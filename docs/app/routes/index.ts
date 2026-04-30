@@ -34,14 +34,14 @@ export default class DocsHome extends LitElement {
     .hero-kiss {
       font-size: 88px;
       font-weight: 500;
-      color: var(--kiss-text-primary, #fff);
+      color: #fff;
       letter-spacing: -4px;
       line-height: 0.9;
       margin: 0;
     }
     .hero-tagline {
       font-size: 10px;
-      color: #555;
+      color: #888;
       letter-spacing: 3px;
       text-transform: uppercase;
       margin-top: 16px;
@@ -59,9 +59,9 @@ export default class DocsHome extends LitElement {
     .hero-ping {
       padding: 6px 20px;
       border-radius: 2px;
-      border: 0.5px solid var(--kiss-text-primary, #000);
+      border: 0.5px solid #000;
       background: transparent;
-      color: var(--kiss-text-primary, #000);
+      color: #000;
       font-size: 11px;
       cursor: pointer;
       letter-spacing: 2px;
@@ -70,33 +70,33 @@ export default class DocsHome extends LitElement {
       font-family: inherit;
     }
     .hero-ping:hover {
-      background: var(--kiss-text-primary, #000);
-      color: var(--kiss-bg-base, #fff);
+      background: #000;
+      color: #fff;
     }
     .hero-ping:disabled {
       opacity: 0.2;
       cursor: not-allowed;
     }
     .hero-box {
-      background: var(--kiss-bg-base, #fff);
-      border: 0.5px solid var(--kiss-border, #ccc);
+      background: #fff;
+      border: 0.5px solid #ccc;
       border-radius: 2px;
       padding: 10px 14px;
       min-width: 180px;
       min-height: 36px;
       font-family: 'SF Mono','Fira Code','Consolas',monospace;
       font-size: 10px;
-      color: var(--kiss-text-secondary, #555);
+      color: #555;
       line-height: 1.6;
     }
-    .hero-box .prompt { color: var(--kiss-text-muted, #aaa); }
-    .hero-box .result { color: var(--kiss-text-primary, #000); }
-    .hero-box .loading { color: var(--kiss-text-tertiary, #888); }
+    .hero-box .prompt { color: #aaa; }
+    .hero-box .result { color: #000; }
+    .hero-box .loading { color: #888; }
     .hero-dot {
       position: absolute;
       width: 6px; height: 6px;
       border-radius: 50%;
-      background: var(--kiss-text-primary, #000);
+      background: #000;
       top: 38%; left: 61%;
       z-index: 3;
     }
@@ -106,7 +106,7 @@ export default class DocsHome extends LitElement {
       left: 48px;
       z-index: 3;
       font-size: 9px;
-      color: var(--kiss-text-muted, #444);
+      color: #555;
       letter-spacing: 3px;
     }
     .hero-foot em { font-style: normal; font-weight: 500; }
@@ -290,11 +290,11 @@ export default class DocsHome extends LitElement {
           </div>
 
           <div class="hero-foot">
-            <em style="color:var(--kiss-text-muted)">jamstack</em>
+            <em style="color:#666">jamstack</em>
             ·
-            <em style="color:var(--kiss-text-primary)">islands</em>
+            <em style="color:#000">islands</em>
             ·
-            <em style="color:var(--kiss-text-muted)">web std</em>
+            <em style="color:#666">web std</em>
           </div>
         </div>
 
