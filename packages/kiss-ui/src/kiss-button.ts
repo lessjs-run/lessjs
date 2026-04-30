@@ -44,7 +44,7 @@ export class KissButton extends LitElement {
         font-weight: var(--kiss-font-weight-medium);
         text-decoration: none;
         cursor: pointer;
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         background: transparent;
         color: var(--kiss-text-primary);
         border-radius: var(--kiss-radius-md);

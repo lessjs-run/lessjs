@@ -30,7 +30,7 @@ export class KissCodeBlock extends LitElement {
         margin: 0;
         padding: var(--kiss-size-5);
         background: var(--kiss-code-bg);
-        border: 1px solid var(--kiss-code-border);
+        border: 0.5px solid var(--kiss-code-border);
         border-radius: var(--kiss-radius-sm);
         overflow-x: auto;
         font-family: var(--kiss-font-mono);
@@ -47,7 +47,7 @@ export class KissCodeBlock extends LitElement {
         right: var(--kiss-size-2);
         background: var(--kiss-bg-elevated);
         color: var(--kiss-text-muted);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         padding: var(--kiss-size-1) var(--kiss-size-3);
         font-size: var(--kiss-font-size-xs);
         font-family: var(--kiss-font-sans);

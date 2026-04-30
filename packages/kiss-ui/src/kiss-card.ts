@@ -29,7 +29,7 @@ export class KissCard extends LitElement {
       :host {
         display: block;
         background: var(--kiss-bg-card);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: var(--kiss-radius-lg);
         overflow: hidden;
       }

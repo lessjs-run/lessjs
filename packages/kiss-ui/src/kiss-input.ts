@@ -64,7 +64,7 @@ export class KissInput extends LitElement {
         font-size: var(--kiss-font-size-md);
         color: var(--kiss-text-primary);
         background: var(--kiss-bg-base);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: var(--kiss-radius-md);
         transition:
           border-color var(--kiss-transition-normal),

@@ -48,7 +48,7 @@ export class KissThemeToggle extends LitElement {
         width: 32px;
         height: 32px;
         padding: 0;
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: var(--kiss-radius-md);
         background: transparent;
         color: var(--kiss-text-tertiary);
