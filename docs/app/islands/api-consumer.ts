@@ -14,7 +14,7 @@ export default class ApiConsumer extends LitElement {
     :host { display: block; }
 
     .card {
-      border: 1px solid var(--kiss-border);
+      border: 0.5px solid var(--kiss-border);
       border-radius: 8px;
       padding: 1.25rem;
       background: var(--kiss-bg-surface);
@@ -63,7 +63,7 @@ export default class ApiConsumer extends LitElement {
 
     .pre-box {
       background: var(--kiss-code-bg);
-      border: 1px solid var(--kiss-code-border);
+      border: 0.5px solid var(--kiss-code-border);
       border-radius: 6px;
       padding: 0.75rem 1rem;
       font-size: 0.75rem;
@@ -79,7 +79,7 @@ export default class ApiConsumer extends LitElement {
       align-items: center;
       gap: 0.35rem;
       padding: 0.4rem 0.85rem;
-      border: 1px solid var(--kiss-border);
+      border: 0.5px solid var(--kiss-border);
       border-radius: 6px;
       background: var(--kiss-bg-card);
       color: var(--kiss-text-secondary);
@@ -110,7 +110,7 @@ export default class ApiConsumer extends LitElement {
 
     .divider {
       border: none;
-      border-top: 1px solid var(--kiss-border);
+      border-top: 0.5px solid var(--kiss-border);
       margin: 1.25rem 0;
     }
 
@@ -123,7 +123,7 @@ export default class ApiConsumer extends LitElement {
     .form-row input {
       flex: 1;
       padding: 0.45rem 0.7rem;
-      border: 1px solid var(--kiss-border);
+      border: 0.5px solid var(--kiss-border);
       border-radius: 6px;
       background: var(--kiss-bg-card);
       color: var(--kiss-text-primary);
@@ -145,6 +145,7 @@ export default class ApiConsumer extends LitElement {
       font-size: 0.9375rem;
       font-weight: 500;
       background: color-mix(in srgb, var(--kiss-accent) 6%, transparent);
+      // TODO: 0.5px after color-mix support
       border: 1px solid color-mix(in srgb, var(--kiss-accent) 15%, transparent);
       color: var(--kiss-text-primary);
       animation: fadeSlide 0.25s ease;
@@ -155,6 +156,7 @@ export default class ApiConsumer extends LitElement {
       border-radius: 6px;
       font-size: 0.8125rem;
       background: color-mix(in srgb, var(--kiss-error) 8%, transparent);
+      // TODO: 0.5px after color-mix support
       border: 1px solid color-mix(in srgb, var(--kiss-error) 20%, transparent);
       color: var(--kiss-error);
       animation: fadeSlide 0.25s ease;

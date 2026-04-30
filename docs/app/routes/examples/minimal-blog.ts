@@ -39,7 +39,7 @@ export class MinimalBlogDemoPage extends LitElement {
       .post-item {
         padding: 1rem;
         background: var(--kiss-bg-surface);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 6px;
       }
       .post-item h3 {

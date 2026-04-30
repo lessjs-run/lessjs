@@ -15,7 +15,7 @@ export class KissCompilerPage extends LitElement {
       p { font-size: 0.8125rem; line-height: 1.7; color: var(--kiss-text-secondary); margin: 0 0 0.75rem; }
       .code-block {
         background: var(--kiss-bg-surface);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 4px;
         padding: 1rem;
         font-family: "SF Mono","Fira Code",monospace;
@@ -27,7 +27,7 @@ export class KissCompilerPage extends LitElement {
         white-space: pre;
       }
       table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; margin: 0.75rem 0; }
-      th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--kiss-border); }
+      th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 0.5px solid var(--kiss-border); }
       th { font-weight: 500; color: var(--kiss-text-primary); }
     `,
   ];

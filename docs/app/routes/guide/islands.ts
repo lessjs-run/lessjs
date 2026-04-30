@@ -6,7 +6,7 @@ import '../../islands/code-block.js'
 export class IslandsGuidePage extends LitElement {
   static override styles = [pageStyles, css`
     .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0 1.5rem; }
-    .comparison-item { padding: 1rem 1.25rem; border: 1px solid var(--kiss-border); border-radius: 3px; }
+    .comparison-item { padding: 1rem 1.25rem; border: 0.5px solid var(--kiss-border); border-radius: 3px; }
     .comparison-item ul { margin: 0; padding-left: 1.25rem; font-size: 0.875rem; color: var(--kiss-text-secondary);  }
     .comparison-item li { margin-bottom: 0.25rem; }
     .comparison-item.spa { border-color: var(--kiss-border, #fecaca); }

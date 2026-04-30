@@ -61,7 +61,7 @@ export default class PageDemo extends LitElement {
     }
     hr.divider {
       border: none;
-      border-top: 1px solid var(--kiss-border);
+      border-top: 0.5px solid var(--kiss-border);
       margin: 2rem 0;
     }
 
@@ -69,7 +69,8 @@ export default class PageDemo extends LitElement {
       display: flex;
       gap: 0;
       margin: 1.5rem 0 2rem;
-      border: 1px solid var(--kiss-border);
+      /* 0.5px: reduced to match kiss-ui spec */
+          border: 0.5px solid var(--kiss-border);
       border-radius: 8px;
       overflow: hidden;
     }
@@ -79,7 +80,7 @@ export default class PageDemo extends LitElement {
       text-align: center;
     }
     .jam-cell + .jam-cell {
-      border-left: 1px solid var(--kiss-border);
+      border-left: 0.5px solid var(--kiss-border);
     }
     .jam-cell .letter {
       font-size: 2rem;
@@ -109,7 +110,8 @@ export default class PageDemo extends LitElement {
     }
 
     .arch-card {
-      border: 1px solid var(--kiss-border);
+      /* 0.5px: reduced to match kiss-ui spec */
+          border: 0.5px solid var(--kiss-border);
       border-radius: 8px;
       overflow: hidden;
     }
@@ -127,7 +129,7 @@ export default class PageDemo extends LitElement {
       align-items: center;
       padding: 0.75rem 1.25rem;
       background: var(--kiss-bg-surface);
-      border-bottom: 1px solid var(--kiss-border);
+      border-bottom: 0.5px solid var(--kiss-border);
       font-size: 0.8125rem;
       color: var(--kiss-text-secondary);
       font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;

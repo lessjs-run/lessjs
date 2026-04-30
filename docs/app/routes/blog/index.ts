@@ -12,7 +12,8 @@ export class BlogIndexPage extends LitElement {
       .blog-list { list-style: none; padding: 0; margin: 1.5rem 0; }
       .blog-item {
         padding: 1rem 1.25rem;
-        border: 1px solid var(--kiss-border);
+        /* 0.5px: reduced to match kiss-ui spec */
+          border: 0.5px solid var(--kiss-border);
         border-radius: 4px;
         margin-bottom: 0.75rem;
         transition: border-color 0.15s;

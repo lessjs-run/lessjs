@@ -14,7 +14,8 @@ export class BlogKissCompilerPage extends LitElement {
       p { font-size: 0.875rem; line-height: 1.7; margin: 0 0 0.75rem; }
       .code-block { 
         background: var(--kiss-bg-surface);
-        border: 1px solid var(--kiss-border);
+        /* 0.5px: reduced to match kiss-ui spec */
+          border: 0.5px solid var(--kiss-border);
         border-radius: 4px;
         padding: 1rem;
         font-family: "SF Mono","Fira Code",monospace;

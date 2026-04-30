@@ -15,7 +15,7 @@ export class DeploymentPage extends LitElement {
       }
       .platform-card {
         padding: 1rem 1.25rem;
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 3px;
       }
       .platform-card h3 {

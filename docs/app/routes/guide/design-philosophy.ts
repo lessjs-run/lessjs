@@ -25,7 +25,7 @@ export class DesignPhilosophyPage extends LitElement {
       .pillar .hard-constraint {
         display: inline-block;
         background: var(--kiss-code-bg);
-        border: 1px solid var(--kiss-border-hover);
+        border: 0.5px solid var(--kiss-border-hover);
         padding: 0.25rem 0.625rem;
         border-radius: 4px;
         font-size: 0.8125rem;

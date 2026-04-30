@@ -25,7 +25,7 @@ export class ExamplesPage extends LitElement {
       .example-card {
         padding: 1.5rem;
         background: var(--kiss-bg-surface);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 6px;
         transition: border-color 0.2s ease;
       }
@@ -72,7 +72,7 @@ export class ExamplesPage extends LitElement {
       .constraint-badge {
         padding: 0.25rem 0.5rem;
         background: var(--kiss-bg-base);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 4px;
         font-size: 0.75rem;
         font-family: "SF Mono", "Fira Code", monospace;
@@ -80,7 +80,7 @@ export class ExamplesPage extends LitElement {
       .architecture-diagram {
         padding: 1.5rem;
         background: var(--kiss-bg-surface);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 6px;
         margin: 1.5rem 0;
       }
@@ -107,7 +107,7 @@ export class ExamplesPage extends LitElement {
       }
       .arch-divider {
         border: none;
-        border-top: 1px solid var(--kiss-border);
+        border-top: 0.5px solid var(--kiss-border);
         margin: 1rem 0;
       }
       .kiss-row {
@@ -122,7 +122,7 @@ export class ExamplesPage extends LitElement {
         justify-content: center;
         width: 28px;
         height: 28px;
-        border: 1px solid var(--kiss-border-hover);
+        border: 0.5px solid var(--kiss-border-hover);
         border-radius: 4px;
         font-size: 0.75rem;
         font-weight: 800;

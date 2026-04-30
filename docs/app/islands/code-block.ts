@@ -28,7 +28,7 @@ export default class CodeBlock extends LitElement {
       margin: 0;
       padding: 1.25rem;
       background: var(--kiss-code-bg);
-      border: 1px solid var(--kiss-code-border);
+      border: 0.5px solid var(--kiss-code-border);
       border-radius: 2px;
       overflow-x: auto;
       font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace;
@@ -45,7 +45,7 @@ export default class CodeBlock extends LitElement {
       right: 0.5rem;
       background: var(--kiss-bg-elevated);
       color: var(--kiss-text-tertiary);
-      border: 1px solid var(--kiss-border);
+      border: 0.5px solid var(--kiss-border);
       padding: 0.25rem 0.625rem;
       font-size: 0.6875rem;
       font-family: inherit;

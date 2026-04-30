@@ -13,7 +13,8 @@ export class ChangelogPage extends LitElement {
         margin: 2rem 0;
         padding: 1.5rem;
         background: var(--kiss-bg-surface);
-        border: 1px solid var(--kiss-border);
+        /* 0.5px: reduced to match kiss-ui spec */
+          border: 0.5px solid var(--kiss-border);
         border-radius: 6px;
       }
       .version-header {
@@ -82,7 +83,7 @@ export class ChangelogPage extends LitElement {
       .version-table td {
         padding: 0.75rem 1rem;
         text-align: left;
-        border-bottom: 1px solid var(--kiss-border);
+        border-bottom: 0.5px solid var(--kiss-border);
       }
       .version-table th {
         font-size: 0.6875rem;

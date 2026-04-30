@@ -13,7 +13,8 @@ export class ContributingPage extends LitElement {
       .layer-diagram {
         padding: 1.25rem;
         background: var(--kiss-bg-surface);
-        border: 1px solid var(--kiss-border);
+        /* 0.5px: reduced to match kiss-ui spec */
+          border: 0.5px solid var(--kiss-border);
         border-radius: 6px;
         margin: 1.5rem 0;
         font-size: 0.8125rem;
@@ -32,7 +33,8 @@ export class ContributingPage extends LitElement {
       .commit-type {
         padding: 0.75rem 1rem;
         background: var(--kiss-bg-surface);
-        border: 1px solid var(--kiss-border);
+        /* 0.5px: reduced to match kiss-ui spec */
+          border: 0.5px solid var(--kiss-border);
         border-radius: 4px;
         font-size: 0.875rem;
       }

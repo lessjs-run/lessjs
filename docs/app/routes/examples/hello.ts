@@ -19,7 +19,7 @@ export class HelloDemoPage extends LitElement {
       .demo-container {
         padding: 2rem;
         background: var(--kiss-bg-surface);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 8px;
         margin: 1.5rem 0;
       }

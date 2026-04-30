@@ -20,7 +20,7 @@ export class FullstackDemoPage extends LitElement {
       .demo-container {
         padding: 2rem;
         background: var(--kiss-bg-surface);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 8px;
         margin: 1.5rem 0;
         color: var(--kiss-text-primary);
@@ -33,7 +33,7 @@ export class FullstackDemoPage extends LitElement {
         margin-top: 1.5rem;
         padding: 1rem;
         background: var(--kiss-bg-elevated);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 6px;
       }
       .api-demo h3 {
@@ -53,7 +53,7 @@ export class FullstackDemoPage extends LitElement {
         margin-top: 1.5rem;
         padding: 1rem;
         background: var(--kiss-bg-elevated);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 6px;
       }
       .counter-demo h3 {
@@ -64,7 +64,7 @@ export class FullstackDemoPage extends LitElement {
       .deployment-diagram {
         padding: 1.25rem;
         background: var(--kiss-bg-surface);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 6px;
         margin: 1.5rem 0;
         font-size: 0.8125rem;

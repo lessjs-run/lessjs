@@ -25,7 +25,7 @@ export class KissUIPage extends LitElement {
       .component-card {
         padding: 1rem;
         background: var(--kiss-bg-surface);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 6px;
       }
       .component-card h4 {

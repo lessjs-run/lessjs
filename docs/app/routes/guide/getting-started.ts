@@ -8,7 +8,7 @@ export class GettingStartedPage extends LitElement {
     .step { margin-bottom: 2rem; }
     .step-header { font-size: 1rem; font-weight: 600; margin: 0 0 0.5rem; color: var(--kiss-text-primary); }
     .step-desc { color: var(--kiss-text-tertiary); font-size: 0.8125rem; margin-bottom: 0.5rem; }
-    .note { background: var(--kiss-bg-surface); border: 1px solid var(--kiss-border); border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.8125rem; color: var(--kiss-text-secondary); margin-top: 1rem; }
+    .note { background: var(--kiss-bg-surface); border: 0.5px solid var(--kiss-border); border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.8125rem; color: var(--kiss-text-secondary); margin-top: 1rem; }
     .inline-code { font-family: "SF Mono","Fira Code",monospace; font-size: 0.8125rem; background: var(--kiss-bg-elevated); padding: 0.125rem 0.375rem; border-radius: 3px; }
   `];
   override render() {

@@ -9,7 +9,7 @@ export class WebAwesomePage extends LitElement {
     css`
       .demo-box {
         padding: 1.25rem;
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 3px;
         margin: 0.75rem 0 1.5rem;
       }

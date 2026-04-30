@@ -35,7 +35,7 @@ export class UIShowcase extends LitElement {
         color: var(--kiss-text-muted);
         margin-bottom: 1.5rem;
         padding-bottom: 0.75rem;
-        border-bottom: 1px solid var(--kiss-border);
+        border-bottom: 0.5px solid var(--kiss-border);
       }
 
       /* ─── Palettes ─── */
@@ -44,7 +44,7 @@ export class UIShowcase extends LitElement {
         grid-template-columns: 1fr 1fr;
         gap: 1px;
         background: var(--kiss-border);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 6px;
         overflow: hidden;
       }
@@ -149,7 +149,7 @@ export class UIShowcase extends LitElement {
         align-items: baseline;
         gap: 1.5rem;
         padding: 0.75rem 0;
-        border-bottom: 1px solid var(--kiss-border);
+        border-bottom: 0.5px solid var(--kiss-border);
       }
 
       .type-row:last-child {
@@ -172,14 +172,14 @@ export class UIShowcase extends LitElement {
       /* ─── Component Preview ─── */
       .preview-card {
         background: var(--kiss-bg-surface);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 6px;
         overflow: hidden;
       }
 
       .preview-header {
         padding: 0.875rem 1.25rem;
-        border-bottom: 1px solid var(--kiss-border);
+        border-bottom: 0.5px solid var(--kiss-border);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -200,7 +200,7 @@ export class UIShowcase extends LitElement {
         border-radius: 3px;
         background: var(--kiss-accent-subtle);
         color: var(--kiss-text-secondary);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
       }
 
       .preview-body {
@@ -223,7 +223,7 @@ export class UIShowcase extends LitElement {
         margin-top: 3.5rem;
         padding: 2rem;
         background: var(--kiss-bg-surface);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 6px;
         text-align: center;
       }
@@ -241,7 +241,7 @@ export class UIShowcase extends LitElement {
         gap: 0.625rem;
         padding: 0.625rem 1.25rem;
         background: var(--kiss-bg-elevated);
-        border: 1px solid var(--kiss-border);
+        border: 0.5px solid var(--kiss-border);
         border-radius: 4px;
         font-family: "SF Mono", "Fira Code", "Consolas", monospace;
         font-size: 0.8125rem;
@@ -429,12 +429,12 @@ export class UIShowcase extends LitElement {
                 <kiss-button>默认按钮</kiss-button>
                 <kiss-button variant="ghost">幽灵按钮</kiss-button>
               </div>
-              <div class="preview-body" style="border-top:1px solid var(--kiss-border)">
+              <div class="preview-body" style="border-top:0.5px solid var(--kiss-border)">
                 <kiss-button variant="primary" size="sm">小号</kiss-button>
                 <kiss-button variant="primary" size="md">中号</kiss-button>
                 <kiss-button variant="primary" size="lg">大号</kiss-button>
               </div>
-              <div class="preview-body" style="border-top:1px solid var(--kiss-border)">
+              <div class="preview-body" style="border-top:0.5px solid var(--kiss-border)">
                 <kiss-button disabled>禁用状态</kiss-button>
                 <kiss-button href="/" target="_blank">链接按钮</kiss-button>
               </div>
