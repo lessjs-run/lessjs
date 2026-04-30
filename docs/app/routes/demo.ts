@@ -1,9 +1,10 @@
 /**
  * Demo Showcase — Jamstack in Action
  *
- * SSR-only page layout.
- * Uses light DOM rendering to avoid nested custom element
- * duplication during Lit SSR hydration.
+ * SSR page layout with interactive Islands.
+ * <api-consumer> is in the normal Shadow DOM template; hydration race
+ * is avoided by using firstUpdated() instead of connectedCallback()
+ * for the initial API fetch.
  */
 import { css, html, LitElement } from '@kissjs/core';
 import '@kissjs/ui/kiss-layout';
@@ -11,12 +12,6 @@ import '@kissjs/ui/kiss-layout';
 export const tagName = 'page-demo';
 
 export default class PageDemo extends LitElement {
-  /** Light DOM: prevents Shadow DOM encapsulation issues
-   *  with nested <api-consumer> during SSR hydration. */
-  override createRenderRoot(): HTMLElement | DocumentFragment {
-    return this;
-  }
-
   static override styles = css`
     .container {
       max-width: 720px;
@@ -178,7 +173,7 @@ export default class PageDemo extends LitElement {
             </div>
           </div>
 
-          <!-- api-consumer rendered in light DOM — no Shadow DOM nesting issue -->
+          <!-- Live API Consumer Island -->
           <api-consumer></api-consumer>
 
           <hr class="divider" />
