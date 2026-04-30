@@ -116,6 +116,48 @@ export class ChangelogPage extends LitElement {
 
           <div class="version-section">
             <div class="version-header">
+              <span class="version-number">0.4.0</span>
+              <span class="version-date">2026-04-30</span>
+            </div>
+
+            <div class="change-category added">
+              <h4>新增</h4>
+              <ul class="change-list">
+                <li><strong>Serverless API CI 部署</strong>：kiss-demo-api.sisyphuszheng.deno.net 生产在线，deploy-api.yml 自动化（CORS 修复、平台迁移 deployctl→deno deploy）</li>
+                <li><strong>kiss-hero-ping 组件</strong>：可配置 API 的 ping Island，🟢/🔴 状态点。提取到 @kissjs/ui v0.4.0</li>
+                <li><strong>首页全中文</strong>：8 段布局、响应式 clamp()/%/rem、四框架比较表、三阶段 Quick start</li>
+                <li><strong>Blog 系统</strong>：v0.4.0 发布文 + kiss-compiler 设计决策</li>
+                <li><strong>路線图</strong>：v0.5.0 → v1.0.0 六阶段规划</li>
+              </ul>
+            </div>
+
+            <div class="change-category changed">
+              <h4>变更</h4>
+              <ul class="change-list">
+                <li><strong>Service Worker 策略重写</strong>：PRECACHE 删除，HTML 用 networkFirst（实时更新），动态缓存名，skipWaiting + clients.claim。根因定位：切回首页变旧版是 SW 缓存，不是 CDN</li>
+                <li><strong>全站 1px → 0.5px 统一</strong>：17 文件、40+ 处边框</li>
+                <li><strong>全站非 Hero 颜色 → CSS 变量</strong>：--kiss-text-primary/secondary/tertiary/muted，--kiss-border，--kiss-bg-surface 等</li>
+                <li><strong>kiss-layout 响应式</strong>：sidebar 240px → clamp(200px, 20vw, 280px)，header max-width CSS 变量化</li>
+                <li><strong>首页布局对齐 Guide</strong>：内容区 720px，Hero min-height、hero-inner 居中</li>
+                <li><strong>README 精简 80%</strong>：JSR shields.io badges（显式版本号），诚实 JS 大小（~400B 基础设施，零框架 JS）</li>
+              </ul>
+            </div>
+
+            <div class="change-category fixed">
+              <h4>修复</h4>
+              <ul class="change-list">
+                <li><strong>Hydration race</strong>：嵌套在父 Shadow DOM 内的 Island 双渲染问题 — _renderer.ts 剥离 defer-hydration</li>
+                <li><strong>Hero 文字可见度</strong>：#555→#999（hero-desc），#444→#777（hero-tech）</li>
+                <li><strong>页面组件事件不生效</strong>：docs-home 的 @click 在客户端不工作 — 提取为独立 Island</li>
+                <li><strong>kiss-hero-ping 类型错误</strong>：static override 顺序、catch e:unknow</li>
+                <li><strong>Quick start 命令错误</strong>：npm create@kissjs/app → deno run -A jsr:@kissjs/create</li>
+                <li><strong>API 版本 0.3.6 → 0.4.0</strong></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="version-section">
+            <div class="version-header">
               <span class="version-number">0.3.4</span>
               <span class="version-date">2026-04-30</span>
             </div>
