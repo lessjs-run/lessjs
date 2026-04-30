@@ -9,7 +9,7 @@ export default class DocsHome extends LitElement {
 
     .hero {
       background: #000;
-      margin: 0 0 2.5rem;
+      margin: 0 0 3rem;
       position: relative;
       overflow: hidden;
     }
@@ -25,7 +25,7 @@ export default class DocsHome extends LitElement {
     .hero-inner {
       max-width: 720px;
       margin: 0 auto;
-      padding: 2.5rem 2rem;
+      padding: 3rem 2rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -33,50 +33,89 @@ export default class DocsHome extends LitElement {
       position: relative;
       z-index: 1;
     }
-    .hero-brand { display: flex; flex-direction: column; gap: 2px; }
+    .hero-brand { display: flex; flex-direction: column; gap: 4px; }
     .hero-kiss {
-      font-size: 36px;
+      font-size: 2.25rem;
       font-weight: 500;
       color: #fff;
-      letter-spacing: -1px;
-      line-height: 1;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
     }
     .hero-tagline {
-      font-size: 9px;
-      color: #555;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      font-size: 0.75rem;
+      color: #666;
+      letter-spacing: 0.12em;
     }
     .hero-term { display: flex; align-items: center; gap: 12px; }
 
     .content {
       max-width: 720px;
       margin: 0 auto;
-      padding: 0 2rem 4rem;
+      padding: 0 2rem 5rem;
     }
+
+    .intro {
+      margin-bottom: 3rem;
+    }
+    .intro h2 {
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: var(--kiss-text-primary);
+      margin: 0 0 0.75rem;
+    }
+    .intro p {
+      font-size: 0.875rem;
+      color: var(--kiss-text-secondary);
+      line-height: 1.7;
+      margin: 0;
+    }
+
     .features {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0;
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
     }
     .feature {
-      padding: 1rem 0;
+      padding: 1.25rem 0;
       border-top: 0.5px solid var(--kiss-border);
     }
     .feature:nth-child(-n+2) { border-top: none; }
     .feature h3 {
-      font-size: 12px;
+      font-size: 0.8125rem;
       font-weight: 500;
       color: var(--kiss-text-primary);
       margin: 0 0 4px;
     }
     .feature p {
-      font-size: 11px;
+      font-size: 0.75rem;
       color: var(--kiss-text-tertiary);
       margin: 0;
       line-height: 1.6;
     }
+
+    .stats {
+      display: flex;
+      gap: 0;
+      border-top: 0.5px solid var(--kiss-border);
+      padding-top: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .stat { flex: 1; text-align: center; }
+    .stat + .stat { border-left: 0.5px solid var(--kiss-border); }
+    .stat-val {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--kiss-text-primary);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 0.625rem;
+      color: var(--kiss-text-muted);
+      letter-spacing: 0.1em;
+    }
+
     .links {
       display: flex;
       gap: 0;
@@ -85,10 +124,10 @@ export default class DocsHome extends LitElement {
     .link-item {
       flex: 1;
       text-align: center;
-      font-size: 11px;
+      font-size: 0.75rem;
       color: var(--kiss-text-secondary);
       text-decoration: none;
-      padding: 0.75rem 0;
+      padding: 0.875rem 0;
       transition: all 0.15s;
     }
     .link-item + .link-item { border-left: 0.5px solid var(--kiss-border); }
@@ -96,9 +135,11 @@ export default class DocsHome extends LitElement {
 
     @media (max-width: 640px) {
       .hero-inner { flex-direction: column; align-items: flex-start; gap: 12px; padding: 2rem 1.5rem; }
-      .hero-kiss { font-size: 28px; }
       .features { grid-template-columns: 1fr; }
       .feature:nth-child(2) { border-top: 0.5px solid var(--kiss-border); }
+      .stats { flex-wrap: wrap; }
+      .stat { flex: 1 1 50%; padding: 0.5rem 0; }
+      .stat:nth-child(2) { border-left: none; }
       .content { padding: 0 1.5rem 3rem; }
     }
   `;
@@ -119,12 +160,54 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="content">
-          <div class="features">
-            <div class="feature"><h3>Web standards first</h3><p>HTTP via Fetch API, UI via Web Components, modules via ESM.</p></div>
-            <div class="feature"><h3>Islands architecture</h3><p>Only interactive components load JS. Static pages ship zero.</p></div>
-            <div class="feature"><h3>Type-safe RPC</h3><p>End-to-end types via Hono RPC — no code generation.</p></div>
-            <div class="feature"><h3>SSG + DSD</h3><p>Build-time static generation with instant client hydration.</p></div>
+          <div class="intro">
+            <h2>A framework built on web standards</h2>
+            <p>
+              KISS is a Jamstack framework that uses the platform directly —
+              HTTP through the Fetch API, UI through Web Components, modules through ESM.
+              No custom abstractions, no runtime lock-in. Just HTML, CSS, and JavaScript
+              as the browser intended.
+            </p>
           </div>
+
+          <div class="features">
+            <div class="feature">
+              <h3>Web standards first</h3>
+              <p>HTTP via Fetch API, UI via Web Components, modules via ESM. No abstractions.</p>
+            </div>
+            <div class="feature">
+              <h3>Islands architecture</h3>
+              <p>Only interactive components load JS. Static pages ship zero JavaScript.</p>
+            </div>
+            <div class="feature">
+              <h3>Type-safe RPC</h3>
+              <p>End-to-end types via Hono RPC — server and client share types without code generation.</p>
+            </div>
+            <div class="feature">
+              <h3>SSG + DSD</h3>
+              <p>Build-time static generation with Declarative Shadow DOM that hydrates instantly on the client.</p>
+            </div>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-val">&lt;20KB</div>
+              <div class="stat-label">runtime payload</div>
+            </div>
+            <div class="stat">
+              <div class="stat-val">0KB</div>
+              <div class="stat-label">static pages</div>
+            </div>
+            <div class="stat">
+              <div class="stat-val">4</div>
+              <div class="stat-label">runtimes</div>
+            </div>
+            <div class="stat">
+              <div class="stat-val">100%</div>
+              <div class="stat-label">web std</div>
+            </div>
+          </div>
+
           <div class="links">
             <a class="link-item" href="/guide/getting-started">Getting started →</a>
             <a class="link-item" href="/demo">Live demo →</a>
