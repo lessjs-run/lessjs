@@ -336,11 +336,16 @@ export class RoadmapPage extends LitElement {
             <li>Wrangler 适配 — Cloudflare Workers 部署支持</li>
             <li>SSG 管线加速 — 并行渲染、增量构建</li>
             <li>Demo 子目录构建集成到 deploy.yml</li>
+            <li>WebSocket 支持 — Hono app.ws() 暴露到 serverless 入口</li>
+            <li>deno create @kissjs/app 协议支持</li>
             <li>开发体验优化 — 更好的错误信息、HMR 改进</li>
           </ul>
 
-          <h2>Phase 12：v0.6.0 .kiss Compiler Alpha（规划中）</h2>
+          <h2>Phase 12：v0.6.0 零基础设施 JS + .kiss Compiler Alpha（规划中）</h2>
           <ul class="task-list">
+            <li><strong>CSS-only 暗色模式</strong> — 用 prefers-color-scheme 消除 theme-init.js（~280B）</li>
+            <li><strong>SW 注册 defer</strong> — 移到 requestIdleCallback，不阻塞</li>
+            <li>目标：零交互页面零 JS（连基础设施一起消除）</li>
             <li>.kiss 文件格式定义 — template + script + style 声明式组件</li>
             <li>编译器原型 — .kiss → vanilla Custom Element（0 runtime deps）</li>
             <li>消除 Lit 58kb gzip、@lit-labs/ssr、CJS polyfill</li>
