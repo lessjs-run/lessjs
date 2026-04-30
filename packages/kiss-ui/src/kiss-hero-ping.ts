@@ -6,9 +6,9 @@ import { css, html, LitElement } from '@kissjs/core';
 export const tagName = 'kiss-hero-ping';
 
 export default class HeroPing extends LitElement {
-  static properties = { apiUrl: { type: String, attribute: 'api-url' } };
+  static override properties = { apiUrl: { type: String, attribute: 'api-url' } };
 
-  static styles = css`
+  static override styles = css`
     :host {
       display: inline-flex;
       align-items: center;
@@ -63,7 +63,7 @@ export default class HeroPing extends LitElement {
   _state: 'idle' | 'loading' | 'ok' | 'err' = 'idle';
   _msg = '';
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
     this._fetch();
   }
@@ -78,9 +78,10 @@ export default class HeroPing extends LitElement {
       const d = await r.json();
       this._state = 'ok';
       this._msg = `${d.framework} v${d.version}  ${d.timestamp.slice(11,19)}`;
-    } catch (e) {
+    } catch (e: unknown) {
+      const err = e as Error;
       this._state = 'err';
-      this._msg = String(e).includes('HTTP') ? e.message : 'connection failed';
+      this._msg = String(e).includes('HTTP') ? err.message : 'connection failed';
     } finally {
       this.requestUpdate();
     }
