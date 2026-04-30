@@ -335,18 +335,19 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         writeFileSync(join(outputDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
         console.log('[KISS SSG] PWA manifest.json generated');
 
-        // Simple CacheFirst service worker
-        const swCode = `const CACHE = 'kiss-v1';
-const PRECACHE = ['/', '/index.html'];
+        // Smart service worker: networkFirst for HTML+API, cacheFirst for assets
+        // No precaching — the old PRECACHE pattern caused stale index.html.
+        const swCode = `const CACHE = 'kiss-${Date.now()}';
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)));
   self.skipWaiting();
 });
 self.addEventListener('activate', (e) => {
   e.waitUntil(clients.claim());
 });
 self.addEventListener('fetch', (e) => {
-  if (e.request.url.includes('/api/')) {
+  const url = new URL(e.request.url);
+  // HTML pages and API calls: always go to network first
+  if (!url.pathname.match(/\\.[a-z0-9]+$/i) || url.pathname.includes('/api/')) {
     e.respondWith(networkFirst(e.request));
   } else {
     e.respondWith(cacheFirst(e.request));
