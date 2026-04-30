@@ -10,7 +10,7 @@ app.get('/', (c) => {
   return c.json({
     ok: true,
     framework: 'KISS',
-    version: '0.3.6',
+    version: '0.4.0',
     jamstack: true,
     serverless: true,
     timestamp: new Date().toISOString(),
