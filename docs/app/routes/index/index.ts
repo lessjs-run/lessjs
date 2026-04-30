@@ -201,15 +201,17 @@ export default class DocsHome extends LitElement {
     return html`
       <kiss-layout home>
         <div class="hero">
-          <div class="hero-brand">
-            <div class="hero-kiss">KISS</div>
-            <div class="hero-desc">
-              一个基于 Web 标准构建的 Jamstack 框架。<br>
-              零运行时锁定。纯粹的 Web 平台。
+          <div class="hero-inner">
+            <div class="hero-brand">
+              <div class="hero-kiss">KISS</div>
+              <div class="hero-desc">
+                一个基于 Web 标准构建的 Jamstack 框架。<br>
+                零运行时锁定。纯粹的 Web 平台。
+              </div>
+              <div class="hero-tech">HTTP Fetch API · Web Components · ESM</div>
             </div>
-            <div class="hero-tech">HTTP Fetch API · Web Components · ESM</div>
+            <hero-ping></hero-ping>
           </div>
-          <hero-ping></hero-ping>
         </div>
 
         <div class="content">
