@@ -10,13 +10,14 @@ Deno.test('kiss-ui — index exports islands array', async () => {
   const mod = await import('../src/index.ts');
   assertExists(mod.islands, 'islands export should exist');
   assertEquals(Array.isArray(mod.islands), true);
-  assertEquals(mod.islands.length, 5);
+  assertEquals(mod.islands.length, 6);
   assertEquals(mod.islands[0].tagName, 'kiss-theme-toggle');
   assertEquals(mod.islands[0].strategy, 'eager');
   assertEquals(mod.islands[1].tagName, 'kiss-button');
   assertEquals(mod.islands[2].tagName, 'kiss-input');
   assertEquals(mod.islands[3].tagName, 'kiss-code-block');
   assertEquals(mod.islands[4].tagName, 'kiss-layout');
+  assertEquals(mod.islands[5].tagName, 'kiss-hero-ping');
 });
 
 Deno.test('kiss-ui — kiss-theme-toggle exports tagName', async () => {
@@ -37,6 +38,7 @@ Deno.test('kiss-ui — all components export tagName', async () => {
     'kiss-input',
     'kiss-code-block',
     'kiss-layout',
+    'kiss-hero-ping',
   ];
   for (const name of components) {
     const mod = await import(`../src/${name}.ts`);

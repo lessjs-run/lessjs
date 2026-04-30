@@ -28,35 +28,57 @@ export default class HeroPing extends LitElement {
       font-family: inherit;
       white-space: nowrap;
     }
-    .ping:hover { background: #1a1a1a; color: #fff; border-color: #888; }
-    .ping:disabled { opacity: 0.3; cursor: not-allowed; }
+    .ping:hover {
+      background: #1a1a1a;
+      color: #fff;
+      border-color: #888;
+    }
+    .ping:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
 
     .dot {
-      width: 7px; height: 7px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       display: inline-block;
       flex-shrink: 0;
     }
-    .dot.idle { background: #444; }
+    .dot.idle {
+      background: #444;
+    }
     .dot.loading {
       background: #888;
       animation: pulse 0.8s ease-in-out infinite alternate;
     }
-    .dot.ok { background: #2ecc40; }
-    .dot.err { background: #e74c3c; }
+    .dot.ok {
+      background: #2ecc40;
+    }
+    .dot.err {
+      background: #e74c3c;
+    }
 
     .info {
-      font-family: 'SF Mono','Fira Code','Consolas',monospace;
+      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
       font-size: 9px;
       color: #666;
       white-space: nowrap;
     }
-    .info .ok { color: #2ecc40; }
-    .info .err { color: #e74c3c; }
+    .info .ok {
+      color: #2ecc40;
+    }
+    .info .err {
+      color: #e74c3c;
+    }
 
     @keyframes pulse {
-      from { opacity: 0.4; }
-      to { opacity: 1; }
+      from {
+        opacity: 0.4;
+      }
+      to {
+        opacity: 1;
+      }
     }
   `;
 
@@ -77,7 +99,7 @@ export default class HeroPing extends LitElement {
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const d = await r.json();
       this._state = 'ok';
-      this._msg = `${d.framework} v${d.version}  ${d.timestamp.slice(11,19)}`;
+      this._msg = `${d.framework} v${d.version}  ${d.timestamp.slice(11, 19)}`;
     } catch (e: unknown) {
       const err = e as Error;
       this._state = 'err';
@@ -85,16 +107,20 @@ export default class HeroPing extends LitElement {
     } finally {
       this.requestUpdate();
     }
-  }
+  };
 
   override render() {
     const dotClass = `dot ${this._state}`;
     return html`
       <span class="${dotClass}"></span>
-      <button class="ping" @click=${this._fetch} ?disabled=${this._state === 'loading'}>
+      <button class="ping" @click="${this._fetch}" ?disabled="${this._state === 'loading'}">
         ${this._state === 'loading' ? 'pinging...' : 'ping server'}
       </button>
-      ${this._msg ? html`<span class="info"><span class="${this._state}">${this._msg}</span></span>` : ''}
+      ${this._msg
+        ? html`
+          <span class="info"><span class="${this._state}">${this._msg}</span></span>
+        `
+        : ''}
     `;
   }
 }
