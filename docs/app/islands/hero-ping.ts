@@ -1,6 +1,5 @@
 /**
- * Hero Ping Island — interactive serverless call button for homepage hero.
- * Must be a separate Island (not in page template) to ensure client hydration.
+ * Hero Ping Island — calls real Deno Deploy API, shows 🟢/🔴 status dot.
  */
 import { css, html, LitElement } from '@kissjs/core';
 
@@ -8,11 +7,15 @@ export const tagName = 'hero-ping';
 
 export default class HeroPing extends LitElement {
   static styles = css`
-    :host { display: inline-flex; align-items: center; gap: 12px; }
-    .ping-btn {
-      padding: 4px 16px;
+    :host {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ping {
+      padding: 5px 18px;
       border-radius: 2px;
-      border: 0.5px solid #ccc;
+      border: 0.5px solid #555;
       background: transparent;
       color: #ccc;
       font-size: 10px;
@@ -23,45 +26,72 @@ export default class HeroPing extends LitElement {
       font-family: inherit;
       white-space: nowrap;
     }
-    .ping-btn:hover { background: #333; color: #fff; border-color: #fff; }
-    .ping-btn:disabled { opacity: 0.25; cursor: not-allowed; }
-    .result {
+    .ping:hover { background: #1a1a1a; color: #fff; border-color: #888; }
+    .ping:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .dot.idle { background: #444; }
+    .dot.loading {
+      background: #888;
+      animation: pulse 0.8s ease-in-out infinite alternate;
+    }
+    .dot.ok { background: #2ecc40; }
+    .dot.err { background: #e74c3c; }
+
+    .info {
       font-family: 'SF Mono','Fira Code','Consolas',monospace;
       font-size: 9px;
       color: #666;
-      min-width: 110px;
+      white-space: nowrap;
     }
-    .result .r { color: #ccc; }
+    .info .ok { color: #2ecc40; }
+    .info .err { color: #e74c3c; }
+
+    @keyframes pulse {
+      from { opacity: 0.4; }
+      to { opacity: 1; }
+    }
   `;
 
-  _loading = false;
-  _result = '';
+  _state: 'idle' | 'loading' | 'ok' | 'err' = 'idle';
+  _msg = '';
 
-  _ping = async () => {
-    this._loading = true;
-    this._result = '';
+  connectedCallback() {
+    super.connectedCallback();
+    this._fetch();
+  }
+
+  _fetch = async () => {
+    this._state = 'loading';
+    this._msg = '';
     this.requestUpdate();
     try {
       const r = await fetch('https://kiss-demo-api.sisyphuszheng.deno.net/api');
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const d = await r.json();
-      this._result = `${d.framework} v${d.version}  ${d.timestamp.slice(11,19)}`;
-    } catch {
-      this._result = 'failed';
+      this._state = 'ok';
+      this._msg = `${d.framework} v${d.version}  ${d.timestamp.slice(11,19)}`;
+    } catch (e) {
+      this._state = 'err';
+      this._msg = String(e).includes('HTTP') ? e.message : 'connection failed';
     } finally {
-      this._loading = false;
       this.requestUpdate();
     }
   }
 
   override render() {
+    const dotClass = `dot ${this._state}`;
     return html`
-      <button class="ping-btn" @click=${this._ping} ?disabled=${this._loading}>
-        ${this._loading ? 'pinging...' : 'ping server'}
+      <span class="${dotClass}"></span>
+      <button class="ping" @click=${this._fetch} ?disabled=${this._state === 'loading'}>
+        ${this._state === 'loading' ? 'pinging...' : 'ping server'}
       </button>
-      <span class="result">
-        ${this._loading ? html`<span>connecting...</span>` : ''}
-        ${this._result ? html`<span class="r">${this._result}</span>` : ''}
-      </span>
+      ${this._msg ? html`<span class="info"><span class="${this._state}">${this._msg}</span></span>` : ''}
     `;
   }
 }
