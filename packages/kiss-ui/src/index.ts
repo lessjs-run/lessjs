@@ -42,6 +42,7 @@ export { KissCodeBlock, tagName as kissCodeBlockTagName } from './kiss-code-bloc
 export { KissLayout, tagName as kissLayoutTagName } from './kiss-layout.js';
 export type { HeaderNavLink, NavItem, NavSection } from './kiss-layout.js';
 export { KissThemeToggle, tagName as kissThemeToggleTagName } from './kiss-theme-toggle.js';
+export { default as KissHeroPing, tagName as kissHeroPingTagName } from './kiss-hero-ping.js';
 
 // Vite plugin for Web Awesome CDN injection (convenience only)
 export { kissUI } from './kiss-ui-plugin.js';
@@ -76,6 +77,11 @@ export const islands: PackageIslandMeta[] = [
   {
     tagName: 'kiss-layout',
     modulePath: '@kissjs/ui/kiss-layout',
+    strategy: 'lazy',
+  },
+  {
+    tagName: 'kiss-hero-ping',
+    modulePath: '@kissjs/ui/kiss-hero-ping',
     strategy: 'lazy',
   },
 ];

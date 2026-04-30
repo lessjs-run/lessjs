@@ -45,6 +45,9 @@ jobs:
       - name: Deploy to gh-pages branch
         run: |
           cd docs/dist
+          # Cache-bust: unique version file so GitHub Pages CDN treats
+          # each deploy as new content (no stale edge cache)
+          echo "$(date -u +%Y%m%dT%H%M%S)" > .version
           git init
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

@@ -3,9 +3,11 @@
  */
 import { css, html, LitElement } from '@kissjs/core';
 
-export const tagName = 'hero-ping';
+export const tagName = 'kiss-hero-ping';
 
 export default class HeroPing extends LitElement {
+  static properties = { apiUrl: { type: String, attribute: 'api-url' } };
+
   static styles = css`
     :host {
       display: inline-flex;

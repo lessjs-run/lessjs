@@ -112,7 +112,7 @@ export class KissLayout extends LitElement {
         top: 0;
         z-index: var(--kiss-z-sticky);
         background: var(--kiss-bg-base);
-        border-bottom: 1px solid var(--kiss-border);
+        border-bottom: 0.5px solid var(--kiss-border);
       }
 
       .header-inner {
@@ -254,7 +254,7 @@ export class KissLayout extends LitElement {
         .docs-sidebar {
           width: clamp(200px, 20vw, 280px);
           flex-shrink: 0;
-          border-right: 1px solid var(--kiss-border);
+          border-right: 0.5px solid var(--kiss-border);
           padding: var(--kiss-size-6) 0;
           overflow-y: auto;
           height: calc(100vh - var(--kiss-layout-header-height, 56px));
@@ -317,7 +317,7 @@ export class KissLayout extends LitElement {
           font-size: var(--kiss-font-size-sm);
           padding: 0.3rem var(--kiss-size-5);
           transition: color var(--kiss-transition-normal), background var(--kiss-transition-normal);
-          border-left: 2px solid transparent;
+          border-left: 1px solid transparent;
         }
 
         .docs-sidebar a:hover {
@@ -377,7 +377,7 @@ export class KissLayout extends LitElement {
             height: calc(100vh - var(--kiss-layout-header-height, 56px));
             z-index: 90;
             background: var(--kiss-bg-base);
-            border-right: 1px solid var(--kiss-border);
+            border-right: 0.5px solid var(--kiss-border);
             border-bottom: none;
             padding: var(--kiss-size-4) 0;
             overflow-y: auto;
@@ -457,7 +457,7 @@ export class KissLayout extends LitElement {
         /* === Footer === */
         .app-footer footer {
           padding: var(--kiss-size-8);
-          border-top: 1px solid var(--kiss-border);
+          border-top: 0.5px solid var(--kiss-border);
           text-align: center;
           color: var(--kiss-text-muted);
           font-size: var(--kiss-font-size-xs);

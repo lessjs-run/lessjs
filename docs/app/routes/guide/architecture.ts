@@ -1,4 +1,4 @@
-import { LitElement, html, css } from '@kissjs/core';
+import { LitElement, html } from '@kissjs/core';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 import '../../islands/code-block.js';

@@ -210,7 +210,7 @@ export default class DocsHome extends LitElement {
               </div>
               <div class="hero-tech">HTTP Fetch API · Web Components · ESM</div>
             </div>
-            <hero-ping></hero-ping>
+            <kiss-hero-ping api-url="https://kiss-demo-api.sisyphuszheng.deno.net/api"></kiss-hero-ping>
           </div>
         </div>
 
