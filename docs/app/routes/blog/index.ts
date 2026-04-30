@@ -36,6 +36,11 @@ export class BlogIndexPage extends LitElement {
           <p class="subtitle">KISS 框架的设计思考、架构决策和发展路线。</p>
 
           <div class="blog-list">
+            <a href="/blog/v0-4-0" class="blog-item">
+              <h2>KISS v0.4.0 — Serverless Integration Milestone</h2>
+              <p class="meta">2026-04-30 · 版本发布</p>
+              <p>Serverless API 部署成功、全站统一 0.5px 视觉风格、零 lint 零 type errors。从"能跑起来"到"真正能用"的里程碑。</p>
+            </a>
             <a href="/blog/kiss-compiler" class="blog-item">
               <h2>.kiss Compiler — 消灭 Lit，零运行时 Web Components</h2>
               <p class="meta">2026-04-30 · 架构决策</p>
