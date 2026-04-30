@@ -7,14 +7,12 @@ export default class DocsHome extends LitElement {
   static styles = css`
     :host { display: block; }
 
-    /* Hero — dark bar with diagonal accent, content width constrained */
     .hero {
       background: #000;
       margin: 0 0 2.5rem;
       position: relative;
       overflow: hidden;
     }
-    /* Diagonal accent line */
     .hero::after {
       content: '';
       position: absolute;
@@ -49,36 +47,8 @@ export default class DocsHome extends LitElement {
       letter-spacing: 2px;
       text-transform: uppercase;
     }
-    .hero-term {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .hero-ping {
-      padding: 4px 16px;
-      border-radius: 2px;
-      border: 0.5px solid #ccc;
-      background: transparent;
-      color: #ccc;
-      font-size: 10px;
-      cursor: pointer;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      transition: all 0.15s;
-      font-family: inherit;
-      white-space: nowrap;
-    }
-    .hero-ping:hover { background: #333; color: #fff; border-color: #fff; }
-    .hero-ping:disabled { opacity: 0.25; cursor: not-allowed; }
-    .hero-result {
-      font-family: 'SF Mono','Fira Code','Consolas',monospace;
-      font-size: 9px;
-      color: #666;
-      min-width: 110px;
-    }
-    .hero-result .r { color: #ccc; }
+    .hero-term { display: flex; align-items: center; gap: 12px; }
 
-    /* Features & Links — constrained content */
     .content {
       max-width: 720px;
       margin: 0 auto;
@@ -133,25 +103,6 @@ export default class DocsHome extends LitElement {
     }
   `;
 
-  _loading = false;
-  _result = '';
-
-  _ping = async () => {
-    this._loading = true;
-    this._result = '';
-    this.requestUpdate();
-    try {
-      const r = await fetch('https://kiss-demo-api.sisyphuszheng.deno.net/api');
-      const d = await r.json();
-      this._result = `${d.framework} v${d.version}  ${d.timestamp.slice(11,19)}`;
-    } catch {
-      this._result = 'failed';
-    } finally {
-      this._loading = false;
-      this.requestUpdate();
-    }
-  }
-
   override render() {
     return html`
       <kiss-layout home>
@@ -162,13 +113,7 @@ export default class DocsHome extends LitElement {
               <div class="hero-tagline">keep it simple, stupid</div>
             </div>
             <div class="hero-term">
-              <button class="hero-ping" @click=${this._ping} ?disabled=${this._loading}>
-                ${this._loading ? 'pinging...' : 'ping server'}
-              </button>
-              <span class="hero-result">
-                ${this._loading ? html`<span>connecting...</span>` : ''}
-                ${this._result ? html`<span class="r">${this._result}</span>` : ''}
-              </span>
+              <hero-ping></hero-ping>
             </div>
           </div>
         </div>
