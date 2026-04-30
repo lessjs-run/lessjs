@@ -587,6 +587,12 @@ export class KissLayout extends LitElement {
           { path: '/contributing', label: 'Contributing' },
         ],
       },
+      {
+        section: 'Demo',
+        items: [
+          { path: '/demo', label: 'JAM Pattern in Action' },
+        ],
+      },
     ];
 
     /** Default header navigation links */
