@@ -3,7 +3,7 @@
  *
  * A lightweight island component that calls the KISS serverless API.
  * Rendered initially as DSD, then hydrated on the client.
- * Styled with KISS UI CSS custom properties.
+ * Uses firstUpdated() to avoid hydration re-render race.
  */
 import { css, html, LitElement } from '@kissjs/core';
 
