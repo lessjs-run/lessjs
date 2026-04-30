@@ -291,18 +291,18 @@ class App extends LitElement {
             <div class="qstart">
               <div class="qstep">
                 <span class="num">步骤 1</span>
-                <code>npm create @kissjs/app</code>
-                <span class="desc">创建项目</span>
+                <code>deno run -A jsr:@kissjs/create my-app</code>
+                <span class="desc">创建项目脚手架</span>
               </div>
               <div class="qstep">
                 <span class="num">步骤 2</span>
-                <code>npm install</code>
-                <span class="desc">安装依赖</span>
+                <code>cd my-app && deno task dev</code>
+                <span class="desc">启动开发服务器</span>
               </div>
               <div class="qstep">
                 <span class="num">步骤 3</span>
-                <code>deno task dev</code>
-                <span class="desc">启动开发服务器</span>
+                <code>deno task build:ssg</code>
+                <span class="desc">构建静态网站</span>
               </div>
             </div>
           </div>
