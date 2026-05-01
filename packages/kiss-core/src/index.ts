@@ -73,14 +73,17 @@ export type { ArtifactInfo, BuildManifest } from './build-manifest.js';
 // (bare module specifier), and the inline hydrateElement() was not real
 // Lit hydration (just DSD polyfill + removeAttribute).
 
-// --- Re-export runtime APIs for zero-config user experience ---
-// Users import everything from @kissjs/core — no need to add lit/hono to their deno.json
-export { css, html, LitElement, nothing, svg, unsafeCSS } from 'lit';
-export type { CSSResult, TemplateResult } from 'lit';
-export { unsafeHTML } from 'lit/directives/unsafe-html.js';
-export { classMap } from 'lit/directives/class-map.js';
-export { styleMap } from 'lit/directives/style-map.js';
-export { createRef, ref } from 'lit/directives/ref.js';
+// --- v0.5.0: Dual runtime exports ---
+// KissElement (zero-runtime, Web Standards path) — always available
+export { KissElement, html, css, signal, computed, effect } from './kiss-element.js';
+export type { ReactiveController, ReactiveControllerHost } from './kiss-element.js';
+
+// DSD renderer exports
+export { renderDSD, renderDSDByName, renderNestedDsd, escapeHtml } from './render-dsd.js';
+
+// Lit re-exports (optional — only available when lit is installed)
+// Users import from '@kissjs/core' — LitElement works if lit is a dependency.
+// KissElement works without lit.
 export { Hono } from 'hono';
 
 // --- Hono 官方 Vite 插件（静态 import，package.json 已声明依赖）---

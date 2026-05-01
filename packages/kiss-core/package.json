@@ -1,16 +1,21 @@
 {
   "name": "@kissjs/core",
-  "version": "0.3.4",
+  "version": "0.5.0-alpha.1",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
-  "exports": { ".": { "types": "./src/index.ts", "import": "./src/index.ts" } },
+  "exports": {
+    ".": { "types": "./src/index.ts", "import": "./src/index.ts" },
+    "./render-dsd": { "types": "./src/render-dsd.ts", "import": "./src/render-dsd.ts" },
+    "./kiss-element": { "types": "./src/kiss-element.ts", "import": "./src/kiss-element.ts" }
+  },
   "dependencies": {
-    "lit": "^3.2.0",
     "hono": "^4.7.0",
     "@hono/vite-dev-server": "^0.25.3",
-    "@lit-labs/ssr": "^3.3.0",
-    "@lit-labs/ssr-client": "^1.1.0"
+    "@preact/signals-core": "^1.8.0"
+  },
+  "optionalDependencies": {
+    "lit": "^3.2.0"
   },
   "devDependencies": { "vite": "^6.0.0", "@types/node": "^22.0.0", "vite-plugin-dts": "^4.5.0" }
 }

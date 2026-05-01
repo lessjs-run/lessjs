@@ -21,7 +21,6 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import {
   type ClientIslandEntry,
   generateClientEntry,
-  type HydrationStrategy,
 } from '../entry-generators.js';
 
 interface BuildMetadata {
@@ -34,8 +33,6 @@ interface BuildMetadata {
   resolveAlias: Record<string, string> | Array<{ find: string; replacement: string }> | null;
   ssrNoExternal: (string | { __type: 'RegExp'; source: string; flags: string })[];
   islandsDir: string;
-  /** @deprecated Since v0.3.0 — client entry always uses Lit hydrate() from @lit-labs/ssr-client */
-  hydrationStrategy?: HydrationStrategy;
 }
 
 async function buildClient(): Promise<void> {
@@ -100,7 +97,7 @@ async function buildClient(): Promise<void> {
     })),
   ];
 
-  const clientEntryCode = generateClientEntry(islandEntries, metadata.hydrationStrategy || 'lazy');
+  const clientEntryCode = generateClientEntry(islandEntries);
   writeFileSync(clientEntryPath, clientEntryCode, 'utf-8');
 
   // Restore RegExp from JSON serialization

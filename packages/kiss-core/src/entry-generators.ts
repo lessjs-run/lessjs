@@ -1,61 +1,48 @@
 /**
  * @kissjs/core - Entry Generators
- * Pure functions that generate auto-entry code strings.
- * No Vite dependency — safe to import in tests.
  *
- * Hydration lifecycle (v0.3.1 — fixed ordering):
- *   1. SSR outputs `<tag defer-hydration>` with `<!--lit-part-->` markers
- *   2. Client entry loads (via <script type="module">)
- *   3. litElementHydrateSupport({LitElement}) patches LitElement SYNCHRONOUSLY
- *   4. Dynamic import() loads ALL island modules (local + package)
- *   5. Island modules' side effects call customElements.define()
- *      (AFTER hydration support is active — no duplicate rendering)
- *   6. Waits for elements to upgrade (customElements.whenDefined)
- *   7. Removes `defer-hydration` attribute on each island element
- *   8. LitElement's patched attributeChangedCallback detects the removal
- *   9. Patched connectedCallback fires → update() → hydrate(value, renderRoot, options)
- *  10. Lit's hydrate() re-associates <!--lit-part--> markers with live DOM
+ * Pure functions that generate client entry code strings.
  *
- * Key insight: We do NOT call hydrate() directly.
- * The correct hydrate(result, container, options) requires the TemplateResult
- * which only exists inside each component's render(). Calling hydrate(el) with
- * just a DOM element is wrong — it interprets the element as the TemplateResult.
- * Instead, lit-element-hydrate-support patches LitElement to call hydrate()
- * internally with the correct arguments after defer-hydration is removed.
+ * v0.5.0: Simplified client entry.
+ * No Lit hydration, no defer-hydration, no <!--lit-part--> markers.
+ * Custom Elements upgrade naturally via the browser's CE spec.
  *
- * CRITICAL ORDERING (v0.3.1 fix):
- * In ESM, ALL static imports execute before module-level code.
- * This means `import Island from './counter.ts'` executes counter.ts's
- * customElements.define() BEFORE this module's litElementHydrateSupport() call.
- * Result: DSD content + Lit render = DUPLICATE CONTENT.
- * Fix: ALL island imports use dynamic import() so they execute AFTER
- * litElementHydrateSupport({LitElement}) is called synchronously.
+ * Client lifecycle:
+ *   1. Browser parses SSR HTML → DSD Shadow DOM attached automatically
+ *   2. This script loads → dynamic import() all island modules
+ *   3. Each module's side-effect calls customElements.define()
+ *   4. Browser automatically upgrades all existing <tag> elements
+ *   5. connectedCallback fires on each upgraded element
+ *   6. Event listeners are attached (no re-rendering needed)
+ *
+ * No hydration ceremony needed because:
+ *   - DSD provides the initial Shadow DOM content (from SSR)
+ *   - Custom Elements upgrade activates the behavior
+ *   - No TemplateResult to re-associate
+ *   - No <!--lit-part--> markers to reconcile
  */
+
+import type { HydrationStrategy } from './types.js';
 
 /** Island entry for client bundle generation */
 export interface ClientIslandEntry {
   /** Custom element tag name */
   tagName: string;
-  /** Absolute or relative module path for import */
+  /** Module path for dynamic import */
   modulePath: string;
-  /** True if this island comes from a package (e.g. @kissjs/ui) — uses side-effect import */
+  /** True if this island comes from a package */
   isPackage?: boolean;
 }
-
-/** Hydration strategy for island components */
-export type HydrationStrategy = 'eager' | 'lazy' | 'idle' | 'visible';
 
 /**
  * Generate the client entry point file content.
  *
  * This entry is built by Vite's client build (Phase 2).
- * It does three things:
- * 1. Activates lit-element-hydrate-support (synchronous — patches LitElement)
- * 2. Dynamically imports ALL island modules (ensures correct ordering)
- * 3. Removes defer-hydration attributes based on the configured strategy
+ * It dynamically imports all island modules — the browser's Custom
+ * Elements v1 spec handles automatic element upgrade from there.
  *
- * The built output is a self-contained JS module that browsers can load
- * via <script type="module" src="..."> — no import maps needed.
+ * @param islands - List of islands to register
+ * @param strategy - Hydration strategy (preserved for backward compat, minimal effect)
  */
 export function generateClientEntry(
   islands: ClientIslandEntry[],
@@ -65,11 +52,7 @@ export function generateClientEntry(
     return '// KISS Client Entry — No islands detected, zero client JS needed\n';
   }
 
-  // ALL islands use dynamic import() to ensure litElementHydrateSupport
-  // runs BEFORE any customElements.define() side effects.
-  // Local islands self-register via customElements.define() in their module,
-  // so we just need the side effect of the dynamic import.
-  // Package islands also self-register — same treatment.
+  // All islands use dynamic import() — their side effects call customElements.define()
   const dynamicImports = islands
     .map((island) => `  import('${island.modulePath}'),`)
     .join('\n');
@@ -78,138 +61,35 @@ export function generateClientEntry(
     .map((island) => `customElements.whenDefined('${island.tagName}')`)
     .join(', ');
 
-  const strategyCode = generateStrategyCode(strategy);
+  return `// KISS Client Entry (auto-generated — v0.5.0)
+// No Lit hydration — CE upgrade + DSD handles everything natively.
 
-  return `// KISS Client Entry (auto-generated — KISS Architecture: Islands only)
-// DO NOT EDIT — changes will be overwritten
-//
-// Hydration: lit-element-hydrate-support patches LitElement so that
-// removing defer-hydration triggers internal hydrate() with correct args.
-// We do NOT call hydrate() directly — that requires (result, container, options).
-
-// Activate hydration support FIRST — must patch LitElement before any
-// customElements.define() calls.
-//
-// CRITICAL: @lit-labs/ssr-client/lit-element-hydrate-support.js only DEFINES
-// globalThis.litElementHydrateSupport — it does NOT call it. We must
-// explicitly call it with LitElement to apply the patch. Without this call:
-//   - 'defer-hydration' is not in observedAttributes
-//   - connectedCallback is NOT blocked by defer-hydration
-//   - update() uses render() instead of hydrate()
-//   - Result: DSD content + Lit render = DUPLICATE CONTENT
-//
-// ORDERING: This runs synchronously (static import + module-level call).
-// ALL island imports below use dynamic import() so their side effects
-// (customElements.define) execute AFTER this patch is applied.
-import {LitElement} from 'lit';
-import '@lit-labs/ssr-client/lit-element-hydrate-support.js';
-globalThis.litElementHydrateSupport({LitElement});
-
-// --- Load ALL islands via dynamic import (after LitElement patch) ---
-// Both local and package islands self-register via customElements.define()
-// in their module code. Using dynamic import ensures the registration
-// happens AFTER litElementHydrateSupport has patched LitElement.
+// --- Dynamic import all islands ---
+// Each module's customElements.define() registers the element.
+// The browser automatically upgrades existing SSR-rendered elements.
 const __islandPromises = Promise.all([
 ${dynamicImports}
 ]);
 
-// --- Hydration: remove defer-hydration to trigger LitElement's patched lifecycle ---
-// lit-element-hydrate-support adds 'defer-hydration' to observedAttributes.
-// When we remove it, attributeChangedCallback fires → connectedCallback →
-// update() → hydrate(this.render(), this.renderRoot, this.renderOptions).
-// This is the ONLY correct way to hydrate — hydrate() needs the TemplateResult.
-//
-// CRITICAL: document.querySelectorAll() does NOT pierce Shadow DOM.
-// SSR-rendered elements (like counter-island inside page-fullstack-demo's
-// shadow root) won't be found by a top-level querySelectorAll.
-// We must recursively walk all shadow roots.
-
-// --- Shadow DOM traversal utility (shared by main + fallback paths) ---
-function __kissFindDeferred(root) {
-  const deferred = [];
-  root.querySelectorAll('[defer-hydration]').forEach(el => {
-    deferred.push(el);
-  });
-  root.querySelectorAll('*').forEach(el => {
-    if (el.shadowRoot) {
-      deferred.push(...__kissFindDeferred(el.shadowRoot));
-    }
-  });
-  return deferred;
-}
-
-function __kissHydrateAll() {
-  const all = __kissFindDeferred(document);
-  all.forEach(el => el.removeAttribute('defer-hydration'));
-}
-
-function __kissHydrateElement(el) {
-  el.removeAttribute('defer-hydration');
-}
-
+// --- Wait for all elements to upgrade, then notify ---
 __islandPromises.then(() => {
   Promise.all([${whenDefinedList}]).then(() => {
-
-${strategyCode}
+    // Dispatch custom event so external code can hook into ready state
+    document.dispatchEvent(new CustomEvent('kiss:ready', {
+      detail: { islands: [${islands.map(i => `'${i.tagName}'`).join(', ')}] }
+    }));
   });
 }).catch(err => {
-  console.warn('[KISS] Island loading failed, hydration may be incomplete:', err);
-  // Attempt hydration for any islands that DID load (using Shadow DOM traversal)
+  console.warn('[KISS] Island loading failed:', err);
+  // Best-effort: try to upgrade any islands that DID load
   Promise.all([${whenDefinedList}]).then(() => {
-    __kissHydrateAll();
+    document.dispatchEvent(new CustomEvent('kiss:ready', {
+      detail: { islands: [${islands.map(i => `'${i.tagName}'`).join(', ')}], partial: true }
+    }));
   }).catch(() => { /* best effort */ });
 });
 `;
 }
 
-/**
- * Generate strategy dispatch code.
- *
- * - eager: remove defer-hydration on all islands immediately
- * - lazy: remove defer-hydration on requestIdleCallback (or setTimeout fallback)
- * - idle: remove defer-hydration on requestIdleCallback or window load
- * - visible: remove defer-hydration on individual islands as they scroll into view
- */
-function generateStrategyCode(strategy: HydrationStrategy): string {
-  switch (strategy) {
-    case 'eager':
-      return `  // Eager: hydrate all islands immediately
-  __kissHydrateAll();`;
-
-    case 'lazy':
-      return `  // Lazy: hydrate on requestIdleCallback (non-blocking)
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(__kissHydrateAll);
-  } else {
-    setTimeout(__kissHydrateAll, 200);
-  }`;
-
-    case 'idle':
-      return `  // Idle: wait for page to be fully idle
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(__kissHydrateAll);
-  } else {
-    window.addEventListener('load', __kissHydrateAll);
-  }`;
-
-    case 'visible':
-      return `  // Visible: hydrate each island when it scrolls into view
-  // Uses __kissFindDeferred to traverse Shadow DOM (document.querySelectorAll doesn't pierce it)
-  const __kissObserver = new IntersectionObserver((entries, observer) => {
-    for (const entry of entries) {
-      if (entry.isIntersecting) {
-        __kissHydrateElement(entry.target);
-        observer.unobserve(entry.target);
-      }
-    }
-    // Disconnect observer when no deferred elements remain (traverse Shadow DOM)
-    if (__kissFindDeferred(document).length === 0) {
-      observer.disconnect();
-    }
-  });
-  __kissFindDeferred(document).forEach(el => __kissObserver.observe(el));`;
-
-    default:
-      return `  __kissHydrateAll();`;
-  }
-}
+/** @deprecated Use generateClientEntry() — strategy parameter kept for API compat */
+export type { HydrationStrategy };

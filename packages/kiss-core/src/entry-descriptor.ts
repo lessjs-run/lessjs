@@ -205,10 +205,9 @@ export function buildEntryDescriptor(
 
   // Always needed
   imports.push({ from: 'hono', names: ['Hono'] });
-  imports.push({ from: '@lit-labs/ssr', names: ['render'], alias: 'litRender' });
-  imports.push({ from: 'lit', names: ['html'] });
-  imports.push({ from: 'lit/directives/unsafe-html.js', names: ['unsafeHTML'] });
-  imports.push({ from: '@lit-labs/ssr/lib/render-result.js', names: ['collectResult'] });
+  // v0.5.0: DSD renderer replaces @lit-labs/ssr + lit + html + unsafeHTML + collectResult
+  // Components use render(): string — no TemplateResult, no <!--lit-part--> markers.
+  imports.push({ from: '@kissjs/core/render-dsd', names: ['renderDSD', 'renderDSDByName'] });
 
   // Conditional middleware imports
   const mw = options.middleware;

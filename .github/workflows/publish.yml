@@ -91,6 +91,9 @@ jobs:
             echo "ℹ️ No version changes detected"
           fi
 
+      - name: Authenticate with JSR
+        run: deno login --token="${{ secrets.JSR_TOKEN }}"
+
       - name: Publish @kissjs/core
         if: steps.check.outputs.core_changed == 'true'
         working-directory: packages/kiss-core

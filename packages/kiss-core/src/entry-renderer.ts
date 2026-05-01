@@ -191,11 +191,10 @@ function renderPageRoute(
   b.push(`app.get('${route.path}', async (c) => {`);
   b.push(`  try {`);
   b.push(`    const tag = ${route.varName}.tagName || '${route.defaultTagName}'`);
-  b.push(`    const raw = await __ssr(tag)`);
-  // NOTE: DO NOT strip <!--lit-part--> comments!
-  // They are essential for Lit's hydrate() to re-associate template
-  // expressions with DOM nodes. Removing them breaks hydration and
-  // forces client-render (destroying SSR HTML and losing first-paint perf).
+  // v0.5.0: DSD renderer — no <!--lit-part--> markers, no defer-hydration.
+  // __ssr() uses renderDSD() which outputs standard DSD HTML.
+  // Components receive route params as props for SSR-time data access.
+  b.push(`    const raw = await __ssr(tag, c.req.param())`);
   b.push(`    const html = raw`);
   b.blank();
 
@@ -337,38 +336,28 @@ export function renderEntry(desc: EntryDescriptor): string {
   }
   b.blank();
 
-  // --- SSR helper ---
-  // unsafeHTML must be in expression position (NOT in element position <${...}>),
-  // otherwise Lit throws "Unexpected final partIndex" error.
-  // tag validation: only hyphenated Custom Element names are valid.
-  // defer-hydration: marks SSR output for Lit hydration (handled by client entry).
-  //
-  // Components MUST be registered via customElements.define() before SSR rendering,
-  // otherwise Lit SSR's renderValue treats them as plain HTML (no Shadow DOM output).
-  // Registration is done above for all page route components.
-  //
-  // IMPORTANT: The SSR output includes <!--lit-part--> comments.
-  // DO NOT strip them — they are essential for Lit's hydrate() to work.
-  const BACKTICK = '\x60'; // backtick: `
-  const DOLLAR_BRACE = '\x24{'; // ${
-  const CLOSE_BRACE = '}'; // }
-  b.push('// SSR helper: render a custom element tag to HTML string');
-  b.push('// Outputs <tag defer-hydration> with Shadow DOM for the client to hydrate');
-  b.push('async function __ssr(tag) {');
+  // --- SSR helper (v0.5.0) ---
+  // DSD renderer replaces Lit SSR + <!--lit-part--> markers.
+  // Components must be registered via customElements.define() before SSR,
+  // otherwise customElements.get() returns undefined.
+  // Each component's render() returns a plain HTML string (no TemplateResult).
+  // Output is standard DSD: <tag><template shadowrootmode="open">...</template></tag>
+  // No defer-hydration, no <!--lit-part-->, no hydration ceremony needed.
+  b.push('// SSR helper: render a registered custom element to DSD HTML');
+  b.push('// Outputs standard DSD — no <!--lit-part--> markers, no defer-hydration');
+  b.push('async function __ssr(tag, props = {}) {');
   b.push('  // Validate tag name — must be a valid Custom Element (contains hyphen)');
   b.push('  if (!tag || !tag.includes("-")) {');
   b.push(
     '    throw new Error("[KISS] Invalid custom element tag: " + String(tag) + ". Must contain a hyphen.")',
   );
   b.push('  }');
-  b.push(
-    '  const tpl = html' + BACKTICK + DOLLAR_BRACE + 'unsafeHTML(' + BACKTICK + '<' + DOLLAR_BRACE +
-      'tag' + CLOSE_BRACE +
-      ' defer-hydration></' + DOLLAR_BRACE +
-      'tag' + CLOSE_BRACE + '>' + BACKTICK + ')' + CLOSE_BRACE + BACKTICK,
-  );
-  b.push('  const result = litRender(tpl)');
-  b.push('  return await collectResult(result)');
+  b.push('  const Cls = customElements.get(tag)');
+  b.push('  if (!Cls) {');
+  b.push('    console.warn("[KISS] <" + tag + "> not registered — rendering empty")');
+  b.push('    return `<${tag}></${tag}>`');
+  b.push('  }');
+  b.push('  return renderDSD(tag, Cls, props)');
   b.push('}');
   b.blank();
 
