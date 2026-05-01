@@ -86,95 +86,99 @@ export class ConfigurationPage extends LitElement {
 
           <h2>inject 选项 <span class="new-badge">新</span></h2>
           <p>
-            通用 &lt;head&gt; 注入——替代旧的 <span class="inline-code">ui</span> 选项。适用于
-            任何 CDN 或本地资源：
+            通用 &lt;head&gt; 注入——替代旧的 <span class="inline-code">ui</span> 选项。适用于 任何 CDN
+            或本地资源：
           </p>
           <code-block
-            ><pre><code>kiss({
-  inject: {
-    stylesheets: [
-      'https://cdn.example.com/style.css',
-    ],
-    scripts: [
-      'https://cdn.example.com/ui.js',
-    ],
-    headFragments: [
-      '&lt;meta name="theme-color" content="#0a0a0a"&gt;',
-    ],
-  },
-})</code></pre></code-block>
+          ><pre>
+            <code>kiss({
+              inject: {
+                stylesheets: [
+                  'https://cdn.example.com/style.css',
+                ],
+                scripts: [
+                  'https://cdn.example.com/ui.js',
+                ],
+                headFragments: [
+                  '&lt;meta name="theme-color" content="#0a0a0a"&gt;',
+                ],
+              },
+            })</code></pre></code-block>
 
-          <h2>packageIslands 选项 <span class="new-badge">新</span></h2>
-          <p>
-            自动探测并注册来自 npm/JSR 包的 Islands。框架会扫描包的
-            <code>islands</code> 导出并自动注册：
-          </p>
-          <code-block
-            ><pre><code>kiss({
-  // 从 @kissjs/ui 包自动探测 Islands
-  packageIslands: ['@kissjs/ui'],
-})</code></pre></code-block>
-          <p>
-            包必须导出 <code>islands</code> 数组。详见
-            <a href="/guide/islands">Islands 架构</a>。
-          </p>
+            <h2>packageIslands 选项 <span class="new-badge">新</span></h2>
+            <p>
+              自动探测并注册来自 npm/JSR 包的 Islands。框架会扫描包的
+              <code>islands</code> 导出并自动注册：
+            </p>
+            <code-block
+            ><pre>
+              <code>kiss({
+                // 从 @kissjs/ui 包自动探测 Islands
+                packageIslands: ['@kissjs/ui'],
+              })</code></pre></code-block>
+            <p>
+              包必须导出 <code>islands</code> 数组。详见
+              <a href="/guide/islands">Islands 架构</a>。
+            </p>
 
-          <h2>完整配置示例</h2>
-          <code-block
-            ><pre><code>// vite.config.ts
-import { kiss } from '@kissjs/core';
-import { defineConfig } from 'vite';
+            <h2>完整配置示例</h2>
+            <code-block
+            ><pre>
+              <code>// vite.config.ts
+              import { kiss } from '@kissjs/core';
+              import { defineConfig } from 'vite';
 
-export default defineConfig({
-  base: '/',         // GitHub Pages 设为 '/repo/'
-  plugins: [
-    kiss({
-      routesDir: 'app/routes',
-      islandsDir: 'app/islands',
-      componentsDir: 'app/components',
-      middleware: 'app/middleware.ts',
+              export default defineConfig({
+                base: '/',         // GitHub Pages 设为 '/repo/'
+                plugins: [
+                  kiss({
+                    routesDir: 'app/routes',
+                    islandsDir: 'app/islands',
+                    componentsDir: 'app/components',
+                    middleware: 'app/middleware.ts',
 
-      // 从包自动探测 Islands
-      packageIslands: ['@kissjs/ui'],
+                    // 从包自动探测 Islands
+                    packageIslands: ['@kissjs/ui'],
 
-      // 通用 head 注入（推荐）
-      inject: {
-        stylesheets: ['https://cdn.jsdelivr.net/npm/@awesome-webcomponents/webawesome@3.5.0/dist/styles.css'],
-        scripts: ['https://cdn.jsdelivr.net/npm/@awesome-webcomponents/webawesome@3.5.0/dist/webawesome.loader.js'],
-      },
+                    // 通用 head 注入（推荐）
+                    inject: {
+                      stylesheets: ['https://cdn.jsdelivr.net/npm/@awesome-webcomponents/webawesome@3.5.0/dist/styles.css'],
+                      scripts: ['https://cdn.jsdelivr.net/npm/@awesome-webcomponents/webawesome@3.5.0/dist/webawesome.loader.js'],
+                    },
 
-      // 旧版 WebAwesome CDN 快捷方式（已弃用，请用 inject）
-      // ui: { cdn: true, version: '3.5.0' },
-    }),
-  ],
-})</code></pre></code-block>
+                    // 旧版 WebAwesome CDN 快捷方式（已弃用，请用 inject）
+                    // ui: { cdn: true, version: '3.5.0' },
+                  }),
+                ],
+              })</code></pre></code-block>
 
-          <h2>项目结构约定</h2>
-          <code-block
-            ><pre><code>my-app/
-  app/
-    routes/        # 基于文件的路由
-      index.ts     # /
-      about.ts     # /about
-      api/
-        posts.ts   # /api/posts (Hono)
-    islands/       # 交互式组件（自动探测）
-      counter.ts
-    components/    # 共享 Lit 组件
-      header.ts
-  deno.json
-  vite.config.ts</code></pre></code-block>
+              <h2>项目结构约定</h2>
+              <code-block
+              ><pre>
+                <code>my-app/
+                  app/
+                    routes/        # 基于文件的路由
+                      index.ts     # /
+                      about.ts     # /about
+                      api/
+                        posts.ts   # /api/posts (Hono)
+                      islands/       # 交互式组件（自动探测）
+                        counter.ts
+                      components/    # 共享 Lit 组件
+                        header.ts
+                      deno.json
+                      vite.config.ts</code></pre></code-block>
 
-          <div class="nav-row">
-            <a href="/guide/ssg" class="nav-link">&larr; SSG</a>
-            <a href="/guide/error-handling" class="nav-link">错误处理 &rarr;</a>
-          </div>
-        </div>
-      </kiss-layout>
-    `;
-  }
-}
+                      <div class="nav-row">
+                        <a href="/guide/ssg" class="nav-link">&larr; SSG</a>
+                        <a href="/guide/error-handling" class="nav-link">错误处理 &rarr;</a>
+                      </div>
+                    </div>
+                  </kiss-layout>
+                `;
+              }
+            }
 
-customElements.define('page-configuration', ConfigurationPage);
-export default ConfigurationPage;
-export const tagName = 'page-configuration';
+            customElements.define('page-configuration', ConfigurationPage);
+            export default ConfigurationPage;
+            export const tagName = 'page-configuration';

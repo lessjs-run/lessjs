@@ -75,7 +75,7 @@ __islandPromises.then(() => {
   Promise.all([${whenDefinedList}]).then(() => {
     // Dispatch custom event so external code can hook into ready state
     document.dispatchEvent(new CustomEvent('kiss:ready', {
-      detail: { islands: [${islands.map(i => `'${i.tagName}'`).join(', ')}] }
+      detail: { islands: [${islands.map((i) => `'${i.tagName}'`).join(', ')}] }
     }));
   });
 }).catch(err => {
@@ -83,7 +83,7 @@ __islandPromises.then(() => {
   // Best-effort: try to upgrade any islands that DID load
   Promise.all([${whenDefinedList}]).then(() => {
     document.dispatchEvent(new CustomEvent('kiss:ready', {
-      detail: { islands: [${islands.map(i => `'${i.tagName}'`).join(', ')}], partial: true }
+      detail: { islands: [${islands.map((i) => `'${i.tagName}'`).join(', ')}], partial: true }
     }));
   }).catch(() => { /* best effort */ });
 });

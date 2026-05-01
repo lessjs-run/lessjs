@@ -75,15 +75,21 @@ export type { ArtifactInfo, BuildManifest } from './build-manifest.js';
 
 // --- v0.5.0: Dual runtime exports ---
 // KissElement (zero-runtime, Web Standards path) — always available
-export { KissElement, signal, effect } from './kiss-element.js';
+export { effect, KissElement, signal } from './kiss-element.js';
 export type { ReactiveController, ReactiveControllerHost } from './kiss-element.js';
 
 // DSD renderer exports
-export { renderDSD, renderDSDByName, renderNestedDsd, escapeHtml, wrapDsdDocument } from './render-dsd.js';
+export {
+  escapeHtml,
+  renderDSD,
+  renderDSDByName,
+  renderNestedDsd,
+  wrapDsdDocument,
+} from './render-dsd.js';
 
 // KissElement template helpers (string-based, zero-runtime)
 // Named differently from Lit equivalents to avoid confusion
-export { html as kissHtml, css as kissCss } from './kiss-element.js';
+export { css as kissCss, html as kissHtml } from './kiss-element.js';
 
 // Lit re-exports (for backward compat — available when lit is installed)
 // These are needed by @kissjs/ui components that extend LitElement

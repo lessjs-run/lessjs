@@ -7,7 +7,13 @@
  * This file is a build-time bridge — not part of the framework's public API.
  */
 // --- KissElement (zero-runtime, always available) ---
-export { KissElement, html as kissHtml, css as kissCss, signal, effect } from '../../packages/kiss-core/src/kiss-element.js';
+export {
+  css as kissCss,
+  effect,
+  html as kissHtml,
+  KissElement,
+  signal,
+} from '../../packages/kiss-core/src/kiss-element.js';
 export { renderDSD } from '../../packages/kiss-core/src/render-dsd.js';
 
 // --- Lit (optional, backward compat) ---

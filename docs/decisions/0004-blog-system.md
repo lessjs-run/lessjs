@@ -33,23 +33,24 @@ A Vite plugin that:
 
 ```ts
 // vite.config.ts
-import { kiss } from '@kissjs/core'
-import { kissBlog } from '@kissjs/blog'
+import { kiss } from '@kissjs/core';
+import { kissBlog } from '@kissjs/blog';
 
 export default defineConfig({
   plugins: [
     kiss(),
     kissBlog({
-      dir: 'content/blog',     // where your .md files live
+      dir: 'content/blog', // where your .md files live
       title: 'My Blog',
       postsPerPage: 10,
     }),
   ],
-})
+});
 ```
 
 ```md
 # content/blog/hello-world.md
+
 ---
 title: Hello World
 date: 2026-05-01
@@ -61,13 +62,13 @@ This is my first post.
 
 ### Generated routes
 
-| Route | Content |
-|-------|---------|
-| `/blog/` | Post listing (paginated, newest first) |
-| `/blog/hello-world` | Individual post (rendered from .md) |
-| `/blog/page/2` | Page 2 of listing |
-| `/blog/tags/kiss` | Filter by tag |
-| `/blog/feed.xml` | RSS 2.0 / Atom feed |
+| Route               | Content                                |
+| ------------------- | -------------------------------------- |
+| `/blog/`            | Post listing (paginated, newest first) |
+| `/blog/hello-world` | Individual post (rendered from .md)    |
+| `/blog/page/2`      | Page 2 of listing                      |
+| `/blog/tags/kiss`   | Filter by tag                          |
+| `/blog/feed.xml`    | RSS 2.0 / Atom feed                    |
 
 ### Plugin architecture
 

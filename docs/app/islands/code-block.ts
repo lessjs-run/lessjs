@@ -81,7 +81,9 @@ export default class CodeBlock extends LitElement {
     return html`
       <slot></slot>
       <button
-        class="copy-btn ${this._copyState === 'copied' ? 'copied' : ''} ${this._copyState === 'failed' ? 'failed' : ''}"
+        class="copy-btn ${this._copyState === 'copied'
+          ? 'copied'
+          : ''} ${this._copyState === 'failed' ? 'failed' : ''}"
         @click="${() => this._copy()}"
       >
         ${this._copyState === 'copied'

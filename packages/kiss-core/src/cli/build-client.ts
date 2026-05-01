@@ -18,10 +18,7 @@ import { build as viteBuild, type InlineConfig } from 'vite';
 import { join, resolve } from 'node:path';
 import process from 'node:process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import {
-  type ClientIslandEntry,
-  generateClientEntry,
-} from '../entry-generators.js';
+import { type ClientIslandEntry, generateClientEntry } from '../entry-generators.js';
 
 interface BuildMetadata {
   islandTagNames: string[];

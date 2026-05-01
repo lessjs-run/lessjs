@@ -37,7 +37,7 @@ export default defineConfig({
       sw: { strategy: 'cache-first' },
     },
   })],
-})
+});
 ```
 
 ### Service Worker Strategy
@@ -45,20 +45,27 @@ export default defineConfig({
 ```js
 // Generated sw.js (~30 lines)
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open('kiss-v1').then(c => c.addAll([
-    '/', '/index.html', '/assets/*.js', '/assets/*.css',
-    // Dynamic island chunks are loaded on demand — cache on fetch
-  ])))
-})
+  e.waitUntil(
+    caches.open('kiss-v1').then((c) =>
+      c.addAll([
+        '/',
+        '/index.html',
+        '/assets/*.js',
+        '/assets/*.css',
+        // Dynamic island chunks are loaded on demand — cache on fetch
+      ])
+    ),
+  );
+});
 self.addEventListener('fetch', (e) => {
   if (e.request.url.includes('/api/')) {
     // NetworkFirst for API calls
-    e.respondWith(networkFirst(e.request))
+    e.respondWith(networkFirst(e.request));
   } else {
     // CacheFirst for static assets
-    e.respondWith(cacheFirst(e.request))
+    e.respondWith(cacheFirst(e.request));
   }
-})
+});
 ```
 
 ### SSG Integration
@@ -67,13 +74,13 @@ In `build-ssg.ts`, after Phase 3:
 
 ```ts
 if (options.pwa) {
-  writeFileSync(join(outputDir, 'manifest.json'), generateManifest(options.pwa))
-  writeFileSync(join(outputDir, 'sw.js'), generateSwScript(options.pwa))
+  writeFileSync(join(outputDir, 'manifest.json'), generateManifest(options.pwa));
+  writeFileSync(join(outputDir, 'sw.js'), generateSwScript(options.pwa));
   // inject manifest link + sw registration into all HTML files
   injectIntoHtml(outputDir, {
     head: `<link rel="manifest" href="/manifest.json">`,
     body: `<script>navigator.serviceWorker?.register('/sw.js')</script>`,
-  })
+  });
 }
 ```
 

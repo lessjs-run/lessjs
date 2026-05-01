@@ -109,13 +109,13 @@ export class FullstackDemoPage extends LitElement {
 
           <h2>部署架构</h2>
           <div class="deployment-diagram">
-            ┌─────────────────────────────────────────────────────────────────┐ │ 全栈部署 │
-            │ │ │ ┌──────────────────┐ ┌──────────────────┐ │ │ │ 静态 dist/ │ │ API 路由 │ │ │ │ │ │
-            │ │ │ │ index.html │ │ /api/hello │ │ │ │ + DSD │ │ /api/time │ │ │ │ + Island JS │ │
-            /api/echo │ │ │ │ │ │ │ │ │ └──────────────────┘ └──────────────────┘ │ │ │ │ │ │ ▼ ▼ │ │
-            ┌──────────────────┐ ┌──────────────────┐ │ │ │ CDN / │ │ Serverless │ │ │ │ GitHub Pages │ │
-            Deno Deploy │ │ │ │ Cloudflare │ │ CF Workers │ │ │ │ Pages │ │ Vercel Edge │ │ │
-            └──────────────────┘ └──────────────────┘ │ │ │ │ S 约束： 静态文件 + Serverless API │
+            ┌─────────────────────────────────────────────────────────────────┐ │ 全栈部署 │ │ │ │
+            ┌──────────────────┐ ┌──────────────────┐ │ │ │ 静态 dist/ │ │ API 路由 │ │ │ │ │ │ │ │ │ │
+            index.html │ │ /api/hello │ │ │ │ + DSD │ │ /api/time │ │ │ │ + Island JS │ │ /api/echo │ │ │
+            │ │ │ │ │ │ └──────────────────┘ └──────────────────┘ │ │ │ │ │ │ ▼ ▼ │ │ ┌──────────────────┐
+            ┌──────────────────┐ │ │ │ CDN / │ │ Serverless │ │ │ │ GitHub Pages │ │ Deno Deploy │ │ │ │
+            Cloudflare │ │ CF Workers │ │ │ │ Pages │ │ Vercel Edge │ │ │ └──────────────────┘
+            └──────────────────┘ │ │ │ │ S 约束： 静态文件 + Serverless API │
             └─────────────────────────────────────────────────────────────────┘
           </div>
 
@@ -154,27 +154,28 @@ export class FullstackDemoPage extends LitElement {
 
           <h2>API Routes 示例代码</h2>
           <code-block
-          ><pre><code>// app/routes/api/index.ts
-            import { Hono } from 'hono'
+          ><pre>
+            <code>// app/routes/api/index.ts
+              import { Hono } from 'hono'
 
-            const app = new Hono()
+              const app = new Hono()
 
-            app.get('/hello', (c) => c.json({ message: 'Hello from KISS API!' }))
-            app.get('/time', (c) => c.json({ time: new Date().toISOString() }))
-            app.get('/echo/:text', (c) => c.json({ echo: c.req.param('text') }))
+              app.get('/hello', (c) => c.json({ message: 'Hello from KISS API!' }))
+              app.get('/time', (c) => c.json({ time: new Date().toISOString() }))
+              app.get('/echo/:text', (c) => c.json({ echo: c.req.param('text') }))
 
-            export default app</code></pre></code-block>
+              export default app</code></pre></code-block>
 
-            <div class="nav-row">
-              <a href="/examples/minimal-blog" class="nav-link">&larr; Minimal Blog</a>
-              <a href="/guide/deployment" class="nav-link">部署 &rarr;</a>
+              <div class="nav-row">
+                <a href="/examples/minimal-blog" class="nav-link">&larr; Minimal Blog</a>
+                <a href="/guide/deployment" class="nav-link">部署 &rarr;</a>
+              </div>
             </div>
-          </div>
-        </kiss-layout>
-      `;
+          </kiss-layout>
+        `;
+      }
     }
-  }
 
-  customElements.define('page-fullstack-demo', FullstackDemoPage);
-  export default FullstackDemoPage;
-  export const tagName = 'page-fullstack-demo';
+    customElements.define('page-fullstack-demo', FullstackDemoPage);
+    export default FullstackDemoPage;
+    export const tagName = 'page-fullstack-demo';

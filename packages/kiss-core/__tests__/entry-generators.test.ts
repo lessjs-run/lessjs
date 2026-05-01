@@ -96,7 +96,7 @@ Deno.test('generateClientEntry dispatches kiss:ready event', () => {
   const code = generateClientEntry([LOCAL_ISLAND]);
 
   // v0.5.0: dispatches kiss:ready instead of hydration ceremony
-  assertExists(code.includes("kiss:ready"));
+  assertExists(code.includes('kiss:ready'));
   assertExists(code.includes('customElements.whenDefined'));
   assertExists(code.includes('Promise.all'));
 });

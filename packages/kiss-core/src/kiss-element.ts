@@ -36,12 +36,18 @@
  * @module @kissjs/core
  */
 
-import { signal, effect } from '@preact/signals-core';
+import { effect, signal } from '@preact/signals-core';
 
 // ─── Types ───────────────────────────────────────────────────
 // Signal.State and Signal.Computed types from @preact/signals-core
-interface SignalState<T> { value: T; peek(): T; }
-interface SignalComputed<T> { readonly value: T; peek(): T; }
+interface SignalState<T> {
+  value: T;
+  peek(): T;
+}
+interface SignalComputed<T> {
+  readonly value: T;
+  peek(): T;
+}
 
 // ─── Reactive Controller Interface ──────────────────────────────
 // Structural type — compatible with both Lit ReactiveController and kiss-rpc.
@@ -353,4 +359,4 @@ export function css(
 }
 
 // ─── Re-exports (for convenience, keeps @kissjs/core as single import) ───
-export { signal, effect } from '@preact/signals-core';
+export { effect, signal } from '@preact/signals-core';

@@ -8,7 +8,7 @@
  */
 
 // --- KissElement (zero-runtime, always available) ---
-export { KissElement, html, css, signal, effect } from './kiss-element.js';
+export { css, effect, html, KissElement, signal } from './kiss-element.js';
 export type { ReactiveController, ReactiveControllerHost } from './kiss-element.js';
 
 export { renderDSD, renderDSDByName } from './render-dsd.js';

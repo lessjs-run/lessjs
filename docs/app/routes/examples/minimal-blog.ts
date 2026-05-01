@@ -136,24 +136,25 @@ export class MinimalBlogDemoPage extends LitElement {
 
           <h2>分层原则验证</h2>
           <code-block
-          ><pre><code>导航高亮 → aria-current + CSS (L0+L1, 非 Island)
-            主题切换 → Island + localStorage (L4, 合法 Island)
+          ><pre>
+            <code>导航高亮 → aria-current + CSS (L0+L1, 非 Island)
+              主题切换 → Island + localStorage (L4, 合法 Island)
 
-            为什么主题切换是 Island？
-            - 需要 localStorage API（L2）
-            - 需要跨 Shadow DOM 通信（L4）
-            - 无法用纯 CSS 实现</code></pre></code-block>
+              为什么主题切换是 Island？
+              - 需要 localStorage API（L2）
+              - 需要跨 Shadow DOM 通信（L4）
+              - 无法用纯 CSS 实现</code></pre></code-block>
 
-            <div class="nav-row">
-              <a href="/examples/hello" class="nav-link">&larr; Hello World</a>
-              <a href="/examples/fullstack" class="nav-link">Fullstack &rarr;</a>
+              <div class="nav-row">
+                <a href="/examples/hello" class="nav-link">&larr; Hello World</a>
+                <a href="/examples/fullstack" class="nav-link">Fullstack &rarr;</a>
+              </div>
             </div>
-          </div>
-        </kiss-layout>
-      `;
+          </kiss-layout>
+        `;
+      }
     }
-  }
 
-  customElements.define('page-minimal-blog-demo', MinimalBlogDemoPage);
-  export default MinimalBlogDemoPage;
-  export const tagName = 'page-minimal-blog-demo';
+    customElements.define('page-minimal-blog-demo', MinimalBlogDemoPage);
+    export default MinimalBlogDemoPage;
+    export const tagName = 'page-minimal-blog-demo';

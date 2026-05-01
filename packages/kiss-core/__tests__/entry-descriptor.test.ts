@@ -129,7 +129,10 @@ Deno.test('renderEntry: produces valid module code', () => {
   const code = renderEntry(desc);
 
   assertStringIncludes(code, "import { Hono } from 'hono'");
-  assertStringIncludes(code, "import { renderDSD, renderDSDByName } from '@kissjs/core/render-dsd'");
+  assertStringIncludes(
+    code,
+    "import { renderDSD, renderDSDByName } from '@kissjs/core/render-dsd'",
+  );
   assertStringIncludes(code, 'export default app');
   assertStringIncludes(code, 'const app = new Hono()');
 });

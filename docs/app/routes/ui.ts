@@ -383,12 +383,12 @@ export class UIShowcase extends LitElement {
               <div class="type-row">
                 <span class="type-label">展示</span>
                 <span class="type-sample" style="font-size:2.5rem;font-weight:900;letter-spacing:-0.04em"
-                  >KISS UI</span>
+                >KISS UI</span>
               </div>
               <div class="type-row">
                 <span class="type-label">H1</span>
                 <span class="type-sample" style="font-size:1.75rem;font-weight:800;letter-spacing:-0.03em"
-                  >一级标题</span>
+                >一级标题</span>
               </div>
               <div class="type-row">
                 <span class="type-label">H2</span>
@@ -397,21 +397,21 @@ export class UIShowcase extends LitElement {
               <div class="type-row">
                 <span class="type-label">正文</span>
                 <span class="type-sample" style="font-size:0.9375rem;color:var(--kiss-text-secondary)"
-                  >正文段落示例。</span>
+                >正文段落示例。</span>
               </div>
               <div class="type-row">
                 <span class="type-label">说明</span>
                 <span
                   class="type-sample"
                   style="font-size:0.6875rem;color:var(--kiss-text-tertiary);text-transform:uppercase;letter-spacing:0.08em;font-weight:600"
-                  >说明文字</span>
+                >说明文字</span>
               </div>
               <div class="type-row">
                 <span class="type-label">等宽</span>
                 <span
                   class="type-sample"
                   style="font-size:0.8125rem;font-family:'SF Mono','Fira Code','Consolas',monospace;color:var(--kiss-text-primary)"
-                  >deno add jsr:@kissjs/ui</span>
+                >deno add jsr:@kissjs/ui</span>
               </div>
             </div>
           </div>
@@ -495,39 +495,40 @@ export class UIShowcase extends LitElement {
               </div>
               <div class="preview-body">
                 <kiss-code-block>
-                  <pre><code>import '@kissjs/ui';
+                  <pre>
+                    <code>import '@kissjs/ui';
 
-// 使用组件
-&lt;kiss-button variant="primary"&gt;点我&lt;/kiss-button&gt;
-&lt;kiss-card&gt;
-  &lt;h3 slot="header"&gt;标题&lt;/h3&gt;
-  &lt;p&gt;卡片内容&lt;/p&gt;
-&lt;/kiss-card&gt;</code></pre>
-                </kiss-code-block>
+                    // 使用组件
+                    &lt;kiss-button variant="primary"&gt;点我&lt;/kiss-button&gt;
+                    &lt;kiss-card&gt;
+                      &lt;h3 slot="header"&gt;标题&lt;/h3&gt;
+                      &lt;p&gt;卡片内容&lt;/p&gt;
+                    &lt;/kiss-card&gt;</code></pre>
+                  </kiss-code-block>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Install -->
-          <div class="install-section">
-            <h3>安装 @kissjs/ui</h3>
-            <div class="install-cmd">
-              <span class="prompt">$</span> deno add jsr:@kissjs/ui
+            <!-- Install -->
+            <div class="install-section">
+              <h3>安装 @kissjs/ui</h3>
+              <div class="install-cmd">
+                <span class="prompt">$</span> deno add jsr:@kissjs/ui
+              </div>
+              <p>Deno、Node、Bun。零配置。</p>
             </div>
-            <p>Deno、Node、Bun。零配置。</p>
-          </div>
 
-          <div class="nav-row">
-            <a href="/guide/deployment" class="nav-link">&larr; 部署</a>
-            <a href="/styling/kiss-ui" class="nav-link">Kiss UI 文档 &rarr;</a>
+            <div class="nav-row">
+              <a href="/guide/deployment" class="nav-link">&larr; 部署</a>
+              <a href="/styling/kiss-ui" class="nav-link">Kiss UI 文档 &rarr;</a>
+            </div>
           </div>
-        </div>
-      </kiss-layout>
-    `;
+        </kiss-layout>
+      `;
+    }
   }
-}
 
-customElements.define('ui-showcase', UIShowcase);
+  customElements.define('ui-showcase', UIShowcase);
 
-export default UIShowcase;
-export const tagName = 'ui-showcase';
+  export default UIShowcase;
+  export const tagName = 'ui-showcase';

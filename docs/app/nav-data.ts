@@ -1,6 +1,6 @@
 /**
  * KISS Docs navigation data.
- * 
+ *
  * Data-driven sidebar + header navigation for the docs site.
  * Lives here so nav changes don't require rebuilding @kissjs/ui.
  */

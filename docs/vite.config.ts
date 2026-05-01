@@ -16,7 +16,8 @@ const runtimeShim = resolve(__dir, 'app/.kiss-runtime.ts');
 // DRY: All color token values come from a single source of truth.
 // kissRootColorCSS is generated from kissDarkColors/kissLightColors in tokens/colors.ts.
 // Do NOT hand-write color values here — edit the source objects instead.
-const colorTokensStyle = `<style>${kissRootColorCSS}body{margin:0;background:var(--kiss-bg-base);color:var(--kiss-text-primary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>`;
+const colorTokensStyle =
+  `<style>${kissRootColorCSS}body{margin:0;background:var(--kiss-bg-base);color:var(--kiss-text-primary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>`;
 
 export default defineConfig({
   base: '/',

@@ -48,8 +48,13 @@ const tpl = document.querySelector('#my-counter-template');
 class MyCounter extends HTMLElement {
   #count = 0;
   #root = this.attachShadow({ mode: 'open' });
-  get count() { return this.#count; }
-  set count(v) { this.#count = v; this.#update(); }
+  get count() {
+    return this.#count;
+  }
+  set count(v) {
+    this.#count = v;
+    this.#update();
+  }
   #update() {
     this.#root.querySelector('span').textContent = this.#count;
   }
@@ -66,14 +71,14 @@ customElements.define('my-counter', MyCounter);
 
 ### What the compiler eliminates
 
-| Layer | Before (Lit) | After (.kiss compiler) |
-|-------|-------------|----------------------|
-| Runtime | 58kb gzip lit | 0kb |
-| SSR | @lit-labs/ssr + DOM shim | template.innerHTML (sync) |
-| Hydration | DSD + hydrate() + order bug | template.cloneNode (no hydration) |
-| Polyfills | node-domexception CJS shim | none needed |
-| Build | esbuild decorator transform | standard TS/JS only |
-| Tests | need jsdom/puppeteer for Lit | native DOM works everywhere |
+| Layer     | Before (Lit)                 | After (.kiss compiler)            |
+| --------- | ---------------------------- | --------------------------------- |
+| Runtime   | 58kb gzip lit                | 0kb                               |
+| SSR       | @lit-labs/ssr + DOM shim     | template.innerHTML (sync)         |
+| Hydration | DSD + hydrate() + order bug  | template.cloneNode (no hydration) |
+| Polyfills | node-domexception CJS shim   | none needed                       |
+| Build     | esbuild decorator transform  | standard TS/JS only               |
+| Tests     | need jsdom/puppeteer for Lit | native DOM works everywhere       |
 
 ### SSG integration
 
@@ -94,6 +99,7 @@ Page `.kiss` files render directly (template is the page). Island `.kiss` files 
 ## Consequences
 
 **Positive:**
+
 - Zero JS runtime cost per page
 - No hydration bugs (no hydration at all)
 - No upstream dependency issues (dprint, node-domexception, parse5)
@@ -102,6 +108,7 @@ Page `.kiss` files render directly (template is the page). Island `.kiss` files 
 - SSG becomes synchronous string concatenation
 
 **Negative:**
+
 - Not backward compatible with existing Lit code (migration needed)
 - Custom compiler = custom bugs (parser edge cases, sourcemap complexity)
 - HMR in dev mode needs special handling (fall back to Lit or implement compiler in watch mode)

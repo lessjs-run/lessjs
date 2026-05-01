@@ -9,16 +9,35 @@ export class BlogSystemPage extends LitElement {
   static override styles = [
     pageStyles,
     css`
-      .adr-meta { font-size: 0.75rem; color: var(--kiss-text-muted); margin-bottom: 1.5rem; }
-      h2 { font-size: 1rem; font-weight: 500; margin: 1.5rem 0 0.5rem; color: var(--kiss-text-primary); }
-      h3 { font-size: 0.875rem; font-weight: 500; margin: 1rem 0 0.25rem; color: var(--kiss-text-secondary); }
-      p { font-size: 0.8125rem; line-height: 1.7; color: var(--kiss-text-secondary); margin: 0 0 0.75rem; }
+      .adr-meta {
+        font-size: 0.75rem;
+        color: var(--kiss-text-muted);
+        margin-bottom: 1.5rem;
+      }
+      h2 {
+        font-size: 1rem;
+        font-weight: 500;
+        margin: 1.5rem 0 0.5rem;
+        color: var(--kiss-text-primary);
+      }
+      h3 {
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin: 1rem 0 0.25rem;
+        color: var(--kiss-text-secondary);
+      }
+      p {
+        font-size: 0.8125rem;
+        line-height: 1.7;
+        color: var(--kiss-text-secondary);
+        margin: 0 0 0.75rem;
+      }
       .code-block {
         background: var(--kiss-bg-surface);
         border: 0.5px solid var(--kiss-border);
         border-radius: 4px;
         padding: 1rem;
-        font-family: "SF Mono","Fira Code",monospace;
+        font-family: "SF Mono", "Fira Code", monospace;
         font-size: 0.75rem;
         line-height: 1.6;
         overflow-x: auto;
@@ -26,7 +45,13 @@ export class BlogSystemPage extends LitElement {
         color: var(--kiss-text-secondary);
         white-space: pre;
       }
-      ul { font-size: 0.8125rem; line-height: 1.8; color: var(--kiss-text-secondary); margin: 0.5rem 0 1rem; padding-left: 1.25rem; }
+      ul {
+        font-size: 0.8125rem;
+        line-height: 1.8;
+        color: var(--kiss-text-secondary);
+        margin: 0.5rem 0 1rem;
+        padding-left: 1.25rem;
+      }
     `,
   ];
 
@@ -39,35 +64,22 @@ export class BlogSystemPage extends LitElement {
 
           <h2>Motivation</h2>
           <p>
-            The docs site currently has two hardcoded blog pages — not a reusable system.
-            Users need a one-line solution: drop in <code>.md</code> files, get automatic
-            listing, pagination, RSS, and tags. Like VitePress, but as a KISS plugin.
+            The docs site currently has two hardcoded blog pages — not a reusable system. Users need a
+            one-line solution: drop in <code>.md</code> files, get automatic listing, pagination, RSS, and
+            tags. Like VitePress, but as a KISS plugin.
           </p>
 
           <h2>User experience</h2>
-          <div class="code-block">// vite.config.ts
-import { kiss } from '@kissjs/core'
-import { kissBlog } from '@kissjs/blog'
+          <div class="code-block">
+            // vite.config.ts import { kiss } from '@kissjs/core' import { kissBlog } from '@kissjs/blog'
+            export default defineConfig({ plugins: [ kiss(), kissBlog({ dir: 'content/blog', // .md files
+            go here title: 'My Blog', postsPerPage: 10, }), ], })
+          </div>
 
-export default defineConfig({
-  plugins: [
-    kiss(),
-    kissBlog({
-      dir: 'content/blog',     // .md files go here
-      title: 'My Blog',
-      postsPerPage: 10,
-    }),
-  ],
-})</div>
-
-          <div class="code-block"><!-- content/blog/hello-world.md -->
----
-title: Hello World
-date: 2026-05-01
-tags: [kiss, meta]
----
-
-This is my first post.</div>
+          <div class="code-block">
+            <!-- content/blog/hello-world.md -->
+            --- title: Hello World date: 2026-05-01 tags: [kiss, meta] --- This is my first post.
+          </div>
 
           <h2>Generated routes</h2>
           <ul>
@@ -80,13 +92,13 @@ This is my first post.</div>
 
           <h2>Constraint</h2>
           <p>
-            The blog package is designed for the <code>.kiss</code> compiler from day one.
-            Post templates compile to vanilla Custom Elements — zero runtime, no Lit,
-            synchronous SSR via <code>template.innerHTML</code>.
+            The blog package is designed for the <code>.kiss</code> compiler from day one. Post templates
+            compile to vanilla Custom Elements — zero runtime, no Lit, synchronous SSR via <code
+            >template.innerHTML</code>.
           </p>
           <p>
-            Before the compiler ships (v1.0), a fallback renders the same templates as
-            server-side string concatenation using <code>html-template.ts</code>.
+            Before the compiler ships (v1.0), a fallback renders the same templates as server-side string
+            concatenation using <code>html-template.ts</code>.
           </p>
 
           <h2>Implementation order</h2>

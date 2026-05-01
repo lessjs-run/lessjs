@@ -7,7 +7,9 @@ import { css } from '@kissjs/core';
  * Aligned with the new minimal design system.
  */
 export const pageStyles = css`
-  :host { display: block; }
+  :host {
+    display: block;
+  }
 
   .container {
     max-width: 720px;
@@ -52,8 +54,13 @@ export const pageStyles = css`
     font-size: 0.875rem;
   }
 
-  strong { color: var(--kiss-text-primary); font-weight: 500; }
-  em { font-style: italic; }
+  strong {
+    color: var(--kiss-text-primary);
+    font-weight: 500;
+  }
+  em {
+    font-style: italic;
+  }
 
   a {
     color: var(--kiss-text-primary);
@@ -63,7 +70,9 @@ export const pageStyles = css`
     text-decoration-thickness: 0.5px;
     transition: text-decoration-color 0.15s;
   }
-  a:hover { text-decoration-color: var(--kiss-text-primary); }
+  a:hover {
+    text-decoration-color: var(--kiss-text-primary);
+  }
 
   /* Code */
   pre {
@@ -78,7 +87,9 @@ export const pageStyles = css`
     border: 0.5px solid var(--kiss-code-border);
   }
 
-  code { font-family: "SF Mono", "Fira Code", "Consolas", monospace; }
+  code {
+    font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+  }
 
   p code, li code {
     background: var(--kiss-code-bg);
@@ -112,7 +123,9 @@ export const pageStyles = css`
     font-weight: 500;
     color: var(--kiss-text-secondary);
   }
-  td { color: var(--kiss-text-tertiary); }
+  td {
+    color: var(--kiss-text-tertiary);
+  }
 
   /* Callouts */
   .callout {
@@ -122,7 +135,9 @@ export const pageStyles = css`
     background: var(--kiss-bg-surface);
     border-radius: 0 3px 3px 0;
   }
-  .callout.warn { border-left-color: var(--kiss-text-tertiary); }
+  .callout.warn {
+    border-left-color: var(--kiss-text-tertiary);
+  }
 
   .pillar {
     padding: 1.25rem 1.5rem;
@@ -139,7 +154,9 @@ export const pageStyles = css`
     color: var(--kiss-text-muted);
     margin-bottom: 0.25rem;
   }
-  .pillar h3 { margin: 0 0 0.5rem; }
+  .pillar h3 {
+    margin: 0 0 0.5rem;
+  }
 
   .hard-constraint {
     display: inline-block;
@@ -157,7 +174,9 @@ export const pageStyles = css`
     color: var(--kiss-text-secondary);
     line-height: 1.7;
   }
-  li { margin: 0.25rem 0; }
+  li {
+    margin: 0.25rem 0;
+  }
 
   /* Page nav */
   .nav-row {
@@ -183,20 +202,48 @@ export const pageStyles = css`
   }
 
   @media (max-width: 900px) {
-    .container { padding: 2rem 1.25rem 3rem; }
-    h1 { font-size: 1.5rem; }
-    .subtitle { margin-bottom: 2rem; }
-    pre { padding: 0.875rem 1rem; font-size: 0.75rem; }
-    .nav-row { flex-direction: column; gap: 0.75rem; }
+    .container {
+      padding: 2rem 1.25rem 3rem;
+    }
+    h1 {
+      font-size: 1.5rem;
+    }
+    .subtitle {
+      margin-bottom: 2rem;
+    }
+    pre {
+      padding: 0.875rem 1rem;
+      font-size: 0.75rem;
+    }
+    .nav-row {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
   }
 
   @media (max-width: 480px) {
-    .container { padding: 1.5rem 1rem 2.5rem; }
-    h1 { font-size: 1.25rem; }
-    .subtitle { font-size: 0.8125rem; margin-bottom: 1.5rem; }
-    h2 { font-size: 0.9375rem; }
-    p { font-size: 0.8125rem; }
-    pre { padding: 0.75rem; font-size: 0.6875rem; }
-    ul, ol { padding-left: 1rem; }
+    .container {
+      padding: 1.5rem 1rem 2.5rem;
+    }
+    h1 {
+      font-size: 1.25rem;
+    }
+    .subtitle {
+      font-size: 0.8125rem;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 0.9375rem;
+    }
+    p {
+      font-size: 0.8125rem;
+    }
+    pre {
+      padding: 0.75rem;
+      font-size: 0.6875rem;
+    }
+    ul, ol {
+      padding-left: 1rem;
+    }
   }
 `;

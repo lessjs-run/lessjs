@@ -11,7 +11,9 @@ export const tagName = 'api-consumer';
 
 export default class ApiConsumer extends LitElement {
   static override styles = css`
-    :host { display: block; }
+    :host {
+      display: block;
+    }
 
     .card {
       border: 0.5px solid var(--kiss-border);
@@ -40,9 +42,15 @@ export default class ApiConsumer extends LitElement {
       border-radius: 50%;
       display: inline-block;
     }
-    .status-dot.loading { background: var(--kiss-accent-dim); }
-    .status-dot.connected { background: #22c55e; }
-    .status-dot.error { background: var(--kiss-error); }
+    .status-dot.loading {
+      background: var(--kiss-accent-dim);
+    }
+    .status-dot.connected {
+      background: #22c55e;
+    }
+    .status-dot.error {
+      background: var(--kiss-error);
+    }
 
     .data-grid {
       display: grid;
@@ -53,7 +61,7 @@ export default class ApiConsumer extends LitElement {
     }
     .data-grid .key {
       color: var(--kiss-text-tertiary);
-      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
       font-size: 0.75rem;
     }
     .data-grid .val {
@@ -67,7 +75,7 @@ export default class ApiConsumer extends LitElement {
       border-radius: 6px;
       padding: 0.75rem 1rem;
       font-size: 0.75rem;
-      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
       color: var(--kiss-text-secondary);
       overflow-x: auto;
       margin: 0.75rem 0;
@@ -101,7 +109,9 @@ export default class ApiConsumer extends LitElement {
       color: var(--kiss-bg-base);
       border-color: var(--kiss-accent);
     }
-    .btn.primary:hover { opacity: 0.85; }
+    .btn.primary:hover {
+      opacity: 0.85;
+    }
     .btn.primary:disabled {
       opacity: 0.25;
       background: var(--kiss-text-muted);
@@ -163,8 +173,14 @@ export default class ApiConsumer extends LitElement {
     }
 
     @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   `;
 
@@ -242,39 +258,75 @@ export default class ApiConsumer extends LitElement {
       <div class="card">
         <h3>Server Status</h3>
         <div class="status-row">
-          <span class="status-dot ${this.apiLoading ? 'loading' : this.apiError ? 'error' : 'connected'}"></span>
-          ${this.apiLoading ? 'Contacting server...' : this.apiError ? 'Connection failed' : 'API online'}
+          <span class="status-dot ${this.apiLoading
+            ? 'loading'
+            : this.apiError
+            ? 'error'
+            : 'connected'}"></span>
+          ${this.apiLoading
+            ? 'Contacting server...'
+            : this.apiError
+            ? 'Connection failed'
+            : 'API online'}
         </div>
-        ${this.apiData ? html`
-          <div class="data-grid">
-            <span class="key">framework</span><span class="val">${this.apiData.framework}</span>
-            <span class="key">version</span><span class="val">${this.apiData.version}</span>
-            <span class="key">jamstack</span><span class="val">${String(this.apiData.jamstack)}</span>
-            <span class="key">serverless</span><span class="val">${String(this.apiData.serverless)}</span>
-          </div>
-        ` : ''}
-        ${this.apiLoading ? html`<div class="pre-box">Loading...</div>` : ''}
-        ${this.apiData ? html`<div class="pre-box">${JSON.stringify(this.apiData, null, 2)}</div>` : ''}
-        ${this.apiError ? html`<div class="pre-box" style="color:var(--kiss-error)">${this.apiError}</div>` : ''}
-        <button class="btn" @click=${this._fetchStatus} ?disabled=${this.apiLoading}>⟳ Refresh</button>
+        ${this.apiData
+          ? html`
+            <div class="data-grid">
+              <span class="key">framework</span><span class="val">${this.apiData.framework}</span>
+              <span class="key">version</span><span class="val">${this.apiData.version}</span>
+              <span class="key">jamstack</span><span class="val">${String(
+                this.apiData.jamstack,
+              )}</span>
+              <span class="key">serverless</span><span class="val">${String(
+                this.apiData.serverless,
+              )}</span>
+            </div>
+          `
+          : ''} ${this.apiLoading
+          ? html`
+            <div class="pre-box">Loading...</div>
+          `
+          : ''} ${this.apiData
+          ? html`
+            <div class="pre-box">${JSON.stringify(this.apiData, null, 2)}</div>
+          `
+          : ''} ${this.apiError
+          ? html`
+            <div class="pre-box" style="color:var(--kiss-error)">${this.apiError}</div>
+          `
+          : ''}
+        <button class="btn" @click="${this._fetchStatus}" ?disabled="${this
+          .apiLoading}">⟳ Refresh</button>
 
         <hr class="divider" />
 
         <h3>Say Hello</h3>
         <p style="font-size:0.8125rem;color:var(--kiss-text-tertiary);margin:0 0 0.75rem;line-height:1.6">
-          Type your name and the serverless API will greet you back.
-          Calls <code style="font-size:0.75rem">GET /api/hello/:name</code> on Deno Deploy.
+          Type your name and the serverless API will greet you back. Calls <code style="font-size:0.75rem"
+          >GET /api/hello/:name</code> on Deno Deploy.
         </p>
         <div class="form-row">
-          <input type="text" placeholder="Enter your name..." .value=${this.name}
-            @input=${this._onInput} @keydown=${this._onKey} />
-          <button class="btn primary" @click=${this._sayHello}
-            ?disabled=${this.helloLoading || !this.name.trim()}>
+          <input
+            type="text"
+            placeholder="Enter your name..."
+            .value="${this.name}"
+            @input="${this._onInput}"
+            @keydown="${this._onKey}"
+          />
+          <button class="btn primary" @click="${this._sayHello}" ?disabled="${this.helloLoading ||
+            !this.name.trim()}">
             ${this.helloLoading ? 'Sending...' : 'Say Hello →'}
           </button>
         </div>
-        ${this.helloMsg ? html`<div class="greeting">${this.helloMsg}</div>` : ''}
-        ${this.helloError ? html`<div class="err-msg">${this.helloError}</div>` : ''}
+        ${this.helloMsg
+          ? html`
+            <div class="greeting">${this.helloMsg}</div>
+          `
+          : ''} ${this.helloError
+          ? html`
+            <div class="err-msg">${this.helloError}</div>
+          `
+          : ''}
       </div>
     `;
   }

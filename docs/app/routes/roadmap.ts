@@ -308,7 +308,9 @@ export class RoadmapPage extends LitElement {
           <ul class="task-list">
             <li>三轮迭代审查 + 两轮 agent 深搜 — 35+ 项修复</li>
             <li>P0: kiss-input undefined 字符串, CLI exports 缺失, SSG CJS polyfill 时序</li>
-            <li>P1: 暗色模式阴影, kiss-button nothing/arrow, kiss-rpc abort race, kiss-theme-toggle 递归</li>
+            <li>
+              P1: 暗色模式阴影, kiss-button nothing/arrow, kiss-rpc abort race, kiss-theme-toggle 递归
+            </li>
             <li>CI 并行化 (typecheck + 4 test job) + actions/cache</li>
             <li>deno-version 锁定 "2" — 防止 Deno 3.0 意外破坏</li>
             <li>scanIslands 递归扫描 — 支持子目录 Island</li>
@@ -318,7 +320,9 @@ export class RoadmapPage extends LitElement {
 
           <h2>Phase 10：v0.4.0 Serverless Milestone（已完成）</h2>
           <ul class="task-list">
-            <li>Serverless API CI 部署 — deploy-api.yml 自动化，CORS 修复，平台迁移 deployctl→deno deploy</li>
+            <li>
+              Serverless API CI 部署 — deploy-api.yml 自动化，CORS 修复，平台迁移 deployctl→deno deploy
+            </li>
             <li>kiss-demo-api.sisyphuszheng.deno.net 生产在线，前端 kiss-hero-ping 一键 verify</li>
             <li>Service Worker 修复 — PRECACHE 删除，networkFirst，动态缓存名</li>
             <li>全站 1px→0.5px（17 文件 40+ 处）</li>
@@ -347,7 +351,9 @@ export class RoadmapPage extends LitElement {
 
           <h2>Phase 12：v0.6.0 零基础设施 JS + .kiss Compiler Alpha（规划中）</h2>
           <ul class="task-list">
-            <li><strong>CSS-only 暗色模式</strong> — 用 prefers-color-scheme 消除 theme-init.js（~280B）</li>
+            <li>
+              <strong>CSS-only 暗色模式</strong> — 用 prefers-color-scheme 消除 theme-init.js（~280B）
+            </li>
             <li><strong>SW 注册 defer</strong> — 移到 requestIdleCallback，不阻塞</li>
             <li>目标：零交互页面零 JS（连基础设施一起消除）</li>
             <li>.kiss 文件格式定义 — template + script + style 声明式组件</li>
@@ -385,7 +391,9 @@ export class RoadmapPage extends LitElement {
           <ul class="task-list">
             <li>语义版本 1.0 — 向后兼容承诺</li>
             <li>长期支持 — 至少 12 个月 bug 修复</li>
-            <li>版本号基线：@kissjs/core@1.0.0, @kissjs/ui@1.0.0, @kissjs/rpc@1.0.0, @kissjs/create@1.0.0</li>
+            <li>
+              版本号基线：@kissjs/core@1.0.0, @kissjs/ui@1.0.0, @kissjs/rpc@1.0.0, @kissjs/create@1.0.0
+            </li>
           </ul>
 
           <h2>已解决的技术债</h2>
@@ -461,31 +469,28 @@ export class RoadmapPage extends LitElement {
           </table>
 
           <h2>架构概览</h2>
-          <div class="architecture-diagram">用户视角：vite.config.ts
-&#x250C;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2510;
-&#x2502;  import { kiss } from '@kissjs/core'  &#x2502;
-&#x2502;  export default defineConfig({         &#x2502;
-&#x2502;    plugins: [kiss()]                   &#x2502;
-&#x2502;  })                                    &#x2502;
-&#x2514;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2534;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2518;
-               &#x2502;
-&#x250C;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2534;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2510;
-&#x2502;     @kissjs/core (6 &#x5B50;&#x63D2;&#x4EF6;)              &#x2502;
-&#x2502;                                          &#x2502;
-&#x2502;  1. kiss:core — &#x8DEF;&#x7531;&#x626B;&#x63CF; (K)            &#x2502;
-&#x2502;  2. kiss:virtual-entry — &#x865A;&#x62DF;&#x6A21;&#x5757;       &#x2502;
-&#x2502;  3. @hono/vite-dev-server — dev only    &#x2502;
-&#x2502;  4. island-transform — AST &#x6807;&#x8BB0; (I)     &#x2502;
-&#x2502;  5. html-template — HTML &#x6CE8;&#x5165; (&#x9884;&#x7559;)    &#x2502;
-&#x2502;  6. kiss:build — &#x5143;&#x6570;&#x636E; (K+S)          &#x2502;
-&#x2514;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2534;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2518;
-               &#x2502;
-&#x250C;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2534;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2510;
-&#x2502;  &#x4E24;&#x4E2A;&#x72EC;&#x7ACB;&#x90E8;&#x7F72;&#x76EE;&#x6807;      &#x2502;
-&#x2502;                       &#x2502;
-&#x2502;  dist/ (&#x9759;&#x6001;&#x524D;&#x7AEF;)     &#x2502; &larr; K+I+S &#x7EA6;&#x675F;
-&#x2502;  API Routes (Serverless) &larr; S &#x7EA6;&#x675F;
-&#x2514;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2518;</div>
+          <div class="architecture-diagram">
+            用户视角：vite.config.ts
+            &#x250C;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2510;
+            &#x2502; import { kiss } from '@kissjs/core' &#x2502; &#x2502; export default defineConfig({
+            &#x2502; &#x2502; plugins: [kiss()] &#x2502; &#x2502; }) &#x2502;
+            &#x2514;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2534;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2518;
+            &#x2502;
+            &#x250C;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2534;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2510;
+            &#x2502; @kissjs/core (6 &#x5B50;&#x63D2;&#x4EF6;) &#x2502; &#x2502; &#x2502; &#x2502; 1.
+            kiss:core — &#x8DEF;&#x7531;&#x626B;&#x63CF; (K) &#x2502; &#x2502; 2. kiss:virtual-entry —
+            &#x865A;&#x62DF;&#x6A21;&#x5757; &#x2502; &#x2502; 3. @hono/vite-dev-server — dev only
+            &#x2502; &#x2502; 4. island-transform — AST &#x6807;&#x8BB0; (I) &#x2502; &#x2502; 5.
+            html-template — HTML &#x6CE8;&#x5165; (&#x9884;&#x7559;) &#x2502; &#x2502; 6. kiss:build —
+            &#x5143;&#x6570;&#x636E; (K+S) &#x2502;
+            &#x2514;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2534;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2518;
+            &#x2502;
+            &#x250C;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2534;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2510;
+            &#x2502; &#x4E24;&#x4E2A;&#x72EC;&#x7ACB;&#x90E8;&#x7F72;&#x76EE;&#x6807; &#x2502; &#x2502;
+            &#x2502; &#x2502; dist/ (&#x9759;&#x6001;&#x524D;&#x7AEF;) &#x2502; &larr; K+I+S
+            &#x7EA6;&#x675F; &#x2502; API Routes (Serverless) &larr; S &#x7EA6;&#x675F;
+            &#x2514;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2518;
+          </div>
 
           <div class="nav-row">
             <a href="/examples" class="nav-link">&larr; 示例</a>

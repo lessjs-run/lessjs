@@ -49,61 +49,64 @@ export class TestingPage extends LitElement {
           <h2>测试框架</h2>
           <p>KISS 使用 Deno 内置测试运行器——零额外依赖：</p>
           <code-block>
-            <pre><code>// __tests__/context_test.ts
-import { assertEquals } from 'jsr:@std/assert';
-import { extractParams, parseQuery } from '@kissjs/core';
+            <pre>
+              <code>// __tests__/context_test.ts
+              import { assertEquals } from 'jsr:@std/assert';
+              import { extractParams, parseQuery } from '@kissjs/core';
 
-Deno.test('extractParams 解析动态片段', () => {
-  const params = extractParams('/users/:id', '/users/42');
-  assertEquals(params, { id: '42' });
-});</code></pre></code-block>
+              Deno.test('extractParams 解析动态片段', () => {
+                const params = extractParams('/users/:id', '/users/42');
+                assertEquals(params, { id: '42' });
+              });</code></pre></code-block>
 
-          <h2>测试你的 KISS 应用</h2>
-          <code-block>
-            <pre><code>// tests/api_test.ts
-import { assertEquals } from 'jsr:@std/assert';
+              <h2>测试你的 KISS 应用</h2>
+              <code-block>
+                <pre>
+                  <code>// tests/api_test.ts
+                  import { assertEquals } from 'jsr:@std/assert';
 
-Deno.test('API 返回 posts', async () => {
-  const res = await fetch('http://localhost:3000/api/posts');
-  assertEquals(res.status, 200);
-  const data = await res.json();
-  assertEquals(Array.isArray(data), true);
-});</code></pre></code-block>
+                  Deno.test('API 返回 posts', async () => {
+                    const res = await fetch('http://localhost:3000/api/posts');
+                    assertEquals(res.status, 200);
+                    const data = await res.json();
+                    assertEquals(Array.isArray(data), true);
+                  });</code></pre></code-block>
 
-          <h2>CI 集成</h2>
-          <code-block>
-            <pre><code># .github/workflows/test.yml
-name: Test
-on: [push, pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-      - run: deno test --allow-read --allow-write</code></pre></code-block>
+                  <h2>CI 集成</h2>
+                  <code-block>
+                    <pre>
+                      <code># .github/workflows/test.yml
+                      name: Test
+                      on: [push, pull_request]
+                      jobs:
+                        test:
+                          runs-on: ubuntu-latest
+                          steps:
+                            - uses: actions/checkout@v4
+                            - uses: denoland/setup-deno@v2
+                            - run: deno test --allow-read --allow-write</code></pre></code-block>
 
-          <h2>KISS 内部测试了什么</h2>
-          <ul>
-            <li><span class="inline-code">entry-descriptor</span> —— EntryDescriptor 数据模型构建器</li>
-            <li><span class="inline-code">entry-renderer</span> —— 从描述符生成代码</li>
-            <li><span class="inline-code">route-scanner</span> —— 基于文件的路由发现</li>
-            <li><span class="inline-code">island-transform</span> —— AST 标记 + hydration 探测</li>
-            <li><span class="inline-code">ssr-handler</span> —— SSR 渲染 + 错误处理</li>
-            <li><span class="inline-code">context</span> —— 请求上下文工具</li>
-            <li><span class="inline-code">errors</span> —— 错误类层级</li>
-          </ul>
+                            <h2>KISS 内部测试了什么</h2>
+                            <ul>
+                              <li><span class="inline-code">entry-descriptor</span> —— EntryDescriptor 数据模型构建器</li>
+                              <li><span class="inline-code">entry-renderer</span> —— 从描述符生成代码</li>
+                              <li><span class="inline-code">route-scanner</span> —— 基于文件的路由发现</li>
+                              <li><span class="inline-code">island-transform</span> —— AST 标记 + hydration 探测</li>
+                              <li><span class="inline-code">ssr-handler</span> —— SSR 渲染 + 错误处理</li>
+                              <li><span class="inline-code">context</span> —— 请求上下文工具</li>
+                              <li><span class="inline-code">errors</span> —— 错误类层级</li>
+                            </ul>
 
-          <div class="nav-row">
-            <a href="/guide/security-middleware" class="nav-link">&larr; 安全 &amp; 中间件</a>
-            <a href="/guide/deployment" class="nav-link">部署 &rarr;</a>
-          </div>
-        </div>
-      </kiss-layout>
-    `;
-  }
-}
+                            <div class="nav-row">
+                              <a href="/guide/security-middleware" class="nav-link">&larr; 安全 &amp; 中间件</a>
+                              <a href="/guide/deployment" class="nav-link">部署 &rarr;</a>
+                            </div>
+                          </div>
+                        </kiss-layout>
+                      `;
+                    }
+                  }
 
-customElements.define('page-testing', TestingPage);
-export default TestingPage;
-export const tagName = 'page-testing';
+                  customElements.define('page-testing', TestingPage);
+                  export default TestingPage;
+                  export const tagName = 'page-testing';
