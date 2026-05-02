@@ -6,7 +6,7 @@
  *   - KissElement has been removed (innerHTML route was not sustainable)
  *   - Route components import from '@kissjs/core' for unified DX
  */
-export { renderDSD } from '../../packages/kiss-core/src/render-dsd.js';
+export { renderDSD, renderDSDByName } from '../../packages/kiss-core/src/render-dsd.js';
 
 // --- Lit (optional, for @kissjs/ui consumers) ---
 // Users of kiss-ui LitElement components import these through the UI package
