@@ -359,25 +359,25 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         // No precaching — the old PRECACHE pattern caused stale index.html.
         const swCode = `const CACHE = 'kiss-${Date.now()}';
 self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
+self.addEventListener('activate', (e) => e.waitUntil(
+  caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => clients.claim())
+));
 self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
-  // Skip non-http(s) requests (chrome-extension://, etc.)
   if (!url.protocol.startsWith('http')) return;
-  // HTML pages and API calls: always go to network first
-  if (!url.pathname.match(/\\.[a-z0-9]+$/i) || url.pathname.includes('/api/')) {
-    e.respondWith(networkFirst(e.request));
-  } else {
-    e.respondWith(cacheFirst(e.request));
-  }
+  const isAsset = /\\.[a-z0-9]+$/i.test(url.pathname) && !url.pathname.includes('/api/');
+  e.respondWith(
+    (isAsset ? cacheFirst(e.request) : networkFirst(e.request))
+      .catch(() => fetch(e.request))
+  );
 });
 async function cacheFirst(req) {
   const cached = await caches.match(req);
   if (cached) return cached;
   const res = await fetch(req);
   if (res.ok) {
-    const clone = res.clone();
-    caches.open(CACHE).then((c) => c.put(req, clone));
+    const cl = res.clone();
+    caches.open(CACHE).then(c => c.put(req, cl)).catch(() => {});
   }
   return res;
 }
@@ -385,11 +385,15 @@ async function networkFirst(req) {
   try {
     const res = await fetch(req);
     if (res.ok) {
-      const clone = res.clone();
-      caches.open(CACHE).then((c) => c.put(req, clone));
+      const cl = res.clone();
+      caches.open(CACHE).then(c => c.put(req, cl)).catch(() => {});
     }
     return res;
-  } catch { return caches.match(req); }
+  } catch {
+    const cached = await caches.match(req);
+    if (cached) return cached;
+    throw new Error('offline');
+  }
 }`;
         writeFileSync(join(outputDir, 'sw.js'), swCode);
         console.log('[KISS SSG] PWA sw.js generated');
