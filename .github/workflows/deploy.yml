@@ -33,7 +33,7 @@ jobs:
 
       - name: Phase 1 — SSR bundle
         working-directory: docs
-        run: vite build
+        run: npx vite build
 
       - name: Phase 2 — Client island chunks
         working-directory: docs

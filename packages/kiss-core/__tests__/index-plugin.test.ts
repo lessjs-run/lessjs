@@ -190,7 +190,7 @@ Deno.test('kiss() corePlugin.configResolved sets honoEntryCode', () => {
   // Should not throw when called with fake config
   // Use type assertion to avoid TS2349 (ObjectHook may not be callable)
   if (typeof corePlugin.configResolved === 'function') {
-    corePlugin.configResolved({} as never);
+    (corePlugin.configResolved as (config: never) => void)({} as never);
   }
   assertEquals(true, true);
 });
