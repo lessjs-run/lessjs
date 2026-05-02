@@ -24,10 +24,18 @@ interface ReactiveElement {
 // --- Compile-time assertions ---
 
 // 1. RpcController implements ReactiveController
-const _controller: ReactiveController = null as unknown as { hostConnected?(): void; hostDisconnected?(): void };
+const _controller: ReactiveController = null as unknown as {
+  hostConnected?(): void;
+  hostDisconnected?(): void;
+};
 
 // 2. Any element with addController/removeController/requestUpdate is a ReactiveElement
-const _host: ReactiveElement = null as unknown as { addController(c: ReactiveController): void; removeController(c: ReactiveController): void; requestUpdate(): void; updateComplete: Promise<boolean> };
+const _host: ReactiveElement = null as unknown as {
+  addController(c: ReactiveController): void;
+  removeController(c: ReactiveController): void;
+  requestUpdate(): void;
+  updateComplete: Promise<boolean>;
+};
 
 Deno.test('RPC type compatibility — local interfaces are self-consistent', () => {
   console.log('✅ Local ReactiveElement/ReactiveController are structurally sound');
