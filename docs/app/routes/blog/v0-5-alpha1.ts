@@ -320,4 +320,3 @@ export default class BlogV05Alpha1 extends LitElement {
 }
 
 customElements.define(tagName, BlogV05Alpha1);
-export default BlogV05Alpha1;
