@@ -3,6 +3,7 @@ node_modules/
 
 # Deno
 .deno/
+vendor/
 
 # Build output
 dist/
