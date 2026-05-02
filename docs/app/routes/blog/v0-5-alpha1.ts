@@ -277,17 +277,40 @@ export default class BlogV05Alpha1 extends LitElement {
             <p>这不是"替代 Lit"——这是让 Lit 从必选变成可选。零运行时始终是方向。</p>
           </div>
 
-          <h2>即刻行动</h2>
+          <h2>v0.5.0 正式版路线</h2>
 
-          <ul>
-            <li><strong>adapter-lit 测试</strong>：当前最高优先级。两个 P0 Bug 的根源都是 0% 测试覆盖率。</li>
-            <li><strong>版本清理</strong>：统一 5 个包的 <code>deno.json</code>，删除冗余配置文件。</li>
-            <li><strong>extractLitStyles 错误可见性</strong>：SSG 构建失败时必须有明确报错，而非静默生成空白页面。</li>
-            <li><strong>Island 懒加载</strong>：实现首屏检测和按需加载，将 67.8KB initial payload 减少到 ~15KB。</li>
-          </ul>
+          <div class="truth">
+            <div class="truth-title">P0 — 阻塞发布</div>
+            <ul>
+              <li><strong>A1 adapter-lit 测试</strong> — extractLitStyles + renderLitToString + installLitAdapter</li>
+              <li><strong>A2 移除 @lit-labs/ssr-client</strong> — 从 deno.json 和 client bundle 中彻底清除</li>
+              <li><strong>A3 extractLitStyles 错误可见性</strong> — try/catch → console.warn</li>
+              <li><strong>A4 CI 全绿</strong> — lint / fmt / test / typecheck 零错误</li>
+              <li><strong>A5 版本号最终对齐</strong> — core 0.5.0, rpc 0.3.0, ui 0.5.0, create 0.4.0</li>
+              <li><strong>A6 Docs 站验证</strong> — SSG 构建 38 页通过，DSD 含 &lt;style&gt;</li>
+            </ul>
+          </div>
+
+          <div class="truth">
+            <div class="truth-title">P1 — 发布附带</div>
+            <ul>
+              <li><strong>B1</strong> escapeHtml 统一（3→1） · <strong>B2</strong> escapeAttr 统一（2→1）</li>
+              <li><strong>B3-B5</strong> 死代码清理（renderNestedDsd / html-template / @deprecated fns）</li>
+              <li><strong>B6</strong> kiss-hero-ping apiUrl 修复 · <strong>B7</strong> create-kiss 模板更新</li>
+            </ul>
+          </div>
+
+          <div class="truth">
+            <div class="truth-title">P2 — v0.5.1+</div>
+            <ul>
+              <li><strong>C1</strong> Island 懒加载 (IntersectionObserver) · <strong>C2</strong> OpenProps 按需</li>
+              <li><strong>C3</strong> JS/CSS minification · <strong>C4</strong> E2E 测试 (Playwright)</li>
+              <li><strong>C5</strong> 结构化 inject API · <strong>C6</strong> 无障碍 · <strong>C7</strong> SEO</li>
+            </ul>
+          </div>
 
           <div class="nav-row">
-            <a href="/blog/v0-5-0" class="nav-link">&larr; v0.5.0</a>
+            <a href="/blog/v0-5-alpha-0" class="nav-link">&larr; v0.5-alpha-0</a>
             <a href="/roadmap" class="nav-link">路线图 &rarr;</a>
           </div>
         </div>
