@@ -375,13 +375,19 @@ async function cacheFirst(req) {
   const cached = await caches.match(req);
   if (cached) return cached;
   const res = await fetch(req);
-  if (res.ok) caches.open(CACHE).then((c) => c.put(req, res.clone()));
+  if (res.ok) {
+    const clone = res.clone();
+    caches.open(CACHE).then((c) => c.put(req, clone));
+  }
   return res;
 }
 async function networkFirst(req) {
   try {
     const res = await fetch(req);
-    if (res.ok) caches.open(CACHE).then((c) => c.put(req, res.clone()));
+    if (res.ok) {
+      const clone = res.clone();
+      caches.open(CACHE).then((c) => c.put(req, clone));
+    }
     return res;
   } catch { return caches.match(req); }
 }`;
