@@ -207,7 +207,9 @@ export function buildEntryDescriptor(
   imports.push({ from: 'hono', names: ['Hono'] });
   // v0.5.0: DSD renderer replaces @lit-labs/ssr + lit + html + unsafeHTML + collectResult
   // Components use render(): string — no TemplateResult, no <!--lit-part--> markers.
-  imports.push({ from: '@kissjs/core/render-dsd', names: ['renderDSD', 'renderDSDByName'] });
+  // Note: import from @kissjs/core (not @kissjs/core/render-dsd) so Vite alias works correctly
+  // with the docs/.kiss-runtime.ts shim which re-exports renderDSD.
+  imports.push({ from: '@kissjs/core', names: ['renderDSD', 'renderDSDByName'] });
 
   // Conditional middleware imports
   const mw = options.middleware;
