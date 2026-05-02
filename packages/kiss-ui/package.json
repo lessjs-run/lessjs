@@ -2,5 +2,18 @@
   "name": "@kissjs/ui",
   "version": "0.4.1",
   "type": "module",
-  "main": "./dist/index.js"
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./kiss-button": "./dist/kiss-button.js",
+    "./kiss-card": "./dist/kiss-card.js",
+    "./kiss-input": "./dist/kiss-input.js",
+    "./kiss-code-block": "./dist/kiss-code-block.js",
+    "./kiss-layout": "./dist/kiss-layout.js",
+    "./kiss-theme-toggle": "./dist/kiss-theme-toggle.js",
+    "./kiss-hero-ping": "./dist/kiss-hero-ping.js",
+    "./kiss-ui-plugin": "./dist/kiss-ui-plugin.js",
+    "./design-tokens": "./dist/design-tokens.js",
+    "./tokens/colors": "./dist/tokens/colors.js"
+  }
 }
