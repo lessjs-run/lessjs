@@ -56,7 +56,33 @@ export function escapeAttrValue(value: unknown): string {
 
 // ─── DSD Rendering ──────────────────────────────────────────────
 
-/** Serialize key-value pairs to HTML attribute string */
+/**
+ * Render a Lit TemplateResult to HTML string using @lit-labs/ssr.
+ * LitElement's render() returns a TemplateResult (not a plain string).
+ * We dynamically import @lit-labs/ssr to render it.
+ * Falls back to String() if @lit-labs/ssr is not available.
+ */
+async function renderLitTemplateResult(
+  result: unknown,
+  tagName: string,
+): Promise<string> {
+  try {
+    // Dynamic import — works when @lit-labs/ssr is installed (npm install)
+    const { render: litRender } = await import('@lit-labs/ssr');
+    const { collectResult } = await import('@lit-labs/ssr/lib/render-result.js');
+    const rendered = litRender(result);
+    const collected = await collectResult(rendered);
+    return collected as string;
+  } catch {
+    // @lit-labs/ssr not available — fall back to String()
+    console.warn(
+      `[KISS] <${tagName}> returned a Lit TemplateResult but @lit-labs/ssr is not available. Falling back to String().`,
+    );
+    return String(result);
+  }
+}
+
+/** Serialize key-value strings to HTML attribute string */
 export function serializeAttributes(props: Record<string, string | boolean | undefined>): string {
   const parts: string[] = [];
   for (const [key, val] of Object.entries(props)) {
@@ -104,11 +130,11 @@ export interface DsdComponent {
  * //    </kiss-button>
  * ```
  */
-export function renderDSD(
+export async function renderDSD(
   tagName: string,
   componentClass: CustomElementConstructor,
   props: Record<string, string | boolean | undefined> = {},
-): string {
+): Promise<string> {
   // 1. Instantiate the component
   //    Note: In Node.js/Deno SSR, no DOM lifecycle fires.
   //    The component must be designed to work without connectedCallback.
@@ -140,11 +166,21 @@ export function renderDSD(
   let content: string;
   try {
     const result = instance.render();
-    content = result == null ? '' : String(result);
+    if (result == null) {
+      content = '';
+    } else if (typeof result === 'string') {
+      content = result;
+    } else if (typeof result === 'object' && '_$litType$' in (result as Record<string, unknown>)) {
+      // Lit TemplateResult — render using @lit-labs/ssr (available when lit is installed)
+      content = await renderLitTemplateResult(result, tagName);
+    } else {
+      content = String(result);
+    }
   } catch (err) {
     console.error(`[KISS] <${tagName}> render() failed:`, err);
     content = '<!-- render error -->';
   }
+  // Note: __ssr is async in the generated entry — this await is compatible
 
   // 5. Wrap in DSD
   const attrs = serializeAttributes(props);
@@ -168,10 +204,10 @@ export function renderDSD(
  * const html = renderDSD('kiss-button', { variant: 'primary' })
  * ```
  */
-export function renderDSDByName(
+export async function renderDSDByName(
   tagName: string,
   props: Record<string, string | boolean | undefined> = {},
-): string {
+): Promise<string> {
   const cls = globalThis.customElements?.get(tagName);
 
   if (!cls) {
@@ -180,7 +216,7 @@ export function renderDSDByName(
     return `<${tagName}${attrs}></${tagName}>`;
   }
 
-  return renderDSD(tagName, cls as CustomElementConstructor, props);
+  return await renderDSD(tagName, cls as CustomElementConstructor, props);
 }
 
 /**
