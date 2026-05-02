@@ -350,7 +350,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
           display: 'standalone' as const,
           theme_color: pwa.themeColor || '#000000',
           background_color: pwa.backgroundColor || '#ffffff',
-          icons: [{ src: '/icon-192.png', sizes: '192x192', type: 'image/png' }],
+          icons: [{ src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }],
         };
         writeFileSync(join(outputDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
         console.log('[KISS SSG] PWA manifest.json generated');
@@ -358,14 +358,12 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         // Smart service worker: networkFirst for HTML+API, cacheFirst for assets
         // No precaching — the old PRECACHE pattern caused stale index.html.
         const swCode = `const CACHE = 'kiss-${Date.now()}';
-self.addEventListener('install', (e) => {
-  self.skipWaiting();
-});
-self.addEventListener('activate', (e) => {
-  e.waitUntil(clients.claim());
-});
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
 self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
+  // Skip non-http(s) requests (chrome-extension://, etc.)
+  if (!url.protocol.startsWith('http')) return;
   // HTML pages and API calls: always go to network first
   if (!url.pathname.match(/\\.[a-z0-9]+$/i) || url.pathname.includes('/api/')) {
     e.respondWith(networkFirst(e.request));
@@ -375,12 +373,15 @@ self.addEventListener('fetch', (e) => {
 });
 async function cacheFirst(req) {
   const cached = await caches.match(req);
-  return cached || fetch(req).then((r) => { caches.open(CACHE).then((c) => c.put(req, r)); return r; });
+  if (cached) return cached;
+  const res = await fetch(req);
+  if (res.ok) caches.open(CACHE).then((c) => c.put(req, res.clone()));
+  return res;
 }
 async function networkFirst(req) {
   try {
     const res = await fetch(req);
-    caches.open(CACHE).then((c) => c.put(req, res.clone()));
+    if (res.ok) caches.open(CACHE).then((c) => c.put(req, res.clone()));
     return res;
   } catch { return caches.match(req); }
 }`;
