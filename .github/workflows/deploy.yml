@@ -32,7 +32,8 @@ jobs:
           cd docs && npm install
 
       - name: Build @kissjs/ui (needed by SSR bundle)
-        run: npx vite build --config packages/kiss-ui/vite.config.build.ts
+        working-directory: packages/kiss-ui
+        run: npx vite build --config vite.config.build.ts
 
       - name: Phase 1 — SSR bundle
         working-directory: docs
