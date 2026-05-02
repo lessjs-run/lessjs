@@ -1,7 +1,7 @@
 /**
  * Hero Ping Island — calls real Deno Deploy API, shows 🟢/🔴 status dot.
  */
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 
 export const tagName = 'kiss-hero-ping';
 

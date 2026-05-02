@@ -45,11 +45,9 @@ export default defineConfig({
       },
       inject: {
         stylesheets: [
-          'https://ka-f.webawesome.com/webawesome@3.5.0/styles/webawesome.css',
+          'https://unpkg.com/open-props@1.7.20/open-props.min.css',
         ],
-        scripts: [
-          'https://ka-f.webawesome.com/webawesome@3.5.0/webawesome.loader.js',
-        ],
+        scripts: [],
         headFragments: [
           // Favicon
           '<link rel="icon" type="image/svg+xml" href="/favicon.svg" />',
@@ -75,9 +73,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@kissjs/core': runtimeShim,
-      // v0.5.0: render-dsd subpath needs separate alias since @kissjs/core → .kiss-runtime.ts
       '@kissjs/core/render-dsd': resolve(__dir, '../packages/kiss-core/src/render-dsd.ts'),
-      '@kissjs/core/kiss-element': resolve(__dir, '../packages/kiss-core/src/kiss-element.ts'),
     },
   },
 });

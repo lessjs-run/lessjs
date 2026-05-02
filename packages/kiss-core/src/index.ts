@@ -1,6 +1,8 @@
 /**
  * @kissjs/core - Main entry
  *
+ * KISS Framework — 纯构建/SSR 基础设施，零运行时。
+ *
  * KISS Architecture = K·I·S·S (Knowledge · Isolated · Semantic · Static)
  * 融合 Jamstack 部署模型与声明式岛屿交互范式的全栈架构风格。
  *
@@ -10,10 +12,9 @@
  * S — Semantic: 每个 Island 包裹原生 HTML 元素，DSD 让内容声明式可见
  * S — Static: 构建产物仅为纯静态文件，动态数据通过 API Routes（Hono + RPC）获取
  *
- * v0.3.0 Build Pipeline (no nested viteBuild in closeBundle):
- *   Phase 1: vite build          → SSR bundle + .kiss/build-metadata.json
- *   Phase 2: deno task build:client → client island chunks
- *   Phase 3: deno task build:ssg    → static HTML + post-process
+ * v0.5.0: Core 仅导出构建期/SSR 期代码，不包含任何浏览器运行时。
+ *   - KissElement 已废弃（innerHTML 路线不可持续）
+ *   - Lit re-export 移至 @kissjs/ui（Lit 是 UI 层的实现细节）
  *
  * 插件组成（kiss() 返回的 Plugin[]）：
  *  1. kiss:core          — configResolved + buildStart（路由扫描 + 虚拟模块生成）
@@ -73,11 +74,6 @@ export type { ArtifactInfo, BuildManifest } from './build-manifest.js';
 // (bare module specifier), and the inline hydrateElement() was not real
 // Lit hydration (just DSD polyfill + removeAttribute).
 
-// --- v0.5.0: Dual runtime exports ---
-// KissElement (zero-runtime, Web Standards path) — always available
-export { effect, KissElement, signal } from './kiss-element.js';
-export type { ReactiveController, ReactiveControllerHost } from './kiss-element.js';
-
 // DSD renderer exports
 export {
   escapeHtml,
@@ -86,16 +82,6 @@ export {
   renderNestedDsd,
   wrapDsdDocument,
 } from './render-dsd.js';
-
-// KissElement template helpers (string-based, zero-runtime)
-// Named differently from Lit equivalents to avoid confusion
-export { css as kissCss, html as kissHtml } from './kiss-element.js';
-
-// Lit re-exports (for backward compat — available when lit is installed)
-// These are needed by @kissjs/ui components that extend LitElement
-// Also serves as the default html/css for backwards-compatible user code
-export { css, html, LitElement, nothing, svg, unsafeCSS } from 'lit';
-export type { CSSResult, TemplateResult } from 'lit';
 
 export { Hono } from 'hono';
 
@@ -315,10 +301,12 @@ export function kiss(options: FrameworkOptions = {}): Plugin[] {
   };
 
   // --- 3. @hono/vite-dev-server（dev 模式 only，不进入生产产物）---
+  // Note: @hono/vite-dev-server types use Vite 6-era Plugin type.
+  // We cast to Vite 8 Plugin to bridge the type gap until the package updates.
   const devServerPlugin = honoDevServer({
     entry: VIRTUAL_ENTRY_ID,
     injectClientScript: true,
-  });
+  }) as unknown as Plugin;
 
   // --- 组装插件数组 ---
   // v0.3.0: No more ssgPlugin with nested viteBuild/createServer.

@@ -1,27 +1,16 @@
 /**
- * Runtime shim for @kissjs/core
+ * Runtime shim for @kissjs/core — auto-injected by kiss() plugin.
  *
- * v0.5.0: Dual runtime — exports both KissElement (zero-runtime) and Lit (optional).
- * Route components import from '@kissjs/core' for unified DX.
- *
- * This file is a build-time bridge — not part of the framework's public API.
+ * v0.5.0: Core exports build/SSR APIs only.
+ *   - Lit exports are provided by @kissjs/ui (not through core)
+ *   - KissElement has been removed (innerHTML route was not sustainable)
+ *   - Route components import from '@kissjs/core' for unified DX
  */
-// --- KissElement (zero-runtime, always available) ---
-export {
-  css as kissCss,
-  effect,
-  html as kissHtml,
-  KissElement,
-  signal,
-} from '../../packages/kiss-core/src/kiss-element.js';
 export { renderDSD } from '../../packages/kiss-core/src/render-dsd.js';
 
-// --- Lit (optional, backward compat) ---
-export { css, html, LitElement, nothing, svg } from 'lit';
-export { unsafeHTML } from 'lit/directives/unsafe-html.js';
-export { classMap } from 'lit/directives/class-map.js';
-export { styleMap } from 'lit/directives/style-map.js';
-export { createRef, ref } from 'lit/directives/ref.js';
+// --- Lit (optional, for @kissjs/ui consumers) ---
+// Users of kiss-ui LitElement components import these through the UI package
+export { css, html, LitElement } from 'lit';
 export { Hono } from 'hono';
 
 // SSR runtime (used by generated Hono entry)

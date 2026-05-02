@@ -1,25 +1,23 @@
 /**
  * @kissjs/ui - Design Tokens: Effects
  *
- * Shadows and visual elevation for Swiss-style interfaces.
- * Minimal, purposeful — no decorative shadows.
+ * Shadows and visual elevation based on OpenProps shadow tokens.
  */
 
-import { css } from '@kissjs/core';
+import { css } from 'lit';
 
 /** Shadow/effect CSS custom properties */
 export const kissEffectTokens = css`
   :host {
-    /* === Box Shadows (subtle, Swiss restraint) === */
-    --kiss-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
-    --kiss-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.15);
-    --kiss-shadow-lg: 0 4px 24px rgba(0, 0, 0, 0.2);
+    --kiss-shadow-sm: var(--shadow-1);
+    --kiss-shadow-md: var(--shadow-3);
+    --kiss-shadow-lg: var(--shadow-5);
   }
 
-  /* Dark mode: invert shadow color for elevation on black backgrounds */
+  /* Dark mode: override with light-on-dark shadows */
   :host([data-theme="dark"]) {
-    --kiss-shadow-sm: 0 1px 3px rgba(255, 255, 255, 0.06);
-    --kiss-shadow-md: 0 2px 8px rgba(255, 255, 255, 0.09);
-    --kiss-shadow-lg: 0 4px 24px rgba(255, 255, 255, 0.12);
+    --kiss-shadow-sm: var(--inner-shadow-1);
+    --kiss-shadow-md: var(--inner-shadow-2);
+    --kiss-shadow-lg: var(--inner-shadow-3);
   }
 `;

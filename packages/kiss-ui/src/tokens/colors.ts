@@ -1,15 +1,16 @@
 /**
  * @kissjs/ui - Design Tokens: Color Themes
  *
- * KISS Design System: Pure B&W (Swiss International Style).
+ * KISS Design System based on OpenProps design tokens.
  * Light theme by default, Dark via data-theme attribute.
  *
  * Token naming: --kiss-{category}-{variant}
  *
  * SINGLE SOURCE OF TRUTH:
- * All color token values are defined in `kissColorValues` below.
- * The CSS outputs (:host and :root versions) are GENERATED from this object.
- * NEVER edit the CSS strings directly — always edit the values object.
+ * All color token values are defined below, referencing OpenProps CSS variables
+ * (var(--gray-N), var(--red-N), etc.). At runtime, OpenProps CSS from CDN
+ * provides the resolved color values. Users can override any OpenProps variable
+ * globally to customize the theme.
  *
  * ARCHITECTURE NOTE — Theme Propagation in Shadow DOM:
  *
@@ -41,53 +42,53 @@ import { css, unsafeCSS } from 'lit';
 // ============================================================
 // SINGLE SOURCE OF TRUTH — Color Token Values
 // ============================================================
-// Edit these values to change ALL color tokens everywhere.
-// The CSS outputs are generated from these objects.
+// Values reference OpenProps CSS variables (loaded via CDN).
+// See: https://open-props.style/#colors
 
 /** Dark theme color values (default) */
 export const kissDarkColors = {
-  '--kiss-bg-base': '#000',
-  '--kiss-bg-surface': '#0a0a0a',
-  '--kiss-bg-elevated': '#111',
-  '--kiss-bg-hover': '#0e0e0e',
-  '--kiss-bg-card': '#0a0a0a',
-  '--kiss-border': '#1a1a1a',
-  '--kiss-border-hover': '#333',
-  '--kiss-text-primary': '#fff',
-  '--kiss-text-secondary': '#999',
-  '--kiss-text-tertiary': '#666',
-  '--kiss-text-muted': '#444',
-  '--kiss-accent': '#fff',
-  '--kiss-accent-dim': '#ccc',
-  '--kiss-accent-subtle': 'rgba(255, 255, 255, 0.05)',
-  '--kiss-code-bg': '#111',
-  '--kiss-code-border': '#1a1a1a',
-  '--kiss-error': '#e55',
+  '--kiss-bg-base': 'var(--gray-12)',
+  '--kiss-bg-surface': 'var(--gray-11)',
+  '--kiss-bg-elevated': 'var(--gray-10)',
+  '--kiss-bg-hover': 'var(--gray-11)',
+  '--kiss-bg-card': 'var(--gray-11)',
+  '--kiss-border': 'var(--gray-9)',
+  '--kiss-border-hover': 'var(--gray-8)',
+  '--kiss-text-primary': 'var(--gray-0)',
+  '--kiss-text-secondary': 'var(--gray-5)',
+  '--kiss-text-tertiary': 'var(--gray-7)',
+  '--kiss-text-muted': 'var(--gray-8)',
+  '--kiss-accent': 'var(--gray-0)',
+  '--kiss-accent-dim': 'var(--gray-4)',
+  '--kiss-accent-subtle': 'var(--gray-11)',
+  '--kiss-code-bg': 'var(--gray-10)',
+  '--kiss-code-border': 'var(--gray-9)',
+  '--kiss-error': 'var(--red-4)',
   '--kiss-scrollbar-track': 'transparent',
-  '--kiss-scrollbar-thumb': '#222',
+  '--kiss-scrollbar-thumb': 'var(--gray-9)',
 } as const;
 
 /** Light theme color values */
 export const kissLightColors = {
-  '--kiss-bg-base': '#fff',
-  '--kiss-bg-surface': '#fafafa',
-  '--kiss-bg-elevated': '#f5f5f5',
-  '--kiss-bg-hover': '#f0f0f0',
-  '--kiss-bg-card': '#fff',
-  '--kiss-border': '#e5e5e5',
-  '--kiss-border-hover': '#ccc',
-  '--kiss-text-primary': '#000',
-  '--kiss-text-secondary': '#555',
-  '--kiss-text-tertiary': '#888',
-  '--kiss-text-muted': '#aaa',
-  '--kiss-accent': '#000',
-  '--kiss-accent-dim': '#333',
-  '--kiss-accent-subtle': 'rgba(0, 0, 0, 0.03)',
-  '--kiss-code-bg': '#f5f5f5',
-  '--kiss-code-border': '#e5e5e5',
-  '--kiss-error': '#c44',
+  '--kiss-bg-base': 'var(--gray-0)',
+  '--kiss-bg-surface': 'var(--gray-1)',
+  '--kiss-bg-elevated': 'var(--gray-2)',
+  '--kiss-bg-hover': 'var(--gray-2)',
+  '--kiss-bg-card': 'var(--gray-0)',
+  '--kiss-border': 'var(--gray-3)',
+  '--kiss-border-hover': 'var(--gray-4)',
+  '--kiss-text-primary': 'var(--gray-12)',
+  '--kiss-text-secondary': 'var(--gray-7)',
+  '--kiss-text-tertiary': 'var(--gray-6)',
+  '--kiss-text-muted': 'var(--gray-5)',
+  '--kiss-accent': 'var(--gray-12)',
+  '--kiss-accent-dim': 'var(--gray-8)',
+  '--kiss-accent-subtle': 'var(--gray-2)',
+  '--kiss-code-bg': 'var(--gray-2)',
+  '--kiss-code-border': 'var(--gray-3)',
+  '--kiss-error': 'var(--red-7)',
   '--kiss-scrollbar-track': 'transparent',
-  '--kiss-scrollbar-thumb': '#ccc',
+  '--kiss-scrollbar-thumb': 'var(--gray-4)',
 } as const;
 
 // ============================================================

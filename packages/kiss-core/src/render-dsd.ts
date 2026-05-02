@@ -98,7 +98,7 @@ export function serializeAttributes(props: Record<string, string | boolean | und
 
 /**
  * Interface that components must implement to be DSD-renderable.
- * Both LitElement and KissElement can satisfy this at runtime.
+ * Works with any Custom Element class that has render() and connectedCallback().
  */
 export interface DsdComponent {
   /** Return Shadow DOM inner HTML as a string */
@@ -107,7 +107,7 @@ export interface DsdComponent {
   /** Optional: called after setting props, before render() */
   connectedCallback?(): void;
 
-  /** Set named property/value — works with both LitElement and KissElement */
+  /** Set named property/value */
   [key: string]: unknown;
 }
 
@@ -230,10 +230,10 @@ export async function renderDSDByName(
  * Currently returns the original HTML — full recursive implementation pending
  * the component registry integration.
  */
-export function renderNestedDsd(
+export async function renderNestedDsd(
   html: string,
-  _renderFn: (tag: string, props: Record<string, string>) => string = renderDSDByName,
-): string {
+  _renderFn: (tag: string, props: Record<string, string>) => Promise<string> = renderDSDByName,
+): Promise<string> {
   // Phase 2: Implement regex or lightweight parser for custom element detection.
   // For v0.5.0 alpha, components are responsible for rendering their own children.
   return html;

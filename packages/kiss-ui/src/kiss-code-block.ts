@@ -12,7 +12,7 @@
  * ```
  */
 
-import { css, type CSSResult, html, LitElement, type TemplateResult } from '@kissjs/core';
+import { css, type CSSResult, html, LitElement, type TemplateResult } from 'lit';
 import { kissDesignTokens } from './design-tokens.js';
 
 export const tagName = 'kiss-code-block';

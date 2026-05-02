@@ -1,47 +1,40 @@
 /**
- * @kissjs/rpc - Lit ReactiveController for Hono RPC
+ * @kissjs/rpc - Framework-agnostic fetch abstraction
  *
- * Minimal wrapper to use Hono RPC in Lit Islands.
- * For type-safe API calls, use Hono's `hc()` directly.
+ * Zero-dependency RPC controller using native Web APIs (fetch, AbortController).
+ * Works with any framework: Lit, HTMLElement, Preact, or vanilla JS.
  *
  * @example
  * ```typescript
  * import { RpcController } from '@kissjs/rpc'
- * import { hc } from 'hono/client'
- * import type { AppType } from '../server'
  *
- * class MyIsland extends LitElement {
+ * class MyElement extends HTMLElement {
  *   private rpc = new RpcController(this)
- *   private client = hc<AppType>('/')
  *
  *   async loadData() {
  *     const data = await this.rpc.call(() =>
- *       this.client.api.posts.$get()
+ *       fetch('/api/posts').then(r => r.json())
  *     )
- *     // data is fully typed!
  *   }
  *
- *   render() {
- *     if (this.rpc.loading) return html`<p>Loading...</p>`
- *     if (this.rpc.error) return html`<p>Error: ${this.rpc.error.message}</p>`
- *     return html`...`
+ *   connectedCallback() {
+ *     this.loadData()
  *   }
  * }
+ * customElements.define('my-element', MyElement)
  * ```
  *
  * @module
  */
 
-// Local type declarations — avoid pulling lit into rpc package dependency.
-// These minimal interfaces match a SUBSET of Lit's ReactiveControllerHost.
+// Local type declarations — no framework dependency.
+// These minimal interfaces match common lifecycle patterns.
 //
-// RpcController only uses addController/removeController/requestUpdate.
-// The local ReactiveElement is intentionally a structural subset of Lit's
-// ReactiveControllerHost — any LitElement satisfies it at runtime.
+// RpcController uses addController/removeController/requestUpdate
+// which are implemented by LitElement, HTMLElement subclasses,
+// and any custom element framework.
 //
-// Drift detection: see __tests__/type-compat.ts — it imports Lit's
-// ReactiveControllerHost and asserts assignability. If Lit adds required
-// methods, that test will fail at compile time.
+// Any object with these methods works at runtime (structural typing).
 interface ReactiveController {
   hostConnected?(): void;
   hostDisconnected?(): void;

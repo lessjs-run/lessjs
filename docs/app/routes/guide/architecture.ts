@@ -13,7 +13,7 @@ export class ArchitecturePage extends LitElement {
         <div class="container">
           <h1>架构设计</h1>
           <p class="subtitle">
-            KISS 框架如何实现 K·I·S·S 架构约束—— 将 Hono、Lit 和 Vite 融合为一个插件。
+            KISS 框架如何实现 K·I·S·S 架构约束—— 一个 Vite 插件，零框架运行时。
           </p>
 
           <h2>用户视角</h2>
@@ -110,20 +110,46 @@ export class ArchitecturePage extends LitElement {
               </tbody>
             </table>
 
+            <h2>Core： 零运行时</h2>
+            <p>
+              <span class="inline-code">@kissjs/core</span> 是纯构建/SSR 工具，
+              在浏览器端不贡献任何字节。它不提供 base class、不导出框架运行时。
+            </p>
+            <p>
+              v0.5 清理了 KissElement（innerHTML 更新路线不可持续）和 Lit re-export，
+              Lit 现在是 <span class="inline-code">@kissjs/ui</span> 的实现细节。
+            </p>
+
+            <h2>RPC：纯原生</h2>
+            <p>
+              <span class="inline-code">@kissjs/rpc</span> 使用原生 Web API
+              （fetch、AbortController、setTimeout），零框架依赖。
+              通过 structural typing 实现框架无关的生命周期集成。
+            </p>
+
+            <h2>UI 组件：OpenProps + Lit</h2>
+            <p>
+              <span class="inline-code">@kissjs/ui</span> 使用 OpenProps 作为设计令牌源
+              （CSS 自定义属性，穿透 Shadow DOM），LitElement 作为组件实现工具。
+              Lit 是 UI 包的内部细节，用户只看到标准的 Custom Element API。
+            </p>
+
             <h2>请求生命周期（开发模式）</h2>
             <code-block
             ><pre>
               <code>请求 → Vite Dev Server → Hono 中间件 → 路由匹配
-                → Vite SSR (ssrLoadModule) → @lit-labs/ssr 渲染 Lit
-                → HTML + 声明式 Shadow DOM → 注入 Island hydration → 响应</code></pre></code-block>
+                → Vite SSR (ssrLoadModule) → DSD 渲染器
+                  → 动态 import @lit-labs/ssr（当 Lit 组件存在时）
+                  → 纯字符串拼接（当纯原生组件时）
+                → HTML + 声明式 Shadow DOM → 注入 Island script → 响应</code></pre></code-block>
 
                 <h2>构建生命周期（SSG — 三阶段管线）</h2>
                 <code-block
                 ><pre>
                   <code>Phase 1: vite build（SSR bundle）
                     → kiss() 插件扫描路由 + Islands
-                    → @lit-labs/ssr 渲染所有页面为带 DSD 的 HTML
-                    → 写出 .kiss/build-metadata.json（供后续阶段使用）
+                    → DSD 渲染器渲染所有页面（双通道：Lit/原生）
+                    → 写出 .kiss/build-metadata.json
                     产出：dist/server/entry.js（SSR bundle）
 
                     Phase 2: deno task build:client（Island JS）
@@ -175,15 +201,20 @@ export class ArchitecturePage extends LitElement {
 
                         <h2>DSD 输出</h2>
                         <p>
-                          每个由
-                          <span class="inline-code">@lit-labs/ssr</span> 渲染的 Lit 组件都输出
-                          <strong>声明式 Shadow DOM</strong>。这满足了 K 约束（构建时内容知识）和 S 约束 （无 JS
-                          的语义基线）：
+                          DSD 渲染器（<span class="inline-code">render-dsd.ts</span>）
+                          对所有组件输出<strong>声明式 Shadow DOM</strong>。双通道设计：
+                        </p>
+                        <ul>
+                          <li>纯原生组件：<code>render()</code> 返回 string → 直接拼接 DSD</li>
+                          <li>Lit 组件：<code>render()</code> 返回 TemplateResult → 动态 import <code>@lit-labs/ssr</code></li>
+                        </ul>
+                        <p>
+                          满足 K 约束（构建时内容知识）和 S 约束（无 JS 的语义基线）：
                         </p>
                         <code-block
                         ><pre>
-                          <code>&lt;!-- SSG 输出的 Lit 组件 --&gt;
-                          &lt;app-layout&gt;
+                          <code>&lt;!-- SSG 输出的组件 --&gt;
+                          &lt;kiss-layout&gt;
                             &lt;template shadowrootmode="open"&gt;
                               &lt;style&gt;/* 作用域样式 */&lt;/style&gt;
                               &lt;header&gt;...&lt;/header&gt;
@@ -191,10 +222,10 @@ export class ArchitecturePage extends LitElement {
                               &lt;footer&gt;...&lt;/footer&gt;
                             &lt;/template&gt;
                             &lt;!-- 插槽页面内容 --&gt;
-                          &lt;/app-layout&gt;</code></pre></code-block>
+                          &lt;/kiss-layout&gt;</code></pre></code-block>
                         <p>
-                          支持 DSD 的浏览器立即渲染 Shadow DOM 内容。 当 Lit hydration 时，它复用现有 DOM ——
-                          无闪烁，无重复。
+                          支持 DSD 的浏览器立即渲染 Shadow DOM 内容。
+                          无闪烁，无重复，无需 JavaScript。
                         </p>
 
                         <h2>Island Hydration</h2>

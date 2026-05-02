@@ -35,7 +35,7 @@
  * ```
  */
 
-import { css, type CSSResult } from '@kissjs/core';
+import { css, type CSSResult } from 'lit';
 import { kissSpacingTokens } from './tokens/spacing.js';
 import { kissTypographyTokens } from './tokens/typography.js';
 import { kissColorTokens } from './tokens/colors.js';

@@ -4,22 +4,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "cd ../packages/kiss-ui && deno task build",
+    "prebuild": "cd ../packages/kiss-ui && npx vite build --config vite.config.build.ts",
     "build": "vite build",
-    "preview": "vite preview",
-    "postinstall": "cd .. && ln -sf docs/node_modules node_modules || true"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@kissjs/ui": "file:../packages/kiss-ui"
   },
   "devDependencies": {
-    "@hono/vite-dev-server": "^0.25.3",
-    "@lit-labs/ssr": "^3.2.0",
-    "@types/node": "^22.0.0",
-    "hono": "^4.0.0",
-    "lit": "^3.2.0",
-    "tsx": "^4.21.0",
-    "typescript": "^5.0.0",
-    "vite": "^6.0.0"
+    "vite": "^8.0.0"
   }
 }

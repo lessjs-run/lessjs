@@ -4,12 +4,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./render-dsd": "./src/render-dsd.ts",
-    "./kiss-element": "./src/kiss-element.ts",
     "./cli/build-client": "./src/cli/build-client.ts",
     "./cli/build-ssg": "./src/cli/build-ssg.ts"
-  },
-  "imports": {
-    "@preact/signals-core": "npm:@preact/signals-core@^1.8.0"
   },
   "tasks": {
     "build": "deno run -A npm:vite build --config vite.config.build.ts",
@@ -19,7 +15,6 @@
   "compilerOptions": {
     "skipLibCheck": true
   },
-
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

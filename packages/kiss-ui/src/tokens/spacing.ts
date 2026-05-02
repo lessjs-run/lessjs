@@ -5,7 +5,7 @@
  * Consistent rhythm across all components.
  */
 
-import { css } from '@kissjs/core';
+import { css } from 'lit';
 
 /** Spacing & layout CSS custom properties */
 export const kissSpacingTokens = css`

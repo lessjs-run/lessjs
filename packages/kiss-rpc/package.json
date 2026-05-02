@@ -1,7 +1,7 @@
 {
   "name": "@kissjs/rpc",
   "version": "0.2.5",
-  "description": "KISS RPC — Lit ReactiveController for type-safe Hono RPC calls",
+  "description": "KISS RPC — framework-agnostic fetch abstraction with retry and cancellation",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -11,6 +11,5 @@
     "build": "vite build --config vite.config.build.ts",
     "dev": "vite build --config vite.config.build.ts --watch"
   },
-  "peerDependencies": { "lit": "^3.2.0" },
   "devDependencies": { "vite-plugin-dts": "^4.5.0" }
 }

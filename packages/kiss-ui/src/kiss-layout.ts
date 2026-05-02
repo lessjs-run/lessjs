@@ -37,7 +37,7 @@
  * ```
  */
 
-import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } from '@kissjs/core';
+import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } from 'lit';
 import { kissDesignTokens } from './design-tokens.js';
 // CRITICAL: kiss-layout's template uses <kiss-theme-toggle>, so we MUST import it
 // so that the SSR renderer can recursively render its DSD shadow root.

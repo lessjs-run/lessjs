@@ -22,7 +22,7 @@
  * ```
  */
 
-import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } from '@kissjs/core';
+import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } from 'lit';
 import { kissDesignTokens } from './design-tokens.js';
 
 export const tagName = 'kiss-button';

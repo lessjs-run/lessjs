@@ -1,19 +1,9 @@
 /**
  * KISS runtime shim — built-in, auto-injected by kiss() plugin.
  *
- * v0.5.0: Dual runtime — exports both KissElement (zero-runtime) and Lit (optional).
- *
- * The kiss() plugin resolves `@kissjs/core` imports to this shim automatically,
- * preventing build-time code (node:fs, Vite plugins) from leaking into bundles.
+ * v0.5.0: Pure build/SSR runtime. No KissElement, no Lit.
+ * Lit exports are handled by @kissjs/ui — users import components directly.
  */
-
-// --- KissElement (zero-runtime, always available) ---
-export { css, effect, html, KissElement, signal } from './kiss-element.js';
-export type { ReactiveController, ReactiveControllerHost } from './kiss-element.js';
-
 export { renderDSD, renderDSDByName } from './render-dsd.js';
-
 export { Hono } from 'hono';
-
-// SSR runtime — wrapInDocument has no Node.js deps, safe to re-export
 export { wrapInDocument } from './ssr-handler.js';
