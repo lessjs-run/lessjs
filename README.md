@@ -1,5 +1,7 @@
 # KISS
 
+[English](./README.md) | [简体中文](./README.zh-CN.md)
+
 KISS is a Deno-first, Web Standards-first fullstack framework for static-first applications.
 
 It combines Declarative Shadow DOM, Web Components, Island Upgrade, SSG, Hono serverless APIs,
