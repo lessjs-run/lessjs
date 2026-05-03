@@ -1,6 +1,6 @@
 {
   "name": "@kissjs/core",
-  "version": "0.5.0-alpha.1",
+  "version": "0.5.0-alpha.2",
   "exports": {
     ".": "./src/index.ts",
     "./render-dsd": "./src/render-dsd.ts",
