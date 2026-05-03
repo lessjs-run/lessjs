@@ -199,39 +199,42 @@ function interpolate(result: unknown): string {
 export function extractLitStyles(componentClass: CustomElementConstructor): string | undefined {
   try {
     const ctor = componentClass as unknown as Record<string, unknown>;
-  const styles = ctor.styles;
-  if (!styles) return undefined;
+    const styles = ctor.styles;
+    if (!styles) return undefined;
 
-  // Normalize to array
-  const styleList: unknown[] = Array.isArray(styles) ? styles : [styles];
-  const parts: string[] = [];
+    // Normalize to array
+    const styleList: unknown[] = Array.isArray(styles) ? styles : [styles];
+    const parts: string[] = [];
 
-  for (const s of styleList) {
-    if (s != null && typeof s === 'object') {
-      const obj = s as Record<string, unknown>;
-      // Lit 3.x CSSResult has cssText — the fully compiled CSS string
-      if (typeof obj.cssText === 'string') {
-        parts.push(obj.cssText);
-      } else if (typeof obj._strings !== 'undefined') {
-        // Fallback: try to reconstruct from _strings if cssText is missing
-        // (shouldn't happen in normal Lit 3.x, but defensive)
-        const strings = obj._strings as ArrayLike<string>;
-        if (strings) {
-          const arr = Array.from(strings);
-          parts.push(arr.join(''));
+    for (const s of styleList) {
+      if (s != null && typeof s === 'object') {
+        const obj = s as Record<string, unknown>;
+        // Lit 3.x CSSResult has cssText — the fully compiled CSS string
+        if (typeof obj.cssText === 'string') {
+          parts.push(obj.cssText);
+        } else if (typeof obj._strings !== 'undefined') {
+          // Fallback: try to reconstruct from _strings if cssText is missing
+          // (shouldn't happen in normal Lit 3.x, but defensive)
+          const strings = obj._strings as ArrayLike<string>;
+          if (strings) {
+            const arr = Array.from(strings);
+            parts.push(arr.join(''));
+          }
+        } else if (typeof s === 'string') {
+          parts.push(s);
         }
       } else if (typeof s === 'string') {
         parts.push(s);
       }
-    } else if (typeof s === 'string') {
-      parts.push(s);
     }
-  }
 
-  return parts.length > 0 ? parts.join('\n') : undefined;
+    return parts.length > 0 ? parts.join('\n') : undefined;
   } catch (err) {
     const name = (componentClass as { name?: string }).name || 'unknown';
-    console.warn(`[KISS] Failed to extract styles for <${name}>:`, err instanceof Error ? err.message : err);
+    console.warn(
+      `[KISS] Failed to extract styles for <${name}>:`,
+      err instanceof Error ? err.message : err,
+    );
     return undefined;
   }
 }

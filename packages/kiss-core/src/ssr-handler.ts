@@ -17,7 +17,7 @@
  */
 
 import type { RouteEntry } from './types.js';
-import { escapeHtml, escapeAttrValue as escapeHtmlAttr } from './render-dsd.js';
+import { escapeAttrValue as escapeHtmlAttr, escapeHtml } from './render-dsd.js';
 
 /**
  * Render an error page to HTML string.

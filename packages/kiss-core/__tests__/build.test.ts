@@ -100,13 +100,12 @@ Deno.test('build - generateClientEntry', async (t) => {
     assertEquals(code.includes('LitElement'), false);
   });
 
-  await t.step('waits for whenDefined before dispatch', () => {
+  await t.step('uses idle-time lazy loading', () => {
     const islands = [{ tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' }];
     const code = generateClientEntry(islands);
-    assertStringIncludes(code, 'customElements.whenDefined');
-    assertStringIncludes(code, 'Promise.all');
-    // v0.5.0: dispatches kiss:ready event instead of Lit hydration
+    assertStringIncludes(code, 'requestIdleCallback');
     assertStringIncludes(code, 'kiss:ready');
+    assertStringIncludes(code, 'function __load');
   });
 });
 

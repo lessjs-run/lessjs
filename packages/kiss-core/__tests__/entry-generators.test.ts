@@ -11,7 +11,9 @@ Deno.test('eager island loads immediately', () => {
   ]);
   assertExists(code.includes("import('@kissjs/ui/kiss-theme-toggle')"));
   assertExists(code.includes('requestIdleCallback'));
-  try { new Function(code); } catch (e) {
+  try {
+    new Function(code);
+  } catch (e) {
     assertEquals(true, false, `Syntax error: ${String(e)}`);
   }
 });
@@ -22,7 +24,9 @@ Deno.test('lazy island deferred to idle', () => {
   ]);
   assertExists(code.includes('requestIdleCallback'));
   assertExists(code.includes("import('./ping.ts')"));
-  try { new Function(code); } catch (e) {
+  try {
+    new Function(code);
+  } catch (e) {
     assertEquals(true, false, `Syntax error: ${String(e)}`);
   }
 });
@@ -35,7 +39,9 @@ Deno.test('mixed eager+lazy', () => {
   ]);
   assertExists(code.includes('requestIdleCallback'));
   assertExists(code.includes('kiss:ready'));
-  try { new Function(code); } catch (e) {
+  try {
+    new Function(code);
+  } catch (e) {
     assertEquals(true, false, `Syntax error: ${String(e)}`);
   }
 });
@@ -53,7 +59,9 @@ Deno.test('kiss:ready event', () => {
     { tagName: 'my-island', modulePath: './island.ts' },
   ]);
   assertExists(code.includes('kiss:ready'));
-  try { new Function(code); } catch (e) {
+  try {
+    new Function(code);
+  } catch (e) {
     assertEquals(true, false, `Syntax error: ${String(e)}`);
   }
 });

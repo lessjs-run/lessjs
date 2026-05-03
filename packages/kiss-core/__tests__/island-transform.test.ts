@@ -117,11 +117,11 @@ Deno.test('entry-generators - generateClientEntry (v0.5.0 CE upgrade)', async (t
     assertEquals(code.includes("customElements.define('my-counter'"), false);
   });
 
-  await t.step('waits for customElements.whenDefined before dispatch', () => {
+  await t.step('uses requestIdleCallback for lazy loading', () => {
     const islands = [{ tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' }];
     const code = generateClientEntry(islands);
-    assertEquals(code.includes('customElements.whenDefined'), true);
-    assertEquals(code.includes('Promise.all'), true);
+    assertEquals(code.includes('requestIdleCallback'), true);
+    assertEquals(code.includes('function __load'), true);
   });
 
   await t.step('dispatches kiss:ready event after upgrade', () => {
