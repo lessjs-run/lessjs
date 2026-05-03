@@ -27,20 +27,20 @@ jobs:
 
       - name: Publish @kissjs/core
         working-directory: packages/kiss-core
-        run: deno publish --allow-dirty --token "${{ secrets.JSR_TOKEN }}"
+        run: deno publish --allow-dirty
 
       - name: Publish @kissjs/rpc
         working-directory: packages/kiss-rpc
-        run: deno publish --allow-dirty --token "${{ secrets.JSR_TOKEN }}"
+        run: deno publish --allow-dirty
 
       - name: Publish @kissjs/ui
         working-directory: packages/kiss-ui
-        run: deno publish --allow-dirty --token "${{ secrets.JSR_TOKEN }}"
+        run: deno publish --allow-dirty
 
       - name: Publish @kissjs/adapter-lit
         working-directory: packages/kiss-adapter-lit
-        run: deno publish --allow-dirty --token "${{ secrets.JSR_TOKEN }}"
+        run: deno publish --allow-dirty
 
       - name: Publish @kissjs/create
         working-directory: packages/create-kiss
-        run: deno publish --allow-dirty --token "${{ secrets.JSR_TOKEN }}"
+        run: deno publish --allow-dirty
