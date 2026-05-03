@@ -215,6 +215,7 @@ export class KissLayout extends LitElement {
 
         .header-nav a:hover {
           color: var(--kiss-text-primary);
+          text-decoration: underline;
         }
 
         /* === Header Right === */

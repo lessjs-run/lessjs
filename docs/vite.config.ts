@@ -60,6 +60,8 @@ export default defineConfig({
           // Theme system: Pure B&W — Dark / Light
           // DRY: CSS values come from @kissjs/ui/tokens/colors.ts (single source of truth)
           colorTokensStyle,
+          // Anti-flash: CLS prevention — removed by theme-init.js
+          '<style id="kiss-anti-flash">html{visibility:hidden}</style>',
           // Init theme from localStorage or prefers-color-scheme
           '<script src="/theme-init.js"></script>',
           // Mobile sidebar: close on backdrop click

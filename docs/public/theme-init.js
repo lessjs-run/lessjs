@@ -9,4 +9,7 @@
   var prefersDark = globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
   var theme = saved || (prefersDark ? 'dark' : 'light');
   document.documentElement.setAttribute('data-theme', theme);
+  // Remove anti-flash cloak — done before first paint
+  var cloak = document.getElementById('kiss-anti-flash');
+  if (cloak) cloak.remove();
 })();
