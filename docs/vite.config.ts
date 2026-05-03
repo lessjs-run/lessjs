@@ -44,9 +44,7 @@ export default defineConfig({
         backgroundColor: '#ffffff',
       },
       inject: {
-        stylesheets: [
-          'https://unpkg.com/open-props@1.7.20/open-props.min.css',
-        ],
+        stylesheets: [],
         scripts: [],
         headFragments: [
           // Meta
