@@ -6,7 +6,6 @@
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/path@1": "1.1.4",
     "npm:@hono/vite-dev-server@~0.25.3": "0.25.3_hono@4.12.16",
-    "npm:@lit-labs/ssr-client@1": "1.1.8",
     "npm:@lit-labs/ssr-dom-shim@1": "1.5.1",
     "npm:@lit/reactive-element@2": "2.1.2",
     "npm:@types/node@22": "22.19.17",
@@ -21,8 +20,7 @@
     "npm:typescript@^5.9.0": "5.9.3",
     "npm:vite-plugin-dts@^4.5.0": "4.5.4_typescript@5.9.3_vite@6.4.2__@types+node@22.19.17__tsx@4.21.0__picomatch@4.0.4_@types+node@22.19.17_tsx@4.21.0",
     "npm:vite@8": "8.0.10_@types+node@22.19.17_tsx@4.21.0",
-    "npm:vite@8.0.10": "8.0.10_@types+node@22.19.17_tsx@4.21.0",
-    "npm:vite@^6.3.0": "6.4.2_@types+node@22.19.17_tsx@4.21.0_picomatch@4.0.4"
+    "npm:vite@8.0.10": "8.0.10_@types+node@22.19.17_tsx@4.21.0"
   },
   "jsr": {
     "@std/assert@1.0.14": {
@@ -1416,7 +1414,6 @@
   "workspace": {
     "dependencies": [
       "npm:@hono/vite-dev-server@~0.25.3",
-      "npm:@lit-labs/ssr-client@1",
       "npm:@lit-labs/ssr-dom-shim@1",
       "npm:@lit/reactive-element@2",
       "npm:@types/node@22",
@@ -1442,23 +1439,10 @@
           ]
         }
       },
-      "packages/kiss-rpc": {
-        "packageJson": {
-          "dependencies": [
-            "npm:vite-plugin-dts@^4.5.0"
-          ]
-        }
-      },
       "packages/kiss-ui": {
         "dependencies": [
           "npm:lit@^3.2.0"
-        ],
-        "packageJson": {
-          "dependencies": [
-            "npm:@types/node@22",
-            "npm:vite@^6.3.0"
-          ]
-        }
+        ]
       }
     }
   }
