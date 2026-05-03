@@ -59,9 +59,9 @@ export default class CounterIsland extends LitElement {
   render() {
     return html`
       <div class="counter">
-        <button @click="${() => this.count--}">−</button>
+        <button aria-label="Decrease count" @click="${() => this.count--}">−</button>
         <span class="count">${this.count}</span>
-        <button @click="${() => this.count++}">+</button>
+        <button aria-label="Increase count" @click="${() => this.count++}">+</button>
       </div>
     `;
   }
