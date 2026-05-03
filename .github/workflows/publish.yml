@@ -2,116 +2,45 @@ name: Publish to JSR
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - 'packages/*/deno.json'
+      - '.github/workflows/publish.yml'
 
 jobs:
-  detect-and-publish:
+  publish:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2 # Need previous commit to compare
-
       - uses: denoland/setup-deno@v2
         with:
           deno-version: '2'
-
-      - name: Check version changes
-        id: check
-        run: |
-          # Helper: read version from a JSON file using python3 (robust, not fragile grep)
-          get_ver() {
-            python3 -c "import sys,json; f=open('${1}','r'); print(json.load(f).get('version','0.0.0')); f.close()" 2>/dev/null || echo "0.0.0"
-          }
-          get_ver_commit() {
-            python3 -c "import sys,json; print(json.load(sys.stdin).get('version','0.0.0'))" 2>/dev/null || echo "0.0.0"
-          }
-
-          changed=""
-
-          # Check kiss-core
-          if git show HEAD~1:packages/kiss-core/deno.json >/dev/null 2>&1; then
-            core_old=$(git show HEAD~1:packages/kiss-core/deno.json | get_ver_commit)
-          else
-            core_old="0.0.0"
-          fi
-          core_new=$(get_ver packages/kiss-core/deno.json)
-          if [ "$core_old" != "$core_new" ]; then
-            echo "core_changed=true" >> $GITHUB_OUTPUT
-            echo "📦 @kissjs/core: $core_old → $core_new"
-            changed="$changed core"
-          fi
-
-          # Check kiss-rpc
-          if git show HEAD~1:packages/kiss-rpc/deno.json >/dev/null 2>&1; then
-            rpc_old=$(git show HEAD~1:packages/kiss-rpc/deno.json | get_ver_commit)
-          else
-            rpc_old="0.0.0"
-          fi
-          rpc_new=$(get_ver packages/kiss-rpc/deno.json)
-          if [ "$rpc_old" != "$rpc_new" ]; then
-            echo "rpc_changed=true" >> $GITHUB_OUTPUT
-            echo "📦 @kissjs/rpc: $rpc_old → $rpc_new"
-            changed="$changed rpc"
-          fi
-
-          # Check kiss-ui
-          if git show HEAD~1:packages/kiss-ui/deno.json >/dev/null 2>&1; then
-            ui_old=$(git show HEAD~1:packages/kiss-ui/deno.json | get_ver_commit)
-          else
-            ui_old="0.0.0"
-          fi
-          ui_new=$(get_ver packages/kiss-ui/deno.json)
-          if [ "$ui_old" != "$ui_new" ]; then
-            echo "ui_changed=true" >> $GITHUB_OUTPUT
-            echo "📦 @kissjs/ui: $ui_old → $ui_new"
-            changed="$changed ui"
-          fi
-
-          # Check create-kiss
-          if git show HEAD~1:packages/create-kiss/deno.json >/dev/null 2>&1; then
-            create_old=$(git show HEAD~1:packages/create-kiss/deno.json | get_ver_commit)
-          else
-            create_old="0.0.0"
-          fi
-          create_new=$(get_ver packages/create-kiss/deno.json)
-          if [ "$create_old" != "$create_new" ]; then
-            echo "create_changed=true" >> $GITHUB_OUTPUT
-            echo "📦 @kissjs/create: $create_old → $create_new"
-            changed="$changed create"
-          fi
-
-          if [ -z "$changed" ]; then
-            echo "ℹ️ No version changes detected"
-          fi
-
-      - name: Publish @kissjs/core
-        if: steps.check.outputs.core_changed == 'true'
-        working-directory: packages/kiss-core
-        run: deno publish --token "${{ secrets.JSR_TOKEN }}"
-
-      - name: Publish @kissjs/rpc
-        if: steps.check.outputs.rpc_changed == 'true'
-        working-directory: packages/kiss-rpc
-        run: deno publish --token "${{ secrets.JSR_TOKEN }}"
+      - name: Install dependencies
+        run: deno install --node-modules-dir
 
       - name: Build @kissjs/ui
-        if: steps.check.outputs.ui_changed == 'true'
         working-directory: packages/kiss-ui
         run: deno task build
 
+      - name: Publish @kissjs/core
+        working-directory: packages/kiss-core
+        run: deno publish --allow-dirty --token "${{ secrets.JSR_TOKEN }}"
+
+      - name: Publish @kissjs/rpc
+        working-directory: packages/kiss-rpc
+        run: deno publish --allow-dirty --token "${{ secrets.JSR_TOKEN }}"
+
       - name: Publish @kissjs/ui
-        if: steps.check.outputs.ui_changed == 'true'
         working-directory: packages/kiss-ui
-        run: deno publish --token "${{ secrets.JSR_TOKEN }}"
+        run: deno publish --allow-dirty --token "${{ secrets.JSR_TOKEN }}"
+
+      - name: Publish @kissjs/adapter-lit
+        working-directory: packages/kiss-adapter-lit
+        run: deno publish --allow-dirty --token "${{ secrets.JSR_TOKEN }}"
 
       - name: Publish @kissjs/create
-        if: steps.check.outputs.create_changed == 'true'
         working-directory: packages/create-kiss
-        run: deno publish --token "${{ secrets.JSR_TOKEN }}"
+        run: deno publish --allow-dirty --token "${{ secrets.JSR_TOKEN }}"

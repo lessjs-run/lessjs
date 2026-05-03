@@ -183,7 +183,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
     }
 
     const { readFileSync, writeFileSync, existsSync } = await import('node:fs');
-    const { join, _resolve, _dirname } = await import('node:path');
+    const { join } = await import('node:path');
 
     const server = await createServer({
       configFile: false,
