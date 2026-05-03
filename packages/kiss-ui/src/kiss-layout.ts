@@ -521,15 +521,6 @@ export class KissLayout extends LitElement {
     /** Default KISS docs navigation — single source of truth for the docs site */
     private static readonly DEFAULT_NAV: NavSection[] = [
       {
-        section: 'Site',
-        items: [
-          { path: '/guide/getting-started', label: 'Docs' },
-          { path: '/ui', label: 'UI' },
-          { path: '/blog', label: 'Blog' },
-          { href: 'https://jsr.io/@kissjs/core', label: 'JSR' },
-        ],
-      },
-      {
         section: 'Introduction',
         items: [
           { path: '/guide/getting-started', label: 'Getting Started' },
@@ -697,7 +688,7 @@ export class KissLayout extends LitElement {
           </header>
           <div class="mobile-backdrop"></div>
           <div class="layout-body">
-            ${this._renderSidebarNav()}
+            ${!this.home ? this._renderSidebarNav() : nothing}
             <main class="layout-main">
               <slot></slot>
             </main>
