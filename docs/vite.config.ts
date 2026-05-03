@@ -12,6 +12,7 @@ import { fileURLToPath } from 'node:url';
 // NOTE: __dirname is unavailable in Deno ESM — use import.meta instead.
 const __dir = dirname(fileURLToPath(import.meta.url));
 const runtimeShim = resolve(__dir, 'app/.kiss-runtime.ts');
+const uiSrcDir = resolve(__dir, '../packages/kiss-ui/src');
 
 // DRY: All color token values come from a single source of truth.
 // kissRootColorCSS is generated from kissDarkColors/kissLightColors in tokens/colors.ts.
@@ -75,11 +76,34 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    alias: {
-      '@kissjs/core': runtimeShim,
-      '@kissjs/core/render-dsd': resolve(__dir, '../packages/kiss-core/src/render-dsd.ts'),
-      '@kissjs/adapter-lit': resolve(__dir, '../packages/kiss-adapter-lit/src/index.ts'),
-      '@kissjs/adapter-lit/ssr': resolve(__dir, '../packages/kiss-adapter-lit/src/ssr.ts'),
-    },
+    alias: [
+      {
+        find: '@kissjs/core/render-dsd',
+        replacement: resolve(__dir, '../packages/kiss-core/src/render-dsd.ts'),
+      },
+      { find: '@kissjs/core', replacement: runtimeShim },
+      {
+        find: '@kissjs/adapter-lit/ssr',
+        replacement: resolve(__dir, '../packages/kiss-adapter-lit/src/ssr.ts'),
+      },
+      {
+        find: '@kissjs/adapter-lit',
+        replacement: resolve(__dir, '../packages/kiss-adapter-lit/src/index.ts'),
+      },
+      { find: '@kissjs/ui/kiss-button', replacement: resolve(uiSrcDir, 'kiss-button.ts') },
+      { find: '@kissjs/ui/kiss-card', replacement: resolve(uiSrcDir, 'kiss-card.ts') },
+      { find: '@kissjs/ui/kiss-input', replacement: resolve(uiSrcDir, 'kiss-input.ts') },
+      { find: '@kissjs/ui/kiss-code-block', replacement: resolve(uiSrcDir, 'kiss-code-block.ts') },
+      { find: '@kissjs/ui/kiss-layout', replacement: resolve(uiSrcDir, 'kiss-layout.ts') },
+      {
+        find: '@kissjs/ui/kiss-theme-toggle',
+        replacement: resolve(uiSrcDir, 'kiss-theme-toggle.ts'),
+      },
+      { find: '@kissjs/ui/kiss-hero-ping', replacement: resolve(uiSrcDir, 'kiss-hero-ping.ts') },
+      { find: '@kissjs/ui/kiss-ui-plugin', replacement: resolve(uiSrcDir, 'kiss-ui-plugin.ts') },
+      { find: '@kissjs/ui/design-tokens', replacement: resolve(uiSrcDir, 'design-tokens.ts') },
+      { find: '@kissjs/ui/tokens/colors', replacement: resolve(uiSrcDir, 'tokens/colors.ts') },
+      { find: '@kissjs/ui', replacement: resolve(uiSrcDir, 'index.ts') },
+    ],
   },
 });
