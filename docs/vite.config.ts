@@ -44,13 +44,13 @@ export default defineConfig({
         backgroundColor: '#ffffff',
       },
       inject: {
-        stylesheets: [
-          'https://cdn.jsdelivr.net/npm/open-props@1.7.20/open-props.min.css',
-        ],
+        stylesheets: [],
         scripts: [],
         headFragments: [
           // Meta
           '<meta name="description" content="KISS Framework — Web Standards-first Jamstack SSG with Island architecture. Zero-runtime core, DSD rendering, Lit Web Components, Hono API routes.">',
+          // Non-blocking OpenProps: media="print" prevents render-block, onload switches to all
+          '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/open-props@1.7.20/open-props.min.css" media="print" onload="this.media=\'all\'">',
           // Anti-flash: CLS prevention — removed by theme-init.js
           '<style id="kiss-anti-flash">html{visibility:hidden}</style>',
           // Favicon
