@@ -192,6 +192,8 @@ export function buildEntryDescriptor(
     middleware?: FrameworkOptions['middleware'];
     ssg?: boolean;
     islandTagNames?: string[];
+    /** Relative file paths for local islands (preserves subdirectory structure) */
+    islandFiles?: string[];
     packageIslands?: PackageIslandMeta[];
     headExtras?: string;
     html?: { lang?: string; title?: string };
@@ -325,12 +327,17 @@ export function buildEntryDescriptor(
 
   // --- Islands ---
   const islandTagNames = options.islandTagNames || [];
+  const islandFiles = options.islandFiles || [];
   const packageIslands = options.packageIslands || [];
 
-  // Local islands
-  const localIslands: IslandDecl[] = islandTagNames.map((tagName) => ({
+  // Local islands — use real file paths when available to support
+  // nested directories (e.g. posts/index.ts → tag "posts-index").
+  // Fallback to tagName-based path for backwards compatibility.
+  const localIslands: IslandDecl[] = islandTagNames.map((tagName, i) => ({
     tagName,
-    modulePath: `/${islandsDir}/${tagName}.ts`,
+    modulePath: islandFiles[i]
+      ? `/${islandsDir}/${islandFiles[i]}`
+      : `/${islandsDir}/${tagName}.ts`,
   }));
 
   // Package islands (from npm/JSR packages)

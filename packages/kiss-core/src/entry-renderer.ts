@@ -370,7 +370,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   // --- Middleware scopes (v0.3.0: _middleware.ts files) ---
   for (const mwScope of desc.middlewareScopes) {
     b.push(`// Middleware scope: ${mwScope.scope} (${mwScope.importPath})`);
-    b.push(`app.use('${mwScope.scope}/*', ${mwScope.varName}.default)`);
+    b.push(`app.use('${mwScope.scope === '/' ? '' : mwScope.scope}/*', ${mwScope.varName}.default)`);
     b.blank();
   }
 

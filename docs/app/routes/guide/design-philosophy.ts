@@ -1,394 +1,102 @@
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
-import '../../islands/code-block.js';
 
 export class DesignPhilosophyPage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
-      .pillar {
-        padding: 1.25rem;
-        margin: 1rem 0;
-        border-left: 3px solid var(--kiss-border-hover);
-        background: var(--kiss-bg-surface);
-        border-radius: 0 3px 3px 0;
-      }
-      .pillar .num {
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--kiss-text-muted);
-        margin-bottom: 0.25rem;
-      }
-      .pillar .hard-constraint {
-        display: inline-block;
-        background: var(--kiss-code-bg);
-        border: 0.5px solid var(--kiss-border-hover);
-        padding: 0.25rem 0.625rem;
-        border-radius: 4px;
-        font-size: 0.8125rem;
-        margin: 0.125rem 0;
-      }
-    `,
-  ];
+  static override styles = [pageStyles];
+
   override render() {
     return html`
       <kiss-layout currentPath="/guide/design-philosophy">
         <div class="container">
-          <h1>设计哲学</h1>
+          <h1>Design Philosophy</h1>
           <p class="subtitle">
-            KISS = Keep It Simple, Stupid。不是口号——而是每个决策的过滤器。
-          </p>
-
-          <h2>五大支柱</h2>
-
-          <div class="pillar">
-            <div class="num">支柱 1</div>
-            <h3>Web 标准优先</h3>
-            <p>
-              大多数框架"支持"Web 标准。KISS
-              <em>就是</em> Web 标准。
-            </p>
-            <p>
-              你的代码不依赖 KISS 的抽象。把它换掉，你的 Hono/Lit/Vite 代码
-              依然能跑。
-            </p>
-            <p>
-              <span class="hard-constraint">纯 ESM，零 CJS</span>
-              <span class="hard-constraint">仅 Vite，无第二个构建工具</span>
-              <span class="hard-constraint">不在输出上打补丁</span>
-            </p>
-          </div>
-
-          <div class="pillar">
-            <div class="num">支柱 2</div>
-            <h3>最小化增强</h3>
-            <p>
-              KISS 不发明东西。它以最小开销连接现有标准工具。
-            </p>
-            <p>
-              框架 = 1 个 Vite 插件（连接器，不是新抽象）。
-            </p>
-            <p>
-              零交互页面：<strong>0 KB</strong> KISS 框架运行时。交互页面只加载 island 需要的客户端代码。
-            </p>
-            <p>
-              <span class="hard-constraint">复用 Hono/Vite/Lit 生态</span>
-              <span class="hard-constraint">新依赖需要 ADR</span>
-            </p>
-          </div>
-
-          <div class="pillar">
-            <div class="num">支柱 3</div>
-            <h3>无框架绑定</h3>
-            <p>
-              KISS 当前文档站仍使用 Lit 编写组件，但 Lit 应被视为 adapter，
-              不是 core 的长期基础。你可以不用 Lit 就实现返回 HTML 字符串的 Web Component。
-            </p>
-            <p>
-              Package Islands 自动探测——无需手动注册。只需从你的包
-              <code>export</code> 一个 <code>islands</code> 数组，KISS 就能找到。
-            </p>
-            <p>
-              <span class="hard-constraint">Lit 不是强制 peerDependency</span>
-              <span class="hard-constraint">无强制验证方案</span>
-              <span class="hard-constraint">零配置 Island 发现</span>
-            </p>
-          </div>
-
-          <div class="pillar">
-            <div class="num">支柱 4</div>
-            <h3>无运行时绑定</h3>
-            <p>
-              纯 ESM 输出运行在任何支持 ESM 的运行时：Deno、Node、Bun、Cloudflare Workers。
-            </p>
-            <p>
-              <span class="hard-constraint">无平台特定硬编码</span>
-              <span class="hard-constraint">deno.json 是开发工具，不是运行时依赖</span>
-            </p>
-          </div>
-
-          <div class="pillar">
-            <div class="num">支柱 5</div>
-            <h3>渐进增强</h3>
-            <p>
-              KISS 默认静态优先。按组件选择加入交互。没有 SPA——这是架构，不是疏忽。
-            </p>
-            <table>
-              <thead>
-                <tr>
-                  <th>层级</th>
-                  <th>内容</th>
-                  <th>JS 大小</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>0</td>
-                  <td>HTML + DSD（声明式 Shadow DOM）</td>
-                  <td><strong>0 KB 框架 JS</strong></td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>部分 Islands 进行 Custom Element upgrade</td>
-                  <td>按 island chunk 计</td>
-                </tr>
-              </tbody>
-            </table>
-            <p>
-              没有层级 2 SPA，没有层级 3 实时，没有层级 4 CSR。这不是缺憾——这是
-              KISS 架构 S 约束定义的边界。
-            </p>
-          </div>
-
-          <h2>六大新原则 (v0.5.0-alpha.1)</h2>
-          <p class="subtitle">
-            基于 2026-05-02 全量架构审计确立的新增原则。与五大支柱互补，不可替代。
+            KISS 的哲学不是“少写代码”这么单薄，而是把复杂度放在正确的位置：
+            平台已经解决的问题交给平台，框架必须解决的问题才由框架承担。
           </p>
 
           <div class="pillar">
-            <div class="num">原则 6</div>
-            <h3>Lit Update Safety</h3>
+            <div class="num">Principle 01</div>
+            <h3>Web Standards First</h3>
             <p>
-              LitElement 的 <code>connectedCallback()</code> 中绝不同步修改 reactive properties。
-              当组件在父 DSD shadow DOM 内升级时，同步属性变更会与首次更新周期竞态，
-              导致 DOM 永远不更新。
-            </p>
-            <p>
-              <span class="hard-constraint">使用 updateComplete.then()</span>
-              <span class="hard-constraint">或 firstUpdated()</span>
+              HTTP 使用 Fetch API，UI 使用 Custom Elements 和 Shadow DOM，模块使用 ESM， 服务端使用 Hono
+              对齐 Web 标准。用户学到的知识应该能离开 KISS 继续使用。
             </p>
           </div>
 
           <div class="pillar">
-            <div class="num">原则 7</div>
-            <h3>Adapter Test Coverage</h3>
+            <div class="num">Principle 02</div>
+            <h3>Static First, Dynamic When Explicit</h3>
             <p>
-              每个 adapter（如 @kissjs/adapter-lit）必须有与核心转换逻辑同等规模的测试覆盖。
-              今天的两个 P0 Bug 都出在 zero-test 的 adapter-lit 中。
-              零测试的 adapter 等于零保障。
-            </p>
-            <p>
-              <span class="hard-constraint">adapter 必须测试</span>
-              <span class="hard-constraint">覆盖率目标 ≥ 60%</span>
+              默认产物应该是静态 HTML、CSS 和必要的 island JavaScript。需要 API、认证、 数据写入或
+              revalidation 时再显式进入 serverless/fullstack 模式。
             </p>
           </div>
 
           <div class="pillar">
-            <div class="num">原则 8</div>
-            <h3>Error Visibility</h3>
+            <div class="num">Principle 03</div>
+            <h3>Islands Are Upgrades, Not Hydration</h3>
             <p>
-              构建/运行时错误绝不静默吞噬。extractLitStyles() 曾用 try/catch 静默吞掉异常
-              导致页面无样式且零反馈——这种模式在框架层是不可接受的。
-              最少输出 console.warn，关键错误抛出。
-            </p>
-            <p>
-              <span class="hard-constraint">异常不可静默</span>
-              <span class="hard-constraint">最少 console.warn</span>
+              页面先是可读、可缓存、可爬取的 HTML。交互组件随后通过 Custom Element upgrade
+              变成活的组件。框架不把整页状态恢复当成默认成本。
             </p>
           </div>
 
           <div class="pillar">
-            <div class="num">原则 9</div>
-            <h3>Island Lazy by Default</h3>
+            <div class="num">Principle 04</div>
+            <h3>Adapters Extend, They Do Not Define</h3>
             <p>
-              所有 Island 组件应默认按页面和可见性延迟加载，仅关键全局 Island
-              （如 theme-toggle）允许 eager。当前实现仍偏全局 entry，v0.7.0 需要改成页面级 manifest。
-            </p>
-            <p>
-              <span class="hard-constraint">页面级 manifest</span>
-              <span class="hard-constraint">仅关键 island eager</span>
+              Lit 是当前最现实的作者体验；未来的 <span class="inline-code">.kiss</span>
+              compiler 是优化路径，不是框架成立的前提。运行时、构建和文档都应该保持 adapter 边界清晰。
             </p>
           </div>
 
           <div class="pillar">
-            <div class="num">原则 10</div>
-            <h3>CSS Single Source</h3>
+            <div class="num">Principle 05</div>
+            <h3>Docs Must Be Falsifiable</h3>
             <p>
-              全局 CSS 变量/主题在一个位置定义，不重复注入到每个组件的
-              &lt;style&gt; 标签中。避免 CSS 膨胀和 Open Props 全量加载问题。
-            </p>
-            <p>
-              <span class="hard-constraint">全局 CSS 一处分发</span>
-              <span class="hard-constraint">组件不重复注入</span>
+              文档要写当前行为，而不是愿景口号。能运行的写成指南；还没稳定的写进 Roadmap；
+              风险和限制写在架构页里，而不是藏到用户踩坑之后。
             </p>
           </div>
 
-          <div class="pillar">
-            <div class="num">原则 11</div>
-            <h3>One Config File</h3>
-            <p>
-              每个包只维护一个 deno.json 作为唯一配置源。删除 jsr.json（冗余）和不必要的 package.json。
-              多配置文件导致版本不一致——今天所有 5 个包都存在 deno.json ≠ package.json ≠ jsr.json 的问题。
-              简单就是少犯错。
-            </p>
-            <p>
-              <span class="hard-constraint">单 deno.json</span>
-              <span class="hard-constraint">npm deps 用 npm: prefix</span>
-            </p>
-          </div>
-
-          <h2>哲学 vs 架构</h2>
-          <p>
-            五大哲学支柱描述<strong>如何</strong>做决策。KISS
-            架构（K·I·S·S）约束定义
-            <strong>什么</strong>框架强制执行。
-          </p>
+          <h2>工程取舍</h2>
           <table>
             <thead>
               <tr>
-                <th>哲学支柱</th>
-                <th>架构约束</th>
-                <th>关系</th>
+                <th>选择</th>
+                <th>原因</th>
+                <th>代价</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Web 标准优先</td>
-                <td>全部四个（K·I·S·S）</td>
-                <td>标准是每个约束的基础</td>
+                <td>Lit authoring</td>
+                <td>Web Components 生态成熟，SSR 可行，API 稳定。</td>
+                <td>需要管理安全渲染边界，compiler 优化仍是未来项。</td>
               </tr>
               <tr>
-                <td>最小化增强</td>
-                <td>I（隔离）</td>
-                <td>最小 JS = 只有 Islands 获得 JS</td>
+                <td>Hono runtime</td>
+                <td>足够小，贴近 Fetch，跨运行时迁移成本低。</td>
+                <td>部署适配器和平台能力仍需要逐步补齐。</td>
               </tr>
               <tr>
-                <td>无框架绑定</td>
-                <td>I（隔离）</td>
-                <td>Web Components = 零框架绑定</td>
-              </tr>
-              <tr>
-                <td>无运行时绑定</td>
-                <td>S（静态）</td>
-                <td>纯静态文件 = 无运行时依赖</td>
-              </tr>
-              <tr>
-                <td>渐进增强</td>
-                <td>K + S（知识 + 语义）</td>
-                <td>构建时知识 + 语义基线</td>
+                <td>SSG default</td>
+                <td>部署简单，缓存友好，文档/内容站收益最大。</td>
+                <td>动态数据和 ISR 需要额外运行时约定。</td>
               </tr>
             </tbody>
           </table>
 
-          <h2>能力分层</h2>
+          <h2>不追求的东西</h2>
           <p>
-            每个特性必须通过能力阶梯。低层优先，始终如此：
+            KISS 不追求把所有前端范式压进一个框架，也不追求用抽象遮住平台。
+            如果一个功能必须引入大量专有协议，它需要证明自己能显著降低实际复杂度。
           </p>
-          <table>
-            <thead>
-              <tr>
-                <th>层级</th>
-                <th>技术</th>
-                <th>仅在何时使用</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>L0</strong></td>
-                <td>HTML5 语义</td>
-                <td>结构、内容、导航</td>
-              </tr>
-              <tr>
-                <td><strong>L1</strong></td>
-                <td>CSS</td>
-                <td>视觉、布局、动画、响应式</td>
-              </tr>
-              <tr>
-                <td><strong>L2</strong></td>
-                <td>平台 APIs</td>
-                <td>Clipboard、IntersectionObserver、matchMedia</td>
-              </tr>
-              <tr>
-                <td><strong>L3</strong></td>
-                <td>Hono / Vite / Lit</td>
-                <td>路由、构建、组件封装</td>
-              </tr>
-              <tr>
-                <td><strong>L4</strong></td>
-                <td>自定义代码</td>
-                <td>Island upgrade、RPC、插件逻辑</td>
-              </tr>
-            </tbody>
-          </table>
-          <p>
-            跳过一层 = 违反设计哲学。参见
-            <a href="/guide/architecture">KISS 架构</a>
-            获取完整决策树。
-          </p>
-
-          <h2>审查清单</h2>
-          <code-block
-            ><pre><code>每次提交前，问自己：
-            1. 新依赖？     → 是否违反"最小化增强"？
-            2. 修改了构建？→ 是否违反"Web 标准优先"？
-            3. 新抽象？     → 你在重新发明轮子吗？
-            4. 平台代码？   → 是否违反"无运行时绑定"？
-            5. 强制选择？   → 是否违反"无框架绑定"？
-            6. 添加了 JS？   → 低层能做吗？
-            7. 破坏了 Shadow DOM？ → 有 DSD 兼容的替代方案吗？</code></pre></code-block>
-          <p>
-            任何"是"都需要一份 ADR（架构决策记录）。
-          </p>
-
-          <h2>竞争格局</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>框架</th>
-                <th>HTTP</th>
-                <th>UI</th>
-                <th>构建</th>
-                <th>DSD</th>
-                <th>Jamstack</th>
-                <th>全标准</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Next.js</td>
-                <td>自定义</td>
-                <td>React</td>
-                <td>Webpack</td>
-                <td>—</td>
-                <td>部分</td>
-                <td>0/3</td>
-              </tr>
-              <tr>
-                <td>Astro</td>
-                <td>自定义</td>
-                <td>任意</td>
-                <td>ESM</td>
-                <td>—</td>
-                <td>是</td>
-                <td>1/3</td>
-              </tr>
-              <tr>
-                <td>Fresh</td>
-                <td>自定义</td>
-                <td>Preact</td>
-                <td>ESM</td>
-                <td>—</td>
-                <td>否</td>
-                <td>1/3</td>
-              </tr>
-              <tr>
-                <td><strong>KISS</strong></td>
-                <td><strong>Fetch API</strong></td>
-                <td><strong>Web Components</strong></td>
-                <td><strong>ESM</strong></td>
-                <td><strong>✓</strong></td>
-                <td><strong>是</strong></td>
-                <td><strong>3/3</strong></td>
-              </tr>
-            </tbody>
-          </table>
 
           <div class="nav-row">
-            <a href="/guide/getting-started" class="nav-link">&larr; 快速上手</a>
-            <a href="/guide/architecture" class="nav-link">架构设计 &rarr;</a>
+            <a href="/guide/getting-started" class="nav-link">&larr; Getting Started</a>
+            <a href="/guide/architecture" class="nav-link">Architecture &rarr;</a>
           </div>
         </div>
       </kiss-layout>

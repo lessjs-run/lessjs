@@ -23,7 +23,7 @@ import { type ClientIslandEntry, generateClientEntry } from '../entry-generators
 interface BuildMetadata {
   islandTagNames: string[];
   islandFiles: string[];
-  packageIslands: Array<{ tagName: string; modulePath: string }>;
+  packageIslands: Array<{ tagName: string; modulePath: string; strategy?: 'eager' | 'lazy' | 'idle' | 'visible' }>;
   root: string;
   outDir: string;
   base: string;
@@ -86,12 +86,19 @@ async function buildClient(): Promise<void> {
           : `${islandsDir}/${tagName}.ts`,
       ).replace(/\\/g, '/'),
       isPackage: false,
+      // Local islands default to lazy; per-island strategy will be
+      // supported once build-metadata carries it from route-scanner.
+      strategy: (metadata as unknown as { localIslandStrategies?: string[] })
+        .localIslandStrategies?.[i] === 'eager' ? 'eager' as const : undefined,
     })),
-    ...packageIslands.map((island: { tagName: string; modulePath: string }) => ({
-      tagName: island.tagName,
-      modulePath: island.modulePath,
-      isPackage: true,
-    })),
+    ...packageIslands.map(
+      (island: { tagName: string; modulePath: string; strategy?: string }) => ({
+        tagName: island.tagName,
+        modulePath: island.modulePath,
+        isPackage: true,
+        strategy: island.strategy === 'eager' ? 'eager' as const : 'lazy' as const,
+      }),
+    ),
   ];
 
   const clientEntryCode = generateClientEntry(islandEntries);

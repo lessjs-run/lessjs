@@ -470,3 +470,37 @@ Deno.test('rewriteHtmlFiles does not write when no matches', () => {
     cleanup(tmp);
   }
 });
+
+// ─── v0.5 Trust Release: no double-islands prefix ──────────
+
+Deno.test('buildIslandChunkMap: manifest entry.file with islands/ prefix has no double prefix', () => {
+  const tmp = makeTempDir();
+  try {
+    const viteDir = join(tmp, 'dist', 'client', '.vite');
+    mkdirSync(viteDir, { recursive: true });
+
+    // Vite manifest: entry.file = "islands/island-my-counter-abc123.js"
+    // The "islands/" prefix is part of the file path.
+    // The chunk name follows: island-<tagName>-<hash>.js
+    const manifest = {
+      'app/islands/my-counter.ts': { file: 'islands/island-my-counter-abc123.js' },
+    };
+    writeFileSync(join(viteDir, 'manifest.json'), JSON.stringify(manifest), 'utf-8');
+
+    const result = buildIslandChunkMap(tmp, 'dist', ['my-counter']);
+
+    // Must be "/client/islands/island-my-counter-abc123.js"
+    // NOT "/client/islands/islands/island-my-counter-abc123.js" (double prefix)
+    assertExists(result['my-counter']);
+    assertFalse(
+      result['my-counter'].includes('islands/islands/'),
+      'Path must NOT have double islands/ prefix, got: ' + result['my-counter'],
+    );
+    assertExists(
+      result['my-counter'].includes('client/islands/island-my-counter-abc123.js'),
+      'Path should be client/islands/island-my-counter-abc123.js, got: ' + result['my-counter'],
+    );
+  } finally {
+    cleanup(tmp);
+  }
+});

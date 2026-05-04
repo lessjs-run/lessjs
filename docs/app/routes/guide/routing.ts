@@ -1,30 +1,32 @@
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 import '../../islands/code-block.js';
 
 export class RoutingGuidePage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
-    `,
-  ];
+  static override styles = [pageStyles];
+
   override render() {
     return html`
       <kiss-layout currentPath="/guide/routing">
         <div class="container">
-          <h1>路由</h1>
-          <p class="subtitle">基于文件的路由——创建一个文件，就得到一个路由。</p>
+          <h1>Routing</h1>
+          <p class="subtitle">
+            KISS 使用文件系统路由。一个页面文件对应一个 URL；特殊文件用于 layout wrapping、
+            middleware 和 API handlers。
+          </p>
 
-          <h2>基础路由</h2>
+          <h2>Page Routes</h2>
           <p>
-            在 <span class="inline-code">app/routes/</span> 下创建一个文件，它会自动变为路由。
+            <span class="inline-code">app/routes</span> 下的页面组件会被扫描成页面路由。
+            页面模块必须默认导出 Custom Element class，并导出
+            <span class="inline-code">tagName</span>。
           </p>
           <table>
             <thead>
               <tr>
-                <th>文件</th>
-                <th>路由</th>
+                <th>File</th>
+                <th>Route</th>
               </tr>
             </thead>
             <tbody>
@@ -37,20 +39,27 @@ export class RoutingGuidePage extends LitElement {
                 <td><span class="inline-code">/about</span></td>
               </tr>
               <tr>
-                <td><span class="inline-code">app/routes/guide/getting-started.ts</span></td>
-                <td><span class="inline-code">/guide/getting-started</span></td>
+                <td><span class="inline-code">app/routes/docs/index.ts</span></td>
+                <td><span class="inline-code">/docs</span></td>
+              </tr>
+              <tr>
+                <td><span class="inline-code">app/routes/docs/install.ts</span></td>
+                <td><span class="inline-code">/docs/install</span></td>
               </tr>
             </tbody>
           </table>
 
-          <h2>动态路由</h2>
-          <p>使用方括号表示动态片段：</p>
+          <h2>Dynamic Segments</h2>
+          <p>
+            方括号会转换成 Hono route params。SSR 时这些 params 会作为同名 property
+            写入页面组件。
+          </p>
           <table>
             <thead>
               <tr>
-                <th>文件</th>
-                <th>路由</th>
-                <th>参数</th>
+                <th>File</th>
+                <th>Route</th>
+                <th>Property</th>
               </tr>
             </thead>
             <tbody>
@@ -67,53 +76,62 @@ export class RoutingGuidePage extends LitElement {
             </tbody>
           </table>
 
-          <h2>特殊文件</h2>
+          <code-block><pre><code>export class PostPage extends LitElement {
+  slug = '';
+
+  override render() {
+    return html&#96;&lt;article&gt;Post: \${this.slug}&lt;/article&gt;&#96;;
+  }
+}</code></pre></code-block>
+
+          <h2>Special Files</h2>
           <table>
             <thead>
               <tr>
-                <th>文件</th>
-                <th>用途</th>
+                <th>File</th>
+                <th>Purpose</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><span class="inline-code">_renderer.ts</span></td>
-                <td>SSR 的自定义 HTML 包装器</td>
+                <td>Wraps SSR output for a route subtree. Use it for layout shells or document-level composition.</td>
               </tr>
               <tr>
                 <td><span class="inline-code">_middleware.ts</span></td>
-                <td>路由树的 Hono 中间件</td>
+                <td>Mounts Hono middleware for a route subtree. Use it for headers, auth, CSP nonce and request guards.</td>
+              </tr>
+              <tr>
+                <td><span class="inline-code">api/*.ts</span></td>
+                <td>Defines Hono API handlers under the same file-system route tree.</td>
               </tr>
             </tbody>
           </table>
 
-          <h2>路由模块约定</h2>
-          <p>每个路由模块必须导出：</p>
-          <table>
-            <thead>
-              <tr>
-                <th>导出</th>
-                <th>类型</th>
-                <th>说明</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="inline-code">default</span></td>
-                <td>LitElement class</td>
-                <td>页面组件</td>
-              </tr>
-              <tr>
-                <td><span class="inline-code">tagName</span></td>
-                <td>string</td>
-                <td>自定义元素标签名</td>
-              </tr>
-            </tbody>
-          </table>
+          <h2>Route Module Contract</h2>
+          <code-block><pre><code>import { html, LitElement } from 'lit';
+
+export class AboutPage extends LitElement {
+  override render() {
+    return html&#96;&lt;main&gt;About&lt;/main&gt;&#96;;
+  }
+}
+
+customElements.define('page-about', AboutPage);
+export default AboutPage;
+export const tagName = 'page-about';</code></pre></code-block>
+
+          <h2>Current Boundary</h2>
+          <p>
+            路由扫描已经可以稳定处理页面、动态片段、renderer、middleware 和 API routes。
+            近期需要修复的核心边界是根级
+            <span class="inline-code">_middleware.ts</span> 的挂载范围：它必须覆盖整个路由树，
+            不能只覆盖 <span class="inline-code">/</span>。
+          </p>
 
           <div class="nav-row">
-            <a href="/guide/architecture" class="nav-link">&larr; KISS 架构</a>
-            <a href="/guide/islands" class="nav-link">Islands &rarr;</a>
+            <a href="/guide/architecture" class="nav-link">&larr; Architecture</a>
+            <a href="/guide/ssg" class="nav-link">Rendering & SSG &rarr;</a>
           </div>
         </div>
       </kiss-layout>

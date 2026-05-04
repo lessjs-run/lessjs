@@ -1,184 +1,175 @@
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 import '../../islands/code-block.js';
 
 export class ConfigurationPage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
-      .deprecated {
-        color: var(--kiss-text-tertiary);
-        text-decoration: line-through;
-      }
-      .new-badge {
-        display: inline-block;
-        background: var(--kiss-accent-subtle);
-        color: var(--kiss-accent);
-        padding: 0.125rem 0.375rem;
-        border-radius: 3px;
-        font-size: 0.6875rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-        vertical-align: middle;
-      }
-    `,
-  ];
+  static override styles = [pageStyles];
+
   override render() {
     return html`
       <kiss-layout currentPath="/guide/configuration">
         <div class="container">
-          <h1>配置</h1>
-          <p class="subtitle">kiss() 选项和 Vite 配置参考。</p>
+          <h1>Configuration</h1>
+          <p class="subtitle">
+            KISS is configured through the Vite plugin. Keep configuration explicit:
+            routes, islands, static output, head injection, PWA and middleware are separate concerns.
+          </p>
 
-          <h2>kiss() 选项</h2>
+          <h2>Minimal Config</h2>
+          <code-block><pre><code>// vite.config.ts
+import { defineConfig } from 'vite';
+import { kiss } from '@kissjs/core';
+
+export default defineConfig({
+  plugins: [kiss()],
+});</code></pre></code-block>
+
+          <h2>Main Options</h2>
           <table>
             <thead>
               <tr>
-                <th>选项</th>
-                <th>默认值</th>
-                <th>说明</th>
+                <th>Option</th>
+                <th>Default</th>
+                <th>Purpose</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><span class="inline-code">routesDir</span></td>
                 <td><span class="inline-code">'app/routes'</span></td>
-                <td>页面和 API 路由目录</td>
+                <td>Page routes, API routes, renderers and route-tree middleware.</td>
               </tr>
               <tr>
                 <td><span class="inline-code">islandsDir</span></td>
                 <td><span class="inline-code">'app/islands'</span></td>
-                <td>交互式 Island 组件目录</td>
+                <td>Local client-upgraded Custom Elements.</td>
               </tr>
               <tr>
                 <td><span class="inline-code">componentsDir</span></td>
                 <td><span class="inline-code">'app/components'</span></td>
-                <td>共享组件目录</td>
+                <td>Shared server-rendered components.</td>
               </tr>
               <tr>
-                <td><span class="inline-code">middleware</span></td>
-                <td><span class="inline-code">undefined</span></td>
-                <td>Hono 中间件模块路径</td>
-              </tr>
-              <tr>
-                <td>
-                  <span class="inline-code">inject</span> <span class="new-badge">新</span>
-                </td>
-                <td><span class="inline-code">undefined</span></td>
-                <td>注入样式表、脚本、HTML 片段到 &lt;head&gt;</td>
-              </tr>
-              <tr>
-                <td>
-                  <span class="inline-code">packageIslands</span> <span class="new-badge">新</span>
-                </td>
+                <td><span class="inline-code">packageIslands</span></td>
                 <td><span class="inline-code">[]</span></td>
-                <td>要扫描 Island 的包名数组（自动探测）</td>
+                <td>Packages that export an <span class="inline-code">islands</span> metadata array.</td>
               </tr>
               <tr>
-                <td><span class="inline-code">ui</span> <span class="deprecated">已弃用</span></td>
-                <td><span class="inline-code">undefined</span></td>
-                <td>请使用 <span class="inline-code">inject</span> 替代</td>
+                <td><span class="inline-code">build.outDir</span></td>
+                <td><span class="inline-code">'dist'</span></td>
+                <td>Static output directory.</td>
               </tr>
             </tbody>
           </table>
 
-          <h2>inject 选项 <span class="new-badge">新</span></h2>
+          <h2>Document Metadata</h2>
+          <code-block><pre><code>kiss({
+  html: {
+    lang: 'en',
+    title: 'My KISS App',
+  },
+});</code></pre></code-block>
+
+          <h2>Head Injection</h2>
           <p>
-            通用 &lt;head&gt; 注入——替代旧的 <span class="inline-code">ui</span> 选项。适用于 任何 CDN
-            或本地资源：
+            Use <span class="inline-code">inject</span> for external stylesheets, module scripts and small head fragments.
+            URLs are validated before being added to the generated document.
           </p>
-          <code-block
-          ><pre>
-            <code>kiss({
-              inject: {
-                stylesheets: [
-                  'https://cdn.example.com/style.css',
-                ],
-                scripts: [
-                  'https://cdn.example.com/ui.js',
-                ],
-                headFragments: [
-                  '&lt;meta name="theme-color" content="#0a0a0a"&gt;',
-                ],
-              },
-            })</code></pre></code-block>
+          <code-block><pre><code>kiss({
+  inject: {
+    stylesheets: [
+      'https://cdn.example.com/theme.css',
+    ],
+    scripts: [
+      'https://cdn.example.com/widget.js',
+    ],
+    headFragments: [
+      '&lt;meta name="theme-color" content="#050505"&gt;',
+    ],
+  },
+});</code></pre></code-block>
 
-            <h2>packageIslands 选项 <span class="new-badge">新</span></h2>
-            <p>
-              自动探测并注册来自 npm/JSR 包的 Islands。框架会扫描包的
-              <code>islands</code> 导出并自动注册：
-            </p>
-            <code-block
-            ><pre>
-              <code>kiss({
-                // 从 @kissjs/ui 包自动探测 Islands
-                packageIslands: ['@kissjs/ui'],
-              })</code></pre></code-block>
-            <p>
-              包必须导出 <code>islands</code> 数组。详见
-              <a href="/guide/islands">Islands 架构</a>。
-            </p>
+          <h2>Package Islands</h2>
+          <p>
+            Package islands are reusable Web Components discovered at build time.
+            This is how <span class="inline-code">@kissjs/ui</span> contributes interactive components to the docs site.
+          </p>
+          <code-block><pre><code>kiss({
+  packageIslands: ['@kissjs/ui'],
+});</code></pre></code-block>
 
-            <h2>完整配置示例</h2>
-            <code-block
-            ><pre>
-              <code>// vite.config.ts
-              import { kiss } from '@kissjs/core';
-              import { defineConfig } from 'vite';
+          <h2>Island Strategy</h2>
+          <p>
+            The framework option declares the default upgrade strategy. Current implementation still needs hardening
+            so this metadata consistently reaches the client build.
+          </p>
+          <code-block><pre><code>kiss({
+  island: {
+    upgradeStrategy: 'idle',
+  },
+});</code></pre></code-block>
 
-              export default defineConfig({
-                base: '/',         // GitHub Pages 设为 '/repo/'
-                plugins: [
-                  kiss({
-                    routesDir: 'app/routes',
-                    islandsDir: 'app/islands',
-                    componentsDir: 'app/components',
-                    middleware: 'app/middleware.ts',
+          <h2>Middleware</h2>
+          <code-block><pre><code>kiss({
+  middleware: {
+    logger: true,
+    requestId: true,
+    cors: true,
+    corsOrigin: 'https://example.com',
+    securityHeaders: true,
+    csp: {
+      policy: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'",
+      nonce: false,
+      reportOnly: false,
+    },
+  },
+});</code></pre></code-block>
 
-                    // 从包自动探测 Islands
-                    packageIslands: ['@kissjs/ui'],
+          <h2>PWA</h2>
+          <p>
+            PWA support generates manifest and service worker assets during SSG. Treat it as an enhancement,
+            not as a replacement for static HTML correctness.
+          </p>
+          <code-block><pre><code>kiss({
+  pwa: {
+    name: 'My KISS App',
+    shortName: 'KISS',
+    themeColor: '#050505',
+    backgroundColor: '#ffffff',
+  },
+});</code></pre></code-block>
 
-                    // 通用 head 注入（推荐）
-                    inject: {
-                      stylesheets: ['https://cdn.jsdelivr.net/npm/@awesome-webcomponents/webawesome@3.5.0/dist/styles.css'],
-                      scripts: ['https://cdn.jsdelivr.net/npm/@awesome-webcomponents/webawesome@3.5.0/dist/webawesome.loader.js'],
-                    },
+          <h2>Complete Example</h2>
+          <code-block><pre><code>export default defineConfig({
+  base: '/',
+  plugins: [
+    kiss({
+      routesDir: 'app/routes',
+      islandsDir: 'app/islands',
+      componentsDir: 'app/components',
+      packageIslands: ['@kissjs/ui'],
+      html: {
+        lang: 'en',
+        title: 'My KISS App',
+      },
+      build: {
+        outDir: 'dist',
+      },
+    }),
+  ],
+});</code></pre></code-block>
 
-                    // 旧版 WebAwesome CDN 快捷方式（已弃用，请用 inject）
-                    // ui: { cdn: true, version: '3.5.0' },
-                  }),
-                ],
-              })</code></pre></code-block>
+          <div class="nav-row">
+            <a href="/guide/api-design" class="nav-link">&larr; API Design</a>
+            <a href="/guide/security-middleware" class="nav-link">Security & Middleware &rarr;</a>
+          </div>
+        </div>
+      </kiss-layout>
+    `;
+  }
+}
 
-              <h2>项目结构约定</h2>
-              <code-block
-              ><pre>
-                <code>my-app/
-                  app/
-                    routes/        # 基于文件的路由
-                      index.ts     # /
-                      about.ts     # /about
-                      api/
-                        posts.ts   # /api/posts (Hono)
-                      islands/       # 交互式组件（自动探测）
-                        counter.ts
-                      components/    # 共享 Lit 组件
-                        header.ts
-                      deno.json
-                      vite.config.ts</code></pre></code-block>
-
-                      <div class="nav-row">
-                        <a href="/guide/ssg" class="nav-link">&larr; SSG</a>
-                        <a href="/guide/error-handling" class="nav-link">错误处理 &rarr;</a>
-                      </div>
-                    </div>
-                  </kiss-layout>
-                `;
-              }
-            }
-
-            customElements.define('page-configuration', ConfigurationPage);
-            export default ConfigurationPage;
-            export const tagName = 'page-configuration';
+customElements.define('page-configuration', ConfigurationPage);
+export default ConfigurationPage;
+export const tagName = 'page-configuration';

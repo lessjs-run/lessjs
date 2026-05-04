@@ -1,96 +1,127 @@
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 import '../../islands/code-block.js';
 
 export class ApiRoutesPage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
-    `,
-  ];
+  static override styles = [pageStyles];
+
   override render() {
     return html`
       <kiss-layout currentPath="/guide/api-routes">
         <div class="container">
           <h1>API Routes</h1>
-          <p class="subtitle">使用 Hono 创建后端端点——KISS 的 HTTP 层。</p>
+          <p class="subtitle">
+            KISS 的服务端层是 Hono。API routes 使用标准 Request/Response 语义，
+            适合部署到 serverless 或 edge runtime。
+          </p>
 
-          <h2>创建 API Route</h2>
-          <code-block
-          ><pre>
-            <code>// app/routes/api/posts.ts
-            import { Hono } from 'hono'
+          <h2>Create an API Route</h2>
+          <p>
+            API routes 放在 <span class="inline-code">app/routes/api</span>。
+            模块默认导出一个 Hono app。
+          </p>
+          <code-block><pre><code>// app/routes/api/posts.ts
+import { Hono } from 'hono';
 
-            const app = new Hono()
+const app = new Hono();
 
-            app.get('/', (c) => {
-              return c.json([
-                { id: 1, title: 'Hello KISS' }
-              ])
-            })
+app.get('/', (c) => {
+  return c.json([
+    { id: 1, title: 'Hello KISS' },
+  ]);
+});
 
-            app.post('/', async (c) => {
-              const body = await c.req.json()
-              return c.json({ id: 2, ...body }, 201)
-            })
+app.post('/', async (c) => {
+  const body = await c.req.json();
+  return c.json({ id: 2, ...body }, 201);
+});
 
-            export default app</code></pre></code-block>
+export default app;
+export type AppType = typeof app;</code></pre></code-block>
 
-            <h2>带验证</h2>
-            <code-block
-            ><pre>
-              <code>// app/routes/api/posts.ts
-              import { Hono } from 'hono'
-              import { zValidator } from '@hono/zod-validator'
-              import { z } from 'zod'
+          <h2>Route Mapping</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>File</th>
+                <th>URL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="inline-code">app/routes/api/status.ts</span></td>
+                <td><span class="inline-code">/api/status</span></td>
+              </tr>
+              <tr>
+                <td><span class="inline-code">app/routes/api/posts.ts</span></td>
+                <td><span class="inline-code">/api/posts</span></td>
+              </tr>
+              <tr>
+                <td><span class="inline-code">app/routes/api/users/[id].ts</span></td>
+                <td><span class="inline-code">/api/users/:id</span></td>
+              </tr>
+            </tbody>
+          </table>
 
-              const app = new Hono()
-              const schema = z.object({
-                title: z.string().min(1),
-                body: z.string(),
-              })
+          <h2>Validation</h2>
+          <p>
+            Hono middleware works normally inside API routes. Validation, auth, rate limits and response shaping
+            should live close to the handler that owns the behavior.
+          </p>
+          <code-block><pre><code>import { Hono } from 'hono';
+import { zValidator } from '@hono/zod-validator';
+import { z } from 'zod';
 
-              app.post('/', zValidator('json', schema), (c) => {
-                const data = c.req.valid('json')
-                return c.json({ id: 1, ...data }, 201)
-              })
+const app = new Hono();
 
-              export default app</code></pre></code-block>
+const schema = z.object({
+  title: z.string().min(1),
+  body: z.string().optional(),
+});
 
-              <h2>类型安全 RPC</h2>
-              <p>使用 <span class="inline-code">@kissjs/rpc</span> 实现端到端类型安全：</p>
-              <code-block
-              ><pre>
-                <code>// 服务端：导出类型
-                export type AppType = typeof app
+app.post('/', zValidator('json', schema), (c) => {
+  const data = c.req.valid('json');
+  return c.json({ id: crypto.randomUUID(), ...data }, 201);
+});
 
-                // 客户端：在 Island 中
-                import { RpcController } from '@kissjs/rpc'
-                import { hc } from 'hono/client'
-                import type { AppType } from '../routes/api/posts'
+export default app;</code></pre></code-block>
 
-                class MyIsland extends LitElement {
-                  private rpc = new RpcController(this)
-                  private client = hc&lt;AppType&gt;('/')
+          <h2>Calling APIs from Islands</h2>
+          <p>
+            Islands can call API routes with <span class="inline-code">fetch</span> or Hono client helpers.
+            Keep fetch state local unless multiple islands truly need a shared protocol.
+          </p>
+          <code-block><pre><code>async function loadPosts() {
+  const res = await fetch('/api/posts');
+  if (!res.ok) throw new Error('Failed to load posts');
+  return await res.json();
+}</code></pre></code-block>
 
-                  async loadPosts() {
-                    const res = await this.rpc.call(() =>
-                      this.client.api.posts.$get()
-                    )
-                  }
-                }</code></pre></code-block>
+          <h2>Static Build Boundary</h2>
+          <p>
+            SSG output is static files. API routes are part of the generated Hono app, but a purely static host
+            will not run them. Deploy API routes through a serverless adapter or platform function when the app
+            needs runtime behavior.
+          </p>
 
-                <div class="nav-row">
-                  <a href="/guide/islands" class="nav-link">&larr; Islands</a>
-                  <a href="/guide/api-design" class="nav-link">API 设计 &rarr;</a>
-                </div>
-              </div>
-            </kiss-layout>
-          `;
-        }
-      }
+          <div class="callout">
+            <p>
+              Near-term KISS fullstack work should focus on explicit adapters, FormData actions,
+              typed RPC and env/secrets. Until those are stable, API routes are powerful but intentionally simple.
+            </p>
+          </div>
 
-      customElements.define('page-api-routes', ApiRoutesPage);
-      export default ApiRoutesPage;
-      export const tagName = 'page-api-routes';
+          <div class="nav-row">
+            <a href="/guide/islands" class="nav-link">&larr; Island Upgrade</a>
+            <a href="/guide/api-design" class="nav-link">API Design &rarr;</a>
+          </div>
+        </div>
+      </kiss-layout>
+    `;
+  }
+}
+
+customElements.define('page-api-routes', ApiRoutesPage);
+export default ApiRoutesPage;
+export const tagName = 'page-api-routes';

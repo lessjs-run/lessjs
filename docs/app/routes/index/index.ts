@@ -9,221 +9,196 @@ export default class DocsHome extends LitElement {
       display: block;
     }
 
-    /* Hero — 紧凑，内容居中 */
     .hero {
-      background: #000;
-      border-bottom: 0.5px solid #222;
-      padding: 4% 0;
-      display: flex;
-      align-items: center;
-    }
-    .hero-inner {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
-    .hero-brand {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    .hero-kiss {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 500;
+      background: #050505;
       color: #fff;
-      letter-spacing: -0.02em;
-      line-height: 1;
-    }
-    .hero-desc {
-      font-size: clamp(0.75rem, 1.5vw, 0.875rem);
-      color: #aaa;
-      line-height: 1.6;
-      max-width: 24rem;
-    }
-    .hero-tech {
-      font-size: clamp(0.625rem, 1vw, 0.75rem);
-      color: var(--kiss-text-muted);
-      letter-spacing: 0.05em;
+      border-bottom: 0.5px solid #222;
     }
 
-    /* Content */
-    .content {
-      max-width: 720px;
+    .hero-inner {
+      max-width: 960px;
       margin: 0 auto;
-      padding: 3% 5%;
-    }
-    .section {
-      margin-bottom: 4%;
-    }
-    .section-title {
-      font-size: clamp(0.625rem, 1vw, 0.75rem);
-      font-weight: 500;
-      color: var(--kiss-text-muted);
-      letter-spacing: 0.1em;
-      margin-bottom: 1.5%;
-      text-transform: uppercase;
-    }
-
-    /* Stats */
-    .stats {
-      display: flex;
-      gap: 0;
-      border: 0.5px solid var(--kiss-border);
-      border-radius: 4px;
-    }
-    .stat {
-      flex: 1;
-      text-align: center;
-      padding: 3% 2%;
-    }
-    .stat + .stat {
-      border-left: 0.5px solid var(--kiss-border);
-    }
-    .stat-val {
-      font-size: clamp(1.25rem, 3vw, 1.75rem);
-      font-weight: 500;
-      color: var(--kiss-text-primary);
-      line-height: 1;
-    }
-    .stat-label {
-      font-size: clamp(0.625rem, 1vw, 0.75rem);
-      color: var(--kiss-text-muted);
-      margin-top: 0.25rem;
-    }
-
-    /* Code */
-    .code-row {
-      display: flex;
-      gap: 0;
-      border: 0.5px solid var(--kiss-border);
-      border-radius: 4px;
-    }
-    .code-panel {
-      flex: 1;
-      padding: 2%;
-      background: var(--kiss-bg-surface);
-    }
-    .code-panel + .code-panel {
-      border-left: 0.5px solid var(--kiss-border);
-    }
-    .code-panel .label {
-      font-size: clamp(0.5rem, 0.9vw, 0.625rem);
-      color: var(--kiss-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 2%;
-    }
-    .code-panel pre {
-      margin: 0;
-      font-family: "SF Mono", "Fira Code", monospace;
-      font-size: clamp(0.625rem, 1vw, 0.75rem);
-      line-height: 1.6;
-      color: var(--kiss-text-secondary);
-    }
-
-    /* Features */
-    .feat-grid {
+      min-height: 54vh;
+      padding: 3rem 1.5rem;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(45%, 1fr));
-      gap: 2%;
+      grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
+      align-items: center;
+      gap: 3rem;
     }
-    .feat {
-      padding: 2% 0 2% 2%;
-      border-left: 2px solid #000;
+
+    .eyebrow {
+      margin: 0 0 0.75rem;
+      color: #9ca3af;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
-    .feat h3 {
-      font-size: clamp(0.875rem, 1.5vw, 1rem);
-      font-weight: 500;
-      color: var(--kiss-text-primary);
-      margin: 0 0 1%;
-    }
-    .feat p {
-      font-size: clamp(0.75rem, 1.2vw, 0.875rem);
-      color: var(--kiss-text-tertiary);
+
+    h1 {
       margin: 0;
+      font-size: clamp(3rem, 9vw, 6rem);
+      font-weight: 520;
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      margin: 1.25rem 0 0;
+      max-width: 34rem;
+      color: #d1d5db;
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.75rem;
+    }
+
+    .hero-actions a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.5rem;
+      padding: 0 1rem;
+      border-radius: 4px;
+      border: 0.5px solid #3f3f46;
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .hero-actions a.primary {
+      background: #fff;
+      border-color: #fff;
+      color: #050505;
+    }
+
+    .signal {
+      border: 0.5px solid #27272a;
+      border-radius: 6px;
+      background: #0f0f10;
+      overflow: hidden;
+    }
+
+    .signal-row {
+      display: grid;
+      grid-template-columns: 5rem 1fr;
+      gap: 1rem;
+      padding: 1rem;
+      border-bottom: 0.5px solid #27272a;
+    }
+
+    .signal-row:last-child {
+      border-bottom: 0;
+    }
+
+    .signal-key {
+      color: #a1a1aa;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .signal-value {
+      color: #f4f4f5;
+      font-size: 0.875rem;
       line-height: 1.5;
     }
 
-    /* Quick start */
-    .qstart {
-      display: flex;
-      gap: 0;
-      border: 0.5px solid var(--kiss-border);
-      border-radius: 4px;
-    }
-    .qstep {
-      flex: 1;
-      padding: 2%;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    .qstep + .qstep {
-      border-left: 0.5px solid var(--kiss-border);
-    }
-    .qstep .num {
-      font-size: clamp(0.5rem, 0.8vw, 0.625rem);
-      color: var(--kiss-text-muted);
-    }
-    .qstep code {
-      font-family: monospace;
-      font-size: clamp(0.625rem, 1vw, 0.75rem);
-      background: var(--kiss-code-bg);
-      padding: 1% 2%;
-      border-radius: 2px;
-    }
-    .qstep .desc {
-      font-size: clamp(0.625rem, 1vw, 0.75rem);
-      color: var(--kiss-text-muted);
+    .content {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
     }
 
-    /* Comparison */
-    .cmp {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: clamp(0.625rem, 1vw, 0.75rem);
-      border: 0.5px solid var(--kiss-border);
+    .band {
+      display: grid;
+      grid-template-columns: 15rem minmax(0, 1fr);
+      gap: 2rem;
+      padding: 2rem 0;
+      border-bottom: 0.5px solid var(--kiss-border);
     }
-    .cmp th, .cmp td {
-      padding: 2%;
-      text-align: left;
-      border-bottom: 0.5px solid #e5e5e5;
+
+    .band:last-child {
+      border-bottom: 0;
     }
-    .cmp th {
-      background: var(--kiss-bg-surface);
-      color: var(--kiss-text-muted);
-      font-weight: 500;
-    }
-    .cmp td {
-      color: var(--kiss-text-tertiary);
-    }
-    .cmp td:first-child {
+
+    h2 {
+      margin: 0;
       color: var(--kiss-text-primary);
-      font-weight: 500;
+      font-size: 1rem;
+      font-weight: 560;
     }
 
-    @media (max-width: 640px) {
-      .hero {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .code-row, .qstart {
-        flex-direction: column;
-      }
-      .feat-grid {
+    p {
+      margin: 0 0 0.75rem;
+      color: var(--kiss-text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.75;
+    }
+
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .doc-link {
+      display: block;
+      border: 0.5px solid var(--kiss-border);
+      border-radius: 5px;
+      padding: 1rem;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .doc-link:hover {
+      border-color: var(--kiss-border-hover);
+      background: var(--kiss-bg-surface);
+    }
+
+    .doc-link strong {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--kiss-text-primary);
+      font-size: 0.875rem;
+      font-weight: 560;
+    }
+
+    .doc-link span {
+      display: block;
+      color: var(--kiss-text-tertiary);
+      font-size: 0.8125rem;
+      line-height: 1.55;
+    }
+
+    code {
+      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+      background: var(--kiss-code-bg);
+      border: 0.5px solid var(--kiss-code-border);
+      border-radius: 3px;
+      padding: 0.125rem 0.375rem;
+      font-size: 0.8125rem;
+      color: var(--kiss-text-secondary);
+    }
+
+    @media (max-width: 760px) {
+      .hero-inner,
+      .band {
         grid-template-columns: 1fr;
       }
-      .stats {
-        flex-wrap: wrap;
+
+      .hero-inner {
+        min-height: auto;
+        gap: 2rem;
       }
-      .stat {
-        flex: 1 1 50%;
+
+      .link-grid {
+        grid-template-columns: 1fr;
       }
     }
   `;
@@ -231,157 +206,98 @@ export default class DocsHome extends LitElement {
   override render() {
     return html`
       <kiss-layout home>
-        <div class="hero">
+        <section class="hero">
           <div class="hero-inner">
-            <div class="hero-brand">
-              <div class="hero-kiss">KISS</div>
-              <div class="hero-desc">
-                一个基于 Web 标准构建的 Jamstack 框架。<br>
-                DSD 首屏渲染，Island 按需升级。纯粹的 Web 平台。
+            <div>
+              <p class="eyebrow">Deno-first / Web Standards-first / Static-first</p>
+              <h1>KISS</h1>
+              <p class="hero-copy">
+                一个以 DSD-rendered Web Components 为首屏模型、以 Island Upgrade 为交互模型、以 Hono API
+                为服务端模型、以 SSG 为默认交付模型的 Web 框架。
+              </p>
+              <div class="hero-actions">
+                <a class="primary" href="/guide/positioning">理解定位</a>
+                <a href="/guide/getting-started">开始使用</a>
               </div>
-              <div class="hero-tech">HTTP Fetch API · Web Components · ESM</div>
             </div>
-            <kiss-hero-ping api-url="https://kiss-demo-api.sisyphuszheng.deno.net/api"></kiss-hero-ping>
-          </div>
-        </div>
 
-        <div class="content">
-          <div class="section">
-            <div class="section-title">核心数据</div>
-            <div class="stats">
-              <div class="stat">
-                <div class="stat-val">DSD</div>
-                <div class="stat-label">首屏输出</div>
+            <div class="signal" aria-label="KISS architecture summary">
+              <div class="signal-row">
+                <div class="signal-key">Render</div>
+                <div class="signal-value">HTML first, Declarative Shadow DOM first.</div>
               </div>
-              <div class="stat">
-                <div class="stat-val">0KB</div>
-                <div class="stat-label">框架 JS 基线</div>
+              <div class="signal-row">
+                <div class="signal-key">Client</div>
+                <div class="signal-value">Only islands upgrade into live Custom Elements.</div>
               </div>
-              <div class="stat">
-                <div class="stat-val">4</div>
-                <div class="stat-label">运行时支持</div>
+              <div class="signal-row">
+                <div class="signal-key">Server</div>
+                <div class="signal-value">Hono, Fetch API, route-level middleware, API routes.</div>
               </div>
-              <div class="stat">
-                <div class="stat-val">100%</div>
-                <div class="stat-label">Web 标准</div>
+              <div class="signal-row">
+                <div class="signal-key">Output</div>
+                <div class="signal-value">Static files first; dynamic capability is explicit.</div>
               </div>
             </div>
           </div>
+        </section>
 
-          <div class="section">
-            <div class="section-title">工作原理</div>
-            <div class="code-row">
-              <div class="code-panel">
-                <div class="label">服务端 (Hono)</div>
-                <pre>import { Hono } from 'hono'
-                  const app = new Hono()
-                  app.get('/api', (c) => c.json({ ok: true }))</pre>
-                </div>
-                <div class="code-panel">
-                  <div class="label">客户端 (Lit)</div>
-                  <pre>import { LitElement, html } from 'lit'
-                    class App extends LitElement {
-                      render() { return html${'`'}&lt;h1&gt;你好&lt;/h1&gt;${'`'} }
-                    }</pre>
-                  </div>
-                </div>
-              </div>
-
-              <div class="section">
-                <div class="section-title">为什么选择 KISS</div>
-                <div class="feat-grid">
-                  <div class="feat">
-                    <h3>Web 标准优先</h3>
-                    <p>HTTP 使用 Fetch API，UI 使用 Web Components，模块使用 ESM。了解平台即了解 KISS。</p>
-                  </div>
-                  <div class="feat">
-                    <h3>群岛架构</h3>
-                    <p>内容先由 DSD 输出，交互组件再通过 Custom Element upgrade 接管。</p>
-                  </div>
-                  <div class="feat">
-                    <h3>类型安全 RPC</h3>
-                    <p>通过 Hono RPC 实现端到端类型安全 — 服务端与客户端直接共享类型，无需代码生成。</p>
-                  </div>
-                  <div class="feat">
-                    <h3>SSG + DSD</h3>
-                    <p>构建时静态生成配合声明式 Shadow DOM。HTML 先可见，JS 后升级。</p>
-                  </div>
-                  <div class="feat">
-                    <h3>多运行时</h3>
-                    <p>API 层贴近 Fetch 标准，可面向 Deno、Node.js、Bun 和 Cloudflare Workers。</p>
-                  </div>
-                  <div class="feat">
-                    <h3>渐进增强</h3>
-                    <p>语义化约束保证内容在无 JavaScript 时依然可读。</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="section">
-                <div class="section-title">快速开始</div>
-                <div class="qstart">
-                  <div class="qstep">
-                    <span class="num">步骤 1</span>
-                    <code>deno run -A jsr:@kissjs/create my-app</code>
-                    <span class="desc">创建项目脚手架</span>
-                  </div>
-                  <div class="qstep">
-                    <span class="num">步骤 2</span>
-                    <code>cd my-app && deno task dev</code>
-                    <span class="desc">启动开发服务器</span>
-                  </div>
-                  <div class="qstep">
-                    <span class="num">步骤 3</span>
-                    <code>deno task build</code>
-                    <span class="desc">正式构建：SSR → Island → SSG</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="section">
-                <div class="section-title">与其他框架对比</div>
-                <table class="cmp">
-                  <tr>
-                    <th></th>
-                    <th>KISS</th>
-                    <th>Fresh</th>
-                    <th>Nuxt</th>
-                    <th>Next.js</th>
-                  </tr>
-                  <tr>
-                    <td>HTTP 层</td>
-                    <td>Fetch API</td>
-                    <td>Fetch API</td>
-                    <td>Nitro (定制)</td>
-                    <td>定制</td>
-                  </tr>
-                  <tr>
-                    <td>UI 层</td>
-                    <td>Web Components</td>
-                    <td>Preact/JSX</td>
-                    <td>Vue</td>
-                    <td>React</td>
-                  </tr>
-                  <tr>
-                    <td>静态页面</td>
-                    <td>0 KB 框架 JS</td>
-                    <td>0 KB 框架 JS</td>
-                    <td>~60 KB</td>
-                    <td>~70 KB</td>
-                  </tr>
-                  <tr>
-                    <td>声明式 Shadow DOM</td>
-                    <td>内置</td>
-                    <td>—</td>
-                    <td>—</td>
-                    <td>—</td>
-                  </tr>
-                </table>
-              </div>
+        <main class="content">
+          <section class="band">
+            <h2>What KISS Is</h2>
+            <div>
+              <p>
+                KISS 的核心不是重新发明组件框架，而是把浏览器已经拥有的能力组织成一条小而清晰的生产路径：
+                路由映射页面组件，SSR 生成 DSD HTML，构建阶段抽取 island client entry， SSG
+                产出可以直接部署的静态站点。
+              </p>
+              <p>
+                这让它天然适合文档、博客、内容站、营销页和轻量 serverless
+                应用。大型后台和高频数据应用可以做， 但必须等 actions、session、validation、revalidation
+                等生产约定更成熟后再作为主打场景。
+              </p>
             </div>
-          </kiss-layout>
-        `;
-      }
-    }
+          </section>
 
-    customElements.define('docs-home', DocsHome);
+          <section class="band">
+            <h2>What KISS Is Not</h2>
+            <div>
+              <p>
+                它不是 React/Vue 风格的整页 hydration 框架，也不应该提前承诺 ISR、零 JS 全站交互、
+                或生产级 compiler 消除 Lit。KISS 更愿意把边界写清楚，把已有能力做稳。
+              </p>
+              <p>
+                当前稳定重心是 <code>SSG + DSD + Hono API + package islands</code>。
+                未来能力会围绕这些边界渐进增加，而不是把所有现代框架关键词一次性塞进文档。
+              </p>
+            </div>
+          </section>
+
+          <section class="band">
+            <h2>Read Next</h2>
+            <div class="link-grid">
+              <a class="doc-link" href="/guide/positioning">
+                <strong>Framework Positioning</strong>
+                <span>先理解 KISS 解决什么问题，以及它暂时不解决什么问题。</span>
+              </a>
+              <a class="doc-link" href="/guide/architecture">
+                <strong>Architecture</strong>
+                <span>查看构建管线、渲染模型、island 升级和生产边界。</span>
+              </a>
+              <a class="doc-link" href="/guide/getting-started">
+                <strong>Getting Started</strong>
+                <span>创建项目、启动开发服务器、构建并预览静态产物。</span>
+              </a>
+              <a class="doc-link" href="/roadmap">
+                <strong>Roadmap</strong>
+                <span>了解近期修复、v0.6 渲染硬化、v0.7 island manifest 和后续方向。</span>
+              </a>
+            </div>
+          </section>
+        </main>
+      </kiss-layout>
+    `;
+  }
+}
+
+customElements.define('docs-home', DocsHome);

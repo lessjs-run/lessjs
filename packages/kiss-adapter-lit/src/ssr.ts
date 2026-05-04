@@ -91,6 +91,11 @@ function isNothing(value: unknown): boolean {
   return typeof value === 'symbol' && value === NOTHING_SYMBOL;
 }
 
+/**
+ * HTML escape utilities.
+ * Canonical implementation lives in @kissjs/core/render-dsd.ts.
+ * If that implementation changes, this copy MUST be updated to match.
+ */
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, '&amp;')

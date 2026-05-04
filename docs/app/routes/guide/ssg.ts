@@ -1,104 +1,120 @@
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 import '../../islands/code-block.js';
 
 export class SSGGuidePage extends LitElement {
-  static override styles = [pageStyles, css``];
+  static override styles = [pageStyles];
 
   override render() {
     return html`
       <kiss-layout currentPath="/guide/ssg">
         <div class="container">
-          <h1>静态站点生成（SSG）</h1>
+          <h1>Rendering & SSG</h1>
           <p class="subtitle">
-            KISS 当前稳定交付形态是 SSG：构建时把路由渲染为带 DSD 的静态 HTML。
+            KISS 的默认生产产物是静态 HTML。构建阶段会把页面渲染成带 Declarative Shadow DOM
+            的文档，并注入必要的 client island entry。
           </p>
 
-          <h2>单命令构建</h2>
+          <h2>Default Output</h2>
           <p>
-            用户只需要运行一个生产构建命令；内部仍保留三个可验证阶段，方便定位问题。
+            对用户来说，生产构建只有一个入口：
           </p>
           <code-block><pre><code>deno task build</code></pre></code-block>
-
-          <h2>内部 Phase 1：SSR bundle</h2>
-          <ol>
-            <li>扫描 <span class="inline-code">app/routes/</span>。</li>
-            <li>扫描 <span class="inline-code">app/islands/</span> 与 package islands。</li>
-            <li>生成 virtual Hono entry。</li>
-            <li>写出 <span class="inline-code">.kiss/build-metadata.json</span>。</li>
-          </ol>
-
-          <h2>内部 Phase 2：Island client build</h2>
           <p>
-            客户端构建读取 Phase 1 的元数据，生成 island entry 并交给 Vite 输出
-            <span class="inline-code">dist/client/islands/*.js</span>。
-          </p>
-          <p>
-            当前仍以全局 island entry 为主。页面级 island manifest 是 v0.7.0 目标。
+            结果写入 <span class="inline-code">dist/</span>。如果应用没有动态 API 依赖，
+            这个目录可以直接部署到 GitHub Pages、Cloudflare Pages、Netlify、Vercel static output
+            或 S3/CloudFront。
           </p>
 
-          <h2>内部 Phase 3：DSD HTML 输出</h2>
+          <h2>What Gets Rendered</h2>
           <p>
-            SSG 阶段创建 Vite SSR server，加载 generated Hono app，
-            对页面路由发起请求并写出静态 HTML。页面组件通过 DSD renderer 输出：
+            页面组件会在构建时执行 SSR，输出 Web Component host 和 shadow root template。
+            内容在 JavaScript 下载前就已经存在于 HTML 中。
           </p>
           <code-block><pre><code>&lt;page-home&gt;
   &lt;template shadowrootmode="open"&gt;
     &lt;style&gt;/* component styles */&lt;/style&gt;
-    &lt;main&gt;...&lt;/main&gt;
+    &lt;main&gt;Readable content first.&lt;/main&gt;
   &lt;/template&gt;
 &lt;/page-home&gt;</code></pre></code-block>
 
-          <h2>DSD 语义</h2>
+          <h2>Three Internal Phases</h2>
           <table>
             <thead>
               <tr>
-                <th>能力</th>
-                <th>当前状态</th>
+                <th>Phase</th>
+                <th>Input</th>
+                <th>Output</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>首屏内容</td>
-                <td>HTML 中已经包含 DSD，JavaScript 失败时内容仍可见。</td>
+                <td>SSR bundle</td>
+                <td>routes, renderers, middleware, API handlers, islands</td>
+                <td>generated Hono entry and <span class="inline-code">.kiss/build-metadata.json</span></td>
               </tr>
               <tr>
-                <td>组件样式</td>
-                <td>静态样式可注入 shadow root。Lit styles 通过 adapter 提取。</td>
+                <td>Client islands</td>
+                <td>build metadata</td>
+                <td>island entry and browser chunks under <span class="inline-code">dist/client</span></td>
               </tr>
               <tr>
-                <td>交互接管</td>
-                <td>客户端 custom element upgrade 后绑定事件和状态。</td>
-              </tr>
-              <tr>
-                <td>嵌套 DSD</td>
-                <td>尚未完整实现；v0.6.0 需要补齐。</td>
-              </tr>
-              <tr>
-                <td>安全转义</td>
-                <td>外层属性已转义；组件 render 内容需要明确 safe/unsafe 契约。</td>
+                <td>SSG</td>
+                <td>generated Hono app</td>
+                <td>static HTML, copied assets and post-processed document head</td>
               </tr>
             </tbody>
           </table>
 
-          <h2>不是 ISR</h2>
+          <h2>DSD Semantics</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Capability</th>
+                <th>Current state</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>First screen</td>
+                <td>Rendered HTML is visible before client JavaScript runs.</td>
+              </tr>
+              <tr>
+                <td>Component styles</td>
+                <td>Styles can be emitted into shadow roots through the Lit adapter path.</td>
+              </tr>
+              <tr>
+                <td>Interaction</td>
+                <td>Custom Elements upgrade after the island module is loaded.</td>
+              </tr>
+              <tr>
+                <td>Nested DSD</td>
+                <td>Still an implementation-hardening item for Renderer 2.</td>
+              </tr>
+              <tr>
+                <td>Safe HTML</td>
+                <td>Outer attributes are escaped; component render output still needs clearer safe/unsafe contracts.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Security Post-Processing</h2>
           <p>
-            当前 KISS 的稳定模式是 SSG。ISR 需要 route-level revalidate、cache lock、
-            serverless/edge adapter、失败回退和 CDN 策略。它属于 v0.9.0 目标，
-            不是当前已完成能力。
+            SSG output must preserve security behavior from the generated Hono entry. CSP metadata, nonces,
+            PWA head tags and island scripts should be injected through one shared post-processing path,
+            so static deployment does not silently lose protections that exist in SSR mode.
           </p>
 
-          <h2>部署</h2>
+          <h2>Not ISR Yet</h2>
           <p>
-            <span class="inline-code">dist/</span> 是纯静态产物，可部署到 GitHub Pages、
-            Cloudflare Pages、Netlify、Vercel 静态输出、S3/CloudFront 等平台。
-            API Routes 需要单独通过 Serverless adapter 或平台配置部署。
+            KISS 当前稳定交付是 SSG。ISR 需要 route-level revalidate、cache lock、adapter contracts、
+            failure fallback 和 CDN semantics。它属于 roadmap，而不是当前可依赖的生产能力。
           </p>
 
           <div class="nav-row">
-            <a href="/guide/api-design" class="nav-link">&larr; API 设计</a>
-            <a href="/guide/configuration" class="nav-link">配置 &rarr;</a>
+            <a href="/guide/routing" class="nav-link">&larr; Routing</a>
+            <a href="/guide/islands" class="nav-link">Island Upgrade &rarr;</a>
           </div>
         </div>
       </kiss-layout>

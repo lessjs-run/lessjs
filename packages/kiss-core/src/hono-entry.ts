@@ -21,6 +21,8 @@ export interface HonoEntryOptions {
   middleware?: FrameworkOptions['middleware'];
   ssg?: boolean;
   islandTagNames?: string[];
+  /** Relative file paths for local islands (preserves subdirectory structure) */
+  islandFiles?: string[];
   packageIslands?: PackageIslandMeta[];
   headExtras?: string;
   html?: { lang?: string; title?: string };

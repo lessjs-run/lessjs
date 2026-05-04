@@ -117,9 +117,10 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
 
   const routes = await scanRoutes(routesDir);
   const islandsRoot = join(root, islandsDir);
+  const ssgIslandFiles = await scanIslands(islandsRoot);
   const ssgIslandTagNames = islandTagNames.length > 0
     ? islandTagNames
-    : (await scanIslands(islandsRoot)).map((f) => fileToTagName(f));
+    : ssgIslandFiles.map((f) => fileToTagName(f));
 
   const ssgEntryCode = generateHonoEntryCode(routes, {
     routesDir,
@@ -127,6 +128,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
     middleware: options.middleware,
     ssg: true,
     islandTagNames: ssgIslandTagNames,
+    islandFiles: ssgIslandFiles,
     packageIslands,
     headExtras: options.headExtras,
     html: options.html,
@@ -317,10 +319,25 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
       }
 
       // Post-process: rewrite island paths (fallback for any inline references)
-      const { buildIslandChunkMap, rewriteHtmlFiles } = await import('../ssg-postprocess.js');
+      const { buildIslandChunkMap, rewriteHtmlFiles, injectCspMeta } = await import('../ssg-postprocess.js');
       const islandChunkMap = buildIslandChunkMap(root, outDir, islandTagNames, basePath);
       if (Object.keys(islandChunkMap).length > 0) {
         rewriteHtmlFiles(outputDir, islandChunkMap);
+      }
+
+      // Post-process: inject CSP <meta> tag into static HTML files.
+      // SSG outputs static files — CSP nonces are not possible here,
+      // but policy-only CSP meta tags provide a security baseline for
+      // static deployments (CDN, GitHub Pages, etc.).
+      const cspPolicy = options.middleware?.csp?.policy;
+      if (cspPolicy) {
+        injectCspMeta(
+          outputDir,
+          cspPolicy,
+          options.middleware?.csp?.reportOnly || false,
+          options.middleware?.csp?.nonce || false,
+        );
+        console.log('[KISS SSG] CSP meta tag injected into static HTML');
       }
 
       // Build observability: full manifest with HTML pages + budget warnings

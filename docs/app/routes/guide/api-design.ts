@@ -8,126 +8,124 @@ export class ApiDesignPage extends LitElement {
     pageStyles,
     css`
       .principle {
-        padding: 1rem;
+        padding: 1rem 1.25rem;
         background: var(--kiss-bg-surface);
-        border-left: 3px solid var(--kiss-border-hover);
-        border-radius: 0 3px 3px 0;
-        margin: 0.75rem 0;
-        font-size: 0.875rem;
+        border-left: 2px solid var(--kiss-border-hover);
+        border-radius: 0 4px 4px 0;
+        margin: 1rem 0;
       }
     `,
   ];
+
   override render() {
     return html`
       <kiss-layout currentPath="/guide/api-design">
         <div class="container">
-          <h1>API 设计</h1>
-          <p class="subtitle">Hono 路由、类型安全 RPC、验证和错误响应模式。</p>
+          <h1>API Design</h1>
+          <p class="subtitle">
+            API routes should feel like the Web: Request in, Response out, validation close to the
+            boundary, typed clients where they reduce mistakes, and no hidden monolithic server.
+          </p>
 
-          <h2>设计原则</h2>
+          <h2>Principles</h2>
           <div class="principle">
-            <strong>Web 标准优先</strong> —— 路由处理器返回标准 <span class="inline-code"
-            >Response</span>，输入使用 <span class="inline-code">Request</span>/<span class="inline-code"
-            >FormData</span><br>
-            <strong>全链路类型安全</strong> —— Zod 验证 → Hono RPC → 客户端自动推断，零代码生成<br>
-            <strong>约定优于配置</strong> —— <span class="inline-code">app/routes/api/</span>
-            下的文件自动注册为 API 路由
+            <p>
+              <strong>Use platform primitives.</strong>
+              Prefer Fetch, Request, Response, FormData and URLSearchParams over framework-specific
+              transport.
+            </p>
+            <p>
+              <strong>Keep validation at the edge.</strong>
+              Parse and validate request bodies before application logic sees them.
+            </p>
+            <p>
+              <strong>Make runtime explicit.</strong>
+              Static pages can call APIs, but those APIs still need a serverless or edge deployment
+              target.
+            </p>
           </div>
 
-          <h2>路由约定</h2>
+          <h2>Route Shape</h2>
           <table>
             <thead>
               <tr>
-                <th>文件</th>
-                <th>路由</th>
-                <th>说明</th>
+                <th>File</th>
+                <th>URL</th>
+                <th>Use</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><span class="inline-code">api/posts.ts</span></td>
+                <td><span class="inline-code">app/routes/api/posts.ts</span></td>
                 <td><span class="inline-code">/api/posts</span></td>
-                <td>Posts API（Hono 子应用）</td>
+                <td>Collection handlers.</td>
               </tr>
               <tr>
-                <td><span class="inline-code">api/posts/[id].ts</span></td>
+                <td><span class="inline-code">app/routes/api/posts/[id].ts</span></td>
                 <td><span class="inline-code">/api/posts/:id</span></td>
-                <td>单个 post API</td>
+                <td>Resource handlers.</td>
               </tr>
               <tr>
-                <td><span class="inline-code">api/users/index.ts</span></td>
-                <td><span class="inline-code">/api/users</span></td>
-                <td>用户列表 API</td>
+                <td><span class="inline-code">app/routes/api/search.ts</span></td>
+                <td><span class="inline-code">/api/search?q=kiss</span></td>
+                <td>Query-driven endpoints.</td>
               </tr>
             </tbody>
           </table>
 
-          <h2>类型安全 RPC</h2>
-          <p>KISS 利用 Hono RPC 实现端到端类型安全。无需代码生成：</p>
+          <h2>Response Shape</h2>
+          <p>
+            Keep successful responses boring and predictable. Use HTTP status codes for status, JSON
+            bodies for data, and framework errors for structured failures.
+          </p>
           <code-block
-          ><pre>
-            <code>// 服务端：app/routes/api/posts.ts
-            import { Hono } from 'hono'
+          ><pre><code>return c.json({ posts }, 200);
+            return c.json({ id, ...created }, 201);
+            return c.json({ error: { code: 'NOT_FOUND', message: 'Post not found' } }, 404);</code></pre></code-block>
 
-            const app = new Hono()
-              .get('/', (c) => c.json([{ id: 1, title: 'Hello' }]))
-              .post('/', async (c) => {
-                const body = await c.req.json()
-                return c.json({ ok: true }, 201)
-              })
+            <h2>Validation</h2>
+            <p>
+              KISS does not force a validation library. Zod with
+              <span class="inline-code">@hono/zod-validator</span> is a practical default when you want
+              typed input.
+            </p>
+            <code-block
+            ><pre><code>import { zValidator } from '@hono/zod-validator';
+              import { z } from 'zod';
 
-              export default app
-              export type AppType = typeof app</code></pre></code-block>
+              const schema = z.object({
+                title: z.string().min(1),
+                body: z.string().optional(),
+              });
 
-              <code-block
-              ><pre>
-                <code>// 客户端：app/islands/post-list.ts
-                import { hc } from 'hono/client'
-                import type { AppType } from '../routes/api/posts.ts'
+              app.post('/', zValidator('json', schema), (c) => {
+                const data = c.req.valid('json');
+                return c.json({ ok: true, data }, 201);
+              });</code></pre></code-block>
 
-                const client = hc&lt;AppType&gt;('/api/posts')
-                const res = await client.index.$get()
-                const posts = await res.json()  // 完全类型化！</code></pre></code-block>
+              <h2>Typed RPC</h2>
+              <p>
+                <span class="inline-code">@kissjs/rpc</span> is where type-safe client/server calling
+                conventions can mature. Treat it as an opt-in layer over Hono rather than a replacement for
+                plain API routes.
+              </p>
 
-                <h2>验证（用户选择）</h2>
-                <p>
-                  Zod 和 <span class="inline-code">@hono/zod-validator</span>
-                  不是框架依赖——它们是你的项目级选择：
-                </p>
-                <code-block
-                ><pre>
-                  <code>import { zValidator } from '@hono/zod-validator'
-                  import { z } from 'zod'
+              <h2>Actions</h2>
+              <p>
+                Future FormData actions should start from native forms, redirects and structured validation
+                errors. They should enhance static pages without turning KISS into a SPA runtime.
+              </p>
 
-                  const schema = z.object({ title: z.string(), body: z.string() })
+              <div class="nav-row">
+                <a href="/guide/api-routes" class="nav-link">&larr; API Routes</a>
+                <a href="/guide/configuration" class="nav-link">Configuration &rarr;</a>
+              </div>
+            </div>
+          </kiss-layout>
+        `;
+      }
+    }
 
-                  app.post('/', zValidator('json', schema), async (c) => {
-                    const data = c.req.valid('json')  // 有类型！
-                    return c.json({ ok: true, data }, 201)
-                  })</code></pre></code-block>
-
-                  <h2>错误响应格式</h2>
-                  <p>所有 KISS 错误产生一致的 JSON 响应：</p>
-                  <code-block
-                  ><pre>
-                    <code>{
-                      "error": {
-                        "code": "VALIDATION_ERROR",
-                        "message": "Title is required",
-                        "status": 400
-                      }
-                    }</code></pre></code-block>
-
-                    <div class="nav-row">
-                      <a href="/guide/api-routes" class="nav-link">&larr; API Routes</a>
-                      <a href="/guide/ssg" class="nav-link">SSG &rarr;</a>
-                    </div>
-                  </div>
-                </kiss-layout>
-              `;
-            }
-          }
-
-          customElements.define('page-api-design', ApiDesignPage);
-          export default ApiDesignPage;
-          export const tagName = 'page-api-design';
+    customElements.define('page-api-design', ApiDesignPage);
+    export default ApiDesignPage;
+    export const tagName = 'page-api-design';

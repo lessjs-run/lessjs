@@ -65,3 +65,21 @@ Deno.test('kiss:ready event', () => {
     assertEquals(true, false, `Syntax error: ${String(e)}`);
   }
 });
+
+// ─── v0.5 Trust Release: strategy must reach client entry ────
+
+Deno.test('package island strategy:eager is preserved in client entry', () => {
+  // Bug: buildClient used to drop strategy from packageIslands, so
+  // kiss-theme-toggle (strategy: 'eager') was treated as lazy.
+  // Fix: strategy is now passed through from metadata.
+  const code = generateClientEntry([
+    { tagName: 'kiss-theme-toggle', modulePath: '@kissjs/ui/kiss-theme-toggle', strategy: 'eager', isPackage: true },
+    { tagName: 'kiss-button', modulePath: '@kissjs/ui/kiss-button', strategy: 'lazy', isPackage: true },
+  ]);
+
+  // Eager island must appear in the immediate-load array
+  assertExists(code.includes("'kiss-theme-toggle'"));
+  // Both must appear in the island map
+  assertExists(code.includes("import('@kissjs/ui/kiss-theme-toggle')"));
+  assertExists(code.includes("import('@kissjs/ui/kiss-button')"));
+});

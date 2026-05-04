@@ -4,109 +4,121 @@ import '@kissjs/ui/kiss-layout';
 import '../../islands/code-block.js';
 
 export class TestingPage extends LitElement {
-  static override styles = [
-    pageStyles,
-  ];
+  static override styles = [pageStyles];
+
   override render() {
     return html`
       <kiss-layout currentPath="/guide/testing">
         <div class="container">
-          <h1>测试策略</h1>
-          <p class="subtitle">测试金字塔、框架内置测试、以及你的项目测试模板。</p>
+          <h1>Testing</h1>
+          <p class="subtitle">
+            KISS tests should protect the framework contract: route scanning, DSD output, island metadata,
+            middleware scope, SSG post-processing and package boundaries.
+          </p>
 
-          <h2>测试金字塔</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>层级</th>
-                <th>占比</th>
-                <th>速度</th>
-                <th>用途</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>单元测试</td>
-                <td>70%</td>
-                <td>&lt;10ms</td>
-                <td>独立函数 / 组件逻辑</td>
-              </tr>
-              <tr>
-                <td>集成测试</td>
-                <td>20%</td>
-                <td>&lt;100ms</td>
-                <td>路由 + SSR + 渲染</td>
-              </tr>
-              <tr>
-                <td>E2E 测试</td>
-                <td>10%</td>
-                <td>秒级</td>
-                <td>关键用户流程</td>
-              </tr>
-            </tbody>
-          </table>
+          <h2>Project Tests</h2>
+          <p>
+            Application code can use Deno's built-in test runner. Start with units for pure logic and API
+            handlers, then add build smoke tests for the routes that matter most.
+          </p>
+          <code-block
+          ><pre><code>deno test --allow-read --allow-write --allow-env --allow-net --allow-run</code></pre></code-block>
 
-          <h2>测试框架</h2>
-          <p>KISS 使用 Deno 内置测试运行器——零额外依赖：</p>
-          <code-block>
-            <pre>
-              <code>// __tests__/context_test.ts
-              import { assertEquals } from 'jsr:@std/assert';
-              import { extractParams, parseQuery } from '@kissjs/core';
+          <h2>Route Utilities</h2>
+          <code-block
+          ><pre><code>import { assertEquals } from 'jsr:@std/assert';
+            import { extractParams, parseQuery } from '@kissjs/core';
 
-              Deno.test('extractParams 解析动态片段', () => {
-                const params = extractParams('/users/:id', '/users/42');
-                assertEquals(params, { id: '42' });
-              });</code></pre></code-block>
+            Deno.test('extractParams parses dynamic segments', () => {
+              const params = extractParams('/users/:id', '/users/42');
+              assertEquals(params, { id: '42' });
+            });
 
-              <h2>测试你的 KISS 应用</h2>
-              <code-block>
-                <pre>
-                  <code>// tests/api_test.ts
-                  import { assertEquals } from 'jsr:@std/assert';
+            Deno.test('parseQuery returns plain values', () => {
+              const query = parseQuery(new URL('https://example.com/?page=2'));
+              assertEquals(query, { page: '2' });
+            });</code></pre></code-block>
 
-                  Deno.test('API 返回 posts', async () => {
-                    const res = await fetch('http://localhost:3000/api/posts');
-                    assertEquals(res.status, 200);
-                    const data = await res.json();
-                    assertEquals(Array.isArray(data), true);
-                  });</code></pre></code-block>
+            <h2>Build Smoke Test</h2>
+            <p>
+              A static-first framework needs at least one test that builds the site and verifies generated
+              HTML. This catches route scanner, SSR, client island and SSG integration problems.
+            </p>
+            <code-block
+            ><pre><code>deno task build
+              # then inspect dist/index.html, dist/client, manifest, CSP/PWA tags as needed</code></pre></code-block>
 
-                  <h2>CI 集成</h2>
-                  <code-block>
-                    <pre>
-                      <code># .github/workflows/test.yml
-                      name: Test
-                      on: [push, pull_request]
-                      jobs:
-                        test:
-                          runs-on: ubuntu-latest
-                          steps:
-                            - uses: actions/checkout@v4
-                            - uses: denoland/setup-deno@v2
-                            - run: deno test --allow-read --allow-write</code></pre></code-block>
+              <h2>Framework CI Baseline</h2>
+              <p>
+                For this repository, the package-level CI baseline is intentionally narrower than a full-root
+                lint/typecheck because generated docs/public assets can have different tool constraints.
+              </p>
+              <code-block
+              ><pre><code>deno test --allow-read --allow-write --allow-env --allow-net --allow-run
+                deno lint packages/
+                deno fmt --check packages/
+                deno check packages/kiss-core/src/index.ts packages/kiss-rpc/src/index.ts packages/kiss-ui/src/index.ts
+                deno task build:all</code></pre></code-block>
 
-                            <h2>KISS 内部测试了什么</h2>
-                            <ul>
-                              <li><span class="inline-code">entry-descriptor</span> —— EntryDescriptor 数据模型构建器</li>
-                              <li><span class="inline-code">entry-renderer</span> —— 从描述符生成代码</li>
-                              <li><span class="inline-code">route-scanner</span> —— 基于文件的路由发现</li>
-                              <li><span class="inline-code">island-transform</span> —— AST 标记 + island upgrade 探测</li>
-                              <li><span class="inline-code">ssr-handler</span> —— SSR 渲染 + 错误处理</li>
-                              <li><span class="inline-code">context</span> —— 请求上下文工具</li>
-                              <li><span class="inline-code">errors</span> —— 错误类层级</li>
-                            </ul>
+                <h2>High-Value Regression Tests</h2>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Area</th>
+                      <th>Test</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Middleware</td>
+                      <td>
+                        Root <span class="inline-code">_middleware.ts</span> protects <span class="inline-code"
+                        >/</span> and nested routes.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>SSG CSP</td>
+                      <td>Static HTML receives CSP meta when middleware CSP is configured.</td>
+                    </tr>
+                    <tr>
+                      <td>Nested islands</td>
+                      <td>
+                        <span class="inline-code">app/islands/posts/index.ts</span> resolves to the scanned file
+                        path.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Strategies</td>
+                      <td>
+                        Package and default island strategies are represented in the generated client entry.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Renderer</td>
+                      <td>
+                        Unsafe HTML, attributes, nested DSD and Lit adapter output have explicit expectations.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
 
-                            <div class="nav-row">
-                              <a href="/guide/security-middleware" class="nav-link">&larr; 安全 &amp; 中间件</a>
-                              <a href="/guide/deployment" class="nav-link">部署 &rarr;</a>
-                            </div>
-                          </div>
-                        </kiss-layout>
-                      `;
-                    }
-                  }
+                <h2>Browser Tests</h2>
+                <p>
+                  Use browser tests when behavior depends on Custom Element upgrade, IntersectionObserver, idle
+                  loading, service workers or real DOM semantics. Unit tests are not enough for island strategy
+                  work.
+                </p>
 
-                  customElements.define('page-testing', TestingPage);
-                  export default TestingPage;
-                  export const tagName = 'page-testing';
+                <div class="nav-row">
+                  <a href="/guide/error-handling" class="nav-link">&larr; Error Handling</a>
+                  <a href="/guide/deployment" class="nav-link">Deployment &rarr;</a>
+                </div>
+              </div>
+            </kiss-layout>
+          `;
+        }
+      }
+
+      customElements.define('page-testing', TestingPage);
+      export default TestingPage;
+      export const tagName = 'page-testing';

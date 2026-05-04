@@ -7,115 +7,132 @@ export class SecurityMiddlewarePage extends LitElement {
   static override styles = [
     pageStyles,
     css`
-      .mw-chain {
+      .chain {
         padding: 1rem;
         background: var(--kiss-bg-surface);
-        border-left: 3px solid var(--kiss-border-hover);
-        border-radius: 0 3px 3px 0;
-        margin: 0.75rem 0;
+        border-left: 2px solid var(--kiss-border-hover);
+        border-radius: 0 4px 4px 0;
+        margin: 1rem 0;
+        font-family: "SF Mono", "Fira Code", "Consolas", monospace;
         font-size: 0.8125rem;
         line-height: 1.8;
+        color: var(--kiss-text-secondary);
+        white-space: pre-wrap;
       }
     `,
   ];
+
   override render() {
     return html`
       <kiss-layout currentPath="/guide/security-middleware">
         <div class="container">
-          <h1>安全 &amp; 中间件</h1>
-          <p class="subtitle">安全请求头、CORS、限流、以及中间件链执行顺序。</p>
+          <h1>Security & Middleware</h1>
+          <p class="subtitle">
+            Middleware is where KISS connects route-tree structure with production safety:
+            request headers, CSP, auth guards, CORS and API-specific protections.
+          </p>
 
-          <h2>中间件链</h2>
-          <p>KISS 按标准顺序自动注册中间件。越早注册的中间件作用域越广：</p>
-          <div class="mw-chain">
-            请求 → RequestID → Logger → CORS → SecurityHeaders<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ RateLimit → BodyParse → Auth → Validation →
-            Handler<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ ErrorHandler → Response
-          </div>
+          <h2>Mental Model</h2>
+          <p>
+            KISS middleware is Hono middleware mounted from file-system route scopes.
+            A middleware file affects its route subtree; nested middleware composes from outer to inner scope.
+          </p>
+          <div class="chain">request
+  -> root middleware
+  -> nested middleware
+  -> page or API handler
+  -> response post-processing</div>
 
-          <h2>默认中间件</h2>
+          <h2>Route-Tree Middleware</h2>
           <table>
             <thead>
               <tr>
-                <th>中间件</th>
-                <th>作用域</th>
-                <th>默认</th>
+                <th>File</th>
+                <th>Intended scope</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Request ID</td>
-                <td>所有路由</td>
-                <td>启用</td>
+                <td><span class="inline-code">app/routes/_middleware.ts</span></td>
+                <td>All pages and API routes.</td>
               </tr>
               <tr>
-                <td>Logger</td>
-                <td>所有路由</td>
-                <td>启用</td>
+                <td><span class="inline-code">app/routes/admin/_middleware.ts</span></td>
+                <td><span class="inline-code">/admin/*</span></td>
               </tr>
               <tr>
-                <td>CORS</td>
-                <td>所有路由</td>
-                <td>开发环境允许 localhost</td>
-              </tr>
-              <tr>
-                <td>Security Headers</td>
-                <td>所有路由</td>
-                <td>启用（XSS、点击劫持等）</td>
+                <td><span class="inline-code">app/routes/api/_middleware.ts</span></td>
+                <td><span class="inline-code">/api/*</span></td>
               </tr>
             </tbody>
           </table>
 
-          <h2>配置 CORS</h2>
-          <p>CORS 源通过 <span class="inline-code">kiss()</span> 选项配置——无需环境变量：</p>
-          <code-block
-          ><pre>
-            <code>// vite.config.ts
-            import { kiss } from '@kissjs/core';
+          <code-block><pre><code>// app/routes/admin/_middleware.ts
+import type { Context, Next } from 'hono';
 
-            export default defineConfig({
-              plugins: [
-                kiss({
-                  middleware: {
-                    corsOrigin: 'https://myapp.com',   // 字符串
-                    // corsOrigin: ['https://a.com', 'https://b.com'],  // 数组
-                    // corsOrigin: (origin) => origin,  // 函数
-                  },
-                }),
-              ],
-            })</code></pre></code-block>
+export default async function adminOnly(c: Context, next: Next) {
+  const session = c.req.header('x-session');
+  if (!session) return c.text('Unauthorized', 401);
+  await next();
+}</code></pre></code-block>
 
-            <h2>禁用中间件</h2>
-            <code-block
-            ><pre>
-              <code>kiss({
-                middleware: {
-                  logger: false,          // 禁用请求日志
-                  cors: false,            // 完全禁用 CORS
-                  securityHeaders: false, // 禁用安全请求头
-                },
-              })</code></pre></code-block>
+          <h2>CSP</h2>
+          <p>
+            CSP is a framework-level trust boundary because KISS emits HTML, DSD templates and island scripts.
+            If CSP is enabled for SSR responses, SSG output must receive the equivalent meta policy during static
+            post-processing.
+          </p>
+          <code-block><pre><code>// vite.config.ts
+kiss({
+  middleware: {
+    csp: {
+      policy: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'",
+      nonce: false,
+      reportOnly: false,
+    },
+  },
+});</code></pre></code-block>
 
-              <h2>安全请求头</h2>
-              <p>KISS 通过 <span class="inline-code">hono/secure-headers</span> 应用以下请求头：</p>
-              <ul>
-                <li><span class="inline-code">X-Content-Type-Options: nosniff</span></li>
-                <li><span class="inline-code">X-Frame-Options: SAMEORIGIN</span></li>
-                <li><span class="inline-code">Referrer-Policy: strict-origin-when-cross-origin</span></li>
-                <li><span class="inline-code">Permissions-Policy</span>（限制浏览器特性）</li>
-              </ul>
+          <h2>CORS</h2>
+          <p>
+            Configure CORS deliberately for API routes. Content pages often do not need cross-origin access;
+            API routes often do.
+          </p>
+          <code-block><pre><code>kiss({
+  middleware: {
+    corsOrigin: 'https://example.com',
+  },
+});</code></pre></code-block>
 
-              <div class="nav-row">
-                <a href="/guide/testing" class="nav-link">&larr; 测试</a>
-                <a href="/guide/deployment" class="nav-link">部署 &rarr;</a>
-              </div>
-            </div>
-          </kiss-layout>
-        `;
-      }
-    }
+          <h2>Security Headers</h2>
+          <p>
+            Common production headers should be enabled in one place and tested through both SSR and SSG paths.
+          </p>
+          <ul>
+            <li><span class="inline-code">X-Content-Type-Options: nosniff</span></li>
+            <li><span class="inline-code">X-Frame-Options</span> or equivalent CSP frame policy</li>
+            <li><span class="inline-code">Referrer-Policy</span></li>
+            <li><span class="inline-code">Permissions-Policy</span></li>
+            <li><span class="inline-code">Content-Security-Policy</span> or SSG meta equivalent</li>
+          </ul>
 
-    customElements.define('page-security-middleware', SecurityMiddlewarePage);
-    export default SecurityMiddlewarePage;
-    export const tagName = 'page-security-middleware';
+          <h2>Current Boundary</h2>
+          <p>
+            Two security issues should stay visible until fixed: root middleware must mount across the whole route tree,
+            and SSG must not drop CSP when it post-processes static HTML. These are P1 reliability items because they
+            affect production protections, not only developer ergonomics.
+          </p>
+
+          <div class="nav-row">
+            <a href="/guide/configuration" class="nav-link">&larr; Configuration</a>
+            <a href="/guide/error-handling" class="nav-link">Error Handling &rarr;</a>
+          </div>
+        </div>
+      </kiss-layout>
+    `;
+  }
+}
+
+customElements.define('page-security-middleware', SecurityMiddlewarePage);
+export default SecurityMiddlewarePage;
+export const tagName = 'page-security-middleware';

@@ -245,3 +245,59 @@ Deno.test('generateHonoEntryCode: end-to-end produces runnable code', () => {
   const codeLines = code.split('\n').filter((l) => !l.trimStart().startsWith('//'));
   assertEquals(codeLines.some((l) => l.includes('process.env')), false);
 });
+
+// ─── v0.5 Trust Release regression tests ────────────────────
+
+Deno.test('buildEntryDescriptor: root middleware scope uses /* not //*', () => {
+  // Bug: scope '/' + '/*' = '//*' in Hono only matches '/', not sub-paths.
+  // Fix: scope '/' renders as '/*' (not '//*').
+  const routesWithRootMiddleware: RouteEntry[] = [
+    { path: '/', filePath: 'index.ts', type: 'page', varName: 'pageIndex' },
+    { path: '/admin', filePath: 'admin.ts', type: 'page', varName: 'pageAdmin' },
+    {
+      path: '/_middleware',
+      filePath: '_middleware.ts',
+      type: 'special',
+      special: 'middleware',
+      varName: 'rootMiddleware',
+    },
+  ];
+  const desc = buildEntryDescriptor(routesWithRootMiddleware);
+  const code = renderEntry(desc);
+
+  // Root middleware must use '/*' (matches all paths), NOT '//*' (only matches /)
+  assertStringIncludes(code, "app.use('/*'");
+  assertEquals(code.includes("app.use('//*'"), false, 'Root middleware must NOT use //* pattern');
+});
+
+Deno.test('buildEntryDescriptor: nested island files use real paths, not tagName-derived paths', () => {
+  // Bug: tagName "posts-index" was used to build modulePath "/app/islands/posts-index.ts"
+  //      but the real file is at "app/islands/posts/index.ts"
+  // Fix: islandFiles provides real relative paths, used in preference to tagName
+  const desc = buildEntryDescriptor(islandRoutes, {
+    islandTagNames: ['my-counter', 'posts-index'],
+    islandFiles: ['my-counter.ts', 'posts/index.ts'],
+    islandsDir: 'app/islands',
+  });
+
+  assertEquals(desc.islands.length, 2);
+  // Top-level island: same as before
+  assertEquals(desc.islands[0].modulePath, '/app/islands/my-counter.ts');
+  // Nested island: uses real file path, NOT /app/islands/posts-index.ts
+  assertEquals(desc.islands[1].modulePath, '/app/islands/posts/index.ts');
+  assertEquals(
+    desc.islands[1].modulePath.includes('posts-index'),
+    false,
+    'Nested island must NOT use tagName-derived path',
+  );
+});
+
+Deno.test('buildEntryDescriptor: islandFiles omitted falls back to tagName paths', () => {
+  // Backwards compatibility: if islandFiles is not provided, use tagName
+  const desc = buildEntryDescriptor(islandRoutes, {
+    islandTagNames: ['my-counter'],
+    islandsDir: 'app/islands',
+  });
+
+  assertEquals(desc.islands[0].modulePath, '/app/islands/my-counter.ts');
+});
