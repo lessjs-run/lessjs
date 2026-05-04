@@ -147,7 +147,7 @@ export class ChangelogPage extends LitElement {
                 </li>
                 <li>
                   <strong>版本号</strong>：@kissjs/core 升至 0.5.2，@kissjs/ui 升至 0.5.0，@kissjs/rpc
-                  升至 0.3.0，@kissjs/adapter-lit 升至 0.2.0，@kissjs/create 升至 0.4.3。
+                  升至 0.3.0，@kissjs/adapter-lit 升至 0.2.0，@kissjs/create 升至 0.4.4。
                 </li>
               </ul>
             </div>

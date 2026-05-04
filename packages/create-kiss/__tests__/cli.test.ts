@@ -84,6 +84,9 @@ Deno.test('create-kiss: deno.json build:ssg uses @kissjs/core', () => {
 Deno.test('create-kiss: deno.json maps Lit and package imports explicitly', () => {
   const denoJson = JSON.parse(extractTemplate('deno.json'));
   assertEquals(denoJson.imports.lit, 'npm:lit@^3.2.0');
+  assertEquals(denoJson.imports['@lit/reactive-element'], 'npm:@lit/reactive-element@^2');
+  assertEquals(denoJson.imports['lit-element'], 'npm:lit-element@^4');
+  assertEquals(denoJson.imports['lit-html'], 'npm:lit-html@^3');
   assertEquals(denoJson.imports.vite, 'npm:vite@8.0.10');
   assertEquals(denoJson.imports['@lit-labs/ssr-dom-shim'], 'npm:@lit-labs/ssr-dom-shim@^1.5.0');
   assertExists(denoJson.imports['@kissjs/adapter-lit'].includes('0.2.0'));

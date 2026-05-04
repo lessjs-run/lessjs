@@ -17,6 +17,9 @@ node_modules/
   'deno.json': `{
   "imports": {
     "lit": "npm:lit@^3.2.0",
+    "@lit/reactive-element": "npm:@lit/reactive-element@^2",
+    "lit-element": "npm:lit-element@^4",
+    "lit-html": "npm:lit-html@^3",
     "vite": "npm:vite@8.0.10",
     "@lit-labs/ssr-dom-shim": "npm:@lit-labs/ssr-dom-shim@^1.5.0",
     "@kissjs/adapter-lit": "jsr:@kissjs/adapter-lit@^0.2.0",

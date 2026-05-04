@@ -80,7 +80,7 @@ needed.
 | `@kissjs/ui`          | Lit-based Web Component library and package islands      | `0.5.0`      |
 | `@kissjs/rpc`         | Small fetch/RPC controller utilities                     | `0.3.0`      |
 | `@kissjs/adapter-lit` | Optional Lit SSR adapter                                 | `0.2.0`      |
-| `@kissjs/create`      | Project scaffolding CLI                                  | `0.4.3`      |
+| `@kissjs/create`      | Project scaffolding CLI                                  | `0.4.4`      |
 
 Deprecated historical packages such as `@kissjs/vite` and `@kissjs/ssg` should not be used.
 
