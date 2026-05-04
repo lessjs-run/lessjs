@@ -19,10 +19,10 @@
  *
  * This file combines all tokens into a single CSSResult for convenience.
  * Import individual token modules if you only need a subset:
- *   import { kissColorTokens } from '@kissjs/ui/tokens/colors.js';
+ *   import { kissColorTokens } from '@kissjs/ui/tokens/colors';
  *
  * DRY: Page-level CSS can be imported from colors.ts:
- *   import { kissRootColorCSS } from '@kissjs/ui/tokens/colors.js';
+ *   import { kissRootColorCSS } from '@kissjs/ui/tokens/colors';
  *   // or: import { kissRootColorCSS } from '@kissjs/ui/design-tokens.js';
  *
  * Usage:

@@ -41,7 +41,7 @@ deno task build      # Production build (SSR + client + SSG)
 Create a file in `app/islands/`:
 
 ```ts
-import { html, LitElement } from '@kissjs/core';
+import { html, LitElement } from 'lit';
 
 export const tagName = 'my-greeting';
 
@@ -55,6 +55,8 @@ export default class MyGreeting extends LitElement {
     `;
   }
 }
+
+customElements.define(tagName, MyGreeting);
 ```
 
 Use it in any page route:

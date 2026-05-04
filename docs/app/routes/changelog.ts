@@ -1,7 +1,7 @@
 /**
  * Changelog Page — KISS Framework Version History
  */
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 
@@ -116,6 +116,47 @@ export class ChangelogPage extends LitElement {
             历史条目保留当时术语；当前文档统一把 KISS 的客户端模型称为 Island Upgrade，而不是传统
             hydration。
           </p>
+
+          <div class="version-section">
+            <div class="version-header">
+              <span class="version-number">0.5.0-alpha.5</span>
+              <span class="version-date">2026-05-04</span>
+            </div>
+            <div class="change-category changed">
+              <h4>变更</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>Core/Lit 边界收紧</strong>：docs route components 直接从
+                  <span class="inline-code">lit</span> 导入 <span class="inline-code">css</span> /
+                  <span class="inline-code">html</span> / <span class="inline-code">LitElement</span>，
+                  <span class="inline-code">@kissjs/core</span> 不再通过 docs runtime shim 暴露 Lit。
+                </li>
+                <li>
+                  <strong>Roadmap 刷新</strong>：吸收 2026-05-04 架构审查结论，明确 v0.6
+                  优先 DSD Renderer 2，博客/文档/内容站是近期产品化样板，CRM/admin 放到中期。
+                </li>
+                <li>
+                  <strong>版本号</strong>：@kissjs/core 升至 0.5.0-alpha.5，@kissjs/create 升至
+                  0.3.3。
+                </li>
+              </ul>
+            </div>
+            <div class="change-category fixed">
+              <h4>修复</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>create-kiss 模板</strong>：新项目显式映射
+                  <span class="inline-code">lit</span> / <span class="inline-code">@kissjs/core</span> /
+                  <span class="inline-code">@kissjs/ui</span>，路由和 island 模板直接导入 Lit。
+                </li>
+                <li>
+                  <strong>Island 自注册</strong>：脚手架生成的 counter island 现在调用
+                  <span class="inline-code">customElements.define()</span>，匹配 client entry 的动态
+                  import 副作用注册契约。
+                </li>
+              </ul>
+            </div>
+          </div>
 
           <div class="version-section">
             <div class="version-header">

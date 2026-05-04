@@ -1,4 +1,4 @@
-﻿import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 import '../../islands/code-block.js';
@@ -89,7 +89,7 @@ export class KissUIPage extends LitElement {
           <h2>使用示例</h2>
           <code-block
             ><pre><code>// app/routes/index.ts
-import { html, LitElement } from '@kissjs/core';
+import { html, LitElement } from 'lit';
 import '@kissjs/ui/kiss-button';
 import '@kissjs/ui/kiss-card';
 

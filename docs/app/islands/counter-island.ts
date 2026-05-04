@@ -6,12 +6,12 @@
  * - 客户端升级
  * - 独立 JS bundle
  */
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 
 export const tagName = 'counter-island';
 
 export default class CounterIsland extends LitElement {
-  static styles = css`
+  static override styles = css`
     :host {
       display: block;
     }
@@ -51,12 +51,14 @@ export default class CounterIsland extends LitElement {
     count: { type: Number },
   };
 
+  count = 0;
+
   constructor() {
     super();
     this.count = 0;
   }
 
-  render() {
+  override render() {
     return html`
       <div class="counter">
         <button aria-label="Decrease count" @click="${() => this.count--}">−</button>

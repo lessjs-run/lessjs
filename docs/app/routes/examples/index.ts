@@ -6,7 +6,7 @@
  * - Islands Architecture：按需升级的交互岛屿
  * - Progressive Enhancement：语义基线，无 JS 可用
  */
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 import '../../islands/code-block.js';

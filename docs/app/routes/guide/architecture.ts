@@ -1,4 +1,4 @@
-import { html, LitElement } from '@kissjs/core';
+import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 import '../../islands/code-block.js';
@@ -93,6 +93,7 @@ Phase 3: build:ssg
             这个模型的好处是首屏不依赖 JavaScript。风险是：
             <span class="inline-code">render(): string</span> 本质上是 unsafe HTML，
             框架必须提供清晰的 safe/unsafe 契约。Lit adapter 也必须保持 Lit 的转义语义。
+            因此 v0.6 的优先级是 DSD Renderer 2，而不是提前扩大未来应用层功能。
           </p>
 
           <h2>Island Upgrade</h2>
@@ -111,6 +112,13 @@ Phase 3: build:ssg
             API Routes 目前通过 Hono sub-app 挂载到 generated Hono entry。
             这已经是好的后端选型，但还不等于完整 fullstack 闭环。
             v0.8.0 需要补齐 deployment adapters、FormData actions、typed RPC、env/secrets。
+          </p>
+
+          <h2>产品节奏</h2>
+          <p>
+            KISS 近期最适合博客、文档、内容站、营销页和轻量 serverless 应用。
+            CRM/admin 是中期目标，需要 forms/actions、auth/session、validation、
+            data table 和 revalidation 约定成熟后再作为官方主打场景。
           </p>
 
           <h2>SSG 与 ISR</h2>

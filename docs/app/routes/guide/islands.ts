@@ -1,4 +1,4 @@
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 import '../../islands/code-block.js';
@@ -140,7 +140,8 @@ export class IslandsGuidePage extends LitElement {
           </p>
           <p>
             当前实现仍是全局 island entry 为主。v0.7.0 的目标是页面级 island manifest，
-            让每个页面只加载实际出现的 islands。
+            让每个页面只加载实际出现的 islands。v0.6 会先收紧 DSD renderer 的安全契约、
+            nested DSD 和错误定位，再推进这些真实可测的 upgrade 策略。
           </p>
 
           <h2>创建 Island</h2>
@@ -204,8 +205,8 @@ export const islands: PackageIslandMeta[] = [
               <tr>
                 <td><code>strategy</code></td>
                 <td>
-                  规划中的 upgrade 策略。当前实现以全局 client entry 为主；
-                  v0.7.0 会把 eager / idle / visible 做成真实可测策略。
+                  未来真实可测的 upgrade 策略。当前实现以全局 client entry 为主；
+                  v0.7.0 会把 eager / idle / visible 从路线图推进到浏览器测试覆盖。
                 </td>
               </tr>
             </tbody>

@@ -1,14 +1,14 @@
 /**
  * Blog: KISS v0.5-alpha1 — 全量架构审计与精准修复
  */
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 
 export const tagName = 'blog-v0-5-alpha1';
 
 export default class BlogV05Alpha1 extends LitElement {
-  static styles = [
+  static override styles = [
     pageStyles,
     css`
       h2 { margin-top: 2rem; }

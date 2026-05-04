@@ -6,7 +6,7 @@
  * - Theme Island（唯一交互）
  * - aria-current 导航高亮（L0+L1）
  */
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 import '../../islands/code-block.js';

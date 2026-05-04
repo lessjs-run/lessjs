@@ -5,9 +5,9 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // Vite needs resolve.alias because JSR packages aren't in node_modules.
-// Route components import from '@kissjs/core' for unified DX,
-// but at build time Vite resolves to the local source.
-// We point to a shim that only re-exports runtime APIs (LitElement, html, css, Hono),
+// Generated SSR entries import runtime helpers from '@kissjs/core',
+// but at build time Vite resolves that specifier to a docs-only shim.
+// The shim only re-exports runtime APIs (renderDSD, wrapInDocument, Hono),
 // avoiding pull-in of build-time code (node:fs, Vite plugin internals).
 // NOTE: __dirname is unavailable in Deno ESM — use import.meta instead.
 const __dir = dirname(fileURLToPath(import.meta.url));

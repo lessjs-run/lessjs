@@ -123,7 +123,7 @@ export const kissColorTokens = css`
  *
  * Usage:
  * ```ts
- * import { kissRootColorCSS } from '@kissjs/ui/tokens/colors.js';
+ * import { kissRootColorCSS } from '@kissjs/ui/tokens/colors';
  * // or: import { kissRootColorCSS } from '@kissjs/ui/design-tokens.js';
  *
  * inject: {

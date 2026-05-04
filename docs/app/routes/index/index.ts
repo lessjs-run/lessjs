@@ -1,10 +1,10 @@
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 import '@kissjs/ui/kiss-layout';
 
 export const tagName = 'docs-home';
 
 export default class DocsHome extends LitElement {
-  static styles = css`
+  static override styles = css`
     :host { display: block; }
 
     /* Hero — 紧凑，内容居中 */

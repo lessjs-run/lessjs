@@ -1,5 +1,5 @@
 /**
- * @kissjs/create — Minimal project scaffold for KISS framework.
+ * @kissjs/create - Minimal project scaffold for KISS framework.
  *
  * Usage: deno run -A jsr:@kissjs/create my-app
  *
@@ -7,11 +7,20 @@
  * One template, zero prompts, instant start.
  */
 
+import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+
 const TPL = {
   'deno.json': `{
+  "imports": {
+    "lit": "npm:lit@^3.2.0",
+    "@kissjs/core": "jsr:@kissjs/core@^0.5.0-alpha.5",
+    "@kissjs/ui": "jsr:@kissjs/ui@^0.4.6",
+    "@kissjs/ui/": "jsr:@kissjs/ui@^0.4.6/"
+  },
   "tasks": {
     "dev": "deno run -A npm:vite",
-    "build": "deno run -A npm:vite build",
+    "build": "deno task build:ssr && deno task build:client && deno task build:ssg",
+    "build:ssr": "deno run -A npm:vite build",
     "build:client": "deno run -A jsr:@kissjs/core/cli/build-client",
     "build:ssg": "deno run -A jsr:@kissjs/core/cli/build-ssg",
     "preview": "deno run -A npm:vite preview"
@@ -20,7 +29,7 @@ const TPL = {
 }
 `,
   'vite.config.ts': `import { kiss } from '@kissjs/core';
-import { kissRootColorCSS } from '@kissjs/ui/tokens/colors.js';
+import { kissRootColorCSS } from '@kissjs/ui/tokens/colors';
 import { defineConfig } from 'vite';
 
 // DRY: All color token values come from @kissjs/ui/tokens/colors.ts
@@ -31,7 +40,7 @@ export default defineConfig({
   plugins: [kiss({
     html: { title: 'My KISS App' },
     // Use pre-built UI components from @kissjs/ui
-    // (JSR distributes compiled JS — no decorator errors)
+    // (JSR distributes compiled JS - no decorator errors)
     packageIslands: ['@kissjs/ui'],
     // SSR must bundle @kissjs/ui (decorators need compilation)
     ssr: {
@@ -39,24 +48,24 @@ export default defineConfig({
     },
     inject: {
       headFragments: [
-        // Design tokens — DRY: values from @kissjs/ui/tokens/colors.ts
+        // Design tokens - DRY: values from @kissjs/ui/tokens/colors.ts
         colorTokensStyle,
       ],
     },
   })],
 });
 `,
-  'app/routes/index.ts': `import { css, html, LitElement } from '@kissjs/core';
+  'app/routes/index.ts': `import { css, html, LitElement } from 'lit';
 
 export const tagName = 'home-page';
 export default class HomePage extends LitElement {
-  static styles = css\`
+  static override styles = css\`
     :host { display: block; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
     h1 { font-size: 2rem; margin-bottom: 0.5rem; }
     p { color: var(--kiss-text-secondary, #666); }
     \`;
 
-  render() {
+  override render() {
     return html\`
       <h1>Hello KISS!</h1>
       <p>Your KISS app is running. Edit <code>app/routes/index.ts</code> to get started.</p>
@@ -65,7 +74,7 @@ export default class HomePage extends LitElement {
   }
 }
 `,
-  'app/islands/my-counter.ts': `import { css, html, LitElement } from '@kissjs/core';
+  'app/islands/my-counter.ts': `import { css, html, LitElement } from 'lit';
 
 export const tagName = 'my-counter';
 
@@ -81,12 +90,14 @@ export default class MyCounter extends LitElement {
 
   override render() {
     return html\`
-      <button @click=\${() => this.count--}>−</button>
+      <button @click=\${() => this.count--}>-</button>
       <span>\${this.count}</span>
       <button @click=\${() => this.count++}>+</button>
     \`;
   }
 }
+
+customElements.define(tagName, MyCounter);
 `,
 };
 
@@ -97,27 +108,45 @@ async function main() {
     Deno.exit(1);
   }
 
-  const dir = name;
+  const cwd = Deno.cwd();
+  const targetDir = resolve(cwd, name);
+  const relativeTarget = relative(cwd, targetDir);
+
+  if (
+    !relativeTarget || relativeTarget === '..' || relativeTarget.startsWith(`..${sep}`) ||
+    isAbsolute(relativeTarget)
+  ) {
+    console.error(`Refusing to create project outside the current directory: ${name}`);
+    Deno.exit(1);
+  }
+
   try {
-    await Deno.mkdir(dir, { recursive: true });
+    await Deno.stat(targetDir);
+    console.error(`Directory "${name}" already exists.`);
+    Deno.exit(1);
   } catch (e) {
-    if (e instanceof Deno.errors.AlreadyExists) {
-      console.error(`Directory "${dir}" already exists.`);
-    } else {
-      console.error(`Failed to create directory "${dir}": ${e}`);
+    if (!(e instanceof Deno.errors.NotFound)) {
+      console.error(`Failed to inspect target directory "${name}": ${e}`);
+      Deno.exit(1);
     }
+  }
+
+  try {
+    await Deno.mkdir(targetDir, { recursive: true });
+  } catch (e) {
+    console.error(`Failed to create directory "${name}": ${e}`);
     Deno.exit(1);
   }
 
   for (const [path, content] of Object.entries(TPL)) {
-    const fullPath = `${dir}/${path}`;
-    await Deno.mkdir(fullPath.substring(0, fullPath.lastIndexOf('/')), { recursive: true });
+    const fullPath = join(targetDir, path);
+    await Deno.mkdir(dirname(fullPath), { recursive: true });
     await Deno.writeTextFile(fullPath, content);
-    console.log(`  ✓ ${path}`);
+    console.log(`  created ${path}`);
   }
 
-  console.log(`\n✨ KISS project created at ./${dir}/`);
-  console.log(`\n  cd ${dir}`);
+  console.log(`\nKISS project created at ./${relativeTarget}/`);
+  console.log(`\n  cd ${relativeTarget}`);
   console.log('  deno task dev');
 }
 

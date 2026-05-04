@@ -76,11 +76,11 @@ needed.
 
 | Package               | Role                                                     | Current line    |
 | --------------------- | -------------------------------------------------------- | --------------- |
-| `@kissjs/core`        | Vite plugin, route scanning, DSD rendering, SSG pipeline | `0.5.0-alpha.4` |
+| `@kissjs/core`        | Vite plugin, route scanning, DSD rendering, SSG pipeline | `0.5.0-alpha.5` |
 | `@kissjs/ui`          | Lit-based Web Component library and package islands      | `0.4.6`         |
 | `@kissjs/rpc`         | Small fetch/RPC controller utilities                     | `0.2.4`         |
 | `@kissjs/adapter-lit` | Optional Lit SSR adapter                                 | `0.1.4`         |
-| `@kissjs/create`      | Project scaffolding CLI                                  | `0.3.2`         |
+| `@kissjs/create`      | Project scaffolding CLI                                  | `0.3.3`         |
 
 Deprecated historical packages such as `@kissjs/vite` and `@kissjs/ssg` should not be used.
 
@@ -108,19 +108,19 @@ Custom Elements.
 ## Example Route
 
 ```ts
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 
 export const tagName = 'home-page';
 
 export default class HomePage extends LitElement {
-  static styles = css`
+  static override styles = css`
     :host {
       display: block;
       padding: 2rem;
     }
   `;
 
-  render() {
+  override render() {
     return html`
       <main>
         <h1>Hello from KISS</h1>
@@ -156,7 +156,7 @@ not part of the main workflow.
 
 ## Status
 
-KISS is currently preparing the `v0.5.0-alpha.4` line.
+KISS is currently preparing the `v0.5.0-alpha.5` line.
 
 Stable enough to evaluate:
 

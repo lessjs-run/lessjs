@@ -6,7 +6,7 @@
  * is avoided by using firstUpdated() instead of connectedCallback()
  * for the initial API fetch.
  */
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 import '@kissjs/ui/kiss-layout';
 
 export const tagName = 'page-demo';

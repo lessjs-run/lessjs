@@ -1,14 +1,14 @@
 /**
  * Blog: KISS v0.4.0 — Serverless Milestone
  */
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 
 export const tagName = 'blog-v040';
 
 export default class BlogV040 extends LitElement {
-  static styles = [
+  static override styles = [
     pageStyles,
     css`
       .cmp {

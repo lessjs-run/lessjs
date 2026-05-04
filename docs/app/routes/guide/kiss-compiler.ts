@@ -1,7 +1,7 @@
 /**
  * KISS Compiler — .kiss file compiler architecture decision
  */
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 

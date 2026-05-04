@@ -1,4 +1,4 @@
-import { css } from '@kissjs/core';
+import { css } from 'lit';
 
 /**
  * KISS Docs — Shared Page Styles (Minimal)

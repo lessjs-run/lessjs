@@ -6,7 +6,7 @@
  * Defers the initial fetch until after the first Lit update to avoid
  * upgrade-time re-render races inside a parent DSD shadow root.
  */
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 
 export const tagName = 'api-consumer';
 

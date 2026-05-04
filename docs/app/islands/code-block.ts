@@ -13,12 +13,12 @@
  * Usage:
  *   <code-block><pre><code>const x = 1</code></pre></code-block>
  */
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 
 export const tagName = 'code-block';
 
 export default class CodeBlock extends LitElement {
-  static styles = css`
+  static override styles = css`
     :host {
       display: block;
       position: relative;

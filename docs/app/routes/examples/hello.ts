@@ -6,7 +6,7 @@
  * - 内容在 JS 加载前可见
  * - @kissjs/ui 组件
  */
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 import '@kissjs/ui/kiss-card';

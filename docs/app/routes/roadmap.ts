@@ -1,7 +1,7 @@
 /**
  * Roadmap Page — KISS Framework Development Roadmap
  */
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 
@@ -116,6 +116,27 @@ export class RoadmapPage extends LitElement {
             </p>
           </div>
 
+          <h2>架构审查裁定</h2>
+          <ul class="principle-list">
+            <li>
+              KISS 的主线是 Web Standards-first、static-first、DSD-rendered Web
+              Components + Island Upgrade，不追随 React/Vue/Svelte 元框架路线。
+            </li>
+            <li>
+              近期产品化样板应优先选择博客、文档、内容站、营销页和轻量 serverless
+              应用；这些场景最能发挥 SSG、DSD 和低 JS 的优势。
+            </li>
+            <li>
+              CRM/admin 可以作为中期目标，但不应成为 v0.5-v0.6 的主打叙事；它需要
+              forms/actions、auth/session、validation、data table 和 revalidation
+              约定成熟后再推进。
+            </li>
+            <li>
+              未来计划本轮先进入路线图和设计文档；运行时 API、包导出、CLI 行为不在
+              本次变更中提前实现。
+            </li>
+          </ul>
+
           <h2>版本线</h2>
           <table class="roadmap-table">
             <thead>
@@ -142,7 +163,7 @@ export class RoadmapPage extends LitElement {
               <tr>
                 <td>v0.6.0</td>
                 <td>DSD Renderer 2</td>
-                <td>定义 safe/unsafe HTML 契约，补齐 nested DSD、slot/projection、错误边界。</td>
+                <td>渲染内核优先：safe/unsafe HTML 契约、safe template helper、nested DSD、slot/projection、错误定位。</td>
                 <td class="status-next">下一阶段</td>
               </tr>
               <tr>
@@ -154,7 +175,7 @@ export class RoadmapPage extends LitElement {
               <tr>
                 <td>v0.8.0</td>
                 <td>Serverless Fullstack</td>
-                <td>Hono API 一等公民化，FormData actions、typed RPC、部署 adapter。</td>
+                <td>Hono API 一等公民化，FormData actions、typed RPC、部署 adapter；为博客/内容插件提供稳定约定。</td>
                 <td>规划中</td>
               </tr>
               <tr>
@@ -237,6 +258,10 @@ export class RoadmapPage extends LitElement {
           </table>
 
           <h2>v0.6.0 DSD Renderer 2</h2>
+          <p>
+            v0.6 是架构审查后确认的优先路线：先把 DSD renderer 的安全边界、
+            递归渲染和错误可观测性做扎实，再继续扩大 Island Upgrade 和 fullstack 能力。
+          </p>
           <table class="task-table">
             <thead>
               <tr>
@@ -249,7 +274,7 @@ export class RoadmapPage extends LitElement {
               <tr>
                 <td class="priority-p0">P0</td>
                 <td>定义 <span class="inline-code">render(): string</span> 安全契约</td>
-                <td>文档明确 string render 是 unsafe HTML；提供 safe helper。</td>
+                <td>文档明确 string render 是 unsafe HTML；设计 safe template helper 与显式 <span class="inline-code">unsafeHTML</span> 边界。</td>
               </tr>
               <tr>
                 <td class="priority-p0">P0</td>
@@ -269,7 +294,7 @@ export class RoadmapPage extends LitElement {
               <tr>
                 <td class="priority-p1">P1</td>
                 <td>错误边界</td>
-                <td>组件实例化/渲染失败时构建报错可定位，不再只输出空壳。</td>
+                <td>组件实例化/渲染失败时构建报错可定位，包含 tag、route、原因，不再只输出空壳。</td>
               </tr>
             </tbody>
           </table>
@@ -308,6 +333,11 @@ export class RoadmapPage extends LitElement {
           </table>
 
           <h2>v0.8.0 Serverless Fullstack</h2>
+          <p>
+            v0.8 之后再展开更完整的应用约定。博客系统是近期最合适的产品化样板；
+            CRM/admin 属于更靠后的中期目标，等 forms、auth、validation 和 data
+            loading 约定稳定后再作为官方示例推进。
+          </p>
           <table class="task-table">
             <thead>
               <tr>
@@ -336,6 +366,11 @@ export class RoadmapPage extends LitElement {
                 <td class="priority-p1">P1</td>
                 <td>env/secrets 规范</td>
                 <td>dev/build/deploy 使用一致的配置入口和文档。</td>
+              </tr>
+              <tr>
+                <td class="priority-p2">P2</td>
+                <td><span class="inline-code">@kissjs/blog</span> 设计落地</td>
+                <td>Markdown/frontmatter、listing、post、tag、pagination、feed 和 sitemap 作为 plain SSG plugin 先行。</td>
               </tr>
             </tbody>
           </table>

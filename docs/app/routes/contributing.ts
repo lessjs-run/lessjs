@@ -1,7 +1,7 @@
 /**
  * Contributing Page — KISS Framework Contribution Guide
  */
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 import '../islands/code-block.js';

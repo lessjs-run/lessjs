@@ -1,14 +1,14 @@
 /**
  * Blog: KISS v0.5-alpha-0 — Architecture Simplification
  */
-import { css, html, LitElement } from '@kissjs/core';
+import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@kissjs/ui/kiss-layout';
 
 export const tagName = 'blog-v050-a0';
 
 export default class BlogV050 extends LitElement {
-  static styles = [
+  static override styles = [
     pageStyles,
     css`
       h2 { margin-top: 2rem; }

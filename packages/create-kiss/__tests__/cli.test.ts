@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-unused-vars prefer-const
 /**
  * @kissjs/create - cli.ts tests (Deno)
  *
@@ -20,7 +19,7 @@ function extractTemplate(key: string): string {
   const startIdx = cliSource.indexOf(marker);
   if (startIdx === -1) throw new Error(`Template '${key}' not found`);
 
-  let contentStart = startIdx + marker.length;
+  const contentStart = startIdx + marker.length;
   let depth = 1;
   let i = contentStart;
 
@@ -70,6 +69,27 @@ Deno.test('create-kiss: deno.json build:ssg uses @kissjs/core', () => {
   assertExists(denoJson.tasks['build:ssg'].includes('@kissjs/core'));
 });
 
+Deno.test('create-kiss: deno.json maps Lit and package imports explicitly', () => {
+  const denoJson = JSON.parse(extractTemplate('deno.json'));
+  assertEquals(denoJson.imports.lit, 'npm:lit@^3.2.0');
+  assertExists(denoJson.imports['@kissjs/core'].includes('0.5.0-alpha.5'));
+  assertExists(denoJson.imports['@kissjs/ui'].includes('0.4.6'));
+});
+
+Deno.test('create-kiss: deno.json build runs the full three-phase pipeline', () => {
+  const denoJson = JSON.parse(extractTemplate('deno.json'));
+  assertExists(denoJson.tasks['build'].includes('build:ssr'));
+  assertExists(denoJson.tasks['build'].includes('build:client'));
+  assertExists(denoJson.tasks['build'].includes('build:ssg'));
+});
+
+Deno.test('create-kiss: refuses path escape and existing target before writing', () => {
+  assertExists(cliSource.includes('relative(cwd, targetDir)'));
+  assertExists(cliSource.includes('Refusing to create project outside the current directory'));
+  assertExists(cliSource.includes('Directory "${name}" already exists.'));
+  assertExists(cliSource.includes('Deno.stat(targetDir)'));
+});
+
 Deno.test('create-kiss: vite.config.ts imports kiss plugin', () => {
   const viteConfig = extractTemplate('vite.config.ts');
   assertExists(viteConfig.includes("import { kiss } from '@kissjs/core'"));
@@ -81,16 +101,21 @@ Deno.test('create-kiss: vite.config.ts includes packageIslands config', () => {
   assertExists(viteConfig.includes('@kissjs/ui'));
 });
 
-Deno.test('create-kiss: route index imports from @kissjs/core', () => {
+Deno.test('create-kiss: route index imports Lit directly', () => {
   const routeIndex = extractTemplate('app/routes/index.ts');
-  assertExists(routeIndex.includes('@kissjs/core'));
+  assertExists(routeIndex.includes("from 'lit'"));
+  assertEquals(routeIndex.includes('@kissjs/core'), false);
   assertExists(routeIndex.includes('LitElement'));
+  assertExists(routeIndex.includes('static override styles'));
+  assertExists(routeIndex.includes('override render()'));
   assertExists(routeIndex.includes('tagName'));
 });
 
-Deno.test('create-kiss: island counter imports from @kissjs/core', () => {
+Deno.test('create-kiss: island counter imports Lit directly and self-registers', () => {
   const islandCounter = extractTemplate('app/islands/my-counter.ts');
-  assertExists(islandCounter.includes('@kissjs/core'));
+  assertExists(islandCounter.includes("from 'lit'"));
+  assertEquals(islandCounter.includes('@kissjs/core'), false);
   assertExists(islandCounter.includes('LitElement'));
   assertExists(islandCounter.includes("tagName = 'my-counter'"));
+  assertExists(islandCounter.includes('customElements.define(tagName, MyCounter)'));
 });
