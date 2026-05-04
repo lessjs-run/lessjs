@@ -25,9 +25,9 @@ node_modules/
     "@kissjs/adapter-lit": "jsr:@kissjs/adapter-lit@^0.2.0",
     "@kissjs/core": "jsr:@kissjs/core@^0.5.2",
     "@kissjs/core/kiss-runtime": "jsr:@kissjs/core@^0.5.2/kiss-runtime",
-    "@kissjs/ui": "jsr:@kissjs/ui@^0.5.0",
-    "@kissjs/ui/tokens/colors": "jsr:@kissjs/ui@^0.5.0/tokens/colors",
-    "@kissjs/ui/": "jsr:@kissjs/ui@^0.5.0/"
+    "@kissjs/ui": "jsr:@kissjs/ui@^0.5.1",
+    "@kissjs/ui/tokens/colors": "jsr:@kissjs/ui@^0.5.1/tokens/colors",
+    "@kissjs/ui/": "jsr:@kissjs/ui@^0.5.1/"
   },
   "nodeModulesDir": "auto",
   "tasks": {
@@ -50,16 +50,16 @@ import { defineConfig } from 'vite';
 const colorTokensStyle = '<style>' + kissRootColorCSS + 'body{margin:0;background:var(--kiss-bg-base);color:var(--kiss-text-primary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>';
 
 const kissUiAliases = {
-  '@kissjs/ui': 'https://jsr.io/@kissjs/ui/0.5.0/src/index.ts',
-  '@kissjs/ui/design-tokens': 'https://jsr.io/@kissjs/ui/0.5.0/src/design-tokens.ts',
-  '@kissjs/ui/kiss-button': 'https://jsr.io/@kissjs/ui/0.5.0/src/kiss-button.ts',
-  '@kissjs/ui/kiss-card': 'https://jsr.io/@kissjs/ui/0.5.0/src/kiss-card.ts',
-  '@kissjs/ui/kiss-code-block': 'https://jsr.io/@kissjs/ui/0.5.0/src/kiss-code-block.ts',
-  '@kissjs/ui/kiss-hero-ping': 'https://jsr.io/@kissjs/ui/0.5.0/src/kiss-hero-ping.ts',
-  '@kissjs/ui/kiss-input': 'https://jsr.io/@kissjs/ui/0.5.0/src/kiss-input.ts',
-  '@kissjs/ui/kiss-layout': 'https://jsr.io/@kissjs/ui/0.5.0/src/kiss-layout.ts',
-  '@kissjs/ui/kiss-theme-toggle': 'https://jsr.io/@kissjs/ui/0.5.0/src/kiss-theme-toggle.ts',
-  '@kissjs/ui/tokens/colors': 'https://jsr.io/@kissjs/ui/0.5.0/src/tokens/colors.ts',
+  '@kissjs/ui': 'https://jsr.io/@kissjs/ui/0.5.1/src/index.ts',
+  '@kissjs/ui/design-tokens': 'https://jsr.io/@kissjs/ui/0.5.1/src/design-tokens.ts',
+  '@kissjs/ui/kiss-button': 'https://jsr.io/@kissjs/ui/0.5.1/src/kiss-button.ts',
+  '@kissjs/ui/kiss-card': 'https://jsr.io/@kissjs/ui/0.5.1/src/kiss-card.ts',
+  '@kissjs/ui/kiss-code-block': 'https://jsr.io/@kissjs/ui/0.5.1/src/kiss-code-block.ts',
+  '@kissjs/ui/kiss-hero-ping': 'https://jsr.io/@kissjs/ui/0.5.1/src/kiss-hero-ping.ts',
+  '@kissjs/ui/kiss-input': 'https://jsr.io/@kissjs/ui/0.5.1/src/kiss-input.ts',
+  '@kissjs/ui/kiss-layout': 'https://jsr.io/@kissjs/ui/0.5.1/src/kiss-layout.ts',
+  '@kissjs/ui/kiss-theme-toggle': 'https://jsr.io/@kissjs/ui/0.5.1/src/kiss-theme-toggle.ts',
+  '@kissjs/ui/tokens/colors': 'https://jsr.io/@kissjs/ui/0.5.1/src/tokens/colors.ts',
 };
 
 export default defineConfig({

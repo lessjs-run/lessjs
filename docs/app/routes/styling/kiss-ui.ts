@@ -53,7 +53,7 @@ export class KissUIPage extends LitElement {
           ><pre><code>// deno.json
             {
               "imports": {
-                "@kissjs/ui": "jsr:@kissjs/ui@^0.5.0"
+                "@kissjs/ui": "jsr:@kissjs/ui@^0.5.1"
               }
             }</code></pre></code-block>
 

@@ -47,7 +47,12 @@ export const tagName = 'my-greeting';
 
 export default class MyGreeting extends LitElement {
   static override properties = { name: { type: String } };
-  name = 'World';
+  declare name: string;
+
+  constructor() {
+    super();
+    this.name = 'World';
+  }
 
   override render() {
     return html`
@@ -56,7 +61,9 @@ export default class MyGreeting extends LitElement {
   }
 }
 
-customElements.define(tagName, MyGreeting);
+if (!customElements.get(tagName)) {
+  customElements.define(tagName, MyGreeting);
+}
 ```
 
 Use it in any page route:

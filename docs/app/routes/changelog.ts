@@ -119,6 +119,35 @@ export class ChangelogPage extends LitElement {
 
           <div class="version-section">
             <div class="version-header">
+              <span class="version-number">0.5.1</span>
+              <span class="version-date">2026-05-04</span>
+            </div>
+            <div class="change-category fixed">
+              <h4>修复</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>Lit Island 响应式修复</strong>：docs demo、@kissjs/ui 交互组件和 create-kiss
+                  模板改为 <span class="inline-code">declare</span> reactive fields，并在 constructor
+                  中初始化，避免 class field 覆盖 Lit 生成的属性 accessor。
+                </li>
+                <li>
+                  <strong>线上 demo 可交互性</strong>：修复
+                  <span class="inline-code">/demo</span> 页面中 Refresh、Say Hello 和 counter
+                  点击后不触发重渲染的问题。
+                </li>
+                <li>
+                  <strong>回归测试</strong>：新增 reactive property shadowing 测试，防止后续组件再次把 Lit
+                  accessor 盖掉。
+                </li>
+                <li>
+                  <strong>版本号</strong>：@kissjs/ui 升至 0.5.1，@kissjs/create 升至 0.4.5。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="version-section">
+            <div class="version-header">
               <span class="version-number">0.5.0</span>
               <span class="version-date">2026-05-04</span>
             </div>
