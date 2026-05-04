@@ -45,9 +45,9 @@ export class RoadmapPage extends LitElement {
             </p>
           </div>
 
-          <h2>Now: Trust Hardening</h2>
+          <h2>Now: DSD Renderer 2</h2>
           <p>
-            当前优先级是修复框架已经承诺的行为，而不是扩大功能面。
+            v0.5.3 Trust Release 已完成，文档承诺与构建产物对齐。下一阶段聚焦渲染内核硬化。
           </p>
           <table>
             <thead>
@@ -59,37 +59,57 @@ export class RoadmapPage extends LitElement {
             </thead>
             <tbody>
               <tr>
-                <td>Middleware</td>
+                <td>Safe/unsafe HTML</td>
                 <td>
-                  Root <span class="inline-code">_middleware.ts</span> must cover the whole route tree.
+                  Define <span class="inline-code">render(): string</span> safety contract; add safe
+                  template helper with explicit <span class="inline-code">unsafeHTML</span> boundary.
                 </td>
                 <td>
-                  Security headers and auth guards cannot silently disappear below <span
-                    class="inline-code"
-                  >/</span>.
+                  Current string render is unsafe HTML by default; need opt-in unsafe with
+                  safe-by-default.
                 </td>
               </tr>
               <tr>
-                <td>SSG Security</td>
-                <td>Static post-processing must preserve CSP behavior from SSR.</td>
-                <td>Static deployments need the same security contract as generated Hono responses.</td>
-              </tr>
-              <tr>
-                <td>Islands</td>
-                <td>Nested island paths must use scanned file paths, not rebuilt tag names.</td>
-                <td>Apps should be able to organize islands in subdirectories.</td>
-              </tr>
-              <tr>
-                <td>Strategies</td>
+                <td>Nested DSD</td>
                 <td>
-                  Island <span class="inline-code">strategy</span> metadata must reach the client build.
+                  Parent components must be able to recursively render child custom elements as nested
+                  DSD.
                 </td>
-                <td>Package islands and framework options should affect runtime loading behavior.</td>
+                <td>
+                  Layout → page → island nesting currently outputs child elements without DSD.
+                </td>
+              </tr>
+              <tr>
+                <td>Slot/projection</td>
+                <td>
+                  Layout, page and island slot projection must have coverage tests.
+                </td>
+                <td>
+                  Slot content disappearing in DSD is a hard-to-debug class of failure.
+                </td>
+              </tr>
+              <tr>
+                <td>Error visibility</td>
+                <td>
+                  Render failures must report route, tag name, module path and original cause.
+                </td>
+                <td>
+                  Current failures produce empty shells with no diagnostic information.
+                </td>
               </tr>
             </tbody>
           </table>
 
           <h2>Release Phases</h2>
+          <div class="phase">
+            <span class="status">v0.5.3 done</span>
+            <h3>Trust Release</h3>
+            <p>
+              修复根 middleware scope、island chunk 双前缀、strategy 传递、嵌套 island 路径、SSG CSP
+              注入和 DEFAULT_NAV 同步。 文档承诺与构建产物对齐，309 测试通过，构建全流程验证。
+            </p>
+          </div>
+
           <div class="phase">
             <span class="status">v0.6</span>
             <h3>DSD Renderer 2</h3>

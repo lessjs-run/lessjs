@@ -1,6 +1,6 @@
 {
   "name": "@kissjs/ui",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "exports": {
     ".": "./dist/index.js",
     "./kiss-button": "./dist/kiss-button.js",
@@ -26,7 +26,16 @@
     "vite": "npm:vite@8.0.10"
   },
   "publish": {
-    "include": ["dist/**", "deno.json", "jsr.json", "LICENSE"],
-    "exclude": ["!dist", "node_modules", "src"]
+    "include": [
+      "dist/**",
+      "deno.json",
+      "jsr.json",
+      "LICENSE"
+    ],
+    "exclude": [
+      "!dist",
+      "node_modules",
+      "src"
+    ]
   }
 }

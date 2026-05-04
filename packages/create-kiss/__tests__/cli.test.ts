@@ -90,11 +90,11 @@ Deno.test('create-kiss: deno.json maps Lit and package imports explicitly', () =
   assertEquals(denoJson.imports.vite, 'npm:vite@8.0.10');
   assertEquals(denoJson.imports['@lit-labs/ssr-dom-shim'], 'npm:@lit-labs/ssr-dom-shim@^1.5.0');
   assertExists(denoJson.imports['@kissjs/adapter-lit'].includes('0.2.0'));
-  assertExists(denoJson.imports['@kissjs/core'].includes('0.5.2'));
-  assertExists(denoJson.imports['@kissjs/core/kiss-runtime'].includes('0.5.2'));
-  assertExists(denoJson.imports['@kissjs/ui'].includes('0.5.1'));
-  assertExists(denoJson.imports['@kissjs/ui/tokens/colors'].includes('0.5.1'));
-  assertExists(denoJson.imports['@kissjs/ui/'].includes('0.5.1/'));
+  assertExists(denoJson.imports['@kissjs/core'].includes('0.5.3'));
+  assertExists(denoJson.imports['@kissjs/core/kiss-runtime'].includes('0.5.3'));
+  assertExists(denoJson.imports['@kissjs/ui'].includes('0.5.2'));
+  assertExists(denoJson.imports['@kissjs/ui/tokens/colors'].includes('0.5.2'));
+  assertExists(denoJson.imports['@kissjs/ui/'].includes('0.5.2/'));
   assertEquals(denoJson.nodeModulesDir, 'auto');
 });
 
@@ -126,7 +126,7 @@ Deno.test('create-kiss: vite.config.ts includes packageIslands config', () => {
   const viteConfig = extractTemplate('vite.config.ts');
   assertExists(viteConfig.includes('@kissjs/ui'));
   assertExists(viteConfig.includes('kissUiAliases'));
-  assertExists(viteConfig.includes('https://jsr.io/@kissjs/ui/0.5.1/src/kiss-button.ts'));
+  assertExists(viteConfig.includes('https://jsr.io/@kissjs/ui/0.5.2/src/kiss-button.ts'));
 });
 
 Deno.test('create-kiss: route index imports Lit directly', () => {
