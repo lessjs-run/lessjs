@@ -34,8 +34,8 @@ await build({
   ],
   outDir: './npm',
   shims: {
-    deno: true,    // polyfill Deno namespace
-    node: true,    // polyfill node:path, node:fs
+    deno: true, // polyfill Deno namespace
+    node: true, // polyfill node:path, node:fs
   },
   typeCheck: false,
   compilerOptions: {

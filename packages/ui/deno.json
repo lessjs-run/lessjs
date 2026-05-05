@@ -31,11 +31,9 @@
     "include": [
       "dist/**",
       "deno.json",
-      "jsr.json",
       "LICENSE"
     ],
     "exclude": [
-      "!dist",
       "node_modules",
       "src"
     ]

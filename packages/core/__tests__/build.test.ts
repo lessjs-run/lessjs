@@ -141,7 +141,9 @@ Deno.test('buildPlugin - closeBundle (build mode, no islands)', async (t) => {
   await t.step('prints "No islands" message', () => {
     // Test verifies the build plugin handles zero islands gracefully
     // by checking that clean-up is safe (no crash on missing dist)
-    try { rmSync('dist', { recursive: true, force: true }); } catch { /* ignore */ }
+    try {
+      rmSync('dist', { recursive: true, force: true });
+    } catch { /* ignore */ }
     assertEquals(existsSync('dist'), false);
   });
 

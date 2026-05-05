@@ -225,9 +225,15 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
     // imports, multiple routes trigger the same define() call.
     const origDefine = globalThis.customElements?.define?.bind(globalThis.customElements);
     if (origDefine && !globalThis.__kissSsrDefinePatched) {
-      globalThis.customElements.define = (name: string, ctor: CustomElementConstructor, options?: ElementDefinitionOptions) => {
+      globalThis.customElements.define = (
+        name: string,
+        ctor: CustomElementConstructor,
+        options?: ElementDefinitionOptions,
+      ) => {
         if (globalThis.customElements.get(name)) return;
-        try { origDefine(name, ctor, options); } catch { /* already defined */ }
+        try {
+          origDefine(name, ctor, options);
+        } catch { /* already defined */ }
       };
       globalThis.__kissSsrDefinePatched = true;
     }

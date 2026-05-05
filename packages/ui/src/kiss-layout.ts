@@ -722,6 +722,6 @@ export class KissLayout extends LitElement {
   }
 
   // Guard: idempotent across SSR paths
-try {
+  try {
     customElements.define(tagName, KissLayout);
   } catch { /* already defined */ }

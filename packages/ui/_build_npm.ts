@@ -7,7 +7,7 @@
  *
  * Usage: deno run -A _build_npm.ts
  */
-import { emptyDir, copy } from 'jsr:@deno/dnt';
+import { copy, emptyDir } from 'jsr:@deno/dnt';
 
 const version = JSON.parse(Deno.readTextFileSync('./deno.json')).version;
 

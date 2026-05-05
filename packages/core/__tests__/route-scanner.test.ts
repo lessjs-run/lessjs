@@ -229,7 +229,7 @@ Deno.test('route-scanner - scanPackageIslands', async (t) => {
   });
 
   // Test skipped: requires @lessjs/ui/dist to be built first.
-  // Run `cd packages/kiss-ui && deno task build` then uncomment to run.
+  // Run `cd packages/ui && deno task build` then uncomment to run.
   /* await t.step('scans @lessjs/ui for islands', async () => {
     const { scanPackageIslands } = await import('../src/route-scanner.ts');
     const result = await scanPackageIslands(['@lessjs/ui']);

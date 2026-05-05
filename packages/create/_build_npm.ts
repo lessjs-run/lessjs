@@ -53,8 +53,7 @@ Deno.chmodSync('./npm/cli.mjs', 0o755);
 const pkgJson = {
   name: '@lessjs/create',
   version,
-  description:
-    'Scaffold a new LessJS project — Deno-first, DSD + Island Architecture + SSG.',
+  description: 'Scaffold a new LessJS project — Deno-first, DSD + Island Architecture + SSG.',
   license: 'MIT',
   repository: {
     type: 'git',

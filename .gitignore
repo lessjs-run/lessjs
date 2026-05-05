@@ -39,6 +39,7 @@ __test_fixtures__/
 
 # Framework internals
 .kiss/
+.workbuddy/
 
 # Vite cache
 .vite/
