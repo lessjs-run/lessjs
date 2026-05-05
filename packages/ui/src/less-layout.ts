@@ -712,7 +712,7 @@ export class KissLayout extends LitElement {
                 <span class="divider"></span>
                 Self-bootstrapped from JSR
                 <span class="divider"></span>
-                LessJS Architecture — K·I·S·S
+                LESS IS MORE
               </p>
             </footer>
           </div>
