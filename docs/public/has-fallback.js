@@ -16,7 +16,7 @@
     var supported = sheet.cssRules.length > 0;
     if (!supported) {
       document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('kiss-layout').forEach(function (el) {
+        document.querySelectorAll('less-layout').forEach(function (el) {
           var sr = el.shadowRoot;
           if (sr) {
             var details = sr.querySelector('details.mobile-menu');

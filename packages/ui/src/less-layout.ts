@@ -336,18 +336,17 @@ export class KissLayout extends LitElement {
           font-weight: var(--less-font-weight-medium);
         }
 
-        /* === Mobile Backdrop === */
-        .mobile-backdrop {
-          position: fixed;
-          inset: 0;
-          top: var(--less-layout-header-height, 56px);
-          background: var(--less-backdrop, rgba(0, 0, 0, 0.4));
-          z-index: 80;
-          opacity: 0;
-          pointer-events: none;
-          transition: opacity var(--less-transition-slow);
-          backdrop-filter: blur(2px);
-        }
+      /* === Mobile Backdrop === */
+      .mobile-backdrop {
+        position: fixed;
+        inset: 0;
+        top: var(--less-layout-header-height, 56px);
+        background: var(--less-backdrop, rgba(0, 0, 0, 0.4));
+        z-index: 80;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--less-transition-slow);
+      }
 
         /* === Mobile Responsive === */
         @media (max-width: 900px) {

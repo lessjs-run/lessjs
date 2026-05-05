@@ -80,7 +80,7 @@ export const islands: PackageIslandMeta[] = [
   {
     tagName: 'less-layout',
     modulePath: '@lessjs/ui/less-layout',
-    strategy: 'lazy',
+    strategy: 'eager', // Layout shell must be interactive immediately (hamburger menu, sidebar)
   },
   {
     tagName: 'less-hero-ping',

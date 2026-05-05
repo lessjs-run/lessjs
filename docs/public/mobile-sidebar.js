@@ -26,7 +26,7 @@ if (typeof document !== 'undefined') {
 
     if (!isBackdrop && !isNavLink) return;
 
-    document.querySelectorAll('kiss-layout').forEach(function (el) {
+    document.querySelectorAll('less-layout').forEach(function (el) {
       var sr = el.shadowRoot;
       if (sr) {
         var details = sr.querySelector('details.mobile-menu');
