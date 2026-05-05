@@ -266,15 +266,6 @@ export class LessLayout extends LitElement {
           scrollbar-width: thin;
         }
 
-        /* Home layout: collapse sidebar on desktop (not display:none which kills transform) */
-        :host([home]) .docs-sidebar {
-          width: 0;
-          min-width: 0;
-          padding: 0;
-          overflow: hidden;
-          border: none;
-        }
-
         .nav-section {
           margin-bottom: var(--less-size-5);
         }
@@ -404,14 +395,24 @@ export class LessLayout extends LitElement {
             box-shadow: none;
           }
 
-          /* Home layout: restore sidebar on mobile for hamburger menu */
-          :host([home]) .docs-sidebar {
+          /* Mobile overlay sidebar: always in DOM, shown/hidden by menu-open */
+          .mobile-sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: var(--less-layout-header-height, 56px);
+            left: 0;
             width: min(300px, 80vw);
-            min-width: unset;
+            height: calc(100vh - var(--less-layout-header-height, 56px));
+            z-index: 90;
+            background: var(--less-bg-base);
+            border-right: 0.5px solid var(--less-border);
             padding: var(--less-size-4) 0;
             overflow-y: auto;
-            border-right: 0.5px solid var(--less-border);
-            border-bottom: none;
+            -webkit-overflow-scrolling: touch;
+          }
+
+          :host([menu-open]) .mobile-sidebar-overlay {
+            display: block;
           }
 
           :host([menu-open]) .docs-sidebar {
@@ -453,6 +454,11 @@ export class LessLayout extends LitElement {
           .app-footer p {
             line-height: 1.8;
           }
+        }
+
+        /* Mobile overlay sidebar: hidden on desktop, shown on mobile by menu-open */
+        .mobile-sidebar-overlay {
+          display: none;
         }
 
         @media (max-width: 480px) {
@@ -665,21 +671,37 @@ export class LessLayout extends LitElement {
     }
 
     private _renderSidebarNav(): TemplateResult | typeof nothing {
-      const nav = this.navItems || LessLayout.DEFAULT_NAV;
       return html`
         <nav class="docs-sidebar" aria-label="Documentation navigation">
-          ${nav.map(
-            (section) =>
-              html`
-                <details class="nav-section" open>
-                  <summary class="nav-section-title">${section.section}</summary>
-                  ${section.items.map(
-                    (item) => this._navLink(item.href || item.path || '#', item.label),
-                  )}
-                </details>
-              `,
-          )}
+          ${this._renderSidebarItems()}
         </nav>
+      `;
+    }
+
+    /** Mobile overlay sidebar: position fixed, shown/hidden by menu-open toggle */
+    private _renderMobileSidebar(): TemplateResult {
+      return html`
+        <nav class="mobile-sidebar-overlay" aria-label="Mobile navigation">
+          ${this._renderSidebarItems()}
+        </nav>
+      `;
+    }
+
+    /** Shared nav items for both desktop and mobile sidebar */
+    private _renderSidebarItems(): TemplateResult {
+      const nav = this.navItems || LessLayout.DEFAULT_NAV;
+      return html`
+        ${nav.map(
+          (section) =>
+            html`
+              <details class="nav-section" open>
+                <summary class="nav-section-title">${section.section}</summary>
+                ${section.items.map(
+                  (item) => this._navLink(item.href || item.path || '#', item.label),
+                )}
+              </details>
+            `,
+        )}
       `;
     }
 
@@ -738,7 +760,9 @@ export class LessLayout extends LitElement {
           </header>
           <div class="mobile-backdrop"></div>
           <div class="layout-body">
-            ${this._renderSidebarNav()}
+            ${!this.home ? this._renderSidebarNav() : nothing}
+            <!-- Mobile overlay sidebar: always rendered, position:fixed, toggled by menu-open -->
+            ${this._renderMobileSidebar()}
             <main class="layout-main">
               <slot></slot>
             </main>
