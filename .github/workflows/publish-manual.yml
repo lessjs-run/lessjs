@@ -59,7 +59,7 @@ jobs:
             fi
 
             echo "[JSR] Publishing ${pkg}@${version}"
-            (cd "$dir" && deno publish --allow-dirty)
+            (cd "$dir" && deno publish -c deno.json --allow-dirty)
           }
 
           publish_if_requested_and_missing "rpc" "@lessjs/rpc" "packages/rpc"
