@@ -79,7 +79,9 @@ jobs:
             fi
 
             echo "[npm] Building ${pkg}@${version}"
-            deno run -A "$dir/_build_npm.ts"
+            # Must cd into the package dir so dnt resolves ./src/index.ts
+            # against the package deno.json, not the workspace root.
+            (cd "$dir" && deno run -A --config deno.json _build_npm.ts)
 
             echo "[npm] Publishing ${pkg}@${version}"
             cd "$dir/npm"
