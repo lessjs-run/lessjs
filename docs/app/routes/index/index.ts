@@ -1,5 +1,5 @@
 import { css, html, LitElement } from 'lit';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 export const tagName = 'docs-home';
 
@@ -119,7 +119,7 @@ export default class DocsHome extends LitElement {
       grid-template-columns: 15rem minmax(0, 1fr);
       gap: 2rem;
       padding: 2rem 0;
-      border-bottom: 0.5px solid var(--kiss-border);
+      border-bottom: 0.5px solid var(--less-border);
     }
 
     .band:last-child {
@@ -128,14 +128,14 @@ export default class DocsHome extends LitElement {
 
     h2 {
       margin: 0;
-      color: var(--kiss-text-primary);
+      color: var(--less-text-primary);
       font-size: 1rem;
       font-weight: 560;
     }
 
     p {
       margin: 0 0 0.75rem;
-      color: var(--kiss-text-secondary);
+      color: var(--less-text-secondary);
       font-size: 0.875rem;
       line-height: 1.75;
     }
@@ -148,7 +148,7 @@ export default class DocsHome extends LitElement {
 
     .doc-link {
       display: block;
-      border: 0.5px solid var(--kiss-border);
+      border: 0.5px solid var(--less-border);
       border-radius: 5px;
       padding: 1rem;
       text-decoration: none;
@@ -157,33 +157,33 @@ export default class DocsHome extends LitElement {
     }
 
     .doc-link:hover {
-      border-color: var(--kiss-border-hover);
-      background: var(--kiss-bg-surface);
+      border-color: var(--less-border-hover);
+      background: var(--less-bg-surface);
     }
 
     .doc-link strong {
       display: block;
       margin-bottom: 0.35rem;
-      color: var(--kiss-text-primary);
+      color: var(--less-text-primary);
       font-size: 0.875rem;
       font-weight: 560;
     }
 
     .doc-link span {
       display: block;
-      color: var(--kiss-text-tertiary);
+      color: var(--less-text-tertiary);
       font-size: 0.8125rem;
       line-height: 1.55;
     }
 
     code {
       font-family: "SF Mono", "Fira Code", "Consolas", monospace;
-      background: var(--kiss-code-bg);
-      border: 0.5px solid var(--kiss-code-border);
+      background: var(--less-code-bg);
+      border: 0.5px solid var(--less-code-border);
       border-radius: 3px;
       padding: 0.125rem 0.375rem;
       font-size: 0.8125rem;
-      color: var(--kiss-text-secondary);
+      color: var(--less-text-secondary);
     }
 
     @media (max-width: 760px) {
@@ -205,7 +205,7 @@ export default class DocsHome extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout home>
+      <less-layout home>
         <section class="hero">
           <div class="hero-inner">
             <div>
@@ -295,7 +295,7 @@ export default class DocsHome extends LitElement {
             </div>
           </section>
         </main>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

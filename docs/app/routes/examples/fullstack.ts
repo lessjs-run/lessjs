@@ -9,7 +9,7 @@
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
 import '../../islands/counter-island.js';
 
@@ -19,11 +19,11 @@ export class FullstackDemoPage extends LitElement {
     css`
       .demo-container {
         padding: 2rem;
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 8px;
         margin: 1.5rem 0;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
       .demo-container h1 {
         font-size: 2rem;
@@ -33,7 +33,7 @@ export class FullstackDemoPage extends LitElement {
         margin-top: 1.5rem;
         padding: 1rem;
         background: var(--kiss-bg-elevated);
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 6px;
       }
       .api-demo h3 {
@@ -44,8 +44,8 @@ export class FullstackDemoPage extends LitElement {
       .api-response {
         font-family: "SF Mono", "Fira Code", monospace;
         font-size: 0.8125rem;
-        color: var(--kiss-text-secondary);
-        background: var(--kiss-code-bg);
+        color: var(--less-text-secondary);
+        background: var(--less-code-bg);
         padding: 0.75rem;
         border-radius: 4px;
       }
@@ -53,7 +53,7 @@ export class FullstackDemoPage extends LitElement {
         margin-top: 1.5rem;
         padding: 1rem;
         background: var(--kiss-bg-elevated);
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 6px;
       }
       .counter-demo h3 {
@@ -63,8 +63,8 @@ export class FullstackDemoPage extends LitElement {
       }
       .deployment-diagram {
         padding: 1.25rem;
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 6px;
         margin: 1.5rem 0;
         font-size: 0.8125rem;
@@ -72,14 +72,14 @@ export class FullstackDemoPage extends LitElement {
         font-family: "SF Mono", "Fira Code", monospace;
         white-space: pre;
         overflow-x: auto;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
       }
     `,
   ];
 
   override render() {
     return html`
-      <kiss-layout current-path="/examples/fullstack">
+      <less-layout current-path="/examples/fullstack">
         <div class="container">
           <h1>全栈示例</h1>
           <p class="subtitle">
@@ -89,7 +89,7 @@ export class FullstackDemoPage extends LitElement {
           <h2>在线演示</h2>
           <div class="demo-container">
             <h1>LessJS 全栈示例</h1>
-            <p style="color: var(--kiss-text-tertiary); margin-bottom: 1.5rem;">
+            <p style="color: var(--less-text-tertiary); margin-bottom: 1.5rem;">
               SSG + API Routes + Islands —— 完整的全栈示例。
             </p>
 
@@ -171,7 +171,7 @@ export class FullstackDemoPage extends LitElement {
                 <a href="/guide/deployment" class="nav-link">部署 &rarr;</a>
               </div>
             </div>
-          </kiss-layout>
+          </less-layout>
         `;
       }
     }

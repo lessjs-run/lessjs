@@ -201,30 +201,30 @@ Deno.test('buildEntryDescriptor: default upgradeStrategy is lazy', () => {
 Deno.test('renderEntry: package islands are included in island upgrade entry', () => {
   const desc = buildEntryDescriptor(basicRoutes, {
     packageIslands: [
-      { tagName: 'kiss-layout', modulePath: '@lessjs/ui/kiss-layout' },
-      { tagName: 'kiss-button', modulePath: '@lessjs/ui/kiss-button' },
+      { tagName: 'less-layout', modulePath: '@lessjs/ui/less-layout' },
+      { tagName: 'less-button', modulePath: '@lessjs/ui/less-button' },
     ],
   });
   const code = renderEntry(desc);
 
-  assertStringIncludes(code, 'kiss-layout');
-  assertStringIncludes(code, 'kiss-button');
+  assertStringIncludes(code, 'less-layout');
+  assertStringIncludes(code, 'less-button');
   assertStringIncludes(code, '@lessjs/ui');
 });
 
 Deno.test('renderEntry: package islands are not imported by SSR entry', () => {
   const desc = buildEntryDescriptor(basicRoutes, {
     packageIslands: [
-      { tagName: 'kiss-layout', modulePath: '@lessjs/ui/kiss-layout' },
-      { tagName: 'kiss-button', modulePath: '@lessjs/ui/kiss-button' },
+      { tagName: 'less-layout', modulePath: '@lessjs/ui/less-layout' },
+      { tagName: 'less-button', modulePath: '@lessjs/ui/less-button' },
     ],
   });
   const code = renderEntry(desc);
 
-  assertStringIncludes(code, '"kiss-layout":"@lessjs/ui/kiss-layout"');
-  assertFalse(code.includes("import * as __island_kiss_layout from '@lessjs/ui/kiss-layout'"));
+  assertStringIncludes(code, '"less-layout":"@lessjs/ui/less-layout"');
+  assertFalse(code.includes("import * as __island_kiss_layout from '@lessjs/ui/less-layout'"));
   assertFalse(code.includes('__kiss_get_default_export'));
-  assertFalse(code.includes("customElements.define('kiss-layout'"));
+  assertFalse(code.includes("customElements.define('less-layout'"));
   assertFalse(code.includes('__island_kiss_layout.default'));
   assertFalse(code.includes('__island_kiss_button.default'));
 });
@@ -307,7 +307,7 @@ Deno.test('generateHonoEntryCode: complex scenario with all features', () => {
     },
     islandTagNames: ['code-block', 'counter-island'],
     packageIslands: [
-      { tagName: 'kiss-layout', modulePath: '@lessjs/ui/kiss-layout' },
+      { tagName: 'less-layout', modulePath: '@lessjs/ui/less-layout' },
     ],
     html: { lang: 'zh-CN', title: 'KISS 文档' },
     headExtras: '<link rel="stylesheet" href="/styles.css" />',
@@ -320,7 +320,7 @@ Deno.test('generateHonoEntryCode: complex scenario with all features', () => {
   assertStringIncludes(code, '"https://example.com"');
   assertStringIncludes(code, '_renderer');
   assertStringIncludes(code, '_middleware');
-  assertStringIncludes(code, 'kiss-layout');
+  assertStringIncludes(code, 'less-layout');
   assertStringIncludes(code, 'lang: "zh-CN"');
   assertStringIncludes(code, 'KISS 文档');
   assertStringIncludes(code, '/styles.css');

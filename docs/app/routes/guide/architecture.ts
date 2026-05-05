@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
 
 export class ArchitecturePage extends LitElement {
@@ -8,7 +8,7 @@ export class ArchitecturePage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/guide/architecture">
+      <less-layout currentPath="/guide/architecture">
         <div class="container">
           <h1>架构</h1>
           <p class="subtitle">
@@ -164,7 +164,7 @@ Phase 3: SSG
             <a href="/guide/routing" class="nav-link">Routing &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

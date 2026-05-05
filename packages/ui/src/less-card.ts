@@ -1,35 +1,35 @@
 /**
- * @lessjs/ui - kiss-card
+ * @lessjs/ui - less-card
  *
  * Minimal card container with optional header and footer.
  * Swiss International Style: borders are whispers, not shouts.
  *
  * Usage:
  * ```html
- * <kiss-card>
+ * <less-card>
  *   <h3 slot="header">Card Title</h3>
  *   <p>Card content goes here.</p>
- * </kiss-card>
+ * </less-card>
  *
- * <kiss-card variant="elevated">
+ * <less-card variant="elevated">
  *   <p>Elevated card with shadow.</p>
- * </kiss-card>
+ * </less-card>
  * ```
  */
 
 import { css, type CSSResult, html, LitElement, type TemplateResult } from 'lit';
-import { kissDesignTokens } from './design-tokens.js';
+import { lessDesignTokens } from './design-tokens.js';
 
-export const tagName = 'kiss-card';
+export const tagName = 'less-card';
 
 export class KissCard extends LitElement {
   static override styles: CSSResult[] = [
-    kissDesignTokens,
+    lessDesignTokens,
     css`
       :host {
         display: block;
         background: var(--kiss-bg-card);
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: var(--kiss-radius-lg);
         overflow: hidden;
       }
@@ -45,10 +45,10 @@ export class KissCard extends LitElement {
 
       ::slotted([slot="header"]) {
         padding: var(--kiss-size-4) var(--kiss-size-5);
-        border-bottom: 0.5px solid var(--kiss-border);
+        border-bottom: 0.5px solid var(--less-border);
         font-size: var(--kiss-font-size-lg);
         font-weight: var(--kiss-font-weight-semibold);
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
         margin: 0;
       }
 
@@ -58,7 +58,7 @@ export class KissCard extends LitElement {
 
       ::slotted([slot="footer"]) {
         padding: var(--kiss-size-3) var(--kiss-size-5);
-        border-top: 0.5px solid var(--kiss-border);
+        border-top: 0.5px solid var(--less-border);
         font-size: var(--kiss-font-size-sm);
         color: var(--kiss-text-muted);
         margin: 0;

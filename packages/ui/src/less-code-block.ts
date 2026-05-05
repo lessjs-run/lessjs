@@ -1,25 +1,25 @@
 /**
- * @lessjs/ui - kiss-code-block
+ * @lessjs/ui - less-code-block
  *
  * Code block with copy button.
  * DSD makes content visible without JavaScript.
  *
  * Usage:
  * ```html
- * <kiss-code-block>
+ * <less-code-block>
  *   <pre><code>const x = 1;</code></pre>
- * </kiss-code-block>
+ * </less-code-block>
  * ```
  */
 
 import { css, type CSSResult, html, LitElement, type TemplateResult } from 'lit';
-import { kissDesignTokens } from './design-tokens.js';
+import { lessDesignTokens } from './design-tokens.js';
 
-export const tagName = 'kiss-code-block';
+export const tagName = 'less-code-block';
 
 export class KissCodeBlock extends LitElement {
   static override styles: CSSResult[] = [
-    kissDesignTokens,
+    lessDesignTokens,
     css`
       :host {
         display: block;
@@ -29,16 +29,16 @@ export class KissCodeBlock extends LitElement {
       ::slotted(pre) {
         margin: 0;
         padding: var(--kiss-size-5);
-        background: var(--kiss-code-bg);
-        border: 0.5px solid var(--kiss-code-border);
+        background: var(--less-code-bg);
+        border: 0.5px solid var(--less-code-border);
         border-radius: var(--kiss-radius-sm);
         overflow-x: auto;
         font-family: var(--kiss-font-mono);
         font-size: var(--kiss-font-size-sm);
         line-height: var(--kiss-line-height-normal);
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
         scrollbar-width: thin;
-        scrollbar-color: var(--kiss-border) transparent;
+        scrollbar-color: var(--less-border) transparent;
       }
 
       .copy-btn {
@@ -47,7 +47,7 @@ export class KissCodeBlock extends LitElement {
         right: var(--kiss-size-2);
         background: var(--kiss-bg-elevated);
         color: var(--kiss-text-muted);
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         padding: var(--kiss-size-1) var(--kiss-size-3);
         font-size: var(--kiss-font-size-xs);
         font-family: var(--kiss-font-sans);
@@ -58,13 +58,13 @@ export class KissCodeBlock extends LitElement {
       }
 
       .copy-btn:hover {
-        color: var(--kiss-text-secondary);
-        border-color: var(--kiss-border-hover);
+        color: var(--less-text-secondary);
+        border-color: var(--less-border-hover);
       }
 
       .copy-btn.copied {
-        color: var(--kiss-text-primary);
-        border-color: var(--kiss-border-hover);
+        color: var(--less-text-primary);
+        border-color: var(--less-border-hover);
       }
 
       .copy-btn.failed {

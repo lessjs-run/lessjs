@@ -108,7 +108,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
     // v0.5.0 note: upgradeStrategy controls island module import timing.
     // It is not a client render runtime.
   } catch {
-    console.log('[KISS] No .kiss/build-metadata.json found; using provided island list');
+    console.log('[LessJS] No .kiss/build-metadata.json found; using provided island list');
   }
 
   // Generate SSG entry code
@@ -215,7 +215,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
       }
     } catch {
       console.warn(
-        '[KISS SSG] @lessjs/adapter-lit not found — Lit components must return string from render()',
+        '[LessJS SSG] @lessjs/adapter-lit not found — Lit components must return string from render()',
       );
     }
 
@@ -288,7 +288,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
             rmdirSync(_404Dir);
           } catch { /* non-empty dir, ignore */ }
         }
-        console.log('[KISS SSG] 404 page → dist/404.html (GitHub Pages)');
+        console.log('[LessJS SSG] 404 page → dist/404.html (GitHub Pages)');
       }
 
       // Convert flat HTML files to clean URLs: about.html → about/index.html
@@ -304,10 +304,10 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         if (existsSync(dirPath)) continue;
         nodeFs.mkdirSync(dirPath, { recursive: true });
         nodeFs.renameSync(filePath, indexPath);
-        console.log(`[KISS SSG] Clean URL: /${baseName} → ${baseName}/index.html`);
+        console.log(`[LessJS SSG] Clean URL: /${baseName} → ${baseName}/index.html`);
       }
 
-      console.log(`[KISS SSG] Static site generated → ${outputDir}`);
+      console.log(`[LessJS SSG] Static site generated → ${outputDir}`);
 
       const basePath = options.base || '/';
 
@@ -326,15 +326,15 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
               const scriptSrc = `${basePath}client/${entry.file}`;
               const { injectClientScript } = await import('../ssg-postprocess.js');
               injectClientScript(outputDir, scriptSrc);
-              console.log(`[KISS SSG] Client script injected: ${scriptSrc}`);
+              console.log(`[LessJS SSG] Client script injected: ${scriptSrc}`);
               break;
             }
           }
         } catch (err) {
-          console.warn('[KISS SSG] Could not read client manifest for script injection:', err);
+          console.warn('[LessJS SSG] Could not read client manifest for script injection:', err);
         }
       } else {
-        console.warn('[KISS SSG] No client manifest found - run the full build command first');
+        console.warn('[LessJS SSG] No client manifest found - run the full build command first');
       }
 
       // Post-process: rewrite island paths (fallback for any inline references)
@@ -358,7 +358,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
           options.middleware?.csp?.reportOnly || false,
           options.middleware?.csp?.nonce || false,
         );
-        console.log('[KISS SSG] CSP meta tag injected into static HTML');
+        console.log('[LessJS SSG] CSP meta tag injected into static HTML');
       }
 
       // Build observability: full manifest with HTML pages + budget warnings
@@ -385,11 +385,11 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
           icons: [{ src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }],
         };
         writeFileSync(join(outputDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
-        console.log('[KISS SSG] PWA manifest.json generated');
+        console.log('[LessJS SSG] PWA manifest.json generated');
 
         // Smart service worker: networkFirst for HTML+API, cacheFirst for assets
         // No precaching — the old PRECACHE pattern caused stale index.html.
-        const swCode = `const CACHE = 'kiss-${Date.now()}';
+        const swCode = `const CACHE = 'less-${Date.now()}';
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(
   caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => clients.claim())
@@ -428,7 +428,7 @@ async function networkFirst(req) {
   }
 }`;
         writeFileSync(join(outputDir, 'sw.js'), swCode);
-        console.log('[KISS SSG] PWA sw.js generated');
+        console.log('[LessJS SSG] PWA sw.js generated');
 
         // Inject manifest link + sw registration into HTML files
         const manifestLink = `<link rel="manifest" href="${basePath}manifest.json">`;
@@ -445,7 +445,7 @@ async function networkFirst(req) {
           }
           writeFileSync(htmlPath, html);
         }
-        console.log(`[KISS SSG] PWA: injected manifest + sw into ${htmlFiles.length} HTML files`);
+        console.log(`[LessJS SSG] PWA: injected manifest + sw into ${htmlFiles.length} HTML files`);
       }
     } finally {
       await server.close();
@@ -467,7 +467,7 @@ async function networkFirst(req) {
 // CLI entry point
 if (import.meta.main) {
   buildSSG().catch((err) => {
-    console.error('[KISS SSG] Failed:', err);
+    console.error('[LessJS SSG] Failed:', err);
     process.exit(1);
   });
 }

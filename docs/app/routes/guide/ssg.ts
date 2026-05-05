@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
 
 export class SSGGuidePage extends LitElement {
@@ -8,7 +8,7 @@ export class SSGGuidePage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/guide/ssg">
+      <less-layout currentPath="/guide/ssg">
         <div class="container">
           <h1>渲染与 SSG</h1>
           <p class="subtitle">
@@ -117,7 +117,7 @@ export class SSGGuidePage extends LitElement {
             <a href="/guide/islands" class="nav-link">Island Upgrade &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

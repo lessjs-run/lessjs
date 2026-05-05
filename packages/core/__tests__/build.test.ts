@@ -3,7 +3,7 @@
  * @lessjs/core - build / entry-generators tests (Deno)
  *
  * v0.5.0: generateClientEntry simplified - no legacy SSR client runtime, no strategy.
- * Client entry just does dynamic imports + dispatches kiss:ready event.
+ * Client entry just does dynamic imports + dispatches less:ready event.
  */
 import {
   assertEquals,
@@ -85,10 +85,10 @@ Deno.test('build - generateClientEntry', async (t) => {
     assertFalse(code.includes("if (!customElements.get('my-counter'))"));
   });
 
-  await t.step('includes KISS Client Entry comment', () => {
+  await t.step('includes LessJS Client Entry comment', () => {
     const islands = [{ tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' }];
     const code = generateClientEntry(islands);
-    assertStringIncludes(code, 'KISS Client Entry');
+    assertStringIncludes(code, 'LessJS Client Entry');
   });
 
   await t.step('no legacy SSR client imports (v0.5.0 CE-native upgrade)', () => {
@@ -104,7 +104,7 @@ Deno.test('build - generateClientEntry', async (t) => {
     const islands = [{ tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' }];
     const code = generateClientEntry(islands);
     assertStringIncludes(code, 'requestIdleCallback');
-    assertStringIncludes(code, 'kiss:ready');
+    assertStringIncludes(code, 'less:ready');
     assertStringIncludes(code, 'function __load');
   });
 });
@@ -118,7 +118,7 @@ Deno.test('buildPlugin - configResolved', () => {
   // If we reach here without error, the hook ran.
   // We can't directly inspect `base` (it's closed over), but closeBundle will use it.
   assertEquals(typeof plugin.name, 'string');
-  assertEquals(plugin.name, 'kiss:build');
+  assertEquals(plugin.name, 'less:build');
 });
 
 Deno.test('buildPlugin - closeBundle (build mode, no islands)', async (t) => {
@@ -154,7 +154,7 @@ Deno.test('buildPlugin - closeBundle (build mode, with islands)', async (t) => {
   cleanup();
   const ctx = {
     islandTagNames: ['my-counter', 'theme-toggle'],
-    packageIslands: [{ tagName: 'kiss-button', packageName: '@lessjs/ui' }],
+    packageIslands: [{ tagName: 'less-button', packageName: '@lessjs/ui' }],
     userResolveAlias: { '@/*': '/src/*' },
   };
   const plugin = buildPlugin({}, ctx as never);
@@ -168,7 +168,7 @@ Deno.test('buildPlugin - closeBundle (build mode, with islands)', async (t) => {
     const meta = JSON.parse(raw);
     assertEquals(meta.islandTagNames.length, 2);
     assertEquals(meta.packageIslands.length, 1);
-    assertEquals(meta.packageIslands[0].tagName, 'kiss-button');
+    assertEquals(meta.packageIslands[0].tagName, 'less-button');
   });
 
   await t.step('prints island count message', () => {

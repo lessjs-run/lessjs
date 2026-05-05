@@ -7,7 +7,7 @@
  * for the initial API fetch.
  */
 import { css, html, LitElement } from 'lit';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 export const tagName = 'page-demo';
 
@@ -32,11 +32,11 @@ export default class PageDemo extends LitElement {
       font-weight: 800;
       letter-spacing: -0.03em;
       margin: 0 0 0.5rem;
-      color: var(--kiss-text-primary);
+      color: var(--less-text-primary);
       line-height: 1.2;
     }
     .subtitle {
-      color: var(--kiss-text-tertiary);
+      color: var(--less-text-tertiary);
       margin-bottom: 3rem;
       font-size: 0.9375rem;
       line-height: 1.7;
@@ -45,26 +45,26 @@ export default class PageDemo extends LitElement {
       font-size: 1.125rem;
       font-weight: 600;
       margin: 1.5rem 0 0.75rem;
-      color: var(--kiss-text-primary);
+      color: var(--less-text-primary);
     }
     p {
       line-height: 1.7;
       margin: 0.5rem 0;
-      color: var(--kiss-text-secondary);
+      color: var(--less-text-secondary);
       font-size: 0.9375rem;
     }
     strong {
-      color: var(--kiss-text-primary);
+      color: var(--less-text-primary);
       font-weight: 600;
     }
     a {
-      color: var(--kiss-text-primary);
+      color: var(--less-text-primary);
       text-decoration: underline;
       text-underline-offset: 3px;
     }
     hr.divider {
       border: none;
-      border-top: 0.5px solid var(--kiss-border);
+      border-top: 0.5px solid var(--less-border);
       margin: 2rem 0;
     }
 
@@ -73,7 +73,7 @@ export default class PageDemo extends LitElement {
       gap: 0;
       margin: 1.5rem 0 2rem;
       /* 0.5px: reduced to match kiss-ui spec */
-      border: 0.5px solid var(--kiss-border);
+      border: 0.5px solid var(--less-border);
       border-radius: 8px;
       overflow: hidden;
     }
@@ -83,12 +83,12 @@ export default class PageDemo extends LitElement {
       text-align: center;
     }
     .jam-cell + .jam-cell {
-      border-left: 0.5px solid var(--kiss-border);
+      border-left: 0.5px solid var(--less-border);
     }
     .jam-cell .letter {
       font-size: 2rem;
       font-weight: 900;
-      color: var(--kiss-text-primary);
+      color: var(--less-text-primary);
       display: block;
       line-height: 1;
       margin-bottom: 0.5rem;
@@ -104,7 +104,7 @@ export default class PageDemo extends LitElement {
     }
     .jam-cell .desc {
       font-size: 0.75rem;
-      color: var(--kiss-text-tertiary);
+      color: var(--less-text-tertiary);
       line-height: 1.5;
       margin: 0;
     }
@@ -114,14 +114,14 @@ export default class PageDemo extends LitElement {
 
     .arch-card {
       /* 0.5px: reduced to match kiss-ui spec */
-      border: 0.5px solid var(--kiss-border);
+      border: 0.5px solid var(--less-border);
       border-radius: 8px;
       overflow: hidden;
     }
     .arch-card pre {
       margin: 0;
       padding: 1rem 1.25rem;
-      background: var(--kiss-code-bg);
+      background: var(--less-code-bg);
       font-size: 0.75rem;
       line-height: 1.7;
       overflow-x: auto;
@@ -131,10 +131,10 @@ export default class PageDemo extends LitElement {
       justify-content: space-between;
       align-items: center;
       padding: 0.75rem 1.25rem;
-      background: var(--kiss-bg-surface);
-      border-bottom: 0.5px solid var(--kiss-border);
+      background: var(--less-bg-surface);
+      border-bottom: 0.5px solid var(--less-border);
       font-size: 0.8125rem;
-      color: var(--kiss-text-secondary);
+      color: var(--less-text-secondary);
       font-family: "SF Mono", "Fira Code", "Consolas", monospace;
     }
     .arch-card .endpoint-bar a {
@@ -152,7 +152,7 @@ export default class PageDemo extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout>
+      <less-layout>
         <div class="container">
           <span class="overline">Showcase</span>
           <h1>JAM Pattern in Action</h1>
@@ -185,7 +185,7 @@ export default class PageDemo extends LitElement {
           <hr class="divider" />
 
           <p
-            style="font-size:0.8125rem;color:var(--kiss-text-tertiary);margin:0 0 0.5rem;line-height:1.6"
+            style="font-size:0.8125rem;color:var(--less-text-tertiary);margin:0 0 0.5rem;line-height:1.6"
           >
             Another Island — <strong>0.9 KB</strong> of lazy-loaded JavaScript, fully interactive via
             Declarative Shadow DOM and Custom Element upgrade.
@@ -195,7 +195,7 @@ export default class PageDemo extends LitElement {
           <hr class="divider" />
 
           <h2>Architecture</h2>
-          <p style="font-size:0.9375rem;color:var(--kiss-text-secondary);line-height:1.7">
+          <p style="font-size:0.9375rem;color:var(--less-text-secondary);line-height:1.7">
             This entire page was statically generated at build time by the KISS 3-phase pipeline. The
             interactive components are <strong>Islands</strong> — lazy-loaded JavaScript that upgrades
             only the parts that need interaction. Everything else is pure static HTML.
@@ -208,7 +208,7 @@ export default class PageDemo extends LitElement {
               <a
                 href="https://kiss-demo-api.sisyphuszheng.deno.net/api"
                 target="_blank"
-                style="font-size:0.75rem;color:var(--kiss-text-primary);text-decoration:underline;text-underline-offset:3px"
+                style="font-size:0.75rem;color:var(--less-text-primary);text-decoration:underline;text-underline-offset:3px"
               >Open →</a>
             </div>
           </div>
@@ -218,7 +218,7 @@ export default class PageDemo extends LitElement {
             <pre>deno task build → SSR bundle + island chunks + static HTML + DSD + clean URLs + PWA</pre>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

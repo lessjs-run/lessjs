@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
 
 export class DeploymentPage extends LitElement {
@@ -16,7 +16,7 @@ export class DeploymentPage extends LitElement {
 
       .platform-card {
         padding: 1rem;
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
       }
 
@@ -33,7 +33,7 @@ export class DeploymentPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/guide/deployment">
+      <less-layout currentPath="/guide/deployment">
         <div class="container">
           <h1>部署</h1>
           <p class="subtitle">
@@ -146,7 +146,7 @@ export class DeploymentPage extends LitElement {
               <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
             </div>
           </div>
-        </kiss-layout>
+        </less-layout>
       `;
     }
   }

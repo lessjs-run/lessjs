@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
 
 export class ApiRoutesPage extends LitElement {
@@ -8,7 +8,7 @@ export class ApiRoutesPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/guide/api-routes">
+      <less-layout currentPath="/guide/api-routes">
         <div class="container">
           <h1>API 路由</h1>
           <p class="subtitle">
@@ -117,7 +117,7 @@ export default app;</code></pre></code-block>
             <a href="/guide/api-design" class="nav-link">API Design &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

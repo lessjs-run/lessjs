@@ -3,7 +3,7 @@
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 export class ChangelogPage extends LitElement {
   static override styles = [
@@ -12,9 +12,9 @@ export class ChangelogPage extends LitElement {
       .version-section {
         margin: 2rem 0;
         padding: 1.5rem;
-        background: var(--kiss-bg-surface);
+        background: var(--less-bg-surface);
         /* 0.5px: reduced to match kiss-ui spec */
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 6px;
       }
       .version-header {
@@ -26,7 +26,7 @@ export class ChangelogPage extends LitElement {
       .version-number {
         font-size: 1.25rem;
         font-weight: 700;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
       .version-date {
         font-size: 0.75rem;
@@ -53,7 +53,7 @@ export class ChangelogPage extends LitElement {
         color: var(--kiss-accent-dim);
       }
       .change-category.fixed h4 {
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
       }
       .change-list {
         list-style: none;
@@ -64,7 +64,7 @@ export class ChangelogPage extends LitElement {
         padding: 0.375rem 0;
         padding-left: 1.25rem;
         position: relative;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
         font-size: 0.875rem;
       }
       .change-list li::before {
@@ -83,7 +83,7 @@ export class ChangelogPage extends LitElement {
       .version-table td {
         padding: 0.75rem 1rem;
         text-align: left;
-        border-bottom: 0.5px solid var(--kiss-border);
+        border-bottom: 0.5px solid var(--less-border);
       }
       .version-table th {
         font-size: 0.6875rem;
@@ -94,14 +94,14 @@ export class ChangelogPage extends LitElement {
       }
       .version-table td:first-child {
         font-weight: 600;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
     `,
   ];
 
   override render() {
     return html`
-      <kiss-layout currentPath="/changelog">
+      <less-layout currentPath="/changelog">
         <div class="container">
           <h1>更新日志</h1>
           <p class="subtitle">
@@ -298,7 +298,7 @@ export class ChangelogPage extends LitElement {
                     <strong>CI 发布补丁</strong>：GitHub Actions 测试任务显式授予
                     <span class="inline-code">--allow-run</span>，create-kiss 模板显式安装 Vite 和 Lit 在
                     SSR 分支需要的 <span class="inline-code">@lit-labs/ssr-dom-shim</span>，并修复 JSR
-                    远程运行时的 <span class="inline-code">@lessjs/core/kiss-runtime</span>、
+                    远程运行时的 <span class="inline-code">@lessjs/core/less-runtime</span>、
                     <span class="inline-code">@lessjs/ui</span> package island、Lit adapter 解析路径。
                   </li>
                   <li>
@@ -357,7 +357,7 @@ export class ChangelogPage extends LitElement {
                     不再依赖本地 node_modules junction。
                   </li>
                   <li>
-                    <strong>Docs navigation</strong>：kiss-layout 默认 sidebar 和 header 补齐 Decisions /
+                    <strong>Docs navigation</strong>：less-layout 默认 sidebar 和 header 补齐 Decisions /
                     ADR 入口，文档站可直接发现架构决策记录。
                   </li>
                   <li>
@@ -451,7 +451,7 @@ export class ChangelogPage extends LitElement {
                     生产在线，deploy-api.yml 自动化（CORS 修复、平台迁移 deployctl→deno deploy）
                   </li>
                   <li>
-                    <strong>kiss-hero-ping 组件</strong>：可配置 API 的 ping Island，🟢/🔴 状态点。提取到
+                    <strong>less-hero-ping 组件</strong>：可配置 API 的 ping Island，🟢/🔴 状态点。提取到
                     @lessjs/ui v0.4.0
                   </li>
                   <li>
@@ -474,11 +474,11 @@ export class ChangelogPage extends LitElement {
                   <li><strong>全站 1px → 0.5px 统一</strong>：17 文件、40+ 处边框</li>
                   <li>
                     <strong>全站非 Hero 颜色 → CSS
-                      变量</strong>：--kiss-text-primary/secondary/tertiary/muted，--kiss-border，--kiss-bg-surface
+                      变量</strong>：--less-text-primary/secondary/tertiary/muted，--less-border，--less-bg-surface
                     等
                   </li>
                   <li>
-                    <strong>kiss-layout 响应式</strong>：sidebar 240px → clamp(200px, 20vw, 280px)，header
+                    <strong>less-layout 响应式</strong>：sidebar 240px → clamp(200px, 20vw, 280px)，header
                     max-width CSS 变量化
                   </li>
                   <li>
@@ -503,7 +503,7 @@ export class ChangelogPage extends LitElement {
                     <strong>页面组件事件不生效</strong>：docs-home 的 @click 在客户端不工作 — 提取为独立
                     Island
                   </li>
-                  <li><strong>kiss-hero-ping 类型错误</strong>：static override 顺序、catch e:unknow</li>
+                  <li><strong>less-hero-ping 类型错误</strong>：static override 顺序、catch e:unknow</li>
                   <li>
                     <strong>Quick start 命令错误</strong>：npm create@lessjs/app → deno run -A
                     jsr:@lessjs/create
@@ -543,15 +543,15 @@ export class ChangelogPage extends LitElement {
                     意外破坏构建
                   </li>
                   <li>
-                    <strong>kissDesignTokens 导出 tokens 子路径</strong>：@lessjs/ui/tokens/colors, effects,
+                    <strong>lessDesignTokens 导出 tokens 子路径</strong>：@lessjs/ui/tokens/colors, effects,
                     spacing, typography 独立导出
                   </li>
                   <li>
                     <strong>kiss-error CSS 变量</strong>：组件错误状态统一使用可配置的 --kiss-error 变量
                   </li>
                   <li>
-                    <strong>kiss-layout 可配置 header 高度</strong>：56px 硬编码替换为
-                    --kiss-layout-header-height CSS 变量
+                    <strong>less-layout 可配置 header 高度</strong>：56px 硬编码替换为
+                    --less-layout-header-height CSS 变量
                   </li>
                   <li>README 包版本号更新至 0.3.2 / 0.2.3</li>
                   <li>README coverage badge 替换为 CI badge</li>
@@ -563,7 +563,7 @@ export class ChangelogPage extends LitElement {
                 <h4>修复</h4>
                 <ul class="change-list">
                   <li>
-                    <strong>主题切换按钮点击无响应（v0.2.x 历史问题）</strong>：kiss-theme-toggle 在 Shadow
+                    <strong>主题切换按钮点击无响应（v0.2.x 历史问题）</strong>：less-theme-toggle 在 Shadow
                     DOM 中事件的 composedPath() 未正确穿透，导致点击事件被吞；data-theme
                     未传播到所有嵌套组件的 host 元素。根因：旧 Lit SSR client 路线要求客户端补丁先于
                     customElements.define() 执行，而当时的执行顺序没有保证
@@ -582,7 +582,7 @@ export class ChangelogPage extends LitElement {
                     环境下报 "Cannot use import statement outside module"，移除（现代浏览器已原生支持 DSD）
                   </li>
                   <li>
-                    <strong>P0 — kiss-input 显示 "undefined" 字符串</strong>：.value="&#36;{this.value ??
+                    <strong>P0 — less-input 显示 "undefined" 字符串</strong>：.value="&#36;{this.value ??
                     ''}"，避免未设置值时显示文本 "undefined"
                   </li>
                   <li>
@@ -603,23 +603,23 @@ export class ChangelogPage extends LitElement {
                     阴影在黑色背景上不可见，添加 [data-theme="dark"] 亮色阴影变体
                   </li>
                   <li>
-                    <strong>P1 — kiss-button href/target 渲染 "undefined"</strong>：href=&#36;{hrefAttr} /
+                    <strong>P1 — less-button href/target 渲染 "undefined"</strong>：href=&#36;{hrefAttr} /
                     target=&#36;{this.target} 在未设置时渲染字面量 "undefined"，改用 nothing sentinel
                   </li>
                   <li>
-                    <strong>P1 — kiss-button 每次 render 创建新箭头函数</strong>：disabled 时的 @click
+                    <strong>P1 — less-button 每次 render 创建新箭头函数</strong>：disabled 时的 @click
                     内联箭头函数提取为类方法 _preventClick
                   </li>
                   <li>
-                    <strong>P1 — kiss-input 错误状态 ARIA 默认值</strong>：aria-invalid="false" /
+                    <strong>P1 — less-input 错误状态 ARIA 默认值</strong>：aria-invalid="false" /
                     aria-errormessage="" 始终存在，改用 nothing sentinel
                   </li>
                   <li>
-                    <strong>P1 — kiss-code-block setTimeout 无清理</strong>：添加 _copyTimer +
+                    <strong>P1 — less-code-block setTimeout 无清理</strong>：添加 _copyTimer +
                     disconnectedCallback 清除超时
                   </li>
                   <li>
-                    <strong>P1 — colors.ts 注释颠倒</strong>：kissDarkColors / kissLightColors 的 JSDoc
+                    <strong>P1 — colors.ts 注释颠倒</strong>：lessDarkColors / lessLightColors 的 JSDoc
                     Light/Dark 标签互换
                   </li>
                   <li>
@@ -627,7 +627,7 @@ export class ChangelogPage extends LitElement {
                     不监听 signal.aborted，改为 race 模式
                   </li>
                   <li>
-                    <strong>P1 — kiss-theme-toggle 无限递归</strong>：_propagateTheme 无递归深度限制，添加
+                    <strong>P1 — less-theme-toggle 无限递归</strong>：_propagateTheme 无递归深度限制，添加
                     depth 参数 + 最大 10 层
                   </li>
                   <li>
@@ -672,7 +672,7 @@ export class ChangelogPage extends LitElement {
                     npm/JSR 包的 Islands
                   </li>
                   <li>
-                    <strong>kiss-theme-toggle Island</strong>：Dark/Light 主题切换组件，从 kiss-layout
+                    <strong>less-theme-toggle Island</strong>：Dark/Light 主题切换组件，从 less-layout
                     中提取为独立 Island（DSD + upgrade）
                   </li>
                   <li>
@@ -689,10 +689,10 @@ export class ChangelogPage extends LitElement {
                 <h4>变更</h4>
                 <ul class="change-list">
                   <li>
-                    <strong>kiss-layout 简化为纯静态组件</strong>：移除 _isLight 属性、localStorage
+                    <strong>less-layout 简化为纯静态组件</strong>：移除 _isLight 属性、localStorage
                     读取、_handleThemeToggle 方法
                   </li>
-                  <li>L2 全局主题切换脚本已删除：由 kiss-theme-toggle Island upgrade 替代</li>
+                  <li>L2 全局主题切换脚本已删除：由 less-theme-toggle Island upgrade 替代</li>
                   <li>客户端构建自动化生成包内 Island 导入和注册代码</li>
                   <li>
                     SSG post-processing 使用 insertBeforeBodyClose/insertAfterHead 辅助函数，替代 naive
@@ -730,7 +730,7 @@ export class ChangelogPage extends LitElement {
                     <code>islands</code> export
                   </li>
                   <li>
-                    <code>kiss-theme-toggle</code> Island for theme switching (Dark/Light)
+                    <code>less-theme-toggle</code> Island for theme switching (Dark/Light)
                   </li>
                   <li>
                     Package Island metadata type: <code>PackageIslandMeta</code>
@@ -742,11 +742,11 @@ export class ChangelogPage extends LitElement {
                 <h4>变更</h4>
                 <ul class="change-list">
                   <li>
-                    <strong>破坏性变更</strong>：<code>kiss-layout</code> 主题切换逻辑已移除 — 请使用
-                    <code>kiss-theme-toggle</code> Island
+                    <strong>破坏性变更</strong>：<code>less-layout</code> 主题切换逻辑已移除 — 请使用
+                    <code>less-theme-toggle</code> Island
                   </li>
                   <li>
-                    <code>kiss-layout</code> simplified to static component (no client-side state)
+                    <code>less-layout</code> simplified to static component (no client-side state)
                   </li>
                   <li>
                     L2 theme toggle script removed (replaced by Island upgrade)
@@ -776,7 +776,7 @@ export class ChangelogPage extends LitElement {
                 <ul class="change-list">
                   <li>Logger 模块支持 <code>LessJS_LOG_LEVEL</code> 环境变量</li>
                   <li>
-                    @lessjs/ui 组件库：kiss-button, kiss-card, kiss-input, kiss-code-block, kiss-layout
+                    @lessjs/ui 组件库：less-button, less-card, less-input, less-code-block, less-layout
                   </li>
                   <li>design-tokens CSS 自定义属性（瑞士国际主义风格）</li>
                   <li>examples/hello 最小示例：演示 LessJS 基础</li>
@@ -963,13 +963,13 @@ export class ChangelogPage extends LitElement {
                   <td>0.3.0</td>
                   <td>2026-04-29</td>
                   <td>
-                    Package Islands auto-detection + kiss-theme-toggle Island + build pipeline refactor
+                    Package Islands auto-detection + less-theme-toggle Island + build pipeline refactor
                   </td>
                 </tr>
                 <tr>
                   <td>0.2.0</td>
                   <td>2026-04-27</td>
-                  <td>Package Islands auto-detection + kiss-theme-toggle Island</td>
+                  <td>Package Islands auto-detection + less-theme-toggle Island</td>
                 </tr>
                 <tr>
                   <td>0.1.7</td>
@@ -1014,7 +1014,7 @@ export class ChangelogPage extends LitElement {
               <a href="/guide/getting-started" class="nav-link">快速上手 &rarr;</a>
             </div>
           </div>
-        </kiss-layout>
+        </less-layout>
       `;
     }
   }

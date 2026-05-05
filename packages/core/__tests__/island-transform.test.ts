@@ -107,12 +107,12 @@ Deno.test('entry-generators - generateClientEntry (v0.5.0 CE upgrade)', async (t
   await t.step('registers custom elements via dynamic import', () => {
     const islands = [
       { tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' },
-      { tagName: 'theme-toggle', modulePath: '@lessjs/ui/kiss-theme-toggle', isPackage: true },
+      { tagName: 'theme-toggle', modulePath: '@lessjs/ui/less-theme-toggle', isPackage: true },
     ];
     const code = generateClientEntry(islands);
     // All islands (local + package) use dynamic import() — they self-register
     assertEquals(code.includes("import('/app/islands/my-counter.ts')"), true);
-    assertEquals(code.includes("import('@lessjs/ui/kiss-theme-toggle')"), true);
+    assertEquals(code.includes("import('@lessjs/ui/less-theme-toggle')"), true);
     // No explicit customElements.define() in generated entry
     assertEquals(code.includes("customElements.define('my-counter'"), false);
   });
@@ -124,12 +124,12 @@ Deno.test('entry-generators - generateClientEntry (v0.5.0 CE upgrade)', async (t
     assertEquals(code.includes('function __load'), true);
   });
 
-  await t.step('dispatches kiss:ready event after upgrade', () => {
+  await t.step('dispatches less:ready event after upgrade', () => {
     const islands = [{ tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' }];
     const code = generateClientEntry(islands);
     // v0.5.0: no old marker, CE-native upgrade
     assertEquals(code.includes('defer-hydration'), false);
-    assertEquals(code.includes('kiss:ready'), true);
+    assertEquals(code.includes('less:ready'), true);
     assertEquals(code.includes('LitElement'), false);
   });
 

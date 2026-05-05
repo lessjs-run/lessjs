@@ -261,7 +261,7 @@ export function extractLitStyles(componentClass: CustomElementConstructor): stri
   } catch (err) {
     const name = (componentClass as { name?: string }).name || 'unknown';
     console.warn(
-      `[KISS] Failed to extract styles for <${name}>:`,
+      `[LessJS] Failed to extract styles for <${name}>:`,
       err instanceof Error ? err.message : err,
     );
     return undefined;
@@ -293,7 +293,7 @@ export function renderLitToString(
   } catch (err) {
     const tag = tagName || 'unknown';
     throw new Error(
-      `[KISS] <${tag}> TemplateResult interpolation failed. ` +
+      `[LessJS] <${tag}> TemplateResult interpolation failed. ` +
         `Original error: ${err instanceof Error ? err.message : String(err)}`,
     );
   }
@@ -341,7 +341,7 @@ export function installLitAdapter(): void {
   };
 
   (globalThis as Record<string, unknown>).__kissLitAdapterInstalled = true;
-  console.log('[KISS] Lit SSR adapter installed - TemplateResult to string');
+  console.log('[LessJS] Lit SSR adapter installed - TemplateResult to string');
 }
 
 /**

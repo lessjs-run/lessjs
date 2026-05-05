@@ -17,16 +17,16 @@ export default class ApiConsumer extends LitElement {
     }
 
     .card {
-      border: 0.5px solid var(--kiss-border);
+      border: 0.5px solid var(--less-border);
       border-radius: 8px;
       padding: 1.25rem;
-      background: var(--kiss-bg-surface);
+      background: var(--less-bg-surface);
     }
     .card h3 {
       font-size: 0.875rem;
       font-weight: 700;
       margin: 0 0 0.75rem;
-      color: var(--kiss-text-primary);
+      color: var(--less-text-primary);
       letter-spacing: -0.01em;
     }
     .status-row {
@@ -34,7 +34,7 @@ export default class ApiConsumer extends LitElement {
       align-items: center;
       gap: 0.5rem;
       font-size: 0.8125rem;
-      color: var(--kiss-text-tertiary);
+      color: var(--less-text-tertiary);
       margin-bottom: 0.75rem;
     }
     .status-dot {
@@ -61,23 +61,23 @@ export default class ApiConsumer extends LitElement {
       margin-bottom: 0.75rem;
     }
     .data-grid .key {
-      color: var(--kiss-text-tertiary);
+      color: var(--less-text-tertiary);
       font-family: "SF Mono", "Fira Code", "Consolas", monospace;
       font-size: 0.75rem;
     }
     .data-grid .val {
-      color: var(--kiss-text-primary);
+      color: var(--less-text-primary);
       font-weight: 500;
     }
 
     .pre-box {
-      background: var(--kiss-code-bg);
-      border: 0.5px solid var(--kiss-code-border);
+      background: var(--less-code-bg);
+      border: 0.5px solid var(--less-code-border);
       border-radius: 6px;
       padding: 0.75rem 1rem;
       font-size: 0.75rem;
       font-family: "SF Mono", "Fira Code", "Consolas", monospace;
-      color: var(--kiss-text-secondary);
+      color: var(--less-text-secondary);
       overflow-x: auto;
       margin: 0.75rem 0;
       line-height: 1.6;
@@ -88,17 +88,17 @@ export default class ApiConsumer extends LitElement {
       align-items: center;
       gap: 0.35rem;
       padding: 0.4rem 0.85rem;
-      border: 0.5px solid var(--kiss-border);
+      border: 0.5px solid var(--less-border);
       border-radius: 6px;
       background: var(--kiss-bg-card);
-      color: var(--kiss-text-secondary);
+      color: var(--less-text-secondary);
       font-size: 0.8125rem;
       cursor: pointer;
       transition: all 0.15s;
     }
     .btn:hover {
-      border-color: var(--kiss-border-hover);
-      color: var(--kiss-text-primary);
+      border-color: var(--less-border-hover);
+      color: var(--less-text-primary);
       background: var(--kiss-bg-hover);
     }
     .btn:disabled {
@@ -107,7 +107,7 @@ export default class ApiConsumer extends LitElement {
     }
     .btn.primary {
       background: var(--kiss-accent);
-      color: var(--kiss-bg-base);
+      color: var(--less-bg-base);
       border-color: var(--kiss-accent);
     }
     .btn.primary:hover {
@@ -121,7 +121,7 @@ export default class ApiConsumer extends LitElement {
 
     .divider {
       border: none;
-      border-top: 0.5px solid var(--kiss-border);
+      border-top: 0.5px solid var(--less-border);
       margin: 1.25rem 0;
     }
 
@@ -134,16 +134,16 @@ export default class ApiConsumer extends LitElement {
     .form-row input {
       flex: 1;
       padding: 0.45rem 0.7rem;
-      border: 0.5px solid var(--kiss-border);
+      border: 0.5px solid var(--less-border);
       border-radius: 6px;
       background: var(--kiss-bg-card);
-      color: var(--kiss-text-primary);
+      color: var(--less-text-primary);
       font-size: 0.8125rem;
       outline: none;
       transition: border-color 0.15s;
     }
     .form-row input:focus {
-      border-color: var(--kiss-border-hover);
+      border-color: var(--less-border-hover);
     }
     .form-row input::placeholder {
       color: var(--kiss-text-muted);
@@ -158,7 +158,7 @@ export default class ApiConsumer extends LitElement {
       background: color-mix(in srgb, var(--kiss-accent) 6%, transparent);
       // TODO: 0.5px after color-mix support
       border: 1px solid color-mix(in srgb, var(--kiss-accent) 15%, transparent);
-      color: var(--kiss-text-primary);
+      color: var(--less-text-primary);
       animation: fadeSlide 0.25s ease;
     }
     .err-msg {
@@ -319,7 +319,7 @@ export default class ApiConsumer extends LitElement {
         <hr class="divider" />
 
         <h3>Say Hello</h3>
-        <p style="font-size:0.8125rem;color:var(--kiss-text-tertiary);margin:0 0 0.75rem;line-height:1.6">
+        <p style="font-size:0.8125rem;color:var(--less-text-tertiary);margin:0 0 0.75rem;line-height:1.6">
           Type your name and the serverless API will greet you back. Calls <code style="font-size:0.75rem"
           >GET /api/hello/:name</code> on Deno Deploy.
         </p>

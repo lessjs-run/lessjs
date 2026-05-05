@@ -77,7 +77,7 @@ function collectFiles(
           sizeKB: formatSize(stat.size),
         });
       } catch (e) {
-        console.warn(`[KISS] Cannot stat ${relPath}: ${(e as Error).message}`);
+        console.warn(`[LessJS] Cannot stat ${relPath}: ${(e as Error).message}`);
       }
     }
   }
@@ -125,7 +125,7 @@ export function scanClientBuild(
         }
         totalJsBytes += fileStat.size;
       } catch (e) {
-        console.warn(`[KISS] Cannot stat ${file}: ${(e as Error).message}`);
+        console.warn(`[LessJS] Cannot stat ${file}: ${(e as Error).message}`);
       }
     }
   }
@@ -212,7 +212,7 @@ export function printBuildManifest(options: {
   console.log('');
   console.log('╔═══════════════════════════════════════════════════════════════╗');
   console.log(
-    `║  KISS Build Manifest — Phase ${phase} @ ${timestamp.slice(11, 19)}              ║`,
+    `║  LessJS Build Manifest — Phase ${phase} @ ${timestamp.slice(11, 19)}              ║`,
   );
   console.log('╚═══════════════════════════════════════════════════════════════╝');
 

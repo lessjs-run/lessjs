@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
 
 export class GettingStartedPage extends LitElement {
@@ -16,8 +16,8 @@ export class GettingStartedPage extends LitElement {
       }
 
       .note {
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
         padding: 0.75rem 1rem;
         margin: 1rem 0;
@@ -31,7 +31,7 @@ export class GettingStartedPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/guide/getting-started">
+      <less-layout currentPath="/guide/getting-started">
         <div class="container">
           <h1>快速开始</h1>
           <p class="subtitle">
@@ -131,7 +131,7 @@ export const tagName = 'page-home';</code></pre></code-block>
             <a href="/guide/design-philosophy" class="nav-link">Design Philosophy &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

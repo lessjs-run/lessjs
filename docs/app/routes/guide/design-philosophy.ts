@@ -1,13 +1,13 @@
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 export class DesignPhilosophyPage extends LitElement {
   static override styles = [pageStyles];
 
   override render() {
     return html`
-      <kiss-layout currentPath="/guide/design-philosophy">
+      <less-layout currentPath="/guide/design-philosophy">
         <div class="container">
           <h1>设计理念</h1>
           <p class="subtitle">
@@ -99,7 +99,7 @@ export class DesignPhilosophyPage extends LitElement {
             <a href="/guide/architecture" class="nav-link">Architecture &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

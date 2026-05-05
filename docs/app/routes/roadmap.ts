@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 export class RoadmapPage extends LitElement {
   static override styles = [
@@ -9,8 +9,8 @@ export class RoadmapPage extends LitElement {
       .phase {
         margin: 1rem 0;
         padding: 1rem 1.25rem;
-        border-left: 2px solid var(--kiss-border-hover);
-        background: var(--kiss-bg-surface);
+        border-left: 2px solid var(--less-border-hover);
+        background: var(--less-bg-surface);
         border-radius: 0 4px 4px 0;
       }
 
@@ -31,7 +31,7 @@ export class RoadmapPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/roadmap">
+      <less-layout currentPath="/roadmap">
         <div class="container">
           <h1>Roadmap</h1>
           <p class="subtitle">
@@ -181,7 +181,7 @@ export class RoadmapPage extends LitElement {
             <a href="/decisions" class="nav-link">Architecture Decisions &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

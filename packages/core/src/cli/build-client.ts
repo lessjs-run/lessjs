@@ -45,8 +45,8 @@ async function buildClient(): Promise<void> {
     const raw = readFileSync(metadataPath, 'utf-8');
     metadata = JSON.parse(raw);
   } catch {
-    console.log('[KISS] No .kiss/build-metadata.json found — skipping client build');
-    console.log('[KISS] Run `vite build` first (Phase 1) to generate island metadata');
+    console.log('[LessJS] No .kiss/build-metadata.json found — skipping client build');
+    console.log('[LessJS] Run `vite build` first (Phase 1) to generate island metadata');
     return;
   }
 
@@ -58,18 +58,18 @@ async function buildClient(): Promise<void> {
 
   // Debug: log resolve aliases for CI troubleshooting
   if (metadata.resolveAlias) {
-    console.log('[KISS] resolveAlias:', JSON.stringify(metadata.resolveAlias, null, 2));
+    console.log('[LessJS] resolveAlias:', JSON.stringify(metadata.resolveAlias, null, 2));
   } else {
-    console.log('[KISS] WARNING: no resolveAlias in build metadata — island imports may fail');
+    console.log('[LessJS] WARNING: no resolveAlias in build metadata — island imports may fail');
   }
 
   if (localIslands.length === 0 && packageIslands.length === 0) {
-    console.log('[KISS] No islands found — zero client JS output');
+    console.log('[LessJS] No islands found — zero client JS output');
     return;
   }
 
   const totalIslands = localIslands.length + packageIslands.length;
-  console.log(`[KISS] Building client bundle for ${totalIslands} island(s)...`);
+  console.log(`[LessJS] Building client bundle for ${totalIslands} island(s)...`);
 
   // Auto-generate client entry from island list
   const kissTmpDir = join(root, '.kiss');
@@ -171,13 +171,13 @@ async function buildClient(): Promise<void> {
 
   try {
     await viteBuild(clientConfig);
-    console.log('[KISS] Client bundle built →', clientOutDir);
+    console.log('[LessJS] Client bundle built →', clientOutDir);
 
     // Build observability: print manifest with island sizes
     const { printBuildManifest } = await import('../build-manifest.js');
     printBuildManifest({ root, outDir, phase: 2 });
   } catch (error) {
-    console.error('[KISS] Client build failed:', error);
+    console.error('[LessJS] Client build failed:', error);
     throw error;
   }
 }
@@ -185,7 +185,7 @@ async function buildClient(): Promise<void> {
 // CLI entry point
 if (import.meta.main) {
   buildClient().catch((err) => {
-    console.error('[KISS] Client build failed:', err);
+    console.error('[LessJS] Client build failed:', err);
     process.exit(1);
   });
 }

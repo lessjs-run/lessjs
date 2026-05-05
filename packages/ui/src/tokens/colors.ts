@@ -22,7 +22,7 @@
  *   1. `:host` declares light-theme defaults — provides fallback
  *      for standalone usage (without global <style>).
  *   2. `:host([data-theme="dark"])` overrides for dark theme.
- *   3. The kiss-theme-toggle Island propagates `data-theme` to
+ *   3. The less-theme-toggle Island propagates `data-theme` to
  *      both `<html>` AND every KISS component host element,
  *      so both `:root` vars (for light DOM) and `:host([data-theme])`
  *      selectors (for Shadow DOM) work correctly.
@@ -30,7 +30,7 @@
  * DRY enforcement:
  *   - `kissColorValues` is the single source of truth
  *   - `kissColorTokens` generates `:host` CSS for Shadow DOM components
- *   - `kissRootColorCSS` generates `:root` CSS for page-level injection
+ *   - `lessRootColorCSS` generates `:root` CSS for page-level injection
  *   - Both MUST stay in sync — editing the object keeps them in sync
  */
 
@@ -46,46 +46,46 @@ import { css, unsafeCSS } from 'lit';
 // See: https://open-props.style/#colors
 
 /** Dark theme color values (default) */
-export const kissDarkColors = {
-  '--kiss-bg-base': 'var(--gray-12)',
-  '--kiss-bg-surface': 'var(--gray-11)',
+export const lessDarkColors = {
+  '--less-bg-base': 'var(--gray-12)',
+  '--less-bg-surface': 'var(--gray-11)',
   '--kiss-bg-elevated': 'var(--gray-10)',
   '--kiss-bg-hover': 'var(--gray-11)',
   '--kiss-bg-card': 'var(--gray-11)',
-  '--kiss-border': 'var(--gray-9)',
-  '--kiss-border-hover': 'var(--gray-8)',
-  '--kiss-text-primary': 'var(--gray-0)',
-  '--kiss-text-secondary': 'var(--gray-5)',
-  '--kiss-text-tertiary': 'var(--gray-7)',
+  '--less-border': 'var(--gray-9)',
+  '--less-border-hover': 'var(--gray-8)',
+  '--less-text-primary': 'var(--gray-0)',
+  '--less-text-secondary': 'var(--gray-5)',
+  '--less-text-tertiary': 'var(--gray-7)',
   '--kiss-text-muted': 'var(--gray-8)',
   '--kiss-accent': 'var(--gray-0)',
   '--kiss-accent-dim': 'var(--gray-4)',
   '--kiss-accent-subtle': 'var(--gray-11)',
-  '--kiss-code-bg': 'var(--gray-10)',
-  '--kiss-code-border': 'var(--gray-9)',
+  '--less-code-bg': 'var(--gray-10)',
+  '--less-code-border': 'var(--gray-9)',
   '--kiss-error': 'var(--red-4)',
   '--kiss-scrollbar-track': 'transparent',
   '--kiss-scrollbar-thumb': 'var(--gray-9)',
 } as const;
 
 /** Light theme color values */
-export const kissLightColors = {
-  '--kiss-bg-base': 'var(--gray-0)',
-  '--kiss-bg-surface': 'var(--gray-1)',
+export const lessLightColors = {
+  '--less-bg-base': 'var(--gray-0)',
+  '--less-bg-surface': 'var(--gray-1)',
   '--kiss-bg-elevated': 'var(--gray-2)',
   '--kiss-bg-hover': 'var(--gray-2)',
   '--kiss-bg-card': 'var(--gray-0)',
-  '--kiss-border': 'var(--gray-3)',
-  '--kiss-border-hover': 'var(--gray-4)',
-  '--kiss-text-primary': 'var(--gray-12)',
-  '--kiss-text-secondary': 'var(--gray-8)',
-  '--kiss-text-tertiary': 'var(--gray-7)',
+  '--less-border': 'var(--gray-3)',
+  '--less-border-hover': 'var(--gray-4)',
+  '--less-text-primary': 'var(--gray-12)',
+  '--less-text-secondary': 'var(--gray-8)',
+  '--less-text-tertiary': 'var(--gray-7)',
   '--kiss-text-muted': 'var(--gray-6)',
   '--kiss-accent': 'var(--gray-12)',
   '--kiss-accent-dim': 'var(--gray-8)',
   '--kiss-accent-subtle': 'var(--gray-2)',
-  '--kiss-code-bg': 'var(--gray-2)',
-  '--kiss-code-border': 'var(--gray-3)',
+  '--less-code-bg': 'var(--gray-2)',
+  '--less-code-border': 'var(--gray-3)',
   '--kiss-error': 'var(--red-7)',
   '--kiss-scrollbar-track': 'transparent',
   '--kiss-scrollbar-thumb': 'var(--gray-4)',
@@ -106,12 +106,12 @@ function declarations(values: Readonly<Record<string, string>>): string {
 export const kissColorTokens = css`
   :host,
   :host([data-theme="light"]) {
-    ${unsafeCSS(declarations(kissLightColors))};
+    ${unsafeCSS(declarations(lessLightColors))};
     color-scheme: light;
   }
 
   :host([data-theme="dark"]) {
-    ${unsafeCSS(declarations(kissDarkColors))};
+    ${unsafeCSS(declarations(lessDarkColors))};
     color-scheme: dark;
   }
 `;
@@ -123,22 +123,22 @@ export const kissColorTokens = css`
  *
  * Usage:
  * ```ts
- * import { kissRootColorCSS } from '@lessjs/ui/tokens/colors';
- * // or: import { kissRootColorCSS } from '@lessjs/ui/design-tokens.js';
+ * import { lessRootColorCSS } from '@lessjs/ui/tokens/colors';
+ * // or: import { lessRootColorCSS } from '@lessjs/ui/design-tokens.js';
  *
  * inject: {
  *   headFragments: [
- *     `<style>${kissRootColorCSS}</style>`,
+ *     `<style>${lessRootColorCSS}</style>`,
  *   ]
  * }
  * ```
  */
-export const kissRootColorCSS = `:root,[data-theme="light"]{${
-  declarations(kissLightColors)
-};color-scheme:light}[data-theme="dark"]{${declarations(kissDarkColors)};color-scheme:dark}`;
+export const lessRootColorCSS = `:root,[data-theme="light"]{${
+  declarations(lessLightColors)
+};color-scheme:light}[data-theme="dark"]{${declarations(lessDarkColors)};color-scheme:dark}`;
 
 /**
  * Minified CSS for scaffolding (create-kiss template).
- * Same content as kissRootColorCSS but formatted for inline <style>.
+ * Same content as lessRootColorCSS but formatted for inline <style>.
  */
-export const kissScaffoldColorCSS = kissRootColorCSS;
+export const kissScaffoldColorCSS = lessRootColorCSS;

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <style>
+    .d { fill: #000; }
+    @media (prefers-color-scheme: dark) { .d { fill: #fff; } }
+  </style>
+  <rect class="d" x="10" y="10" width="80" height="80" rx="10" transform="rotate(45 50 50)" opacity="0.25"/>
+  <rect class="d" x="26" y="26" width="48" height="48" rx="6" transform="rotate(45 50 50)"/>
+</svg>

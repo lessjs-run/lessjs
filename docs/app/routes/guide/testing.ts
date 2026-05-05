@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
 
 export class TestingPage extends LitElement {
@@ -8,7 +8,7 @@ export class TestingPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/guide/testing">
+      <less-layout currentPath="/guide/testing">
         <div class="container">
           <h1>测试</h1>
           <p class="subtitle">
@@ -114,7 +114,7 @@ export class TestingPage extends LitElement {
                   <a href="/guide/deployment" class="nav-link">Deployment &rarr;</a>
                 </div>
               </div>
-            </kiss-layout>
+            </less-layout>
           `;
         }
       }

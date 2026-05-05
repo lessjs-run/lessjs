@@ -2,17 +2,17 @@
  * @lessjs/ui —— 设计系统
  * 双色板。零噪音。
  *
- * Dogfooding: 使用实际的 kiss-button、kiss-card、kiss-input 组件。
+ * Dogfooding: 使用实际的 less-button、less-card、less-input 组件。
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 // 导入 LessJS UI 组件用于 dogfooding
-import '@lessjs/ui/kiss-button';
-import '@lessjs/ui/kiss-card';
-import '@lessjs/ui/kiss-input';
-import '@lessjs/ui/kiss-code-block';
+import '@lessjs/ui/less-button';
+import '@lessjs/ui/less-card';
+import '@lessjs/ui/less-input';
+import '@lessjs/ui/less-code-block';
 
 export class UIShowcase extends LitElement {
   static override styles = [
@@ -35,7 +35,7 @@ export class UIShowcase extends LitElement {
         color: var(--kiss-text-muted);
         margin-bottom: 1.5rem;
         padding-bottom: 0.75rem;
-        border-bottom: 0.5px solid var(--kiss-border);
+        border-bottom: 0.5px solid var(--less-border);
       }
 
       /* ─── Palettes ─── */
@@ -43,8 +43,8 @@ export class UIShowcase extends LitElement {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1px;
-        background: var(--kiss-border);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 6px;
         overflow: hidden;
       }
@@ -54,7 +54,7 @@ export class UIShowcase extends LitElement {
       }
 
       .palette-dark {
-        background: var(--kiss-bg-base);
+        background: var(--less-bg-base);
       }
 
       .palette-light {
@@ -74,7 +74,7 @@ export class UIShowcase extends LitElement {
       }
 
       .palette-light .palette-name {
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
       }
 
       .swatch-grid {
@@ -114,7 +114,7 @@ export class UIShowcase extends LitElement {
       }
 
       .palette-light .swatch-label {
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
       }
 
       .palette-desc {
@@ -123,19 +123,19 @@ export class UIShowcase extends LitElement {
       }
 
       .palette-dark .palette-desc {
-        color: var(--kiss-text-tertiary);
+        color: var(--less-text-tertiary);
       }
 
       .palette-dark .palette-desc strong {
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
 
       .palette-light .palette-desc {
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
       }
 
       .palette-light .palette-desc strong {
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
 
       /* ─── Typography ─── */
@@ -149,7 +149,7 @@ export class UIShowcase extends LitElement {
         align-items: baseline;
         gap: 1.5rem;
         padding: 0.75rem 0;
-        border-bottom: 0.5px solid var(--kiss-border);
+        border-bottom: 0.5px solid var(--less-border);
       }
 
       .type-row:last-child {
@@ -166,20 +166,20 @@ export class UIShowcase extends LitElement {
       }
 
       .type-sample {
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
 
       /* ─── Component Preview ─── */
       .preview-card {
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 6px;
         overflow: hidden;
       }
 
       .preview-header {
         padding: 0.875rem 1.25rem;
-        border-bottom: 0.5px solid var(--kiss-border);
+        border-bottom: 0.5px solid var(--less-border);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -188,7 +188,7 @@ export class UIShowcase extends LitElement {
       .preview-title {
         font-size: 0.8125rem;
         font-weight: 600;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
 
       .preview-badge {
@@ -199,8 +199,8 @@ export class UIShowcase extends LitElement {
         padding: 0.25rem 0.5rem;
         border-radius: 3px;
         background: var(--kiss-accent-subtle);
-        color: var(--kiss-text-secondary);
-        border: 0.5px solid var(--kiss-border);
+        color: var(--less-text-secondary);
+        border: 0.5px solid var(--less-border);
       }
 
       .preview-body {
@@ -222,8 +222,8 @@ export class UIShowcase extends LitElement {
       .install-section {
         margin-top: 3.5rem;
         padding: 2rem;
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 6px;
         text-align: center;
       }
@@ -231,7 +231,7 @@ export class UIShowcase extends LitElement {
       .install-section h3 {
         font-size: 0.9375rem;
         font-weight: 600;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
         margin: 0 0 1rem;
       }
 
@@ -241,11 +241,11 @@ export class UIShowcase extends LitElement {
         gap: 0.625rem;
         padding: 0.625rem 1.25rem;
         background: var(--kiss-bg-elevated);
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
         font-family: "SF Mono", "Fira Code", "Consolas", monospace;
         font-size: 0.8125rem;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
 
       .install-cmd .prompt {
@@ -254,7 +254,7 @@ export class UIShowcase extends LitElement {
 
       .install-section p {
         font-size: 0.8125rem;
-        color: var(--kiss-text-tertiary);
+        color: var(--less-text-tertiary);
         margin: 0.75rem 0 0;
       }
 
@@ -297,7 +297,7 @@ export class UIShowcase extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout current-path="/ui">
+      <less-layout current-path="/ui">
         <div class="container">
           <h1>设计系统</h1>
           <p class="subtitle">
@@ -396,27 +396,27 @@ export class UIShowcase extends LitElement {
               </div>
               <div class="type-row">
                 <span class="type-label">正文</span>
-                <span class="type-sample" style="font-size:0.9375rem;color:var(--kiss-text-secondary)"
+                <span class="type-sample" style="font-size:0.9375rem;color:var(--less-text-secondary)"
                 >正文段落示例。</span>
               </div>
               <div class="type-row">
                 <span class="type-label">说明</span>
                 <span
                   class="type-sample"
-                  style="font-size:0.6875rem;color:var(--kiss-text-tertiary);text-transform:uppercase;letter-spacing:0.08em;font-weight:600"
+                  style="font-size:0.6875rem;color:var(--less-text-tertiary);text-transform:uppercase;letter-spacing:0.08em;font-weight:600"
                 >说明文字</span>
               </div>
               <div class="type-row">
                 <span class="type-label">等宽</span>
                 <span
                   class="type-sample"
-                  style="font-size:0.8125rem;font-family:'SF Mono','Fira Code','Consolas',monospace;color:var(--kiss-text-primary)"
+                  style="font-size:0.8125rem;font-family:'SF Mono','Fira Code','Consolas',monospace;color:var(--less-text-primary)"
                 >deno add jsr:@lessjs/ui</span>
               </div>
             </div>
           </div>
 
-          <!-- Buttons (Dogfooding kiss-button) -->
+          <!-- Buttons (Dogfooding less-button) -->
           <div class="section">
             <div class="section-title">按钮</div>
             <div class="preview-card">
@@ -425,51 +425,51 @@ export class UIShowcase extends LitElement {
                 <span class="preview-badge">可用</span>
               </div>
               <div class="preview-body">
-                <kiss-button variant="primary">主要按钮</kiss-button>
-                <kiss-button>默认按钮</kiss-button>
-                <kiss-button variant="ghost">幽灵按钮</kiss-button>
+                <less-button variant="primary">主要按钮</less-button>
+                <less-button>默认按钮</less-button>
+                <less-button variant="ghost">幽灵按钮</less-button>
               </div>
-              <div class="preview-body" style="border-top:0.5px solid var(--kiss-border)">
-                <kiss-button variant="primary" size="sm">小号</kiss-button>
-                <kiss-button variant="primary" size="md">中号</kiss-button>
-                <kiss-button variant="primary" size="lg">大号</kiss-button>
+              <div class="preview-body" style="border-top:0.5px solid var(--less-border)">
+                <less-button variant="primary" size="sm">小号</less-button>
+                <less-button variant="primary" size="md">中号</less-button>
+                <less-button variant="primary" size="lg">大号</less-button>
               </div>
-              <div class="preview-body" style="border-top:0.5px solid var(--kiss-border)">
-                <kiss-button disabled>禁用状态</kiss-button>
-                <kiss-button href="/" target="_blank">链接按钮</kiss-button>
+              <div class="preview-body" style="border-top:0.5px solid var(--less-border)">
+                <less-button disabled>禁用状态</less-button>
+                <less-button href="/" target="_blank">链接按钮</less-button>
               </div>
             </div>
           </div>
 
-          <!-- Cards (Dogfooding kiss-card) -->
+          <!-- Cards (Dogfooding less-card) -->
           <div class="section">
             <div class="section-title">卡片</div>
             <div class="cards-grid">
-              <kiss-card>
+              <less-card>
                 <h3 slot="header">Island</h3>
                 <p>带客户端升级的交互式组件和 Shadow DOM。</p>
                 <div slot="footer">
-                  <kiss-button size="sm">使用</kiss-button>
+                  <less-button size="sm">使用</less-button>
                 </div>
-              </kiss-card>
-              <kiss-card>
+              </less-card>
+              <less-card>
                 <h3 slot="header">静态</h3>
                 <p>通过 DSD 零 JS 渲染。JS 加载前可见。</p>
                 <div slot="footer">
-                  <kiss-button size="sm">使用</kiss-button>
+                  <less-button size="sm">使用</less-button>
                 </div>
-              </kiss-card>
-              <kiss-card variant="elevated">
+              </less-card>
+              <less-card variant="elevated">
                 <h3 slot="header">API Route</h3>
                 <p>带 Hono RPC 的 Serverless 函数。类型安全。</p>
                 <div slot="footer">
-                  <kiss-button size="sm">使用</kiss-button>
+                  <less-button size="sm">使用</less-button>
                 </div>
-              </kiss-card>
+              </less-card>
             </div>
           </div>
 
-          <!-- Input (Dogfooding kiss-input) -->
+          <!-- Input (Dogfooding less-input) -->
           <div class="section">
             <div class="section-title">输入框</div>
             <div class="preview-card">
@@ -478,14 +478,14 @@ export class UIShowcase extends LitElement {
                 <span class="preview-badge">可用</span>
               </div>
               <div class="preview-body" style="flex-direction:column;gap:0.75rem">
-                <kiss-input placeholder="输入邮箱..." label="邮箱"></kiss-input>
-                <kiss-input type="password" placeholder="密码" label="密码" required></kiss-input>
-                <kiss-input value="hello@kissjs.org" label="只读" disabled></kiss-input>
+                <less-input placeholder="输入邮箱..." label="邮箱"></less-input>
+                <less-input type="password" placeholder="密码" label="密码" required></less-input>
+                <less-input value="hello@kissjs.org" label="只读" disabled></less-input>
               </div>
             </div>
           </div>
 
-          <!-- Code Block (Dogfooding kiss-code-block) -->
+          <!-- Code Block (Dogfooding less-code-block) -->
           <div class="section">
             <div class="section-title">代码块</div>
             <div class="preview-card">
@@ -494,17 +494,17 @@ export class UIShowcase extends LitElement {
                 <span class="preview-badge">可用</span>
               </div>
               <div class="preview-body">
-                <kiss-code-block>
+                <less-code-block>
                   <pre>
                     <code>import '@lessjs/ui';
 
                     // 使用组件
-                    &lt;kiss-button variant="primary"&gt;点我&lt;/kiss-button&gt;
-                    &lt;kiss-card&gt;
+                    &lt;less-button variant="primary"&gt;点我&lt;/less-button&gt;
+                    &lt;less-card&gt;
                       &lt;h3 slot="header"&gt;标题&lt;/h3&gt;
                       &lt;p&gt;卡片内容&lt;/p&gt;
-                    &lt;/kiss-card&gt;</code></pre>
-                  </kiss-code-block>
+                    &lt;/less-card&gt;</code></pre>
+                  </less-code-block>
                 </div>
               </div>
             </div>
@@ -523,7 +523,7 @@ export class UIShowcase extends LitElement {
               <a href="/styling/kiss-ui" class="nav-link">Kiss UI 文档 &rarr;</a>
             </div>
           </div>
-        </kiss-layout>
+        </less-layout>
       `;
     }
   }

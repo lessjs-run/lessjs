@@ -3,7 +3,7 @@
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 export const tagName = 'blog-v040';
 
@@ -15,24 +15,24 @@ export default class BlogV040 extends LitElement {
         width: 100%;
         border-collapse: collapse;
         font-size: 0.8125rem;
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         margin: 1.5rem 0;
       }
       .cmp th, .cmp td {
         padding: 0.625rem 0.75rem;
         text-align: left;
-        border-bottom: 0.5px solid var(--kiss-border);
+        border-bottom: 0.5px solid var(--less-border);
       }
       .cmp th {
-        background: var(--kiss-bg-surface);
+        background: var(--less-bg-surface);
         color: var(--kiss-text-muted);
         font-weight: 500;
       }
       .cmp td {
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
       }
       .cmp td:first-child {
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
         font-weight: 500;
       }
       .cmp td.yes {
@@ -45,17 +45,17 @@ export default class BlogV040 extends LitElement {
         margin-top: 2rem;
       }
       .truth {
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
         padding: 1rem 1.25rem;
         margin: 1rem 0;
       }
       .truth strong {
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
       .truth p {
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
         font-size: 0.875rem;
         margin: 0.5rem 0 0;
       }
@@ -64,7 +64,7 @@ export default class BlogV040 extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/blog">
+      <less-layout currentPath="/blog">
         <div class="container">
           <h1>LessJS v0.4.0 — Serverless Integration Milestone</h1>
           <p class="meta" style="color:var(--kiss-text-muted);font-size:0.8125rem;margin-bottom:2rem">
@@ -121,7 +121,7 @@ export default class BlogV040 extends LitElement {
 
           <p>
             最终成果：<code>kiss-demo-api.sisyphuszheng.deno.net</code> 生产在线，CI 自动部署，前端 <code
-            >kiss-hero-ping</code> 一键 verify。 这是 LessJS Jamstack 承诺的 "J"（Markup）+ "A"（API）+
+            >less-hero-ping</code> 一键 verify。 这是 LessJS Jamstack 承诺的 "J"（Markup）+ "A"（API）+
             "M"（Markup） 全链路闭环。
           </p>
 
@@ -135,32 +135,32 @@ export default class BlogV040 extends LitElement {
               <th>版本</th>
             </tr>
             <tr>
-              <td>新组件：kiss-hero-ping</td>
+              <td>新组件：less-hero-ping</td>
               <td>可配置 API 的 ping 按钮，🟢/🔴 状态点</td>
               <td>0.3.6 → 0.4.0</td>
             </tr>
             <tr>
-              <td>kiss-layout</td>
+              <td>less-layout</td>
               <td>sidebar 240px → clamp(200px, 20vw, 280px)，max-width 变量化</td>
               <td>0.3.5</td>
             </tr>
             <tr>
               <td>全组件边框统一</td>
-              <td>kiss-button/card/input/code-block/layout 全部 0.5px</td>
+              <td>less-button/card/input/code-block/layout 全部 0.5px</td>
               <td>0.3.5</td>
             </tr>
             <tr>
-              <td>kiss-input</td>
+              <td>less-input</td>
               <td>修复 undefined string 问题</td>
               <td>0.3.5</td>
             </tr>
             <tr>
-              <td>kiss-button</td>
+              <td>less-button</td>
               <td>修复 nothing 输出</td>
               <td>0.3.5</td>
             </tr>
             <tr>
-              <td>kiss-code-block</td>
+              <td>less-code-block</td>
               <td>修复 timeout cleanup</td>
               <td>0.3.5</td>
             </tr>
@@ -176,12 +176,12 @@ export default class BlogV040 extends LitElement {
             </tr>
             <tr>
               <td>vite.config.build</td>
-              <td>新增 kiss-hero-ping 构建入口</td>
+              <td>新增 less-hero-ping 构建入口</td>
               <td>0.3.5</td>
             </tr>
             <tr>
               <td>index.ts</td>
-              <td>导出 kiss-hero-ping，islands 数组 +1</td>
+              <td>导出 less-hero-ping，islands 数组 +1</td>
               <td>0.3.6</td>
             </tr>
           </table>
@@ -467,7 +467,7 @@ export default class BlogV040 extends LitElement {
             从 Hono 路由定义自动生成类型安全的客户端调用代码。 消除手动编写 API 客户端代码的需求。
           </p>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

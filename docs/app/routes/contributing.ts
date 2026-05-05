@@ -3,7 +3,7 @@
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../islands/code-block.js';
 
 export class ContributingPage extends LitElement {
@@ -12,9 +12,9 @@ export class ContributingPage extends LitElement {
     css`
       .layer-diagram {
         padding: 1.25rem;
-        background: var(--kiss-bg-surface);
+        background: var(--less-bg-surface);
         /* 0.5px: reduced to match kiss-ui spec */
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 6px;
         margin: 1.5rem 0;
         font-size: 0.8125rem;
@@ -22,7 +22,7 @@ export class ContributingPage extends LitElement {
         font-family: "SF Mono", "Fira Code", monospace;
         white-space: pre;
         overflow-x: auto;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
       }
       .commit-types {
         display: grid;
@@ -32,9 +32,9 @@ export class ContributingPage extends LitElement {
       }
       .commit-type {
         padding: 0.75rem 1rem;
-        background: var(--kiss-bg-surface);
+        background: var(--less-bg-surface);
         /* 0.5px: reduced to match kiss-ui spec */
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
         font-size: 0.875rem;
       }
@@ -47,7 +47,7 @@ export class ContributingPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/contributing">
+      <less-layout currentPath="/contributing">
         <div class="container">
           <h1>Contributing to LessJS</h1>
           <p class="subtitle">感谢你对 LessJS 框架的兴趣！</p>
@@ -172,7 +172,7 @@ export class ContributingPage extends LitElement {
                     <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
                   </div>
                 </div>
-              </kiss-layout>
+              </less-layout>
             `;
           }
         }

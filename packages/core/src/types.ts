@@ -12,9 +12,9 @@ import type { Plugin } from 'vite';
 
 /** Package Island metadata exported from npm/JSR packages */
 export interface PackageIslandMeta {
-  /** Custom element tag name (e.g. 'kiss-theme-toggle') */
+  /** Custom element tag name (e.g. 'less-theme-toggle') */
   tagName: string;
-  /** Module path for import (e.g. '@lessjs/ui/kiss-theme-toggle') */
+  /** Module path for import (e.g. '@lessjs/ui/less-theme-toggle') */
   modulePath: string;
   /** Island upgrade strategy (default: 'lazy') */
   strategy?: 'eager' | 'lazy' | 'idle' | 'visible';

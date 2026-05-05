@@ -72,12 +72,12 @@ Deno.test('types: RouteEntry has required fields', () => {
 
 Deno.test('types: PackageIslandMeta has required fields', () => {
   const pkg: PackageIslandMeta = {
-    tagName: 'kiss-button',
-    modulePath: '@lessjs/ui/kiss-button',
+    tagName: 'less-button',
+    modulePath: '@lessjs/ui/less-button',
     strategy: 'eager',
   };
-  assertEquals(pkg.tagName, 'kiss-button');
-  assertEquals(pkg.modulePath, '@lessjs/ui/kiss-button');
+  assertEquals(pkg.tagName, 'less-button');
+  assertEquals(pkg.modulePath, '@lessjs/ui/less-button');
 });
 
 Deno.test('types: SsrContext has expected properties', () => {

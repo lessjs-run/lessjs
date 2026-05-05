@@ -22,12 +22,12 @@ export const pageStyles = css`
     font-weight: 500;
     letter-spacing: -0.02em;
     margin: 0 0 0.5rem;
-    color: var(--kiss-text-primary);
+    color: var(--less-text-primary);
     line-height: 1.2;
   }
 
   .subtitle {
-    color: var(--kiss-text-tertiary);
+    color: var(--less-text-tertiary);
     margin-bottom: 3rem;
     font-size: 0.875rem;
     line-height: 1.7;
@@ -37,25 +37,25 @@ export const pageStyles = css`
     font-size: 1rem;
     font-weight: 500;
     margin: 2rem 0 0.75rem;
-    color: var(--kiss-text-primary);
+    color: var(--less-text-primary);
   }
 
   h3 {
     font-size: 0.875rem;
     font-weight: 500;
     margin: 1.5rem 0 0.5rem;
-    color: var(--kiss-text-primary);
+    color: var(--less-text-primary);
   }
 
   p {
     line-height: 1.7;
     margin: 0.5rem 0;
-    color: var(--kiss-text-secondary);
+    color: var(--less-text-secondary);
     font-size: 0.875rem;
   }
 
   strong {
-    color: var(--kiss-text-primary);
+    color: var(--less-text-primary);
     font-weight: 500;
   }
   em {
@@ -63,28 +63,28 @@ export const pageStyles = css`
   }
 
   a {
-    color: var(--kiss-text-primary);
+    color: var(--less-text-primary);
     text-decoration: underline;
     text-underline-offset: 3px;
-    text-decoration-color: var(--kiss-border-hover);
+    text-decoration-color: var(--less-border-hover);
     text-decoration-thickness: 0.5px;
     transition: text-decoration-color 0.15s;
   }
   a:hover {
-    text-decoration-color: var(--kiss-text-primary);
+    text-decoration-color: var(--less-text-primary);
   }
 
   /* Code */
   pre {
-    background: var(--kiss-code-bg);
-    color: var(--kiss-text-secondary);
+    background: var(--less-code-bg);
+    color: var(--less-text-secondary);
     padding: 1rem 1.25rem;
     border-radius: 3px;
     overflow-x: auto;
     font-size: 0.8125rem;
     line-height: 1.6;
     margin: 0.75rem 0;
-    border: 0.5px solid var(--kiss-code-border);
+    border: 0.5px solid var(--less-code-border);
   }
 
   code {
@@ -92,16 +92,16 @@ export const pageStyles = css`
   }
 
   p code, li code {
-    background: var(--kiss-code-bg);
+    background: var(--less-code-bg);
     padding: 0.125rem 0.375rem;
     border-radius: 3px;
     font-size: 0.75rem;
-    color: var(--kiss-text-secondary);
-    border: 0.5px solid var(--kiss-code-border);
+    color: var(--less-text-secondary);
+    border: 0.5px solid var(--less-code-border);
   }
 
   .inline-code {
-    background: var(--kiss-code-bg);
+    background: var(--less-code-bg);
     padding: 0.125rem 0.375rem;
     border-radius: 3px;
     font-size: 0.875em;
@@ -115,35 +115,35 @@ export const pageStyles = css`
     font-size: 0.8125rem;
   }
   th, td {
-    border: 0.5px solid var(--kiss-border);
+    border: 0.5px solid var(--less-border);
     padding: 0.5rem 0.75rem;
     text-align: left;
   }
   th {
     font-weight: 500;
-    color: var(--kiss-text-secondary);
+    color: var(--less-text-secondary);
   }
   td {
-    color: var(--kiss-text-tertiary);
+    color: var(--less-text-tertiary);
   }
 
   /* Callouts */
   .callout {
     padding: 1rem 1.25rem;
     margin: 1rem 0;
-    border-left: 2px solid var(--kiss-border-hover);
-    background: var(--kiss-bg-surface);
+    border-left: 2px solid var(--less-border-hover);
+    background: var(--less-bg-surface);
     border-radius: 0 3px 3px 0;
   }
   .callout.warn {
-    border-left-color: var(--kiss-text-tertiary);
+    border-left-color: var(--less-text-tertiary);
   }
 
   .pillar {
     padding: 1.25rem 1.5rem;
     margin: 1rem 0;
-    border-left: 2px solid var(--kiss-border-hover);
-    background: var(--kiss-bg-surface);
+    border-left: 2px solid var(--less-border-hover);
+    background: var(--less-bg-surface);
     border-radius: 0 3px 3px 0;
   }
   .pillar .num {
@@ -160,8 +160,8 @@ export const pageStyles = css`
 
   .hard-constraint {
     display: inline-block;
-    background: var(--kiss-code-bg);
-    border: 0.5px solid var(--kiss-border-hover);
+    background: var(--less-code-bg);
+    border: 0.5px solid var(--less-border-hover);
     padding: 0.25rem 0.625rem;
     border-radius: 3px;
     font-size: 0.75rem;
@@ -171,7 +171,7 @@ export const pageStyles = css`
   /* Lists */
   ul, ol {
     padding-left: 1.25rem;
-    color: var(--kiss-text-secondary);
+    color: var(--less-text-secondary);
     line-height: 1.7;
   }
   li {
@@ -190,15 +190,15 @@ export const pageStyles = css`
     padding: 0.5rem 1rem;
     font-size: 0.75rem;
     font-weight: 500;
-    color: var(--kiss-text-secondary);
+    color: var(--less-text-secondary);
     text-decoration: none;
-    border: 0.5px solid var(--kiss-border);
+    border: 0.5px solid var(--less-border);
     border-radius: 3px;
     transition: color 0.15s, border-color 0.15s;
   }
   .nav-link:hover {
-    color: var(--kiss-text-primary);
-    border-color: var(--kiss-border-hover);
+    color: var(--less-text-primary);
+    border-color: var(--less-border-hover);
   }
 
   @media (max-width: 900px) {

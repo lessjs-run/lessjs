@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
 
 export class IslandsGuidePage extends LitElement {
@@ -16,12 +16,12 @@ export class IslandsGuidePage extends LitElement {
 
       .comparison-item {
         padding: 1rem 1.25rem;
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
       }
 
       .comparison-item.kiss {
-        background: var(--kiss-bg-surface);
+        background: var(--less-bg-surface);
       }
 
       @media (max-width: 720px) {
@@ -34,7 +34,7 @@ export class IslandsGuidePage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/guide/islands">
+      <less-layout currentPath="/guide/islands">
         <div class="container">
           <h1>Island Upgrade</h1>
           <p class="subtitle">
@@ -143,8 +143,8 @@ export class IslandsGuidePage extends LitElement {
 
             export const islands: PackageIslandMeta[] = [
               {
-                tagName: 'kiss-theme-toggle',
-                modulePath: '@lessjs/ui/kiss-theme-toggle',
+                tagName: 'less-theme-toggle',
+                modulePath: '@lessjs/ui/less-theme-toggle',
                 strategy: 'eager',
               },
             ];</code></pre></code-block>
@@ -161,7 +161,7 @@ export class IslandsGuidePage extends LitElement {
               <a href="/guide/api-routes" class="nav-link">API Routes &rarr;</a>
             </div>
           </div>
-        </kiss-layout>
+        </less-layout>
       `;
     }
   }

@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
 
 export class ErrorHandlingPage extends LitElement {
@@ -9,21 +9,21 @@ export class ErrorHandlingPage extends LitElement {
     css`
       .error-hierarchy {
         padding: 1rem;
-        background: var(--kiss-bg-surface);
-        border-left: 2px solid var(--kiss-border-hover);
+        background: var(--less-bg-surface);
+        border-left: 2px solid var(--less-border-hover);
         border-radius: 0 4px 4px 0;
         margin: 1rem 0;
         font-family: "SF Mono", "Fira Code", "Consolas", monospace;
         font-size: 0.8125rem;
         line-height: 1.8;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
       }
     `,
   ];
 
   override render() {
     return html`
-      <kiss-layout currentPath="/guide/error-handling">
+      <less-layout currentPath="/guide/error-handling">
         <div class="container">
           <h1>错误处理</h1>
           <p class="subtitle">
@@ -118,7 +118,7 @@ app.post('/api/posts', async (c) => {
             <a href="/guide/testing" class="nav-link">Testing &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

@@ -58,14 +58,14 @@ Deno.test('buildIslandChunkMap scans manifest.json for island chunks', () => {
     };
     writeFileSync(join(viteDir, 'manifest.json'), JSON.stringify(manifest), 'utf-8');
 
-    const result = buildIslandChunkMap(tmp, 'dist', ['counter-island', 'kiss-theme-toggle']);
+    const result = buildIslandChunkMap(tmp, 'dist', ['counter-island', 'less-theme-toggle']);
 
     // Should find both islands from manifest entries
     assertExists(result['counter-island']);
-    assertExists(result['kiss-theme-toggle']);
+    assertExists(result['less-theme-toggle']);
     // Paths should include the island file name
     assertExists(result['counter-island'].includes('counter'));
-    assertExists(result['kiss-theme-toggle'].includes('theme'));
+    assertExists(result['less-theme-toggle'].includes('theme'));
   } finally {
     cleanup(tmp);
   }

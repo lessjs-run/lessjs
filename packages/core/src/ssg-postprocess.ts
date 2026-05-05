@@ -192,7 +192,7 @@ export function injectCspMeta(
   // requested, warn the user and fall back to policy-only mode.
   if (nonce) {
     console.warn(
-      '[KISS] CSP nonce is not supported for SSG static output. ' +
+      '[LessJS] CSP nonce is not supported for SSG static output. ' +
         'Falling back to policy-only Content-Security-Policy meta tag. ' +
         'For per-request nonces, use a server-side middleware instead.',
     );

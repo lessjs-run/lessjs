@@ -17,7 +17,7 @@ export function generateClientEntry(
   islands: ClientIslandEntry[],
 ): string {
   if (islands.length === 0) {
-    return '// KISS Client Entry — No islands detected, zero client JS needed\n';
+    return '// LessJS Client Entry — No islands detected, zero client JS needed\n';
   }
 
   const islandMap = islands
@@ -30,7 +30,7 @@ export function generateClientEntry(
     .map((i) => `'${i.tagName}'`)
     .join(', ');
 
-  return `// KISS Client Entry (auto-generated — v0.5.0 idle-lazy)
+  return `// LessJS Client Entry (auto-generated — v0.5.0 idle-lazy)
 // Eager islands load immediately, others deferred to browser idle.
 // Zero DOM interaction — safe with DSD rendering.
 
@@ -41,7 +41,7 @@ var __tags = [${tags}];
 
 function __load(tag) {
   if (__map[tag]) {
-    __map[tag]().catch(function(e) { console.warn('[KISS]', tag, e); });
+    __map[tag]().catch(function(e) { console.warn('[LessJS]', tag, e); });
     __map[tag] = null;
   }
 }
@@ -52,7 +52,7 @@ function __load(tag) {
 // Defer remaining islands to browser idle
 var __deferred = function() {
   __tags.forEach(__load);
-  document.dispatchEvent(new CustomEvent('kiss:ready', {
+  document.dispatchEvent(new CustomEvent('less:ready', {
     detail: { islands: __tags }
   }));
 };

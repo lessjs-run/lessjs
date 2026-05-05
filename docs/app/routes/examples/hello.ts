@@ -8,9 +8,9 @@
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
-import '@lessjs/ui/kiss-card';
-import '@lessjs/ui/kiss-button';
+import '@lessjs/ui/less-layout';
+import '@lessjs/ui/less-card';
+import '@lessjs/ui/less-button';
 
 export class HelloDemoPage extends LitElement {
   static override styles = [
@@ -18,8 +18,8 @@ export class HelloDemoPage extends LitElement {
     css`
       .demo-container {
         padding: 2rem;
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 8px;
         margin: 1.5rem 0;
       }
@@ -27,10 +27,10 @@ export class HelloDemoPage extends LitElement {
         font-size: 2.5rem;
         font-weight: 800;
         margin: 0 0 1rem;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
       .demo-container .subtitle {
-        color: var(--kiss-text-tertiary);
+        color: var(--less-text-tertiary);
         font-size: 1rem;
         margin-bottom: 1.5rem;
       }
@@ -38,7 +38,7 @@ export class HelloDemoPage extends LitElement {
         display: grid;
         gap: 1rem;
       }
-      kiss-card {
+      less-card {
         --kiss-bg-card: var(--kiss-bg-elevated);
       }
       .actions {
@@ -51,7 +51,7 @@ export class HelloDemoPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout current-path="/examples/hello">
+      <less-layout current-path="/examples/hello">
         <div class="container">
           <h1>Hello World Demo</h1>
           <p class="subtitle">
@@ -63,26 +63,26 @@ export class HelloDemoPage extends LitElement {
             <h1>Hello, LessJS!</h1>
             <p class="subtitle">完全基于 Web 标准构建的极简全栈框架。</p>
             <div class="actions">
-              <kiss-button variant="primary" href="https://jsr.io/@lessjs/core">快速上手</kiss-button>
-              <kiss-button href="https://github.com/lessjs-run/LessJS">GitHub</kiss-button>
+              <less-button variant="primary" href="https://jsr.io/@lessjs/core">快速上手</less-button>
+              <less-button href="https://github.com/lessjs-run/LessJS">GitHub</less-button>
             </div>
             <div class="cards">
-              <kiss-card>
+              <less-card>
                 <h3 slot="header">SSG + DSD</h3>
                 <p>
                   带声明式 Shadow DOM 的静态站点生成。内容在 JavaScript 加载前就可见。
                 </p>
-              </kiss-card>
-              <kiss-card>
+              </less-card>
+              <less-card>
                 <h3 slot="header">Islands 架构</h3>
                 <p>
                   交互式组件按需 upgrade。默认静态优先，渐进增强。
                 </p>
-              </kiss-card>
-              <kiss-card>
+              </less-card>
+              <less-card>
                 <h3 slot="header">API Routes</h3>
                 <p>带 Hono RPC 的 Serverless 端点。服务端到客户端类型安全。</p>
-              </kiss-card>
+              </less-card>
             </div>
           </div>
 
@@ -124,7 +124,7 @@ export class HelloDemoPage extends LitElement {
             <a href="/examples/minimal-blog" class="nav-link">Minimal Blog &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

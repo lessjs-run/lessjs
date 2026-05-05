@@ -3,7 +3,7 @@
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 export class BlogKissCompilerPage extends LitElement {
   static override styles = [
@@ -18,7 +18,7 @@ export class BlogKissCompilerPage extends LitElement {
         font-size: 1rem;
         font-weight: 500;
         margin: 1.5rem 0 0.5rem;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
       p {
         font-size: 0.875rem;
@@ -26,9 +26,9 @@ export class BlogKissCompilerPage extends LitElement {
         margin: 0 0 0.75rem;
       }
       .code-block {
-        background: var(--kiss-bg-surface);
+        background: var(--less-bg-surface);
         /* 0.5px: reduced to match kiss-ui spec */
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
         padding: 1rem;
         font-family: "SF Mono", "Fira Code", monospace;
@@ -36,7 +36,7 @@ export class BlogKissCompilerPage extends LitElement {
         line-height: 1.6;
         overflow-x: auto;
         margin: 0.75rem 0 1.25rem;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
         white-space: pre;
       }
     `,
@@ -44,7 +44,7 @@ export class BlogKissCompilerPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/blog/kiss-compiler">
+      <less-layout currentPath="/blog/kiss-compiler">
         <div class="container">
           <p class="blog-meta">2026-04-30 · SisyphusZheng</p>
           <h1>.kiss Compiler — 可选零框架运行时组件</h1>
@@ -106,7 +106,7 @@ export class BlogKissCompilerPage extends LitElement {
             <a href="/blog" class="nav-link">&larr; 返回博客</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

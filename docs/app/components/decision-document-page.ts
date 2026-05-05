@@ -2,7 +2,7 @@ import { css, html, LitElement } from 'lit';
 import { pageStyles } from './page-styles.js';
 import { renderMarkdown } from '../lib/markdown.js';
 import type { DecisionDoc } from '../decision-data.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 export abstract class DecisionDocumentPage extends LitElement {
   protected abstract decision: DecisionDoc;
@@ -19,29 +19,29 @@ export abstract class DecisionDocumentPage extends LitElement {
         font-size: 0.75rem;
       }
       .badge {
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 3px;
         padding: 0.125rem 0.375rem;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
       }
       .markdown h1 {
         display: none;
       }
       .markdown h4 {
         margin: 1rem 0 0.5rem;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
         font-size: 0.8125rem;
       }
       .markdown blockquote {
         margin: 1rem 0;
         padding: 0.75rem 1rem;
-        border-left: 2px solid var(--kiss-border-hover);
-        background: var(--kiss-bg-surface);
-        color: var(--kiss-text-secondary);
+        border-left: 2px solid var(--less-border-hover);
+        background: var(--less-bg-surface);
+        color: var(--less-text-secondary);
       }
       .markdown hr {
         border: 0;
-        border-top: 0.5px solid var(--kiss-border);
+        border-top: 0.5px solid var(--less-border);
         margin: 2rem 0;
       }
     `,
@@ -50,7 +50,7 @@ export abstract class DecisionDocumentPage extends LitElement {
   override render() {
     const decision = this.decision;
     return html`
-      <kiss-layout currentPath="${decision.path}">
+      <less-layout currentPath="${decision.path}">
         <div class="container">
           <h1>${decision.id}: ${decision.title}</h1>
           <p class="subtitle">${decision.summary}</p>
@@ -64,7 +64,7 @@ export abstract class DecisionDocumentPage extends LitElement {
             <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

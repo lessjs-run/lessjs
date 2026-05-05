@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
 
 export class WebAwesomePage extends LitElement {
@@ -9,7 +9,7 @@ export class WebAwesomePage extends LitElement {
     css`
       .demo-box {
         padding: 1.25rem;
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 3px;
         margin: 0.75rem 0 1.5rem;
       }
@@ -23,7 +23,7 @@ export class WebAwesomePage extends LitElement {
   ];
   override render() {
     return html`
-      <kiss-layout currentPath="/styling/web-awesome">
+      <less-layout currentPath="/styling/web-awesome">
         <div class="container">
           <h1>Web Awesome 组件</h1>
           <p class="subtitle">通过 CDN 使用 50+ UI 组件。无需导入。</p>
@@ -123,7 +123,7 @@ kiss({
             <a href="https://webawesome.com/docs" class="nav-link">Web Awesome 文档 &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

@@ -1,5 +1,5 @@
 /**
- * @lessjs/ui - kiss-theme-toggle
+ * @lessjs/ui - less-theme-toggle
  *
  * Theme toggle Island component for Dark/Light mode switching.
  * Swiss International Style: Pure B&W, minimal.
@@ -14,10 +14,10 @@
  * Usage:
  * ```html
  * <!-- SSR-rendered with known theme (avoids FOUC + race condition) -->
- * <kiss-theme-toggle theme="light"></kiss-theme-toggle>
+ * <less-theme-toggle theme="light"></less-theme-toggle>
  *
  * <!-- Or without attribute (falls back to localStorage) -->
- * <kiss-theme-toggle></kiss-theme-toggle>
+ * <less-theme-toggle></less-theme-toggle>
  * ```
  *
  * KISS Architecture:
@@ -29,13 +29,13 @@
  */
 
 import { css, type CSSResult, html, LitElement, type TemplateResult } from 'lit';
-import { kissDesignTokens } from './design-tokens.js';
+import { lessDesignTokens } from './design-tokens.js';
 
-export const tagName = 'kiss-theme-toggle';
+export const tagName = 'less-theme-toggle';
 
 export class KissThemeToggle extends LitElement {
   static override styles: CSSResult[] = [
-    kissDesignTokens,
+    lessDesignTokens,
     css`
       :host {
         display: inline-block;
@@ -48,10 +48,10 @@ export class KissThemeToggle extends LitElement {
         width: 32px;
         height: 32px;
         padding: 0;
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: var(--kiss-radius-md);
         background: transparent;
-        color: var(--kiss-text-tertiary);
+        color: var(--less-text-tertiary);
         cursor: pointer;
         font-size: 0;
         line-height: 1;
@@ -62,8 +62,8 @@ export class KissThemeToggle extends LitElement {
         }
 
         .theme-toggle:hover {
-          color: var(--kiss-text-primary);
-          border-color: var(--kiss-border-hover);
+          color: var(--less-text-primary);
+          border-color: var(--less-border-hover);
           background: var(--kiss-accent-subtle);
         }
 
@@ -136,7 +136,7 @@ export class KissThemeToggle extends LitElement {
         // try-catch: localStorage may throw in private browsing mode or when
         // storage is disabled by browser policy.
         try {
-          const saved = localStorage.getItem('kiss-theme');
+          const saved = localStorage.getItem('less-theme');
           if (saved === 'light') {
             this._isLight = true;
           }
@@ -157,7 +157,7 @@ export class KissThemeToggle extends LitElement {
       // are browser platform APIs (infrastructure). Not cross-Island dependencies.
       document.documentElement.setAttribute('data-theme', theme);
       try {
-        localStorage.setItem('kiss-theme', theme);
+        localStorage.setItem('less-theme', theme);
       } catch {
         // Silently ignore — localStorage may be unavailable in private browsing
       }
@@ -172,19 +172,19 @@ export class KissThemeToggle extends LitElement {
      *
      * Uses convention-based selectors instead of a hardcoded tag list:
      *   1. All elements with `kiss-` prefixed tag names (KISS built-in components)
-     *   2. All elements with `[data-kiss]` attribute (user custom components)
+     *   2. All elements with `[data-less]` attribute (user custom components)
      *
-     * This ensures custom components using kissDesignTokens are also themed,
+     * This ensures custom components using lessDesignTokens are also themed,
      * without requiring the theme toggle to know about every component.
      *
      * Convention for user components:
      * ```html
-     * <my-widget data-kiss>...</my-widget>
+     * <my-widget data-less>...</my-widget>
      * ```
      */
     private _propagateTheme(theme: string) {
       // CRITICAL: document.querySelectorAll() does NOT pierce Shadow DOM.
-      // KISS components like kiss-layout live inside other components' shadow roots
+      // KISS components like less-layout live inside other components' shadow roots
       // (e.g. page-fullstack-demo's shadow root). We must recursively walk all
       // shadow roots to find and update every KISS component.
       //
@@ -199,7 +199,7 @@ export class KissThemeToggle extends LitElement {
           try {
             const tag = el.tagName?.toLowerCase();
             // All KISS built-in components (kiss-* prefix)
-            if (tag?.startsWith('kiss-') || el.hasAttribute?.('data-kiss')) {
+            if (tag?.startsWith('less-') || el.hasAttribute?.('data-less')) {
               el.setAttribute('data-theme', theme);
             }
             // Recurse into shadow roots created by DSD and custom element upgrade

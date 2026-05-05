@@ -5,12 +5,12 @@
  * Built on Lit + design tokens CSS custom properties.
  *
  * Components:
- * - kiss-button: Button with variants (default, primary, ghost)
- * - kiss-card: Card container with optional header/footer
- * - kiss-input: Input field with label and error states
- * - kiss-code-block: Code block with copy button
- * - kiss-layout: App layout with header, sidebar, footer
- * - kiss-theme-toggle: Theme toggle Island (Dark/Light)
+ * - less-button: Button with variants (default, primary, ghost)
+ * - less-card: Card container with optional header/footer
+ * - less-input: Input field with label and error states
+ * - less-code-block: Code block with copy button
+ * - less-layout: App layout with header, sidebar, footer
+ * - less-theme-toggle: Theme toggle Island (Dark/Light)
  *
  * Usage:
  * ```ts
@@ -18,7 +18,7 @@
  * import '@lessjs/ui';
  *
  * // Or import specific components
- * import { KissButton } from '@lessjs/ui/kiss-button';
+ * import { KissButton } from '@lessjs/ui/less-button';
  * ```
  *
  * @module @lessjs/ui
@@ -31,7 +31,7 @@ interface PackageIslandMeta {
 }
 
 // Design tokens (CSS custom properties)
-export { kissDesignTokens } from './design-tokens.js';
+export { lessDesignTokens } from './design-tokens.js';
 // Individual token sub-modules (for partial imports)
 export { kissSpacingTokens } from './tokens/spacing.js';
 export { kissTypographyTokens } from './tokens/typography.js';
@@ -39,18 +39,18 @@ export { kissColorTokens } from './tokens/colors.js';
 export { kissEffectTokens } from './tokens/effects.js';
 
 // Components
-export { KissButton, tagName as kissButtonTagName } from './kiss-button.js';
-export { KissCard, tagName as kissCardTagName } from './kiss-card.js';
-export { KissInput, tagName as kissInputTagName } from './kiss-input.js';
-export { KissCodeBlock, tagName as kissCodeBlockTagName } from './kiss-code-block.js';
-export { KissLayout, tagName as kissLayoutTagName } from './kiss-layout.js';
-export type { HeaderNavLink, NavItem, NavSection } from './kiss-layout.js';
-export { KissThemeToggle, tagName as kissThemeToggleTagName } from './kiss-theme-toggle.js';
-export { default as KissHeroPing, tagName as kissHeroPingTagName } from './kiss-hero-ping.js';
+export { KissButton, tagName as kissButtonTagName } from './less-button.js';
+export { KissCard, tagName as kissCardTagName } from './less-card.js';
+export { KissInput, tagName as kissInputTagName } from './less-input.js';
+export { KissCodeBlock, tagName as kissCodeBlockTagName } from './less-code-block.js';
+export { KissLayout, tagName as kissLayoutTagName } from './less-layout.js';
+export type { HeaderNavLink, NavItem, NavSection } from './less-layout.js';
+export { KissThemeToggle, tagName as kissThemeToggleTagName } from './less-theme-toggle.js';
+export { default as KissHeroPing, tagName as kissHeroPingTagName } from './less-hero-ping.js';
 
 // Vite plugin for Web Awesome CDN injection (convenience only)
-export { kissUI } from './kiss-ui-plugin.js';
-export type { KissUIOptions } from './kiss-ui-plugin.js';
+export { kissUI } from './less-ui-plugin.js';
+export type { KissUIOptions } from './less-ui-plugin.js';
 
 // Island metadata for auto-detection by @lessjs/core
 // These components are Islands with Shadow DOM and client-side behavior.
@@ -58,33 +58,33 @@ export type { KissUIOptions } from './kiss-ui-plugin.js';
 // client entry can import it for custom element self-registration.
 export const islands: PackageIslandMeta[] = [
   {
-    tagName: 'kiss-theme-toggle',
-    modulePath: '@lessjs/ui/kiss-theme-toggle',
+    tagName: 'less-theme-toggle',
+    modulePath: '@lessjs/ui/less-theme-toggle',
     strategy: 'eager', // Theme should be applied immediately
   },
   {
-    tagName: 'kiss-button',
-    modulePath: '@lessjs/ui/kiss-button',
+    tagName: 'less-button',
+    modulePath: '@lessjs/ui/less-button',
     strategy: 'lazy',
   },
   {
-    tagName: 'kiss-input',
-    modulePath: '@lessjs/ui/kiss-input',
+    tagName: 'less-input',
+    modulePath: '@lessjs/ui/less-input',
     strategy: 'lazy', // Form interaction needs JS
   },
   {
-    tagName: 'kiss-code-block',
-    modulePath: '@lessjs/ui/kiss-code-block',
+    tagName: 'less-code-block',
+    modulePath: '@lessjs/ui/less-code-block',
     strategy: 'lazy', // Copy button needs JS
   },
   {
-    tagName: 'kiss-layout',
-    modulePath: '@lessjs/ui/kiss-layout',
+    tagName: 'less-layout',
+    modulePath: '@lessjs/ui/less-layout',
     strategy: 'lazy',
   },
   {
-    tagName: 'kiss-hero-ping',
-    modulePath: '@lessjs/ui/kiss-hero-ping',
+    tagName: 'less-hero-ping',
+    modulePath: '@lessjs/ui/less-hero-ping',
     strategy: 'lazy',
   },
 ];

@@ -3,7 +3,7 @@
  *
  * Vite/Rolldown does not resolve JSR bare specifiers inside generated virtual
  * modules. The KISS plugin writes this small local file into `.kiss/` and
- * aliases `@lessjs/core/kiss-runtime` to it so generated SSR entries stay
+ * aliases `@lessjs/core/less-runtime` to it so generated SSR entries stay
  * package-manager agnostic.
  */
 
@@ -64,7 +64,7 @@ export async function renderDSD(tagName, componentClass, props = {}) {
   try {
     instance = new componentClass();
   } catch (err) {
-    console.error(\`[KISS] Failed to instantiate <\${tagName}>:\`, err);
+    console.error(\`[LessJS] Failed to instantiate <\${tagName}>:\`, err);
     return \`<\${tagName}><!-- render error --></\${tagName}>\`;
   }
 
@@ -90,7 +90,7 @@ export async function renderDSD(tagName, componentClass, props = {}) {
         content = await ssrRenderer(result, tagName);
       } else {
         console.error(
-          \`[KISS] <\${tagName}> render() returned \${typeof result} instead of string. \` +
+          \`[LessJS] <\${tagName}> render() returned \${typeof result} instead of string. \` +
             (isLitTemplateResultHeuristic(result)
               ? 'This looks like a Lit TemplateResult; install @lessjs/adapter-lit to handle it.'
               : 'Components must return a string from render().'),
@@ -99,7 +99,7 @@ export async function renderDSD(tagName, componentClass, props = {}) {
       }
     }
   } catch (err) {
-    console.error(\`[KISS] <\${tagName}> render() failed:\`, err);
+    console.error(\`[LessJS] <\${tagName}> render() failed:\`, err);
     content = '<!-- render error -->';
   }
 
@@ -125,7 +125,7 @@ export async function renderDSD(tagName, componentClass, props = {}) {
 export async function renderDSDByName(tagName, props = {}) {
   const cls = globalThis.customElements?.get(tagName);
   if (!cls) {
-    console.warn(\`[KISS] <\${tagName}> is not registered; rendering as void element\`);
+    console.warn(\`[LessJS] <\${tagName}> is not registered; rendering as void element\`);
     const attrs = serializeAttributes(props);
     return \`<\${tagName}\${attrs}></\${tagName}>\`;
   }

@@ -57,7 +57,7 @@ Deno.test('kiss() plugins have names starting with kiss:', () => {
   // All KISS plugins should have the kiss: prefix
   for (const name of names) {
     if (name === '@hono/vite-dev-server') continue; // external
-    assertEquals(name.startsWith('kiss:'), true, `Plugin "${name}" should start with "kiss:"`);
+    assertEquals(name.startsWith('kiss:') || name.startsWith('less:'), true, `Plugin "${name}" should start with "kiss:" or "less:"`);
   }
 });
 
@@ -66,10 +66,10 @@ Deno.test('kiss() includes required plugin types', () => {
   const names = plugins.map((p) => p.name);
 
   // Must include these plugins (html-template removed in v0.3.1)
-  assertArrayIncludes(names, ['kiss:core']);
-  assertArrayIncludes(names, ['kiss:virtual-entry']);
-  assertArrayIncludes(names, ['kiss:island-transform']);
-  assertArrayIncludes(names, ['kiss:build']);
+  assertArrayIncludes(names, ['less:core']);
+  assertArrayIncludes(names, ['less:virtual-entry']);
+  assertArrayIncludes(names, ['less:island-transform']);
+  assertArrayIncludes(names, ['less:build']);
 
   // External dev server
   assertArrayIncludes(names, ['@hono/vite-dev-server']);
@@ -91,13 +91,13 @@ Deno.test('kiss() accepts options without error', () => {
 
 Deno.test('kiss() core plugin has config hook defined', () => {
   const plugins = kiss();
-  const corePlugin = plugins.find((p) => p.name === 'kiss:core')!;
+  const corePlugin = plugins.find((p) => p.name === 'less:core')!;
   assertExists(corePlugin.config, 'core plugin must define config hook');
 });
 
 Deno.test('kiss() core plugin has buildStart hook defined', () => {
   const plugins = kiss();
-  const corePlugin = plugins.find((p) => p.name === 'kiss:core')!;
+  const corePlugin = plugins.find((p) => p.name === 'less:core')!;
   assertExists(corePlugin.buildStart, 'core plugin must define buildStart hook');
 });
 
@@ -149,7 +149,7 @@ Deno.test('kiss() headExtras takes precedence over inject', () => {
 
 Deno.test('kiss() corePlugin.config captures resolve.alias', () => {
   const plugins = kiss();
-  const corePlugin = plugins.find((p) => p.name === 'kiss:core')!;
+  const corePlugin = plugins.find((p) => p.name === 'less:core')!;
   assertExists(corePlugin.config);
   const result = (corePlugin.config as Function)({
     resolve: { alias: { '@/*': '/src/*' } },
@@ -165,7 +165,7 @@ Deno.test('kiss() corePlugin.config captures resolve.alias', () => {
 
 Deno.test('kiss() corePlugin.config returns rollupOptions with virtual entry', () => {
   const plugins = kiss();
-  const corePlugin = plugins.find((p) => p.name === 'kiss:core')!;
+  const corePlugin = plugins.find((p) => p.name === 'less:core')!;
   const result = (corePlugin.config as Function)({} as never) as Record<string, unknown>;
   const build = result.build as Record<string, unknown>;
   const rollupOptions = build.rollupOptions as Record<string, unknown>;
@@ -177,16 +177,16 @@ Deno.test('kiss() corePlugin.config returns rollupOptions with virtual entry', (
 
 Deno.test('kiss() corePlugin.config aliases runtime to generated shim', () => {
   const plugins = kiss();
-  const corePlugin = plugins.find((p) => p.name === 'kiss:core')!;
+  const corePlugin = plugins.find((p) => p.name === 'less:core')!;
   const result = (corePlugin.config as Function)({} as never) as Record<string, unknown>;
   const resolve = result.resolve as Record<string, unknown>;
   const alias = resolve.alias as Record<string, string>;
-  assertStringIncludes(alias['@lessjs/core/kiss-runtime'], '.kiss-runtime.ts');
+  assertStringIncludes(alias['@lessjs/core/less-runtime'], '.less-runtime.ts');
 });
 
 Deno.test('kiss() corePlugin.configResolved sets honoEntryCode', () => {
   const plugins = kiss();
-  const corePlugin = plugins.find((p) => p.name === 'kiss:core')!;
+  const corePlugin = plugins.find((p) => p.name === 'less:core')!;
   assertExists(corePlugin.configResolved);
   // Should not throw when called with fake config
   // Use type assertion to avoid TS2349 (ObjectHook may not be callable)
@@ -200,7 +200,7 @@ Deno.test('kiss() corePlugin.configResolved sets honoEntryCode', () => {
 
 Deno.test('kiss() virtualEntryPlugin.resolveId matches VIRTUAL_ENTRY_ID', () => {
   const plugins = kiss();
-  const virtualPlugin = plugins.find((p) => p.name === 'kiss:virtual-entry')!;
+  const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
   assertExists(virtualPlugin.resolveId);
   // The resolved ID includes '\0' prefix — we just verify it returns non-null for the ID
   const result = (virtualPlugin.resolveId as Function)(
@@ -213,7 +213,7 @@ Deno.test('kiss() virtualEntryPlugin.resolveId matches VIRTUAL_ENTRY_ID', () => 
 
 Deno.test('kiss() virtualEntryPlugin.load returns code for resolved ID', () => {
   const plugins = kiss();
-  const virtualPlugin = plugins.find((p) => p.name === 'kiss:virtual-entry')!;
+  const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
   assertExists(virtualPlugin.load);
   // '\0virtual:kiss-hono-entry' is the resolved ID
   const code = (virtualPlugin.load as Function)('\0virtual:kiss-hono-entry' as never);
@@ -241,7 +241,7 @@ Deno.test('kiss() applies default routesDir and islandsDir', () => {
 
 Deno.test('kiss() corePlugin.buildStart is callable', () => {
   const plugins = kiss();
-  const corePlugin = plugins.find((p) => p.name === 'kiss:core')!;
+  const corePlugin = plugins.find((p) => p.name === 'less:core')!;
   assertExists(corePlugin.buildStart, 'core plugin must have buildStart');
   // buildStart is async and requires filesystem — just verify it's callable
   assertEquals(typeof corePlugin.buildStart, 'function');
@@ -318,7 +318,7 @@ Deno.test('kiss() corePlugin.buildStart scans routes and islands', async () => {
       routesDir: 'app/routes',
       islandsDir: 'app/islands',
     });
-    const corePlugin = plugins.find((p) => p.name === 'kiss:core')!;
+    const corePlugin = plugins.find((p) => p.name === 'less:core')!;
     assertExists(corePlugin.buildStart);
 
     // Call buildStart — it should succeed with valid directory structure
@@ -345,7 +345,7 @@ Deno.test('kiss() corePlugin.buildStart handles empty directories gracefully', a
       routesDir: 'nonexistent/routes',
       islandsDir: 'nonexistent/islands',
     });
-    const corePlugin = plugins.find((p) => p.name === 'kiss:core')!;
+    const corePlugin = plugins.find((p) => p.name === 'less:core')!;
 
     // buildStart should NOT throw — scanRoutes returns empty array for missing dirs
     await (corePlugin.buildStart as Function)();
@@ -376,7 +376,7 @@ Deno.test('kiss() corePlugin.buildStart with packageIslands config', async () =>
       islandsDir: 'app/islands',
       packageIslands: ['@nonexistent/package'],
     });
-    const corePlugin = plugins.find((p) => p.name === 'kiss:core')!;
+    const corePlugin = plugins.find((p) => p.name === 'less:core')!;
 
     // Will try to scan package islands but fail gracefully (logged, not thrown)
     try {
@@ -397,7 +397,7 @@ Deno.test('kiss() corePlugin.buildStart with packageIslands config', async () =>
 
 Deno.test('kiss() virtualEntryPlugin.load fallback when ctx.honoEntryCode is empty', () => {
   const plugins = kiss();
-  const virtualPlugin = plugins.find((p) => p.name === 'kiss:virtual-entry')!;
+  const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
   // First call configResolved to set honoEntryCode
   // deno-lint-ignore no-explicit-any
   if (typeof (plugins[0] as any).configResolved === 'function') {
@@ -412,14 +412,14 @@ Deno.test('kiss() virtualEntryPlugin.load fallback when ctx.honoEntryCode is emp
 
 Deno.test('kiss() virtualEntryPlugin.resolveId returns null for unknown IDs', () => {
   const plugins = kiss();
-  const virtualPlugin = plugins.find((p) => p.name === 'kiss:virtual-entry')!;
+  const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
   const result = (virtualPlugin.resolveId as Function)('unknown-module', undefined, {});
   assertEquals(result, undefined);
 });
 
 Deno.test('kiss() virtualEntryPlugin.load returns null for unknown IDs', () => {
   const plugins = kiss();
-  const virtualPlugin = plugins.find((p) => p.name === 'kiss:virtual-entry')!;
+  const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
   const result = (virtualPlugin.load as Function)('unknown-id');
   assertEquals(result, undefined);
 });
@@ -444,7 +444,7 @@ Deno.test('kiss() inject.scripts escapes special chars in URLs', () => {
 
 Deno.test('kiss() corePlugin.config handles config without resolve', () => {
   const plugins = kiss();
-  const corePlugin = plugins.find((p) => p.name === 'kiss:core')!;
+  const corePlugin = plugins.find((p) => p.name === 'less:core')!;
   const result = (corePlugin.config as Function)({} as never);
   assertExists(result);
   assertExists((result as Record<string, unknown>).build);

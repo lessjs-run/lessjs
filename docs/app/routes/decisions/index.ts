@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import { DECISIONS } from '../../decision-data.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 export class DecisionsIndexPage extends LitElement {
   static override styles = [
@@ -15,19 +15,19 @@ export class DecisionsIndexPage extends LitElement {
       .decision-link {
         display: block;
         padding: 1rem;
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 6px;
         text-decoration: none;
-        background: var(--kiss-bg-surface);
+        background: var(--less-bg-surface);
       }
       .decision-link:hover {
-        border-color: var(--kiss-border-hover);
+        border-color: var(--less-border-hover);
       }
       .decision-title {
         display: flex;
         justify-content: space-between;
         gap: 1rem;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
         font-size: 0.9375rem;
         font-weight: 500;
       }
@@ -38,7 +38,7 @@ export class DecisionsIndexPage extends LitElement {
       }
       .decision-summary {
         margin-top: 0.5rem;
-        color: var(--kiss-text-tertiary);
+        color: var(--less-text-tertiary);
         font-size: 0.8125rem;
         line-height: 1.6;
       }
@@ -47,7 +47,7 @@ export class DecisionsIndexPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/decisions">
+      <less-layout currentPath="/decisions">
         <div class="container">
           <h1>Architecture Decisions</h1>
           <p class="subtitle">
@@ -74,7 +74,7 @@ export class DecisionsIndexPage extends LitElement {
             <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

@@ -59,7 +59,7 @@ export function buildPlugin(options: FrameworkOptions = {}, ctx?: KissBuildConte
   let base: string = '/';
 
   return {
-    name: 'kiss:build',
+    name: 'less:build',
 
     configResolved(resolvedConfig) {
       config = resolvedConfig;
@@ -113,13 +113,13 @@ export function buildPlugin(options: FrameworkOptions = {}, ctx?: KissBuildConte
 
       const totalIslands = (ctx?.islandTagNames?.length || 0) + (ctx?.packageIslands?.length || 0);
 
-      console.log('[KISS] Phase 1 complete — SSR bundle + metadata written');
+      console.log('[LessJS] Phase 1 complete — SSR bundle + metadata written');
       if (totalIslands > 0) {
-        console.log(`[KISS] ${totalIslands} island(s) detected — run the full build command next.`);
-        console.log('[KISS]   deno task build          (compile islands + render static HTML)');
+        console.log(`[LessJS] ${totalIslands} island(s) detected — run the full build command next.`);
+        console.log('[LessJS]   deno task build          (compile islands + render static HTML)');
       } else {
-        console.log('[KISS] No islands — static pages only, zero client JS');
-        console.log('[KISS] Run: deno task build       (render static HTML)');
+        console.log('[LessJS] No islands — static pages only, zero client JS');
+        console.log('[LessJS] Run: deno task build       (render static HTML)');
       }
     },
   };

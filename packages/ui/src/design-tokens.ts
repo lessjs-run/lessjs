@@ -22,14 +22,14 @@
  *   import { kissColorTokens } from '@lessjs/ui/tokens/colors';
  *
  * DRY: Page-level CSS can be imported from colors.ts:
- *   import { kissRootColorCSS } from '@lessjs/ui/tokens/colors';
- *   // or: import { kissRootColorCSS } from '@lessjs/ui/design-tokens.js';
+ *   import { lessRootColorCSS } from '@lessjs/ui/tokens/colors';
+ *   // or: import { lessRootColorCSS } from '@lessjs/ui/design-tokens.js';
  *
  * Usage:
  * ```css
  * .my-component {
- *   background: var(--kiss-bg-base);
- *   color: var(--kiss-text-primary);
+ *   background: var(--less-bg-base);
+ *   color: var(--less-text-primary);
  *   padding: var(--kiss-size-4);
  * }
  * ```
@@ -47,15 +47,15 @@ import { kissEffectTokens } from './tokens/effects.js';
  * These tokens are injected into every KISS UI component.
  * They provide consistent spacing, colors, typography, and more.
  */
-export const kissDesignTokens: CSSResult = css`
+export const lessDesignTokens: CSSResult = css`
   ${kissSpacingTokens} ${kissTypographyTokens} ${kissColorTokens} ${kissEffectTokens};
 `;
 
 /**
  * Page-level color CSS for :root injection.
  * Use this in vite.config.ts headFragments instead of hand-writing values.
- * Generated from kissDarkColors/kissLightColors — SINGLE SOURCE OF TRUTH.
+ * Generated from lessDarkColors/lessLightColors — SINGLE SOURCE OF TRUTH.
  */
-export { kissRootColorCSS, kissScaffoldColorCSS } from './tokens/colors.js';
+export { lessRootColorCSS, kissScaffoldColorCSS } from './tokens/colors.js';
 
-export default kissDesignTokens;
+export default lessDesignTokens;

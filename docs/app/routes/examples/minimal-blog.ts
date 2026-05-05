@@ -8,9 +8,9 @@
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
-// kiss-theme-toggle is registered via packageIslands (no local import needed)
+// less-theme-toggle is registered via packageIslands (no local import needed)
 
 export class MinimalBlogDemoPage extends LitElement {
   static override styles = [
@@ -18,7 +18,7 @@ export class MinimalBlogDemoPage extends LitElement {
     css`
       .demo-container {
         padding: 2rem;
-        background: var(--kiss-bg-base);
+        background: var(--less-bg-base);
         border-radius: 8px;
         margin: 1.5rem 0;
       }
@@ -38,8 +38,8 @@ export class MinimalBlogDemoPage extends LitElement {
       }
       .post-item {
         padding: 1rem;
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 6px;
       }
       .post-item h3 {
@@ -59,11 +59,11 @@ export class MinimalBlogDemoPage extends LitElement {
       .nav-link-demo {
         padding: 0.5rem 1rem;
         border-radius: 4px;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
       }
       .nav-link-demo.active {
-        background: var(--kiss-bg-surface);
-        color: var(--kiss-text-primary);
+        background: var(--less-bg-surface);
+        color: var(--less-text-primary);
         font-weight: 600;
       }
     `,
@@ -71,7 +71,7 @@ export class MinimalBlogDemoPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout current-path="/examples/minimal-blog">
+      <less-layout current-path="/examples/minimal-blog">
         <div class="container">
           <h1>Minimal Blog Demo</h1>
           <p class="subtitle">
@@ -82,7 +82,7 @@ export class MinimalBlogDemoPage extends LitElement {
           <div class="demo-container">
             <div class="demo-header">
               <h1>My Blog</h1>
-              <kiss-theme-toggle></kiss-theme-toggle>
+              <less-theme-toggle></less-theme-toggle>
             </div>
             <div class="nav-highlight-demo">
               <a class="nav-link-demo active" aria-current="page">Home</a>
@@ -150,7 +150,7 @@ export class MinimalBlogDemoPage extends LitElement {
                 <a href="/examples/fullstack" class="nav-link">Fullstack &rarr;</a>
               </div>
             </div>
-          </kiss-layout>
+          </less-layout>
         `;
       }
     }

@@ -152,8 +152,8 @@ export function kiss(options: FrameworkOptions = {}): Plugin[] {
         | import('vite').Alias[]
         | undefined;
       const hasRuntimeAlias = Array.isArray(userAlias)
-        ? userAlias.some((alias) => alias.find === '@lessjs/core/kiss-runtime')
-        : Boolean(userAlias?.['@lessjs/core/kiss-runtime']);
+        ? userAlias.some((alias) => alias.find === '@lessjs/core/less-runtime')
+        : Boolean(userAlias?.['@lessjs/core/less-runtime']);
 
       const buildConfig = {
         build: {
@@ -169,19 +169,19 @@ export function kiss(options: FrameworkOptions = {}): Plugin[] {
 
       const kissTmpDir = resolve(process.cwd(), '.kiss');
       mkdirSync(kissTmpDir, { recursive: true });
-      const runtimePath = join(kissTmpDir, '.kiss-runtime.ts');
+      const runtimePath = join(kissTmpDir, '.less-runtime.ts');
       writeFileSync(runtimePath, createRuntimeShimCode(), 'utf-8');
       ctx.userResolveAlias = Array.isArray(userAlias)
-        ? [{ find: '@lessjs/core/kiss-runtime', replacement: runtimePath }, ...userAlias]
+        ? [{ find: '@lessjs/core/less-runtime', replacement: runtimePath }, ...userAlias]
         : {
           ...(userAlias || {}),
-          '@lessjs/core/kiss-runtime': runtimePath,
+          '@lessjs/core/less-runtime': runtimePath,
         };
 
       return {
         resolve: {
           alias: {
-            '@lessjs/core/kiss-runtime': runtimePath,
+            '@lessjs/core/less-runtime': runtimePath,
           },
         },
         ...buildConfig,
@@ -215,7 +215,7 @@ export function kiss(options: FrameworkOptions = {}): Plugin[] {
           ctx.packageIslands = await scanPackageIslands(resolvedOptions.packageIslands);
           if (ctx.packageIslands.length > 0) {
             console.log(
-              `[KISS] Package islands: ${ctx.packageIslands.map((i) => i.tagName).join(', ')}`,
+              `[LessJS] Package islands: ${ctx.packageIslands.map((i) => i.tagName).join(', ')}`,
             );
           }
         }
@@ -230,7 +230,7 @@ export function kiss(options: FrameworkOptions = {}): Plugin[] {
         const apiCount = routes.filter((r) => r.type === 'api' && !r.special).length;
         const totalIslands = ctx.islandTagNames.length + ctx.packageIslands.length;
         console.log(
-          `[KISS] Routes: ${pageCount} page(s), ${apiCount} API route(s), ` +
+          `[LessJS] Routes: ${pageCount} page(s), ${apiCount} API route(s), ` +
             `${totalIslands} island(s) - KISS Architecture`,
         );
       } catch (err) {

@@ -1,5 +1,5 @@
 /**
- * @lessjs/ui - kiss-input
+ * @lessjs/ui - less-input
  *
  * Minimal input field following Swiss International Style.
  * Clean borders, subtle focus states.
@@ -7,15 +7,15 @@
  * Features:
  * - Form-associated: participates in native <form> submission
  * - Supports label, placeholder, error, disabled, required
- * - Dispatches 'kiss-input' custom event on value change
+ * - Dispatches 'less-input' custom event on value change
  *
  * Usage:
  * ```html
- * <kiss-input placeholder="Enter text"></kiss-input>
- * <kiss-input type="email" label="Email"></kiss-input>
- * <kiss-input type="password" label="Password" required></kiss-input>
+ * <less-input placeholder="Enter text"></less-input>
+ * <less-input type="email" label="Email"></less-input>
+ * <less-input type="password" label="Password" required></less-input>
  * <form onsubmit="console.log(new FormData(this))">
- *   <kiss-input name="username" label="Username"></kiss-input>
+ *   <less-input name="username" label="Username"></less-input>
  *   <button type="submit">Submit</button>
  * </form>
  * ```
@@ -26,9 +26,9 @@
  */
 
 import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } from 'lit';
-import { kissDesignTokens } from './design-tokens.js';
+import { lessDesignTokens } from './design-tokens.js';
 
-export const tagName = 'kiss-input';
+export const tagName = 'less-input';
 
 export class KissInput extends LitElement {
   /** Enable form association for native <form> participation */
@@ -38,7 +38,7 @@ export class KissInput extends LitElement {
   private _internals?: ElementInternals;
 
   static override styles: CSSResult[] = [
-    kissDesignTokens,
+    lessDesignTokens,
     css`
       :host {
         display: block;
@@ -53,7 +53,7 @@ export class KissInput extends LitElement {
       label {
         font-size: var(--kiss-font-size-sm);
         font-weight: var(--kiss-font-weight-medium);
-        color: var(--kiss-text-tertiary);
+        color: var(--less-text-tertiary);
         letter-spacing: var(--kiss-letter-spacing-wide);
       }
 
@@ -62,9 +62,9 @@ export class KissInput extends LitElement {
         padding: var(--kiss-size-2) var(--kiss-size-3);
         font-family: var(--kiss-font-sans);
         font-size: var(--kiss-font-size-md);
-        color: var(--kiss-text-primary);
-        background: var(--kiss-bg-base);
-        border: 0.5px solid var(--kiss-border);
+        color: var(--less-text-primary);
+        background: var(--less-bg-base);
+        border: 0.5px solid var(--less-border);
         border-radius: var(--kiss-radius-md);
         transition:
           border-color var(--kiss-transition-normal),
@@ -77,7 +77,7 @@ export class KissInput extends LitElement {
       }
 
       .input:hover {
-        border-color: var(--kiss-border-hover);
+        border-color: var(--less-border-hover);
       }
 
       .input:focus {
@@ -88,7 +88,7 @@ export class KissInput extends LitElement {
       .input:disabled {
         opacity: 0.5;
         cursor: not-allowed;
-        background: var(--kiss-bg-surface);
+        background: var(--less-bg-surface);
       }
 
       .input--error {
@@ -201,10 +201,10 @@ export class KissInput extends LitElement {
     // Sync form value for native <form> submission
     this._internals?.setFormValue(input.value);
     // KISS I-constraint: composed:false keeps events within Shadow DOM.
-    // Parent islands must listen via `addEventListener('kiss-input', ...)` on
-    // the <kiss-input> host element — NOT by capturing from the light DOM.
+    // Parent islands must listen via `addEventListener('less-input', ...)` on
+    // the <less-input> host element — NOT by capturing from the light DOM.
     this.dispatchEvent(
-      new CustomEvent('kiss-input', {
+      new CustomEvent('less-input', {
         detail: { value: input.value },
         bubbles: true,
         composed: false,

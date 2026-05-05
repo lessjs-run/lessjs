@@ -91,7 +91,7 @@ Deno.test('create-kiss: deno.json maps Lit and package imports explicitly', () =
   assertEquals(denoJson.imports['@lit-labs/ssr-dom-shim'], 'npm:@lit-labs/ssr-dom-shim@^1.5.0');
   assertExists(denoJson.imports['@lessjs/adapter-lit'].includes('0.2.0'));
   assertExists(denoJson.imports['@lessjs/core'].includes('0.5.3'));
-  assertExists(denoJson.imports['@lessjs/core/kiss-runtime'].includes('0.5.3'));
+  assertExists(denoJson.imports['@lessjs/core/less-runtime'].includes('0.5.3'));
   assertExists(denoJson.imports['@lessjs/ui'].includes('0.5.2'));
   assertExists(denoJson.imports['@lessjs/ui/tokens/colors'].includes('0.5.2'));
   assertExists(denoJson.imports['@lessjs/ui/'].includes('0.5.2/'));
@@ -169,8 +169,8 @@ Deno.test('create-kiss: generated project builds through the one-command pipelin
     denoJson.imports['@lessjs/core'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'index.ts'),
     ).href;
-    denoJson.imports['@lessjs/core/kiss-runtime'] = pathToFileURL(
-      join(repoRoot, 'packages', 'core', 'src', 'kiss-runtime.ts'),
+    denoJson.imports['@lessjs/core/less-runtime'] = pathToFileURL(
+      join(repoRoot, 'packages', 'core', 'src', 'less-runtime.ts'),
     ).href;
     denoJson.imports['@lessjs/adapter-lit'] = pathToFileURL(
       join(repoRoot, 'packages', 'adapter-lit', 'src', 'index.ts'),
@@ -195,8 +195,8 @@ Deno.test('create-kiss: generated project builds through the one-command pipelin
     const uiSrc = join(repoRoot, 'packages', 'ui', 'src');
     const aliases = [
       {
-        find: '@lessjs/core/kiss-runtime',
-        replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'kiss-runtime.ts')),
+        find: '@lessjs/core/less-runtime',
+        replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'less-runtime.ts')),
       },
       {
         find: '@lessjs/adapter-lit/ssr',

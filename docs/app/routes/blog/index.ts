@@ -3,7 +3,7 @@
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 export class BlogIndexPage extends LitElement {
   static override styles = [
@@ -17,7 +17,7 @@ export class BlogIndexPage extends LitElement {
       .blog-item {
         padding: 1rem 1.25rem;
         /* 0.5px: reduced to match kiss-ui spec */
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
         margin-bottom: 0.75rem;
         transition: border-color 0.15s;
@@ -26,13 +26,13 @@ export class BlogIndexPage extends LitElement {
         color: inherit;
       }
       .blog-item:hover {
-        border-color: var(--kiss-text-primary);
+        border-color: var(--less-text-primary);
       }
       .blog-item h2 {
         font-size: 0.9375rem;
         margin: 0 0 0.25rem;
         font-weight: 500;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
       .blog-item .meta {
         font-size: 0.75rem;
@@ -41,7 +41,7 @@ export class BlogIndexPage extends LitElement {
       }
       .blog-item p {
         font-size: 0.8125rem;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
         margin: 0.5rem 0 0;
       }
     `,
@@ -49,7 +49,7 @@ export class BlogIndexPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/blog">
+      <less-layout currentPath="/blog">
         <div class="container">
           <h1>博客</h1>
           <p class="subtitle">LessJS 框架的设计思考、架构决策和发展路线。</p>
@@ -84,7 +84,7 @@ export class BlogIndexPage extends LitElement {
             </a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

@@ -236,7 +236,7 @@ Deno.test('route-scanner - scanPackageIslands', async (t) => {
     assertEquals(Array.isArray(result), true);
     if (result.length > 0) {
       const tags = result.map((i) => i.tagName);
-      assertEquals(tags.includes('kiss-theme-toggle') || tags.includes('kiss-button'), true);
+      assertEquals(tags.includes('less-theme-toggle') || tags.includes('less-button'), true);
     }
   }); */
 

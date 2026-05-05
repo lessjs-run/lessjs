@@ -3,7 +3,7 @@
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 export const tagName = 'blog-v050-a0';
 
@@ -13,8 +13,8 @@ export default class BlogV050 extends LitElement {
     css`
       h2 { margin-top: 2rem; }
       .truth {
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
         padding: 1.25rem;
         margin: 1.5rem 0;
@@ -22,12 +22,12 @@ export default class BlogV050 extends LitElement {
       .truth-title {
         font-weight: 600;
         margin-bottom: 0.5rem;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
       code {
-        background: var(--kiss-code-bg);
+        background: var(--less-code-bg);
         padding: 0.125rem 0.375rem;
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 3px;
         font-size: 0.8125rem;
       }
@@ -36,7 +36,7 @@ export default class BlogV050 extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/blog/v0-5-0">
+      <less-layout currentPath="/blog/v0-5-0">
         <div class="container">
           <p class="breadcrumb"><a href="/blog">← Blog</a></p>
           <h1>LessJS v0.5-alpha-0 — 架构精简：砍掉不必要的，留住核心</h1>
@@ -90,7 +90,7 @@ export default class BlogV050 extends LitElement {
           <div class="truth">
             <div class="truth-title">Lit 保留在 @lessjs/ui</div>
             <p>Lit 是 Web Component 最成熟的工具库。kiss-ui 的九个组件已经用 Lit 写好、无 bug、正在跑。15KB gzip 不可见成本（被所有组件共享）。</p>
-            <p>Lit 现在是 <code>@lessjs/ui</code> 的实现细节。用户写 <code>&lt;kiss-button variant="primary"&gt;</code> 不需要知道里面有 Lit。需要自定义组件的用户可以自己写 <code>class extends HTMLElement</code>，和 kiss-ui 组件同页面共存。</p>
+            <p>Lit 现在是 <code>@lessjs/ui</code> 的实现细节。用户写 <code>&lt;less-button variant="primary"&gt;</code> 不需要知道里面有 Lit。需要自定义组件的用户可以自己写 <code>class extends HTMLElement</code>，和 kiss-ui 组件同页面共存。</p>
           </div>
 
           <div class="truth">
@@ -117,7 +117,7 @@ create-kiss     — 脚手架                    [CLI 工具]</code></pre>
             <a href="/roadmap" class="nav-link">路线图 &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

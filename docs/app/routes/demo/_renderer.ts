@@ -3,7 +3,7 @@
  *
  * Injects <api-consumer> inside page-demo's template (correct position in layout)
  * without the legacy upgrade marker. This means:
- *   - It's positioned correctly within the kiss-layout slot
+ *   - It's positioned correctly within the less-layout slot
  *   - It's excluded from the old batch-upgrade group
  *   - It upgrades independently when its chunk defines the custom element
  *   - No simultaneous upgrade conflict with the parent shadow DOM

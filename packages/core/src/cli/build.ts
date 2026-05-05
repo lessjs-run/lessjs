@@ -24,11 +24,11 @@ type BuildPhase = {
 };
 
 async function runPhase(phase: BuildPhase): Promise<void> {
-  console.log(`[KISS] ${phase.name}...`);
+  console.log(`[LessJS] ${phase.name}...`);
   try {
     await phase.run();
   } catch (error) {
-    console.error(`[KISS] ${phase.name} failed.`);
+    console.error(`[LessJS] ${phase.name} failed.`);
     throw error;
   }
 }
@@ -46,12 +46,12 @@ export async function build(): Promise<void> {
     name: 'Phase 3/3 - static site generation',
     run: () => buildSSG(),
   });
-  console.log('[KISS] Build complete.');
+  console.log('[LessJS] Build complete.');
 }
 
 if (import.meta.main) {
   build().catch((error) => {
-    console.error('[KISS] Build failed:', error);
+    console.error('[LessJS] Build failed:', error);
     process.exit(1);
   });
 }

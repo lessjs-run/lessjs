@@ -58,7 +58,7 @@ async function setupSsgFixtures() {
     </nav>
   </template></app-layout>
 </template></docs-home>
-<script type="module" data-kiss-island-loader>
+<script type="module" data-less-island-loader>
 (function() {
   const loaders = {
     'my-counter': () => import('/app/islands/my-counter.ts'),
@@ -66,7 +66,7 @@ async function setupSsgFixtures() {
   };
   async function upgradeIsland(tag, loader) {
     try { const m = await loader(); if (m.default && !customElements.get(tag)) customElements.define(tag, m.default); }
-    catch(e) { console.warn("[KISS] Island upgrade failed:", e); }
+    catch(e) { console.warn("[LessJS] Island upgrade failed:", e); }
   }
   if ("requestIdleCallback" in window) requestIdleCallback(() => { for (const [t,l] of Object.entries(loaders)) upgradeIsland(t,l); });
   else setTimeout(() => { for (const [t,l] of Object.entries(loaders)) upgradeIsland(t,l); }, 200);
@@ -96,7 +96,7 @@ async function setupSsgFixtures() {
     </nav>
   </template></app-layout>
 </template></docs-about>
-<script type="module" data-kiss-island-loader>
+<script type="module" data-less-island-loader>
 (function() {
   const loaders = {
     'my-counter': () => import('/app/islands/my-counter.ts')
@@ -171,7 +171,7 @@ Deno.test('SSG integration', { permissions: { read: true, write: true } }, async
 
   await t.step('rewriteHtmlFiles - no longer applies aria-current (moved to component)', () => {
     // v0.3.0: sidebar active link highlighting was removed from rewriteHtmlFiles
-    // and moved to <kiss-layout currentPath="..."> component.
+    // and moved to <less-layout currentPath="..."> component.
     // rewriteHtmlFiles now ONLY rewrites island source paths → built chunk paths.
     // This test verifies that rewriteHtmlFiles does NOT add aria-current or class="active".
     const indexHtml = Deno.readTextFileSync(join(FIXTURES_DIR, 'dist', 'index.html'));
@@ -197,7 +197,7 @@ Deno.test('SSG integration', { permissions: { read: true, write: true } }, async
     const html = Deno.readTextFileSync(join(FIXTURES_DIR, 'dist', 'index.html'));
 
     // Legacy inline loader must exist with rewritten paths
-    assertStringIncludes(html, 'data-kiss-island-loader');
+    assertStringIncludes(html, 'data-less-island-loader');
     assertStringIncludes(html, '/kiss/client/islands/');
   });
 

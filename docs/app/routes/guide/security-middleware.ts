@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
 
 export class SecurityMiddlewarePage extends LitElement {
@@ -9,14 +9,14 @@ export class SecurityMiddlewarePage extends LitElement {
     css`
       .chain {
         padding: 1rem;
-        background: var(--kiss-bg-surface);
-        border-left: 2px solid var(--kiss-border-hover);
+        background: var(--less-bg-surface);
+        border-left: 2px solid var(--less-border-hover);
         border-radius: 0 4px 4px 0;
         margin: 1rem 0;
         font-family: "SF Mono", "Fira Code", "Consolas", monospace;
         font-size: 0.8125rem;
         line-height: 1.8;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
         white-space: pre-wrap;
       }
     `,
@@ -24,7 +24,7 @@ export class SecurityMiddlewarePage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/guide/security-middleware">
+      <less-layout currentPath="/guide/security-middleware">
         <div class="container">
           <h1>安全与中间件</h1>
           <p class="subtitle">
@@ -128,7 +128,7 @@ kiss({
             <a href="/guide/error-handling" class="nav-link">Error Handling &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

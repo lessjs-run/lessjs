@@ -2,7 +2,7 @@
  * _renderer.ts — Layout renderer for the guide section.
  *
  * LessJS Architecture: Renderers wrap page SSR output, like Next.js layout.tsx.
- * This renderer is a pass-through — the sidebar navigation in <kiss-layout>
+ * This renderer is a pass-through — the sidebar navigation in <less-layout>
  * already provides section context, so no additional wrapping is needed.
  *
  * Convention:
@@ -18,9 +18,9 @@ import type { KissRenderer } from '@lessjs/core';
 
 const renderer: KissRenderer = {
   wrap(html, _ctx) {
-    // Pass-through: <kiss-layout> sidebar already provides navigation context.
+    // Pass-through: <less-layout> sidebar already provides navigation context.
     // No breadcrumb or section wrapper needed — it would render outside
-    // the <kiss-layout> component and appear above the sticky header.
+    // the <less-layout> component and appear above the sticky header.
     return html;
   },
 };

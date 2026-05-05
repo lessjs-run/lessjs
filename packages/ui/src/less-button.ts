@@ -1,5 +1,5 @@
 /**
- * @lessjs/ui - kiss-button
+ * @lessjs/ui - less-button
  *
  * Minimal button component following Swiss International Style.
  * Pure B&W design with subtle hover states.
@@ -16,20 +16,20 @@
  *
  * Usage:
  * ```html
- * <kiss-button>Click me</kiss-button>
- * <kiss-button variant="primary">Submit</kiss-button>
- * <kiss-button size="sm" disabled>Small</kiss-button>
+ * <less-button>Click me</less-button>
+ * <less-button variant="primary">Submit</less-button>
+ * <less-button size="sm" disabled>Small</less-button>
  * ```
  */
 
 import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } from 'lit';
-import { kissDesignTokens } from './design-tokens.js';
+import { lessDesignTokens } from './design-tokens.js';
 
-export const tagName = 'kiss-button';
+export const tagName = 'less-button';
 
 export class KissButton extends LitElement {
   static override styles: CSSResult[] = [
-    kissDesignTokens,
+    lessDesignTokens,
     css`
       :host {
         display: inline-block;
@@ -44,9 +44,9 @@ export class KissButton extends LitElement {
         font-weight: var(--kiss-font-weight-medium);
         text-decoration: none;
         cursor: pointer;
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         background: transparent;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
         border-radius: var(--kiss-radius-md);
         transition:
           color var(--kiss-transition-normal),
@@ -77,14 +77,14 @@ export class KissButton extends LitElement {
 
       /* Variants */
       .btn--default:hover {
-        color: var(--kiss-text-primary);
-        border-color: var(--kiss-border-hover);
+        color: var(--less-text-primary);
+        border-color: var(--less-border-hover);
         background: var(--kiss-accent-subtle);
       }
 
       .btn--primary {
         background: var(--kiss-accent);
-        color: var(--kiss-bg-base);
+        color: var(--less-bg-base);
         border-color: var(--kiss-accent);
       }
 

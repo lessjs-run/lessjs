@@ -3,7 +3,7 @@
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 export class PwaPage extends LitElement {
   static override styles = [
@@ -18,23 +18,23 @@ export class PwaPage extends LitElement {
         font-size: 1rem;
         font-weight: 500;
         margin: 1.5rem 0 0.5rem;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
       h3 {
         font-size: 0.875rem;
         font-weight: 500;
         margin: 1rem 0 0.25rem;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
       }
       p {
         font-size: 0.8125rem;
         line-height: 1.7;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
         margin: 0 0 0.75rem;
       }
       .code-block {
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
         padding: 1rem;
         font-family: "SF Mono", "Fira Code", monospace;
@@ -42,7 +42,7 @@ export class PwaPage extends LitElement {
         line-height: 1.6;
         overflow-x: auto;
         margin: 0.75rem 0 1.25rem;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
         white-space: pre;
       }
     `,
@@ -50,7 +50,7 @@ export class PwaPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/guide/pwa">
+      <less-layout currentPath="/guide/pwa">
         <div class="container">
           <p class="adr-meta">ADR 0003 · 2026-04-30 · Partially implemented</p>
           <h1>PWA Support for LessJS SSG</h1>
@@ -68,7 +68,7 @@ export class PwaPage extends LitElement {
             Added to <code>build-ssg.ts</code> — after Phase 3, the SSG script generates:
           </p>
           <ul
-            style="font-size:0.8125rem;color:var(--kiss-text-secondary);margin:0.5rem 0 1rem;line-height:1.8"
+            style="font-size:0.8125rem;color:var(--less-text-secondary);margin:0.5rem 0 1rem;line-height:1.8"
           >
             <li><code>manifest.json</code> — Web App Manifest with name, theme_color, icons</li>
             <li>
@@ -109,7 +109,7 @@ export class PwaPage extends LitElement {
             <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 120">
+  <style>
+    .d { fill: #000; }
+    .t { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; font-weight: 500; font-size: 40px; fill: #000; }
+    .s { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; font-weight: 400; font-size: 14px; fill: #888780; letter-spacing: 3px; }
+    @media (prefers-color-scheme: dark) { .d { fill: #fff; } .t { fill: #fff; } }
+  </style>
+  <g transform="translate(36, 60)">
+    <rect class="d" x="-20" y="-20" width="40" height="40" rx="5" transform="rotate(45)" opacity="0.25"/>
+    <rect class="d" x="-9" y="-9" width="18" height="18" rx="2" transform="rotate(45)"/>
+  </g>
+  <text class="t" x="74" y="58">Less</text>
+  <text class="s" x="76" y="82">less is more</text>
+</svg>

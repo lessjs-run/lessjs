@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
 
 export class ApiDesignPage extends LitElement {
@@ -9,8 +9,8 @@ export class ApiDesignPage extends LitElement {
     css`
       .principle {
         padding: 1rem 1.25rem;
-        background: var(--kiss-bg-surface);
-        border-left: 2px solid var(--kiss-border-hover);
+        background: var(--less-bg-surface);
+        border-left: 2px solid var(--less-border-hover);
         border-radius: 0 4px 4px 0;
         margin: 1rem 0;
       }
@@ -19,7 +19,7 @@ export class ApiDesignPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/guide/api-design">
+      <less-layout currentPath="/guide/api-design">
         <div class="container">
           <h1>API 设计</h1>
           <p class="subtitle">
@@ -121,7 +121,7 @@ export class ApiDesignPage extends LitElement {
                 <a href="/guide/configuration" class="nav-link">Configuration &rarr;</a>
               </div>
             </div>
-          </kiss-layout>
+          </less-layout>
         `;
       }
     }

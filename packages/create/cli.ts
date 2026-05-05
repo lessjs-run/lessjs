@@ -24,7 +24,7 @@ node_modules/
     "@lit-labs/ssr-dom-shim": "npm:@lit-labs/ssr-dom-shim@^1.5.0",
     "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^0.2.0",
     "@lessjs/core": "jsr:@lessjs/core@^0.5.3",
-    "@lessjs/core/kiss-runtime": "jsr:@lessjs/core@^0.5.3/kiss-runtime",
+    "@lessjs/core/less-runtime": "jsr:@lessjs/core@^0.5.3/less-runtime",
     "@lessjs/ui": "jsr:@lessjs/ui@^0.5.2",
     "@lessjs/ui/tokens/colors": "jsr:@lessjs/ui@^0.5.2/tokens/colors",
     "@lessjs/ui/": "jsr:@lessjs/ui@^0.5.2/"
@@ -42,23 +42,23 @@ node_modules/
 }
 `,
   'vite.config.ts': `import { kiss } from '@lessjs/core';
-import { kissRootColorCSS } from '@lessjs/ui/tokens/colors';
+import { lessRootColorCSS } from '@lessjs/ui/tokens/colors';
 import { defineConfig } from 'vite';
 
 // DRY: All color token values come from @lessjs/ui/tokens/colors.ts
 // (single source of truth). Do NOT hand-write color values here.
-const colorTokensStyle = '<style>' + kissRootColorCSS + 'body{margin:0;background:var(--kiss-bg-base);color:var(--kiss-text-primary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>';
+const colorTokensStyle = '<style>' + lessRootColorCSS + 'body{margin:0;background:var(--less-bg-base);color:var(--less-text-primary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>';
 
 const kissUiAliases = {
   '@lessjs/ui': 'https://jsr.io/@lessjs/ui/0.5.2/src/index.ts',
   '@lessjs/ui/design-tokens': 'https://jsr.io/@lessjs/ui/0.5.2/src/design-tokens.ts',
-  '@lessjs/ui/kiss-button': 'https://jsr.io/@lessjs/ui/0.5.2/src/kiss-button.ts',
-  '@lessjs/ui/kiss-card': 'https://jsr.io/@lessjs/ui/0.5.2/src/kiss-card.ts',
-  '@lessjs/ui/kiss-code-block': 'https://jsr.io/@lessjs/ui/0.5.2/src/kiss-code-block.ts',
-  '@lessjs/ui/kiss-hero-ping': 'https://jsr.io/@lessjs/ui/0.5.2/src/kiss-hero-ping.ts',
-  '@lessjs/ui/kiss-input': 'https://jsr.io/@lessjs/ui/0.5.2/src/kiss-input.ts',
-  '@lessjs/ui/kiss-layout': 'https://jsr.io/@lessjs/ui/0.5.2/src/kiss-layout.ts',
-  '@lessjs/ui/kiss-theme-toggle': 'https://jsr.io/@lessjs/ui/0.5.2/src/kiss-theme-toggle.ts',
+  '@lessjs/ui/less-button': 'https://jsr.io/@lessjs/ui/0.5.2/src/less-button.ts',
+  '@lessjs/ui/less-card': 'https://jsr.io/@lessjs/ui/0.5.2/src/less-card.ts',
+  '@lessjs/ui/less-code-block': 'https://jsr.io/@lessjs/ui/0.5.2/src/less-code-block.ts',
+  '@lessjs/ui/less-hero-ping': 'https://jsr.io/@lessjs/ui/0.5.2/src/less-hero-ping.ts',
+  '@lessjs/ui/less-input': 'https://jsr.io/@lessjs/ui/0.5.2/src/less-input.ts',
+  '@lessjs/ui/less-layout': 'https://jsr.io/@lessjs/ui/0.5.2/src/less-layout.ts',
+  '@lessjs/ui/less-theme-toggle': 'https://jsr.io/@lessjs/ui/0.5.2/src/less-theme-toggle.ts',
   '@lessjs/ui/tokens/colors': 'https://jsr.io/@lessjs/ui/0.5.2/src/tokens/colors.ts',
 };
 
@@ -91,7 +91,7 @@ export default class HomePage extends LitElement {
   static override styles = css\`
     :host { display: block; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
     h1 { font-size: 2rem; margin-bottom: 0.5rem; }
-    p { color: var(--kiss-text-secondary, #666); }
+    p { color: var(--less-text-secondary, #666); }
     \`;
 
   override render() {

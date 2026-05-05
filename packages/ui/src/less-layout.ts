@@ -1,5 +1,5 @@
 /**
- * @lessjs/ui - kiss-layout
+ * @lessjs/ui - less-layout
  *
  * App layout component with header, sidebar, and footer.
  * Swiss International Style: Pure B&W, minimal.
@@ -8,26 +8,26 @@
  * - Sticky header with configurable navigation
  * - Collapsible sidebar with data-driven sections
  * - Mobile hamburger menu (L0 details/summary)
- * - Theme toggle via kiss-theme-toggle Island
+ * - Theme toggle via less-theme-toggle Island
  * - Footer with links
  *
  * LessJS Architecture:
  * - This is a static layout component (no client re-render needed)
- * - Theme toggle is handled by kiss-theme-toggle Island
+ * - Theme toggle is handled by less-theme-toggle Island
  * - Navigation is data-driven via navItems property (no hardcoded links)
  *
  * Usage (data-driven navigation):
  * ```html
- * <kiss-layout current-path="/guide/getting-started"
+ * <less-layout current-path="/guide/getting-started"
  *   nav-items='[{"section":"Guide","items":[{"path":"/guide/getting-started","label":"Getting Started"}]}]'>
- * </kiss-layout>
+ * </less-layout>
  * ```
  *
  * Usage (default LessJS docs navigation, no nav-items attribute):
  * ```html
- * <kiss-layout current-path="/guide/getting-started">
+ * <less-layout current-path="/guide/getting-started">
  *   <main>Content here</main>
- * </kiss-layout>
+ * </less-layout>
  * ```
  *
  * NavItems schema:
@@ -38,15 +38,15 @@
  */
 
 import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } from 'lit';
-import { kissDesignTokens } from './design-tokens.js';
-// CRITICAL: kiss-layout's template uses <kiss-theme-toggle>, so we MUST import it
+import { lessDesignTokens } from './design-tokens.js';
+// CRITICAL: less-layout's template uses <less-theme-toggle>, so we MUST import it
 // so that the SSR renderer can recursively render its DSD shadow root.
-// Without this import, SSR outputs <kiss-theme-toggle></kiss-theme-toggle> without
+// Without this import, SSR outputs <less-theme-toggle></less-theme-toggle> without
 // DSD, which means the theme toggle button is never rendered server-side and
 // cannot be upgraded into a working client element.
-import './kiss-theme-toggle.js';
+import './less-theme-toggle.js';
 
-export const tagName = 'kiss-layout';
+export const tagName = 'less-layout';
 
 /** A single navigation link */
 export interface NavItem {
@@ -76,7 +76,7 @@ export interface HeaderNavLink {
 
 export class KissLayout extends LitElement {
   static override styles: CSSResult[] = [
-    kissDesignTokens,
+    lessDesignTokens,
     css`
       :host {
         display: block;
@@ -87,8 +87,8 @@ export class KissLayout extends LitElement {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
-        background: var(--kiss-bg-base);
-        color: var(--kiss-text-primary);
+        background: var(--less-bg-base);
+        color: var(--less-text-primary);
         font-family: var(--kiss-font-sans);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
@@ -113,17 +113,17 @@ export class KissLayout extends LitElement {
         position: sticky;
         top: 0;
         z-index: var(--kiss-z-sticky);
-        background: var(--kiss-bg-base);
-        border-bottom: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-base);
+        border-bottom: 0.5px solid var(--less-border);
       }
 
       .header-inner {
-        max-width: var(--kiss-layout-max-width, 1400px);
+        max-width: var(--less-layout-max-width, 1400px);
         margin: 0 auto;
         padding: 0 var(--kiss-size-8);
         display: flex;
         align-items: center;
-        height: var(--kiss-layout-header-height, 56px);
+        height: var(--less-layout-header-height, 56px);
         gap: var(--kiss-size-6);
       }
 
@@ -138,10 +138,10 @@ export class KissLayout extends LitElement {
         justify-content: center;
         width: 32px;
         height: 32px;
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: var(--kiss-radius-md);
         background: transparent;
-        color: var(--kiss-text-tertiary);
+        color: var(--less-text-tertiary);
         cursor: pointer;
         padding: 0;
         list-style: none;
@@ -161,22 +161,22 @@ export class KissLayout extends LitElement {
 
         .mobile-menu-btn:hover,
         .mobile-menu-btn:focus-visible {
-          color: var(--kiss-text-primary);
-          border-color: var(--kiss-border-hover);
+          color: var(--less-text-primary);
+          border-color: var(--less-border-hover);
           background: var(--kiss-accent-subtle);
         }
 
         .mobile-menu[open] .mobile-menu-btn {
-          color: var(--kiss-text-primary);
+          color: var(--less-text-primary);
           background: var(--kiss-accent-subtle);
-          border-color: var(--kiss-border-hover);
+          border-color: var(--less-border-hover);
         }
 
         /* === Logo === */
         .logo {
           font-size: var(--kiss-font-size-sm);
           font-weight: var(--kiss-font-weight-extrabold);
-          color: var(--kiss-text-primary);
+          color: var(--less-text-primary);
           text-decoration: none;
           letter-spacing: var(--kiss-letter-spacing-widest);
           text-transform: uppercase;
@@ -205,7 +205,7 @@ export class KissLayout extends LitElement {
         }
 
         .header-nav a {
-          color: var(--kiss-text-tertiary);
+          color: var(--less-text-tertiary);
           text-decoration: none;
           font-size: var(--kiss-font-size-sm);
           font-weight: var(--kiss-font-weight-medium);
@@ -216,7 +216,7 @@ export class KissLayout extends LitElement {
         }
 
         .header-nav a:hover {
-          color: var(--kiss-text-primary);
+          color: var(--less-text-primary);
           text-decoration: underline;
         }
 
@@ -239,14 +239,14 @@ export class KissLayout extends LitElement {
           font-weight: var(--kiss-font-weight-medium);
           letter-spacing: var(--kiss-letter-spacing-wide);
           padding: var(--kiss-size-2) var(--kiss-size-3);
-          border: 0.5px solid var(--kiss-border);
+          border: 0.5px solid var(--less-border);
           border-radius: var(--kiss-radius-md);
           transition: color var(--kiss-transition-normal), border-color var(--kiss-transition-normal);
         }
 
         .github-link:hover {
-          color: var(--kiss-text-secondary);
-          border-color: var(--kiss-border-hover);
+          color: var(--less-text-secondary);
+          border-color: var(--less-border-hover);
         }
 
         .github-link svg {
@@ -257,12 +257,12 @@ export class KissLayout extends LitElement {
         .docs-sidebar {
           width: clamp(200px, 20vw, 280px);
           flex-shrink: 0;
-          border-right: 0.5px solid var(--kiss-border);
+          border-right: 0.5px solid var(--less-border);
           padding: var(--kiss-size-6) 0;
           overflow-y: auto;
-          height: calc(100vh - var(--kiss-layout-header-height, 56px));
+          height: calc(100vh - var(--less-layout-header-height, 56px));
           position: sticky;
-          top: var(--kiss-layout-header-height, 56px);
+          top: var(--less-layout-header-height, 56px);
           scrollbar-width: thin;
         }
 
@@ -310,12 +310,12 @@ export class KissLayout extends LitElement {
         }
 
         .nav-section summary:hover {
-          color: var(--kiss-text-tertiary);
+          color: var(--less-text-tertiary);
         }
 
         .docs-sidebar a {
           display: block;
-          color: var(--kiss-text-tertiary);
+          color: var(--less-text-tertiary);
           text-decoration: none;
           font-size: var(--kiss-font-size-sm);
           padding: 0.3rem var(--kiss-size-5);
@@ -324,14 +324,14 @@ export class KissLayout extends LitElement {
         }
 
         .docs-sidebar a:hover {
-          color: var(--kiss-text-primary);
+          color: var(--less-text-primary);
           background: var(--kiss-accent-subtle);
         }
 
         .docs-sidebar a.active,
         .docs-sidebar a[aria-current="page"] {
-          color: var(--kiss-text-primary);
-          border-left-color: var(--kiss-text-primary);
+          color: var(--less-text-primary);
+          border-left-color: var(--less-text-primary);
           background: var(--kiss-accent-subtle);
           font-weight: var(--kiss-font-weight-medium);
         }
@@ -340,7 +340,7 @@ export class KissLayout extends LitElement {
         .mobile-backdrop {
           position: fixed;
           inset: 0;
-          top: var(--kiss-layout-header-height, 56px);
+          top: var(--less-layout-header-height, 56px);
           background: var(--kiss-backdrop, rgba(0, 0, 0, 0.4));
           z-index: 80;
           opacity: 0;
@@ -374,13 +374,13 @@ export class KissLayout extends LitElement {
 
           .docs-sidebar {
             position: fixed;
-            top: var(--kiss-layout-header-height, 56px);
+            top: var(--less-layout-header-height, 56px);
             left: 0;
             width: min(300px, 80vw);
-            height: calc(100vh - var(--kiss-layout-header-height, 56px));
+            height: calc(100vh - var(--less-layout-header-height, 56px));
             z-index: 90;
-            background: var(--kiss-bg-base);
-            border-right: 0.5px solid var(--kiss-border);
+            background: var(--less-bg-base);
+            border-right: 0.5px solid var(--less-border);
             border-bottom: none;
             padding: var(--kiss-size-4) 0;
             overflow-y: auto;
@@ -460,12 +460,12 @@ export class KissLayout extends LitElement {
         /* === Footer === */
         .app-footer footer {
           padding: var(--kiss-size-8);
-          border-top: 0.5px solid var(--kiss-border);
+          border-top: 0.5px solid var(--less-border);
           text-align: center;
           color: var(--kiss-text-muted);
           font-size: var(--kiss-font-size-xs);
           letter-spacing: var(--kiss-letter-spacing-wide);
-          background: var(--kiss-bg-base);
+          background: var(--less-bg-base);
         }
 
         .app-footer p {
@@ -473,12 +473,12 @@ export class KissLayout extends LitElement {
         }
 
         .app-footer a {
-          color: var(--kiss-text-tertiary);
+          color: var(--less-text-tertiary);
           transition: color var(--kiss-transition-normal);
         }
 
         .app-footer a:hover {
-          color: var(--kiss-text-primary);
+          color: var(--less-text-primary);
           text-decoration: underline;
         }
 
@@ -486,7 +486,7 @@ export class KissLayout extends LitElement {
           display: inline-block;
           width: 1px;
           height: 8px;
-          background: var(--kiss-border-hover);
+          background: var(--less-border-hover);
           vertical-align: middle;
           margin: 0 var(--kiss-size-3);
         }
@@ -685,7 +685,7 @@ export class KissLayout extends LitElement {
                     </svg>
                   </summary>
                 </details>
-                <kiss-theme-toggle></kiss-theme-toggle>
+                <less-theme-toggle></less-theme-toggle>
                 <a class="github-link" href="${this.githubUrl}" aria-label="GitHub repository">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                     <path

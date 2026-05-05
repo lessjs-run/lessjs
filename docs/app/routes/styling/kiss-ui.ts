@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
 
 export class KissUIPage extends LitElement {
@@ -10,8 +10,8 @@ export class KissUIPage extends LitElement {
       .callout {
         padding: 1rem 1.25rem;
         margin: 1rem 0;
-        border-left: 3px solid var(--kiss-border-hover);
-        background: var(--kiss-bg-surface);
+        border-left: 3px solid var(--less-border-hover);
+        background: var(--less-bg-surface);
         border-radius: 0 3px 3px 0;
       }
       .callout.warn {
@@ -24,8 +24,8 @@ export class KissUIPage extends LitElement {
       }
       .component-card {
         padding: 1rem;
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 6px;
       }
       .component-card h4 {
@@ -41,7 +41,7 @@ export class KissUIPage extends LitElement {
   ];
   override render() {
     return html`
-      <kiss-layout currentPath="/styling/kiss-ui">
+      <less-layout currentPath="/styling/kiss-ui">
         <div class="container">
           <h1>@lessjs/ui</h1>
           <p class="subtitle">
@@ -64,23 +64,23 @@ export class KissUIPage extends LitElement {
 
             <div class="component-grid">
               <div class="component-card">
-                <h4>kiss-button</h4>
+                <h4>less-button</h4>
                 <p>按钮组件，支持 variants (default, primary, ghost) 和 sizes (sm, md, lg)</p>
               </div>
               <div class="component-card">
-                <h4>kiss-card</h4>
+                <h4>less-card</h4>
                 <p>卡片组件，支持 header/footer slots 和 variants (default, elevated, borderless)</p>
               </div>
               <div class="component-card">
-                <h4>kiss-input</h4>
+                <h4>less-input</h4>
                 <p>输入组件，支持 label、error states 和 validation</p>
               </div>
               <div class="component-card">
-                <h4>kiss-code-block</h4>
+                <h4>less-code-block</h4>
                 <p>代码块组件，带复制按钮和语法高亮</p>
               </div>
               <div class="component-card">
-                <h4>kiss-layout</h4>
+                <h4>less-layout</h4>
                 <p>布局组件，包含 header、sidebar、footer 和移动端 hamburger 菜单</p>
               </div>
             </div>
@@ -89,17 +89,17 @@ export class KissUIPage extends LitElement {
             <code-block
             ><pre><code>// app/routes/index.ts
               import { html, LitElement } from 'lit';
-              import '@lessjs/ui/kiss-button';
-              import '@lessjs/ui/kiss-card';
+              import '@lessjs/ui/less-button';
+              import '@lessjs/ui/less-card';
 
               export class MyPage extends LitElement {
                 override render() {
                   return html&#96;
-                    &lt;kiss-button variant="primary"&gt;Click me&lt;/kiss-button&gt;
-                    &lt;kiss-card&gt;
+                    &lt;less-button variant="primary"&gt;Click me&lt;/less-button&gt;
+                    &lt;less-card&gt;
                       &lt;h3 slot="header"&gt;Title&lt;/h3&gt;
                       &lt;p&gt;Card content&lt;/p&gt;
-                    &lt;/kiss-card&gt;
+                    &lt;/less-card&gt;
                   &#96;;
                 }
               }</code></pre></code-block>
@@ -113,7 +113,7 @@ export class KissUIPage extends LitElement {
               ><pre><code>import '@lessjs/ui/design-tokens';
 
               // 可用的 CSS 自定义属性：
-              // --kiss-bg-base, --kiss-text-primary, --kiss-border-base
+              // --less-bg-base, --less-text-primary, --less-border-base
               // --kiss-spacing-sm, --kiss-spacing-md, --kiss-spacing-lg
               // --kiss-font-sans, --kiss-font-mono
               // --kiss-radius-sm, --kiss-radius-md</code></pre></code-block>
@@ -152,7 +152,7 @@ export class KissUIPage extends LitElement {
                 <a href="/styling/web-awesome" class="nav-link">Web Awesome &rarr;</a>
               </div>
             </div>
-          </kiss-layout>
+          </less-layout>
         `;
       }
     }

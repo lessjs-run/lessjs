@@ -3,7 +3,7 @@
  */
 import { css, html, LitElement } from 'lit';
 
-export const tagName = 'kiss-hero-ping';
+export const tagName = 'less-hero-ping';
 
 export default class HeroPing extends LitElement {
   static override properties = { apiUrl: { type: String, attribute: 'api-url' } };

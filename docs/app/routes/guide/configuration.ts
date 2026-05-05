@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
 
 export class ConfigurationPage extends LitElement {
@@ -8,7 +8,7 @@ export class ConfigurationPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/guide/configuration">
+      <less-layout currentPath="/guide/configuration">
         <div class="container">
           <h1>配置</h1>
           <p class="subtitle">
@@ -165,7 +165,7 @@ export default defineConfig({
             <a href="/guide/security-middleware" class="nav-link">Security & Middleware &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

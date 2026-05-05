@@ -7,9 +7,9 @@ Deno.test('empty → zero JS', () => {
 
 Deno.test('eager island loads immediately', () => {
   const code = generateClientEntry([
-    { tagName: 'kiss-theme-toggle', modulePath: '@lessjs/ui/kiss-theme-toggle', strategy: 'eager' },
+    { tagName: 'less-theme-toggle', modulePath: '@lessjs/ui/less-theme-toggle', strategy: 'eager' },
   ]);
-  assertExists(code.includes("import('@lessjs/ui/kiss-theme-toggle')"));
+  assertExists(code.includes("import('@lessjs/ui/less-theme-toggle')"));
   assertExists(code.includes('requestIdleCallback'));
   try {
     new Function(code);
@@ -20,7 +20,7 @@ Deno.test('eager island loads immediately', () => {
 
 Deno.test('lazy island deferred to idle', () => {
   const code = generateClientEntry([
-    { tagName: 'kiss-hero-ping', modulePath: './ping.ts', strategy: 'lazy' },
+    { tagName: 'less-hero-ping', modulePath: './ping.ts', strategy: 'lazy' },
   ]);
   assertExists(code.includes('requestIdleCallback'));
   assertExists(code.includes("import('./ping.ts')"));
@@ -33,12 +33,12 @@ Deno.test('lazy island deferred to idle', () => {
 
 Deno.test('mixed eager+lazy', () => {
   const code = generateClientEntry([
-    { tagName: 'kiss-theme-toggle', modulePath: '@lessjs/ui/kiss-theme-toggle', strategy: 'eager' },
-    { tagName: 'kiss-hero-ping', modulePath: '@lessjs/ui/kiss-hero-ping', strategy: 'lazy' },
+    { tagName: 'less-theme-toggle', modulePath: '@lessjs/ui/less-theme-toggle', strategy: 'eager' },
+    { tagName: 'less-hero-ping', modulePath: '@lessjs/ui/less-hero-ping', strategy: 'lazy' },
     { tagName: 'api-consumer', modulePath: './api-consumer.ts', strategy: 'lazy' },
   ]);
   assertExists(code.includes('requestIdleCallback'));
-  assertExists(code.includes('kiss:ready'));
+  assertExists(code.includes('less:ready'));
   try {
     new Function(code);
   } catch (e) {
@@ -54,11 +54,11 @@ Deno.test('no legacy SSR client runtime', () => {
   assertEquals(code.includes('lit-element-hydrate-support'), false);
 });
 
-Deno.test('kiss:ready event', () => {
+Deno.test('less:ready event', () => {
   const code = generateClientEntry([
     { tagName: 'my-island', modulePath: './island.ts' },
   ]);
-  assertExists(code.includes('kiss:ready'));
+  assertExists(code.includes('less:ready'));
   try {
     new Function(code);
   } catch (e) {
@@ -70,26 +70,26 @@ Deno.test('kiss:ready event', () => {
 
 Deno.test('package island strategy:eager is preserved in client entry', () => {
   // Bug: buildClient used to drop strategy from packageIslands, so
-  // kiss-theme-toggle (strategy: 'eager') was treated as lazy.
+  // less-theme-toggle (strategy: 'eager') was treated as lazy.
   // Fix: strategy is now passed through from metadata.
   const code = generateClientEntry([
     {
-      tagName: 'kiss-theme-toggle',
-      modulePath: '@lessjs/ui/kiss-theme-toggle',
+      tagName: 'less-theme-toggle',
+      modulePath: '@lessjs/ui/less-theme-toggle',
       strategy: 'eager',
       isPackage: true,
     },
     {
-      tagName: 'kiss-button',
-      modulePath: '@lessjs/ui/kiss-button',
+      tagName: 'less-button',
+      modulePath: '@lessjs/ui/less-button',
       strategy: 'lazy',
       isPackage: true,
     },
   ]);
 
   // Eager island must appear in the immediate-load array
-  assertExists(code.includes("'kiss-theme-toggle'"));
+  assertExists(code.includes("'less-theme-toggle'"));
   // Both must appear in the island map
-  assertExists(code.includes("import('@lessjs/ui/kiss-theme-toggle')"));
-  assertExists(code.includes("import('@lessjs/ui/kiss-button')"));
+  assertExists(code.includes("import('@lessjs/ui/less-theme-toggle')"));
+  assertExists(code.includes("import('@lessjs/ui/less-button')"));
 });

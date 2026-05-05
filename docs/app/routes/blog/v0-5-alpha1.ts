@@ -3,7 +3,7 @@
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 export const tagName = 'blog-v0-5-alpha1';
 
@@ -19,8 +19,8 @@ export default class BlogV05Alpha1 extends LitElement {
         font-size: 1.1rem;
       }
       .truth {
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
         padding: 1.25rem;
         margin: 1.5rem 0;
@@ -28,18 +28,18 @@ export default class BlogV05Alpha1 extends LitElement {
       .truth-title {
         font-weight: 600;
         margin-bottom: 0.5rem;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
       code {
-        background: var(--kiss-code-bg);
+        background: var(--less-code-bg);
         padding: 0.125rem 0.375rem;
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 3px;
         font-size: 0.8125rem;
       }
       pre {
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
         padding: 1rem;
         overflow-x: auto;
@@ -52,8 +52,8 @@ export default class BlogV05Alpha1 extends LitElement {
         font-size: inherit;
       }
       .bug-card {
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
         padding: 1.25rem;
         margin: 1.25rem 0;
@@ -68,8 +68,8 @@ export default class BlogV05Alpha1 extends LitElement {
         margin-bottom: 0.25rem;
       }
       .principle {
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
         padding: 1.25rem;
         margin: 1rem 0;
@@ -77,7 +77,7 @@ export default class BlogV05Alpha1 extends LitElement {
       .principle-title {
         font-weight: 600;
         margin-bottom: 0.25rem;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
       .new-badge {
         display: inline-block;
@@ -92,8 +92,8 @@ export default class BlogV05Alpha1 extends LitElement {
         margin-left: 0.5rem;
       }
       .phase {
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
         padding: 1rem 1.25rem;
         margin: 0.75rem 0;
@@ -105,7 +105,7 @@ export default class BlogV05Alpha1 extends LitElement {
       }
       .phase-goal {
         margin-top: 0.25rem;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
         font-size: 0.875rem;
       }
       table {
@@ -117,11 +117,11 @@ export default class BlogV05Alpha1 extends LitElement {
       th, td {
         text-align: left;
         padding: 0.5rem 0.75rem;
-        border-bottom: 0.5px solid var(--kiss-border);
+        border-bottom: 0.5px solid var(--less-border);
       }
       th {
         font-weight: 600;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
         font-size: 0.75rem;
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -139,7 +139,7 @@ export default class BlogV05Alpha1 extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/blog/v0-5-alpha1">
+      <less-layout currentPath="/blog/v0-5-alpha1">
         <div class="container">
           <p class="breadcrumb"><a href="/blog">← Blog</a></p>
           <h1>v0.5-alpha1：全量架构审计与精准修复</h1>
@@ -390,7 +390,7 @@ export default class BlogV05Alpha1 extends LitElement {
                   <strong>B3-B5</strong> 死代码清理（renderNestedDsd / html-template / @deprecated fns）
                 </li>
                 <li>
-                  <strong>B6</strong> kiss-hero-ping apiUrl 修复 · <strong>B7</strong> create-kiss 模板更新
+                  <strong>B6</strong> less-hero-ping apiUrl 修复 · <strong>B7</strong> create-kiss 模板更新
                 </li>
               </ul>
             </div>
@@ -415,7 +415,7 @@ export default class BlogV05Alpha1 extends LitElement {
               <a href="/roadmap" class="nav-link">路线图 &rarr;</a>
             </div>
           </div>
-        </kiss-layout>
+        </less-layout>
       `;
     }
   }

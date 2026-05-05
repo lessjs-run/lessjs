@@ -282,7 +282,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   // Uses wrapInDocument from ssr-handler.ts (single source of truth).
   // Import via the lightweight runtime export so SSR does not load the
   // Vite plugin or dev-server dependency graph.
-  b.push(`import { wrapInDocument } from '@lessjs/core/kiss-runtime';`);
+  b.push(`import { wrapInDocument } from '@lessjs/core/less-runtime';`);
   b.blank();
 
   // --- Route module imports ---
@@ -347,12 +347,12 @@ export function renderEntry(desc: EntryDescriptor): string {
   b.push('  // Validate tag name — must be a valid Custom Element (contains hyphen)');
   b.push('  if (!tag || !tag.includes("-")) {');
   b.push(
-    '    throw new Error("[KISS] Invalid custom element tag: " + String(tag) + ". Must contain a hyphen.")',
+    '    throw new Error("[LessJS] Invalid custom element tag: " + String(tag) + ". Must contain a hyphen.")',
   );
   b.push('  }');
   b.push('  const Cls = customElements.get(tag)');
   b.push('  if (!Cls) {');
-  b.push('    console.warn("[KISS] <" + tag + "> not registered — rendering empty")');
+  b.push('    console.warn("[LessJS] <" + tag + "> not registered — rendering empty")');
   b.push('    return `<${tag}></${tag}>`');
   b.push('  }');
   b.push('  return renderDSD(tag, Cls, props)');

@@ -8,10 +8,10 @@
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
-import '@lessjs/ui/kiss-card';
-import '@lessjs/ui/kiss-button';
+import '@lessjs/ui/less-card';
+import '@lessjs/ui/less-button';
 
 export class ExamplesPage extends LitElement {
   static override styles = [
@@ -24,13 +24,13 @@ export class ExamplesPage extends LitElement {
       }
       .example-card {
         padding: 1.5rem;
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 6px;
         transition: border-color 0.2s ease;
       }
       .example-card:hover {
-        border-color: var(--kiss-border-hover);
+        border-color: var(--less-border-hover);
       }
       .example-card h3 {
         margin: 0 0 0.5rem;
@@ -42,7 +42,7 @@ export class ExamplesPage extends LitElement {
       .example-card .tag {
         font-size: 0.6875rem;
         padding: 0.125rem 0.375rem;
-        background: var(--kiss-code-bg);
+        background: var(--less-code-bg);
         border-radius: 3px;
         font-weight: 500;
       }
@@ -53,14 +53,14 @@ export class ExamplesPage extends LitElement {
         color: var(--kiss-accent-dim);
       }
       .example-card .tag.s1 {
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
       }
       .example-card .tag.s2 {
-        color: var(--kiss-text-tertiary);
+        color: var(--less-text-tertiary);
       }
       .example-card p {
         margin: 0.5rem 0 1rem;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
         font-size: 0.9375rem;
       }
       .constraint-badges {
@@ -71,16 +71,16 @@ export class ExamplesPage extends LitElement {
       }
       .constraint-badge {
         padding: 0.25rem 0.5rem;
-        background: var(--kiss-bg-base);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-base);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
         font-size: 0.75rem;
         font-family: "SF Mono", "Fira Code", monospace;
       }
       .architecture-diagram {
         padding: 1.5rem;
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 6px;
         margin: 1.5rem 0;
       }
@@ -103,11 +103,11 @@ export class ExamplesPage extends LitElement {
       }
       .arch-value {
         font-size: 0.8125rem;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
       }
       .arch-divider {
         border: none;
-        border-top: 0.5px solid var(--kiss-border);
+        border-top: 0.5px solid var(--less-border);
         margin: 1rem 0;
       }
       .kiss-row {
@@ -122,16 +122,16 @@ export class ExamplesPage extends LitElement {
         justify-content: center;
         width: 28px;
         height: 28px;
-        border: 0.5px solid var(--kiss-border-hover);
+        border: 0.5px solid var(--less-border-hover);
         border-radius: 4px;
         font-size: 0.75rem;
         font-weight: 800;
-        color: var(--kiss-text-primary);
-        background: var(--kiss-bg-base);
+        color: var(--less-text-primary);
+        background: var(--less-bg-base);
       }
       .kiss-desc {
         font-size: 0.8125rem;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
         margin-left: 0.25rem;
         line-height: 28px;
       }
@@ -145,7 +145,7 @@ export class ExamplesPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout current-path="/examples">
+      <less-layout current-path="/examples">
         <div class="container">
           <h1>Examples</h1>
           <p class="subtitle">
@@ -205,12 +205,12 @@ export class ExamplesPage extends LitElement {
               ><pre><code>deno run -A npm:vite build
                 # 输出: dist/index.html (含 DSD)</code></pre></code-block>
               <div class="nav-links">
-                <kiss-button size="sm" href="/examples/hello">查看 Demo</kiss-button>
-                <kiss-button
+                <less-button size="sm" href="/examples/hello">查看 Demo</less-button>
+                <less-button
                   size="sm"
                   variant="ghost"
                   href="https://github.com/lessjs-run/LessJS/tree/main/docs/app/routes/examples/hello"
-                >源码</kiss-button>
+                >源码</less-button>
               </div>
             </div>
 
@@ -231,12 +231,12 @@ export class ExamplesPage extends LitElement {
                 CSS（L0+L1），零 JS。
               </p>
               <div class="nav-links">
-                <kiss-button size="sm" href="/examples/minimal-blog">查看 Demo</kiss-button>
-                <kiss-button
+                <less-button size="sm" href="/examples/minimal-blog">查看 Demo</less-button>
+                <less-button
                   size="sm"
                   variant="ghost"
                   href="https://github.com/lessjs-run/LessJS/tree/main/docs/app/routes/examples/minimal-blog"
-                >源码</kiss-button>
+                >源码</less-button>
               </div>
             </div>
 
@@ -263,12 +263,12 @@ export class ExamplesPage extends LitElement {
                 dist/           → CDN / GitHub Pages
                 api/            → Deno Deploy / CF Workers</code></pre></code-block>
               <div class="nav-links">
-                <kiss-button size="sm" href="/examples/fullstack">查看 Demo</kiss-button>
-                <kiss-button
+                <less-button size="sm" href="/examples/fullstack">查看 Demo</less-button>
+                <less-button
                   size="sm"
                   variant="ghost"
                   href="https://github.com/lessjs-run/LessJS/tree/main/docs/app/routes/examples/fullstack"
-                >源码</kiss-button>
+                >源码</less-button>
               </div>
             </div>
           </div>
@@ -286,7 +286,7 @@ export class ExamplesPage extends LitElement {
               <a href="/guide/deployment" class="nav-link">Deployment &rarr;</a>
             </div>
           </div>
-        </kiss-layout>
+        </less-layout>
       `;
     }
   }

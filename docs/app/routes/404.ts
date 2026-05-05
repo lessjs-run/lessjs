@@ -3,7 +3,7 @@
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 export class NotFoundPage extends LitElement {
   static override styles = [
@@ -13,12 +13,12 @@ export class NotFoundPage extends LitElement {
         font-size: 5rem;
         font-weight: 800;
         letter-spacing: -0.06em;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
         margin: 2rem 0 0.5rem;
         line-height: 1;
       }
       .error-message {
-        color: var(--kiss-text-tertiary);
+        color: var(--less-text-tertiary);
         font-size: 0.9375rem;
         margin-bottom: 2rem;
       }
@@ -26,22 +26,22 @@ export class NotFoundPage extends LitElement {
         display: inline-block;
         padding: 0.5rem 1.25rem;
         /* 0.5px: reduced to match kiss-ui spec */
-        border: 0.5px solid var(--kiss-border);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
         text-decoration: none;
         font-size: 0.8125rem;
         transition: border-color 0.15s;
       }
       .home-link:hover {
-        border-color: var(--kiss-text-primary);
+        border-color: var(--less-text-primary);
       }
     `,
   ];
 
   override render() {
     return html`
-      <kiss-layout>
+      <less-layout>
         <div class="container" style="text-align:center;padding-top:4rem">
           <div class="error-code">404</div>
           <p class="error-message">
@@ -49,7 +49,7 @@ export class NotFoundPage extends LitElement {
           </p>
           <a href="/" class="home-link">&larr; Back to home</a>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }

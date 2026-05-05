@@ -342,7 +342,7 @@ export async function scanIslands(
  * ```ts
  * // @lessjs/ui/index.ts
  * export const islands = [
- *   { tagName: 'kiss-theme-toggle', modulePath: '@lessjs/ui/kiss-theme-toggle', strategy: 'eager' }
+ *   { tagName: 'less-theme-toggle', modulePath: '@lessjs/ui/less-theme-toggle', strategy: 'eager' }
  * ] as const;
  * ```
  *
@@ -369,7 +369,7 @@ export async function scanPackageIslands(
             });
           } else {
             console.warn(
-              `[KISS] Invalid island in ${pkg}: missing tagName or modulePath`,
+              `[LessJS] Invalid island in ${pkg}: missing tagName or modulePath`,
               island,
             );
           }

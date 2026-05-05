@@ -128,20 +128,20 @@ export interface DsdComponent {
 /**
  * Render a single component to DSD HTML string.
  *
- * @param tagName - Custom element tag name (e.g. 'kiss-button')
+ * @param tagName - Custom element tag name (e.g. 'less-button')
  * @param componentClass - Registered Custom Element class constructor
  * @param props - Attribute/property key-value pairs
  * @returns Complete DSD HTML string
  *
  * @example
  * ```ts
- * const html = renderDSD('kiss-button', KissButton, { variant: 'primary' })
- * // → <kiss-button variant="primary">
+ * const html = renderDSD('less-button', KissButton, { variant: 'primary' })
+ * // → <less-button variant="primary">
  * //      <template shadowrootmode="open">
  * //        <style>:host{...}</style>
  * //        <button>Click</button>
  * //      </template>
- * //    </kiss-button>
+ * //    </less-button>
  * ```
  */
 export async function renderDSD(
@@ -156,7 +156,7 @@ export async function renderDSD(
   try {
     instance = new componentClass() as unknown as DsdComponent;
   } catch (err) {
-    console.error(`[KISS] Failed to instantiate <${tagName}>:`, err);
+    console.error(`[LessJS] Failed to instantiate <${tagName}>:`, err);
     return `<${tagName}><!-- render error --></${tagName}>`;
   }
 
@@ -198,7 +198,7 @@ export async function renderDSD(
         // The component returned something that's not a string and no adapter
         // can handle it. Provide a clear error message.
         console.error(
-          `[KISS] <${tagName}> render() returned ${typeof result} instead of string. ` +
+          `[LessJS] <${tagName}> render() returned ${typeof result} instead of string. ` +
             (isLitTemplateResultHeuristic(result)
               ? 'This looks like a Lit TemplateResult — install @lessjs/adapter-lit to handle it.'
               : 'Components must return a string from render().'),
@@ -207,7 +207,7 @@ export async function renderDSD(
       }
     }
   } catch (err) {
-    console.error(`[KISS] <${tagName}> render() failed:`, err);
+    console.error(`[LessJS] <${tagName}> render() failed:`, err);
     content = '<!-- render error -->';
   }
 
@@ -256,7 +256,7 @@ function isLitTemplateResultHeuristic(value: unknown): boolean {
  *
  * @example
  * ```ts
- * const html = renderDSD('kiss-button', { variant: 'primary' })
+ * const html = renderDSD('less-button', { variant: 'primary' })
  * ```
  */
 export async function renderDSDByName(
@@ -266,7 +266,7 @@ export async function renderDSDByName(
   const cls = globalThis.customElements?.get(tagName);
 
   if (!cls) {
-    console.warn(`[KISS] <${tagName}> is not registered — rendering as void element`);
+    console.warn(`[LessJS] <${tagName}> is not registered — rendering as void element`);
     const attrs = serializeAttributes(props);
     return `<${tagName}${attrs}></${tagName}>`;
   }

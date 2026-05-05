@@ -3,7 +3,7 @@
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/kiss-layout';
+import '@lessjs/ui/less-layout';
 
 export class BlogSystemPage extends LitElement {
   static override styles = [
@@ -18,23 +18,23 @@ export class BlogSystemPage extends LitElement {
         font-size: 1rem;
         font-weight: 500;
         margin: 1.5rem 0 0.5rem;
-        color: var(--kiss-text-primary);
+        color: var(--less-text-primary);
       }
       h3 {
         font-size: 0.875rem;
         font-weight: 500;
         margin: 1rem 0 0.25rem;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
       }
       p {
         font-size: 0.8125rem;
         line-height: 1.7;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
         margin: 0 0 0.75rem;
       }
       .code-block {
-        background: var(--kiss-bg-surface);
-        border: 0.5px solid var(--kiss-border);
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
         border-radius: 4px;
         padding: 1rem;
         font-family: "SF Mono", "Fira Code", monospace;
@@ -42,13 +42,13 @@ export class BlogSystemPage extends LitElement {
         line-height: 1.6;
         overflow-x: auto;
         margin: 0.75rem 0 1.25rem;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
         white-space: pre;
       }
       ul {
         font-size: 0.8125rem;
         line-height: 1.8;
-        color: var(--kiss-text-secondary);
+        color: var(--less-text-secondary);
         margin: 0.5rem 0 1rem;
         padding-left: 1.25rem;
       }
@@ -57,7 +57,7 @@ export class BlogSystemPage extends LitElement {
 
   override render() {
     return html`
-      <kiss-layout currentPath="/guide/blog-system">
+      <less-layout currentPath="/guide/blog-system">
         <div class="container">
           <p class="adr-meta">ADR 0004 · 2026-04-30 · Draft · after v0.8.0 target</p>
           <h1>@lessjs/blog — Standalone SSG Blog Package</h1>
@@ -102,7 +102,7 @@ export class BlogSystemPage extends LitElement {
           </p>
 
           <h2>Implementation order</h2>
-          <ol style="font-size:0.8125rem;line-height:1.8;color:var(--kiss-text-secondary)">
+          <ol style="font-size:0.8125rem;line-height:1.8;color:var(--less-text-secondary)">
             <li>v0.8.0 stabilizes route/action/serverless conventions</li>
             <li><code>@lessjs/blog</code> ships as a plain SSG plugin first</li>
             <li><code>.kiss</code> compiler support is added after v0.10.0 alpha</li>
@@ -116,7 +116,7 @@ export class BlogSystemPage extends LitElement {
             <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
           </div>
         </div>
-      </kiss-layout>
+      </less-layout>
     `;
   }
 }
