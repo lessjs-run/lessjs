@@ -30,7 +30,7 @@
  * .my-component {
  *   background: var(--less-bg-base);
  *   color: var(--less-text-primary);
- *   padding: var(--kiss-size-4);
+ *   padding: var(--less-size-4);
  * }
  * ```
  */

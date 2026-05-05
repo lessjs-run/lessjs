@@ -4,7 +4,7 @@
  * KISS Design System based on OpenProps design tokens.
  * Light theme by default, Dark via data-theme attribute.
  *
- * Token naming: --kiss-{category}-{variant}
+ * Token naming: --less-{category}-{variant}
  *
  * SINGLE SOURCE OF TRUTH:
  * All color token values are defined below, referencing OpenProps CSS variables
@@ -49,46 +49,46 @@ import { css, unsafeCSS } from 'lit';
 export const lessDarkColors = {
   '--less-bg-base': 'var(--gray-12)',
   '--less-bg-surface': 'var(--gray-11)',
-  '--kiss-bg-elevated': 'var(--gray-10)',
-  '--kiss-bg-hover': 'var(--gray-11)',
-  '--kiss-bg-card': 'var(--gray-11)',
+  '--less-bg-elevated': 'var(--gray-10)',
+  '--less-bg-hover': 'var(--gray-11)',
+  '--less-bg-card': 'var(--gray-11)',
   '--less-border': 'var(--gray-9)',
   '--less-border-hover': 'var(--gray-8)',
   '--less-text-primary': 'var(--gray-0)',
   '--less-text-secondary': 'var(--gray-5)',
   '--less-text-tertiary': 'var(--gray-7)',
-  '--kiss-text-muted': 'var(--gray-8)',
-  '--kiss-accent': 'var(--gray-0)',
-  '--kiss-accent-dim': 'var(--gray-4)',
-  '--kiss-accent-subtle': 'var(--gray-11)',
+  '--less-text-muted': 'var(--gray-8)',
+  '--less-accent': 'var(--gray-0)',
+  '--less-accent-dim': 'var(--gray-4)',
+  '--less-accent-subtle': 'var(--gray-11)',
   '--less-code-bg': 'var(--gray-10)',
   '--less-code-border': 'var(--gray-9)',
-  '--kiss-error': 'var(--red-4)',
-  '--kiss-scrollbar-track': 'transparent',
-  '--kiss-scrollbar-thumb': 'var(--gray-9)',
+  '--less-error': 'var(--red-4)',
+  '--less-scrollbar-track': 'transparent',
+  '--less-scrollbar-thumb': 'var(--gray-9)',
 } as const;
 
 /** Light theme color values */
 export const lessLightColors = {
   '--less-bg-base': 'var(--gray-0)',
   '--less-bg-surface': 'var(--gray-1)',
-  '--kiss-bg-elevated': 'var(--gray-2)',
-  '--kiss-bg-hover': 'var(--gray-2)',
-  '--kiss-bg-card': 'var(--gray-0)',
+  '--less-bg-elevated': 'var(--gray-2)',
+  '--less-bg-hover': 'var(--gray-2)',
+  '--less-bg-card': 'var(--gray-0)',
   '--less-border': 'var(--gray-3)',
   '--less-border-hover': 'var(--gray-4)',
   '--less-text-primary': 'var(--gray-12)',
   '--less-text-secondary': 'var(--gray-8)',
   '--less-text-tertiary': 'var(--gray-7)',
-  '--kiss-text-muted': 'var(--gray-6)',
-  '--kiss-accent': 'var(--gray-12)',
-  '--kiss-accent-dim': 'var(--gray-8)',
-  '--kiss-accent-subtle': 'var(--gray-2)',
+  '--less-text-muted': 'var(--gray-6)',
+  '--less-accent': 'var(--gray-12)',
+  '--less-accent-dim': 'var(--gray-8)',
+  '--less-accent-subtle': 'var(--gray-2)',
   '--less-code-bg': 'var(--gray-2)',
   '--less-code-border': 'var(--gray-3)',
-  '--kiss-error': 'var(--red-7)',
-  '--kiss-scrollbar-track': 'transparent',
-  '--kiss-scrollbar-thumb': 'var(--gray-4)',
+  '--less-error': 'var(--red-7)',
+  '--less-scrollbar-track': 'transparent',
+  '--less-scrollbar-thumb': 'var(--gray-4)',
 } as const;
 
 // ============================================================

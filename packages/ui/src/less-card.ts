@@ -28,14 +28,14 @@ export class KissCard extends LitElement {
     css`
       :host {
         display: block;
-        background: var(--kiss-bg-card);
+        background: var(--less-bg-card);
         border: 0.5px solid var(--less-border);
-        border-radius: var(--kiss-radius-lg);
+        border-radius: var(--less-radius-lg);
         overflow: hidden;
       }
 
       :host([variant="elevated"]) {
-        box-shadow: var(--kiss-shadow-md);
+        box-shadow: var(--less-shadow-md);
         border-color: transparent;
       }
 
@@ -44,23 +44,23 @@ export class KissCard extends LitElement {
       }
 
       ::slotted([slot="header"]) {
-        padding: var(--kiss-size-4) var(--kiss-size-5);
+        padding: var(--less-size-4) var(--less-size-5);
         border-bottom: 0.5px solid var(--less-border);
-        font-size: var(--kiss-font-size-lg);
-        font-weight: var(--kiss-font-weight-semibold);
+        font-size: var(--less-font-size-lg);
+        font-weight: var(--less-font-weight-semibold);
         color: var(--less-text-primary);
         margin: 0;
       }
 
       .card-body {
-        padding: var(--kiss-size-5);
+        padding: var(--less-size-5);
       }
 
       ::slotted([slot="footer"]) {
-        padding: var(--kiss-size-3) var(--kiss-size-5);
+        padding: var(--less-size-3) var(--less-size-5);
         border-top: 0.5px solid var(--less-border);
-        font-size: var(--kiss-font-size-sm);
-        color: var(--kiss-text-muted);
+        font-size: var(--less-font-size-sm);
+        color: var(--less-text-muted);
         margin: 0;
       }
     `,

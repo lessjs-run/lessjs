@@ -11,7 +11,7 @@ import { css } from 'lit';
 export const kissTypographyTokens = css`
   :host {
     /* === Font Families === */
-    --kiss-font-sans:
+    --less-font-sans:
       -apple-system,
       BlinkMacSystemFont,
       "Segoe UI",
@@ -19,34 +19,34 @@ export const kissTypographyTokens = css`
       "Helvetica Neue",
       Arial,
       sans-serif;
-    --kiss-font-mono: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace;
+    --less-font-mono: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace;
 
     /* === Font Sizes (modular scale ~1.125) === */
-    --kiss-font-size-xs: 0.6875rem; /* 11px */
-    --kiss-font-size-sm: 0.75rem; /* 12px */
-    --kiss-font-size-md: 0.875rem; /* 14px */
-    --kiss-font-size-lg: 1rem; /* 16px */
-    --kiss-font-size-xl: 1.125rem; /* 18px */
-    --kiss-font-size-2xl: 1.25rem; /* 20px */
-    --kiss-font-size-3xl: 1.5rem; /* 24px */
+    --less-font-size-xs: 0.6875rem; /* 11px */
+    --less-font-size-sm: 0.75rem; /* 12px */
+    --less-font-size-md: 0.875rem; /* 14px */
+    --less-font-size-lg: 1rem; /* 16px */
+    --less-font-size-xl: 1.125rem; /* 18px */
+    --less-font-size-2xl: 1.25rem; /* 20px */
+    --less-font-size-3xl: 1.5rem; /* 24px */
 
     /* === Font Weights === */
-    --kiss-font-weight-normal: 400;
-    --kiss-font-weight-medium: 500;
-    --kiss-font-weight-semibold: 600;
-    --kiss-font-weight-bold: 700;
-    --kiss-font-weight-extrabold: 800;
+    --less-font-weight-normal: 400;
+    --less-font-weight-medium: 500;
+    --less-font-weight-semibold: 600;
+    --less-font-weight-bold: 700;
+    --less-font-weight-extrabold: 800;
 
     /* === Line Heights === */
-    --kiss-line-height-tight: 1.2;
-    --kiss-line-height-normal: 1.5;
-    --kiss-line-height-relaxed: 1.7;
+    --less-line-height-tight: 1.2;
+    --less-line-height-normal: 1.5;
+    --less-line-height-relaxed: 1.7;
 
     /* === Letter Spacing === */
-    --kiss-letter-spacing-tight: -0.03em;
-    --kiss-letter-spacing-normal: 0;
-    --kiss-letter-spacing-wide: 0.02em;
-    --kiss-letter-spacing-wider: 0.05em;
-    --kiss-letter-spacing-widest: 0.15em;
+    --less-letter-spacing-tight: -0.03em;
+    --less-letter-spacing-normal: 0;
+    --less-letter-spacing-wide: 0.02em;
+    --less-letter-spacing-wider: 0.05em;
+    --less-letter-spacing-widest: 0.15em;
   }
 `;

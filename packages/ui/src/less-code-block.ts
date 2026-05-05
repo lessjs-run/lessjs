@@ -28,14 +28,14 @@ export class KissCodeBlock extends LitElement {
 
       ::slotted(pre) {
         margin: 0;
-        padding: var(--kiss-size-5);
+        padding: var(--less-size-5);
         background: var(--less-code-bg);
         border: 0.5px solid var(--less-code-border);
-        border-radius: var(--kiss-radius-sm);
+        border-radius: var(--less-radius-sm);
         overflow-x: auto;
-        font-family: var(--kiss-font-mono);
-        font-size: var(--kiss-font-size-sm);
-        line-height: var(--kiss-line-height-normal);
+        font-family: var(--less-font-mono);
+        font-size: var(--less-font-size-sm);
+        line-height: var(--less-line-height-normal);
         color: var(--less-text-secondary);
         scrollbar-width: thin;
         scrollbar-color: var(--less-border) transparent;
@@ -43,17 +43,17 @@ export class KissCodeBlock extends LitElement {
 
       .copy-btn {
         position: absolute;
-        top: var(--kiss-size-2);
-        right: var(--kiss-size-2);
-        background: var(--kiss-bg-elevated);
-        color: var(--kiss-text-muted);
+        top: var(--less-size-2);
+        right: var(--less-size-2);
+        background: var(--less-bg-elevated);
+        color: var(--less-text-muted);
         border: 0.5px solid var(--less-border);
-        padding: var(--kiss-size-1) var(--kiss-size-3);
-        font-size: var(--kiss-font-size-xs);
-        font-family: var(--kiss-font-sans);
+        padding: var(--less-size-1) var(--less-size-3);
+        font-size: var(--less-font-size-xs);
+        font-family: var(--less-font-sans);
         cursor: pointer;
-        border-radius: var(--kiss-radius-sm);
-        transition: color var(--kiss-transition-normal), border-color var(--kiss-transition-normal);
+        border-radius: var(--less-radius-sm);
+        transition: color var(--less-transition-normal), border-color var(--less-transition-normal);
         z-index: 1;
       }
 
@@ -68,8 +68,8 @@ export class KissCodeBlock extends LitElement {
       }
 
       .copy-btn.failed {
-        color: var(--kiss-error, #e55);
-        border-color: var(--kiss-error, #e55);
+        color: var(--less-error, #e55);
+        border-color: var(--less-error, #e55);
       }
     `,
   ];

@@ -47,33 +47,33 @@ export class KissInput extends LitElement {
       .input-wrapper {
         display: flex;
         flex-direction: column;
-        gap: var(--kiss-size-2);
+        gap: var(--less-size-2);
       }
 
       label {
-        font-size: var(--kiss-font-size-sm);
-        font-weight: var(--kiss-font-weight-medium);
+        font-size: var(--less-font-size-sm);
+        font-weight: var(--less-font-weight-medium);
         color: var(--less-text-tertiary);
-        letter-spacing: var(--kiss-letter-spacing-wide);
+        letter-spacing: var(--less-letter-spacing-wide);
       }
 
       .input {
         width: 100%;
-        padding: var(--kiss-size-2) var(--kiss-size-3);
-        font-family: var(--kiss-font-sans);
-        font-size: var(--kiss-font-size-md);
+        padding: var(--less-size-2) var(--less-size-3);
+        font-family: var(--less-font-sans);
+        font-size: var(--less-font-size-md);
         color: var(--less-text-primary);
         background: var(--less-bg-base);
         border: 0.5px solid var(--less-border);
-        border-radius: var(--kiss-radius-md);
+        border-radius: var(--less-radius-md);
         transition:
-          border-color var(--kiss-transition-normal),
-          box-shadow var(--kiss-transition-normal);
+          border-color var(--less-transition-normal),
+          box-shadow var(--less-transition-normal);
         outline: none;
       }
 
       .input::placeholder {
-        color: var(--kiss-text-muted);
+        color: var(--less-text-muted);
       }
 
       .input:hover {
@@ -81,8 +81,8 @@ export class KissInput extends LitElement {
       }
 
       .input:focus {
-        border-color: var(--kiss-accent);
-        box-shadow: 0 0 0 1px var(--kiss-accent);
+        border-color: var(--less-accent);
+        box-shadow: 0 0 0 1px var(--less-accent);
       }
 
       .input:disabled {
@@ -92,12 +92,12 @@ export class KissInput extends LitElement {
       }
 
       .input--error {
-        border-color: var(--kiss-error, #e55);
+        border-color: var(--less-error, #e55);
       }
 
       .error-message {
-        font-size: var(--kiss-font-size-xs);
-        color: var(--kiss-error, #e55);
+        font-size: var(--less-font-size-xs);
+        color: var(--less-error, #e55);
       }
     `,
   ];

@@ -89,7 +89,7 @@ export class KissLayout extends LitElement {
         min-height: 100vh;
         background: var(--less-bg-base);
         color: var(--less-text-primary);
-        font-family: var(--kiss-font-sans);
+        font-family: var(--less-font-sans);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
@@ -112,7 +112,7 @@ export class KissLayout extends LitElement {
       .app-header {
         position: sticky;
         top: 0;
-        z-index: var(--kiss-z-sticky);
+        z-index: var(--less-z-sticky);
         background: var(--less-bg-base);
         border-bottom: 0.5px solid var(--less-border);
       }
@@ -120,11 +120,11 @@ export class KissLayout extends LitElement {
       .header-inner {
         max-width: var(--less-layout-max-width, 1400px);
         margin: 0 auto;
-        padding: 0 var(--kiss-size-8);
+        padding: 0 var(--less-size-8);
         display: flex;
         align-items: center;
         height: var(--less-layout-header-height, 56px);
-        gap: var(--kiss-size-6);
+        gap: var(--less-size-6);
       }
 
       /* === Mobile Menu (L0: details/summary) === */
@@ -139,16 +139,16 @@ export class KissLayout extends LitElement {
         width: 32px;
         height: 32px;
         border: 0.5px solid var(--less-border);
-        border-radius: var(--kiss-radius-md);
+        border-radius: var(--less-radius-md);
         background: transparent;
         color: var(--less-text-tertiary);
         cursor: pointer;
         padding: 0;
         list-style: none;
         transition:
-          color var(--kiss-transition-normal),
-          border-color var(--kiss-transition-normal),
-          background var(--kiss-transition-normal);
+          color var(--less-transition-normal),
+          border-color var(--less-transition-normal),
+          background var(--less-transition-normal);
         }
 
         .mobile-menu-btn::-webkit-details-marker {
@@ -163,24 +163,24 @@ export class KissLayout extends LitElement {
         .mobile-menu-btn:focus-visible {
           color: var(--less-text-primary);
           border-color: var(--less-border-hover);
-          background: var(--kiss-accent-subtle);
+          background: var(--less-accent-subtle);
         }
 
         .mobile-menu[open] .mobile-menu-btn {
           color: var(--less-text-primary);
-          background: var(--kiss-accent-subtle);
+          background: var(--less-accent-subtle);
           border-color: var(--less-border-hover);
         }
 
         /* === Logo === */
         .logo {
-          font-size: var(--kiss-font-size-sm);
-          font-weight: var(--kiss-font-weight-extrabold);
+          font-size: var(--less-font-size-sm);
+          font-weight: var(--less-font-weight-extrabold);
           color: var(--less-text-primary);
           text-decoration: none;
-          letter-spacing: var(--kiss-letter-spacing-widest);
+          letter-spacing: var(--less-letter-spacing-widest);
           text-transform: uppercase;
-          transition: opacity var(--kiss-transition-normal);
+          transition: opacity var(--less-transition-normal);
           white-space: nowrap;
         }
 
@@ -189,11 +189,11 @@ export class KissLayout extends LitElement {
         }
 
         .logo-sub {
-          font-size: var(--kiss-font-size-xs);
-          font-weight: var(--kiss-font-weight-normal);
-          color: var(--kiss-text-muted);
-          margin-left: var(--kiss-size-2);
-          letter-spacing: var(--kiss-letter-spacing-wide);
+          font-size: var(--less-font-size-xs);
+          font-weight: var(--less-font-weight-normal);
+          color: var(--less-text-muted);
+          margin-left: var(--less-size-2);
+          letter-spacing: var(--less-letter-spacing-wide);
           text-transform: none;
         }
 
@@ -207,12 +207,12 @@ export class KissLayout extends LitElement {
         .header-nav a {
           color: var(--less-text-tertiary);
           text-decoration: none;
-          font-size: var(--kiss-font-size-sm);
-          font-weight: var(--kiss-font-weight-medium);
-          padding: var(--kiss-size-2) var(--kiss-size-3);
-          letter-spacing: var(--kiss-letter-spacing-wide);
-          transition: color var(--kiss-transition-normal);
-          border-radius: var(--kiss-radius-md);
+          font-size: var(--less-font-size-sm);
+          font-weight: var(--less-font-weight-medium);
+          padding: var(--less-size-2) var(--less-size-3);
+          letter-spacing: var(--less-letter-spacing-wide);
+          transition: color var(--less-transition-normal);
+          border-radius: var(--less-radius-md);
         }
 
         .header-nav a:hover {
@@ -224,7 +224,7 @@ export class KissLayout extends LitElement {
         .header-right {
           display: flex;
           align-items: center;
-          gap: var(--kiss-size-2);
+          gap: var(--less-size-2);
           margin-left: auto;
         }
 
@@ -232,16 +232,16 @@ export class KissLayout extends LitElement {
         .github-link {
           display: inline-flex;
           align-items: center;
-          gap: var(--kiss-size-2);
-          color: var(--kiss-text-muted);
+          gap: var(--less-size-2);
+          color: var(--less-text-muted);
           text-decoration: none;
-          font-size: var(--kiss-font-size-xs);
-          font-weight: var(--kiss-font-weight-medium);
-          letter-spacing: var(--kiss-letter-spacing-wide);
-          padding: var(--kiss-size-2) var(--kiss-size-3);
+          font-size: var(--less-font-size-xs);
+          font-weight: var(--less-font-weight-medium);
+          letter-spacing: var(--less-letter-spacing-wide);
+          padding: var(--less-size-2) var(--less-size-3);
           border: 0.5px solid var(--less-border);
-          border-radius: var(--kiss-radius-md);
-          transition: color var(--kiss-transition-normal), border-color var(--kiss-transition-normal);
+          border-radius: var(--less-radius-md);
+          transition: color var(--less-transition-normal), border-color var(--less-transition-normal);
         }
 
         .github-link:hover {
@@ -258,7 +258,7 @@ export class KissLayout extends LitElement {
           width: clamp(200px, 20vw, 280px);
           flex-shrink: 0;
           border-right: 0.5px solid var(--less-border);
-          padding: var(--kiss-size-6) 0;
+          padding: var(--less-size-6) 0;
           overflow-y: auto;
           height: calc(100vh - var(--less-layout-header-height, 56px));
           position: sticky;
@@ -267,22 +267,22 @@ export class KissLayout extends LitElement {
         }
 
         .nav-section {
-          margin-bottom: var(--kiss-size-5);
+          margin-bottom: var(--less-size-5);
         }
 
         .nav-section summary {
-          font-size: var(--kiss-font-size-xs);
-          font-weight: var(--kiss-font-weight-bold);
+          font-size: var(--less-font-size-xs);
+          font-weight: var(--less-font-weight-bold);
           text-transform: uppercase;
           letter-spacing: 0.14em;
-          color: var(--kiss-text-muted);
-          padding: 0 var(--kiss-size-5);
-          margin-bottom: var(--kiss-size-2);
+          color: var(--less-text-muted);
+          padding: 0 var(--less-size-5);
+          margin-bottom: var(--less-size-2);
           cursor: pointer;
           list-style: none;
           display: flex;
           align-items: center;
-          gap: var(--kiss-size-2);
+          gap: var(--less-size-2);
           user-select: none;
         }
 
@@ -297,7 +297,7 @@ export class KissLayout extends LitElement {
         .nav-section summary::before {
           content: "▾";
           font-size: 0.5rem;
-          transition: transform var(--kiss-transition-normal);
+          transition: transform var(--less-transition-normal);
           display: inline-block;
         }
 
@@ -317,23 +317,23 @@ export class KissLayout extends LitElement {
           display: block;
           color: var(--less-text-tertiary);
           text-decoration: none;
-          font-size: var(--kiss-font-size-sm);
-          padding: 0.3rem var(--kiss-size-5);
-          transition: color var(--kiss-transition-normal), background var(--kiss-transition-normal);
+          font-size: var(--less-font-size-sm);
+          padding: 0.3rem var(--less-size-5);
+          transition: color var(--less-transition-normal), background var(--less-transition-normal);
           border-left: 1px solid transparent;
         }
 
         .docs-sidebar a:hover {
           color: var(--less-text-primary);
-          background: var(--kiss-accent-subtle);
+          background: var(--less-accent-subtle);
         }
 
         .docs-sidebar a.active,
         .docs-sidebar a[aria-current="page"] {
           color: var(--less-text-primary);
           border-left-color: var(--less-text-primary);
-          background: var(--kiss-accent-subtle);
-          font-weight: var(--kiss-font-weight-medium);
+          background: var(--less-accent-subtle);
+          font-weight: var(--less-font-weight-medium);
         }
 
         /* === Mobile Backdrop === */
@@ -341,11 +341,11 @@ export class KissLayout extends LitElement {
           position: fixed;
           inset: 0;
           top: var(--less-layout-header-height, 56px);
-          background: var(--kiss-backdrop, rgba(0, 0, 0, 0.4));
+          background: var(--less-backdrop, rgba(0, 0, 0, 0.4));
           z-index: 80;
           opacity: 0;
           pointer-events: none;
-          transition: opacity var(--kiss-transition-slow);
+          transition: opacity var(--less-transition-slow);
           backdrop-filter: blur(2px);
         }
 
@@ -356,8 +356,8 @@ export class KissLayout extends LitElement {
           }
 
           .header-inner {
-            padding: 0 var(--kiss-size-4);
-            gap: var(--kiss-size-3);
+            padding: 0 var(--less-size-4);
+            gap: var(--less-size-3);
           }
 
           .header-nav {
@@ -369,7 +369,7 @@ export class KissLayout extends LitElement {
           }
 
           .header-right {
-            gap: var(--kiss-size-2);
+            gap: var(--less-size-2);
           }
 
           .docs-sidebar {
@@ -382,7 +382,7 @@ export class KissLayout extends LitElement {
             background: var(--less-bg-base);
             border-right: 0.5px solid var(--less-border);
             border-bottom: none;
-            padding: var(--kiss-size-4) 0;
+            padding: var(--less-size-4) 0;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             transform: translateX(-101%);
@@ -403,7 +403,7 @@ export class KissLayout extends LitElement {
 
           :host([menu-open]) .docs-sidebar {
             transform: translateX(0);
-            box-shadow: var(--kiss-shadow-sidebar, 4px 0 24px rgba(0, 0, 0, 0.3));
+            box-shadow: var(--less-shadow-sidebar, 4px 0 24px rgba(0, 0, 0, 0.3));
           }
 
           :host([menu-open]) .mobile-backdrop {
@@ -412,17 +412,17 @@ export class KissLayout extends LitElement {
           }
 
           .nav-section {
-            margin-bottom: var(--kiss-size-2);
+            margin-bottom: var(--less-size-2);
           }
 
           .nav-section summary {
-            padding: var(--kiss-size-2) var(--kiss-size-4);
-            font-size: var(--kiss-font-size-xs);
+            padding: var(--less-size-2) var(--less-size-4);
+            font-size: var(--less-font-size-xs);
           }
 
           .docs-sidebar a {
-            padding: var(--kiss-size-2) var(--kiss-size-4) var(--kiss-size-2) var(--kiss-size-7);
-            font-size: var(--kiss-font-size-sm);
+            padding: var(--less-size-2) var(--less-size-4) var(--less-size-2) var(--less-size-7);
+            font-size: var(--less-font-size-sm);
           }
 
           .layout-main {
@@ -430,7 +430,7 @@ export class KissLayout extends LitElement {
           }
 
           .app-footer footer {
-            padding: var(--kiss-size-6) var(--kiss-size-4);
+            padding: var(--less-size-6) var(--less-size-4);
           }
 
           .app-footer .divider {
@@ -448,23 +448,23 @@ export class KissLayout extends LitElement {
           }
 
           .github-link {
-            padding: var(--kiss-size-2);
+            padding: var(--less-size-2);
             border: none;
           }
 
           .header-inner {
-            padding: 0 var(--kiss-size-3);
+            padding: 0 var(--less-size-3);
           }
         }
 
         /* === Footer === */
         .app-footer footer {
-          padding: var(--kiss-size-8);
+          padding: var(--less-size-8);
           border-top: 0.5px solid var(--less-border);
           text-align: center;
-          color: var(--kiss-text-muted);
-          font-size: var(--kiss-font-size-xs);
-          letter-spacing: var(--kiss-letter-spacing-wide);
+          color: var(--less-text-muted);
+          font-size: var(--less-font-size-xs);
+          letter-spacing: var(--less-letter-spacing-wide);
           background: var(--less-bg-base);
         }
 
@@ -474,7 +474,7 @@ export class KissLayout extends LitElement {
 
         .app-footer a {
           color: var(--less-text-tertiary);
-          transition: color var(--kiss-transition-normal);
+          transition: color var(--less-transition-normal);
         }
 
         .app-footer a:hover {
@@ -488,7 +488,7 @@ export class KissLayout extends LitElement {
           height: 8px;
           background: var(--less-border-hover);
           vertical-align: middle;
-          margin: 0 var(--kiss-size-3);
+          margin: 0 var(--less-size-3);
         }
       `,
     ];

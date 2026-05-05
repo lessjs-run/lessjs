@@ -49,22 +49,22 @@ export class KissThemeToggle extends LitElement {
         height: 32px;
         padding: 0;
         border: 0.5px solid var(--less-border);
-        border-radius: var(--kiss-radius-md);
+        border-radius: var(--less-radius-md);
         background: transparent;
         color: var(--less-text-tertiary);
         cursor: pointer;
         font-size: 0;
         line-height: 1;
         transition:
-          color var(--kiss-transition-normal),
-          border-color var(--kiss-transition-normal),
-          background var(--kiss-transition-normal);
+          color var(--less-transition-normal),
+          border-color var(--less-transition-normal),
+          background var(--less-transition-normal);
         }
 
         .theme-toggle:hover {
           color: var(--less-text-primary);
           border-color: var(--less-border-hover);
-          background: var(--kiss-accent-subtle);
+          background: var(--less-accent-subtle);
         }
 
         .theme-toggle svg {
