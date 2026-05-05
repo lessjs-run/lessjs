@@ -11,7 +11,7 @@
  * - Theme toggle via kiss-theme-toggle Island
  * - Footer with links
  *
- * KISS Architecture:
+ * LessJS Architecture:
  * - This is a static layout component (no client re-render needed)
  * - Theme toggle is handled by kiss-theme-toggle Island
  * - Navigation is data-driven via navItems property (no hardcoded links)
@@ -23,7 +23,7 @@
  * </kiss-layout>
  * ```
  *
- * Usage (default KISS docs navigation, no nav-items attribute):
+ * Usage (default LessJS docs navigation, no nav-items attribute):
  * ```html
  * <kiss-layout current-path="/guide/getting-started">
  *   <main>Content here</main>
@@ -511,11 +511,11 @@ export class KissLayout extends LitElement {
     declare navItems: NavSection[] | undefined;
     /** Header navigation links (data-driven; falls back to default) */
     declare headerNav: HeaderNavLink[] | undefined;
-    /** Logo text (default: "KISS") */
+    /** Logo text (default: "LessJS") */
     declare logoText: string;
     /** Logo subtitle (default: "framework") */
     declare logoSub: string;
-    /** GitHub repository URL (default: KISS repo) */
+    /** GitHub repository URL (default: LessJS repo) */
     declare githubUrl: string;
 
     constructor() {
@@ -524,8 +524,8 @@ export class KissLayout extends LitElement {
       this.currentPath = '';
       this.navItems = undefined;
       this.headerNav = undefined;
-      this.logoText = 'KISS';
-      this.logoSub = 'framework';
+      this.logoText = 'LessJS';
+      this.logoSub = '';
       this.githubUrl = 'https://github.com/lessjs-run/LessJS';
     }
 
@@ -708,11 +708,11 @@ export class KissLayout extends LitElement {
             <footer>
               <p>
                 Built with <a href="${this.githubUrl}" target="_blank" rel="noopener noreferrer"
-                >KISS Framework</a>
+                >LessJS Framework</a>
                 <span class="divider"></span>
                 Self-bootstrapped from JSR
                 <span class="divider"></span>
-                KISS Architecture — K·I·S·S
+                LessJS Architecture — K·I·S·S
               </p>
             </footer>
           </div>

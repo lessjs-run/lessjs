@@ -210,7 +210,7 @@ export default class DocsHome extends LitElement {
           <div class="hero-inner">
             <div>
               <p class="eyebrow">Deno-first / Web Standards-first / Static-first</p>
-              <h1>KISS</h1>
+              <h1>LessJS</h1>
               <p class="hero-copy">
                 一个以 DSD-rendered Web Components 为首屏模型、以 Island Upgrade 为交互模型、以 Hono API
                 为服务端模型、以 SSG 为默认交付模型的 Web 框架。
@@ -221,7 +221,7 @@ export default class DocsHome extends LitElement {
               </div>
             </div>
 
-            <div class="signal" aria-label="KISS architecture summary">
+            <div class="signal" aria-label="LessJS architecture summary">
               <div class="signal-row">
                 <div class="signal-key">Render</div>
                 <div class="signal-value">HTML first, Declarative Shadow DOM first.</div>
@@ -244,10 +244,10 @@ export default class DocsHome extends LitElement {
 
         <main class="content">
           <section class="band">
-            <h2>What KISS Is</h2>
+            <h2>What LessJS Is</h2>
             <div>
               <p>
-                KISS 的核心不是重新发明组件框架，而是把浏览器已经拥有的能力组织成一条小而清晰的生产路径：
+                LessJS 的核心不是重新发明组件框架，而是把浏览器已经拥有的能力组织成一条小而清晰的生产路径：
                 路由映射页面组件，SSR 生成 DSD HTML，构建阶段抽取 island client entry， SSG
                 产出可以直接部署的静态站点。
               </p>
@@ -260,11 +260,11 @@ export default class DocsHome extends LitElement {
           </section>
 
           <section class="band">
-            <h2>What KISS Is Not</h2>
+            <h2>What LessJS Is Not</h2>
             <div>
               <p>
                 它不是 React/Vue 风格的整页 hydration 框架，也不应该提前承诺 ISR、零 JS 全站交互、
-                或生产级 compiler 消除 Lit。KISS 更愿意把边界写清楚，把已有能力做稳。
+                或生产级 compiler 消除 Lit。LessJS 更愿意把边界写清楚，把已有能力做稳。
               </p>
               <p>
                 当前稳定重心是 <code>SSG + DSD + Hono API + package islands</code>。
@@ -278,7 +278,7 @@ export default class DocsHome extends LitElement {
             <div class="link-grid">
               <a class="doc-link" href="/guide/positioning">
                 <strong>Framework Positioning</strong>
-                <span>先理解 KISS 解决什么问题，以及它暂时不解决什么问题。</span>
+                <span>先理解 LessJS 解决什么问题，以及它暂时不解决什么问题。</span>
               </a>
               <a class="doc-link" href="/guide/architecture">
                 <strong>Architecture</strong>
