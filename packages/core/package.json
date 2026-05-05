@@ -7,7 +7,7 @@
   "exports": {
     ".": { "types": "./src/index.ts", "import": "./src/index.ts" },
     "./render-dsd": { "types": "./src/render-dsd.ts", "import": "./src/render-dsd.ts" },
-    "./kiss-runtime": { "types": "./src/kiss-runtime.ts", "import": "./src/kiss-runtime.ts" },
+    "./less-runtime": { "types": "./src/less-runtime.ts", "import": "./src/less-runtime.ts" },
     "./cli/build": { "types": "./src/cli/build.ts", "import": "./src/cli/build.ts" },
     "./cli/build-client": {
       "types": "./src/cli/build-client.ts",

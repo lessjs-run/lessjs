@@ -4,7 +4,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./render-dsd": "./src/render-dsd.ts",
-    "./kiss-runtime": "./src/kiss-runtime.ts",
+    "./less-runtime": "./src/less-runtime.ts",
     "./cli/build": "./src/cli/build.ts",
     "./cli/build-client": "./src/cli/build-client.ts",
     "./cli/build-ssg": "./src/cli/build-ssg.ts"

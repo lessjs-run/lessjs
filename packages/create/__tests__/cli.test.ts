@@ -196,49 +196,55 @@ Deno.test('create-kiss: generated project builds through the one-command pipelin
     const aliases = [
       {
         find: '@lessjs/core/less-runtime',
-        replacement:
-          pathToFileURL(join(repoRoot, 'packages', 'core', 'src', 'less-runtime.ts')).href,
+        replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'less-runtime.ts')),
       },
       {
         find: '@lessjs/adapter-lit/ssr',
-        replacement: pathToFileURL(join(repoRoot, 'packages', 'adapter-lit', 'src', 'ssr.ts')).href,
+        replacement: vitePath(join(repoRoot, 'packages', 'adapter-lit', 'src', 'ssr.ts')),
       },
       {
         find: '@lessjs/adapter-lit',
-        replacement:
-          pathToFileURL(join(repoRoot, 'packages', 'adapter-lit', 'src', 'index.ts')).href,
+        replacement: vitePath(join(repoRoot, 'packages', 'adapter-lit', 'src', 'index.ts')),
+      },
+      {
+        find: '@lessjs/ui',
+        replacement: vitePath(join(uiSrc, 'index.ts')),
+      },
+      {
+        find: '@lessjs/ui/design-tokens',
+        replacement: vitePath(join(uiSrc, 'design-tokens.ts')),
       },
       {
         find: '@lessjs/ui/tokens/colors',
-        replacement: pathToFileURL(join(uiSrc, 'tokens', 'colors.ts')).href,
+        replacement: vitePath(join(uiSrc, 'tokens', 'colors.ts')),
       },
       {
         find: '@lessjs/ui/less-button',
-        replacement: pathToFileURL(join(uiSrc, 'less-button.ts')).href,
+        replacement: vitePath(join(uiSrc, 'less-button.ts')),
       },
       {
         find: '@lessjs/ui/less-card',
-        replacement: pathToFileURL(join(uiSrc, 'less-card.ts')).href,
+        replacement: vitePath(join(uiSrc, 'less-card.ts')),
       },
       {
         find: '@lessjs/ui/less-input',
-        replacement: pathToFileURL(join(uiSrc, 'less-input.ts')).href,
+        replacement: vitePath(join(uiSrc, 'less-input.ts')),
       },
       {
         find: '@lessjs/ui/less-code-block',
-        replacement: pathToFileURL(join(uiSrc, 'less-code-block.ts')).href,
+        replacement: vitePath(join(uiSrc, 'less-code-block.ts')),
       },
       {
         find: '@lessjs/ui/less-layout',
-        replacement: pathToFileURL(join(uiSrc, 'less-layout.ts')).href,
+        replacement: vitePath(join(uiSrc, 'less-layout.ts')),
       },
       {
         find: '@lessjs/ui/less-theme-toggle',
-        replacement: pathToFileURL(join(uiSrc, 'less-theme-toggle.ts')).href,
+        replacement: vitePath(join(uiSrc, 'less-theme-toggle.ts')),
       },
       {
         find: '@lessjs/ui/less-hero-ping',
-        replacement: pathToFileURL(join(uiSrc, 'less-hero-ping.ts')).href,
+        replacement: vitePath(join(uiSrc, 'less-hero-ping.ts')),
       },
     ];
     const viteConfigPath = join(appDir, 'vite.config.ts');
@@ -261,7 +267,7 @@ Deno.test('create-kiss: generated project builds through the one-command pipelin
     );
     viteConfig = viteConfig.replace(
       "packageIslands: ['@lessjs/ui'],",
-      `packageIslands: [${JSON.stringify(vitePath(join(uiSrc, 'index.ts')))}],`,
+      `packageIslands: [${JSON.stringify(pathToFileURL(join(uiSrc, 'index.ts')).href)}],`,
     );
     viteConfig = viteConfig.replace(
       'alias: lessUiAliases',

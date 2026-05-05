@@ -17,7 +17,7 @@ await build({
   entryPoints: [
     { name: '.', path: './src/index.ts' },
     { name: './render-dsd', path: './src/render-dsd.ts' },
-    { name: './kiss-runtime', path: './src/kiss-runtime.ts' },
+    { name: './less-runtime', path: './src/less-runtime.ts' },
     { name: './cli/build', path: './src/cli/build.ts' },
     { name: './cli/build-client', path: './src/cli/build-client.ts' },
     { name: './cli/build-ssg', path: './src/cli/build-ssg.ts' },
