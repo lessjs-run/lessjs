@@ -132,7 +132,7 @@ export interface MiddlewareScopeDecl {
 export interface DocumentConfig {
   /** <html> lang attribute (default: 'en') */
   lang: string;
-  /** <title> content (default: 'KISS App') */
+  /** <title> content (default: 'LessJS') */
   title: string;
   /** Extra <head> content (e.g. CDN links) */
   headExtras: string;
@@ -353,7 +353,7 @@ export function buildEntryDescriptor(
   // --- Document ---
   const document: DocumentConfig = {
     lang: options.html?.lang || 'en',
-    title: options.html?.title || 'KISS App',
+    title: options.html?.title || 'LessJS',
     headExtras: options.headExtras || '',
   };
 

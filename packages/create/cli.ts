@@ -49,7 +49,7 @@ import { defineConfig } from 'vite';
 // (single source of truth). Do NOT hand-write color values here.
 const colorTokensStyle = '<style>' + lessRootColorCSS + 'body{margin:0;background:var(--less-bg-base);color:var(--less-text-primary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>';
 
-const kissUiAliases = {
+const lessUiAliases = {
   '@lessjs/ui': 'https://jsr.io/@lessjs/ui/0.5.2/src/index.ts',
   '@lessjs/ui/design-tokens': 'https://jsr.io/@lessjs/ui/0.5.2/src/design-tokens.ts',
   '@lessjs/ui/less-button': 'https://jsr.io/@lessjs/ui/0.5.2/src/less-button.ts',
@@ -64,7 +64,7 @@ const kissUiAliases = {
 
 export default defineConfig({
   resolve: {
-    alias: kissUiAliases,
+    alias: lessUiAliases,
   },
   plugins: [kiss({
     html: { title: 'My LessJS App' },

@@ -43,7 +43,7 @@ export interface FrameworkOptions {
   html?: {
     /** Language attribute (default: 'en') */
     lang?: string;
-    /** Document title (default: 'KISS App') */
+    /** Document title (default: 'LessJS') */
     title?: string;
   };
 

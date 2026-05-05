@@ -125,7 +125,7 @@ Deno.test('create-kiss: vite.config.ts imports kiss plugin', () => {
 Deno.test('create-kiss: vite.config.ts includes packageIslands config', () => {
   const viteConfig = extractTemplate('vite.config.ts');
   assertExists(viteConfig.includes('@lessjs/ui'));
-  assertExists(viteConfig.includes('kissUiAliases'));
+  assertExists(viteConfig.includes('lessUiAliases'));
   assertExists(viteConfig.includes('https://jsr.io/@lessjs/ui/0.5.2/src/less-button.ts'));
 });
 
@@ -255,7 +255,7 @@ Deno.test('create-kiss: generated project builds through the one-command pipelin
       `packageIslands: [${JSON.stringify(pathToFileURL(join(uiSrc, 'index.ts')).href)}],`,
     );
     viteConfig = viteConfig.replace(
-      'alias: kissUiAliases',
+      'alias: lessUiAliases',
       `alias: ${JSON.stringify(aliases, null, 4)}`,
     );
     writeFileSync(viteConfigPath, viteConfig);

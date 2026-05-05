@@ -47,7 +47,7 @@ async function setupSsgFixtures() {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>KISS App</title>
+  <title>LessJS</title>
 </head>
 <body>
 <docs-home><template shadowroot="open" shadowrootmode="open"><style>:host { display: block; }</style>
@@ -85,7 +85,7 @@ async function setupSsgFixtures() {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>KISS App</title>
+  <title>LessJS</title>
 </head>
 <body>
 <docs-about><template shadowroot="open" shadowrootmode="open"><style>:host { display: block; }</style>

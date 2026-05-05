@@ -210,7 +210,10 @@ export default class DocsHome extends LitElement {
           <div class="hero-inner">
             <div>
               <p class="eyebrow">Deno-first / Web Standards-first / Static-first</p>
-              <img src="/assets/less-logo-inverted.svg" alt="LessJS" style="width: 180px; height: auto; display: block; margin: 0;">
+              <div style="display:flex;align-items:center;gap:0.5rem;">
+                <img src="/assets/less-logo-inverted.svg" alt="LessJS" style="width:120px;height:auto;display:block;flex-shrink:0;">
+                <span style="font-size:clamp(3rem,9vw,6rem);font-weight:520;line-height:0.95;color:#fff;">Less</span>
+              </div>
               <p class="hero-copy">
                 一个以 DSD-rendered Web Components 为首屏模型、以 Island Upgrade 为交互模型、以 Hono API
                 为服务端模型、以 SSG 为默认交付模型的 Web 框架。

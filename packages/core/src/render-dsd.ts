@@ -288,7 +288,7 @@ export function wrapDsdDocument(
     headExtras?: string;
   } = {},
 ): string {
-  const { title = 'KISS App', lang = 'en', headExtras = '' } = options;
+  const { title = 'LessJS', lang = 'en', headExtras = '' } = options;
   return `<!DOCTYPE html>
 <html lang="${escapeAttr(lang)}">
 <head>

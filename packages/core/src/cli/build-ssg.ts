@@ -376,7 +376,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         | undefined;
       if (pwa) {
         const manifest = {
-          name: pwa.name || 'KISS App',
+          name: pwa.name || 'LessJS',
           short_name: pwa.shortName || 'KISS',
           start_url: basePath,
           display: 'standalone' as const,

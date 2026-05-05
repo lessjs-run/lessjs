@@ -134,7 +134,7 @@ export async function renderDSDByName(tagName, props = {}) {
 
 export function wrapInDocument(html, options = {}) {
   const {
-    title = 'KISS App',
+    title = 'LessJS',
     lang = 'en',
     clientScript = '',
     meta,

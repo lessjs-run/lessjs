@@ -79,7 +79,7 @@ export function wrapInDocument(
   } = {},
 ): string {
   const {
-    title = 'KISS App',
+    title = 'LessJS',
     lang = 'en',
     clientScript = '',
     meta,
