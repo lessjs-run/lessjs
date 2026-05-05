@@ -10,17 +10,15 @@
  */
 
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
-import { escapeHtml, escapeAttr } from '../../core/src/render-dsd.ts';
+import { escapeAttr, escapeHtml } from '../../core/src/render-dsd.ts';
 
-// Inline the adapter-lit implementation to compare against core's canonical version.
-// If adapter-lit changes its escape functions, this test will catch the drift.
-// We import from the source to get the actual runtime copy.
-import {
-  installLitAdapter,
-  renderLitToString,
-  uninstallLitAdapter,
-} from '../src/ssr.ts';
+import { renderLitToString } from '../src/ssr.ts';
 import { html } from 'lit';
+
+/** Strip whitespace between tags for reliable comparison */
+function compactHtml(value: string): string {
+  return value.replace(/>\s+</g, '><').trim();
+}
 
 // ─── Core escape function reference ──────────────────────────────
 
@@ -45,7 +43,9 @@ Deno.test('escapeHtml: adapter-lit output matches core implementation', () => {
     const coreResult = escapeHtml(input);
     // Use the adapter-lit renderer to produce output with the same input
     // as text content, then extract what was rendered
-    const rendered = renderLitToString(html`<span>${input}</span>`);
+    const rendered = compactHtml(renderLitToString(html`
+      <span>${input}</span>
+    `));
     // The adapter should have escaped the text the same way core does
     const expected = `<span>${coreResult}</span>`;
     assertEquals(
@@ -61,7 +61,9 @@ Deno.test('escapeAttr: adapter-lit output matches core implementation', () => {
     const coreResult = escapeAttr(input);
     // Use the adapter-lit renderer to produce output with the same input
     // as an attribute value
-    const rendered = renderLitToString(html`<span title="${input}"></span>`);
+    const rendered = compactHtml(renderLitToString(html`
+      <span title="${input}"></span>
+    `));
     const expected = `<span title="${coreResult}"></span>`;
     assertEquals(
       rendered,

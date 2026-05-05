@@ -153,7 +153,11 @@ Deno.test('extractLitStyles returns undefined for class without styles', () => {
 
 Deno.test('extractLitStyles handles single CSSResult (not array)', () => {
   class SingleStyleElement extends LitElement {
-    static override styles = css`:host { display: inline; }`;
+    static override styles = css`
+      :host {
+        display: inline;
+      }
+    `;
   }
   const result = compactCss(
     extractLitStyles(SingleStyleElement as unknown as CustomElementConstructor) ?? '',
@@ -175,9 +179,15 @@ Deno.test('extractLitStyles handles plain string styles', () => {
 });
 
 Deno.test('renderLitToString handles deeply nested TemplateResult', () => {
-  const inner = html`<em>${'bold'}</em>`;
-  const middle = html`<span>${inner}</span>`;
-  const outer = html`<div>${middle}</div>`;
+  const inner = html`
+    <em>${'bold'}</em>
+  `;
+  const middle = html`
+    <span>${inner}</span>
+  `;
+  const outer = html`
+    <div>${middle}</div>
+  `;
   const result = compactHtml(renderLitToString(outer));
   assertEquals(result, '<div><span><em>bold</em></span></div>');
 });
@@ -193,27 +203,37 @@ Deno.test('renderLitToString strips multiple event and property bindings in one 
 });
 
 Deno.test('renderLitToString handles nothing sentinel in text content', () => {
-  const result = compactHtml(renderLitToString(html`<p>${nothing}</p>`));
+  const result = compactHtml(renderLitToString(html`
+    <p>${nothing}</p>
+  `));
   assertEquals(result, '<p></p>');
 });
 
 Deno.test('renderLitToString handles null and undefined values', () => {
-  const result = compactHtml(renderLitToString(html`<span>${null}${undefined}</span>`));
+  const result = compactHtml(renderLitToString(html`
+    <span>${null}${undefined}</span>
+  `));
   assertEquals(result, '<span></span>');
 });
 
 Deno.test('renderLitToString handles array values in attribute context', () => {
-  const result = compactHtml(renderLitToString(html`<div class="${['a', 'b', 'c']}"></div>`));
+  const result = compactHtml(renderLitToString(html`
+    <div class="${['a', 'b', 'c']}"></div>
+  `));
   assertEquals(result, '<div class="abc"></div>');
 });
 
 Deno.test('renderLitToString handles numeric values', () => {
-  const result = compactHtml(renderLitToString(html`<span>${42}</span>`));
+  const result = compactHtml(renderLitToString(html`
+    <span>${42}</span>
+  `));
   assertEquals(result, '<span>42</span>');
 });
 
 Deno.test('renderLitToString handles boolean attribute with nothing sentinel', () => {
-  const result = compactHtml(renderLitToString(html`<button ?disabled="${nothing}">OK</button>`));
+  const result = compactHtml(renderLitToString(html`
+    <button ?disabled="${nothing}">OK</button>
+  `));
   assertEquals(result, '<button>OK</button>');
 });
 

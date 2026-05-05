@@ -688,7 +688,8 @@ export class LessLayout extends LitElement {
               ${this._renderHeaderNav()}
               <div class="header-right">
                 <details class="mobile-menu">
-                  <summary class="mobile-menu-btn" aria-label="Toggle navigation" @click="${this._toggleMenu}">
+                  <summary class="mobile-menu-btn" aria-label="Toggle navigation" @click="${this
+                    ._toggleMenu}">
                     <svg
                       width="18"
                       height="18"

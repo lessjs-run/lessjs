@@ -56,6 +56,6 @@ export const lessDesignTokens: CSSResult = css`
  * Use this in vite.config.ts headFragments instead of hand-writing values.
  * Generated from lessDarkColors/lessLightColors — SINGLE SOURCE OF TRUTH.
  */
-export { lessScaffoldColorCSS, lessRootColorCSS } from './tokens/colors.js';
+export { lessRootColorCSS, lessScaffoldColorCSS } from './tokens/colors.js';
 
 export default lessDesignTokens;

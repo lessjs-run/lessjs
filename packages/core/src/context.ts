@@ -56,9 +56,9 @@ export function extractParams(
           params[paramName] = decodeURIComponent(pathParts[i]);
         } catch (e) {
           console.warn(
-            `[LessJS] decodeURIComponent failed for route param "${paramName}" value "${pathParts[i]}": ${
-              e instanceof Error ? e.message : String(e)
-            }`,
+            `[LessJS] decodeURIComponent failed for route param "${paramName}" value "${
+              pathParts[i]
+            }": ${e instanceof Error ? e.message : String(e)}`,
           );
           params[paramName] = pathParts[i]; // fallback: raw on malformed encoding
         }
