@@ -16,6 +16,10 @@ await build({
     { name: './ssr', path: './src/ssr.ts' },
   ],
   outDir: './npm',
+  typeCheck: false,
+  compilerOptions: {
+    skipLibCheck: true,
+  },
   shims: { deno: false, node: false },
   package: {
     name: '@lessjs/adapter-lit',

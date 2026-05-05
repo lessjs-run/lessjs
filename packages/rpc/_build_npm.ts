@@ -17,6 +17,10 @@ await build({
     { name: '.', path: './src/index.ts' },
   ],
   outDir: './npm',
+  typeCheck: false,
+  compilerOptions: {
+    skipLibCheck: true,
+  },
   shims: {
     // No Deno namespace used, no Node built-ins needed
     deno: false,
