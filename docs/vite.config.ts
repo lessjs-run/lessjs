@@ -56,6 +56,7 @@ export default defineConfig({
           '<style id="kiss-anti-flash">html{visibility:hidden}</style>',
           // Favicon
           '<link rel="icon" type="image/svg+xml" href="/favicon.svg" />',
+          '<link rel="apple-touch-icon" href="/favicon.svg" />',
           // DSD (Declarative Shadow DOM) polyfill removed — all modern browsers
           // (Chrome 90+, Safari 16.4+, Firefox 123+) support native DSD.
           // The old document.write() polyfill caused:

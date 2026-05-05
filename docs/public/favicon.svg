@@ -1,4 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect x="2" y="2" width="28" height="28" rx="4" transform="rotate(45 16 16)" fill="#000" opacity="0.3"/>
-  <rect x="8" y="8" width="16" height="16" rx="2" transform="rotate(45 16 16)" fill="#000"/>
+  <style>
+    .outer { fill: #000; opacity: 0.25; }
+    .inner { fill: #000; }
+    @media (prefers-color-scheme: dark) {
+      .outer { fill: #fff; opacity: 0.3; }
+      .inner { fill: #fff; }
+    }
+  </style>
+  <!-- Two nested diamonds = "less" → dynamic reduction -->
+  <rect class="outer" x="2" y="2" width="28" height="28" rx="5" transform="rotate(45 16 16)"/>
+  <rect class="inner" x="9" y="9" width="14" height="14" rx="2" transform="rotate(45 16 16)"/>
 </svg>
