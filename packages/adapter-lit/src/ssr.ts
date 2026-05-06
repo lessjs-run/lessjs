@@ -109,9 +109,13 @@ function isNothing(value: unknown): boolean {
  *   - Dynamic interpolations are escaped (except unsafeHTML directive)
  */
 
-// Re-export escape utilities from render-dsd (single source of truth)
-export { escapeAttr, escapeHtml } from '../../core/src/render-dsd.js';
-import { escapeAttr, escapeHtml } from '../../core/src/render-dsd.js';
+// Re-export escape utilities from @lessjs/core/render-dsd (single source of truth)
+// JSR requires bare specifiers for cross-package imports — relative paths
+// like '../../core/src/render-dsd.js' won't resolve once published.
+// NOTE: Use @lessjs/core/render-dsd (not @lessjs/core) to avoid pulling in the
+// entire core dependency graph (Hono, Vite, etc.) when Vite SSR loads this module.
+export { escapeAttr, escapeHtml } from '@lessjs/core/render-dsd';
+import { escapeAttr, escapeHtml } from '@lessjs/core/render-dsd';
 // Import registerAdapter from @lessjs/core/less-runtime so it shares the same
 // module scope as renderDSD when loaded through Vite SSR — no globalThis bridge needed.
 import { registerAdapter } from '@lessjs/core/less-runtime';

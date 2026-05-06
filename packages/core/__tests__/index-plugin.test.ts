@@ -31,11 +31,7 @@ import { createSsrContext, extractParams, parseQuery } from '../src/context.ts';
 
 import { renderSsrError, wrapInDocument } from '../src/ssr-handler.ts';
 
-import {
-  buildIslandChunkMap,
-  injectClientScript,
-  injectCspMeta,
-} from '../src/ssg-postprocess.ts';
+import { buildIslandChunkMap, injectClientScript, injectCspMeta } from '../src/ssg-postprocess.ts';
 
 import { printBuildManifest, scanClientBuild, scanSSGOutput } from '../src/build-manifest.ts';
 

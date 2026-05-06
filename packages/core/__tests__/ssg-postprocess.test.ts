@@ -4,11 +4,7 @@
  * Tests the SSG post-processing functions using temp directories.
  */
 import { assertEquals, assertExists, assertFalse } from 'jsr:@std/assert@^1.0.0';
-import {
-  buildIslandChunkMap,
-  injectClientScript,
-  injectCspMeta,
-} from '../src/ssg-postprocess.ts';
+import { buildIslandChunkMap, injectClientScript, injectCspMeta } from '../src/ssg-postprocess.ts';
 
 import { join } from 'node:path';
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';

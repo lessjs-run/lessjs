@@ -305,14 +305,14 @@ function setupDOMMocks(): () => void {
   const savedLocalStorage = (globalThis as any).localStorage;
   const _data: Record<string, string> = {};
 
-    // Mock document.documentElement (querySelectorAll returns empty for CSS variable theme)
-    (globalThis as any).document = {
-      documentElement: {
-        dataset: {},
-        setAttribute: (...args: any[]) => {},
-      },
-      querySelectorAll: (_selector: string) => [],
-    };
+  // Mock document.documentElement (querySelectorAll returns empty for CSS variable theme)
+  (globalThis as any).document = {
+    documentElement: {
+      dataset: {},
+      setAttribute: (...args: any[]) => {},
+    },
+    querySelectorAll: (_selector: string) => [],
+  };
 
   // Mock localStorage with proper method bindings
   (globalThis as any).localStorage = {

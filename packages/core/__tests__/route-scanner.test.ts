@@ -3,11 +3,7 @@
  */
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { join } from 'jsr:@std/path@^1.0.0';
-import {
-  fileToTagName,
-  scanIslands,
-  scanRoutes,
-} from '../src/route-scanner.ts';
+import { fileToTagName, scanIslands, scanRoutes } from '../src/route-scanner.ts';
 
 const FIXTURES_DIR = join(Deno.cwd(), 'packages/core/__test_fixtures__');
 

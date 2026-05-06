@@ -88,13 +88,15 @@ Deno.test('create-less: deno.json maps Lit and package imports explicitly', () =
   assertEquals(denoJson.imports['lit-element'], 'npm:lit-element@^4');
   assertEquals(denoJson.imports['lit-html'], 'npm:lit-html@^3');
   assertEquals(denoJson.imports.vite, 'npm:vite@8.0.10');
-  assertEquals(denoJson.imports['@lit-labs/ssr-dom-shim'], 'npm:@lit-labs/ssr-dom-shim@^1.5.0');
-  assertExists(denoJson.imports['@lessjs/adapter-lit'].includes('0.2.0'));
-  assertExists(denoJson.imports['@lessjs/core'].includes('0.5.3'));
-  assertExists(denoJson.imports['@lessjs/core/less-runtime'].includes('0.5.3'));
-  assertExists(denoJson.imports['@lessjs/ui'].includes('0.5.2'));
-  assertExists(denoJson.imports['@lessjs/ui/tokens/colors'].includes('0.5.2'));
-  assertExists(denoJson.imports['@lessjs/ui/'].includes('0.5.2/'));
+  // @lit-labs/ssr-dom-shim removed in v0.6 — no longer needed
+  assertEquals(denoJson.imports['@lit-labs/ssr-dom-shim'], undefined);
+  assertExists(denoJson.imports['@lessjs/adapter-lit'].includes('0.3.0'));
+  assertExists(denoJson.imports['@lessjs/core'].includes('0.6.0'));
+  assertExists(denoJson.imports['@lessjs/core/less-runtime'].includes('0.6.0'));
+  assertExists(denoJson.imports['@lessjs/ui'].includes('0.6.0'));
+  assertExists(denoJson.imports['@lessjs/ui/tokens/colors'].includes('0.6.0'));
+  assertExists(denoJson.imports['@lessjs/ui/tokens/color-values'].includes('0.6.0'));
+  assertExists(denoJson.imports['@lessjs/ui/'].includes('0.6.0/'));
   assertEquals(denoJson.nodeModulesDir, 'auto');
 });
 
@@ -195,8 +197,16 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     const uiSrc = join(repoRoot, 'packages', 'ui', 'src');
     const aliases = [
       {
+        find: '@lessjs/core/render-dsd',
+        replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'render-dsd.ts')),
+      },
+      {
         find: '@lessjs/core/less-runtime',
         replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'less-runtime.ts')),
+      },
+      {
+        find: '@lessjs/core',
+        replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'index.ts')),
       },
       {
         find: '@lessjs/adapter-lit/ssr',
@@ -217,6 +227,10 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       {
         find: '@lessjs/ui/tokens/colors',
         replacement: vitePath(join(uiSrc, 'tokens', 'colors.ts')),
+      },
+      {
+        find: '@lessjs/ui/tokens/color-values',
+        replacement: vitePath(join(uiSrc, 'tokens', 'color-values.ts')),
       },
       {
         find: '@lessjs/ui/less-button',
@@ -249,6 +263,10 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       {
         find: '@lessjs/ui/less-dialog',
         replacement: vitePath(join(uiSrc, 'less-dialog.ts')),
+      },
+      {
+        find: '@lessjs/ui/less-ui-plugin',
+        replacement: vitePath(join(uiSrc, 'less-ui-plugin.ts')),
       },
     ];
     const viteConfigPath = join(appDir, 'vite.config.ts');

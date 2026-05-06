@@ -10,6 +10,7 @@
     "./less-layout": "./dist/less-layout.js",
     "./less-theme-toggle": "./dist/less-theme-toggle.js",
     "./less-hero-ping": "./dist/less-hero-ping.js",
+    "./less-dialog": "./dist/less-dialog.js",
     "./less-ui-plugin": "./dist/less-ui-plugin.js",
     "./design-tokens": "./dist/design-tokens.js",
     "./tokens/colors": "./dist/tokens/colors.js",

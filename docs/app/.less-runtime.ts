@@ -5,7 +5,7 @@
  *   - registerAdapter: so adapters share the same module scope as renderDSD
  *   - No self-contained copy — this is the monorepo-internal docs override
  */
-export { renderDSD, renderDSDByName, registerAdapter } from '../../packages/core/src/render-dsd.js';
+export { registerAdapter, renderDSD, renderDSDByName } from '../../packages/core/src/render-dsd.js';
 export { Hono } from 'hono';
 
 // SSR runtime (used by generated Hono entry)

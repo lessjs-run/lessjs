@@ -49,6 +49,7 @@ export default defineConfig({
         'design-tokens': 'src/design-tokens.ts',
         'less-ui-plugin': 'src/less-ui-plugin.ts',
         'less-hero-ping': 'src/less-hero-ping.ts',
+        'less-dialog': 'src/less-dialog.ts',
         'tokens/colors': 'src/tokens/colors.ts',
         'tokens/color-values': 'src/tokens/color-values.ts',
       },

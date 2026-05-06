@@ -21,13 +21,13 @@ node_modules/
     "lit-element": "npm:lit-element@^4",
     "lit-html": "npm:lit-html@^3",
     "vite": "npm:vite@8.0.10",
-    "@lit-labs/ssr-dom-shim": "npm:@lit-labs/ssr-dom-shim@^1.5.0",
-    "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^0.2.0",
-    "@lessjs/core": "jsr:@lessjs/core@^0.5.3",
-    "@lessjs/core/less-runtime": "jsr:@lessjs/core@^0.5.3/less-runtime",
-    "@lessjs/ui": "jsr:@lessjs/ui@^0.5.2",
-    "@lessjs/ui/tokens/colors": "jsr:@lessjs/ui@^0.5.2/tokens/colors",
-    "@lessjs/ui/": "jsr:@lessjs/ui@^0.5.2/"
+    "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^0.3.0",
+    "@lessjs/core": "jsr:@lessjs/core@^0.6.0",
+    "@lessjs/core/less-runtime": "jsr:@lessjs/core@^0.6.0/less-runtime",
+    "@lessjs/ui": "jsr:@lessjs/ui@^0.6.0",
+    "@lessjs/ui/tokens/colors": "jsr:@lessjs/ui@^0.6.0/tokens/colors",
+    "@lessjs/ui/tokens/color-values": "jsr:@lessjs/ui@^0.6.0/tokens/color-values",
+    "@lessjs/ui/": "jsr:@lessjs/ui@^0.6.0/"
   },
   "nodeModulesDir": "auto",
   "tasks": {
@@ -50,16 +50,19 @@ import { defineConfig } from 'vite';
 const colorTokensStyle = '<style>' + lessRootColorCSS + 'body{margin:0;background:var(--less-bg-base);color:var(--less-text-primary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>';
 
 const lessUiAliases = {
-  '@lessjs/ui': 'https://jsr.io/@lessjs/ui/0.5.2/src/index.ts',
-  '@lessjs/ui/design-tokens': 'https://jsr.io/@lessjs/ui/0.5.2/src/design-tokens.ts',
-  '@lessjs/ui/less-button': 'https://jsr.io/@lessjs/ui/0.5.2/src/less-button.ts',
-  '@lessjs/ui/less-card': 'https://jsr.io/@lessjs/ui/0.5.2/src/less-card.ts',
-  '@lessjs/ui/less-code-block': 'https://jsr.io/@lessjs/ui/0.5.2/src/less-code-block.ts',
-  '@lessjs/ui/less-hero-ping': 'https://jsr.io/@lessjs/ui/0.5.2/src/less-hero-ping.ts',
-  '@lessjs/ui/less-input': 'https://jsr.io/@lessjs/ui/0.5.2/src/less-input.ts',
-  '@lessjs/ui/less-layout': 'https://jsr.io/@lessjs/ui/0.5.2/src/less-layout.ts',
-  '@lessjs/ui/less-theme-toggle': 'https://jsr.io/@lessjs/ui/0.5.2/src/less-theme-toggle.ts',
-  '@lessjs/ui/tokens/colors': 'https://jsr.io/@lessjs/ui/0.5.2/src/tokens/colors.ts',
+  '@lessjs/ui': 'https://jsr.io/@lessjs/ui/0.6.0/src/index.ts',
+  '@lessjs/ui/design-tokens': 'https://jsr.io/@lessjs/ui/0.6.0/src/design-tokens.ts',
+  '@lessjs/ui/less-button': 'https://jsr.io/@lessjs/ui/0.6.0/src/less-button.ts',
+  '@lessjs/ui/less-card': 'https://jsr.io/@lessjs/ui/0.6.0/src/less-card.ts',
+  '@lessjs/ui/less-code-block': 'https://jsr.io/@lessjs/ui/0.6.0/src/less-code-block.ts',
+  '@lessjs/ui/less-dialog': 'https://jsr.io/@lessjs/ui/0.6.0/src/less-dialog.ts',
+  '@lessjs/ui/less-hero-ping': 'https://jsr.io/@lessjs/ui/0.6.0/src/less-hero-ping.ts',
+  '@lessjs/ui/less-input': 'https://jsr.io/@lessjs/ui/0.6.0/src/less-input.ts',
+  '@lessjs/ui/less-layout': 'https://jsr.io/@lessjs/ui/0.6.0/src/less-layout.ts',
+  '@lessjs/ui/less-theme-toggle': 'https://jsr.io/@lessjs/ui/0.6.0/src/less-theme-toggle.ts',
+  '@lessjs/ui/less-ui-plugin': 'https://jsr.io/@lessjs/ui/0.6.0/src/less-ui-plugin.ts',
+  '@lessjs/ui/tokens/colors': 'https://jsr.io/@lessjs/ui/0.6.0/src/tokens/colors.ts',
+  '@lessjs/ui/tokens/color-values': 'https://jsr.io/@lessjs/ui/0.6.0/src/tokens/color-values.ts',
 };
 
 export default defineConfig({

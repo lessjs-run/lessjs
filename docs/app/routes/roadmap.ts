@@ -68,8 +68,8 @@ export class RoadmapPage extends LitElement {
                   <span class="inline-code">signal()</span>、
                   <span class="inline-code">computed()</span>、
                   <span class="inline-code">effect()</span>、
-                  <span class="inline-code">islandEffect()</span>。
-                  浏览器原生 <span class="inline-code">Signal</span> 条件回退。
+                  <span class="inline-code">islandEffect()</span>。 浏览器原生 <span class="inline-code"
+                  >Signal</span> 条件回退。
                 </td>
               </tr>
               <tr>
@@ -99,8 +99,7 @@ export class RoadmapPage extends LitElement {
                 <td>
                   <span class="inline-code">navigate()</span>、
                   <span class="inline-code">onNavigate()</span>、
-                  <span class="inline-code">matchRoute()</span>。
-                  URLPattern + regex fallback。
+                  <span class="inline-code">matchRoute()</span>。 URLPattern + regex fallback。
                 </td>
               </tr>
               <tr>
@@ -132,8 +131,8 @@ export class RoadmapPage extends LitElement {
                 <td>Quick Wins</td>
                 <td>✅ Done</td>
                 <td>
-                  <span class="inline-code">prefers-color-scheme</span>、escapeHtml 统一、
-                  语义化 HTML、CSS 去重。
+                  <span class="inline-code">prefers-color-scheme</span>、escapeHtml 统一、 语义化
+                  HTML、CSS 去重。
                 </td>
               </tr>
             </tbody>
@@ -153,13 +152,12 @@ export class RoadmapPage extends LitElement {
             <span class="status">v0.6.0-alpha.1 done</span>
             <h3>DSD + Island Architecture + Signals + Web Standards</h3>
             <p>
-              Declarative Shadow DOM SSR、Safe/Unsafe HTML 品牌类型、L2 嵌套 DSD 递归渲染、
-              CSS Custom Properties 主题系统（替代 _propagateTheme DOM 遍历）、Island 懒加载策略、
-              TC39 signal-polyfill 二开（signal/computed/effect/islandEffect）、
-              DSD 规范对齐（delegatesFocus/serializable/slotAssignment/scopedRegistry）、
-              Form-Associated CE + ElementInternals + :state()、Navigation API + URLPattern、
-              Speculative Loading、dialog/popover + inert、Island Mixin。
-              322 测试通过，deno lint 零警告。
+              Declarative Shadow DOM SSR、Safe/Unsafe HTML 品牌类型、L2 嵌套 DSD 递归渲染、 CSS Custom
+              Properties 主题系统（替代 _propagateTheme DOM 遍历）、Island 懒加载策略、 TC39
+              signal-polyfill 二开（signal/computed/effect/islandEffect）、 DSD
+              规范对齐（delegatesFocus/serializable/slotAssignment/scopedRegistry）、 Form-Associated CE +
+              ElementInternals + :state()、Navigation API + URLPattern、 Speculative
+              Loading、dialog/popover + inert、Island Mixin。 322 测试通过，deno lint 零警告。
             </p>
           </div>
 
@@ -167,8 +165,8 @@ export class RoadmapPage extends LitElement {
             <span class="status">v0.6.x — in progress</span>
             <h3>v0.6 Stabilization</h3>
             <p>
-              alpha 反馈收集、回归测试增强、文档补全。v0.6.0 正式版发布前需要验证所有新增 Web
-              Standards 功能在真实应用中的表现。
+              alpha 反馈收集、回归测试增强、文档补全。v0.6.0 正式版发布前需要验证所有新增 Web Standards
+              功能在真实应用中的表现。
             </p>
           </div>
 
