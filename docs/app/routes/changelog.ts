@@ -119,6 +119,58 @@ export class ChangelogPage extends LitElement {
 
           <div class="version-section">
             <div class="version-header">
+              <span class="version-number">0.6.0</span>
+              <span class="version-date">2026-05-06</span>
+            </div>
+            <div class="change-category added">
+              <h4>新增</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>L2 Nested DSD</strong>：<span class="inline-code">renderDSD()</span>
+                  现在递归渲染嵌套 Custom Element。页面组件模版中的
+                  <span class="inline-code">&lt;less-layout&gt;</span>、
+                  <span class="inline-code">&lt;less-theme-toggle&gt;</span> 等子组件
+                  都会生成 <span class="inline-code">&lt;template shadowrootmode="open"&gt;</span>，
+                  不需要等 JS 升级就能渲染 Shadow DOM。
+                </li>
+                <li>
+                  <strong>Sidebar SSR 首次渲染</strong>：less-layout 的 sidebar/header/footer
+                  在 HTML 中静态存在，全部 CSS 在 DSD 模版内，不依赖 client JS 加载。
+                </li>
+              </ul>
+            </div>
+            <div class="change-category changed">
+              <h4>变更</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>@lessjs/core 升至 0.6.0</strong>：包含 L2 Nested DSD 实现。
+                  其他包版本根据自身情况独立管理。
+                </li>
+              </ul>
+            </div>
+            <div class="change-category fixed">
+              <h4>修复</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>首页 content 被 sidebar BFC 裁剪</strong>：<span class="inline-code">:host([home]) .docs-sidebar { width:0; overflow:hidden }</span>
+                  创建的 BFC 会裁剪相邻 flex 子项。改为条件渲染：home 时不渲染 desktop sidebar，
+                  移动端用独立 <span class="inline-code">mobile-sidebar-overlay</span> overlay。
+                </li>
+                <li>
+                  <strong>sidebar 样式不依赖 JS</strong>：less-layout 无 DSD 时 sidebar CSS 只在 JS 中，
+                  Cloudflare Rocket Loader / SW 缓存导致 sidebar 完全无样式。
+                  DSD 将全部 CSS 静态写入 HTML。
+                </li>
+                <li>
+                  <strong>仓库迁移</strong>：<span class="inline-code">SisyphusZheng/kiss</span>
+                  → <span class="inline-code">lessjs-run/lessjs</span>，remote 已更新。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="version-section">
+            <div class="version-header">
               <span class="version-number">0.5.5</span>
               <span class="version-date">2026-05-06</span>
             </div>

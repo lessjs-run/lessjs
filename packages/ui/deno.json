@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/ui",
-  "version": "0.6.0",
+  "version": "0.5.5",
   "exports": {
     ".": "./dist/index.js",
     "./less-button": "./dist/less-button.js",
