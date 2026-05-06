@@ -165,6 +165,31 @@ export class ChangelogPage extends LitElement {
                   <strong>仓库迁移</strong>：<span class="inline-code">SisyphusZheng/kiss</span>
                   → <span class="inline-code">lessjs-run/lessjs</span>，remote 已更新。
                 </li>
+                <li>
+                  <strong>renderNestedCustomElements 三个关联 bug</strong>（<span class="inline-code">render-dsd.ts</span> +
+                  <span class="inline-code">runtime-shim.ts</span>）：
+                  <ol style="margin:0.5rem 0;padding-left:1.5rem;color:var(--less-text-secondary);font-size:0.875rem">
+                    <li style="padding:0.25rem 0">
+                      <strong>两阶段替换重叠</strong>：旧代码先收集所有 CE 位置再批量替换，当父 CE（less-layout）范围
+                      包含子 CE（code-block）时，子替换导致字符串索引偏移，父替换在错误位置截断 CSS。
+                      修复为迭代式逐个处理：找最深 CE → 渲染 → 更新字符串 → 重复。
+                    </li>
+                    <li style="padding:0.25rem 0">
+                      <strong>Shadow DOM 内容被当作 Light DOM 处理</strong>：旧代码扫描
+                      <span class="inline-code">&lt;template shadowrootmode="open"&gt;</span>
+                      内部的标签名，导致 <span class="inline-code">&lt;style&gt;</span> 中的文本被误解析，
+                      CSS 被截断（如 <span class="inline-code">border-radius</span> 后面跟
+                      <span class="inline-code">&lt;code-block&gt;</span>）。
+                      修复为 <span class="inline-code">findTemplateShadowRanges()</span> 跳过 shadow DOM 范围。
+                    </li>
+                    <li style="padding:0.25rem 0">
+                      <strong>alreadyHasDSD 误判</strong>：用 <span class="inline-code">.includes()</span>
+                      检查整个元素内容是否含 DSD template，Light DOM 子元素（code-block）已有 DSD 就导致
+                      父元素（less-layout）被跳过，不生成 DSD。
+                      修复为只检查 open tag 后的第一个子节点是否为 DSD template。
+                    </li>
+                  </ol>
+                </li>
               </ul>
             </div>
           </div>
