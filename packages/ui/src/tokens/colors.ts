@@ -116,20 +116,16 @@ function declarations(values: Readonly<Record<string, string>>): string {
  */
 export const lessColorTokens = css`
   :host {
-    /* Colors inherit from :root via CSS custom property cascade.
-       These fallbacks only activate when :root has no theme injected
-       (standalone component usage without LessJS head styles). */
-    --less-bg-base: initial;
-    --less-bg-surface: initial;
-    --less-bg-elevated: initial;
-    --less-border: initial;
-    --less-text-primary: initial;
-    --less-text-secondary: initial;
-    --less-text-tertiary: initial;
-    --less-text-muted: initial;
-    --less-accent: initial;
-    --less-accent-subtle: initial;
-    --less-code-bg: initial;
+    /* v0.6: Color tokens inherit from :root via CSS custom property cascade.
+       DO NOT redeclare them on :host — that breaks inheritance!
+       Setting --less-bg-base: initial would make var(--less-bg-base) invalid
+       inside the shadow root, because 'initial' for custom properties means
+       "guaranteed-invalid value", NOT "inherit from parent".
+
+       For standalone usage (without LessJS head styles), the page must
+       inject lessRootColorCSS into <head> — this is the expected setup.
+       If tokens are missing, var() references without fallbacks will simply
+       not apply, which is acceptable for standalone mode. */
     color-scheme: light dark;
   }
 `;

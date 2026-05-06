@@ -7,6 +7,11 @@ export default class DocsHome extends LitElement {
   static override styles = css`
     :host {
       display: block;
+      min-height: 100vh;
+    }
+
+    less-layout {
+      min-height: 100vh;
     }
 
     .hero {
