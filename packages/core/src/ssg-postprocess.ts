@@ -228,6 +228,53 @@ export function injectCspMeta(
  * Vite-built client entry, not inline scripts. This function catches any
  * residual source path references left by older generated HTML fixtures.
  */
+/**
+ * Inject inline layout styles into all HTML files.
+ *
+ * less-layout is a Lit component without DSD in SSR output,
+ * so its shadow DOM CSS only appears after JS executes.
+ * This injects the layout CSS into the HTML <head> so the
+ * header, sidebar, footer are styled immediately.
+ */
+export function injectLayoutStyles(dir: string): void {
+  const style = [
+    '<style id="less-layout-inline">',
+    'less-layout{display:block}',
+    'less-layout .app-layout{display:flex;flex-direction:column;min-height:100vh;background:var(--less-bg-base);color:var(--less-text-primary)}',
+    'less-layout .layout-body{display:flex;flex:1}',
+    'less-layout .layout-main{flex:1;min-width:0}',
+    'less-layout .app-layout[home] .layout-body{display:block}',
+    'less-layout .app-header{position:sticky;top:0;z-index:200;background:var(--less-bg-base);border-bottom:0.5px solid var(--less-border)}',
+    'less-layout .header-inner{max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;height:56px;gap:1.25rem}',
+    'less-layout .docs-sidebar{width:clamp(200px,20vw,280px);flex-shrink:0;border-right:0.5px solid var(--less-border);padding:1.25rem 0;overflow-y:auto;height:calc(100vh - 56px);position:sticky;top:56px}',
+    'less-layout .nav-section{margin-bottom:1.25rem}',
+    'less-layout .docs-sidebar a{display:block;color:var(--less-text-tertiary);text-decoration:none;font-size:0.75rem;padding:0.3rem 1rem;border-left:1px solid transparent}',
+    'less-layout .docs-sidebar a:hover{color:var(--less-text-primary);background:var(--less-accent-subtle)}',
+    "less-layout .docs-sidebar a[aria-current='page']{color:var(--less-text-primary);border-left-color:var(--less-text-primary);background:var(--less-accent-subtle)}",
+    'less-layout .app-footer footer{padding:2rem;border-top:0.5px solid var(--less-border);text-align:center;color:var(--less-text-muted);font-size:0.6875rem;background:var(--less-bg-base)}',
+    '@media(max-width:900px){',
+    'less-layout .layout-main{width:100%}',
+    'less-layout .header-inner{padding:0 0.75rem;gap:0.75rem}',
+    'less-layout .docs-sidebar a{padding:0.3rem 0.75rem 0.3rem 1.5rem}',
+    '}',
+    '</style>',
+  ].join('');
+
+  const entries = readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      injectLayoutStyles(fullPath);
+    } else if (entry.name.endsWith('.html')) {
+      let content = readFileSync(fullPath, 'utf-8');
+      if (!content.includes('id="less-layout-inline"')) {
+        content = insertAfterHead(content, style);
+        writeFileSync(fullPath, content, 'utf-8');
+      }
+    }
+  }
+}
+
 export function rewriteHtmlFiles(
   dir: string,
   islandChunkMap: Record<string, string>,

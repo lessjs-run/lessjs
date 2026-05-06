@@ -338,7 +338,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
       }
 
       // Post-process: rewrite island paths (fallback for any inline references)
-      const { buildIslandChunkMap, rewriteHtmlFiles, injectCspMeta } = await import(
+      const { buildIslandChunkMap, rewriteHtmlFiles, injectCspMeta, injectLayoutStyles } = await import(
         '../ssg-postprocess.js'
       );
       const islandChunkMap = buildIslandChunkMap(root, outDir, islandTagNames, basePath);
@@ -360,6 +360,11 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         );
         console.log('[LessJS SSG] CSP meta tag injected into static HTML');
       }
+
+      // Inject inline layout styles so less-layout header/sidebar/footer
+      // are styled immediately without waiting for JS.
+      injectLayoutStyles(outputDir);
+      console.log('[LessJS SSG] Layout styles injected into static HTML');
 
       // Build observability: full manifest with HTML pages + budget warnings
       const { printBuildManifest } = await import('../build-manifest.js');
