@@ -115,7 +115,7 @@ function isNothing(value: unknown): boolean {
 // NOTE: Use @lessjs/core/render-dsd (not @lessjs/core) to avoid pulling in the
 // entire core dependency graph (Hono, Vite, etc.) when Vite SSR loads this module.
 export { escapeAttr, escapeHtml } from '@lessjs/core/render-dsd';
-import { escapeAttr, escapeHtml } from '@lessjs/core/render-dsd';
+import { escapeAttr, escapeHtml, type RenderAdapter } from '@lessjs/core/render-dsd';
 // Import registerAdapter from @lessjs/core/less-runtime so it shares the same
 // module scope as renderDSD when loaded through Vite SSR — no globalThis bridge needed.
 import { registerAdapter } from '@lessjs/core/less-runtime';
@@ -131,7 +131,7 @@ function startsWithCustomElement(html: string): boolean {
  *  Input: `<custom-element[attrs]><template shadowrootmode="open">CONTENT</template></custom-element>`
  *  Returns: `custom-element[attrs]` (the tag + attributes)
  */
-function extractCeTag(dsdHtml: string): string | null {
+function _extractCeTag(dsdHtml: string): string | null {
   const trimmed = dsdHtml.trimStart();
   const match = trimmed.match(/^<([a-z][a-z0-9]*-[a-z0-9-]+)[^>]*>/);
   return match ? match[0] : null;
@@ -457,6 +457,6 @@ export function installLitAdapter(): void {
  * default behavior (only accepting string from render()).
  */
 export function uninstallLitAdapter(): void {
-  registerAdapter(undefined as any); // Clear adapter
+  registerAdapter(undefined as unknown as RenderAdapter); // Clear adapter
   _litAdapterInstalled = false;
 }

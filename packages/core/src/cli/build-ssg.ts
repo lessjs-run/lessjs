@@ -344,7 +344,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
       const { buildIslandChunkMap, injectCspMeta, injectLayoutStyles } = await import(
         '../ssg-postprocess.js'
       );
-      const islandChunkMap = buildIslandChunkMap(root, outDir, islandTagNames, basePath);
+      const _islandChunkMap = buildIslandChunkMap(root, outDir, islandTagNames, basePath);
 
       // Post-process: inject CSP <meta> tag into static HTML files.
       // SSG outputs static files — CSP nonces are not possible here,

@@ -88,8 +88,8 @@ Deno.test('create-less: deno.json maps Lit and package imports explicitly', () =
   assertEquals(denoJson.imports['lit-element'], 'npm:lit-element@^4');
   assertEquals(denoJson.imports['lit-html'], 'npm:lit-html@^3');
   assertEquals(denoJson.imports.vite, 'npm:vite@8.0.10');
-  // @lit-labs/ssr-dom-shim removed in v0.6 — no longer needed
-  assertEquals(denoJson.imports['@lit-labs/ssr-dom-shim'], undefined);
+  // @lit-labs/ssr-dom-shim required by @lit/reactive-element in Vite SSR
+  assertEquals(denoJson.imports['@lit-labs/ssr-dom-shim'], 'npm:@lit-labs/ssr-dom-shim@^1.5.0');
   assertExists(denoJson.imports['@lessjs/adapter-lit'].includes('0.3.0'));
   assertExists(denoJson.imports['@lessjs/core'].includes('0.6.0'));
   assertExists(denoJson.imports['@lessjs/core/less-runtime'].includes('0.6.0'));

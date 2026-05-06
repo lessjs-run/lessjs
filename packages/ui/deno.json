@@ -2,44 +2,30 @@
   "name": "@lessjs/ui",
   "version": "0.6.0",
   "exports": {
-    ".": "./dist/index.js",
-    "./less-button": "./dist/less-button.js",
-    "./less-card": "./dist/less-card.js",
-    "./less-input": "./dist/less-input.js",
-    "./less-code-block": "./dist/less-code-block.js",
-    "./less-layout": "./dist/less-layout.js",
-    "./less-theme-toggle": "./dist/less-theme-toggle.js",
-    "./less-hero-ping": "./dist/less-hero-ping.js",
-    "./less-dialog": "./dist/less-dialog.js",
-    "./less-ui-plugin": "./dist/less-ui-plugin.js",
-    "./design-tokens": "./dist/design-tokens.js",
-    "./tokens/colors": "./dist/tokens/colors.js",
-    "./tokens/color-values": "./dist/tokens/color-values.js"
+    ".": "./src/index.ts",
+    "./less-button": "./src/less-button.ts",
+    "./less-card": "./src/less-card.ts",
+    "./less-input": "./src/less-input.ts",
+    "./less-code-block": "./src/less-code-block.ts",
+    "./less-layout": "./src/less-layout.ts",
+    "./less-theme-toggle": "./src/less-theme-toggle.ts",
+    "./less-hero-ping": "./src/less-hero-ping.ts",
+    "./less-dialog": "./src/less-dialog.ts",
+    "./less-ui-plugin": "./src/less-ui-plugin.ts",
+    "./design-tokens": "./src/design-tokens.ts",
+    "./tokens/colors": "./src/tokens/colors.ts",
+    "./tokens/color-values": "./src/tokens/color-values.ts"
   },
-  "tasks": {
-    "build": "deno run -A npm:vite build --config vite.config.build.ts",
-    "dev": "deno run -A npm:vite build --config vite.config.build.ts --watch"
+  "imports": {
+    "lit": "npm:lit@^3.2.0",
+    "@lessjs/core": "../core/src/index.ts"
+  },
+  "publish": {
+    "include": ["src/**", "deno.json", "LICENSE"]
   },
   "compilerOptions": {
     "skipLibCheck": true
   },
-  "imports": {
-    "lit": "npm:lit@^3.2.0",
-    "vite": "npm:vite@8.0.10",
-    "vite-plugin-dts": "npm:vite-plugin-dts@^4.5.0",
-    "@types/node": "npm:@types/node@^22.0.0"
-  },
-  "publish": {
-    "include": [
-      "dist/**",
-      "deno.json",
-      "LICENSE"
-    ],
-    "exclude": [
-      "node_modules",
-      "!dist",
-      "!dist/**",
-      "src"
-    ]
-  }
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

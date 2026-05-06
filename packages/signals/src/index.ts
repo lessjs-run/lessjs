@@ -24,6 +24,7 @@
 
 // ─── Engine Layer: TC39 Signal Primitives ────────────────────────
 // Use native Signal if available, otherwise polyfill.
+// deno-lint-ignore-file no-explicit-any
 // The polyfill is inlined below; when browsers ship native Signal,
 // the polyfill code will be tree-shaken away.
 
@@ -57,7 +58,7 @@ const _engine: SignalEngineNamespace = _createPolyfill();
 
 // ─── Polyfill Implementation ─────────────────────────────────────
 
-const SIGNAL = Symbol('SIGNAL');
+const _SIGNAL = Symbol('SIGNAL');
 const NODE = Symbol('node');
 
 interface ReactiveNode {
@@ -78,7 +79,7 @@ interface ReactiveNode {
   consumerOnSignalRead(node: unknown): void;
   watched?(): void;
   unwatched?(): void;
-  wrapper?: any;
+  wrapper?: unknown;
 }
 
 interface SignalNode<T> extends ReactiveNode {
@@ -508,7 +509,7 @@ export type Signal<T> = WritableSignal<T> | ReadonlySignal<T>;
  */
 export function signal<T>(initialValue: T): WritableSignal<T> {
   const state = new _engine.State(initialValue);
-  let _subVersion = 0;
+  const _subVersion = 0;
 
   return {
     get value(): T {

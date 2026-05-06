@@ -515,7 +515,7 @@ function alreadyHasDSD(html: string, openEnd: number, _closeIdx: number): boolea
  *   - static slotAssignment = 'manual' → shadowrootslotassignment="manual"
  *   - static customElementRegistry → shadowrootcustomelementregistry
  */
-function inferDsdOptions(tagName: string, cls: CustomElementConstructor): DsdOptions {
+function inferDsdOptions(_tagName: string, cls: CustomElementConstructor): DsdOptions {
   const opts: DsdOptions = {};
   const proto = cls as unknown as Record<string, unknown>;
 

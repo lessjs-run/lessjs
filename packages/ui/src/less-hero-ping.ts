@@ -8,7 +8,7 @@ export const tagName = 'less-hero-ping';
 export default class HeroPing extends LitElement {
   static override properties = { apiUrl: { type: String, attribute: 'api-url' } };
 
-  static override styles = css`
+  static override styles: ReturnType<typeof css> = css`
     :host {
       display: inline-flex;
       align-items: center;
@@ -90,7 +90,7 @@ export default class HeroPing extends LitElement {
     this._fetch();
   }
 
-  _fetch = async () => {
+  _fetch = async (): Promise<void> => {
     this._state = 'loading';
     this._msg = '';
     this.requestUpdate();
@@ -109,7 +109,7 @@ export default class HeroPing extends LitElement {
     }
   };
 
-  override render() {
+  override render(): unknown {
     const dotClass = `dot ${this._state}`;
     return html`
       <span class="${dotClass}"></span>

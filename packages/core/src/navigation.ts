@@ -43,6 +43,7 @@ interface Navigation {
   ): void;
 }
 
+// deno-lint-ignore no-var
 declare var navigation: Navigation | undefined;
 
 /** Check if Navigation API is available */
@@ -77,7 +78,7 @@ export function navigate(url: string, options?: { replace?: boolean }): void {
       history.pushState(null, '', url);
     }
     // Dispatch popstate for listeners (History API doesn't fire it on pushState)
-    window.dispatchEvent(new PopStateEvent('popstate'));
+    globalThis.dispatchEvent(new PopStateEvent('popstate'));
   }
 }
 
@@ -111,10 +112,10 @@ export function onNavigate(callback: NavigationCallback): () => void {
   } else {
     // Fallback: popstate
     const handler = () => {
-      callback(new URL(window.location.href), 'push');
+      callback(new URL(globalThis.location.href), 'push');
     };
-    window.addEventListener('popstate', handler);
-    return () => window.removeEventListener('popstate', handler);
+    globalThis.addEventListener('popstate', handler);
+    return () => globalThis.removeEventListener('popstate', handler);
   }
 }
 

@@ -61,7 +61,7 @@ import { generateRootColorCSS } from './color-values.js';
  * Theme switching only needs to update `data-theme` on `:root` — the CSS
  * cascade handles propagation into all shadow roots automatically.
  */
-export const lessColorTokens = css`
+export const lessColorTokens: ReturnType<typeof css> = css`
   :host {
     /* v0.6: Color tokens inherit from :root via CSS custom property cascade.
       DO NOT redeclare them on :host — that breaks inheritance!
@@ -96,4 +96,4 @@ export const lessColorTokens = css`
  * }
  * ```
  */
-export const lessRootColorCSS = generateRootColorCSS();
+export const lessRootColorCSS: string = generateRootColorCSS();

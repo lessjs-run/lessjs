@@ -10,7 +10,8 @@
 import { join, resolve } from 'node:path';
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 // DRY: Color token values from single source of truth (zero lit dependency)
-import { generateRootColorCSS } from '../../ui/src/tokens/color-values.js';
+// JSR requires bare specifiers for cross-package imports
+import { generateRootColorCSS } from '@lessjs/ui/tokens/color-values';
 
 // ─── HTML Insertion Helpers ────────────────────────────────────────────
 

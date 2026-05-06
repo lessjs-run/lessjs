@@ -141,8 +141,8 @@ export class LessThemeToggle extends LitElement {
         if (!resolved) {
           // v0.6': Respect user's OS-level preference via prefers-color-scheme
           // Per CSS Media Queries Level 5 §4.2
-          if (typeof window !== 'undefined' && window.matchMedia) {
-            const prefersLight = window.matchMedia('(prefers-color-scheme: light)');
+          if (typeof globalThis !== 'undefined' && globalThis.matchMedia) {
+            const prefersLight = globalThis.matchMedia('(prefers-color-scheme: light)');
             this._isLight = prefersLight.matches;
           }
           // else: default to dark (already set in constructor)

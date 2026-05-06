@@ -1,4 +1,4 @@
-name: Publish to JSR + npm
+name: Publish to JSR
 
 on:
   push:
@@ -22,10 +22,6 @@ jobs:
       - name: Install dependencies
         run: deno install --node-modules-dir
 
-      - name: Build @lessjs/ui
-        working-directory: packages/ui
-        run: deno task build
-
       - name: Publish to JSR (missing versions only)
         shell: bash
         run: |
@@ -46,52 +42,10 @@ jobs:
             (cd "$dir" && deno publish -c deno.json --allow-dirty)
           }
 
+          # Publish in dependency order: rpc → ui → adapter-lit → signals → core → create
           publish_if_missing "@lessjs/rpc" "packages/rpc"
           publish_if_missing "@lessjs/ui" "packages/ui"
           publish_if_missing "@lessjs/adapter-lit" "packages/adapter-lit"
+          publish_if_missing "@lessjs/signals" "packages/signals"
           publish_if_missing "@lessjs/core" "packages/core"
           publish_if_missing "@lessjs/create" "packages/create"
-
-      - name: Publish to npm (dnt transform)
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          if [ -z "${NPM_TOKEN:-}" ]; then
-            echo "NPM_TOKEN not set; skipping npm publish."
-            exit 0
-          fi
-
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-
-          publish_npm() {
-            local dir="$1"
-            local pkg="$2"
-            local version
-            version="$(sed -n 's/.*"version": "\([^"]*\)".*/\1/p' "$dir/deno.json" | head -n 1)"
-
-            # Check if version already exists on npm
-            if npm view "${pkg}@${version}" version >/dev/null 2>&1; then
-              echo "[npm] ${pkg}@${version} already exists; skipping."
-              return 0
-            fi
-
-            echo "[npm] Building ${pkg}@${version}"
-            # Must cd into the package dir so dnt resolves ./src/index.ts
-            # against the package deno.json, not the workspace root.
-            (cd "$dir" && deno run -A --config deno.json _build_npm.ts)
-
-            echo "[npm] Publishing ${pkg}@${version}"
-            cd "$dir/npm"
-            npm publish --access public
-            cd "$OLDPWD"
-          }
-
-          # Publish in dependency order: rpc → ui → adapter-lit → core → create
-          publish_npm "packages/rpc" "@lessjs/rpc"
-          publish_npm "packages/ui" "@lessjs/ui"
-          publish_npm "packages/adapter-lit" "@lessjs/adapter-lit"
-          publish_npm "packages/core" "@lessjs/core"
-          publish_npm "packages/create" "@lessjs/create"

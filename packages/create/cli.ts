@@ -20,6 +20,7 @@ node_modules/
     "@lit/reactive-element": "npm:@lit/reactive-element@^2",
     "lit-element": "npm:lit-element@^4",
     "lit-html": "npm:lit-html@^3",
+    "@lit-labs/ssr-dom-shim": "npm:@lit-labs/ssr-dom-shim@^1.5.0",
     "vite": "npm:vite@8.0.10",
     "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^0.3.0",
     "@lessjs/core": "jsr:@lessjs/core@^0.6.0",

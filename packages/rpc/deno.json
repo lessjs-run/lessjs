@@ -5,8 +5,7 @@
     ".": "./src/index.ts"
   },
   "tasks": {
-    "build": "deno run -A npm:vite build --config vite.config.build.ts",
-    "dev": "deno run -A npm:vite build --config vite.config.build.ts --watch"
+    "build": "deno check src/index.ts"
   },
   "publish": {
     "include": ["src/**", "deno.json", "LICENSE"]

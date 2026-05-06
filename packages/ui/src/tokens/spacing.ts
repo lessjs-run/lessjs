@@ -8,7 +8,7 @@
 import { css } from 'lit';
 
 /** Spacing & layout CSS custom properties */
-export const lessSpacingTokens = css`
+export const lessSpacingTokens: ReturnType<typeof css> = css`
   :host {
     /* === Spacing Scale (4px base unit) === */
     --less-size-1: 0.25rem; /* 4px */

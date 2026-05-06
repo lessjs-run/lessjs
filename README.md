@@ -73,13 +73,13 @@ Custom Elements。
 
 ## 包
 
-| 包                    | 职责                                               | 当前版本 |
-| --------------------- | -------------------------------------------------- | -------- |
+| 包                    | 职责                                               | 当前版本      |
+| --------------------- | -------------------------------------------------- | ------------- |
 | `@lessjs/core`        | Vite 插件、路由扫描、DSD 渲染、SSG 管线            | 0.6.0-alpha.1 |
-| `@lessjs/ui`          | 基于 Lit 的 Web Component 组件库和 package islands | 0.6.0    |
-| `@lessjs/rpc`         | 轻量 fetch/RPC controller 工具                     | 0.3.1    |
-| `@lessjs/adapter-lit` | 可选 Lit SSR 适配器                                | 0.3.0    |
-| `@lessjs/create`      | 项目脚手架 CLI                                     | 0.4.7    |
+| `@lessjs/ui`          | 基于 Lit 的 Web Component 组件库和 package islands | 0.6.0         |
+| `@lessjs/rpc`         | 轻量 fetch/RPC controller 工具                     | 0.3.1         |
+| `@lessjs/adapter-lit` | 可选 Lit SSR 适配器                                | 0.3.0         |
+| `@lessjs/create`      | 项目脚手架 CLI                                     | 0.4.7         |
 | `@lessjs/signals`     | 响应式信号系统                                     | 0.6.0-alpha.1 |
 
 历史包 `@lessjs/vite` 和 `@lessjs/ssg` 已废弃。
