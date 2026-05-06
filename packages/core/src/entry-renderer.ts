@@ -192,7 +192,8 @@ function renderPageRoute(
   // v0.5.0: DSD renderer - no <!--lit-part--> markers, no old upgrade marker.
   // __ssr() uses renderDSD() which outputs standard DSD HTML.
   // Components receive route params as props for SSR-time data access.
-  b.push(`    const raw = await __ssr(tag, c.req.param())`);
+  // v0.6: Pass route/source context for error visibility.
+  b.push(`    const raw = await __ssr(tag, c.req.param(), { route: '${route.path}', source: '${route.filePath}' })`);
   b.push(`    const html = raw`);
   b.blank();
 
@@ -343,7 +344,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   // No old upgrade marker, no <!--lit-part-->, no client render ceremony needed.
   b.push('// SSR helper: render a registered custom element to DSD HTML');
   b.push('// Outputs standard DSD; no client render markers needed');
-  b.push('async function __ssr(tag, props = {}) {');
+  b.push('async function __ssr(tag, props = {}, sourceInfo = {}) {');
   b.push('  // Validate tag name — must be a valid Custom Element (contains hyphen)');
   b.push('  if (!tag || !tag.includes("-")) {');
   b.push(
@@ -355,7 +356,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   b.push('    console.warn("[LessJS] <" + tag + "> not registered — rendering empty")');
   b.push('    return `<${tag}></${tag}>`');
   b.push('  }');
-  b.push('  return renderDSD(tag, Cls, props)');
+  b.push('  return renderDSD(tag, Cls, props, sourceInfo)');
   b.push('}');
   b.blank();
 

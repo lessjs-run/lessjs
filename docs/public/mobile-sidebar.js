@@ -1,18 +1,17 @@
 // LessJS Mobile Sidebar — L2 (browser API)
 // Closes sidebar on backdrop click or nav link click (mobile).
 // Uses composedPath() to penetrate Shadow DOM.
-// deno-lint-ignore no-var no-inner-declarations
 if (typeof document !== 'undefined') {
   document.addEventListener('click', function (e) {
-    var target = e.target;
+    const target = e.target;
     if (!target || !(target instanceof Element)) return;
 
-    var path = e.composedPath();
-    var isBackdrop = false;
-    var isNavLink = false;
+    const path = e.composedPath();
+    let isBackdrop = false;
+    let isNavLink = false;
 
-    for (var i = 0; i < path.length; i++) {
-      var el = path[i];
+    for (let i = 0; i < path.length; i++) {
+      const el = path[i];
       if (!el.classList) continue;
       if (el.classList.contains('mobile-backdrop')) isBackdrop = true;
       if (
@@ -26,9 +25,9 @@ if (typeof document !== 'undefined') {
     if (!isBackdrop && !isNavLink) return;
 
     document.querySelectorAll('less-layout').forEach(function (el) {
-      var sr = el.shadowRoot;
+      const sr = el.shadowRoot;
       if (sr) {
-        var details = sr.querySelector('details.mobile-menu');
+        const details = sr.querySelector('details.mobile-menu');
         if (details && details.open) details.removeAttribute('open');
       }
     });

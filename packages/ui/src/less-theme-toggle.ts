@@ -155,66 +155,30 @@ export class LessThemeToggle extends LitElement {
       const theme = this._isLight ? 'light' : 'dark';
       // L2 EXEMPTION: document.documentElement.setAttribute and localStorage.setItem
       // are browser platform APIs (infrastructure). Not cross-Island dependencies.
+      //
+      // v0.6: CSS custom properties inherit through Shadow DOM automatically.
+      // Setting data-theme on :root is sufficient — no need to walk shadow roots
+      // calling _propagateTheme(). The CSS cascade handles theme propagation
+      // into all shadow roots via var() references.
       document.documentElement.setAttribute('data-theme', theme);
       try {
         localStorage.setItem('less-theme', theme);
       } catch {
         // Silently ignore — localStorage may be unavailable in private browsing
       }
-      // Propagate data-theme to all LessJS component host elements.
-      // Shadow DOM `:host([data-theme="light"])` selectors only match
-      // when the host element itself has the attribute — CSS custom
-      // properties declared on `:host` shadow the inherited `:root` values.
-      this._propagateTheme(theme);
+      // Also set data-theme on this host for matching :host([data-theme]) selectors
+      // in the component's own shadow boundary (for any remaining direct host selectors).
+      this.setAttribute('data-theme', theme);
     }
 
-    /** Propagate data-theme to all LessJS UI components in the document.
+    /** Propagate data-theme to the host element.
      *
-     * Uses convention-based selectors instead of a hardcoded tag list:
-     *   1. All elements with `less-` prefixed tag names (LessJS built-in components)
-     *   2. All elements with `[data-less]` attribute (user custom components)
-     *
-     * This ensures custom components using lessDesignTokens are also themed,
-     * without requiring the theme toggle to know about every component.
-     *
-     * Convention for user components:
-     * ```html
-     * <my-widget data-less>...</my-widget>
-     * ```
+     * v0.6: CSS custom properties on :root cascade into shadow DOM
+     * automatically via the platform's CSS inheritance model. We no
+     * longer need to walk all shadow roots setting data-theme.
+     * Only set data-theme on this host for direct :host([data-theme])
+     * selector matching within this component's own styles.
      */
-    private _propagateTheme(theme: string) {
-      // CRITICAL: document.querySelectorAll() does NOT pierce Shadow DOM.
-      // LessJS components like less-layout live inside other components' shadow roots
-      // (e.g. page-fullstack-demo's shadow root). We must recursively walk all
-      // shadow roots to find and update every LessJS component.
-      //
-      // I-CONSTRAINT ISOLATION: each element is wrapped in try/catch so that
-      // one Island's setAttribute failure does NOT prevent other Islands from
-      // receiving the theme update.
-      const propagate = (root: Document | ShadowRoot, depth = 0) => {
-        // Safety: limit recursion depth to avoid stack overflow on
-        // deeply nested component compositions
-        if (depth > 10) return;
-        root.querySelectorAll('*').forEach((el) => {
-          try {
-            const tag = el.tagName?.toLowerCase();
-            // All LessJS built-in components (less-* prefix)
-            if (tag?.startsWith('less-') || el.hasAttribute?.('data-less')) {
-              el.setAttribute('data-theme', theme);
-            }
-            // Recurse into shadow roots created by DSD and custom element upgrade
-            if (el.shadowRoot) {
-              propagate(el.shadowRoot, depth + 1);
-            }
-          } catch {
-            // Isolation: silently skip elements that fail (e.g. cross-origin,
-            // already disconnected, or Shadow DOM access restrictions).
-            // One Island's failure must not cascade to others.
-          }
-        });
-      };
-      propagate(document);
-    }
 
     override render(): TemplateResult {
       return html`

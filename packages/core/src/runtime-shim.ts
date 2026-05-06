@@ -5,6 +5,9 @@
  * modules. The LessJS plugin writes this small local file into `.less/` and
  * aliases `@lessjs/core/less-runtime` to it so generated SSR entries stay
  * package-manager agnostic.
+ *
+ * v0.6: Mirrors updated render-dsd.ts with error visibility, data-ssr-props,
+ * nested DSD, and slot/projection support.
  */
 
 export function createRuntimeShimCode(): string {
@@ -31,6 +34,11 @@ function escapeAttr(value) {
     .replace(/'/g, '&#39;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
+}
+
+function escapeAttrValue(value) {
+  if (value == null) return '';
+  return escapeAttr(String(value));
 }
 
 function serializeAttributes(props = {}) {
@@ -60,23 +68,150 @@ function isLitTemplateResultHeuristic(value) {
   return typeof value === 'object' && value !== null && '_$litType$' in value;
 }
 
-export async function renderDSD(tagName, componentClass, props = {}) {
+// ─── Nested DSD helpers (v0.6) ────────────────────────────────
+
+function kebabToCamel(str) {
+  return str.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+}
+
+function parseElementAttrs(attrsStr) {
+  const props = {};
+  const attrRegex = /(\\w[\\w-]*)(?:="((?:[^"\\\\]|\\\\.)*)"|='((?:[^'\\\\]|\\\\.)*)')?/g;
+  let match;
+  while ((match = attrRegex.exec(attrsStr)) !== null) {
+    const key = match[1];
+    const value = match[2] ?? match[3];
+    if (value === undefined) {
+      props[key] = true;
+    } else if (key.startsWith('data-')) {
+      props[key] = value;
+    } else {
+      props[kebabToCamel(key)] = value;
+    }
+  }
+  return props;
+}
+
+async function renderNestedCustomElements(html) {
+  if (!globalThis.customElements?.get) return html;
+
+  const ceOpenRegex = /<([a-z][a-z0-9]*-[a-z0-9-]+)([\\s\\S]*?)>/g;
+  const replacements = [];
+  const cePositions = [];
+
+  let match;
+  while ((match = ceOpenRegex.exec(html)) !== null) {
+    const tagName = match[1];
+    const attrsStr = match[2];
+    const openStart = match.index;
+    const openEnd = openStart + match[0].length;
+
+    if (replacements.some((r) => r.start <= openStart && r.end >= openEnd)) continue;
+
+    const Cls = globalThis.customElements.get(tagName);
+    if (!Cls) continue;
+
+    const selfClosing = attrsStr.trimEnd().endsWith('/');
+    if (selfClosing) {
+      cePositions.push({
+        tagName,
+        attrsStr: attrsStr.replace(/\\/\\s*\$/, ''),
+        start: openStart,
+        openEnd,
+        selfClosing: true,
+      });
+      continue;
+    }
+
+    const closeTag = \`</\${tagName}>\`;
+    const closeIdx = html.indexOf(closeTag, openEnd);
+    if (closeIdx === -1) continue;
+    const closeEnd = closeIdx + closeTag.length;
+
+    cePositions.push({
+      tagName,
+      attrsStr,
+      start: openStart,
+      openEnd,
+      closeEnd,
+      selfClosing: false,
+    });
+  }
+
+  cePositions.sort((a, b) => b.start - a.start);
+
+  for (const pos of cePositions) {
+    if (pos.selfClosing) {
+      const props = parseElementAttrs(pos.attrsStr);
+      const Cls = globalThis.customElements.get(pos.tagName);
+      const dsdHtml = await renderDSD(pos.tagName, Cls, props);
+      replacements.push({ start: pos.start, end: pos.openEnd, newHtml: dsdHtml });
+    } else {
+      const closeTag = \`</\${pos.tagName}>\`;
+      const closeIdx = html.indexOf(closeTag, pos.openEnd);
+      if (closeIdx === -1) continue;
+      const closeEnd = closeIdx + closeTag.length;
+      const fullContent = html.slice(pos.openEnd, closeIdx);
+      const renderedChildren = await renderNestedCustomElements(fullContent);
+
+      const Cls = globalThis.customElements.get(pos.tagName);
+      const props = parseElementAttrs(pos.attrsStr);
+      const dsdHtml = await renderDSD(pos.tagName, Cls, props);
+
+      const templateClose = '</template>';
+      const templateIdx = dsdHtml.lastIndexOf(templateClose);
+      if (templateIdx === -1) continue;
+
+      const childrenTrimmed = renderedChildren.trim();
+      if (!childrenTrimmed) {
+        replacements.push({ start: pos.start, end: closeEnd, newHtml: dsdHtml });
+      } else {
+        const before = dsdHtml.slice(0, templateIdx + templateClose.length);
+        const after = dsdHtml.slice(templateIdx + templateClose.length);
+        replacements.push({
+          start: pos.start,
+          end: closeEnd,
+          newHtml: before + '\\n  ' + renderedChildren + after,
+        });
+      }
+    }
+  }
+
+  if (replacements.length === 0) return html;
+  let result = html;
+  for (let i = replacements.length - 1; i >= 0; i--) {
+    const { start, end, newHtml } = replacements[i];
+    result = result.slice(0, start) + newHtml + result.slice(end);
+  }
+  return result;
+}
+
+// ─── Main renderDSD (v0.6) ────────────────────────────────────
+
+export async function renderDSD(tagName, componentClass, props = {}, sourceInfo) {
+  const sourceStr = sourceInfo
+    ? (sourceInfo.route ? \` route="\${sourceInfo.route}"\` : '') + (sourceInfo.source ? \` source="\${sourceInfo.source}"\` : '')
+    : '';
+
+  // 1. Instantiate
   let instance;
   try {
     instance = new componentClass();
   } catch (err) {
-    console.error(\`[LessJS] Failed to instantiate <\${tagName}>:\`, err);
-    return \`<\${tagName}><!-- render error --></\${tagName}>\`;
+    const errMsg = err instanceof Error ? err.message : String(err);
+    console.error(\`[LessJS] Failed to instantiate <\${tagName}>:\`, errMsg);
+    return \`<\${tagName}\${sourceStr}><!-- LessJS ERROR: Failed to instantiate <\${tagName}>: \${escapeHtml(errMsg)} -->\`
+      + (sourceInfo?.route ? \`\\n<!-- Route: \${escapeHtml(sourceInfo.route)} -->\` : '')
+      + (sourceInfo?.source ? \`\\n<!-- Source: \${escapeHtml(sourceInfo.source)} -->\` : '')
+      + \`</\${tagName}>\`;
   }
 
+  // 2. Set props
   for (const [key, value] of Object.entries(props)) {
-    try {
-      instance[key] = value;
-    } catch {
-      // Ignore read-only properties during SSR.
-    }
+    try { instance[key] = value; } catch { /* read-only */ }
   }
 
+  // 3. Render
   let content;
   try {
     const result = instance.render();
@@ -90,47 +225,53 @@ export async function renderDSD(tagName, componentClass, props = {}) {
       if (templateCheck && ssrRenderer && templateCheck(result)) {
         content = await ssrRenderer(result, tagName);
       } else {
-        console.error(
-          \`[LessJS] <\${tagName}> render() returned \${typeof result} instead of string. \` +
-            (isLitTemplateResultHeuristic(result)
-              ? 'This looks like a Lit TemplateResult; install @lessjs/adapter-lit to handle it.'
-              : 'Components must return a string from render().'),
-        );
-        content = \`<!-- render error: \${typeof result} returned, expected string -->\`;
+        const errDetail = isLitTemplateResultHeuristic(result)
+          ? 'This looks like a Lit TemplateResult; install @lessjs/adapter-lit to handle it.'
+          : \`Components must return a string from render(), got \${typeof result}.\`;
+        console.error(\`[LessJS] <\${tagName}> render() returned \${typeof result} instead of string. \${errDetail}\`);
+        content = \`<!-- LessJS ERROR: <\${tagName}> render() returned \${typeof result}, expected string. \${errDetail} -->\`;
       }
     }
   } catch (err) {
-    console.error(\`[LessJS] <\${tagName}> render() failed:\`, err);
-    content = '<!-- render error -->';
+    const errMsg = err instanceof Error ? err.message : String(err);
+    const errStack = err instanceof Error ? err.stack : '';
+    console.error(\`[LessJS] <\${tagName}> render() failed:\`, errMsg, errStack ? \`\\n\${errStack}\` : '');
+    content = \`<!-- LessJS ERROR: <\${tagName}> render() threw: \${escapeHtml(errMsg)} -->\\n\`
+      + (errStack ? \`<!-- Stack: \${escapeHtml(errStack.split('\\\\n').slice(0, 3).join(' | '))} -->\\n\` : '')
+      + '<!-- Check console for full error details -->';
   }
 
+  // Nested DSD (v0.6)
+  content = await renderNestedCustomElements(content);
+
+  // Styles extraction
   let styleCss = '';
   const stylesExtractor = getAdapterStylesExtractor();
   if (stylesExtractor) {
-    try {
-      styleCss = stylesExtractor(componentClass) || '';
-    } catch {
-      // Continue without extracted styles.
-    }
+    try { styleCss = stylesExtractor(componentClass) || ''; } catch { /* ignore */ }
   }
 
+  // data-ssr-props (v0.6)
   const attrs = serializeAttributes(props);
-  const styleTag = styleCss ? \`\\n    <style>\${styleCss}</style>\` : '';
-  return \`<\${tagName}\${attrs}>
+  const ssrPropsAttr = Object.keys(props).length > 0
+    ? \` data-ssr-props="\${escapeAttrValue(JSON.stringify(props))}"\`
+    : '';
+  const styleTag = styleCss ? \`\\\\n    <style>\${styleCss}</style>\` : '';
+  return \`<\${tagName}\${attrs}\${ssrPropsAttr}\${sourceStr}>
   <template shadowrootmode="open">\${styleTag}
     \${content}
   </template>
 </\${tagName}>\`;
 }
 
-export async function renderDSDByName(tagName, props = {}) {
+export async function renderDSDByName(tagName, props = {}, sourceInfo) {
   const cls = globalThis.customElements?.get(tagName);
   if (!cls) {
     console.warn(\`[LessJS] <\${tagName}> is not registered; rendering as void element\`);
     const attrs = serializeAttributes(props);
     return \`<\${tagName}\${attrs}></\${tagName}>\`;
   }
-  return await renderDSD(tagName, cls, props);
+  return await renderDSD(tagName, cls, props, sourceInfo);
 }
 
 export function wrapInDocument(html, options = {}) {
@@ -149,7 +290,7 @@ export function wrapInDocument(html, options = {}) {
   if (meta?.description) {
     metaTags.push(\`  <meta name="description" content="\${escapeAttr(meta.description)}">\`);
   }
-  const metaBlock = metaTags.length > 0 ? '\\n' + metaTags.join('\\n') + '\\n' : '';
+  const metaBlock = metaTags.length > 0 ? '\\\\n' + metaTags.join('\\\\n') + '\\\\n' : '';
   const devScripts = devMode
     ? \`
   <script type="module" src="/@vite/client"\${nonceAttr}></script>

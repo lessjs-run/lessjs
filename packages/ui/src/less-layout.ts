@@ -253,7 +253,17 @@ export class LessLayout extends LitElement {
           flex-shrink: 0;
         }
 
-        /* === Sidebar (Desktop) === */
+        /* === Sidebar: unified desktop/mobile (v0.6) ===
+         *
+         * v0.6: SINGLE .docs-sidebar for both desktop and mobile.
+         * - Desktop: position:sticky, border-right, always visible
+         * - Mobile: position:fixed, slides in from left via transform
+         * - Home page: hidden via width:0 (not display:none — preserves transform)
+         *
+         * This replaces the old dual-sidebar approach (.docs-sidebar for desktop
+         * + .mobile-sidebar-overlay for mobile) which caused duplicate content
+         * and inconsistent styling between breakpoints.
+         */
         .docs-sidebar {
           width: clamp(200px, 20vw, 280px);
           flex-shrink: 0;
@@ -264,6 +274,16 @@ export class LessLayout extends LitElement {
           position: sticky;
           top: var(--less-layout-header-height, 56px);
           scrollbar-width: thin;
+        }
+
+        /* Home page: hide sidebar while keeping box model alive for transitions.
+         * NOT display:none — that kills the box model and makes transform unusable. */
+        :host([home]) .docs-sidebar {
+          width: 0;
+          min-width: 0;
+          padding: 0;
+          overflow: hidden;
+          border-right: none;
         }
 
         .nav-section {
@@ -353,7 +373,12 @@ export class LessLayout extends LitElement {
           transition: opacity var(--less-transition-slow);
         }
 
-        /* === Mobile Responsive === */
+        /* === Mobile Responsive ===
+         *
+         * v0.6: Unified sidebar. On mobile, .docs-sidebar becomes a fixed overlay
+         * that slides in from the left via transform. No separate mobile sidebar
+         * overlay element — eliminates content duplication and style inconsistency.
+         */
         @media (max-width: 900px) {
           .mobile-menu {
             display: block;
@@ -393,31 +418,27 @@ export class LessLayout extends LitElement {
             transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: transform;
             box-shadow: none;
+            /* Desktop sticky properties are overridden by fixed */;
           }
 
-          /* Mobile overlay sidebar: always in DOM, shown/hidden by menu-open */
-          .mobile-sidebar-overlay {
-            display: none;
-            position: fixed;
-            top: var(--less-layout-header-height, 56px);
-            left: 0;
+          /* Home page on mobile: always hidden via transform + invisible */
+          :host([home]) .docs-sidebar {
             width: min(300px, 80vw);
-            height: calc(100vh - var(--less-layout-header-height, 56px));
-            z-index: 90;
-            background: var(--less-bg-base);
-            border-right: 0.5px solid var(--less-border);
+            min-width: auto;
             padding: var(--less-size-4) 0;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-          }
-
-          :host([menu-open]) .mobile-sidebar-overlay {
-            display: block;
+            border-right: 0.5px solid var(--less-border);
+            transform: translateX(-101%);
+            pointer-events: none;
+            visibility: hidden;
           }
 
           :host([menu-open]) .docs-sidebar {
             transform: translateX(0);
             box-shadow: var(--less-shadow-sidebar, 4px 0 24px rgba(0, 0, 0, 0.3));
+          }
+
+          :host([home][menu-open]) .docs-sidebar {
+            transform: translateX(-101%);
           }
 
           :host([menu-open]) .mobile-backdrop {
@@ -454,11 +475,6 @@ export class LessLayout extends LitElement {
           .app-footer p {
             line-height: 1.8;
           }
-        }
-
-        /* Mobile overlay sidebar: hidden on desktop, shown on mobile by menu-open */
-        .mobile-sidebar-overlay {
-          display: none;
         }
 
         @media (max-width: 480px) {
@@ -678,13 +694,15 @@ export class LessLayout extends LitElement {
       `;
     }
 
-    /** Mobile overlay sidebar: position fixed, shown/hidden by menu-open toggle */
-    private _renderMobileSidebar(): TemplateResult {
-      return html`
-        <nav class="mobile-sidebar-overlay" aria-label="Mobile navigation">
-          ${this._renderSidebarItems()}
-        </nav>
-      `;
+    /** Mobile overlay sidebar: position fixed, shown/hidden by menu-open toggle
+     * v0.6: Unified sidebar — the same .docs-sidebar is used for both desktop
+     * and mobile. On desktop it's position:sticky, on mobile it slides in
+     * via transform. No more separate mobile-sidebar-overlay (which caused
+     * duplication and inconsistent styling).
+     * @deprecated Use _renderSidebarNav() which now works for both.
+     */
+    private _renderMobileSidebar(): TemplateResult | typeof nothing {
+      return nothing;
     }
 
     /** Shared nav items for both desktop and mobile sidebar */

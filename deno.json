@@ -5,7 +5,8 @@
     "./packages/rpc",
     "./packages/ui",
     "./packages/adapter-lit",
-    "./packages/create"
+    "./packages/create",
+    "./packages/signals"
   ],
   "imports": {
     "lit": "npm:lit@^3.2.0",
@@ -43,7 +44,8 @@
     "publish:ui": "cd packages/ui && deno task build && deno publish --allow-dirty",
     "publish:adapter-lit": "cd packages/adapter-lit && deno publish --allow-dirty",
     "publish:create": "cd packages/create && deno publish --allow-dirty",
-    "publish": "deno task publish:rpc && deno task publish:ui && deno task publish:adapter-lit && deno task publish:core && deno task publish:create",
+    "publish:signals": "cd packages/signals && deno publish --allow-dirty",
+    "publish": "deno task publish:rpc && deno task publish:ui && deno task publish:adapter-lit && deno task publish:signals && deno task publish:core && deno task publish:create",
     "test": "deno test --allow-read --allow-write --allow-env --allow-net --allow-run",
     "test:watch": "deno test --allow-read --allow-write --allow-env --allow-net --allow-run --watch",
     "typecheck": "deno check **/*.ts",

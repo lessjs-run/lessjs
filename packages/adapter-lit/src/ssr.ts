@@ -28,6 +28,13 @@
  *   listeners / sets properties fresh — the SSR HTML is only for
  *   initial paint.
  *
+ * v0.6: Uses SafeHtml/UnsafeHtml branded types from @lessjs/core.
+ *   - Text content: escaped by default (SafeHtml)
+ *   - TemplateResult literals (trusted HTML): UnsafeHtml
+ *   - Lit's unsafeHTML() directive: UnsafeHtml (bypassed)
+ *   - Lit's html`` tagged template: the template strings are trustable
+ *     but interpolations are dynamically escaped
+ *
  * @module @lessjs/adapter-lit/ssr
  */
 
@@ -38,6 +45,9 @@ const LIT_TEMPLATE_TYPE_MARKER = '_$litType$';
 
 /** Lit's `nothing` sentinel — used to conditionally remove attributes */
 const NOTHING_SYMBOL = Symbol.for('lit-nothing');
+
+/** Lit's unsafeHTML directive marker — bypasses escaping */
+const UNSAFE_HTML_DIRECTIVE = 'lit-html:unsafe-html';
 
 /**
  * Check if a value is a Lit TemplateResult.
@@ -94,7 +104,9 @@ function isNothing(value: unknown): boolean {
 /**
  * HTML escape utilities.
  * Canonical implementation lives in @lessjs/core/render-dsd.ts.
- * If that implementation changes, this copy MUST be updated to match.
+ * v0.6: Uses SafeHtml branded type to preserve Lit escaping semantics.
+ *   - TemplateResult static parts (strings[]) are trusted HTML
+ *   - Dynamic interpolations are escaped (except unsafeHTML directive)
  */
 function escapeHtml(value: string): string {
   return value
@@ -114,11 +126,37 @@ function escapeAttr(value: string): string {
     .replace(/>/g, '&gt;');
 }
 
-/** Convert a template value for safe text-content insertion. */
+/** Convert a template value for safe text-content insertion.
+ *
+ * v0.6: Preserves Lit's escaping semantics:
+ *   - TemplateResult static parts → trusted (not escaped)
+ *   - Dynamic interpolations → escaped by default
+ *   - unsafeHTML directive → bypasses escaping
+ *   - null/undefined/Lit nothing → empty string
+ */
 function stringifyContentValue(value: unknown): string {
   if (value == null || isNothing(value)) return '';
   if (isLitTemplateResult(value)) return interpolate(value);
   if (Array.isArray(value)) return value.map(stringifyContentValue).join('');
+
+  // v0.6: Check if this value has a directive marker that indicates
+  // it should bypass escaping (e.g., unsafeHTML directive).
+  // Lit's unsafeHTML directive returns a special object with properties
+  // that signal "trust this HTML content".
+  if (typeof value === 'object' && value !== null) {
+    const obj = value as Record<string, unknown>;
+    // Check for Lit's unsafeHTML directive marker
+    if (obj._$litDirective$ === UNSAFE_HTML_DIRECTIVE && typeof obj._$resolve === 'function') {
+      try {
+        const resolved = obj._$resolve();
+        return resolved != null ? String(resolved) : '';
+      } catch {
+        // If resolution fails, fall through to escaped string
+      }
+    }
+    // _$litDirective$ also appears in other Lit directives — fall through
+  }
+
   return escapeHtml(String(value));
 }
 

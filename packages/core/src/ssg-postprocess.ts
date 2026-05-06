@@ -235,10 +235,58 @@ export function injectCspMeta(
  * so its shadow DOM CSS only appears after JS executes.
  * This injects the layout CSS into the HTML <head> so the
  * header, sidebar, footer are styled immediately.
+ *
+ * v0.6: Also injects :root theme CSS custom properties.
+ * Components no longer declare colors on :host — they inherit
+ * from :root via CSS custom property cascade. The root CSS is
+ * essential for theme switching without _propagateTheme().
  */
 export function injectLayoutStyles(dir: string): void {
+  // v0.6: Root color CSS custom properties for theme inheritance.
+  // These cascade into all shadow DOM components via var() references.
+  // No need for _propagateTheme() — CSS handles propagation.
+  const rootColorVars = [
+    ':root,[data-theme="light"]{',
+    '--less-bg-base:var(--gray-0);',
+    '--less-bg-surface:var(--gray-1);',
+    '--less-bg-elevated:var(--gray-2);',
+    '--less-border:var(--gray-3);',
+    '--less-border-hover:var(--gray-4);',
+    '--less-text-primary:var(--gray-12);',
+    '--less-text-secondary:var(--gray-8);',
+    '--less-text-tertiary:var(--gray-7);',
+    '--less-text-muted:var(--gray-6);',
+    '--less-accent:var(--gray-12);',
+    '--less-accent-dim:var(--gray-8);',
+    '--less-accent-subtle:var(--gray-2);',
+    '--less-code-bg:var(--gray-2);',
+    '--less-code-border:var(--gray-3);',
+    '--less-error:var(--red-7);',
+    'color-scheme:light;',
+    '}',
+    '[data-theme="dark"]{',
+    '--less-bg-base:var(--gray-12);',
+    '--less-bg-surface:var(--gray-11);',
+    '--less-bg-elevated:var(--gray-10);',
+    '--less-border:var(--gray-9);',
+    '--less-border-hover:var(--gray-8);',
+    '--less-text-primary:var(--gray-0);',
+    '--less-text-secondary:var(--gray-5);',
+    '--less-text-tertiary:var(--gray-7);',
+    '--less-text-muted:var(--gray-8);',
+    '--less-accent:var(--gray-0);',
+    '--less-accent-dim:var(--gray-4);',
+    '--less-accent-subtle:var(--gray-11);',
+    '--less-code-bg:var(--gray-10);',
+    '--less-code-border:var(--gray-9);',
+    '--less-error:var(--red-4);',
+    'color-scheme:dark;',
+    '}',
+  ].join('');
+
   const style = [
     '<style id="less-layout-inline">',
+    rootColorVars,
     'less-layout{display:block}',
     'less-layout .app-layout{display:flex;flex-direction:column;min-height:100vh;background:var(--less-bg-base);color:var(--less-text-primary)}',
     'less-layout .layout-body{display:flex;flex:1}',

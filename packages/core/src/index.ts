@@ -57,7 +57,22 @@ export {
 } from './ssg-postprocess.js';
 export { printBuildManifest, scanClientBuild, scanSSGOutput } from './build-manifest.js';
 export type { ArtifactInfo, BuildManifest } from './build-manifest.js';
-export { escapeHtml, renderDSD, renderDSDByName, wrapDsdDocument } from './render-dsd.js';
+export {
+  type SafeHtml,
+  type UnsafeHtml,
+  escapeHtml,
+  escapeAttr,
+  escapeAttrValue,
+  isSafeHtml,
+  isUnsafeHtml,
+  safeHtml,
+  unsafeHtml,
+  renderDSD,
+  renderDSDByName,
+  serializeAttributes,
+  wrapDsdDocument,
+} from './render-dsd.js';
+export { island, getSSRProps, lessBind, type IslandOptions } from './island.js';
 export { Hono } from 'hono';
 
 /**

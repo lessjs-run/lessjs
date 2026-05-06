@@ -4,11 +4,12 @@
  * Pure string-based Declarative Shadow DOM SSR renderer.
  * Framework-agnostic: no Lit dependency and no TemplateResult knowledge.
  *
- * LessJS Architecture (v0.5.0):
+ * LessJS Architecture (v0.6.0):
  * - Takes a registered Custom Element class + props and returns DSD HTML
  * - Components MUST implement render(): string
  * - Rendering is synchronous string concatenation; no DOM shim needed
  * - Framework adapters can hook into the pipeline via globalThis
+ * - Safe/Unsafe HTML contracts preserve Lit's escaping semantics
  *
  * SSR lifecycle:
  *   1. Instantiate component class
@@ -24,8 +25,58 @@
  *
  * @module @lessjs/core/render-dsd
  */
-/** Escape text content for safe HTML insertion */
-export function escapeHtml(str: string): string {
+
+// ─── L1: Safe/Unsafe HTML Contract (v0.6) ───────────────────────
+//
+// Branded types to enforce safe-vs-unsafe HTML at the type level.
+// - SafeHtml:  A string that has been HTML-escaped (safe for text content)
+// - UnsafeHtml: A string that is intentionally raw HTML (do not double-escape)
+//
+// Lit's tagged template literals preserve this distinction natively:
+//   html`<div>${userInput}</div>`   → text escaped (safe)
+//   html`<div>${unsafeHTML(html)}</div>` → bypasses escape (unsafe/trusted)
+//
+// For string-based DSD SSR, we encode this via branded string types.
+
+/** Branded type: a string that has been HTML-escaped (safe for text content) */
+export type SafeHtml = string & { readonly __safeHtml: unique symbol };
+
+/** Branded type: a string that is intentionally raw/untrusted HTML */
+export type UnsafeHtml = string & { readonly __unsafeHtml: unique symbol };
+
+/** Mark a string as safe (HTML-escaped) text content */
+export function safeHtml(value: string): SafeHtml {
+  return value as SafeHtml;
+}
+
+/** Mark a string as unsafe/raw HTML (will not be double-escaped) */
+export function unsafeHtml(value: string): UnsafeHtml {
+  return value as UnsafeHtml;
+}
+
+/** Check if a string is branded SafeHtml */
+export function isSafeHtml(value: unknown): value is SafeHtml {
+  return typeof value === 'string' && (value as SafeHtml).__safeHtml !== undefined;
+}
+
+/** Check if a string is branded UnsafeHtml */
+export function isUnsafeHtml(value: unknown): value is UnsafeHtml {
+  return typeof value === 'string' && (value as UnsafeHtml).__unsafeHtml !== undefined;
+}
+
+/**
+ * Escape a string for safe HTML text content insertion.
+ * If the input is already HTML-escaped (SafeHtml), return as-is.
+ * If the input is UnsafeHtml (raw HTML), return as-is (trusted).
+ * Otherwise, escape the string.
+ *
+ * This mirrors Lit's escaping semantics: by default all dynamic
+ * content is escaped, but explicit "unsafe" markers bypass escaping.
+ */
+export function escapeHtml(str: string | SafeHtml | UnsafeHtml): string {
+  if (typeof str !== 'string') return '';
+  if ((str as SafeHtml).__safeHtml !== undefined) return str;
+  if ((str as UnsafeHtml).__unsafeHtml !== undefined) return str;
   return str
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -133,9 +184,13 @@ export interface DsdComponent {
 /**
  * Render a single component to DSD HTML string.
  *
+ * v0.6: Error visibility — render failures point to tag/source in visible
+ * HTML comments and console warnings.
+ *
  * @param tagName - Custom element tag name (e.g. 'less-button')
  * @param componentClass - Registered Custom Element class constructor
  * @param props - Attribute/property key-value pairs
+ * @param sourceInfo - Optional context for error messages (route path, source file)
  * @returns Complete DSD HTML string
  *
  * @example
@@ -153,16 +208,25 @@ export async function renderDSD(
   tagName: string,
   componentClass: CustomElementConstructor,
   props: Record<string, unknown> = {},
+  sourceInfo?: { route?: string; source?: string },
 ): Promise<string> {
+  const sourceStr = sourceInfo
+    ? `${sourceInfo.route ? ` route="${sourceInfo.route}"` : ''}${sourceInfo.source ? ` source="${sourceInfo.source}"` : ''}`
+    : '';
+
   // 1. Instantiate the component
-  //    Note: In Node.js/Deno SSR, no DOM lifecycle fires.
-  //    The component must be designed to work without connectedCallback.
   let instance: DsdComponent;
   try {
     instance = new componentClass() as unknown as DsdComponent;
   } catch (err) {
-    console.error(`[LessJS] Failed to instantiate <${tagName}>:`, err);
-    return `<${tagName}><!-- render error --></${tagName}>`;
+    const errMsg = err instanceof Error ? err.message : String(err);
+    console.error(`[LessJS] Failed to instantiate <${tagName}>:`, errMsg);
+    return (
+      `<${tagName}${sourceStr}><!-- LessJS ERROR: Failed to instantiate <${tagName}>: ${escapeHtml(errMsg)} -->` +
+      (sourceInfo?.route ? `\n<!-- Route: ${escapeHtml(sourceInfo.route)} -->` : '') +
+      (sourceInfo?.source ? `\n<!-- Source: ${escapeHtml(sourceInfo.source)} -->` : '') +
+      `</${tagName}>`
+    );
   }
 
   // 2. Set attributes/properties
@@ -175,11 +239,6 @@ export async function renderDSD(
   }
 
   // 3. DO NOT call connectedCallback in SSR.
-  //    Lit's connectedCallback triggers performUpdate() → requestUpdate()
-  //    which requires a real DOM (createComment, etc.).
-  //    In DSD SSR we only need the render() return value.
-  //    connectedCallback will fire on the client after upgrade.
-
   // 4. Call render() to get Shadow DOM content
   let content: string;
   try {
@@ -187,44 +246,34 @@ export async function renderDSD(
     if (result == null) {
       content = '';
     } else if (typeof result === 'string') {
-      // Fast path: render() returned a plain string — no adapter needed
       content = result;
     } else {
-      // Slow path: render() returned a non-string value.
-      // Check if an adapter (e.g. @lessjs/adapter-lit) is installed.
       const templateCheck = getAdapterTemplateCheck();
       const ssrRenderer = getAdapterSsrRenderer();
 
       if (templateCheck && ssrRenderer && templateCheck(result)) {
-        // Adapter handles the framework-specific type (e.g. Lit TemplateResult)
         content = await ssrRenderer(result, tagName);
       } else {
-        // No adapter installed — this is a user error.
-        // The component returned something that's not a string and no adapter
-        // can handle it. Provide a clear error message.
-        console.error(
-          `[LessJS] <${tagName}> render() returned ${typeof result} instead of string. ` +
-            (isLitTemplateResultHeuristic(result)
-              ? 'This looks like a Lit TemplateResult — install @lessjs/adapter-lit to handle it.'
-              : 'Components must return a string from render().'),
-        );
-        content = `<!-- render error: ${typeof result} returned, expected string -->`;
+        const errDetail = isLitTemplateResultHeuristic(result)
+          ? 'This looks like a Lit TemplateResult — install @lessjs/adapter-lit to handle it.'
+          : `Components must return a string from render(), got ${typeof result}.`;
+        console.error(`[LessJS] <${tagName}> render() returned ${typeof result} instead of string. ${errDetail}`);
+        content = `<!-- LessJS ERROR: <${tagName}> render() returned ${typeof result}, expected string. ${errDetail} -->`;
       }
     }
   } catch (err) {
-    console.error(`[LessJS] <${tagName}> render() failed:`, err);
-    content = '<!-- render error -->';
+    const errMsg = err instanceof Error ? err.message : String(err);
+    const errStack = err instanceof Error ? err.stack : '';
+    console.error(`[LessJS] <${tagName}> render() failed:`, errMsg, errStack ? `\n${errStack}` : '');
+    content = `<!-- LessJS ERROR: <${tagName}> render() threw: ${escapeHtml(errMsg)} -->\n` +
+      (errStack ? `<!-- Stack: ${escapeHtml(errStack.split('\n').slice(0, 3).join(' | '))} -->\n` : '') +
+      '<!-- Check console for full error details -->';
   }
 
   // v0.6: L2 Nested DSD — recursively render nested Custom Elements
-  // so that components like less-layout get shadow DOM in SSR output
   content = await renderNestedCustomElements(content);
 
   // 5. Extract static styles from component class
-  //    Adapters (e.g. @lessjs/adapter-lit) register a styles extractor
-  //    that reads CSSResult / CSSResultArray from the class and returns
-  //    a plain CSS string. This is injected as a <style> tag inside the
-  //    shadow root so the DSD output includes styles for first paint.
   let styleCss = '';
   const stylesExtractor = getAdapterStylesExtractor();
   if (stylesExtractor) {
@@ -236,9 +285,14 @@ export async function renderDSD(
   }
 
   // 6. Wrap in DSD
+  // v0.6: data-ssr-props embeds all props as JSON for client-side island
+  // reconstruction via less:bind() directive or getSSRProps() helper.
   const attrs = serializeAttributes(props);
+  const ssrPropsAttr = Object.keys(props).length > 0
+    ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
+    : '';
   const styleTag = styleCss ? `\n    <style>${styleCss}</style>` : '';
-  return `<${tagName}${attrs}>
+  return `<${tagName}${attrs}${ssrPropsAttr}${sourceStr}>
   <template shadowrootmode="open">${styleTag}
     ${content}
   </template>
@@ -261,16 +315,18 @@ function isLitTemplateResultHeuristic(value: unknown): boolean {
  *
  * @param tagName - Registered custom element tag name
  * @param props - Attribute/property key-value pairs
+ * @param sourceInfo - Optional context for error messages (route path, source file)
  * @returns DSD HTML string, or error HTML if tag is not registered
  *
  * @example
  * ```ts
- * const html = renderDSD('less-button', { variant: 'primary' })
+ * const html = renderDSDByName('less-button', { variant: 'primary' })
  * ```
  */
 export async function renderDSDByName(
   tagName: string,
   props: Record<string, unknown> = {},
+  sourceInfo?: { route?: string; source?: string },
 ): Promise<string> {
   const cls = globalThis.customElements?.get(tagName);
 
@@ -280,10 +336,21 @@ export async function renderDSDByName(
     return `<${tagName}${attrs}></${tagName}>`;
   }
 
-  return await renderDSD(tagName, cls as CustomElementConstructor, props);
+  return await renderDSD(tagName, cls as CustomElementConstructor, props, sourceInfo);
 }
 
 // ─── L2 Nested DSD (v0.6) ──────────────────────────────────────
+
+/**
+ * HTML void elements that MUST NOT have a closing tag or be self-closing.
+ * These are native HTML elements — never Custom Elements (which always
+ * contain a hyphen and are never void).
+ * @internal Reserved for future L2 DSD processing enhancements.
+ */
+const _VOID_ELEMENTS = new Set([
+  'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+  'link', 'meta', 'param', 'source', 'track', 'wbr',
+]);
 
 /**
  * Convert kebab-case attribute name to camelCase property name.
@@ -296,14 +363,14 @@ function kebabToCamel(str: string): string {
 /**
  * Parse an HTML element's attributes string into a props object.
  *
- * Handles:
- *   key="value"  →  props.camelKey = "value"
- *   key          →  props.key = true  (boolean attribute)
- *   key='value'  →  props.camelKey = "value"
+ * v0.6: Handles quoted values with escaped chars and JSON-encoded
+ * attribute values (arrays, objects). Boolean attributes are set to true.
+ * Also preserves data-* attributes as-is (no camelCase conversion).
  */
 function parseElementAttrs(attrsStr: string): Record<string, unknown> {
   const props: Record<string, unknown> = {};
-  const attrRegex = /(\w[\w-]*)(?:="([^"]*)"|='([^']*)')?/g;
+  // Match key="value", key='value', or bare key (boolean)
+  const attrRegex = /(\w[\w-]*)(?:="((?:[^"\\]|\\.)*)"|='((?:[^'\\]|\\.)*)')?/g;
   let match: RegExpExecArray | null;
   while ((match = attrRegex.exec(attrsStr)) !== null) {
     const key = match[1];
@@ -311,6 +378,9 @@ function parseElementAttrs(attrsStr: string): Record<string, unknown> {
     if (value === undefined) {
       // Boolean attribute (no value): e.g. home, disabled
       props[key] = true;
+    } else if (key.startsWith('data-')) {
+      // data-* attributes: preserve as-is (don't camelCase)
+      props[key] = value;
     } else {
       props[kebabToCamel(key)] = value;
     }
@@ -321,63 +391,142 @@ function parseElementAttrs(attrsStr: string): Record<string, unknown> {
 /**
  * Recursively render nested Custom Elements with DSD.
  *
- * v0.6: After a component's render() output is produced as a string,
- * scan it for known Custom Element tags and wrap each in
- * `<template shadowrootmode="open">` so their shadow DOM exists
- * in the static HTML without waiting for JS to upgrade them.
+ * v0.6: Enhanced slot/projection support:
+ *   - Self-closing CE tags (<my-comp />) are handled correctly
+ *   - Void elements are skipped (they can't be Custom Elements)
+ *   - Light DOM children are preserved after </template> for <slot> projection
+ *   - Depth-first recursion ensures innermost elements are wrapped first
+ *   - Handles nested template contents correctly
+ *   - Supports data-ssr-props for client-side property binding
  *
  * Only processes tags with hyphens (valid Custom Element names)
  * that are registered in the global customElements registry.
- *
- * Light DOM children of nested elements are preserved after the
- * DSD template so they can be projected through `<slot>`.
- *
- * Depth-first recursion ensures innermost elements are wrapped first.
  */
 async function renderNestedCustomElements(html: string): Promise<string> {
   if (!globalThis.customElements?.get) return html;
 
-  // Match only tags with hyphens — native HTML tags are skipped
-  const ceRegex = /<([a-z][a-z0-9]*-[a-z0-9-]+)([\s\S]*?)>([\s\S]*?)<\/\1>/g;
+  // Strategy: process the HTML iteratively from inside out.
+  // First, find all registered custom element tags, then render
+  // each one's DSD, preserving light DOM children for slot projection.
 
-  const replacements: Array<{ start: number; end: number; newHtml: string }> = [];
+  // Match opening tags with hyphens (valid CE names):
+  //   <my-comp> ... </my-comp>  — regular element with children
+  //   <my-comp />               — self-closing (void-like)
+  const ceOpenRegex = /<([a-z][a-z0-9]*-[a-z0-9-]+)([\s\S]*?)>/g;
+
+  interface Replacement {
+    start: number;
+    end: number;
+    newHtml: string;
+  }
+
+  const replacements: Replacement[] = [];
+
+  // First pass: collect all custom element positions
+  const cePositions: Array<{
+    tagName: string;
+    attrsStr: string;
+    start: number;
+    openEnd: number;
+    selfClosing: boolean;
+    fullMatch: string;
+  }> = [];
+
   let match: RegExpExecArray | null;
-
-  while ((match = ceRegex.exec(html)) !== null) {
-    const [full, tagName, attrsStr, childrenStr] = match;
-    const start = match.index;
-    const end = start + full.length;
-
-    // Skip if this range is already covered by a previous replacement
-    if (replacements.some((r) => r.start <= start && r.end >= end)) continue;
+  while ((match = ceOpenRegex.exec(html)) !== null) {
+    const tagName = match[1];
+    const attrsStr = match[2];
+    const openStart = match.index;
+    const openEnd = openStart + match[0].length;
 
     // Only process registered Custom Elements
     const Cls = globalThis.customElements.get(tagName);
     if (!Cls) continue;
 
-    // Depth-first: process children before parent
-    const renderedChildren = await renderNestedCustomElements(childrenStr);
+    // Skip if this range is already covered by a previous replacement
+    if (replacements.some((r) => r.start <= openStart && r.end >= openEnd)) continue;
 
-    // Parse attributes from HTML string → props for renderDSD
-    const props = parseElementAttrs(attrsStr);
+    // Check for self-closing: ends with /> or is a void element
+    const selfClosing = attrsStr.trimEnd().endsWith('/');
 
-    // Render this component's DSD (may trigger further recursion)
-    const dsdHtml = await renderDSD(tagName, Cls as CustomElementConstructor, props);
+    if (selfClosing) {
+      // Self-closing CE: render full DSD, no children
+      cePositions.push({
+        tagName,
+        attrsStr: attrsStr.replace(/\/\s*$/, ''), // Remove trailing /
+        start: openStart,
+        openEnd,
+        selfClosing: true,
+        fullMatch: match[0],
+      });
+      continue;
+    }
 
-    // Insert light DOM children after the </template> and before </tag>
-    const templateClose = '</template>';
-    const templateIdx = dsdHtml.lastIndexOf(templateClose);
-    if (templateIdx === -1) continue;
+    // Find matching close tag: </tagName>
+    const closeTag = `</${tagName}>`;
+    const closeIdx = html.indexOf(closeTag, openEnd);
+    if (closeIdx === -1) continue; // Malformed HTML — skip
 
-    const childrenTrimmed = renderedChildren.trim();
-    if (!childrenTrimmed) {
-      // No children — use DSD output as-is
-      replacements.push({ start, end, newHtml: dsdHtml });
+    const closeEnd = closeIdx + closeTag.length;
+
+    cePositions.push({
+      tagName,
+      attrsStr,
+      start: openStart,
+      openEnd,
+      selfClosing: false,
+      fullMatch: html.slice(openStart, closeEnd),
+    });
+  }
+
+  // Second pass: process from inside out (deepest first, by position)
+  // Sort by nested depth: later opening tags are deeper
+  cePositions.sort((a, b) => b.start - a.start);
+
+  for (const pos of cePositions) {
+    if (pos.selfClosing) {
+      // Self-closing element: render DSd without children
+      const props = parseElementAttrs(pos.attrsStr);
+      const dsdHtml = await renderDSD(pos.tagName, globalThis.customElements.get(pos.tagName) as CustomElementConstructor, props);
+      replacements.push({
+        start: pos.start,
+        end: pos.openEnd,
+        newHtml: dsdHtml,
+      });
     } else {
-      // Inject children between </template> and </tag>
-      const before = dsdHtml.slice(0, templateIdx + templateClose.length);
-      const after = dsdHtml.slice(templateIdx + templateClose.length);
-      replacements.push({ start, end, newHtml: before + '\n  ' + renderedChildren + after });
+      // Regular element with children: find the full match again
+      const closeTag = `</${pos.tagName}>`;
+      const closeIdx = html.indexOf(closeTag, pos.openEnd);
+      if (closeIdx === -1) continue;
+      const closeEnd = closeIdx + closeTag.length;
+      const fullContent = html.slice(pos.openEnd, closeIdx);
+
+      // Depth-first: recursively process children first
+      const renderedChildren = await renderNestedCustomElements(fullContent);
+
+      // Render this component's DSD
+      const props = parseElementAttrs(pos.attrsStr);
+      const dsdHtml = await renderDSD(pos.tagName, globalThis.customElements.get(pos.tagName) as CustomElementConstructor, props);
+
+      // Slot projection: inject light DOM children after </template>
+      // DSD spec: light DOM children are placed after </template> and before
+      // </tag>, and are projected through <slot> elements inside the shadow root.
+      const templateClose = '</template>';
+      const templateIdx = dsdHtml.lastIndexOf(templateClose);
+      if (templateIdx === -1) continue;
+
+      const childrenTrimmed = renderedChildren.trim();
+      if (!childrenTrimmed) {
+        replacements.push({ start: pos.start, end: closeEnd, newHtml: dsdHtml });
+      } else {
+        const before = dsdHtml.slice(0, templateIdx + templateClose.length);
+        const after = dsdHtml.slice(templateIdx + templateClose.length);
+        replacements.push({
+          start: pos.start,
+          end: closeEnd,
+          newHtml: before + '\n  ' + renderedChildren + after,
+        });
+      }
     }
   }
 

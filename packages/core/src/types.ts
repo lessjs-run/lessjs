@@ -20,9 +20,10 @@ export interface PackageIslandMeta {
   strategy?: 'eager' | 'lazy';
 }
 
-/** @deprecated Planned for v0.6 — not yet implemented. @see FrameworkOptions.island.upgradeStrategy */
+/** @deprecated Planned for v0.6 — now partially implemented. @see FrameworkOptions.island.upgradeStrategy */
 /**
- * @deprecated Planned for v0.6 — not yet implemented.
+ * @deprecated Planned for v0.6 — now partially implemented.
+ * 'idle' and 'visible' are available via island() wrapper and entry-generators.
  * @see FrameworkOptions.island.upgradeStrategy
  */
 export type PlannedIslandStrategy = 'idle' | 'visible';
@@ -88,9 +89,11 @@ export interface FrameworkOptions {
      * Controls when island modules are imported for custom element upgrade.
      * 'lazy' (default): import on requestIdleCallback
      * 'eager': import immediately
-     * NOTE: 'idle' and 'visible' are planned for v0.6 (see PlannedIslandStrategy).
+     * 'idle': same as 'lazy' (requestIdleCallback)
+     * 'visible': import when element enters viewport (IntersectionObserver)
+     * NOTE: 'idle' and 'visible' are available in v0.6 via island() wrapper.
      */
-    upgradeStrategy?: 'eager' | 'lazy';
+    upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';
   };
 
   /** Build configuration */
