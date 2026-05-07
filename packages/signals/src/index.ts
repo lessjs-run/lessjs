@@ -721,7 +721,7 @@ export function channel<T = unknown>(name: string): Channel<T> {
  * Global theme signal. Reflects the current data-theme on :root.
  * Islands can subscribe to theme changes.
  */
-export const themeSignal = createThemeSignal();
+export const themeSignal: WritableSignal<string> = createThemeSignal();
 
 function createThemeSignal(): WritableSignal<string> {
   const s = signal<string>(
