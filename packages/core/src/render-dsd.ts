@@ -441,7 +441,10 @@ function findMatchingCloseTag(
  */
 function findTemplateShadowRanges(html: string): Array<[number, number]> {
   const ranges: Array<[number, number]> = [];
-  const templateOpenRegex = /<template\s+shadowrootmode\s*=\s*"open"\s*>/g;
+  // v0.6 fix: must match additional DSD attributes (shadowrootdelegatesfocus, etc.)
+  // not just <template shadowrootmode="open"> but also
+  // <template shadowrootmode="open" shadowrootdelegatesfocus>
+  const templateOpenRegex = /<template\s+shadowrootmode\s*=\s*"open"[^>]*>/g;
   let match: RegExpExecArray | null;
 
   while ((match = templateOpenRegex.exec(html)) !== null) {
@@ -501,9 +504,12 @@ function isInRange(pos: number, ranges: Array<[number, number]>): boolean {
  */
 function alreadyHasDSD(html: string, openEnd: number, _closeIdx: number): boolean {
   // Check if the first non-whitespace content after the open tag
-  // is <template shadowrootmode="open">
+  // is <template shadowrootmode="open" ...> (may include shadowrootdelegatesfocus etc.)
+  // v0.6 fix: must accept additional DSD attributes after shadowrootmode="open"
+  // otherwise components with delegatesFocus=true cause an infinite loop
+  // (the regex didn't match <template shadowrootmode="open" shadowrootdelegatesfocus>)
   const content = html.slice(openEnd);
-  const match = content.match(/^\s*<template\s+shadowrootmode\s*=\s*"open"\s*>/);
+  const match = content.match(/^\s*<template\s+shadowrootmode\s*=\s*"open"[^>]*>/);
   return match !== null;
 }
 
