@@ -579,16 +579,101 @@ export class LessLayout extends LitElement {
       this.githubUrl = 'https://github.com/lessjs-run/LessJS';
     }
 
-    /** Override createRenderRoot: if DSD already created the shadow root,
-     *  clear it and reuse it so Lit renders fresh content (no duplication). */
+    /**
+     * When DSD already created and populated the shadow root,
+     * keep it as-is — no Lit re-render needed.
+     * DSD rendered the complete layout (header, sidebar, footer, CSS).
+     * Re-rendering would either duplicate content (if Lit appends)
+     * or waste the DSD advantage (if we clear + re-render).
+     *
+     * Instead, we only need to:
+     * 1. Reuse the existing shadow root (return it from createRenderRoot)
+     * 2. Mark ourselves as "DSD hydrated" so render() returns nothing
+     * 3. Wire up interactive behavior in connectedCallback
+     */
+    private _dsdHydrated = false;
+
     override createRenderRoot(): HTMLElement | DocumentFragment {
-      if (this.shadowRoot) {
-        // DSD or DSD polyfill already created the shadow root.
-        // Clear existing content so Lit renders fresh — prevents duplication.
-        this.shadowRoot.innerHTML = '';
+      if (this.shadowRoot && this.shadowRoot.childElementCount > 0) {
+        this._dsdHydrated = true;
         return this.shadowRoot;
       }
       return this.attachShadow({ mode: 'open' });
+    }
+
+    /** When DSD hydrated, return nothing — the shadow DOM already has content. */
+    override render(): TemplateResult | typeof nothing {
+      if (this._dsdHydrated) return nothing;
+      return this._renderLayout();
+    }
+
+    /** Extract the full layout template so render() can skip it for DSD. */
+    private _renderLayout(): TemplateResult {
+      return html`
+        <div class="app-layout" ?home="${this.home}">
+          <header class="app-header">
+            <nav class="header-inner" aria-label="Primary navigation">
+              <a class="logo" href="/">${this.logoText}<span class="logo-sub">${this
+                .logoSub}</span></a>
+              ${this._renderHeaderNav()}
+              <div class="header-right">
+                <details class="mobile-menu">
+                  <summary class="mobile-menu-btn" aria-label="Toggle navigation" @click="${this
+                    ._toggleMenu}">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 18 18"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                    >
+                      <line x1="3" y1="4.5" x2="15" y2="4.5" />
+                      <line x1="3" y1="9" x2="15" y2="9" />
+                      <line x1="3" y1="13.5" x2="15" y2="13.5" />
+                    </svg>
+                  </summary>
+                </details>
+                <less-theme-toggle></less-theme-toggle>
+                <a class="github-link" href="${this.githubUrl}" aria-label="GitHub repository">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path
+                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+                    />
+                  </svg>
+                  <span class="github-text">GitHub</span>
+                </a>
+              </div>
+            </nav>
+          </header>
+          <div class="mobile-backdrop"></div>
+          <div class="layout-body">
+            ${!this.home ? this._renderSidebarNav() : nothing}
+            <main class="layout-main">
+              <slot></slot>
+            </main>
+          </div>
+          <footer class="app-footer">
+            <p>
+              Built with <a href="${this.githubUrl}" target="_blank" rel="noopener noreferrer"
+              >LessJS Framework</a>
+              <span class="divider"></span>
+              Self-bootstrapped from JSR
+              <span class="divider"></span>
+              LESS IS MORE
+            </p>
+          </footer>
+        </div>
+      `;
+    }
+
+    override connectedCallback() {
+      super.connectedCallback();
+      // DSD hydration: wire up interactive behavior without re-rendering
+      if (this._dsdHydrated) {
+        this._syncMenuState();
+      }
     }
 
     override firstUpdated() {
@@ -766,66 +851,6 @@ export class LessLayout extends LitElement {
               `,
           )}
         </nav>
-      `;
-    }
-
-    override render(): TemplateResult {
-      return html`
-        <div class="app-layout" ?home="${this.home}">
-          <header class="app-header">
-            <nav class="header-inner" aria-label="Primary navigation">
-              <a class="logo" href="/">${this.logoText}<span class="logo-sub">${this
-                .logoSub}</span></a>
-              ${this._renderHeaderNav()}
-              <div class="header-right">
-                <details class="mobile-menu">
-                  <summary class="mobile-menu-btn" aria-label="Toggle navigation" @click="${this
-                    ._toggleMenu}">
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 18 18"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                    >
-                      <line x1="3" y1="4.5" x2="15" y2="4.5" />
-                      <line x1="3" y1="9" x2="15" y2="9" />
-                      <line x1="3" y1="13.5" x2="15" y2="13.5" />
-                    </svg>
-                  </summary>
-                </details>
-                <less-theme-toggle></less-theme-toggle>
-                <a class="github-link" href="${this.githubUrl}" aria-label="GitHub repository">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                    <path
-                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
-                    />
-                  </svg>
-                  <span class="github-text">GitHub</span>
-                </a>
-              </div>
-            </nav>
-          </header>
-          <div class="mobile-backdrop"></div>
-          <div class="layout-body">
-            ${!this.home ? this._renderSidebarNav() : nothing}
-            <main class="layout-main">
-              <slot></slot>
-            </main>
-          </div>
-          <footer class="app-footer">
-            <p>
-              Built with <a href="${this.githubUrl}" target="_blank" rel="noopener noreferrer"
-              >LessJS Framework</a>
-              <span class="divider"></span>
-              Self-bootstrapped from JSR
-              <span class="divider"></span>
-              LESS IS MORE
-            </p>
-          </footer>
-        </div>
       `;
     }
   }
