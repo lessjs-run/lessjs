@@ -8,12 +8,11 @@ LessJS 是一个 Deno-first、Web Standards-first 的现代全栈框架，面向
 和 Vite 组合成一个很小的框架表面。LessJS 的目标不是隐藏 Web 平台，而是让平台本身变得更好用。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![CI](https://github.com/lessjs-run/lessjs/actions/workflows/test.yml/badge.svg)](https://github.com/lessjs-run/lessjs/actions/workflows/test.yml)
-[![@lessjs/core](https://img.shields.io/jsr/v/@lessjs/core?logo=jsr&labelColor=0a0a0a)](https://jsr.io/@lessjs/core)
-[![@lessjs/ui](https://img.shields.io/jsr/v/@lessjs/ui?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/ui)
-[![@lessjs/rpc](https://img.shields.io/jsr/v/@lessjs/rpc?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/rpc)
-[![@lessjs/create](https://img.shields.io/jsr/v/@lessjs/create?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/create)
-[![@lessjs/signal](https://img.shields.io/jsr/v/@lessjs/signal?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/signal)
+@lessjs/core[![@lessjs/core](https://img.shields.io/jsr/v/@lessjs/core?logo=jsr&labelColor=0a0a0a)](https://jsr.io/@lessjs/core)
+@lessjs/ui[![@lessjs/ui](https://img.shields.io/jsr/v/@lessjs/ui?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/ui)
+@lessjs/rpc[![@lessjs/rpc](https://img.shields.io/jsr/v/@lessjs/rpc?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/rpc)
+@lessjs/create[![@lessjs/create](https://img.shields.io/jsr/v/@lessjs/create?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/create)
+@lessjs/signal[![@lessjs/signal](https://img.shields.io/jsr/v/@lessjs/signal?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/signal)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
 [![Vite](https://img.shields.io/badge/Vite-8.x-646CFF)](https://vite.dev/)
 [![Hono](https://img.shields.io/badge/Hono-4.x-E36002)](https://hono.dev/)
