@@ -9,16 +9,16 @@ and Vite into a minimal framework surface. LessJS aims not to hide the Web platf
 the platform itself more usable.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![CI](https://github.com/lessjs-run/lessjs/actions/workflows/test.yml/badge.svg)](https://github.com/lessjs-run/lessjs/actions/workflows/test.yml)
-[![@lessjs/core](https://img.shields.io/jsr/v/@lessjs/core?logo=jsr&labelColor=0a0a0a)](https://jsr.io/@lessjs/core)
-[![@lessjs/ui](https://img.shields.io/jsr/v/@lessjs/ui?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/ui)
-[![@lessjs/rpc](https://img.shields.io/jsr/v/@lessjs/rpc?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/rpc)
-[![@lessjs/create](https://img.shields.io/jsr/v/@lessjs/create?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/create)
-[![@lessjs/signal](https://img.shields.io/jsr/v/@lessjs/signal?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/signal)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
 [![Vite](https://img.shields.io/badge/Vite-8.x-646CFF)](https://vite.dev/)
 [![Hono](https://img.shields.io/badge/Hono-4.x-E36002)](https://hono.dev/)
 [![Lit](https://img.shields.io/badge/Lit-optional-325CFF)](https://lit.dev/)
+[![@lessjs/core](https://img.shields.io/jsr/v/@lessjs/core?label=@lessjs/core&style=flat-square)](https://jsr.io/@lessjs/core)
+[![@lessjs/ui](https://img.shields.io/jsr/v/@lessjs/ui?label=@lessjs/ui&style=flat-square)](https://jsr.io/@lessjs/ui)
+[![@lessjs/adapter-lit](https://img.shields.io/jsr/v/@lessjs/adapter-lit?label=@lessjs/adapter-lit&style=flat-square)](https://jsr.io/@lessjs/adapter-lit)
+[![@lessjs/rpc](https://img.shields.io/jsr/v/@lessjs/rpc?label=@lessjs/rpc&style=flat-square)](https://jsr.io/@lessjs/rpc)
+[![@lessjs/signal](https://img.shields.io/jsr/v/@lessjs/signal?label=@lessjs/signal&style=flat-square)](https://jsr.io/@lessjs/signal)
+[![@lessjs/create](https://img.shields.io/jsr/v/@lessjs/create?label=@lessjs/create&style=flat-square)](https://jsr.io/@lessjs/create)
 
 ## Why LessJS
 
