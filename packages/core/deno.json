@@ -13,7 +13,7 @@
     "hono": "npm:hono@^4",
     "@hono/vite-dev-server": "npm:@hono/vite-dev-server@^0.25.3",
     "vite": "npm:vite@8.0.10",
-    "@lessjs/ui/tokens/color-values": "jsr:@lessjs/ui/tokens/color-values"
+    "@lessjs/ui/tokens/color-values": "jsr:@lessjs/ui/tokens/color-values@^0.6.1"
   },
   "tasks": {
     "build": "deno check src/index.ts src/render-dsd.ts src/less-runtime.ts",
