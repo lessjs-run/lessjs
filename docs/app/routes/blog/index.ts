@@ -1,9 +1,10 @@
 /**
- * Blog Index Page — LessJS Framework Blog
+ * Blog Index Page — Data-driven rendering via @lessjs/blog
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
+import { getPosts } from '@lessjs/blog';
 
 export class BlogIndexPage extends LitElement {
   static override styles = [
@@ -34,20 +35,45 @@ export class BlogIndexPage extends LitElement {
         font-weight: 500;
         color: var(--less-text-primary);
       }
-      .blog-item .meta {
+      .blog-item .blog-desc {
+        font-size: 0.8125rem;
+        color: var(--less-text-secondary);
+        margin: 0.5rem 0 0;
+      }
+      .blog-item .blog-date {
         font-size: 0.75rem;
         color: var(--less-text-muted);
         margin: 0;
       }
-      .blog-item p {
-        font-size: 0.8125rem;
-        color: var(--less-text-secondary);
-        margin: 0.5rem 0 0;
+      .blog-item .blog-tags {
+        display: flex;
+        gap: 0.25rem;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+      }
+      .blog-item .blog-tag {
+        font-size: 0.5625rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 0.0625rem 0.25rem;
+        border-radius: 2px;
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
+        color: var(--less-text-muted);
+      }
+      .new-badge {
+        font-size: 0.7rem;
+        color: var(--less-accent);
+        margin-left: 0.25rem;
       }
     `,
   ];
 
   override render() {
+    const posts = getPosts();
+    const newestSlug = posts.length > 0 ? posts[0].slug : '';
+
     return html`
       <less-layout currentPath="/blog">
         <div class="container">
@@ -55,48 +81,37 @@ export class BlogIndexPage extends LitElement {
           <p class="subtitle">LessJS 框架的设计思考、架构决策和发展路线。</p>
 
           <div class="blog-list">
-            <a href="/blog/v0-8-0" class="blog-item">
-              <h2>
-                v0.8.0 — 功能完善 + Island Manifest + Blog 启动 <span
-                  style="font-size:0.7rem;color:var(--less-accent)"
-                >NEW</span>
-              </h2>
-              <p class="blog-desc">
-                Signal 原生切换 · Island Upgrade Manifest · @lessjs/blog 包 · render-dsd.ts 拆分 · 390 测试通过
-              </p>
-              <span class="blog-date">2026-05-08</span>
-            </a>
-
-            <a href="/blog/v0-5-alpha1" class="blog-item">
-              <h2>v0.5-alpha1 — 全量架构审计与精准修复</h2>
-              <p class="blog-desc">
-                3 agent 扫描 13k 行源码 · CSS 注入修复 · Island 升级修复 · 6 条新设计原则 · 配置精简
-              </p>
-              <span class="blog-date">2026-05-03</span>
-            </a>
-
-            <a href="/blog/v0-5-0" class="blog-item">
-              <h2>LessJS v0.5-alpha-0 — 架构精简</h2>
-              <p class="blog-desc">零框架运行时 Core · 原生 RPC · OpenProps + Lit · 单 deno.json</p>
-              <span class="blog-date">2026-05-02</span>
-            </a>
-
-            <a href="/blog/v0-4-0" class="blog-item">
-              <h2>LessJS v0.4.0 — Serverless Integration Milestone</h2>
-              <p class="meta">2026-04-30 · 版本发布</p>
-              <p>
-                Serverless API 部署成功、全站统一 0.5px 视觉风格、零 lint 零 type
-                errors。从"能跑起来"到"真正能用"的里程碑。
-              </p>
-            </a>
-            <a href="/blog/less-compiler" class="blog-item">
-              <h2>.less Compiler — 可选零框架运行时组件</h2>
-              <p class="meta">2026-04-30 · 架构决策</p>
-              <p>
-                一个可选编译器将声明式 .less 文件编译为原生 Custom Elements，让 Lit 从必选路线变成
-                adapter。
-              </p>
-            </a>
+            ${posts.map((post, i) => {
+              const tags = post.frontmatter.tags ?? [];
+              return html`
+                <a href="/blog/${post.slug}" class="blog-item">
+                  <h2>
+                    ${post.frontmatter.title} ${i === 0
+                      ? html`
+                        <span class="new-badge">NEW</span>
+                      `
+                      : ''}
+                  </h2>
+                  ${post.frontmatter.excerpt
+                    ? html`
+                      <p class="blog-desc">${post.frontmatter.excerpt}</p>
+                    `
+                    : ''}
+                  <span class="blog-date">${post.frontmatter.date}</span>
+                  ${tags.length > 0
+                    ? html`
+                      <div class="blog-tags">
+                        ${tags.map((tag) =>
+                          html`
+                            <span class="blog-tag">${tag}</span>
+                          `
+                        )}
+                      </div>
+                    `
+                    : ''}
+                </a>
+              `;
+            })}
           </div>
         </div>
       </less-layout>

@@ -82,6 +82,7 @@ export const SIDEBAR_NAV: NavSection[] = [
     section: 'History',
     items: [
       { path: '/blog', label: 'Blog' },
+      { path: '/blog/v0-8-0', label: 'v0.8.0' },
       { path: '/blog/v0-5-alpha1', label: 'v0.5 Alpha 1' },
       { path: '/blog/v0-5-0', label: 'v0.5.0' },
       { path: '/blog/v0-4-0', label: 'v0.4.0' },

@@ -32,4 +32,14 @@ export interface LessBlogOptions {
   basePath?: string;
   /** Custom markdown renderer override */
   markdown?: (content: string) => string | Promise<string>;
+  /**
+   * Layout component tag name for wrapping blog pages.
+   * Default: 'less-layout' (from @lessjs/ui)
+   */
+  layoutTag?: string;
+  /**
+   * CSS class for the content container.
+   * Default: 'container' (matches page-styles.ts)
+   */
+  containerClass?: string;
 }

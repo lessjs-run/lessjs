@@ -9,15 +9,20 @@
 
 import type { Plugin } from 'vite';
 import type { LessBlogOptions } from './types.ts';
-import { generateBlogRoutes } from './routes.ts';
+import { initBlogData } from './blog-data.ts';
 
 export type { BlogPost, BlogPostFrontmatter, LessBlogOptions } from './types.ts';
 export { parseMarkdownFile, slugFromFilename } from './markdown.ts';
 export { generateBlogRoutes, scanPosts } from './routes.ts';
+export { getBlogOptions, getPostBySlug, getPosts, initBlogData } from './blog-data.ts';
 
 /**
  * LessJS Blog Vite plugin.
- * Scans .md files and generates blog routes during build.
+ * Scans .md files, initializes blog data store, and prepares routes.
+ *
+ * The actual route rendering is handled by:
+ * - `blog/index.ts` — uses getPosts() to render the listing
+ * - `blog/[slug].ts` — uses getPostBySlug(slug) to render individual posts
  *
  * @example
  * ```ts
@@ -26,7 +31,7 @@ export { generateBlogRoutes, scanPosts } from './routes.ts';
  * export default defineConfig({
  *   plugins: [
  *     less(),
- *     lessBlog({ contentDir: 'posts', basePath: '/blog' }),
+ *     lessBlog({ contentDir: 'content/blog', basePath: '/blog' }),
  *   ],
  * });
  * ```
@@ -39,8 +44,13 @@ export function lessBlog(options?: LessBlogOptions): Plugin {
     name: 'less:blog',
 
     async buildStart() {
-      const routes = await generateBlogRoutes(options);
-      const postCount = routes.posts.length;
+      // Initialize the global blog data store.
+      // This makes posts available to [slug].ts and index.ts route components.
+      const { postCount } = await (async () => {
+        const result = await initBlogData(options);
+        return { postCount: result.posts.length };
+      })();
+
       console.log(
         `[LessJS Blog] ${postCount} post(s) found in ${contentDir}, base path: ${basePath}`,
       );
