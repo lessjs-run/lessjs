@@ -61,6 +61,20 @@ export interface DsdHydration {
 }
 
 /**
+ * Instance interface added by the WithDsdHydration mixin beyond DsdHydration.
+ * Captures the LitElement method overrides the mixin provides.
+ * Required by JSR slow-types checker for explicit public API return types.
+ */
+export interface DsdHydrationMixin extends DsdHydration {
+  /** Override: reuses existing shadow root when DSD-pre-populated */
+  createRenderRoot(): HTMLElement | DocumentFragment;
+  /** Override: auto-wires DSD hydration events on connect */
+  connectedCallback(): void;
+  /** Override: cleans up hydration listeners on disconnect */
+  disconnectedCallback(): void;
+}
+
+/**
  * Mixin that adds DSD hydration support to a LitElement subclass.
  *
  * When the browser upgrades a DSD-pre-rendered element, this Mixin:
@@ -73,7 +87,9 @@ export interface DsdHydration {
  * - Declare `static hydrateEvents: HydrateEventDescriptor[]`
  * - Check `if (this._dsdHydrated) return nothing` at the top of render()
  */
-export function WithDsdHydration<T extends Constructor<LitElement>>(superClass: T) {
+export function WithDsdHydration<T extends Constructor<LitElement>>(
+  superClass: T,
+): T & Constructor<DsdHydrationMixin> {
   class WithDsdHydrationClass extends superClass {
     /**
      * Declarative event bindings for DSD hydration.
@@ -168,7 +184,7 @@ export function WithDsdHydration<T extends Constructor<LitElement>>(superClass: 
     }
   }
 
-  return WithDsdHydrationClass as unknown as T & Constructor<WithDsdHydrationClass>;
+  return WithDsdHydrationClass as unknown as T & Constructor<DsdHydrationMixin>;
 }
 
 /**

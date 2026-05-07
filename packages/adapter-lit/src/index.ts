@@ -24,4 +24,4 @@
 export { installLitAdapter, uninstallLitAdapter } from './ssr.js';
 export { isLitTemplateResult, renderLitToString } from './ssr.js';
 export { DsdLitElement, WithDsdHydration } from './dsd-hydration.js';
-export type { DsdHydration } from './dsd-hydration.js';
+export type { DsdHydration, DsdHydrationMixin } from './dsd-hydration.js';
