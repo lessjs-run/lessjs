@@ -37,6 +37,7 @@ interface BuildSSGOptions {
   ssr?: FrameworkOptions['ssr'];
   islandTagNames?: string[];
   packageIslands?: PackageIslandMeta[];
+  /** @security Injected as raw HTML without sanitization */
   headExtras?: string;
   html?: { lang?: string; title?: string };
   upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';
@@ -60,8 +61,11 @@ function findHtmlFiles(dir: string): string[] {
         results.push(fullPath);
       }
     }
-  } catch {
-    /* ignore */
+  } catch (e) {
+    // Directory may not exist or be unreadable — warn instead of silent swallow
+    console.warn(
+      `[LessJS] Cannot read directory ${dir}: ${e instanceof Error ? e.message : String(e)}`,
+    );
   }
   return results;
 }
@@ -107,8 +111,11 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
     }
     // v0.5.0 note: upgradeStrategy controls island module import timing.
     // It is not a client render runtime.
-  } catch {
-    console.log('[LessJS] No .less/build-metadata.json found; using provided island list');
+  } catch (e) {
+    console.warn(
+      '[LessJS] No .less/build-metadata.json found; using provided island list.',
+      e instanceof Error ? e.message : '',
+    );
   }
 
   // Generate SSG entry code
@@ -236,7 +243,10 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         if (globalThis.customElements.get(name)) return;
         try {
           origDefine(name, ctor, options);
-        } catch { /* already defined */ }
+        } catch (_e) {
+          // Already defined by another route — safe to skip in SSR
+          console.debug(`[LessJS SSG] customElements.define("${name}") skipped: already defined`);
+        }
       };
       _ssrDefinePatched = true;
     }
@@ -267,7 +277,11 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         isDirectory: (path: string) => {
           try {
             return nodeFs.statSync(path).isDirectory();
-          } catch {
+          } catch (e) {
+            // Path doesn't exist or is inaccessible — not a directory
+            console.debug(
+              `[LessJS SSG] isDirectory("${path}"): ${e instanceof Error ? e.message : String(e)}`,
+            );
             return false;
           }
         },
@@ -289,7 +303,14 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
           const { rmdirSync } = await import('node:fs');
           try {
             rmdirSync(_404Dir);
-          } catch { /* non-empty dir, ignore */ }
+          } catch (e) {
+            // Non-empty directory — not an error, just can't auto-remove
+            console.debug(
+              `[LessJS SSG] Cannot remove 404 directory (not empty): ${
+                e instanceof Error ? e.message : String(e)
+              }`,
+            );
+          }
         }
         console.log('[LessJS SSG] 404 page → dist/404.html (GitHub Pages)');
       }
@@ -465,7 +486,12 @@ async function networkFirst(req) {
 
     try {
       unlinkSync(tmpEntryPath);
-    } catch { /* ignore */ }
+    } catch (e) {
+      // Temp file cleanup failure is non-fatal
+      console.debug(
+        `[LessJS SSG] Could not remove temp entry: ${e instanceof Error ? e.message : String(e)}`,
+      );
+    }
   }
 }
 

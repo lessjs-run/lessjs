@@ -134,7 +134,12 @@ export interface DocumentConfig {
   lang: string;
   /** <title> content (default: 'LessJS') */
   title: string;
-  /** Extra <head> content (e.g. CDN links) */
+  /**
+   * Extra <head> content (e.g. CDN links, analytics).
+   *
+   * @security Injected as raw HTML without sanitization. Only use with
+   * developer-controlled content. Never pass user-supplied strings.
+   */
   headExtras: string;
 }
 
@@ -195,6 +200,7 @@ export function buildEntryDescriptor(
     /** Relative file paths for local islands (preserves subdirectory structure) */
     islandFiles?: string[];
     packageIslands?: PackageIslandMeta[];
+    /** @security Injected as raw HTML without sanitization */
     headExtras?: string;
     html?: { lang?: string; title?: string };
     upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';

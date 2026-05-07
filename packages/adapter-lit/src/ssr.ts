@@ -207,8 +207,11 @@ function stringifyContentValue(value: unknown): string {
           return unwrapDsdForNestedCe(str);
         }
         return '';
-      } catch {
+      } catch (e) {
         // If resolution fails, fall through to escaped string
+        console.debug(
+          `[LessJS] Directive resolution failed: ${e instanceof Error ? e.message : String(e)}`,
+        );
       }
     }
     // _$litDirective$ also appears in other Lit directives — fall through

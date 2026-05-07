@@ -44,9 +44,10 @@ async function buildClient(): Promise<void> {
   try {
     const raw = readFileSync(metadataPath, 'utf-8');
     metadata = JSON.parse(raw);
-  } catch {
+  } catch (e) {
     console.log('[LessJS] No .less/build-metadata.json found — skipping client build');
     console.log('[LessJS] Run `vite build` first (Phase 1) to generate island metadata');
+    console.debug(`[LessJS] Metadata read error: ${e instanceof Error ? e.message : String(e)}`);
     return;
   }
 

@@ -143,8 +143,13 @@ export function matchRoute(
             params: (result.pathname?.groups ?? {}) as Record<string, string>,
           };
         }
-      } catch {
-        // URLPattern might not support this pattern, fall through
+      } catch (e) {
+        // URLPattern might not support this pattern — fall through to regex
+        console.debug(
+          `[LessJS] URLPattern failed for "${pattern.path}": ${
+            e instanceof Error ? e.message : String(e)
+          }`,
+        );
       }
     }
 

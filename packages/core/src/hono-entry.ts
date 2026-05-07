@@ -24,6 +24,7 @@ export interface HonoEntryOptions {
   /** Relative file paths for local islands (preserves subdirectory structure) */
   islandFiles?: string[];
   packageIslands?: PackageIslandMeta[];
+  /** @security Injected as raw HTML without sanitization */
   headExtras?: string;
   html?: { lang?: string; title?: string };
   upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';

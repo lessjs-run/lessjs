@@ -113,8 +113,13 @@ export function lessBind(el: HTMLElement): void {
   for (const [key, value] of Object.entries(props)) {
     try {
       (el as unknown as Record<string, unknown>)[key] = value;
-    } catch {
-      // Some properties may be read-only — ignore silently
+    } catch (e) {
+      // Some properties may be read-only — safe to skip, but log for debuggability
+      console.debug(
+        `[LessJS] Cannot set read-only property "${key}" on <${el.tagName.toLowerCase()}>: ${
+          e instanceof Error ? e.message : String(e)
+        }`,
+      );
     }
   }
 }
@@ -284,8 +289,13 @@ export function island<T extends CustomElementConstructor>(
     if (!globalThis.customElements.get(tagName)) {
       try {
         globalThis.customElements.define(tagName, componentClass);
-      } catch {
+      } catch (e) {
         // Already defined — safe to ignore in SSR contexts
+        console.debug(
+          `[LessJS] customElements.define("${tagName}") skipped: ${
+            e instanceof Error ? e.message : String(e)
+          }`,
+        );
       }
     }
   };

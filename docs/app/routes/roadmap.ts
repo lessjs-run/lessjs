@@ -26,6 +26,58 @@ export class RoadmapPage extends LitElement {
         letter-spacing: 0.06em;
         text-transform: uppercase;
       }
+
+      .version-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.8125rem;
+      }
+      .version-table th,
+      .version-table td {
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+        border-bottom: 0.5px solid var(--less-border);
+      }
+      .version-table th {
+        font-size: 0.6875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--less-text-muted);
+      }
+      .version-table td:first-child {
+        font-weight: 600;
+        color: var(--less-text-primary);
+        white-space: nowrap;
+      }
+
+      .criteria-list {
+        list-style: none;
+        padding: 0;
+        margin: 0.5rem 0;
+      }
+      .criteria-list li {
+        padding: 0.25rem 0;
+        padding-left: 1.25rem;
+        position: relative;
+        color: var(--less-text-secondary);
+        font-size: 0.8125rem;
+      }
+      .criteria-list li::before {
+        content: "○";
+        position: absolute;
+        left: 0;
+        color: var(--less-text-muted);
+      }
+      .criteria-list li.met::before {
+        content: "●";
+        color: var(--less-accent);
+      }
+
+      .callout {
+        margin: 1.5rem 0;
+      }
     `,
   ];
 
@@ -35,21 +87,26 @@ export class RoadmapPage extends LitElement {
         <div class="container">
           <h1>Roadmap</h1>
           <p class="subtitle">
-            LessJS 的路线图围绕一个判断展开：先把 SSG + DSD + Island Upgrade + Hono API 做可信，再扩展
-            serverless fullstack、ISR、PWA 和 compiler。
+            LessJS 的路线图围绕一个判断展开：先把 SSG + DSD + Island Upgrade + Hono API
+            做可信，再扩展 serverless fullstack、ISR、PWA 和 compiler，最终在公共 API
+            稳定后承诺 1.0。
           </p>
 
           <div class="callout">
             <p>
               Roadmap 不是宣传页。这里列出的未来项只有进入实现和测试后，才会被写成稳定用户指南。
+              版本号策略详见
+              <a href="/decisions/0006-version-strategy">ADR 0006</a>。
             </p>
           </div>
 
-          <h2>Now: v0.6 Stabilization</h2>
+          <h2>Now: v0.7 — P0 Stabilization ✅</h2>
           <p>
-            v0.6.0-alpha.1 已完成 DSD + Island + CSS 变量主题 + Signals 二开 + Form-Associated CE +
-            Navigation API + dialog/popover + Speculative Loading 架构审查全部 8 Phase 38 项任务。
-            当前聚焦稳定化：回归测试、文档更新、alpha 反馈收集。
+            v0.7.0 完成了四维审计的全部 P0 修复：render-dsd.ts 和 island.ts
+            单元测试（73 个新测试）、runtime-shim 一致性修复、headExtras XSS 警告、
+            静默 catch 消除、CI 补全、pre-commit hooks。354 测试全部通过。
+            部署迁移至 Cloudflare Pages，lessjs.com 已上线。
+            当前聚焦 v0.8.0：P1 功能完善 + Island Manifest。
           </p>
           <table>
             <thead>
@@ -171,26 +228,70 @@ export class RoadmapPage extends LitElement {
           </div>
 
           <div class="phase">
-            <span class="status">v0.7</span>
-            <h3>Island Upgrade Manifest + Speculative Loading</h3>
+            <span class="status">v0.7.0 — done</span>
+            <h3>稳定基线（P0 审计修复）</h3>
             <p>
-              Move from global island entry toward page-level island manifests. Make eager, idle and
-              visible strategies observable in browser tests, then document them as stable behavior. Add
-              Speculation Rules for predictive prefetch.
+              基于四维审计（2026-05-07）的 P0 紧急修复。消除不可信行为，建立工程纪律。
+              包含破坏性变更（XSS 修复、catch 行为变更），因此升 MINOR。
             </p>
+            <table class="version-table">
+              <thead>
+                <tr><th>任务</th><th>说明</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>render-dsd.ts 单元测试</td><td>770 行核心渲染器零覆盖</td></tr>
+                <tr><td>island.ts 单元测试</td><td>321 行 Island 系统零覆盖</td></tr>
+                <tr><td>runtime-shim 一致性修复</td><td>serializeAttributes 缺失 escapeAttrValue</td></tr>
+                <tr><td>headExtras/headFragments XSS</td><td>重命名 + 运行时警告</td></tr>
+                <tr><td>消除静默 catch</td><td>8+ 处错误吞没 → console.warn</td></tr>
+                <tr><td>CI 补全</td><td>adapter-lit/docs 测试任务、发布门禁</td></tr>
+                <tr><td>pre-commit hooks</td><td>格式化/lint/类型检查守卫</td></tr>
+              </tbody>
+            </table>
           </div>
 
           <div class="phase">
-            <span class="status">v0.8</span>
+            <span class="status">v0.8.0 — next</span>
+            <h3>功能完善 + Island Manifest + Blog 开发启动</h3>
+            <p>
+              P1 审计修复 + Island 系统演进。补全测试覆盖、统一组件模型、
+              引入页面级 island manifest 替代全局入口。
+              Core API 稳定后启动 @lessjs/blog 开发（SSG 插件形态，不依赖 Fullstack）。
+            </p>
+            <table class="version-table">
+              <thead>
+                <tr><th>任务</th><th>说明</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>signals 测试套件</td><td>749 行零覆盖</td></tr>
+                <tr><td>dsd-hydration.ts 单元测试</td><td>Mixin 核心逻辑验证</td></tr>
+                <tr><td>Signal 原生切换</td><td>npm 依赖 + globalThis.Signal 回退</td></tr>
+                <tr><td>render-dsd.ts 拆分</td><td>770 行拆为 4 模块</td></tr>
+                <tr><td>UI 统一到 DsdLitElement</td><td>3 个组件未使用 Mixin</td></tr>
+                <tr><td>insertAfterHead 去重</td><td>ui → core</td></tr>
+                <tr><td>包版本统一</td><td>6 包版本不一致</td></tr>
+                <tr><td>定位重写</td><td>避免"全栈"过度承诺</td></tr>
+                <tr><td>Interactive Playground</td><td>StackBlitz 一键体验</td></tr>
+                <tr><td>Playwright E2E 测试</td><td>浏览器级集成测试</td></tr>
+                <tr><td>Island Upgrade Manifest</td><td>页面级 island 清单</td></tr>
+                <tr><td>Speculative Loading 可观测</td><td>策略浏览器测试</td></tr>
+                <tr><td>@lessjs/blog 开发启动</td><td>SSG 插件形态，v0.8 后核心 API 稳定即可开始</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="phase">
+            <span class="status">v0.9.0</span>
             <h3>Serverless Fullstack</h3>
             <p>
               Promote Hono API routes into a complete app story: FormData actions, typed RPC, env/secrets,
               deployment adapters and small official examples for content-driven apps.
+              @lessjs/blog dogfooding on docs site during this phase.
             </p>
           </div>
 
           <div class="phase">
-            <span class="status">v0.9</span>
+            <span class="status">v0.10.0</span>
             <h3>SSG + ISR + PWA</h3>
             <p>
               Add route-level revalidation, cache locks, stale fallback, service worker strategy and CDN
@@ -199,13 +300,90 @@ export class RoadmapPage extends LitElement {
           </div>
 
           <div class="phase">
-            <span class="status">v0.10</span>
-            <h3>.less Compiler Alpha</h3>
+            <span class="status">v0.11.0</span>
+            <h3>基础设施成熟 + Compiler Alpha</h3>
             <p>
-              Explore a compiler that can reduce runtime cost and make Lit optional. It remains an
-              optimization path, not a prerequisite for the current framework model.
+              P2 审计修复 + .less Compiler Alpha 引入。AST 替代手工 runtime-shim（根治最大技术债）、
+              增量 SSG 构建、性能基准、覆盖率门禁、视觉回归测试、安全审计自动化。
+              Compiler 需要稳定的 DSD renderer 作为编译目标，因此排在 AST 替换之后。
             </p>
           </div>
+
+          <div class="phase">
+            <span class="status">v1.0.0</span>
+            <h3>API 稳定承诺</h3>
+            <p>
+              当以下条件全部满足时，可以打 1.0.0：
+            </p>
+            <ul class="criteria-list">
+              <li>核心模块测试覆盖率 ≥ 80%</li>
+              <li>CI 全链路门禁就位（test + typecheck + lint + coverage gate）</li>
+              <li>runtime-shim 由 AST 生成，不再手工维护</li>
+              <li>公共 API 列表明确文档化（exports、config、CLI flags）</li>
+              <li>至少 3 个真实项目 dogfooding</li>
+              <li>无 P0/P1 级已知 Bug</li>
+            </ul>
+            <p>
+              1.0.0 不要求 Compiler 生产可用或 ISR 生产可用——这些是 1.x 的增量工作。
+            </p>
+          </div>
+
+          <div class="phase">
+            <span class="status">v1.x</span>
+            <h3>增量演进</h3>
+            <p>
+              1.0 后公共 API 视为稳定，Breaking Change 必须升 MAJOR。
+              增量工作包括：Compiler Beta → Stable、@lessjs/blog 包、Fullstack 示例丰富、
+              更多 adapter（Vue/React island bridge）等。
+            </p>
+          </div>
+
+          <div class="phase">
+            <span class="status">v2.0.0（如果需要）</span>
+            <h3>Compiler 成为默认</h3>
+            <p>
+              只有当 .less Compiler 生产可用、社区已自然迁移、将 Compiler 设为默认会破坏现有 Lit
+              用户工作流时，才需要 2.0。如果 Lit 兼容模式可以无缝共存，则不需要 2.0。
+            </p>
+          </div>
+
+          <h2>版本号逻辑</h2>
+          <table class="version-table">
+            <thead>
+              <tr>
+                <th>版本段</th>
+                <th>含义</th>
+                <th>Breaking Change</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>v0.7–0.10</td>
+                <td>框架在定义自己</td>
+                <td>MINOR 升级允许</td>
+              </tr>
+              <tr>
+                <td>v0.11</td>
+                <td>过渡版本：基础设施成熟 + 新能力引入</td>
+                <td>尽量减少</td>
+              </tr>
+              <tr>
+                <td>v1.0</td>
+                <td>公共 API 冻结</td>
+                <td>绝不允许</td>
+              </tr>
+              <tr>
+                <td>v1.x</td>
+                <td>增量扩展</td>
+                <td>公共 API 不破坏</td>
+              </tr>
+              <tr>
+                <td>v2.0</td>
+                <td>范式转换（如果需要）</td>
+                <td>允许，需迁移指南</td>
+              </tr>
+            </tbody>
+          </table>
 
           <h2>Product Direction</h2>
           <p>

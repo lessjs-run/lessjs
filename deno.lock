@@ -5,6 +5,7 @@
     "jsr:@deno/dnt@*": "0.42.3",
     "jsr:@deno/dnt@0.42": "0.42.3",
     "jsr:@lessjs/ui@0.6.1": "0.6.1",
+    "jsr:@std/assert@*": "1.0.19",
     "jsr:@std/assert@1": "1.0.19",
     "jsr:@std/fmt@1": "1.0.10",
     "jsr:@std/fs@1": "1.0.23",
@@ -663,7 +664,7 @@
     "members": {
       "packages/adapter-lit": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.6.2"
+          "jsr:@lessjs/core@0.7"
         ]
       },
       "packages/core": {
@@ -675,7 +676,7 @@
       },
       "packages/ui": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.6.2",
+          "jsr:@lessjs/core@0.7",
           "npm:lit@^3.2.0"
         ]
       }

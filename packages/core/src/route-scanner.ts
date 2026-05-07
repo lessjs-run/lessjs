@@ -108,8 +108,13 @@ export async function scanRoutes(
 
   try {
     files = await readdir(routesDir);
-  } catch {
+  } catch (e) {
     // Directory doesn't exist yet — return empty
+    console.debug(
+      `[LessJS] Routes directory "${routesDir}" not found: ${
+        e instanceof Error ? e.message : String(e)
+      }`,
+    );
     return entries;
   }
 
@@ -121,9 +126,12 @@ export async function scanRoutes(
     let fileStat;
     try {
       fileStat = await stat(fullPath);
-    } catch {
+    } catch (e) {
       // File disappeared between readdir and stat (e.g. watch mode deletion)
-      // Skip gracefully instead of crashing the build
+      console.debug(
+        `[LessJS] File vanished before stat: ${fullPath}`,
+        e instanceof Error ? e.message : '',
+      );
       continue;
     }
 
@@ -205,7 +213,13 @@ export async function scanIslands(
 
   try {
     entries = await readdir(islandsDir);
-  } catch {
+  } catch (e) {
+    // Directory doesn't exist yet — return empty
+    console.debug(
+      `[LessJS] Islands directory "${islandsDir}" not found: ${
+        e instanceof Error ? e.message : String(e)
+      }`,
+    );
     return files;
   }
 
@@ -216,7 +230,11 @@ export async function scanIslands(
     let fileStat;
     try {
       fileStat = await stat(fullPath);
-    } catch {
+    } catch (e) {
+      console.debug(
+        `[LessJS] Island file vanished before stat: ${fullPath}`,
+        e instanceof Error ? e.message : '',
+      );
       continue;
     }
 

@@ -63,7 +63,13 @@ export interface FrameworkOptions {
     stylesheets?: string[];
     /** Module script URLs to inject into <head> */
     scripts?: string[];
-    /** Arbitrary HTML fragments to inject into <head> */
+    /**
+     * Arbitrary HTML fragments to inject into <head>.
+     *
+     * @dangerous Fragments are injected as-is without sanitization. Only use
+     * with content you fully control. Never pass user-supplied strings here.
+     * For safe URL injection, use `stylesheets` or `scripts` instead.
+     */
     headFragments?: string[];
   };
 

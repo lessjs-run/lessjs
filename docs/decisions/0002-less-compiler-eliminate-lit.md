@@ -2,7 +2,7 @@
 
 ## Status
 
-**DRAFT** — Proposed for v0.10.0 alpha, not a v0.5-v0.9 blocker.
+**DRAFT** — Proposed for v0.11.0 alpha (per ADR 0006 version strategy), not a v0.7–v0.10 blocker.
 
 ## Context
 
@@ -97,7 +97,7 @@ Page `.less` files render directly (template is the page). Island `.less` files 
 
 - `vite.config.ts` option: `compiler: 'lit' | 'less' | 'auto'` (auto = `.less` files use compiler, `.ts` files use Lit)
 - Lit support retained as optional runtime throughout v0.x
-- v0.10.0 introduces `.less` as alpha and optional
+- v0.11.0 introduces `.less` as alpha and optional
 - v1.0 default remains an open decision; Lit compatibility must not be broken casually
 
 ## Consequences

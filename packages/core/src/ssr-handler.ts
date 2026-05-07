@@ -93,6 +93,16 @@ export function wrapInDocument(
   const safeTitle = escapeHtml(title);
   const safeLang = escapeHtmlAttr(lang);
   const safeHeadExtras = headExtras; // developer-provided HTML, intentionally not escaped
+
+  // Security: warn if headExtras contains <script> tags, which may indicate
+  // user-supplied content being injected unsafely. Legitimate use cases exist
+  // (e.g. analytics scripts), but developers should be aware of the risk.
+  if (headExtras && /<script[\s>]/i.test(headExtras)) {
+    console.warn(
+      '[LessJS] headExtras contains <script> tags. Ensure this content is developer-controlled, ' +
+        'not user-supplied, to prevent XSS. For safe URL injection, use inject.scripts instead.',
+    );
+  }
   const metaTags: string[] = [];
   if (meta?.description) {
     const safeDesc = meta.description

@@ -2,8 +2,9 @@
 
 ## Status
 
-**DRAFT** - proposed after v0.8.0 Serverless Fullstack. The ideal
-zero-framework version can wait for `.less` compiler alpha.
+**DRAFT** - can start development after v0.8.0 (when core API stabilizes). The ideal
+zero-framework version can wait for `.less` compiler alpha (v0.11.0).
+Blog is an SSG content plugin at its core — it does NOT depend on Fullstack (v0.9) or ISR (v0.10).
 
 ## Context
 
@@ -142,9 +143,10 @@ The `.md` parser should support:
 
 ## Implementation order
 
-1. v0.8.0 stabilizes route/action/serverless conventions
-2. `@lessjs/blog` ships as a plain SSG plugin first
-3. `.less` compiler support is added when v0.10.0 alpha is available
+1. v0.8.0 stabilizes core API (render-dsd split, component unification)
+2. `@lessjs/blog` development starts after v0.8.0 — SSG plugin form only
+3. Dogfood on LessJS docs site during v0.9.0 phase
+4. `.less` compiler support is added when v0.11.0 alpha is available
 4. LessJS docs site eats its own dogfood and replaces the current hardcoded blog
    routes
 

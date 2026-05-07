@@ -67,7 +67,7 @@ export class LessCompilerPage extends LitElement {
     return html`
       <less-layout currentPath="/guide/less-compiler">
         <div class="container">
-          <p class="adr-meta">ADR 0002 · 2026-04-30 · Draft · v0.10.0 alpha target</p>
+          <p class="adr-meta">ADR 0002 · 2026-04-30 · Draft · v0.11.0 alpha target (per ADR 0006)</p>
           <h1>.less Compiler — Optional Zero-Framework Authoring</h1>
 
           <h2>Context</h2>
@@ -85,7 +85,7 @@ export class LessCompilerPage extends LitElement {
           <h2>Proposal</h2>
           <p>
             引入可选的 <code>.less</code> 文件格式。编译器在 build time 将它转换成 vanilla Custom
-            Elements，让这类组件做到 0 KB framework runtime。Lit 继续作为 adapter 存在，不作为 v0.5-v0.9
+            Elements，让这类组件做到 0 KB framework runtime。            Lit 继续作为 adapter 存在，不作为 v0.7–v0.10
             的阻塞项，也不在 v0.x 被草率移除。
           </p>
 
@@ -143,7 +143,8 @@ export class LessCompilerPage extends LitElement {
           <p>
             可能的配置形态是 <code>compiler: 'lit' | 'kiss' | 'auto'</code>。其中
             <code>auto</code> 表示 <code>.less</code> 文件走编译器，<code>.ts</code> 组件继续走现有
-            adapter。v0.10.0 只应把它作为 alpha 能力引入；v1.0 是否默认启用仍是开放决策。
+            adapter。v0.11.0 只应把它作为 alpha 能力引入；v1.0 是否默认启用仍是开放决策。
+            详见 <a href="/decisions/0006-version-strategy">ADR 0006</a>。
           </p>
 
           <div class="nav-row" style="margin-top:2rem">

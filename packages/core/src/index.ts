@@ -111,6 +111,14 @@ export function less(options: FrameworkOptions = {}): Plugin[] {
       fragments.push(`<script type="module" src="${safeSrc}"></script>`);
     }
     for (const frag of options.inject.headFragments || []) {
+      // Security: warn if fragment contains inline <script> tags
+      if (/<script[\s>]/i.test(frag)) {
+        console.warn(
+          '[LessJS] inject.headFragments contains <script> tags. Ensure this content is ' +
+            'developer-controlled, not user-supplied, to prevent XSS. For safe URL injection, ' +
+            'use inject.scripts instead.',
+        );
+      }
       fragments.push(frag);
     }
     headExtras = fragments.join('\n  ');

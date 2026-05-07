@@ -119,6 +119,80 @@ export class ChangelogPage extends LitElement {
 
           <div class="version-section">
             <div class="version-header">
+              <span class="version-number">0.7.0</span>
+              <span class="version-date">2026-05-07</span>
+            </div>
+            <div class="change-category added">
+              <h4>新增</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>render-dsd.ts 单元测试</strong>：44 个测试用例覆盖核心 DSD 渲染器（770 行，此前零覆盖）。
+                  包含 escapeHtml/escapeAttr/escapeAttrValue、serializeAttributes、renderDSD 全路径、
+                  L2 Nested DSD、XSS 安全、DSD options、pure-island layer、adapter protocol、edge cases。
+                </li>
+                <li>
+                  <strong>island.ts 单元测试</strong>：29 个测试用例覆盖 Island 系统（321 行，此前零覆盖）。
+                  包含 tagName 验证、元数据标记（__island/__tagName/__layer）、DSD opt-out、
+                  四种策略实现（eager/lazy/idle/visible）、幂等注册、connectedCallback 包装、
+                  getSSRProps、lessBind。
+                </li>
+                <li>
+                  <strong>Pre-commit Hooks</strong>：<span class="inline-code">.githooks/pre-commit</span>
+                  自动运行 <span class="inline-code">deno fmt --check</span> +
+                  <span class="inline-code">deno lint</span> +
+                  <span class="inline-code">deno check</span>，阻止格式/lint/类型错误进入仓库。
+                  通过 <span class="inline-code">deno task hooks:install</span> 启用。
+                </li>
+                <li>
+                  <strong>CI adapter-lit 测试</strong>：test.yml 新增
+                  <span class="inline-code">test-adapter-lit</span> job，覆盖 adapter-lit 包的测试。
+                </li>
+                <li>
+                  <strong>CI 发布门禁</strong>：publish.yml 添加
+                  <span class="inline-code">needs: [test]</span> 依赖，确保测试通过后才能发布。
+                </li>
+              </ul>
+            </div>
+            <div class="change-category changed">
+              <h4>变更</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>runtime-shim 一致性修复</strong>：
+                  <span class="inline-code">serializeAttributes()</span> 改用
+                  <span class="inline-code">escapeAttrValue()</span>，与
+                  <span class="inline-code">render-dsd.ts</span> 保持一致。此前
+                  runtime-shim 的 <span class="inline-code">serializeAttributes</span> 直接调用
+                  <span class="inline-code">escapeAttr</span>，跳过了 null/undefined 处理逻辑。
+                </li>
+                <li>
+                  <strong>部署迁移至 Cloudflare Pages</strong>：从 GitHub Pages 迁移到 Cloudflare Pages
+                  Connect GitHub 模式。main → Production（lessjs.com），dev → Preview（自动分配 URL）。
+                </li>
+              </ul>
+            </div>
+            <div class="change-category fixed">
+              <h4>修复</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>headExtras/headFragments XSS 警告</strong>：
+                  <span class="inline-code">headExtras</span> 和
+                  <span class="inline-code">headFragments</span> 添加
+                  <span class="inline-code">@security</span> / <span class="inline-code">@dangerous</span>
+                  JSDoc 标注。当注入内容包含 <span class="inline-code">&lt;script&gt;</span> 标签时，
+                  运行时打印 <span class="inline-code">console.warn</span> 提醒开发者注意 XSS 风险。
+                </li>
+                <li>
+                  <strong>静默 catch 消除</strong>：修复 6 处残余静默 catch 块，改为
+                  <span class="inline-code">console.debug</span> 或
+                  <span class="inline-code">console.warn</span>，使错误可观测。
+                  涉及文件：island.ts、render-dsd.ts、cli/build-ssg.ts、cli/build-client.ts。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="version-section">
+            <div class="version-header">
               <span class="version-number">0.6.0-stabilization</span>
               <span class="version-date">2026-05-07</span>
             </div>

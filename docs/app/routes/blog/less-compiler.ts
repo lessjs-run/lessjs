@@ -95,9 +95,10 @@ export class BlogLessCompilerPage extends LitElement {
 
           <h2>路线</h2>
           <p>
-            这项工作不应该阻塞 v0.5-v0.9。当前路线是：先修可信度、安全、DSD renderer、Island Upgrade、
-            Serverless Fullstack 与 SSG/ISR，再在 v0.10.0 引入 <code>.less</code> compiler alpha。 Lit
-            兼容模式在 v0.x 生命周期中保留。
+            这项工作不应该阻塞 v0.7–v0.10。当前路线是：先修可信度、安全、DSD renderer、Island Upgrade、
+            Serverless Fullstack 与 SSG/ISR，再在 v0.11.0 引入 <code>.less</code> compiler alpha。 Lit
+            兼容模式在 v0.x 生命周期中保留。版本策略详见
+            <a href="/decisions/0006-version-strategy">ADR 0006</a>。
           </p>
           <p>
             详细技术设计见 <code>docs/decisions/0002-kiss-compiler-eliminate-lit.md</code>。

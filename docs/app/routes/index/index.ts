@@ -304,7 +304,7 @@ export default class DocsHome extends LitElement {
               </a>
               <a class="doc-link" href="/roadmap">
                 <strong>Roadmap</strong>
-                <span>了解近期修复、v0.6 渲染硬化、v0.7 island manifest 和后续方向。</span>
+                <span>了解 v0.7 稳定基线、v0.8 功能完善、v0.9+ 全栈/ISR/Compiler 到 1.0 的路线。</span>
               </a>
             </div>
           </section>
