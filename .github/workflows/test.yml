@@ -92,6 +92,23 @@ jobs:
       - name: Run create tests
         run: deno test packages/create/__tests__/ --allow-read --allow-write --allow-env --allow-run
 
+  test-adapter-lit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: '2'
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
+      - name: Install dependencies
+        run: deno install --node-modules-dir
+      - name: Run adapter-lit tests
+        run: deno test packages/adapter-lit/__tests__/ --allow-read --allow-write --allow-env
+
   build-docs:
     runs-on: ubuntu-latest
     steps:

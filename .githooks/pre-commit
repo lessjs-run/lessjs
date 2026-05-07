@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# LessJS pre-commit hook
+# Runs formatting, linting, and type checking before allowing a commit.
+# Install: deno task hooks:install
+# Uninstall: deno task hooks:uninstall
+#
+
+set -e
+
+echo "🔍 Running deno fmt --check (packages/)..."
+deno fmt --check packages/
+
+echo "🔍 Running deno lint (packages/)..."
+deno lint packages/
+
+echo "🔍 Running deno check (key entry points)..."
+deno check packages/core/src/index.ts \
+  packages/rpc/src/index.ts \
+  packages/ui/src/index.ts \
+  packages/adapter-lit/src/index.ts \
+  packages/adapter-lit/src/ssr.ts \
+  packages/signals/src/index.ts \
+  packages/create/cli.ts
+
+echo "✅ All pre-commit checks passed."

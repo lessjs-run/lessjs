@@ -263,6 +263,22 @@ deno task fmt:check    # 格式检查
 
 本仓库是 Deno-first。Vite 通过 `deno run -A npm:vite` 执行；Node/npm/npx 不是主工作流的一部分。
 
+### Pre-commit Hooks
+
+安装 Git pre-commit hooks，在每次提交前自动运行格式化检查、lint 和类型检查：
+
+```bash
+deno task hooks:install
+```
+
+卸载：
+
+```bash
+deno task hooks:uninstall
+```
+
+Hook 会执行 `deno fmt --check`、`deno lint` 和 `deno check`，不运行完整测试套件。
+
 ## 设计系统
 
 LessJS UI 组件遵循瑞士国际主义风格（Swiss International Style）：
