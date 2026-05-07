@@ -22,6 +22,9 @@ import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } f
 import { lessDesignTokens } from './design-tokens.js';
 import { WithDsdHydration } from '@lessjs/adapter-lit';
 
+/** Base class with DSD hydration mixed in (JSR requires extracted super class expression) */
+const DsdLitElement = WithDsdHydration(LitElement);
+
 export const tagName = 'less-code-block';
 
 /**
@@ -32,7 +35,7 @@ export const tagName = 'less-code-block';
  *   - Binds events declared in `static hydrateEvents`
  *   - Cleans up listeners on disconnect
  */
-export class LessCodeBlock extends WithDsdHydration(LitElement) {
+export class LessCodeBlock extends DsdLitElement {
   /** Declarative event bindings for DSD hydration */
   static hydrateEvents = [
     { selector: 'button.copy-btn', event: 'click', method: '_copy' },

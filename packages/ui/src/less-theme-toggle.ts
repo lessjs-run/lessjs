@@ -38,6 +38,9 @@ import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } f
 import { lessDesignTokens } from './design-tokens.js';
 import { WithDsdHydration } from '@lessjs/adapter-lit';
 
+/** Base class with DSD hydration mixed in (JSR requires extracted super class expression) */
+const DsdLitElement = WithDsdHydration(LitElement);
+
 export const tagName = 'less-theme-toggle';
 
 /**
@@ -48,7 +51,7 @@ export const tagName = 'less-theme-toggle';
  *   - Binds events declared in `static hydrateEvents`
  *   - Cleans up listeners on disconnect
  */
-export class LessThemeToggle extends WithDsdHydration(LitElement) {
+export class LessThemeToggle extends DsdLitElement {
   /** DSD: delegates focus for keyboard accessibility */
   static delegatesFocus = true;
 

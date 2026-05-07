@@ -42,6 +42,9 @@
 import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } from 'lit';
 import { lessDesignTokens } from './design-tokens.js';
 import { WithDsdHydration } from '@lessjs/adapter-lit';
+
+/** Base class with DSD hydration mixed in (JSR requires extracted super class expression) */
+const DsdLitElement = WithDsdHydration(LitElement);
 // CRITICAL: less-layout's template uses <less-theme-toggle>, so we MUST import it
 // so that the SSR renderer can recursively render its DSD shadow root.
 // Without this import, SSR outputs <less-theme-toggle></less-theme-toggle> without
@@ -87,7 +90,7 @@ export interface HeaderNavLink {
  *
  * Layout-specific: also sets up native <details> toggle for mobile menu.
  */
-export class LessLayout extends WithDsdHydration(LitElement) {
+export class LessLayout extends DsdLitElement {
   /** Declarative event bindings for DSD hydration */
   static hydrateEvents = [
     { selector: 'summary.mobile-menu-btn', event: 'click', method: '_toggleMenu' },
