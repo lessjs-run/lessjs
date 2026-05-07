@@ -1,15 +1,12 @@
-name: Deploy Docs to GitHub Pages
+name: Deploy Docs to Cloudflare Pages
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 concurrency:
-  group: 'pages'
+  group: 'production-deploy'
   cancel-in-progress: false
 
 jobs:
@@ -20,7 +17,7 @@ jobs:
 
       - uses: denoland/setup-deno@v2
         with:
-          deno-version: 'v2.7.14'
+          deno-version: '2'
 
       - name: Install dependencies
         run: deno install --node-modules-dir
@@ -28,16 +25,15 @@ jobs:
       - name: Build docs
         run: deno task build:docs
 
-      - name: Deploy to gh-pages branch
+      - name: Deploy to Cloudflare Pages (production)
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy docs/dist --project-name=lessjs --branch=main
+
+      - name: Print deployment info
         run: |
-          cd docs/dist
-          # Cache-bust: unique version file so GitHub Pages CDN treats
-          # each deploy as new content (no stale edge cache)
-          echo "$(date -u +%Y%m%dT%H%M%S)" > .version
-          git init
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          echo "lessjs.com" > CNAME
-          git add -A
-          git commit -m "Deploy LessJS docs site — $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          git push -f https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:gh-pages
+          echo "🚀 Production deployed to lessjs.com"
+          echo "Branch: main"
+          echo "Commit: ${{ github.sha }}"
