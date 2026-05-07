@@ -5,6 +5,10 @@
     ".": "./src/index.ts",
     "./ssr": "./src/ssr.ts"
   },
+  "imports": {
+    "@lessjs/core/render-dsd": "jsr:@lessjs/core@^0.6.0/render-dsd",
+    "@lessjs/core/less-runtime": "jsr:@lessjs/core@^0.6.0/less-runtime"
+  },
   "tasks": {
     "build": "deno check src/index.ts src/ssr.ts"
   },
