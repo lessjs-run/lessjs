@@ -8,8 +8,6 @@ It combines Declarative Shadow DOM, Web Components, Island Upgrade, SSG, Hono se
 and Vite into a minimal framework surface. LessJS aims not to hide the Web platform, but to make
 the platform itself more usable.
 
-LessJS evolved from the KISS framework (Keep It Simple, Stupid), continuing the same philosophy.
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/lessjs-run/lessjs/actions/workflows/test.yml/badge.svg)](https://github.com/lessjs-run/lessjs/actions/workflows/test.yml)
 [![@lessjs/core](https://img.shields.io/jsr/v/@lessjs/core?logo=jsr&labelColor=0a0a0a)](https://jsr.io/@lessjs/core)
@@ -48,31 +46,18 @@ Requirements:
 - Deno 2.7 or later
 - A modern browser with Declarative Shadow DOM support
 
-## Architecture
-
-LessJS is not just about "less code." It is a set of architectural constraints:
-
-| Letter | Constraint | Meaning                                                                                      |
-| ------ | ---------- | -------------------------------------------------------------------------------------------- |
-| K      | Knowledge  | Prefer build-time knowledge over runtime discovery.                                          |
-| I      | Isolated   | Client JavaScript should stay within island and component boundaries.                        |
-| S      | Semantic   | HTML remains the primary document format and the foundation of accessibility.                |
-| S      | Static     | SSG output should be deployable as static files; serverless APIs are optional dynamic edges. |
-
-Current rendering model:
+## Rendering Model
 
 ```text
 Route module (Web Component / LitElement)
   → render() → TemplateResult
-  → SSR adapter → Declarative Shadow DOM (L2 recursive, nested CEs get own <template shadowrootmode>)
+  → SSR adapter → Declarative Shadow DOM (L2 recursive nesting)
   → static HTML file + inline DSD templates
-  → optional island client chunk (<link rel="modulepreload"> for eager islands)
-  → browser: native DSD attachment + Custom Element upgrade at interaction boundaries
+  → optional island client chunk (4 strategies: eager / lazy / visible / idle)
+  → browser: native DSD attachment + Custom Element upgrade (DSD hydration, skip re-render)
 ```
 
-This differs intentionally from a full client hydration model. LessJS does not attempt
-to rebuild the application tree on the client — it upgrades Custom Elements at interaction
-points.
+LessJS does not do full client-side hydration tree reconciliation. Instead, it upgrades Custom Elements at interaction points on demand.
 
 **DSD Hydration**: When the browser natively attaches Declarative Shadow DOM, Lit components
 detect the existing shadow root and skip re-rendering, avoiding duplicate content (blank boxes,
@@ -184,12 +169,12 @@ Resource hints injected based on island strategy:
 
 | Package               | Responsibility                                                              | Version |
 | --------------------- | --------------------------------------------------------------------------- | ------- |
-| `@lessjs/core`        | Vite plugin, route scanning, DSD rendering (L2 nested), Navigation API, SSG | 0.6.0   |
-| `@lessjs/ui`          | Lit-based Web Component library (with DSD hydration)                        | 0.6.0   |
-| `@lessjs/signal`      | TC39 Signals fork (signal/computed/effect/islandEffect)                     | 0.6.0   |
-| `@lessjs/adapter-lit` | Optional Lit SSR adapter                                                    | 0.6.0   |
-| `@lessjs/rpc`         | Lightweight fetch/RPC controller tools                                      | 0.3.1   |
-| `@lessjs/create`      | Project scaffolding CLI                                                     | 0.6.0   |
+| `@lessjs/core`        | Vite plugin, route scanning, DSD rendering (L2 nested), Navigation API, SSG | 0.6.1   |
+| `@lessjs/ui`          | Lit-based Web Component library (with DSD hydration)                        | 0.6.1   |
+| `@lessjs/signal`      | TC39 Signals fork (signal/computed/effect/islandEffect)                     | 0.6.1   |
+| `@lessjs/adapter-lit` | Optional Lit SSR adapter                                                    | 0.6.1   |
+| `@lessjs/rpc`         | Lightweight fetch/RPC controller tools                                      | 0.6.1   |
+| `@lessjs/create`      | Project scaffolding CLI                                                     | 0.6.1   |
 
 Legacy packages `@lessjs/vite` and `@lessjs/ssg` are deprecated.
 
@@ -317,8 +302,9 @@ Theme variable example:
 
 | Version           | Date       | Highlights                                                                                   |
 | ----------------- | ---------- | -------------------------------------------------------------------------------------------- |
+| **0.6.1**         | 2026-05-07 | v0.6 stable release — README cleanup, all packages version-aligned, CI stability fixes       |
 | **0.6.0-alpha.1** | 2026-05-06 | DSD + Islands + Signals + Form-Associated CE + Navigation API + Dialog + Speculative Loading |
-| **0.5.5**         | 2026-05-06 | Full brand rename KISS → LessJS (105 files)                                                  |
+| **0.5.5**         | 2026-05-06 | Full brand rename (105 files)                                                                |
 | **0.5.3**         | 2026-05-05 | Trust Release — docs promises align with build artifacts                                     |
 | **0.5.0**         | 2026-05-04 | Single-command build + Core/Lit boundary tightening                                          |
 | **0.4.0**         | 2026-04-30 | Serverless API + Blog system + PWA SW strategy rewrite                                       |
@@ -326,7 +312,7 @@ Theme variable example:
 | **0.2.0**         | 2026-04-27 | Package Islands auto-detection                                                               |
 | **0.1.7**         | 2026-04-27 | @lessjs/ui component library + dogfooding                                                    |
 | **0.1.6**         | 2026-04-26 | Design system + mobile responsive                                                            |
-| **0.1.5**         | 2026-04-20 | K·I·S·S four-constraint architecture definition                                              |
+| **0.1.5**         | 2026-04-20 | Architecture constraint definition                                                           |
 | **0.1.4**         | 2026-04-15 | inject option + API Routes docs                                                              |
 | **0.1.3**         | 2026-04-10 | @lessjs/rpc + @lessjs/ui                                                                     |
 | **0.1.2**         | 2026-04-05 | Island AST transform                                                                         |
