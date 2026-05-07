@@ -55,12 +55,20 @@ export class BlogIndexPage extends LitElement {
           <p class="subtitle">LessJS 框架的设计思考、架构决策和发展路线。</p>
 
           <div class="blog-list">
-            <a href="/blog/v0-5-alpha1" class="blog-item">
+            <a href="/blog/v0-8-0" class="blog-item">
               <h2>
-                v0.5-alpha1 — 全量架构审计与精准修复 <span
+                v0.8.0 — 功能完善 + Island Manifest + Blog 启动 <span
                   style="font-size:0.7rem;color:var(--less-accent)"
                 >NEW</span>
               </h2>
+              <p class="blog-desc">
+                Signal 原生切换 · Island Upgrade Manifest · @lessjs/blog 包 · render-dsd.ts 拆分 · 390 测试通过
+              </p>
+              <span class="blog-date">2026-05-08</span>
+            </a>
+
+            <a href="/blog/v0-5-alpha1" class="blog-item">
+              <h2>v0.5-alpha1 — 全量架构审计与精准修复</h2>
               <p class="blog-desc">
                 3 agent 扫描 13k 行源码 · CSS 注入修复 · Island 升级修复 · 6 条新设计原则 · 配置精简
               </p>

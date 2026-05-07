@@ -100,13 +100,12 @@ export class RoadmapPage extends LitElement {
             </p>
           </div>
 
-          <h2>Now: v0.7 — P0 Stabilization ✅</h2>
+          <h2>Now: v0.8 — Feature Completion + Island Manifest + Blog 🚧</h2>
           <p>
-            v0.7.0 完成了四维审计的全部 P0 修复：render-dsd.ts 和 island.ts
-            单元测试（73 个新测试）、runtime-shim 一致性修复、headExtras XSS 警告、
-            静默 catch 消除、CI 补全、pre-commit hooks。354 测试全部通过。
-            部署迁移至 Cloudflare Pages，lessjs.com 已上线。
-            当前聚焦 v0.8.0：P1 功能完善 + Island Manifest。
+            v0.7.0 完成了四维审计的全部 P0 修复（354 测试通过），v0.8.0 在此基础上完成了 P1 功能完善：
+            Signal 原生切换、Island Upgrade Manifest、@lessjs/blog 包启动。
+            render-dsd.ts 拆分为 4 模块、UI 统一到 DsdLitElement、insertAfterHead 去重。
+            390 测试通过。当前聚焦 v0.8 收尾 + 文档站 dogfooding。
           </p>
           <table>
             <thead>
@@ -233,60 +232,49 @@ export class RoadmapPage extends LitElement {
             <p>
               基于四维审计（2026-05-07）的 P0 紧急修复。消除不可信行为，建立工程纪律。
               包含破坏性变更（XSS 修复、catch 行为变更），因此升 MINOR。
+              354 测试通过，lessjs.com 上线 Cloudflare Pages。
             </p>
-            <table class="version-table">
-              <thead>
-                <tr><th>任务</th><th>说明</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>render-dsd.ts 单元测试</td><td>770 行核心渲染器零覆盖</td></tr>
-                <tr><td>island.ts 单元测试</td><td>321 行 Island 系统零覆盖</td></tr>
-                <tr><td>runtime-shim 一致性修复</td><td>serializeAttributes 缺失 escapeAttrValue</td></tr>
-                <tr><td>headExtras/headFragments XSS</td><td>重命名 + 运行时警告</td></tr>
-                <tr><td>消除静默 catch</td><td>8+ 处错误吞没 → console.warn</td></tr>
-                <tr><td>CI 补全</td><td>adapter-lit/docs 测试任务、发布门禁</td></tr>
-                <tr><td>pre-commit hooks</td><td>格式化/lint/类型检查守卫</td></tr>
-              </tbody>
-            </table>
           </div>
 
           <div class="phase">
-            <span class="status">v0.8.0 — next</span>
+            <span class="status">v0.8.0 — in progress</span>
             <h3>功能完善 + Island Manifest + Blog 开发启动</h3>
             <p>
               P1 审计修复 + Island 系统演进。补全测试覆盖、统一组件模型、
               引入页面级 island manifest 替代全局入口。
-              Core API 稳定后启动 @lessjs/blog 开发（SSG 插件形态，不依赖 Fullstack）。
+              @lessjs/blog 包已启动（SSG 插件形态，不依赖 Fullstack）。
+              390 测试通过。
             </p>
             <table class="version-table">
               <thead>
-                <tr><th>任务</th><th>说明</th></tr>
+                <tr><th>任务</th><th>说明</th><th>状态</th></tr>
               </thead>
               <tbody>
-                <tr><td>signals 测试套件</td><td>749 行零覆盖</td></tr>
-                <tr><td>dsd-hydration.ts 单元测试</td><td>Mixin 核心逻辑验证</td></tr>
-                <tr><td>Signal 原生切换</td><td>npm 依赖 + globalThis.Signal 回退</td></tr>
-                <tr><td>render-dsd.ts 拆分</td><td>770 行拆为 4 模块</td></tr>
-                <tr><td>UI 统一到 DsdLitElement</td><td>3 个组件未使用 Mixin</td></tr>
-                <tr><td>insertAfterHead 去重</td><td>ui → core</td></tr>
-                <tr><td>✅ 包版本统一</td><td>已完成 — core 0.7.0, adapter-lit 0.6.3, 其余未变更</td></tr>
-                <tr><td>✅ 定位重写</td><td>已完成 — 静态站点框架 + 混合框架/编译器演进方向</td></tr>
-                <tr><td>Interactive Playground</td><td>StackBlitz 一键体验</td></tr>
-                <tr><td>Playwright E2E 测试</td><td>浏览器级集成测试</td></tr>
-                <tr><td>Island Upgrade Manifest</td><td>页面级 island 清单</td></tr>
-                <tr><td>Speculative Loading 可观测</td><td>策略浏览器测试</td></tr>
-                <tr><td>@lessjs/blog 开发启动</td><td>SSG 插件形态，v0.8 后核心 API 稳定即可开始</td></tr>
+                <tr><td>signals 测试套件</td><td>19 个测试覆盖 signal/computed/effect/islandEffect</td><td>✅ Done</td></tr>
+                <tr><td>dsd-hydration.ts 单元测试</td><td>13 个测试覆盖 DsdLitElement Mixin</td><td>✅ Done</td></tr>
+                <tr><td>Signal 原生切换</td><td>isNativeSignal() + globalThis.Signal 回退</td><td>✅ Done</td></tr>
+                <tr><td>render-dsd.ts 拆分</td><td>770 行拆为 4 模块</td><td>✅ Done</td></tr>
+                <tr><td>UI 统一到 DsdLitElement</td><td>3 个组件迁移到 Mixin</td><td>✅ Done</td></tr>
+                <tr><td>insertAfterHead 去重</td><td>ui → core</td><td>✅ Done</td></tr>
+                <tr><td>包版本统一</td><td>core 0.7.0, adapter-lit 0.6.3</td><td>✅ Done</td></tr>
+                <tr><td>定位重写</td><td>静态站点框架 + 混合框架/编译器演进方向</td><td>✅ Done</td></tr>
+                <tr><td>Island Upgrade Manifest</td><td>页面级 island 清单 + JSON 落盘</td><td>✅ Done</td></tr>
+                <tr><td>@lessjs/blog 开发启动</td><td>Vite 插件 + Markdown 解析 + 路由生成</td><td>✅ Done</td></tr>
+                <tr><td>Interactive Playground</td><td>StackBlitz 一键体验</td><td>⬜ Planned</td></tr>
+                <tr><td>Playwright E2E 测试</td><td>浏览器级集成测试</td><td>⬜ Planned</td></tr>
+                <tr><td>Speculative Loading 可观测</td><td>策略浏览器测试</td><td>⬜ Planned</td></tr>
               </tbody>
             </table>
           </div>
 
           <div class="phase">
             <span class="status">v0.9.0</span>
-            <h3>Serverless Fullstack</h3>
+            <h3>Serverless Fullstack + Docs Site Rewrite</h3>
             <p>
               Promote Hono API routes into a complete app story: FormData actions, typed RPC, env/secrets,
               deployment adapters and small official examples for content-driven apps.
-              @lessjs/blog dogfooding on docs site during this phase.
+              Docs site rewrite using @lessjs/blog as SSG content pipeline — dogfooding the blog plugin
+              on the framework's own documentation site.
             </p>
           </div>
 
