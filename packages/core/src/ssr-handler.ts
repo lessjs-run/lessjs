@@ -100,7 +100,7 @@ export function wrapInDocument(
   if (headExtras && /<script[\s>]/i.test(headExtras)) {
     console.warn(
       '[LessJS] headExtras contains <script> tags. Ensure this content is developer-controlled, ' +
-      'not user-supplied, to prevent XSS. For safe URL injection, use inject.scripts instead.',
+        'not user-supplied, to prevent XSS. For safe URL injection, use inject.scripts instead.',
     );
   }
   const metaTags: string[] = [];

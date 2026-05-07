@@ -75,7 +75,9 @@ export function buildIslandChunkMap(
     }
   } catch (e) {
     // Malformed manifest — warn and return empty map
-    console.warn(`[LessJS] Could not parse client manifest: ${e instanceof Error ? e.message : String(e)}`);
+    console.warn(
+      `[LessJS] Could not parse client manifest: ${e instanceof Error ? e.message : String(e)}`,
+    );
   }
 
   return islandChunkMap;

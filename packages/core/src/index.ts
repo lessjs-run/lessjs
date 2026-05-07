@@ -115,8 +115,8 @@ export function less(options: FrameworkOptions = {}): Plugin[] {
       if (/<script[\s>]/i.test(frag)) {
         console.warn(
           '[LessJS] inject.headFragments contains <script> tags. Ensure this content is ' +
-          'developer-controlled, not user-supplied, to prevent XSS. For safe URL injection, ' +
-          'use inject.scripts instead.',
+            'developer-controlled, not user-supplied, to prevent XSS. For safe URL injection, ' +
+            'use inject.scripts instead.',
         );
       }
       fragments.push(frag);

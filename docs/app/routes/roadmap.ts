@@ -100,11 +100,13 @@ export class RoadmapPage extends LitElement {
             </p>
           </div>
 
-          <h2>Now: v0.6 Stabilization</h2>
+          <h2>Now: v0.7 — P0 Stabilization ✅</h2>
           <p>
-            v0.6.0-alpha.1 已完成 DSD + Island + CSS 变量主题 + Signals 二开 + Form-Associated CE +
-            Navigation API + dialog/popover + Speculative Loading 架构审查全部 8 Phase 38 项任务。
-            当前聚焦稳定化：回归测试、文档更新、alpha 反馈收集。
+            v0.7.0 完成了四维审计的全部 P0 修复：render-dsd.ts 和 island.ts
+            单元测试（73 个新测试）、runtime-shim 一致性修复、headExtras XSS 警告、
+            静默 catch 消除、CI 补全、pre-commit hooks。354 测试全部通过。
+            部署迁移至 Cloudflare Pages，lessjs.com 已上线。
+            当前聚焦 v0.8.0：P1 功能完善 + Island Manifest。
           </p>
           <table>
             <thead>
@@ -226,7 +228,7 @@ export class RoadmapPage extends LitElement {
           </div>
 
           <div class="phase">
-            <span class="status">v0.7.0 — next</span>
+            <span class="status">v0.7.0 — done</span>
             <h3>稳定基线（P0 审计修复）</h3>
             <p>
               基于四维审计（2026-05-07）的 P0 紧急修复。消除不可信行为，建立工程纪律。
@@ -249,7 +251,7 @@ export class RoadmapPage extends LitElement {
           </div>
 
           <div class="phase">
-            <span class="status">v0.8.0</span>
+            <span class="status">v0.8.0 — next</span>
             <h3>功能完善 + Island Manifest + Blog 开发启动</h3>
             <p>
               P1 审计修复 + Island 系统演进。补全测试覆盖、统一组件模型、

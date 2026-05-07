@@ -63,7 +63,9 @@ function findHtmlFiles(dir: string): string[] {
     }
   } catch (e) {
     // Directory may not exist or be unreadable — warn instead of silent swallow
-    console.warn(`[LessJS] Cannot read directory ${dir}: ${e instanceof Error ? e.message : String(e)}`);
+    console.warn(
+      `[LessJS] Cannot read directory ${dir}: ${e instanceof Error ? e.message : String(e)}`,
+    );
   }
   return results;
 }
@@ -110,7 +112,10 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
     // v0.5.0 note: upgradeStrategy controls island module import timing.
     // It is not a client render runtime.
   } catch (e) {
-    console.warn('[LessJS] No .less/build-metadata.json found; using provided island list.', e instanceof Error ? e.message : '');
+    console.warn(
+      '[LessJS] No .less/build-metadata.json found; using provided island list.',
+      e instanceof Error ? e.message : '',
+    );
   }
 
   // Generate SSG entry code
@@ -238,7 +243,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         if (globalThis.customElements.get(name)) return;
         try {
           origDefine(name, ctor, options);
-        } catch (e) {
+        } catch (_e) {
           // Already defined by another route — safe to skip in SSR
           console.debug(`[LessJS SSG] customElements.define("${name}") skipped: already defined`);
         }
@@ -274,7 +279,9 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
             return nodeFs.statSync(path).isDirectory();
           } catch (e) {
             // Path doesn't exist or is inaccessible — not a directory
-            console.debug(`[LessJS SSG] isDirectory("${path}"): ${e instanceof Error ? e.message : String(e)}`);
+            console.debug(
+              `[LessJS SSG] isDirectory("${path}"): ${e instanceof Error ? e.message : String(e)}`,
+            );
             return false;
           }
         },
@@ -298,7 +305,11 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
             rmdirSync(_404Dir);
           } catch (e) {
             // Non-empty directory — not an error, just can't auto-remove
-            console.debug(`[LessJS SSG] Cannot remove 404 directory (not empty): ${e instanceof Error ? e.message : String(e)}`);
+            console.debug(
+              `[LessJS SSG] Cannot remove 404 directory (not empty): ${
+                e instanceof Error ? e.message : String(e)
+              }`,
+            );
           }
         }
         console.log('[LessJS SSG] 404 page → dist/404.html (GitHub Pages)');
@@ -477,7 +488,9 @@ async function networkFirst(req) {
       unlinkSync(tmpEntryPath);
     } catch (e) {
       // Temp file cleanup failure is non-fatal
-      console.debug(`[LessJS SSG] Could not remove temp entry: ${e instanceof Error ? e.message : String(e)}`);
+      console.debug(
+        `[LessJS SSG] Could not remove temp entry: ${e instanceof Error ? e.message : String(e)}`,
+      );
     }
   }
 }

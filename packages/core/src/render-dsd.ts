@@ -291,7 +291,11 @@ export async function renderDSD(
       (instance as Record<string, unknown>)[key] = value;
     } catch (e) {
       // Some properties may be read-only — safe to skip, but log for debuggability
-      console.debug(`[LessJS] Cannot set read-only property "${key}" on <${tagName}>: ${e instanceof Error ? e.message : String(e)}`);
+      console.debug(
+        `[LessJS] Cannot set read-only property "${key}" on <${tagName}>: ${
+          e instanceof Error ? e.message : String(e)
+        }`,
+      );
     }
   }
 
@@ -346,7 +350,11 @@ export async function renderDSD(
       styleCss = adapter.extractStyles(componentClass) || '';
     } catch (e) {
       // Style extraction failed — continue without styles, but log for debuggability
-      console.debug(`[LessJS] extractStyles failed for <${tagName}>: ${e instanceof Error ? e.message : String(e)}`);
+      console.debug(
+        `[LessJS] extractStyles failed for <${tagName}>: ${
+          e instanceof Error ? e.message : String(e)
+        }`,
+      );
     }
   }
 

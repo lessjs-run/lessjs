@@ -145,7 +145,11 @@ export function matchRoute(
         }
       } catch (e) {
         // URLPattern might not support this pattern — fall through to regex
-        console.debug(`[LessJS] URLPattern failed for "${pattern.path}": ${e instanceof Error ? e.message : String(e)}`);
+        console.debug(
+          `[LessJS] URLPattern failed for "${pattern.path}": ${
+            e instanceof Error ? e.message : String(e)
+          }`,
+        );
       }
     }
 

@@ -14,12 +14,8 @@
  * We mock customElements, IntersectionObserver, MutationObserver etc.
  */
 
-import { assertEquals, assertStringIncludes } from 'jsr:@std/assert';
-import {
-  island,
-  getSSRProps,
-  lessBind,
-} from '../src/island.ts';
+import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
+import { getSSRProps, island, lessBind } from '../src/island.ts';
 
 // ─── Mock infrastructure ─────────────────────────────────────────
 
@@ -256,18 +252,32 @@ Deno.test('island: visible strategy does not crash (IntersectionObserver + Mutat
 
   (globalThis as unknown as Record<string, unknown>).IntersectionObserver = class {
     constructor() {}
-    observe() { return; }
-    disconnect() { return; }
-    takeRecords() { return []; }
-    unobserve() { return; }
+    observe() {
+      return;
+    }
+    disconnect() {
+      return;
+    }
+    takeRecords() {
+      return [];
+    }
+    unobserve() {
+      return;
+    }
   };
 
   // Mock MutationObserver
   (globalThis as unknown as Record<string, unknown>).MutationObserver = class {
     constructor() {}
-    observe() { return; }
-    disconnect() { return; }
-    takeRecords() { return []; }
+    observe() {
+      return;
+    }
+    disconnect() {
+      return;
+    }
+    takeRecords() {
+      return [];
+    }
   };
 
   // Mock document for visible strategy
@@ -382,7 +392,8 @@ Deno.test('getSSRProps: returns null when no data-ssr-props attribute', () => {
 
 Deno.test('getSSRProps: parses valid JSON from data-ssr-props', () => {
   const el = {
-    getAttribute: (name: string) => name === 'data-ssr-props' ? JSON.stringify({ count: 5, label: 'test' }) : null,
+    getAttribute: (name: string) =>
+      name === 'data-ssr-props' ? JSON.stringify({ count: 5, label: 'test' }) : null,
     tagName: 'DIV',
   } as unknown as HTMLElement;
   const props = getSSRProps(el);
@@ -424,14 +435,23 @@ Deno.test('getSSRProps: handles complex nested JSON', () => {
 Deno.test('lessBind: sets properties from data-ssr-props', () => {
   const data: Record<string, unknown> = { count: 0, label: '' };
   const el = {
-    getAttribute: (name: string) => name === 'data-ssr-props' ? JSON.stringify({ count: 42, label: 'hello' }) : null,
+    getAttribute: (name: string) =>
+      name === 'data-ssr-props' ? JSON.stringify({ count: 42, label: 'hello' }) : null,
     tagName: 'DIV',
     hasAttribute: (name: string) => name === 'data-ssr-props',
     // Make properties settable on the mock
-    get count() { return data.count; },
-    set count(v: unknown) { data.count = v; },
-    get label() { return data.label; },
-    set label(v: unknown) { data.label = v; },
+    get count() {
+      return data.count;
+    },
+    set count(v: unknown) {
+      data.count = v;
+    },
+    get label() {
+      return data.label;
+    },
+    set label(v: unknown) {
+      data.label = v;
+    },
   } as unknown as HTMLElement;
 
   lessBind(el);
@@ -452,7 +472,8 @@ Deno.test('lessBind: does nothing when no data-ssr-props', () => {
 
 Deno.test('lessBind: skips read-only properties gracefully', () => {
   const el = {
-    getAttribute: (name: string) => name === 'data-ssr-props' ? JSON.stringify({ readonly: 'changed' }) : null,
+    getAttribute: (name: string) =>
+      name === 'data-ssr-props' ? JSON.stringify({ readonly: 'changed' }) : null,
     tagName: 'DIV',
     hasAttribute: (name: string) => name === 'data-ssr-props',
   } as unknown as HTMLElement;

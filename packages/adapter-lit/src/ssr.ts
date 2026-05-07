@@ -209,7 +209,9 @@ function stringifyContentValue(value: unknown): string {
         return '';
       } catch (e) {
         // If resolution fails, fall through to escaped string
-        console.debug(`[LessJS] Directive resolution failed: ${e instanceof Error ? e.message : String(e)}`);
+        console.debug(
+          `[LessJS] Directive resolution failed: ${e instanceof Error ? e.message : String(e)}`,
+        );
       }
     }
     // _$litDirective$ also appears in other Lit directives — fall through
