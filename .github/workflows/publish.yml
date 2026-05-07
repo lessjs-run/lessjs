@@ -43,10 +43,10 @@ jobs:
             (cd "$dir" && deno publish -c deno.json --allow-dirty)
           }
 
-          # Publish in dependency order: rpc → ui → adapter-lit → signals → core → create
+          # Publish in dependency order: rpc → ui → adapter-lit → signal → core → create
           publish_if_missing "@lessjs/rpc" "packages/rpc"
           publish_if_missing "@lessjs/ui" "packages/ui"
           publish_if_missing "@lessjs/adapter-lit" "packages/adapter-lit"
-          publish_if_missing "@lessjs/signals" "packages/signals"
+          publish_if_missing "@lessjs/signal" "packages/signals"
           publish_if_missing "@lessjs/core" "packages/core"
           publish_if_missing "@lessjs/create" "packages/create"

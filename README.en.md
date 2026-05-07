@@ -83,7 +83,7 @@ Current version v0.6.0-alpha.1 is the DSD + Island Architecture + Web Standards 
 | `@lessjs/rpc`         | Lightweight fetch/RPC controller tools                   | 0.3.1           |
 | `@lessjs/adapter-lit` | Optional Lit SSR adapter                                 | 0.3.0           |
 | `@lessjs/create`      | Project scaffolding CLI                                  | 0.4.7           |
-| `@lessjs/signals`     | Reactive signals system                                  | 0.6.0-alpha.1   |
+| `@lessjs/signal`      | Reactive signals system                                  | 0.6.0-alpha.1   |
 
 Legacy packages `@lessjs/vite` and `@lessjs/ssg` are deprecated.
 

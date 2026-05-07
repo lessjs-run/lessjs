@@ -64,7 +64,7 @@ export class RoadmapPage extends LitElement {
                 <td>TC39 Signals 二开</td>
                 <td>✅ Done</td>
                 <td>
-                  <span class="inline-code">@lessjs/signals</span>：
+                  <span class="inline-code">@lessjs/signal</span>：
                   <span class="inline-code">signal()</span>、
                   <span class="inline-code">computed()</span>、
                   <span class="inline-code">effect()</span>、
