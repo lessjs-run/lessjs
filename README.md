@@ -69,18 +69,18 @@ Route module
 这和完整客户端 hydration 模型有意不同。LessJS 不尝试在客户端重建应用树，而是在需要交互的位置升级
 Custom Elements。
 
-当前版本 v0.6.1 是 DSD + Island Architecture + Web Standards 版本。
+当前版本 v0.6.0 是 DSD + Island Architecture + Web Standards 版本。
 
 ## 包
 
 | 包                    | 职责                                               | 当前版本 |
 | --------------------- | -------------------------------------------------- | -------- |
-| `@lessjs/core`        | Vite 插件、路由扫描、DSD 渲染、SSG 管线            | 0.6.1    |
+| `@lessjs/core`        | Vite 插件、路由扫描、DSD 渲染、SSG 管线            | 0.6.0    |
 | `@lessjs/ui`          | 基于 Lit 的 Web Component 组件库和 package islands | 0.6.0    |
 | `@lessjs/rpc`         | 轻量 fetch/RPC controller 工具                     | 0.3.1    |
-| `@lessjs/adapter-lit` | 可选 Lit SSR 适配器                                | 0.6.1    |
-| `@lessjs/create`      | 项目脚手架 CLI                                     | 0.6.1    |
-| `@lessjs/signal`      | 响应式信号系统                                     | 0.6.1    |
+| `@lessjs/adapter-lit` | 可选 Lit SSR 适配器                                | 0.6.0    |
+| `@lessjs/create`      | 项目脚手架 CLI                                     | 0.6.0    |
+| `@lessjs/signal`      | 响应式信号系统                                     | 0.6.0    |
 
 历史包 `@lessjs/vite` 和 `@lessjs/ssg` 已废弃。
 

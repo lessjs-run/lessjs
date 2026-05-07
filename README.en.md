@@ -72,18 +72,18 @@ This differs intentionally from a full client hydration model. LessJS does not a
 to rebuild the application tree on the client — it upgrades Custom Elements at interaction
 points.
 
-Current version v0.6.1 is the DSD + Island Architecture + Web Standards release.
+Current version v0.6.0 is the DSD + Island Architecture + Web Standards release.
 
 ## Packages
 
 | Package               | Responsibility                                           | Current Version |
 | --------------------- | -------------------------------------------------------- | --------------- |
-| `@lessjs/core`        | Vite plugin, route scanning, DSD rendering, SSG pipeline | 0.6.1           |
+| `@lessjs/core`        | Vite plugin, route scanning, DSD rendering, SSG pipeline | 0.6.0           |
 | `@lessjs/ui`          | Lit-based Web Component library and package islands      | 0.6.0           |
 | `@lessjs/rpc`         | Lightweight fetch/RPC controller tools                   | 0.3.1           |
-| `@lessjs/adapter-lit` | Optional Lit SSR adapter                                 | 0.6.1           |
-| `@lessjs/create`      | Project scaffolding CLI                                  | 0.6.1           |
-| `@lessjs/signal`      | Reactive signals system                                  | 0.6.1           |
+| `@lessjs/adapter-lit` | Optional Lit SSR adapter                                 | 0.6.0           |
+| `@lessjs/create`      | Project scaffolding CLI                                  | 0.6.0           |
+| `@lessjs/signal`      | Reactive signals system                                  | 0.6.0           |
 
 Legacy packages `@lessjs/vite` and `@lessjs/ssg` are deprecated.
 

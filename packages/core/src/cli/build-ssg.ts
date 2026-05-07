@@ -341,9 +341,10 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
       }
 
       // Post-process: build island chunk map for speculative links
-      const { buildIslandChunkMap, injectCspMeta, injectDsdPolyfill, injectLayoutStyles } = await import(
-        '../ssg-postprocess.js'
-      );
+      const { buildIslandChunkMap, injectCspMeta, injectDsdPolyfill, injectLayoutStyles } =
+        await import(
+          '../ssg-postprocess.js'
+        );
       const _islandChunkMap = buildIslandChunkMap(root, outDir, islandTagNames, basePath);
 
       // Post-process: inject CSP <meta> tag into static HTML files.
