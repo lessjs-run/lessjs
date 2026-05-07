@@ -22,7 +22,7 @@ import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } f
 import { lessDesignTokens } from './design-tokens.js';
 import { WithDsdHydration } from '@lessjs/adapter-lit';
 
-/** Base class with DSD hydration mixed in (JSR requires extracted super class expression) */
+/** @internal */
 const DsdLitElement = WithDsdHydration(LitElement);
 
 export const tagName = 'less-code-block';

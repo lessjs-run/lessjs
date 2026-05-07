@@ -43,7 +43,7 @@ import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } f
 import { lessDesignTokens } from './design-tokens.js';
 import { WithDsdHydration } from '@lessjs/adapter-lit';
 
-/** Base class with DSD hydration mixed in (JSR requires extracted super class expression) */
+/** @internal */
 const DsdLitElement = WithDsdHydration(LitElement);
 // CRITICAL: less-layout's template uses <less-theme-toggle>, so we MUST import it
 // so that the SSR renderer can recursively render its DSD shadow root.
