@@ -119,6 +119,43 @@ export class ChangelogPage extends LitElement {
 
           <div class="version-section">
             <div class="version-header">
+              <span class="version-number">0.6.0-stabilization</span>
+              <span class="version-date">2026-05-07</span>
+            </div>
+            <div class="change-category fixed">
+              <h4>修复</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>DSD Hydration 全组件覆盖</strong>：LessButton、LessThemeToggle、
+                  LessCodeBlock、LessCard、LessInput 五个组件全部添加 DSD hydration 逻辑 （<span
+                    class="inline-code"
+                  >_dsdHydrated</span> +
+                  <span class="inline-code">createRenderRoot()</span> 覆写）， 解决按钮旁空白框、Footer
+                  内容重复渲染等重复渲染问题。
+                </li>
+                <li>
+                  <strong>Footer CSS 选择器修复</strong>：
+                  <span class="inline-code">.app-footer footer</span> →
+                  <span class="inline-code">.app-footer</span>。 原选择器匹配不到实际 DOM 结构（<span
+                    class="inline-code"
+                  >&lt;footer class="app-footer"&gt;</span>）， 导致 Footer 无样式（无
+                  padding/border/background）。
+                </li>
+                <li>
+                  <strong>DSD Regex 属性匹配增强</strong>：正则表达式扩展以匹配
+                  <span class="inline-code">shadowrootdelegatesfocus</span> 等所有 template 属性。
+                </li>
+                <li>
+                  <strong>CI 类型检查修复</strong>：3 个新增 hydration 组件补齐
+                  <span class="inline-code">nothing</span> 导入； less-theme-toggle.ts 缩进通过 deno fmt
+                  自动修正。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="version-section">
+            <div class="version-header">
               <span class="version-number">0.6.0-alpha.1</span>
               <span class="version-date">2026-05-06</span>
             </div>
@@ -131,14 +168,15 @@ export class ChangelogPage extends LitElement {
                   <span class="inline-code">signal()</span>、
                   <span class="inline-code">computed()</span>（自动依赖追踪）、
                   <span class="inline-code">effect()</span>（依赖变化自动重跑）、
-                  <span class="inline-code">islandEffect()</span>（Island 生命周期绑定）。
-                  浏览器原生 <span class="inline-code">Signal</span> 条件回退。
-                  旧 API <span class="inline-code">derived()</span> + fire-once
+                  <span class="inline-code">islandEffect()</span>（Island 生命周期绑定）。 浏览器原生
+                  <span class="inline-code">Signal</span> 条件回退。 旧 API <span class="inline-code"
+                  >derived()</span> + fire-once
                   <span class="inline-code">effect()</span> 完全删除。
                 </li>
                 <li>
                   <strong>DSD 规范对齐</strong>：
-                  <span class="inline-code">shadowrootdelegatesfocus</span>（less-button, less-input, less-theme-toggle）、
+                  <span class="inline-code">shadowrootdelegatesfocus</span>（less-button, less-input,
+                  less-theme-toggle）、
                   <span class="inline-code">shadowrootserializable</span>、
                   <span class="inline-code">shadowrootslotassignment</span>、
                   <span class="inline-code">shadowrootcustomelementregistry</span>。
@@ -156,13 +194,13 @@ export class ChangelogPage extends LitElement {
                   <strong>Navigation API</strong>：
                   <span class="inline-code">navigate()</span>、
                   <span class="inline-code">onNavigate()</span>、
-                  <span class="inline-code">matchRoute()</span>。
-                  URLPattern + regex fallback 路由匹配。
+                  <span class="inline-code">matchRoute()</span>。 URLPattern + regex fallback 路由匹配。
                 </li>
                 <li>
                   <strong>Speculative Loading</strong>：
                   <span class="inline-code">&lt;link rel="modulepreload"&gt;</span> for eager islands；
-                  <span class="inline-code">&lt;link rel="prefetch"&gt;</span> for lazy/visible/idle islands。
+                  <span class="inline-code">&lt;link rel="prefetch"&gt;</span> for lazy/visible/idle
+                  islands。
                 </li>
                 <li>
                   <strong>less-dialog 组件</strong>：原生
@@ -176,8 +214,8 @@ export class ChangelogPage extends LitElement {
                   递归渲染嵌套 Custom Element，页面组件模版中的子组件都生成 DSD。
                 </li>
                 <li>
-                  <strong>Sidebar SSR 首次渲染</strong>：less-layout 的 sidebar/header/footer
-                  在 HTML 中静态存在，全部 CSS 在 DSD 模版内。
+                  <strong>Sidebar SSR 首次渲染</strong>：less-layout 的 sidebar/header/footer 在 HTML
+                  中静态存在，全部 CSS 在 DSD 模版内。
                 </li>
               </ul>
             </div>
@@ -186,15 +224,15 @@ export class ChangelogPage extends LitElement {
               <ul class="change-list">
                 <li>
                   <strong>@lessjs/core 升至 0.6.0-alpha.1</strong>：包含 L2 Nested DSD、Navigation API、
-                  DsdOptions、renderNestedCustomElements 等。
-                  @lessjs/signal 升至 0.6.0-alpha.1。@lessjs/ui 升至 0.6.0。
-                  @lessjs/adapter-lit 升至 0.3.0。@lessjs/create 升至 0.4.7。
-                  @lessjs/rpc 无变更（0.3.1）。
+                  DsdOptions、renderNestedCustomElements 等。 @lessjs/signal 升至
+                  0.6.0-alpha.1。@lessjs/ui 升至 0.6.0。 @lessjs/adapter-lit 升至 0.3.0。@lessjs/create
+                  升至 0.4.7。 @lessjs/rpc 无变更（0.3.1）。
                 </li>
                 <li>
-                  <strong>Adapter 协议去全局化</strong>：移除 <span class="inline-code">globalThis.__lessRenderAdapter</span>、
-                  <span class="inline-code">globalThis.__lessLitAdapterInstalled</span> 等 globalThis 污染。
-                  适配器通过 <span class="inline-code">registerAdapter()</span> 显式注册。
+                  <strong>Adapter 协议去全局化</strong>：移除 <span class="inline-code"
+                  >globalThis.__lessRenderAdapter</span>、
+                  <span class="inline-code">globalThis.__lessLitAdapterInstalled</span> 等 globalThis
+                  污染。 适配器通过 <span class="inline-code">registerAdapter()</span> 显式注册。
                 </li>
                 <li>
                   <strong>Island Mixin 替代猴子补丁</strong>：
@@ -218,9 +256,10 @@ export class ChangelogPage extends LitElement {
                 </li>
                 <li>
                   <strong>废弃代码清理</strong>：删除 <span class="inline-code">html-template.ts</span>、
-                  <span class="inline-code">less-bind.ts</span>、<span class="inline-code">vite-ext.d.ts</span>。
-                  合并重复类型（<span class="inline-code">PackageIslandMeta</span>），
-                  移除 <span class="inline-code">lessScaffoldColorCSS</span> 别名。
+                  <span class="inline-code">less-bind.ts</span>、<span class="inline-code"
+                  >vite-ext.d.ts</span>。 合并重复类型（<span class="inline-code"
+                  >PackageIslandMeta</span>）， 移除 <span class="inline-code">lessScaffoldColorCSS</span>
+                  别名。
                 </li>
               </ul>
             </div>
@@ -232,17 +271,17 @@ export class ChangelogPage extends LitElement {
                   <span class="inline-code">navigationType</span> 未按 WHATWG §7.4 规范返回正确类型。
                 </li>
                 <li>
-                  <strong>首页 content 被 sidebar BFC 裁剪</strong>：改为条件渲染，
-                  home 时不渲染 desktop sidebar。
+                  <strong>首页 content 被 sidebar BFC 裁剪</strong>：改为条件渲染， home 时不渲染 desktop
+                  sidebar。
                 </li>
                 <li>
-                  <strong>renderNestedCustomElements 三个关联 bug</strong>：
-                  两阶段替换重叠、Shadow DOM 内容被当 Light DOM、alreadyHasDSD 误判。
+                  <strong>renderNestedCustomElements 三个关联 bug</strong>： 两阶段替换重叠、Shadow DOM
+                  内容被当 Light DOM、alreadyHasDSD 误判。
                 </li>
                 <li>
                   <strong>SSG Lit TemplateResult 渲染失败</strong>：改用
-                  <span class="inline-code">server.ssrLoadModule()</span> 安装 adapter，
-                  与 renderDSD 共享同一模块作用域。
+                  <span class="inline-code">server.ssrLoadModule()</span> 安装 adapter， 与 renderDSD
+                  共享同一模块作用域。
                 </li>
                 <li>
                   <strong>CSS token 数据漂移</strong>：新建
@@ -265,20 +304,24 @@ export class ChangelogPage extends LitElement {
               <h4>变更</h4>
               <ul class="change-list">
                 <li>
-                  <strong>全面品牌重塑 KISS → LessJS 完成</strong>：包名 <span class="inline-code">@kissjs/*</span>
-                  → <span class="inline-code">@lessjs/*</span>，主函数 <span class="inline-code">kiss()</span>
-                  → <span class="inline-code">less()</span>，全部类名、变量名、注释完成迁移。
-                  涉及 105 个文件，1171 行新增，905 行删除。
+                  <strong>全面品牌重塑 KISS → LessJS 完成</strong>：包名 <span class="inline-code"
+                  >@kissjs/*</span>
+                  → <span class="inline-code">@lessjs/*</span>，主函数 <span class="inline-code"
+                  >kiss()</span>
+                  → <span class="inline-code">less()</span>，全部类名、变量名、注释完成迁移。 涉及 105
+                  个文件，1171 行新增，905 行删除。
                 </li>
                 <li>
                   <strong>文档站全站品牌更新</strong>：CSS 变量 <span class="inline-code">--kiss-*</span>
-                  → <span class="inline-code">--less-*</span>（69 处），域名 <span class="inline-code">kiss.js.org</span>
-                  → <span class="inline-code">lessjs.com</span>，路由 <span class="inline-code">/kiss-compiler</span>
+                  → <span class="inline-code">--less-*</span>（69 处），域名 <span class="inline-code"
+                  >kiss.js.org</span>
+                  → <span class="inline-code">lessjs.com</span>，路由 <span class="inline-code"
+                  >/kiss-compiler</span>
                   → <span class="inline-code">/less-compiler</span>，README.en.md 全文重写。
                 </li>
                 <li>
-                  <strong>版本号提升</strong>：core 0.5.4→0.5.5，ui 0.5.4→0.5.5，
-                  rpc 0.3.0→0.3.1，adapter-lit 0.2.0→0.2.1，create 0.4.5→0.4.6。
+                  <strong>版本号提升</strong>：core 0.5.4→0.5.5，ui 0.5.4→0.5.5， rpc
+                  0.3.0→0.3.1，adapter-lit 0.2.0→0.2.1，create 0.4.5→0.4.6。
                 </li>
               </ul>
             </div>
@@ -286,31 +329,41 @@ export class ChangelogPage extends LitElement {
               <h4>修复</h4>
               <ul class="change-list">
                 <li>
-                  <strong>移动端 sidebar 无法打开（全浏览器）</strong>：首页 <span class="inline-code">&lt;less-layout home&gt;</span>
-                  因 <span class="inline-code">home=true</span> 使用了 <span class="inline-code">display:none</span> 隐藏 sidebar，
-                  导致 <span class="inline-code">transform</span> 无法作用于无盒模型的元素。
-                  修复为 <span class="inline-code">width:0 + overflow:hidden</span>，保留盒模型使 transform 生效。
+                  <strong>移动端 sidebar 无法打开（全浏览器）</strong>：首页 <span class="inline-code"
+                  >&lt;less-layout home&gt;</span>
+                  因 <span class="inline-code">home=true</span> 使用了 <span class="inline-code"
+                  >display:none</span> 隐藏 sidebar， 导致 <span class="inline-code">transform</span>
+                  无法作用于无盒模型的元素。 修复为 <span class="inline-code"
+                  >width:0 + overflow:hidden</span>，保留盒模型使 transform 生效。
                 </li>
                 <li>
                   <strong>移动端首页 hamburger 只显示遮罩无 sidebar</strong>：改为始终渲染 sidebar，
-                  桌面端折叠（width:0），移动端恢复尺寸，配合 <span class="inline-code">:host([menu-open])</span> CSS 控制显隐。
+                  桌面端折叠（width:0），移动端恢复尺寸，配合 <span class="inline-code"
+                  >:host([menu-open])</span> CSS 控制显隐。
                 </li>
                 <li>
-                  <strong>PWA manifest.json favicon 路径错误</strong>：<span class="inline-code">/favicon.svg</span>
-                  → <span class="inline-code">/assets/less-logo.svg</span>，修复浏览器默认 favicon 请求 404。
+                  <strong>PWA manifest.json favicon 路径错误</strong>：<span class="inline-code"
+                  >/favicon.svg</span>
+                  → <span class="inline-code">/assets/less-logo.svg</span>，修复浏览器默认 favicon 请求
+                  404。
                 </li>
                 <li>
-                  <strong>dnt npm 构建失败</strong>：<span class="inline-code">packages/rpc/_build_npm.ts</span>
-                  的 LICENSE 路径错误（<span class="inline-code">../LICENSE</span> → <span class="inline-code">../../LICENSE</span>）。
+                  <strong>dnt npm 构建失败</strong>：<span class="inline-code"
+                  >packages/rpc/_build_npm.ts</span>
+                  的 LICENSE 路径错误（<span class="inline-code">../LICENSE</span> → <span
+                    class="inline-code"
+                  >../../LICENSE</span>）。
                 </li>
                 <li>
-                  <strong>CI 格式检查修复</strong>：deno fmt 格式化 5 个文件，deno lint 清理未使用 imports，
-                  publish exclusion 配置修复（<span class="inline-code">!dist</span> 取消 gitignore 排除）。
+                  <strong>CI 格式检查修复</strong>：deno fmt 格式化 5 个文件，deno lint 清理未使用
+                  imports， publish exclusion 配置修复（<span class="inline-code">!dist</span> 取消
+                  gitignore 排除）。
                 </li>
                 <li>
-                  <strong>遗留 KISS 引用清理</strong>：<span class="inline-code">__kissLit*</span> 全局变量
-                  → <span class="inline-code">__lessLit*</span>，<span class="inline-code">.kiss-row</span> CSS 类
-                  → <span class="inline-code">.less-row</span>，文档中构建路径引用更新。
+                  <strong>遗留 KISS 引用清理</strong>：<span class="inline-code">__kissLit*</span>
+                  全局变量 → <span class="inline-code">__lessLit*</span>，<span class="inline-code"
+                  >.kiss-row</span> CSS 类 → <span class="inline-code"
+                  >.less-row</span>，文档中构建路径引用更新。
                 </li>
               </ul>
             </div>

@@ -15,6 +15,7 @@ LessJS 的前身是 KISS 框架（Keep It Simple, Stupid），延续了同样的
 [![@lessjs/ui](https://img.shields.io/jsr/v/@lessjs/ui?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/ui)
 [![@lessjs/rpc](https://img.shields.io/jsr/v/@lessjs/rpc?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/rpc)
 [![@lessjs/create](https://img.shields.io/jsr/v/@lessjs/create?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/create)
+[![@lessjs/signal](https://img.shields.io/jsr/v/@lessjs/signal?logo=jsr&labelColor=083344)](https://jsr.io/@lessjs/signal)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
 [![Vite](https://img.shields.io/badge/Vite-8.x-646CFF)](https://vite.dev/)
 [![Hono](https://img.shields.io/badge/Hono-4.x-E36002)](https://hono.dev/)
@@ -25,9 +26,10 @@ LessJS 的前身是 KISS 框架（Keep It Simple, Stupid），延续了同样的
 很多现代前端栈把 HTML 变成运行时产物。LessJS 反过来，从 HTML 和 Web 平台本身出发：
 
 - 在构建期渲染语义化 HTML
-- 用 Declarative Shadow DOM 保留组件边界
-- 只升级真正需要 JavaScript 的交互岛屿
-- 优先使用原生 Web APIs，而不是先制造框架抽象
+- 用 **Declarative Shadow DOM** 保留组件边界（嵌套递归）
+- 只升级真正需要 JavaScript 的交互 **Island**
+- 优先使用原生 Web APIs（`<dialog>`、`:state()`、Navigation API），而不是先制造框架抽象
+- 用 **TC39 Signals** 管理响应式状态（浏览器原生 `Signal` 条件回退）
 - 让 serverless APIs 靠近路由树
 - 通过 Deno-first 工作流运行、构建和发布
 
@@ -58,31 +60,150 @@ LessJS 不只追求"代码少"。它是一组架构约束：
 当前渲染模型：
 
 ```text
-Route module
-  -> Web Component render()
-  -> Declarative Shadow DOM HTML
-  -> static HTML file
-  -> optional island client chunk
-  -> Custom Element upgrade in the browser
+Route module (Web Component / LitElement)
+  → render() → TemplateResult
+  → SSR adapter → Declarative Shadow DOM (L2 recursive, nested CEs get their own <template shadowrootmode>)
+  → static HTML file + inline DSD templates
+  → optional island client chunk (<link rel="modulepreload"> for eager islands)
+  → browser: native DSD attachment + Custom Element upgrade at interactive boundaries
 ```
 
 这和完整客户端 hydration 模型有意不同。LessJS 不尝试在客户端重建应用树，而是在需要交互的位置升级
 Custom Elements。
 
-当前版本 v0.6.0 是 DSD + Island Architecture + Web Standards 版本。
+**DSD Hydration**：当浏览器原生附加 Declarative Shadow DOM 后，Lit 组件检测已有 shadow root 并跳过重渲染，
+避免重复内容（空白框、Footer 双写等）。
+
+## v0.6 新特性
+
+### Declarative Shadow DOM — 嵌套递归
+
+v0.6 核心突破：**L2 Nested DSD**。
+
+```html
+<!-- 页面级 DSD -->
+<page-examples>
+  <template shadowrootmode="open">
+    <!-- less-layout 的 DSD -->
+    <less-layout>
+      <template shadowrootmode="open">
+        <!-- less-button 在 less-layout 内部也有自己的 DSD -->
+        <less-button variant="primary">
+          <template shadowrootmode="open">
+            <style>
+              /* button styles */
+            </style>
+            <button class="btn">Click me</button>
+          </template>
+        </less-button>
+      </template>
+    </less-layout>
+  </template>
+</page-examples>
+```
+
+每个嵌套的 Custom Element 都获得独立的 `<template shadowrootmode>`，CSS 封装完整保留，
+无需 JavaScript 即可看到最终样式。
+
+### TC39 Signals — 响应式状态
+
+基于 signal-polyfill 二开，与浏览器原生 `Signal` API 对齐：
+
+```ts
+import { computed, effect, signal } from '@lessjs/signal';
+
+const count = signal(0);
+const doubled = computed(() => count.value * 2);
+effect(() => console.log(`count is now ${count.value}`));
+count.value++; // → "count is now 1"
+```
+
+- `signal()` — 响应式值
+- `computed()` — 自动依赖追踪的计算属性
+- `effect()` — 副作用自动重跑
+- `islandEffect()` — Island 生命周期绑定
+
+### Form-Associated Custom Elements
+
+原生表单集成，无需 polyfill：
+
+```html
+<form onsubmit="console.log(new FormData(this))">
+  <less-input name="email" label="Email" required></less-input>
+  <less-input type="password" label="Password" required></less-input>
+  <less-button type="submit" variant="primary">Submit</less-button>
+</form>
+```
+
+- `less-button`: 支持 `type="submit"`，`:state(disabled)` CSS 伪类
+- `less-input`: 支持 `:state(invalid)`, `:state(disabled)`
+- 通过 `ElementInternals.setFormValue()` 参与原生表单提交
+
+### Navigation API
+
+客户端路由基于 WHATWG Navigation API：
+
+```ts
+import { matchRoute, navigate, onNavigate } from '@lessjs/core';
+
+onNavigate((event) => {
+  const route = matchRoute(event.destination.url);
+  // 处理导航...
+});
+navigate('/about');
+```
+
+### less-dialog 组件
+
+原生 `<dialog>` 元素封装：
+
+```html
+<less-dialog open>
+  <p slot="header">Confirm Action</p>
+  <p>Are you sure you want to proceed?</p>
+  <less-button slot="footer" variant="primary">Yes</less-button>
+</less-dialog>
+```
+
+- 原生 `<dialog>` + `::backdrop`
+- `:state(open/closed)` CSS 伪类
+- `inert` 无障碍属性
+
+### Speculative Loading
+
+根据 Island 策略注入不同的资源提示：
+
+- **eager**: `<link rel="modulepreload">` — 预加载并执行
+- **lazy/visible/idle**: `<link rel="prefetch">` — 仅预取到缓存
 
 ## 包
 
-| 包                    | 职责                                               | 当前版本 |
-| --------------------- | -------------------------------------------------- | -------- |
-| `@lessjs/core`        | Vite 插件、路由扫描、DSD 渲染、SSG 管线            | 0.6.0    |
-| `@lessjs/ui`          | 基于 Lit 的 Web Component 组件库和 package islands | 0.6.0    |
-| `@lessjs/rpc`         | 轻量 fetch/RPC controller 工具                     | 0.3.1    |
-| `@lessjs/adapter-lit` | 可选 Lit SSR 适配器                                | 0.6.0    |
-| `@lessjs/create`      | 项目脚手架 CLI                                     | 0.6.0    |
-| `@lessjs/signal`      | 响应式信号系统                                     | 0.6.0    |
+| 包                    | 职责                                                               | 当前版本 |
+| --------------------- | ------------------------------------------------------------------ | -------- |
+| `@lessjs/core`        | Vite 插件、路由扫描、DSD 渲染（L2 嵌套）、Navigation API、SSG 管线 | 0.6.0    |
+| `@lessjs/ui`          | 基于 Lit 的 Web Component 组件库（含 DSD hydration）               | 0.6.0    |
+| `@lessjs/signal`      | TC39 Signals 二开（signal/computed/effect/islandEffect）           | 0.6.0    |
+| `@lessjs/adapter-lit` | 可选 Lit SSR 适配器                                                | 0.6.0    |
+| `@lessjs/rpc`         | 轻量 fetch/RPC controller 工具                                     | 0.3.1    |
+| `@lessjs/create`      | 项目脚手架 CLI                                                     | 0.6.0    |
 
 历史包 `@lessjs/vite` 和 `@lessjs/ssg` 已废弃。
+
+### @lessjs/ui 组件清单
+
+| 组件                | 说明                              | DSD | Form-Associated      | Island |
+| ------------------- | --------------------------------- | --- | -------------------- | ------ |
+| `less-layout`       | 应用布局（header/sidebar/footer） | ✅  | ❌                   | ❌     |
+| `less-button`       | 按钮（default/primary/ghost）     | ✅  | ✅ (`type="submit"`) | ❌     |
+| `less-card`         | 卡片容器（可选 header/footer）    | ✅  | ❌                   | ❌     |
+| `less-input`        | 输入框（支持 label/error）        | ✅  | ✅                   | ❌     |
+| `less-code-block`   | 代码块（带复制按钮）              | ✅  | ❌                   | ❌     |
+| `less-dialog`       | 对话框（原生 dialog）             | ✅  | ❌                   | ❌     |
+| `less-theme-toggle` | 主题切换（dark/light）            | ✅  | ❌                   | ✅     |
+| `less-hero-ping`    | API 状态指示器                    | ✅  | ❌                   | ✅     |
+
+所有 UI 组件均已实现 **DSD hydration**：检测到浏览器已附加的 Declarative Shadow DOM 时跳过 Lit 重渲染，
+确保 SSR 产出与客户端激活零差异。
 
 ## 项目结构
 
@@ -90,12 +211,12 @@ Custom Elements。
 my-app/
   app/
     routes/
-      index.ts
+      index.ts          # 页面 = 文件路由
       about.ts
       api/
-        status.ts
+        status.ts       # Hono API route
     islands/
-      counter.ts
+      counter.ts        # Island = 客户端交互组件
     components/
       shell.ts
   deno.json
@@ -103,11 +224,13 @@ my-app/
 ```
 
 页面是文件路由。API 文件导出 Hono apps。Islands 是注册 Custom Elements 的客户端 chunk。
+全部页面组件输出 Declarative Shadow DOM。
 
 ## 路由示例
 
 ```ts
 import { css, html, LitElement } from 'lit';
+import '@lessjs/ui/less-layout';
 
 export const tagName = 'home-page';
 
@@ -140,24 +263,67 @@ LessJS 应用的生产构建只需要一个命令：
 deno task build
 ```
 
-内部仍然保留 SSR bundle、island client chunks、SSG rendering 三个可观测阶段；这用于调试和
-CI 定位，不再是用户 quickstart 的主路径。
+内部仍保留 SSR bundle、island client chunks、SSG rendering 三个阶段；这用于调试和 CI 定位。
 
 完整仓库可运行：
 
 ```bash
-deno task build:all
-deno task test
-deno task lint
+deno task build:ssg    # 仅构建 SSG（静态 HTML）
+deno task test         # 运行测试
+deno task lint         # lint 检查
+deno task fmt:check    # 格式检查
 ```
 
 本仓库是 Deno-first。Vite 通过 `deno run -A npm:vite` 执行；Node/npm/npx 不是主工作流的一部分。
 
+## 设计系统
+
+LessJS UI 组件遵循瑞士国际主义风格（Swiss International Style）：
+
+- **纯黑白配色** — 通过 Open Props Design Tokens 管理 light/dark 主题色
+- **0.5px 边框** — 全站统一的极细边框
+- **4px 间距基准** — spacing scale 基于 4px 单元
+- **CSS 自定义属性穿透 Shadow DOM** — 主题变量从 `:root` 级联到所有组件
+- **Form-Associated CE** — 表单组件原生参与 `<form>` 提交
+
+主题变量示例：
+
+```css
+/* Light theme */
+--less-text-primary: var(--gray-12); /* 黑 */
+--less-bg-base: var(--gray-0); /* 白 */
+
+/* Dark theme */
+--less-text-primary: var(--gray-0); /* 白 */
+--less-bg-base: var(--gray-12); /* 黑 */
+```
+
 ## 文档
 
 - 文档站：[lessjs.com](https://lessjs.com/)
-- 路线图：[docs/app/routes/roadmap.ts](./docs/app/routes/roadmap.ts)
-- 架构决策：[docs/decisions](./docs/decisions)
+- 更新日志：[/changelog](https://lessjs.com/changelog)
+- 路线图：[/roadmap](https://lessjs.com/roadmap)
+- 架构决策：[/decisions](https://lessjs.com/decisions)
+- UI 组件展示：[/ui](https://lessjs.com/ui)
+
+## 版本历史
+
+| Version           | Date       | Highlights                                                                                   |
+| ----------------- | ---------- | -------------------------------------------------------------------------------------------- |
+| **0.6.0-alpha.1** | 2026-05-06 | DSD + Islands + Signals + Form-Associated CE + Navigation API + Dialog + Speculative Loading |
+| **0.5.5**         | 2026-05-06 | 全面品牌重塑 KISS → LessJS（105 个文件）                                                     |
+| **0.5.3**         | 2026-05-05 | Trust Release — 文档承诺与构建产物对齐                                                       |
+| **0.5.0**         | 2026-05-04 | 正式单命令构建 + Core/Lit 边界收紧                                                           |
+| **0.4.0**         | 2026-04-30 | Serverless API + Blog 系统 + PWA SW 策略重写                                                 |
+| **0.3.0**         | 2026-04-29 | Package Islands 自动检测 + Theme Toggle Island                                               |
+| **0.2.0**         | 2026-04-27 | Package Islands 自动检测                                                                     |
+| **0.1.7**         | 2026-04-27 | @lessjs/ui 组件库 + dogfooding                                                               |
+| **0.1.6**         | 2026-04-26 | 设计系统 + 移动端响应式                                                                      |
+| **0.1.5**         | 2026-04-20 | K·I·S·S 四约束架构定义                                                                       |
+| **0.1.4**         | 2026-04-15 | inject option + API Routes docs                                                              |
+| **0.1.3**         | 2026-04-10 | @lessjs/rpc + @lessjs/ui                                                                     |
+| **0.1.2**         | 2026-04-05 | Island AST transform                                                                         |
+| **0.1.1**         | 2026-04-01 | Initial JSR release                                                                          |
 
 ## License
 
