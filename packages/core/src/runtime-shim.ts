@@ -62,8 +62,8 @@ function serializeAttributes(props = {}) {
   for (const [key, val] of Object.entries(props)) {
     if (val === false || val === null || val === undefined) continue;
     if (val === true) parts.push(key);
-    else if (typeof val === 'object') parts.push(\`\${key}="\${escapeAttr(JSON.stringify(val))}"\`);
-    else parts.push(\`\${key}="\${escapeAttr(val)}"\`);
+    else if (typeof val === 'object') parts.push(\`\${key}="\${escapeAttrValue(JSON.stringify(val))}"\`);
+    else parts.push(\`\${key}="\${escapeAttrValue(val)}"\`);
   }
   return parts.length > 0 ? ' ' + parts.join(' ') : '';
 }
@@ -296,7 +296,7 @@ export async function renderDSD(tagName, componentClass, props = {}, sourceInfo,
 
   // 2. Set props
   for (const [key, value] of Object.entries(props)) {
-    try { instance[key] = value; } catch { /* read-only */ }
+    try { instance[key] = value; } catch (e) { /* read-only property — safe to skip */ console.debug(\`[LessJS] Cannot set read-only property "\${key}" on <\${tagName}>\`); }
   }
 
   // 3. Render
@@ -335,7 +335,7 @@ export async function renderDSD(tagName, componentClass, props = {}, sourceInfo,
   let styleCss = '';
   const adapter = getAdapter();
   if (adapter?.extractStyles) {
-    try { styleCss = adapter.extractStyles(componentClass) || ''; } catch { /* ignore */ }
+    try { styleCss = adapter.extractStyles(componentClass) || ''; } catch (e) { console.debug(\`[LessJS] extractStyles failed for <\${tagName}>: \${e instanceof Error ? e.message : String(e)}\`); }
   }
 
   // data-ssr-props
@@ -382,6 +382,10 @@ export function wrapInDocument(html, options = {}) {
     cspNonce,
   } = options;
   const nonceAttr = cspNonce ? \` nonce="\${cspNonce}"\` : '';
+  // Security: warn if headExtras contains <script> tags
+  if (headExtras && /<script[\\s>]/i.test(headExtras)) {
+    console.warn('[LessJS] headExtras contains <script> tags. Ensure this is developer-controlled content to prevent XSS. Use inject.scripts for safe URL injection.');
+  }
   const metaTags = [];
   if (meta?.description) {
     metaTags.push(\`  <meta name="description" content="\${escapeAttr(meta.description)}">\`);
