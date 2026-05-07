@@ -17,7 +17,7 @@
  * ```
  */
 
-import { css, type CSSResult, html, LitElement, type TemplateResult } from 'lit';
+import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } from 'lit';
 import { lessDesignTokens } from './design-tokens.js';
 
 export const tagName = 'less-card';

@@ -28,7 +28,7 @@
  *   reading localStorage and the head script having already set data-theme.
  */
 
-import { css, type CSSResult, html, LitElement, type TemplateResult } from 'lit';
+import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } from 'lit';
 import { lessDesignTokens } from './design-tokens.js';
 
 export const tagName = 'less-theme-toggle';
@@ -195,10 +195,10 @@ export class LessThemeToggle extends LitElement {
      * selector matching within this component's own styles.
      */
 
-  /** When DSD hydrated, return nothing — the shadow DOM already has content. */
-  override render(): TemplateResult | typeof nothing {
-    if (this._dsdHydrated) return nothing;
-    return html`
+    /** When DSD hydrated, return nothing — the shadow DOM already has content. */
+    override render(): TemplateResult | typeof nothing {
+      if (this._dsdHydrated) return nothing;
+      return html`
         <button
           class="theme-toggle ${this._isLight ? 'is-light' : ''}"
           title="${this._isLight ? 'Switch to dark theme' : 'Switch to light theme'}"
