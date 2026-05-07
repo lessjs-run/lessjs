@@ -25,12 +25,13 @@
  * maintaining progressive enhancement and semantic correctness.
  */
 
-import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } from 'lit';
+import { css, type CSSResult, html, nothing, type TemplateResult } from 'lit';
+import { DsdLitElement } from '@lessjs/adapter-lit';
 import { lessDesignTokens } from './design-tokens.js';
 
 export const tagName = 'less-input';
 
-export class LessInput extends LitElement {
+export class LessInput extends DsdLitElement {
   /** Enable form association for native <form> participation */
   static formAssociated = true;
 
@@ -39,20 +40,6 @@ export class LessInput extends LitElement {
 
   /** Element internals for form participation */
   private _internals?: ElementInternals;
-
-  /**
-   * When DSD already created and populated the shadow root,
-   * keep it as-is — no Lit re-render needed.
-   */
-  private _dsdHydrated = false;
-
-  override createRenderRoot(): HTMLElement | DocumentFragment {
-    if (this.shadowRoot && this.shadowRoot.childElementCount > 0) {
-      this._dsdHydrated = true;
-      return this.shadowRoot;
-    }
-    return this.attachShadow({ mode: 'open' });
-  }
 
   static override styles: CSSResult[] = [
     lessDesignTokens,

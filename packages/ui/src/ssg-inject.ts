@@ -17,21 +17,8 @@
 
 import { join } from 'node:path';
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { insertAfterHead } from '@lessjs/core';
 import { generateRootColorCSS } from './tokens/color-values.js';
-
-// ─── HTML Insertion Helper ─────────────────────────────────────────
-
-/** Insert content immediately after <head> opening tag (handles attributes) */
-function insertAfterHead(html: string, content: string): string {
-  const headMatch = html.match(/<head(\s[^>]*)?>/i);
-  if (!headMatch) {
-    return html.startsWith('<!') || html.startsWith('<html')
-      ? html.replace(/(<(?:!DOCTYPE|html)[^>]*>)/i, `$1\n<head>\n  ${content}\n</head>`)
-      : `<head>\n  ${content}\n</head>\n${html}`;
-  }
-  const headEnd = headMatch.index! + headMatch[0].length;
-  return html.slice(0, headEnd) + `\n  ${content}` + html.slice(headEnd);
-}
 
 // ─── Public API ────────────────────────────────────────────────────
 

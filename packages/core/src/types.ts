@@ -219,3 +219,120 @@ export interface RouteEntry {
 }
 
 export type { SsrContext } from './context.js';
+
+// ─── DSD Render Types (from render-dsd.ts refactoring) ──────────
+
+/** Component layer in the three-layer model */
+export type ComponentLayer = 'dsd-static' | 'dsd-interactive' | 'pure-island';
+
+/**
+ * Declarative event binding for DSD Interactive components.
+ *
+ * When a component's shadow root is pre-populated by DSD, framework template
+ * bindings (e.g. Lit's @click) are never executed because render() returns nothing.
+ * This descriptor tells the adapter which DOM events need manual wiring.
+ *
+ * @example
+ * ```ts
+ * static hydrateEvents: HydrateEventDescriptor[] = [
+ *   { selector: 'button.theme-toggle', event: 'click', method: '_handleToggle' },
+ * ];
+ * ```
+ */
+export interface HydrateEventDescriptor {
+  /** CSS selector within shadow root to find the target element */
+  selector: string;
+  /** DOM event name (e.g. 'click', 'input', 'keydown') */
+  event: string;
+  /** Method name on the component instance to call */
+  method: string;
+}
+
+/**
+ * Adapter interface for framework-specific rendering.
+ *
+ * v0.6.2: DSD hydration is handled at the component level via
+ * WithDsdHydration Mixin (in @lessjs/adapter-lit) and declarative
+ * hydrateEvents. The adapter only needs render + isTemplate + extractStyles.
+ */
+export interface RenderAdapter {
+  /** Check if a value is a template type this adapter handles */
+  isTemplate?: (value: unknown) => boolean;
+  /** Render a template value to HTML string */
+  render?: (value: unknown, tagName: string) => Promise<string>;
+  /** Extract static CSS from a component class */
+  extractStyles?: (componentClass: CustomElementConstructor) => string | undefined;
+}
+
+/** Global adapter instance (set via registerAdapter) */
+let _globalAdapter: RenderAdapter | undefined;
+
+/** Register a render adapter explicitly. */
+export function registerAdapter(adapter: RenderAdapter | undefined): void {
+  _globalAdapter = adapter;
+}
+
+/** Get the currently registered adapter. */
+export function getAdapter(): RenderAdapter | undefined {
+  return _globalAdapter;
+}
+
+/**
+ * Interface that components must implement to be DSD-renderable.
+ * Works with any Custom Element class that has render() and connectedCallback().
+ *
+ * render() MUST return a string. If you use Lit components that return
+ * TemplateResult, install @lessjs/adapter-lit to handle the conversion.
+ *
+ * v0.6.2: Added `layer` property for three-layer component model.
+ *   - 'dsd-static' (default): static content, no hydration needed
+ *   - 'dsd-interactive': needs event bindings after DSD upgrade
+ *   - 'pure-island': no DSD, framework fully owns shadow root
+ *
+ * v0.6.2: Added `hydrateEvents` for declarative event binding (Layer 2).
+ */
+export interface DsdComponent {
+  /** Return Shadow DOM inner HTML as a string */
+  render(): string | unknown;
+
+  /** Optional: called after setting props, before render() */
+  connectedCallback?(): void;
+
+  /**
+   * Component layer in the three-layer model.
+   * - 'dsd-static': default, no client-side hydration needed
+   * - 'dsd-interactive': DSD for first paint, adapter hydrates events
+   * - 'pure-island': no DSD, framework fully owns shadow root
+   * @default 'dsd-static'
+   */
+  layer?: ComponentLayer;
+
+  /**
+   * Declarative event bindings for DSD Interactive components.
+   * Used by adapters to attach event listeners to existing DSD DOM.
+   * Only relevant when layer === 'dsd-interactive'.
+   */
+  hydrateEvents?: HydrateEventDescriptor[];
+
+  /** Set named property/value */
+  [key: string]: unknown;
+}
+
+/** DSD template options per WHATWG HTML Living Standard */
+export interface DsdOptions {
+  /** Add shadowrootdelegatesfocus — improves focus management for interactive components */
+  delegatesFocus?: boolean;
+  /** Add shadowrootserializable — enables getInnerHTML() serialization */
+  serializable?: boolean;
+  /** Set shadowrootslotassignment="manual" — for precise slot control */
+  slotAssignment?: 'named' | 'manual';
+  /** Set shadowrootcustomelementregistry — reference to a scoped registry */
+  customElementRegistry?: string;
+  /**
+   * Component layer — controls whether DSD template is emitted.
+   * 'pure-island' → no DSD template, framework owns shadow root entirely.
+   * 'dsd-static' | 'dsd-interactive' → DSD template emitted.
+   * @default 'dsd-static'
+   */
+  layer?: ComponentLayer;
+}

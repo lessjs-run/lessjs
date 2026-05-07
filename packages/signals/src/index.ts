@@ -54,12 +54,13 @@ interface SignalOptions<T> {
   [key: symbol]: (() => void) | undefined;
 }
 
+// Symbols must be defined before _createPolyfill() references them
+const _SIGNAL = Symbol('SIGNAL');
+const NODE = Symbol('node');
+
 const _engine: SignalEngineNamespace = _createPolyfill();
 
 // ─── Polyfill Implementation ─────────────────────────────────────
-
-const _SIGNAL = Symbol('SIGNAL');
-const NODE = Symbol('node');
 
 interface ReactiveNode {
   version: number;
@@ -519,8 +520,11 @@ export function signal<T>(initialValue: T): WritableSignal<T> {
       state.set(newValue);
     },
     subscribe(fn: (value: T) => void): Unsubscribe {
-      // Use effect to track and notify
-      const dispose = effect(() => fn(state.get()));
+      // Use effect to track and notify.
+      // Wrap in braces to avoid returning fn's return value as a cleanup function.
+      const dispose = effect(() => {
+        fn(state.get());
+      });
       return dispose;
     },
   };
@@ -538,7 +542,9 @@ export function computed<T>(fn: () => T): ReadonlySignal<T> {
       return c.get();
     },
     subscribe(fn2: (value: T) => void): Unsubscribe {
-      const dispose = effect(() => fn2(c.get()));
+      const dispose = effect(() => {
+        fn2(c.get());
+      });
       return dispose;
     },
   };

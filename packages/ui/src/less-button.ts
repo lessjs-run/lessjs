@@ -22,12 +22,13 @@
  * ```
  */
 
-import { css, type CSSResult, html, LitElement, nothing, type TemplateResult } from 'lit';
+import { css, type CSSResult, html, nothing, type TemplateResult } from 'lit';
+import { DsdLitElement } from '@lessjs/adapter-lit';
 import { lessDesignTokens } from './design-tokens.js';
 
 export const tagName = 'less-button';
 
-export class LessButton extends LitElement {
+export class LessButton extends DsdLitElement {
   /** DSD: delegates focus to the first focusable element in the shadow DOM */
   static delegatesFocus = true;
 
@@ -36,22 +37,6 @@ export class LessButton extends LitElement {
 
   /** Element internals for form participation + :state() pseudo-classes */
   private _internals?: ElementInternals;
-
-  /**
-   * When DSD already created and populated the shadow root,
-   * keep it as-is — no Lit re-render needed.
-   * DSD rendered the complete button (style + <button> or <a>).
-   * Re-rendering would duplicate content (blank box bug).
-   */
-  private _dsdHydrated = false;
-
-  override createRenderRoot(): HTMLElement | DocumentFragment {
-    if (this.shadowRoot && this.shadowRoot.childElementCount > 0) {
-      this._dsdHydrated = true;
-      return this.shadowRoot;
-    }
-    return this.attachShadow({ mode: 'open' });
-  }
 
   static override styles: CSSResult[] = [
     lessDesignTokens,

@@ -13,7 +13,7 @@ import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 // ─── HTML Insertion Helpers ────────────────────────────────────────────
 
 /** Insert content immediately after <head> opening tag (handles attributes) */
-function insertAfterHead(html: string, content: string): string {
+export function insertAfterHead(html: string, content: string): string {
   const headMatch = html.match(/<head(\s[^>]*)?>/i);
   if (!headMatch) {
     return html.startsWith('<!') || html.startsWith('<html')
