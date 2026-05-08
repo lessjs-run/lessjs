@@ -4,6 +4,7 @@
     "jsr:@david/code-block-writer@^13.0.3": "13.0.3",
     "jsr:@deno/dnt@*": "0.42.3",
     "jsr:@deno/dnt@0.42": "0.42.3",
+    "jsr:@lessjs/core@0.7": "0.7.0",
     "jsr:@lessjs/ui@0.6.1": "0.6.1",
     "jsr:@std/assert@*": "1.0.19",
     "jsr:@std/assert@1": "1.0.19",
@@ -45,6 +46,9 @@
         "jsr:@std/path@1",
         "jsr:@ts-morph/bootstrap"
       ]
+    },
+    "@lessjs/core@0.7.0": {
+      "integrity": "912b4e04a4d65e9d44423edd89ef0795ae3cd66c7063129faf23a6ef5c325900"
     },
     "@lessjs/ui@0.6.1": {
       "integrity": "5b18fe15e2f4ca436fe3b0ada9d139fcfc13b392b1beb72f421fabe849c7af16"

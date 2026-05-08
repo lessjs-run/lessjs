@@ -19,7 +19,7 @@
   },
   "imports": {
     "lit": "npm:lit@^3.2.0",
-    "@lessjs/core": "jsr:@lessjs/core@^0.7.0"
+    "@lessjs/core": "jsr:@lessjs/core@^0.8.0"
   },
   "publish": {
     "include": [
