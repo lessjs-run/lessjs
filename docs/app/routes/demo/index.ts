@@ -6,6 +6,8 @@
  * is avoided by using firstUpdated() instead of connectedCallback()
  * for the initial API fetch.
  */
+export const meta = { section: 'Examples', label: 'Live Demo', order: 10 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import '@lessjs/ui/less-layout';
 
@@ -152,7 +154,7 @@ export default class PageDemo extends LitElement {
 
   override render() {
     return html`
-      <less-layout>
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}">
         <div class="container">
           <span class="overline">Showcase</span>
           <h1>JAM Pattern in Action</h1>

@@ -1,3 +1,4 @@
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import '@lessjs/ui/less-layout';
 

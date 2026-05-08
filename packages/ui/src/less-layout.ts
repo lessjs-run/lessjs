@@ -716,89 +716,6 @@ export class LessLayout extends DsdLitElement {
       }
     }
 
-    /** Default LessJS docs navigation — sync with docs/app/nav-data.ts */
-    private static readonly DEFAULT_NAV: NavSection[] = [
-      {
-        section: 'Start Here',
-        items: [
-          { path: '/guide/positioning', label: 'Framework Positioning' },
-          { path: '/guide/getting-started', label: 'Getting Started' },
-          { path: '/guide/design-philosophy', label: 'Design Philosophy' },
-          { path: '/guide/architecture', label: 'Architecture' },
-        ],
-      },
-      {
-        section: 'Core Model',
-        items: [
-          { path: '/guide/routing', label: 'Routing' },
-          { path: '/guide/ssg', label: 'Rendering & SSG' },
-          { path: '/guide/islands', label: 'Island Upgrade' },
-          { path: '/guide/api-routes', label: 'API Routes' },
-          { path: '/guide/api-design', label: 'API Design' },
-        ],
-      },
-      {
-        section: 'Production',
-        items: [
-          { path: '/guide/configuration', label: 'Configuration' },
-          { path: '/guide/security-middleware', label: 'Security & Middleware' },
-          { path: '/guide/error-handling', label: 'Error Handling' },
-          { path: '/guide/testing', label: 'Testing' },
-          { path: '/guide/deployment', label: 'Deployment' },
-        ],
-      },
-      {
-        section: 'Packages',
-        items: [
-          { path: '/ui', label: 'Design System' },
-          { path: '/styling/less-ui', label: '@lessjs/ui' },
-          { path: '/styling/web-awesome', label: 'Web Awesome' },
-          { path: '/examples', label: 'Examples' },
-        ],
-      },
-      {
-        section: 'Strategy',
-        items: [
-          { path: '/roadmap', label: 'Roadmap' },
-          { path: '/guide/less-compiler', label: '.less Compiler' },
-          { path: '/guide/pwa', label: 'PWA Support' },
-          { path: '/guide/blog-system', label: 'Blog System' },
-          { path: '/decisions', label: 'Architecture Decisions' },
-        ],
-      },
-      {
-        section: 'Examples',
-        items: [
-          { path: '/demo', label: 'Live Demo' },
-          { path: '/examples/hello', label: 'Hello World' },
-          { path: '/examples/minimal-blog', label: 'Minimal Blog' },
-          { path: '/examples/fullstack', label: 'Fullstack' },
-        ],
-      },
-      {
-        section: 'History',
-        items: [
-          { path: '/blog', label: 'Blog' },
-          { path: '/blog/v0-5-alpha1', label: 'v0.5 Alpha 1' },
-          { path: '/blog/v0-5-0', label: 'v0.5.0' },
-          { path: '/blog/v0-4-0', label: 'v0.4.0' },
-          { path: '/blog/less-compiler', label: '.less Compiler Note' },
-          { path: '/changelog', label: 'Changelog' },
-          { path: '/contributing', label: 'Contributing' },
-        ],
-      },
-    ];
-
-    /** Default header navigation links — sync with docs/app/nav-data.ts */
-    private static readonly DEFAULT_HEADER_NAV: HeaderNavLink[] = [
-      { href: '/guide/positioning', label: 'Docs' },
-      { href: '/guide/architecture', label: 'Architecture' },
-      { href: '/examples', label: 'Examples' },
-      { href: '/ui', label: 'UI' },
-      { href: '/roadmap', label: 'Roadmap' },
-      { href: 'https://jsr.io/@lessjs/core', label: 'JSR' },
-    ];
-
     private _navLink(path: string, text: string) {
       const isExternal = path.startsWith('http');
       const isActive = !isExternal && this.currentPath === path;
@@ -823,7 +740,7 @@ export class LessLayout extends DsdLitElement {
 
     /** Shared nav items for both desktop and mobile sidebar */
     private _renderSidebarItems(): TemplateResult {
-      const nav = this.navItems || LessLayout.DEFAULT_NAV;
+      const nav = this.navItems || [];
       return html`
         ${nav.map(
           (section) =>
@@ -840,7 +757,7 @@ export class LessLayout extends DsdLitElement {
     }
 
     private _renderHeaderNav(): TemplateResult | typeof nothing {
-      const links = this.headerNav || LessLayout.DEFAULT_HEADER_NAV;
+      const links = this.headerNav || [];
       return html`
         <nav class="header-nav">
           ${links.map(

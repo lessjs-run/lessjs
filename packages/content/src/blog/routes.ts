@@ -1,5 +1,5 @@
 /**
- * @lessjs/blog - Route generation
+ * @lessjs/content - Route generation
  *
  * Scans content directory for .md files and generates route data.
  */

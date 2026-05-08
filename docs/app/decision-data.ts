@@ -43,10 +43,10 @@ export const DECISIONS: DecisionDoc[] = [
   },
   {
     id: '0004',
-    title: '@lessjs/blog',
+    title: '@lessjs/content',
     status: 'Draft',
     path: '/decisions/0004-blog-system',
-    summary: 'SSG content plugin — can start after v0.8.0 core API stabilization. Zero-framework templates when compiler exists.',
+    summary: 'Unified content plugin (blog + nav + sitemap) — SSG content pipeline with auto-generated navigation.',
     source: adr0004,
   },
   {

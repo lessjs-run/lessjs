@@ -6,6 +6,8 @@
  * - Islands Architecture：按需升级的交互岛屿
  * - Progressive Enhancement：语义基线，无 JS 可用
  */
+export const meta = { section: 'Packages', label: 'Examples', order: 50 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';

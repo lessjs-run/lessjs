@@ -1,3 +1,5 @@
+export const meta = { section: 'Production', label: 'Deployment', order: 50 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -33,7 +35,7 @@ export class DeploymentPage extends LitElement {
 
   override render() {
     return html`
-      <less-layout currentPath="/guide/deployment">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/guide/deployment">
         <div class="container">
           <h1>部署</h1>
           <p class="subtitle">

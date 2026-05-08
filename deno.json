@@ -7,7 +7,7 @@
     "./packages/adapter-lit",
     "./packages/create",
     "./packages/signals",
-    "./packages/blog"
+    "./packages/content"
   ],
   "imports": {
     "lit": "npm:lit@^3.2.0",
@@ -41,8 +41,8 @@
     "publish:adapter-lit": "cd packages/adapter-lit && deno publish --allow-dirty",
     "publish:create": "cd packages/create && deno publish --allow-dirty",
     "publish:signal": "cd packages/signals && deno publish --allow-dirty",
-    "publish:blog": "cd packages/blog && deno publish --allow-dirty",
-    "publish": "deno task publish:rpc && deno task publish:ui && deno task publish:adapter-lit && deno task publish:signal && deno task publish:core && deno task publish:create && deno task publish:blog",
+    "publish:content": "cd packages/content && deno publish --allow-dirty",
+    "publish": "deno task publish:rpc && deno task publish:ui && deno task publish:adapter-lit && deno task publish:signal && deno task publish:content && deno task publish:core && deno task publish:create",
     "test": "deno test --allow-read --allow-write --allow-env --allow-net --allow-run",
     "test:watch": "deno test --allow-read --allow-write --allow-env --allow-net --allow-run --watch",
     "test:e2e": "npx -y @playwright/test test --config e2e/playwright.config.ts",

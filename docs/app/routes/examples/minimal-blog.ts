@@ -6,6 +6,8 @@
  * - Theme Island（唯一交互）
  * - aria-current 导航高亮（L0+L1）
  */
+export const meta = { section: 'Examples', label: 'Minimal Blog', order: 30 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';

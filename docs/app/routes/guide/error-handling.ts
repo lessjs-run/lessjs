@@ -1,3 +1,5 @@
+export const meta = { section: 'Production', label: 'Error Handling', order: 30 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -43,7 +45,7 @@ export class ErrorHandlingPage extends LitElement {
 
   override render() {
     return html`
-      <less-layout currentPath="/guide/error-handling">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/guide/error-handling">
         <div class="container">
           <h1>错误处理</h1>
           <p class="subtitle">

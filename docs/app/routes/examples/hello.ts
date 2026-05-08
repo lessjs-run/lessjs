@@ -6,6 +6,8 @@
  * - 内容在 JS 加载前可见
  * - @lessjs/ui 组件
  */
+export const meta = { section: 'Examples', label: 'Hello World', order: 20 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';

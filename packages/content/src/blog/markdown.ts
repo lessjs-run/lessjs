@@ -1,5 +1,5 @@
 /**
- * @lessjs/blog - Markdown processing
+ * @lessjs/content - Markdown processing
  *
  * Parses markdown files with frontmatter using gray-matter + marked.
  */

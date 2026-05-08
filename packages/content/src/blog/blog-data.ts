@@ -1,5 +1,5 @@
 /**
- * @lessjs/blog - Blog data store
+ * @lessjs/content - Blog data store
  *
  * Singleton that holds parsed blog posts during build/dev.
  * The [slug].ts dynamic route reads from this store to render posts.

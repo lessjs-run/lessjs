@@ -1,6 +1,8 @@
 /**
  * PWA Support — @lessjs/core PWA feature guide
  */
+export const meta = { section: 'Production', label: 'PWA Support', order: 60 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -11,7 +13,7 @@ export class PwaPage extends LitElement {
 
   override render() {
     return html`
-      <less-layout currentPath="/guide/pwa">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/guide/pwa">
         <div class="container">
           <h1>PWA 支持</h1>
           <p class="subtitle">

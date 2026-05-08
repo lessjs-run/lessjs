@@ -1,6 +1,8 @@
 /**
- * Blog System — @lessjs/blog feature guide
+ * Blog System — @lessjs/content feature guide
  */
+export const meta = { section: 'Packages', label: '@lessjs/content', order: 40 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -11,11 +13,11 @@ export class BlogSystemPage extends LitElement {
 
   override render() {
     return html`
-      <less-layout currentPath="/guide/blog-system">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/guide/blog-system">
         <div class="container">
           <h1>博客系统</h1>
           <p class="subtitle">
-            <span class="inline-code">@lessjs/blog</span> 是 LessJS 的 Markdown 博客插件。
+            <span class="inline-code">@lessjs/content</span> 是 LessJS 的统一内容插件（博客 + 导航 + 站点地图）。
             把 <span class="inline-code">.md</span> 文件丢进内容目录，自动获得文章列表和详情页。
             纯 SSG 插件，不依赖 Lit，博客页面不加载页面级框架运行时。
           </p>
@@ -26,15 +28,26 @@ export class BlogSystemPage extends LitElement {
           </p>
           <code-block><pre><code>// vite.config.ts
 import { less } from '@lessjs/core';
-import { lessBlog } from '@lessjs/blog';
+import { lessContent } from '@lessjs/content';
 import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [
     less(),
-    lessBlog({
-      contentDir: resolve(__dirname, 'content/blog'),
-      basePath: '/blog',
+    lessContent({
+      blog: {
+        contentDir: resolve(__dirname, 'content/blog'),
+        basePath: '/blog',
+      },
+      nav: {
+        routesDir: resolve(__dirname, 'app/routes'),
+        headerNav: [
+          { href: '/guide', label: 'Docs' },
+        ],
+      },
+      sitemap: {
+        hostname: 'https://example.com',
+      },
     }),
   ],
 });</code></pre></code-block>
@@ -64,14 +77,14 @@ This is my first post.</code></pre></code-block>
 
           <h2>API 参考</h2>
 
-          <h3>lessBlog(options)</h3>
+          <h3>lessContent(options)</h3>
           <p>
-            Vite 插件，将博客集成到构建管线。配置项：
+            Vite 插件，统一博客、导航、站点地图的构建管线。配置项：
           </p>
           <ul>
-            <li><span class="inline-code">contentDir</span> — Markdown 文件目录路径（必填）</li>
-            <li><span class="inline-code">basePath</span> — 博客路由 URL 前缀（默认 <span class="inline-code">/blog</span>）</li>
-            <li><span class="inline-code">markdown</span> — 自定义 Markdown 渲染函数（可选）</li>
+            <li><span class="inline-code">blog</span> — 博客配置：<span class="inline-code">{ contentDir, basePath }</span></li>
+            <li><span class="inline-code">nav</span> — 导航配置：<span class="inline-code">{ routesDir, headerNav }</span>，从路由文件 <span class="inline-code">export const meta</span> 自动生成侧边栏</li>
+            <li><span class="inline-code">sitemap</span> — 站点地图配置：<span class="inline-code">{ hostname, exclude? }</span>，SSG 完成后自动生成 sitemap.xml + robots.txt</li>
           </ul>
 
           <h3>getPosts()</h3>
@@ -99,11 +112,11 @@ This is my first post.</code></pre></code-block>
 
           <h2>架构约束</h2>
           <p>
-            博客包不依赖 Lit，作为纯 SSG 插件运行：Markdown 输入，静态路由输出。
+            内容插件不依赖 Lit，作为纯 SSG 插件运行：Markdown 输入，静态路由输出。
             博客页面不加载页面级框架运行时，交互组件仍以 island 形式存在。
           </p>
           <p>
-            v0.8 范围：<span class="inline-code">.md → 路由 → 列表/文章页</span>。
+            v0.8 范围：<span class="inline-code">.md → 路由 → 列表/文章页</span> + 导航自动生成 + 站点地图。
             暂不支持 MDX、评论、分页和标签系统。
           </p>
 

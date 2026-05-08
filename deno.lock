@@ -790,6 +790,13 @@
           "npm:vite@8.0.10"
         ]
       },
+      "packages/content": {
+        "dependencies": [
+          "npm:gray-matter@^4.0.3",
+          "npm:marked@15",
+          "npm:vite@8.0.10"
+        ]
+      },
       "packages/core": {
         "dependencies": [
           "npm:@hono/vite-dev-server@~0.25.3",

@@ -1,6 +1,8 @@
 /**
  * Contributing Page — LessJS Framework Contribution Guide
  */
+export const meta = { section: 'History', label: 'Contributing', order: 30 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -47,7 +49,7 @@ export class ContributingPage extends LitElement {
 
   override render() {
     return html`
-      <less-layout currentPath="/contributing">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/contributing">
         <div class="container">
           <h1>Contributing to LessJS</h1>
           <p class="subtitle">感谢你对 LessJS 框架的兴趣！</p>

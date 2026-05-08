@@ -1,8 +1,10 @@
 {
-  "name": "@lessjs/blog",
-  "version": "0.8.0",
+  "name": "@lessjs/content",
+  "version": "0.1.0",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./nav": "./src/nav/index.ts",
+    "./sitemap": "./src/sitemap/index.ts"
   },
   "imports": {
     "marked": "npm:marked@^15",

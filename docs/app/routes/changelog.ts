@@ -1,6 +1,8 @@
 /**
  * Changelog Page — LessJS Framework Version History
  */
+export const meta = { section: 'History', label: 'Changelog', order: 20 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -101,7 +103,7 @@ export class ChangelogPage extends LitElement {
 
   override render() {
     return html`
-      <less-layout currentPath="/changelog">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/changelog">
         <div class="container">
           <h1>更新日志</h1>
           <p class="subtitle">

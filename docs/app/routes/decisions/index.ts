@@ -1,3 +1,5 @@
+export const meta = { section: 'Roadmap & Decisions', label: 'Architecture Decisions', order: 20 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import { DECISIONS } from '../../decision-data.js';
@@ -47,7 +49,7 @@ export class DecisionsIndexPage extends LitElement {
 
   override render() {
     return html`
-      <less-layout currentPath="/decisions">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/decisions">
         <div class="container">
           <h1>Architecture Decisions</h1>
           <p class="subtitle">

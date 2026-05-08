@@ -1069,15 +1069,14 @@ Deno.test('less-layout: currentPath highlights active nav link', async () => {
   assertExists(result);
 });
 
-Deno.test('less-layout: default docs nav includes architecture decisions in Strategy section', async () => {
+Deno.test('less-layout: no hardcoded DEFAULT_NAV — nav is data-driven via navItems property', async () => {
   const { LessLayout } = await import('../src/less-layout.ts');
-  const defaults = (LessLayout as any).DEFAULT_NAV as Array<{
-    section: string;
-    items: Array<{ path?: string; label: string }>;
-  }>;
-  const strategy = defaults.find((section) => section.section === 'Strategy');
-  assertExists(strategy);
-  assertEquals(strategy.items.some((item) => item.path === '/decisions'), true);
+  // DEFAULT_NAV was removed — navItems must be passed via property
+  // (supplied by @lessjs/content virtual:less-nav module)
+  const instance = new LessLayout();
+  // Without navItems, sidebar should render empty
+  assertExists(instance);
+  assertEquals(instance.navItems, undefined);
 });
 
 Deno.test('less-layout: custom headerNav renders custom links', async () => {

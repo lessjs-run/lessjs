@@ -1,13 +1,14 @@
 /**
  * Blog Post Page — Dynamic Route
  *
- * Renders individual blog posts from @lessjs/blog markdown content.
+ * Renders individual blog posts from @lessjs/content markdown content.
  * The `slug` param is set by LessJS dynamic routing: /blog/:slug
  */
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import { getPostBySlug, getPosts } from '@lessjs/blog';
+import { getPostBySlug, getPosts } from '@lessjs/content';
 
 export const tagName = 'page-blog-slug';
 
@@ -161,7 +162,7 @@ export default class BlogPostPage extends LitElement {
 
     if (!post) {
       return html`
-        <less-layout currentPath="/blog">
+        <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/blog">
           <div class="container">
             <div class="not-found">
               <h1>404</h1>
@@ -176,7 +177,7 @@ export default class BlogPostPage extends LitElement {
     const tags = post.frontmatter.tags ?? [];
 
     return html`
-      <less-layout currentPath="/blog">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/blog">
         <div class="container">
           <a href="/blog" class="blog-back">&larr; 博客</a>
           <h1>${post.frontmatter.title}</h1>

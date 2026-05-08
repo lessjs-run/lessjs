@@ -1,5 +1,5 @@
 import { less } from '../packages/core/src/index.js';
-import { lessBlog } from '../packages/blog/src/index.ts';
+import { lessContent } from '../packages/content/src/index.ts';
 import { lessRootColorCSS } from '../packages/ui/src/tokens/colors.js';
 import { defineConfig } from 'vite';
 import { dirname, resolve } from 'node:path';
@@ -74,10 +74,26 @@ export default defineConfig({
         ],
       },
     }),
-    // @lessjs/blog: Dogfooding — scan content/blog/*.md for blog posts
-    lessBlog({
-      contentDir: resolve(__dir, 'content/blog'),
-      basePath: '/blog',
+    // @lessjs/content: Blog + Nav + Sitemap (unified content plugin)
+    lessContent({
+      blog: {
+        contentDir: resolve(__dir, 'content/blog'),
+        basePath: '/blog',
+      },
+      nav: {
+        routesDir: resolve(__dir, 'app/routes'),
+        headerNav: [
+          { href: '/guide/positioning', label: 'Docs' },
+          { href: '/guide/architecture', label: 'Architecture' },
+          { href: '/examples', label: 'Examples' },
+          { href: '/ui', label: 'UI' },
+          { href: '/roadmap', label: 'Roadmap' },
+          { href: 'https://jsr.io/@lessjs/core', label: 'JSR' },
+        ],
+      },
+      sitemap: {
+        hostname: 'https://lessjs.org',
+      },
     }),
   ],
   resolve: {
@@ -115,7 +131,7 @@ export default defineConfig({
       { find: '@lessjs/ui/less-hero-ping', replacement: resolve(uiSrcDir, 'less-hero-ping.ts') },
       { find: '@lessjs/ui/less-dialog', replacement: resolve(uiSrcDir, 'less-dialog.ts') },
       { find: '@lessjs/ui', replacement: resolve(uiSrcDir, 'index.ts') },
-      { find: '@lessjs/blog', replacement: resolve(__dir, '../packages/blog/src/index.ts') },
+      { find: '@lessjs/content', replacement: resolve(__dir, '../packages/content/src/index.ts') },
     ],
   },
 });

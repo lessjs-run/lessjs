@@ -1,3 +1,5 @@
+export const meta = { section: 'Packages', label: 'Web Awesome', order: 30 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -23,7 +25,7 @@ export class WebAwesomePage extends LitElement {
   ];
   override render() {
     return html`
-      <less-layout currentPath="/styling/web-awesome">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/styling/web-awesome">
         <div class="container">
           <h1>Web Awesome 组件</h1>
           <p class="subtitle">通过 CDN 使用 50+ UI 组件。无需导入。</p>

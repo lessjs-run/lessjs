@@ -1,3 +1,5 @@
+export const meta = { section: 'Core Model', label: 'Island Deep Dive', order: 50 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -72,7 +74,7 @@ export class IslandsDeepGuidePage extends LitElement {
 
   override render() {
     return html`
-      <less-layout currentPath="/guide/islands-deep">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/guide/islands-deep">
         <div class="container">
           <h1>Island 深度指南</h1>
           <p class="subtitle">

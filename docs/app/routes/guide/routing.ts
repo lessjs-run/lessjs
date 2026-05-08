@@ -1,3 +1,5 @@
+export const meta = { section: 'Core Model', label: 'Routing', order: 10 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -8,7 +10,7 @@ export class RoutingGuidePage extends LitElement {
 
   override render() {
     return html`
-      <less-layout currentPath="/guide/routing">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/guide/routing">
         <div class="container">
           <h1>路由</h1>
           <p class="subtitle">

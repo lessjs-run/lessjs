@@ -1,7 +1,7 @@
 // deno-lint-ignore no-unversioned-import
 import { assertEquals } from 'jsr:@std/assert';
 // deno-lint-ignore no-sloppy-imports
-import { parseMarkdownFile, slugFromFilename } from '../src/markdown.ts';
+import { parseMarkdownFile, slugFromFilename } from '../src/blog/markdown.ts';
 
 Deno.test('slugFromFilename: strips .md extension', () => {
   assertEquals(slugFromFilename('hello-world.md'), 'hello-world');

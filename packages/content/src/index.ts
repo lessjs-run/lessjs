@@ -1,0 +1,180 @@
+/**
+ * @lessjs/content - Unified content plugin for LessJS
+ *
+ * Blog + Nav + Sitemap — build-time only, zero runtime.
+ * Each module is opt-in: pass options to enable, omit or false to disable.
+ *
+ * Usage:
+ * ```ts
+ * import { lessContent } from '@lessjs/content';
+ *
+ * export default defineConfig({
+ *   plugins: [
+ *     less(),
+ *     lessContent({
+ *       blog: { contentDir: 'content/blog', basePath: '/blog' },
+ *       nav: { routesDir: 'app/routes', headerNav: [...] },
+ *       sitemap: { hostname: 'https://lessjs.org' },
+ *     }),
+ *   ],
+ * });
+ * ```
+ */
+
+import type { Plugin } from 'vite';
+import type { HeaderNavLink, LessContentOptions, NavSection } from './types.ts';
+import { initBlogData } from './blog/blog-data.ts';
+import { scanNavData } from './nav/scanner.ts';
+import { createLogger } from '@lessjs/core/logger';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import process from 'node:process';
+
+const log = createLogger('content');
+
+// ─── Re-exports ─────────────────────────────────────────────────
+
+// Blog
+export type { BlogPost, BlogPostFrontmatter, LessBlogOptions } from './blog/types.ts';
+export { parseMarkdownFile, slugFromFilename } from './blog/markdown.ts';
+export { generateBlogRoutes, scanPosts } from './blog/routes.ts';
+export { getBlogOptions, getPostBySlug, getPosts, initBlogData } from './blog/blog-data.ts';
+
+// Nav
+export { extractMeta, scanNavData } from './nav/scanner.ts';
+export type { HeaderNavLink, NavItem, NavOptions, NavSection, RouteMeta } from './types.ts';
+
+// Sitemap
+export {
+  generateSitemap,
+  renderRobotsTxt,
+  renderSitemapXml,
+  scanHtmlFiles,
+} from './sitemap/generator.ts';
+export type { SitemapOptions, SitemapUrl } from './types.ts';
+
+// ─── Virtual module IDs ─────────────────────────────────────────
+
+const VIRTUAL_NAV_ID = 'virtual:less-nav';
+const RESOLVED_NAV_ID = '\0' + VIRTUAL_NAV_ID;
+
+/** Cached nav data (populated in buildStart) */
+let _navSections: NavSection[] = [];
+let _headerNav: HeaderNavLink[] = [];
+
+// ─── Main Plugin ────────────────────────────────────────────────
+
+/**
+ * LessJS Content Vite plugin.
+ * Unified entry for blog, nav, and sitemap modules.
+ * Each module is opt-in.
+ */
+export function lessContent(options: LessContentOptions = {}): Plugin[] {
+  const blogOpts = options.blog === false ? null : (options.blog || null);
+  const navOpts = options.nav || null;
+  const sitemapOpts = options.sitemap || null;
+
+  const contentPlugin: Plugin = {
+    name: 'less:content',
+
+    async buildStart() {
+      // ─── Blog module ────────────────────────────────────
+      if (blogOpts) {
+        const contentDir = blogOpts.contentDir ?? 'posts';
+        const basePath = blogOpts.basePath ?? '/blog';
+
+        const { postCount } = await (async () => {
+          const result = await initBlogData(blogOpts);
+          return { postCount: result.posts.length };
+        })();
+
+        log.info(`Blog: ${postCount} post(s) found in ${contentDir}, base path: ${basePath}`);
+
+        // Write blog options to .less/ for SSG Phase 3
+        try {
+          const root = process.cwd();
+          const lessDir = join(root, '.less');
+          mkdirSync(lessDir, { recursive: true });
+          writeFileSync(
+            join(lessDir, 'blog-options.json'),
+            JSON.stringify({ contentDir, basePath }),
+            'utf-8',
+          );
+        } catch {
+          // Non-fatal — dynamic route expansion will be skipped if options missing
+        }
+      }
+
+      // ─── Nav module ─────────────────────────────────────
+      if (navOpts) {
+        _navSections = scanNavData(navOpts);
+        _headerNav = navOpts.headerNav || [];
+
+        // Write nav data to .less/ for SSG Phase 3 and other consumers
+        try {
+          const root = process.cwd();
+          const lessDir = join(root, '.less');
+          mkdirSync(lessDir, { recursive: true });
+          writeFileSync(
+            join(lessDir, 'nav-data.json'),
+            JSON.stringify(_navSections, null, 2),
+            'utf-8',
+          );
+          log.info(`Nav: ${_navSections.length} section(s) written to .less/nav-data.json`);
+        } catch (e) {
+          log.warn(`Failed to write nav-data.json: ${e}`);
+        }
+      }
+
+      // ─── Sitemap module ──────────────────────────────────
+      // Write sitemap options to .less/ for build-ssg to pick up
+      if (sitemapOpts) {
+        try {
+          const root = process.cwd();
+          const lessDir = join(root, '.less');
+          mkdirSync(lessDir, { recursive: true });
+          writeFileSync(
+            join(lessDir, 'sitemap-options.json'),
+            JSON.stringify(sitemapOpts),
+            'utf-8',
+          );
+          log.info(`Sitemap: configured for ${sitemapOpts.hostname}`);
+        } catch (e) {
+          log.warn(`Failed to write sitemap-options.json: ${e}`);
+        }
+      }
+    },
+
+    config() {
+      const defines: Record<string, string> = {};
+
+      // Blog: define __LESS_BLOG_BASE_PATH__ for route components
+      if (blogOpts) {
+        defines['__LESS_BLOG_BASE_PATH__'] = JSON.stringify(blogOpts.basePath ?? '/blog');
+      }
+
+      return { define: defines };
+    },
+  };
+
+  const virtualNavPlugin: Plugin = {
+    name: 'less:virtual-nav',
+
+    resolveId(id) {
+      if (id === VIRTUAL_NAV_ID) return RESOLVED_NAV_ID;
+    },
+
+    load(id) {
+      if (id === RESOLVED_NAV_ID) {
+        return [
+          `export const navSections = ${JSON.stringify(_navSections)};`,
+          `export const headerNav = ${JSON.stringify(_headerNav)};`,
+        ].join('\n');
+      }
+    },
+  };
+
+  return [contentPlugin, virtualNavPlugin];
+}
+
+export default lessContent;

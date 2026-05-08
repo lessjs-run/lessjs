@@ -1,3 +1,5 @@
+export const meta = { section: 'Core Model', label: 'Rendering & SSG', order: 20 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -8,7 +10,7 @@ export class SSGGuidePage extends LitElement {
 
   override render() {
     return html`
-      <less-layout currentPath="/guide/ssg">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/guide/ssg">
         <div class="container">
           <h1>渲染与 SSG</h1>
           <p class="subtitle">

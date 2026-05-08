@@ -1,10 +1,12 @@
 /**
- * Blog Index Page — Data-driven rendering via @lessjs/blog
+ * Blog Index Page — Data-driven rendering via @lessjs/content
  */
+export const meta = { section: 'History', label: 'Blog', order: 10 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import { getPosts } from '@lessjs/blog';
+import { getPosts } from '@lessjs/content';
 
 export class BlogIndexPage extends LitElement {
   static override styles = [
@@ -75,7 +77,7 @@ export class BlogIndexPage extends LitElement {
     const newestSlug = posts.length > 0 ? posts[0].slug : '';
 
     return html`
-      <less-layout currentPath="/blog">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/blog">
         <div class="container">
           <h1>博客</h1>
           <p class="subtitle">LessJS 框架的设计思考、架构决策和发展路线。</p>

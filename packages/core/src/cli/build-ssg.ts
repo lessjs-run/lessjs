@@ -293,8 +293,8 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         const wrapInDocumentFn = ssrHandlerMod
           .wrapInDocument as typeof import('../ssr-handler.js').wrapInDocument;
 
-        // Initialize @lessjs/blog data store if present.
-        // The blog plugin's buildStart() ran in Phase 1's Vite instance,
+        // Initialize @lessjs/content (blog) data store if present.
+        // The content plugin's buildStart() ran in Phase 1's Vite instance,
         // but Phase 3 creates a fresh SSR server with its own module graph.
         // We need to re-initialize so getPosts() returns data.
         let blogOptions: { contentDir?: string; basePath?: string } | undefined;
@@ -309,15 +309,18 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         }
 
         try {
-          const blogModule = await server.ssrLoadModule('@lessjs/blog') as Record<string, unknown>;
-          if (typeof blogModule.initBlogData === 'function') {
+          const blogModule = await server.ssrLoadModule('@lessjs/content') as Record<
+            string,
+            unknown
+          >;
+          if (blogModule && typeof blogModule.initBlogData === 'function') {
             await (blogModule.initBlogData as (opts?: unknown) => Promise<unknown>)(blogOptions);
             const postCount = (blogModule.getPosts as () => unknown[])().length;
             log.info(`Blog data store initialized: ${postCount} post(s) for SSG dynamic routes`);
           }
         } catch {
-          // @lessjs/blog not available — non-fatal, dynamic routes may not use it
-          log.debug('@lessjs/blog not found — skipping blog data initialization');
+          // @lessjs/content not available — non-fatal
+          log.debug('Blog content module not found — skipping blog data initialization');
         }
 
         for (const route of dynamicRoutes) {
@@ -617,6 +620,31 @@ async function networkFirst(req) {
       }
     } finally {
       await server.close();
+    }
+
+    // ─── Sitemap generation ────────────────────────────────────
+    // After SSG is complete, generate sitemap.xml from dist/ output
+    // if @lessjs/content sitemap module is configured.
+    try {
+      const navDataPath = join(root, '.less', 'nav-data.json');
+      if (existsSync(navDataPath)) {
+        // Nav data exists → @lessjs/content was configured
+        // Check if sitemap is configured via build-metadata
+        const sitemapConfigPath = join(root, '.less', 'sitemap-options.json');
+        if (existsSync(sitemapConfigPath)) {
+          const sitemapOpts = JSON.parse(readFileSync(sitemapConfigPath, 'utf-8'));
+          const sitemapModule = await import('@lessjs/content/sitemap') as Record<string, unknown>;
+          if (typeof sitemapModule.generateSitemap === 'function') {
+            (sitemapModule.generateSitemap as (dir: string, opts: unknown) => string[])(
+              join(root, outDir),
+              sitemapOpts,
+            );
+          }
+        }
+      }
+    } catch {
+      // Sitemap generation failure is non-fatal
+      log.debug('Sitemap generation skipped or failed');
     }
   } catch (err) {
     const cause = err instanceof Error ? err : new Error(String(err));

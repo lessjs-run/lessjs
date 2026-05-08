@@ -1,3 +1,5 @@
+export const meta = { section: 'Roadmap & Decisions', label: 'Roadmap', order: 10 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -83,7 +85,7 @@ export class RoadmapPage extends LitElement {
 
   override render() {
     return html`
-      <less-layout currentPath="/roadmap">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/roadmap">
         <div class="container">
           <h1>Roadmap</h1>
           <p class="subtitle">

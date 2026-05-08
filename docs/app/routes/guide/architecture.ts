@@ -1,3 +1,5 @@
+export const meta = { section: 'Start Here', label: 'Architecture', order: 30 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -8,7 +10,7 @@ export class ArchitecturePage extends LitElement {
 
   override render() {
     return html`
-      <less-layout currentPath="/guide/architecture">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/guide/architecture">
         <div class="container">
           <h1>架构</h1>
           <p class="subtitle">

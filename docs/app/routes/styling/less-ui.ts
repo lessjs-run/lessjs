@@ -1,3 +1,5 @@
+export const meta = { section: 'Packages', label: '@lessjs/ui', order: 20 };
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -41,7 +43,7 @@ export class LessUIPage extends LitElement {
   ];
   override render() {
     return html`
-      <less-layout currentPath="/styling/less-ui">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/styling/less-ui">
         <div class="container">
           <h1>@lessjs/ui</h1>
           <p class="subtitle">

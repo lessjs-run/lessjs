@@ -1,6 +1,7 @@
 /**
  * 404 Not Found Page
  */
+import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -41,7 +42,7 @@ export class NotFoundPage extends LitElement {
 
   override render() {
     return html`
-      <less-layout>
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}">
         <div class="container" style="text-align:center;padding-top:4rem">
           <div class="error-code">404</div>
           <p class="error-message">
