@@ -10,3 +10,8 @@ export { Hono } from 'hono';
 
 // SSR runtime (used by generated Hono entry)
 export { wrapInDocument } from '../../packages/core/src/ssr-handler.js';
+
+// Logger (used by generated Hono entry for SSR warnings)
+import { createLogger } from '../../packages/core/src/logger.js';
+const log = createLogger('core');
+export { log };
