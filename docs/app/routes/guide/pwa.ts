@@ -152,7 +152,7 @@ self.addEventListener('fetch', (e) => {
 
           <div class="nav-row">
             <a href="/guide/deployment" class="nav-link">&larr; Deployment</a>
-            <a href="/guide/blog-system" class="nav-link">Blog System &rarr;</a>
+            <a href="/guide/content-system" class="nav-link">Content System &rarr;</a>
           </div>
         </div>
       </less-layout>

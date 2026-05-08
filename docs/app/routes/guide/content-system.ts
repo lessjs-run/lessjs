@@ -1,21 +1,21 @@
 /**
- * Blog System — @lessjs/content feature guide
+ * Content System — @lessjs/content feature guide
  */
-export const meta = { section: 'Packages', label: '@lessjs/content', order: 40 };
+export const meta = { section: 'Strategy', label: 'Content System', order: 40 };
 import { navSections, headerNav } from 'virtual:less-nav';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '../../islands/code-block.js';
 
-export class BlogSystemPage extends LitElement {
+export class ContentSystemPage extends LitElement {
   static override styles = [pageStyles];
 
   override render() {
     return html`
-      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/guide/blog-system">
+      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" currentPath="/guide/content-system">
         <div class="container">
-          <h1>博客系统</h1>
+          <h1>Content System</h1>
           <p class="subtitle">
             <span class="inline-code">@lessjs/content</span> 是 LessJS 的统一内容插件（博客 + 导航 + 站点地图）。
             把 <span class="inline-code">.md</span> 文件丢进内容目录，自动获得文章列表和详情页。
@@ -130,6 +130,6 @@ This is my first post.</code></pre></code-block>
   }
 }
 
-customElements.define('page-blog-system', BlogSystemPage);
-export default BlogSystemPage;
-export const tagName = 'page-blog-system';
+customElements.define('page-content-system', ContentSystemPage);
+export default ContentSystemPage;
+export const tagName = 'page-content-system';

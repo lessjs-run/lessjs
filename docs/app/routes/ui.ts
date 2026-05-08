@@ -511,19 +511,73 @@ export class UIShowcase extends LitElement {
               </div>
             </div>
 
-            <!-- Install -->
-            <div class="install-section">
-              <h3>安装 @lessjs/ui</h3>
-              <div class="install-cmd">
-                <span class="prompt">$</span> deno add jsr:@lessjs/ui
-              </div>
-              <p>Deno、Node、Bun。零配置。</p>
+          <!-- Component List -->
+          <div class="section">
+            <div class="section-title">组件清单</div>
+            <div class="cards-grid">
+              <less-card>
+                <h3 slot="header">less-button</h3>
+                <p>按钮组件，支持 variants (default, primary, ghost) 和 sizes (sm, md, lg)</p>
+              </less-card>
+              <less-card>
+                <h3 slot="header">less-card</h3>
+                <p>卡片组件，支持 header/footer slots 和 variants (default, elevated, borderless)</p>
+              </less-card>
+              <less-card>
+                <h3 slot="header">less-input</h3>
+                <p>输入组件，支持 label、error states 和 validation</p>
+              </less-card>
+              <less-card>
+                <h3 slot="header">less-code-block</h3>
+                <p>代码块组件，带复制按钮和语法高亮</p>
+              </less-card>
+              <less-card>
+                <h3 slot="header">less-layout</h3>
+                <p>布局组件，包含 header、sidebar、footer 和移动端 hamburger 菜单</p>
+              </less-card>
             </div>
+          </div>
 
-            <div class="nav-row">
-              <a href="/guide/deployment" class="nav-link">&larr; 部署</a>
-              <a href="/styling/less-ui" class="nav-link">LessJS UI 文档 &rarr;</a>
+          <!-- Design Tokens -->
+          <div class="section">
+            <div class="section-title">设计令牌</div>
+            <p style="font-size:0.8125rem;color:var(--less-text-secondary);margin-bottom:1rem">
+              组件使用 CSS 自定义属性作为设计令牌，可通过
+              <span class="inline-code">@lessjs/ui/design-tokens</span> 导入：
+            </p>
+            <div class="preview-card">
+              <div class="preview-body" style="flex-direction:column;font-family:'SF Mono','Fira Code','Consolas',monospace;font-size:0.8125rem;color:var(--less-text-secondary)">
+                <code>--less-bg-base, --less-text-primary, --less-border-base</code><br>
+                <code>--less-spacing-sm, --less-spacing-md, --less-spacing-lg</code><br>
+                <code>--less-font-sans, --less-font-mono</code><br>
+                <code>--less-radius-sm, --less-radius-md</code>
+              </div>
             </div>
+          </div>
+
+          <!-- SSR Compatibility -->
+          <div class="section">
+            <div class="section-title">SSR 兼容性</div>
+            <p style="font-size:0.8125rem;color:var(--less-text-secondary)">
+              所有组件使用 <span class="inline-code">static properties</span> 而非
+              <span class="inline-code">@property</span> 装饰器，确保 Vite SSR 兼容。详见
+              <a href="/guide/ssg" style="color: var(--less-accent);">SSG 文档</a>。
+            </p>
+          </div>
+
+          <!-- Install -->
+          <div class="install-section">
+            <h3>安装 @lessjs/ui</h3>
+            <div class="install-cmd">
+              <span class="prompt">$</span> deno add jsr:@lessjs/ui
+            </div>
+            <p>Deno、Node、Bun。零配置。</p>
+          </div>
+
+          <div class="nav-row">
+            <a href="/guide/deployment" class="nav-link">&larr; 部署</a>
+            <a href="/styling/web-awesome" class="nav-link">Web Awesome &rarr;</a>
+          </div>
           </div>
         </less-layout>
       `;

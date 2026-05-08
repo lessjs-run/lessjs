@@ -72,7 +72,7 @@ export class DecisionsIndexPage extends LitElement {
           </div>
 
           <div class="nav-row">
-            <a href="/guide/blog-system" class="nav-link">&larr; Blog System</a>
+            <a href="/guide/content-system" class="nav-link">&larr; Content System</a>
             <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
           </div>
         </div>
