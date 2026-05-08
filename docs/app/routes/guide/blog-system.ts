@@ -1,9 +1,10 @@
 /**
- * Blog System — @lessjs/blog package design
+ * Blog System — @lessjs/blog package guide
  */
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
+import '../../islands/code-block.js';
 
 export class BlogSystemPage extends LitElement {
   static override styles = [
@@ -32,19 +33,6 @@ export class BlogSystemPage extends LitElement {
         color: var(--less-text-secondary);
         margin: 0 0 0.75rem;
       }
-      .code-block {
-        background: var(--less-bg-surface);
-        border: 0.5px solid var(--less-border);
-        border-radius: 4px;
-        padding: 1rem;
-        font-family: "SF Mono", "Fira Code", monospace;
-        font-size: 0.75rem;
-        line-height: 1.6;
-        overflow-x: auto;
-        margin: 0.75rem 0 1.25rem;
-        color: var(--less-text-secondary);
-        white-space: pre;
-      }
       ul {
         font-size: 0.8125rem;
         line-height: 1.8;
@@ -59,60 +47,101 @@ export class BlogSystemPage extends LitElement {
     return html`
       <less-layout currentPath="/guide/blog-system">
         <div class="container">
-          <p class="adr-meta">ADR 0004 · 2026-04-30 · Draft · after v0.8.0 target</p>
-          <h1>@lessjs/blog — Standalone SSG Blog Package</h1>
+          <p class="adr-meta">ADR 0004 · 2026-04-30 · Shipped in v0.8.0</p>
+          <h1>@lessjs/blog — Markdown Blog Plugin</h1>
 
-          <h2>Motivation</h2>
+          <h2>Quick Start</h2>
           <p>
-            The docs site currently has two hardcoded blog pages — not a reusable system. Users need a
-            one-line solution: drop in <code>.md</code> files, get automatic listing, pagination, RSS, and
-            tags. Like VitePress, but as a LessJS plugin.
+            Drop <code>.md</code> files into a content directory, get automatic
+            blog listing and post pages. One Vite plugin call:
+          </p>
+          <code-block><pre><code>// vite.config.ts
+import { less } from '@lessjs/core';
+import { lessBlog } from '@lessjs/blog';
+import { resolve } from 'path';
+
+export default defineConfig({
+  plugins: [
+    less(),
+    lessBlog({
+      contentDir: resolve(__dirname, 'content/blog'),
+      basePath: '/blog',
+    }),
+  ],
+});</code></pre></code-block>
+
+          <h2>Markdown Files</h2>
+          <p>
+            Each <code>.md</code> file in the content directory becomes a blog post.
+            Frontmatter supports <code>title</code>, <code>date</code>, <code>tags</code>,
+            <code>draft</code>, and <code>excerpt</code>:
+          </p>
+          <code-block><pre><code><!-- content/blog/2026-05-08-hello-world.md -->
+---
+title: 'Hello World'
+date: '2026-05-08'
+tags: ['lessjs', 'meta']
+excerpt: 'First post on the new blog system.'
+---
+
+This is my first post.</code></pre></code-block>
+
+          <h2>Generated Routes</h2>
+          <ul>
+            <li><code>/blog/</code> — Post listing (newest first)</li>
+            <li><code>/blog/hello-world</code> — Individual post</li>
+          </ul>
+
+          <h2>API Reference</h2>
+          <h3>lessBlog(options)</h3>
+          <p>
+            Vite plugin that integrates blog into the build pipeline. Options:
+          </p>
+          <ul>
+            <li><code>contentDir</code> — Path to <code>.md</code> files (required)</li>
+            <li><code>basePath</code> — URL prefix for blog routes (default: <code>/blog</code>)</li>
+            <li><code>markdown</code> — Custom markdown renderer function (optional)</li>
+          </ul>
+
+          <h3>getPosts()</h3>
+          <p>
+            Returns all non-draft posts sorted by date (newest first).
+            Use in route components to render the listing page.
           </p>
 
-          <h2>User experience</h2>
-          <div class="code-block">
-            // vite.config.ts import { less } from '@lessjs/core' import { lessBlog } from '@lessjs/blog'
-            export default defineConfig({ plugins: [ less(), lessBlog({ dir: 'content/blog', // .md files
-            go here title: 'My Blog', postsPerPage: 10, }), ], })
-          </div>
+          <h3>getPostBySlug(slug)</h3>
+          <p>
+            Returns a single post by its slug (filename without date prefix and <code>.md</code>).
+            Returns <code>undefined</code> if not found or if the post is a draft.
+          </p>
 
-          <div class="code-block">
-            <!-- content/blog/hello-world.md -->
-            --- title: Hello World date: 2026-05-01 tags: [kiss, meta] --- This is my first post.
-          </div>
+          <h3>parseMarkdownFile(content, filename)</h3>
+          <p>
+            Parses a markdown file with gray-matter frontmatter.
+            Returns <code>{ frontmatter, content, html, slug }</code>.
+          </p>
 
-          <h2>Generated routes</h2>
-          <ul>
-            <li><code>/blog/</code> — Post listing (paginated, newest first)</li>
-            <li><code>/blog/hello-world</code> — Individual post</li>
-            <li><code>/blog/page/2</code> — Page 2</li>
-            <li><code>/blog/tags/lessjs</code> — Filter by tag</li>
-            <li><code>/blog/feed.xml</code> — RSS / Atom feed</li>
-          </ul>
+          <h3>slugFromFilename(filename)</h3>
+          <p>
+            Strips date prefix from filenames: <code>2026-05-08-my-post.md</code>
+            → <code>my-post</code>.
+          </p>
 
           <h2>Constraint</h2>
           <p>
-            The blog package should not require Lit. The first useful version should work as a plain SSG
-            plugin: Markdown in, static routes + feed out. Plain blog pages should ship no page-level
+            The blog package does not require Lit. It works as a plain SSG plugin:
+            Markdown in, static routes out. Plain blog pages ship no page-level
             framework runtime; interactive widgets remain islands.
           </p>
           <p>
-            The <code>.less</code> compiler is an ideal future template backend, not a release blocker.
-            When v0.10.0 alpha exists, blog templates can gain compiler-backed Custom Elements.
+            v0.8 scope: <code>.md → routes → list/post pages</code>.
+            No MDX, comments, pagination, or tags system in this version.
           </p>
-
-          <h2>Implementation order</h2>
-          <ol style="font-size:0.8125rem;line-height:1.8;color:var(--less-text-secondary)">
-            <li>v0.8.0 stabilizes route/action/serverless conventions</li>
-            <li><code>@lessjs/blog</code> ships as a plain SSG plugin first</li>
-            <li><code>.less</code> compiler support is added after v0.10.0 alpha</li>
-            <li>LessJS docs site dogfoods it and replaces current hardcoded blog routes</li>
-          </ol>
 
           <p>详见 <code>docs/decisions/0004-blog-system.md</code></p>
 
           <div class="nav-row" style="margin-top:2rem">
-            <a href="/guide/pwa" class="nav-link">&larr; PWA Support</a>
+            <a href="/guide/error-handling" class="nav-link">&larr; Error Handling</a>
             <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
           </div>
         </div>

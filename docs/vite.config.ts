@@ -86,6 +86,10 @@ export default defineConfig({
         find: '@lessjs/core/render-dsd',
         replacement: resolve(__dir, '../packages/core/src/render-dsd.ts'),
       },
+      {
+        find: '@lessjs/core/logger',
+        replacement: resolve(__dir, '../packages/core/src/logger.ts'),
+      },
       { find: '@lessjs/core/less-runtime', replacement: runtimeShim },
       {
         find: '@lessjs/core',

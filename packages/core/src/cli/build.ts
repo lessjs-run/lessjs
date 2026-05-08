@@ -17,6 +17,9 @@ import { build as viteBuild } from 'vite';
 import process from 'node:process';
 import { buildClient } from './build-client.js';
 import { buildSSG } from './build-ssg.js';
+import { createLogger } from '../logger.js';
+
+const log = createLogger('ssg');
 
 type BuildPhase = {
   name: string;
@@ -24,11 +27,11 @@ type BuildPhase = {
 };
 
 async function runPhase(phase: BuildPhase): Promise<void> {
-  console.log(`[LessJS] ${phase.name}...`);
+  log.info(`${phase.name}...`);
   try {
     await phase.run();
   } catch (error) {
-    console.error(`[LessJS] ${phase.name} failed.`);
+    log.error(`${phase.name} failed.`);
     throw error;
   }
 }
@@ -46,12 +49,12 @@ export async function build(): Promise<void> {
     name: 'Phase 3/3 - static site generation',
     run: () => buildSSG(),
   });
-  console.log('[LessJS] Build complete.');
+  log.info('Build complete.');
 }
 
 if (import.meta.main) {
   build().catch((error) => {
-    console.error('[LessJS] Build failed:', error);
+    log.error('Build failed:', error);
     process.exit(1);
   });
 }

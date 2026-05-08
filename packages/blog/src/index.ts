@@ -10,6 +10,9 @@
 import type { Plugin } from 'vite';
 import type { LessBlogOptions } from './types.ts';
 import { initBlogData } from './blog-data.ts';
+import { createLogger } from '@lessjs/core';
+
+const log = createLogger('blog');
 
 export type { BlogPost, BlogPostFrontmatter, LessBlogOptions } from './types.ts';
 export { parseMarkdownFile, slugFromFilename } from './markdown.ts';
@@ -51,8 +54,8 @@ export function lessBlog(options?: LessBlogOptions): Plugin {
         return { postCount: result.posts.length };
       })();
 
-      console.log(
-        `[LessJS Blog] ${postCount} post(s) found in ${contentDir}, base path: ${basePath}`,
+      log.info(
+        `${postCount} post(s) found in ${contentDir}, base path: ${basePath}`,
       );
     },
 

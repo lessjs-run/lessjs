@@ -18,6 +18,9 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import process from 'node:process';
 import { LessError } from './errors.js';
+import { createLogger } from './logger.js';
+
+const log = createLogger('core');
 
 import honoDevServer from '@hono/vite-dev-server';
 import { LessBuildContext } from './build-context.js';
@@ -82,6 +85,7 @@ export {
   type SafeHtml,
   type UnsafeHtml,
 } from './render-dsd.js';
+export { createLogger, LessLogger, LogLevel } from './logger.js';
 export { getSSRProps, island, type IslandOptions, lessBind } from './island.js';
 export { hasNavigationApi, matchRoute, navigate, onNavigate } from './navigation.js';
 export type { NavigationCallback } from './navigation.js';
@@ -123,8 +127,8 @@ export function less(options: FrameworkOptions = {}): Plugin[] {
     for (const frag of options.inject.headFragments || []) {
       // Security: warn if fragment contains inline <script> tags
       if (/<script[\s>]/i.test(frag)) {
-        console.warn(
-          '[LessJS] inject.headFragments contains <script> tags. Ensure this content is ' +
+        log.warn(
+          'inject.headFragments contains <script> tags. Ensure this content is ' +
             'developer-controlled, not user-supplied, to prevent XSS. For safe URL injection, ' +
             'use inject.scripts instead.',
         );
@@ -244,8 +248,8 @@ export function less(options: FrameworkOptions = {}): Plugin[] {
         if (resolvedOptions.packageIslands && resolvedOptions.packageIslands.length > 0) {
           ctx.packageIslands = await scanPackageIslands(resolvedOptions.packageIslands);
           if (ctx.packageIslands.length > 0) {
-            console.log(
-              `[LessJS] Package islands: ${ctx.packageIslands.map((i) => i.tagName).join(', ')}`,
+            log.info(
+              `Package islands: ${ctx.packageIslands.map((i) => i.tagName).join(', ')}`,
             );
           }
         }
@@ -259,8 +263,8 @@ export function less(options: FrameworkOptions = {}): Plugin[] {
         const pageCount = routes.filter((r) => r.type === 'page' && !r.special).length;
         const apiCount = routes.filter((r) => r.type === 'api' && !r.special).length;
         const totalIslands = ctx.islandTagNames.length + ctx.packageIslands.length;
-        console.log(
-          `[LessJS] Routes: ${pageCount} page(s), ${apiCount} API route(s), ` +
+        log.info(
+          `Routes: ${pageCount} page(s), ${apiCount} API route(s), ` +
             `${totalIslands} island(s) - LessJS Architecture`,
         );
       } catch (err) {

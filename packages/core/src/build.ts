@@ -25,6 +25,9 @@ import type { FrameworkOptions } from './types.js';
 import type { LessBuildContext } from './build-context.js';
 import { join } from 'node:path';
 import { mkdirSync, writeFileSync } from 'node:fs';
+import { createLogger } from './logger.js';
+
+const log = createLogger('core');
 
 /**
  * Serialize resolve.alias for JSON storage.
@@ -113,15 +116,15 @@ export function buildPlugin(options: FrameworkOptions = {}, ctx?: LessBuildConte
 
       const totalIslands = (ctx?.islandTagNames?.length || 0) + (ctx?.packageIslands?.length || 0);
 
-      console.log('[LessJS] Phase 1 complete — SSR bundle + metadata written');
+      log.info('Phase 1 complete — SSR bundle + metadata written');
       if (totalIslands > 0) {
-        console.log(
-          `[LessJS] ${totalIslands} island(s) detected — run the full build command next.`,
+        log.info(
+          `${totalIslands} island(s) detected — run the full build command next.`,
         );
-        console.log('[LessJS]   deno task build          (compile islands + render static HTML)');
+        log.info('  deno task build          (compile islands + render static HTML)');
       } else {
-        console.log('[LessJS] No islands — static pages only, zero client JS');
-        console.log('[LessJS] Run: deno task build       (render static HTML)');
+        log.info('No islands — static pages only, zero client JS');
+        log.info('Run: deno task build       (render static HTML)');
       }
     },
   };

@@ -18,6 +18,26 @@ export class ErrorHandlingPage extends LitElement {
         line-height: 1.8;
         color: var(--less-text-secondary);
       }
+      .log-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.875rem;
+      }
+      .log-table th,
+      .log-table td {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid var(--less-border-hover);
+        text-align: left;
+      }
+      .log-table th {
+        background: var(--less-bg-surface);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .log-table code {
+        font-size: 0.8125rem;
+      }
     `,
   ];
 
@@ -112,6 +132,135 @@ app.post('/api/posts', async (c) => {
     "message": "Invalid post"
   }
 }</code></pre></code-block>
+
+          <h2>Structured Logging & Classification</h2>
+          <p>
+            LessJS uses <span class="inline-code">createLogger(scope)</span> to provide scoped,
+            leveled logging across all modules. Every log message carries a prefix that identifies its
+            origin — for example <span class="inline-code">[LessJS/SSG]</span> or
+            <span class="inline-code">[LessJS/Blog]</span>.
+          </p>
+
+          <h3>Log Levels</h3>
+          <table class="log-table">
+            <thead>
+              <tr>
+                <th>Level</th>
+                <th>Method</th>
+                <th>When to Use</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>DEBUG</code></td>
+                <td><code>log.debug()</code></td>
+                <td>Internal diagnostics — skipped registrations, property assignment fallbacks. Stripped by DCE when <code>DEBUG=false</code>.</td>
+              </tr>
+              <tr>
+                <td><code>INFO</code></td>
+                <td><code>log.info()</code></td>
+                <td>Build progress — route scan results, phase completions, adapter installations.</td>
+              </tr>
+              <tr>
+                <td><code>WARN</code></td>
+                <td><code>log.warn()</code></td>
+                <td>Recoverable issues — budget overruns, malformed manifests, failed stat reads, property parse errors.</td>
+              </tr>
+              <tr>
+                <td><code>ERROR</code></td>
+                <td><code>log.error()</code></td>
+                <td>Framework errors — render failures, style extraction failures. Includes <code>LessError</code> code and status.</td>
+              </tr>
+              <tr>
+                <td><code>SILENT</code></td>
+                <td>—</td>
+                <td>Suppress all output. Set via log level configuration.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Logger Scopes</h3>
+          <table class="log-table">
+            <thead>
+              <tr>
+                <th>Scope</th>
+                <th>Prefix</th>
+                <th>Modules</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>core</code></td>
+                <td><code>[LessJS]</code></td>
+                <td>index.ts, island.ts, route-scanner.ts, ssg-postprocess.ts</td>
+              </tr>
+              <tr>
+                <td><code>ssg</code></td>
+                <td><code>[LessJS/SSG]</code></td>
+                <td>build.ts, build-client.ts, build-ssg.ts, build-manifest.ts</td>
+              </tr>
+              <tr>
+                <td><code>blog</code></td>
+                <td><code>[LessJS/Blog]</code></td>
+                <td>blog/index.ts, routes.ts</td>
+              </tr>
+              <tr>
+                <td><code>signal</code></td>
+                <td><code>[LessJS/Signal]</code></td>
+                <td>signals/index.ts (effect errors, channel warnings)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Usage Pattern</h3>
+          <code-block><pre><code>import { createLogger } from '@lessjs/core/logger';
+
+const log = createLogger('ssg');
+
+// Structured warnings — prefix auto-included
+log.warn('Client build failed:', err.message);
+
+// Info for build progress
+log.info('Routes: 5 page(s), 2 API route(s), 8 island(s)');
+
+// Debug for diagnostics (stripped in production builds)
+log.debug('customElements.define("my-counter") skipped: already defined');</code></pre></code-block>
+
+          <h3>Error-Log Mapping</h3>
+          <p>
+            <code>LessError</code> subclasses map to specific log levels:
+          </p>
+          <table class="log-table">
+            <thead>
+              <tr>
+                <th>Error Class</th>
+                <th>Log Level</th>
+                <th>Context</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>NotFoundError</code></td>
+                <td><code>WARN</code></td>
+                <td>API route — client requested missing resource</td>
+              </tr>
+              <tr>
+                <td><code>ValidationError</code></td>
+                <td><code>WARN</code></td>
+                <td>API route — invalid input from client</td>
+              </tr>
+              <tr>
+                <td><code>SsrRenderError</code></td>
+                <td><code>ERROR</code></td>
+                <td>Build — component render() threw during SSG</td>
+              </tr>
+              <tr>
+                <td><code>IslandUpgradeError</code></td>
+                <td><code>ERROR</code></td>
+                <td>Browser — island module failed to load or register</td>
+              </tr>
+            </tbody>
+          </table>
 
           <div class="nav-row">
             <a href="/guide/security-middleware" class="nav-link">&larr; Security & Middleware</a>

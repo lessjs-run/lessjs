@@ -22,6 +22,7 @@ serverless fullstack and ISR scenarios. See [Roadmap](https://lessjs.com/roadmap
 [![@lessjs/rpc](https://img.shields.io/jsr/v/@lessjs/rpc?label=@lessjs/rpc&style=flat-square)](https://jsr.io/@lessjs/rpc)
 [![@lessjs/signal](https://img.shields.io/jsr/v/@lessjs/signal?label=@lessjs/signal&style=flat-square)](https://jsr.io/@lessjs/signal)
 [![@lessjs/create](https://img.shields.io/jsr/v/@lessjs/create?label=@lessjs/create&style=flat-square)](https://jsr.io/@lessjs/create)
+[![@lessjs/blog](https://img.shields.io/jsr/v/@lessjs/blog?label=@lessjs/blog&style=flat-square)](https://jsr.io/@lessjs/blog)
 
 ## Why LessJS
 
@@ -66,7 +67,7 @@ LessJS does not do full client-side hydration tree reconciliation. Instead, it u
 detect the existing shadow root and skip re-rendering, avoiding duplicate content (blank boxes,
 double footers, etc.).
 
-## v0.7 Changes
+## v0.8 Changes
 
 ### Declarative Shadow DOM — Recursive Nesting
 
@@ -96,6 +97,60 @@ The v0.6 core breakthrough: **L2 Nested DSD**.
 
 Every nested Custom Element receives its own `<template shadowrootmode>` with complete CSS encapsulation.
 Final styles are visible without any JavaScript.
+
+### Structured Logging — createLogger
+
+v0.8 introduces `createLogger(scope)` for structured, leveled logging across all framework modules.
+Unified prefixes (`[LessJS]`, `[LessJS/SSG]`, `[LessJS/Blog]`), four levels (`debug/info/warn/error`),
+and a `SILENT` level to suppress all output. All internal modules have been migrated to structured logging.
+
+```ts
+import { createLogger } from '@lessjs/core/logger';
+
+const log = createLogger('ssg');
+log.warn('Client build failed:', err.message);
+log.info('Routes: 5 page(s), 2 API route(s), 8 island(s)');
+log.debug('customElements.define("my-counter") skipped: already defined');
+```
+
+### Runtime Shim Auto-Generation
+
+v0.8 adds `packages/core/scripts/generate-runtime-shim.ts` which uses TypeScript AST to extract
+functions from source files and auto-generate `runtime-shim.ts`. Eliminates the manual sync risk
+between the runtime shim and source code.
+
+```bash
+deno task generate:runtime-shim          # Regenerate
+deno task generate:runtime-shim && git diff --exit-code packages/core/src/runtime-shim.ts  # Verify consistency
+```
+
+### @lessjs/blog — Blog Plugin
+
+New package `@lessjs/blog` provides blog capabilities as a Vite plugin:
+
+```ts
+import { lessBlog } from '@lessjs/blog';
+
+export default defineConfig({
+  plugins: [
+    less(),
+    lessBlog({
+      contentDir: resolve(__dirname, 'content/blog'),
+      basePath: '/blog',
+    }),
+  ],
+});
+```
+
+- `parseMarkdownFile()` — Parse Markdown + frontmatter
+- `scanPosts()` + `generateBlogRoutes()` — Auto-generate routes
+- Draft filtering, custom basePath, and custom markdown renderer
+- v0.8 scope: `.md → routes → list/post pages`
+
+### Nested DSD Rendering — parse5 Optimization
+
+v0.8 replaces the regex-based O(n²) nested custom element rendering with a parse5 AST O(n×d) approach,
+supporting complex nesting scenarios.
 
 ### TC39 Signals — Reactive State
 
@@ -172,12 +227,13 @@ Resource hints injected based on island strategy:
 
 | Package               | Responsibility                                                              | Version |
 | --------------------- | --------------------------------------------------------------------------- | ------- |
-| `@lessjs/core`        | Vite plugin, route scanning, DSD rendering (L2 nested), Navigation API, SSG | 0.7.0   |
+| `@lessjs/core`        | Vite plugin, route scanning, DSD rendering (L2 nested), structured logging, Navigation API, SSG | 0.8.0   |
 | `@lessjs/ui`          | Lit-based Web Component library (with DSD hydration)                        | 0.6.2   |
 | `@lessjs/signal`      | TC39 Signals fork (signal/computed/effect/islandEffect)                     | 0.6.1   |
 | `@lessjs/adapter-lit` | Optional Lit SSR adapter                                                    | 0.6.3   |
 | `@lessjs/rpc`         | Lightweight fetch/RPC controller tools                                      | 0.6.1   |
 | `@lessjs/create`      | Project scaffolding CLI                                                     | 0.6.1   |
+| `@lessjs/blog`        | Markdown blog plugin (Vite plugin, auto route generation)                   | 0.8.0   |
 
 Legacy packages `@lessjs/vite` and `@lessjs/ssg` are deprecated.
 
@@ -206,12 +262,18 @@ my-app/
     routes/
       index.ts          # Pages = file routing
       about.ts
+      blog/
+        index.ts        # Blog listing (@lessjs/blog)
+        [slug].ts       # Blog post
       api/
         status.ts       # Hono API route
     islands/
       counter.ts        # Islands = client-side interactive components
     components/
       shell.ts
+  content/
+    blog/               # Markdown blog content
+      hello-world.md
   deno.json
   vite.config.ts
 ```
@@ -264,12 +326,29 @@ Full repository commands:
 ```bash
 deno task build:ssg    # Build SSG only (static HTML)
 deno task test         # Run tests
+deno task test:e2e     # Playwright E2E tests
 deno task lint         # Lint check
 deno task fmt:check    # Format check
 ```
 
 This repository is Deno-first. Vite runs via `deno run -A npm:vite`; Node/npm/npx is not
 part of the primary workflow.
+
+### Pre-commit Hooks
+
+Install Git pre-commit hooks to automatically run format checks, lint, and type checks before each commit:
+
+```bash
+deno task hooks:install
+```
+
+Uninstall:
+
+```bash
+deno task hooks:uninstall
+```
+
+The hook runs `deno fmt --check`, `deno lint`, and `deno check` — it does not run the full test suite.
 
 ## Design System
 
@@ -300,11 +379,13 @@ Theme variable example:
 - Roadmap: [/roadmap](https://lessjs.com/roadmap)
 - Architecture decisions: [/decisions](https://lessjs.com/decisions)
 - UI component showcase: [/ui](https://lessjs.com/ui)
+- Blog: [/blog](https://lessjs.com/blog)
 
 ## Version History
 
 | Version           | Date       | Highlights                                                                                   |
 | ----------------- | ---------- | -------------------------------------------------------------------------------------------- |
+| **0.8.0**         | 2026-05-08 | Structured logging (createLogger), runtime-shim auto-generation, @lessjs/blog plugin, parse5 nested optimization, Playwright E2E |
 | **0.7.0**         | 2026-05-07 | P0 audit fixes — 73 new tests, runtime-shim consistency, XSS warnings, silent catch elimination, CI gaps, pre-commit hooks |
 | **0.6.2**         | 2026-05-07 | adapter-lit silent catch fix                                                                 |
 | **0.6.1**         | 2026-05-07 | v0.6 stable release — README cleanup, all packages version-aligned, CI stability fixes       |

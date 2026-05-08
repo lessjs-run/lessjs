@@ -47,6 +47,11 @@ export function generateClientEntry(
 // Lazy islands deferred to browser idle.
 // Zero DOM interaction — safe with DSD rendering.
 
+var log = {
+  warn: function() { var a = ['[LessJS]']; a.push.apply(a, arguments); console.warn.apply(console, a); },
+  error: function() { var a = ['[LessJS]']; a.push.apply(a, arguments); console.error.apply(console, a); },
+};
+
 var __map = {
 ${islandMap}
 };
@@ -54,7 +59,7 @@ var __tags = [${tags}];
 
 function __load(tag) {
   if (__map[tag]) {
-    __map[tag]().catch(function(e) { console.warn('[LessJS]', tag, e); });
+    __map[tag]().catch(function(e) { log.warn(tag, e); });
     __map[tag] = null;
   }
 }

@@ -17,12 +17,14 @@
     "@lit-labs/ssr-dom-shim": "npm:@lit-labs/ssr-dom-shim@^1.5.0",
     "hono": "npm:hono@^4",
     "@hono/vite-dev-server": "npm:@hono/vite-dev-server@^0.25.3",
+    "ts-morph": "npm:ts-morph@^28.0.0",
     "vite": "npm:vite@8.0.10",
     "typescript": "npm:typescript@^5.9.0",
     "tsx": "npm:tsx@^4.21.0",
     "@types/node": "npm:@types/node@^22.0.0",
     "parse5": "npm:parse5@7.0.0",
-    "entities": "npm:entities@6.0.0"
+    "entities": "npm:entities@^4.5.0",
+    "@playwright/test": "npm:@playwright/test@^1.52.0"
   },
   "vendor": true,
   "nodeModulesDir": "manual",
@@ -43,11 +45,14 @@
     "publish": "deno task publish:rpc && deno task publish:ui && deno task publish:adapter-lit && deno task publish:signal && deno task publish:core && deno task publish:create && deno task publish:blog",
     "test": "deno test --allow-read --allow-write --allow-env --allow-net --allow-run",
     "test:watch": "deno test --allow-read --allow-write --allow-env --allow-net --allow-run --watch",
+    "test:e2e": "npx -y @playwright/test test --config e2e/playwright.config.ts",
+    "test:e2e:install": "npx -y playwright install chromium",
     "typecheck": "deno check **/*.ts",
     "lint": "deno lint",
     "fmt": "deno fmt",
     "fmt:check": "deno fmt --check",
     "clean": "rm -rf packages/*/dist docs/dist docs/.less",
+    "generate:runtime-shim": "deno run --allow-read --allow-write --allow-env packages/core/scripts/generate-runtime-shim.ts",
     "hooks:install": "git config core.hooksPath .githooks",
     "hooks:uninstall": "git config core.hooksPath"
   },
@@ -62,7 +67,7 @@
   "lint": {
     "rules": {
       "tags": ["recommended"],
-      "exclude": ["no-sloppy-imports"]
+      "exclude": ["no-sloppy-imports", "no-explicit-any"]
     }
   },
   "compilerOptions": {

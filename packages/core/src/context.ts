@@ -10,6 +10,9 @@
 
 import type { RouteEntry } from './types.js';
 import type { IslandDecl } from './entry-descriptor.js';
+import { createLogger } from './logger.js';
+
+const log = createLogger('core');
 
 /**
  * Resolved SSR context passed through the rendering pipeline.
@@ -55,10 +58,10 @@ export function extractParams(
         try {
           params[paramName] = decodeURIComponent(pathParts[i]);
         } catch (e) {
-          console.warn(
-            `[LessJS] decodeURIComponent failed for route param "${paramName}" value "${
-              pathParts[i]
-            }": ${e instanceof Error ? e.message : String(e)}`,
+          log.warn(
+            `decodeURIComponent failed for route param "${paramName}" value "${pathParts[i]}": ${
+              e instanceof Error ? e.message : String(e)
+            }`,
           );
           params[paramName] = pathParts[i]; // fallback: raw on malformed encoding
         }

@@ -8,6 +8,9 @@ import { join } from 'node:path';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import type { BlogPost, LessBlogOptions } from './types.ts';
 import { parseMarkdownFile, slugFromFilename } from './markdown.ts';
+import { createLogger } from '@lessjs/core';
+
+const log = createLogger('blog');
 
 /**
  * Scan the content directory and parse all blog posts.
@@ -18,7 +21,7 @@ export async function scanPosts(options?: LessBlogOptions): Promise<BlogPost[]> 
   const posts: BlogPost[] = [];
 
   if (!existsSync(contentDir)) {
-    console.warn(`[LessJS Blog] Content directory not found: ${contentDir}`);
+    log.warn(`Content directory not found: ${contentDir}`);
     return posts;
   }
 

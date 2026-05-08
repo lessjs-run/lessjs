@@ -158,6 +158,29 @@ export class ChangelogPage extends LitElement {
                   <strong>dsd-hydration 单元测试</strong>：13 个测试用例覆盖 DsdLitElement Mixin 的
                   constructor 拦截、createRenderRoot 覆写、_dsdHydrated 标记、DSD options 透传。
                 </li>
+                <li>
+                  <strong>结构化日志 createLogger</strong>：
+                  <span class="inline-code">@lessjs/core/logger</span> 新模块，
+                  提供 <span class="inline-code">createLogger(scope)</span> 工厂函数，
+                  统一 <span class="inline-code">[LessJS]</span> / <span class="inline-code">[LessJS/SSG]</span>
+                  / <span class="inline-code">[LessJS/Blog]</span> 前缀。
+                  支持 debug/info/warn/error 四级，SILENT 级别可静默所有输出。
+                  全框架内部模块已从原始 <span class="inline-code">console.*</span> 迁移至结构化日志。
+                </li>
+                <li>
+                  <strong>Runtime Shim 自动生成</strong>：
+                  <span class="inline-code">packages/core/scripts/generate-runtime-shim.ts</span>
+                  使用 TypeScript AST 从源文件提取函数，自动生成
+                  <span class="inline-code">runtime-shim.ts</span>，消除手工同步风险。
+                </li>
+                <li>
+                  <strong>parse5 嵌套 DSD 优化</strong>：将嵌套自定义元素渲染从正则 O(n²) 替换为
+                  parse5 AST O(n×d) 方案，支持复杂嵌套场景。
+                </li>
+                <li>
+                  <strong>Playwright E2E 测试</strong>：10 个端到端测试覆盖 DSD layers
+                  和嵌套自定义元素，验证 SSG 产物在真实浏览器中的行为。
+                </li>
               </ul>
             </div>
             <div class="change-category changed">
@@ -188,7 +211,7 @@ export class ChangelogPage extends LitElement {
                   README 和文档站同步更新。
                 </li>
                 <li>
-                  <strong>包版本统一</strong>：@lessjs/core 0.7.0、@lessjs/adapter-lit 0.6.3，
+                  <strong>包版本统一</strong>：@lessjs/core 0.8.0、@lessjs/blog 0.8.0，
                   其余包未变更。
                 </li>
               </ul>
@@ -206,6 +229,18 @@ export class ChangelogPage extends LitElement {
                   <span class="inline-code">buildIslandChunkMap</span> 在已包含
                   <span class="inline-code">islands/</span> 前缀的路径上再次拼接，导致 SSG HTML
                   中 island 脚本 URL 404（回归修复）。
+                </li>
+                <li>
+                  <strong>Runtime shim log 未定义</strong>：生成的 runtime-shim 代码引用
+                  <span class="inline-code">log</span> 变量但未定义，导致运行时
+                  <span class="inline-code">ReferenceError</span>。在 SHIM_BOILERPLATE 中添加
+                  <span class="inline-code">var log = {...}</span> 桩函数。
+                </li>
+                <li>
+                  <strong>全量 console.* 迁移</strong>：框架内部所有原始
+                  <span class="inline-code">console.warn/error/debug</span> 调用替换为
+                  <span class="inline-code">createLogger</span> 结构化日志（core、adapter-lit、signals）。
+                  仅 CLI 工具和日志实现本身保留 <span class="inline-code">console.*</span>。
                 </li>
               </ul>
             </div>

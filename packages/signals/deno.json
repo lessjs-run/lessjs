@@ -10,6 +10,11 @@
   "compilerOptions": {
     "skipLibCheck": true
   },
+  "lint": {
+    "rules": {
+      "exclude": ["no-explicit-any"]
+    }
+  },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

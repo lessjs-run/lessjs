@@ -114,7 +114,7 @@ export class SSGGuidePage extends LitElement {
 
           <div class="nav-row">
             <a href="/guide/routing" class="nav-link">&larr; Routing</a>
-            <a href="/guide/islands" class="nav-link">Island Upgrade &rarr;</a>
+            <a href="/guide/dsd" class="nav-link">DSD 渲染架构 &rarr;</a>
           </div>
         </div>
       </less-layout>

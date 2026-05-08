@@ -158,7 +158,7 @@ export class IslandsGuidePage extends LitElement {
 
             <div class="nav-row">
               <a href="/guide/ssg" class="nav-link">&larr; Rendering & SSG</a>
-              <a href="/guide/api-routes" class="nav-link">API Routes &rarr;</a>
+              <a href="/guide/islands-deep" class="nav-link">Island 深度指南 &rarr;</a>
             </div>
           </div>
         </less-layout>

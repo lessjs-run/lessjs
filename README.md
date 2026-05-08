@@ -22,8 +22,9 @@ LessJS 正在演化为一个**混合框架 + 编译器**：当前以 SSG + Islan
 [![@lessjs/rpc](https://img.shields.io/jsr/v/@lessjs/rpc?label=@lessjs/rpc&style=flat-square)](https://jsr.io/@lessjs/rpc)
 [![@lessjs/signal](https://img.shields.io/jsr/v/@lessjs/signal?label=@lessjs/signal&style=flat-square)](https://jsr.io/@lessjs/signal)
 [![@lessjs/create](https://img.shields.io/jsr/v/@lessjs/create?label=@lessjs/create&style=flat-square)](https://jsr.io/@lessjs/create)
+[![@lessjs/blog](https://img.shields.io/jsr/v/@lessjs/blog?label=@lessjs/blog&style=flat-square)](https://jsr.io/@lessjs/blog)
 
-  
+
 ## 为什么是 LessJS
 
 很多现代前端栈把 HTML 变成运行时产物。LessJS 反过来，从 HTML 和 Web 平台本身出发：
@@ -65,7 +66,7 @@ LessJS 不做客户端整树 hydration，而是在需要交互的位置按需升
 **DSD Hydration**：当浏览器原生附加 Declarative Shadow DOM 后，Lit 组件检测已有 shadow root 并跳过重渲染，
 避免重复内容（空白框、Footer 双写等）。
 
-## v0.7 变更
+## v0.8 变更
 
 ### Declarative Shadow DOM — 嵌套递归
 
@@ -95,6 +96,58 @@ v0.6 核心突破：**L2 Nested DSD**。
 
 每个嵌套的 Custom Element 都获得独立的 `<template shadowrootmode>`，CSS 封装完整保留，
 无需 JavaScript 即可看到最终样式。
+
+### 结构化日志 — createLogger
+
+v0.8 引入 `createLogger(scope)` 结构化日志模块，全框架统一 `[LessJS]` / `[LessJS/SSG]` / `[LessJS/Blog]` 前缀，
+支持 `debug/info/warn/error` 四级，`SILENT` 级别可静默所有输出。所有框架内部模块已迁移至结构化日志，
+原始 `console.*` 调用仅在 CLI 工具和日志实现本身中保留。
+
+```ts
+import { createLogger } from '@lessjs/core/logger';
+
+const log = createLogger('ssg');
+log.warn('Client build failed:', err.message);
+log.info('Routes: 5 page(s), 2 API route(s), 8 island(s)');
+log.debug('customElements.define("my-counter") skipped: already defined');
+```
+
+### Runtime Shim 自动生成
+
+v0.8 新增 `packages/core/scripts/generate-runtime-shim.ts`，使用 TypeScript AST 从源文件提取函数，
+自动生成 `runtime-shim.ts`。消除了手工同步运行时 shim 与源码的风险。
+
+```bash
+deno task generate:runtime-shim          # 重新生成
+deno task generate:runtime-shim && git diff --exit-code packages/core/src/runtime-shim.ts  # 验证一致性
+```
+
+### @lessjs/blog — 博客插件
+
+新包 `@lessjs/blog` 以 Vite 插件形态提供博客能力：
+
+```ts
+import { lessBlog } from '@lessjs/blog';
+
+export default defineConfig({
+  plugins: [
+    less(),
+    lessBlog({
+      contentDir: resolve(__dirname, 'content/blog'),
+      basePath: '/blog',
+    }),
+  ],
+});
+```
+
+- `parseMarkdownFile()` — 解析 Markdown + frontmatter
+- `scanPosts()` + `generateBlogRoutes()` — 自动生成路由
+- 支持 draft 过滤、自定义 basePath 和 markdown 渲染器
+- v0.8 范围：`.md → 路由 → 列表/文章页`
+
+### 嵌套 DSD 渲染 — parse5 优化
+
+v0.8 将嵌套自定义元素渲染从正则 O(n²) 替换为 parse5 AST O(n×d) 方案，支持复杂嵌套场景。
 
 ### TC39 Signals — 响应式状态
 
@@ -171,12 +224,13 @@ navigate('/about');
 
 | 包                    | 职责                                                               | 当前版本 |
 | --------------------- | ------------------------------------------------------------------ | -------- |
-| `@lessjs/core`        | Vite 插件、路由扫描、DSD 渲染（L2 嵌套）、Navigation API、SSG 管线 | 0.7.0    |
+| `@lessjs/core`        | Vite 插件、路由扫描、DSD 渲染（L2 嵌套）、结构化日志、Navigation API、SSG 管线 | 0.8.0    |
 | `@lessjs/ui`          | 基于 Lit 的 Web Component 组件库（含 DSD hydration）               | 0.6.2    |
 | `@lessjs/signal`      | TC39 Signals 二开（signal/computed/effect/islandEffect）           | 0.6.1    |
 | `@lessjs/adapter-lit` | 可选 Lit SSR 适配器                                                | 0.6.3    |
 | `@lessjs/rpc`         | 轻量 fetch/RPC controller 工具                                     | 0.6.1    |
 | `@lessjs/create`      | 项目脚手架 CLI                                                     | 0.6.1    |
+| `@lessjs/blog`        | Markdown 博客插件（Vite 插件、路由自动生成）                       | 0.8.0    |
 
 历史包 `@lessjs/vite` 和 `@lessjs/ssg` 已废弃。
 
@@ -204,12 +258,18 @@ my-app/
     routes/
       index.ts          # 页面 = 文件路由
       about.ts
+      blog/
+        index.ts        # 博客列表（@lessjs/blog）
+        [slug].ts       # 博客文章
       api/
         status.ts       # Hono API route
     islands/
       counter.ts        # Island = 客户端交互组件
     components/
       shell.ts
+  content/
+    blog/               # Markdown 博客内容
+      hello-world.md
   deno.json
   vite.config.ts
 ```
@@ -261,6 +321,7 @@ deno task build
 ```bash
 deno task build:ssg    # 仅构建 SSG（静态 HTML）
 deno task test         # 运行测试
+deno task test:e2e     # Playwright E2E 测试
 deno task lint         # lint 检查
 deno task fmt:check    # 格式检查
 ```
@@ -312,11 +373,13 @@ LessJS UI 组件遵循瑞士国际主义风格（Swiss International Style）：
 - 路线图：[/roadmap](https://lessjs.com/roadmap)
 - 架构决策：[/decisions](https://lessjs.com/decisions)
 - UI 组件展示：[/ui](https://lessjs.com/ui)
+- 博客：[/blog](https://lessjs.com/blog)
 
 ## 版本历史
 
 | Version           | Date       | Highlights                                                                                   |
 | ----------------- | ---------- | -------------------------------------------------------------------------------------------- |
+| **0.8.0**         | 2026-05-08 | 结构化日志（createLogger）、runtime-shim 自动生成、@lessjs/blog 博客插件、parse5 嵌套优化、Playwright E2E |
 | **0.7.0**         | 2026-05-07 | P0 审计修复 — 73 新测试、runtime-shim 一致性、XSS 警告、静默 catch 消除、CI 补全、pre-commit hooks |
 | **0.6.2**         | 2026-05-07 | adapter-lit 静默 catch 修复                                                                   |
 | **0.6.1**         | 2026-05-07 | v0.6 正式版 — README 清理、全包版本对齐、CI 稳定性修复                                       |

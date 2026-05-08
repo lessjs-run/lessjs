@@ -40,6 +40,10 @@
  */
 
 /** Island registration options */
+
+import { createLogger } from './logger.js';
+const log = createLogger('core');
+
 export interface IslandOptions {
   /** Upgrade strategy:
    *   - 'eager': load immediately when module is imported
@@ -88,7 +92,7 @@ export function getSSRProps(el: HTMLElement): Record<string, unknown> | null {
   try {
     return JSON.parse(raw) as Record<string, unknown>;
   } catch {
-    console.warn(`[LessJS] Failed to parse data-ssr-props on <${el.tagName.toLowerCase()}>`);
+    log.warn(`Failed to parse data-ssr-props on <${el.tagName.toLowerCase()}>`);
     return null;
   }
 }
@@ -115,8 +119,8 @@ export function lessBind(el: HTMLElement): void {
       (el as unknown as Record<string, unknown>)[key] = value;
     } catch (e) {
       // Some properties may be read-only — safe to skip, but log for debuggability
-      console.debug(
-        `[LessJS] Cannot set read-only property "${key}" on <${el.tagName.toLowerCase()}>: ${
+      log.debug(
+        `Cannot set read-only property "${key}" on <${el.tagName.toLowerCase()}>: ${
           e instanceof Error ? e.message : String(e)
         }`,
       );
@@ -291,8 +295,8 @@ export function island<T extends CustomElementConstructor>(
         globalThis.customElements.define(tagName, componentClass);
       } catch (e) {
         // Already defined — safe to ignore in SSR contexts
-        console.debug(
-          `[LessJS] customElements.define("${tagName}") skipped: ${
+        log.debug(
+          `customElements.define("${tagName}") skipped: ${
             e instanceof Error ? e.message : String(e)
           }`,
         );

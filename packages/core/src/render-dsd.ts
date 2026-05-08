@@ -48,6 +48,9 @@ export { renderNestedCustomElements } from './render-nested.js';
 import { escapeAttr, escapeAttrValue, escapeHtml } from './html-escape.js';
 import { type DsdComponent, type DsdOptions, getAdapter } from './types.js';
 import { renderNestedCustomElements } from './render-nested.js';
+import { createLogger } from './logger.js';
+
+const log = createLogger('core');
 
 // ─── DSD Rendering ──────────────────────────────────────────────
 
@@ -113,7 +116,7 @@ export async function renderDSD(
     instance = new componentClass() as unknown as DsdComponent;
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : String(err);
-    console.error(`[LessJS] Failed to instantiate <${tagName}>:`, errMsg);
+    log.error(`Failed to instantiate <${tagName}>:`, errMsg);
     return (
       `<${tagName}${sourceStr}><!-- LessJS ERROR: Failed to instantiate <${tagName}>: ${
         escapeHtml(errMsg)
@@ -130,8 +133,8 @@ export async function renderDSD(
       (instance as Record<string, unknown>)[key] = value;
     } catch (e) {
       // Some properties may be read-only — safe to skip, but log for debuggability
-      console.debug(
-        `[LessJS] Cannot set read-only property "${key}" on <${tagName}>: ${
+      log.debug(
+        `Cannot set read-only property "${key}" on <${tagName}>: ${
           e instanceof Error ? e.message : String(e)
         }`,
       );
@@ -156,8 +159,8 @@ export async function renderDSD(
         const errDetail = isLitTemplateResultHeuristic(result)
           ? 'This looks like a Lit TemplateResult — install @lessjs/adapter-lit to handle it.'
           : `Components must return a string from render(), got ${typeof result}.`;
-        console.error(
-          `[LessJS] <${tagName}> render() returned ${typeof result} instead of string. ${errDetail}`,
+        log.error(
+          `<${tagName}> render() returned ${typeof result} instead of string. ${errDetail}`,
         );
         content =
           `<!-- LessJS ERROR: <${tagName}> render() returned ${typeof result}, expected string. ${errDetail} -->`;
@@ -166,10 +169,8 @@ export async function renderDSD(
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : String(err);
     const errStack = err instanceof Error ? err.stack : '';
-    console.error(
-      `[LessJS] <${tagName}> render() failed:`,
-      errMsg,
-      errStack ? `\n${errStack}` : '',
+    log.error(
+      `<${tagName}> render() failed: ${errMsg}${errStack ? `\n${errStack}` : ''}`,
     );
     content = `<!-- LessJS ERROR: <${tagName}> render() threw: ${escapeHtml(errMsg)} -->\n` +
       (errStack
@@ -189,10 +190,8 @@ export async function renderDSD(
       styleCss = adapter.extractStyles(componentClass) || '';
     } catch (e) {
       // Style extraction failed — continue without styles, but log for debuggability
-      console.debug(
-        `[LessJS] extractStyles failed for <${tagName}>: ${
-          e instanceof Error ? e.message : String(e)
-        }`,
+      log.debug(
+        `extractStyles failed for <${tagName}>: ${e instanceof Error ? e.message : String(e)}`,
       );
     }
   }
@@ -277,7 +276,7 @@ export async function renderDSDByName(
   const cls = globalThis.customElements?.get(tagName);
 
   if (!cls) {
-    console.warn(`[LessJS] <${tagName}> is not registered — rendering as void element`);
+    log.warn(`<${tagName}> is not registered — rendering as void element`);
     const attrs = serializeAttributes(props);
     return `<${tagName}${attrs}></${tagName}>`;
   }

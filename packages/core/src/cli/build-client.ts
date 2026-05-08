@@ -19,6 +19,9 @@ import { join, resolve } from 'node:path';
 import process from 'node:process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { type ClientIslandEntry, generateClientEntry } from '../entry-generators.js';
+import { createLogger } from '../logger.js';
+
+const log = createLogger('ssg');
 
 interface BuildMetadata {
   islandTagNames: string[];
@@ -45,9 +48,9 @@ async function buildClient(): Promise<void> {
     const raw = readFileSync(metadataPath, 'utf-8');
     metadata = JSON.parse(raw);
   } catch (e) {
-    console.log('[LessJS] No .less/build-metadata.json found — skipping client build');
-    console.log('[LessJS] Run `vite build` first (Phase 1) to generate island metadata');
-    console.debug(`[LessJS] Metadata read error: ${e instanceof Error ? e.message : String(e)}`);
+    log.info('No .less/build-metadata.json found — skipping client build');
+    log.info('Run `vite build` first (Phase 1) to generate island metadata');
+    log.debug(`Metadata read error: ${e instanceof Error ? e.message : String(e)}`);
     return;
   }
 
@@ -59,18 +62,18 @@ async function buildClient(): Promise<void> {
 
   // Debug: log resolve aliases for CI troubleshooting
   if (metadata.resolveAlias) {
-    console.log('[LessJS] resolveAlias:', JSON.stringify(metadata.resolveAlias, null, 2));
+    log.info('resolveAlias: ' + JSON.stringify(metadata.resolveAlias, null, 2));
   } else {
-    console.log('[LessJS] WARNING: no resolveAlias in build metadata — island imports may fail');
+    log.info('WARNING: no resolveAlias in build metadata — island imports may fail');
   }
 
   if (localIslands.length === 0 && packageIslands.length === 0) {
-    console.log('[LessJS] No islands found — zero client JS output');
+    log.info('No islands found — zero client JS output');
     return;
   }
 
   const totalIslands = localIslands.length + packageIslands.length;
-  console.log(`[LessJS] Building client bundle for ${totalIslands} island(s)...`);
+  log.info(`Building client bundle for ${totalIslands} island(s)...`);
 
   // Auto-generate client entry from island list
   const lessTmpDir = join(root, '.less');
@@ -172,13 +175,13 @@ async function buildClient(): Promise<void> {
 
   try {
     await viteBuild(clientConfig);
-    console.log('[LessJS] Client bundle built →', clientOutDir);
+    log.info('Client bundle built → ' + clientOutDir);
 
     // Build observability: print manifest with island sizes
     const { printBuildManifest } = await import('../build-manifest.js');
     printBuildManifest({ root, outDir, phase: 2 });
   } catch (error) {
-    console.error('[LessJS] Client build failed:', error);
+    log.error('Client build failed:', error);
     throw error;
   }
 }
@@ -186,7 +189,7 @@ async function buildClient(): Promise<void> {
 // CLI entry point
 if (import.meta.main) {
   buildClient().catch((err) => {
-    console.error('[LessJS] Client build failed:', err);
+    log.error('Client build failed:', err);
     process.exit(1);
   });
 }

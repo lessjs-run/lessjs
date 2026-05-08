@@ -22,6 +22,18 @@
  * @module @lessjs/signal
  */
 
+// ─── Internal Logger ────────────────────────────────────────────
+// Lightweight scoped logger — no @lessjs/core dependency needed.
+// Prefix: [LessJS/Signal] — matches createLogger('signal') convention.
+const _log = {
+  warn: (...args: unknown[]) => {
+    console.warn('[LessJS/Signal]', ...args);
+  },
+  error: (...args: unknown[]) => {
+    console.error('[LessJS/Signal]', ...args);
+  },
+};
+
 // ─── Engine Layer: TC39 Signal Primitives ────────────────────────
 // Use native Signal if available, otherwise polyfill.
 // deno-lint-ignore-file no-explicit-any
@@ -575,7 +587,7 @@ export function effect(fn: () => void | (() => void)): Unsubscribe {
           try {
             (s as any).get();
           } catch (err) {
-            console.warn('[LessJS Effect] Error:', err);
+            _log.warn('Effect error:', err);
           }
         }
         watcher.watch(c);
@@ -588,7 +600,7 @@ export function effect(fn: () => void | (() => void)): Unsubscribe {
   try {
     c.get();
   } catch (err) {
-    console.warn('[LessJS Effect] Initial error:', err);
+    _log.warn('Effect initial error:', err);
   }
 
   return () => {
@@ -680,8 +692,8 @@ const _channelTarget = typeof document !== 'undefined' ? document.body : null;
  */
 export function channel<T = unknown>(name: string): Channel<T> {
   if (!_channelTarget) {
-    console.warn(
-      '[LessJS Channel] No DOM available — events will be no-ops (expected in SSR/SSG).',
+    _log.warn(
+      'No DOM available — channel events will be no-ops (expected in SSR/SSG).',
     );
   }
 

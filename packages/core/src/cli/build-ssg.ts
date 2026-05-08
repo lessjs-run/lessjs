@@ -23,6 +23,9 @@ import process from 'node:process';
 import { readdirSync, readFileSync, unlinkSync } from 'node:fs';
 import type { FrameworkOptions, PackageIslandMeta } from '../types.js';
 import { SsrRenderError } from '../errors.js';
+import { createLogger } from '../logger.js';
+
+const log = createLogger('ssg');
 
 // Lit adapter is installed after the Vite SSR server is created.
 // The adapter uses naive TemplateResult interpolation — no DOM shim
@@ -63,8 +66,8 @@ function findHtmlFiles(dir: string): string[] {
     }
   } catch (e) {
     // Directory may not exist or be unreadable — warn instead of silent swallow
-    console.warn(
-      `[LessJS] Cannot read directory ${dir}: ${e instanceof Error ? e.message : String(e)}`,
+    log.warn(
+      `Cannot read directory ${dir}: ${e instanceof Error ? e.message : String(e)}`,
     );
   }
   return results;
@@ -112,8 +115,8 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
     // v0.5.0 note: upgradeStrategy controls island module import timing.
     // It is not a client render runtime.
   } catch (e) {
-    console.warn(
-      '[LessJS] No .less/build-metadata.json found; using provided island list.',
+    log.warn(
+      'No .less/build-metadata.json found; using provided island list.',
       e instanceof Error ? e.message : '',
     );
   }
@@ -152,12 +155,14 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
   try {
     const { createServer } = await import('vite');
 
-    // SSR noExternal: bundle lit ecosystem + @lessjs/ui + @lessjs/adapter-lit + node-fetch (Deno compat)
+    // SSR noExternal: bundle lit ecosystem + @lessjs/ui + @lessjs/adapter-lit + parse5 + node-fetch (Deno compat)
     const defaultNoExternal = [
       /^lit/,
       /^@lit/,
       /^@lessjs\/ui/,
       /^@lessjs\/adapter-lit/,
+      'parse5',
+      'entities',
       'node-fetch',
       'fetch-blob',
       'data-uri-to-buffer',
@@ -223,8 +228,8 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         adapterModule.installLitAdapter();
       }
     } catch {
-      console.warn(
-        '[LessJS SSG] @lessjs/adapter-lit not found — Lit components must return string from render()',
+      log.warn(
+        '@lessjs/adapter-lit not found — Lit components must return string from render()',
       );
     }
 
@@ -245,7 +250,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
           origDefine(name, ctor, options);
         } catch (_e) {
           // Already defined by another route — safe to skip in SSR
-          console.debug(`[LessJS SSG] customElements.define("${name}") skipped: already defined`);
+          log.debug(`customElements.define("${name}") skipped: already defined`);
         }
       };
       _ssrDefinePatched = true;
@@ -279,8 +284,8 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
             return nodeFs.statSync(path).isDirectory();
           } catch (e) {
             // Path doesn't exist or is inaccessible — not a directory
-            console.debug(
-              `[LessJS SSG] isDirectory("${path}"): ${e instanceof Error ? e.message : String(e)}`,
+            log.debug(
+              `isDirectory("${path}"): ${e instanceof Error ? e.message : String(e)}`,
             );
             return false;
           }
@@ -305,14 +310,14 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
             rmdirSync(_404Dir);
           } catch (e) {
             // Non-empty directory — not an error, just can't auto-remove
-            console.debug(
-              `[LessJS SSG] Cannot remove 404 directory (not empty): ${
+            log.debug(
+              `Cannot remove 404 directory (not empty): ${
                 e instanceof Error ? e.message : String(e)
               }`,
             );
           }
         }
-        console.log('[LessJS SSG] 404 page → dist/404.html (GitHub Pages)');
+        log.info('404 page → dist/404.html (GitHub Pages)');
       }
 
       // Convert flat HTML files to clean URLs: about.html → about/index.html
@@ -328,10 +333,10 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         if (existsSync(dirPath)) continue;
         nodeFs.mkdirSync(dirPath, { recursive: true });
         nodeFs.renameSync(filePath, indexPath);
-        console.log(`[LessJS SSG] Clean URL: /${baseName} → ${baseName}/index.html`);
+        log.info(`Clean URL: /${baseName} → ${baseName}/index.html`);
       }
 
-      console.log(`[LessJS SSG] Static site generated → ${outputDir}`);
+      log.info(`Static site generated → ${outputDir}`);
 
       const basePath = options.base || '/';
 
@@ -350,15 +355,15 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
               const scriptSrc = `${basePath}client/${entry.file}`;
               const { injectClientScript } = await import('../ssg-postprocess.js');
               injectClientScript(outputDir, scriptSrc);
-              console.log(`[LessJS SSG] Client script injected: ${scriptSrc}`);
+              log.info(`Client script injected: ${scriptSrc}`);
               break;
             }
           }
         } catch (err) {
-          console.warn('[LessJS SSG] Could not read client manifest for script injection:', err);
+          log.warn('Could not read client manifest for script injection:', err);
         }
       } else {
-        console.warn('[LessJS SSG] No client manifest found - run the full build command first');
+        log.warn('No client manifest found - run the full build command first');
       }
 
       // Post-process: build island chunk map for speculative links
@@ -379,13 +384,13 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
           options.middleware?.csp?.reportOnly || false,
           options.middleware?.csp?.nonce || false,
         );
-        console.log('[LessJS SSG] CSP meta tag injected into static HTML');
+        log.info('CSP meta tag injected into static HTML');
       }
 
       // Inject DSD polyfill for browsers that don't support Declarative Shadow DOM
       // (Firefox does NOT support shadowrootmode as of 2025).
       injectDsdPolyfill(outputDir);
-      console.log('[LessJS SSG] DSD polyfill injected into static HTML');
+      log.info('DSD polyfill injected into static HTML');
 
       // Build observability: full manifest with HTML pages + budget warnings
       const { printBuildManifest } = await import('../build-manifest.js');
@@ -411,7 +416,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
           icons: [{ src: '/assets/less-logo.svg', sizes: 'any', type: 'image/svg+xml' }],
         };
         writeFileSync(join(outputDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
-        console.log('[LessJS SSG] PWA manifest.json generated');
+        log.info('PWA manifest.json generated');
 
         // Smart service worker: networkFirst for HTML+API, cacheFirst for assets
         // No precaching — the old PRECACHE pattern caused stale index.html.
@@ -454,7 +459,7 @@ async function networkFirst(req) {
   }
 }`;
         writeFileSync(join(outputDir, 'sw.js'), swCode);
-        console.log('[LessJS SSG] PWA sw.js generated');
+        log.info('PWA sw.js generated');
 
         // Inject manifest link + sw registration into HTML files
         const manifestLink = `<link rel="manifest" href="${basePath}manifest.json">`;
@@ -471,7 +476,7 @@ async function networkFirst(req) {
           }
           writeFileSync(htmlPath, html);
         }
-        console.log(`[LessJS SSG] PWA: injected manifest + sw into ${htmlFiles.length} HTML files`);
+        log.info(`PWA: injected manifest + sw into ${htmlFiles.length} HTML files`);
       }
     } finally {
       await server.close();
@@ -488,8 +493,8 @@ async function networkFirst(req) {
       unlinkSync(tmpEntryPath);
     } catch (e) {
       // Temp file cleanup failure is non-fatal
-      console.debug(
-        `[LessJS SSG] Could not remove temp entry: ${e instanceof Error ? e.message : String(e)}`,
+      log.debug(
+        `Could not remove temp entry: ${e instanceof Error ? e.message : String(e)}`,
       );
     }
   }
@@ -498,7 +503,7 @@ async function networkFirst(req) {
 // CLI entry point
 if (import.meta.main) {
   buildSSG().catch((err) => {
-    console.error('[LessJS SSG] Failed:', err);
+    log.error('Failed:', err);
     process.exit(1);
   });
 }

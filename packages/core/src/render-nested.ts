@@ -1,14 +1,27 @@
 /**
  * @lessjs/core - Nested Custom Element recursive rendering
  *
- * Handles recursive DSD rendering of nested Custom Elements within
- * HTML content. Includes helper functions for tag matching, attribute
- * parsing, and shadow DOM range detection.
+ * Uses parse5 AST for O(n·d) recursive DSD rendering of nested Custom Elements.
+ * Replaces the previous regex-based O(n²) approach.
+ *
+ * Strategy:
+ *   1. Parse HTML into a parse5 AST
+ *   2. Recursively traverse nodes bottom-up
+ *   3. For custom element nodes (tagName contains hyphen), render DSD
+ *   4. Insert DSD template as first child, preserving light DOM for slots
+ *   5. Serialize AST back to HTML
  *
  * @module @lessjs/core/render-nested
  */
 
+import * as parse5 from 'parse5';
+import type { DefaultTreeAdapterMap } from 'parse5';
 import { type DsdOptions } from './types.js';
+
+type P5Element = DefaultTreeAdapterMap['element'];
+type P5Document = DefaultTreeAdapterMap['document'];
+type P5ChildNode = DefaultTreeAdapterMap['childNode'];
+type P5TextNode = DefaultTreeAdapterMap['textNode'];
 
 /**
  * Convert kebab-case attribute name to camelCase property name.
@@ -19,22 +32,18 @@ function kebabToCamel(str: string): string {
 }
 
 /**
- * Parse an HTML element's attributes string into a props object.
+ * Parse parse5 element attributes into a props object.
  *
- * v0.6: Handles quoted values with escaped chars and JSON-encoded
- * attribute values (arrays, objects). Boolean attributes are set to true.
- * Also preserves data-* attributes as-is (no camelCase conversion).
+ * Boolean attributes are set to true.
+ * data-* attributes are preserved as-is (no camelCase conversion).
  */
-function parseElementAttrs(attrsStr: string): Record<string, unknown> {
+function parseAttrsToProps(attrs: Array<{ name: string; value: string }>): Record<string, unknown> {
   const props: Record<string, unknown> = {};
-  // Match key="value", key='value', or bare key (boolean)
-  const attrRegex = /(\w[\w-]*)(?:="((?:[^"\\]|\\.)*)"|='((?:[^'\\]|\\.)*)')?/g;
-  let match: RegExpExecArray | null;
-  while ((match = attrRegex.exec(attrsStr)) !== null) {
-    const key = match[1];
-    const value = match[2] ?? match[3];
-    if (value === undefined) {
-      // Boolean attribute (no value): e.g. home, disabled
+  for (const attr of attrs) {
+    const key = attr.name;
+    const value = attr.value;
+    if (value === '') {
+      // Boolean attribute (no value): e.g. disabled, home
       props[key] = true;
     } else if (key.startsWith('data-')) {
       // data-* attributes: preserve as-is (don't camelCase)
@@ -47,127 +56,35 @@ function parseElementAttrs(attrsStr: string): Record<string, unknown> {
 }
 
 /**
- * Find the matching close tag for an opening tag using balanced counting.
+ * Check if an element already has a DSD template child (already rendered).
  *
- * Handles nested same-name elements correctly:
- *   <x-foo>...<x-foo>...</x-foo>...</x-foo>
- *                 ^-- not this one     ^-- this one
+ * This prevents double-rendering: if a CE's FIRST element child is
+ * <template shadowrootmode="open">, it was rendered in a previous pass.
  *
- * @returns Index of the close tag start, or -1 if not found
+ * IMPORTANT: We check only the FIRST element child, not all children.
+ * Light DOM children (slot content) may contain other CE DSDs, which
+ * must NOT cause a false positive.
  */
-function findMatchingCloseTag(
-  html: string,
-  tagName: string,
-  searchFrom: number,
-): number {
-  let depth = 1;
-  const openRegex = new RegExp(`<${tagName}[\\s/>]`, 'g');
-  const closeRegex = new RegExp(`</${tagName}>`, 'g');
-
-  // Start searching from the position after the opening tag
-  openRegex.lastIndex = searchFrom;
-  closeRegex.lastIndex = searchFrom;
-
-  // Walk through both open and close tags in document order
-  let nextOpen: RegExpExecArray | null;
-  let nextClose: RegExpExecArray | null;
-
-  // Get first candidates
-  nextOpen = openRegex.exec(html);
-  nextClose = closeRegex.exec(html);
-
-  while (depth > 0) {
-    // No more close tags → unmatched
-    if (nextClose === null) return -1;
-
-    // If the next tag is a close tag (or there's no more open tags before it)
-    if (nextOpen === null || nextOpen.index >= nextClose.index) {
-      depth--;
-      if (depth === 0) return nextClose.index;
-      nextClose = closeRegex.exec(html);
-    } else {
-      // Another open tag of the same type → increase depth
-      depth++;
-      nextOpen = openRegex.exec(html);
+function elementAlreadyHasDSD(node: P5Element): boolean {
+  for (const child of node.childNodes) {
+    if (child.nodeName === 'template') {
+      const template = child as P5Element;
+      const shadowAttr = template.attrs.find(
+        (a: { name: string; value: string }) => a.name === 'shadowrootmode' && a.value === 'open',
+      );
+      if (shadowAttr) return true;
     }
-  }
-
-  return -1;
-}
-
-/**
- * Identify ranges in the HTML that are inside <template shadowrootmode="open">
- * and should be excluded from custom element processing.
- *
- * Shadow DOM content is rendering output, not light DOM that needs DSD wrapping.
- * Processing it would cause CSS/HTML leakage and double-rendering bugs.
- *
- * @returns Array of [start, end] ranges to skip
- */
-function findTemplateShadowRanges(html: string): Array<[number, number]> {
-  const ranges: Array<[number, number]> = [];
-  // v0.6 fix: must match additional DSD attributes (shadowrootdelegatesfocus, etc.)
-  // not just <template shadowrootmode="open"> but also
-  // <template shadowrootmode="open" shadowrootdelegatesfocus>
-  const templateOpenRegex = /<template\s+shadowrootmode\s*=\s*"open"[^>]*>/g;
-  let match: RegExpExecArray | null;
-
-  while ((match = templateOpenRegex.exec(html)) !== null) {
-    const contentStart = match.index + match[0].length;
-    // Find the matching </template> using balanced counting
-    let depth = 1;
-    let searchPos = contentStart;
-    while (depth > 0 && searchPos < html.length) {
-      const nextClose = html.indexOf('</template>', searchPos);
-      const nextOpen = html.indexOf('<template', searchPos);
-
-      if (nextClose === -1) break;
-
-      if (nextOpen !== -1 && nextOpen < nextClose) {
-        // Nested <template> — skip past it
-        depth++;
-        searchPos = nextOpen + 9; // past "<template"
-      } else {
-        depth--;
-        if (depth === 0) {
-          ranges.push([match.index, nextClose + '</template>'.length]);
-        }
-        searchPos = nextClose + '</template>'.length;
-      }
-    }
-  }
-
-  return ranges;
-}
-
-/**
- * Check if a position is inside any of the skip ranges.
- */
-function isInRange(pos: number, ranges: Array<[number, number]>): boolean {
-  for (const [start, end] of ranges) {
-    if (pos >= start && pos < end) return true;
+    // Skip text nodes (whitespace) — only check the first element child
+    if (child.nodeName !== '#text') break;
   }
   return false;
 }
 
 /**
- * Check if an element already has its own DSD template child (already rendered).
- *
- * This prevents double-rendering: if a CE tag's FIRST child is
- * <template shadowrootmode="open">, it was rendered in a previous pass.
- *
- * IMPORTANT: We check only the FIRST child, not the entire content.
- * Light DOM children (slot content) may contain other CE DSDs, which
- * must NOT cause a false positive.
+ * Check if a tagName is a valid Custom Element name (contains a hyphen).
  */
-function alreadyHasDSD(html: string, openEnd: number, _closeIdx: number): boolean {
-  // Check if the first non-whitespace content after the open tag
-  // is <template shadowrootmode="open" ...> (may include shadowrootdelegatesfocus etc.)
-  // v0.6 fix: must accept additional DSD attributes after shadowrootmode="open"
-  // otherwise components with delegatesFocus=true cause an infinite loop
-  const content = html.slice(openEnd);
-  const match = content.match(/^\s*<template\s+shadowrootmode\s*=\s*"open"[^>]*>/);
-  return match !== null;
+function isCustomElementName(tagName: string): boolean {
+  return /^[a-z][a-z0-9]*-[a-z0-9-]+$/i.test(tagName);
 }
 
 /**
@@ -193,30 +110,41 @@ function inferDsdOptions(_tagName: string, cls: CustomElementConstructor): DsdOp
 }
 
 /**
- * Recursively render nested Custom Elements with DSD.
+ * Check if a node is inside a DSD template (shadow DOM content).
+ * We must NOT process custom elements inside shadow DOM — they are
+ * already rendered output, not light DOM that needs DSD wrapping.
+ */
+function isInsideDsdTemplate(node: P5Element): boolean {
+  let parent: P5Element['parentNode'] = node.parentNode;
+  while (parent) {
+    if ('nodeName' in parent && (parent as P5Element).nodeName === 'template') {
+      const tpl = parent as P5Element;
+      if (
+        tpl.attrs.some((a: { name: string; value: string }) =>
+          a.name === 'shadowrootmode' && a.value === 'open'
+        )
+      ) {
+        return true;
+      }
+    }
+    parent = (parent as P5Element).parentNode;
+  }
+  return false;
+}
+
+/**
+ * Recursively render nested Custom Elements with DSD using parse5 AST.
  *
- * v0.6 (rev 3): Fixed critical rendering bugs:
+ * v0.8: Replaced regex-based O(n²) approach with parse5 AST traversal.
  *
- *   ROOT CAUSE: The old two-pass approach (collect positions, then apply
- *   replacements) broke when parent/child replacements overlapped. When
- *   less-layout's replacement range included code-block positions, applying
- *   code-block replacements first shifted string indices, causing less-layout's
- *   replacement to corrupt the output (CSS truncated, code-block DSD leaking
- *   into style tags).
+ * Strategy:
+ *   - Parse HTML → AST with parse5.parse()
+ *   - Collect all custom element nodes in a bottom-up order
+ *   - For each un-rendered CE: render DSD, insert template, preserve light DOM
+ *   - Serialize AST → HTML with parse5.serialize()
  *
- *   FIX: Process one element at a time from innermost out. After each
- *   replacement, re-scan the updated string for the next element. This is
- *   O(n²) in the worst case but n is small (typically <10 nested CEs per page)
- *   and correctness is more important than asymptotic speed.
- *
- *   Additional protections:
- *   - Skips content inside <template shadowrootmode="open"> (shadow DOM)
- *     to prevent double-rendering and CSS leakage
- *   - Uses balanced counting for close tag matching (handles nested same-name
- *     elements correctly)
- *   - Detects already-rendered elements to avoid double DSD wrapping
- *   - Preserves light DOM children for slot projection
- *   - Self-closing CE tags handled correctly
+ * Complexity: O(n·d) where n = total nodes, d = max nesting depth
+ * (vs O(n²) for the regex approach which re-scanned after each replacement)
  *
  * Only processes tags with hyphens (valid Custom Element names)
  * that are registered in the global customElements registry.
@@ -227,111 +155,88 @@ export async function renderNestedCustomElements(html: string): Promise<string> 
   // Import renderDSD dynamically to avoid circular dependency
   const { renderDSD } = await import('./render-dsd.js');
 
-  // Iterative approach: find the deepest nested CE, render it, repeat.
-  // This avoids the overlapping-replacement bug of the old two-pass approach.
-  let result = html;
-  let maxIterations = 50; // Safety limit
+  // Parse HTML into AST
+  const ast = parse5.parse(html);
 
-  while (maxIterations-- > 0) {
-    // Identify shadow DOM ranges that must not be processed
-    const shadowRanges = findTemplateShadowRanges(result);
+  // Collect custom element nodes in bottom-up (deepest-first) order
+  const ceNodes: P5Element[] = [];
 
-    // Find the deepest (rightmost) unprocessed custom element
-    const ceOpenRegex = /<([a-z][a-z0-9]*-[a-z0-9-]+)([\s\S]*?)>/g;
-    let deepestPos: {
-      tagName: string;
-      attrsStr: string;
-      start: number;
-      openEnd: number;
-      selfClosing: boolean;
-    } | null = null;
+  function collectCustomElements(node: P5ChildNode): void {
+    if (!('tagName' in node)) return;
+    const element = node as P5Element;
 
-    let match: RegExpExecArray | null;
-    while ((match = ceOpenRegex.exec(result)) !== null) {
-      const tagName = match[1];
-      const attrsStr = match[2];
-      const openStart = match.index;
-      const openEnd = openStart + match[0].length;
-
-      // Only process registered Custom Elements
-      if (!globalThis.customElements!.get(tagName)) continue;
-
-      // Skip if inside a shadow DOM range
-      if (isInRange(openStart, shadowRanges)) continue;
-
-      const selfClosing = attrsStr.trimEnd().endsWith('/');
-
-      if (selfClosing) {
-        // Track self-closing elements (they're leaf nodes)
-        if (!deepestPos || openStart > deepestPos.start) {
-          deepestPos = {
-            tagName,
-            attrsStr: attrsStr.replace(/\/\s*$/, ''),
-            start: openStart,
-            openEnd,
-            selfClosing: true,
-          };
-        }
-        continue;
-      }
-
-      // Find matching close tag using balanced counting
-      const closeIdx = findMatchingCloseTag(result, tagName, openEnd);
-      if (closeIdx === -1) continue;
-
-      // Skip if already has DSD (previously rendered)
-      if (alreadyHasDSD(result, openEnd, closeIdx)) continue;
-
-      // Skip if close tag is inside a shadow range
-      if (isInRange(closeIdx, shadowRanges)) continue;
-
-      // This is a candidate — keep the deepest one
-      if (!deepestPos || openStart > deepestPos.start) {
-        deepestPos = { tagName, attrsStr, start: openStart, openEnd, selfClosing: false };
+    // Recurse into children first (bottom-up: children before parent)
+    if (element.childNodes) {
+      for (const child of element.childNodes) {
+        collectCustomElements(child);
       }
     }
 
-    if (!deepestPos) break; // No more CEs to process
+    // Check if this is a custom element
+    const tagName = element.tagName;
+    if (!tagName || !isCustomElementName(tagName)) return;
 
-    // Render this single CE
-    const pos = deepestPos;
-    const Cls = globalThis.customElements!.get(pos.tagName) as CustomElementConstructor;
-    const props = parseElementAttrs(pos.attrsStr);
-    const dsdOpts = inferDsdOptions(pos.tagName, Cls);
+    // Skip if inside a DSD template (shadow DOM content)
+    if (isInsideDsdTemplate(element)) return;
 
-    if (pos.selfClosing) {
-      const dsdHtml = await renderDSD(pos.tagName, Cls, props, undefined, dsdOpts);
-      result = result.slice(0, pos.start) + dsdHtml + result.slice(pos.openEnd);
-    } else {
-      const closeTag = `</${pos.tagName}>`;
-      const closeIdx = findMatchingCloseTag(result, pos.tagName, pos.openEnd);
-      if (closeIdx === -1) break;
-      const closeEnd = closeIdx + closeTag.length;
+    // Check if registered
+    if (!globalThis.customElements!.get(tagName)) return;
 
-      // Get light DOM children (between open and close tags)
-      const lightDom = result.slice(pos.openEnd, closeIdx);
+    // Skip if already has DSD
+    if (elementAlreadyHasDSD(element)) return;
 
-      // Render the component's DSD
-      const dsdHtml = await renderDSD(pos.tagName, Cls, props, undefined, dsdOpts);
+    ceNodes.push(element);
+  }
 
-      // Slot projection: inject light DOM children after </template>
-      const templateClose = '</template>';
-      const templateIdx = dsdHtml.lastIndexOf(templateClose);
-      if (templateIdx === -1) break;
+  for (const child of (ast as P5Document).childNodes ?? []) {
+    collectCustomElements(child);
+  }
 
-      const lightDomTrimmed = lightDom.trim();
-      let finalHtml: string;
-      if (!lightDomTrimmed) {
-        finalHtml = dsdHtml;
-      } else {
-        const before = dsdHtml.slice(0, templateIdx + templateClose.length);
-        const after = dsdHtml.slice(templateIdx + templateClose.length);
-        finalHtml = before + '\n  ' + lightDom + after;
+  // Process each custom element (already in bottom-up order)
+  for (const ceNode of ceNodes) {
+    const tagName = ceNode.tagName;
+    const Cls = globalThis.customElements!.get(tagName) as CustomElementConstructor;
+    if (!Cls) continue;
+
+    const props = parseAttrsToProps(ceNode.attrs);
+    const dsdOpts = inferDsdOptions(tagName, Cls);
+
+    // Render DSD HTML for this component
+    const dsdHtml = await renderDSD(tagName, Cls, props, undefined, dsdOpts);
+
+    // Parse the DSD HTML into a fragment
+    const dsdFragment = parse5.parseFragment(dsdHtml);
+
+    // Collect light DOM children (slot content) — everything currently inside the CE
+    const lightDomChildren = [...ceNode.childNodes];
+
+    // Clear the CE node and repopulate with DSD content + light DOM
+    ceNode.childNodes = [];
+
+    // Insert DSD fragment children into the CE node
+    if (dsdFragment.childNodes) {
+      for (const child of dsdFragment.childNodes) {
+        // Set parentNode to the CE node
+        (child as P5Element).parentNode = ceNode;
+        ceNode.childNodes.push(child);
       }
+    }
 
-      result = result.slice(0, pos.start) + finalHtml + result.slice(closeEnd);
+    // Append light DOM children after the DSD template (for slot projection)
+    // Only add non-empty text nodes and element nodes
+    for (const child of lightDomChildren) {
+      // Skip pure whitespace text nodes between the DSD template and light DOM
+      if (
+        child.nodeName === '#text' &&
+        (child as P5TextNode).value.trim() === ''
+      ) {
+        continue;
+      }
+      (child as P5Element).parentNode = ceNode;
+      ceNode.childNodes.push(child);
     }
   }
 
-  return result;
+  // Serialize AST back to HTML
+  return parse5.serialize(ast);
 }

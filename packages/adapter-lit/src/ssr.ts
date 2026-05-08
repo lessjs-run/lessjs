@@ -119,6 +119,9 @@ import { escapeAttr, escapeHtml, type RenderAdapter } from '@lessjs/core/render-
 // Import registerAdapter from @lessjs/core/less-runtime so it shares the same
 // module scope as renderDSD when loaded through Vite SSR — no globalThis bridge needed.
 import { registerAdapter } from '@lessjs/core/less-runtime';
+import { createLogger } from '@lessjs/core/logger';
+
+const log = createLogger('core');
 
 /** Detect if a string starts with a custom element tag after trimming leading whitespace.
  *  Custom element names MUST contain a hyphen: [a-z][a-z0-9]*-[a-z0-9-]+
@@ -209,8 +212,8 @@ function stringifyContentValue(value: unknown): string {
         return '';
       } catch (e) {
         // If resolution fails, fall through to escaped string
-        console.debug(
-          `[LessJS] Directive resolution failed: ${e instanceof Error ? e.message : String(e)}`,
+        log.debug(
+          `Directive resolution failed: ${e instanceof Error ? e.message : String(e)}`,
         );
       }
     }
@@ -358,8 +361,8 @@ export function extractLitStyles(componentClass: CustomElementConstructor): stri
     return parts.length > 0 ? parts.join('\n') : undefined;
   } catch (err) {
     const name = (componentClass as { name?: string }).name || 'unknown';
-    console.warn(
-      `[LessJS] Failed to extract styles for <${name}>:`,
+    log.warn(
+      `Failed to extract styles for <${name}>:`,
       err instanceof Error ? err.message : err,
     );
     return undefined;
@@ -440,7 +443,7 @@ export function installLitAdapter(): void {
   });
 
   _litAdapterInstalled = true;
-  console.log('[LessJS] Lit SSR adapter installed - TemplateResult to string');
+  log.info('Lit SSR adapter installed - TemplateResult to string');
 }
 
 /**

@@ -9,6 +9,9 @@
 
 import { join, resolve } from 'node:path';
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { createLogger } from './logger.js';
+
+const log = createLogger('core');
 
 // ─── HTML Insertion Helpers ────────────────────────────────────────────
 
@@ -75,8 +78,8 @@ export function buildIslandChunkMap(
     }
   } catch (e) {
     // Malformed manifest — warn and return empty map
-    console.warn(
-      `[LessJS] Could not parse client manifest: ${e instanceof Error ? e.message : String(e)}`,
+    log.warn(
+      `Could not parse client manifest: ${e instanceof Error ? e.message : String(e)}`,
     );
   }
 
@@ -117,8 +120,8 @@ export function injectCspMeta(
   nonce = false,
 ): void {
   if (nonce) {
-    console.warn(
-      '[LessJS] CSP nonce is not supported for SSG static output. ' +
+    log.warn(
+      'CSP nonce is not supported for SSG static output. ' +
         'Falling back to policy-only Content-Security-Policy meta tag. ' +
         'For per-request nonces, use a server-side middleware instead.',
     );

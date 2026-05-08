@@ -109,6 +109,26 @@ export class TestingPage extends LitElement {
                   work.
                 </p>
 
+                <h2>Playwright E2E Tests</h2>
+                <p>
+                  LessJS includes Playwright end-to-end tests that verify the SSG output in a real browser.
+                  These tests confirm that Declarative Shadow DOM is correctly parsed, custom elements upgrade,
+                  and island strategies work as expected.
+                </p>
+                <code-block
+                ><pre><code># Install Playwright browsers (first time)
+deno task test:e2e:install
+
+# Run E2E tests (builds docs site first, then tests against static server)
+deno task test:e2e</code></pre></code-block>
+                <p>
+                  The E2E suite covers two areas:
+                </p>
+                <ul>
+                  <li><strong>DSD Layers</strong> — HTML structure, shadow root attachment, styles, no raw template text</li>
+                  <li><strong>Nested Custom Elements</strong> — CE discovery, shadow root upgrade after DSD parsing, navigation</li>
+                </ul>
+
                 <div class="nav-row">
                   <a href="/guide/error-handling" class="nav-link">&larr; Error Handling</a>
                   <a href="/guide/deployment" class="nav-link">Deployment &rarr;</a>

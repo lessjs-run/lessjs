@@ -113,7 +113,7 @@ export default app;</code></pre></code-block>
           </div>
 
           <div class="nav-row">
-            <a href="/guide/islands" class="nav-link">&larr; Island Upgrade</a>
+            <a href="/guide/rpc" class="nav-link">&larr; RPC 远程调用</a>
             <a href="/guide/api-design" class="nav-link">API Design &rarr;</a>
           </div>
         </div>

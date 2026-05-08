@@ -11,7 +11,10 @@
  */
 
 import type { RouteEntry } from './types.js';
-import { escapeAttrValue as escapeHtmlAttr, escapeHtml } from './render-dsd.js';
+import { wrapInDocument } from './html-escape.js';
+
+// Re-export wrapInDocument from html-escape.ts (canonical location)
+export { wrapInDocument };
 
 /**
  * Render an error page to HTML string.
@@ -55,89 +58,6 @@ export function renderSsrError(
 <body>
   <h1>${title}</h1>
   <p>${message}</p>
-</body>
-</html>`;
-}
-
-/**
- * Wrap rendered HTML in a full HTML document.
- * Adds DOCTYPE, head (title, meta, preload), and body.
- */
-export function wrapInDocument(
-  html: string,
-  options: {
-    title?: string;
-    lang?: string;
-    /** Client-side module script injected after rendered HTML. */
-    clientScript?: string;
-    meta?: { description?: string };
-    devMode?: boolean;
-    routeModulePath?: string;
-    headExtras?: string;
-    /** CSP nonce, if provided, added to all generated <script> tags. */
-    cspNonce?: string;
-  } = {},
-): string {
-  const {
-    title = 'LessJS',
-    lang = 'en',
-    clientScript = '',
-    meta,
-    devMode = false,
-    routeModulePath,
-    headExtras = '',
-    cspNonce,
-  } = options;
-  const nonceAttr = cspNonce ? ` nonce="${cspNonce}"` : '';
-
-  const safeTitle = escapeHtml(title);
-  const safeLang = escapeHtmlAttr(lang);
-  const safeHeadExtras = headExtras; // developer-provided HTML, intentionally not escaped
-
-  // Security: warn if headExtras contains <script> tags, which may indicate
-  // user-supplied content being injected unsafely. Legitimate use cases exist
-  // (e.g. analytics scripts), but developers should be aware of the risk.
-  if (headExtras && /<script[\s>]/i.test(headExtras)) {
-    console.warn(
-      '[LessJS] headExtras contains <script> tags. Ensure this content is developer-controlled, ' +
-        'not user-supplied, to prevent XSS. For safe URL injection, use inject.scripts instead.',
-    );
-  }
-  const metaTags: string[] = [];
-  if (meta?.description) {
-    const safeDesc = meta.description
-      .replace(/&/g, '&amp;')
-      .replace(/"/g, '&quot;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-    metaTags.push(`  <meta name="description" content="${safeDesc}">`);
-  }
-  const metaBlock = metaTags.length > 0 ? '\n' + metaTags.join('\n') + '\n' : '';
-
-  const devScripts = devMode
-    ? `
-  <script type="module" src="/@vite/client"${nonceAttr}></script>
-  ${
-      routeModulePath
-        ? `<script type="module"${nonceAttr}>
-  // Register route component for client-side custom element definition
-  import '${routeModulePath}';
-</script>`
-        : ''
-    }`
-    : '';
-
-  return `<!DOCTYPE html>
-<html lang="${safeLang}">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${safeTitle}</title>${metaBlock}
-  ${safeHeadExtras}
-</head>
-<body>
-  ${html}
-  ${clientScript}${devScripts}
 </body>
 </html>`;
 }

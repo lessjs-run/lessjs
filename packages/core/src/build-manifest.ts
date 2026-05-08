@@ -17,6 +17,9 @@
 
 import { join, resolve } from 'node:path';
 import { existsSync, readdirSync, statSync } from 'node:fs';
+import { createLogger } from './logger.js';
+
+const log = createLogger('ssg');
 
 /** File size info for a single artifact */
 export interface ArtifactInfo {
@@ -77,7 +80,7 @@ function collectFiles(
           sizeKB: formatSize(stat.size),
         });
       } catch (e) {
-        console.warn(`[LessJS] Cannot stat ${relPath}: ${(e as Error).message}`);
+        log.warn(`Cannot stat ${relPath}: ${(e as Error).message}`);
       }
     }
   }
@@ -125,7 +128,7 @@ export function scanClientBuild(
         }
         totalJsBytes += fileStat.size;
       } catch (e) {
-        console.warn(`[LessJS] Cannot stat ${file}: ${(e as Error).message}`);
+        log.warn(`Cannot stat ${file}: ${(e as Error).message}`);
       }
     }
   }

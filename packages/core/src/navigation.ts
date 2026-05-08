@@ -12,6 +12,10 @@
 // Minimal type declarations for the Navigation API.
 // When Deno/browsers ship native types, these will be superseded.
 
+import { createLogger } from './logger.js';
+
+const log = createLogger('core');
+
 interface NavigationDestination {
   url: string;
   index: number;
@@ -145,10 +149,8 @@ export function matchRoute(
         }
       } catch (e) {
         // URLPattern might not support this pattern — fall through to regex
-        console.debug(
-          `[LessJS] URLPattern failed for "${pattern.path}": ${
-            e instanceof Error ? e.message : String(e)
-          }`,
+        log.debug(
+          `URLPattern failed for "${pattern.path}": ${e instanceof Error ? e.message : String(e)}`,
         );
       }
     }

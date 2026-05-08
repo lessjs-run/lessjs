@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/core",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "exports": {
     ".": "./src/index.ts",
     "./render-dsd": "./src/render-dsd.ts",
@@ -13,6 +13,8 @@
     "./island-manifest.js": "./src/island-manifest.ts",
     "./less-runtime": "./src/less-runtime.ts",
     "./less-runtime.js": "./src/less-runtime.ts",
+    "./logger": "./src/logger.ts",
+    "./logger.js": "./src/logger.ts",
     "./cli/build": "./src/cli/build.ts",
     "./cli/build-client": "./src/cli/build-client.ts",
     "./cli/build-ssg": "./src/cli/build-ssg.ts"
