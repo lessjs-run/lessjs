@@ -102,12 +102,13 @@ export class RoadmapPage extends LitElement {
             </p>
           </div>
 
-          <h2>Now: v0.8 — Feature Completion + Island Manifest + Blog 🚧</h2>
+          <h2>Now: v0.9 — Content Pipeline + SSR Property Bindings 🚧</h2>
           <p>
-            v0.7.0 完成了四维审计的全部 P0 修复（354 测试通过），v0.8.0 在此基础上完成了 P1 功能完善：
-            Signal 原生切换、Island Upgrade Manifest、@lessjs/blog 包启动。
-            render-dsd.ts 拆分为 4 模块、UI 统一到 DsdLitElement、insertAfterHead 去重。
-            390 测试通过。当前聚焦 v0.8 收尾 + 文档站 dogfooding。
+            v0.8.0 完成了 P1 功能完善（390 测试），v0.9.0 在此基础上推进内容管线和 SSR 修复：
+            @lessjs/content 统一内容插件（Blog + Nav + Sitemap 三合一）、
+            SSR 属性绑定保留（.prop 不再被剥离，转为 kebab-case HTML 属性 + JSON 序列化）、
+            Monorepo 包版本策略确立（ADR 0006 补充）。
+            378+ 测试通过（content 25 个新增）。
           </p>
           <table>
             <thead>
@@ -239,13 +240,13 @@ export class RoadmapPage extends LitElement {
           </div>
 
           <div class="phase">
-            <span class="status">v0.8.0 — in progress</span>
-            <h3>功能完善 + Island Manifest + Blog 开发启动</h3>
+            <span class="status">v0.8.0 — done</span>
+            <h3>功能完善 + Island Manifest + @lessjs/content</h3>
             <p>
               P1 审计修复 + Island 系统演进。补全测试覆盖、统一组件模型、
               引入页面级 island manifest 替代全局入口。
-              @lessjs/blog 包已启动（SSG 插件形态，不依赖 Fullstack）。
-              390 测试通过。
+              @lessjs/content 包已启动（SSG 插件形态，替代 @lessjs/blog）。
+              390 测试通过。Playwright E2E 测试 10 个（移至 docs/e2e/）。
             </p>
             <table class="version-table">
               <thead>
@@ -258,34 +259,54 @@ export class RoadmapPage extends LitElement {
                 <tr><td>render-dsd.ts 拆分</td><td>770 行拆为 4 模块</td><td>✅ Done</td></tr>
                 <tr><td>UI 统一到 DsdLitElement</td><td>3 个组件迁移到 Mixin</td><td>✅ Done</td></tr>
                 <tr><td>insertAfterHead 去重</td><td>ui → core</td><td>✅ Done</td></tr>
-                <tr><td>包版本统一</td><td>core 0.7.0, adapter-lit 0.6.3</td><td>✅ Done</td></tr>
+                <tr><td>包版本统一</td><td>core 0.8.0, adapter-lit 0.6.3</td><td>✅ Done</td></tr>
                 <tr><td>定位重写</td><td>静态站点框架 + 混合框架/编译器演进方向</td><td>✅ Done</td></tr>
                 <tr><td>Island Upgrade Manifest</td><td>页面级 island 清单 + JSON 落盘</td><td>✅ Done</td></tr>
-                <tr><td>@lessjs/blog 开发启动</td><td>Vite 插件 + Markdown 解析 + 路由生成</td><td>✅ Done</td></tr>
+                <tr><td>@lessjs/content 开发启动</td><td>Vite 插件 + Markdown 解析 + 路由生成（替代 @lessjs/blog）</td><td>✅ Done</td></tr>
                 <tr><td>Interactive Playground</td><td>StackBlitz 一键体验</td><td>⬜ Planned</td></tr>
-                <tr><td>Playwright E2E 测试</td><td>浏览器级集成测试</td><td>⬜ Planned</td></tr>
+                <tr><td>Playwright E2E 测试</td><td>浏览器级集成测试（已移至 docs/e2e/）</td><td>✅ Done</td></tr>
                 <tr><td>Speculative Loading 可观测</td><td>策略浏览器测试</td><td>⬜ Planned</td></tr>
               </tbody>
             </table>
           </div>
 
           <div class="phase">
-            <span class="status">v0.9.0</span>
-            <h3>Serverless Fullstack + Docs Site Rewrite</h3>
+            <span class="status">v0.9.0 — in progress</span>
+            <h3>Content Pipeline + SSR Property Bindings</h3>
             <p>
-              Promote Hono API routes into a complete app story: FormData actions, typed RPC, env/secrets,
-              deployment adapters and small official examples for content-driven apps.
-              Docs site rewrite using @lessjs/blog as SSG content pipeline — dogfooding the blog plugin
-              on the framework's own documentation site.
+              @lessjs/content 统一内容插件（Blog + Nav + Sitemap 三合一 opt-in），
+              替代 @lessjs/blog。Nav 模块自动扫描路由 meta 生成 sidebar（virtual:less-nav），
+              Sitemap 模块 SSG 后自动生成 sitemap.xml + robots.txt。
+              SSR 属性绑定保留为 HTML 属性（.prop → kebab-case attr + JSON 序列化），
+              修复数据驱动组件在 SSR 阶段收到空数据的问题。
+              Monorepo 包版本策略确立（ADR 0006 补充）。
+              378+ 测试通过。
             </p>
+            <table class="version-table">
+              <thead>
+                <tr><th>任务</th><th>说明</th><th>状态</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>@lessjs/content</td><td>Blog + Nav + Sitemap 三合一统一内容插件</td><td>✅ Done</td></tr>
+                <tr><td>Nav 自动生成</td><td>路由 meta 扫描 → NavSection[] + virtual:less-nav</td><td>✅ Done</td></tr>
+                <tr><td>Sitemap SSG 集成</td><td>SSG 后自动生成 sitemap.xml + robots.txt</td><td>✅ Done</td></tr>
+                <tr><td>SSR 属性绑定保留</td><td>.prop → kebab-case attr + JSON 序列化</td><td>✅ Done</td></tr>
+                <tr><td>Monorepo 包版本策略</td><td>ADR 0006 补充：谁改了谁升级</td><td>✅ Done</td></tr>
+                <tr><td>Interactive Playground</td><td>StackBlitz 一键体验</td><td>⬜ Planned</td></tr>
+                <tr><td>Speculative Loading 可观测</td><td>策略浏览器测试</td><td>⬜ Planned</td></tr>
+                <tr><td>Docs 路由清理</td><td>删除 /demo、/examples、/styling/less-ui；合并 @lessjs/ui 文档到 /ui</td><td>✅ Done</td></tr>
+                <tr><td>仓库清理</td><td>删除 deliverables/、demo/、docs/index.html；e2e/ → docs/e2e/</td><td>✅ Done</td></tr>
+              </tbody>
+            </table>
           </div>
 
           <div class="phase">
             <span class="status">v0.10.0</span>
-            <h3>SSG + ISR + PWA</h3>
+            <h3>Serverless Fullstack + ISR + PWA</h3>
             <p>
-              Add route-level revalidation, cache locks, stale fallback, service worker strategy and CDN
-              recipes. ISR should arrive only after adapter semantics are clear.
+              Promote Hono API routes into a complete app story: FormData actions, typed RPC, env/secrets,
+              deployment adapters. 路由级 revalidation、缓存锁、stale fallback、Service Worker 策略。
+              ISR should arrive only after adapter semantics are clear.
             </p>
           </div>
 
@@ -323,7 +344,7 @@ export class RoadmapPage extends LitElement {
             <h3>增量演进</h3>
             <p>
               1.0 后公共 API 视为稳定，Breaking Change 必须升 MAJOR。
-              增量工作包括：Compiler Beta → Stable、@lessjs/blog 包、Fullstack 示例丰富、
+              增量工作包括：Compiler Beta → Stable、@lessjs/content 包完善、Fullstack 示例丰富、
               更多 adapter（Vue/React island bridge）等。
             </p>
           </div>

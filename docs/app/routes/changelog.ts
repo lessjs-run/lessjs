@@ -121,6 +121,116 @@ export class ChangelogPage extends LitElement {
 
           <div class="version-section">
             <div class="version-header">
+              <span class="version-number">0.9.0</span>
+              <span class="version-date">2026-05-09</span>
+            </div>
+            <div class="change-category added">
+              <h4>新增</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>@lessjs/content 统一内容插件</strong>：
+                  <span class="inline-code">lessContent()</span> 合并 Blog + Nav + Sitemap 三模块，
+                  每个模块 opt-in。Blog 模块从
+                  <span class="inline-code">@lessjs/blog</span> 升级而来，
+                  新增 Nav 模块（路由文件 meta 扫描 → sidebar 自动生成）和
+                  Sitemap 模块（SSG 产物扫描 → sitemap.xml + robots.txt）。
+                  25 个测试用例覆盖全部三模块。
+                </li>
+                <li>
+                  <strong>Nav 虚拟模块</strong>：
+                  <span class="inline-code">virtual:less-nav</span> 在构建时注入
+                  <span class="inline-code">navSections</span> +
+                  <span class="inline-code">headerNav</span>，
+                  docs 站点 33 个路由文件消费。告别硬编码 DEFAULT_NAV。
+                </li>
+                <li>
+                  <strong>Sitemap SSG 集成</strong>：
+                  <span class="inline-code">build-ssg.ts</span> 在 SSG 完成后自动读取
+                  <span class="inline-code">.less/sitemap-options.json</span>
+                  调用 <span class="inline-code">generateSitemap()</span>，生成 sitemap.xml + robots.txt。
+                </li>
+                <li>
+                  <strong>SSR 属性绑定保留</strong>：
+                  Lit 模板中的 <span class="inline-code">.prop="${val}"</span>
+                  不再被 SSR 剥弃，而是转换为 kebab-case HTML 属性 + JSON 序列化值
+                  （如 <span class="inline-code">.navItems="${arr}"</span> →
+                  <span class="inline-code">nav-items="[{...}]"</span>），
+                  嵌套自定义元素在 SSR 阶段获得属性数据。事件绑定仍被剥离。
+                </li>
+                <li>
+                  <strong>camelToKebab + parseAttrsToProps</strong>：
+                  <span class="inline-code">adapter-lit/ssr.ts</span> 新增
+                  <span class="inline-code">camelToKebab()</span> 转换，
+                  <span class="inline-code">core/render-nested.ts</span> 的
+                  <span class="inline-code">parseAttrsToProps()</span> 新增 JSON.parse
+                  反序列化 object/array 属性值。
+                </li>
+              </ul>
+            </div>
+            <div class="change-category changed">
+              <h4>变更</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>@lessjs/blog → @lessjs/content</strong>：
+                  <span class="inline-code">lessBlog()</span> →
+                  <span class="inline-code">lessContent()</span>，
+                  0.x 阶段 Breaking Change。API 入口从单一博客扩展为三合一内容插件。
+                </li>
+                <li>
+                  <strong>Monorepo 包版本策略</strong>（ADR 0006 补充）：
+                  每个包独立版本号，谁改了谁升级；仓库 Release tag 取本次最大包版本号。
+                  不采用固定版本（虚增未修改包），也不采用完全独立（缺叙事节奏）。
+                </li>
+                <li>
+                  <strong>包版本变更</strong>：
+                  @lessjs/core 0.8.1→0.9.0，
+                  @lessjs/adapter-lit 0.6.4→0.7.0，
+                  @lessjs/content 0.1.0→0.2.0；
+                  ui/rpc/signal/create 不变。
+                </li>
+              </ul>
+            </div>
+            <div class="change-category fixed">
+              <h4>修复</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>Sidebar 空白修复</strong>：移除 DEFAULT_NAV 后 SSR 管线剥离所有属性绑定，
+                  导致 <span class="inline-code">&lt;less-layout .navItems="${data}"&gt;</span>
+                  在 SSR 阶段收到空数据。根因：属性绑定现在保留为 HTML 属性。
+                </li>
+                <li>
+                  <strong>Sitemap 测试变量未定义</strong>：
+                  <span class="inline-code">sitemap.test.ts</span> 中
+                  <span class="inline-code">generateSitemap()</span> 返回值未被
+                  <span class="inline-code">const generated =</span> 接收。
+                </li>
+              </ul>
+            </div>
+            <div class="change-category changed">
+              <h4>文档与仓库清理</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>删除 /demo 和 /examples 路由</strong>：6 个 mock 展示页不可运行，净减 1029 行。
+                  /ui 页面合并了 @lessjs/ui 文档（组件清单、设计令牌、SSR 兼容性）。
+                </li>
+                <li>
+                  <strong>/guide/blog-system → /guide/content-system</strong>：重命名并更新为
+                  <span class="inline-code">@lessjs/content</span> 文档。
+                </li>
+                <li>
+                  <strong>删除 /styling/less-ui</strong>：内容合并进 /ui，减少路由碎片。
+                </li>
+                <li>
+                  <strong>仓库清理</strong>：删除 deliverables/（一次性审计报告）、demo/ 目录（v0.4.0 死代码）、
+                  docs/index.html（构建残留）、playwright-report/ 和 test-results/（已在 .gitignore 但被误跟踪）。
+                  e2e/ 移至 docs/e2e/（测试目标就是 docs 站构建产物）。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="version-section">
+            <div class="version-header">
               <span class="version-number">0.8.0</span>
               <span class="version-date">2026-05-08</span>
             </div>
@@ -1411,6 +1521,11 @@ export class ChangelogPage extends LitElement {
                 </tr>
               </thead>
               <tbody>
+                <tr>
+                  <td>0.9.0</td>
+                  <td>2026-05-09</td>
+                  <td>@lessjs/content 统一内容插件 + SSR 属性绑定保留 + Monorepo 包版本策略</td>
+                </tr>
                 <tr>
                   <td>0.3.4</td>
                   <td>2026-04-30</td>
