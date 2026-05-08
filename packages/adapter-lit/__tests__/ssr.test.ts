@@ -52,13 +52,20 @@ Deno.test('renderLitToString supports boolean attributes', () => {
   );
 });
 
-Deno.test('renderLitToString strips event and property bindings', () => {
+Deno.test('renderLitToString strips event bindings, preserves property bindings as attributes', () => {
   const rendered = renderLitToString(
     html`
       <button @click="${() => undefined}" .value="${'private'}">Save</button>
     `,
   );
-  assertEquals(compactHtml(rendered), '<button>Save</button>');
+  // Event binding (@click) is stripped; property binding (.value) is converted
+  // to kebab-case HTML attribute with serialized value for SSR rendering.
+  const compact = compactHtml(rendered);
+  assertStringIncludes(compact, 'value="private"');
+  assertStringIncludes(compact, '>Save</button>');
+  // Event binding must NOT appear in output
+  assertEquals(compact.includes('@click'), false);
+  assertEquals(compact.includes('.value'), false);
 });
 
 Deno.test('renderLitToString handles nothing, arrays, and nested templates', () => {
@@ -177,14 +184,26 @@ Deno.test('renderLitToString handles deeply nested TemplateResult', () => {
   assertEquals(result, '<div><span><em>bold</em></span></div>');
 });
 
-Deno.test('renderLitToString strips multiple event and property bindings in one template', () => {
+Deno.test('renderLitToString strips events and preserves property bindings as attributes', () => {
   const result = compactHtml(renderLitToString(html`
     <form @submit="${() => undefined}" .data="${{ a: 1 }}" @input="${() => undefined}">
       <input .value="${'secret'}" @change="${() => undefined}" type="text">
       <button ?disabled="${false}" @click="${() => undefined}" .label="${'x'}">Submit</button>
     </form>
   `));
-  assertEquals(result, '<form><input type="text"><button>Submit</button></form>');
+  // Event bindings are stripped entirely
+  assertEquals(result.includes('@submit'), false);
+  assertEquals(result.includes('@input'), false);
+  assertEquals(result.includes('@change'), false);
+  assertEquals(result.includes('@click'), false);
+  // Property bindings are converted to kebab-case HTML attributes with JSON-serialized values
+  assertStringIncludes(result, 'data="{&quot;a&quot;:1}"');
+  assertStringIncludes(result, 'value="secret"');
+  assertStringIncludes(result, 'label="x"');
+  // No .prop syntax should remain
+  assertEquals(result.includes('.data'), false);
+  assertEquals(result.includes('.value'), false);
+  assertEquals(result.includes('.label'), false);
 });
 
 Deno.test('renderLitToString handles nothing sentinel in text content', () => {

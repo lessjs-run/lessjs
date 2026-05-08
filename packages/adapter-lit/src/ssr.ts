@@ -68,6 +68,17 @@ interface TemplateResultLike {
 
 type BindingType = 'content' | 'attribute' | 'boolean' | 'event' | 'property';
 
+/**
+ * Convert camelCase to kebab-case for HTML attribute names.
+ * e.g. navItems → nav-items, headerNav → header-nav
+ *
+ * Used when converting Lit property bindings (.prop="${val}") to
+ * HTML attributes (attr="${val}") for SSR rendering.
+ */
+function camelToKebab(str: string): string {
+  return str.replace(/([A-Z])/g, '-$1').toLowerCase();
+}
+
 // ─── Template Interpolation ────────────────────────────────────
 
 /**
@@ -284,12 +295,45 @@ function interpolate(result: unknown): string {
           break;
         }
 
-        case 'event':
-        case 'property': {
-          // @click="${handler}" or .prop="${val}"
-          // These cannot work in static HTML — strip entirely.
-          output = output.replace(/\s?[@.][\w-]+="\s*$/, '');
+        case 'event': {
+          // @click="${handler}" — cannot work in static HTML, strip entirely.
+          output = output.replace(/\s?@[\w-]+="\s*$/, '');
           skipNextQuote = true;
+          break;
+        }
+
+        case 'property': {
+          // .prop="${val}" — convert to kebab-case HTML attribute with
+          // serialized value so nested custom elements receive property data
+          // during SSR rendering.
+          //
+          // Previously, property bindings were stripped entirely because
+          // "static HTML can't have property bindings". But this broke
+          // data-driven components like <less-layout .navItems="${data}">
+          // which need the data during renderNestedCustomElements().
+          //
+          // Now: .navItems="${arr}" → nav-items="[{...}]" (JSON-encoded)
+          // The render-nested.ts parser (parseAttrsToProps) detects JSON
+          // attribute values and parses them back to JS objects/arrays.
+          const propMatch = str.match(/\.([\w-]+)="\s*$/);
+          if (propMatch) {
+            const propName = propMatch[1];
+            const attrName = camelToKebab(propName);
+            // Replace .propName=" with attrName="
+            output = output.replace(/\s?\.([\w-]+)="\s*$/, ` ${attrName}="`);
+            // Serialize value: JSON for objects/arrays, string for primitives
+            if (value != null && typeof value === 'object' && !isNothing(value)) {
+              output += stringifyAttributeValue(JSON.stringify(value));
+            } else if (value != null && !isNothing(value)) {
+              output += stringifyAttributeValue(String(value));
+            }
+            // Don't set skipNextQuote — the closing " from the next string
+            // segment is needed to close the attribute value.
+          } else {
+            // Fallback: strip if we can't parse the property name
+            output = output.replace(/\s?\.([\w-]+)="\s*$/, '');
+            skipNextQuote = true;
+          }
           break;
         }
 

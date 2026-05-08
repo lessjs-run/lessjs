@@ -48,7 +48,22 @@ function parseAttrsToProps(attrs: Array<{ name: string; value: string }>): Recor
       // data-* attributes: preserve as-is (don't camelCase)
       props[key] = value;
     } else {
-      props[kebabToCamel(key)] = value;
+      const camelKey = kebabToCamel(key);
+      // Try to parse as JSON for array/object values from SSR property bindings.
+      // The Lit SSR adapter converts .navItems="${arr}" → nav-items="[{...}]"
+      // so we need to parse the JSON back to a JS value for renderDSD().
+      if (value.startsWith('[') || value.startsWith('{')) {
+        try {
+          const parsed = JSON.parse(value);
+          if (typeof parsed === 'object' && parsed !== null) {
+            props[camelKey] = parsed;
+            continue;
+          }
+        } catch {
+          // Not valid JSON — treat as string
+        }
+      }
+      props[camelKey] = value;
     }
   }
   return props;
