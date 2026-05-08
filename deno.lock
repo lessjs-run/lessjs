@@ -783,13 +783,6 @@
       "npm:vite@8.0.10"
     ],
     "members": {
-      "packages/blog": {
-        "dependencies": [
-          "npm:gray-matter@^4.0.3",
-          "npm:marked@15",
-          "npm:vite@8.0.10"
-        ]
-      },
       "packages/content": {
         "dependencies": [
           "npm:gray-matter@^4.0.3",

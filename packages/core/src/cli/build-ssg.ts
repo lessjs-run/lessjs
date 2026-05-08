@@ -20,7 +20,7 @@
 
 import { join } from 'node:path';
 import process from 'node:process';
-import { readdirSync, readFileSync, unlinkSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, unlinkSync } from 'node:fs';
 import type { FrameworkOptions, PackageIslandMeta } from '../types.js';
 import { SsrRenderError } from '../errors.js';
 import { createLogger } from '../logger.js';
@@ -193,8 +193,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
       (globalThis as Record<string, unknown>).exports = {};
     }
 
-    const { readFileSync, writeFileSync, existsSync } = await import('node:fs');
-    const { join } = await import('node:path');
+    const { writeFileSync } = await import('node:fs');
 
     const server = await createServer({
       configFile: false,
@@ -210,7 +209,37 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
           },
         },
       },
-      plugins: [],
+      plugins: [
+        // Resolve virtual:less-nav — @lessjs/content writes .less/nav-data.json
+        // in Phase 1, but Phase 3 creates a fresh Vite server with no plugins.
+        // This minimal plugin bridges the gap by reading the JSON and serving it
+        // as a virtual module, so route files importing 'virtual:less-nav' resolve.
+        {
+          name: 'less:ssg-virtual-nav',
+          resolveId(id) {
+            if (id === 'virtual:less-nav') return '\0virtual:less-nav';
+          },
+          load(id) {
+            if (id === '\0virtual:less-nav') {
+              const navDataPath = join(root, '.less', 'nav-data.json');
+              const headerNavPath = join(root, '.less', 'header-nav.json');
+              let navSections = '[]';
+              let headerNav = '[]';
+              try {
+                if (existsSync(navDataPath)) {
+                  navSections = readFileSync(navDataPath, 'utf-8').trim();
+                }
+              } catch { /* non-fatal */ }
+              try {
+                if (existsSync(headerNavPath)) {
+                  headerNav = readFileSync(headerNavPath, 'utf-8').trim();
+                }
+              } catch { /* non-fatal */ }
+              return `export const navSections = ${navSections};\nexport const headerNav = ${headerNav};`;
+            }
+          },
+        },
+      ],
       resolve: {
         preserveSymlinks: true,
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],

@@ -120,6 +120,12 @@ export function lessContent(options: LessContentOptions = {}): Plugin[] {
             JSON.stringify(_navSections, null, 2),
             'utf-8',
           );
+          // Write headerNav separately for Phase 3 virtual module resolution
+          writeFileSync(
+            join(lessDir, 'header-nav.json'),
+            JSON.stringify(_headerNav),
+            'utf-8',
+          );
           log.info(`Nav: ${_navSections.length} section(s) written to .less/nav-data.json`);
         } catch (e) {
           log.warn(`Failed to write nav-data.json: ${e}`);
