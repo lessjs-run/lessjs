@@ -15,6 +15,22 @@ export const pageStyles = css`
     max-width: 720px;
     margin: 0 auto;
     padding: 2rem 1.5rem 4rem;
+    /* Prevent long strings (URLs, code references) from causing overflow */
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* Responsive images */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Table scroll wrapper — wrap any <table> in <div class="table-wrap"> */
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 1rem 0;
   }
 
   h1 {
@@ -245,5 +261,65 @@ export const pageStyles = css`
     ul, ol {
       padding-left: 1rem;
     }
+  }
+
+  /* ── Prism.js token colors ──────────────────────────────────────────
+   * Inlined here because global Prism CSS can't penetrate Shadow DOM.
+   * All guide/blog pages use pageStyles inside their shadow root.
+   */
+  .token.cdata,
+  .token.comment,
+  .token.doctype,
+  .token.prolog { color: #708090; }
+
+  .token.punctuation { color: #999; }
+
+  .token.namespace { opacity: 0.7; }
+
+  .token.boolean,
+  .token.constant,
+  .token.deleted,
+  .token.number,
+  .token.property,
+  .token.symbol,
+  .token.tag { color: #905; }
+
+  .token.attr-name,
+  .token.builtin,
+  .token.char,
+  .token.inserted,
+  .token.selector,
+  .token.string { color: #690; }
+
+  .token.entity,
+  .token.operator,
+  .token.url,
+  .language-css .token.string,
+  .style .token.string { color: #9a6e3a; }
+
+  .token.atrule,
+  .token.attr-value,
+  .token.keyword { color: #07a; }
+
+  .token.class-name,
+  .token.function { color: #dd4a68; }
+
+  .token.important,
+  .token.regex,
+  .token.variable { color: #e90; }
+
+  .token.bold,
+  .token.important { font-weight: 700; }
+
+  .token.italic { font-style: italic; }
+
+  .token.entity { cursor: help; }
+
+  /* Extra: selection color matching Prism default theme */
+  code[class*="language-"] ::selection,
+  code[class*="language-"]::selection,
+  pre[class*="language-"] ::selection,
+  pre[class*="language-"]::selection {
+    background: #b3d4fc;
   }
 `;
