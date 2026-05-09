@@ -578,6 +578,7 @@ export class LessLayout extends DsdLitElement {
       logoText: { type: String, attribute: 'logo-text' },
       logoSub: { type: String, attribute: 'logo-sub' },
       githubUrl: { type: String, attribute: 'github-url' },
+      editUrl: { type: String, attribute: 'edit-url' },
     };
 
     /** Whether to show the home layout (no sidebar, full-width) */
@@ -594,6 +595,8 @@ export class LessLayout extends DsdLitElement {
     declare logoSub: string;
     /** GitHub repository URL (default: LessJS repo) */
     declare githubUrl: string;
+    /** "Edit this page" URL (shown in footer when set) */
+    declare editUrl: string | undefined;
 
     constructor() {
       super();
@@ -662,7 +665,14 @@ export class LessLayout extends DsdLitElement {
           </div>
           <footer class="app-footer">
             <p>
-              Built with <a href="${this.githubUrl}" target="_blank" rel="noopener noreferrer"
+              ${this.editUrl
+                ? html`
+                  <a href="${this
+                    .editUrl}" target="_blank" rel="noopener" style="margin-right:0.75rem;"
+                  >Edit this page</a>
+                `
+                : nothing} Built with <a href="${this
+                .githubUrl}" target="_blank" rel="noopener noreferrer"
               >LessJS Framework</a>
               <span class="divider"></span>
               Self-bootstrapped from JSR

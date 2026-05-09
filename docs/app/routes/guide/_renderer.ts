@@ -1,7 +1,7 @@
 /**
  * _renderer.ts — Layout renderer for the guide section.
  *
- * Adds "Edit this page" link and search button.
+ * Injects search button and "Edit this page" in the layout footer.
  *
  * @see {@link ../../packages/core/src/types.ts} for LessRenderer interface
  */
@@ -19,10 +19,9 @@ function routeToSourcePath(path: string): string {
 
 const renderer: LessRenderer = {
   wrap(html: string, ctx: { req: { path: string } }) {
-    const sourcePath = routeToSourcePath(ctx.req.path);
-    const editUrl = `${GITHUB_EDIT_BASE}/${sourcePath}`;
+    const editUrl = `${GITHUB_EDIT_BASE}/${routeToSourcePath(ctx.req.path)}`;
 
-    // Inject search button into header slot (must be direct child of <less-layout>)
+    // Inject search button into header slot
     const layoutOpen = html.indexOf('<less-layout');
     if (layoutOpen >= 0) {
       const closeGt = html.indexOf('>', layoutOpen);
@@ -33,13 +32,14 @@ const renderer: LessRenderer = {
       }
     }
 
-    // Add "Edit this page" footer before </less-layout>
+    // Inject "Edit this page" in the layout footer
+    // This is needed because the layout's DSD template was already rendered without editUrl.
+    // We inject directly into the <less-layout> footer in the SSR HTML output.
     html = html.replace(
-      '</less-layout>',
-      `<div style="margin-top:3rem;padding-top:1.5rem;border-top:0.5px solid var(--less-border);font-size:0.8125rem;">
-  <a href="${editUrl}" target="_blank" rel="noopener" style="color:var(--less-text-tertiary);text-decoration:none;">Edit this page on GitHub →</a>
-</div>
-</less-layout>`,
+      'LESS IS MORE',
+      `LESS IS MORE</p><p style="font-size:0.75rem;margin-top:0.5rem;opacity:0.6"><a href="${
+        editUrl.replace(/"/g, '&quot;')
+      }" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">Edit this page on GitHub →</a></p>`,
     );
 
     return html;
