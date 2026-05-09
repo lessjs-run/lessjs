@@ -8,7 +8,7 @@
 import type { BlogPost, LessBlogOptions } from './types.ts';
 import { generateBlogRoutes } from './routes.ts';
 
-/** Global blog data store — populated by lessBlog() plugin at buildStart */
+/** Global blog data store — populated by lessContent() blog module at buildStart */
 let _posts: BlogPost[] = [];
 let _options: LessBlogOptions = {};
 
@@ -29,7 +29,7 @@ export function getBlogOptions(): LessBlogOptions {
 
 /**
  * Initialize the blog data store.
- * Called by lessBlog() plugin during buildStart().
+ * Called by lessContent() plugin during buildStart().
  * Returns the route data for further use.
  */
 export async function initBlogData(options?: LessBlogOptions): Promise<{

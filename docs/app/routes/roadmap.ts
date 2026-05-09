@@ -25,8 +25,8 @@ export class RoadmapPage extends LitElement {
   private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/roadmap"><div class="container">
     <h1>Roadmap</h1>
     <p class="subtitle">LessJS 的路线图围绕一个判断展开：先把 SSG + DSD + Island Upgrade + Hono API 做可信，再扩展 serverless fullstack、ISR、PWA 和 compiler，最终在公共 API 稳定后承诺 1.0。</p>
-    <h2>Now: v0.9 — Content Pipeline + SSR Property Bindings</h2>
-    <p>v0.8.0 完成了 P1 功能完善（390 测试），v0.9.0 在此基础上推进内容管线和 SSR 修复。378+ 测试通过。</p>
+    <h2>Now: v0.9 — i18n + Content Pipeline + SSR Property Bindings</h2>
+    <p>v0.8.0 完成了 P1 功能完善（390 测试），v0.9.0 推进内容管线、i18n 国际化和 SSR 修复。414 测试通过。</p>
     <table class="version-table"><thead><tr><th>Area</th><th>Status</th><th>Notes</th></tr></thead><tbody>
       <tr><td>TC39 Signals</td><td>✅ Done</td><td>@lessjs/signal: signal(), computed(), effect(), islandEffect()</td></tr>
       <tr><td>DSD 规范对齐</td><td>✅ Done</td><td>shadowrootdelegatesfocus, shadowrootserializable, shadowrootslotassignment, shadowrootcustomelementregistry</td></tr>
@@ -35,6 +35,8 @@ export class RoadmapPage extends LitElement {
       <tr><td>Speculative Loading</td><td>✅ Done</td><td>modulepreload for eager, prefetch for lazy</td></tr>
       <tr><td>dialog/popover + inert</td><td>✅ Done</td><td>原生 &lt;dialog&gt; + ::backdrop + inert</td></tr>
       <tr><td>Island 系统改进</td><td>✅ Done</td><td>Mixin 替代猴子补丁，适配器显式注入</td></tr>
+      <tr><td>@lessjs/i18n 独立包</td><td>✅ Done</td><td>从 content 拆出，lessI18n() 独立插件，SSG locale 展开</td></tr>
+      <tr><td>双语文档站</td><td>✅ Done</td><td>25/30 页面英文版 + language switcher + en/zh 路径</td></tr>
     </tbody></table>
     <h2>Release Phases</h2>
     <div class="phase"><div class="status">v1.0 Target</div><h3>v1.0 — Public API Stability</h3><p>所有 package 公共 API 稳定、遵循 SemVer、迁移文档完备。当前核心框架处于 v0.9 — 功能完整但公共 API 仍在调整。</p></div>

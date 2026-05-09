@@ -128,6 +128,83 @@ export class ChangelogPage extends LitElement {
               <h4>新增</h4>
               <ul class="change-list">
                 <li>
+                  <strong>@lessjs/i18n 独立包</strong>：
+                  从 <span class="inline-code">@lessjs/content</span> 中拆分 i18n 功能为独立
+                  <span class="inline-code">@lessjs/i18n</span> 包（v0.1.0）。
+                  <span class="inline-code">lessI18n()</span> 独立 Vite 插件，
+                  包含 <span class="inline-code">i18nStaticPaths()</span>、
+                  <span class="inline-code">switchLocale()</span> 路由辅助函数。
+                </li>
+                <li>
+                  <strong>SSG locale 展开</strong>：
+                  <span class="inline-code">build-ssg.ts</span> 新增 i18n locale 展开阶段，
+                  构建时自动为每个 locale × 每个路由渲染页面，
+                  写入 <span class="inline-code">dist/en/guide/architecture/</span> 等 locale 前缀路径。
+                  126 HTML 文件（原 42）。
+                </li>
+                <li>
+                  <strong>双语文档站</strong>：
+                  25/30 文档页面添加 <span class="inline-code">_renderEn()</span> 英文版，
+                  <span class="inline-code">render()</span> 根据 <span class="inline-code">this.locale</span> 分发。
+                  language switcher 在 header-right 可点击切换整个网站语言。
+                </li>
+                <li>
+                  <strong>i18n StaticPaths</strong>：
+                  <span class="inline-code">i18nStaticPaths()</span> 为动态路由提供 locale 参数展开。
+                </li>
+              </ul>
+            </div>
+            <div class="change-category changed">
+              <h4>变更</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>i18n 从 @lessjs/content 剥离</strong>：
+                  <span class="inline-code">LessContentOptions.i18n</span> 选项移除，
+                  改为独立 <span class="inline-code">lessI18n()</span> 插件。
+                  i18n 是跨切面功能，不属内容管理。
+                </li>
+                <li>
+                  <strong>包版本</strong>：
+                  @lessjs/core 0.9.0-alpha-1（不变），
+                  @lessjs/content 0.2.0（不变），
+                  @lessjs/i18n 0.1.0（新增）。
+                </li>
+              </ul>
+            </div>
+            <div class="change-category fixed">
+              <h4>修复</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>route-scanner index 路由 bug</strong>：
+                  <span class="inline-code">filePathToRoutePath('index/index.ts')</span>
+                  返回 <span class="inline-code">/index</span> 而非 <span class="inline-code">/</span>。
+                  <span class="inline-code">p === 'index'</span> 检查在 slice 之前执行，
+                  slice 后未重新检查。导致首页 locale 展开写入 <span class="inline-code">dist/en/index/</span>。
+                </li>
+                <li>
+                  <strong>首页 current-path 缺失</strong>：
+                  首页 <span class="inline-code">&lt;less-layout&gt;</span> 无
+                  <span class="inline-code">current-path</span> 属性，
+                  导致 language switcher href 为 <span class="inline-code">/en</span>（缺斜杠）。
+                </li>
+                <li>
+                  <strong>kissjs.org 域名残留</strong>：
+                  UI 组件示例邮箱 <span class="inline-code">hello@kissjs.org</span> →
+                  <span class="inline-code">hello@lessjs.org</span>。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="version-section">
+            <div class="version-header">
+              <span class="version-number">0.9.0-alpha-0</span>
+              <span class="version-date">2026-05-09</span>
+            </div>
+            <div class="change-category added">
+              <h4>新增</h4>
+              <ul class="change-list">
+                <li>
                   <strong>@lessjs/content 统一内容插件</strong>：
                   <span class="inline-code">lessContent()</span> 合并 Blog + Nav + Sitemap 三模块，
                   每个模块 opt-in。Blog 模块从
@@ -1523,6 +1600,11 @@ export class ChangelogPage extends LitElement {
               <tbody>
                 <tr>
                   <td>0.9.0-alpha-1</td>
+                  <td>2026-05-09</td>
+                  <td>@lessjs/i18n 独立包 + SSG locale 展开 + 双语文档站 25 页面</td>
+                </tr>
+                <tr>
+                  <td>0.9.0-alpha-0</td>
                   <td>2026-05-09</td>
                   <td>@lessjs/content 统一内容插件 + SSR 属性绑定保留 + Monorepo 包版本策略</td>
                 </tr>
