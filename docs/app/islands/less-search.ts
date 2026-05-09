@@ -8,8 +8,6 @@
 
 import { css, html, LitElement } from 'lit';
 import { live } from 'lit-html/directives/live.js';
-// FlexSearch from esm.sh CDN (CSP-allowed)
-import FlexSearch from 'https://esm.sh/flexsearch@0.8.212';
 
 interface SearchEntry {
   path: string;
@@ -138,7 +136,7 @@ export default class LessSearch extends LitElement {
   private _open = false;
   private _query = '';
   private _results: SearchEntry[] = [];
-  private _index: FlexSearch.Document<SearchEntry> | null = null;
+  private _index: unknown = null;
   private _entries: SearchEntry[] = [];
   private _loaded = false;
 
@@ -177,7 +175,12 @@ export default class LessSearch extends LitElement {
     if (this._loaded) return;
     this._loaded = true;
     try {
-      const res = await fetch('/search-index.json');
+      const [res, FlexSearchModule] = await Promise.all([
+        fetch('/search-index.json'),
+        import('https://esm.sh/flexsearch@0.8.212'),
+      ]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const FlexSearch = (FlexSearchModule as any).default || FlexSearchModule;
       this._entries = await res.json() as SearchEntry[];
       this._index = new FlexSearch.Document({
         document: {
@@ -187,10 +190,10 @@ export default class LessSearch extends LitElement {
         tokenize: 'forward',
       });
       for (const entry of this._entries) {
-        this._index.add(entry);
+        (this._index as { add: (e: SearchEntry) => void }).add(entry);
       }
     } catch {
-      // Search index not available
+      // Search index or FlexSearch not available
     }
   }
 
@@ -199,11 +202,14 @@ export default class LessSearch extends LitElement {
     if (this._query.length < 2 || !this._index) {
       this._results = [];
     } else {
-      const raw = this._index.search(this._query, { limit: 10 });
+      const index = this._index as {
+        search: (q: string, opts: { limit: number }) => Array<{ field: string; result: string[] }>;
+      };
+      const raw = index.search(this._query, { limit: 10 });
       const paths = new Set<string>();
       for (const field of raw) {
         for (const path of field.result) {
-          paths.add(path as string);
+          paths.add(path);
         }
       }
       this._results = this._entries

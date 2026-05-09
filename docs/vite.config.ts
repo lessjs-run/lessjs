@@ -145,6 +145,11 @@ export default defineConfig({
       { find: '@lessjs/ui/less-hero-ping', replacement: resolve(uiSrcDir, 'less-hero-ping.ts') },
       { find: '@lessjs/ui/less-dialog', replacement: resolve(uiSrcDir, 'less-dialog.ts') },
       { find: '@lessjs/ui', replacement: resolve(uiSrcDir, 'index.ts') },
+      // Subpath aliases MUST come before parent path (Vite prefix matching)
+      {
+        find: '@lessjs/content/sitemap',
+        replacement: resolve(__dir, '../packages/content/src/sitemap/index.ts'),
+      },
       { find: '@lessjs/content', replacement: resolve(__dir, '../packages/content/src/index.ts') },
     ],
   },
