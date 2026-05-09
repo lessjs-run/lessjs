@@ -10,6 +10,10 @@
  * - Mobile hamburger menu (L0 details/summary)
  * - Theme toggle via less-theme-toggle Island
  * - Footer with links
+ * - SPA navigation via Navigation API (navigate/fetch/swap)
+ *   Intercepts internal link clicks, uses navigate() for URL
+ *   update, fetches new page HTML, and swaps slot content.
+ *   Falls back to History API when Navigation API unavailable.
  *
  * LessJS Architecture:
  * - This is a Layer 2 (DSD Interactive) component
@@ -17,6 +21,7 @@
  *   with declarative event binding and direct DOM manipulation
  * - Theme toggle is handled by less-theme-toggle Island
  * - Navigation is data-driven via navItems property (no hardcoded links)
+ * - v0.9.0: Uses @lessjs/core/navigation for SPA navigation
  *
  * Usage (data-driven navigation):
  * ```html
@@ -42,6 +47,7 @@
 import { css, type CSSResult, html, nothing, type TemplateResult } from 'lit';
 import { lessDesignTokens } from './design-tokens.js';
 import { DsdLitElement } from '@lessjs/adapter-lit';
+import { navigate, onNavigate } from '@lessjs/core/navigation';
 
 // CRITICAL: less-layout's template uses <less-theme-toggle>, so we MUST import it
 // so that the SSR renderer can recursively render its DSD shadow root.
@@ -79,14 +85,16 @@ export interface HeaderNavLink {
 }
 
 /**
- * App layout with DSD hydration.
+ * App layout with DSD hydration and SPA navigation.
  *
  * Uses WithDsdHydration Mixin for the common DSD pattern:
  *   - Detects pre-populated shadow root from DSD
  *   - Binds events declared in `static hydrateEvents`
  *   - Cleans up listeners on disconnect
  *
- * Layout-specific: also sets up native <details> toggle for mobile menu.
+ * v0.9.0: SPA navigation via Navigation API + fetch-and-swap.
+ * Internal links use data-nav attribute; click handling is delegated
+ * from the shadow root, working with both DSD and non-DSD modes.
  */
 export class LessLayout extends DsdLitElement {
   /** Declarative event bindings for DSD hydration */
@@ -668,10 +676,32 @@ export class LessLayout extends DsdLitElement {
     override connectedCallback() {
       super.connectedCallback(); // Mixin handles _hydrateEvents()
 
-      // Layout-specific: also set up native <details> toggle for mobile menu
+      // Layout-specific: set up native <details> toggle for mobile menu
       if (this._dsdHydrated) {
         this._setupDetailsToggle();
       }
+
+      // ── SPA navigation: event delegation for all internal nav links ──
+      // Uses data-nav attribute instead of @click on each <a> tag.
+      // This works with both DSD (pre-rendered HTML) and non-DSD (Lit render)
+      // because event delegation at the shadow root level catches all clicks.
+      this._navCleanup = this._setupNavDelegation();
+
+      // ── Listen for navigation events ──
+      // After navigate() updates the URL, swap in the new page content
+      // via fetch-and-swap so the user gets a SPA-like experience.
+      this._navUnlisten = onNavigate((url, navType) => {
+        if (navType === 'push') {
+          this.currentPath = url.pathname;
+          this._loadContent(url.pathname);
+        }
+      });
+    }
+
+    override disconnectedCallback() {
+      super.disconnectedCallback();
+      this._navCleanup?.();
+      this._navUnlisten?.();
     }
 
     /**
@@ -716,6 +746,75 @@ export class LessLayout extends DsdLitElement {
       }
     }
 
+    // ─── Private fields ───────────────────────────────────────────
+    /** Cleanup for nav click delegation */
+    private _navCleanup?: () => void;
+    /** Cleanup for onNavigate listener */
+    private _navUnlisten?: () => void;
+
+    // ─── SPA Navigation ───────────────────────────────────────────
+
+    /**
+     * Set up event delegation for all nav links on the shadow root.
+     * Intercepts clicks on <a data-nav="..."> elements and routes them
+     * through the Navigation API for SPA-like page transitions.
+     */
+    private _setupNavDelegation(): () => void {
+      if (!this.shadowRoot) return () => {};
+      const handler = (e: Event) => {
+        const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('[data-nav]');
+        if (!link) return;
+        const path = link.getAttribute('data-nav');
+        if (!path || path.startsWith('http')) return;
+        e.preventDefault();
+        navigate(path);
+      };
+      this.shadowRoot.addEventListener('click', handler);
+      return () => this.shadowRoot?.removeEventListener('click', handler);
+    }
+
+    /**
+     * Fetch a new page and swap its content into the layout's slot.
+     *
+     * Strategy (SSG-optimized):
+     *   1. Fetch the full HTML of the target page
+     *   2. Parse and find the <less-layout> element
+     *   3. Replace this element's children with the new page's
+     *      light DOM content (projected via <slot>)
+     *   4. Update currentPath for sidebar highlighting
+     *   5. Scroll to top
+     *
+     * If anything fails (network, parsing), falls back to full reload.
+     */
+    private async _loadContent(path: string): Promise<void> {
+      try {
+        const resp = await fetch(path);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const html = await resp.text();
+
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html;
+
+        const newLayout = tmp.querySelector<HTMLElement>('less-layout');
+        if (!newLayout) throw new Error('No less-layout found in response');
+
+        // Replace this layout's light DOM children with the new page's
+        // (they are projected through <slot></slot> in the template)
+        while (this.firstChild) this.removeChild(this.firstChild);
+        while (newLayout.firstChild) this.appendChild(newLayout.firstChild);
+
+        // Update sidebar active state
+        this.currentPath = path;
+
+        // Scroll to top for a fresh viewport
+        globalThis.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch {
+        // Fallback: full reload — Navigation API already updated the URL,
+        // so this acts as a normal page load from the new URL
+        globalThis.location.reload();
+      }
+    }
+
     private _navLink(path: string, text: string) {
       const isExternal = path.startsWith('http');
       const isActive = !isExternal && this.currentPath === path;
@@ -726,6 +825,7 @@ export class LessLayout extends DsdLitElement {
           aria-current="${isActive ? 'page' : undefined}"
           target="${isExternal ? '_blank' : nothing}"
           rel="${isExternal ? 'noopener noreferrer' : nothing}"
+          data-nav="${isExternal ? '' : path}"
         >${text}</a>
       `;
     }
@@ -763,7 +863,9 @@ export class LessLayout extends DsdLitElement {
           ${links.map(
             (link) =>
               html`
-                <a href="${link.href}">${link.label}</a>
+                <a href="${link.href}" data-nav="${link.href.startsWith('http')
+                  ? ''
+                  : link.href}">${link.label}</a>
               `,
           )}
         </nav>

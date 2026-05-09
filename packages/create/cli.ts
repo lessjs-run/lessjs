@@ -25,6 +25,7 @@ node_modules/
     "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^0.7.0",
     "@lessjs/core": "jsr:@lessjs/core@^0.9.0",
     "@lessjs/core/less-runtime": "jsr:@lessjs/core@^0.9.0/less-runtime",
+    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.9.0/navigation",
     "@lessjs/ui": "jsr:@lessjs/ui@^0.6.0",
     "@lessjs/ui/tokens/colors": "jsr:@lessjs/ui@^0.6.0/tokens/colors",
     "@lessjs/ui/tokens/color-values": "jsr:@lessjs/ui@^0.6.0/tokens/color-values",

@@ -177,6 +177,9 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     denoJson.imports['@lessjs/core/logger'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'logger.ts'),
     ).href;
+    denoJson.imports['@lessjs/core/navigation'] = pathToFileURL(
+      join(repoRoot, 'packages', 'core', 'src', 'navigation.ts'),
+    ).href;
     denoJson.imports['@lessjs/adapter-lit'] = pathToFileURL(
       join(repoRoot, 'packages', 'adapter-lit', 'src', 'index.ts'),
     ).href;
@@ -210,6 +213,10 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       {
         find: '@lessjs/core/less-runtime',
         replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'less-runtime.ts')),
+      },
+      {
+        find: '@lessjs/core/navigation',
+        replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'navigation.ts')),
       },
       {
         find: '@lessjs/core',

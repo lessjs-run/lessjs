@@ -108,6 +108,10 @@ export default defineConfig({
       },
       { find: '@lessjs/core/less-runtime', replacement: runtimeShim },
       {
+        find: '@lessjs/core/navigation',
+        replacement: resolve(__dir, '../packages/core/src/navigation.ts'),
+      },
+      {
         find: '@lessjs/core',
         replacement: resolve(__dir, '../packages/core/src/index.ts'),
       },
