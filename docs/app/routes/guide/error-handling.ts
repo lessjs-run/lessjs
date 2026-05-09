@@ -3,7 +3,7 @@ import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import '../../islands/code-block.js';
+import '@lessjs/ui/less-code-block';
 
 export class ErrorHandlingPage extends LitElement {
   static override styles = [
@@ -88,7 +88,7 @@ export class ErrorHandlingPage extends LitElement {
           </table>
 
           <h2>Use Framework Errors</h2>
-          <code-block><pre><code>import { NotFoundError, ValidationError } from '@lessjs/core';
+          <less-code-block><pre><code>import { NotFoundError, ValidationError } from '@lessjs/core';
 
 app.get('/api/posts/:id', async (c) => {
   const post = await findPost(c.req.param('id'));
@@ -104,7 +104,7 @@ app.post('/api/posts', async (c) => {
     ]);
   }
   return c.json(body, 201);
-});</code></pre></code-block>
+});</code></pre></less-code-block>
 
           <h2>SSR / SSG Errors</h2>
           <p>
@@ -128,12 +128,12 @@ app.post('/api/posts', async (c) => {
             <span class="inline-code">LessError#toJSON()</span> 返回一个精简的结构化 payload。
             API routes 在添加全局错误 middleware 时可以直接使用这个 shape。
           </p>
-          <code-block><pre><code>{
+          <less-code-block><pre><code>{
   "error": {
     "code": "VALIDATION_ERROR",
     "message": "Invalid post"
   }
-}</code></pre></code-block>
+}</code></pre></less-code-block>
 
           <h2>Structured Logging & Classification</h2>
           <p>
@@ -215,7 +215,7 @@ app.post('/api/posts', async (c) => {
           </table>
 
           <h3>Usage Pattern</h3>
-          <code-block><pre><code>import { createLogger } from '@lessjs/core/logger';
+          <less-code-block><pre><code>import { createLogger } from '@lessjs/core/logger';
 
 const log = createLogger('ssg');
 
@@ -226,7 +226,7 @@ log.warn('Client build failed:', err.message);
 log.info('Routes: 5 page(s), 2 API route(s), 8 island(s)');
 
 // Debug for diagnostics (stripped in production builds)
-log.debug('customElements.define("my-counter") skipped: already defined');</code></pre></code-block>
+log.debug('customElements.define("my-counter") skipped: already defined');</code></pre></less-code-block>
 
           <h3>Error-Log Mapping</h3>
           <p>

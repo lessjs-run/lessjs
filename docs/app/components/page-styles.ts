@@ -264,17 +264,23 @@ export const pageStyles = css`
   }
 
   /* ── Prism.js token colors ──────────────────────────────────────────
-   * Inlined here because global Prism CSS can't penetrate Shadow DOM.
-   * All guide/blog pages use pageStyles inside their shadow root.
-   */
+  * Inlined here because global Prism CSS can't penetrate Shadow DOM.
+  * All guide/blog pages use pageStyles inside their shadow root.
+  */
   .token.cdata,
   .token.comment,
   .token.doctype,
-  .token.prolog { color: #708090; }
+  .token.prolog {
+    color: #708090;
+  }
 
-  .token.punctuation { color: #999; }
+  .token.punctuation {
+    color: #999;
+  }
 
-  .token.namespace { opacity: 0.7; }
+  .token.namespace {
+    opacity: 0.7;
+  }
 
   .token.boolean,
   .token.constant,
@@ -282,38 +288,56 @@ export const pageStyles = css`
   .token.number,
   .token.property,
   .token.symbol,
-  .token.tag { color: #905; }
+  .token.tag {
+    color: #905;
+  }
 
   .token.attr-name,
   .token.builtin,
   .token.char,
   .token.inserted,
   .token.selector,
-  .token.string { color: #690; }
+  .token.string {
+    color: #690;
+  }
 
   .token.entity,
   .token.operator,
   .token.url,
   .language-css .token.string,
-  .style .token.string { color: #9a6e3a; }
+  .style .token.string {
+    color: #9a6e3a;
+  }
 
   .token.atrule,
   .token.attr-value,
-  .token.keyword { color: #07a; }
+  .token.keyword {
+    color: #07a;
+  }
 
   .token.class-name,
-  .token.function { color: #dd4a68; }
+  .token.function {
+    color: #dd4a68;
+  }
 
   .token.important,
   .token.regex,
-  .token.variable { color: #e90; }
+  .token.variable {
+    color: #e90;
+  }
 
   .token.bold,
-  .token.important { font-weight: 700; }
+  .token.important {
+    font-weight: 700;
+  }
 
-  .token.italic { font-style: italic; }
+  .token.italic {
+    font-style: italic;
+  }
 
-  .token.entity { cursor: help; }
+  .token.entity {
+    cursor: help;
+  }
 
   /* Extra: selection color matching Prism default theme */
   code[class*="language-"] ::selection,

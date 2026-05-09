@@ -1,5 +1,5 @@
 export const meta = { section: 'Start Here', label: 'Framework Positioning', order: 10 };
-import { navSections, headerNav } from 'virtual:less-nav';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -28,8 +28,8 @@ export class PositioningPage extends LitElement {
 
           <div class="callout">
             <p>
-              这不是"另一个 hydration 框架"。更准确地说，LessJS 是一个把 Web Components、
-              Declarative Shadow DOM、ESM、Fetch API 和静态部署打通的应用骨架。
+              这不是"另一个 hydration 框架"。更准确地说，LessJS 是一个把 Web Components、 Declarative
+              Shadow DOM、ESM、Fetch API 和静态部署打通的应用骨架。
             </p>
           </div>
 
@@ -39,8 +39,8 @@ export class PositioningPage extends LitElement {
             <div class="num">Principle 01</div>
             <h3>Web Standards First</h3>
             <p>
-              HTTP 使用 Fetch API，UI 使用 Custom Elements 和 Shadow DOM，模块使用 ESM，
-              服务端使用 Hono 对齐 Web 标准。用户学到的知识应该能离开 LessJS 继续使用。
+              HTTP 使用 Fetch API，UI 使用 Custom Elements 和 Shadow DOM，模块使用 ESM， 服务端使用 Hono
+              对齐 Web 标准。用户学到的知识应该能离开 LessJS 继续使用。
             </p>
           </div>
 
@@ -48,8 +48,8 @@ export class PositioningPage extends LitElement {
             <div class="num">Principle 02</div>
             <h3>Static First, Dynamic When Explicit</h3>
             <p>
-              默认产物应该是静态 HTML、CSS 和必要的 island JavaScript。
-              需要 API、认证、数据写入或 revalidation 时再显式进入 serverless/edge 模式。
+              默认产物应该是静态 HTML、CSS 和必要的 island JavaScript。 需要 API、认证、数据写入或
+              revalidation 时再显式进入 serverless/edge 模式。
             </p>
           </div>
 

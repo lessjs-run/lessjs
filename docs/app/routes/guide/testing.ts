@@ -1,9 +1,9 @@
 export const meta = { section: 'Production', label: 'Testing', order: 40 };
-import { navSections, headerNav } from 'virtual:less-nav';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import '../../islands/code-block.js';
+import '@lessjs/ui/less-code-block';
 
 export class TestingPage extends LitElement {
   static override styles = [pageStyles];
@@ -14,8 +14,8 @@ export class TestingPage extends LitElement {
         <div class="container">
           <h1>测试</h1>
           <p class="subtitle">
-            LessJS 测试应保护框架契约：路由扫描、DSD 输出、island 元数据、
-            middleware 范围、SSG 后处理和包边界。
+            LessJS 测试应保护框架契约：路由扫描、DSD 输出、island 元数据、 middleware 范围、SSG
+            后处理和包边界。
           </p>
 
           <h2>项目测试</h2>
@@ -23,11 +23,11 @@ export class TestingPage extends LitElement {
             应用代码可以使用 Deno 内置的测试运行器。从纯逻辑和 API handler 的单元测试开始，
             再为最重要的路由添加构建冒烟测试。
           </p>
-          <code-block
-          ><pre><code>deno test --allow-read --allow-write --allow-env --allow-net --allow-run</code></pre></code-block>
+          <less-code-block
+          ><pre><code>deno test --allow-read --allow-write --allow-env --allow-net --allow-run</code></pre></less-code-block>
 
           <h2>路由工具</h2>
-          <code-block
+          <less-code-block
           ><pre><code>import { assertEquals } from 'jsr:@std/assert';
             import { extractParams, parseQuery } from '@lessjs/core';
 
@@ -39,28 +39,28 @@ export class TestingPage extends LitElement {
             Deno.test('parseQuery returns plain values', () => {
               const query = parseQuery(new URL('https://example.com/?page=2'));
               assertEquals(query, { page: '2' });
-            });</code></pre></code-block>
+            });</code></pre></less-code-block>
 
             <h2>构建冒烟测试</h2>
             <p>
-              静态优先框架至少需要一个测试来构建站点并验证生成的 HTML。
-              这能捕获路由扫描、SSR、client island 和 SSG 集成问题。
+              静态优先框架至少需要一个测试来构建站点并验证生成的 HTML。 这能捕获路由扫描、SSR、client island
+              和 SSG 集成问题。
             </p>
-            <code-block
+            <less-code-block
             ><pre><code>deno task build
-              # then inspect dist/index.html, dist/client, manifest, CSP/PWA tags as needed</code></pre></code-block>
+              # then inspect dist/index.html, dist/client, manifest, CSP/PWA tags as needed</code></pre></less-code-block>
 
               <h2>框架 CI 基线</h2>
               <p>
-                对于本仓库，包级别 CI 基线故意比全根 lint/typecheck 更窄，
-                因为生成的 docs/public 资源可能有不同的工具约束。
+                对于本仓库，包级别 CI 基线故意比全根 lint/typecheck 更窄， 因为生成的 docs/public
+                资源可能有不同的工具约束。
               </p>
-              <code-block
+              <less-code-block
               ><pre><code>deno test --allow-read --allow-write --allow-env --allow-net --allow-run
                 deno lint packages/
                 deno fmt --check packages/
                 deno check packages/core/src/index.ts packages/rpc/src/index.ts packages/ui/src/index.ts
-                deno task build:all</code></pre></code-block>
+                deno task build:all</code></pre></less-code-block>
 
                 <h2>高价值回归测试</h2>
                 <table>
@@ -85,7 +85,8 @@ export class TestingPage extends LitElement {
                     <tr>
                       <td>嵌套 island</td>
                       <td>
-                        <span class="inline-code">app/islands/posts/index.ts</span> resolves to the scanned file path.
+                        <span class="inline-code">app/islands/posts/index.ts</span> resolves to the scanned file
+                        path.
                       </td>
                     </tr>
                     <tr>
@@ -105,23 +106,21 @@ export class TestingPage extends LitElement {
 
                 <h2>浏览器测试</h2>
                 <p>
-                  当行为依赖 Custom Element 升级、IntersectionObserver、idle 加载、
-                  service worker 或真实 DOM 语义时，使用浏览器测试。
-                  单元测试不足以覆盖 island 策略工作。
+                  当行为依赖 Custom Element 升级、IntersectionObserver、idle 加载、 service worker 或真实 DOM
+                  语义时，使用浏览器测试。 单元测试不足以覆盖 island 策略工作。
                 </p>
 
                 <h2>Playwright E2E 测试</h2>
                 <p>
-                  LessJS 包含 Playwright 端到端测试，在真实浏览器中验证 SSG 输出。
-                  这些测试确认 Declarative Shadow DOM 被正确解析、Custom Elements 升级、
-                  island 策略按预期工作。
+                  LessJS 包含 Playwright 端到端测试，在真实浏览器中验证 SSG 输出。 这些测试确认 Declarative
+                  Shadow DOM 被正确解析、Custom Elements 升级、 island 策略按预期工作。
                 </p>
-                <code-block
+                <less-code-block
                 ><pre><code># Install Playwright browsers (first time)
-deno task test:e2e:install
+                  deno task test:e2e:install
 
-# Run E2E tests (builds docs site first, then tests against static server)
-deno task test:e2e</code></pre></code-block>
+                  # Run E2E tests (builds docs site first, then tests against static server)
+                  deno task test:e2e</code></pre></less-code-block>
                 <p>
                   E2E 测试套件覆盖两个领域：
                 </p>

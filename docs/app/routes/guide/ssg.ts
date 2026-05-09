@@ -3,7 +3,7 @@ import { navSections, headerNav } from 'virtual:less-nav';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import '../../islands/code-block.js';
+import '@lessjs/ui/less-code-block';
 
 export class SSGGuidePage extends LitElement {
   static override styles = [pageStyles];
@@ -22,7 +22,7 @@ export class SSGGuidePage extends LitElement {
           <p>
             对用户来说，生产构建只有一个入口：
           </p>
-          <code-block><pre><code>deno task build</code></pre></code-block>
+          <less-code-block><pre><code>deno task build</code></pre></less-code-block>
           <p>
             结果写入 <span class="inline-code">dist/</span>。如果应用没有动态 API 依赖，
             这个目录可以直接部署到 GitHub Pages、Cloudflare Pages、Netlify、Vercel static output
@@ -34,12 +34,12 @@ export class SSGGuidePage extends LitElement {
             页面组件会在构建时执行 SSR，输出 Web Component host 和 shadow root template。
             内容在 JavaScript 下载前就已经存在于 HTML 中。
           </p>
-          <code-block><pre><code>&lt;page-home&gt;
+          <less-code-block><pre><code>&lt;page-home&gt;
   &lt;template shadowrootmode="open"&gt;
     &lt;style&gt;/* component styles */&lt;/style&gt;
     &lt;main&gt;Readable content first.&lt;/main&gt;
   &lt;/template&gt;
-&lt;/page-home&gt;</code></pre></code-block>
+&lt;/page-home&gt;</code></pre></less-code-block>
 
           <h2>三个内部阶段</h2>
           <table>

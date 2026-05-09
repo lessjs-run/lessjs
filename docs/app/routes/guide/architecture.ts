@@ -3,7 +3,7 @@ import { navSections, headerNav } from 'virtual:less-nav';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import '../../islands/code-block.js';
+import '@lessjs/ui/less-code-block';
 
 export class ArchitecturePage extends LitElement {
   static override styles = [pageStyles];
@@ -26,7 +26,7 @@ export class ArchitecturePage extends LitElement {
             和最终静态 HTML。
           </p>
 
-          <code-block><pre><code>app/
+          <less-code-block><pre><code>app/
   routes/
     index.ts              # page component for /
     guide/[slug].ts       # dynamic page route
@@ -34,7 +34,7 @@ export class ArchitecturePage extends LitElement {
     _middleware.ts        # route-tree middleware
   islands/
     counter.ts            # client-upgraded component
-  _renderer.ts            # optional layout wrapper</code></pre></code-block>
+  _renderer.ts            # optional layout wrapper</code></pre></less-code-block>
 
           <h2>Build Pipeline</h2>
           <p>
@@ -42,7 +42,7 @@ export class ArchitecturePage extends LitElement {
             内部仍分成三个阶段，因为每一段都有不同的失败模式和可验证产物。
           </p>
 
-          <code-block><pre><code>Phase 1: SSR bundle
+          <less-code-block><pre><code>Phase 1: SSR bundle
   - scan routes, API routes, middleware and islands
   - generate virtual Hono entry
   - emit .less/build-metadata.json
@@ -55,7 +55,7 @@ Phase 2: client islands
 Phase 3: SSG
   - load generated Hono app through Vite SSR
   - render route HTML with Declarative Shadow DOM
-  - inject island entry, PWA assets and static post-processing</code></pre></code-block>
+  - inject island entry, PWA assets and static post-processing</code></pre></less-code-block>
 
           <h2>Rendering Model</h2>
           <p>
@@ -63,12 +63,12 @@ Phase 3: SSG
             获取它的模板和样式，并把结果写入 Declarative Shadow DOM。
           </p>
 
-          <code-block><pre><code>&lt;page-home&gt;
+          <less-code-block><pre><code>&lt;page-home&gt;
   &lt;template shadowrootmode="open"&gt;
     &lt;style&gt;/* component styles */&lt;/style&gt;
     &lt;main&gt;Content is visible before JavaScript runs.&lt;/main&gt;
   &lt;/template&gt;
-&lt;/page-home&gt;</code></pre></code-block>
+&lt;/page-home&gt;</code></pre></less-code-block>
 
           <p>
             当前渲染器的风险在于 safe/unsafe HTML 边界必须更清晰。未来的 DSD Renderer 2

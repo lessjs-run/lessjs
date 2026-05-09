@@ -3,7 +3,7 @@ import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import '../../islands/code-block.js';
+import '@lessjs/ui/less-code-block';
 
 export class RpcGuidePage extends LitElement {
   static override styles = [
@@ -74,7 +74,7 @@ export class RpcGuidePage extends LitElement {
           <h2>配置和使用</h2>
 
           <h3>基本用法</h3>
-          <code-block><pre><code>import { LitElement, html } from 'lit';
+          <less-code-block><pre><code>import { LitElement, html } from 'lit';
 import { RpcController, RpcError } from '@lessjs/rpc';
 
 class PostList extends LitElement {
@@ -113,21 +113,21 @@ class PostList extends LitElement {
   }
 }
 
-customElements.define('post-list', PostList);</code></pre></code-block>
+customElements.define('post-list', PostList);</code></pre></less-code-block>
 
           <h3>重试配置</h3>
-          <code-block><pre><code>// 自动重试瞬态错误（5xx / 网络错误），最多 2 次
+          <less-code-block><pre><code>// 自动重试瞬态错误（5xx / 网络错误），最多 2 次
 private rpc = new RpcController(this, {
   maxRetries: 2,
   retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 5000), // 指数退避
-});</code></pre></code-block>
+});</code></pre></less-code-block>
 
           <h3>请求取消</h3>
-          <code-block><pre><code>// 取消进行中的请求（如导航离开页面时）
+          <less-code-block><pre><code>// 取消进行中的请求（如导航离开页面时）
 this.rpc.abort();
 
 // 也可以获取 AbortSignal 传给 fetch
-const signal = this.rpc.signal;</code></pre></code-block>
+const signal = this.rpc.signal;</code></pre></less-code-block>
 
           <h2>Island 通信模式</h2>
 
@@ -155,7 +155,7 @@ const signal = this.rpc.signal;</code></pre></code-block>
             最简单的模式。Island 通过 <span class="inline-code">fetch</span> 调用
             LessJS API Route（Hono handler），RpcController 管理加载和错误状态。
           </p>
-          <code-block><pre><code>// app/routes/api/posts.ts — API Route
+          <less-code-block><pre><code>// app/routes/api/posts.ts — API Route
 import { Hono } from 'hono';
 
 const app = new Hono();
@@ -167,9 +167,9 @@ app.get('/', (c) => {
   ]);
 });
 
-export default app;</code></pre></code-block>
+export default app;</code></pre></less-code-block>
 
-          <code-block><pre><code>// app/islands/post-list.ts — Island 消费者
+          <less-code-block><pre><code>// app/islands/post-list.ts — Island 消费者
 import { LitElement, html } from 'lit';
 import { RpcController, RpcError } from '@lessjs/rpc';
 import { island } from '@lessjs/core';
@@ -211,14 +211,14 @@ class PostListIsland extends LitElement {
 export default island('post-list', PostListIsland, {
   strategy: 'lazy',
   dsd: false,
-});</code></pre></code-block>
+});</code></pre></less-code-block>
 
           <h3>模式 2：Island 通过 Hono Client 调用</h3>
           <p>
             当 API Route 和 Island 共享类型时，可以使用 Hono RPC Client
             获得端到端类型安全。
           </p>
-          <code-block><pre><code>// app/routes/api/posts.ts — 导出类型
+          <less-code-block><pre><code>// app/routes/api/posts.ts — 导出类型
 import { Hono } from 'hono';
 
 const app = new Hono()
@@ -226,9 +226,9 @@ const app = new Hono()
   .post('/', async (c) => c.json({ id: 1 }, 201));
 
 export default app;
-export type AppType = typeof app;</code></pre></code-block>
+export type AppType = typeof app;</code></pre></less-code-block>
 
-          <code-block><pre><code>// app/islands/typed-posts.ts — 类型安全调用
+          <less-code-block><pre><code>// app/islands/typed-posts.ts — 类型安全调用
 import { hc } from 'hono/client';
 import { LitElement, html } from 'lit';
 import { RpcController } from '@lessjs/rpc';
@@ -254,7 +254,7 @@ class TypedPosts extends LitElement {
   }
 }
 
-export default island('typed-posts', TypedPosts, { dsd: false });</code></pre></code-block>
+export default island('typed-posts', TypedPosts, { dsd: false });</code></pre></less-code-block>
 
           <h3>模式 3：Island 间间接通信</h3>
           <p>
@@ -288,7 +288,7 @@ export default island('typed-posts', TypedPosts, { dsd: false });</code></pre></
             </tbody>
           </table>
 
-          <code-block><pre><code>// Island A：发出自定义事件
+          <less-code-block><pre><code>// Island A：发出自定义事件
 class FilterBar extends LitElement {
   private _onFilter(e: Event) {
     const value = (e.target as HTMLInputElement).value;
@@ -309,14 +309,14 @@ class FilteredList extends LitElement {
       this._applyFilter(filter);
     });
   }
-}</code></pre></code-block>
+}</code></pre></less-code-block>
 
           <h2>RpcError 结构</h2>
           <p>
             <span class="inline-code">RpcError</span> 与 <span class="inline-code">@lessjs/core</span>
             的 <span class="inline-code">LessError</span> 结构对齐，提供结构化的错误信息：
           </p>
-          <code-block><pre><code>class RpcError extends Error {
+          <less-code-block><pre><code>class RpcError extends Error {
   readonly status: number;    // HTTP 状态码（网络错误为 0）
   readonly code: string;     // 机器可读错误码（如 'RPC_ERROR', 'ABORTED'）
   readonly details?: Array&lt;{ field: string; message: string }&gt;; // 字段级验证
@@ -330,7 +330,7 @@ class FilteredList extends LitElement {
       }
     };
   }
-}</code></pre></code-block>
+}</code></pre></less-code-block>
 
           <h2>安全性考虑</h2>
 
@@ -376,7 +376,7 @@ class FilteredList extends LitElement {
 
           <h2>完整示例：带 CRUD 的 Island</h2>
 
-          <code-block><pre><code>import { LitElement, html } from 'lit';
+          <less-code-block><pre><code>import { LitElement, html } from 'lit';
 import { RpcController, RpcError } from '@lessjs/rpc';
 import { island } from '@lessjs/core';
 
@@ -467,7 +467,7 @@ class TodoApp extends LitElement {
 export default island('todo-app', TodoApp, {
   strategy: 'eager',
   dsd: false,
-});</code></pre></code-block>
+});</code></pre></less-code-block>
 
           <div class="callout">
             <p>

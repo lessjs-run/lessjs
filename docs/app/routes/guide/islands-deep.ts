@@ -3,7 +3,7 @@ import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import '../../islands/code-block.js';
+import '@lessjs/ui/less-code-block';
 
 export class IslandsDeepGuidePage extends LitElement {
   static override styles = [
@@ -117,13 +117,13 @@ export class IslandsDeepGuidePage extends LitElement {
               <span class="inline-code">customElements.define()</span> 升级，
               内容也始终可见且样式完整。
             </p>
-            <code-block><pre><code>&lt;!-- SSG 输出：无需 JS 即可渲染 --&gt;
+            <less-code-block><pre><code>&lt;!-- SSG 输出：无需 JS 即可渲染 --&gt;
 &lt;page-nav&gt;
   &lt;template shadowrootmode="open"&gt;
     &lt;style&gt;nav { display: flex; }&lt;/style&gt;
     &lt;nav&gt;&lt;a href="/"&gt;Home&lt;/a&gt;&lt;a href="/guide"&gt;Guide&lt;/a&gt;&lt;/nav&gt;
   &lt;/template&gt;
-&lt;/page-nav&gt;</code></pre></code-block>
+&lt;/page-nav&gt;</code></pre></less-code-block>
           </div>
 
           <div class="layer-card">
@@ -133,7 +133,7 @@ export class IslandsDeepGuidePage extends LitElement {
               需要交互但状态简单的组件。SSR 输出完整 DSD（首屏可见），客户端加载模块后
               检测已有 shadow root，跳过 render()，只绑定声明的事件处理器。
             </p>
-            <code-block><pre><code>import { html, nothing } from 'lit';
+            <less-code-block><pre><code>import { html, nothing } from 'lit';
 import { WithDsdHydration } from '@lessjs/adapter-lit/dsd-hydration';
 
 class ExpandableSection extends WithDsdHydration(LitElement) {
@@ -160,7 +160,7 @@ class ExpandableSection extends WithDsdHydration(LitElement) {
   }
 }
 
-customElements.define('expandable-section', ExpandableSection);</code></pre></code-block>
+customElements.define('expandable-section', ExpandableSection);</code></pre></less-code-block>
           </div>
 
           <div class="layer-card">
@@ -171,10 +171,10 @@ customElements.define('expandable-section', ExpandableSection);</code></pre></co
               SSR 只输出标签和 <span class="inline-code">data-ssr-props</span>，
               不输出 DSD 模板。客户端框架创建 shadow root 并完全控制渲染。
             </p>
-            <code-block><pre><code>&lt;!-- SSG 输出：只有标签和 props --&gt;
+            <less-code-block><pre><code>&lt;!-- SSG 输出：只有标签和 props --&gt;
 &lt;live-chart data-ssr-props="{&amp;quot;endpoint&amp;quot;:&amp;quot;/api/metrics&amp;quot;}"&gt;&lt;/live-chart&gt;
 
-&lt;!-- 客户端升级后框架创建 shadow root --&gt;</code></pre></code-block>
+&lt;!-- 客户端升级后框架创建 shadow root --&gt;</code></pre></less-code-block>
           </div>
 
           <h2>升级策略</h2>
@@ -209,7 +209,7 @@ customElements.define('expandable-section', ExpandableSection);</code></pre></co
             </div>
           </div>
 
-          <code-block><pre><code>import { island } from '@lessjs/core';
+          <less-code-block><pre><code>import { island } from '@lessjs/core';
 
 // 立即注册
 island('theme-toggle', ThemeToggle, { strategy: 'eager' });
@@ -221,7 +221,7 @@ island('expand-section', ExpandSection, { strategy: 'lazy' });
 island('comment-list', CommentList, { strategy: 'visible' });
 
 // Pure Island + 可见策略
-island('live-chart', LiveChart, { strategy: 'visible', dsd: false });</code></pre></code-block>
+island('live-chart', LiveChart, { strategy: 'visible', dsd: false });</code></pre></less-code-block>
 
           <h2>Speculative Loading（预加载优化）</h2>
           <p>
@@ -236,7 +236,7 @@ island('live-chart', LiveChart, { strategy: 'visible', dsd: false });</code></pr
             <li>避免加载未使用的 island 模块</li>
           </ul>
 
-          <code-block><pre><code>// island-manifests/page-abc123.json
+          <less-code-block><pre><code>// island-manifests/page-abc123.json
 {
   "route": "/guide/islands-deep",
   "islands": [
@@ -247,14 +247,14 @@ island('live-chart', LiveChart, { strategy: 'visible', dsd: false });</code></pr
       "layer": "dsd-interactive"
     },
     {
-      "tagName": "code-block",
-      "chunkUrl": "/client/code-block-Km9w.js",
+      "tagName": "less-code-block",
+      "chunkUrl": "/client/less-code-block-Km9w.js",
       "strategy": "lazy",
       "layer": "dsd-static"
     }
   ],
   "builtAt": "2025-05-08T00:00:00.000Z"
-}</code></pre></code-block>
+}</code></pre></less-code-block>
 
           <h2>less:bind 声明式事件绑定</h2>
           <p>
@@ -265,7 +265,7 @@ island('live-chart', LiveChart, { strategy: 'visible', dsd: false });</code></pr
             <span class="inline-code">hydrateEvents</span> 告诉适配器哪些 DOM 事件需要手动绑定。
           </p>
 
-          <code-block><pre><code>import { html, nothing } from 'lit';
+          <less-code-block><pre><code>import { html, nothing } from 'lit';
 import { WithDsdHydration } from '@lessjs/adapter-lit/dsd-hydration';
 import type { HydrateEventDescriptor } from '@lessjs/core/render-dsd';
 
@@ -294,7 +294,7 @@ class TabPanel extends WithDsdHydration(LitElement) {
   private _onTabClick() { /* ... */ }
   private _onSearch() { /* ... */ }
   private _onKeydown() { /* ... */ }
-}</code></pre></code-block>
+}</code></pre></less-code-block>
 
           <p>
             事件监听器通过 <span class="inline-code">AbortController</span> 管理，
@@ -309,7 +309,7 @@ class TabPanel extends WithDsdHydration(LitElement) {
             确保 SSR 和客户端状态一致。
           </p>
 
-          <code-block><pre><code>&lt;!-- SSR 输出 --&gt;
+          <less-code-block><pre><code>&lt;!-- SSR 输出 --&gt;
 &lt;live-counter
   count="5"
   data-ssr-props="{&amp;quot;count&amp;quot;:5,&amp;quot;step&amp;quot;:2}"
@@ -319,9 +319,9 @@ class TabPanel extends WithDsdHydration(LitElement) {
 &lt;!-- 1. customElements.define('live-counter', LiveCounter) --&gt;
 &lt;!-- 2. connectedCallback 检测 data-ssr-props --&gt;
 &lt;!-- 3. lessBind(this) 解析 JSON 并设置属性 --&gt;
-&lt;!-- 4. this.count = 5, this.step = 2 --&gt;</code></pre></code-block>
+&lt;!-- 4. this.count = 5, this.step = 2 --&gt;</code></pre></less-code-block>
 
-          <code-block><pre><code>// 手动使用 less:bind
+          <less-code-block><pre><code>// 手动使用 less:bind
 import { lessBind, getSSRProps } from '@lessjs/core/island';
 
 class MyComponent extends LitElement {
@@ -338,11 +338,11 @@ class MyComponent extends LitElement {
       this.data = props.initialData;
     }
   }
-}</code></pre></code-block>
+}</code></pre></less-code-block>
 
           <h2>完整示例：三层 Island 协作</h2>
 
-          <code-block><pre><code>// app/islands/dark-toggle.ts — Layer 2
+          <less-code-block><pre><code>// app/islands/dark-toggle.ts — Layer 2
 import { html, nothing } from 'lit';
 import { WithDsdHydration } from '@lessjs/adapter-lit/dsd-hydration';
 import { island } from '@lessjs/core';
@@ -369,9 +369,9 @@ class DarkToggle extends WithDsdHydration(LitElement) {
   }
 }
 
-export default island('dark-toggle', DarkToggle, { strategy: 'eager' });</code></pre></code-block>
+export default island('dark-toggle', DarkToggle, { strategy: 'eager' });</code></pre></less-code-block>
 
-          <code-block><pre><code>// app/islands/word-counter.ts — Layer 3 (Pure Island)
+          <less-code-block><pre><code>// app/islands/word-counter.ts — Layer 3 (Pure Island)
 import { html, LitElement } from 'lit';
 import { island } from '@lessjs/core';
 
@@ -397,9 +397,9 @@ class WordCounter extends LitElement {
 export default island('word-counter', WordCounter, {
   strategy: 'lazy',
   dsd: false,
-});</code></pre></code-block>
+});</code></pre></less-code-block>
 
-          <code-block><pre><code>// app/routes/blog/[slug].ts — 页面中使用
+          <less-code-block><pre><code>// app/routes/blog/[slug].ts — 页面中使用
 import { html, LitElement } from 'lit';
 
 class BlogPostPage extends LitElement {
@@ -421,7 +421,7 @@ class BlogPostPage extends LitElement {
 
 customElements.define('page-blog-post', BlogPostPage);
 export default BlogPostPage;
-export const tagName = 'page-blog-post';</code></pre></code-block>
+export const tagName = 'page-blog-post';</code></pre></less-code-block>
 
           <h2>最佳实践</h2>
 
@@ -462,7 +462,7 @@ export const tagName = 'page-blog-post';</code></pre></code-block>
             忘记检查 <span class="inline-code">this._dsdHydrated</span> 会导致 DSD DOM
             被重复渲染。这是 Layer 2 组件最常见的 bug：
           </p>
-          <code-block><pre><code>// 正确
+          <less-code-block><pre><code>// 正确
 override render() {
   if (this._dsdHydrated) return nothing;
   return html\`...content...\`;
@@ -471,7 +471,7 @@ override render() {
 // 错误：会导致重复 DOM
 override render() {
   return html\`...content...\`;
-}</code></pre></code-block>
+}</code></pre></less-code-block>
 
           <div class="nav-row">
             <a href="/guide/dsd" class="nav-link">&larr; DSD 渲染架构</a>

@@ -4,7 +4,7 @@
  * Renders individual blog posts from @lessjs/content markdown content.
  * The `slug` param is set by LessJS dynamic routing: /blog/:slug
  */
-import { navSections, headerNav } from 'virtual:less-nav';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';

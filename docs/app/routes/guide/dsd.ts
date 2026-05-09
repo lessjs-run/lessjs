@@ -3,7 +3,7 @@ import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import '../../islands/code-block.js';
+import '@lessjs/ui/less-code-block';
 
 export class DsdGuidePage extends LitElement {
   static override styles = [
@@ -47,12 +47,12 @@ export class DsdGuidePage extends LitElement {
             声明式地创建 Shadow DOM。浏览器在解析 HTML 时自动创建 shadow root 并填充内容，
             无需任何 JavaScript 执行。
           </p>
-          <code-block><pre><code>&lt;my-component&gt;
+          <less-code-block><pre><code>&lt;my-component&gt;
   &lt;template shadowrootmode="open"&gt;
     &lt;style&gt;:host { display: block; }&lt;/style&gt;
     &lt;p&gt;内容在 JS 加载前就已经可见&lt;/p&gt;
   &lt;/template&gt;
-&lt;/my-component&gt;</code></pre></code-block>
+&lt;/my-component&gt;</code></pre></less-code-block>
 
           <h2>为什么选择 DSD</h2>
           <div class="comparison">
@@ -120,7 +120,7 @@ export class DsdGuidePage extends LitElement {
             SSR 会将它们放置在 <span class="inline-code">&lt;/template&gt;</span> 之后，
             浏览器自动投影到 shadow DOM 中对应的 <span class="inline-code">&lt;slot&gt;</span> 位置。
           </p>
-          <code-block><pre><code>&lt;!-- SSR 输出 --&gt;
+          <less-code-block><pre><code>&lt;!-- SSR 输出 --&gt;
 &lt;less-layout current-path="/guide/dsd"&gt;
   &lt;template shadowrootmode="open"&gt;
     &lt;style&gt;...&lt;/style&gt;
@@ -131,7 +131,7 @@ export class DsdGuidePage extends LitElement {
   &lt;div class="container"&gt;
     &lt;h1&gt;DSD 渲染架构&lt;/h1&gt;
   &lt;/div&gt;
-&lt;/less-layout&gt;</code></pre></code-block>
+&lt;/less-layout&gt;</code></pre></less-code-block>
 
           <h2>WHATWG DSD 属性</h2>
           <p>
@@ -170,7 +170,7 @@ export class DsdGuidePage extends LitElement {
             </tbody>
           </table>
 
-          <code-block><pre><code>// 通过组件静态属性声明
+          <less-code-block><pre><code>// 通过组件静态属性声明
 class SearchBox extends LitElement {
   static delegatesFocus = true;
   static serializable = true;
@@ -188,7 +188,7 @@ const html = await renderDSD(
 //     &lt;template shadowrootmode="open" shadowrootdelegatesfocus shadowrootserializable&gt;
 //       ...
 //     &lt;/template&gt;
-//   &lt;/search-box&gt;</code></pre></code-block>
+//   &lt;/search-box&gt;</code></pre></less-code-block>
 
           <h2>DSD-first 原则</h2>
           <p>

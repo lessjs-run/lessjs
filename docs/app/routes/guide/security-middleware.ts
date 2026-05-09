@@ -3,7 +3,7 @@ import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import '../../islands/code-block.js';
+import '@lessjs/ui/less-code-block';
 
 export class SecurityMiddlewarePage extends LitElement {
   static override styles = [
@@ -69,21 +69,21 @@ export class SecurityMiddlewarePage extends LitElement {
             </tbody>
           </table>
 
-          <code-block><pre><code>// app/routes/admin/_middleware.ts
+          <less-code-block><pre><code>// app/routes/admin/_middleware.ts
 import type { Context, Next } from 'hono';
 
 export default async function adminOnly(c: Context, next: Next) {
   const session = c.req.header('x-session');
   if (!session) return c.text('Unauthorized', 401);
   await next();
-}</code></pre></code-block>
+}</code></pre></less-code-block>
 
           <h2>CSP</h2>
           <p>
             CSP 是框架级别的信任边界，因为 LessJS 会输出 HTML、DSD templates 和 island scripts。
             如果 SSR 响应启用了 CSP，SSG 输出必须在静态后处理阶段收到等效的 meta policy。
           </p>
-          <code-block><pre><code>// vite.config.ts
+          <less-code-block><pre><code>// vite.config.ts
 less({
   middleware: {
     csp: {
@@ -92,17 +92,17 @@ less({
       reportOnly: false,
     },
   },
-});</code></pre></code-block>
+});</code></pre></less-code-block>
 
           <h2>CORS</h2>
           <p>
             API routes 需要审慎配置 CORS。内容页面通常不需要跨域访问；API routes 通常需要。
           </p>
-          <code-block><pre><code>less({
+          <less-code-block><pre><code>less({
   middleware: {
     corsOrigin: 'https://example.com',
   },
-});</code></pre></code-block>
+});</code></pre></less-code-block>
 
           <h2>Security Headers</h2>
           <p>

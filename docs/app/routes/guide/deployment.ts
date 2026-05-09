@@ -1,9 +1,9 @@
 export const meta = { section: 'Production', label: 'Deployment', order: 50 };
-import { navSections, headerNav } from 'virtual:less-nav';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import '../../islands/code-block.js';
+import '@lessjs/ui/less-code-block';
 
 export class DeploymentPage extends LitElement {
   static override styles = [
@@ -39,12 +39,12 @@ export class DeploymentPage extends LitElement {
         <div class="container">
           <h1>部署</h1>
           <p class="subtitle">
-            LessJS 优先部署静态文件。运行时 API 路由在应用需要动态行为时，
-            通过 serverless 或 edge adapter 单独部署。
+            LessJS 优先部署静态文件。运行时 API 路由在应用需要动态行为时， 通过 serverless 或 edge adapter
+            单独部署。
           </p>
 
           <h2>Build Once</h2>
-          <code-block><pre><code>deno task build</code></pre></code-block>
+          <less-code-block><pre><code>deno task build</code></pre></less-code-block>
           <p>
             构建输出 <span class="inline-code">dist/</span>：带 Declarative Shadow DOM 的静态 HTML、
             client island chunks 和复制的公开资源。
@@ -82,10 +82,10 @@ export class DeploymentPage extends LitElement {
 
           <h2>GitHub Pages Base Path</h2>
           <p>
-            如果站点从 <span class="inline-code">https://user.github.io/repo/</span> 提供服务，
-            在 Vite 中配置基础路径。
+            如果站点从 <span class="inline-code">https://user.github.io/repo/</span> 提供服务， 在 Vite
+            中配置基础路径。
           </p>
-          <code-block
+          <less-code-block
           ><pre><code>// vite.config.ts
             import { defineConfig } from 'vite';
             import { less } from '@lessjs/core';
@@ -93,12 +93,12 @@ export class DeploymentPage extends LitElement {
             export default defineConfig({
               base: '/repo/',
               plugins: [less()],
-            });</code></pre></code-block>
+            });</code></pre></less-code-block>
 
             <h2>API Deployment</h2>
             <p>
-              API 路由属于生成的 Hono app。静态托管不会自动执行它们。
-              当应用需要运行时行为时，通过平台 adapter 部署 API 路由。
+              API 路由属于生成的 Hono app。静态托管不会自动执行它们。 当应用需要运行时行为时，通过平台
+              adapter 部署 API 路由。
             </p>
             <table>
               <thead>
@@ -129,8 +129,8 @@ export class DeploymentPage extends LitElement {
 
             <h2>No Production SSR Server by Default</h2>
             <p>
-              LessJS 主路径不需要长期运行的生产 SSR 服务器。静态页面应保持静态；
-              动态行为应为显式 API 或未来的 ISR。这使托管便宜、可缓存、运维轻量。
+              LessJS 主路径不需要长期运行的生产 SSR 服务器。静态页面应保持静态； 动态行为应为显式 API
+              或未来的 ISR。这使托管便宜、可缓存、运维轻量。
             </p>
 
             <h2>Deployment Checklist</h2>

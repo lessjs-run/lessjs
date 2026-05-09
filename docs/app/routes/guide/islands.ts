@@ -1,9 +1,9 @@
 export const meta = { section: 'Core Model', label: 'Island Upgrade', order: 40 };
-import { navSections, headerNav } from 'virtual:less-nav';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import '../../islands/code-block.js';
+import '@lessjs/ui/less-code-block';
 
 export class IslandsGuidePage extends LitElement {
   static override styles = [
@@ -66,8 +66,8 @@ export class IslandsGuidePage extends LitElement {
 
           <h2>Upgrade, Not Hydration</h2>
           <p>
-            浏览器解析 HTML 时，Declarative Shadow DOM 已经把组件内容和样式放进 shadow root。
-            客户端 entry 加载后调用 <span class="inline-code">customElements.define()</span>，
+            浏览器解析 HTML 时，Declarative Shadow DOM 已经把组件内容和样式放进 shadow root。 客户端 entry
+            加载后调用 <span class="inline-code">customElements.define()</span>，
             浏览器把已有元素升级为真正的 Custom Element。这个过程更准确地叫
             <strong>Island Upgrade</strong>。
           </p>
@@ -102,10 +102,10 @@ export class IslandsGuidePage extends LitElement {
 
           <h2>创建本地 Island</h2>
           <p>
-            本地 island 放在 <span class="inline-code">app/islands</span>。构建器会扫描它，
-            生成 client entry，并在静态 HTML 中注入 entry script。
+            本地 island 放在 <span class="inline-code">app/islands</span>。构建器会扫描它， 生成 client
+            entry，并在静态 HTML 中注入 entry script。
           </p>
-          <code-block
+          <less-code-block
           ><pre><code>// app/islands/my-counter.ts
             import { css, html, LitElement } from 'lit';
 
@@ -127,10 +127,10 @@ export class IslandsGuidePage extends LitElement {
               }
             }
 
-            customElements.define(tagName, MyCounter);</code></pre></code-block>
+            customElements.define(tagName, MyCounter);</code></pre></less-code-block>
 
             <h2>在页面中使用 Island</h2>
-            <code-block><pre><code>&lt;my-counter&gt;&lt;/my-counter&gt;</code></pre></code-block>
+            <less-code-block><pre><code>&lt;my-counter&gt;&lt;/my-counter&gt;</code></pre></less-code-block>
             <p>
               首屏 HTML 中会出现 host 和 shadow root。浏览器加载
               <span class="inline-code">my-counter</span> 模块后，按钮事件才会开始工作。
@@ -138,9 +138,10 @@ export class IslandsGuidePage extends LitElement {
 
             <h2>Package Islands</h2>
             <p>
-            可复用包可以导出 island metadata，LessJS 在构建时读取这些信息，用于 SSR 注册和 client entry 生成。
-          </p>
-            <code-block
+              可复用包可以导出 island metadata，LessJS 在构建时读取这些信息，用于 SSR 注册和 client entry
+              生成。
+            </p>
+            <less-code-block
             ><pre><code>import type { PackageIslandMeta } from '@lessjs/core';
 
             export const islands: PackageIslandMeta[] = [
@@ -149,13 +150,13 @@ export class IslandsGuidePage extends LitElement {
                 modulePath: '@lessjs/ui/less-theme-toggle',
                 strategy: 'eager',
               },
-            ];</code></pre></code-block>
+            ];</code></pre></less-code-block>
 
-          <h2>当前边界</h2>
+            <h2>当前边界</h2>
             <p>
               当前实现仍以全局 island entry 为主。下一阶段需要把
-              <span class="inline-code">strategy</span> 从 metadata 真正带进 client build，
-              并引入页面级 island manifest，让每个页面只加载实际出现的 island。
+              <span class="inline-code">strategy</span> 从 metadata 真正带进 client build， 并引入页面级
+              island manifest，让每个页面只加载实际出现的 island。
             </p>
 
             <div class="nav-row">

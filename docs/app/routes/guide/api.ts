@@ -3,7 +3,7 @@ import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import '../../islands/code-block.js';
+import '@lessjs/ui/less-code-block';
 
 export class ApiPage extends LitElement {
   static override styles = [
@@ -50,7 +50,7 @@ export class ApiPage extends LitElement {
             API routes 放在 <span class="inline-code">app/routes/api</span>。
             模块默认导出一个 Hono app。
           </p>
-          <code-block><pre><code>// app/routes/api/posts.ts
+          <less-code-block><pre><code>// app/routes/api/posts.ts
 import { Hono } from 'hono';
 
 const app = new Hono();
@@ -67,7 +67,7 @@ app.post('/', async (c) => {
 });
 
 export default app;
-export type AppType = typeof app;</code></pre></code-block>
+export type AppType = typeof app;</code></pre></less-code-block>
 
           <h2>Route Mapping</h2>
           <table>
@@ -107,7 +107,7 @@ export type AppType = typeof app;</code></pre></code-block>
             LessJS 不强制校验库。Zod 配合 <span class="inline-code">@hono/zod-validator</span>
             是实用的默认选择：
           </p>
-          <code-block><pre><code>import { Hono } from 'hono';
+          <less-code-block><pre><code>import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 
@@ -123,27 +123,27 @@ app.post('/', zValidator('json', schema), (c) => {
   return c.json({ id: crypto.randomUUID(), ...data }, 201);
 });
 
-export default app;</code></pre></code-block>
+export default app;</code></pre></less-code-block>
 
           <h2>Response Format</h2>
           <p>
             成功响应保持简单和可预测。用 HTTP 状态码表示状态，JSON 体承载数据，
             结构化错误用于可操作的失败：
           </p>
-          <code-block><pre><code>return c.json({ posts }, 200);
+          <less-code-block><pre><code>return c.json({ posts }, 200);
 return c.json({ id, ...created }, 201);
-return c.json({ error: { code: 'NOT_FOUND', message: 'Post not found' } }, 404);</code></pre></code-block>
+return c.json({ error: { code: 'NOT_FOUND', message: 'Post not found' } }, 404);</code></pre></less-code-block>
 
           <h2>Calling API from Island</h2>
           <p>
             Island 可以用 <span class="inline-code">fetch</span> 或 Hono client helpers 调用 API routes。
             保持 fetch 状态局部化，除非多个 island 确实需要共享协议。
           </p>
-          <code-block><pre><code>async function loadPosts() {
+          <less-code-block><pre><code>async function loadPosts() {
   const res = await fetch('/api/posts');
   if (!res.ok) throw new Error('Failed to load posts');
   return await res.json();
-}</code></pre></code-block>
+}</code></pre></less-code-block>
 
           <h2>Type-Safe RPC</h2>
           <p>

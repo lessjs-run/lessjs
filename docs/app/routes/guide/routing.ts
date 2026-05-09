@@ -3,7 +3,7 @@ import { navSections, headerNav } from 'virtual:less-nav';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import '../../islands/code-block.js';
+import '@lessjs/ui/less-code-block';
 
 export class RoutingGuidePage extends LitElement {
   static override styles = [pageStyles];
@@ -78,13 +78,13 @@ export class RoutingGuidePage extends LitElement {
             </tbody>
           </table>
 
-          <code-block><pre><code>export class PostPage extends LitElement {
+          <less-code-block><pre><code>export class PostPage extends LitElement {
   slug = '';
 
   override render() {
     return html&#96;&lt;article&gt;Post: \${this.slug}&lt;/article&gt;&#96;;
   }
-}</code></pre></code-block>
+}</code></pre></less-code-block>
 
           <h2>特殊文件</h2>
           <table>
@@ -111,7 +111,7 @@ export class RoutingGuidePage extends LitElement {
           </table>
 
           <h2>路由模块契约</h2>
-          <code-block><pre><code>import { html, LitElement } from 'lit';
+          <less-code-block><pre><code>import { html, LitElement } from 'lit';
 
 export class AboutPage extends LitElement {
   override render() {
@@ -121,7 +121,7 @@ export class AboutPage extends LitElement {
 
 customElements.define('page-about', AboutPage);
 export default AboutPage;
-export const tagName = 'page-about';</code></pre></code-block>
+export const tagName = 'page-about';</code></pre></less-code-block>
 
           <h2>当前边界</h2>
           <p>

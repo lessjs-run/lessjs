@@ -2,11 +2,11 @@
  * Contributing Page — LessJS Framework Contribution Guide
  */
 export const meta = { section: 'History', label: 'Contributing', order: 30 };
-import { navSections, headerNav } from 'virtual:less-nav';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import '../islands/code-block.js';
+import '@lessjs/ui/less-code-block';
 
 export class ContributingPage extends LitElement {
   static override styles = [
@@ -55,7 +55,7 @@ export class ContributingPage extends LitElement {
           <p class="subtitle">感谢你对 LessJS 框架的兴趣！</p>
 
           <h2>开发环境设置</h2>
-          <code-block
+          <less-code-block
           ><pre>
             <code># 克隆仓库
             git clone https://github.com/lessjs-run/LessJS.git
@@ -68,7 +68,7 @@ export class ContributingPage extends LitElement {
             deno task test
 
             # 启动文档站开发服务器
-            deno task docs:dev</code></pre></code-block>
+            deno task docs:dev</code></pre></less-code-block>
 
             <h2>Deno-first 工具链</h2>
             <p>
@@ -82,7 +82,7 @@ export class ContributingPage extends LitElement {
             </p>
 
             <h2>项目结构</h2>
-            <code-block
+            <less-code-block
             ><pre>
               <code>lessjs/
               ├── packages/
@@ -91,7 +91,7 @@ export class ContributingPage extends LitElement {
               │   ├── ui/         # UI 插件
               │   └── adapter-lit/ # Lit adapter
               ├── docs/           # 文档站（自举）
-              └── scripts/        # 工具脚本</code></pre></code-block>
+              └── scripts/        # 工具脚本</code></pre></less-code-block>
 
               <h2>开发规范</h2>
 
@@ -122,7 +122,7 @@ export class ContributingPage extends LitElement {
               </div>
 
               <h3>测试</h3>
-              <code-block
+              <less-code-block
               ><pre>
                 <code># 运行所有测试
                 deno task test
@@ -131,7 +131,7 @@ export class ContributingPage extends LitElement {
                 deno task test:watch
 
                 # 类型检查
-                deno task typecheck</code></pre></code-block>
+                deno task typecheck</code></pre></less-code-block>
 
                 <h2>发布流程</h2>
                 <ol>
@@ -144,7 +144,7 @@ export class ContributingPage extends LitElement {
 
                 <h2>架构决策记录（ADR）</h2>
                 <p>重大架构变更需要创建 ADR 文档：</p>
-                <code-block
+                <less-code-block
                 ><pre>
                   <code># ADR-XXX: 标题
 
@@ -158,7 +158,7 @@ export class ContributingPage extends LitElement {
                   我们决定做什么
 
                   ## 后果
-                  这个决策的影响</code></pre></code-block>
+                  这个决策的影响</code></pre></less-code-block>
 
                   <h2>问题反馈</h2>
                   <ul>

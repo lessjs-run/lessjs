@@ -1,5 +1,5 @@
 export const meta = { section: 'Roadmap & Decisions', label: 'Architecture Decisions', order: 20 };
-import { navSections, headerNav } from 'virtual:less-nav';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import { DECISIONS } from '../../decision-data.js';

@@ -46,7 +46,8 @@ export const DECISIONS: DecisionDoc[] = [
     title: '@lessjs/content',
     status: 'Adopted',
     path: '/decisions/0004-blog-system',
-    summary: 'Unified content plugin (blog + nav + sitemap) — SSG content pipeline with auto-generated navigation.',
+    summary:
+      'Unified content plugin (blog + nav + sitemap) — SSG content pipeline with auto-generated navigation.',
     source: adr0004,
   },
   {

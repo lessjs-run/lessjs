@@ -1,9 +1,9 @@
 export const meta = { section: 'Start Here', label: 'Getting Started', order: 20 };
-import { navSections, headerNav } from 'virtual:less-nav';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import '../../islands/code-block.js';
+import '@lessjs/ui/less-code-block';
 
 export class GettingStartedPage extends LitElement {
   static override styles = [
@@ -49,9 +49,9 @@ export class GettingStartedPage extends LitElement {
 
           <section class="step">
             <h2>1. 创建项目</h2>
-            <code-block
+            <less-code-block
             ><pre><code>deno run -A jsr:@lessjs/create my-app
-              cd my-app</code></pre></code-block>
+              cd my-app</code></pre></less-code-block>
             <p>
               生成的项目会包含页面路由、示例 island、Vite 配置和常用 Deno tasks。
             </p>
@@ -59,7 +59,7 @@ export class GettingStartedPage extends LitElement {
 
           <section class="step">
             <h2>2. 启动开发服务器</h2>
-            <code-block><pre><code>deno task dev</code></pre></code-block>
+            <less-code-block><pre><code>deno task dev</code></pre></less-code-block>
             <p>
               开发模式通过 Vite 提供模块加载和刷新，通过生成的 Hono entry 提供 SSR/API 行为。 默认打开
               <span class="inline-code">http://localhost:5173</span>。
@@ -68,7 +68,7 @@ export class GettingStartedPage extends LitElement {
 
           <section class="step">
             <h2>3. 构建静态产物</h2>
-            <code-block><pre><code>deno task build</code></pre></code-block>
+            <less-code-block><pre><code>deno task build</code></pre></less-code-block>
             <p>
               构建命令会依次生成 SSR bundle、client island entry 和 SSG HTML。 最终产物在 <span
                 class="inline-code"
@@ -78,14 +78,14 @@ export class GettingStartedPage extends LitElement {
 
           <section class="step">
             <h2>4. 预览生产构建</h2>
-            <code-block><pre><code>deno task preview</code></pre></code-block>
+            <less-code-block><pre><code>deno task preview</code></pre></less-code-block>
             <p>
               预览命令用于检查最终静态产物，而不是开发服务器行为。部署前至少跑一次。
             </p>
           </section>
 
           <h2>项目结构</h2>
-          <code-block
+          <less-code-block
           ><pre><code>my-app/
             |-- app/
             |   |-- routes/
@@ -97,14 +97,14 @@ export class GettingStartedPage extends LitElement {
             |   |   └-- counter.ts        # client-upgraded Custom Element
             |   └-- _renderer.ts          # optional layout wrapper
             |-- deno.json                 # tasks and imports
-            └-- vite.config.ts            # LessJS plugin config</code></pre></code-block>
+            └-- vite.config.ts            # LessJS plugin config</code></pre></less-code-block>
 
             <h2>编写页面</h2>
             <p>
               页面是一个 Web Component。SSR 会把它渲染成 Declarative Shadow DOM， 所以内容在 JavaScript
               运行前就已经可见。
             </p>
-            <code-block
+            <less-code-block
             ><pre><code>import { html, LitElement } from 'lit';
 
             export class HomePage extends LitElement {
@@ -115,15 +115,15 @@ export class GettingStartedPage extends LitElement {
 
             customElements.define('page-home', HomePage);
             export default HomePage;
-            export const tagName = 'page-home';</code></pre></code-block>
+            export const tagName = 'page-home';</code></pre></less-code-block>
 
             <h2>添加交互</h2>
             <p>
               把需要客户端行为的组件放进 <span class="inline-code">app/islands</span>。 页面 HTML
               先输出，浏览器加载 island entry 后再升级组件。
             </p>
-            <code-block
-            ><pre><code>&lt;counter-island count="1"&gt;&lt;/counter-island&gt;</code></pre></code-block>
+            <less-code-block
+            ><pre><code>&lt;counter-island count="1"&gt;&lt;/counter-island&gt;</code></pre></less-code-block>
 
             <div class="note">
               <p>

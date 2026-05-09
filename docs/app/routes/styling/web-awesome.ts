@@ -1,9 +1,9 @@
 export const meta = { section: 'Packages', label: 'Web Awesome', order: 30 };
-import { navSections, headerNav } from 'virtual:less-nav';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import '../../islands/code-block.js';
+import '@lessjs/ui/less-code-block';
 
 export class WebAwesomePage extends LitElement {
   static override styles = [
@@ -45,10 +45,10 @@ export class WebAwesomePage extends LitElement {
               <wa-button variant="danger">危险</wa-button>
               <wa-button variant="default">默认</wa-button>
             </div>
-            <code-block>
+            <less-code-block>
               <pre><code>&lt;wa-button variant="brand"&gt;品牌&lt;/wa-button&gt;
                 &lt;wa-button variant="danger"&gt;危险&lt;/wa-button&gt;</code></pre>
-              </code-block>
+              </less-code-block>
             </div>
 
             <div class="demo-box">
@@ -58,13 +58,13 @@ export class WebAwesomePage extends LitElement {
                 <p>带 header 和 footer slots 的 Web Awesome 卡片组件。</p>
                 <wa-button slot="footer" variant="brand">操作</wa-button>
               </wa-card>
-              <code-block>
+              <less-code-block>
                 <pre><code>&lt;wa-card&gt;
                   &lt;h2 slot="header"&gt;标题&lt;/h2&gt;
                   &lt;p&gt;内容&lt;/p&gt;
                   &lt;wa-button slot="footer" variant="brand"&gt;操作&lt;/wa-button&gt;
                 &lt;/wa-card&gt;</code></pre>
-              </code-block>
+              </less-code-block>
             </div>
 
             <div class="demo-box">
@@ -75,15 +75,15 @@ export class WebAwesomePage extends LitElement {
                 <wa-badge variant="danger">危险</wa-badge>
                 <wa-badge variant="warning">警告</wa-badge>
               </div>
-              <code-block>
+              <less-code-block>
                 <pre><code>&lt;wa-badge variant="primary"&gt;主要&lt;/wa-badge&gt;
                   &lt;wa-badge variant="danger"&gt;危险&lt;/wa-badge&gt;</code></pre>
-                </code-block>
+                </less-code-block>
               </div>
 
               <h2>配置</h2>
               <p>通过 <span class="inline-code">inject</span> 选项启用 Web Awesome（推荐）：</p>
-              <code-block>
+              <less-code-block>
                 <pre><code>// vite.config.ts
                   import { less } from '@lessjs/core'
                   import { defineConfig } from 'vite'
@@ -98,13 +98,13 @@ export class WebAwesomePage extends LitElement {
                       }),
                     ]
                   })</code></pre>
-                </code-block>
+                </less-code-block>
 
                 <h2>从 <span class="inline-code">ui</span> 选项迁移</h2>
                 <p>
                   旧的 <span class="inline-code">ui: { cdn: true }</span> 快捷方式仍然可用，但已弃用。迁移方法：
                 </p>
-                <code-block>
+                <less-code-block>
                   <pre><code>// 之前（已弃用）
                     less({ ui: { cdn: true } })
 
@@ -115,7 +115,7 @@ export class WebAwesomePage extends LitElement {
                         scripts: ['https://cdn.jsdelivr.net/npm/@awesome-webcomponents/webawesome@3.5.0/dist/webawesome.loader.js'],
                       },
                     })</code></pre>
-                  </code-block>
+                  </less-code-block>
                   <p>
                     <span class="inline-code">inject</span> 选项更灵活——适用于任何 CDN、任何版本、任何外部资源。
                   </p>
