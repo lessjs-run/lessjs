@@ -1,7 +1,12 @@
 /**
  * @lessjs/ui - less-code-block
  *
- * Code block with copy button.
+ * Code block with copy button AND syntax highlighting via Prism.
+ * v0.9.0: Self-contained Prism highlighting — each <code-block>
+ *   highlights its own <pre><code> on upgrade. This is more reliable
+ *   than external shadow DOM traversal because the component owns
+ *   its own DOM structure.
+ *
  * DSD makes content visible without JavaScript.
  *
  * v0.6.2: Fixed DSD hydration — copy button now works after DSD upgrade.
@@ -106,13 +111,48 @@ export class LessCodeBlock extends DsdLitElement {
     this._copyState = 'idle';
   }
 
+  override connectedCallback() {
+    super.connectedCallback();
+    // Trigger Prism highlighting for code inside this block.
+    // This runs after CE upgrade, whether from DSD or client render.
+    this._tryHighlight();
+  }
+
   override disconnectedCallback() {
     super.disconnectedCallback(); // Mixin handles _hydrateAbortController
     if (this._copyTimer !== undefined) {
       clearTimeout(this._copyTimer);
       this._copyTimer = undefined;
     }
+    if (this._highlightTimer !== undefined) {
+      clearTimeout(this._highlightTimer);
+      this._highlightTimer = undefined;
+    }
   }
+
+  /**
+   * After upgrade (DSD or client render), highlight the embedded code.
+   * Uses a retry loop because Prism might not be loaded yet
+   * (defer scripts may not have executed before CE upgrade).
+   */
+  private _tryHighlight(): void {
+    const p = (globalThis as any).Prism;
+    if (typeof p === 'undefined') {
+      // Prism hasn't loaded yet — retry
+      this._highlightTimer = globalThis.setTimeout(() => this._tryHighlight(), 50);
+      return;
+    }
+    const code = this.querySelector('pre code');
+    if (!code) return;
+    // Add default language class if missing
+    if (!Array.from(code.classList).some((c: string) => c.startsWith('language-'))) {
+      code.classList.add('language-typescript');
+    }
+    // Highlight this element
+    p.highlightElement(code);
+  }
+
+  private _highlightTimer: ReturnType<typeof globalThis.setTimeout> | undefined;
 
   /** When DSD hydrated, return nothing — the shadow DOM already has content. */
   override render(): TemplateResult | typeof nothing {
