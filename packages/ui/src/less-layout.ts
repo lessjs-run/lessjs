@@ -622,6 +622,7 @@ export class LessLayout extends DsdLitElement {
                 .logoSub}</span></a>
               ${this._renderHeaderNav()}
               <div class="header-right">
+                <slot name="header-actions"></slot>
                 <details class="mobile-menu">
                   <summary class="mobile-menu-btn" aria-label="Toggle navigation" @click="${this
                     ._toggleMenu}">

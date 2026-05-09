@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <title>LessJS — Less is More</title>
+  <rect width="1200" height="630" fill="#050505"/>
+  <g transform="translate(160, 210)">
+    <path d="M 15 210 L 220 105 L 15 0" fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="250" cy="105" r="14" fill="#ffffff"/>
+  </g>
+  <text x="740" y="295" font-family="system-ui,-apple-system,sans-serif" font-size="120" font-weight="520" fill="#ffffff" text-anchor="middle" dominant-baseline="central">LessJS</text>
+  <text x="600" y="370" font-family="system-ui,-apple-system,sans-serif" font-size="28" fill="#9ca3af" text-anchor="middle" dominant-baseline="central" letter-spacing="1">Less is More</text>
+  <text x="600" y="430" font-family="system-ui,-apple-system,sans-serif" font-size="22" fill="#6b7280" text-anchor="middle" dominant-baseline="central" letter-spacing="0.5">DSD-first · SSG · Islands · Web Standards</text>
+</svg>

@@ -49,7 +49,14 @@ export default defineConfig({
         stylesheets: [],
         scripts: [],
         headFragments: [
-          // Meta: Less is More
+          // Meta: Open Graph / Twitter Cards
+          '<meta property="og:site_name" content="LessJS">',
+          '<meta property="og:type" content="website">',
+          '<meta property="og:title" content="LessJS — Less is More">',
+          '<meta property="og:description" content="DSD-first Web Standards framework. Zero-runtime core, SSG + Island architecture, Lit Web Components, Hono API routes.">',
+          '<meta property="og:url" content="https://lessjs.org">',
+          '<meta property="og:image" content="https://lessjs.org/assets/og-image.svg">',
+          '<meta name="twitter:card" content="summary_large_image">',
           '<meta name="description" content="LessJS — Less is More. Web Standards-first Jamstack SSG with Island architecture. Zero-runtime core, DSD rendering, Lit Web Components, Hono API routes.">',
           // Non-blocking OpenProps: media="print" prevents render-block, onload switches to all
           '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/open-props@1.7.20/open-props.min.css" media="print" onload="this.media=\'all\'">',
@@ -71,6 +78,8 @@ export default defineConfig({
           '<script src="/theme-init.js"></script>',
           // Mobile sidebar: universal JS for open/close (all browsers)
           '<script defer src="/mobile-menu.js"></script>',
+          // Privacy-friendly analytics (GoatCounter, no cookies)
+          '<script data-goatcounter="https://lessjs.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>',
         ],
       },
     }),
@@ -85,9 +94,10 @@ export default defineConfig({
         headerNav: [
           { href: '/guide/positioning', label: 'Docs' },
           { href: '/guide/architecture', label: 'Architecture' },
-          { href: '/examples', label: 'Examples' },
+          { href: '/blog', label: 'Blog' },
           { href: '/ui', label: 'UI' },
           { href: '/roadmap', label: 'Roadmap' },
+          { href: '/community', label: 'Community' },
           { href: 'https://jsr.io/@lessjs/core', label: 'JSR' },
         ],
       },
