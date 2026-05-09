@@ -8,11 +8,6 @@
     "./dsd-hydration": "./src/dsd-hydration.ts",
     "./dsd-hydration.js": "./src/dsd-hydration.ts"
   },
-  "imports": {
-    "@lessjs/core/render-dsd": "../core/src/render-dsd.ts",
-    "@lessjs/core/less-runtime": "../core/src/less-runtime.ts",
-    "@lessjs/core/logger": "../core/src/logger.ts"
-  },
   "tasks": {
     "build": "deno check src/index.ts src/ssr.ts src/dsd-hydration.ts"
   },

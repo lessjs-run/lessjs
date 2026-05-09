@@ -16,8 +16,7 @@
     "./tokens/color-values": "./src/tokens/color-values.ts"
   },
   "imports": {
-    "lit": "npm:lit@^3.2.0",
-    "@lessjs/core": "../core/src/index.ts"
+    "lit": "npm:lit@^3.2.0"
   },
   "publish": {
     "include": [

@@ -54,20 +54,37 @@ const log = createLogger('core');
 
 // ─── DSD Rendering ──────────────────────────────────────────────
 
+/**
+ * Convert camelCase to kebab-case for HTML attribute names.
+ * e.g. currentPath → current-path, navItems → nav-items
+ *
+ * HTML attributes are case-insensitive — browsers lowercase them.
+ * Lit's @property({attribute: 'current-path'}) expects kebab-case.
+ * Without this conversion, currentPath would render as "currentpath"
+ * (lowercased by the browser) and never match "current-path".
+ */
+function camelToKebab(str: string): string {
+  return str.replace(/([A-Z])/g, '-$1').toLowerCase();
+}
+
 /** Serialize key-value strings to HTML attribute string */
 function serializeAttributes(props: Record<string, unknown>): string {
   const parts: string[] = [];
   for (const [key, val] of Object.entries(props)) {
     if (val === false || val === null || val === undefined) continue;
+    // Convert camelCase to kebab-case so Lit's attribute observer
+    // can read the value back on client-side upgrade.
+    // e.g. currentPath → current-path
+    const attrKey = camelToKebab(key);
     if (val === true) {
-      parts.push(key);
+      parts.push(attrKey);
     } else if (typeof val === 'object') {
       // Array or Object: JSON-encode and escape for safe HTML attribute embedding.
       // Client-side Lit deserializes via property setter (not attribute), so the
       // JSON string only needs to survive HTML parsing, not be human-readable.
-      parts.push(`${key}="${escapeAttrValue(JSON.stringify(val))}"`);
+      parts.push(`${attrKey}="${escapeAttrValue(JSON.stringify(val))}"`);
     } else {
-      parts.push(`${key}="${escapeAttrValue(val)}"`);
+      parts.push(`${attrKey}="${escapeAttrValue(val)}"`);
     }
   }
   return parts.length > 0 ? ' ' + parts.join(' ') : '';
