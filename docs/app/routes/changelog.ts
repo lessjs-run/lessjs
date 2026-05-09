@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Changelog Page — LessJS Framework Version History
  */
 export const meta = { section: 'History', label: 'Changelog', order: 20 };

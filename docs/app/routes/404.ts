@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 404 Not Found Page — with search and helpful links
  */
 import { headerNav, navSections } from 'virtual:less-nav';

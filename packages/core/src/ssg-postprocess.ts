@@ -159,7 +159,7 @@ const DSD_POLYFILL = `
     const t = document.createElement('template');
     t.setAttribute('shadowrootmode', 'open');
     if ('shadowRootMode' in t) return; // Native support
-  } catch {}
+  } catch { /* native detection failed — fallback to polyfill */ }
   
   const attachDSD = (root) => {
     root.querySelectorAll('template[shadowrootmode]').forEach(tpl => {
@@ -173,7 +173,7 @@ const DSD_POLYFILL = `
         sr.innerHTML = tpl.innerHTML;
         tpl.remove();
         attachDSD(sr); // Handle nested DSD
-      } catch {}
+      } catch { /* non-fatal: skip malformed DSD templates */ }
     });
   };
   

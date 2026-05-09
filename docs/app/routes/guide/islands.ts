@@ -1,4 +1,4 @@
-﻿export const meta = { section: 'Core Model', label: 'Island Upgrade', order: 40 };
+export const meta = { section: 'Core Model', label: 'Island Upgrade', order: 40 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';

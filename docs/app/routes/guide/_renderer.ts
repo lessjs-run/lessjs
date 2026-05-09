@@ -1,4 +1,4 @@
-﻿/**
+/**
  * _renderer.ts — Layout renderer for the guide section.
  *
  * Injects search button and "Edit this page" in the layout footer.

@@ -1,4 +1,4 @@
-﻿export const meta = { section: 'Core Model', label: 'Rendering & SSG', order: 20 };
+export const meta = { section: 'Core Model', label: 'Rendering & SSG', order: 20 };
 import { navSections, headerNav } from 'virtual:less-nav';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';

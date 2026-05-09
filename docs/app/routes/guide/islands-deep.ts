@@ -1,4 +1,4 @@
-﻿export const meta = { section: 'Core Model', label: 'Island Deep Dive', order: 50 };
+export const meta = { section: 'Core Model', label: 'Island Deep Dive', order: 50 };
 import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';

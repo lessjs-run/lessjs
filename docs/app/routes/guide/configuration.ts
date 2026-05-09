@@ -1,4 +1,4 @@
-﻿export const meta = { section: 'Production', label: 'Configuration', order: 10 };
+export const meta = { section: 'Production', label: 'Configuration', order: 10 };
 import { navSections, headerNav } from 'virtual:less-nav';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';

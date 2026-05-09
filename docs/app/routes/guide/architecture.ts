@@ -1,4 +1,4 @@
-﻿export const meta = { section: 'Start Here', label: 'Architecture', order: 30 };
+export const meta = { section: 'Start Here', label: 'Architecture', order: 30 };
 import { navSections, headerNav } from 'virtual:less-nav';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';

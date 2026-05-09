@@ -1,4 +1,4 @@
-﻿export const meta = { section: 'Core Model', label: 'RPC', order: 70 };
+export const meta = { section: 'Core Model', label: 'RPC', order: 70 };
 import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';

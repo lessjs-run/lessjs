@@ -1,4 +1,4 @@
-﻿export const meta = { section: 'Roadmap & Decisions', label: 'Roadmap', order: 10 };
+export const meta = { section: 'Roadmap & Decisions', label: 'Roadmap', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
@@ -47,8 +47,8 @@ export class RoadmapPage extends LitElement {
     <h1>Roadmap</h1>
     <p class="subtitle">The LessJS roadmap centers on one judgment: make SSG + DSD + Island Upgrade + Hono API trustworthy first, then expand to serverless fullstack, ISR, PWA, and compiler, and finally commit to 1.0 after public APIs stabilize.</p>
     <div class="callout"><p>This roadmap is not a marketing page. Future items listed here will only become stable user guides after they enter implementation and testing. See <a href="/decisions/0006-version-strategy">ADR 0006</a> for versioning strategy.</p></div>
-    <h2>Now: v0.9 — Content Pipeline + SSR Property Bindings</h2>
-    <p>v0.8.0 completed P1 feature completeness (390 tests). v0.9.0 advances content pipeline and SSR fixes. 378+ tests passing.</p>
+    <h2>Now: v0.9 — i18n + Content Pipeline + SSR Property Bindings</h2>
+    <p>v0.8.0 completed P1 feature completeness (390 tests). v0.9.0 advances i18n, content pipeline, and SSR fixes. 414 tests passing.</p>
     <table class="version-table"><thead><tr><th>Area</th><th>Status</th><th>Notes</th></tr></thead><tbody>
       <tr><td>TC39 Signals</td><td>✅ Done</td><td>@lessjs/signal: signal(), computed(), effect(), islandEffect()</td></tr>
       <tr><td>DSD Spec Alignment</td><td>✅ Done</td><td>shadowrootdelegatesfocus, shadowrootserializable, shadowrootslotassignment, shadowrootcustomelementregistry</td></tr>
@@ -57,6 +57,8 @@ export class RoadmapPage extends LitElement {
       <tr><td>Speculative Loading</td><td>✅ Done</td><td>modulepreload for eager, prefetch for lazy</td></tr>
       <tr><td>dialog/popover + inert</td><td>✅ Done</td><td>Native &lt;dialog&gt; + ::backdrop + inert</td></tr>
       <tr><td>Island System</td><td>✅ Done</td><td>Mixin replaces monkey-patch, explicit adapter injection</td></tr>
+      <tr><td>@lessjs/i18n Package</td><td>✅ Done</td><td>Extracted from content, lessI18n() standalone plugin, SSG locale expansion</td></tr>
+      <tr><td>Bilingual Docs</td><td>✅ Done</td><td>25/30 pages with English version + language switcher + en/zh paths</td></tr>
     </tbody></table>
     <h2>Release Phases</h2>
     <div class="phase"><div class="status">v1.0 Target</div><h3>v1.0 — Public API Stability</h3><p>All package public APIs stable, following SemVer, with complete migration docs. The current core framework is at v0.9 — feature-complete but public APIs are still settling.</p></div>

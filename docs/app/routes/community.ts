@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @lessjs/docs - Community page
  */
 

@@ -1,4 +1,4 @@
-﻿export const meta = { section: 'Production', label: 'Error Handling', order: 30 };
+export const meta = { section: 'Production', label: 'Error Handling', order: 30 };
 import { navSections, headerNav } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';

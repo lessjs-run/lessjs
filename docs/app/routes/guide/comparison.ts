@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @lessjs/docs - Comparison: LessJS vs Alternatives
  */
 

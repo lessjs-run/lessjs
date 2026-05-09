@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @lessjs/docs - API Reference: @lessjs/core
  */
 
