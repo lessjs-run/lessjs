@@ -80,12 +80,10 @@ export default defineConfig({
           '<script defer src="/mobile-menu.js"></script>',
           // Code syntax highlighting (Prism, loaded async to avoid blocking)
           '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" media="print" onload="this.media=\'all\'">',
-          '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" media="print" onload="this.media=\'all\'">',
           '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>',
           '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>',
-          '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>',
-          // Trigger Prism after DSD polyfill completes
-          '<script>document.addEventListener("DOMContentLoaded",()=>{setTimeout(()=>{if(typeof Prism!=="undefined")Prism.highlightAll()},300)});</script>',
+          // Prism auto-init: adds default language class + highlights after DSD settles
+          '<script defer src="/prism-init.js"></script>',
           // Privacy-friendly analytics (GoatCounter, no cookies)
           '<script data-goatcounter="https://lessjs.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>',
         ],
