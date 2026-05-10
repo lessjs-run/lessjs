@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: deno install --node-modules-dir
       - name: Run type check
-        run: deno check packages/core/src/index.ts packages/rpc/src/index.ts packages/ui/src/index.ts packages/adapter-lit/src/index.ts packages/adapter-lit/src/ssr.ts packages/signals/src/index.ts packages/create/cli.ts
+        run: deno check packages/core/src/index.ts packages/rpc/src/index.ts packages/ui/src/index.ts packages/adapter-lit/src/index.ts packages/adapter-lit/src/ssr.ts packages/signals/src/index.ts packages/create/cli.ts packages/app/src/index.ts packages/i18n/src/index.ts packages/content/src/index.ts
 
   test-core:
     runs-on: ubuntu-latest
@@ -92,6 +92,40 @@ jobs:
         run: deno install --node-modules-dir
       - name: Run create tests
         run: deno test packages/create/__tests__/ --allow-read --allow-write --allow-env --allow-run --allow-ffi
+
+  test-i18n:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: '2'
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
+      - name: Install dependencies
+        run: deno install --node-modules-dir
+      - name: Run i18n tests
+        run: deno test packages/i18n/__tests__/ --allow-read --allow-write --allow-env
+
+  test-content:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: '2'
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
+      - name: Install dependencies
+        run: deno install --node-modules-dir
+      - name: Run content tests
+        run: deno test packages/content/__tests__/ --allow-read --allow-write --allow-env
 
   test-adapter-lit:
     runs-on: ubuntu-latest

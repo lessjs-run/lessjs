@@ -14,8 +14,9 @@ export class ConfigurationPage extends LitElement {
     <p class="subtitle">LessJS 通过 Vite 插件配置。路由、island、静态输出、head 注入、PWA 和 middleware 是各自独立的关注点。</p>
     <h2>Minimal Configuration</h2>
     <less-code-block><pre><code>import { defineConfig } from 'vite';
-import { less } from '@lessjs/core';
-export default defineConfig({ plugins: [less()] });</code></pre></less-code-block>
+import { lessjs } from '@lessjs/app';
+export default defineConfig({ plugins: [lessjs()] });</code></pre></less-code-block>
+    <p>使用 <span class="inline-code">lessjs()</span> 是推荐方式——它组合了核心插件、内容管线和 i18n，一个调用包含所有功能。如果你只需要核心路由和 island 功能，也可以单独使用 <span class="inline-code">less()</span> from <span class="inline-code">@lessjs/core</span>。</p>
     <h2>Main Options</h2>
     <table><thead><tr><th>Option</th><th>Default</th><th>Purpose</th></tr></thead><tbody>
       <tr><td>routesDir</td><td>'app/routes'</td><td>Page routes, API routes, renderer and route-tree middleware.</td></tr>
@@ -24,7 +25,7 @@ export default defineConfig({ plugins: [less()] });</code></pre></less-code-bloc
       <tr><td>packageIslands</td><td>[]</td><td>Packages that export an islands metadata array.</td></tr>
     </tbody></table>
     <h2>Document Metadata, Head Injection, Package Islands, Middleware, PWA</h2>
-    <less-code-block><pre><code>less({
+    <less-code-block><pre><code>lessjs({
   html: { lang: 'en', title: 'My App' },
   inject: {
     stylesheets: ['https://cdn.example.com/theme.css'],
@@ -33,6 +34,8 @@ export default defineConfig({ plugins: [less()] });</code></pre></less-code-bloc
   packageIslands: ['@lessjs/ui'],
   middleware: { logger: true, cors: true, csp: { policy: "default-src 'self'" } },
   pwa: { name: 'My App', shortName: 'LessJS', themeColor: '#050505' },
+  content: { blog: { contentDir: 'posts' }, nav: { routesDir: 'app/routes' } },
+  i18n: { locales: ['en', 'zh'], defaultLocale: 'en' },
 });</code></pre></less-code-block>
     <div class="nav-row"><a href="/guide/api-design" class="nav-link">&larr; API Design</a><a href="/guide/security-middleware" class="nav-link">Security &amp; Middleware &rarr;</a></div>
   </div></less-layout>`; }
@@ -43,8 +46,9 @@ export default defineConfig({ plugins: [less()] });</code></pre></less-code-bloc
     <p>All options are the same as the Chinese version. Refer to the code examples below:</p>
     <h2>Minimal Configuration</h2>
     <less-code-block><pre><code>import { defineConfig } from 'vite';
-import { less } from '@lessjs/core';
-export default defineConfig({ plugins: [less()] });</code></pre></less-code-block>
+import { lessjs } from '@lessjs/app';
+export default defineConfig({ plugins: [lessjs()] });</code></pre></less-code-block>
+    <p>Use <span class="inline-code">lessjs()</span> as the recommended entry — it combines the core plugin, content pipeline, and i18n in a single call. If you only need core routing and island functionality, you can use <span class="inline-code">less()</span> from <span class="inline-code">@lessjs/core</span> directly.</p>
     <h2>Options Reference</h2>
     <table><thead><tr><th>Option</th><th>Default</th><th>Purpose</th></tr></thead><tbody>
       <tr><td>routesDir</td><td>'app/routes'</td><td>Page routes, API routes, renderer and route-tree middleware.</td></tr>

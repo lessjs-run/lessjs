@@ -128,23 +128,25 @@ deno task generate:runtime-shim && git diff --exit-code packages/core/src/runtim
 
 ```ts
 import { lessContent } from '@lessjs/content';
+import { lessjs } from '@lessjs/app';
 
 export default defineConfig({
   plugins: [
-    less(),
-    lessContent({
-      blog: {
-        contentDir: resolve(__dirname, 'content/blog'),
-        basePath: '/blog',
-      },
-      nav: {
-        routesDir: resolve(__dirname, 'app/routes'),
-        headerNav: [
-          { href: '/guide', label: 'Docs' },
-        ],
-      },
-      sitemap: {
-        hostname: 'https://example.com',
+    lessjs({
+      content: {
+        blog: {
+          contentDir: resolve(__dirname, 'content/blog'),
+          basePath: '/blog',
+        },
+        nav: {
+          routesDir: resolve(__dirname, 'app/routes'),
+          headerNav: [
+            { href: '/guide', label: 'Docs' },
+          ],
+        },
+        sitemap: {
+          hostname: 'https://example.com',
+        },
       },
     }),
   ],
@@ -235,17 +237,17 @@ navigate('/about');
 
 | 包                    | 职责                                                               | 当前版本 |
 | --------------------- | ------------------------------------------------------------------ | -------- |
-| `@lessjs/core`        | Vite 插件、路由扫描、DSD 渲染（L2 嵌套）、结构化日志、Navigation API、SSG 管线 | 0.9.0-alpha-1 |
-| `@lessjs/ui`          | 基于 Lit 的 Web Component 组件库（含 DSD hydration）               | 0.6.2    |
+| `@lessjs/core`        | Vite 插件、路由扫描、DSD 渲染（L2 嵌套）、结构化日志、Navigation API、SSG 管线 | 0.10.0   |
+| `@lessjs/app`         | 统一入口 lessjs()：组合 core + content + i18n                     | 0.2.0    |
+| `@lessjs/ui`          | 基于 Lit 的 Web Component 组件库（含 DSD hydration）               | 0.7.0    |
 | `@lessjs/signal`      | TC39 Signals 二开（signal/computed/effect/islandEffect）           | 0.6.2    |
-| `@lessjs/adapter-lit` | 可选 Lit SSR 适配器                                                | 0.7.0    |
+| `@lessjs/adapter-lit` | 可选 Lit SSR 适配器                                                | 0.8.0    |
 | `@lessjs/rpc`         | 轻量 fetch/RPC controller 工具                                     | 0.6.1    |
-| `@lessjs/create`      | 项目脚手架 CLI                                                     | 0.6.1    |
-| `@lessjs/content`     | 统一内容插件（Blog + Nav + Sitemap，纯构建时）                     | 0.2.0    |
+| `@lessjs/create`      | 项目脚手架 CLI                                                     | 0.7.0    |
+| `@lessjs/content`     | 统一内容插件（Blog + Nav + Sitemap，纯构建时）                     | 0.3.0    |
+| `@lessjs/i18n`        | 国际化插件（locale 展开 + 语言切换）                               | 0.1.0    |
 
-历史包 `@lessjs/vite` 和 `@lessjs/ssg` 已废弃。
-
-### @lessjs/ui 组件清单
+历史包 `@lessjs/vite` 和 `@lessjs/ssg` 已废弃。### @lessjs/ui 组件清单
 
 | 组件                | 说明                              | DSD | Form-Associated      | Island |
 | ------------------- | --------------------------------- | --- | -------------------- | ------ |
@@ -390,6 +392,8 @@ LessJS UI 组件遵循瑞士国际主义风格（Swiss International Style）：
 
 | Version           | Date       | Highlights                                                                                   |
 | ----------------- | ---------- | -------------------------------------------------------------------------------------------- |
+| **0.10.0**        | 2026-05-10 | SSR 架构净化（ADR 0008-0014）：renderRoute()/getStaticPaths() 公共 API、@lessjs/app 统一入口、消除 globalThis 桥接和 .less/ 临时文件 |
+| **0.9.2**         | 2026-05-09 | View Transitions API + Speculation Rules API + SSG 后处理管线重构 |
 | **0.9.0-alpha-1** | 2026-05-09 | @lessjs/content 统一内容插件、SSR 属性绑定保留、Monorepo 包版本策略 |
 | **0.8.0**         | 2026-05-08 | 结构化日志（createLogger）、runtime-shim 自动生成、@lessjs/blog 博客插件、parse5 嵌套优化、Playwright E2E |
 | **0.7.0**         | 2026-05-07 | P0 审计修复 — 73 新测试、runtime-shim 一致性、XSS 警告、静默 catch 消除、CI 补全、pre-commit hooks |

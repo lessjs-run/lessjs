@@ -8,28 +8,32 @@
  */
 
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 // ─── Package versions ──────────────────────────────────────────
-// Read from workspace deno.json at dev time; fallback at JSR publish time.
+// Read from workspace deno.json at dev time.
+// No fallback: LessJS 0.x does not guarantee backward compatibility.
+// If workspace version can't be read, fail fast with a clear error.
 function loadWorkspaceVersion(pkg: string): string {
+  const selfPath = fileURLToPath(new URL('.', import.meta.url));
+  const wsPath = resolve(selfPath, '..', '..', 'packages', pkg, 'deno.json');
   try {
-    const selfPath = new URL('.', import.meta.url).pathname;
-    const wsPath = resolve(selfPath, '..', '..', pkg, 'deno.json');
-    return JSON.parse(Deno.readTextFileSync(wsPath)).version;
-  } catch {
-    // Fallback versions (embedded at JSR publish time)
-    const FALLBACKS: Record<string, string> = {
-      core: '0.9.1',
-      'adapter-lit': '0.7.1',
-      ui: '0.7.0',
-    };
-    return FALLBACKS[pkg] || '0.0.0';
+    const version = JSON.parse(Deno.readTextFileSync(wsPath)).version;
+    if (!version) throw new Error(`No version found in ${wsPath}`);
+    return version;
+  } catch (e) {
+    throw new Error(
+      `Failed to read version for @lessjs/${pkg} from ${wsPath}. ` +
+        `Run this script from the LessJS workspace or ensure deno.json is accessible.\n` +
+        `Original error: ${e}`,
+    );
   }
 }
 
 const _v = {
   core: loadWorkspaceVersion('core'),
   adapterLit: loadWorkspaceVersion('adapter-lit'),
+  app: loadWorkspaceVersion('app'),
   ui: loadWorkspaceVersion('ui'),
 };
 
@@ -45,6 +49,7 @@ node_modules/
     "lit-html": "npm:lit-html@^3",
     "@lit-labs/ssr-dom-shim": "npm:@lit-labs/ssr-dom-shim@^1.5.0",
     "vite": "npm:vite@8.0.10",
+    "@lessjs/app": "jsr:@lessjs/app@^${_v.app}",
     "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^${_v.adapterLit}",
     "@lessjs/core": "jsr:@lessjs/core@^${_v.core}",
     "@lessjs/core/adapter-registry": "jsr:@lessjs/core@^${_v.core}/adapter-registry",
@@ -69,7 +74,7 @@ node_modules/
   "compilerOptions": { "lib": ["ES2022", "DOM", "DOM.Iterable"] }
 }
 `,
-  'vite.config.ts': `import { less } from '@lessjs/core';
+  'vite.config.ts': `import { lessjs } from '@lessjs/app';
 import { lessRootColorCSS } from '@lessjs/ui/tokens/colors';
 import { defineConfig } from 'vite';
 
@@ -96,7 +101,7 @@ export default defineConfig({
   resolve: {
     alias: lessUiAliases,
   },
-  plugins: [less({
+  plugins: [lessjs({
     html: { title: 'My LessJS App' },
     // Use pre-built UI components from @lessjs/ui
     // (JSR distributes compiled JS - no decorator errors)

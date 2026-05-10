@@ -91,17 +91,18 @@ Deno.test('create-less: deno.json maps Lit and package imports explicitly', () =
   assertEquals(denoJson.imports.vite, 'npm:vite@8.0.10');
   // @lit-labs/ssr-dom-shim required by @lit/reactive-element in Vite SSR
   assertEquals(denoJson.imports['@lit-labs/ssr-dom-shim'], 'npm:@lit-labs/ssr-dom-shim@^1.5.0');
-  assertExists(denoJson.imports['@lessjs/adapter-lit'].includes('0.7.0'));
-  assertExists(denoJson.imports['@lessjs/core'].includes('0.9.0'));
-  assertExists(denoJson.imports['@lessjs/core/adapter-registry'].includes('0.9.0'));
-  assertExists(denoJson.imports['@lessjs/core/html-escape'].includes('0.9.0'));
-  assertExists(denoJson.imports['@lessjs/core/navigation'].includes('0.9.0'));
-  assertExists(denoJson.imports['@lessjs/core/render-dsd'].includes('0.9.0'));
-  assertExists(denoJson.imports['@lessjs/core/ssr-handler'].includes('0.9.0'));
-  assertExists(denoJson.imports['@lessjs/ui'].includes('0.6.2'));
-  assertExists(denoJson.imports['@lessjs/ui/tokens/colors'].includes('0.6.2'));
-  assertExists(denoJson.imports['@lessjs/ui/tokens/color-values'].includes('0.6.2'));
-  assertExists(denoJson.imports['@lessjs/ui/'].includes('0.6.2/'));
+  assertExists(denoJson.imports['@lessjs/app'].includes('0.2'));
+  assertExists(denoJson.imports['@lessjs/adapter-lit'].includes('0.8'));
+  assertExists(denoJson.imports['@lessjs/core'].includes('0.10'));
+  assertExists(denoJson.imports['@lessjs/core/adapter-registry'].includes('0.10'));
+  assertExists(denoJson.imports['@lessjs/core/html-escape'].includes('0.10'));
+  assertExists(denoJson.imports['@lessjs/core/navigation'].includes('0.10'));
+  assertExists(denoJson.imports['@lessjs/core/render-dsd'].includes('0.10'));
+  assertExists(denoJson.imports['@lessjs/core/ssr-handler'].includes('0.10'));
+  assertExists(denoJson.imports['@lessjs/ui'].includes('0.7'));
+  assertExists(denoJson.imports['@lessjs/ui/tokens/colors'].includes('0.7'));
+  assertExists(denoJson.imports['@lessjs/ui/tokens/color-values'].includes('0.7'));
+  assertExists(denoJson.imports['@lessjs/ui/'].includes('0.7/'));
   assertEquals(denoJson.nodeModulesDir, 'auto');
 });
 
@@ -123,17 +124,17 @@ Deno.test('create-less: refuses path escape and existing target before writing',
   assertExists(cliSource.includes('Deno.stat(targetDir)'));
 });
 
-Deno.test('create-less: vite.config.ts imports less plugin', () => {
+Deno.test('create-less: vite.config.ts imports lessjs plugin', () => {
   const viteConfig = extractTemplate('vite.config.ts');
-  assertExists(viteConfig.includes("import { less } from '@lessjs/core'"));
-  assertExists(viteConfig.includes('less({'));
+  assertExists(viteConfig.includes("import { lessjs } from '@lessjs/app'"));
+  assertExists(viteConfig.includes('lessjs({'));
 });
 
 Deno.test('create-less: vite.config.ts includes packageIslands config', () => {
   const viteConfig = extractTemplate('vite.config.ts');
   assertExists(viteConfig.includes('@lessjs/ui'));
   assertExists(viteConfig.includes('lessUiAliases'));
-  assertExists(viteConfig.includes('https://jsr.io/@lessjs/ui/0.6.2/src/less-button.ts'));
+  assertExists(viteConfig.includes('https://jsr.io/@lessjs/ui/0.7'));
 });
 
 Deno.test('create-less: route index imports Lit directly', () => {
@@ -173,6 +174,9 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     const appDir = join(tmpRoot, projectName);
     const denoJsonPath = join(appDir, 'deno.json');
     const denoJson = JSON.parse(readFileSync(denoJsonPath, 'utf-8'));
+    denoJson.imports['@lessjs/app'] = pathToFileURL(
+      join(repoRoot, 'packages', 'app', 'src', 'index.ts'),
+    ).href;
     denoJson.imports['@lessjs/core'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'index.ts'),
     ).href;
@@ -193,6 +197,15 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     ).href;
     denoJson.imports['@lessjs/core/render-dsd'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'render-dsd.ts'),
+    ).href;
+    denoJson.imports['@lessjs/core/build-context'] = pathToFileURL(
+      join(repoRoot, 'packages', 'core', 'src', 'build-context.ts'),
+    ).href;
+    denoJson.imports['@lessjs/content'] = pathToFileURL(
+      join(repoRoot, 'packages', 'content', 'src', 'index.ts'),
+    ).href;
+    denoJson.imports['@lessjs/i18n'] = pathToFileURL(
+      join(repoRoot, 'packages', 'i18n', 'src', 'index.ts'),
     ).href;
     denoJson.imports['@lessjs/adapter-lit'] = pathToFileURL(
       join(repoRoot, 'packages', 'adapter-lit', 'src', 'index.ts'),
@@ -216,6 +229,10 @@ Deno.test('create-less: generated project builds through the one-command pipelin
 
     const uiSrc = join(repoRoot, 'packages', 'ui', 'src');
     const aliases = [
+      {
+        find: '@lessjs/core/build-context',
+        replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'build-context.ts')),
+      },
       {
         find: '@lessjs/core/render-dsd',
         replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'render-dsd.ts')),
@@ -303,16 +320,25 @@ Deno.test('create-less: generated project builds through the one-command pipelin
         find: '@lessjs/ui',
         replacement: vitePath(join(uiSrc, 'index.ts')),
       },
+      // @lessjs/app must resolve to local source
+      {
+        find: '@lessjs/app',
+        replacement: vitePath(join(repoRoot, 'packages', 'app', 'src', 'index.ts')),
+      },
     ];
     const viteConfigPath = join(appDir, 'vite.config.ts');
     let viteConfig = readFileSync(viteConfigPath, 'utf-8');
     viteConfig = viteConfig.replace(
-      "import { less } from '@lessjs/core';",
+      "import { lessjs } from '@lessjs/app';",
       `import { less } from ${
         JSON.stringify(
           vitePath(join(repoRoot, 'packages', 'core', 'src', 'index.ts')),
         )
       };`,
+    );
+    viteConfig = viteConfig.replace(
+      'lessjs({',
+      'less({',
     );
     viteConfig = viteConfig.replace(
       "import { lessRootColorCSS } from '@lessjs/ui/tokens/colors';",

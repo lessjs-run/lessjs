@@ -51,13 +51,17 @@ jobs:
           # Publish in dependency order: no-deps first, then dependents
           # rpc, signal, create have zero LessJS deps → publish first
           # core has zero LessJS deps (ssrLoadModule is not a JSR import) → publish early
-          # content depends on core (imports @lessjs/core/logger) → publish after core
+          # content depends on core → publish after core
+          # i18n depends on core → publish after core
           # adapter-lit depends on core → publish after core
           # ui depends on core → publish after core
+          # app depends on core + content + i18n → publish after all three
           publish_if_missing "@lessjs/rpc" "packages/rpc"
           publish_if_missing "@lessjs/signal" "packages/signals"
           publish_if_missing "@lessjs/core" "packages/core"
           publish_if_missing "@lessjs/content" "packages/content"
+          publish_if_missing "@lessjs/i18n" "packages/i18n"
           publish_if_missing "@lessjs/adapter-lit" "packages/adapter-lit"
           publish_if_missing "@lessjs/ui" "packages/ui"
+          publish_if_missing "@lessjs/app" "packages/app"
           publish_if_missing "@lessjs/create" "packages/create"

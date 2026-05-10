@@ -129,24 +129,25 @@ deno task generate:runtime-shim && git diff --exit-code packages/core/src/runtim
 `@lessjs/content` is a Blog + Nav + Sitemap Vite plugin with opt-in modules:
 
 ```ts
-import { lessContent } from '@lessjs/content';
+import { lessjs } from '@lessjs/app';
 
 export default defineConfig({
   plugins: [
-    less(),
-    lessContent({
-      blog: {
-        contentDir: resolve(__dirname, 'content/blog'),
-        basePath: '/blog',
-      },
-      nav: {
-        routesDir: resolve(__dirname, 'app/routes'),
-        headerNav: [
-          { href: '/guide', label: 'Docs' },
-        ],
-      },
-      sitemap: {
-        hostname: 'https://example.com',
+    lessjs({
+      content: {
+        blog: {
+          contentDir: resolve(__dirname, 'content/blog'),
+          basePath: '/blog',
+        },
+        nav: {
+          routesDir: resolve(__dirname, 'app/routes'),
+          headerNav: [
+            { href: '/guide', label: 'Docs' },
+          ],
+        },
+        sitemap: {
+          hostname: 'https://example.com',
+        },
       },
     }),
   ],
@@ -238,13 +239,15 @@ Resource hints injected based on island strategy:
 
 | Package               | Responsibility                                                              | Version |
 | --------------------- | --------------------------------------------------------------------------- | ------- |
-| `@lessjs/core`        | Vite plugin, route scanning, DSD rendering (L2 nested), structured logging, Navigation API, SSG | 0.9.0-alpha-1 |
-| `@lessjs/ui`          | Lit-based Web Component library (with DSD hydration)                        | 0.6.2   |
+| `@lessjs/core`        | Vite plugin, route scanning, DSD rendering (L2 nested), structured logging, Navigation API, SSG | 0.10.0  |
+| `@lessjs/app`         | Unified entry lessjs(): combines core + content + i18n                     | 0.2.0   |
+| `@lessjs/ui`          | Lit-based Web Component library (with DSD hydration)                        | 0.7.0   |
 | `@lessjs/signal`      | TC39 Signals fork (signal/computed/effect/islandEffect)                     | 0.6.2   |
-| `@lessjs/adapter-lit` | Optional Lit SSR adapter                                                    | 0.7.0   |
+| `@lessjs/adapter-lit` | Optional Lit SSR adapter                                                    | 0.8.0   |
 | `@lessjs/rpc`         | Lightweight fetch/RPC controller tools                                      | 0.6.1   |
-| `@lessjs/create`      | Project scaffolding CLI                                                     | 0.6.1   |
-| `@lessjs/content`     | Unified content plugin (Blog + Nav + Sitemap, build-time only)              | 0.2.0   |
+| `@lessjs/create`      | Project scaffolding CLI                                                     | 0.7.0   |
+| `@lessjs/content`     | Unified content plugin (Blog + Nav + Sitemap, build-time only)              | 0.3.0   |
+| `@lessjs/i18n`        | Internationalization plugin (locale expansion + language switcher)          | 0.1.0   |
 
 Legacy packages `@lessjs/vite` and `@lessjs/ssg` are deprecated.
 
@@ -396,6 +399,8 @@ Theme variable example:
 
 | Version           | Date       | Highlights                                                                                   |
 | ----------------- | ---------- | -------------------------------------------------------------------------------------------- |
+| **0.10.0**        | 2026-05-10 | SSR architecture purification (ADR 0008-0014): renderRoute()/getStaticPaths() public API, @lessjs/app unified entry, eliminate globalThis bridges and .less/ temp files |
+| **0.9.2**         | 2026-05-09 | View Transitions API + Speculation Rules API + SSG post-process pipeline refactor |
 | **0.9.0-alpha-1** | 2026-05-09 | @lessjs/content unified content plugin, SSR property bindings preserved, monorepo version strategy |
 | **0.8.0**         | 2026-05-08 | Structured logging (createLogger), runtime-shim auto-generation, @lessjs/blog plugin, parse5 nested optimization, Playwright E2E |
 | **0.7.0**         | 2026-05-07 | P0 audit fixes — 73 new tests, runtime-shim consistency, XSS warnings, silent catch elimination, CI gaps, pre-commit hooks |
