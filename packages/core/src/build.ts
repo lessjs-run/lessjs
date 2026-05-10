@@ -4,20 +4,12 @@
  * Build produces only static files (K+S), Islands are the only JS (I).
  * API Routes (S — Serverless extension) deploy separately.
  *
- * v0.3.0: closeBundle no longer nests viteBuild() + createServer().
- * Instead, it writes .less/build-metadata.json and instructs the user
- * to run the official build command:
+ * ADR 0008 Phase A: closeBundle writes metadata to LessBuildContext
+ * instead of .less/build-metadata.json. When ctx is provided, the
+ * unified build orchestrator reads ctx directly — no filesystem IPC.
  *
- *   deno task build
- *     Phase 1: vite build  -> SSR bundle + .less/build-metadata.json
- *     Phase 2: buildClient -> dist/client/islands/*.js + manifest
- *     Phase 3: buildSSG    -> dist/*.html + post-process
- *
- * This eliminates:
- *   - Watch mode breakage from nested viteBuild() inside Vite hooks
- *   - Cross-instance error stacks that are impossible to debug
- *
- * Phase 2/3 remain available as debug CLIs under src/cli/.
+ * For backward compat (standalone `vite build` without orchestrator),
+ * .less/build-metadata.json is still written as a fallback.
  */
 
 import type { Plugin, ResolvedConfig } from 'vite';
@@ -54,7 +46,7 @@ function serializeAlias(
   return result.length > 0 ? result : null;
 }
 
-/** Vite plugin: writes build metadata for CLI build pipeline */
+/** Vite plugin: writes build metadata to ctx and .less/ fallback */
 export function buildPlugin(options: FrameworkOptions = {}, ctx?: LessBuildContext): Plugin {
   const outDir = options.build?.outDir || 'dist';
 
@@ -76,10 +68,42 @@ export function buildPlugin(options: FrameworkOptions = {}, ctx?: LessBuildConte
       if (config.command !== 'build') return;
 
       const root = config.root;
+
+      // Serialize SSR noExternal patterns (RegExp → marker objects)
+      const ssrNoExternal = ((options.ssr?.noExternal ||
+        (config.ssr as { noExternal?: (string | RegExp)[] } | undefined)?.noExternal) || [])
+        .map((item) => {
+          if (item instanceof RegExp) {
+            return { __type: 'RegExp', source: item.source, flags: item.flags };
+          }
+          return item;
+        });
+
+      // ─── Write to LessBuildContext (preferred path) ──────────
+      if (ctx) {
+        ctx.root = root;
+        ctx.outDir = outDir;
+        ctx.base = base;
+        ctx.ssrNoExternal =
+          ssrNoExternal as (string | { __type: 'RegExp'; source: string; flags: string })[];
+        ctx.routesDir = options.routesDir || 'app/routes';
+        ctx.islandsDir = options.islandsDir || 'app/islands';
+        ctx.componentsDir = options.componentsDir || 'app/components';
+        ctx.middleware = options.middleware || null;
+        ctx.html = options.html || null;
+        ctx.pwa = options.pwa || null;
+        ctx.upgradeStrategy = options.island?.upgradeStrategy || 'lazy';
+        ctx.viewTransition = options.viewTransition ?? true;
+        ctx.speculation = options.speculation ?? null;
+        ctx.headExtras = options.headExtras || '';
+      }
+
+      // ─── Write .less/build-metadata.json (fallback for standalone CLI) ──
+      // TODO: Remove once unified build orchestrator is the only entry point
       const lessTmpDir = join(root, '.less');
       mkdirSync(lessTmpDir, { recursive: true });
 
-      // Write build metadata — this is the bridge to Phase 2/3 CLI scripts
+      const resolveAlias = serializeAlias(ctx?.userResolveAlias || config.resolve?.alias);
       const metadata = {
         islandTagNames: ctx?.islandTagNames || [],
         islandFiles: ctx?.islandFiles || [],
@@ -87,19 +111,8 @@ export function buildPlugin(options: FrameworkOptions = {}, ctx?: LessBuildConte
         root,
         outDir,
         base,
-        // Pass user's resolve alias and ssr.noExternal so CLI scripts
-        // can replicate the same module resolution
-        // Priority: ctx.userResolveAlias (from config hook) → config.resolve.alias (from configResolved)
-        resolveAlias: serializeAlias(ctx?.userResolveAlias || config.resolve?.alias),
-        // Priority: options.ssr (from less() plugin options) → config.ssr (from Vite config)
-        ssrNoExternal: ((options.ssr?.noExternal ||
-          (config.ssr as { noExternal?: (string | RegExp)[] } | undefined)?.noExternal) || [])
-          .map((item) => {
-            if (item instanceof RegExp) {
-              return { __type: 'RegExp', source: item.source, flags: item.flags };
-            }
-            return item;
-          }),
+        resolveAlias,
+        ssrNoExternal,
         islandsDir: options.islandsDir || 'app/islands',
         routesDir: options.routesDir || 'app/routes',
         componentsDir: options.componentsDir || 'app/components',
@@ -107,8 +120,6 @@ export function buildPlugin(options: FrameworkOptions = {}, ctx?: LessBuildConte
         headExtras: options.headExtras || '',
         html: options.html || {},
         pwa: options.pwa || null,
-        // upgradeStrategy controls when island modules are imported.
-        // It is an upgrade timing hint, not a client render runtime.
         upgradeStrategy: options.island?.upgradeStrategy || 'lazy',
         viewTransition: options.viewTransition ?? true,
         speculation: options.speculation ?? null,
