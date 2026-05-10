@@ -15,11 +15,11 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = dirname(dirname(dirname(__dirname)));
-const DOCS_DIR = join(ROOT, 'docs');
-const DOCS_DIST = join(DOCS_DIR, 'dist');
+const WWW_DIR = join(ROOT, 'www');
+const WWW_DIST = join(WWW_DIR, 'dist');
 
 function hasSsrBundle(): boolean {
-  const assetsDir = join(DOCS_DIST, 'assets');
+  const assetsDir = join(WWW_DIST, 'assets');
   if (!existsSync(assetsDir)) return false;
   return readdirSync(assetsDir).some((file) =>
     file.startsWith('_virtual_less-hono-entry-') && file.endsWith('.js')
@@ -44,7 +44,7 @@ function findHtmlFiles(dir: string): string[] {
 
 async function ensureDocsBuild(): Promise<void> {
   if (
-    hasSsrBundle() && existsSync(join(DOCS_DIST, 'index.html'))
+    hasSsrBundle() && existsSync(join(WWW_DIST, 'index.html'))
   ) {
     return;
   }
@@ -61,7 +61,7 @@ async function ensureDocsBuild(): Promise<void> {
   assertEquals(output.code, 0, `${stdout}\n${stderr}`);
 }
 
-Deno.test('SSG smoke: one-command build produces trusted docs output', async (t) => {
+Deno.test('SSG smoke: one-command build produces trusted www output', async (t) => {
   await ensureDocsBuild();
 
   await t.step('phase 1 output exists with SSR bundle and HTML', () => {
@@ -69,12 +69,12 @@ Deno.test('SSG smoke: one-command build produces trusted docs output', async (t)
 
     // ADR 0011: Build metadata is now in LessBuildContext, not .less/build-metadata.json.
     // Verify the build produced real output instead.
-    assert(existsSync(join(DOCS_DIST, 'index.html')), 'index.html should exist after build');
+    assert(existsSync(join(WWW_DIST, 'index.html')), 'index.html should exist after build');
   });
 
   await t.step('phase 2 output exists without legacy SSR client runtime', () => {
-    const manifestPath = join(DOCS_DIST, 'client', '.vite', 'manifest.json');
-    const clientEntry = join(DOCS_DIST, 'client', 'islands', 'client.js');
+    const manifestPath = join(WWW_DIST, 'client', '.vite', 'manifest.json');
+    const clientEntry = join(WWW_DIST, 'client', 'islands', 'client.js');
     assert(existsSync(manifestPath), 'Client manifest should exist');
     assert(existsSync(clientEntry), 'Client entry should exist');
 
@@ -84,7 +84,7 @@ Deno.test('SSG smoke: one-command build produces trusted docs output', async (t)
   });
 
   await t.step('phase 3 output contains HTML, DSD, clean URLs, and PWA files', () => {
-    const htmlFiles = findHtmlFiles(DOCS_DIST);
+    const htmlFiles = findHtmlFiles(WWW_DIST);
     assert(htmlFiles.length > 0, 'Should have generated HTML files');
 
     for (const filePath of htmlFiles) {
@@ -92,13 +92,13 @@ Deno.test('SSG smoke: one-command build produces trusted docs output', async (t)
       assertStringIncludes(content.toLowerCase(), '<!doctype html>');
     }
 
-    const indexHtml = readFileSync(join(DOCS_DIST, 'index.html'), 'utf-8');
+    const indexHtml = readFileSync(join(WWW_DIST, 'index.html'), 'utf-8');
     assert(
       indexHtml.includes('shadowrootmode="open"') || indexHtml.includes('<template shadowroot'),
       'SSG output should preserve Declarative Shadow DOM',
     );
-    assert(existsSync(join(DOCS_DIST, 'roadmap', 'index.html')), 'Clean URL output should exist');
-    assert(existsSync(join(DOCS_DIST, 'manifest.json')), 'PWA manifest should exist');
-    assert(existsSync(join(DOCS_DIST, 'sw.js')), 'PWA service worker should exist');
+    assert(existsSync(join(WWW_DIST, 'roadmap', 'index.html')), 'Clean URL output should exist');
+    assert(existsSync(join(WWW_DIST, 'manifest.json')), 'PWA manifest should exist');
+    assert(existsSync(join(WWW_DIST, 'sw.js')), 'PWA service worker should exist');
   });
 });
