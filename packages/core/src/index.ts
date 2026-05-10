@@ -22,7 +22,7 @@ import { createLogger } from './logger.js';
 const log = createLogger('core');
 
 import honoDevServer from '@hono/vite-dev-server';
-import { LessBuildContext } from './build-context.js';
+import { LessBuildContext, setActiveContext } from './build-context.js';
 import { buildPlugin } from './build.js';
 import { escapeAttr as escapeHtmlAttr } from './render-dsd.js';
 import { generateHonoEntryCode } from './hono-entry.js';
@@ -95,6 +95,11 @@ export { createLogger, LessLogger, LogLevel } from './logger.js';
 export { getSSRProps, island, type IslandOptions, lessBind } from './island.js';
 export { hasNavigationApi, matchRoute, navigate, onNavigate } from './navigation.js';
 export type { NavigationCallback } from './navigation.js';
+/**
+ * @internal Build context discovery — used by sub-plugins (lessContent, lessI18n).
+ * Not intended for direct use by application code.
+ */
+export { clearActiveContext, getActiveContext, setActiveContext } from './build-context.js';
 
 /**
  * LessJS Framework Vite plugin.
@@ -159,6 +164,9 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
 
   // ADR 0011: No globalThis bridge needed. Phase 2/3 run inside
   // closeBundle() where ctx is available via closure.
+  // Share ctx with sub-plugins (lessContent, lessI18n) via module-level
+  // active context — they can discover it without being passed ctx directly.
+  setActiveContext(ctx);
 
   const VIRTUAL_ENTRY_ID = 'virtual:less-hono-entry';
   const RESOLVED_ENTRY_ID = '\0' + VIRTUAL_ENTRY_ID;

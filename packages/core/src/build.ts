@@ -11,6 +11,7 @@
 import type { Plugin, ResolvedConfig } from 'vite';
 import type { FrameworkOptions } from './types.js';
 import type { LessBuildContext } from './build-context.js';
+import { clearActiveContext } from './build-context.js';
 import { createLogger } from './logger.js';
 
 const log = createLogger('core');
@@ -100,6 +101,9 @@ export function buildPlugin(options: FrameworkOptions = {}, ctx?: LessBuildConte
       }
 
       log.info('Build complete.');
+
+      // Clean up module-level active context
+      clearActiveContext();
     },
   };
 }

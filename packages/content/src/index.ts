@@ -24,6 +24,7 @@
 import type { Plugin } from 'vite';
 import type { HeaderNavLink, LessContentOptions, NavSection } from './types.ts';
 import type { LessBuildContext } from '@lessjs/core/build-context';
+import { getActiveContext } from '@lessjs/core';
 import { initBlogData } from './blog/blog-data.ts';
 import { scanNavData } from './nav/scanner.ts';
 import { createLogger } from '@lessjs/core/logger';
@@ -73,7 +74,8 @@ export function lessContent(
   const blogOpts = options.blog === false ? null : (options.blog || null);
   const navOpts = options.nav || null;
   const sitemapOpts = options.sitemap || null;
-  const ctx = options.ctx;
+  // Discover ctx: explicit param > active build context from less()
+  const ctx = options.ctx || getActiveContext();
 
   const contentPlugin: Plugin = {
     name: 'less:content',

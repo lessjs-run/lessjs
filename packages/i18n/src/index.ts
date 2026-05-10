@@ -30,6 +30,7 @@
 import type { Plugin } from 'vite';
 import type { LessI18nOptions } from './types.ts';
 import type { LessBuildContext } from '@lessjs/core/build-context';
+import { getActiveContext } from '@lessjs/core';
 import { initI18nData } from './i18n-data.ts';
 import { createLogger } from '@lessjs/core/logger';
 
@@ -50,7 +51,7 @@ export { i18nStaticPaths, switchLocale } from './routes.ts';
 export function lessI18n(
   options: LessI18nOptions & { ctx?: LessBuildContext },
 ): Plugin {
-  const ctx = options.ctx;
+  const ctx = options.ctx || getActiveContext();
 
   return {
     name: 'less:i18n',

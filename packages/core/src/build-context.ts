@@ -21,6 +21,33 @@
 import type { Alias, ResolvedConfig } from 'vite';
 import type { FrameworkOptions, PackageIslandMeta } from './types.js';
 
+// ─── Active Build Context ─────────────────────────────────────────
+// Module-level singleton for sharing the build context between
+// less() and sub-plugins (lessContent, lessI18n) that are called
+// separately in vite.config.ts. This replaces the old globalThis bridge.
+// Set by less() when it creates the ctx; cleared in closeBundle().
+// ─── Active Build Context ─────────────────────────────────────────
+// Shared between less() and sub-plugins (lessContent, lessI18n).
+// Uses globalThis because Vite's config bundler (rolldown) may create
+// separate module instances, making module-level variables unreliable.
+// The Symbol key avoids collisions with user code.
+const ACTIVE_CTX_KEY = Symbol.for('lessjs:active-ctx');
+
+/** Get the active build context (set by less() plugin) */
+export function getActiveContext(): LessBuildContext | undefined {
+  return (globalThis as Record<symbol, unknown>)[ACTIVE_CTX_KEY] as LessBuildContext | undefined;
+}
+
+/** Set the active build context (called by less() plugin) */
+export function setActiveContext(ctx: LessBuildContext): void {
+  (globalThis as Record<symbol, unknown>)[ACTIVE_CTX_KEY] = ctx;
+}
+
+/** Clear the active build context (called in closeBundle) */
+export function clearActiveContext(): void {
+  delete (globalThis as Record<symbol, unknown>)[ACTIVE_CTX_KEY];
+}
+
 export class LessBuildContext {
   // ─── From less:core route scanning ────────────────────────────
 
