@@ -223,7 +223,7 @@ export function buildEntryDescriptor(
   // Components use render(): string — no TemplateResult, no <!--lit-part--> markers.
   // Import from the lightweight runtime export so SSG never loads the Vite plugin
   // or dev-server dependency graph.
-  imports.push({ from: '@lessjs/core/less-runtime', names: ['renderDSD', 'renderDSDByName'] });
+  imports.push({ from: '@lessjs/core/render-dsd', names: ['renderDSD', 'renderDSDByName'] });
   imports.push({ from: '@lessjs/core/html-escape', names: ['escapeHtml'] });
 
   // Conditional middleware imports

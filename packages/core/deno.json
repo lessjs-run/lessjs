@@ -11,8 +11,10 @@
     "./render-nested.js": "./src/render-nested.ts",
     "./island-manifest": "./src/island-manifest.ts",
     "./island-manifest.js": "./src/island-manifest.ts",
-    "./less-runtime": "./src/less-runtime.ts",
-    "./less-runtime.js": "./src/less-runtime.ts",
+    "./adapter-registry": "./src/adapter-registry.ts",
+    "./adapter-registry.js": "./src/adapter-registry.ts",
+    "./ssr-handler": "./src/ssr-handler.ts",
+    "./ssr-handler.js": "./src/ssr-handler.ts",
     "./logger": "./src/logger.ts",
     "./logger.js": "./src/logger.ts",
     "./build-context": "./src/build-context.ts",
@@ -29,7 +31,7 @@
     "vite": "npm:vite@8.0.10"
   },
   "tasks": {
-    "build": "deno check src/index.ts src/render-dsd.ts src/less-runtime.ts",
+    "build": "deno check src/index.ts src/render-dsd.ts",
     "test": "deno test --allow-read --allow-write --allow-env --allow-net __tests__/"
   },
   "publish": {

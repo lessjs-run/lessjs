@@ -183,9 +183,8 @@ function renderPageRoute(
   lines.push('');
 
   // Wrap with renderers from outer to inner (v0.3.0)
-  // SSG mode: headExtras is read from .less/head-extras.html at runtime
-  // to avoid embedding large strings (which can contain backticks, ${}, etc.)
-  // into the generated code that Vite SSR evaluates via AsyncFunction.
+  // SSG mode: headExtras is injected via Vite define as __LESS_HEAD_EXTRAS__
+  // (ADR 0008 Phase A: replaces the old .less/head-extras.html runtime file read).
   // Dev mode: headExtras is inlined via JSON.stringify (safe for dev server).
   const headExtrasExpr = isSSG ? '__headExtras' : JSON.stringify(docConfig.headExtras);
 
@@ -262,10 +261,10 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('');
 
   // --- Document wrapper ---
-  // Uses wrapInDocument from html-escape.ts (single source of truth).
-  // Import via the lightweight runtime export so SSR does not load the
-  // Vite plugin or dev-server dependency graph.
-  lines.push(`import { log, wrapInDocument } from '@lessjs/core/less-runtime';`);
+  // ADR 0013: import directly from source files instead of less-runtime barrel.
+  lines.push(`import { wrapInDocument } from '@lessjs/core/ssr-handler';`);
+  lines.push(`import { createLogger } from '@lessjs/core/logger';`);
+  lines.push(`const log = createLogger('core');`);
   lines.push('');
 
   // --- Route module imports ---
@@ -421,9 +420,8 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('// Shared module scope ensures adapter/data state is consistent.');
     lines.push('');
     lines.push('export { renderDSD, renderDSDByName } from "@lessjs/core/render-dsd"');
-    lines.push(
-      'export { wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core/less-runtime"',
-    );
+    lines.push('export { wrapInDocument } from "@lessjs/core/ssr-handler"');
+    lines.push('export { registerAdapter, getAdapter } from "@lessjs/core/adapter-registry"');
     lines.push('export { installLitAdapter, uninstallLitAdapter } from "@lessjs/adapter-lit"');
     lines.push(
       'export { initBlogData, getPosts, getPostBySlug, getBlogOptions } from "@lessjs/content"',

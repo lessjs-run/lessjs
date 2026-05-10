@@ -2,7 +2,7 @@
 
 ## Status
 
-**PROPOSED** — v0.9.0 架构重构方案
+**IMPLEMENTED** — v0.9.x 架构重构（通过 ADR 0010/0011/0012 分步实施完成）
 
 ## Context
 
@@ -311,4 +311,28 @@ Phase 3: viteBuild(client)                → 产出客户端 JS/CSS
 
 ---
 
-_决策日期: 2026-05-10 | 版本: v0.9.0 (proposed)_
+_决策日期: 2026-05-10 | 版本: v0.9.0_
+
+## Implementation Summary
+
+本 ADR 的各 Phase 通过后续 ADR 分步实施完成：
+
+| Phase | 描述 | 实施 ADR | 状态 |
+|-------|------|---------|------|
+| A | .less/ 临时文件 IPC → LessBuildContext + 虚拟模块 | ADR 0010 | ✅ 完成 |
+| B | globalThis[Symbol.for()] → 模块变量 | ADR 0011 (部分) + ADR 0012 | ✅ 完成 |
+| C | 消除 createServer()，改为 closeBundle 内联 | ADR 0011 | ✅ 完成 |
+| D | runtime-shim → virtual:less-runtime | ADR 0010 (Step 1) | ✅ 完成 |
+| E | lessjs() 统一入口 → 拆到 @lessjs/app | ADR 0012 | ✅ 完成 |
+
+### 最终指标
+
+| 指标 | ADR 0008 提出时 | 当前 |
+|------|----------------|------|
+| `createServer()` | 有 | **无** |
+| `.less/` 临时文件 | 8+ | **0** |
+| `globalThis` 桥接键 | 4 | **0** |
+| `runtime-shim` 字符串化 | 有 | 无（使用 virtual:less-runtime） |
+| 构建管线 | 3 阶段 + 文件 IPC | 1 次 viteBuild + closeBundle 内联 |
+| ctx 传递 | globalThis 隐式共享 | 显式参数传递 |
+| `lessjs()` 入口 | 在 core 中，动态 import | 在 @lessjs/app 中，静态 import |

@@ -260,32 +260,6 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
         // This plugin resolves them to empty stubs when missing, so the
         // viteBuild() succeeds regardless of which packages are available.
         optionalPackageStubsPlugin(),
-        // ADR 0008 Phase D: Resolve virtual:less-runtime
-        // The generated entry code imports @lessjs/core/less-runtime which
-        // is now a virtual module. This plugin resolves it at SSR build time.
-        // SSR needs full implementations (renderDSD, wrapInDocument, etc.),
-        // NOT the client-side runtime shim (createRuntimeShimCode).
-        {
-          name: 'less:ssg-virtual-runtime',
-          enforce: 'pre',
-          resolveId(id) {
-            if (id === 'virtual:less-runtime') return '\0virtual:less-runtime';
-            if (id === '@lessjs/core/less-runtime') return '\0virtual:less-runtime';
-          },
-          load(id) {
-            if (id === '\0virtual:less-runtime') {
-              // SSR needs real implementations, not the client runtime shim.
-              // Use import+export pattern (not `export ... from`) because
-              // Vite's SSR export analysis may not resolve re-export chains
-              // for virtual modules.
-              return [
-                "import { registerAdapter, renderDSD, renderDSDByName, wrapInDocument, createLogger } from '@lessjs/core';",
-                "const log = createLogger('core');",
-                'export { registerAdapter, renderDSD, renderDSDByName, wrapInDocument, log };',
-              ].join('\n');
-            }
-          },
-        },
         // Resolve virtual:less-nav — reads from ctx (ADR 0010: no .less/ fallback)
         {
           name: 'less:ssg-virtual-nav',

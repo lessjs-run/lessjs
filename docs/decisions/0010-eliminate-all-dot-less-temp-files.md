@@ -2,7 +2,7 @@
 
 ## Status
 
-**PROPOSED** — v0.9.x 架构简化
+**IMPLEMENTED** — v0.9.x 架构简化（所有 5 个 Step 已完成）
 
 ## Context
 

@@ -298,7 +298,7 @@ export class ChangelogPage extends LitElement {
                 <li>
                   <strong>Sitemap SSG 集成</strong>：
                   <span class="inline-code">build-ssg.ts</span> 在 SSG 完成后自动读取
-                  <span class="inline-code">.less/sitemap-options.json</span>
+                  <span class="inline-code">ctx.sitemapOptions</span>
                   调用 <span class="inline-code">generateSitemap()</span>，生成 sitemap.xml + robots.txt。
                 </li>
                 <li>

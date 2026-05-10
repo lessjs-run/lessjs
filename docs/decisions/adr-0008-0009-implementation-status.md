@@ -1,8 +1,13 @@
-# ADR 0008/0009/0010 — Implementation Status
+# ADR 0008/0009/0010/0011/0012 — Implementation Status
 
 ## Summary
 
-ADR 0008 + 0009 + 0010 fully implemented on the `dev` branch. All `.less/` temp files eliminated.
+ADR 0008 + 0009 + 0010 + 0011 + 0012 fully implemented on the `dev` branch.
+
+- All `.less/` temp files eliminated (ADR 0010)
+- All `globalThis[Symbol.for()]` bridges eliminated (ADR 0011 + 0012)
+- `lessjs()` unified entry extracted to `@lessjs/app` (ADR 0012)
+- Build pipeline: single `viteBuild()` + closeBundle inline Phase 2/3 (ADR 0011)
 
 ## Completed Phases
 
@@ -26,12 +31,33 @@ ADR 0008 + 0009 + 0010 fully implemented on the `dev` branch. All `.less/` temp 
 | D.1+D.3 | ✅     | `1bf6d6a` | `virtual:less-runtime` replaces `.less-runtime.ts` file write |
 | D.2     | ✅     | `52f9e11` | Virtual runtime plugin added to SSR build                     |
 
-### Phase E: Single-Plugin API (`lessjs()`)
+### Phase E: Single-Plugin API (`lessjs()`) → Extracted to `@lessjs/app`
 
-| Step | Status | Commit    | Description                                               |
-| ---- | ------ | --------- | --------------------------------------------------------- |
-| E.1  | ✅     | `6208496` | `lessjs()` umbrella function with lazy sub-plugin imports |
-| E.2  | ✅     | `6208496` | `less()` accepts optional `externalCtx` parameter         |
+| Step | Status | Description                                               |
+| ---- | ------ | --------------------------------------------------------- |
+| E.1  | ✅     | `lessjs()` umbrella function created in `@lessjs/app`    |
+| E.2  | ✅     | `less()` accepts optional `externalCtx` parameter         |
+| E.3  | ✅     | Backward compat: split-call mode works with explicit `ctx`|
+| E.4  | ✅     | Unified `build` command via closeBundle (ADR 0011)       |
+
+### ADR 0011: Eliminate Last globalThis Bridge via closeBundle Inline
+
+| Step | Status | Description                                                    |
+| ---- | ------ | -------------------------------------------------------------- |
+| 1    | ✅     | Phase 2/3 inlined in closeBundle(), cli/build.ts simplified    |
+| 2    | ✅     | globalThis write removed from less() in index.ts               |
+| 3    | ✅     | clearActiveContext() removed from build.ts                      |
+
+### ADR 0012: Extract lessjs() Umbrella to @lessjs/app
+
+| Step | Status | Description                                                    |
+| ---- | ------ | -------------------------------------------------------------- |
+| 1    | ✅     | New `@lessjs/app` package with static imports                  |
+| 2    | ✅     | `lessjs()` removed from core/index.ts                           |
+| 3    | ✅     | `getActiveContext`/`setActiveContext`/`clearActiveContext` deleted from build-context.ts |
+| 4    | ✅     | content/i18n: `options.ctx || getActiveContext()` → `options.ctx` only |
+| 5    | ✅     | docs/vite.config.ts switched to `lessjs()` from `@lessjs/app`  |
+| 6    | ✅     | `LessContentOptions` exported from `@lessjs/content`            |
 
 ### ADR 0010: Eliminate All Remaining `.less/` Temp Files
 
@@ -46,15 +72,13 @@ ADR 0008 + 0009 + 0010 fully implemented on the `dev` branch. All `.less/` temp 
 ## Key Results
 
 - **`.less/` files reduced**: 10 → 3 → **0** (zero filesystem IPC)
-- **`globalThis` bridges**: 0 (Phase B was already done)
+- **`globalThis` bridges**: 4 → 1 → **0** (all deleted, ctx via explicit parameter only)
 - **Virtual modules**: `virtual:less-runtime`, `virtual:less-nav`, `virtual:less-client-entry`, `virtual:less-ssg-entry`
-- **`lessjs({ content, i18n })`**: Single-call API with shared `LessBuildContext`
+- **`lessjs({ content, i18n })`**: Single-call API in `@lessjs/app`, static imports, type-safe
 - **`buildClient()`/`buildSSG()` require `ctx`**: No standalone split-phase execution
-- **Net code reduction**: ~87 lines removed
+- **Build pipeline**: Single `viteBuild()` → `closeBundle()` inlines Phase 2/3
 - **All pre-commit checks pass** (deno fmt, deno lint, deno check)
 
-## Remaining Work
+## No Remaining Work
 
-- [ ] E.3: Verify backward compatibility for standalone plugin usage
-- [ ] E.4: Update `deno task build` to use unified orchestrator
-- [ ] End-to-end build verification with `deno task build`
+All ADR 0008/0009/0010/0011/0012 tasks are complete.

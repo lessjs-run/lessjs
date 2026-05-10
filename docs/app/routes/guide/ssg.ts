@@ -32,7 +32,7 @@ export class SSGGuidePage extends LitElement {
 &lt;/page-home&gt;</code></pre></less-code-block>
           <h2>三个内部阶段</h2>
           <table><thead><tr><th>阶段</th><th>输入</th><th>输出</th></tr></thead><tbody>
-            <tr><td>SSR bundle</td><td>routes、renderers、middleware、API handlers、islands</td><td>生成的 Hono entry 和 .less/build-metadata.json</td></tr>
+            <tr><td>SSR bundle</td><td>routes、renderers、middleware、API handlers、islands</td><td>生成的 Hono entry（build metadata 存入 ctx）</td></tr>
             <tr><td>Client islands</td><td>build metadata</td><td>island entry 和浏览器 chunks，输出到 dist/client</td></tr>
             <tr><td>SSG</td><td>生成的 Hono app</td><td>静态 HTML、复制的资源和后处理的文档 head</td></tr>
           </tbody></table>
@@ -77,7 +77,7 @@ export class SSGGuidePage extends LitElement {
 &lt;/page-home&gt;</code></pre></less-code-block>
           <h2>Three Internal Phases</h2>
           <table><thead><tr><th>Phase</th><th>Input</th><th>Output</th></tr></thead><tbody>
-            <tr><td>SSR bundle</td><td>routes, renderers, middleware, API handlers, islands</td><td>Generated Hono entry + .less/build-metadata.json</td></tr>
+            <tr><td>SSR bundle</td><td>routes, renderers, middleware, API handlers, islands</td><td>Generated Hono entry (build metadata stored in ctx)</td></tr>
             <tr><td>Client islands</td><td>build metadata</td><td>Island entry + browser chunks → dist/client</td></tr>
             <tr><td>SSG</td><td>Generated Hono app</td><td>Static HTML, copied assets, post-processed document head</td></tr>
           </tbody></table>

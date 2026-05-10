@@ -2,7 +2,7 @@
  * @lessjs/content/nav - Navigation module
  *
  * Auto-generates sidebar navigation from route file meta exports.
- * Produces .less/nav-data.json and virtual:less-nav module.
+ * Data is stored in ctx.navSections and exposed via virtual:less-nav module.
  */
 
 export { extractMeta, scanNavData } from './scanner.ts';

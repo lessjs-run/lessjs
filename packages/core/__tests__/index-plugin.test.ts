@@ -164,15 +164,6 @@ Deno.test('less() corePlugin.config returns rollupOptions with virtual entry', (
 
 // ─── less() configResolved + generateEntry ───────────────────
 
-Deno.test('less() corePlugin.config aliases runtime to virtual module', () => {
-  const plugins = less();
-  const corePlugin = plugins.find((p) => p.name === 'less:core')!;
-  const result = (corePlugin.config as Function)({} as never) as Record<string, unknown>;
-  const resolve = result.resolve as Record<string, unknown>;
-  const alias = resolve.alias as Record<string, string>;
-  assertEquals(alias['@lessjs/core/less-runtime'], 'virtual:less-runtime');
-});
-
 Deno.test('less() corePlugin.configResolved sets honoEntryCode', () => {
   const plugins = less();
   const corePlugin = plugins.find((p) => p.name === 'less:core')!;

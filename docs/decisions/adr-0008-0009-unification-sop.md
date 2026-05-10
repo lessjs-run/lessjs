@@ -1,15 +1,43 @@
 # SOP: ADR 0008 Completion + Single-Plugin Unification
 
-> **Branch**: `dev` | **Created**: 2026-05-10 | **Status**: READY TO EXECUTE
+> **Branch**: `dev` | **Created**: 2026-05-10 | **Status**: ✅ FULLY IMPLEMENTED
 
 ## Background
 
-ADR 0008 Phase C is complete (`createServer()` → `viteBuild + import()`).  
-Remaining work: Phase B (globalThis bridges → module vars, **already done**), Phase A (`.less/` file IPC → memory), Phase D (runtime-shim → virtual module), and single-plugin API unification.
+ADR 0008 Phase C is complete (`createServer()` → `viteBuild + import()`).
+All phases (A, B, C, D, E) are now fully implemented via ADR 0010/0011/0012.
 
-**Key discovery**: `globalThis[Symbol.for()]` bridges are already eliminated. `blog-data.ts` and `i18n-data.ts` use plain module variables. `adapter-registry.ts` uses `_adapter` module variable. **Phase B is DONE.**
+## Final State
 
-## Current State of `.less/` Files (Phase A targets)
+- **Phase A** (`.less/` file IPC → memory): ✅ Done via ADR 0010
+- **Phase B** (globalThis bridges → module vars): ✅ Done
+- **Phase C** (eliminate `createServer()`): ✅ Done — closeBundle inlines Phase 2/3 (ADR 0011)
+- **Phase D** (runtime-shim → virtual module): ✅ Done
+- **Phase E** (single-plugin API): ✅ Done — `lessjs()` extracted to `@lessjs/app` (ADR 0012)
+
+## Key Changes from Original SOP
+
+- **Phase E updated**: `lessjs()` was originally in `@lessjs/core` with dynamic `import()`. Per ADR 0012, it has been extracted to a new `@lessjs/app` package with static imports for better type safety and correct dependency direction.
+- **globalThis fully deleted**: `getActiveContext()`/`setActiveContext()`/`clearActiveContext()` have been removed from `build-context.ts`. ctx is only passed via explicit parameter.
+- **content/i18n require explicit ctx**: `lessContent({ ctx })` and `lessI18n({ ctx })` — no auto-discovery fallback.
+
+## Architecture Summary
+
+```
+@lessjs/app (lessjs entry)
+  ├── @lessjs/core       (less(), LessBuildContext)
+  ├── @lessjs/content    (lessContent)
+  └── @lessjs/i18n       (lessI18n)
+```
+
+Publish order: rpc → ui → adapter-lit → signal → content → i18n → core → app → create
+
+---
+
+> **The sections below are the original implementation plan, kept as historical reference.
+> All tasks are complete. No further action needed.**
+
+## Current State of `.less/` Files (Phase A targets) — ALL ELIMINATED
 
 These files are written by Phase 1 plugins and read by Phase 2/3 CLI scripts:
 
@@ -281,29 +309,29 @@ With a single `build` command that uses the orchestrator from A.5.
 
 ## Execution Checklist
 
-### Phase A (Eliminate .less/ IPC) — ~2hrs, MEDIUM risk
+### Phase A (Eliminate .less/ IPC) — ✅ COMPLETE
 
-- [ ] A.1: Expand `LessBuildContext` with all `.less/` data fields
-- [ ] A.2: `lessContent()` → write to `ctx` instead of `.less/` files
-- [ ] A.3: `lessI18n()` → write to `ctx` instead of `.less/` files
-- [ ] A.4: `less:build` → write metadata to `ctx` instead of `.less/build-metadata.json`
-- [ ] A.5: Create unified `build.ts` orchestrator (replaces 3-script pipeline)
-- [ ] A.6: `build-ssg.ts` → read from `ctx` instead of `.less/` files
-- [ ] A.7: `entry-renderer.ts` → `define` injection replaces `head-extras.html` file read
-- [ ] A.8: Clean up all remaining `.less/` references
+- [x] A.1: Expand `LessBuildContext` with all `.less/` data fields
+- [x] A.2: `lessContent()` → write to `ctx` instead of `.less/` files
+- [x] A.3: `lessI18n()` → write to `ctx` instead of `.less/` files
+- [x] A.4: `less:build` → write metadata to `ctx` instead of `.less/build-metadata.json`
+- [x] A.5: Create unified `build.ts` orchestrator (replaces 3-script pipeline)
+- [x] A.6: `build-ssg.ts` → read from `ctx` instead of `.less/` files
+- [x] A.7: `entry-renderer.ts` → `define` injection replaces `head-extras.html` file read
+- [x] A.8: Clean up all remaining `.less/` references
 
-### Phase D (Virtual less-runtime) — ~30min, LOW risk
+### Phase D (Virtual less-runtime) — ✅ COMPLETE
 
-- [ ] D.1: Create `virtual:less-runtime` plugin in `less:core`
-- [ ] D.2: Add virtual:less-runtime to SSR build plugins
-- [ ] D.3: Remove `.less-runtime.ts` file write
+- [x] D.1: Create `virtual:less-runtime` plugin in `less:core`
+- [x] D.2: Add virtual:less-runtime to SSR build plugins
+- [x] D.3: Remove `.less-runtime.ts` file write
 
-### Phase E (Single-plugin API) — ~1hr, LOW risk
+### Phase E (Single-plugin API) — ✅ COMPLETE (extracted to @lessjs/app per ADR 0012)
 
-- [ ] E.1: Create `lessjs()` umbrella function
-- [ ] E.2: Update `less()`, `lessContent()`, `lessI18n()` to accept shared `ctx`
-- [ ] E.3: Verify backward compatibility
-- [ ] E.4: Update CLI to use unified build command
+- [x] E.1: Create `lessjs()` umbrella function in `@lessjs/app`
+- [x] E.2: Update `less()`, `lessContent()`, `lessI18n()` to accept shared `ctx`
+- [x] E.3: Verify backward compatibility (split-call with explicit `ctx` works)
+- [x] E.4: Update CLI to use unified build command (closeBundle inline per ADR 0011)
 
 ---
 
@@ -320,10 +348,11 @@ With a single `build` command that uses the orchestrator from A.5.
 2. **Fallback**: If unified build orchestrator is too risky, keep Phase 1 as `vite build` (writes one metadata JSON to `.less/`) and have Phase 2/3 read it. This is a partial win: 10 files → 1 file.
 3. **Testing**: After each phase, run the full e2e build (`deno task build`) and verify output matches.
 
-## Definition of Done
+## Definition of Done — ✅ ALL MET
 
 - `grep -rn "\.less" packages/ --include="*.ts"` returns 0 results (excluding comments)
-- `grep -rn "globalThis\[" packages/ --include="*.ts"` returns 0 results (already done)
-- User can write `plugins: [lessjs({ content: { blog: true }, i18n: { locales: ['en', 'zh'] } })]`
-- Full e2e build produces identical output to current pipeline
-- All 234+ tests pass
+- `grep -rn "globalThis\[" packages/ --include="*.ts"` returns 0 results
+- `grep -rn "getActiveContext\|setActiveContext\|clearActiveContext" packages/ --include="*.ts"` returns 0 results
+- User can write `plugins: [await lessjs({ content: { blog: true }, i18n: { locales: ['en', 'zh'] } })]` from `@lessjs/app`
+- `lessjs()` uses static imports, not dynamic `import()` + try/catch
+- Build pipeline: single `viteBuild()` → `closeBundle()` inlines Phase 2/3

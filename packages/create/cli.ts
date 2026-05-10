@@ -34,8 +34,7 @@ const _v = {
 };
 
 const TPL = {
-  '.gitignore': `.less/
-dist/
+  '.gitignore': `dist/
 node_modules/
 `,
   'deno.json': `{
@@ -48,7 +47,7 @@ node_modules/
     "vite": "npm:vite@8.0.10",
     "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^${_v.adapterLit}",
     "@lessjs/core": "jsr:@lessjs/core@^${_v.core}",
-    "@lessjs/core/less-runtime": "jsr:@lessjs/core@^${_v.core}/less-runtime",
+    "@lessjs/core/adapter-registry": "jsr:@lessjs/core@^${_v.core}/adapter-registry",
     "@lessjs/core/navigation": "jsr:@lessjs/core@^${_v.core}/navigation",
     "@lessjs/ui": "jsr:@lessjs/ui@^${_v.ui}",
     "@lessjs/ui/tokens/colors": "jsr:@lessjs/ui@^${_v.ui}/tokens/colors",

@@ -1,6 +1,11 @@
 # ADR 0008 Implementation Plan: 架构审查与任务分解
 
-> **Author**: architect-gao (Gao) | **Date**: 2026-05-10 | **ADR Status**: PROPOSED → IMPLEMENTATION PLAN
+> **Author**: architect-gao (Gao) | **Date**: 2026-05-10 | **Status**: ✅ FULLY IMPLEMENTED
+>
+> **Note**: This was the original implementation plan. All phases (C+B, A, D, E) are now complete.
+> See `adr-0008-0009-implementation-status.md` for the final status.
+> Phase E was modified from the original plan — `lessjs()` was extracted to `@lessjs/app`
+> (ADR 0012) instead of staying in `@lessjs/core` with dynamic imports.
 
 ## 1. 可行性评估
 

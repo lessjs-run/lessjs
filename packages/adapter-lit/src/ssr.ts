@@ -113,9 +113,10 @@ function isNothing(value: unknown): boolean {
 // entire core dependency graph (Hono, Vite, etc.) when Vite SSR loads this module.
 export { camelToKebab, escapeAttr, escapeHtml } from '@lessjs/core/render-dsd';
 import { camelToKebab, escapeAttr, escapeHtml, type RenderAdapter } from '@lessjs/core/render-dsd';
-// Import registerAdapter from @lessjs/core/less-runtime so it shares the same
+// Import registerAdapter from @lessjs/core/adapter-registry so it shares the same
 // module scope as renderDSD when loaded through Vite SSR — no globalThis bridge needed.
-import { registerAdapter } from '@lessjs/core/less-runtime';
+// ADR 0013: import directly from adapter-registry instead of less-runtime barrel.
+import { registerAdapter } from '@lessjs/core/adapter-registry';
 import { createLogger } from '@lessjs/core/logger';
 
 const log = createLogger('core');

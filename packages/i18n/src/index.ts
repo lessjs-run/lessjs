@@ -5,20 +5,20 @@
  * Separate from @lessjs/content because i18n is a cross-cutting concern,
  * not a content-management feature.
  *
- * Usage:
+ * Recommended usage (via @lessjs/app):
  * ```ts
- * import { defineConfig } from 'vite';
- * import { less } from '@lessjs/core';
- * import { lessContent } from '@lessjs/content';
- * import { lessI18n } from '@lessjs/i18n';
+ * import { lessjs } from '@lessjs/app';
  *
  * export default defineConfig({
- *   plugins: [
- *     less({ routesDir: 'app/routes' }),
- *     lessContent({ nav: { routesDir: 'app/routes' } }),
- *     lessI18n({ locales: ['en', 'zh'], defaultLocale: 'en' }),
- *   ],
+ *   plugins: [await lessjs({
+ *     i18n: { locales: ['en', 'zh'], defaultLocale: 'en' },
+ *   })],
  * });
+ * ```
+ *
+ * Standalone usage requires explicit ctx parameter:
+ * ```ts
+ * lessI18n({ locales: ['en', 'zh'], defaultLocale: 'en', ctx });  // ctx must be explicitly passed
  * ```
  *
  * Route-level helpers:
@@ -30,7 +30,6 @@
 import type { Plugin } from 'vite';
 import type { LessI18nOptions } from './types.ts';
 import type { LessBuildContext } from '@lessjs/core/build-context';
-import { getActiveContext } from '@lessjs/core';
 import { initI18nData } from './i18n-data.ts';
 import { createLogger } from '@lessjs/core/logger';
 
@@ -51,7 +50,8 @@ export { i18nStaticPaths, switchLocale } from './routes.ts';
 export function lessI18n(
   options: LessI18nOptions & { ctx?: LessBuildContext },
 ): Plugin {
-  const ctx = options.ctx || getActiveContext();
+  // ctx must be explicitly provided (via lessjs() umbrella or direct param)
+  const ctx = options.ctx;
 
   return {
     name: 'less:i18n',

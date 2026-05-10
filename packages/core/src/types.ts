@@ -294,14 +294,6 @@ export interface RenderAdapter {
 }
 
 /**
- * Module-level adapter storage.
- *
- * Moved to adapter-registry.ts — types.ts should only contain type definitions.
- * Re-exported here for backward compatibility.
- */
-export { getAdapter, registerAdapter } from './adapter-registry.js';
-
-/**
  * Interface that components must implement to be DSD-renderable.
  * Works with any Custom Element class that has render() and connectedCallback().
  *

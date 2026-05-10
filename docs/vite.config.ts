@@ -1,6 +1,4 @@
-import { less } from '../packages/core/src/index.js';
-import { lessContent } from '../packages/content/src/index.ts';
-import { lessI18n } from '../packages/i18n/src/index.ts';
+import { lessjs } from '../packages/app/src/index.ts';
 import { lessRootColorCSS } from '../packages/ui/src/tokens/colors.js';
 import { defineConfig } from 'vite';
 import { dirname, resolve } from 'node:path';
@@ -25,7 +23,7 @@ const colorTokensStyle =
 export default defineConfig({
   base: '/',
   plugins: [
-    less({
+    lessjs({
       routesDir: 'app/routes',
       islandsDir: 'app/islands',
       componentsDir: 'app/components',
@@ -98,34 +96,33 @@ export default defineConfig({
           '<script data-goatcounter="https://lessjs.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>',
         ],
       },
-    }),
-    // @lessjs/content: Blog + Nav + Sitemap (unified content plugin)
-    lessContent({
-      blog: {
-        contentDir: resolve(__dir, 'content/blog'),
-        basePath: '/blog',
+      // @lessjs/content: Blog + Nav + Sitemap (unified content plugin)
+      content: {
+        blog: {
+          contentDir: resolve(__dir, 'content/blog'),
+          basePath: '/blog',
+        },
+        nav: {
+          routesDir: resolve(__dir, 'app/routes'),
+          headerNav: [
+            { href: '/guide/positioning', label: 'Docs' },
+            { href: '/guide/architecture', label: 'Architecture' },
+            { href: '/blog', label: 'Blog' },
+            { href: '/ui', label: 'UI' },
+            { href: '/roadmap', label: 'Roadmap' },
+            { href: '/community', label: 'Community' },
+            { href: 'https://jsr.io/@lessjs/core', label: 'JSR' },
+          ],
+        },
+        sitemap: {
+          hostname: 'https://lessjs.org',
+        },
       },
-      nav: {
-        routesDir: resolve(__dir, 'app/routes'),
-        headerNav: [
-          { href: '/guide/positioning', label: 'Docs' },
-          { href: '/guide/architecture', label: 'Architecture' },
-          { href: '/blog', label: 'Blog' },
-          { href: '/ui', label: 'UI' },
-          { href: '/roadmap', label: 'Roadmap' },
-          { href: '/community', label: 'Community' },
-          { href: 'https://jsr.io/@lessjs/core', label: 'JSR' },
-        ],
+      // @lessjs/i18n: Internationalization (locales, path helpers)
+      i18n: {
+        locales: ['en', 'zh'],
+        defaultLocale: 'en',
       },
-      sitemap: {
-        hostname: 'https://lessjs.org',
-      },
-    }),
-    // @lessjs/i18n: Internationalization (locales, path helpers)
-    // Separate plugin — i18n is a cross-cutting concern, not content management.
-    lessI18n({
-      locales: ['en', 'zh'],
-      defaultLocale: 'en',
     }),
   ],
   resolve: {
@@ -146,6 +143,10 @@ export default defineConfig({
       {
         find: '@lessjs/core/navigation',
         replacement: resolve(__dir, '../packages/core/src/navigation.ts'),
+      },
+      {
+        find: '@lessjs/core/build-context',
+        replacement: resolve(__dir, '../packages/core/src/build-context.ts'),
       },
       {
         find: '@lessjs/core',
@@ -181,6 +182,7 @@ export default defineConfig({
         find: '@lessjs/i18n',
         replacement: resolve(__dir, '../packages/i18n/src/index.ts'),
       },
+      { find: '@lessjs/app', replacement: resolve(__dir, '../packages/app/src/index.ts') },
     ],
   },
 });

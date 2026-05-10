@@ -2,7 +2,7 @@
  * @lessjs/content/nav - Navigation scanner
  *
  * Scans route files, extracts `meta` exports, and aggregates NavSection[].
- * Build-time only — produces .less/nav-data.json.
+ * Build-time only — data stored in ctx.navSections (ADR 0010: no .less/ temp files).
  */
 
 import { join, resolve } from 'node:path';

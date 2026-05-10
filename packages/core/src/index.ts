@@ -1,7 +1,7 @@
 /**
  * @lessjs/core - Main entry.
  *
- * LessJS 0.6 is a static-first framework package:
+ * LessJS is a static-first framework package:
  * - routes are scanned at build time
  * - pages are rendered to DSD HTML
  * - islands upgrade through Custom Elements
@@ -9,6 +9,8 @@
  *
  * less() returns the Vite plugins that provide route scanning, virtual Hono
  * entry generation, dev-server integration, island marking, and build metadata.
+ *
+ * For the unified lessjs() entry, use @lessjs/app instead.
  */
 
 import type { Plugin } from 'vite';
@@ -22,13 +24,12 @@ import { createLogger } from './logger.js';
 const log = createLogger('core');
 
 import honoDevServer from '@hono/vite-dev-server';
-import { LessBuildContext, setActiveContext } from './build-context.js';
+import { LessBuildContext } from './build-context.js';
 import { buildPlugin } from './build.js';
 import { escapeAttr as escapeHtmlAttr } from './render-dsd.js';
 import { generateHonoEntryCode } from './hono-entry.js';
 import { islandTransformPlugin } from './island-transform.js';
 import { fileToTagName, scanIslands, scanPackageIslands, scanRoutes } from './route-scanner.js';
-import { createRuntimeShimCode } from './runtime-shim.js';
 
 export type {
   FrameworkOptions,
@@ -77,13 +78,8 @@ export {
 export { printBuildManifest, scanClientBuild, scanSSGOutput } from './build-manifest.js';
 export type { ArtifactInfo, BuildManifest } from './build-manifest.js';
 export { renderDSD, renderDSDByName } from './render-dsd.js';
-export {
-  type ComponentLayer,
-  type DsdOptions,
-  type HydrateEventDescriptor,
-  registerAdapter,
-  type RenderAdapter,
-} from './types.js';
+export { getAdapter, registerAdapter } from './adapter-registry.js';
+export type { ComponentLayer, DsdOptions, HydrateEventDescriptor, RenderAdapter } from './types.js';
 export {
   escapeAttr,
   escapeAttrValue,
@@ -95,11 +91,6 @@ export { createLogger, LessLogger, LogLevel } from './logger.js';
 export { getSSRProps, island, type IslandOptions, lessBind } from './island.js';
 export { hasNavigationApi, matchRoute, navigate, onNavigate } from './navigation.js';
 export type { NavigationCallback } from './navigation.js';
-/**
- * @internal Build context discovery — used by sub-plugins (lessContent, lessI18n).
- * Not intended for direct use by application code.
- */
-export { clearActiveContext, getActiveContext, setActiveContext } from './build-context.js';
 
 /**
  * LessJS Framework Vite plugin.
@@ -162,16 +153,8 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
 
   const ctx = externalCtx || new LessBuildContext(resolvedOptions);
 
-  // ADR 0011: No globalThis bridge needed. Phase 2/3 run inside
-  // closeBundle() where ctx is available via closure.
-  // Share ctx with sub-plugins (lessContent, lessI18n) via module-level
-  // active context — they can discover it without being passed ctx directly.
-  setActiveContext(ctx);
-
   const VIRTUAL_ENTRY_ID = 'virtual:less-hono-entry';
   const RESOLVED_ENTRY_ID = '\0' + VIRTUAL_ENTRY_ID;
-  const VIRTUAL_RUNTIME_ID = 'virtual:less-runtime';
-  const RESOLVED_RUNTIME_ID = '\0' + VIRTUAL_RUNTIME_ID;
 
   function generateEntry(
     routes: RouteEntry[],
@@ -193,7 +176,7 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
     });
   }
 
-  let resolvedConfig: import('vite').ResolvedConfig | undefined;
+  let _resolvedConfig: import('vite').ResolvedConfig | undefined;
 
   const corePlugin: Plugin = {
     name: 'less:core',
@@ -206,11 +189,6 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
       }
 
       return {
-        resolve: {
-          alias: {
-            '@lessjs/core/less-runtime': VIRTUAL_RUNTIME_ID,
-          },
-        },
         build: {
           rollupOptions: {
             input: [VIRTUAL_ENTRY_ID],
@@ -219,31 +197,8 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
       };
     },
 
-    resolveId(id) {
-      if (id === VIRTUAL_RUNTIME_ID) return RESOLVED_RUNTIME_ID;
-    },
-
-    load(id) {
-      if (id === RESOLVED_RUNTIME_ID) {
-        // SSR build needs real implementations (renderDSD, wrapInDocument, etc.)
-        // because it renders pages server-side. Client build uses the lightweight
-        // runtime shim (createRuntimeShimCode) which inlines minimal versions.
-        if (resolvedConfig?.build?.ssr) {
-          // In SSR mode, re-export from @lessjs/core. Use import+export pattern
-          // (not `export ... from`) because Vite's SSR export analysis may not
-          // resolve re-export chains for virtual modules.
-          return [
-            "import { registerAdapter, renderDSD, renderDSDByName, wrapInDocument, createLogger } from '@lessjs/core';",
-            "const log = createLogger('core');",
-            'export { registerAdapter, renderDSD, renderDSDByName, wrapInDocument, log };',
-          ].join('\n');
-        }
-        return createRuntimeShimCode();
-      }
-    },
-
     configResolved(cfg) {
-      resolvedConfig = cfg;
+      _resolvedConfig = cfg;
       if (cfg.resolve?.alias && !ctx.userResolveAlias) {
         ctx.userResolveAlias = cfg.resolve.alias;
       }
@@ -329,68 +284,3 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
 }
 
 export default less;
-
-/**
- * Unified LessJS Vite plugin — single entry point for all LessJS features.
- *
- * Combines less() + lessContent() + lessI18n() under one call with a
- * shared LessBuildContext. This is the recommended way to use LessJS.
- *
- * ```ts
- * export default defineConfig({
- *   plugins: [lessjs({
- *     routesDir: 'app/routes',
- *     content: { blog: { contentDir: 'posts' }, nav: { routesDir: 'app/routes' } },
- *     i18n: { locales: ['en', 'zh'], defaultLocale: 'en' },
- *   })]
- * })
- * ```
- */
-export async function lessjs(
-  options: FrameworkOptions & {
-    content?: Record<string, unknown>;
-    i18n?: Record<string, unknown>;
-  } = {},
-): Promise<Plugin[]> {
-  const { content: contentOpts, i18n: i18nOpts, ...coreOpts } = options;
-  const ctx = new LessBuildContext({
-    ...coreOpts,
-    routesDir: coreOpts.routesDir || 'app/routes',
-    islandsDir: coreOpts.islandsDir || 'app/islands',
-    componentsDir: coreOpts.componentsDir || 'app/components',
-  });
-
-  const plugins: Plugin[] = [...less(coreOpts, ctx)];
-
-  // Lazy-import sub-plugins to avoid hard deps when not used
-  if (contentOpts) {
-    try {
-      const contentMod = await import('@lessjs/content') as Record<string, unknown>;
-      if (typeof contentMod.lessContent === 'function') {
-        plugins.push(
-          ...(contentMod.lessContent as (opts: Record<string, unknown>) => Plugin[])({
-            ...contentOpts,
-            ctx,
-          }),
-        );
-      }
-    } catch {
-      log.warn('@lessjs/content not installed — content features disabled');
-    }
-  }
-
-  if (i18nOpts) {
-    try {
-      const i18nMod = await import('@lessjs/i18n') as Record<string, unknown>;
-      if (typeof i18nMod.lessI18n === 'function') {
-        plugins.push(
-          (i18nMod.lessI18n as (opts: Record<string, unknown>) => Plugin)({ ...i18nOpts, ctx }),
-        );
-      }
-    } catch {
-      log.warn('@lessjs/i18n not installed — i18n features disabled');
-    }
-  }
-
-  return plugins;
-}

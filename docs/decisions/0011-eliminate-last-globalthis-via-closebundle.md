@@ -2,7 +2,7 @@
 
 ## Status
 
-**ACCEPTED** — v0.9.x 架构简化
+**IMPLEMENTED** — v0.9.x 架构简化（globalThis 桥接已彻底删除，见 ADR 0012）
 
 ## Context
 
@@ -132,6 +132,7 @@ Fresh 的 `writeBundle` 钩子中触发后续构建也是同样模式——在 V
 - **代码更简单**：`cli/build.ts` 从 ~80 行降至 ~10 行，`index.ts` 删除 globalThis 相关代码
 - **架构更清晰**：`viteBuild()` 一个入口完成全部 3 个 phase，与 Fresh 模式对齐
 - **消除 Symbol.for() 碰撞风险**：不再有全局 Symbol 注册
+- **ADR 0012 进一步删除**：`getActiveContext()`/`setActiveContext()`/`clearActiveContext()` 函数本身也从 `build-context.ts` 中删除，ctx 只通过显式参数传递
 
 ### Negative
 

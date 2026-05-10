@@ -4,27 +4,30 @@
  * Blog + Nav + Sitemap — build-time only, zero runtime.
  * Each module is opt-in: pass options to enable, omit or false to disable.
  *
- * Usage:
+ * Recommended usage (via @lessjs/app):
  * ```ts
- * import { lessContent } from '@lessjs/content';
+ * import { lessjs } from '@lessjs/app';
  *
  * export default defineConfig({
- *   plugins: [
- *     less(),
- *     lessContent({
+ *   plugins: [await lessjs({
+ *     content: {
  *       blog: { contentDir: 'content/blog', basePath: '/blog' },
  *       nav: { routesDir: 'app/routes', headerNav: [...] },
  *       sitemap: { hostname: 'https://lessjs.org' },
- *     }),
- *   ],
+ *     },
+ *   })],
  * });
+ * ```
+ *
+ * Standalone usage requires explicit ctx parameter:
+ * ```ts
+ * lessContent({ blog: {...}, ctx });  // ctx must be explicitly passed
  * ```
  */
 
 import type { Plugin } from 'vite';
 import type { HeaderNavLink, LessContentOptions, NavSection } from './types.ts';
 import type { LessBuildContext } from '@lessjs/core/build-context';
-import { getActiveContext } from '@lessjs/core';
 import { initBlogData } from './blog/blog-data.ts';
 import { scanNavData } from './nav/scanner.ts';
 import { createLogger } from '@lessjs/core/logger';
@@ -41,7 +44,14 @@ export { getBlogOptions, getPostBySlug, getPosts, initBlogData } from './blog/bl
 
 // Nav
 export { extractMeta, scanNavData } from './nav/scanner.ts';
-export type { HeaderNavLink, NavItem, NavOptions, NavSection, RouteMeta } from './types.ts';
+export type {
+  HeaderNavLink,
+  LessContentOptions,
+  NavItem,
+  NavOptions,
+  NavSection,
+  RouteMeta,
+} from './types.ts';
 
 // Sitemap
 export {
@@ -74,8 +84,8 @@ export function lessContent(
   const blogOpts = options.blog === false ? null : (options.blog || null);
   const navOpts = options.nav || null;
   const sitemapOpts = options.sitemap || null;
-  // Discover ctx: explicit param > active build context from less()
-  const ctx = options.ctx || getActiveContext();
+  // ctx must be explicitly provided (via lessjs() umbrella or direct param)
+  const ctx = options.ctx;
 
   const contentPlugin: Plugin = {
     name: 'less:content',
@@ -93,7 +103,7 @@ export function lessContent(
 
         log.info(`Blog: ${postCount} post(s) found in ${contentDir}, base path: ${basePath}`);
 
-        // Write blog options to ctx (or fallback to .less/ for backward compat)
+        // Write blog options to ctx (ADR 0010: ctx replaces .less/ temp files)
         if (ctx) {
           ctx.blogOptions = { contentDir, basePath };
         }

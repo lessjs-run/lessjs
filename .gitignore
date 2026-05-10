@@ -40,7 +40,7 @@ playwright-report/
 test-results/
 
 # Framework internals
-.less/
+.workbuddy/
 .workbuddy/
 
 # Vite cache
