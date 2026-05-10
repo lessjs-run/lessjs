@@ -1,103 +1,50 @@
 /**
  * @lessjs/core - CLI: Client Island Build
  *
- * Standalone client build for Island components.
+ * Client build for Island components.
  * Produces dist/client/islands/*.js + manifest for SSG post-processing.
  *
- * This is Phase 2 of the LessJS build pipeline:
- *   Phase 1 (vite build): SSR bundle + .less/build-metadata.json
- *   Phase 2 (this script): Client island chunks
- *   Phase 3 (build-ssg.ts): SSG rendering + post-processing
- *
- * When ctx is provided, reads metadata from LessBuildContext instead of
- * .less/build-metadata.json (ADR 0008 Phase A).
+ * ADR 0010: Virtual module `virtual:less-client-entry` replaces
+ * .less/.less-client-entry.ts file write. All metadata flows through
+ * LessBuildContext — no filesystem IPC.
  *
  * Usage:
- *   deno run -A jsr:@lessjs/core/cli/build-client
- *   deno task build:client
+ *   deno run -A jsr:@lessjs/core/cli/build  (recommended — unified entry)
  */
 
 import { build as viteBuild, type InlineConfig } from 'vite';
-import { join, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import process from 'node:process';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { type ClientIslandEntry, generateClientEntry } from '../entry-generators.js';
 import type { LessBuildContext } from '../build-context.js';
 import { createLogger } from '../logger.js';
 
 const log = createLogger('ssg');
 
-interface BuildMetadata {
-  islandTagNames: string[];
-  islandFiles: string[];
-  packageIslands: Array<
-    { tagName: string; modulePath: string; strategy?: 'eager' | 'lazy' | 'idle' | 'visible' }
-  >;
-  root: string;
-  outDir: string;
-  base: string;
-  resolveAlias: Record<string, string> | Array<{ find: string; replacement: string }> | null;
-  ssrNoExternal: (string | { __type: 'RegExp'; source: string; flags: string })[];
-  islandsDir: string;
-}
+const VIRTUAL_CLIENT_ENTRY_ID = 'virtual:less-client-entry';
+const RESOLVED_CLIENT_ENTRY_ID = '\0' + VIRTUAL_CLIENT_ENTRY_ID;
 
-/** Read build metadata from ctx (preferred) or .less/build-metadata.json (fallback) */
-function getBuildMetadata(ctx?: LessBuildContext): BuildMetadata | null {
-  if (ctx && ctx.root) {
-    // Read from ctx (ADR 0008 Phase A — no .less/ IPC)
-    const resolveAlias = ctx.userResolveAlias;
-    const serializedAlias = resolveAlias
-      ? (Array.isArray(resolveAlias)
-        ? resolveAlias.filter((a) => typeof a.find === 'string').map((a) => ({
-          find: a.find as string,
-          replacement: a.replacement,
-        }))
-        : Object.entries(resolveAlias).map(([find, replacement]) => ({ find, replacement })))
-      : null;
+async function buildClient(ctx: LessBuildContext): Promise<void> {
+  const root = ctx.root || process.cwd();
+  const outDir = ctx.outDir || 'dist';
+  const islandsDir = ctx.islandsDir || 'app/islands';
+  const localIslands = ctx.islandTagNames || [];
+  const localIslandFiles = ctx.islandFiles || [];
+  const packageIslands = ctx.packageIslands || [];
 
-    return {
-      islandTagNames: ctx.islandTagNames,
-      islandFiles: ctx.islandFiles,
-      packageIslands: ctx.packageIslands,
-      root: ctx.root,
-      outDir: ctx.outDir,
-      base: ctx.base,
-      resolveAlias: serializedAlias,
-      ssrNoExternal: ctx.ssrNoExternal,
-      islandsDir: ctx.islandsDir,
-    };
-  }
+  // Resolve alias for client build
+  const resolveAlias = ctx.userResolveAlias;
+  const serializedAlias = resolveAlias
+    ? (Array.isArray(resolveAlias)
+      ? resolveAlias.filter((a) => typeof a.find === 'string').map((a) => ({
+        find: a.find as string,
+        replacement: a.replacement,
+      }))
+      : Object.entries(resolveAlias).map(([find, replacement]) => ({ find, replacement })))
+    : null;
 
-  // Fallback: read from .less/build-metadata.json
-  const root = process.cwd();
-  const metadataPath = join(root, '.less', 'build-metadata.json');
-  try {
-    const raw = readFileSync(metadataPath, 'utf-8');
-    return JSON.parse(raw) as BuildMetadata;
-  } catch {
-    return null;
-  }
-}
-
-async function buildClient(ctx?: LessBuildContext): Promise<void> {
-  const metadata = getBuildMetadata(ctx);
-
-  if (!metadata) {
-    log.info('No build metadata found — skipping client build');
-    log.info('Run `vite build` first (Phase 1) or use unified build() orchestrator');
-    return;
-  }
-
-  const root = metadata.root || process.cwd();
-  const outDir = metadata.outDir || 'dist';
-  const islandsDir = metadata.islandsDir || 'app/islands';
-  const localIslands = metadata.islandTagNames || [];
-  const localIslandFiles = metadata.islandFiles || [];
-  const packageIslands = metadata.packageIslands || [];
-
-  // Debug: log resolve aliases for CI troubleshooting
-  if (metadata.resolveAlias) {
-    log.info('resolveAlias: ' + JSON.stringify(metadata.resolveAlias, null, 2));
+  if (serializedAlias) {
+    log.info('resolveAlias: ' + JSON.stringify(serializedAlias, null, 2));
   } else {
     log.info('WARNING: no resolveAlias in build metadata — island imports may fail');
   }
@@ -110,11 +57,7 @@ async function buildClient(ctx?: LessBuildContext): Promise<void> {
   const totalIslands = localIslands.length + packageIslands.length;
   log.info(`Building client bundle for ${totalIslands} island(s)...`);
 
-  // Auto-generate client entry from island list
-  const lessTmpDir = join(root, '.less');
-  mkdirSync(lessTmpDir, { recursive: true });
-  const clientEntryPath = join(lessTmpDir, '.less-client-entry.ts');
-
+  // Generate client entry code
   const islandEntries: ClientIslandEntry[] = [
     ...localIslands.map((tagName: string, i: number) => ({
       tagName,
@@ -125,13 +68,13 @@ async function buildClient(ctx?: LessBuildContext): Promise<void> {
           : `${islandsDir}/${tagName}.ts`,
       ).replace(/\\/g, '/'),
       isPackage: false,
-      strategy: (metadata as unknown as { localIslandStrategies?: string[] })
+      strategy: (ctx as unknown as { localIslandStrategies?: string[] })
           .localIslandStrategies?.[i] === 'eager'
         ? 'eager' as const
         : undefined,
     })),
     ...packageIslands.map(
-      (island: { tagName: string; modulePath: string; strategy?: string }) => ({
+      (island) => ({
         tagName: island.tagName,
         modulePath: island.modulePath,
         isPackage: true,
@@ -141,10 +84,9 @@ async function buildClient(ctx?: LessBuildContext): Promise<void> {
   ];
 
   const clientEntryCode = generateClientEntry(islandEntries);
-  writeFileSync(clientEntryPath, clientEntryCode, 'utf-8');
 
-  // Restore RegExp from JSON serialization
-  const noExternalPatterns = (metadata.ssrNoExternal || []).map((item) => {
+  // Restore RegExp from serialized noExternal patterns
+  const noExternalPatterns = (ctx.ssrNoExternal || []).map((item) => {
     if (typeof item === 'string') return item;
     if (item && typeof item === 'object' && (item as Record<string, unknown>).__type === 'RegExp') {
       return new RegExp(
@@ -156,7 +98,7 @@ async function buildClient(ctx?: LessBuildContext): Promise<void> {
   });
 
   const clientOutDir = resolve(root, outDir, 'client');
-  const clientBase = metadata.base || '/';
+  const clientBase = ctx.base || '/';
   const clientConfig: InlineConfig = {
     configFile: false,
     root,
@@ -169,7 +111,7 @@ async function buildClient(ctx?: LessBuildContext): Promise<void> {
       // @ts-ignore — Vite's own manifest option (not Rollup's)
       manifest: true,
       rollupOptions: {
-        input: { client: clientEntryPath },
+        input: { client: VIRTUAL_CLIENT_ENTRY_ID },
         output: {
           format: 'esm',
           entryFileNames: 'islands/[name].js',
@@ -186,12 +128,25 @@ async function buildClient(ctx?: LessBuildContext): Promise<void> {
         },
       },
     },
-    resolve: metadata.resolveAlias ? { alias: metadata.resolveAlias } : undefined,
+    resolve: serializedAlias ? { alias: serializedAlias } : undefined,
     ssr: {
       noExternal: (noExternalPatterns.length > 0 ? noExternalPatterns : undefined) as
         | (string | RegExp)[]
         | undefined,
     },
+    plugins: [
+      // ADR 0010: Virtual client entry module
+      // Replaces .less/.less-client-entry.ts file write
+      {
+        name: 'less:virtual-client-entry',
+        resolveId(id) {
+          if (id === VIRTUAL_CLIENT_ENTRY_ID) return RESOLVED_CLIENT_ENTRY_ID;
+        },
+        load(id) {
+          if (id === RESOLVED_CLIENT_ENTRY_ID) return clientEntryCode;
+        },
+      },
+    ],
   };
 
   try {
@@ -204,14 +159,6 @@ async function buildClient(ctx?: LessBuildContext): Promise<void> {
     log.error('Client build failed:', error);
     throw error;
   }
-}
-
-// CLI entry point
-if (import.meta.main) {
-  buildClient().catch((err) => {
-    log.error('Client build failed:', err);
-    process.exit(1);
-  });
 }
 
 export { buildClient };

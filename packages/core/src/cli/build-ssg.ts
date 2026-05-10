@@ -1,41 +1,32 @@
 /**
  * @lessjs/core - CLI: SSG Build
  *
- * Standalone SSG rendering + post-processing.
+ * SSG rendering + post-processing.
  * Builds a self-contained SSR bundle via viteBuild(ssr:true, noExternal),
  * then imports it to render all pages to static HTML, and post-processes
  * island paths.
  *
- * This is Phase 3 of the LessJS build pipeline:
- *   Phase 1 (vite build): SSR bundle + .less/ metadata
- *   Phase 2 (build-client.ts): Client island chunks
- *   Phase 3 (this script): SSG rendering + post-processing
- *
- * Must run AFTER build-client so island chunk paths are available
- * for the post-processing step (source paths → built chunk paths).
- *
- * ADR 0008: Eliminates createServer() in favor of viteBuild(ssr:true,
- * noExternal) + import(). This produces a self-contained ESM bundle
- * where all virtual modules resolve at compile time, module variables
- * replace globalThis[Symbol.for()] bridges, and ssrLoadModule() is
- * replaced by direct import() of the built bundle.
+ * ADR 0010: Virtual module `virtual:less-ssg-entry` replaces
+ * .less/.less-ssg-entry.ts file write. All metadata flows through
+ * LessBuildContext — no filesystem IPC, no .less/ fallback reads.
  *
  * Usage:
- *   deno run -A jsr:@lessjs/core/cli/build-ssg
- *   deno task build:ssg
+ *   deno run -A jsr:@lessjs/core/cli/build  (recommended — unified entry)
  */
 
 import { join, resolve } from 'node:path';
 import process from 'node:process';
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import type { FrameworkOptions, PackageIslandMeta } from '../types.js';
 import type { LessBuildContext } from '../build-context.js';
-import type { SpeculationRulesOptions } from '../ssg-postprocess.js';
 import { SsrRenderError } from '../errors.js';
 import { createLogger } from '../logger.js';
 import { createRuntimeShimCode } from '../runtime-shim.js';
 
 const log = createLogger('ssg');
+
+const VIRTUAL_SSG_ENTRY_ID = 'virtual:less-ssg-entry';
+const RESOLVED_SSG_ENTRY_ID = '\0' + VIRTUAL_SSG_ENTRY_ID;
 
 // ─── Optional Package Stubs (ADR 0008 Phase C) ──────────────────────
 // Vite plugin that resolves optional LessJS packages to empty stubs
@@ -140,71 +131,27 @@ function findHtmlFiles(dir: string): string[] {
   return results;
 }
 
-async function buildSSG(options: BuildSSGOptions = {}, ctx?: LessBuildContext): Promise<void> {
-  const root = options.root || ctx?.root || process.cwd();
-  const outDir = options.outDir || ctx?.outDir || 'dist';
-  const routesDir = options.routesDir || ctx?.routesDir || 'app/routes';
-  const islandsDir = options.islandsDir || ctx?.islandsDir || 'app/islands';
+async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): Promise<void> {
+  const root = options.root || ctx.root || process.cwd();
+  const outDir = options.outDir || ctx.outDir || 'dist';
+  const routesDir = options.routesDir || ctx.routesDir || 'app/routes';
+  const islandsDir = options.islandsDir || ctx.islandsDir || 'app/islands';
 
-  // Read island metadata from ctx (preferred) or .less/ files (fallback)
-  let islandTagNames = options.islandTagNames || ctx?.islandTagNames || [];
-  let packageIslands = options.packageIslands || ctx?.packageIslands || [];
-  let metadataResolveAlias = options.resolveAlias ||
-    (ctx?.userResolveAlias as Record<string, string> | import('vite').Alias[] | undefined);
+  // Read island metadata from ctx (ADR 0010: no .less/ fallback)
+  const islandTagNames = options.islandTagNames || ctx.islandTagNames || [];
+  const packageIslands = options.packageIslands || ctx.packageIslands || [];
+  const metadataResolveAlias = options.resolveAlias ||
+    (ctx.userResolveAlias as Record<string, string> | import('vite').Alias[] | undefined);
 
-  // Fallback: read .less/build-metadata.json if ctx didn't provide data
-  if (!ctx || !ctx.root) {
-    const metadataPath = join(root, '.less', 'build-metadata.json');
-    try {
-      const raw = readFileSync(metadataPath, 'utf-8');
-      const metadata = JSON.parse(raw);
-      if (islandTagNames.length === 0) islandTagNames = metadata.islandTagNames || [];
-      if (packageIslands.length === 0) packageIslands = metadata.packageIslands || [];
-      if (!metadataResolveAlias && metadata.resolveAlias) {
-        metadataResolveAlias = metadata.resolveAlias as Record<string, string>;
-      }
-      // Read Phase 1 metadata when values were not provided via CLI options.
-      if (!options.headExtras && metadata.headExtras) {
-        options.headExtras = metadata.headExtras;
-      }
-      if (!options.html && metadata.html) {
-        options.html = metadata.html;
-      }
-      if (!options.middleware && metadata.middleware) {
-        options.middleware = metadata.middleware;
-      }
-      if (!options.upgradeStrategy && metadata.upgradeStrategy) {
-        options.upgradeStrategy = metadata.upgradeStrategy;
-      }
-      if (!options.pwa && metadata.pwa) {
-        options.pwa = metadata.pwa;
-      }
-      if (!options.base && metadata.base) {
-        options.base = metadata.base as string;
-      }
-      if (options.viewTransition === undefined && metadata.viewTransition !== undefined) {
-        options.viewTransition = metadata.viewTransition as boolean;
-      }
-      if (!options.speculation && metadata.speculation) {
-        options.speculation = metadata.speculation as boolean | SpeculationRulesOptions;
-      }
-    } catch (e) {
-      log.warn(
-        'No .less/build-metadata.json found; using provided island list.',
-        e instanceof Error ? e.message : '',
-      );
-    }
-  } else {
-    // Read from ctx (ADR 0008 Phase A — no .less/ IPC)
-    if (!options.headExtras) options.headExtras = ctx.headExtras || undefined;
-    if (!options.html) options.html = ctx.html || undefined;
-    if (!options.middleware) options.middleware = ctx.middleware || undefined;
-    if (!options.upgradeStrategy) options.upgradeStrategy = ctx.upgradeStrategy;
-    if (!options.pwa) options.pwa = ctx.pwa || undefined;
-    if (!options.base) options.base = ctx.base;
-    if (options.viewTransition === undefined) options.viewTransition = ctx.viewTransition;
-    if (!options.speculation) options.speculation = ctx.speculation || undefined;
-  }
+  // Read options from ctx
+  if (!options.headExtras) options.headExtras = ctx.headExtras || undefined;
+  if (!options.html) options.html = ctx.html || undefined;
+  if (!options.middleware) options.middleware = ctx.middleware || undefined;
+  if (!options.upgradeStrategy) options.upgradeStrategy = ctx.upgradeStrategy;
+  if (!options.pwa) options.pwa = ctx.pwa || undefined;
+  if (!options.base) options.base = ctx.base;
+  if (options.viewTransition === undefined) options.viewTransition = ctx.viewTransition;
+  if (!options.speculation) options.speculation = ctx.speculation || undefined;
 
   // Generate SSG entry code
   const { scanRoutes, scanIslands, fileToTagName } = await import('../route-scanner.js');
@@ -230,14 +177,6 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx?: LessBuildContext): 
     upgradeStrategy: options.upgradeStrategy || 'lazy',
   });
 
-  // Write temp entry file
-  const lessTmpDir = join(root, '.less');
-  const tmpEntryPath = join(lessTmpDir, '.less-ssg-entry.ts');
-  const { mkdirSync, writeFileSync } = await import('node:fs');
-  mkdirSync(lessTmpDir, { recursive: true });
-
-  writeFileSync(tmpEntryPath, ssgEntryCode, 'utf-8');
-
   try {
     const { build: viteBuild } = await import('vite');
 
@@ -259,7 +198,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx?: LessBuildContext): 
     const userNoExternal = options.ssr?.noExternal || [];
     const allNoExternal = [...defaultNoExternal, ...userNoExternal];
 
-    // Handle alias — prefer CLI options, then fallback to metadata from Phase 1
+    // Handle alias — prefer CLI options, then ctx from Phase 1
     const alias = metadataResolveAlias;
     if (alias) {
       if (Array.isArray(alias)) {
@@ -282,7 +221,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx?: LessBuildContext): 
       configFile: false,
       root,
       build: {
-        ssr: tmpEntryPath,
+        ssr: VIRTUAL_SSG_ENTRY_ID,
         outDir: ssrOutDir,
         rollupOptions: {
           output: { format: 'esm' },
@@ -304,6 +243,17 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx?: LessBuildContext): 
         },
       },
       plugins: [
+        // ADR 0010: Virtual SSG entry module
+        // Replaces .less/.less-ssg-entry.ts file write
+        {
+          name: 'less:virtual-ssg-entry',
+          resolveId(id) {
+            if (id === VIRTUAL_SSG_ENTRY_ID) return RESOLVED_SSG_ENTRY_ID;
+          },
+          load(id) {
+            if (id === RESOLVED_SSG_ENTRY_ID) return ssgEntryCode;
+          },
+        },
         // ADR 0008 Phase C: Provide stubs for optional packages.
         // The generated entry code statically imports @lessjs/adapter-lit,
         // @lessjs/content, @lessjs/i18n — but these may not be installed.
@@ -325,7 +275,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx?: LessBuildContext): 
             }
           },
         },
-        // Resolve virtual:less-nav — reads from ctx (preferred) or .less/ files (fallback)
+        // Resolve virtual:less-nav — reads from ctx (ADR 0010: no .less/ fallback)
         {
           name: 'less:ssg-virtual-nav',
           resolveId(id) {
@@ -333,26 +283,8 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx?: LessBuildContext): 
           },
           load(id) {
             if (id === '\0virtual:less-nav') {
-              // ADR 0008 Phase A: read from ctx first, fallback to .less/ files
-              let navSections = '[]';
-              let headerNav = '[]';
-              if (ctx && ctx.navSections.length > 0) {
-                navSections = JSON.stringify(ctx.navSections);
-                headerNav = JSON.stringify(ctx.headerNav);
-              } else {
-                const navDataPath = join(root, '.less', 'nav-data.json');
-                const headerNavPath = join(root, '.less', 'header-nav.json');
-                try {
-                  if (existsSync(navDataPath)) {
-                    navSections = readFileSync(navDataPath, 'utf-8').trim();
-                  }
-                } catch { /* non-fatal */ }
-                try {
-                  if (existsSync(headerNavPath)) {
-                    headerNav = readFileSync(headerNavPath, 'utf-8').trim();
-                  }
-                } catch { /* non-fatal */ }
-              }
+              const navSections = JSON.stringify(ctx.navSections || []);
+              const headerNav = JSON.stringify(ctx.headerNav || []);
               return `export const navSections = ${navSections};\nexport const headerNav = ${headerNav};`;
             }
           },
@@ -374,7 +306,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx?: LessBuildContext): 
     const app = module.default;
 
     if (!app) {
-      throw new SsrRenderError('.less-ssg-entry.ts', new Error('Failed to load Hono app'));
+      throw new SsrRenderError('virtual:less-ssg-entry', new Error('Failed to load Hono app'));
     }
 
     // Patch CustomElementRegistry.define to be idempotent in SSR.
@@ -422,21 +354,8 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx?: LessBuildContext): 
       const { renderDSD: renderDSDFn, wrapInDocument: wrapInDocumentFn } = module;
 
       // Initialize @lessjs/content (blog) data store if present.
-      // ADR 0008 Phase A: read from ctx first, fallback to .less/ files
-      let blogOptions: { contentDir?: string; basePath?: string } | undefined;
-      if (ctx?.blogOptions) {
-        blogOptions = ctx.blogOptions;
-      } else {
-        try {
-          const blogOptsPath = join(root, '.less', 'blog-options.json');
-          if (existsSync(blogOptsPath)) {
-            const raw = readFileSync(blogOptsPath, 'utf-8');
-            blogOptions = JSON.parse(raw);
-          }
-        } catch {
-          // Non-fatal
-        }
-      }
+      // ADR 0010: read from ctx directly — no .less/ fallback
+      const blogOptions = ctx.blogOptions || undefined;
 
       // Initialize in the SSR bundle's module scope
       if (module.initBlogData && typeof module.initBlogData === 'function') {
@@ -610,22 +529,8 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx?: LessBuildContext): 
     }
 
     // ── i18n locale expansion ──────────────────────────────
-    // ADR 0008 Phase A: read from ctx first, fallback to .less/ files
-    let i18nOptsToUse:
-      | { locales: string[]; defaultLocale?: string; [key: string]: unknown }
-      | null = null;
-    if (ctx?.i18nOptions) {
-      i18nOptsToUse = ctx.i18nOptions;
-    } else {
-      const i18nOptsPath = join(root, '.less', 'i18n-options.json');
-      if (existsSync(i18nOptsPath)) {
-        try {
-          i18nOptsToUse = JSON.parse(readFileSync(i18nOptsPath, 'utf-8'));
-        } catch {
-          // Non-fatal
-        }
-      }
-    }
+    // ADR 0010: read from ctx directly — no .less/ fallback
+    const i18nOptsToUse = ctx.i18nOptions || null;
 
     if (i18nOptsToUse) {
       const locales: string[] = i18nOptsToUse.locales || [];
@@ -774,9 +679,12 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx?: LessBuildContext): 
         const manifestRaw = readFileSync(clientManifestPath, 'utf-8');
         const manifest = JSON.parse(manifestRaw);
         // Find the client entry in the manifest
-        // The key is the source path of .less/.less-client-entry.ts
+        // ADR 0010: virtual:less-client-entry replaces .less/.less-client-entry.ts
+        // The manifest key is either the virtual ID or a resolved path containing it
         for (const [src, entry] of Object.entries(manifest) as [string, { file?: string }][]) {
-          if (src.includes('.less-client-entry') && entry.file) {
+          if (
+            (src.includes('less-client-entry') || src.includes('virtual:less-client')) && entry.file
+          ) {
             const scriptSrc = `${basePath}client/${entry.file}`;
             const { injectClientScript } = await import('../ssg-postprocess.js');
             injectClientScript(outputDir, scriptSrc);
@@ -937,26 +845,9 @@ async function networkFirst(req) {
     }
 
     // ─── Sitemap generation ────────────────────────────────────
-    // ADR 0008 Phase A: read from ctx first, fallback to .less/ files
+    // ADR 0010: read from ctx directly — no .less/ fallback
     try {
-      let hasSitemapConfig = false;
-      let sitemapOpts: unknown = null;
-
-      if (ctx?.sitemapOptions) {
-        hasSitemapConfig = true;
-        sitemapOpts = ctx.sitemapOptions;
-      } else {
-        const navDataPath = join(root, '.less', 'nav-data.json');
-        if (existsSync(navDataPath)) {
-          const sitemapConfigPath = join(root, '.less', 'sitemap-options.json');
-          if (existsSync(sitemapConfigPath)) {
-            hasSitemapConfig = true;
-            sitemapOpts = JSON.parse(readFileSync(sitemapConfigPath, 'utf-8'));
-          }
-        }
-      }
-
-      if (hasSitemapConfig && sitemapOpts) {
+      if (ctx.sitemapOptions) {
         const sitemapModule = await import('@lessjs/content/sitemap') as Record<
           string,
           unknown
@@ -964,7 +855,7 @@ async function networkFirst(req) {
         if (typeof sitemapModule.generateSitemap === 'function') {
           (sitemapModule.generateSitemap as (dir: string, opts: unknown) => string[])(
             join(root, outDir),
-            sitemapOpts,
+            ctx.sitemapOptions,
           );
         }
       }
@@ -976,14 +867,6 @@ async function networkFirst(req) {
     const cause = err instanceof Error ? err : new Error(String(err));
     throw new SsrRenderError('SSG pipeline', cause);
   }
-}
-
-// CLI entry point
-if (import.meta.main) {
-  buildSSG().catch((err) => {
-    log.error('Failed:', err);
-    process.exit(1);
-  });
 }
 
 export { buildSSG };

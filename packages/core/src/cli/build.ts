@@ -3,14 +3,13 @@
  *
  * Official one-command build pipeline for LessJS apps.
  *
- * Internally this keeps the three build phases separate and observable:
+ * Three build phases, single process, shared LessBuildContext:
  *   Phase 1: Vite build writes the server bundle + ctx metadata
  *   Phase 2: Client island build writes dist/client/islands
  *   Phase 3: SSG builds self-contained SSR bundle (viteBuild ssr:noExternal),
  *            imports it, renders static HTML, and post-processes the output
  *
- * ADR 0008 Phase A: When using the unified build() orchestrator, all metadata
- * flows through LessBuildContext instead of .less/ temp files.
+ * ADR 0010: No .less/ temp files. All metadata flows through ctx.
  *
  * Usage:
  *   deno run -A jsr:@lessjs/core/cli/build
@@ -43,6 +42,7 @@ async function runPhase(phase: BuildPhase): Promise<void> {
 
 export async function build(): Promise<void> {
   // Shared build context — replaces .less/ file IPC between phases
+  // ADR 0010: ctx is required for all phases, no fallback to filesystem
   const ctx = new LessBuildContext({});
 
   await runPhase({
