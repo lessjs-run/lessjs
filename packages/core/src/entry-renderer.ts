@@ -23,6 +23,12 @@ import type {
   PageRouteDecl,
   RendererDecl,
 } from './entry-descriptor.js';
+import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from './types.js';
+import { buildEntryDescriptor } from './entry-descriptor.js';
+
+// Re-export for backward compatibility (consumers import from hono-entry.ts)
+export { buildEntryDescriptor } from './entry-descriptor.js';
+export type { EntryDescriptor } from './entry-descriptor.js';
 
 // ─── Import rendering ──────────────────────────────────────────
 
@@ -434,4 +440,40 @@ export function renderEntry(desc: EntryDescriptor): string {
   }
 
   return lines.join('\n');
+}
+
+// ─── Convenience wrapper ───────────────────────────────────────
+
+/** Options for the Hono entry code generator */
+export interface HonoEntryOptions {
+  routesDir?: string;
+  islandsDir?: string;
+  componentsDir?: string;
+  middleware?: FrameworkOptions['middleware'];
+  ssg?: boolean;
+  islandTagNames?: string[];
+  /** Relative file paths for local islands (preserves subdirectory structure) */
+  islandFiles?: string[];
+  packageIslands?: PackageIslandMeta[];
+  /** @security Injected as raw HTML without sanitization */
+  headExtras?: string;
+  html?: { lang?: string; title?: string };
+  upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';
+}
+
+/**
+ * Generate the Hono entry module code from scanned routes.
+ *
+ * Internally:
+ *  1. buildEntryDescriptor() — pure data transformation
+ *  2. renderEntry()          — pure string rendering
+ *
+ * Both steps are exported individually for testing.
+ */
+export function generateHonoEntryCode(
+  routes: RouteEntry[],
+  options: HonoEntryOptions = {},
+): string {
+  const descriptor = buildEntryDescriptor(routes, options);
+  return renderEntry(descriptor);
 }
