@@ -224,6 +224,7 @@ export function buildEntryDescriptor(
   // Import from the lightweight runtime export so SSG never loads the Vite plugin
   // or dev-server dependency graph.
   imports.push({ from: '@lessjs/core/less-runtime', names: ['renderDSD', 'renderDSDByName'] });
+  imports.push({ from: '@lessjs/core/html-escape', names: ['escapeHtml'] });
 
   // Conditional middleware imports
   const mw = options.middleware;

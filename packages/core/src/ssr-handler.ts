@@ -11,7 +11,7 @@
  */
 
 import type { RouteEntry } from './types.js';
-import { wrapInDocument } from './html-escape.js';
+import { escapeHtml, wrapInDocument } from './html-escape.js';
 
 // Re-export wrapInDocument from html-escape.ts (canonical location)
 export { wrapInDocument };
@@ -28,10 +28,10 @@ export function renderSsrError(
 ): string {
   const status = typeof statusOrRoute === 'number' ? statusOrRoute : 500;
   const title = isDev ? 'SSR Render Error' : `Error ${status}`;
-  const message = error.message.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const message = escapeHtml(error.message);
 
   if (isDev) {
-    const stack = error.stack ? error.stack.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
+    const stack = error.stack ? escapeHtml(error.stack) : '';
     return `<!DOCTYPE html>
 <html lang="en">
 <head>

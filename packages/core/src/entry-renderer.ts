@@ -205,9 +205,7 @@ function renderPageRoute(
   lines.push(`    if (import.meta.env.PROD) {`);
   lines.push(`      return c.html('<h1>500 Internal Server Error</h1>', 500)`);
   lines.push(`    } else {`);
-  lines.push(
-    `      const safeErr = String(err.stack || err).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')`,
-  );
+  lines.push(`      const safeErr = escapeHtml(String(err.stack || err))`);
   lines.push(`      return c.html('<h1>500</h1><pre>' + safeErr + '</pre>', 500)`);
   lines.push(`    }`);
   lines.push(`  }`);
