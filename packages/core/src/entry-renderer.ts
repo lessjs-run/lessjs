@@ -297,6 +297,21 @@ export function renderEntry(desc: EntryDescriptor): string {
   // --- Register page components in SSR customElements registry ---
   // This is essential for renderDSD() to find and render Shadow DOM.
   // Each SSR route module exports { default: ComponentClass, tagName: string }.
+  // ADR 0014: Patch customElements.define to be idempotent in SSR — moved
+  // inside the bundle so build-ssg.ts doesn't need to patch the global.
+  if (desc.isSSG) {
+    lines.push('// ADR 0014: Idempotent customElements.define for SSR');
+    lines.push(
+      '// Multiple routes may import the same UI modules, causing duplicate define() calls.',
+    );
+    lines.push('// Patch once inside the bundle — external code does not touch customElements.');
+    lines.push('const _origDefine = customElements.define.bind(customElements);');
+    lines.push('customElements.define = (name, ctor, options) => {');
+    lines.push('  if (customElements.get(name)) return;');
+    lines.push('  try { _origDefine(name, ctor, options); } catch { /* already defined */ }');
+    lines.push('};');
+    lines.push('');
+  }
   for (const route of desc.pageRoutes) {
     lines.push(`if (!customElements.get(${route.varName}.tagName || '${route.defaultTagName}')) {`);
     lines.push(
@@ -430,6 +445,83 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push(
       'export { initI18nData, getI18nOptions, getI18nLocales, getDefaultLocale } from "@lessjs/i18n"',
     );
+
+    // ── ADR 0014: renderRoute() — DSD-first rendering API ───────
+    // The SSR bundle owns all rendering knowledge (tagName → component
+    // mapping, customElements registry, renderDSD, wrapInDocument).
+    // build-ssg.ts only calls renderRoute() and getStaticPaths() —
+    // no globalThis access, no source file regex, no direct renderDSD().
+    lines.push('');
+    lines.push('// ── ADR 0014: DSD-first rendering API ──────────────────────');
+    lines.push('// build-ssg.ts calls these — never touches customElements directly.');
+    lines.push('');
+
+    // --- routeInfo: structured route metadata ---
+    // Build routeInfo as runtime code (not JSON) because tagName needs
+    // to be evaluated from the imported module variable.
+    lines.push('export const routeInfo = [');
+    for (const r of desc.pageRoutes) {
+      const tagNameExpr = `${r.varName}.tagName || '${r.defaultTagName}'`;
+      lines.push(
+        `  { path: '${r.path}', tagName: ${tagNameExpr}, isDynamic: ${!!r.isDynamic}, paramNames: ${
+          JSON.stringify(r.paramNames || [])
+        } },`,
+      );
+    }
+    lines.push('];');
+    lines.push('');
+
+    // --- renderRoute: path + options → full HTML ---
+    lines.push('/**');
+    lines.push(' * Render a route to complete HTML (ADR 0014).');
+    lines.push(' * Uses customElements + renderDSD + wrapInDocument internally.');
+    lines.push(' * Caller does not need to know tagName, ComponentClass, or renderDSD.');
+    lines.push(' */');
+    lines.push('export async function renderRoute(routePath, options = {}) {');
+    lines.push('  const info = routeInfo.find(r => r.path === routePath);');
+    lines.push(
+      "  if (!info) throw new Error('[LessJS] renderRoute: route not found: ' + routePath);",
+    );
+    lines.push('  const { params = {}, locale, title, lang, headExtras } = options;');
+    lines.push('  const props = { ...params };');
+    lines.push('  if (locale) props.locale = locale;');
+    lines.push(
+      '  const html = await renderDSDByName(info.tagName, props, { route: routePath, source: info.tagName });',
+    );
+    lines.push('  return wrapInDocument(html, {');
+    lines.push('    title: title || "LessJS",');
+    lines.push('    lang: lang || locale || "en",');
+    lines.push(
+      '    headExtras: headExtras !== undefined ? headExtras : (typeof __headExtras !== "undefined" ? __headExtras : ""),',
+    );
+    lines.push('  });');
+    lines.push('}');
+    lines.push('');
+
+    // --- getStaticPaths: dynamic route → params[] ---
+    // Only dynamic routes have getStaticPaths(). The function body
+    // dispatches to the appropriate route module's getStaticPaths().
+    lines.push('/**');
+    lines.push(' * Get static paths for a dynamic route (ADR 0014).');
+    lines.push(' * Returns [] for non-dynamic routes.');
+    lines.push(' */');
+    lines.push('export async function getStaticPaths(routePath) {');
+    lines.push('  const info = routeInfo.find(r => r.path === routePath);');
+    lines.push('  if (!info || !info.isDynamic) return [];');
+    const dynamicRoutes = desc.pageRoutes.filter((r) => r.isDynamic);
+    if (dynamicRoutes.length > 0) {
+      lines.push("  // Dispatch to the route module's getStaticPaths()");
+      for (const r of dynamicRoutes) {
+        lines.push(`  if (routePath === '${r.path}') {`);
+        lines.push(`    if (typeof ${r.varName}.getStaticPaths === 'function') {`);
+        lines.push(`      return await ${r.varName}.getStaticPaths();`);
+        lines.push(`    }`);
+        lines.push(`    return [];`);
+        lines.push(`  }`);
+      }
+    }
+    lines.push('  return [];');
+    lines.push('}');
   }
 
   return lines.join('\n');

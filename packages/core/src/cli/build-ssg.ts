@@ -290,135 +290,74 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     const ssrBundleUrl = Deno.build.os === 'windows'
       ? 'file:///' + ssrBundlePath.replace(/\\/g, '/')
       : 'file://' + ssrBundlePath;
-    const module = await import(ssrBundleUrl);
-    const app = module.default;
+    const module = await import(ssrBundleUrl) as Record<string, unknown>;
+    const app = module.default as import('hono').Hono;
 
     if (!app) {
       throw new SsrRenderError('virtual:less-ssg-entry', new Error('Failed to load Hono app'));
     }
 
-    // Patch CustomElementRegistry.define to be idempotent in SSR.
-    // The SSR dom shim throws on duplicate registration, but SSG loads page
-    // components that each import the same UI modules. With nested DSD + relative
-    // imports, multiple routes trigger the same define() call.
-    let _ssrDefinePatched = false;
-    const origDefine = globalThis.customElements?.define?.bind(globalThis.customElements);
-    if (origDefine && !_ssrDefinePatched) {
-      globalThis.customElements.define = (
-        name: string,
-        ctor: CustomElementConstructor,
-        options?: ElementDefinitionOptions,
-      ) => {
-        if (globalThis.customElements.get(name)) return;
-        try {
-          origDefine(name, ctor, options);
-        } catch (_e) {
-          // Already defined by another route — safe to skip in SSR
-          log.debug(`customElements.define("${name}") skipped: already defined`);
-        }
-      };
-      _ssrDefinePatched = true;
+    // ADR 0014: Initialize @lessjs/content (blog) data store in the bundle.
+    // All getStaticPaths() calls now happen inside the bundle's module scope,
+    // so blog data only needs to be initialized once — no double-scope init.
+    const blogOptions = ctx.blogOptions || undefined;
+    if (module.initBlogData && typeof module.initBlogData === 'function') {
+      try {
+        await (module.initBlogData as (opts?: unknown) => Promise<void>)(blogOptions);
+      } catch {
+        log.debug('Blog content module (bundle) not found — skipping');
+      }
+    }
+    const postCount = module.getPosts && typeof module.getPosts === 'function'
+      ? (module.getPosts as () => unknown[])().length
+      : 0;
+    if (postCount > 0) {
+      log.info(`Blog data store initialized: ${postCount} post(s) for SSG`);
     }
 
-    // ── Dynamic route expansion via getStaticPaths() ──────────
-    // Hono's toSSG() skips parameter routes (e.g. /blog/:slug).
-    // We detect dynamic routes, call their getStaticPaths() to get
-    // concrete parameter values, and render each page.
-    // The rendered HTML is written directly to the output directory.
-    const dynamicRoutes = routes.filter(
-      (r) => r.type === 'page' && !r.special && r.path.includes(':'),
-    );
+    // ── Dynamic route expansion via bundle.getStaticPaths() ──────
+    // ADR 0014: Hono's toSSG() skips parameter routes (e.g. /blog/:slug).
+    // We use the bundle's getStaticPaths() and renderRoute() APIs instead of
+    // importing route modules natively (which fails for virtual module deps).
+    const routeInfo = (module.routeInfo ?? []) as Array<{
+      path: string;
+      tagName: string;
+      isDynamic: boolean;
+      paramNames: string[];
+    }>;
+    const renderRoute = module.renderRoute as
+      | ((path: string, opts?: Record<string, unknown>) => Promise<string>)
+      | undefined;
+    const getStaticPaths = module.getStaticPaths as
+      | ((path: string) => Promise<Array<Record<string, string>>>)
+      | undefined;
 
+    const dynamicRoutes = routeInfo.filter((r) => r.isDynamic);
     log.info(
       `Dynamic routes found: ${dynamicRoutes.length}${
         dynamicRoutes.length > 0 ? ` (${dynamicRoutes.map((r) => r.path).join(', ')})` : ''
       }`,
     );
 
-    if (dynamicRoutes.length > 0) {
-      // Import renderDSD and wrapInDocument from the SSR bundle.
-      // Since the bundle is self-contained (noExternal), these share
-      // the same module scope as installLitAdapter() (called in entry).
-      const { renderDSD: renderDSDFn, wrapInDocument: wrapInDocumentFn } = module;
-
-      // Initialize @lessjs/content (blog) data store if present.
-      // ADR 0010: read from ctx directly — no .less/ fallback
-      const blogOptions = ctx.blogOptions || undefined;
-
-      // Initialize in the SSR bundle's module scope
-      if (module.initBlogData && typeof module.initBlogData === 'function') {
-        try {
-          await module.initBlogData(blogOptions);
-        } catch {
-          log.debug('Blog content module (bundle) not found — skipping');
-        }
-      }
-
-      // Also initialize in the file system module scope — route modules
-      // imported via import() resolve their dependencies from the file
-      // system, creating a separate module instance of blog-data.ts.
-      // Without this, getPosts() would return [] in those route modules.
-      try {
-        const fsContentModule = await import('@lessjs/content') as Record<string, unknown>;
-        if (typeof fsContentModule.initBlogData === 'function') {
-          await (fsContentModule.initBlogData as (opts?: unknown) => Promise<unknown>)(blogOptions);
-        }
-      } catch {
-        log.debug('Blog content module (file system) not found — skipping');
-      }
-
-      const postCount = module.getPosts ? (module.getPosts as () => unknown[])().length : 0;
-      if (postCount > 0) {
-        log.info(`Blog data store initialized: ${postCount} post(s) for SSG dynamic routes`);
-      }
-
+    if (dynamicRoutes.length > 0 && renderRoute && getStaticPaths) {
       for (const route of dynamicRoutes) {
-        const paramNames = [...route.path.matchAll(/:([^/]+)/g)].map((m) => m[1]);
-        const routeModulePath = `/${routesDir}/${route.filePath}`;
-        let routeMod: Record<string, unknown>;
+        const paramNames = route.paramNames;
+        let paramsList: Array<Record<string, string>>;
 
         try {
-          // Dynamic import the route module from the project source.
-          // Since the SSR bundle already inlined everything with noExternal,
-          // individual route modules are already compiled in. However, for
-          // dynamic routes that need getStaticPaths(), we need to load them
-          // individually. Use the bundle's context by re-importing from the
-          // same root-based path that the SSR build used.
-          const routeImportPath = resolve(root, routesDir, route.filePath);
-          routeMod = await import(routeImportPath) as Record<string, unknown>;
+          paramsList = await getStaticPaths(route.path);
         } catch (e) {
           log.warn(
-            `Cannot load dynamic route module ${routeModulePath}: ${
+            `Failed to get static paths for ${route.path}: ${
               e instanceof Error ? e.message : String(e)
             }`,
           );
           continue;
         }
 
-        if (typeof routeMod.getStaticPaths !== 'function') {
-          log.warn(
-            `Dynamic route ${route.path} has no getStaticPaths() export — skipping SSG generation`,
-          );
+        if (paramsList.length === 0) {
+          log.info(`Dynamic route ${route.path} has no static paths — skipping`);
           continue;
-        }
-
-        const paramsList =
-          await (routeMod.getStaticPaths as () => Promise<Array<Record<string, string>>>)();
-        const tagName = (routeMod.tagName as string) || fileToTagName(route.filePath);
-        const ComponentClass = routeMod.default as CustomElementConstructor;
-
-        if (!ComponentClass) {
-          log.warn(`Dynamic route ${route.path} has no default export — skipping`);
-          continue;
-        }
-
-        // Register the component in SSR customElements registry
-        if (!globalThis.customElements.get(tagName)) {
-          try {
-            globalThis.customElements.define(tagName, ComponentClass);
-          } catch {
-            // Already defined — safe to skip
-          }
         }
 
         for (const params of paramsList) {
@@ -429,16 +368,11 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
           }
 
           try {
-            // Render the component with route params as props
-            const html = await renderDSDFn(tagName, ComponentClass, params, {
-              route: resolvedPath,
-              source: route.filePath,
-            });
-
-            const fullHtml = wrapInDocumentFn(html, {
-              title: options.html?.title || 'LessJS',
-              lang: options.html?.lang || 'en',
-              headExtras: options.headExtras || '',
+            const html = await renderRoute(route.path, {
+              params,
+              title: options.html?.title,
+              lang: options.html?.lang,
+              headExtras: options.headExtras,
             });
 
             // Write to dist/blog/v0-8-0/index.html
@@ -446,7 +380,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
             const pageDir = join(ssgOutputDir, resolvedPath);
             const { mkdirSync: mkDir, writeFileSync: writeFile } = await import('node:fs');
             mkDir(pageDir, { recursive: true });
-            writeFile(join(pageDir, 'index.html'), fullHtml, 'utf-8');
+            writeFile(join(pageDir, 'index.html'), html, 'utf-8');
 
             log.info(`Dynamic route: ${resolvedPath} → ${resolvedPath}/index.html`);
           } catch (e) {
@@ -524,87 +458,41 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
       const locales: string[] = i18nOptsToUse.locales || [];
 
       if (locales.length > 1) {
-        log.info(`i18n: expanding ${routes.length} route(s) for locales: ${locales.join(', ')}`);
+        log.info(`i18n: expanding ${routeInfo.length} route(s) for locales: ${locales.join(', ')}`);
 
-        // Use renderDSD and wrapInDocument from the SSR bundle
-        const { renderDSD: renderDSDFn, wrapInDocument: wrapInDocumentFn } = module;
-
-        // Initialize @lessjs/i18n data store so route-level helpers
-        // (i18nStaticPaths, switchLocale) return correct values.
-        try {
-          const i18nModule = await import('@lessjs/i18n') as Record<string, unknown>;
-          if (typeof i18nModule.initI18nData === 'function') {
-            (i18nModule.initI18nData as (opts: unknown) => void)(i18nOptsToUse);
-          }
-        } catch {
-          // @lessjs/i18n not available — non-fatal
-          log.debug('@lessjs/i18n not found — continuing with inline locale expansion');
-        }
-
+        // ADR 0014: Use the bundle's renderRoute() and getStaticPaths() APIs.
+        // No globalThis access, no source file regex, no direct renderDSD() calls.
+        // The bundle owns all rendering knowledge — build-ssg.ts only does orchestration.
         for (const locale of locales) {
-          for (const route of routes) {
-            if (route.type !== 'page' || route.special) continue;
-
-            // ADR 0010/0011: The SSR bundle has already registered all route
-            // components via customElements.define(). Use the registry instead of
-            // re-importing route files — native import() cannot resolve Vite
-            // virtual modules (virtual:less-nav, virtual:less-client-entry, etc.)
-            //
-            // Route files export `tagName` (e.g. 'page-dsd-guide'), but we can't
-            // import them natively. Extract it from the source file via regex,
-            // falling back to fileToTagName() for routes without an explicit export.
-            let tagName = fileToTagName(route.filePath);
-            const routeSourcePath = resolve(root, routesDir, route.filePath);
-            if (existsSync(routeSourcePath)) {
-              try {
-                const src = readFileSync(routeSourcePath, 'utf-8');
-                const tagMatch = src.match(/export\s+const\s+tagName\s*=\s*['"]([^'"]+)['"]/);
-                if (tagMatch) tagName = tagMatch[1];
-              } catch {
-                // Source not readable — use fileToTagName fallback
-              }
-            }
-            const ComponentClass = globalThis.customElements.get(tagName) as
-              | CustomElementConstructor
-              | undefined;
-
-            if (!ComponentClass) {
-              log.debug(
-                `Route ${route.path} (${tagName}) not in customElements — skipping locale expansion`,
-              );
-              continue;
-            }
-
+          for (const route of routeInfo) {
             // Get param values for dynamic routes
             let paramsList: Array<Record<string, string>> = [{}];
-            if (route.path.includes(':')) {
-              // Dynamic routes need getStaticPaths — try native import as
-              // fallback (may fail for routes with virtual module deps)
-              let routeMod: Record<string, unknown> | null = null;
-              const routeImportPath = resolve(root, routesDir, route.filePath);
+            if (route.isDynamic) {
+              if (!getStaticPaths) {
+                log.info(
+                  `Dynamic route ${route.path}: getStaticPaths not available — skipping locale expansion`,
+                );
+                continue;
+              }
               try {
-                routeMod = await import(routeImportPath) as Record<string, unknown>;
+                paramsList = await getStaticPaths(route.path);
               } catch (e) {
-                log.debug(
-                  `Cannot load dynamic route module ${routeImportPath}: ${
+                log.warn(
+                  `Cannot get static paths for ${route.path}: ${
                     e instanceof Error ? e.message : String(e)
                   }`,
                 );
+                continue;
               }
-
-              if (routeMod && typeof routeMod.getStaticPaths === 'function') {
-                paramsList = await (routeMod.getStaticPaths as () => Promise<
-                  Array<Record<string, string>>
-                >)();
-              } else {
+              if (paramsList.length === 0) {
                 log.info(
-                  `Dynamic route ${route.path} has no getStaticPaths — skipping locale expansion`,
+                  `Dynamic route ${route.path} has no static paths — skipping locale expansion`,
                 );
                 continue;
               }
             }
 
-            const paramNames = [...route.path.matchAll(/:([^/]+)/g)].map((m) => m[1]);
+            const paramNames = route.paramNames;
 
             for (const params of paramsList) {
               // Resolve concrete path
@@ -616,25 +504,19 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
               const localePath = `/${locale}${resolvedPath}`;
 
               try {
-                const html = await renderDSDFn(tagName, ComponentClass, {
-                  ...params,
+                const html = await renderRoute!(route.path, {
+                  params,
                   locale,
-                }, {
-                  route: localePath,
-                  source: route.filePath,
-                });
-
-                const fullHtml = wrapInDocumentFn(html, {
-                  title: options.html?.title || 'LessJS',
+                  title: options.html?.title,
                   lang: locale,
-                  headExtras: options.headExtras || '',
+                  headExtras: options.headExtras,
                 });
 
                 // Write to dist/en/guide/architecture/index.html
                 const pageDir = join(outputDir, localePath);
                 const { mkdirSync: mkDir, writeFileSync: writeFile } = await import('node:fs');
                 mkDir(pageDir, { recursive: true });
-                writeFile(join(pageDir, 'index.html'), fullHtml, 'utf-8');
+                writeFile(join(pageDir, 'index.html'), html, 'utf-8');
 
                 log.info(`i18n: ${localePath}/index.html`);
               } catch (e) {
