@@ -9,7 +9,7 @@
  *   No inline script in SSG HTML; the client entry is a Vite-built module
  *   referenced via <script type="module" src="..."> and imports island modules
  *   for side-effect custom element registration.
- * - HTML document wrapping delegates to wrapInDocument from ssr-handler.ts
+ * - HTML document wrapping delegates to wrapInDocument from html-escape.ts
  *   (imported at runtime — single source of truth, no duplicate HTML logic)
  * - DSD output must remain plain HTML, without Lit SSR marker comments.
  */
@@ -262,7 +262,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('');
 
   // --- Document wrapper ---
-  // Uses wrapInDocument from ssr-handler.ts (single source of truth).
+  // Uses wrapInDocument from html-escape.ts (single source of truth).
   // Import via the lightweight runtime export so SSR does not load the
   // Vite plugin or dev-server dependency graph.
   lines.push(`import { log, wrapInDocument } from '@lessjs/core/less-runtime';`);
