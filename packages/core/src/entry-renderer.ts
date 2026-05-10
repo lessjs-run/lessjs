@@ -34,14 +34,8 @@ function renderImport(imp: ImportDecl): string {
 // ─── CORS config rendering ─────────────────────────────────────
 
 function renderCorsOrigin(origin: CorsOriginConfig): string {
-  if (typeof origin === 'string') {
-    return JSON.stringify(origin);
-  }
-  if (Array.isArray(origin)) {
-    return JSON.stringify(origin);
-  }
-  // Function type
-  return origin.body;
+  if (typeof origin === 'object' && !Array.isArray(origin)) return origin.body;
+  return JSON.stringify(origin);
 }
 
 const CORS_ALLOW =
