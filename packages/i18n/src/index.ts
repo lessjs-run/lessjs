@@ -29,11 +29,9 @@
 
 import type { Plugin } from 'vite';
 import type { LessI18nOptions } from './types.ts';
+import type { LessBuildContext } from '@lessjs/core/build-context';
 import { initI18nData } from './i18n-data.ts';
 import { createLogger } from '@lessjs/core/logger';
-import { mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
-import process from 'node:process';
 
 const log = createLogger('i18n');
 
@@ -49,27 +47,26 @@ export { i18nStaticPaths, switchLocale } from './routes.ts';
  * LessJS i18n Vite plugin.
  * Configures locale options for route-level i18n helpers.
  */
-export function lessI18n(options: LessI18nOptions): Plugin {
+export function lessI18n(
+  options: LessI18nOptions & { ctx?: LessBuildContext },
+): Plugin {
+  const ctx = options.ctx;
+
   return {
     name: 'less:i18n',
 
     buildStart() {
       initI18nData(options);
 
-      // Write i18n options to .less/ for SSG Phase 3
-      try {
-        const root = process.cwd();
-        const lessDir = join(root, '.less');
-        mkdirSync(lessDir, { recursive: true });
-        writeFileSync(
-          join(lessDir, 'i18n-options.json'),
-          JSON.stringify(options),
-          'utf-8',
-        );
-        log.info(`${options.locales.join(', ')} (default: ${options.defaultLocale})`);
-      } catch (e) {
-        log.warn(`Failed to write i18n-options.json: ${e}`);
+      // Write i18n options to ctx (shared build context)
+      if (ctx) {
+        ctx.i18nOptions = {
+          locales: options.locales,
+          defaultLocale: options.defaultLocale,
+        };
       }
+
+      log.info(`${options.locales.join(', ')} (default: ${options.defaultLocale})`);
     },
   };
 }
