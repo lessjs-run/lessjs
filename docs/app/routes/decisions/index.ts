@@ -49,7 +49,13 @@ export class DecisionsIndexPage extends LitElement {
 
   override render() {
     return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/decisions">
+      <less-layout
+        locale="${this.locale || 'zh'}"
+        .locales="${['en', 'zh']}"
+        .navItems="${navSections}"
+        .headerNav="${headerNav}"
+        current-path="/decisions"
+      >
         <div class="container">
           <h1>Architecture Decisions</h1>
           <p class="subtitle">

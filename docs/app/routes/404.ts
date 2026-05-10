@@ -119,7 +119,12 @@ export class NotFoundPage extends LitElement {
 
   override render() {
     return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}">
+      <less-layout
+        locale="${this.locale || 'zh'}"
+        .locales="${['en', 'zh']}"
+        .navItems="${navSections}"
+        .headerNav="${headerNav}"
+      >
         <div class="container">
           <div class="error-code">404</div>
           <p class="error-message">This page does not exist — or has moved to a different route.</p>

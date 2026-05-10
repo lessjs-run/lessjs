@@ -8,13 +8,14 @@
 
 ADR 0008 将 `.less/` 临时文件从 10 个减少到 3 个，建立了 `LessBuildContext` 内存传递机制和 `virtual:less-runtime`/`virtual:less-nav` 虚拟模块模式。但仍有 3 个文件残留：
 
-| 文件 | 写入位置 | 读取位置 | 残留原因 |
-|------|---------|---------|---------|
-| `build-metadata.json` | `build.ts` closeBundle | `build-client.ts`、`build-ssg.ts` | 跨进程 IPC fallback |
-| `.less-client-entry.ts` | `build-client.ts` | Vite `rollupOptions.input` | Vite 入口需文件路径 |
-| `.less-ssg-entry.ts` | `build-ssg.ts` | Vite `build.ssr` | Vite SSR 入口需文件路径 |
+| 文件                    | 写入位置               | 读取位置                          | 残留原因                |
+| ----------------------- | ---------------------- | --------------------------------- | ----------------------- |
+| `build-metadata.json`   | `build.ts` closeBundle | `build-client.ts`、`build-ssg.ts` | 跨进程 IPC fallback     |
+| `.less-client-entry.ts` | `build-client.ts`      | Vite `rollupOptions.input`        | Vite 入口需文件路径     |
+| `.less-ssg-entry.ts`    | `build-ssg.ts`         | Vite `build.ssr`                  | Vite SSR 入口需文件路径 |
 
 此外，`build-ssg.ts` 仍有多处 `.less/` 文件的 fallback 读取：
+
 - `nav-data.json` / `header-nav.json`（virtual:less-nav 插件内）
 - `blog-options.json`（动态路由博客初始化）
 - `i18n-options.json`（i18n locale 扩展）
@@ -51,6 +52,7 @@ ADR 0008 将 `.less/` 临时文件从 10 个减少到 3 个，建立了 `LessBui
 **方案**：在 `build-client.ts` 的 Vite 配置中添加 `resolveId`/`load` 插件，将生成的客户端入口代码作为虚拟模块提供。`rollupOptions.input` 使用 `virtual:less-client-entry`。
 
 **代码变更**：
+
 - 移除 `mkdirSync` + `writeFileSync` 写入
 - 添加内联 Vite plugin（同 `virtual:less-runtime` 模式）
 - `input: { client: 'virtual:less-client-entry' }` 替代文件路径
@@ -60,6 +62,7 @@ ADR 0008 将 `.less/` 临时文件从 10 个减少到 3 个，建立了 `LessBui
 **方案**：在 `build-ssg.ts` 的 SSR Vite 配置中添加 `resolveId`/`load` 插件。`build.ssr` 使用 `virtual:less-ssg-entry`。
 
 **代码变更**：
+
 - 移除 `mkdirSync` + `writeFileSync` 写入
 - 添加内联 Vite plugin
 - `build: { ssr: 'virtual:less-ssg-entry' }` 替代文件路径
@@ -69,6 +72,7 @@ ADR 0008 将 `.less/` 临时文件从 10 个减少到 3 个，建立了 `LessBui
 **方案**：`build-ssg.ts` 中所有 `if (!ctx || !ctx.root) { readFileSync(...) }` 分支全部移除。当 ctx 不可用时，直接报错退出，而不是静默降级到文件读取。
 
 **影响的 fallback**：
+
 - `build-metadata.json`（island 元数据、alias、middleware 等）
 - `nav-data.json` / `header-nav.json`（virtual:less-nav 插件内）
 - `blog-options.json`（动态路由博客初始化）
@@ -78,6 +82,7 @@ ADR 0008 将 `.less/` 临时文件从 10 个减少到 3 个，建立了 `LessBui
 ### 5. `build.ts` 清理
 
 **方案**：
+
 - 移除 `serializeAlias()` 函数（仅用于 JSON 序列化写入文件）
 - 移除 `mkdirSync` + `writeFileSync` 写入 `build-metadata.json`
 - 移除 `import { mkdirSync, writeFileSync } from 'node:fs'`

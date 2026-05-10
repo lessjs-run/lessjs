@@ -114,11 +114,11 @@ Phase 3: viteBuild(client)                → 产出客户端 JS/CSS
 | `.less/sitemap-options.json` | IPC：content 插件 → SSG | 数据内联到 SSR bundle |
 | `.less/i18n-options.json` | IPC：i18n 插件 → SSG | 数据内联到 SSR bundle |
 | `.less/head-extras.html` | IPC：entry 代码 → 运行时读取 | 构建时常量内联到 bundle |
-| `.less/.less-runtime.ts` | 运行时 shim 文件 | bundle 直接 import less-runtime |
+| `.less/.less-runtime.ts` | 运行时 shim 文件 | `virtual:less-runtime` 替代物理文件 + alias |
 | `.less/.less-ssg-entry.ts` | SSG 入口文件 | 虚拟模块或 inline |
 | `.less/.less-client-entry.ts` | 客户端入口文件 | 虚拟模块或 inline |
 | `.less/build-metadata.json` | 岛屿清单 IPC | 编译时内联 |
-| `createRuntimeShimCode()` | 避免加载 Vite 插件依赖图 | bundle 直接引用 less-runtime |
+| `createRuntimeShimCode()` | 避免加载 Vite 插件依赖图 | bundle 直接引用 virtual:less-runtime |
 | `less:ssg-virtual-nav` 插件 | createServer 的虚拟模块桥接 | createServer 消除 |
 | `Symbol.for('lit-nothing')` | 跨实例 Lit nothing 检测 | bundle 单实例 |
 
@@ -233,15 +233,17 @@ Phase 3: viteBuild(client)                → 产出客户端 JS/CSS
 
 **目标**：`.less/.less-runtime.ts` 和 `createRuntimeShimCode()` 不再需要。
 
-1. **SSR bundle 直接 import `less-runtime`**：当 bundle 自包含时，`@lessjs/core/less-runtime` 已经在 bundle 内部，不需要单独的 shim 文件。
+1. **SSR bundle 直接 import `virtual:less-runtime`**：当 bundle 自包含时，`@lessjs/core/less-runtime` 路径由 Vite 插件的 `resolveId` hook 拦截并指向 `virtual:less-runtime`，该虚拟模块从各源文件 re-export（`registerAdapter` from `adapter-registry.ts`、`renderDSD` from `render-dsd.ts`、`wrapInDocument` from `html-escape.ts`、`log` from `logger.ts`）。
 
 2. **移除 `generate-runtime-shim.ts` 脚本**：AST 提取 + 编译 + 字符串化的机制不再需要。
 
 3. **移除 `runtime-shim.ts`**：巨型字符串常量不再需要。
 
-4. **移除 `less()` 插件中的 `.less/.less-runtime.ts` 写入逻辑**（`index.ts` L199-208）。
+4. **移除 `less()` 插件中的 `.less/.less-runtime.ts` 写入逻辑**（`index.ts` L199-208）及相关的 `writeFileSync` + `userResolveAlias` + `resolve.alias` 配置（L183-217），全部由 `virtual:less-runtime` 的 `resolveId`/`load` hook 替代。
 
-5. **保留 `less-runtime.ts` 作为轻量 re-export 模块**：它的 API（`registerAdapter`、`renderDSD`、`wrapInDocument`、`log`、`Hono`）继续存在，只是不再需要文件系统 alias。
+5. **删除物理 `less-runtime.ts` 文件**：不再需要物理 re-export 文件，`virtual:less-runtime` 在插件中集中声明 re-export 映射。消费者 import 路径 `@lessjs/core/less-runtime` 保持不变，由插件自动拦截。
+
+6. **移除 `export { Hono } from 'hono'`**：第三方包不应通过 runtime 中间层 re-export，消费者直接 `import { Hono } from 'hono'`。
 
 ### 风险与缓解
 
