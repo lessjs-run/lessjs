@@ -233,10 +233,6 @@ Deno.test('create-less: generated project builds through the one-command pipelin
         replacement: vitePath(join(repoRoot, 'packages', 'adapter-lit', 'src', 'index.ts')),
       },
       {
-        find: '@lessjs/ui',
-        replacement: vitePath(join(uiSrc, 'index.ts')),
-      },
-      {
         find: '@lessjs/ui/design-tokens',
         replacement: vitePath(join(uiSrc, 'design-tokens.ts')),
       },
@@ -279,6 +275,13 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       {
         find: '@lessjs/ui/less-dialog',
         replacement: vitePath(join(uiSrc, 'less-dialog.ts')),
+      },
+      // Parent @lessjs/ui alias MUST come after all @lessjs/ui/* subpath aliases
+      // (Vite matches first-hit for string aliases — parent before subpath causes
+      // "Not a directory (os error 20)" for subpath imports like @lessjs/ui/less-dialog)
+      {
+        find: '@lessjs/ui',
+        replacement: vitePath(join(uiSrc, 'index.ts')),
       },
     ];
     const viteConfigPath = join(appDir, 'vite.config.ts');

@@ -8,7 +8,7 @@
  * should experience it as a single production build.
  */
 
-import { assert, assertEquals, assertExists, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
+import { assert, assertEquals, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
@@ -64,18 +64,12 @@ async function ensureDocsBuild(): Promise<void> {
 Deno.test('SSG smoke: one-command build produces trusted docs output', async (t) => {
   await ensureDocsBuild();
 
-  await t.step('phase 1 output exists with current metadata shape', () => {
+  await t.step('phase 1 output exists with SSR bundle and HTML', () => {
     assert(hasSsrBundle(), 'SSR bundle should exist');
 
-    const metadataPath = join(DOCS_DIR, '.less', 'build-metadata.json');
-    assert(existsSync(metadataPath), 'Build metadata should exist');
-
-    const meta = JSON.parse(readFileSync(metadataPath, 'utf-8'));
-    assertExists(meta.islandTagNames);
-    assertExists(meta.islandFiles);
-    assertExists(meta.packageIslands);
-    assertEquals(meta.root.replace(/\\/g, '/').endsWith('/docs'), true);
-    assertEquals(meta.outDir, 'dist');
+    // ADR 0011: Build metadata is now in LessBuildContext, not .less/build-metadata.json.
+    // Verify the build produced real output instead.
+    assert(existsSync(join(DOCS_DIST, 'index.html')), 'index.html should exist after build');
   });
 
   await t.step('phase 2 output exists without legacy SSR client runtime', () => {

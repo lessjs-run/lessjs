@@ -40,7 +40,7 @@ jobs:
       - name: Install dependencies
         run: deno install --node-modules-dir
       - name: Run core tests
-        run: deno test packages/core/__tests__/ --allow-read --allow-write --allow-env --allow-run
+        run: deno test packages/core/__tests__/ --allow-read --allow-write --allow-env --allow-run --allow-ffi
 
   test-rpc:
     runs-on: ubuntu-latest
@@ -91,7 +91,7 @@ jobs:
       - name: Install dependencies
         run: deno install --node-modules-dir
       - name: Run create tests
-        run: deno test packages/create/__tests__/ --allow-read --allow-write --allow-env --allow-run
+        run: deno test packages/create/__tests__/ --allow-read --allow-write --allow-env --allow-run --allow-ffi
 
   test-adapter-lit:
     runs-on: ubuntu-latest
