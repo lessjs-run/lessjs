@@ -177,6 +177,7 @@ function renderPageRoute(
   route: PageRouteDecl,
   renderers: RendererDecl[],
   docConfig: { title: string; lang: string; headExtras: string },
+  isSSG: boolean,
 ): void {
   // Find renderers whose scope matches this route's path prefix
   const matchingRenderers = renderers.filter((r) => {
@@ -199,6 +200,12 @@ function renderPageRoute(
   b.blank();
 
   // Wrap with renderers from outer to inner (v0.3.0)
+  // SSG mode: headExtras is read from .less/head-extras.html at runtime
+  // to avoid embedding large strings (which can contain backticks, ${}, etc.)
+  // into the generated code that Vite SSR evaluates via AsyncFunction.
+  // Dev mode: headExtras is inlined via JSON.stringify (safe for dev server).
+  const headExtrasExpr = isSSG ? '__headExtras' : JSON.stringify(docConfig.headExtras);
+
   if (matchingRenderers.length > 0) {
     b.push(`    // Renderer wrapping (outer → inner)`);
     b.push(`    let wrapped = html`);
@@ -208,14 +215,14 @@ function renderPageRoute(
     b.push(`    return c.html(wrapInDocument(wrapped, {`);
     b.push(`      title: ${JSON.stringify(docConfig.title)},`);
     b.push(`      lang: ${JSON.stringify(docConfig.lang)},`);
-    b.push(`      headExtras: ${JSON.stringify(docConfig.headExtras)},`);
+    b.push(`      headExtras: ${headExtrasExpr},`);
     b.push(`      cspNonce: c.get('cspNonce'),`);
     b.push(`    }))`);
   } else {
     b.push(`    return c.html(wrapInDocument(html, {`);
     b.push(`      title: ${JSON.stringify(docConfig.title)},`);
     b.push(`      lang: ${JSON.stringify(docConfig.lang)},`);
-    b.push(`      headExtras: ${JSON.stringify(docConfig.headExtras)},`);
+    b.push(`      headExtras: ${headExtrasExpr},`);
     b.push(`      cspNonce: c.get('cspNonce'),`);
     b.push(`    }))`);
   }
@@ -300,6 +307,20 @@ export function renderEntry(desc: EntryDescriptor): string {
   }
   b.blank();
 
+  // --- SSG: Auto-install Lit adapter if available ---
+  // With viteBuild(ssr:true, noExternal), @lessjs/adapter-lit is inlined
+  // into the self-contained bundle. Installing it at module load time
+  // ensures registerAdapter() runs before any renderDSD() call.
+  // The try/catch makes this a no-op when @lessjs/adapter-lit is absent.
+  if (desc.isSSG) {
+    b.push('// SSG: auto-install Lit adapter (inlined in SSR bundle)');
+    b.push('try {');
+    b.push("  const { installLitAdapter } = await import('@lessjs/adapter-lit');");
+    b.push('  installLitAdapter();');
+    b.push('} catch { /* @lessjs/adapter-lit not available */ }');
+    b.blank();
+  }
+
   // --- Register page components in SSR customElements registry ---
   // This is essential for renderDSD() to find and render Shadow DOM.
   // Each SSR route module exports { default: ComponentClass, tagName: string }.
@@ -336,6 +357,25 @@ export function renderEntry(desc: EntryDescriptor): string {
   }
   b.blank();
 
+  // --- SSG: load headExtras from file instead of inlining ---
+  // When headExtras is a large CSS/HTML string, inlining it via JSON.stringify
+  // into the generated code breaks Vite SSR's AsyncFunction evaluator.
+  // The string may contain backticks, ${}, or </script> which corrupt the
+  // generated source. Instead, read from .less/head-extras.html at runtime.
+  if (desc.isSSG && desc.document.headExtras) {
+    b.push('// SSG: read headExtras from file to avoid Vite SSR AsyncFunction syntax errors');
+    b.push('// (large inline strings with backticks/${} break new AsyncFunction())');
+    b.push('import { readFileSync } from "node:fs";');
+    b.push('import { join } from "node:path";');
+    b.push('let __headExtras = "";');
+    b.push('try {');
+    b.push(
+      '  __headExtras = readFileSync(join(process.cwd(), ".less", "head-extras.html"), "utf-8");',
+    );
+    b.push('} catch { /* headExtras file not found — use empty string */ }');
+    b.blank();
+  }
+
   // --- SSR helper (v0.5.0) ---
   // DSD renderer replaces Lit SSR + <!--lit-part--> markers.
   // Components must be registered via customElements.define() before SSR,
@@ -355,7 +395,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   b.push('  const Cls = customElements.get(tag)');
   b.push('  if (!Cls) {');
   b.push('    log.warn("<" + tag + "> not registered — rendering empty")');
-  b.push('    return `<${tag}></${tag}>`');
+  b.push('    return "<" + tag + "></" + tag + ">"');
   b.push('  }');
   b.push('  return renderDSD(tag, Cls, props, sourceInfo)');
   b.push('}');
@@ -390,11 +430,43 @@ export function renderEntry(desc: EntryDescriptor): string {
     headExtras: desc.document.headExtras,
   };
   for (const route of desc.pageRoutes) {
-    renderPageRoute(b, route, desc.renderers, docConfig);
+    renderPageRoute(b, route, desc.renderers, docConfig, desc.isSSG);
   }
 
   // --- Export ---
   b.push('export default app');
+
+  // ── SSG Utility Re-exports ──────────────────────────────────
+  // ADR 0008 Phase C: After viteBuild(ssr:true, noExternal) produces a
+  // self-contained ESM bundle, build-ssg.ts imports it and needs access
+  // to these utility functions from the same module scope.
+  //
+  // Key: these re-exports share the SAME module-level variables as the
+  // rest of the bundle (e.g., _adapter in types.ts, _posts in blog-data.ts).
+  // This eliminates the globalThis[Symbol.for()] bridges from Phase B.
+  //
+  // Optional packages (@lessjs/adapter-lit, @lessjs/content, @lessjs/i18n)
+  // are resolved by the optionalPackageStubsPlugin in build-ssg.ts, which
+  // provides empty stubs when the real package is not installed.
+  if (desc.isSSG) {
+    b.blank();
+    b.push('// ── SSG Utility Re-exports (ADR 0008 Phase C) ───────────────');
+    b.push('// Used by build-ssg.ts after importing the SSR bundle.');
+    b.push('// Shared module scope ensures adapter/data state is consistent.');
+    b.blank();
+    b.push('export { renderDSD, renderDSDByName } from "@lessjs/core/render-dsd"');
+    b.push(
+      'export { wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core/less-runtime"',
+    );
+    b.push('export { installLitAdapter, uninstallLitAdapter } from "@lessjs/adapter-lit"');
+    b.push(
+      'export { initBlogData, getPosts, getPostBySlug, getBlogOptions } from "@lessjs/content"',
+    );
+    b.push('export { generateSitemap } from "@lessjs/content/sitemap"');
+    b.push(
+      'export { initI18nData, getI18nOptions, getI18nLocales, getDefaultLocale } from "@lessjs/i18n"',
+    );
+  }
 
   return b.toString();
 }

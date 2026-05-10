@@ -2,8 +2,9 @@
  * @lessjs/core - CLI: SSG Build
  *
  * Standalone SSG rendering + post-processing.
- * Reads the SSR entry from .less/, creates a Vite SSR server,
- * renders all pages to static HTML, then post-processes island paths.
+ * Builds a self-contained SSR bundle via viteBuild(ssr:true, noExternal),
+ * then imports it to render all pages to static HTML, and post-processes
+ * island paths.
  *
  * This is Phase 3 of the LessJS build pipeline:
  *   Phase 1 (vite build): SSR bundle + .less/ metadata
@@ -13,14 +14,20 @@
  * Must run AFTER build-client so island chunk paths are available
  * for the post-processing step (source paths → built chunk paths).
  *
+ * ADR 0008: Eliminates createServer() in favor of viteBuild(ssr:true,
+ * noExternal) + import(). This produces a self-contained ESM bundle
+ * where all virtual modules resolve at compile time, module variables
+ * replace globalThis[Symbol.for()] bridges, and ssrLoadModule() is
+ * replaced by direct import() of the built bundle.
+ *
  * Usage:
  *   deno run -A jsr:@lessjs/core/cli/build-ssg
  *   deno task build:ssg
  */
 
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import process from 'node:process';
-import { existsSync, readdirSync, readFileSync, unlinkSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import type { FrameworkOptions, PackageIslandMeta } from '../types.js';
 import type { SpeculationRulesOptions } from '../ssg-postprocess.js';
 import { SsrRenderError } from '../errors.js';
@@ -28,9 +35,52 @@ import { createLogger } from '../logger.js';
 
 const log = createLogger('ssg');
 
-// Lit adapter is installed after the Vite SSR server is created.
-// The adapter uses naive TemplateResult interpolation — no DOM shim
-// or @lit-labs/ssr dependency needed.
+// ─── Optional Package Stubs (ADR 0008 Phase C) ──────────────────────
+// Vite plugin that resolves optional LessJS packages to empty stubs
+// when they're not installed. This allows the generated entry code
+// (which statically imports these packages) to build successfully
+// regardless of which optional packages are available.
+function optionalPackageStubsPlugin(): import('vite').Plugin {
+  const stubs: Record<string, string> = {
+    '@lessjs/adapter-lit': [
+      'export function installLitAdapter() {}',
+      'export function uninstallLitAdapter() {}',
+    ].join('\n'),
+    '@lessjs/content': [
+      'export async function initBlogData() { return { posts: [], basePath: "" }; }',
+      'export function getPosts() { return []; }',
+      'export function getPostBySlug() { return undefined; }',
+      'export function getBlogOptions() { return {}; }',
+    ].join('\n'),
+    '@lessjs/content/sitemap': [
+      'export function generateSitemap() { return []; }',
+    ].join('\n'),
+    '@lessjs/i18n': [
+      'export function initI18nData() {}',
+      'export function getI18nOptions() { return null; }',
+      'export function getI18nLocales() { return []; }',
+      'export function getDefaultLocale() { return "en"; }',
+    ].join('\n'),
+  };
+
+  return {
+    name: 'less:ssg-optional-stubs',
+    enforce: 'pre',
+    async resolveId(id) {
+      if (id in stubs) {
+        // Try to resolve the real package first
+        const resolved = await this.resolve(id, undefined, { skipSelf: true });
+        if (resolved) return null; // Package exists — let normal resolution proceed
+        return `\0stub:${id}`; // Package missing — use stub
+      }
+    },
+    load(id) {
+      for (const pkgId of Object.keys(stubs)) {
+        if (id === `\0stub:${pkgId}`) return stubs[pkgId];
+      }
+    },
+  };
+}
 
 interface BuildSSGOptions {
   root?: string;
@@ -171,10 +221,19 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
   const tmpEntryPath = join(lessTmpDir, '.less-ssg-entry.ts');
   const { mkdirSync, writeFileSync } = await import('node:fs');
   mkdirSync(lessTmpDir, { recursive: true });
+
+  // Write headExtras to a separate file so the generated entry code
+  // reads it at runtime instead of inlining a potentially large
+  // CSS/HTML string that breaks Vite SSR's AsyncFunction evaluator.
+  // Fixes Issue #2: backticks and ${} in headExtras corrupt the generated source.
+  if (options.headExtras) {
+    writeFileSync(join(lessTmpDir, 'head-extras.html'), options.headExtras, 'utf-8');
+  }
+
   writeFileSync(tmpEntryPath, ssgEntryCode, 'utf-8');
 
   try {
-    const { createServer } = await import('vite');
+    const { build: viteBuild } = await import('vite');
 
     // SSR noExternal: bundle lit ecosystem + @lessjs/ui + @lessjs/adapter-lit + parse5 + node-fetch (Deno compat)
     const defaultNoExternal = [
@@ -206,22 +265,23 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
       }
     }
 
-    // Polyfill CJS globals for node-domexception in Deno ESM environment
-    // node-domexception uses `module.exports` (CJS), which Deno's ESM
-    // module-runner can't handle. Provide minimal polyfill before Vite loads.
-    if (typeof (globalThis as Record<string, unknown>).module === 'undefined') {
-      (globalThis as Record<string, unknown>).module = { exports: {} };
-      (globalThis as Record<string, unknown>).exports = {};
-    }
+    // Build the self-contained SSR bundle (ADR 0008 Phase C)
+    // Replaces createServer() + ssrLoadModule() with viteBuild + import().
+    // noExternal ensures all dependencies are inlined into a single bundle,
+    // so module-level variables (Phase B) are shared across the entire graph.
+    const ssrOutDir = join(root, outDir, 'server');
+    log.info(`Building SSR bundle → ${ssrOutDir}`);
 
-    const { writeFileSync } = await import('node:fs');
-
-    const server = await createServer({
+    await viteBuild({
       configFile: false,
       root,
-      server: { middlewareMode: true },
-      appType: 'custom',
-      build: { ssr: true },
+      build: {
+        ssr: tmpEntryPath,
+        outDir: ssrOutDir,
+        rollupOptions: {
+          output: { format: 'esm' },
+        },
+      },
       ssr: { noExternal: allNoExternal },
       esbuild: {
         tsconfigRaw: {
@@ -231,10 +291,15 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         },
       },
       plugins: [
+        // ADR 0008 Phase C: Provide stubs for optional packages.
+        // The generated entry code statically imports @lessjs/adapter-lit,
+        // @lessjs/content, @lessjs/i18n — but these may not be installed.
+        // This plugin resolves them to empty stubs when missing, so the
+        // viteBuild() succeeds regardless of which packages are available.
+        optionalPackageStubsPlugin(),
         // Resolve virtual:less-nav — @lessjs/content writes .less/nav-data.json
-        // in Phase 1, but Phase 3 creates a fresh Vite server with no plugins.
-        // This minimal plugin bridges the gap by reading the JSON and serving it
-        // as a virtual module, so route files importing 'virtual:less-nav' resolve.
+        // in Phase 1. This plugin resolves the virtual module at build time
+        // so the SSR bundle contains the resolved data inline.
         {
           name: 'less:ssg-virtual-nav',
           resolveId(id) {
@@ -268,19 +333,16 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
       },
     });
 
-    // Install Lit adapter through Vite SSR so registerAdapter() and renderDSD()
-    // share the same module scope. Using server.ssrLoadModule() instead of Deno's
-    // import() ensures the adapter is registered in Vite's module graph — no
-    // globalThis bridge needed.
-    try {
-      const adapterModule = await server.ssrLoadModule('@lessjs/adapter-lit');
-      if (typeof adapterModule.installLitAdapter === 'function') {
-        adapterModule.installLitAdapter();
-      }
-    } catch {
-      log.warn(
-        '@lessjs/adapter-lit not found — Lit components must return string from render()',
-      );
+    log.info('SSR bundle built successfully');
+
+    // Load the SSR bundle
+    // Use resolve() to generate an absolute path for import()
+    const ssrBundlePath = resolve(ssrOutDir, 'entry.js');
+    const module = await import(ssrBundlePath);
+    const app = module.default;
+
+    if (!app) {
+      throw new SsrRenderError('.less-ssg-entry.ts', new Error('Failed to load Hono app'));
     }
 
     // Patch CustomElementRegistry.define to be idempotent in SSR.
@@ -306,487 +368,474 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
       _ssrDefinePatched = true;
     }
 
-    try {
-      const module = await server.ssrLoadModule(tmpEntryPath);
-      const app = module.default;
+    // ── Dynamic route expansion via getStaticPaths() ──────────
+    // Hono's toSSG() skips parameter routes (e.g. /blog/:slug).
+    // We detect dynamic routes, call their getStaticPaths() to get
+    // concrete parameter values, and render each page.
+    // The rendered HTML is written directly to the output directory.
+    const dynamicRoutes = routes.filter(
+      (r) => r.type === 'page' && !r.special && r.path.includes(':'),
+    );
 
-      if (!app) {
-        throw new SsrRenderError('.less-ssg-entry.ts', new Error('Failed to load Hono app'));
+    log.info(
+      `Dynamic routes found: ${dynamicRoutes.length}${
+        dynamicRoutes.length > 0 ? ` (${dynamicRoutes.map((r) => r.path).join(', ')})` : ''
+      }`,
+    );
+
+    if (dynamicRoutes.length > 0) {
+      // Import renderDSD and wrapInDocument from the SSR bundle.
+      // Since the bundle is self-contained (noExternal), these share
+      // the same module scope as installLitAdapter() (called in entry).
+      const { renderDSD: renderDSDFn, wrapInDocument: wrapInDocumentFn } = module;
+
+      // Initialize @lessjs/content (blog) data store if present.
+      // The content plugin's buildStart() ran in Phase 1's Vite instance.
+      // We need to initialize blog data in TWO module scopes:
+      // 1. The SSR bundle (module.initBlogData) — for renderDSD's adapter chain
+      // 2. The file system module — for route modules imported separately
+      //    (they resolve getPosts() from the file system, not the bundle)
+      let blogOptions: { contentDir?: string; basePath?: string } | undefined;
+      try {
+        const blogOptsPath = join(root, '.less', 'blog-options.json');
+        if (existsSync(blogOptsPath)) {
+          const raw = readFileSync(blogOptsPath, 'utf-8');
+          blogOptions = JSON.parse(raw);
+        }
+      } catch {
+        // Non-fatal
       }
 
-      // ── Dynamic route expansion via getStaticPaths() ──────────
-      // Hono's toSSG() skips parameter routes (e.g. /blog/:slug).
-      // We detect dynamic routes, call their getStaticPaths() to get
-      // concrete parameter values, and render each page via Vite SSR.
-      // The rendered HTML is written directly to the output directory.
-      const dynamicRoutes = routes.filter(
-        (r) => r.type === 'page' && !r.special && r.path.includes(':'),
-      );
-
-      log.info(
-        `Dynamic routes found: ${dynamicRoutes.length}${
-          dynamicRoutes.length > 0 ? ` (${dynamicRoutes.map((r) => r.path).join(', ')})` : ''
-        }`,
-      );
-
-      if (dynamicRoutes.length > 0) {
-        // Use server.ssrLoadModule() to ensure adapter registration is visible.
-        // Direct import() creates a separate module graph where
-        // installLitAdapter()'s registerAdapter() call is not visible.
-        const renderDsdMod = await server.ssrLoadModule(
-          '@lessjs/core/render-dsd',
-        ) as Record<string, unknown>;
-        const ssrHandlerMod = await server.ssrLoadModule(
-          '@lessjs/core/less-runtime',
-        ) as Record<string, unknown>;
-        const renderDSDFn = renderDsdMod.renderDSD as typeof import('../render-dsd.js').renderDSD;
-        const wrapInDocumentFn = ssrHandlerMod
-          .wrapInDocument as typeof import('../ssr-handler.js').wrapInDocument;
-
-        // Initialize @lessjs/content (blog) data store if present.
-        // The content plugin's buildStart() ran in Phase 1's Vite instance,
-        // but Phase 3 creates a fresh SSR server with its own module graph.
-        // We need to re-initialize so getPosts() returns data.
-        let blogOptions: { contentDir?: string; basePath?: string } | undefined;
+      // Initialize in the SSR bundle's module scope
+      if (module.initBlogData && typeof module.initBlogData === 'function') {
         try {
-          const blogOptsPath = join(root, '.less', 'blog-options.json');
-          if (existsSync(blogOptsPath)) {
-            const raw = readFileSync(blogOptsPath, 'utf-8');
-            blogOptions = JSON.parse(raw);
-          }
+          await module.initBlogData(blogOptions);
         } catch {
-          // Non-fatal
+          log.debug('Blog content module (bundle) not found — skipping');
         }
+      }
+
+      // Also initialize in the file system module scope — route modules
+      // imported via import() resolve their dependencies from the file
+      // system, creating a separate module instance of blog-data.ts.
+      // Without this, getPosts() would return [] in those route modules.
+      try {
+        const fsContentModule = await import('@lessjs/content') as Record<string, unknown>;
+        if (typeof fsContentModule.initBlogData === 'function') {
+          await (fsContentModule.initBlogData as (opts?: unknown) => Promise<unknown>)(blogOptions);
+        }
+      } catch {
+        log.debug('Blog content module (file system) not found — skipping');
+      }
+
+      const postCount = module.getPosts ? (module.getPosts as () => unknown[])().length : 0;
+      if (postCount > 0) {
+        log.info(`Blog data store initialized: ${postCount} post(s) for SSG dynamic routes`);
+      }
+
+      for (const route of dynamicRoutes) {
+        const paramNames = [...route.path.matchAll(/:([^/]+)/g)].map((m) => m[1]);
+        const routeModulePath = `/${routesDir}/${route.filePath}`;
+        let routeMod: Record<string, unknown>;
 
         try {
-          const blogModule = await server.ssrLoadModule('@lessjs/content') as Record<
-            string,
-            unknown
-          >;
-          if (blogModule && typeof blogModule.initBlogData === 'function') {
-            await (blogModule.initBlogData as (opts?: unknown) => Promise<unknown>)(blogOptions);
-            const postCount = (blogModule.getPosts as () => unknown[])().length;
-            log.info(`Blog data store initialized: ${postCount} post(s) for SSG dynamic routes`);
-          }
-        } catch {
-          // @lessjs/content not available — non-fatal
-          log.debug('Blog content module not found — skipping blog data initialization');
+          // Dynamic import the route module from the project source.
+          // Since the SSR bundle already inlined everything with noExternal,
+          // individual route modules are already compiled in. However, for
+          // dynamic routes that need getStaticPaths(), we need to load them
+          // individually. Use the bundle's context by re-importing from the
+          // same root-based path that the SSR build used.
+          const routeImportPath = resolve(root, routesDir, route.filePath);
+          routeMod = await import(routeImportPath) as Record<string, unknown>;
+        } catch (e) {
+          log.warn(
+            `Cannot load dynamic route module ${routeModulePath}: ${
+              e instanceof Error ? e.message : String(e)
+            }`,
+          );
+          continue;
         }
 
-        for (const route of dynamicRoutes) {
-          const paramNames = [...route.path.matchAll(/:([^/]+)/g)].map((m) => m[1]);
-          const routeModulePath = `/${routesDir}/${route.filePath}`;
-          let routeMod: Record<string, unknown>;
+        if (typeof routeMod.getStaticPaths !== 'function') {
+          log.warn(
+            `Dynamic route ${route.path} has no getStaticPaths() export — skipping SSG generation`,
+          );
+          continue;
+        }
+
+        const paramsList =
+          await (routeMod.getStaticPaths as () => Promise<Array<Record<string, string>>>)();
+        const tagName = (routeMod.tagName as string) || fileToTagName(route.filePath);
+        const ComponentClass = routeMod.default as CustomElementConstructor;
+
+        if (!ComponentClass) {
+          log.warn(`Dynamic route ${route.path} has no default export — skipping`);
+          continue;
+        }
+
+        // Register the component in SSR customElements registry
+        if (!globalThis.customElements.get(tagName)) {
+          try {
+            globalThis.customElements.define(tagName, ComponentClass);
+          } catch {
+            // Already defined — safe to skip
+          }
+        }
+
+        for (const params of paramsList) {
+          // Resolve concrete path: /blog/:slug + { slug: 'v0-8-0' } → /blog/v0-8-0
+          let resolvedPath = route.path;
+          for (const name of paramNames) {
+            resolvedPath = resolvedPath.replace(`:${name}`, params[name] || name);
+          }
 
           try {
-            routeMod = await server.ssrLoadModule(routeModulePath) as Record<string, unknown>;
+            // Render the component with route params as props
+            const html = await renderDSDFn(tagName, ComponentClass, params, {
+              route: resolvedPath,
+              source: route.filePath,
+            });
+
+            const fullHtml = wrapInDocumentFn(html, {
+              title: options.html?.title || 'LessJS',
+              lang: options.html?.lang || 'en',
+              headExtras: options.headExtras || '',
+            });
+
+            // Write to dist/blog/v0-8-0/index.html
+            const ssgOutputDir = join(root, outDir);
+            const pageDir = join(ssgOutputDir, resolvedPath);
+            const { mkdirSync: mkDir, writeFileSync: writeFile } = await import('node:fs');
+            mkDir(pageDir, { recursive: true });
+            writeFile(join(pageDir, 'index.html'), fullHtml, 'utf-8');
+
+            log.info(`Dynamic route: ${resolvedPath} → ${resolvedPath}/index.html`);
           } catch (e) {
             log.warn(
-              `Cannot load dynamic route module ${routeModulePath}: ${
+              `Failed to render dynamic route ${resolvedPath}: ${
                 e instanceof Error ? e.message : String(e)
               }`,
             );
-            continue;
           }
+        }
+      }
+    }
 
-          if (typeof routeMod.getStaticPaths !== 'function') {
-            log.warn(
-              `Dynamic route ${route.path} has no getStaticPaths() export — skipping SSG generation`,
-            );
-            continue;
+    const { toSSG } = await import('hono/ssg');
+    const nodeFs = await import('node:fs');
+    const nodePath = await import('node:path');
+
+    const fsModule = {
+      // deno-lint-ignore require-await
+      writeFile: async (path: string, data: string | Uint8Array) => {
+        const dir = nodePath.dirname(path);
+        if (!nodeFs.existsSync(dir)) nodeFs.mkdirSync(dir, { recursive: true });
+        nodeFs.writeFileSync(path, data);
+      },
+      // deno-lint-ignore require-await
+      mkdir: async (path: string) => {
+        if (!nodeFs.existsSync(path)) nodeFs.mkdirSync(path, { recursive: true });
+      },
+      isDirectory: (path: string) => {
+        try {
+          return nodeFs.statSync(path).isDirectory();
+        } catch (e) {
+          // Path doesn't exist or is inaccessible — not a directory
+          log.debug(
+            `isDirectory("${path}"): ${e instanceof Error ? e.message : String(e)}`,
+          );
+          return false;
+        }
+      },
+    };
+
+    const outputDir = join(root, outDir);
+    const result = await toSSG(app, fsModule, { dir: outputDir });
+
+    if (!result.success) throw result.error;
+
+    // Rename 404/index.html → 404.html for GitHub Pages compatibility
+    const _404Dir = join(outputDir, '404');
+    const _404Html = join(outputDir, '404.html');
+    const _404Index = join(_404Dir, 'index.html');
+    if (existsSync(_404Index)) {
+      const { renameSync } = await import('node:fs');
+      renameSync(_404Index, _404Html);
+      if (existsSync(_404Dir)) {
+        const { rmdirSync } = await import('node:fs');
+        try {
+          rmdirSync(_404Dir);
+        } catch (e) {
+          // Non-empty directory — not an error, just can't auto-remove
+          log.debug(
+            `Cannot remove 404 directory (not empty): ${
+              e instanceof Error ? e.message : String(e)
+            }`,
+          );
+        }
+      }
+      log.info('404 page → dist/404.html (GitHub Pages)');
+    }
+
+    // ── i18n locale expansion ──────────────────────────────
+    // After toSSG() renders all static routes, expand each route for every
+    // configured locale and write to locale-prefixed paths so the language
+    // switcher can navigate to /en/guide/architecture, /zh/guide/architecture.
+    // The locale is passed as a renderDSD prop so route templates can read
+    // this.locale (falling back to 'zh' when unset).
+    const i18nOptsPath = join(root, '.less', 'i18n-options.json');
+    if (existsSync(i18nOptsPath)) {
+      const i18nOpts = JSON.parse(readFileSync(i18nOptsPath, 'utf-8'));
+      const locales: string[] = i18nOpts.locales || [];
+
+      if (locales.length > 1) {
+        log.info(`i18n: expanding ${routes.length} route(s) for locales: ${locales.join(', ')}`);
+
+        // Use renderDSD and wrapInDocument from the SSR bundle
+        const { renderDSD: renderDSDFn, wrapInDocument: wrapInDocumentFn } = module;
+
+        // Initialize @lessjs/i18n data store so route-level helpers
+        // (i18nStaticPaths, switchLocale) return correct values.
+        try {
+          const i18nModule = await import('@lessjs/i18n') as Record<string, unknown>;
+          if (typeof i18nModule.initI18nData === 'function') {
+            i18nModule.initI18nData(i18nOpts);
           }
+        } catch {
+          // @lessjs/i18n not available — non-fatal
+          log.debug('@lessjs/i18n not found — continuing with inline locale expansion');
+        }
 
-          const paramsList =
-            await (routeMod.getStaticPaths as () => Promise<Array<Record<string, string>>>)();
-          const tagName = (routeMod.tagName as string) || fileToTagName(route.filePath);
-          const ComponentClass = routeMod.default as CustomElementConstructor;
+        for (const locale of locales) {
+          for (const route of routes) {
+            if (route.type !== 'page' || route.special) continue;
 
-          if (!ComponentClass) {
-            log.warn(`Dynamic route ${route.path} has no default export — skipping`);
-            continue;
-          }
-
-          // Register the component in SSR customElements registry
-          if (!globalThis.customElements.get(tagName)) {
+            let routeMod: Record<string, unknown>;
+            const routeImportPath = resolve(root, routesDir, route.filePath);
             try {
-              globalThis.customElements.define(tagName, ComponentClass);
-            } catch {
-              // Already defined — safe to skip
-            }
-          }
-
-          for (const params of paramsList) {
-            // Resolve concrete path: /blog/:slug + { slug: 'v0-8-0' } → /blog/v0-8-0
-            let resolvedPath = route.path;
-            for (const name of paramNames) {
-              resolvedPath = resolvedPath.replace(`:${name}`, params[name] || name);
-            }
-
-            try {
-              // Render the component with route params as props
-              const html = await renderDSDFn(tagName, ComponentClass, params, {
-                route: resolvedPath,
-                source: route.filePath,
-              });
-
-              const fullHtml = wrapInDocumentFn(html, {
-                title: options.html?.title || 'LessJS',
-                lang: options.html?.lang || 'en',
-                headExtras: options.headExtras || '',
-              });
-
-              // Write to dist/blog/v0-8-0/index.html
-              const ssgOutputDir = join(root, outDir);
-              const pageDir = join(ssgOutputDir, resolvedPath);
-              const { mkdirSync: mkDir, writeFileSync: writeFile } = await import('node:fs');
-              mkDir(pageDir, { recursive: true });
-              writeFile(join(pageDir, 'index.html'), fullHtml, 'utf-8');
-
-              log.info(`Dynamic route: ${resolvedPath} → ${resolvedPath}/index.html`);
+              routeMod = await import(routeImportPath) as Record<string, unknown>;
             } catch (e) {
-              log.warn(
-                `Failed to render dynamic route ${resolvedPath}: ${
+              log.debug(
+                `Cannot load route module ${routeImportPath}: ${
                   e instanceof Error ? e.message : String(e)
                 }`,
               );
+              continue;
             }
-          }
-        }
-      }
 
-      const { toSSG } = await import('hono/ssg');
-      const nodeFs = await import('node:fs');
-      const nodePath = await import('node:path');
+            const ComponentClass = routeMod.default as CustomElementConstructor | undefined;
+            const tagName = (routeMod.tagName as string) || fileToTagName(route.filePath);
 
-      const fsModule = {
-        // deno-lint-ignore require-await
-        writeFile: async (path: string, data: string | Uint8Array) => {
-          const dir = nodePath.dirname(path);
-          if (!nodeFs.existsSync(dir)) nodeFs.mkdirSync(dir, { recursive: true });
-          nodeFs.writeFileSync(path, data);
-        },
-        // deno-lint-ignore require-await
-        mkdir: async (path: string) => {
-          if (!nodeFs.existsSync(path)) nodeFs.mkdirSync(path, { recursive: true });
-        },
-        isDirectory: (path: string) => {
-          try {
-            return nodeFs.statSync(path).isDirectory();
-          } catch (e) {
-            // Path doesn't exist or is inaccessible — not a directory
-            log.debug(
-              `isDirectory("${path}"): ${e instanceof Error ? e.message : String(e)}`,
-            );
-            return false;
-          }
-        },
-      };
-
-      const outputDir = join(root, outDir);
-      const result = await toSSG(app, fsModule, { dir: outputDir });
-
-      if (!result.success) throw result.error;
-
-      // Rename 404/index.html → 404.html for GitHub Pages compatibility
-      const _404Dir = join(outputDir, '404');
-      const _404Html = join(outputDir, '404.html');
-      const _404Index = join(_404Dir, 'index.html');
-      if (existsSync(_404Index)) {
-        const { renameSync } = await import('node:fs');
-        renameSync(_404Index, _404Html);
-        if (existsSync(_404Dir)) {
-          const { rmdirSync } = await import('node:fs');
-          try {
-            rmdirSync(_404Dir);
-          } catch (e) {
-            // Non-empty directory — not an error, just can't auto-remove
-            log.debug(
-              `Cannot remove 404 directory (not empty): ${
-                e instanceof Error ? e.message : String(e)
-              }`,
-            );
-          }
-        }
-        log.info('404 page → dist/404.html (GitHub Pages)');
-      }
-
-      // ── i18n locale expansion ──────────────────────────────
-      // After toSSG() renders all static routes, expand each route for every
-      // configured locale and write to locale-prefixed paths so the language
-      // switcher can navigate to /en/guide/architecture, /zh/guide/architecture.
-      // The locale is passed as a renderDSD prop so route templates can read
-      // this.locale (falling back to 'zh' when unset).
-      const i18nOptsPath = join(root, '.less', 'i18n-options.json');
-      if (existsSync(i18nOptsPath)) {
-        const i18nOpts = JSON.parse(readFileSync(i18nOptsPath, 'utf-8'));
-        const locales: string[] = i18nOpts.locales || [];
-
-        if (locales.length > 1) {
-          log.info(`i18n: expanding ${routes.length} route(s) for locales: ${locales.join(', ')}`);
-
-          // Load renderDSD and wrapInDocument for manual rendering
-          const renderDsdMod = await server.ssrLoadModule(
-            '@lessjs/core/render-dsd',
-          ) as Record<string, unknown>;
-          const ssrHandlerMod = await server.ssrLoadModule(
-            '@lessjs/core/less-runtime',
-          ) as Record<string, unknown>;
-          const renderDSDFn = renderDsdMod.renderDSD as (
-            tag: string,
-            cls: CustomElementConstructor,
-            props: Record<string, unknown>,
-            info?: { route?: string; source?: string },
-          ) => Promise<string>;
-          const wrapInDocumentFn = ssrHandlerMod.wrapInDocument as (
-            html: string,
-            opts: Record<string, unknown>,
-          ) => string;
-
-          // Initialize @lessjs/i18n data store so route-level helpers
-          // (i18nStaticPaths, switchLocale) return correct values.
-          try {
-            const i18nModule = await server.ssrLoadModule('@lessjs/i18n') as Record<
-              string,
-              unknown
-            >;
-            if (typeof i18nModule.initI18nData === 'function') {
-              i18nModule.initI18nData(i18nOpts);
+            if (!ComponentClass) {
+              log.debug(
+                `Route ${route.path} has no default export — skipping locale expansion`,
+              );
+              continue;
             }
-          } catch {
-            // @lessjs/i18n not available — non-fatal
-            log.debug('@lessjs/i18n not found — continuing with inline locale expansion');
-          }
 
-          for (const locale of locales) {
-            for (const route of routes) {
-              if (route.type !== 'page' || route.special) continue;
-
-              let routeMod: Record<string, unknown>;
-              const routeModulePath = `/${routesDir}/${route.filePath}`;
+            // Register component if not already registered
+            if (!globalThis.customElements.get(tagName)) {
               try {
-                routeMod = await server.ssrLoadModule(routeModulePath) as Record<string, unknown>;
+                globalThis.customElements.define(tagName, ComponentClass);
+              } catch {
+                // Already defined — safe to skip
+              }
+            }
+
+            // Get param values for dynamic routes
+            let paramsList: Array<Record<string, string>> = [{}];
+            if (route.path.includes(':')) {
+              if (typeof routeMod.getStaticPaths === 'function') {
+                paramsList = await (routeMod.getStaticPaths as () => Promise<
+                  Array<Record<string, string>>
+                >)();
+              } else {
+                log.info(
+                  `Dynamic route ${route.path} has no getStaticPaths — skipping locale expansion`,
+                );
+                continue;
+              }
+            }
+
+            const paramNames = [...route.path.matchAll(/:([^/]+)/g)].map((m) => m[1]);
+
+            for (const params of paramsList) {
+              // Resolve concrete path
+              let resolvedPath = route.path;
+              for (const name of paramNames) {
+                resolvedPath = resolvedPath.replace(`:${name}`, params[name] || name);
+              }
+
+              const localePath = `/${locale}${resolvedPath}`;
+
+              try {
+                const html = await renderDSDFn(tagName, ComponentClass, {
+                  ...params,
+                  locale,
+                }, {
+                  route: localePath,
+                  source: route.filePath,
+                });
+
+                const fullHtml = wrapInDocumentFn(html, {
+                  title: options.html?.title || 'LessJS',
+                  lang: locale,
+                  headExtras: options.headExtras || '',
+                });
+
+                // Write to dist/en/guide/architecture/index.html
+                const pageDir = join(outputDir, localePath);
+                const { mkdirSync: mkDir, writeFileSync: writeFile } = await import('node:fs');
+                mkDir(pageDir, { recursive: true });
+                writeFile(join(pageDir, 'index.html'), fullHtml, 'utf-8');
+
+                log.info(`i18n: ${localePath}/index.html`);
               } catch (e) {
-                log.debug(
-                  `Cannot load route module ${routeModulePath}: ${
+                log.warn(
+                  `i18n: failed to render locale ${locale} for ${resolvedPath}: ${
                     e instanceof Error ? e.message : String(e)
                   }`,
                 );
-                continue;
-              }
-
-              const ComponentClass = routeMod.default as CustomElementConstructor | undefined;
-              const tagName = (routeMod.tagName as string) || fileToTagName(route.filePath);
-
-              if (!ComponentClass) {
-                log.debug(
-                  `Route ${route.path} has no default export — skipping locale expansion`,
-                );
-                continue;
-              }
-
-              // Register component if not already registered
-              if (!globalThis.customElements.get(tagName)) {
-                try {
-                  globalThis.customElements.define(tagName, ComponentClass);
-                } catch {
-                  // Already defined — safe to skip
-                }
-              }
-
-              // Get param values for dynamic routes
-              let paramsList: Array<Record<string, string>> = [{}];
-              if (route.path.includes(':')) {
-                if (typeof routeMod.getStaticPaths === 'function') {
-                  paramsList = await (routeMod.getStaticPaths as () => Promise<
-                    Array<Record<string, string>>
-                  >)();
-                } else {
-                  log.info(
-                    `Dynamic route ${route.path} has no getStaticPaths — skipping locale expansion`,
-                  );
-                  continue;
-                }
-              }
-
-              const paramNames = [...route.path.matchAll(/:([^/]+)/g)].map((m) => m[1]);
-
-              for (const params of paramsList) {
-                // Resolve concrete path
-                let resolvedPath = route.path;
-                for (const name of paramNames) {
-                  resolvedPath = resolvedPath.replace(`:${name}`, params[name] || name);
-                }
-
-                const localePath = `/${locale}${resolvedPath}`;
-
-                try {
-                  const html = await renderDSDFn(tagName, ComponentClass, {
-                    ...params,
-                    locale,
-                  }, {
-                    route: localePath,
-                    source: route.filePath,
-                  });
-
-                  const fullHtml = wrapInDocumentFn(html, {
-                    title: options.html?.title || 'LessJS',
-                    lang: locale,
-                    headExtras: options.headExtras || '',
-                  });
-
-                  // Write to dist/en/guide/architecture/index.html
-                  const pageDir = join(outputDir, localePath);
-                  const { mkdirSync: mkDir, writeFileSync: writeFile } = await import('node:fs');
-                  mkDir(pageDir, { recursive: true });
-                  writeFile(join(pageDir, 'index.html'), fullHtml, 'utf-8');
-
-                  log.info(`i18n: ${localePath}/index.html`);
-                } catch (e) {
-                  log.warn(
-                    `i18n: failed to render locale ${locale} for ${resolvedPath}: ${
-                      e instanceof Error ? e.message : String(e)
-                    }`,
-                  );
-                }
               }
             }
           }
         }
       }
+    }
 
-      // Convert flat HTML files to clean URLs: about.html → about/index.html
-      const allHtmlFiles = findHtmlFiles(outputDir);
-      for (const filePath of allHtmlFiles) {
-        const rel = nodePath.relative(outputDir, filePath);
-        if (rel.endsWith('index.html') || rel === '404.html' || rel.includes(nodePath.sep)) {
-          continue;
-        }
-        const baseName = rel.replace(/\.html$/, '');
-        const dirPath = join(outputDir, baseName);
-        const indexPath = join(dirPath, 'index.html');
-        if (existsSync(dirPath)) continue;
-        nodeFs.mkdirSync(dirPath, { recursive: true });
-        nodeFs.renameSync(filePath, indexPath);
-        log.info(`Clean URL: /${baseName} → ${baseName}/index.html`);
+    // Convert flat HTML files to clean URLs: about.html → about/index.html
+    const allHtmlFiles = findHtmlFiles(outputDir);
+    for (const filePath of allHtmlFiles) {
+      const rel = nodePath.relative(outputDir, filePath);
+      if (rel.endsWith('index.html') || rel === '404.html' || rel.includes(nodePath.sep)) {
+        continue;
       }
+      const baseName = rel.replace(/\.html$/, '');
+      const dirPath = join(outputDir, baseName);
+      const indexPath = join(dirPath, 'index.html');
+      if (existsSync(dirPath)) continue;
+      nodeFs.mkdirSync(dirPath, { recursive: true });
+      nodeFs.renameSync(filePath, indexPath);
+      log.info(`Clean URL: /${baseName} → ${baseName}/index.html`);
+    }
 
-      log.info(`Static site generated → ${outputDir}`);
+    log.info(`Static site generated → ${outputDir}`);
 
-      const basePath = options.base || '/';
+    const basePath = options.base || '/';
 
-      // Inject client script tag into all HTML files
-      // The client entry (built in Phase 2) imports island modules so
-      // custom elements can self-register and upgrade DSD markup.
-      const clientManifestPath = join(root, outDir, 'client', '.vite', 'manifest.json');
-      if (existsSync(clientManifestPath)) {
-        try {
-          const manifestRaw = readFileSync(clientManifestPath, 'utf-8');
-          const manifest = JSON.parse(manifestRaw);
-          // Find the client entry in the manifest
-          // The key is the source path of .less/.less-client-entry.ts
-          for (const [src, entry] of Object.entries(manifest) as [string, { file?: string }][]) {
-            if (src.includes('.less-client-entry') && entry.file) {
-              const scriptSrc = `${basePath}client/${entry.file}`;
-              const { injectClientScript } = await import('../ssg-postprocess.js');
-              injectClientScript(outputDir, scriptSrc);
-              log.info(`Client script injected: ${scriptSrc}`);
-              break;
-            }
+    // Inject client script tag into all HTML files
+    // The client entry (built in Phase 2) imports island modules so
+    // custom elements can self-register and upgrade DSD markup.
+    const clientManifestPath = join(root, outDir, 'client', '.vite', 'manifest.json');
+    if (existsSync(clientManifestPath)) {
+      try {
+        const manifestRaw = readFileSync(clientManifestPath, 'utf-8');
+        const manifest = JSON.parse(manifestRaw);
+        // Find the client entry in the manifest
+        // The key is the source path of .less/.less-client-entry.ts
+        for (const [src, entry] of Object.entries(manifest) as [string, { file?: string }][]) {
+          if (src.includes('.less-client-entry') && entry.file) {
+            const scriptSrc = `${basePath}client/${entry.file}`;
+            const { injectClientScript } = await import('../ssg-postprocess.js');
+            injectClientScript(outputDir, scriptSrc);
+            log.info(`Client script injected: ${scriptSrc}`);
+            break;
           }
-        } catch (err) {
-          log.warn('Could not read client manifest for script injection:', err);
         }
+      } catch (err) {
+        log.warn('Could not read client manifest for script injection:', err);
+      }
+    } else {
+      log.warn('No client manifest found - run the full build command first');
+    }
+
+    // Post-process: build island chunk map for speculative links
+    const {
+      buildIslandChunkMap,
+      injectCspMeta,
+      injectDsdPolyfill,
+      injectViewTransitionMeta,
+      injectSpeculationRules,
+      buildSpeculationRulesJson,
+    } = await import('../ssg-postprocess.js');
+    const _islandChunkMap = buildIslandChunkMap(root, outDir, islandTagNames, basePath);
+
+    // Post-process: inject View Transitions meta tag.
+    // Enables smooth cross-page animations for MPA navigation.
+    // Supported: Chrome 111+, Safari 18+, Firefox 129+.
+    // Unsupported browsers silently ignore the meta tag.
+    const enableViewTransition = options.viewTransition !== false;
+    if (enableViewTransition) {
+      injectViewTransitionMeta(outputDir);
+      log.info('View Transitions meta tag injected into static HTML');
+    }
+
+    // Post-process: inject Speculation Rules for prefetch/prerender.
+    // Enables the browser to prefetch or prerender pages before navigation,
+    // making page loads feel instant for SSG sites.
+    // Supported: Chrome 121+, Edge 121+. Safari/Firefox gracefully ignore.
+    if (options.speculation) {
+      const specOpts = typeof options.speculation === 'boolean'
+        ? {} // boolean true → use heuristic defaults
+        : options.speculation;
+      const rulesJson = buildSpeculationRulesJson(specOpts, routes);
+      if (rulesJson) {
+        injectSpeculationRules(outputDir, rulesJson);
+        log.info('Speculation Rules injected into static HTML');
       } else {
-        log.warn('No client manifest found - run the full build command first');
+        log.info('Speculation Rules: no rules generated (no matching routes)');
       }
+    }
 
-      // Post-process: build island chunk map for speculative links
-      const {
-        buildIslandChunkMap,
-        injectCspMeta,
-        injectDsdPolyfill,
-        injectViewTransitionMeta,
-        injectSpeculationRules,
-        buildSpeculationRulesJson,
-      } = await import('../ssg-postprocess.js');
-      const _islandChunkMap = buildIslandChunkMap(root, outDir, islandTagNames, basePath);
+    // Post-process: inject CSP <meta> tag into static HTML files.
+    // SSG outputs static files — CSP nonces are not possible here,
+    // but policy-only CSP meta tags provide a security baseline for
+    // static deployments (CDN, GitHub Pages, etc.).
+    const cspPolicy = options.middleware?.csp?.policy;
+    if (cspPolicy) {
+      injectCspMeta(
+        outputDir,
+        cspPolicy,
+        options.middleware?.csp?.reportOnly || false,
+        options.middleware?.csp?.nonce || false,
+      );
+      log.info('CSP meta tag injected into static HTML');
+    }
 
-      // Post-process: inject View Transitions meta tag.
-      // Enables smooth cross-page animations for MPA navigation.
-      // Supported: Chrome 111+, Safari 18+, Firefox 129+.
-      // Unsupported browsers silently ignore the meta tag.
-      const enableViewTransition = options.viewTransition !== false;
-      if (enableViewTransition) {
-        injectViewTransitionMeta(outputDir);
-        log.info('View Transitions meta tag injected into static HTML');
-      }
+    // Inject DSD polyfill for browsers that don't support Declarative Shadow DOM
+    // (Firefox does NOT support shadowrootmode as of 2025).
+    injectDsdPolyfill(outputDir);
+    log.info('DSD polyfill injected into static HTML');
 
-      // Post-process: inject Speculation Rules for prefetch/prerender.
-      // Enables the browser to prefetch or prerender pages before navigation,
-      // making page loads feel instant for SSG sites.
-      // Supported: Chrome 121+, Edge 121+. Safari/Firefox gracefully ignore.
-      if (options.speculation) {
-        const specOpts = typeof options.speculation === 'boolean'
-          ? {} // boolean true → use heuristic defaults
-          : options.speculation;
-        const rulesJson = buildSpeculationRulesJson(specOpts, routes);
-        if (rulesJson) {
-          injectSpeculationRules(outputDir, rulesJson);
-          log.info('Speculation Rules injected into static HTML');
-        } else {
-          log.info('Speculation Rules: no rules generated (no matching routes)');
-        }
-      }
+    // Build observability: full manifest with HTML pages + budget warnings
+    const { printBuildManifest } = await import('../build-manifest.js');
+    printBuildManifest({
+      root,
+      outDir,
+      phase: 3,
+      headExtras: options.headExtras,
+    });
 
-      // Post-process: inject CSP <meta> tag into static HTML files.
-      // SSG outputs static files — CSP nonces are not possible here,
-      // but policy-only CSP meta tags provide a security baseline for
-      // static deployments (CDN, GitHub Pages, etc.).
-      const cspPolicy = options.middleware?.csp?.policy;
-      if (cspPolicy) {
-        injectCspMeta(
-          outputDir,
-          cspPolicy,
-          options.middleware?.csp?.reportOnly || false,
-          options.middleware?.csp?.nonce || false,
-        );
-        log.info('CSP meta tag injected into static HTML');
-      }
+    // Generate PWA files (manifest.json + sw.js) if options include PWA config
+    const pwa = (options as Record<string, unknown>).pwa as
+      | { name?: string; shortName?: string; themeColor?: string; backgroundColor?: string }
+      | undefined;
+    if (pwa) {
+      const manifest = {
+        name: pwa.name || 'LessJS',
+        short_name: pwa.shortName || 'LessJS',
+        start_url: basePath,
+        display: 'standalone' as const,
+        theme_color: pwa.themeColor || '#000000',
+        background_color: pwa.backgroundColor || '#ffffff',
+        icons: [{ src: '/assets/less-logo.svg', sizes: 'any', type: 'image/svg+xml' }],
+      };
+      writeFileSync(join(outputDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
+      log.info('PWA manifest.json generated');
 
-      // Inject DSD polyfill for browsers that don't support Declarative Shadow DOM
-      // (Firefox does NOT support shadowrootmode as of 2025).
-      injectDsdPolyfill(outputDir);
-      log.info('DSD polyfill injected into static HTML');
-
-      // Build observability: full manifest with HTML pages + budget warnings
-      const { printBuildManifest } = await import('../build-manifest.js');
-      printBuildManifest({
-        root,
-        outDir,
-        phase: 3,
-        headExtras: options.headExtras,
-      });
-
-      // Generate PWA files (manifest.json + sw.js) if options include PWA config
-      const pwa = (options as Record<string, unknown>).pwa as
-        | { name?: string; shortName?: string; themeColor?: string; backgroundColor?: string }
-        | undefined;
-      if (pwa) {
-        const manifest = {
-          name: pwa.name || 'LessJS',
-          short_name: pwa.shortName || 'LessJS',
-          start_url: basePath,
-          display: 'standalone' as const,
-          theme_color: pwa.themeColor || '#000000',
-          background_color: pwa.backgroundColor || '#ffffff',
-          icons: [{ src: '/assets/less-logo.svg', sizes: 'any', type: 'image/svg+xml' }],
-        };
-        writeFileSync(join(outputDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
-        log.info('PWA manifest.json generated');
-
-        // Smart service worker: networkFirst for HTML+API, cacheFirst for assets
-        // No precaching — the old PRECACHE pattern caused stale index.html.
-        const swCode = `const CACHE = 'less-${Date.now()}';
+      // Smart service worker: networkFirst for HTML+API, cacheFirst for assets
+      // No precaching — the old PRECACHE pattern caused stale index.html.
+      const swCode = `const CACHE = 'less-${Date.now()}';
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(
   caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => clients.claim())
@@ -824,73 +873,53 @@ async function networkFirst(req) {
     throw new Error('offline');
   }
 }`;
-        writeFileSync(join(outputDir, 'sw.js'), swCode);
-        log.info('PWA sw.js generated');
+      writeFileSync(join(outputDir, 'sw.js'), swCode);
+      log.info('PWA sw.js generated');
 
-        // Inject manifest link + sw registration into HTML files
-        const manifestLink = `<link rel="manifest" href="${basePath}manifest.json">`;
-        const swScript =
-          `<script>addEventListener("load",()=>{navigator.serviceWorker?.register("${basePath}sw.js")})</script>`;
-        const htmlFiles = findHtmlFiles(outputDir);
-        for (const htmlPath of htmlFiles) {
-          let html = readFileSync(htmlPath, 'utf-8');
-          if (!html.includes('rel="manifest"')) {
-            html = html.replace('</head>', `${manifestLink}</head>`);
-          }
-          if (!html.includes('serviceWorker')) {
-            html = html.replace('</body>', `${swScript}</body>`);
-          }
-          writeFileSync(htmlPath, html);
+      // Inject manifest link + sw registration into HTML files
+      const manifestLink = `<link rel="manifest" href="${basePath}manifest.json">`;
+      const swScript =
+        `<script>addEventListener("load",()=>{navigator.serviceWorker?.register("${basePath}sw.js")})</script>`;
+      const htmlFiles = findHtmlFiles(outputDir);
+      for (const htmlPath of htmlFiles) {
+        let html = readFileSync(htmlPath, 'utf-8');
+        if (!html.includes('rel="manifest"')) {
+          html = html.replace('</head>', `${manifestLink}</head>`);
         }
-        log.info(`PWA: injected manifest + sw into ${htmlFiles.length} HTML files`);
+        if (!html.includes('serviceWorker')) {
+          html = html.replace('</body>', `${swScript}</body>`);
+        }
+        writeFileSync(htmlPath, html);
       }
-    } finally {
-      // ─── Sitemap generation ────────────────────────────────────
-      // Before closing the Vite server, generate sitemap.xml if
-      // @lessjs/content sitemap module is configured.
-      // Uses ssrLoadModule (not import()) to avoid JSR treating
-      // @lessjs/content as a hard dependency of @lessjs/core.
-      try {
-        const navDataPath = join(root, '.less', 'nav-data.json');
-        if (existsSync(navDataPath)) {
-          const sitemapConfigPath = join(root, '.less', 'sitemap-options.json');
-          if (existsSync(sitemapConfigPath)) {
-            const sitemapOpts = JSON.parse(readFileSync(sitemapConfigPath, 'utf-8'));
-            const sitemapModule = await server.ssrLoadModule('@lessjs/content/sitemap') as Record<
-              string,
-              unknown
-            >;
-            if (typeof sitemapModule.generateSitemap === 'function') {
-              (sitemapModule.generateSitemap as (dir: string, opts: unknown) => string[])(
-                join(root, outDir),
-                sitemapOpts,
-              );
-            }
+      log.info(`PWA: injected manifest + sw into ${htmlFiles.length} HTML files`);
+    }
+
+    // ─── Sitemap generation ────────────────────────────────────
+    try {
+      const navDataPath = join(root, '.less', 'nav-data.json');
+      if (existsSync(navDataPath)) {
+        const sitemapConfigPath = join(root, '.less', 'sitemap-options.json');
+        if (existsSync(sitemapConfigPath)) {
+          const sitemapOpts = JSON.parse(readFileSync(sitemapConfigPath, 'utf-8'));
+          const sitemapModule = await import('@lessjs/content/sitemap') as Record<
+            string,
+            unknown
+          >;
+          if (typeof sitemapModule.generateSitemap === 'function') {
+            (sitemapModule.generateSitemap as (dir: string, opts: unknown) => string[])(
+              join(root, outDir),
+              sitemapOpts,
+            );
           }
         }
-      } catch {
-        // Sitemap generation failure is non-fatal
-        log.debug('Sitemap generation skipped or failed');
       }
-
-      await server.close();
+    } catch {
+      // Sitemap generation failure is non-fatal
+      log.debug('Sitemap generation skipped or failed');
     }
   } catch (err) {
     const cause = err instanceof Error ? err : new Error(String(err));
     throw new SsrRenderError('SSG pipeline', cause);
-  } finally {
-    // Clean up CJS polyfill — don't leave global pollution
-    delete (globalThis as Record<string, unknown>).module;
-    delete (globalThis as Record<string, unknown>).exports;
-
-    try {
-      unlinkSync(tmpEntryPath);
-    } catch (e) {
-      // Temp file cleanup failure is non-fatal
-      log.debug(
-        `Could not remove temp entry: ${e instanceof Error ? e.message : String(e)}`,
-      );
-    }
   }
 }
 

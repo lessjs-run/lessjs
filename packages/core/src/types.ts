@@ -293,17 +293,25 @@ export interface RenderAdapter {
   extractStyles?: (componentClass: CustomElementConstructor) => string | undefined;
 }
 
-/** Global adapter instance (set via registerAdapter) */
-let _globalAdapter: RenderAdapter | undefined;
+/**
+ * Module-level adapter storage.
+ *
+ * With viteBuild(ssr:true, noExternal) producing a self-contained ESM bundle,
+ * all virtual modules resolve at compile time and there is only one module
+ * instance — so a plain module variable replaces the former globalThis bridge.
+ *
+ * The public API (registerAdapter / getAdapter) is unchanged.
+ */
+let _adapter: RenderAdapter | undefined;
 
 /** Register a render adapter explicitly. */
 export function registerAdapter(adapter: RenderAdapter | undefined): void {
-  _globalAdapter = adapter;
+  _adapter = adapter;
 }
 
 /** Get the currently registered adapter. */
 export function getAdapter(): RenderAdapter | undefined {
-  return _globalAdapter;
+  return _adapter;
 }
 
 /**

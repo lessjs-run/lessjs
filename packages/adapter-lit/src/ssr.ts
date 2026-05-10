@@ -458,17 +458,18 @@ export function renderLitToString(
  * Idempotent — safe to call multiple times.
  */
 
-// Module-level idempotency guard — no globalThis pollution.
-// Works because registerAdapter and renderDSD share the same module
-// scope when both are loaded through Vite SSR or Deno.
-let _litAdapterInstalled = false;
+// Module-level idempotency guard.
+// With viteBuild(ssr:true, noExternal) producing a self-contained ESM bundle,
+// there is only one module instance — a plain module variable suffices.
+let _installed = false;
 
 export function installLitAdapter(): void {
-  if (_litAdapterInstalled) {
+  if (_installed) {
     return; // Already installed — idempotent
   }
 
-  // Use registerAdapter() — the explicit API, no globalThis pollution
+  // Use registerAdapter() — backed by a module-level variable in @lessjs/core,
+  // so the registration is shared within the self-contained SSR bundle.
   registerAdapter({
     render: (result: unknown, tagName: string): Promise<string> => {
       return Promise.resolve(renderLitToString(result, tagName));
@@ -481,7 +482,7 @@ export function installLitAdapter(): void {
     },
   });
 
-  _litAdapterInstalled = true;
+  _installed = true;
   log.info('Lit SSR adapter installed - TemplateResult to string');
 }
 
@@ -493,5 +494,5 @@ export function installLitAdapter(): void {
  */
 export function uninstallLitAdapter(): void {
   registerAdapter(undefined as unknown as RenderAdapter); // Clear adapter
-  _litAdapterInstalled = false;
+  _installed = false;
 }

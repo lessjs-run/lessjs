@@ -3,12 +3,16 @@
  *
  * Singleton that holds parsed blog posts during build/dev.
  * The [slug].ts dynamic route reads from this store to render posts.
+ *
+ * With viteBuild(ssr:true, noExternal) producing a self-contained ESM bundle,
+ * all virtual modules resolve at compile time and there is only one module
+ * instance — so plain module variables replace the former globalThis bridge.
  */
 
 import type { BlogPost, LessBlogOptions } from './types.ts';
 import { generateBlogRoutes } from './routes.ts';
 
-/** Global blog data store — populated by lessContent() blog module at buildStart */
+// Module-level storage — single instance within the self-contained SSR bundle
 let _posts: BlogPost[] = [];
 let _options: LessBlogOptions = {};
 
