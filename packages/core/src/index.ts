@@ -16,8 +16,9 @@
 import type { Plugin } from 'vite';
 import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from './types.js';
 
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import process from 'node:process';
+import { fileURLToPath } from 'node:url';
 import { LessError } from './errors.js';
 import { createLogger } from './logger.js';
 
@@ -91,6 +92,57 @@ export { createLogger, LessLogger, LogLevel } from './logger.js';
 export { getSSRProps, island, type IslandOptions, lessBind } from './island.js';
 export { hasNavigationApi, matchRoute, navigate, onNavigate } from './navigation.js';
 export type { NavigationCallback } from './navigation.js';
+
+/**
+ * Build Vite resolve aliases for @lessjs/core subpath imports.
+ *
+ * The generated virtual:less-hono-entry module imports from subpaths like
+ * @lessjs/core/ssr-handler and @lessjs/core/logger. Vite cannot resolve
+ * these bare specifiers without aliases — JSR packages are not in
+ * node_modules, and the Deno import map is not used by Vite's SSR runner.
+ *
+ * IMPORTANT: Subpath aliases MUST come before the parent @lessjs/core alias.
+ * Vite alias matching is first-hit (not longest-prefix). If @lessjs/core
+ * is listed before @lessjs/core/ssr-handler, Vite resolves the parent first
+ * and appends "/ssr-handler" to the index.ts file path → "Not a directory".
+ *
+ * This bug has recurred 3 times (b6a6b41, f223bef, 6c5a992).
+ */
+function buildCoreSubpathAliases(): import('vite').Alias[] {
+  // Resolve the core package source directory relative to this file.
+  // Uses import.meta.url so it works regardless of CWD.
+  const coreSrcDir = join(dirname(fileURLToPath(import.meta.url)));
+
+  const subpaths: Record<string, string> = {
+    'html-escape': 'html-escape.ts',
+    'render-dsd': 'render-dsd.ts',
+    'render-nested': 'render-nested.ts',
+    'island-manifest': 'island-manifest.ts',
+    'adapter-registry': 'adapter-registry.ts',
+    'ssr-handler': 'ssr-handler.ts',
+    'logger': 'logger.ts',
+    'build-context': 'build-context.ts',
+    'navigation': 'navigation.ts',
+  };
+
+  const aliases: import('vite').Alias[] = [];
+
+  // Subpath aliases MUST come first (before parent)
+  for (const [subpath, file] of Object.entries(subpaths)) {
+    aliases.push({
+      find: `@lessjs/core/${subpath}`,
+      replacement: join(coreSrcDir, file),
+    });
+  }
+
+  // Parent alias last
+  aliases.push({
+    find: '@lessjs/core',
+    replacement: join(coreSrcDir, 'index.ts'),
+  });
+
+  return aliases;
+}
 
 /**
  * LessJS Framework Vite plugin.
@@ -186,11 +238,22 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
           | import('vite').Alias[];
       }
 
+      // ADR 0015: Auto-inject @lessjs/core subpath aliases.
+      // The generated virtual:less-hono-entry imports from @lessjs/core/ssr-handler,
+      // @lessjs/core/logger, etc. Vite can't resolve these bare specifiers
+      // without aliases (JSR packages aren't in node_modules).
+      // Previously, consumers had to manually add 8+ aliases — now the plugin
+      // injects them automatically.
+      const coreSubpathAliases = buildCoreSubpathAliases();
+
       return {
         build: {
           rollupOptions: {
             input: [VIRTUAL_ENTRY_ID],
           },
+        },
+        resolve: {
+          alias: coreSubpathAliases,
         },
       };
     },

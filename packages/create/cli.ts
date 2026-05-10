@@ -34,7 +34,10 @@ const _v = {
   core: loadWorkspaceVersion('core'),
   adapterLit: loadWorkspaceVersion('adapter-lit'),
   app: loadWorkspaceVersion('app'),
+  content: loadWorkspaceVersion('content'),
+  i18n: loadWorkspaceVersion('i18n'),
   ui: loadWorkspaceVersion('ui'),
+  signal: loadWorkspaceVersion('signals'),
 };
 
 const TPL = {
@@ -51,12 +54,15 @@ node_modules/
     "vite": "npm:vite@8.0.10",
     "@lessjs/app": "jsr:@lessjs/app@^${_v.app}",
     "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^${_v.adapterLit}",
+    "@lessjs/content": "jsr:@lessjs/content@^${_v.content}",
     "@lessjs/core": "jsr:@lessjs/core@^${_v.core}",
     "@lessjs/core/adapter-registry": "jsr:@lessjs/core@^${_v.core}/adapter-registry",
     "@lessjs/core/html-escape": "jsr:@lessjs/core@^${_v.core}/html-escape",
     "@lessjs/core/navigation": "jsr:@lessjs/core@^${_v.core}/navigation",
     "@lessjs/core/render-dsd": "jsr:@lessjs/core@^${_v.core}/render-dsd",
     "@lessjs/core/ssr-handler": "jsr:@lessjs/core@^${_v.core}/ssr-handler",
+    "@lessjs/i18n": "jsr:@lessjs/i18n@^${_v.i18n}",
+    "@lessjs/signal": "jsr:@lessjs/signal@^${_v.signal}",
     "@lessjs/ui": "jsr:@lessjs/ui@^${_v.ui}",
     "@lessjs/ui/tokens/colors": "jsr:@lessjs/ui@^${_v.ui}/tokens/colors",
     "@lessjs/ui/tokens/color-values": "jsr:@lessjs/ui@^${_v.ui}/tokens/color-values",
@@ -115,6 +121,19 @@ export default defineConfig({
         // Design tokens - DRY: values from @lessjs/ui/tokens/colors.ts
         colorTokensStyle,
       ],
+    },
+    // Blog + Navigation + Sitemap (from @lessjs/content)
+    content: {
+      blog: {
+        contentDir: 'content/blog',
+        basePath: '/blog',
+      },
+      nav: {
+        headerNav: [
+          { href: '/', label: 'Home' },
+          { href: '/blog', label: 'Blog' },
+        ],
+      },
     },
   })],
 });
