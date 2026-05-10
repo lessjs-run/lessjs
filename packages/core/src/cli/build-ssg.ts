@@ -642,7 +642,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     const allHtmlFiles = findHtmlFiles(outputDir);
     for (const filePath of allHtmlFiles) {
       const rel = nodePath.relative(outputDir, filePath);
-      if (rel.endsWith('index.html') || rel === '404.html' || rel.includes(nodePath.sep)) {
+      if (rel.endsWith('index.html') || rel === '404.html') {
         continue;
       }
       const baseName = rel.replace(/\.html$/, '');
