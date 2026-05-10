@@ -183,26 +183,19 @@ function renderPageRoute(
   // Dev mode: headExtras is inlined via JSON.stringify (safe for dev server).
   const headExtrasExpr = isSSG ? '__headExtras' : JSON.stringify(docConfig.headExtras);
 
+  lines.push(`    let content = html`);
   if (matchingRenderers.length > 0) {
     lines.push(`    // Renderer wrapping (outer → inner)`);
-    lines.push(`    let wrapped = html`);
     for (const renderer of matchingRenderers) {
-      lines.push(`    wrapped = ${renderer.varName}.default.wrap(wrapped, c)`);
+      lines.push(`    content = ${renderer.varName}.default.wrap(content, c)`);
     }
-    lines.push(`    return c.html(wrapInDocument(wrapped, {`);
-    lines.push(`      title: ${JSON.stringify(docConfig.title)},`);
-    lines.push(`      lang: ${JSON.stringify(docConfig.lang)},`);
-    lines.push(`      headExtras: ${headExtrasExpr},`);
-    lines.push(`      cspNonce: c.get('cspNonce'),`);
-    lines.push(`    }))`);
-  } else {
-    lines.push(`    return c.html(wrapInDocument(html, {`);
-    lines.push(`      title: ${JSON.stringify(docConfig.title)},`);
-    lines.push(`      lang: ${JSON.stringify(docConfig.lang)},`);
-    lines.push(`      headExtras: ${headExtrasExpr},`);
-    lines.push(`      cspNonce: c.get('cspNonce'),`);
-    lines.push(`    }))`);
   }
+  lines.push(`    return c.html(wrapInDocument(content, {`);
+  lines.push(`      title: ${JSON.stringify(docConfig.title)},`);
+  lines.push(`      lang: ${JSON.stringify(docConfig.lang)},`);
+  lines.push(`      headExtras: ${headExtrasExpr},`);
+  lines.push(`      cspNonce: c.get('cspNonce'),`);
+  lines.push(`    }))`);
 
   lines.push(`  } catch (err) {`);
   // Use import.meta.env.PROD for runtime environment detection.

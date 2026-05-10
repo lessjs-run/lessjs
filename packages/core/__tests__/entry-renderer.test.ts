@@ -140,7 +140,7 @@ Deno.test('renderEntry: _renderer.ts generates wrap call', () => {
   assertStringIncludes(code, '$specialRenderer');
   assertStringIncludes(code, '$guideRenderer');
   // Renderer wrap call uses c (Hono context)
-  assertStringIncludes(code, '.default.wrap(wrapped, c)');
+  assertStringIncludes(code, '.default.wrap(content, c)');
 });
 
 Deno.test('renderEntry: _middleware.ts generates app.use scope', () => {
