@@ -32,6 +32,7 @@ import type { FrameworkOptions, PackageIslandMeta } from '../types.js';
 import type { SpeculationRulesOptions } from '../ssg-postprocess.js';
 import { SsrRenderError } from '../errors.js';
 import { createLogger } from '../logger.js';
+import { createRuntimeShimCode } from '../runtime-shim.js';
 
 const log = createLogger('ssg');
 
@@ -297,6 +298,21 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         // This plugin resolves them to empty stubs when missing, so the
         // viteBuild() succeeds regardless of which packages are available.
         optionalPackageStubsPlugin(),
+        // ADR 0008 Phase D: Resolve virtual:less-runtime
+        // The generated entry code imports @lessjs/core/less-runtime which
+        // is now a virtual module. This plugin resolves it at SSR build time.
+        {
+          name: 'less:ssg-virtual-runtime',
+          resolveId(id) {
+            if (id === 'virtual:less-runtime') return '\0virtual:less-runtime';
+            if (id === '@lessjs/core/less-runtime') return '\0virtual:less-runtime';
+          },
+          load(id) {
+            if (id === '\0virtual:less-runtime') {
+              return createRuntimeShimCode();
+            }
+          },
+        },
         // Resolve virtual:less-nav — @lessjs/content writes .less/nav-data.json
         // in Phase 1. This plugin resolves the virtual module at build time
         // so the SSR bundle contains the resolved data inline.
