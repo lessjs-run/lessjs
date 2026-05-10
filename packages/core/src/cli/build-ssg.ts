@@ -29,6 +29,7 @@ import { join, resolve } from 'node:path';
 import process from 'node:process';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import type { FrameworkOptions, PackageIslandMeta } from '../types.js';
+import type { LessBuildContext } from '../build-context.js';
 import type { SpeculationRulesOptions } from '../ssg-postprocess.js';
 import { SsrRenderError } from '../errors.js';
 import { createLogger } from '../logger.js';
@@ -139,58 +140,70 @@ function findHtmlFiles(dir: string): string[] {
   return results;
 }
 
-async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
-  const root = options.root || process.cwd();
-  const outDir = options.outDir || 'dist';
-  const routesDir = options.routesDir || 'app/routes';
-  const islandsDir = options.islandsDir || 'app/islands';
+async function buildSSG(options: BuildSSGOptions = {}, ctx?: LessBuildContext): Promise<void> {
+  const root = options.root || ctx?.root || process.cwd();
+  const outDir = options.outDir || ctx?.outDir || 'dist';
+  const routesDir = options.routesDir || ctx?.routesDir || 'app/routes';
+  const islandsDir = options.islandsDir || ctx?.islandsDir || 'app/islands';
 
-  // Read island metadata from Phase 1
-  const metadataPath = join(root, '.less', 'build-metadata.json');
-  let islandTagNames = options.islandTagNames || [];
-  let packageIslands = options.packageIslands || [];
-  let metadataResolveAlias = options.resolveAlias;
+  // Read island metadata from ctx (preferred) or .less/ files (fallback)
+  let islandTagNames = options.islandTagNames || ctx?.islandTagNames || [];
+  let packageIslands = options.packageIslands || ctx?.packageIslands || [];
+  let metadataResolveAlias = options.resolveAlias ||
+    (ctx?.userResolveAlias as Record<string, string> | import('vite').Alias[] | undefined);
 
-  try {
-    const raw = readFileSync(metadataPath, 'utf-8');
-    const metadata = JSON.parse(raw);
-    if (islandTagNames.length === 0) islandTagNames = metadata.islandTagNames || [];
-    if (packageIslands.length === 0) packageIslands = metadata.packageIslands || [];
-    if (!metadataResolveAlias && metadata.resolveAlias) {
-      metadataResolveAlias = metadata.resolveAlias as Record<string, string>;
+  // Fallback: read .less/build-metadata.json if ctx didn't provide data
+  if (!ctx || !ctx.root) {
+    const metadataPath = join(root, '.less', 'build-metadata.json');
+    try {
+      const raw = readFileSync(metadataPath, 'utf-8');
+      const metadata = JSON.parse(raw);
+      if (islandTagNames.length === 0) islandTagNames = metadata.islandTagNames || [];
+      if (packageIslands.length === 0) packageIslands = metadata.packageIslands || [];
+      if (!metadataResolveAlias && metadata.resolveAlias) {
+        metadataResolveAlias = metadata.resolveAlias as Record<string, string>;
+      }
+      // Read Phase 1 metadata when values were not provided via CLI options.
+      if (!options.headExtras && metadata.headExtras) {
+        options.headExtras = metadata.headExtras;
+      }
+      if (!options.html && metadata.html) {
+        options.html = metadata.html;
+      }
+      if (!options.middleware && metadata.middleware) {
+        options.middleware = metadata.middleware;
+      }
+      if (!options.upgradeStrategy && metadata.upgradeStrategy) {
+        options.upgradeStrategy = metadata.upgradeStrategy;
+      }
+      if (!options.pwa && metadata.pwa) {
+        options.pwa = metadata.pwa;
+      }
+      if (!options.base && metadata.base) {
+        options.base = metadata.base as string;
+      }
+      if (options.viewTransition === undefined && metadata.viewTransition !== undefined) {
+        options.viewTransition = metadata.viewTransition as boolean;
+      }
+      if (!options.speculation && metadata.speculation) {
+        options.speculation = metadata.speculation as boolean | SpeculationRulesOptions;
+      }
+    } catch (e) {
+      log.warn(
+        'No .less/build-metadata.json found; using provided island list.',
+        e instanceof Error ? e.message : '',
+      );
     }
-    // Read Phase 1 metadata when values were not provided via CLI options.
-    if (!options.headExtras && metadata.headExtras) {
-      options.headExtras = metadata.headExtras;
-    }
-    if (!options.html && metadata.html) {
-      options.html = metadata.html;
-    }
-    if (!options.middleware && metadata.middleware) {
-      options.middleware = metadata.middleware;
-    }
-    if (!options.upgradeStrategy && metadata.upgradeStrategy) {
-      options.upgradeStrategy = metadata.upgradeStrategy;
-    }
-    if (!options.pwa && metadata.pwa) {
-      options.pwa = metadata.pwa;
-    }
-    if (!options.base && metadata.base) {
-      options.base = metadata.base as string;
-    }
-    if (options.viewTransition === undefined && metadata.viewTransition !== undefined) {
-      options.viewTransition = metadata.viewTransition as boolean;
-    }
-    if (!options.speculation && metadata.speculation) {
-      options.speculation = metadata.speculation as boolean | SpeculationRulesOptions;
-    }
-    // v0.5.0 note: upgradeStrategy controls island module import timing.
-    // It is not a client render runtime.
-  } catch (e) {
-    log.warn(
-      'No .less/build-metadata.json found; using provided island list.',
-      e instanceof Error ? e.message : '',
-    );
+  } else {
+    // Read from ctx (ADR 0008 Phase A — no .less/ IPC)
+    if (!options.headExtras) options.headExtras = ctx.headExtras || undefined;
+    if (!options.html) options.html = ctx.html || undefined;
+    if (!options.middleware) options.middleware = ctx.middleware || undefined;
+    if (!options.upgradeStrategy) options.upgradeStrategy = ctx.upgradeStrategy;
+    if (!options.pwa) options.pwa = ctx.pwa || undefined;
+    if (!options.base) options.base = ctx.base;
+    if (options.viewTransition === undefined) options.viewTransition = ctx.viewTransition;
+    if (!options.speculation) options.speculation = ctx.speculation || undefined;
   }
 
   // Generate SSG entry code
@@ -312,9 +325,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
             }
           },
         },
-        // Resolve virtual:less-nav — @lessjs/content writes .less/nav-data.json
-        // in Phase 1. This plugin resolves the virtual module at build time
-        // so the SSR bundle contains the resolved data inline.
+        // Resolve virtual:less-nav — reads from ctx (preferred) or .less/ files (fallback)
         {
           name: 'less:ssg-virtual-nav',
           resolveId(id) {
@@ -322,20 +333,26 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
           },
           load(id) {
             if (id === '\0virtual:less-nav') {
-              const navDataPath = join(root, '.less', 'nav-data.json');
-              const headerNavPath = join(root, '.less', 'header-nav.json');
+              // ADR 0008 Phase A: read from ctx first, fallback to .less/ files
               let navSections = '[]';
               let headerNav = '[]';
-              try {
-                if (existsSync(navDataPath)) {
-                  navSections = readFileSync(navDataPath, 'utf-8').trim();
-                }
-              } catch { /* non-fatal */ }
-              try {
-                if (existsSync(headerNavPath)) {
-                  headerNav = readFileSync(headerNavPath, 'utf-8').trim();
-                }
-              } catch { /* non-fatal */ }
+              if (ctx && ctx.navSections.length > 0) {
+                navSections = JSON.stringify(ctx.navSections);
+                headerNav = JSON.stringify(ctx.headerNav);
+              } else {
+                const navDataPath = join(root, '.less', 'nav-data.json');
+                const headerNavPath = join(root, '.less', 'header-nav.json');
+                try {
+                  if (existsSync(navDataPath)) {
+                    navSections = readFileSync(navDataPath, 'utf-8').trim();
+                  }
+                } catch { /* non-fatal */ }
+                try {
+                  if (existsSync(headerNavPath)) {
+                    headerNav = readFileSync(headerNavPath, 'utf-8').trim();
+                  }
+                } catch { /* non-fatal */ }
+              }
               return `export const navSections = ${navSections};\nexport const headerNav = ${headerNav};`;
             }
           },
@@ -405,20 +422,20 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
       const { renderDSD: renderDSDFn, wrapInDocument: wrapInDocumentFn } = module;
 
       // Initialize @lessjs/content (blog) data store if present.
-      // The content plugin's buildStart() ran in Phase 1's Vite instance.
-      // We need to initialize blog data in TWO module scopes:
-      // 1. The SSR bundle (module.initBlogData) — for renderDSD's adapter chain
-      // 2. The file system module — for route modules imported separately
-      //    (they resolve getPosts() from the file system, not the bundle)
+      // ADR 0008 Phase A: read from ctx first, fallback to .less/ files
       let blogOptions: { contentDir?: string; basePath?: string } | undefined;
-      try {
-        const blogOptsPath = join(root, '.less', 'blog-options.json');
-        if (existsSync(blogOptsPath)) {
-          const raw = readFileSync(blogOptsPath, 'utf-8');
-          blogOptions = JSON.parse(raw);
+      if (ctx?.blogOptions) {
+        blogOptions = ctx.blogOptions;
+      } else {
+        try {
+          const blogOptsPath = join(root, '.less', 'blog-options.json');
+          if (existsSync(blogOptsPath)) {
+            const raw = readFileSync(blogOptsPath, 'utf-8');
+            blogOptions = JSON.parse(raw);
+          }
+        } catch {
+          // Non-fatal
         }
-      } catch {
-        // Non-fatal
       }
 
       // Initialize in the SSR bundle's module scope
@@ -593,15 +610,25 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
     }
 
     // ── i18n locale expansion ──────────────────────────────
-    // After toSSG() renders all static routes, expand each route for every
-    // configured locale and write to locale-prefixed paths so the language
-    // switcher can navigate to /en/guide/architecture, /zh/guide/architecture.
-    // The locale is passed as a renderDSD prop so route templates can read
-    // this.locale (falling back to 'zh' when unset).
-    const i18nOptsPath = join(root, '.less', 'i18n-options.json');
-    if (existsSync(i18nOptsPath)) {
-      const i18nOpts = JSON.parse(readFileSync(i18nOptsPath, 'utf-8'));
-      const locales: string[] = i18nOpts.locales || [];
+    // ADR 0008 Phase A: read from ctx first, fallback to .less/ files
+    let i18nOptsToUse:
+      | { locales: string[]; defaultLocale?: string; [key: string]: unknown }
+      | null = null;
+    if (ctx?.i18nOptions) {
+      i18nOptsToUse = ctx.i18nOptions;
+    } else {
+      const i18nOptsPath = join(root, '.less', 'i18n-options.json');
+      if (existsSync(i18nOptsPath)) {
+        try {
+          i18nOptsToUse = JSON.parse(readFileSync(i18nOptsPath, 'utf-8'));
+        } catch {
+          // Non-fatal
+        }
+      }
+    }
+
+    if (i18nOptsToUse) {
+      const locales: string[] = i18nOptsToUse.locales || [];
 
       if (locales.length > 1) {
         log.info(`i18n: expanding ${routes.length} route(s) for locales: ${locales.join(', ')}`);
@@ -614,7 +641,7 @@ async function buildSSG(options: BuildSSGOptions = {}): Promise<void> {
         try {
           const i18nModule = await import('@lessjs/i18n') as Record<string, unknown>;
           if (typeof i18nModule.initI18nData === 'function') {
-            i18nModule.initI18nData(i18nOpts);
+            (i18nModule.initI18nData as (opts: unknown) => void)(i18nOptsToUse);
           }
         } catch {
           // @lessjs/i18n not available — non-fatal
@@ -910,22 +937,35 @@ async function networkFirst(req) {
     }
 
     // ─── Sitemap generation ────────────────────────────────────
+    // ADR 0008 Phase A: read from ctx first, fallback to .less/ files
     try {
-      const navDataPath = join(root, '.less', 'nav-data.json');
-      if (existsSync(navDataPath)) {
-        const sitemapConfigPath = join(root, '.less', 'sitemap-options.json');
-        if (existsSync(sitemapConfigPath)) {
-          const sitemapOpts = JSON.parse(readFileSync(sitemapConfigPath, 'utf-8'));
-          const sitemapModule = await import('@lessjs/content/sitemap') as Record<
-            string,
-            unknown
-          >;
-          if (typeof sitemapModule.generateSitemap === 'function') {
-            (sitemapModule.generateSitemap as (dir: string, opts: unknown) => string[])(
-              join(root, outDir),
-              sitemapOpts,
-            );
+      let hasSitemapConfig = false;
+      let sitemapOpts: unknown = null;
+
+      if (ctx?.sitemapOptions) {
+        hasSitemapConfig = true;
+        sitemapOpts = ctx.sitemapOptions;
+      } else {
+        const navDataPath = join(root, '.less', 'nav-data.json');
+        if (existsSync(navDataPath)) {
+          const sitemapConfigPath = join(root, '.less', 'sitemap-options.json');
+          if (existsSync(sitemapConfigPath)) {
+            hasSitemapConfig = true;
+            sitemapOpts = JSON.parse(readFileSync(sitemapConfigPath, 'utf-8'));
           }
+        }
+      }
+
+      if (hasSitemapConfig && sitemapOpts) {
+        const sitemapModule = await import('@lessjs/content/sitemap') as Record<
+          string,
+          unknown
+        >;
+        if (typeof sitemapModule.generateSitemap === 'function') {
+          (sitemapModule.generateSitemap as (dir: string, opts: unknown) => string[])(
+            join(root, outDir),
+            sitemapOpts,
+          );
         }
       }
     } catch {

@@ -9,6 +9,9 @@
  *   Phase 2 (this script): Client island chunks
  *   Phase 3 (build-ssg.ts): SSG rendering + post-processing
  *
+ * When ctx is provided, reads metadata from LessBuildContext instead of
+ * .less/build-metadata.json (ADR 0008 Phase A).
+ *
  * Usage:
  *   deno run -A jsr:@lessjs/core/cli/build-client
  *   deno task build:client
@@ -19,6 +22,7 @@ import { join, resolve } from 'node:path';
 import process from 'node:process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { type ClientIslandEntry, generateClientEntry } from '../entry-generators.js';
+import type { LessBuildContext } from '../build-context.js';
 import { createLogger } from '../logger.js';
 
 const log = createLogger('ssg');
@@ -37,23 +41,54 @@ interface BuildMetadata {
   islandsDir: string;
 }
 
-async function buildClient(): Promise<void> {
+/** Read build metadata from ctx (preferred) or .less/build-metadata.json (fallback) */
+function getBuildMetadata(ctx?: LessBuildContext): BuildMetadata | null {
+  if (ctx && ctx.root) {
+    // Read from ctx (ADR 0008 Phase A — no .less/ IPC)
+    const resolveAlias = ctx.userResolveAlias;
+    const serializedAlias = resolveAlias
+      ? (Array.isArray(resolveAlias)
+        ? resolveAlias.filter((a) => typeof a.find === 'string').map((a) => ({
+          find: a.find as string,
+          replacement: a.replacement,
+        }))
+        : Object.entries(resolveAlias).map(([find, replacement]) => ({ find, replacement })))
+      : null;
+
+    return {
+      islandTagNames: ctx.islandTagNames,
+      islandFiles: ctx.islandFiles,
+      packageIslands: ctx.packageIslands,
+      root: ctx.root,
+      outDir: ctx.outDir,
+      base: ctx.base,
+      resolveAlias: serializedAlias,
+      ssrNoExternal: ctx.ssrNoExternal,
+      islandsDir: ctx.islandsDir,
+    };
+  }
+
+  // Fallback: read from .less/build-metadata.json
   const root = process.cwd();
-
-  // Read island metadata from Phase 1 output
   const metadataPath = join(root, '.less', 'build-metadata.json');
-  let metadata: BuildMetadata;
-
   try {
     const raw = readFileSync(metadataPath, 'utf-8');
-    metadata = JSON.parse(raw);
-  } catch (e) {
-    log.info('No .less/build-metadata.json found — skipping client build');
-    log.info('Run `vite build` first (Phase 1) to generate island metadata');
-    log.debug(`Metadata read error: ${e instanceof Error ? e.message : String(e)}`);
+    return JSON.parse(raw) as BuildMetadata;
+  } catch {
+    return null;
+  }
+}
+
+async function buildClient(ctx?: LessBuildContext): Promise<void> {
+  const metadata = getBuildMetadata(ctx);
+
+  if (!metadata) {
+    log.info('No build metadata found — skipping client build');
+    log.info('Run `vite build` first (Phase 1) or use unified build() orchestrator');
     return;
   }
 
+  const root = metadata.root || process.cwd();
   const outDir = metadata.outDir || 'dist';
   const islandsDir = metadata.islandsDir || 'app/islands';
   const localIslands = metadata.islandTagNames || [];
@@ -83,8 +118,6 @@ async function buildClient(): Promise<void> {
   const islandEntries: ClientIslandEntry[] = [
     ...localIslands.map((tagName: string, i: number) => ({
       tagName,
-      // Use file path if available (supports subdirectory islands).
-      // The tagName fallback keeps generated test metadata compact.
       modulePath: resolve(
         root,
         localIslandFiles[i]
@@ -92,8 +125,6 @@ async function buildClient(): Promise<void> {
           : `${islandsDir}/${tagName}.ts`,
       ).replace(/\\/g, '/'),
       isPackage: false,
-      // Local islands default to lazy; per-island strategy will be
-      // supported once build-metadata carries it from route-scanner.
       strategy: (metadata as unknown as { localIslandStrategies?: string[] })
           .localIslandStrategies?.[i] === 'eager'
         ? 'eager' as const
@@ -113,7 +144,6 @@ async function buildClient(): Promise<void> {
   writeFileSync(clientEntryPath, clientEntryCode, 'utf-8');
 
   // Restore RegExp from JSON serialization
-  // JSON.stringify turns RegExp into {} — we reconstruct via __type marker
   const noExternalPatterns = (metadata.ssrNoExternal || []).map((item) => {
     if (typeof item === 'string') return item;
     if (item && typeof item === 'object' && (item as Record<string, unknown>).__type === 'RegExp') {
@@ -126,12 +156,6 @@ async function buildClient(): Promise<void> {
   });
 
   const clientOutDir = resolve(root, outDir, 'client');
-  // base must match the deployed URL prefix for client assets.
-  // The SSG output places client JS at /client/islands/*.js,
-  // so the client build's base must be '/client/' so that
-  // Vite generates correct dynamic-import URLs (__vite__mapDeps).
-  // Without this, preload links point to /islands/*.js (404)
-  // instead of /client/islands/*.js.
   const clientBase = metadata.base || '/';
   const clientConfig: InlineConfig = {
     configFile: false,
@@ -162,10 +186,7 @@ async function buildClient(): Promise<void> {
         },
       },
     },
-    // Pass user's resolve alias from Phase 1 so island imports resolve correctly
     resolve: metadata.resolveAlias ? { alias: metadata.resolveAlias } : undefined,
-    // SSR noExternal: ensures packages like @lessjs/ui (with decorators)
-    // are bundled by Vite instead of left as bare imports
     ssr: {
       noExternal: (noExternalPatterns.length > 0 ? noExternalPatterns : undefined) as
         | (string | RegExp)[]
@@ -177,7 +198,6 @@ async function buildClient(): Promise<void> {
     await viteBuild(clientConfig);
     log.info('Client bundle built → ' + clientOutDir);
 
-    // Build observability: print manifest with island sizes
     const { printBuildManifest } = await import('../build-manifest.js');
     printBuildManifest({ root, outDir, phase: 2 });
   } catch (error) {
