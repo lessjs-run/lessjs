@@ -5,13 +5,11 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // Vite needs resolve.alias because JSR packages aren't in node_modules.
-// Generated SSR entries import runtime helpers from '@lessjs/core/less-runtime',
-// but at build time Vite resolves that specifier to a docs-only shim.
-// The shim only re-exports runtime APIs (renderDSD, wrapInDocument, Hono),
-// avoiding pull-in of build-time code (node:fs, Vite plugin internals).
+// Subpath imports (e.g. @lessjs/core/adapter-registry) need explicit aliases
+// because the parent @lessjs/core alias points to a file (index.ts), and
+// appending /subpath to a file path is invalid ("Not a directory").
 // NOTE: __dirname is unavailable in Deno ESM — use import.meta instead.
 const __dir = dirname(fileURLToPath(import.meta.url));
-const runtimeShim = resolve(__dir, 'app/.less-runtime.ts');
 const uiSrcDir = resolve(__dir, '../packages/ui/src');
 
 // DRY: All color token values come from a single source of truth.
@@ -139,7 +137,14 @@ export default defineConfig({
         find: '@lessjs/core/logger',
         replacement: resolve(__dir, '../packages/core/src/logger.ts'),
       },
-      { find: '@lessjs/core/less-runtime', replacement: runtimeShim },
+      {
+        find: '@lessjs/core/adapter-registry',
+        replacement: resolve(__dir, '../packages/core/src/adapter-registry.ts'),
+      },
+      {
+        find: '@lessjs/core/ssr-handler',
+        replacement: resolve(__dir, '../packages/core/src/ssr-handler.ts'),
+      },
       {
         find: '@lessjs/core/navigation',
         replacement: resolve(__dir, '../packages/core/src/navigation.ts'),

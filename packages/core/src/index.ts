@@ -176,8 +176,6 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
     });
   }
 
-  let _resolvedConfig: import('vite').ResolvedConfig | undefined;
-
   const corePlugin: Plugin = {
     name: 'less:core',
 
@@ -198,7 +196,6 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
     },
 
     configResolved(cfg) {
-      _resolvedConfig = cfg;
       if (cfg.resolve?.alias && !ctx.userResolveAlias) {
         ctx.userResolveAlias = cfg.resolve.alias;
       }
