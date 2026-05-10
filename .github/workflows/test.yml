@@ -110,7 +110,7 @@ jobs:
       - name: Run adapter-lit tests
         run: deno test packages/adapter-lit/__tests__/ --allow-read --allow-write --allow-env
 
-  build-docs:
+  build-www:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -124,5 +124,5 @@ jobs:
           key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
       - name: Install dependencies
         run: deno install --node-modules-dir
-      - name: Build docs site
+      - name: Build www site
         run: deno task build:docs

@@ -8,7 +8,7 @@
 
 import type { LessRenderer } from '@lessjs/core';
 
-const GITHUB_EDIT_BASE = 'https://github.com/lessjs-run/lessjs/edit/main/docs/app/routes';
+const GITHUB_EDIT_BASE = 'https://github.com/lessjs-run/lessjs/edit/main/www/app/routes';
 
 function routeToSourcePath(path: string): string {
   const p = path.endsWith('/') ? path.slice(0, -1) : path;

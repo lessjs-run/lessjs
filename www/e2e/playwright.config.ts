@@ -1,12 +1,12 @@
 /**
  * Playwright configuration for LessJS E2E tests.
  *
- * Tests run against the built docs site (static HTML).
+ * Tests run against the built www site (static HTML).
  * Uses a simple HTTP server instead of Vite preview (which may fail
  * in CI due to config resolution issues).
  *
  * Prerequisites:
- *   1. deno task build   (build the docs site to docs/dist/)
+ *   1. deno task build   (build the www site to www/dist/)
  *
  * Run: deno task test:e2e
  */
@@ -27,7 +27,7 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
-  // Auto-start a simple static file server for docs/dist/
+  // Auto-start a simple static file server for www/dist/
   webServer: {
     command: 'npx -y serve ../dist -l 4173 --no-clipboard',
     port: 4173,

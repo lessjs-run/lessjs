@@ -59,7 +59,7 @@ export class DecisionsIndexPage extends LitElement {
         <div class="container">
           <h1>Architecture Decisions</h1>
           <p class="subtitle">
-            Source-controlled ADRs from <span class="inline-code">docs/decisions</span>, rendered directly
+            Source-controlled ADRs from <span class="inline-code">www/decisions</span>, rendered directly
             into the docs site.
           </p>
 

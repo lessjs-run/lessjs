@@ -56,7 +56,7 @@ export abstract class DecisionDocumentPage extends LitElement {
           <p class="subtitle">${decision.summary}</p>
           <div class="decision-meta">
             <span class="badge">${decision.status}</span>
-            <span>Source: docs/decisions/${decision.id}</span>
+            <span>Source: www/decisions/${decision.id}</span>
           </div>
           <div class="markdown">${renderMarkdown(decision.source)}</div>
           <div class="nav-row">
