@@ -14,6 +14,9 @@ import { createLogger } from './logger.js';
 
 const log = createLogger('core');
 
+/** Track whether we've already warned about <script> in headExtras (once per process) */
+let _warnedHeadExtrasScripts = false;
+
 /** Branded type: a string that has been HTML-escaped (safe for text content) */
 export type SafeHtml = string & { readonly __safeHtml: unique symbol };
 
@@ -89,7 +92,9 @@ export function wrapInDocument(
   // Security: warn if headExtras contains <script> tags, which may indicate
   // user-supplied content being injected unsafely. Legitimate use cases exist
   // (e.g. analytics scripts), but developers should be aware of the risk.
-  if (headExtras && /<script[\s>]/i.test(headExtras)) {
+  // Only warn once per process to avoid flooding SSG logs.
+  if (headExtras && /<script[\s>]/i.test(headExtras) && !_warnedHeadExtrasScripts) {
+    _warnedHeadExtrasScripts = true;
     log.warn(
       'headExtras contains <script> tags. Ensure this content is developer-controlled, ' +
         'not user-supplied, to prevent XSS. For safe URL injection, use inject.scripts instead.',

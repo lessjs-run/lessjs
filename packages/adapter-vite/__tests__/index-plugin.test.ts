@@ -1,10 +1,10 @@
-// deno-lint-ignore-file no-unused-vars ban-types
 /**
- * @lessjs/core - index.ts main entry tests (Deno)
+ * @lessjs/adapter-vite - index.ts main entry tests (Deno)
  *
  * Tests that less() plugin factory returns a valid plugin array
  * with correct structure and re-exports.
  */
+// deno-lint-ignore-file no-unused-vars ban-types
 import {
   assertArrayIncludes,
   assertEquals,
@@ -14,12 +14,10 @@ import {
 import { join } from 'node:path';
 import { less } from '../src/index.ts';
 
-// Verify re-exports exist (compile-time)
-import { LessError, SsrRenderError } from '../src/errors.ts';
-
-import { createSsrContext, extractParams, parseQuery } from '../src/context.ts';
-
-import { renderSsrError, wrapInDocument } from '../src/ssr-handler.ts';
+// Verify core re-exports work (imported via @lessjs/core subpaths)
+import { LessError, SsrRenderError } from '@lessjs/core/errors';
+import { createSsrContext, extractParams, parseQuery } from '@lessjs/core/context';
+import { renderSsrError, wrapInDocument } from '@lessjs/core/ssr-handler';
 
 import { buildIslandChunkMap, injectClientScript, injectCspMeta } from '../src/ssg-postprocess.ts';
 

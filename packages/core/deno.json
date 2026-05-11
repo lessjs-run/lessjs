@@ -14,6 +14,7 @@
     "./ssr-handler": "./src/ssr-handler.ts",
     "./ssr-handler.js": "./src/ssr-handler.ts",
     "./errors": "./src/errors.ts",
+    "./context": "./src/context.ts",
     "./logger": "./src/logger.ts",
     "./logger.js": "./src/logger.ts",
     "./navigation": "./src/navigation.ts",

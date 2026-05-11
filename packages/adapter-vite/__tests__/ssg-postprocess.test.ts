@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - ssg-postprocess.ts tests (Deno)
+ * @lessjs/adapter-vite - ssg-postprocess.ts tests (Deno)
  *
  * Tests the SSG post-processing functions using temp directories.
  */

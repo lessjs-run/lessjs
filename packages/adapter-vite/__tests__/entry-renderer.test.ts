@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - Entry renderer snapshot tests (Deno)
+ * @lessjs/adapter-vite - Entry renderer snapshot tests (Deno)
  *
  * Snapshot tests for renderEntry output covering:
  * - CSP middleware (with/without nonce)
@@ -16,7 +16,7 @@ import {
   assertStringIncludes,
 } from 'jsr:@std/assert@^1.0.0';
 import { buildEntryDescriptor, generateHonoEntryCode, renderEntry } from '../src/hono-entry.ts';
-import type { RouteEntry } from '../src/types.ts';
+import type { RouteEntry } from '@lessjs/core';
 
 // Fixtures
 

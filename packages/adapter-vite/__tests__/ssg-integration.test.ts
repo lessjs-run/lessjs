@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - SSG integration tests (Deno)
+ * @lessjs/adapter-vite - SSG integration tests (Deno)
  *
  * Tests the SSG post-processing pipeline:
  *   1. buildIslandChunkMap — scan client build output → tagName → chunk path mapping

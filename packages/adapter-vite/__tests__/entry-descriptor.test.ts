@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - Entry descriptor + renderer tests (Deno)
+ * @lessjs/adapter-vite - Entry descriptor + renderer tests (Deno)
  *
  * Tests the two-step entry pipeline:
  *   1. buildEntryDescriptor — produces structured data
@@ -10,7 +10,7 @@
 
 import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
 import { buildEntryDescriptor, generateHonoEntryCode, renderEntry } from '../src/hono-entry.ts';
-import type { RouteEntry } from '../src/types.ts';
+import type { RouteEntry } from '@lessjs/core';
 
 // ─── Test fixtures ─────────────────────────────────────────────
 

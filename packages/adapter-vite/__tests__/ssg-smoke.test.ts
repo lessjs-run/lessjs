@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - SSG smoke build test
+ * @lessjs/adapter-vite - SSG smoke build test
  *
  * End-to-end verification of the official one-command build path:
  *   deno task build

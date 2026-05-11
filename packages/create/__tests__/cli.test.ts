@@ -110,7 +110,7 @@ Deno.test('create-less: deno.json build uses the one-command LessJS build', () =
   const denoJson = JSON.parse(extractTemplate('deno.json'));
   assertEquals(
     denoJson.tasks['build'],
-    'deno run --config deno.json -A jsr:@lessjs/core/cli/build',
+    'deno run --config deno.json -A jsr:@lessjs/adapter-vite/cli/build',
   );
   assertExists(denoJson.tasks['build:ssr']);
   assertExists(denoJson.tasks['build:client']);
@@ -198,8 +198,11 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     denoJson.imports['@lessjs/core/render-dsd'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'render-dsd.ts'),
     ).href;
-    denoJson.imports['@lessjs/core/build-context'] = pathToFileURL(
-      join(repoRoot, 'packages', 'core', 'src', 'build-context.ts'),
+    denoJson.imports['@lessjs/adapter-vite/build-context'] = pathToFileURL(
+      join(repoRoot, 'packages', 'adapter-vite', 'src', 'build-context.ts'),
+    ).href;
+    denoJson.imports['@lessjs/adapter-vite'] = pathToFileURL(
+      join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts'),
     ).href;
     denoJson.imports['@lessjs/content'] = pathToFileURL(
       join(repoRoot, 'packages', 'content', 'src', 'index.ts'),
@@ -223,15 +226,21 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     denoJson.imports['hono'] = 'npm:hono@^4';
     denoJson.imports['@hono/vite-dev-server'] = 'npm:@hono/vite-dev-server@^0.25.3';
     denoJson.tasks.build = `deno run -A ${
-      join(repoRoot, 'packages', 'core', 'src', 'cli', 'build.ts')
+      join(repoRoot, 'packages', 'adapter-vite', 'src', 'cli', 'build.ts')
     }`;
     writeFileSync(denoJsonPath, JSON.stringify(denoJson, null, 2));
 
     const uiSrc = join(repoRoot, 'packages', 'ui', 'src');
     const aliases = [
       {
-        find: '@lessjs/core/build-context',
-        replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'build-context.ts')),
+        find: '@lessjs/adapter-vite/build-context',
+        replacement: vitePath(
+          join(repoRoot, 'packages', 'adapter-vite', 'src', 'build-context.ts'),
+        ),
+      },
+      {
+        find: '@lessjs/adapter-vite',
+        replacement: vitePath(join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts')),
       },
       {
         find: '@lessjs/core/render-dsd',
@@ -332,7 +341,7 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       "import { lessjs } from '@lessjs/app';",
       `import { less } from ${
         JSON.stringify(
-          vitePath(join(repoRoot, 'packages', 'core', 'src', 'index.ts')),
+          vitePath(join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts')),
         )
       };`,
     );

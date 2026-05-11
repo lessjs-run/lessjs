@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 /**
- * @lessjs/core - build / entry-generators tests (Deno)
+ * @lessjs/adapter-vite - build / entry-generators tests (Deno)
  *
  * ADR 0011: closeBundle writes metadata to ctx, not .less/build-metadata.json.
  * Tests verify LessBuildContext fields instead of filesystem.

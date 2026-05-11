@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - route-scanner.ts tests (Deno)
+ * @lessjs/adapter-vite - route-scanner.ts tests (Deno)
  */
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { join } from 'jsr:@std/path@^1.0.0';
@@ -189,8 +189,7 @@ Deno.test({
 
     await t.step('throws LessError for non-existent package', async () => {
       const { scanPackageIslands } = await import('../src/route-scanner.ts');
-      const { LessError } = await import('../src/errors.ts');
-      // Non-existent package should throw — misconfigured packages must break the build
+      const { LessError } = await import('@lessjs/core/errors'); // Non-existent package should throw — misconfigured packages must break the build
       try {
         await scanPackageIslands(['@nonexistent/package']);
         // Should not reach here
@@ -215,8 +214,7 @@ Deno.test({
 
     await t.step('throws LessError for package with import errors', async () => {
       const { scanPackageIslands } = await import('../src/route-scanner.ts');
-      const { LessError } = await import('../src/errors.ts');
-      // A package that exists but fails to import should throw
+      const { LessError } = await import('@lessjs/core/errors'); // A package that exists but fails to import should throw
       try {
         await scanPackageIslands(['vite']);
         // If vite imports successfully but has no islands, that's OK

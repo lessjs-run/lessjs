@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - build-context.ts tests (Deno)
+ * @lessjs/adapter-vite - build-context.ts tests (Deno)
  */
 import { assertEquals, assertExists } from 'jsr:@std/assert@^1.0.0';
 import { LessBuildContext } from '../src/build-context.ts';

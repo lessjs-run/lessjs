@@ -89,8 +89,8 @@ const CORE_SUBPATHS: Record<string, string> = {
  */
 function buildCoreSubpathAliases(): import('vite').Alias[] {
   const adapterSrcDir = dirname(fileURLToPath(import.meta.url));
-  // Core source is at ../core/src/ relative to adapter-vite/src/
-  const coreSrcDir = join(adapterSrcDir, '../core/src');
+  // Core source is at ../../core/src/ relative to adapter-vite/src/
+  const coreSrcDir = join(adapterSrcDir, '../../core/src');
 
   const aliases: import('vite').Alias[] = [];
 

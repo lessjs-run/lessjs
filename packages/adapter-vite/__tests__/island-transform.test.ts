@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - island-transform.ts tests (Deno)
+ * @lessjs/adapter-vite - island-transform.ts tests (Deno)
  */
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { islandTransformPlugin } from '../src/island-transform.ts';

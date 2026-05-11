@@ -22,6 +22,7 @@ const JSR_SCOPE = '@lessjs';
 const PKG_DIR_MAP: Record<string, string> = {
   core: 'core',
   adapterLit: 'adapter-lit',
+  adapterVite: 'adapter-vite',
   app: 'app',
   content: 'content',
   i18n: 'i18n',
@@ -118,6 +119,7 @@ node_modules/
     "vite": "npm:vite@8.0.10",
     "@lessjs/app": "jsr:@lessjs/app@^${v.app}",
     "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^${v.adapterLit}",
+    "@lessjs/adapter-vite": "jsr:@lessjs/adapter-vite@^${v.adapterVite}",
     "@lessjs/content": "jsr:@lessjs/content@^${v.content}",
     "@lessjs/core": "jsr:@lessjs/core@^${v.core}",
     "@lessjs/core/adapter-registry": "jsr:@lessjs/core@^${v.core}/adapter-registry",
@@ -135,10 +137,10 @@ node_modules/
   "nodeModulesDir": "auto",
   "tasks": {
     "dev": "deno run --config deno.json -A npm:vite",
-    "build": "deno run --config deno.json -A jsr:@lessjs/core/cli/build",
+    "build": "deno run --config deno.json -A jsr:@lessjs/adapter-vite/cli/build",
     "build:ssr": "deno run --config deno.json -A npm:vite build",
-    "build:client": "deno run --config deno.json -A jsr:@lessjs/core/cli/build-client",
-    "build:ssg": "deno run --config deno.json -A jsr:@lessjs/core/cli/build-ssg",
+    "build:client": "deno run --config deno.json -A jsr:@lessjs/adapter-vite/cli/build-client",
+    "build:ssg": "deno run --config deno.json -A jsr:@lessjs/adapter-vite/cli/build-ssg",
     "preview": "deno run --config deno.json -A npm:vite preview"
   },
   "compilerOptions": { "lib": ["ES2022", "DOM", "DOM.Iterable"] }
