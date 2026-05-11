@@ -23,7 +23,7 @@ import type {
   PageRouteDecl,
   RendererDecl,
 } from './entry-descriptor.js';
-import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from './types.js';
+import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from '@lessjs/core';
 import { buildEntryDescriptor } from './entry-descriptor.js';
 
 // Re-export for backward compatibility (consumers import from hono-entry.ts)

@@ -5,6 +5,8 @@
     ".": "./src/index.ts"
   },
   "imports": {
+    "@lessjs/core/logger": "jsr:@lessjs/core@^0.11/logger",
+    "@lessjs/adapter-vite/build-context": "jsr:@lessjs/adapter-vite@^0.1/build-context",
     "vite": "npm:vite@8.0.10"
   },
   "publish": {

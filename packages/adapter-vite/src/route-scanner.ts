@@ -15,9 +15,9 @@
  * - Files starting with _ are not route handlers but are loaded by the framework
  */
 
-import type { PackageIslandMeta, RouteEntry, SpecialFileType } from './types.js';
-import { LessError } from './errors.js';
-import { createLogger } from './logger.js';
+import type { PackageIslandMeta, RouteEntry, SpecialFileType } from '@lessjs/core';
+import { LessError } from '@lessjs/core/errors';
+import { createLogger } from '@lessjs/core/logger';
 import { readdir, stat } from 'node:fs/promises';
 import { join, posix, sep } from 'node:path';
 

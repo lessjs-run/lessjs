@@ -9,9 +9,9 @@
  */
 
 import type { Plugin, ResolvedConfig } from 'vite';
-import type { FrameworkOptions } from './types.js';
+import type { FrameworkOptions } from '@lessjs/core';
 import type { LessBuildContext } from './build-context.js';
-import { createLogger } from './logger.js';
+import { createLogger } from '@lessjs/core/logger';
 
 const log = createLogger('core');
 

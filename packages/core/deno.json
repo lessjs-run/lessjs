@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/core",
-  "version": "0.10.7",
+  "version": "0.11.0",
   "exports": {
     ".": "./src/index.ts",
     "./render-dsd": "./src/render-dsd.ts",
@@ -9,27 +9,18 @@
     "./html-escape.js": "./src/html-escape.ts",
     "./render-nested": "./src/render-nested.ts",
     "./render-nested.js": "./src/render-nested.ts",
-    "./island-manifest": "./src/island-manifest.ts",
-    "./island-manifest.js": "./src/island-manifest.ts",
     "./adapter-registry": "./src/adapter-registry.ts",
     "./adapter-registry.js": "./src/adapter-registry.ts",
     "./ssr-handler": "./src/ssr-handler.ts",
     "./ssr-handler.js": "./src/ssr-handler.ts",
+    "./errors": "./src/errors.ts",
     "./logger": "./src/logger.ts",
     "./logger.js": "./src/logger.ts",
-    "./build-context": "./src/build-context.ts",
-    "./build-context.js": "./src/build-context.ts",
     "./navigation": "./src/navigation.ts",
-    "./navigation.js": "./src/navigation.ts",
-    "./cli/build": "./src/cli/build.ts",
-    "./cli/build-client": "./src/cli/build-client.ts",
-    "./cli/build-ssg": "./src/cli/build-ssg.ts"
+    "./navigation.js": "./src/navigation.ts"
   },
   "imports": {
-    "esbuild": "npm:esbuild@^0.25",
-    "hono": "npm:hono@^4",
-    "@hono/vite-dev-server": "npm:@hono/vite-dev-server@^0.25.3",
-    "vite": "npm:vite@8.0.10"
+    "parse5": "npm:parse5@7.0.0"
   },
   "tasks": {
     "build": "deno check src/index.ts src/render-dsd.ts",

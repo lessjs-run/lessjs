@@ -22,10 +22,10 @@ import type { Plugin } from 'vite';
 import type { FrameworkOptions } from '@lessjs/core';
 import type { LessContentOptions } from '@lessjs/content';
 import type { LessI18nOptions } from '@lessjs/i18n';
-import type { LessBuildContext } from '@lessjs/core/build-context';
+import type { LessBuildContext } from '@lessjs/adapter-vite/build-context';
 
-import { less } from '@lessjs/core';
-import { LessBuildContext as LessBuildContextClass } from '@lessjs/core/build-context';
+import { less } from '@lessjs/adapter-vite';
+import { LessBuildContext as LessBuildContextClass } from '@lessjs/adapter-vite/build-context';
 import { lessContent } from '@lessjs/content';
 import { lessI18n } from '@lessjs/i18n';
 import { createLogger } from '@lessjs/core/logger';

@@ -25,31 +25,15 @@ export class RoadmapPage extends LitElement {
   private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/roadmap"><div class="container">
     <h1>Roadmap</h1>
     <p class="subtitle">LessJS 的路线图围绕一个判断展开：先把 SSG + DSD + Island Upgrade + Hono API 做可信，再扩展 serverless fullstack、ISR、PWA 和 compiler，最终在公共 API 稳定后承诺 1.0。</p>
-    <h2>Now: v0.10 — SSR Architecture Purification + API Boundary</h2>
-    <p>v0.9.2 完成了 i18n 和 View Transitions（446 测试）。v0.10.0 通过 ADR 0008-0014 七条决策消除了 SSR 层全部边界违规，SSR bundle 现在导出 <span class="inline-code">renderRoute()</span>、<span class="inline-code">getStaticPaths()</span>、<span class="inline-code">routeInfo</span> 三个干净公共 API，<span class="inline-code">build-ssg.ts</span> 仅负责路径枚举和文件写入。448 测试通过。</p>
+    <h2>Now: v0.11 — Runtime/Build Separation</h2>
+    <p>v0.10.0 完成了 SSR 架构净化（448 测试）。v0.11.0 通过 ADR 0017 将 @lessjs/core 拆分为纯运行时 + @lessjs/adapter-vite 构建编排。Core 不再包含 Vite 插件代码，零 node:*、零 npm:、零 Vite 依赖，可在 Deno / Node / Bun / Edge 任意运行。5 个 npm: specifier 补丁不再需要碰到框架本身。</p>
     <table class="version-table"><thead><tr><th>Area</th><th>Status</th><th>Notes</th></tr></thead><tbody>
-      <tr><td>TC39 Signals</td><td>✅ Done</td><td>@lessjs/signal: signal(), computed(), effect(), islandEffect()</td></tr>
-      <tr><td>DSD 规范对齐</td><td>✅ Done</td><td>shadowrootdelegatesfocus, shadowrootserializable, shadowrootslotassignment, shadowrootcustomelementregistry</td></tr>
-      <tr><td>Form-Associated CE</td><td>✅ Done</td><td>less-button, less-input 使用 ElementInternals</td></tr>
-      <tr><td>Navigation API</td><td>✅ Done</td><td>navigate(), onNavigate(), matchRoute()</td></tr>
-      <tr><td>Speculative Loading</td><td>✅ Done</td><td>modulepreload for eager, prefetch for lazy</td></tr>
-      <tr><td>dialog/popover + inert</td><td>✅ Done</td><td>原生 &lt;dialog&gt; + ::backdrop + inert</td></tr>
-      <tr><td>Island 系统改进</td><td>✅ Done</td><td>Mixin 替代猴子补丁，适配器显式注入</td></tr>
-      <tr><td>@lessjs/i18n 独立包</td><td>✅ Done</td><td>从 content 拆出，lessI18n() 独立插件，SSG locale 展开</td></tr>
-      <tr><td>双语文档站</td><td>✅ Done</td><td>25/30 页面英文版 + language switcher + en/zh 路径</td></tr>
-      <tr><td>View Transitions API</td><td>✅ Done</td><td>跨页面 MPA 动画，Chrome 111+, Safari 18+, Firefox 129+，默认开启</td></tr>
-      <tr><td>Speculation Rules API</td><td>✅ Done</td><td>浏览器 prefetch/prerender，Chrome 121+，显式启用</td></tr>
-      <tr><td>SSG 后处理管线</td><td>✅ Done</td><td>5 步管线：clientScript → viewTransition → speculation → CSP → DSD polyfill</td></tr>
-      <tr><td>消除 globalThis 桥接</td><td>✅ Done</td><td>ADR 0008: 消除 createServer() + 全部 globalThis 桥接</td></tr>
-      <tr><td>消除 .less/ 临时文件</td><td>✅ Done</td><td>ADR 0010: 构建 ctx 替代文件系统中间态</td></tr>
-      <tr><td>消除 last globalThis</td><td>✅ Done</td><td>ADR 0011: closeBundle 替代 globalThis 数据传递</td></tr>
-      <tr><td>提取 @lessjs/app</td><td>✅ Done</td><td>ADR 0012: umbrella 函数抽到独立包</td></tr>
-      <tr><td>消除 less-runtime barrel</td><td>✅ Done</td><td>ADR 0013: 内联 shim 替代 barrel 重导出</td></tr>
-      <tr><td>SSR Bundle 公共 API</td><td>✅ Done</td><td>ADR 0014: renderRoute() + getStaticPaths() + routeInfo，build-ssg.ts 仅编排</td></tr>
-    </tbody></table>
-    <h2>Next: v0.11 — ISR + PWA + Compiler Alpha</h2>
-    <p>构建能力成熟——增量构建、缓存策略、离线支持。详见 <a href="/decisions/0003-pwa-support">ADR 0003</a>、<a href="/decisions/0002-less-compiler-eliminate-lit">ADR 0002</a>。</p>
-    <table class="version-table"><thead><tr><th>Area</th><th>Status</th><th>Notes</th></tr></thead><tbody>
+      <tr><td>Runtime/Build 分离</td><td>✅ Done</td><td>ADR 0017: core 纯运行时 + adapter-vite 构建编排</td></tr>
+      <tr><td>Core 零 node:* 依赖</td><td>✅ Done</td><td>无 node:path, node:process, node:url, node:fs</td></tr>
+      <tr><td>Core 零 Vite 依赖</td><td>✅ Done</td><td>无 Plugin type, 无 esbuild, 无 @hono/vite-dev-server</td></tr>
+      <tr><td>Core 零 npm: 依赖</td><td>✅ Done</td><td>仅 parse5 作为纯 JS HTML 解析器</td></tr>
+      <tr><td>@lessjs/adapter-vite</td><td>✅ Done</td><td>less() → Plugin[]，路由扫描，HMR，SSG 三阶段，npm:→bare 翻译</td></tr>
+      <tr><td>用户 API 兼容</td><td>✅ Done</td><td>lessjs() 仍从 @lessjs/app 导出，用户代码零改动</td></tr>
       <tr><td>路由级 revalidation</td><td>📋 Planned</td><td>按需重新生成静态页面</td></tr>
       <tr><td>Cache lock</td><td>📋 Planned</td><td>并发构建时的缓存锁</td></tr>
       <tr><td>Stale fallback</td><td>📋 Planned</td><td>新内容构建中返回旧内容</td></tr>
@@ -71,30 +55,22 @@ export class RoadmapPage extends LitElement {
     <h1>Roadmap</h1>
     <p class="subtitle">The LessJS roadmap centers on one judgment: make SSG + DSD + Island Upgrade + Hono API trustworthy first, then expand to serverless fullstack, ISR, PWA, and compiler, and finally commit to 1.0 after public APIs stabilize.</p>
     <div class="callout"><p>This roadmap is not a marketing page. Future items listed here will only become stable user guides after they enter implementation and testing. See <a href="/decisions/0006-version-strategy">ADR 0006</a> for versioning strategy.</p></div>
-    <h2>Now: v0.10 — SSR Architecture Purification + API Boundary</h2>
-    <p>v0.9.2 completed i18n and View Transitions (446 tests). v0.10.0 eliminates all SSR layer boundary violations through ADR 0008-0014 — seven decisions that make the SSR bundle export <span class="inline-code">renderRoute()</span>, <span class="inline-code">getStaticPaths()</span>, and <span class="inline-code">routeInfo</span> as clean public APIs, while <span class="inline-code">build-ssg.ts</span> only handles path enumeration and file writing. 448 tests passing.</p>
+    <h2>Now: v0.11 — Runtime/Build Separation</h2>
+    <p>v0.10.0 completed SSR architecture purification (448 tests). v0.11.0 splits @lessjs/core into pure runtime + @lessjs/adapter-vite build orchestration via ADR 0017. Core no longer contains Vite plugin code — zero node:*, zero npm:, zero Vite dependency. Runs in Deno / Node / Bun / Edge. Five npm: specifier patches no longer need to touch the framework itself.</p>
     <table class="version-table"><thead><tr><th>Area</th><th>Status</th><th>Notes</th></tr></thead><tbody>
-      <tr><td>TC39 Signals</td><td>✅ Done</td><td>@lessjs/signal: signal(), computed(), effect(), islandEffect()</td></tr>
-      <tr><td>DSD Spec Alignment</td><td>✅ Done</td><td>shadowrootdelegatesfocus, shadowrootserializable, shadowrootslotassignment, shadowrootcustomelementregistry</td></tr>
-      <tr><td>Form-Associated CE</td><td>✅ Done</td><td>less-button, less-input using ElementInternals</td></tr>
-      <tr><td>Navigation API</td><td>✅ Done</td><td>navigate(), onNavigate(), matchRoute()</td></tr>
-      <tr><td>Speculative Loading</td><td>✅ Done</td><td>modulepreload for eager, prefetch for lazy</td></tr>
-      <tr><td>dialog/popover + inert</td><td>✅ Done</td><td>Native &lt;dialog&gt; + ::backdrop + inert</td></tr>
-      <tr><td>Island System</td><td>✅ Done</td><td>Mixin replaces monkey-patch, explicit adapter injection</td></tr>
-      <tr><td>@lessjs/i18n Package</td><td>✅ Done</td><td>Extracted from content, lessI18n() standalone plugin, SSG locale expansion</td></tr>
-      <tr><td>Bilingual Docs</td><td>✅ Done</td><td>25/30 pages with English version + language switcher + en/zh paths</td></tr>
-      <tr><td>View Transitions API</td><td>✅ Done</td><td>Cross-page MPA animations, Chrome 111+, Safari 18+, Firefox 129+, enabled by default</td></tr>
-      <tr><td>Speculation Rules API</td><td>✅ Done</td><td>Browser prefetch/prerender, Chrome 121+, opt-in via speculation: true</td></tr>
-      <tr><td>SSG Post-process Pipeline</td><td>✅ Done</td><td>5-step pipeline: clientScript → viewTransition → speculation → CSP → DSD polyfill</td></tr>
-      <tr><td>Eliminate globalThis bridges</td><td>✅ Done</td><td>ADR 0008: eliminate createServer() + all globalThis bridges</td></tr>
-      <tr><td>Eliminate .less/ temp files</td><td>✅ Done</td><td>ADR 0010: build ctx replaces filesystem intermediate state</td></tr>
-      <tr><td>Eliminate last globalThis</td><td>✅ Done</td><td>ADR 0011: closeBundle replaces globalThis data passing</td></tr>
-      <tr><td>Extract @lessjs/app</td><td>✅ Done</td><td>ADR 0012: umbrella functions moved to standalone package</td></tr>
-      <tr><td>Eliminate less-runtime barrel</td><td>✅ Done</td><td>ADR 0013: inline shim replaces barrel re-exports</td></tr>
-      <tr><td>SSR Bundle Public API</td><td>✅ Done</td><td>ADR 0014: renderRoute() + getStaticPaths() + routeInfo, build-ssg.ts is orchestration only</td></tr>
+      <tr><td>Runtime/Build Separation</td><td>✅ Done</td><td>ADR 0017: core pure runtime + adapter-vite build orchestration</td></tr>
+      <tr><td>Core zero node:* deps</td><td>✅ Done</td><td>No node:path, node:process, node:url, node:fs</td></tr>
+      <tr><td>Core zero Vite deps</td><td>✅ Done</td><td>No Plugin type, no esbuild, no @hono/vite-dev-server</td></tr>
+      <tr><td>Core zero npm: deps</td><td>✅ Done</td><td>Only parse5 as pure JS HTML parser</td></tr>
+      <tr><td>@lessjs/adapter-vite</td><td>✅ Done</td><td>less() → Plugin[], route scanning, HMR, SSG 3-phase, npm:→bare rewrite</td></tr>
+      <tr><td>User API Compatibility</td><td>✅ Done</td><td>lessjs() still from @lessjs/app, zero user code changes</td></tr>
+      <tr><td>Route-level revalidation</td><td>📋 Planned</td><td>On-demand static page regeneration</td></tr>
+      <tr><td>Cache lock</td><td>📋 Planned</td><td>Concurrency lock for builds</td></tr>
+      <tr><td>Stale fallback</td><td>📋 Planned</td><td>Serve old content while building new</td></tr>
+      <tr><td>Service Worker strategy</td><td>📋 Planned</td><td>Configurable NetworkFirst/CacheFirst</td></tr>
+      <tr><td>CDN recipes</td><td>📋 Planned</td><td>Cloudflare/Netlify cache config templates</td></tr>
+      <tr><td>.less Compiler Alpha</td><td>📋 Planned</td><td>AST runtime-shim generation, eliminate Lit dependency</td></tr>
     </tbody></table>
-    <h2>Next: v0.11 — ISR + PWA + Compiler Alpha</h2>
-    <p>Build capability maturation — incremental builds, caching strategies, offline support. See <a href="/decisions/0003-pwa-support">ADR 0003</a>, <a href="/decisions/0002-less-compiler-eliminate-lit">ADR 0002</a>.</p>
     <table class="version-table"><thead><tr><th>Area</th><th>Status</th><th>Notes</th></tr></thead><tbody>
       <tr><td>Route-level revalidation</td><td>📋 Planned</td><td>On-demand static page regeneration</td></tr>
       <tr><td>Cache lock</td><td>📋 Planned</td><td>Concurrency lock for builds</td></tr>

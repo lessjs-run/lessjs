@@ -9,8 +9,19 @@
  */
 
 import type { RouteEntry } from './types.js';
-import type { IslandDecl } from './entry-descriptor.js';
 import { createLogger } from './logger.js';
+
+/**
+ * Minimal island descriptor used in SSR context.
+ * Full IslandDecl (with import paths, strategy, etc.) lives in @lessjs/adapter-vite.
+ * This keeps @lessjs/core zero-dependency on build orchestration.
+ */
+export interface IslandDescriptor {
+  /** Custom element tag name */
+  tagName: string;
+  /** Import path for the island module */
+  importPath: string;
+}
 
 const log = createLogger('core');
 
@@ -28,7 +39,7 @@ export interface SsrContext {
   /** Parsed query/search parameters */
   query: Record<string, string>;
   /** Islands collected during SSR rendering */
-  islands: IslandDecl[];
+  islands: IslandDescriptor[];
   /** HTTP status code (default: 200) */
   status: number;
   /** Custom data bag — for loaders, middleware, etc. */

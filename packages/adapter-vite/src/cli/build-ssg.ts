@@ -17,10 +17,10 @@
 import { join, resolve } from 'node:path';
 import process from 'node:process';
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import type { FrameworkOptions, PackageIslandMeta } from '../types.js';
+import type { FrameworkOptions, PackageIslandMeta } from '@lessjs/core';
 import type { LessBuildContext } from '../build-context.js';
-import { SsrRenderError } from '../errors.js';
-import { createLogger } from '../logger.js';
+import { SsrRenderError } from '@lessjs/core/errors';
+import { createLogger } from '@lessjs/core/logger';
 
 const log = createLogger('ssg');
 

@@ -17,7 +17,7 @@ import { resolve } from 'node:path';
 import process from 'node:process';
 import { type ClientIslandEntry, generateClientEntry } from '../entry-generators.js';
 import type { LessBuildContext } from '../build-context.js';
-import { createLogger } from '../logger.js';
+import { createLogger } from '@lessjs/core/logger';
 
 const log = createLogger('ssg');
 

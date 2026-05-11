@@ -121,6 +121,53 @@ export class ChangelogPage extends LitElement {
 
           <div class="version-section">
             <div class="version-header">
+              <span class="version-number">0.11.0</span>
+              <span class="version-date">2026-05-11</span>
+            </div>
+            <div class="change-category added">
+              <h4>新增</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>@lessjs/adapter-vite 独立包</strong>（ADR 0017）：
+                  从 @lessjs/core 中提取 Vite 构建编排代码到
+                  <span class="inline-code">@lessjs/adapter-vite</span>，
+                  core 只保留纯运行时（零 node:*，零 npm:，零 Vite 依赖）。
+                  <span class="inline-code">less()</span> 函数从 core 迁移到 adapter-vite。
+                </li>
+              </ul>
+            </div>
+            <div class="change-category changed">
+              <h4>变更</h4>
+              <ul class="change-list">
+                <li>
+                  <strong>框架运行时与构建编排解耦</strong>（ADR 0017）：
+                  @lessjs/core 成为纯 Web Standard 运行时包，可在 Deno / Node / Bun / Edge 任意运行。
+                  Vite 插件、路由扫描、SSG 三阶段流水线、npm:→bare 翻译全部移至 @lessjs/adapter-vite。
+                </li>
+                <li>
+                  <strong>API 迁移</strong>：
+                  <span class="inline-code">less()</span> 从 <span class="inline-code">@lessjs/core</span>
+                  迁移到 <span class="inline-code">@lessjs/adapter-vite</span>。
+                  <span class="inline-code">lessjs()</span> 仍从 <span class="inline-code">@lessjs/app</span>
+                  导出，用户代码无需改动。
+                </li>
+                <li>
+                  <strong>构建工具依赖移除</strong>：
+                  @lessjs/core 不再依赖 Vite、esbuild、@hono/vite-dev-server、node:*。
+                  仅保留 parse5 作为纯 JS HTML 解析器依赖。
+                </li>
+                <li>
+                  <strong>包版本变更</strong>：
+                  @lessjs/core 0.10.7 → 0.11.0；
+                  @lessjs/app 0.2.6 → 0.3.0；
+                  @lessjs/adapter-vite 新增 0.1.0。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="version-section">
+            <div class="version-header">
               <span class="version-number">0.10.0</span>
               <span class="version-date">2026-05-10</span>
             </div>

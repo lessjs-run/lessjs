@@ -27,7 +27,7 @@
 
 import type { Plugin } from 'vite';
 import type { HeaderNavLink, LessContentOptions, NavSection } from './types.ts';
-import type { LessBuildContext } from '@lessjs/core/build-context';
+import type { LessBuildContext } from '@lessjs/adapter-vite/build-context';
 import { initBlogData } from './blog/blog-data.ts';
 import { scanNavData } from './nav/scanner.ts';
 import { createLogger } from '@lessjs/core/logger';

@@ -9,6 +9,8 @@
   "imports": {
     "marked": "npm:marked@^15",
     "gray-matter": "npm:gray-matter@^4.0.3",
+    "@lessjs/core/logger": "jsr:@lessjs/core@^0.11/logger",
+    "@lessjs/adapter-vite/build-context": "jsr:@lessjs/adapter-vite@^0.1/build-context",
     "vite": "npm:vite@8.0.10"
   },
   "publish": {

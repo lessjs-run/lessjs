@@ -125,6 +125,16 @@ export default defineConfig({
   ],
   resolve: {
     alias: [
+      // @lessjs/adapter-vite subpath aliases (MUST come before parent)
+      {
+        find: '@lessjs/adapter-vite/build-context',
+        replacement: resolve(__dir, '../packages/adapter-vite/src/build-context.ts'),
+      },
+      {
+        find: '@lessjs/adapter-vite',
+        replacement: resolve(__dir, '../packages/adapter-vite/src/index.ts'),
+      },
+      // @lessjs/core subpath aliases (MUST come before parent)
       {
         find: '@lessjs/core/html-escape',
         replacement: resolve(__dir, '../packages/core/src/html-escape.ts'),
@@ -148,10 +158,6 @@ export default defineConfig({
       {
         find: '@lessjs/core/navigation',
         replacement: resolve(__dir, '../packages/core/src/navigation.ts'),
-      },
-      {
-        find: '@lessjs/core/build-context',
-        replacement: resolve(__dir, '../packages/core/src/build-context.ts'),
       },
       {
         find: '@lessjs/core',

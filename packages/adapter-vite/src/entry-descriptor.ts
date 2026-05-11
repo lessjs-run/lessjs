@@ -12,7 +12,7 @@
  * entry pipeline testable, serializable, and diffable.
  */
 
-import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from './types.js';
+import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from '@lessjs/core';
 import { fileToTagName } from './route-scanner.js';
 
 // ─── Import declarations ───────────────────────────────────────

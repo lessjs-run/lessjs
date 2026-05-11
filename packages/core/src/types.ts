@@ -231,7 +231,15 @@ export interface LessRenderer {
  * export default middleware;
  * ```
  */
-export type LessMiddleware = import('hono').MiddlewareHandler;
+/**
+ * LessMiddleware type for _middleware.ts files.
+ *
+ * Middleware is mounted as Hono middleware on the directory prefix.
+ * Uses a generic function type to avoid importing Hono at runtime.
+ * When used with Hono, the actual type is Hono.MiddlewareHandler.
+ */
+// deno-lint-ignore no-explicit-any
+export type LessMiddleware = (c: any, next: () => Promise<void>) => Promise<void> | void;
 
 /** Resolved route entry from file-based routing */
 export interface RouteEntry {

@@ -17,7 +17,7 @@
 
 import { join, resolve } from 'node:path';
 import { existsSync, readdirSync, statSync } from 'node:fs';
-import { createLogger } from './logger.js';
+import { createLogger } from '@lessjs/core/logger';
 
 const log = createLogger('ssg');
 

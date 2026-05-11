@@ -16,7 +16,7 @@
  */
 
 import type { Alias, ResolvedConfig } from 'vite';
-import type { FrameworkOptions, PackageIslandMeta } from './types.js';
+import type { FrameworkOptions, PackageIslandMeta } from '@lessjs/core';
 
 export class LessBuildContext {
   // ─── From less:core route scanning ────────────────────────────
