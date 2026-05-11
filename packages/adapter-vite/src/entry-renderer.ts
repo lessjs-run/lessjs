@@ -285,8 +285,9 @@ export function renderEntry(desc: EntryDescriptor): string {
   // into the self-contained bundle. Installing it at module load time
   // ensures registerAdapter() runs before any renderDSD() call.
   // The try/catch makes this a no-op when @lessjs/adapter-lit is absent.
-  if (desc.isSSG) {
-    lines.push('// SSG: auto-install Lit adapter (inlined in SSR bundle)');
+  // Both SSG and dev mode need the adapter to render Lit TemplateResults.
+  {
+    lines.push('// Auto-install Lit adapter for SSR rendering');
     lines.push('try {');
     lines.push("  const { installLitAdapter } = await import('@lessjs/adapter-lit');");
     lines.push('  installLitAdapter();');
@@ -438,12 +439,12 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('export { wrapInDocument } from "@lessjs/core/ssr-handler"');
     lines.push('export { registerAdapter, getAdapter } from "@lessjs/core/adapter-registry"');
     lines.push('export { installLitAdapter, uninstallLitAdapter } from "@lessjs/adapter-lit"');
-    lines.push(
-      'export { initBlogData, getPosts, getPostBySlug, getBlogOptions } from "@lessjs/content"',
-    );
+    // ADR 0018: Blog data comes from virtual:less-blog-data (zero module state)
+    lines.push('export { posts, getPostBySlug, getBlogOptions } from "virtual:less-blog-data"');
     lines.push('export { generateSitemap } from "@lessjs/content/sitemap"');
+    // ADR 0018: i18n data comes from virtual:less-i18n-data (zero module state)
     lines.push(
-      'export { initI18nData, getI18nOptions, getI18nLocales, getDefaultLocale } from "@lessjs/i18n"',
+      'export { locales, getDefaultLocale, getI18nOptions } from "virtual:less-i18n-data"',
     );
 
     // ── ADR 0014: renderRoute() — DSD-first rendering API ───────

@@ -4,6 +4,10 @@
  * Blog + Nav + Sitemap — build-time only, zero runtime.
  * Each module is opt-in: pass options to enable, omit or false to disable.
  *
+ * ADR 0018: Route components import data from virtual:less-blog-data,
+ * NOT from @lessjs/content module state. The loadBlogData() pure function
+ * is called by the virtual module plugin's load() hook.
+ *
  * Recommended usage (via @lessjs/app):
  * ```ts
  * import { lessjs } from '@lessjs/app';
@@ -25,12 +29,14 @@
  * ```
  */
 
-import type { Plugin } from 'vite';
+import type { Plugin, ViteDevServer } from 'vite';
 import type { HeaderNavLink, LessContentOptions, NavSection } from './types.ts';
 import type { LessBuildContext } from '@lessjs/adapter-vite/build-context';
-import { initBlogData } from './blog/blog-data.ts';
+import { RESOLVED_BLOG_DATA_ID } from '@lessjs/adapter-vite/virtual-data';
+import { loadBlogData } from './blog/blog-data.ts';
 import { scanNavData } from './nav/scanner.ts';
 import { createLogger } from '@lessjs/core/logger';
+import { relative, resolve } from 'node:path';
 
 const log = createLogger('content');
 
@@ -40,7 +46,7 @@ const log = createLogger('content');
 export type { BlogPost, BlogPostFrontmatter, LessBlogOptions } from './blog/types.ts';
 export { parseMarkdownFile, slugFromFilename } from './blog/markdown.ts';
 export { generateBlogRoutes, scanPosts } from './blog/routes.ts';
-export { getBlogOptions, getPostBySlug, getPosts, initBlogData } from './blog/blog-data.ts';
+export { loadBlogData } from './blog/blog-data.ts';
 
 // Nav
 export { extractMeta, scanNavData } from './nav/scanner.ts';
@@ -96,14 +102,15 @@ export function lessContent(
         const contentDir = blogOpts.contentDir ?? 'posts';
         const basePath = blogOpts.basePath ?? '/blog';
 
-        const { postCount } = await (async () => {
-          const result = await initBlogData(blogOpts);
-          return { postCount: result.posts.length };
-        })();
+        // ADR 0018: Use loadBlogData() pure function instead of stateful initBlogData()
+        const result = await loadBlogData(blogOpts);
 
-        log.info(`Blog: ${postCount} post(s) found in ${contentDir}, base path: ${basePath}`);
+        log.info(
+          `Blog: ${result.posts.length} post(s) found in ${contentDir}, base path: ${basePath}`,
+        );
 
         // Write blog options to ctx (ADR 0010: ctx replaces .less/ temp files)
+        // The virtual:less-blog-data plugin reads ctx.blogOptions in its load() hook
         if (ctx) {
           ctx.blogOptions = { contentDir, basePath };
         }
@@ -141,6 +148,36 @@ export function lessContent(
       }
 
       return { define: defines };
+    },
+
+    // ADR 0018 Phase 3: Content HMR
+    // When .md/.mdx files change, invalidate virtual:less-blog-data
+    // so the next ssrLoadModule() call triggers load() with fresh data.
+    configureServer(server: ViteDevServer) {
+      const contentDir = blogOpts?.contentDir;
+      if (!contentDir) return;
+
+      const absoluteContentDir = resolve(server.config.root, contentDir);
+
+      // Watch the content directory for changes
+      server.watcher.add(absoluteContentDir);
+
+      const invalidateBlogData = (file: string) => {
+        if (!file.startsWith(absoluteContentDir)) return;
+        if (!file.endsWith('.md') && !file.endsWith('.mdx')) return;
+
+        // Invalidate the virtual blog data module
+        const mod = server.moduleGraph.getModuleById(RESOLVED_BLOG_DATA_ID);
+        if (mod) {
+          server.moduleGraph.invalidateModule(mod);
+          log.info(`Content changed: ${relative(server.config.root, file)} — reloading`);
+          server.hot.send({ type: 'full-reload' });
+        }
+      };
+
+      server.watcher.on('change', invalidateBlogData);
+      server.watcher.on('add', invalidateBlogData);
+      server.watcher.on('unlink', invalidateBlogData);
     },
   };
 

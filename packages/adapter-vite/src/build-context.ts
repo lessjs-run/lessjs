@@ -16,13 +16,16 @@
  */
 
 import type { Alias, ResolvedConfig } from 'vite';
-import type { FrameworkOptions, PackageIslandMeta } from '@lessjs/core';
+import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from '@lessjs/core';
 
 export class LessBuildContext {
   // ─── From less:core route scanning ────────────────────────────
 
   /** The generated Hono entry module code (virtual module content) */
   honoEntryCode: string = '';
+
+  /** Cached routes from buildStart() for lazy load() regeneration */
+  cachedRoutes: RouteEntry[] = [];
 
   /** Island tag names discovered during route scanning (local islands) */
   islandTagNames: string[] = [];
@@ -130,6 +133,7 @@ export class LessBuildContext {
   /** Reset all mutable state (for watch mode / testing) */
   reset(): void {
     this.honoEntryCode = '';
+    this.cachedRoutes = [];
     this.islandTagNames = [];
     this.islandFiles = [];
     this.packageIslands = [];

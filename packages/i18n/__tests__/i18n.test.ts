@@ -1,53 +1,32 @@
 /**
  * @lessjs/i18n - Unit Tests
+ * ADR 0018: Tests updated for pure function pattern (loadI18nData)
  */
 import { assertEquals, assertStrictEquals } from 'jsr:@std/assert@^1.0.0';
-import {
-  getDefaultLocale,
-  getI18nLocales,
-  getI18nOptions,
-  initI18nData,
-} from '../src/i18n-data.ts';
+import { loadI18nData } from '../src/i18n-data.ts';
 import { i18nStaticPaths, switchLocale } from '../src/routes.ts';
 
 // ─── i18n-data.ts ────────────────────────────────────────────────
 
-Deno.test('i18n-data: initI18nData stores options', () => {
-  initI18nData({ locales: ['en', 'zh'], defaultLocale: 'en' });
-  const opts = getI18nOptions();
-  assertEquals(opts?.locales, ['en', 'zh']);
-  assertStrictEquals(opts?.defaultLocale, 'en');
+Deno.test('loadI18nData: returns options copy', () => {
+  const opts = { locales: ['en', 'zh'], defaultLocale: 'en' };
+  const result = loadI18nData(opts);
+  assertEquals(result.locales, ['en', 'zh']);
+  assertStrictEquals(result.defaultLocale, 'en');
 });
 
-Deno.test('i18n-data: getI18nLocales returns configured locales', () => {
-  initI18nData({ locales: ['en', 'zh', 'ja'], defaultLocale: 'en' });
-  assertEquals(getI18nLocales(), ['en', 'zh', 'ja']);
-});
-
-Deno.test('i18n-data: getDefaultLocale returns configured default', () => {
-  initI18nData({ locales: ['en', 'zh'], defaultLocale: 'zh' });
-  assertStrictEquals(getDefaultLocale(), 'zh');
-});
-
-Deno.test('i18n-data: getI18nLocales returns empty array before init', () => {
-  // Reset by re-initializing with different options, then checking before init state
-  // Since _options is module-level state, we test after a fresh init
-  initI18nData({ locales: ['fr'], defaultLocale: 'fr' });
-  assertEquals(getI18nLocales(), ['fr']);
-});
-
-Deno.test('i18n-data: getDefaultLocale returns "en" as fallback', () => {
-  // The default fallback is 'en' when no options set
-  // After init, it should return the configured default
-  initI18nData({ locales: ['de'], defaultLocale: 'de' });
-  assertStrictEquals(getDefaultLocale(), 'de');
+Deno.test('loadI18nData: returns independent copy', () => {
+  const opts = { locales: ['en', 'zh'], defaultLocale: 'en' };
+  const result = loadI18nData(opts);
+  // Mutating the result should not affect the original
+  result.locales.push('ja');
+  assertEquals(opts.locales, ['en', 'zh']);
 });
 
 // ─── routes.ts — i18nStaticPaths ─────────────────────────────────
 
-Deno.test('i18nStaticPaths: generates paths from configured locales', () => {
-  initI18nData({ locales: ['en', 'zh'], defaultLocale: 'en' });
-  const paths = i18nStaticPaths();
+Deno.test('i18nStaticPaths: generates paths from locale list', () => {
+  const paths = i18nStaticPaths(['en', 'zh']);
   assertEquals(paths, [{ locale: 'en' }, { locale: 'zh' }]);
 });
 
@@ -91,12 +70,6 @@ Deno.test('switchLocale: handles root path without locale prefix', () => {
 Deno.test('switchLocale: handles trailing slash locale prefix', () => {
   const result = switchLocale('/en/', 'zh', ['en', 'zh']);
   assertEquals(result, '/zh/');
-});
-
-Deno.test('switchLocale: uses configured locales when not specified', () => {
-  initI18nData({ locales: ['en', 'zh'], defaultLocale: 'en' });
-  const result = switchLocale('/en/guide/getting-started', 'zh');
-  assertEquals(result, '/zh/guide/getting-started');
 });
 
 Deno.test('switchLocale: handles 3+ locales', () => {

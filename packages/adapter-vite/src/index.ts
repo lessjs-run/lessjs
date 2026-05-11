@@ -17,9 +17,8 @@
 import type { Plugin } from 'vite';
 import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from '@lessjs/core';
 
-import { dirname, join } from 'node:path';
+import { join } from 'node:path';
 import process from 'node:process';
-import { fileURLToPath } from 'node:url';
 import { transform as esbuildTransform } from 'esbuild';
 import { LessError } from '@lessjs/core/errors';
 import { createLogger } from '@lessjs/core/logger';
@@ -33,40 +32,24 @@ import { buildPlugin } from './build.js';
 import { generateHonoEntryCode } from './hono-entry.js';
 import { islandTransformPlugin } from './island-transform.js';
 import { fileToTagName, scanIslands, scanPackageIslands, scanRoutes } from './route-scanner.js';
+import { createBlogDataPlugin, createI18nDataPlugin } from './virtual-data.js';
 
-// ─── Subpath resolution (ADR 0016) ─────────────────────────────────
+// ─── Subpath resolution (ADR 0016 — JSR remote only) ─────────────
 //
-// Problem: The virtual:less-hono-entry module imports from subpaths like
-// @lessjs/core/ssr-handler and @lessjs/core/logger. Vite's SSR runner
-// cannot resolve these bare specifiers because:
-//   - JSR packages are NOT in node_modules (Deno uses content-addressable cache)
-//   - The Deno import map (deno.json) is not used by Vite's SSR runner
-//   - Node.js ESM loader only supports file:// and data: URLs
+// ADR 0018 Phase 0: buildCoreSubpathAliases() DELETED.
+// Local mode now relies on @deno/vite-plugin for bare specifier resolution.
 //
-// This bug has recurred 6 times (b6a6b41, f223bef, 6c5a992, v0.10.2 https:// aliases,
-// v0.10.3 TS source not compiled, v0.10.4 npm: specifiers unresolvable).
+// Remote JSR resolution (createCoreResolvePlugin) is retained because
+// JSR packages are not in node_modules and require virtual module loading.
 //
-// Solution: Two-pronged approach depending on execution context:
-//
-//   A) Local (file:// import.meta.url): resolve.alias with local file paths
-//      - Fast, supports HMR, no virtual module overhead
-//
-//   B) Remote (https:// import.meta.url — JSR execution):
-//      - resolveId + load virtual module pattern
-//      - resolveId intercepts @lessjs/core/* → virtual IDs (\0lessjs:core/src/*)
-//      - load fetches TypeScript source from JSR, compiles TS→JS via esbuild
-//      - Relative imports within virtual modules are also intercepted
-//      - Virtual IDs (\0 prefix) bypass Node.js ESM loader entirely
-//
-//   Why esbuild? Virtual modules (\0 prefix) bypass Vite's standard transform
-//   pipeline, so TS syntax like `export type` reaches Rolldown's parser which
-//   only understands JavaScript. esbuild (bundled with Vite) strips types and
-//   produces clean ESM. JSR does NOT serve pre-compiled .js files.
+// When @deno/vite-plugin is integrated, it will handle local bare specifier
+// resolution through Deno's import map. The remote plugin remains as fallback
+// for JSR execution contexts.
 
 /** Virtual module ID prefix for JSR remote resolution */
 const VIRTUAL_CORE_PREFIX = '\0lessjs:core/src/';
 
-/** Mapping of @lessjs/core/* subpath specifiers to source files */
+/** Mapping of @lessjs/core/* subpath specifiers to source files (used by JSR remote resolution only) */
 const CORE_SUBPATHS: Record<string, string> = {
   'html-escape': 'html-escape.ts',
   'render-dsd': 'render-dsd.ts',
@@ -78,37 +61,9 @@ const CORE_SUBPATHS: Record<string, string> = {
   'navigation': 'navigation.ts',
 };
 
-/**
- * Build Vite resolve aliases for @lessjs/core subpath imports (local mode).
- *
- * Only used when import.meta.url is file:// (local development).
- * For remote (JSR) execution, the coreResolvePlugin handles resolution.
- *
- * IMPORTANT: Subpath aliases MUST come before the parent @lessjs/core alias.
- * Vite alias matching is first-hit (not longest-prefix).
- */
-function buildCoreSubpathAliases(): import('vite').Alias[] {
-  const adapterSrcDir = dirname(fileURLToPath(import.meta.url));
-  // Core source is at ../../core/src/ relative to adapter-vite/src/
-  const coreSrcDir = join(adapterSrcDir, '../../core/src');
-
-  const aliases: import('vite').Alias[] = [];
-
-  for (const [subpath, file] of Object.entries(CORE_SUBPATHS)) {
-    aliases.push({
-      find: `@lessjs/core/${subpath}`,
-      replacement: join(coreSrcDir, file),
-    });
-  }
-
-  // Parent alias last
-  aliases.push({
-    find: '@lessjs/core',
-    replacement: join(coreSrcDir, 'index.ts'),
-  });
-
-  return aliases;
-}
+// ADR 0018: buildCoreSubpathAliases() DELETED.
+// Local mode relies on @deno/vite-plugin (to be integrated).
+// Remote JSR mode uses createCoreResolvePlugin below.
 
 /** Source cache for JSR-fetched modules (avoids redundant network requests) */
 const jsrSourceCache = new Map<string, string>();
@@ -250,7 +205,6 @@ function createCoreResolvePlugin(metaUrl: string): Plugin {
  */
 export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildContext): Plugin[] {
   const metaUrl = import.meta.url;
-  const isRemote = metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
 
   let headExtras = options.headExtras;
 
@@ -336,17 +290,15 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
           | import('vite').Alias[];
       }
 
-      // ADR 0015+0016: Auto-inject @lessjs/core subpath aliases (local mode).
-      const coreSubpathAliases = isRemote ? [] : buildCoreSubpathAliases();
+      // ADR 0018: buildCoreSubpathAliases() DELETED.
+      // Local bare specifier resolution handled by @deno/vite-plugin (to be integrated).
+      // Remote JSR resolution handled by createCoreResolvePlugin.
 
       return {
         build: {
           rollupOptions: {
             input: [VIRTUAL_ENTRY_ID],
           },
-        },
-        resolve: {
-          alias: coreSubpathAliases,
         },
       };
     },
@@ -383,6 +335,10 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
           }
         }
 
+        // Cache routes for lazy load() regeneration (ctx.blogOptions may not
+        // be set yet — lessContent() buildStart() runs after this one).
+        ctx.cachedRoutes = routes;
+
         ctx.honoEntryCode = generateEntry(
           routes,
           ctx.islandTagNames,
@@ -416,8 +372,16 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
 
     load(id) {
       if (id === RESOLVED_ENTRY_ID) {
-        return ctx.honoEntryCode ||
-          generateEntry([], ctx.islandTagNames, ctx.packageIslands, ctx.islandFiles);
+        // Always regenerate to pick up late-settled ctx fields (e.g., blogOptions
+        // from lessContent() buildStart() which runs after less:core buildStart()).
+        // In dev mode, load() is called lazily by the SSR runner, so all buildStart()
+        // hooks have completed by this point.
+        return generateEntry(
+          ctx.cachedRoutes || [],
+          ctx.islandTagNames,
+          ctx.packageIslands,
+          ctx.islandFiles,
+        );
       }
     },
   };
@@ -430,6 +394,8 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
   return [
     corePlugin,
     createCoreResolvePlugin(metaUrl),
+    createBlogDataPlugin(ctx),
+    createI18nDataPlugin(ctx),
     virtualEntryPlugin,
     devServerPlugin,
     islandTransformPlugin(resolvedOptions.islandsDir!),

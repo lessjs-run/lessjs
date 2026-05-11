@@ -1,48 +1,30 @@
 /**
- * @lessjs/content - Blog data store
+ * @lessjs/content - Blog data loader
  *
- * Singleton that holds parsed blog posts during build/dev.
- * The [slug].ts dynamic route reads from this store to render posts.
+ * Pure function for loading blog data from the file system.
+ * Zero module-level state. Zero side effects beyond reading files.
  *
- * With viteBuild(ssr:true, noExternal) producing a self-contained ESM bundle,
- * all virtual modules resolve at compile time and there is only one module
- * instance — so plain module variables replace the former globalThis bridge.
+ * ADR 0018: Replaces the old stateful initBlogData() + getPosts() pattern.
+ * Route components import data from virtual:less-blog-data instead.
+ * This module is only called by the virtual module plugin's load() hook.
  */
 
 import type { BlogPost, LessBlogOptions } from './types.ts';
 import { generateBlogRoutes } from './routes.ts';
 
-// Module-level storage — single instance within the self-contained SSR bundle
-let _posts: BlogPost[] = [];
-let _options: LessBlogOptions = {};
-
-/** Get all published posts (sorted newest first) */
-export function getPosts(): BlogPost[] {
-  return _posts;
-}
-
-/** Get a single post by slug */
-export function getPostBySlug(slug: string): BlogPost | undefined {
-  return _posts.find((p) => p.slug === slug);
-}
-
-/** Get current blog options */
-export function getBlogOptions(): LessBlogOptions {
-  return _options;
-}
-
 /**
- * Initialize the blog data store.
- * Called by lessContent() plugin during buildStart().
- * Returns the route data for further use.
+ * Pure function: load blog data from file system.
+ * No module-level state. No side effects beyond reading files.
+ * Can be called from any runtime context.
+ *
+ * This replaces the stateful initBlogData() + getPosts() pattern.
+ * For virtual module consumers, use virtual:less-blog-data instead.
  */
-export async function initBlogData(options?: LessBlogOptions): Promise<{
+export async function loadBlogData(options?: LessBlogOptions): Promise<{
   posts: BlogPost[];
   basePath: string;
 }> {
-  _options = options ?? {};
   const routes = await generateBlogRoutes(options);
-  _posts = routes.posts;
   return {
     posts: routes.posts,
     basePath: routes.basePath,

@@ -5,6 +5,10 @@
  * Separate from @lessjs/content because i18n is a cross-cutting concern,
  * not a content-management feature.
  *
+ * ADR 0018: Route components import data from virtual:less-i18n-data,
+ * NOT from @lessjs/i18n module state. The loadI18nData() pure function
+ * is called by the virtual module plugin's load() hook.
+ *
  * Recommended usage (via @lessjs/app):
  * ```ts
  * import { lessjs } from '@lessjs/app';
@@ -30,7 +34,7 @@
 import type { Plugin } from 'vite';
 import type { LessI18nOptions } from './types.ts';
 import type { LessBuildContext } from '@lessjs/adapter-vite/build-context';
-import { initI18nData } from './i18n-data.ts';
+import { loadI18nData } from './i18n-data.ts';
 import { createLogger } from '@lessjs/core/logger';
 
 const log = createLogger('i18n');
@@ -38,7 +42,7 @@ const log = createLogger('i18n');
 // ─── Re-exports ─────────────────────────────────────────────────
 
 export type { LessI18nOptions } from './types.ts';
-export { getDefaultLocale, getI18nLocales, getI18nOptions, initI18nData } from './i18n-data.ts';
+export { loadI18nData } from './i18n-data.ts';
 export { i18nStaticPaths, switchLocale } from './routes.ts';
 
 // ─── Main Plugin ────────────────────────────────────────────────
@@ -57,13 +61,15 @@ export function lessI18n(
     name: 'less:i18n',
 
     buildStart() {
-      initI18nData(options);
+      // ADR 0018: Use loadI18nData() pure function — zero module state
+      const i18nData = loadI18nData(options);
 
       // Write i18n options to ctx (shared build context)
+      // The virtual:less-i18n-data plugin reads ctx.i18nOptions in its load() hook
       if (ctx) {
         ctx.i18nOptions = {
-          locales: options.locales,
-          defaultLocale: options.defaultLocale,
+          locales: i18nData.locales,
+          defaultLocale: i18nData.defaultLocale,
         };
       }
 

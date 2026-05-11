@@ -2,39 +2,41 @@
  * @lessjs/i18n - Route helpers for i18n
  *
  * Helpers for creating locale-aware routes in LessJS.
+ * ADR 0018: These helpers require explicit locale lists since
+ * module-level state (getI18nLocales()) has been removed.
  */
-import { getI18nLocales } from './i18n-data.ts';
 
 /**
  * Generate getStaticPaths() return for locale-aware routes.
  *
- * Auto-picks up configured locales from lessI18n({ locales }).
+ * ADR 0018: locales parameter is now REQUIRED (no module-level state fallback).
+ * Import locales from virtual:less-i18n-data in route components.
  *
  * Usage in route file:
  * ```ts
  * import { i18nStaticPaths } from '@lessjs/i18n';
+ * import { locales } from 'virtual:less-i18n-data';
  *
  * export function getStaticPaths() {
- *   return i18nStaticPaths(); // → [{ locale: 'en' }, { locale: 'zh' }]
+ *   return i18nStaticPaths(locales); // → [{ locale: 'en' }, { locale: 'zh' }]
  * }
  * ```
  */
 export function i18nStaticPaths(
-  locales?: string[],
+  locales: string[],
 ): Array<Record<string, string>> {
-  const localeList = locales ?? getI18nLocales();
-  return localeList.map((locale) => ({ locale }));
+  return locales.map((locale) => ({ locale }));
 }
 
 /**
  * Switch a URL path to a different locale.
  * e.g. switchLocale('/en/guide/overview', 'zh') → '/zh/guide/overview'
- *      switchLocale('/guide/overview', 'zh', 'en') → '/zh/guide/overview'
+ *      switchLocale('/guide/overview', 'zh', ['en', 'zh']) → '/zh/guide/overview'
  */
 export function switchLocale(
   currentPath: string,
   targetLocale: string,
-  locales: string[] = getI18nLocales(),
+  locales: string[],
 ): string {
   // Strip any existing locale prefix
   let stripped = currentPath;

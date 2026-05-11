@@ -21,6 +21,7 @@ import type { FrameworkOptions, PackageIslandMeta } from '@lessjs/core';
 import type { LessBuildContext } from '../build-context.js';
 import { SsrRenderError } from '@lessjs/core/errors';
 import { createLogger } from '@lessjs/core/logger';
+import { createBlogDataPlugin, createI18nDataPlugin } from '../virtual-data.js';
 
 const log = createLogger('ssg');
 
@@ -38,20 +39,19 @@ function optionalPackageStubsPlugin(): import('vite').Plugin {
       'export function installLitAdapter() {}',
       'export function uninstallLitAdapter() {}',
     ].join('\n'),
+    // ADR 0018: @lessjs/content no longer exports initBlogData/getPosts/getPostBySlug/getBlogOptions
+    // Route components import from virtual:less-blog-data instead.
+    // This stub is for the generateSitemap re-export only.
     '@lessjs/content': [
-      'export async function initBlogData() { return { posts: [], basePath: "" }; }',
-      'export function getPosts() { return []; }',
-      'export function getPostBySlug() { return undefined; }',
-      'export function getBlogOptions() { return {}; }',
+      'export async function loadBlogData() { return { posts: [], basePath: "" }; }',
     ].join('\n'),
     '@lessjs/content/sitemap': [
       'export function generateSitemap() { return []; }',
     ].join('\n'),
+    // ADR 0018: @lessjs/i18n no longer exports initI18nData/getI18nOptions/getI18nLocales/getDefaultLocale
+    // Route components import from virtual:less-i18n-data instead.
     '@lessjs/i18n': [
-      'export function initI18nData() {}',
-      'export function getI18nOptions() { return null; }',
-      'export function getI18nLocales() { return []; }',
-      'export function getDefaultLocale() { return "en"; }',
+      'export function loadI18nData() { return { locales: [], defaultLocale: "en" }; }',
     ].join('\n'),
   };
 
@@ -254,6 +254,10 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
             if (id === RESOLVED_SSG_ENTRY_ID) return ssgEntryCode;
           },
         },
+        // ADR 0018: Virtual data modules — resolve virtual:less-blog-data
+        // and virtual:less-i18n-data in the SSR bundle
+        createBlogDataPlugin(ctx),
+        createI18nDataPlugin(ctx),
         // ADR 0008 Phase C: Provide stubs for optional packages.
         // The generated entry code statically imports @lessjs/adapter-lit,
         // @lessjs/content, @lessjs/i18n — but these may not be installed.
@@ -297,22 +301,13 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
       throw new SsrRenderError('virtual:less-ssg-entry', new Error('Failed to load Hono app'));
     }
 
-    // ADR 0014: Initialize @lessjs/content (blog) data store in the bundle.
-    // All getStaticPaths() calls now happen inside the bundle's module scope,
-    // so blog data only needs to be initialized once — no double-scope init.
-    const blogOptions = ctx.blogOptions || undefined;
-    if (module.initBlogData && typeof module.initBlogData === 'function') {
-      try {
-        await (module.initBlogData as (opts?: unknown) => Promise<void>)(blogOptions);
-      } catch {
-        log.debug('Blog content module (bundle) not found — skipping');
-      }
-    }
-    const postCount = module.getPosts && typeof module.getPosts === 'function'
-      ? (module.getPosts as () => unknown[])().length
-      : 0;
-    if (postCount > 0) {
-      log.info(`Blog data store initialized: ${postCount} post(s) for SSG`);
+    // ADR 0018: Blog data is now provided by virtual:less-blog-data.
+    // The SSR bundle re-exports `posts` from virtual:less-blog-data,
+    // which is populated by the virtual module plugin's load() hook.
+    // No more initBlogData() / getPosts() — zero module state.
+    const bundlePosts = module.posts as unknown[];
+    if (Array.isArray(bundlePosts) && bundlePosts.length > 0) {
+      log.info(`Blog data available: ${bundlePosts.length} post(s) for SSG`);
     }
 
     // ── Dynamic route expansion via bundle.getStaticPaths() ──────

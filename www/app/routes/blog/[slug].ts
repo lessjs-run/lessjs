@@ -1,19 +1,19 @@
 /**
  * Blog Post Page — Dynamic Route
  *
- * Renders individual blog posts from @lessjs/content markdown content.
+ * Renders individual blog posts from virtual:less-blog-data.
  * The `slug` param is set by LessJS dynamic routing: /blog/:slug
+ * ADR 0018: Data comes from virtual module, not @lessjs/content module state.
  */
 import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import { getPostBySlug, getPosts } from '@lessjs/content';
+import { posts, getPostBySlug } from 'virtual:less-blog-data';
 
 export const tagName = 'page-blog-slug';
 
 export async function getStaticPaths(): Promise<Array<Record<string, string>>> {
-  const posts = getPosts();
   return posts.map((post) => ({ slug: post.slug }));
 }
 

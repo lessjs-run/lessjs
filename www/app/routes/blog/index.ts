@@ -1,12 +1,12 @@
 /**
- * Blog Index Page — Data-driven rendering via @lessjs/content
+ * Blog Index Page — Data-driven rendering via virtual:less-blog-data
  */
 export const meta = { section: 'History', label: 'Blog', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import { getPosts } from '@lessjs/content';
+import { posts } from 'virtual:less-blog-data';
 
 export class BlogIndexPage extends LitElement {
   static override styles = [
@@ -29,7 +29,6 @@ export class BlogIndexPage extends LitElement {
   }
 
   private _renderZh() {
-    const posts = getPosts();
     return html`
       <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/blog">
         <div class="container">
@@ -51,7 +50,6 @@ export class BlogIndexPage extends LitElement {
   }
 
   private _renderEn() {
-    const posts = getPosts();
     return html`
       <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/blog">
         <div class="container">
