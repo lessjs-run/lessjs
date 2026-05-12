@@ -9,6 +9,7 @@ import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
+import '../islands/less-term.js';
 
 export const tagName = 'docs-home';
 
@@ -121,6 +122,19 @@ export default class DocsHome extends LitElement {
     .counter button { width: 34px; height: 34px; border-radius: 6px; border: 0.5px solid #3f3f46; background: #27272a; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #f4f4f5; }
     .counter button:hover { background: #3f3f46; }
     .counter span { font-size: 20px; font-weight: 500; color: #f4f4f5; min-width: 24px; text-align: center; }
+
+    /* ── Bundle size bars ── */
+    .bundle { margin-bottom: 2.5rem; }
+    .bar-row { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+    .bar-lbl { width: 80px; font-size: 12px; font-weight: 500; color: var(--less-text-primary); text-align: right; flex-shrink: 0; }
+    .bar-track { flex: 1; height: 32px; border-radius: 6px; background: var(--less-bg-surface); overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: 12px; font-size: 12px; font-weight: 500; }
+    .bar-fill.g { background: #E1F5EE; color: #0F6E56; width: 2%; min-width: 60px; }
+    .bar-fill.r { background: #FCEBEB; color: #A32D2D; width: 100%; }
+    .bundle-note { font-size: 11px; color: var(--less-text-tertiary); margin-top: 6px; padding-left: 94px; line-height: 1.6; }
+
+    /* ── Terminal (less-term-demo island) ── */
+    less-term-demo { display: block; margin-bottom: 2.5rem; }
 
     /* ── Quick start ── */
     .qs { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; margin-bottom: 2.5rem; }
@@ -295,6 +309,32 @@ export default class DocsHome extends LitElement {
           </div>
         </div>
 
+        <!-- Terminal demo -->
+        <div class="sec">
+          <div class="sec-lbl">试试看 — 交互式终端</div>
+          <div class="sec-bd">
+            <less-term-demo></less-term-demo>
+          </div>
+        </div>
+
+        <!-- Bundle size -->
+        <div class="sec">
+          <div class="sec-lbl">首屏 JS 对比</div>
+          <div class="sec-bd">
+            <div class="bundle">
+              <div class="bar-row">
+                <div class="bar-lbl">LessJS</div>
+                <div class="bar-track"><div class="bar-fill g">0 kb</div></div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-lbl">Next.js</div>
+                <div class="bar-track"><div class="bar-fill r">~90 kb react</div></div>
+              </div>
+              <div class="bundle-note">Island-only JS 意味着负载随组件复杂度增长，不随页面数量增长。50 页的站点和 1 页的站点 JS 大小相同。</div>
+            </div>
+          </div>
+        </div>
+
         <div class="sec">
           <div class="sec-lbl">快速开始</div>
           <div class="sec-bd">
@@ -431,6 +471,30 @@ export default class DocsHome extends LitElement {
                 <pre><code>${COUNTER_RAW}</code></pre>
                 <div class="note">dsd template parsed natively — no hydration cost.</div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec">
+          <div class="sec-lbl">try it — interactive terminal</div>
+          <div class="sec-bd">
+            <less-term-demo></less-term-demo>
+          </div>
+        </div>
+
+        <div class="sec">
+          <div class="sec-lbl">js at first paint</div>
+          <div class="sec-bd">
+            <div class="bundle">
+              <div class="bar-row">
+                <div class="bar-lbl">LessJS</div>
+                <div class="bar-track"><div class="bar-fill g">0 kb</div></div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-lbl">Next.js</div>
+                <div class="bar-track"><div class="bar-fill r">~90 kb react</div></div>
+              </div>
+              <div class="bundle-note">island-only js means payload scales with component complexity, not page count. a 50-page site ships the same js as a 1-page site.</div>
             </div>
           </div>
         </div>
