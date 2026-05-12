@@ -79,7 +79,7 @@ export const pageStyles = css`
   }
 
   a {
-    color: var(--less-text-primary);
+    color: var(--less-brand, var(--less-text-primary));
     text-decoration: underline;
     text-underline-offset: 3px;
     text-decoration-color: var(--less-border-hover);
@@ -87,7 +87,17 @@ export const pageStyles = css`
     transition: text-decoration-color 0.15s;
   }
   a:hover {
-    text-decoration-color: var(--less-text-primary);
+    text-decoration-color: var(--less-brand, var(--less-text-primary));
+  }
+
+  /* Brand section label (matches homepage) */
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--less-brand, #534AB7);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 14px;
   }
 
   /* Code */
