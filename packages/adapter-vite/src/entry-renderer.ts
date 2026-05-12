@@ -262,7 +262,7 @@ export function renderEntry(desc: EntryDescriptor): string {
 
   // --- Document wrapper ---
   // ADR 0013: import directly from source files instead of less-runtime barrel.
-  lines.push(`import { wrapInDocument } from '@lessjs/core/ssr-handler';`);
+  lines.push(`import { wrapInDocument } from '@lessjs/core/html-escape';`);
   lines.push(`import { createLogger } from '@lessjs/core/logger';`);
   lines.push(`const log = createLogger('core');`);
   lines.push('');
@@ -436,7 +436,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('// Shared module scope ensures adapter/data state is consistent.');
     lines.push('');
     lines.push('export { renderDSD, renderDSDByName } from "@lessjs/core/render-dsd"');
-    lines.push('export { wrapInDocument } from "@lessjs/core/ssr-handler"');
+    lines.push('export { wrapInDocument } from "@lessjs/core/html-escape"');
     lines.push('export { registerAdapter, getAdapter } from "@lessjs/core/adapter-registry"');
     lines.push('export { installLitAdapter, uninstallLitAdapter } from "@lessjs/adapter-lit"');
     // ADR 0018: Blog data comes from virtual:less-blog-data (zero module state)

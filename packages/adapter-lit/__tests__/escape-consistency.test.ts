@@ -10,7 +10,7 @@
  */
 
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
-import { escapeAttr, escapeHtml } from '../../core/src/render-dsd.ts';
+import { escapeAttr, escapeHtml } from '../../core/src/html-escape.ts';
 
 import { renderLitToString } from '../src/ssr.ts';
 import { html } from 'lit';

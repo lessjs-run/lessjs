@@ -43,7 +43,7 @@
  */
 
 import { LitElement } from 'lit';
-import type { HydrateEventDescriptor } from '@lessjs/core/render-dsd';
+import type { HydrateEventDescriptor } from '@lessjs/core';
 
 /** Constructor type for Mixin pattern — `any[]` is standard TS Mixin signature */
 // deno-lint-ignore no-explicit-any

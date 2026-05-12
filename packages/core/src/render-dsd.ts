@@ -26,30 +26,6 @@
  * @module @lessjs/core/render-dsd
  */
 
-// ─── Re-exports for backward compatibility ─────────────────────
-// @deprecated Import from '@lessjs/core/html-escape' instead.
-// These re-exports will be removed in the next major version.
-export {
-  escapeAttr,
-  escapeAttrValue,
-  escapeHtml,
-  type SafeHtml,
-  type UnsafeHtml,
-} from './html-escape.js';
-// @deprecated Import types from '@lessjs/core' and registerAdapter from
-// '@lessjs/core/less-runtime' instead.
-// These re-exports will be removed in the next major version.
-export {
-  type ComponentLayer,
-  type DsdComponent,
-  type DsdOptions,
-  type DsdRenderCollector,
-  type HydrateEventDescriptor,
-  type RenderAdapter,
-} from './types.js';
-export { registerAdapter } from './adapter-registry.js';
-export { renderNestedCustomElements } from './render-nested.js';
-
 // ─── Internal imports ──────────────────────────────────────────
 import { escapeAttr, escapeAttrValue, escapeHtml } from './html-escape.js';
 import { type DsdComponent, type DsdOptions, type DsdRenderCollector } from './types.js';

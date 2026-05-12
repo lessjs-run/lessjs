@@ -8,15 +8,9 @@
  * Uses plain class mocks — no browser HTMLElement needed.
  */
 import { assertEquals, assertFalse, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
-import {
-  escapeAttr,
-  escapeAttrValue,
-  escapeHtml,
-  registerAdapter,
-  type RenderAdapter,
-  renderDSD,
-  renderDSDByName,
-} from '../src/render-dsd.ts';
+import { renderDSD, renderDSDByName } from '../src/render-dsd.ts';
+import { escapeAttr, escapeAttrValue, escapeHtml } from '../src/html-escape.ts';
+import { registerAdapter, type RenderAdapter } from '../src/adapter-registry.ts';
 
 // ─── Mock Component Classes ──────────────────────────────────
 //

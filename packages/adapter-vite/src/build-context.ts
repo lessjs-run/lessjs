@@ -113,7 +113,9 @@ export class PluginMeta {
   i18nDataPlugin: Plugin | null = null;
 
   /** Navigation sections from @lessjs/content plugin */
-  navSections: Array<{ section: string; items: Array<{ path: string; label: string; order?: number }> }> = [];
+  navSections: Array<
+    { section: string; items: Array<{ path: string; label: string; order?: number }> }
+  > = [];
 
   /** Header navigation links from @lessjs/content plugin */
   headerNav: Array<{ href: string; label: string }> = [];

@@ -1,13 +1,13 @@
 /**
- * @lessjs/core - ssr-handler.ts tests (Deno)
+ * @lessjs/core - wrapInDocument & renderSsrError tests (Deno)
  *
- * LessJS Architecture: collectIslands removed (moved to build-time map).
- * Only renderSsrError and wrapInDocument remain.
+ * Both functions are now in html-escape.ts (ssr-handler.ts was removed
+ * as a pure re-export facade).
  */
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
-import { renderSsrError, wrapInDocument } from '../src/ssr-handler.ts';
+import { renderSsrError, wrapInDocument } from '../src/html-escape.ts';
 
-Deno.test('ssr-handler - wrapInDocument', async (t) => {
+Deno.test('html-escape - wrapInDocument', async (t) => {
   await t.step('wraps body in full HTML document', () => {
     const html = wrapInDocument('<h1>Hello</h1>', { title: 'Test' });
     assertEquals(html.includes('<!DOCTYPE html>'), true);
@@ -79,7 +79,7 @@ Deno.test('ssr-handler - wrapInDocument', async (t) => {
   });
 });
 
-Deno.test('ssr-handler - renderSsrError', async (t) => {
+Deno.test('html-escape - renderSsrError', async (t) => {
   await t.step('shows error details in dev mode', () => {
     const error = new Error('Something went wrong');
     const html = renderSsrError(error, 500, true);

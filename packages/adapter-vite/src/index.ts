@@ -22,7 +22,7 @@ import process from 'node:process';
 import { transform as esbuildTransform } from 'esbuild';
 import { LessError } from '@lessjs/core/errors';
 import { createLogger } from '@lessjs/core/logger';
-import { escapeAttr as escapeHtmlAttr } from '@lessjs/core/render-dsd';
+import { escapeAttr as escapeHtmlAttr } from '@lessjs/core/html-escape';
 
 const log = createLogger('adapter-vite');
 
@@ -54,9 +54,7 @@ const VIRTUAL_CORE_PREFIX = '\0lessjs:core/src/';
 const CORE_SUBPATHS: Record<string, string> = {
   'html-escape': 'html-escape.ts',
   'render-dsd': 'render-dsd.ts',
-  'render-nested': 'render-nested.ts',
   'adapter-registry': 'adapter-registry.ts',
-  'ssr-handler': 'ssr-handler.ts',
   'logger': 'logger.ts',
   'build-context': 'build-context.ts',
   'navigation': 'navigation.ts',

@@ -13,7 +13,6 @@
     "@lessjs/core/render-dsd": "jsr:@lessjs/core@^0.12/render-dsd",
     "@lessjs/core/html-escape": "jsr:@lessjs/core@^0.12/html-escape",
     "@lessjs/core/adapter-registry": "jsr:@lessjs/core@^0.12/adapter-registry",
-    "@lessjs/core/ssr-handler": "jsr:@lessjs/core@^0.12/ssr-handler",
     "@lessjs/core/navigation": "jsr:@lessjs/core@^0.12/navigation",
     "esbuild": "npm:esbuild@^0.25",
     "hono": "npm:hono@^4",
