@@ -56,7 +56,10 @@ export function createBlogDataPlugin(ctx: LessBuildContext): Plugin {
       // at module load time (content is an optional peer).
       // Import from main entry (.) — loadBlogData is a pure function
       // re-exported there, no need for a separate subpath.
-      const { loadBlogData } = await import('@lessjs/content');
+      // NOTE: specifier is assigned to a variable to bypass JSR static
+      // dependency resolution (breaks CI circular dep cycle with content).
+      const contentPkg = '@lessjs/content';
+      const { loadBlogData } = await import(contentPkg);
 
       const options = {
         contentDir: blogOpts.contentDir,

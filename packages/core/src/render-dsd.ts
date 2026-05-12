@@ -52,7 +52,7 @@ export { renderNestedCustomElements } from './render-nested.js';
 
 // ─── Internal imports ──────────────────────────────────────────
 import { escapeAttr, escapeAttrValue, escapeHtml } from './html-escape.js';
-import { type DsdComponent, type DsdOptions } from './types.js';
+import { type DsdComponent, type DsdOptions, type DsdRenderCollector } from './types.js';
 import { getAdapter } from './adapter-registry.js';
 import { renderNestedCustomElements } from './render-nested.js';
 import { createLogger } from './logger.js';
