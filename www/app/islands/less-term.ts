@@ -1,120 +1,90 @@
 /**
- * less-term-demo — Interactive terminal island for the homepage.
+ * less-term-demo — Interactive terminal for the homepage.
  *
- * SSR renders a static terminal look. Client-side JS activates
- * keyboard input and sends commands to /api/term.
+ * Light-DOM based: no shadow root. SSR renders the terminal HTML directly.
+ * On upgrade, this element attaches keyboard handlers to the existing DOM.
  */
-import { css, html, LitElement } from 'lit';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { LitElement, html } from 'lit';
 
-const INITIAL_PROMPT = '<span class="prompt">$</span> type <span class="hl">help</span> to get started';
+const TERM_HTML = `
+<div class="term">
+  <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+  <div class="term-body">
+    <div class="output">
+      <div><span style="color:#fbbf24;">$</span> type <span style="color:#7dd3fc;">help</span> to get started</div>
+    </div>
+    <div class="input-line">
+      <span style="color:#fbbf24;">$</span>
+      <input type="text" autocomplete="off" spellcheck="false">
+    </div>
+  </div>
+</div>`;
 
 export class LessTermDemo extends LitElement {
-  static override styles = css`
-    :host { display: block; }
-    .term { background: #09090b; border-radius: 10px; overflow: hidden; border: 0.5px solid #27272a; }
-    .term-bar { display: flex; align-items: center; gap: 5px; padding: 10px 14px; background: #18181b; border-bottom: 0.5px solid #27272a; }
-    .dot { width: 7px; height: 7px; border-radius: 50%; }
-    .dot.r { background: #ef4444; }
-    .dot.y { background: #eab308; }
-    .dot.g { background: #22c55e; }
-    .term-body { padding: 16px; font-family: "JetBrains Mono","Fira Code","SF Mono",Consolas,monospace; font-size: 12px; line-height: 1.9; color: #a1a1aa; min-height: 280px; }
-    .term-body .ok { color: #86efac; }
-    .term-body .hl { color: #7dd3fc; }
-    .term-body .dim { color: #52525b; }
-    .term-body .prompt { color: #fbbf24; }
-    .term-body .err { color: #ef4444; }
-    .input-line { display: flex; align-items: center; gap: 6px; }
-    .input-line .prompt { flex-shrink: 0; }
-    .input-line input { flex: 1; background: transparent; border: none; outline: none; color: #f4f4f5; font-family: inherit; font-size: inherit; line-height: inherit; padding: 0; caret-color: #f4f4f5; }
-    .cursor { display: inline-block; width: 7px; height: 14px; background: #a1a1aa; animation: blink 1s step-end infinite; }
-    @keyframes blink { 50% { opacity: 0; } }
-    .output { white-space: pre-wrap; }
-    .ellipsis { animation: dots 1.4s steps(4) infinite; }
-    @keyframes dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } }
-  `;
-
-  private _output: string[] = [];
-  private _cmdHistory: string[] = [];
-  private _historyIdx = -1;
-  private _loading = false;
+  protected createRenderRoot() {
+    return this; // light DOM — no shadow root
+  }
 
   override render() {
-    return html`
-      <div class="term">
-        <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
-        <div class="term-body" @click=${this._focusInput}>
-          <div class="output">
-            ${this._output.length === 0 ? html`<div>${unsafeHTML(INITIAL_PROMPT)}</div>` : this._output.map(line => html`<div>${unsafeHTML(line)}</div>`)}
-          </div>
-          <div class="input-line">
-            <span class="prompt">$</span>
-            <input
-              type="text"
-              autocomplete="off"
-              spellcheck="false"
-              @keydown=${this._onKey}
-            >
-          </div>
-        </div>
-      </div>
-    `;
+    return html`${TERM_HTML}`;
   }
 
-  private _focusInput() {
-    const input = this.shadowRoot?.querySelector('input');
-    input?.focus();
+  override connectedCallback() {
+    super.connectedCallback();
+    // Defer to next tick so DOM is ready
+    setTimeout(() => this._init(), 0);
   }
 
-  private async _onKey(e: KeyboardEvent) {
-    const input = e.target as HTMLInputElement;
-    if (e.key === 'Enter') {
-      const cmd = input.value.trim();
-      input.value = '';
-      this._cmdHistory.push(cmd);
-      this._historyIdx = this._cmdHistory.length;
-      this._output.push(`<span class="prompt">$</span> ${cmd}`);
-      if (cmd.toLowerCase() === 'clear') {
-        this._output = [];
-        this.requestUpdate();
-        return;
-      }
-      this._loading = true;
-      this.requestUpdate();
-      try {
-        const res = await fetch('/api/term', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ cmd }),
-        });
-        const data = await res.json();
-        this._loading = false;
-        if (data.output) {
-          for (const line of data.output) {
-            this._output.push(line);
-          }
+  private _cmdHistory: string[] = [];
+  private _historyIdx = -1;
+
+  private _init() {
+    const input = this.querySelector('input');
+    const output = this.querySelector('.output') as HTMLElement;
+    if (!input || !output) return;
+
+    this.addEventListener('click', () => input.focus());
+
+    input.addEventListener('keydown', async (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        const cmd = input.value.trim();
+        input.value = '';
+        this._cmdHistory.push(cmd);
+        this._historyIdx = this._cmdHistory.length;
+        this._addLine(`<span style="color:#fbbf24;">$</span> ${cmd}`, output);
+        if (cmd.toLowerCase() === 'clear') { output.innerHTML = ''; return; }
+        try {
+          const res = await fetch('/api/term', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cmd }),
+          });
+          const data = await res.json();
+          if (data.output) for (const line of data.output) this._addLine(line, output);
+        } catch {
+          this._addLine('<span style="color:#ef4444;">error: could not reach api</span>', output);
         }
-      } catch {
-        this._loading = false;
-        this._output.push('<span class="err">error: could not reach api</span>');
+      } else if (e.key === 'ArrowUp') {
+        if (this._cmdHistory.length > 0) {
+          this._historyIdx = Math.max(0, this._historyIdx - 1);
+          input.value = this._cmdHistory[this._historyIdx] || '';
+        }
+        e.preventDefault();
+      } else if (e.key === 'ArrowDown') {
+        if (this._historyIdx < this._cmdHistory.length) {
+          this._historyIdx = Math.min(this._cmdHistory.length, this._historyIdx + 1);
+          input.value = this._cmdHistory[this._historyIdx] || '';
+        }
+        e.preventDefault();
       }
-      this.requestUpdate();
-      // scroll to bottom
-      const body = this.shadowRoot?.querySelector('.term-body');
-      if (body) body.scrollTop = body.scrollHeight;
-    } else if (e.key === 'ArrowUp') {
-      if (this._cmdHistory.length > 0) {
-        this._historyIdx = Math.max(0, this._historyIdx - 1);
-        input.value = this._cmdHistory[this._historyIdx] || '';
-      }
-      e.preventDefault();
-    } else if (e.key === 'ArrowDown') {
-      if (this._historyIdx < this._cmdHistory.length) {
-        this._historyIdx = Math.min(this._cmdHistory.length, this._historyIdx + 1);
-        input.value = this._cmdHistory[this._historyIdx] || '';
-      }
-      e.preventDefault();
-    }
+    });
+  }
+
+  private _addLine(htmlStr: string, container: HTMLElement) {
+    const div = document.createElement('div');
+    div.innerHTML = htmlStr;
+    container.appendChild(div);
+    const body = container.closest('.term-body');
+    if (body) body.scrollTop = body.scrollHeight;
   }
 }
 

@@ -207,6 +207,32 @@ export default class DocsHome extends LitElement {
               <a class="hero-pri" href="/guide/getting-started">开始使用 →</a>
               <a class="hero-sec" href="/guide/positioning">理解定位</a>
             </div>
+            ${unsafeHTML(`<less-term-demo>
+  <div class="term">
+    <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+    <div class="term-body">
+      <div class="output">
+        <div><span style="color:#fbbf24;">$</span> type <span style="color:#7dd3fc;">help</span> to get started</div>
+      </div>
+      <div class="input-line">
+        <span style="color:#fbbf24;">$</span>
+        <input type="text" autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+  </div>
+</less-term-demo>`)}
+            <div class="stats">
+              <div class="stat"><strong>v0.13</strong><span>最新版本</span></div>
+              <div class="stat"><strong>268</strong><span>测试通过</span></div>
+              <div class="stat"><strong>10</strong><span>个包</span></div>
+              <div class="stat"><strong>1</strong><span>运行时依赖 (core)</span></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="sec">
+          <div class="sec-lbl">你的组件 → SSG 输出</div>
+          <div class="sec-bd">
             <div class="code-compare">
               <div class="code-pane">
                 <div class="code-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>你的组件</span></div>
@@ -217,14 +243,8 @@ export default class DocsHome extends LitElement {
                 <less-code-block><pre><code>${CODE_DSD}</code></pre></less-code-block>
               </div>
             </div>
-            <div class="stats">
-              <div class="stat"><strong>v0.13</strong><span>最新版本</span></div>
-              <div class="stat"><strong>268</strong><span>测试通过</span></div>
-              <div class="stat"><strong>10</strong><span>个包</span></div>
-              <div class="stat"><strong>1</strong><span>运行时依赖 (core)</span></div>
-            </div>
           </div>
-        </section>
+        </div>
 
         <div class="sec">
           <div class="sec-lbl">核心模型</div>
@@ -309,14 +329,6 @@ export default class DocsHome extends LitElement {
           </div>
         </div>
 
-        <!-- Terminal demo -->
-        <div class="sec">
-          <div class="sec-lbl">试试看 — 交互式终端</div>
-          <div class="sec-bd">
-            ${unsafeHTML('<less-term-demo></less-term-demo>')}
-          </div>
-        </div>
-
         <!-- Bundle size -->
         <div class="sec">
           <div class="sec-lbl">首屏 JS 对比</div>
@@ -373,6 +385,32 @@ export default class DocsHome extends LitElement {
               <a class="hero-pri" href="/guide/getting-started">get started →</a>
               <a class="hero-sec" href="/guide/positioning">why lessjs</a>
             </div>
+            ${unsafeHTML(`<less-term-demo>
+  <div class="term">
+    <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+    <div class="term-body">
+      <div class="output">
+        <div><span style="color:#fbbf24;">$</span> type <span style="color:#7dd3fc;">help</span> to get started</div>
+      </div>
+      <div class="input-line">
+        <span style="color:#fbbf24;">$</span>
+        <input type="text" autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+  </div>
+</less-term-demo>`)}
+            <div class="stats">
+              <div class="stat"><strong>v0.13</strong><span>latest release</span></div>
+              <div class="stat"><strong>268</strong><span>tests passing</span></div>
+              <div class="stat"><strong>10</strong><span>packages</span></div>
+              <div class="stat"><strong>1</strong><span>runtime dep (core)</span></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="sec">
+          <div class="sec-lbl">your component → ssg output</div>
+          <div class="sec-bd">
             <div class="code-compare">
               <div class="code-pane">
                 <div class="code-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>your component</span></div>
@@ -383,14 +421,8 @@ export default class DocsHome extends LitElement {
                 <less-code-block><pre><code>${CODE_DSD}</code></pre></less-code-block>
               </div>
             </div>
-            <div class="stats">
-              <div class="stat"><strong>v0.13</strong><span>latest release</span></div>
-              <div class="stat"><strong>268</strong><span>tests passing</span></div>
-              <div class="stat"><strong>10</strong><span>packages</span></div>
-              <div class="stat"><strong>1</strong><span>runtime dep (core)</span></div>
-            </div>
           </div>
-        </section>
+        </div>
 
         <div class="sec">
           <div class="sec-lbl">core model</div>
@@ -472,13 +504,6 @@ export default class DocsHome extends LitElement {
                 <div class="note">dsd template parsed natively — no hydration cost.</div>
               </div>
             </div>
-          </div>
-        </div>
-
-        <div class="sec">
-          <div class="sec-lbl">try it — interactive terminal</div>
-          <div class="sec-bd">
-            ${unsafeHTML('<less-term-demo></less-term-demo>')}
           </div>
         </div>
 
