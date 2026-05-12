@@ -2,9 +2,8 @@
  * @lessjs/adapter-vite - Workspace alias auto-generation
  *
  * Reads Deno workspace deno.json exports and generates
- * Vite resolve.alias entries. Used by build-client and build-ssg
- * to resolve @lessjs/* packages when rolldown doesn't support
- * Deno workspace resolution natively.
+ * Vite resolve.alias entries. Uses sync Deno APIs so it
+ * can run in synchronous plugin hooks (config, configResolved).
  */
 
 import { resolve } from 'node:path';
@@ -14,17 +13,23 @@ export interface AliasEntry {
   replacement: string;
 }
 
+function tryReadJson(path: string): Record<string, unknown> | null {
+  try {
+    return JSON.parse(Deno.readTextFileSync(path));
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Walk up from startDir to find a deno.json with a "workspace" field.
  */
-export async function findWorkspaceRoot(startDir: string): Promise<string | null> {
+export function findWorkspaceRoot(startDir: string): string | null {
   let dir = resolve(startDir);
   const fsRoot = resolve('/');
   while (dir !== fsRoot && dir !== resolve(dir, '..')) {
-    try {
-      const cfg = JSON.parse(await Deno.readTextFile(resolve(dir, 'deno.json')));
-      if (cfg.workspace && Array.isArray(cfg.workspace)) return dir;
-    } catch { /* not found or no workspace */ }
+    const cfg = tryReadJson(resolve(dir, 'deno.json'));
+    if (cfg?.workspace && Array.isArray(cfg.workspace)) return dir;
     dir = resolve(dir, '..');
   }
   return null;
@@ -34,19 +39,18 @@ export async function findWorkspaceRoot(startDir: string): Promise<string | null
  * Generate Vite resolve.alias from workspace packages' deno.json exports.
  * Subpath aliases come before parent (Vite prefix matching rule).
  */
-export async function generateWorkspaceAliases(workspaceRoot: string): Promise<AliasEntry[]> {
-  const rootCfg = JSON.parse(await Deno.readTextFile(resolve(workspaceRoot, 'deno.json')));
-  const members: string[] = rootCfg.workspace || [];
+export function generateWorkspaceAliases(workspaceRoot: string): AliasEntry[] {
+  const rootCfg = tryReadJson(resolve(workspaceRoot, 'deno.json'));
+  if (!rootCfg) return [];
+
+  const members: string[] = (rootCfg.workspace as string[]) || [];
   const aliases: AliasEntry[] = [];
 
   for (const member of members) {
     const memberDir = resolve(workspaceRoot, member);
-    let memberCfg: Record<string, unknown>;
-    try {
-      memberCfg = JSON.parse(await Deno.readTextFile(resolve(memberDir, 'deno.json')));
-    } catch {
-      continue;
-    }
+    const memberCfg = tryReadJson(resolve(memberDir, 'deno.json'));
+    if (!memberCfg) continue;
+
     const name = memberCfg.name as string | undefined;
     const exports = memberCfg.exports as Record<string, string> | string | undefined;
     if (!name || !exports) continue;

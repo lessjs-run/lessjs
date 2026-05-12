@@ -28,6 +28,7 @@ const log = createLogger('adapter-vite');
 
 import honoDevServer from '@hono/vite-dev-server';
 import { LessBuildContext } from './build-context.js';
+import { findWorkspaceRoot, generateWorkspaceAliases } from './workspace-alias.js';
 import { buildPlugin } from './build.js';
 import { generateHonoEntryCode } from './hono-entry.js';
 import { islandTransformPlugin } from './island-transform.js';
@@ -257,6 +258,21 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
 
   const ctx = externalCtx || new LessBuildContext(resolvedOptions);
 
+  // Pre-generate workspace aliases (sync, once, cached in ctx).
+  // Phase 1 config, Phase 2 client build, and Phase 3 SSG build
+  // all read ctx.userResolveAlias — zero redundant generation.
+  try {
+    const wsRoot = findWorkspaceRoot(process.cwd());
+    if (wsRoot) {
+      ctx.userResolveAlias = generateWorkspaceAliases(wsRoot);
+      log.info(
+        `Auto-generated ${
+          (ctx.userResolveAlias as Array<unknown>).length
+        } resolve alias(es) from workspace`,
+      );
+    }
+  } catch { /* workspace not available, aliases stay null */ }
+
   const VIRTUAL_ENTRY_ID = 'virtual:less-hono-entry';
   const RESOLVED_ENTRY_ID = '\0' + VIRTUAL_ENTRY_ID;
 
@@ -283,37 +299,20 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
   const corePlugin: Plugin = {
     name: 'less:core',
 
-    async config(userConfig) {
+    config(userConfig) {
       if (userConfig.resolve?.alias && !ctx.userResolveAlias) {
         ctx.userResolveAlias = userConfig.resolve.alias as
           | Record<string, string>
           | import('vite').Alias[];
       }
 
-      // Auto-generate aliases from workspace packages when user
-      // doesn't provide explicit aliases (zero-alias config).
-      // This is needed because Vite/rolldown doesn't support
-      // Deno workspace resolution during builds.
-      let workspaceAliases = null;
-      if (!userConfig.resolve?.alias) {
-        try {
-          const { findWorkspaceRoot, generateWorkspaceAliases } =
-            await import('./workspace-alias.js');
-          const wsRoot = await findWorkspaceRoot(process.cwd());
-          if (wsRoot) {
-            workspaceAliases = await generateWorkspaceAliases(wsRoot);
-            log.info(
-              `Auto-generated ${workspaceAliases.length} resolve alias(es) from workspace`,
-            );
-            ctx.userResolveAlias = workspaceAliases;
-          }
-        } catch (e) {
-          log.warn(`Workspace alias generation skipped: ${e}`);
-        }
-      }
+      const aliases = ctx.userResolveAlias as
+        | import('vite').Alias[]
+        | Record<string, string>
+        | null;
 
       return {
-        resolve: workspaceAliases ? { alias: workspaceAliases } : undefined,
+        resolve: aliases ? { alias: aliases } : undefined,
         build: {
           rollupOptions: {
             input: [VIRTUAL_ENTRY_ID],

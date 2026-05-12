@@ -22,10 +22,6 @@ import type { LessBuildContext } from '../build-context.js';
 import { SsrRenderError } from '@lessjs/core/errors';
 import { createLogger } from '@lessjs/core/logger';
 import { createBlogDataPlugin, createI18nDataPlugin } from '../virtual-data.js';
-import {
-  findWorkspaceRoot,
-  generateWorkspaceAliases,
-} from '../workspace-alias.js';
 
 const log = createLogger('ssg');
 
@@ -220,21 +216,6 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     const ssrOutDir = join(root, outDir, 'server');
     log.info(`Building SSR bundle → ${ssrOutDir}`);
 
-    // Auto-generate aliases from workspace packages
-    const ssgAliases = await (async () => {
-      const wsRoot = await findWorkspaceRoot(root);
-      if (!wsRoot) {
-        log.info('SSG: no workspace found — @lessjs/* imports may fail');
-        return null;
-      }
-      const aliases = await generateWorkspaceAliases(wsRoot);
-      log.info(`SSG: auto-generated ${aliases.length} resolve alias(es) from workspace`);
-      return aliases;
-    })();
-
-    const effectiveAlias = ssgAliases || alias;
-    log.info(`SSG: using ${effectiveAlias ? (Array.isArray(effectiveAlias) ? effectiveAlias.length + ' alias(es)' : 'alias map') : 'NO aliases'} for resolution`);
-
     await viteBuild({
       configFile: false,
       root,
@@ -301,7 +282,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
       resolve: {
         preserveSymlinks: true,
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
-        alias: effectiveAlias || undefined,
+        alias: alias || undefined,
       },
     });
 
