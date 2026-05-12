@@ -5,11 +5,8 @@
  * Mounted as a Hono sub-app at /api/term
  */
 import { Hono } from 'hono';
-import { cors } from 'hono/cors';
 
 const app = new Hono();
-
-app.use('/*', cors());
 
 function neofetch(): string[] {
   return [

@@ -7,6 +7,7 @@
  */
 import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
@@ -312,7 +313,7 @@ export default class DocsHome extends LitElement {
         <div class="sec">
           <div class="sec-lbl">试试看 — 交互式终端</div>
           <div class="sec-bd">
-            <less-term-demo></less-term-demo>
+            ${unsafeHTML('<less-term-demo></less-term-demo>')}
           </div>
         </div>
 
@@ -477,7 +478,7 @@ export default class DocsHome extends LitElement {
         <div class="sec">
           <div class="sec-lbl">try it — interactive terminal</div>
           <div class="sec-bd">
-            <less-term-demo></less-term-demo>
+            ${unsafeHTML('<less-term-demo></less-term-demo>')}
           </div>
         </div>
 
