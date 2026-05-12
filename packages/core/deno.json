@@ -4,21 +4,13 @@
   "exports": {
     ".": "./src/index.ts",
     "./render-dsd": "./src/render-dsd.ts",
-    "./render-dsd.js": "./src/render-dsd.ts",
     "./html-escape": "./src/html-escape.ts",
-    "./html-escape.js": "./src/html-escape.ts",
-    "./render-nested": "./src/render-nested.ts",
-    "./render-nested.js": "./src/render-nested.ts",
     "./adapter-registry": "./src/adapter-registry.ts",
-    "./adapter-registry.js": "./src/adapter-registry.ts",
     "./ssr-handler": "./src/ssr-handler.ts",
-    "./ssr-handler.js": "./src/ssr-handler.ts",
     "./errors": "./src/errors.ts",
     "./context": "./src/context.ts",
     "./logger": "./src/logger.ts",
-    "./logger.js": "./src/logger.ts",
     "./navigation": "./src/navigation.ts",
-    "./navigation.js": "./src/navigation.ts",
     "./constants": "./src/constants.ts"
   },
   "imports": {

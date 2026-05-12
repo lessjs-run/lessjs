@@ -8,7 +8,7 @@
  * Zero runtime overhead in production builds.
  */
 
-import type { Plugin } from 'vite/index';
+import type { Plugin } from 'vite';
 
 /**
  * Vite plugin that injects the DSD DevTools panel in dev mode.
@@ -37,7 +37,7 @@ export function devtoolsPlugin(): Plugin {
   };
 }
 
-// ─── Client-side DevTools Panel code ──────────────────────────────
+// 鈹€鈹€鈹€ Client-side DevTools Panel code 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 // This is injected as an inline <script type="module"> in dev mode.
 // It defines the <less-devtool> custom element that provides:
 //   - A floating toggle button (bottom-right corner)
@@ -46,7 +46,7 @@ export function devtoolsPlugin(): Plugin {
 //   - Island information
 
 const CLIENT_PANEL_CODE = `
-// LessJS DevTools — DSD Debug Panel
+// LessJS DevTools 鈥?DSD Debug Panel
 (function() {
   const STYLES = \`
     <style>
@@ -101,7 +101,7 @@ const CLIENT_PANEL_CODE = `
       this.attachShadow({ mode: 'open' });
       if (!this.shadowRoot) return;
       this.shadowRoot.innerHTML = STYLES + \`
-        <button class="ljt-toggle" id="toggle">⏻</button>
+        <button class="ljt-toggle" id="toggle">鈴?/button>
         <div class="ljt-panel" id="panel">
           <div class="ljt-header">LessJS DSD Inspector</div>
           <div id="ljt-content">Scanning page...</div>
@@ -188,11 +188,11 @@ const CLIENT_PANEL_CODE = `
           <div class="ljt-header">Runtime Checks</div>
           <div class="ljt-row">
             <span class="ljt-label">DSD Polyfill</span>
-            <span class="ljt-value">\${typeof HTMLTemplateElement.prototype.shadowRootMode !== 'undefined' ? '✅ Native' : '⚠️ Polyfill'}</span>
+            <span class="ljt-value">\${typeof HTMLTemplateElement.prototype.shadowRootMode !== 'undefined' ? '鉁?Native' : '鈿狅笍 Polyfill'}</span>
           </div>
           <div class="ljt-row">
             <span class="ljt-label">Navigation API</span>
-            <span class="ljt-value">\${'navigation' in window ? '✅ Supported' : 'ℹ️ History API fallback'}</span>
+            <span class="ljt-value">\${'navigation' in window ? '鉁?Supported' : '鈩癸笍 History API fallback'}</span>
           </div>
         </div>
       \`;

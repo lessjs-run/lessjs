@@ -113,10 +113,10 @@ export class PluginMeta {
   i18nDataPlugin: Plugin | null = null;
 
   /** Navigation sections from @lessjs/content plugin */
-  navSections: unknown[] = [];
+  navSections: Array<{ section: string; items: Array<{ path: string; label: string; order?: number }> }> = [];
 
   /** Header navigation links from @lessjs/content plugin */
-  headerNav: unknown[] = [];
+  headerNav: Array<{ href: string; label: string }> = [];
 
   /** Sitemap options from @lessjs/content plugin */
   sitemapOptions: Record<string, unknown> | null = null;

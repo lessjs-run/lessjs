@@ -4,9 +4,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./ssr": "./src/ssr.ts",
-    "./ssr.js": "./src/ssr.ts",
-    "./dsd-hydration": "./src/dsd-hydration.ts",
-    "./dsd-hydration.js": "./src/dsd-hydration.ts"
+    "./dsd-hydration": "./src/dsd-hydration.ts"
   },
   "tasks": {
     "build": "deno check src/index.ts src/ssr.ts src/dsd-hydration.ts"
