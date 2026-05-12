@@ -67,6 +67,26 @@ export class LessTermDemo extends DsdLitElement {
     if (body) body.scrollTop = body.scrollHeight;
   }
 
+  private _localCommands: Record<string, string[]> = {
+    help: ['<span class="hl">available commands:</span>',
+      '  <span style="color:#fbbf24;">help</span>      show this message',
+      '  <span style="color:#fbbf24;">neofetch</span>  display system info',
+      '  <span style="color:#fbbf24;">version</span>   show lessjs version',
+      '  <span style="color:#fbbf24;">build</span>     simulate ssg build',
+      '  <span style="color:#fbbf24;">ls</span>        list project structure',
+      '  <span style="color:#fbbf24;">whoami</span>    who are you?',
+      '  <span style="color:#fbbf24;">uname</span>     print system info',
+      '  <span style="color:#fbbf24;">dsd</span>       what is dsd?',
+      '  <span style="color:#fbbf24;">clear</span>     clear terminal'],
+    version: ['<span class="hl">v0.13.0</span> — api convergence + phase checks'],
+    whoami: ['<span style="color:#a1a1aa;">you are a lessjs developer. welcome.</span>'],
+    uname: ['<span class="hl">lessjs</span> <span style="color:#52525b;">deno 2.7+ node 18+ edge</span>'],
+    dsd: ['<span class="hl">declarative shadow dom:</span>',
+      'ssg renders your lit components into <span style="color:#fbbf24;">&lt;template shadowrootmode&gt;</span>',
+      'browsers parse it natively — no js framework needed.',
+      'content is visible <span style="color:#86efac;">before</span> javascript downloads.'],
+  };
+
   private async _onKey(e: Event) {
     const ke = e as KeyboardEvent;
     const input = ke.target as HTMLInputElement;
@@ -101,15 +121,23 @@ export class LessTermDemo extends DsdLitElement {
       return;
     }
 
+    // Try local first, fall back to API
+    const local = this._localCommands[cmd.toLowerCase()];
+    if (local) {
+      for (const line of local) this._addLine(line);
+      return;
+    }
+
     try {
       const res = await fetch('/api/term', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cmd }),
       });
+      if (!res.ok) throw new Error(`status ${res.status}`);
       const data = await res.json();
       if (data.output) for (const line of data.output) this._addLine(line);
     } catch {
-      this._addLine('<span class="err">error: could not reach api</span>');
+      this._addLine('<span class="err">error: could not reach api. try <span class="hl">help</span> for local commands.</span>');
     }
   }
 }

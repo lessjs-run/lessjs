@@ -58,18 +58,24 @@ export default class DocsHome extends LitElement {
     .hero-pri { background: #fff; color: #09090b; }
     .hero-sec { border: 0.5px solid #333; color: #d4d4d8; }
 
-    /* ── Code comparison ── */
-    .code-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #09090b; border-radius: 8px; overflow: hidden; border: 0.5px solid #27272a; margin-bottom: 18px; }
+    /* ── Code comparison (full-width dark strip) ── */
+    .code-strip { background: #09090b; width: 100vw; margin-left: calc(-50vw + 50%); padding: 2.5rem 0; }
+    .code-strip-inner { max-width: 960px; margin: 0 auto; padding: 0 1.5rem; }
+    .code-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #09090b; border-radius: 8px; overflow: hidden; border: 0.5px solid #27272a; }
     .code-pane { background: #09090b; padding: 14px 16px; }
     .code-bar { display: flex; align-items: center; gap: 5px; margin-bottom: 10px; }
-    .code-bar i { width: 7px; height: 7px; border-radius: 50%; }
+    .code-bar i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
     .code-bar .r { background: #ef4444; }
     .code-bar .y { background: #eab308; }
     .code-bar .g { background: #22c55e; }
     .code-bar span { color: #52525b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-left: 5px; }
-    .code-pane less-code-block { --code-bg: transparent; --code-border: none; }
+    .code-pane less-code-block {
+      --code-bg: transparent !important;
+      --code-border: none !important;
+      background: transparent !important;
+    }
     .code-pane pre { background: transparent !important; border: none !important; padding: 0 !important; margin: 0 !important; }
-    .code-pane code { font-family: "JetBrains Mono","Fira Code","SF Mono",Consolas,monospace !important; font-size: 12px !important; line-height: 1.8 !important; color: #f4f4f5 !important; }
+    .code-pane code { font-family: "JetBrains Mono","Fira Code","SF Mono",Consolas,monospace !important; font-size: 12px !important; line-height: 1.8 !important; color: #f4f4f5 !important; background: transparent !important; }
 
     /* ── Stats ── */
     .stats { display: flex; gap: 28px; flex-wrap: wrap; }
@@ -217,9 +223,9 @@ export default class DocsHome extends LitElement {
           </div>
         </section>
 
-        <div class="sec">
-          <div class="sec-lbl">你的组件 → SSG 输出</div>
-          <div class="sec-bd">
+        <div class="code-strip">
+          <div class="code-strip-inner">
+            <div style="font-size:11px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:16px;">你的组件 → SSG 输出</div>
             <div class="code-compare">
               <div class="code-pane">
                 <div class="code-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>你的组件</span></div>
@@ -382,9 +388,9 @@ export default class DocsHome extends LitElement {
           </div>
         </section>
 
-        <div class="sec">
-          <div class="sec-lbl">your component → ssg output</div>
-          <div class="sec-bd">
+        <div class="code-strip">
+          <div class="code-strip-inner">
+            <div style="font-size:11px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:16px;">your component → ssg output</div>
             <div class="code-compare">
               <div class="code-pane">
                 <div class="code-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>your component</span></div>
