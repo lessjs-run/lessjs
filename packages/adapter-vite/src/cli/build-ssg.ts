@@ -229,7 +229,6 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     await viteBuild({
       configFile: false,
       root,
-      resolve: ssgAliases ? { alias: ssgAliases } : undefined,
       build: {
         ssr: true,
         outDir: ssrOutDir,
@@ -293,7 +292,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
       resolve: {
         preserveSymlinks: true,
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
-        alias: alias || undefined,
+        alias: alias || ssgAliases || undefined,
       },
     });
 
