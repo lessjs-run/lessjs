@@ -11,6 +11,7 @@
     "marked": "npm:marked@^15",
     "gray-matter": "npm:gray-matter@^4.0.3",
     "@lessjs/core/logger": "jsr:@lessjs/core@^0.12/logger",
+    "@lessjs/core/constants": "jsr:@lessjs/core@^0.12/constants",
     "@lessjs/adapter-vite/build-context": "jsr:@lessjs/adapter-vite@^0.2/build-context",
     "vite": "npm:vite@8.0.10"
   },

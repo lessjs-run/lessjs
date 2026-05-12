@@ -18,7 +18,8 @@
     "./logger": "./src/logger.ts",
     "./logger.js": "./src/logger.ts",
     "./navigation": "./src/navigation.ts",
-    "./navigation.js": "./src/navigation.ts"
+    "./navigation.js": "./src/navigation.ts",
+    "./constants": "./src/constants.ts"
   },
   "imports": {
     "parse5": "npm:parse5@7.0.0"

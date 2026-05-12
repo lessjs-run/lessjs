@@ -17,13 +17,15 @@
 import type { Plugin } from 'vite';
 import type { LessBuildContext } from './build-context.js';
 
-// ─── Virtual module IDs (exported for HMR invalidation) ─────────
-
-export const VIRTUAL_BLOG_DATA_ID = 'virtual:less-blog-data';
-export const RESOLVED_BLOG_DATA_ID = '\0' + VIRTUAL_BLOG_DATA_ID;
-
-export const VIRTUAL_I18N_DATA_ID = 'virtual:less-i18n-data';
-export const RESOLVED_I18N_DATA_ID = '\0' + VIRTUAL_I18N_DATA_ID;
+// ─── Virtual module IDs ─────────────────────────────────────────
+// Defined in @lessjs/core/constants to avoid circular dependencies.
+// Re-exported here for backward compat.
+export {
+  RESOLVED_BLOG_DATA_ID,
+  RESOLVED_I18N_DATA_ID,
+  VIRTUAL_BLOG_DATA_ID,
+  VIRTUAL_I18N_DATA_ID,
+} from '@lessjs/core/constants';
 
 // ─── Blog data virtual module ──────────────────────────────────
 
