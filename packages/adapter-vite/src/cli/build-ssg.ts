@@ -218,9 +218,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
 
     await viteBuild({
       configFile: false,
-      // Use workspace root so Vite finds workspace deno.json
-      // and resolves @lessjs/* through Deno natively (zero aliases).
-      root: resolve(root, '..'),
+      root,
       build: {
         ssr: true,
         outDir: ssrOutDir,
