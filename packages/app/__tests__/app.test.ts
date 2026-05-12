@@ -6,7 +6,7 @@
  *
  * These are structural/smoke tests — they don't run a full Vite build.
  */
-import { assert, assertEquals } from 'jsr:@std/assert@^1.0.0';
+import { assert } from 'jsr:@std/assert@^1.0.0';
 import { lessjs } from '../src/index.ts';
 
 Deno.test('lessjs() returns Plugin[]', () => {

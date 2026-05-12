@@ -30,7 +30,7 @@
  */
 
 import type { Plugin, ViteDevServer } from 'vite';
-import type { HeaderNavLink, LessContentOptions, NavSection } from './types.ts';
+import type { LessContentOptions } from './types.ts';
 import type { LessBuildContext } from '@lessjs/adapter-vite/build-context';
 import { RESOLVED_BLOG_DATA_ID } from '@lessjs/adapter-vite/virtual-data';
 import { loadBlogData } from './blog/blog-data.ts';
