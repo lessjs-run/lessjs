@@ -8,12 +8,16 @@
  * closeBundle() in less:build plugin. No longer a standalone CLI entry.
  * ctx parameter is required (no globalThis fallback).
  *
+ * Resolution: No Vite resolve.alias. The client build runs with
+ * root = workspace root so Vite finds the workspace deno.json
+ * and resolves all @lessjs/* packages through Deno natively.
+ *
  * Usage:
  *   deno task build  (unified entry — runs all 3 phases)
  */
 
 import { build as viteBuild, type InlineConfig } from 'vite';
-import { resolve } from 'node:path';
+import { basename, resolve } from 'node:path';
 import process from 'node:process';
 import { type ClientIslandEntry, generateClientEntry } from '../entry-generators.js';
 import type { LessBuildContext } from '../build-context.js';
@@ -24,120 +28,16 @@ const log = createLogger('ssg');
 const VIRTUAL_CLIENT_ENTRY_ID = 'virtual:less-client-entry';
 const RESOLVED_CLIENT_ENTRY_ID = '\0' + VIRTUAL_CLIENT_ENTRY_ID;
 
-// ─── Alias auto-generation from workspace ────────────────────────────
-
-interface AliasEntry {
-  find: string;
-  replacement: string;
-}
-
-/**
- * Walk up from startDir to find a deno.json with a "workspace" field.
- * Returns the directory containing the workspace deno.json, or null.
- */
-async function findWorkspaceRoot(startDir: string): Promise<string | null> {
-  let dir = resolve(startDir);
-  const fsRoot = resolve('/');
-  while (dir !== fsRoot && dir !== resolve(dir, '..')) {
-    try {
-      const path = resolve(dir, 'deno.json');
-      const raw = await Deno.readTextFile(path);
-      const cfg = JSON.parse(raw);
-      if (cfg.workspace && Array.isArray(cfg.workspace)) return dir;
-    } catch { /* not found or no workspace */ }
-    dir = resolve(dir, '..');
-  }
-  return null;
-}
-
-/**
- * Generate Vite resolve.alias entries from all @lessjs/* workspace packages.
- * Each package's deno.json exports become aliases:
- *   "."        → { find: "@lessjs/pkg", replacement: "<dir>/src/index.ts" }
- *   "./foo"    → { find: "@lessjs/pkg/foo", replacement: "<dir>/src/foo.ts" }
- */
-async function generateWorkspaceAliases(workspaceRoot: string): Promise<AliasEntry[]> {
-  const rootConfig = JSON.parse(
-    await Deno.readTextFile(resolve(workspaceRoot, 'deno.json')),
-  );
-  const members: string[] = rootConfig.workspace || [];
-  const aliases: AliasEntry[] = [];
-
-  for (const member of members) {
-    const memberDir = resolve(workspaceRoot, member);
-    let memberCfg: Record<string, unknown>;
-    try {
-      memberCfg = JSON.parse(await Deno.readTextFile(resolve(memberDir, 'deno.json')));
-    } catch {
-      continue;
-    }
-
-    const name = memberCfg.name as string | undefined;
-    const exports = memberCfg.exports as Record<string, string> | string | undefined;
-    if (!name || !exports) continue;
-
-    if (typeof exports === 'string') {
-      // Single export — no subpaths
-      aliases.push({ find: name, replacement: resolve(memberDir, exports) });
-      continue;
-    }
-
-    // Build subpath aliases first (Vite prefix matching: subpath before parent)
-    for (const [exportPath, sourcePath] of Object.entries(exports)) {
-      if (exportPath === '.') continue; // parent alias added last
-      // "./foo" → "@lessjs/pkg/foo"
-      const subpath = exportPath.replace(/^\.\//, '/');
-      aliases.push({
-        find: `${name}${subpath}`,
-        replacement: resolve(memberDir, sourcePath as string),
-      });
-    }
-
-    // Parent alias last
-    if (exports['.']) {
-      aliases.push({ find: name, replacement: resolve(memberDir, exports['.'] as string) });
-    }
-  }
-
-  return aliases;
-}
-
-// ─── Build function ──────────────────────────────────────────────────
-
 async function buildClient(ctx: LessBuildContext): Promise<void> {
-  const root = ctx.root || process.cwd();
+  const userRoot = ctx.root || process.cwd();
+  const workspaceRoot = resolve(userRoot, '..');
+  const wwwRel = basename(userRoot); // e.g. "www"
+
   const outDir = ctx.outDir || 'dist';
   const islandsDir = ctx.islandsDir || 'app/islands';
   const localIslands = ctx.islandTagNames || [];
   const localIslandFiles = ctx.islandFiles || [];
   const packageIslands = ctx.packageIslands || [];
-
-  // Resolve alias for client build
-  // 1. Prefer user-provided aliases (vite.config.ts resolve.alias)
-  // 2. Otherwise, auto-generate from Deno workspace packages
-  const resolveAlias = ctx.userResolveAlias;
-  let serializedAlias: AliasEntry[] | null = null;
-
-  if (resolveAlias) {
-    serializedAlias = Array.isArray(resolveAlias)
-      ? resolveAlias.filter((a) => typeof a.find === 'string').map((a) => ({
-        find: a.find as string,
-        replacement: a.replacement,
-      }))
-      : Object.entries(resolveAlias).map(([find, replacement]) => ({ find, replacement }));
-    log.info('resolveAlias: ' + JSON.stringify(serializedAlias, null, 2));
-  } else {
-    // Auto-generate from workspace packages
-    const workspaceRoot = await findWorkspaceRoot(root);
-    if (workspaceRoot) {
-      serializedAlias = await generateWorkspaceAliases(workspaceRoot);
-      log.info(
-        `Auto-generated ${serializedAlias.length} alias(es) from workspace: ${workspaceRoot}`,
-      );
-    } else {
-      log.info('WARNING: no resolveAlias and no workspace found — island imports may fail');
-    }
-  }
 
   if (localIslands.length === 0 && packageIslands.length === 0) {
     log.info('No islands found — zero client JS output');
@@ -152,7 +52,7 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
     ...localIslands.map((tagName: string, i: number) => ({
       tagName,
       modulePath: resolve(
-        root,
+        userRoot,
         localIslandFiles[i]
           ? `${islandsDir}/${localIslandFiles[i]}`
           : `${islandsDir}/${tagName}.ts`,
@@ -187,11 +87,13 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
     return item;
   });
 
-  const clientOutDir = resolve(root, outDir, 'client');
+  const clientOutDir = resolve(userRoot, outDir, 'client');
   const clientBase = ctx.base || '/';
   const clientConfig: InlineConfig = {
     configFile: false,
-    root,
+    // Use workspace root so Vite finds workspace deno.json
+    // and resolves @lessjs/* through Deno natively (zero aliases).
+    root: workspaceRoot,
     base: `${clientBase}client/`,
     logLevel: 'warn',
     build: {
@@ -207,7 +109,8 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
           entryFileNames: 'islands/[name].js',
           chunkFileNames: 'islands/[name]-[hash].js',
           manualChunks(id: string) {
-            if (id.includes(`/${islandsDir}/`)) {
+            // Match local islands under www/ (root is workspace root)
+            if (id.includes(`/${wwwRel}/${islandsDir}/`)) {
               const match = id.match(/\/([^/]+)\.(ts|js)$/);
               if (match) return `island-${match[1]}`;
             }
@@ -218,7 +121,6 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
         },
       },
     },
-    resolve: serializedAlias ? { alias: serializedAlias } : undefined,
     ssr: {
       noExternal: (noExternalPatterns.length > 0 ? noExternalPatterns : undefined) as
         | (string | RegExp)[]
