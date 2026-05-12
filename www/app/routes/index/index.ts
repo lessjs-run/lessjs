@@ -58,8 +58,8 @@ export default class DocsHome extends LitElement {
     .hero-sec { border: 0.5px solid #333; color: #d4d4d8; }
 
     /* ── Code comparison ── */
-    .code-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #18181b; border-radius: 8px; overflow: hidden; border: 0.5px solid #27272a; margin-bottom: 18px; }
-    .code-pane { background: #101012; padding: 14px 16px; }
+    .code-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #09090b; border-radius: 8px; overflow: hidden; border: 0.5px solid #27272a; margin-bottom: 18px; }
+    .code-pane { background: #09090b; padding: 14px 16px; }
     .code-bar { display: flex; align-items: center; gap: 5px; margin-bottom: 10px; }
     .code-bar i { width: 7px; height: 7px; border-radius: 50%; }
     .code-bar .r { background: #ef4444; }
@@ -68,7 +68,7 @@ export default class DocsHome extends LitElement {
     .code-bar span { color: #52525b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-left: 5px; }
     .code-pane less-code-block { --code-bg: transparent; --code-border: none; }
     .code-pane pre { background: transparent !important; border: none !important; padding: 0 !important; margin: 0 !important; }
-    .code-pane code { font-size: 12px !important; line-height: 1.8 !important; color: #a1a1aa !important; }
+    .code-pane code { font-family: "JetBrains Mono","Fira Code","SF Mono",Consolas,monospace !important; font-size: 12px !important; line-height: 1.8 !important; color: #f4f4f5 !important; }
 
     /* ── Stats ── */
     .stats { display: flex; gap: 28px; flex-wrap: wrap; }
@@ -163,11 +163,19 @@ export default class DocsHome extends LitElement {
   /* ── counterState helper: used in render to create interactive counter ── */
   private _counter(initial = 0) {
     return html`
-      <div class="live-counter">
-        <button @click="${(e: Event) => { const el = (e.target as HTMLElement).parentElement!.querySelector('.val') as HTMLElement; if (el) el.textContent = String(Number(el.textContent) - 1); }}">−</button>
+      <div class="live-counter" @click=${this._onCounterClick}>
+        <button data-delta="-1">−</button>
         <span class="val">${initial}</span>
-        <button @click="${(e: Event) => { const el = (e.target as HTMLElement).parentElement!.querySelector('.val') as HTMLElement; if (el) el.textContent = String(Number(el.textContent) + 1); }}">+</button>
+        <button data-delta="1">+</button>
       </div>`;
+  }
+
+  private _onCounterClick(e: Event) {
+    const btn = (e.target as HTMLElement).closest('[data-delta]') as HTMLElement | null;
+    if (!btn) return;
+    const delta = parseInt(btn.dataset.delta || '0');
+    const val = btn.parentElement!.querySelector('.val') as HTMLElement;
+    if (val) val.textContent = String(Number(val.textContent) + delta);
   }
 
   private _renderZh() {
