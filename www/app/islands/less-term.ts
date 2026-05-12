@@ -19,7 +19,7 @@ export class LessTermDemo extends DsdLitElement {
     .dot.r { background: #ef4444; }
     .dot.y { background: #eab308; }
     .dot.g { background: #22c55e; }
-    .term-body { padding: 16px; font-family: "JetBrains Mono","Fira Code","SF Mono",Consolas,monospace; font-size: 12px; line-height: 1.9; color: #a1a1aa; min-height: 260px; overflow-y: auto; cursor: text; }
+    .term-body { padding: 16px; font-family: "JetBrains Mono","Fira Code","SF Mono",Consolas,monospace; font-size: 12px; line-height: 1.9; color: #a1a1aa; max-height: 280px; overflow-y: auto; cursor: text; }
     .term-body .prompt { color: #fbbf24; }
     .term-body .hl { color: #7dd3fc; }
     .term-body .err { color: #ef4444; }

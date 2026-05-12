@@ -96,10 +96,11 @@ export default class DocsHome extends LitElement {
     .card h3 { margin: 0 0 5px; font-size: 14px; font-weight: 600; color: var(--less-text-primary); }
     .card p { margin: 0; font-size: 12.5px; color: var(--less-text-secondary); line-height: 1.7; }
 
-    /* ── Use cases ── */
-    .uses { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 0.5px solid var(--less-border); border-bottom: 0.5px solid var(--less-border); margin-bottom: 2.5rem; }
+    /* ── Use cases (brand icons) ── */
+    .uses { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 0.5px solid var(--less-border); border-bottom: 0.5px solid var(--less-border); margin-bottom: 2rem; }
     .use { padding: 1.5rem 1rem; border-right: 0.5px solid var(--less-border); text-align: center; }
     .use:last-child { border-right: 0; }
+    .use .icon { font-size: 22px; margin-bottom: 6px; }
     .use h3 { margin: 0 0 3px; font-size: 13px; font-weight: 600; color: var(--less-text-primary); }
     .use p { margin: 0; font-size: 12px; color: var(--less-text-secondary); }
 
@@ -259,10 +260,10 @@ export default class DocsHome extends LitElement {
           <div class="sec-lbl">适用场景</div>
           <div class="sec-bd">
             <div class="uses">
-              <div class="use"><h3>文档站点</h3><p>本网站由 LessJS 构建</p></div>
-              <div class="use"><h3>博客 &amp; 内容</h3><p>Markdown + frontmatter，自动 Sitemap</p></div>
-              <div class="use"><h3>营销页面</h3><p>多语言 + i18n，自动导航</p></div>
-              <div class="use"><h3>轻量 API</h3><p>Hono 路由，Deno / Workers 部署</p></div>
+              <div class="use"><div class="icon">📄</div><h3>文档站点</h3><p>本网站由 LessJS 构建</p></div>
+              <div class="use"><div class="icon">✍️</div><h3>博客 &amp; 内容</h3><p>Markdown + frontmatter，自动 Sitemap</p></div>
+              <div class="use"><div class="icon">🏢</div><h3>营销页面</h3><p>多语言 + i18n，自动导航</p></div>
+              <div class="use"><div class="icon">⚡</div><h3>轻量 API</h3><p>Hono 路由，Deno / Workers 部署</p></div>
             </div>
           </div>
         </div>
@@ -420,10 +421,10 @@ export default class DocsHome extends LitElement {
           <div class="sec-lbl">built for</div>
           <div class="sec-bd">
             <div class="uses">
-              <div class="use"><h3>documentation sites</h3><p>this website runs on lessjs</p></div>
-              <div class="use"><h3>blogs &amp; content</h3><p>markdown + frontmatter, auto sitemap</p></div>
-              <div class="use"><h3>marketing pages</h3><p>multi-language with i18n, auto nav</p></div>
-              <div class="use"><h3>lightweight apis</h3><p>hono routes on deno / workers</p></div>
+              <div class="use"><div class="icon">📄</div><h3>documentation sites</h3><p>this website runs on lessjs</p></div>
+              <div class="use"><div class="icon">✍️</div><h3>blogs &amp; content</h3><p>markdown + frontmatter, auto sitemap</p></div>
+              <div class="use"><div class="icon">🏢</div><h3>marketing pages</h3><p>multi-language with i18n, auto nav</p></div>
+              <div class="use"><div class="icon">⚡</div><h3>lightweight apis</h3><p>hono routes on deno / workers</p></div>
             </div>
           </div>
         </div>
