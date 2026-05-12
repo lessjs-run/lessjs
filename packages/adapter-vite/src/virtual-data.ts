@@ -20,12 +20,18 @@ import type { LessBuildContext } from './build-context.js';
 // ─── Virtual module IDs ─────────────────────────────────────────
 // Defined in @lessjs/core/constants to avoid circular dependencies.
 // Re-exported here for backward compat.
-export {
+import {
   RESOLVED_BLOG_DATA_ID,
   RESOLVED_I18N_DATA_ID,
   VIRTUAL_BLOG_DATA_ID,
   VIRTUAL_I18N_DATA_ID,
 } from '@lessjs/core/constants';
+export {
+  RESOLVED_BLOG_DATA_ID,
+  RESOLVED_I18N_DATA_ID,
+  VIRTUAL_BLOG_DATA_ID,
+  VIRTUAL_I18N_DATA_ID,
+};
 
 // ─── Blog data virtual module ──────────────────────────────────
 
