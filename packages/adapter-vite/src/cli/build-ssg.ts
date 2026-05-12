@@ -22,6 +22,10 @@ import type { LessBuildContext } from '../build-context.js';
 import { SsrRenderError } from '@lessjs/core/errors';
 import { createLogger } from '@lessjs/core/logger';
 import { createBlogDataPlugin, createI18nDataPlugin } from '../virtual-data.js';
+import {
+  findWorkspaceRoot,
+  generateWorkspaceAliases,
+} from '../workspace-alias.js';
 
 const log = createLogger('ssg');
 
@@ -216,9 +220,16 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     const ssrOutDir = join(root, outDir, 'server');
     log.info(`Building SSR bundle → ${ssrOutDir}`);
 
+    // Auto-generate aliases from workspace packages
+    const ssgAliases = await (async () => {
+      const wsRoot = await findWorkspaceRoot(root);
+      return wsRoot ? await generateWorkspaceAliases(wsRoot) : null;
+    })();
+
     await viteBuild({
       configFile: false,
       root,
+      resolve: ssgAliases ? { alias: ssgAliases } : undefined,
       build: {
         ssr: true,
         outDir: ssrOutDir,
