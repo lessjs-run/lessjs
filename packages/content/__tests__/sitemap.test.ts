@@ -2,7 +2,6 @@
 import { assertEquals } from 'jsr:@std/assert';
 import { join } from 'node:path';
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
-// deno-lint-ignore no-sloppy-imports
 import {
   generateSitemap,
   renderRobotsTxt,

@@ -2,7 +2,6 @@
 import { assertEquals, assertExists } from 'jsr:@std/assert';
 import { join } from 'node:path';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-// deno-lint-ignore no-sloppy-imports
 import {
   extractCustomElementTags,
   generateIslandManifests,

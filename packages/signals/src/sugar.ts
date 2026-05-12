@@ -43,13 +43,18 @@ export function islandEffect(
   }
   observeParent();
 
+  // Periodic check for two edge cases that MutationObserver alone cannot cover:
+  // 1. The element is moved to a new parent — MO still watches the old parent
+  //    (there's no DOM event for "element reparented")
+  // 2. MO fails silently in certain edge cases (extremely rare in modern browsers)
+  // A 30-second interval is a lightweight safety net for these scenarios.
   const intervalId = setInterval(() => {
     if (!host.isConnected) {
       teardown();
     } else {
       observeParent();
     }
-  }, 5000);
+  }, 30000);
 
   return teardown;
 }

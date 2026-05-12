@@ -2,7 +2,6 @@
 import { assertEquals } from 'jsr:@std/assert';
 import { join } from 'node:path';
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
-// deno-lint-ignore no-sloppy-imports
 import { generateBlogRoutes, scanPosts } from '../src/blog/routes.ts';
 
 const TMP_DIR = join(import.meta.dirname!, '__tmp_blog_test__');

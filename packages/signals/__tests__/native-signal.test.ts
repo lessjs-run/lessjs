@@ -1,6 +1,5 @@
 // deno-lint-ignore-file no-explicit-any no-unversioned-import
 import { assertEquals } from 'jsr:@std/assert';
-// deno-lint-ignore no-sloppy-imports
 import { isNativeSignal } from '../src/index.ts';
 
 Deno.test('isNativeSignal: returns false when globalThis.Signal is undefined', () => {
