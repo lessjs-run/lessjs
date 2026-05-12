@@ -504,7 +504,7 @@ Deno.test('buildSpeculationRulesJson returns empty string for no options and no 
   assertEquals(result, '');
 });
 
-Deno.test('buildSpeculationRulesJson generates heuristic prefetch rules from routes', () => {
+Deno.test('buildSpeculationRulesJson generates heuristic prerender rules from routes', () => {
   const result = buildSpeculationRulesJson({}, [
     { path: '/', type: 'page' },
     { path: '/about', type: 'page' },
@@ -513,13 +513,17 @@ Deno.test('buildSpeculationRulesJson generates heuristic prefetch rules from rou
   ]);
 
   const parsed = JSON.parse(result);
-  assertExists(parsed.prefetch);
-  // Static pages should be included
+  // Heuristic mode generates prerender rules (not prefetch)
+  assertExists(parsed.prerender);
+  // Home page should be in prerender
   assertExists(
-    parsed.prefetch.some((r: { where: { href_matches: string } }) => r.where.href_matches === '/'),
+    parsed.prerender.some((r: { where: { href_matches?: string } }) =>
+      r.where && !r.where.href_matches
+    ),
   );
+  // Top-level page with wildcard
   assertExists(
-    parsed.prefetch.some((r: { where: { href_matches: string } }) =>
+    parsed.prerender.some((r: { where: { href_matches: string } }) =>
       r.where.href_matches === '/about/*'
     ),
   );
@@ -584,7 +588,10 @@ Deno.test('buildSpeculationRulesJson excludes API routes in heuristic mode', () 
   ]);
 
   const parsed = JSON.parse(result);
-  assertExists(parsed.prefetch[0].where.not);
+  // Heuristic mode generates prerender, not prefetch
+  assertExists(parsed.prerender);
+  // Only one static page (/) → no exclusions needed
+  assertEquals(parsed.prerender.length, 1);
 });
 
 Deno.test('buildSpeculationRulesJson returns empty string when no static pages', () => {
