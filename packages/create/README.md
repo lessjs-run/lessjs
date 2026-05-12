@@ -79,7 +79,7 @@ render() {
 在 `app/routes/api/` 中创建文件：
 
 ```ts
-import { Hono } from '@lessjs/core';
+import { Hono } from 'hono';
 
 const app = new Hono();
 app.get('/', (c) => c.json({ message: 'Hello from LessJS API!' }));

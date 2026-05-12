@@ -2,8 +2,8 @@
 
 > **审查日期**: 2026-05-12  
 > **审查人员**: 架构师-高见远  
-> **项目版本**: v0.11.1  
-> **审查范围**: 全部 9 个核心包
+> **项目版本**: v0.13.0  
+> **审查范围**: 全部 10 个核心包
 
 ---
 
@@ -21,20 +21,20 @@
 
 ### 1.1 Monorepo 包结构
 
-LessJS 采用 Deno workspace monorepo 架构，由 9 个独立包 + 1 个文档站点构成：
+LessJS 采用 Deno workspace monorepo 架构，由 10 个独立包 + 1 个文档站点构成：
 
 | 包 | 版本 | 职责 | 核心依赖 |
 |---|---|---|---|
-| `@lessjs/core` | 0.11.1 | 运行时核心：DSD 渲染、Island 体系、Navigation API、结构化日志 | parse5（唯一外部依赖） |
-| `@lessjs/adapter-vite` | 0.1.0 | Vite 构建编排：路由扫描、Island Transform、SSG 管线 | vite, hono, esbuild |
-| `@lessjs/app` | 0.3.0 | 统一入口 `lessjs()`，组合 core + content + i18n | 全部上层包 |
+| `@lessjs/core` | 0.13.0 | 运行时核心：DSD 渲染、Island 体系、Navigation API、结构化日志 | parse5（唯一外部依赖） |
+| `@lessjs/adapter-vite` | 0.3.0 | Vite 构建编排：路由扫描、Island Transform、SSG 管线 | vite, hono, esbuild |
+| `@lessjs/app` | 0.3.1 | 统一入口 `lessjs()`，组合 core + content + i18n | 全部上层包 |
 | `@lessjs/adapter-lit` | 0.8.0 | Lit SSR 适配器 + DSD Hydration Mixin | lit |
-| `@lessjs/ui` | 0.7.0 | Web Component 组件库（8 个组件） | lit |
-| `@lessjs/signal` | 0.6.2 | TC39 Signals 实现（polyfill + native） | 无依赖 |
-| `@lessjs/content` | 0.3.1 | Blog + Nav + Sitemap 构建时插件 | marked, gray-matter |
-| `@lessjs/i18n` | 0.1.0 | 国际化插件 | 无直接运行时依赖 |
+| `@lessjs/ui` | 0.7.1 | Web Component 组件库（8 个组件） | lit |
+| `@lessjs/signal` | 0.6.3 | TC39 Signals 实现（polyfill + native） | 无依赖 |
+| `@lessjs/content` | 0.3.3 | Blog + Nav + Sitemap 构建时插件 | marked, gray-matter |
+| `@lessjs/i18n` | 0.1.1 | 国际化插件 | 无直接运行时依赖 |
 | `@lessjs/rpc` | 0.6.1 | 轻量 RPC 控制器（fetch 包装） | 无依赖 |
-| `@lessjs/create` | 0.7.0 | 项目脚手架 CLI | 无依赖 |
+| `@lessjs/create` | 0.8.1 | 项目脚手架 CLI | 无依赖 |
 
 ### 1.2 包依赖关系图
 
@@ -120,7 +120,7 @@ Route module (LitElement / Web Component)
   │   ├── Instantiate component → set props
   │   ├── Call render() → get shadow DOM HTML
   │   ├── [Adapter] Lit TemplateResult → string interpolation
-  │   ├── renderNestedCustomElements()  ← parse5 AST, bottom-up
+  │   ├── renderDSDByName()  ← parse5 AST, bottom-up
   │   │   └── Recursively render child CEs → wrap in <template shadowrootmode>
   │   └── Wrap in DSD template
   │
@@ -148,7 +148,7 @@ Route module (LitElement / Web Component)
 
 1. **零依赖运行时**: core 被刻意设计为纯运行时库，除 parse5 外无任何外部依赖。不存在 `node:*` 导入，可在 Deno/Node/Bun/Edge 环境中运行。
 
-2. **子路径导出粒度**: core 通过 JSR 子路径导出 11 个独立模块（`/render-dsd`、`/logger`、`/errors` 等），允许消费者按需导入，避免包级 barrel 文件引入全部依赖。
+2. **导出收敛（ADR 0021）**: v0.13 将 core 的公共 API 从 18 个导出收敛到 6 个 JSR 子路径（`.`、`./errors`、`./context`、`./logger`、`./navigation`、`./constants`）。`/render-dsd`、`/cli` 等内部实现不再暴露。
 
 3. **Adapter 模式**: `registerAdapter()` / `getAdapter()` 构成插件接口，Lit 适配器通过该接口接入渲染管线，无需修改 core 代码：
    ```typescript
@@ -165,12 +165,12 @@ Route module (LitElement / Web Component)
    - **Layer 2 — DSD Interactive**: DSD 模板 + 事件 hydration（`hydrateEvents` + `WithDsdHydration` Mixin）
    - **Layer 3 — Pure Island**: 无 DSD，框架完全拥有 shadow root
 
-5. **嵌套 DSD 递归**: `render-nested.ts` 使用 parse5 AST 实现 O(n·d) 复杂度的递归渲染，替代了早期的 O(n²) 正则方案。
+5. **嵌套 DSD 递归**: `render-dsd.ts` 中的 `renderDSDByName()` 使用 parse5 AST 实现 O(n·d) 复杂度的递归渲染，替代了早期的 O(n²) 正则方案。
 
 **设计问题**:
 
-- `render-nested.ts` 中动态 `import('./render-dsd.js')` 存在循环依赖风险
-- `ssr-handler.ts` 实际上只是 `html-escape.ts` 的重导出 facade，增加了不必要的间接层
+- 【已修复 v0.13】`renderDSDByName()` 的循环依赖风险（通过模块内部职责分层解决）
+- 【已修复 v0.13】`ssr-handler.ts` 已被删除，消费者直接导入 `@lessjs/core`（ADR 0021）
 
 ### 2.2 @lessjs/adapter-vite — 构建编排层
 
@@ -366,9 +366,9 @@ Route module (LitElement / Web Component)
 
 | # | 风险 | 描述 |
 |---|------|------|
-| R9 | **包版本号不统一** | core 0.11.1、app 0.3.0、signal 0.6.2 等版本号各自独立演进 |
+| R9 | **包版本号不统一** | core 0.13.0、app 0.3.1、signal 0.6.3 等版本号各自独立演进 |
 | R10 | **debug 日志不可关闭** | `DEBUG` 编译时常量默认为 `true`，生产构建需注意保留 |
-| R11 | **PWA sw.js 硬编码** | Service Worker 代码以字符串模板形式嵌入 `build-ssg.ts`，不可定制 |
+| R11 | **PWA sw.js 硬编码** | Service Worker 代码以字符串模板形式嵌入，不可定制 |
 
 ---
 
@@ -443,9 +443,9 @@ class LessBuildContext {
 
 | # | 项 | 位置 | 建议 |
 |---|-----|------|------|
-| T1 | `ssr-handler.ts` 仅重导出 | `core/src/ssr-handler.ts` | 删除文件，消费者直接导入 `html-escape` |
+| T1 | `ssr-handler.ts` 仅重导出（已修复 v0.13） | `core/src/ssr-handler.ts` | ✅ 已删除，消费者直接使用 `@lessjs/core`（ADR 0021） |
 | T2 | `adapter-vite/src/build-manifest.ts` 代码标注与包名不一致 | 文件头部标注 `@lessjs/core` | 修正为 `@lessjs/adapter-vite` |
-| T3 | `render-nested.ts` 循环导入 | 动态 `import('./render-dsd.js')` | 重构模块分层 |
+| T3 | `render-nested.ts` 循环导入（已修复 v0.13） | 动态 `import('./render-dsd.js')` | ✅ 已重构，`renderDSDByName()` 在模块内部处理 |
 | T4 | `signals/src/index.ts` 单文件过大 | ~800 行 | 拆分为 engine/polyfill/framework 三个模块 |
 
 ---

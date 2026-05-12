@@ -17,20 +17,57 @@ deno add jsr:@lessjs/i18n
 
 ## 使用
 
+### 推荐方式（通过 @lessjs/app）
+
 ```ts
 // vite.config.ts
-import { lessI18n } from '@lessjs/i18n';
+import { lessjs } from '@lessjs/app';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [
-    lessI18n({
-      locales: ['en', 'zh'],
-      defaultLocale: 'en',
+    lessjs({
+      i18n: {
+        locales: ['en', 'zh'],
+        defaultLocale: 'en',
+      },
     }),
+  ],
+});
+```
+
+### Route 层辅助函数
+
+```ts
+// app/routes/[locale]/index.ts
+import { i18nStaticPaths, switchLocale } from '@lessjs/i18n';
+
+export function getStaticPaths() {
+  return i18nStaticPaths(); // 展开所有 locale 路径
+}
+
+// 生成跨 locale 链接
+const enPath = switchLocale('/zh/about', 'en'); // → '/en/about'
+```
+
+### 独立使用（需显式传递 ctx）
+
+```ts
+import { lessI18n } from '@lessjs/i18n';
+import { less } from '@lessjs/adapter-vite';
+import { LessBuildContext } from '@lessjs/adapter-vite/build-context';
+import { defineConfig } from 'vite';
+
+const ctx = new LessBuildContext({});
+
+export default defineConfig({
+  plugins: [
+    ...less({ routesDir: 'app/routes' }, ctx),
+    lessI18n({ locales: ['en', 'zh'], defaultLocale: 'en', ctx }),
   ],
 });
 ```
 
 ## 许可
 
-MIT License
+MIT

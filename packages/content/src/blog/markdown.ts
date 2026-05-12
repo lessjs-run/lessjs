@@ -26,6 +26,7 @@ export async function parseMarkdownFile(
     draft: data.draft ?? false,
     tags: data.tags ?? [],
     excerpt: data.excerpt,
+    type: data.type,
   };
 
   let html: string;

@@ -67,6 +67,6 @@ class MyCounter extends HTMLElement {
 
 ## 路线
 
-这项工作不应该阻塞 v0.7–v0.10。当前路线是：先修可信度、安全、DSD renderer、Island Upgrade、Serverless Fullstack 与 SSG/ISR，再在 v0.11.0 引入 `.less` compiler alpha。Lit 兼容模式在 v0.x 生命周期中保留。版本策略详见 [ADR 0006](/decisions/0006-version-strategy)。
+这项工作不应该阻塞 v0.7–v0.10。当前路线是：先修可信度、安全、DSD renderer、Island Upgrade、Serverless Fullstack 与 SSG/ISR，再在 v0.11.0 引入 `.less` compiler alpha。Lit 兼容模式在 v0.x 生命周期中保留。版本策略详见 [ADR 0006](/blog/0006-version-strategy)。
 
-详细技术设计见 `docs/decisions/0002-kiss-compiler-eliminate-lit.md`。
+详细技术设计见 [ADR 0002](/blog/0002-less-compiler-eliminate-lit)。

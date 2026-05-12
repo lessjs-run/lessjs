@@ -105,7 +105,7 @@ deno task build
 
 ## 架构决策（ADR）
 
-LessJS 的架构通过 [Architecture Decision Records](www/decisions/) 驱动。关键决策：
+LessJS 的架构通过 [Architecture Decision Records](/blog/) 驱动。关键决策：
 
 | ADR | 决策 |
 |-----|------|

@@ -8,9 +8,9 @@
 
 | 维度 | 评分 | 说明 |
 |------|------|------|
-| 测试覆盖广度 | ⭐⭐⭐⭐ | 9 个包中有 7 个有充足的单元测试，1 个基本覆盖 |
+| 测试覆盖广度 | ⭐⭐⭐⭐ | 10 个包中有 8 个有充足的单元测试，1 个基本覆盖 |
 | 测试深度 | ⭐⭐⭐⭐ | 边界用例覆盖良好，包含错误路径、异常场景 |
-| 测试基础设施 | ⭐⭐⭐⭐⭐ | CI 完整（9 个并行 job + E2E + 构建验证） |
+| 测试基础设施 | ⭐⭐⭐⭐⭐ | CI 完整（10 个并行 job + E2E + 构建验证） |
 | E2E 测试 | ⭐⭐⭐⭐ | 9 个 spec 文件覆盖核心用户场景 |
 | 测试可维护性 | ⭐⭐⭐⭐ | 代码清晰，命名规范，mock 策略合理 |
 
@@ -24,7 +24,7 @@
 
 **测试文件**（6 个）：
 - `render-dsd.test.ts` — 核心 DSD 渲染（含 escape 函数、DSD 选项、adapter protocol、错误处理、边界场景）
-- `ssr-handler.test.ts` — SSR 处理器
+- `ssr-handler.test.ts`（已合并到 `render-dsd.test.ts`，v0.13 删除原文件）
 - `island.test.ts` — Island 体系
 - `context.test.ts` — 上下文管理
 - `errors.test.ts` — 错误处理
@@ -69,7 +69,7 @@
 
 ### 2.3 @lessjs/signals — ⭐⭐⭐⭐⭐（优秀）
 
-**测试文件**（9 个）：
+**测试文件**（8 个）：
 - `signal.test.ts` — signal 读写、subscribe/unsubscribe
 - `computed.test.ts` — 计算属性
 - `effect.test.ts` — 副作用
@@ -78,7 +78,6 @@
 - `batch-untracked.test.ts` — 批量更新
 - `native-signal.test.ts` — 原生 Signal 兼容
 - `theme-signal.test.ts` — 主题信号
-- `components.test.ts` — 组件集成
 
 **亮点**：
 - 测试覆盖率高：所有核心 API（signal/computed/effect/islandEffect/batch/untracked）都有独立测试

@@ -10,6 +10,8 @@ export interface BlogPostFrontmatter {
   tags?: string[];
   /** Short excerpt / description */
   excerpt?: string;
+  /** Post type discriminator (e.g. 'adr', 'post') */
+  type?: string;
 }
 
 /** A fully parsed blog post */

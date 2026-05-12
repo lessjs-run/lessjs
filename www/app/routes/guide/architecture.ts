@@ -89,7 +89,7 @@ Phase 3: SSG
           <p>
             当前实现已经支持本地 islands 和 package islands，但构建 metadata 还需要继续收紧：
             页面级 island manifest、加载策略、嵌套路由中的本地 island 路径和 package island
-            策略都应该成为 v0.7 前的重点。
+            策略都已经实现（见 island manifest 和升级策略配置）。
           </p>
 
           <h2>服务端运行时</h2>
@@ -271,8 +271,7 @@ Phase 3: SSG
           <p>
             The current implementation supports both local islands and package islands, but the
             build metadata still needs tightening: page-level island manifests, loading strategies,
-            local island paths in nested routes, and package island policies should be priorities
-            before v0.7.
+            local island paths in nested routes, and package island policies are now implemented.
           </p>
 
           <h2>Server Runtime</h2>

@@ -41,7 +41,7 @@
 - **错误层级设计**: `LessError` 基类 + `SsrRenderError` 子类，包含 `code`、`statusCode`、`isOperational` 等字段，设计规范 (`errors.ts:7-37`)
 - **安全的 HTML 转义**: `escapeHtml()`、`escapeAttr()`、`escapeAttrValue()` 三重转义函数覆盖 XSS 常见入口 (`html-escape.ts:32-57`)
 - **DSD 渲染管线**: 纯字符串拼接的 DSD 渲染器设计简洁，支持异步 adapter 扩展，无 DOM shim 依赖 (`render-dsd.ts:123-251`)
-- **parse5 递归渲染**: 用 `parse5` AST 替代正则表达式，将 O(n²) 复杂度降为 O(n·d) (`render-nested.ts:6-15`)
+- **parse5 递归渲染**: 用 `parse5` AST 替代正则表达式，将 O(n²) 复杂度降为 O(n·d)（`renderDSDByName()` 函数）
 - **CSP Nonce 支持**: 文档包裹函数支持内容安全策略 nonce 注入 (`html-escape.ts:90`)
 
 #### 发现的问题
@@ -51,7 +51,7 @@
 | **Minor** | `context.ts:90-96` | `parseQuery` 返回 `Record<string, string>` 但 `URLSearchParams` 支持同键多值，应改为 `Record<string, string \| string[]>` |
 | **Minor** | `context.ts:119` | `SsrContext.query` 同样受限于单值，可能丢失多值查询参数 |
 | **Minor** | `render-nested.ts:173` | `renderDSD` 的动态 `import()` 从自身模块内调用，存在循环依赖风险；虽然通过异步加载规避了，但不如顶层导入清晰 |
-| **Info** | `ssr-handler.ts` | 整个文件仅为 re-export facade，增加了不必要的间接层，建议在 `index.ts` 中直接 re-export |
+| **Info** | `ssr-handler.ts`（已修复 v0.13） | 整个文件仅为 re-export facade，v0.13 已删除，消费者改用 `@lessjs/core`（ADR 0021） |
 | **Info** | `render-dsd.ts:29-50` | 多处被标记为 `@deprecated` 的 re-export 仍在使用旧路径，需要在下次 major 版本清理 |
 
 ---
@@ -199,7 +199,7 @@
 ### Info (5 个)
 | ID | 位置 | 问题 |
 |----|------|------|
-| i-01 | `ssr-handler.ts` | 纯 re-export facade 增加间接层 |
+| i-01 | `ssr-handler.ts`（已修复 v0.13） | 纯 re-export facade，v0.13 已删除 |
 | i-02 | `render-dsd.ts:29-50` | 多处 @deprecated re-export 需清理 |
 | i-03 | `ssr.ts:369` (adapter-lit) | 遗留的 Lit 2.x fallback 可清理 |
 | i-04 | `less-layout.ts:839` | 语言标签硬编码 |
@@ -266,7 +266,7 @@
 
 | 优先级 | ID | 建议 |
 |--------|----|------|
-| P3 | i-01 | 清理 `ssr-handler.ts` 等 re-export facade |
+| P3 | i-01 | 清理 `ssr-handler.ts` 等 re-export facade（✅ v0.13 已删除） |
 | P3 | i-02 | 移除 `render-dsd.ts` 中的 deprecated re-export |
 | P3 | i-03 | 清理遗留的 Lit 2.x fallback 代码 |
 | P3 | i-04 | 使语言切换标签可配置化 |

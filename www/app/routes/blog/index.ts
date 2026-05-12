@@ -34,7 +34,7 @@ export class BlogIndexPage extends LitElement {
         <div class="container">
           <h1>博客</h1>
           <p class="subtitle">LessJS 框架的设计思考、架构决策和发展路线。</p>
-          <div class="blog-list">${posts.map((post, i) => {
+          <div class="blog-list">${posts.filter(p => p.frontmatter.type !== 'adr').map((post, i) => {
             const tags = post.frontmatter.tags ?? [];
             return html`
               <a href="/blog/${post.slug}" class="blog-item">
@@ -55,7 +55,7 @@ export class BlogIndexPage extends LitElement {
         <div class="container">
           <h1>Blog</h1>
           <p class="subtitle">Design thoughts, architecture decisions, and development roadmap for the LessJS framework.</p>
-          <div class="blog-list">${posts.map((post, i) => {
+          <div class="blog-list">${posts.filter(p => p.frontmatter.type !== 'adr').map((post, i) => {
             const tags = post.frontmatter.tags ?? [];
             return html`
               <a href="/en/blog/${post.slug}" class="blog-item">

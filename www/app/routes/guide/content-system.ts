@@ -21,9 +21,9 @@ export class ContentSystemPage extends LitElement {
     <h2>Markdown 文件</h2>
     <p>内容目录中的每个 .md 文件自动成为一篇博客文章。Frontmatter 支持 title、date、tags、draft 和 excerpt。</p>
     <h2>API 参考</h2>
-    <p>getPosts() — 返回所有非草稿文章，按日期降序排列。getPostBySlug(slug) — 按 slug 获取单篇文章。parseMarkdownFile(content, filename) — 解析 Markdown 文件。slugFromFilename(filename) — 从文件名提取 slug。</p>
+    <p>路由组件通过虚拟模块导入数据：<span class="inline-code">import { posts, getPostBySlug } from 'virtual:less-blog-data'</span>。底层工具函数：<span class="inline-code">parseMarkdownFile()</span>、<span class="inline-code">slugFromFilename()</span>。</p>
     <h2>架构约束</h2>
-    <p>内容插件不依赖 Lit，作为纯 SSG 插件运行。v0.8 范围：.md → 路由 → 列表/文章页 + 导航自动生成 + 站点地图。暂不支持 MDX、评论、分页和标签系统。</p>
+    <p>内容插件不依赖 Lit，作为纯 SSG 插件运行。当前能力：.md → 路由 → 列表/文章页 + 导航自动生成 + 站点地图。暂不支持 MDX、评论、分页和标签系统。</p>
     <div class="nav-row"><a href="/guide/ssg" class="nav-link">&larr; Rendering & SSG</a><a href="/guide/rpc" class="nav-link">RPC 远程调用 &rarr;</a></div>
   </div></less-layout>`; }
 
@@ -36,9 +36,9 @@ export class ContentSystemPage extends LitElement {
     <h2>Markdown Files</h2>
     <p>Every <span class="inline-code">.md</span> file in the content directory becomes a blog post. Frontmatter supports <span class="inline-code">title</span>, <span class="inline-code">date</span>, <span class="inline-code">tags</span>, <span class="inline-code">draft</span>, and <span class="inline-code">excerpt</span>.</p>
     <h2>API Reference</h2>
-    <ul><li><span class="inline-code">getPosts()</span> — Returns all non-draft posts, sorted by date descending.</li><li><span class="inline-code">getPostBySlug(slug)</span> — Gets a single post by its slug.</li><li><span class="inline-code">parseMarkdownFile(content, filename)</span> — Parses a markdown file with gray-matter frontmatter.</li><li><span class="inline-code">slugFromFilename(filename)</span> — Extracts the slug from a filename.</li></ul>
+    <ul><li><span class="inline-code">virtual:less-blog-data</span> — Route components import <span class="inline-code">posts</span>, <span class="inline-code">getPostBySlug(slug)</span> from here (ADR 0018).</li><li><span class="inline-code">parseMarkdownFile(content, filename)</span> — Parses a markdown file with gray-matter frontmatter.</li><li><span class="inline-code">slugFromFilename(filename)</span> — Extracts the slug from a filename.</li></ul>
     <h2>Architecture Constraints</h2>
-    <p>The content plugin has no Lit dependency and runs as a pure SSG plugin. v0.8 scope: .md → routes → list/detail pages + auto-generated nav + sitemap. MDX, comments, pagination, and tag systems are not yet supported.</p>
+    <p>The content plugin has no Lit dependency and runs as a pure SSG plugin. Current scope: .md → routes → list/detail pages + auto-generated nav + sitemap. MDX, comments, pagination, and tag systems are not yet supported.</p>
     <div class="nav-row"><a href="/guide/ssg" class="nav-link">&larr; Rendering &amp; SSG</a><a href="/guide/rpc" class="nav-link">RPC &rarr;</a></div>
   </div></less-layout>`; }
 }

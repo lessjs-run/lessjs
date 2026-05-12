@@ -105,7 +105,7 @@ Requirements:
 
 ## Architecture Decisions (ADRs)
 
-All ADRs are in [`www/decisions/`](www/decisions/).
+All ADRs are in the [blog](/blog/) — search `type: adr` to filter. Key decisions:
 
 | ADR | Decision |
 |-----|----------|
