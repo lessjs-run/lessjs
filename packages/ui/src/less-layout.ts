@@ -891,8 +891,7 @@ export class LessLayout extends DsdLitElement {
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const html = await resp.text();
 
-        const tmp = document.createElement('div');
-        tmp.innerHTML = html;
+        const tmp = new DOMParser().parseFromString(html, 'text/html').body;
 
         const newLayout = tmp.querySelector<HTMLElement>('less-layout');
         if (!newLayout) throw new Error('No less-layout found in response');

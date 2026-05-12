@@ -29,7 +29,7 @@ export type {
 
 export { LessError, SsrRenderError } from './errors.js';
 export { createSsrContext, extractParams, parseQuery } from './context.js';
-export { renderSsrError, wrapInDocument } from './ssr-handler.js';
+export { renderSsrError, wrapInDocument } from './html-escape.js';
 export { renderDSD, renderDSDByName } from './render-dsd.js';
 export { getAdapter, registerAdapter } from './adapter-registry.js';
 export type { ComponentLayer, DsdOptions, HydrateEventDescriptor, RenderAdapter } from './types.js';

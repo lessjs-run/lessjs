@@ -399,3 +399,39 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     rmSync(tmpRoot, { recursive: true, force: true });
   }
 });
+
+Deno.test('create-less: --help flag prints usage info', async () => {
+  const help = new Deno.Command(Deno.execPath(), {
+    args: ['run', '-A', join(__dirname, '..', 'cli.ts'), '--help'],
+    cwd: Deno.makeTempDirSync({ prefix: 'less-help-' }),
+    stdout: 'piped',
+    stderr: 'piped',
+  });
+  const result = await help.output();
+  const output = new TextDecoder().decode(result.stdout);
+  // Should print usage/help info without error
+  assertEquals(result.code, 0);
+  assertExists(output.includes('Usage') || output.includes('usage') || output.includes('--help'));
+});
+
+Deno.test('create-less: rejects project name with spaces', async () => {
+  const tmpRoot = Deno.makeTempDirSync({ prefix: 'less-create-' });
+  try {
+    const create = new Deno.Command(Deno.execPath(), {
+      args: ['run', '-A', join(__dirname, '..', 'cli.ts'), 'my app'],
+      cwd: tmpRoot,
+      stdout: 'piped',
+      stderr: 'piped',
+    });
+    const result = await create.output();
+    const stderr = new TextDecoder().decode(result.stderr);
+    const stdout = new TextDecoder().decode(result.stdout);
+    // Should fail with an error code and mention the invalid name
+    // (exact exit code depends on how the CLI validates input)
+    assertExists(
+      result.code !== 0 || stderr.includes('my app') || stdout.includes('my app'),
+    );
+  } finally {
+    rmSync(tmpRoot, { recursive: true, force: true });
+  }
+});

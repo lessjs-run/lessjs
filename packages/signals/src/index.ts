@@ -36,9 +36,9 @@ const _log = {
 
 // ─── Engine Layer: TC39 Signal Primitives ────────────────────────
 // Use native Signal if available, otherwise polyfill.
-// deno-lint-ignore-file no-explicit-any
 // The polyfill is inlined below; when browsers ship native Signal,
 // the polyfill code will be tree-shaken away.
+// deno-lint-ignore no-explicit-any
 
 interface SignalEngineNamespace {
   State: new <T>(
@@ -522,7 +522,6 @@ export type Signal<T> = WritableSignal<T> | ReadonlySignal<T>;
  */
 export function signal<T>(initialValue: T): WritableSignal<T> {
   const state = new _engine.State(initialValue);
-  const _subVersion = 0;
 
   return {
     get value(): T {
