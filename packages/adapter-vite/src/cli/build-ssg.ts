@@ -232,7 +232,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
       return aliases;
     })();
 
-    const effectiveAlias = alias || ssgAliases;
+    const effectiveAlias = ssgAliases || alias;
     log.info(`SSG: using ${effectiveAlias ? (Array.isArray(effectiveAlias) ? effectiveAlias.length + ' alias(es)' : 'alias map') : 'NO aliases'} for resolution`);
 
     await viteBuild({
