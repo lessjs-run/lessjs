@@ -9,7 +9,6 @@ import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
-import '../islands/less-term.js';
 
 export const tagName = 'docs-home';
 

@@ -5,11 +5,10 @@
  * keyboard input and sends commands to /api/term.
  */
 import { css, html, LitElement } from 'lit';
-import { DsdLitElement } from '@lessjs/adapter-lit';
 
 const INITIAL_PROMPT = '<span class="prompt">$</span> type <span class="hl">help</span> to get started';
 
-export class LessTermDemo extends DsdLitElement {
+export class LessTermDemo extends LitElement {
   static override styles = css`
     :host { display: block; }
     .term { background: #09090b; border-radius: 10px; overflow: hidden; border: 0.5px solid #27272a; }
