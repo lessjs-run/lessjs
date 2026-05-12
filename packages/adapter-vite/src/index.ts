@@ -30,6 +30,7 @@ import honoDevServer from '@hono/vite-dev-server';
 import { LessBuildContext } from './build-context.js';
 import { findWorkspaceRoot, generateWorkspaceAliases } from './workspace-alias.js';
 import { buildPlugin } from './build.js';
+import { devtoolsPlugin } from './devtools/index.js';
 import { generateHonoEntryCode } from './hono-entry.js';
 import { islandTransformPlugin } from './island-transform.js';
 import { fileToTagName, scanIslands, scanPackageIslands, scanRoutes } from './route-scanner.js';
@@ -420,6 +421,7 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
     devServerPlugin,
     islandTransformPlugin(resolvedOptions.islandsDir!),
     buildPlugin(resolvedOptions, ctx),
+    devtoolsPlugin(),
   ];
 }
 
