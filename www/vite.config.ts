@@ -4,13 +4,9 @@ import { defineConfig } from 'vite';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Vite needs resolve.alias because JSR packages aren't in node_modules.
-// Subpath imports (e.g. @lessjs/core/adapter-registry) need explicit aliases
-// because the parent @lessjs/core alias points to a file (index.ts), and
-// appending /subpath to a file path is invalid ("Not a directory").
-// NOTE: __dirname is unavailable in Deno ESM — use import.meta instead.
+// All @lessjs/* packages resolve via Deno workspace (see root deno.json).
+// No Vite resolve.alias needed — workspace members resolve natively.
 const __dir = dirname(fileURLToPath(import.meta.url));
-const uiSrcDir = resolve(__dir, '../packages/ui/src');
 
 // DRY: All color token values come from a single source of truth.
 // lessRootColorCSS is generated from lessDarkColors/lessLightColors in tokens/colors.ts.
@@ -123,77 +119,4 @@ export default defineConfig({
       },
     }),
   ],
-  resolve: {
-    alias: [
-      // @lessjs/adapter-vite subpath aliases (MUST come before parent)
-      {
-        find: '@lessjs/adapter-vite/build-context',
-        replacement: resolve(__dir, '../packages/adapter-vite/src/build-context.ts'),
-      },
-      {
-        find: '@lessjs/adapter-vite',
-        replacement: resolve(__dir, '../packages/adapter-vite/src/index.ts'),
-      },
-      // @lessjs/core subpath aliases (MUST come before parent)
-      {
-        find: '@lessjs/core/html-escape',
-        replacement: resolve(__dir, '../packages/core/src/html-escape.ts'),
-      },
-      {
-        find: '@lessjs/core/render-dsd',
-        replacement: resolve(__dir, '../packages/core/src/render-dsd.ts'),
-      },
-      {
-        find: '@lessjs/core/logger',
-        replacement: resolve(__dir, '../packages/core/src/logger.ts'),
-      },
-      {
-        find: '@lessjs/core/adapter-registry',
-        replacement: resolve(__dir, '../packages/core/src/adapter-registry.ts'),
-      },
-      {
-        find: '@lessjs/core/ssr-handler',
-        replacement: resolve(__dir, '../packages/core/src/ssr-handler.ts'),
-      },
-      {
-        find: '@lessjs/core/navigation',
-        replacement: resolve(__dir, '../packages/core/src/navigation.ts'),
-      },
-      {
-        find: '@lessjs/core',
-        replacement: resolve(__dir, '../packages/core/src/index.ts'),
-      },
-      {
-        find: '@lessjs/adapter-lit/ssr',
-        replacement: resolve(__dir, '../packages/adapter-lit/src/ssr.ts'),
-      },
-      {
-        find: '@lessjs/adapter-lit',
-        replacement: resolve(__dir, '../packages/adapter-lit/src/index.ts'),
-      },
-      { find: '@lessjs/ui/less-button', replacement: resolve(uiSrcDir, 'less-button.ts') },
-      { find: '@lessjs/ui/less-card', replacement: resolve(uiSrcDir, 'less-card.ts') },
-      { find: '@lessjs/ui/less-input', replacement: resolve(uiSrcDir, 'less-input.ts') },
-      { find: '@lessjs/ui/less-code-block', replacement: resolve(uiSrcDir, 'less-code-block.ts') },
-      { find: '@lessjs/ui/less-layout', replacement: resolve(uiSrcDir, 'less-layout.ts') },
-      {
-        find: '@lessjs/ui/less-theme-toggle',
-        replacement: resolve(uiSrcDir, 'less-theme-toggle.ts'),
-      },
-      { find: '@lessjs/ui/less-hero-ping', replacement: resolve(uiSrcDir, 'less-hero-ping.ts') },
-      { find: '@lessjs/ui/less-dialog', replacement: resolve(uiSrcDir, 'less-dialog.ts') },
-      { find: '@lessjs/ui', replacement: resolve(uiSrcDir, 'index.ts') },
-      // Subpath aliases MUST come before parent path (Vite prefix matching)
-      {
-        find: '@lessjs/content/sitemap',
-        replacement: resolve(__dir, '../packages/content/src/sitemap/index.ts'),
-      },
-      { find: '@lessjs/content', replacement: resolve(__dir, '../packages/content/src/index.ts') },
-      {
-        find: '@lessjs/i18n',
-        replacement: resolve(__dir, '../packages/i18n/src/index.ts'),
-      },
-      { find: '@lessjs/app', replacement: resolve(__dir, '../packages/app/src/index.ts') },
-    ],
-  },
 });

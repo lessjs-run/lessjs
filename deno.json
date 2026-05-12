@@ -10,7 +10,8 @@
     "./packages/signals",
     "./packages/content",
     "./packages/i18n",
-    "./packages/app"
+    "./packages/app",
+    "./www"
   ],
   "imports": {
     "lit": "npm:lit@^3.2.0",
