@@ -5,6 +5,7 @@
  * keyboard input and sends commands to /api/term.
  */
 import { css, html, LitElement } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 const INITIAL_PROMPT = '<span class="prompt">$</span> type <span class="hl">help</span> to get started';
 
@@ -44,7 +45,7 @@ export class LessTermDemo extends LitElement {
         <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
         <div class="term-body" @click=${this._focusInput}>
           <div class="output">
-            ${this._output.length === 0 ? html`<div>${INITIAL_PROMPT}</div>` : this._output.map(line => html`<div>${line}</div>`)}
+            ${this._output.length === 0 ? html`<div>${unsafeHTML(INITIAL_PROMPT)}</div>` : this._output.map(line => html`<div>${unsafeHTML(line)}</div>`)}
           </div>
           <div class="input-line">
             <span class="prompt">$</span>
@@ -53,7 +54,6 @@ export class LessTermDemo extends LitElement {
               autocomplete="off"
               spellcheck="false"
               @keydown=${this._onKey}
-              .value=${''}
             >
           </div>
         </div>
