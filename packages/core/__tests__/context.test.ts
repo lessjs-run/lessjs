@@ -40,10 +40,17 @@ Deno.test('context - parseQuery', async (t) => {
     assertEquals(query, {});
   });
 
-  await t.step('handles last value for duplicate keys', () => {
+  await t.step('handles duplicate keys as array', () => {
     const url = new URL('http://localhost:3000/?tag=a&tag=b');
     const query = parseQuery(url);
-    assertEquals(query.tag, 'b');
+    assertEquals(query.tag, ['a', 'b']);
+  });
+
+  await t.step('handles single key and multi-value key mixed', () => {
+    const url = new URL('http://localhost:3000/?tag=a&tag=b&page=1');
+    const query = parseQuery(url);
+    assertEquals(query.tag, ['a', 'b']);
+    assertEquals(query.page, '1');
   });
 });
 

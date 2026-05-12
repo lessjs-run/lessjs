@@ -36,8 +36,8 @@ export interface SsrContext {
   url: URL;
   /** Route params extracted from dynamic segments (e.g., { id: '123' }) */
   params: Record<string, string>;
-  /** Parsed query/search parameters */
-  query: Record<string, string>;
+  /** Parsed query/search parameters (supports multi-value) */
+  query: Record<string, string | string[]>;
   /** Islands collected during SSR rendering */
   islands: IslandDescriptor[];
   /** HTTP status code (default: 200) */
@@ -86,11 +86,23 @@ export function extractParams(
 /**
  * Parse URL search params into a plain object.
  * Uses standard URLSearchParams — zero framework magic.
+ * Supports multi-value keys (e.g., ?tag=a&tag=b → { tag: ['a', 'b'] }).
  */
-export function parseQuery(url: URL): Record<string, string> {
-  const query: Record<string, string> = {};
+export function parseQuery(url: URL): Record<string, string | string[]> {
+  const query: Record<string, string | string[]> = {};
+  const seen = new Set<string>();
   url.searchParams.forEach((value, key) => {
-    query[key] = value;
+    if (seen.has(key)) {
+      const existing = query[key];
+      if (Array.isArray(existing)) {
+        existing.push(value);
+      } else {
+        query[key] = [existing as string, value];
+      }
+    } else {
+      seen.add(key);
+      query[key] = value;
+    }
   });
   return query;
 }

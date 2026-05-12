@@ -73,10 +73,6 @@ export type { SitemapOptions, SitemapUrl } from './types.ts';
 const VIRTUAL_NAV_ID = 'virtual:less-nav';
 const RESOLVED_NAV_ID = '\0' + VIRTUAL_NAV_ID;
 
-/** Cached nav data (populated in buildStart) */
-let _navSections: NavSection[] = [];
-let _headerNav: HeaderNavLink[] = [];
-
 // ─── Main Plugin ────────────────────────────────────────────────
 
 /**
@@ -118,16 +114,12 @@ export function lessContent(
 
       // ─── Nav module ─────────────────────────────────────
       if (navOpts) {
-        _navSections = scanNavData(navOpts);
-        _headerNav = navOpts.headerNav || [];
-
-        // Write nav data to ctx (or fallback to virtual module resolution)
         if (ctx) {
-          ctx.plugins.navSections = _navSections;
-          ctx.plugins.headerNav = _headerNav;
+          ctx.plugins.navSections = scanNavData(navOpts);
+          ctx.plugins.headerNav = navOpts.headerNav || [];
         }
 
-        log.info(`Nav: ${_navSections.length} section(s) configured`);
+        log.info(`Nav: ${ctx?.plugins.navSections.length ?? 0} section(s) configured`);
       }
 
       // ─── Sitemap module ──────────────────────────────────
@@ -190,9 +182,11 @@ export function lessContent(
 
     load(id) {
       if (id === RESOLVED_NAV_ID) {
+        const navSections = ctx?.plugins.navSections ?? [];
+        const headerNav = ctx?.plugins.headerNav ?? [];
         return [
-          `export const navSections = ${JSON.stringify(_navSections)};`,
-          `export const headerNav = ${JSON.stringify(_headerNav)};`,
+          `export const navSections = ${JSON.stringify(navSections)};`,
+          `export const headerNav = ${JSON.stringify(headerNav)};`,
         ].join('\n');
       }
     },
