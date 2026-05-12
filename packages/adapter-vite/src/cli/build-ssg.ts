@@ -131,26 +131,26 @@ function findHtmlFiles(dir: string): string[] {
 }
 
 async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): Promise<void> {
-  const root = options.root || ctx.root || process.cwd();
-  const outDir = options.outDir || ctx.outDir || 'dist';
-  const routesDir = options.routesDir || ctx.routesDir || 'app/routes';
-  const islandsDir = options.islandsDir || ctx.islandsDir || 'app/islands';
+  const root = options.root || ctx.phase3.root || process.cwd();
+  const outDir = options.outDir || ctx.phase3.outDir || 'dist';
+  const routesDir = options.routesDir || ctx.phase3.routesDir || 'app/routes';
+  const islandsDir = options.islandsDir || ctx.phase3.islandsDir || 'app/islands';
 
   // Read island metadata from ctx (ADR 0010: no .less/ fallback)
-  const islandTagNames = options.islandTagNames || ctx.islandTagNames || [];
-  const packageIslands = options.packageIslands || ctx.packageIslands || [];
+  const islandTagNames = options.islandTagNames || ctx.phase1.islandTagNames || [];
+  const packageIslands = options.packageIslands || ctx.phase1.packageIslands || [];
   const metadataResolveAlias = options.resolveAlias ||
-    (ctx.userResolveAlias as Record<string, string> | import('vite').Alias[] | undefined);
+    (ctx.phase1.userResolveAlias as Record<string, string> | import('vite').Alias[] | undefined);
 
   // Read options from ctx
-  if (!options.headExtras) options.headExtras = ctx.headExtras || undefined;
-  if (!options.html) options.html = ctx.html || undefined;
-  if (!options.middleware) options.middleware = ctx.middleware || undefined;
-  if (!options.upgradeStrategy) options.upgradeStrategy = ctx.upgradeStrategy;
-  if (!options.pwa) options.pwa = ctx.pwa || undefined;
-  if (!options.base) options.base = ctx.base;
-  if (options.viewTransition === undefined) options.viewTransition = ctx.viewTransition;
-  if (!options.speculation) options.speculation = ctx.speculation || undefined;
+  if (!options.headExtras) options.headExtras = ctx.phase3.headExtras || undefined;
+  if (!options.html) options.html = ctx.phase3.html || undefined;
+  if (!options.middleware) options.middleware = ctx.phase3.middleware || undefined;
+  if (!options.upgradeStrategy) options.upgradeStrategy = ctx.phase3.upgradeStrategy;
+  if (!options.pwa) options.pwa = ctx.phase3.pwa || undefined;
+  if (!options.base) options.base = ctx.phase3.base;
+  if (options.viewTransition === undefined) options.viewTransition = ctx.phase3.viewTransition;
+  if (!options.speculation) options.speculation = ctx.phase3.speculation || undefined;
 
   // Generate SSG entry code
   const { scanRoutes, scanIslands, fileToTagName } = await import('../route-scanner.js');
@@ -272,8 +272,8 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
           },
           load(id) {
             if (id === '\0virtual:less-nav') {
-              const navSections = JSON.stringify(ctx.navSections || []);
-              const headerNav = JSON.stringify(ctx.headerNav || []);
+              const navSections = JSON.stringify(ctx.plugins.navSections || []);
+              const headerNav = JSON.stringify(ctx.plugins.headerNav || []);
               return `export const navSections = ${navSections};\nexport const headerNav = ${headerNav};`;
             }
           },
@@ -447,7 +447,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
 
     // ── i18n locale expansion ──────────────────────────────
     // ADR 0010: read from ctx directly — no .less/ fallback
-    const i18nOptsToUse = ctx.i18nOptions || null;
+    const i18nOptsToUse = ctx.plugins.i18nOptions || null;
 
     if (i18nOptsToUse) {
       const locales: string[] = i18nOptsToUse.locales || [];
@@ -727,7 +727,7 @@ async function networkFirst(req) {
     // @lessjs/content is an optional peer — the consumer's import map resolves it.
     // This avoids a circular publish dependency (core↔content) on JSR.
     try {
-      if (ctx.sitemapOptions) {
+      if (ctx.plugins.sitemapOptions) {
         const sitemapPkg = '@lessjs/content/sitemap';
         const sitemapModule = await import(sitemapPkg) as Record<
           string,
@@ -736,7 +736,7 @@ async function networkFirst(req) {
         if (typeof sitemapModule.generateSitemap === 'function') {
           (sitemapModule.generateSitemap as (dir: string, opts: unknown) => string[])(
             join(root, outDir),
-            ctx.sitemapOptions,
+            ctx.plugins.sitemapOptions,
           );
         }
       }

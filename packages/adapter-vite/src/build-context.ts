@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - LessJS Build Context
+ * @lessjs/adapter-vite - LessJS Build Context
  *
  * Shared mutable state for all LessJS Vite plugins.
  * Replaces the closure-captured variables (honoEntryCode, scannedIslandTagNames, etc.)
@@ -13,14 +13,15 @@
  *
  * ctx is passed via explicit parameter — no globalThis or module-level discovery.
  * Use lessjs() from @lessjs/app for the recommended unified entry.
+ *
+ * Fields are grouped by Phase to improve type safety and maintainability.
  */
 
 import type { Alias, ResolvedConfig } from 'vite';
 import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from '@lessjs/core';
 
-export class LessBuildContext {
-  // ─── From less:core route scanning ────────────────────────────
-
+// ─── Phase 1: Route scanning & build metadata ───────────────────
+export class Phase1Meta {
   /** The generated Hono entry module code (virtual module content) */
   honoEntryCode: string = '';
 
@@ -30,7 +31,7 @@ export class LessBuildContext {
   /** Island tag names discovered during route scanning (local islands) */
   islandTagNames: string[] = [];
 
-  /** Relative file paths for local islands (e.g., 'my-counter.ts', 'posts/index.ts') */
+  /** Relative file paths for local islands */
   islandFiles: string[] = [];
 
   /** Package islands discovered from npm/JSR packages */
@@ -42,16 +43,20 @@ export class LessBuildContext {
   /** Vite resolved config (set in configResolved hook) */
   resolvedConfig: ResolvedConfig | null = null;
 
-  /** User-provided resolve.alias in its original format.
-   * Vite accepts both Record<string, string> and Alias[].
-   * Saved during the config() hook so SSG can pass it to the internal Vite SSR server.
-   */
+  /** User-provided resolve.alias in its original format */
   userResolveAlias: Record<string, string> | Alias[] | null = null;
+}
 
-  /** Resolved framework options with defaults applied */
-  readonly options: FrameworkOptions;
+// ─── Phase 2: Client island build state ─────────────────────────
+export class Phase2Meta {
+  /** Generated client island entry code */
+  clientEntryCode: string = '';
+}
 
-  // ─── From less:build closeBundle (replaces .less/build-metadata.json) ──
+// ─── Phase 3: SSG rendering state ───────────────────────────────
+export class Phase3Meta {
+  /** Generated SSG entry code (for viteBuild SSR input) */
+  ssgEntryCode: string = '';
 
   /** Project root directory */
   root: string = '';
@@ -94,9 +99,10 @@ export class LessBuildContext {
 
   /** Components directory */
   componentsDir: string = 'app/components';
+}
 
-  // ─── From lessContent buildStart (replaces .less/blog-options.json, nav-data.json, etc.) ──
-
+// ─── Plugin data from content/i18n sub-plugins ──────────────────
+export class PluginMeta {
   /** Blog options from @lessjs/content plugin */
   blogOptions: { contentDir?: string; basePath?: string } | null = null;
 
@@ -109,22 +115,30 @@ export class LessBuildContext {
   /** Sitemap options from @lessjs/content plugin */
   sitemapOptions: Record<string, unknown> | null = null;
 
-  // ─── From lessI18n buildStart (replaces .less/i18n-options.json) ──
-
   /** i18n options from @lessjs/i18n plugin */
   i18nOptions: {
     locales: string[];
     defaultLocale: string;
     [key: string]: unknown;
   } | null = null;
+}
 
-  // ─── Generated entry code (replaces .less/.less-ssg-entry.ts, .less/.less-client-entry.ts) ──
+// ─── Root context ────────────────────────────────────────────────
+export class LessBuildContext {
+  /** Phase 1: Route scanning & build metadata */
+  readonly phase1 = new Phase1Meta();
 
-  /** Generated SSG entry code (for viteBuild SSR input) */
-  ssgEntryCode: string = '';
+  /** Phase 2: Client island build state */
+  readonly phase2 = new Phase2Meta();
 
-  /** Generated client island entry code */
-  clientEntryCode: string = '';
+  /** Phase 3: SSG rendering state */
+  readonly phase3 = new Phase3Meta();
+
+  /** Plugin data from content/i18n sub-plugins */
+  readonly plugins = new PluginMeta();
+
+  /** Resolved framework options with defaults applied (read-only after construction) */
+  readonly options: FrameworkOptions;
 
   constructor(options: FrameworkOptions) {
     this.options = options;
@@ -132,36 +146,36 @@ export class LessBuildContext {
 
   /** Reset all mutable state (for watch mode / testing) */
   reset(): void {
-    this.honoEntryCode = '';
-    this.cachedRoutes = [];
-    this.islandTagNames = [];
-    this.islandFiles = [];
-    this.packageIslands = [];
-    this.buildCompleted = false;
-    this.resolvedConfig = null;
+    this.phase1.honoEntryCode = '';
+    this.phase1.cachedRoutes = [];
+    this.phase1.islandTagNames = [];
+    this.phase1.islandFiles = [];
+    this.phase1.packageIslands = [];
+    this.phase1.buildCompleted = false;
+    this.phase1.resolvedConfig = null;
     // NOTE: userResolveAlias is NOT reset — it's user configuration, not
     // build state. It's set in config()/configResolved() and must persist
     // through buildStart() for Phase 2 and 3 to use.
-    this.root = '';
-    this.outDir = 'dist';
-    this.base = '/';
-    this.middleware = null;
-    this.html = null;
-    this.pwa = null;
-    this.upgradeStrategy = 'lazy';
-    this.viewTransition = true;
-    this.speculation = null;
-    this.headExtras = '';
-    this.ssrNoExternal = [];
-    this.routesDir = 'app/routes';
-    this.islandsDir = 'app/islands';
-    this.componentsDir = 'app/components';
-    this.blogOptions = null;
-    this.navSections = [];
-    this.headerNav = [];
-    this.sitemapOptions = null;
-    this.i18nOptions = null;
-    this.ssgEntryCode = '';
-    this.clientEntryCode = '';
+    this.phase2.clientEntryCode = '';
+    this.phase3.ssgEntryCode = '';
+    this.phase3.root = '';
+    this.phase3.outDir = 'dist';
+    this.phase3.base = '/';
+    this.phase3.middleware = null;
+    this.phase3.html = null;
+    this.phase3.pwa = null;
+    this.phase3.upgradeStrategy = 'lazy';
+    this.phase3.viewTransition = true;
+    this.phase3.speculation = null;
+    this.phase3.headExtras = '';
+    this.phase3.ssrNoExternal = [];
+    this.phase3.routesDir = 'app/routes';
+    this.phase3.islandsDir = 'app/islands';
+    this.phase3.componentsDir = 'app/components';
+    this.plugins.blogOptions = null;
+    this.plugins.navSections = [];
+    this.plugins.headerNav = [];
+    this.plugins.sitemapOptions = null;
+    this.plugins.i18nOptions = null;
   }
 }

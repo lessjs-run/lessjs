@@ -65,9 +65,9 @@ export function lessI18n(
       const i18nData = loadI18nData(options);
 
       // Write i18n options to ctx (shared build context)
-      // The virtual:less-i18n-data plugin reads ctx.i18nOptions in its load() hook
+      // The virtual:less-i18n-data plugin reads ctx.plugins.i18nOptions in its load() hook
       if (ctx) {
-        ctx.i18nOptions = {
+        ctx.plugins.i18nOptions = {
           locales: i18nData.locales,
           defaultLocale: i18nData.defaultLocale,
         };

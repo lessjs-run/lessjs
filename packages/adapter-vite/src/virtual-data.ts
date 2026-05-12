@@ -39,7 +39,7 @@ export function createBlogDataPlugin(ctx: LessBuildContext): Plugin {
     async load(id) {
       if (id !== RESOLVED_BLOG_DATA_ID) return;
 
-      const blogOpts = ctx.blogOptions;
+      const blogOpts = ctx.plugins.blogOptions;
       if (!blogOpts) {
         // Blog not configured — export empty data
         return [
@@ -100,7 +100,7 @@ export function createI18nDataPlugin(ctx: LessBuildContext): Plugin {
     load(id) {
       if (id !== RESOLVED_I18N_DATA_ID) return;
 
-      const i18nOpts = ctx.i18nOptions;
+      const i18nOpts = ctx.plugins.i18nOptions;
       if (!i18nOpts) {
         return [
           'export const locales = [];',

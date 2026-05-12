@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - Build Manifest / Observability
+ * @lessjs/adapter-vite - Build Manifest / Observability
  *
  * Scans build output directories after each phase and prints a structured
  * summary table. This gives developers visibility into:

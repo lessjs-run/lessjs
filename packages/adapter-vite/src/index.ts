@@ -260,14 +260,14 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
 
   // Pre-generate workspace aliases (sync, once, cached in ctx).
   // Phase 1 config, Phase 2 client build, and Phase 3 SSG build
-  // all read ctx.userResolveAlias — zero redundant generation.
+  // all read ctx.phase1.userResolveAlias — zero redundant generation.
   try {
     const wsRoot = findWorkspaceRoot(process.cwd());
     if (wsRoot) {
-      ctx.userResolveAlias = generateWorkspaceAliases(wsRoot);
+      ctx.phase1.userResolveAlias = generateWorkspaceAliases(wsRoot);
       log.info(
         `Auto-generated ${
-          (ctx.userResolveAlias as Array<unknown>).length
+          (ctx.phase1.userResolveAlias as Array<unknown>).length
         } resolve alias(es) from workspace`,
       );
     }
@@ -302,13 +302,13 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
     name: 'less:core',
 
     config(userConfig) {
-      if (userConfig.resolve?.alias && !ctx.userResolveAlias) {
-        ctx.userResolveAlias = userConfig.resolve.alias as
+      if (userConfig.resolve?.alias && !ctx.phase1.userResolveAlias) {
+        ctx.phase1.userResolveAlias = userConfig.resolve.alias as
           | Record<string, string>
           | import('vite').Alias[];
       }
 
-      const aliases = ctx.userResolveAlias as
+      const aliases = ctx.phase1.userResolveAlias as
         | import('vite').Alias[]
         | Record<string, string>
         | null;
@@ -324,14 +324,14 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
     },
 
     configResolved(cfg) {
-      if (cfg.resolve?.alias && !ctx.userResolveAlias) {
-        ctx.userResolveAlias = cfg.resolve.alias;
+      if (cfg.resolve?.alias && !ctx.phase1.userResolveAlias) {
+        ctx.phase1.userResolveAlias = cfg.resolve.alias;
       }
-      ctx.honoEntryCode = generateEntry(
+      ctx.phase1.honoEntryCode = generateEntry(
         [],
-        ctx.islandTagNames,
-        ctx.packageIslands,
-        ctx.islandFiles,
+        ctx.phase1.islandTagNames,
+        ctx.phase1.packageIslands,
+        ctx.phase1.islandFiles,
       );
     },
 
@@ -343,31 +343,31 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
 
         const islandsRoot = join(process.cwd(), resolvedOptions.islandsDir || 'app/islands');
         const islandFiles = await scanIslands(islandsRoot);
-        ctx.islandTagNames = islandFiles.map((f) => fileToTagName(f));
-        ctx.islandFiles = islandFiles;
+        ctx.phase1.islandTagNames = islandFiles.map((f) => fileToTagName(f));
+        ctx.phase1.islandFiles = islandFiles;
 
         if (resolvedOptions.packageIslands && resolvedOptions.packageIslands.length > 0) {
-          ctx.packageIslands = await scanPackageIslands(resolvedOptions.packageIslands);
-          if (ctx.packageIslands.length > 0) {
+          ctx.phase1.packageIslands = await scanPackageIslands(resolvedOptions.packageIslands);
+          if (ctx.phase1.packageIslands.length > 0) {
             log.info(
-              `Package islands: ${ctx.packageIslands.map((i) => i.tagName).join(', ')}`,
+              `Package islands: ${ctx.phase1.packageIslands.map((i) => i.tagName).join(', ')}`,
             );
           }
         }
 
         // Cache routes for lazy load() regeneration (ctx.blogOptions may not
         // be set yet — lessContent() buildStart() runs after this one).
-        ctx.cachedRoutes = routes;
+        ctx.phase1.cachedRoutes = routes;
 
-        ctx.honoEntryCode = generateEntry(
+        ctx.phase1.honoEntryCode = generateEntry(
           routes,
-          ctx.islandTagNames,
-          ctx.packageIslands,
-          ctx.islandFiles,
+          ctx.phase1.islandTagNames,
+          ctx.phase1.packageIslands,
+          ctx.phase1.islandFiles,
         );
         const pageCount = routes.filter((r) => r.type === 'page' && !r.special).length;
         const apiCount = routes.filter((r) => r.type === 'api' && !r.special).length;
-        const totalIslands = ctx.islandTagNames.length + ctx.packageIslands.length;
+        const totalIslands = ctx.phase1.islandTagNames.length + ctx.phase1.packageIslands.length;
         log.info(
           `Routes: ${pageCount} page(s), ${apiCount} API route(s), ` +
             `${totalIslands} island(s) - LessJS Architecture`,
@@ -397,10 +397,10 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
         // In dev mode, load() is called lazily by the SSR runner, so all buildStart()
         // hooks have completed by this point.
         return generateEntry(
-          ctx.cachedRoutes || [],
-          ctx.islandTagNames,
-          ctx.packageIslands,
-          ctx.islandFiles,
+          ctx.phase1.cachedRoutes || [],
+          ctx.phase1.islandTagNames,
+          ctx.phase1.packageIslands,
+          ctx.phase1.islandFiles,
         );
       }
     },

@@ -110,9 +110,9 @@ export function lessContent(
         );
 
         // Write blog options to ctx (ADR 0010: ctx replaces .less/ temp files)
-        // The virtual:less-blog-data plugin reads ctx.blogOptions in its load() hook
+        // The virtual:less-blog-data plugin reads ctx.plugins.blogOptions in its load() hook
         if (ctx) {
-          ctx.blogOptions = { contentDir, basePath };
+          ctx.plugins.blogOptions = { contentDir, basePath };
         }
       }
 
@@ -123,8 +123,8 @@ export function lessContent(
 
         // Write nav data to ctx (or fallback to virtual module resolution)
         if (ctx) {
-          ctx.navSections = _navSections;
-          ctx.headerNav = _headerNav;
+          ctx.plugins.navSections = _navSections;
+          ctx.plugins.headerNav = _headerNav;
         }
 
         log.info(`Nav: ${_navSections.length} section(s) configured`);
@@ -133,7 +133,7 @@ export function lessContent(
       // ─── Sitemap module ──────────────────────────────────
       if (sitemapOpts) {
         if (ctx) {
-          ctx.sitemapOptions = sitemapOpts as unknown as Record<string, unknown>;
+          ctx.plugins.sitemapOptions = sitemapOpts as unknown as Record<string, unknown>;
         }
         log.info(`Sitemap: configured for ${sitemapOpts.hostname}`);
       }

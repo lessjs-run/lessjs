@@ -137,14 +137,14 @@ Deno.test({
     }
 
     await t.step('ctx fields are populated by Phase 1', () => {
-      assertEquals(ctx.outDir, 'dist');
-      assertEquals(ctx.base, '/');
-      assertEquals(ctx.ssrNoExternal.length, 0);
+      assertEquals(ctx.phase3.outDir, 'dist');
+      assertEquals(ctx.phase3.base, '/');
+      assertEquals(ctx.phase3.ssrNoExternal.length, 0);
     });
 
     await t.step('no islands in ctx', () => {
-      assertEquals(ctx.islandTagNames.length, 0);
-      assertEquals(ctx.packageIslands.length, 0);
+      assertEquals(ctx.phase1.islandTagNames.length, 0);
+      assertEquals(ctx.phase1.packageIslands.length, 0);
     });
   },
 });
@@ -158,8 +158,8 @@ Deno.test('buildPlugin - closeBundle (dev mode, skips write)', async (t) => {
 
   await t.step('does NOT write ctx fields in dev mode', () => {
     // In dev mode, closeBundle returns early — ctx fields should remain default
-    assertEquals(ctx.root, '');
-    assertEquals(ctx.outDir, 'dist'); // default value
+    assertEquals(ctx.phase3.root, '');
+    assertEquals(ctx.phase3.outDir, 'dist'); // default value
   });
 });
 
@@ -185,11 +185,11 @@ Deno.test('buildPlugin - custom outDir and options writes to ctx', async (t) => 
   }
 
   await t.step('writes custom options to ctx', () => {
-    assertEquals(ctx.outDir, 'custom-dist');
-    assertEquals(ctx.islandsDir, 'src/islands');
-    assertEquals(ctx.routesDir, 'src/routes');
-    assertEquals(ctx.html?.lang, 'zh');
-    assertEquals(ctx.upgradeStrategy, 'eager');
+    assertEquals(ctx.phase3.outDir, 'custom-dist');
+    assertEquals(ctx.phase3.islandsDir, 'src/islands');
+    assertEquals(ctx.phase3.routesDir, 'src/routes');
+    assertEquals(ctx.phase3.html?.lang, 'zh');
+    assertEquals(ctx.phase3.upgradeStrategy, 'eager');
   });
 });
 
@@ -209,11 +209,11 @@ Deno.test('buildPlugin - ssr.noExternal RegExp serialization writes to ctx', asy
   }
 
   await t.step('serializes RegExp as __type objects in ctx', () => {
-    assertExists(ctx.ssrNoExternal);
-    const first = ctx.ssrNoExternal[0] as { __type?: string; source?: string };
+    assertExists(ctx.phase3.ssrNoExternal);
+    const first = ctx.phase3.ssrNoExternal[0] as { __type?: string; source?: string };
     assertEquals(first.__type, 'RegExp');
     assertEquals(first.source, '@lessjs\\/.*');
-    assertEquals(ctx.ssrNoExternal[1], 'lit');
+    assertEquals(ctx.phase3.ssrNoExternal[1], 'lit');
   });
 });
 
@@ -230,6 +230,6 @@ Deno.test('buildPlugin - base without trailing slash ensures base ends with /', 
   }
 
   await t.step('ensures base ends with /', () => {
-    assertEquals(ctx.base, '/base/');
+    assertEquals(ctx.phase3.base, '/base/');
   });
 });
