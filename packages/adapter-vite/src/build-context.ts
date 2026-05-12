@@ -126,16 +126,16 @@ export class PluginMeta {
 // ─── Root context ────────────────────────────────────────────────
 export class LessBuildContext {
   /** Phase 1: Route scanning & build metadata */
-  readonly phase1 = new Phase1Meta();
+  readonly phase1: Phase1Meta = new Phase1Meta();
 
   /** Phase 2: Client island build state */
-  readonly phase2 = new Phase2Meta();
+  readonly phase2: Phase2Meta = new Phase2Meta();
 
   /** Phase 3: SSG rendering state */
-  readonly phase3 = new Phase3Meta();
+  readonly phase3: Phase3Meta = new Phase3Meta();
 
   /** Plugin data from content/i18n sub-plugins */
-  readonly plugins = new PluginMeta();
+  readonly plugins: PluginMeta = new PluginMeta();
 
   /** Resolved framework options with defaults applied (read-only after construction) */
   readonly options: FrameworkOptions;
