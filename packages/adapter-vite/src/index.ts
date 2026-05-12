@@ -283,18 +283,37 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
   const corePlugin: Plugin = {
     name: 'less:core',
 
-    config(userConfig) {
+    async config(userConfig) {
       if (userConfig.resolve?.alias && !ctx.userResolveAlias) {
         ctx.userResolveAlias = userConfig.resolve.alias as
           | Record<string, string>
           | import('vite').Alias[];
       }
 
-      // ADR 0018: buildCoreSubpathAliases() DELETED.
-      // Local bare specifier resolution handled by @deno/vite-plugin (to be integrated).
-      // Remote JSR resolution handled by createCoreResolvePlugin.
+      // Auto-generate aliases from workspace packages when user
+      // doesn't provide explicit aliases (zero-alias config).
+      // This is needed because Vite/rolldown doesn't support
+      // Deno workspace resolution during builds.
+      let workspaceAliases = null;
+      if (!userConfig.resolve?.alias) {
+        try {
+          const { findWorkspaceRoot, generateWorkspaceAliases } =
+            await import('./workspace-alias.js');
+          const wsRoot = await findWorkspaceRoot(process.cwd());
+          if (wsRoot) {
+            workspaceAliases = await generateWorkspaceAliases(wsRoot);
+            log.info(
+              `Auto-generated ${workspaceAliases.length} resolve alias(es) from workspace`,
+            );
+            ctx.userResolveAlias = workspaceAliases;
+          }
+        } catch (e) {
+          log.warn(`Workspace alias generation skipped: ${e}`);
+        }
+      }
 
       return {
+        resolve: workspaceAliases ? { alias: workspaceAliases } : undefined,
         build: {
           rollupOptions: {
             input: [VIRTUAL_ENTRY_ID],
