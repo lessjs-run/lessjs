@@ -52,61 +52,32 @@ export interface SsrContext {
  * Extract route params from a pathname using a route pattern.
  * e.g., pattern '/posts/:id' + pathname '/posts/123' → { id: '123' }
  *
- * Uses WHATWG URLPattern API where available (Deno native, Node 19+, Bun, all browsers).
- * Falls back to hand-rolled implementation for Node <19.
+ * Uses WHATWG URLPattern API — available in:
+ *   ✅ Deno 1.33+ (native, no flags)
+ *   ✅ Node.js 19+ (--experimental-url-pattern)
+ *   ✅ Bun (native)
+ *   ✅ All modern browsers
  */
 export function extractParams(
   pattern: string,
   pathname: string,
 ): Record<string, string> {
-  if (typeof URLPattern !== 'undefined') {
-    try {
-      const urlPattern = new URLPattern({ pathname: pattern });
-      const match = urlPattern.exec({
-        pathname,
-        protocol: 'https',
-        hostname: 'localhost',
-      });
-      return (match?.pathname?.groups ?? {}) as Record<string, string>;
-    } catch {
-      // URLPattern constructor or exec failed — fall through to fallback
-    }
+  try {
+    const urlPattern = new URLPattern({ pathname: pattern });
+    const match = urlPattern.exec({
+      pathname,
+      protocol: 'https',
+      hostname: 'localhost',
+    });
+    return (match?.pathname?.groups ?? {}) as Record<string, string>;
+  } catch (err) {
+    log.error(
+      `URLPattern failed for pattern "${pattern}" on pathname "${pathname}": ${
+        err instanceof Error ? err.message : String(err)
+      }`,
+    );
+    return {};
   }
-  return extractParamsFallback(pattern, pathname);
-}
-
-/**
- * Fallback: hand-rolled route param extraction for Node <19 or URLPattern failure.
- */
-function extractParamsFallback(
-  pattern: string,
-  pathname: string,
-): Record<string, string> {
-  const params: Record<string, string> = {};
-
-  const patternParts = pattern.split('/');
-  const pathParts = pathname.split('/');
-
-  for (let i = 0; i < patternParts.length; i++) {
-    const part = patternParts[i];
-    if (part.startsWith(':')) {
-      const paramName = part.slice(1);
-      if (i < pathParts.length) {
-        try {
-          params[paramName] = decodeURIComponent(pathParts[i]);
-        } catch (e) {
-          log.warn(
-            `decodeURIComponent failed for route param "${paramName}" value "${pathParts[i]}": ${
-              e instanceof Error ? e.message : String(e)
-            }`,
-          );
-          params[paramName] = pathParts[i]; // fallback: raw on malformed encoding
-        }
-      }
-    }
-  }
-
-  return params;
 }
 
 /**
