@@ -1,5 +1,5 @@
 /**
- * @lessjs/signal - Reactive signals for Island-to-Island communication.
+ * @lessjs/signals - Reactive signals for Island-to-Island communication.
  *
  * v0.6': Based on TC39 signal-polyfill (Apache-2.0 / MIT)
  * Engine: Signal.State + Signal.Computed + Signal.subtle.Watcher
@@ -19,7 +19,7 @@
  *   4. Infrastructure APIs (localStorage, document.documentElement,
  *      IntersectionObserver, CustomEvent) are exempt from L2 constraints.
  *
- * @module @lessjs/signal
+ * @module @lessjs/signals
  */
 
 export type {

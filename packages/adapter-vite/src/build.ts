@@ -51,7 +51,10 @@ class SSGBuildStep implements BuildStep {
 }
 
 /** Vite plugin: writes build metadata to ctx, then runs Phase 2 + Phase 3 */
-export function buildPlugin(options: FrameworkOptions = {}, ctx?: LessBuildContext): Plugin {
+export function buildPlugin(
+  options: FrameworkOptions & { allowHeadExtrasScripts?: boolean } = {},
+  ctx?: LessBuildContext,
+): Plugin {
   const outDir = options.build?.outDir || 'dist';
 
   let config: ResolvedConfig;
@@ -71,6 +74,11 @@ export function buildPlugin(options: FrameworkOptions = {}, ctx?: LessBuildConte
       if (config.command !== 'build') return;
 
       const root = config.root;
+
+      if (!ctx) {
+        log.warn('less:build skipped Phase 2/3 because no LessBuildContext was provided.');
+        return;
+      }
 
       // Serialize SSR noExternal patterns (RegExp → marker objects)
       const ssrNoExternal = ((options.ssr?.noExternal ||
@@ -99,10 +107,11 @@ export function buildPlugin(options: FrameworkOptions = {}, ctx?: LessBuildConte
         ctx.phase3.viewTransition = options.viewTransition ?? true;
         ctx.phase3.speculation = options.speculation ?? null;
         ctx.phase3.headExtras = options.headExtras || '';
+        ctx.phase3.allowHeadExtrasScripts = options.allowHeadExtrasScripts || false;
       }
 
-      const totalIslands = (ctx?.phase1.islandTagNames?.length || 0) +
-        (ctx?.phase1.packageIslands?.length || 0);
+      const totalIslands = (ctx.phase1.islandTagNames?.length || 0) +
+        (ctx.phase1.packageIslands?.length || 0);
 
       log.info('Phase 1/3 complete — SSR bundle + metadata written to ctx');
 
@@ -110,26 +119,26 @@ export function buildPlugin(options: FrameworkOptions = {}, ctx?: LessBuildConte
       // SSG only needs Phase 1 — it renders HTML from the SSR bundle.
       // Phase 2 runs last because client chunks have content hashes that
       // don't affect HTML content, and injection is a post-processing step.
-      const phase1Token = ctx!.completePhase1();
+      const phase1Token = ctx.completePhase1();
       const steps: BuildStep[] = [];
 
       // Phase 3: SSG render (always runs — generates HTML pages)
-      if (ctx) steps.push(new SSGBuildStep());
+      steps.push(new SSGBuildStep());
 
       // Phase 2: Client island bundle (only if islands exist)
-      if (ctx && totalIslands > 0) steps.push(new ClientBuildStep());
+      if (totalIslands > 0) steps.push(new ClientBuildStep());
 
       let currentToken: Phase1Token | Phase2Token | Phase3Token = phase1Token;
       for (const step of steps) {
         try {
           log.info(`[${step.phase}/3] ${step.name}...`);
-          await step.run(ctx!, currentToken);
+          await step.run(ctx, currentToken);
           // Track the latest completion token
-          if (step.phase === 3 && ctx!._phaseTokens[3]) {
-            currentToken = ctx!._phaseTokens[3] as Phase3Token;
+          if (step.phase === 3 && ctx._phaseTokens[3]) {
+            currentToken = ctx._phaseTokens[3] as Phase3Token;
           }
-          if (step.phase === 2 && ctx!._phaseTokens[2]) {
-            currentToken = ctx!._phaseTokens[2] as Phase2Token;
+          if (step.phase === 2 && ctx._phaseTokens[2]) {
+            currentToken = ctx._phaseTokens[2] as Phase2Token;
           }
           log.info(`[${step.phase}/3] ${step.name} — complete`);
         } catch (error) {
@@ -141,10 +150,10 @@ export function buildPlugin(options: FrameworkOptions = {}, ctx?: LessBuildConte
       // ── Inject client script (only runs if Phase 2 completed) ──
       // Phase 2's manifest.json tells us the client chunk URLs to inject
       // into the already-rendered HTML pages.
-      if (ctx!._phaseTokens[2]) {
+      if (ctx._phaseTokens[2]) {
         try {
-          const outDir = ctx!.phase3.outDir || 'dist';
-          const root = ctx!.phase3.root || process.cwd();
+          const outDir = ctx.phase3.outDir || 'dist';
+          const root = ctx.phase3.root || process.cwd();
           const clientManifestPath = join(root, outDir, 'client', '.vite', 'manifest.json');
           const { existsSync, readFileSync } = await import('node:fs');
           if (existsSync(clientManifestPath)) {
@@ -155,7 +164,7 @@ export function buildPlugin(options: FrameworkOptions = {}, ctx?: LessBuildConte
                 (src.includes('less-client-entry') || src.includes('virtual:less-client')) &&
                 entry.file
               ) {
-                const base = ctx!.phase3.base || '/';
+                const base = ctx.phase3.base || '/';
                 const scriptSrc = `${base}client/${entry.file}`;
                 const { injectClientScript } = await import('./ssg-postprocess.js');
                 const outputDir = join(root, outDir);

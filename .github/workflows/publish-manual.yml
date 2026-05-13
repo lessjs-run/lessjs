@@ -1,16 +1,20 @@
-name: Publish to JSR + npm (manual)
+name: Publish to JSR (manual)
 
 on:
   workflow_dispatch:
     inputs:
       packages:
-        description: 'Packages to publish (comma-separated: core,rpc,ui,adapter-lit,create)'
+        description: 'Packages to publish (comma-separated: rpc,signals,core,adapter-vite,content,i18n,adapter-lit,ui,app,create)'
         required: true
-        default: 'core,rpc,ui,adapter-lit,create'
+        default: 'rpc,signals,core,adapter-vite,content,i18n,adapter-lit,ui,app,create'
 
 jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
   publish:
     runs-on: ubuntu-latest
+    needs: [test]
     permissions:
       contents: read
       id-token: write
@@ -24,15 +28,16 @@ jobs:
       - name: Install dependencies
         run: deno install --node-modules-dir
 
-      - name: Build @lessjs/ui (if publishing ui)
-        if: contains(github.event.inputs.packages, 'ui')
-        working-directory: packages/ui
-        run: deno task build
-
-      - name: Publish to JSR
+      - name: Publish requested packages to JSR
         shell: bash
         run: |
           set -euo pipefail
+
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "::error::Refusing to publish from a dirty worktree"
+            git status --porcelain
+            exit 1
+          fi
 
           requested=",${{ github.event.inputs.packages }},"
 
@@ -59,66 +64,16 @@ jobs:
             fi
 
             echo "[JSR] Publishing ${pkg}@${version}"
-            (cd "$dir" && deno publish -c deno.json --allow-dirty)
+            (cd "$dir" && deno publish -c deno.json)
           }
 
           publish_if_requested_and_missing "rpc" "@lessjs/rpc" "packages/rpc"
-          publish_if_requested_and_missing "ui" "@lessjs/ui" "packages/ui"
-          publish_if_requested_and_missing "adapter-lit" "@lessjs/adapter-lit" "packages/adapter-lit"
+          publish_if_requested_and_missing "signals" "@lessjs/signals" "packages/signals"
           publish_if_requested_and_missing "core" "@lessjs/core" "packages/core"
+          publish_if_requested_and_missing "adapter-vite" "@lessjs/adapter-vite" "packages/adapter-vite"
+          publish_if_requested_and_missing "content" "@lessjs/content" "packages/content"
+          publish_if_requested_and_missing "i18n" "@lessjs/i18n" "packages/i18n"
+          publish_if_requested_and_missing "adapter-lit" "@lessjs/adapter-lit" "packages/adapter-lit"
+          publish_if_requested_and_missing "ui" "@lessjs/ui" "packages/ui"
+          publish_if_requested_and_missing "app" "@lessjs/app" "packages/app"
           publish_if_requested_and_missing "create" "@lessjs/create" "packages/create"
-
-      - name: Publish to npm (dnt transform)
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          if [ -z "${NPM_TOKEN:-}" ]; then
-            echo "NPM_TOKEN not set; skipping npm publish."
-            exit 0
-          fi
-
-          requested=",${{ github.event.inputs.packages }},"
-
-          wants() {
-            [[ "$requested" == *",$1,"* ]]
-          }
-
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-
-          publish_npm() {
-            local key="$1"
-            local dir="$2"
-            local pkg="$3"
-
-            if ! wants "$key"; then
-              echo "[npm] ${pkg} not requested; skipping."
-              return 0
-            fi
-
-            local version
-            version="$(sed -n 's/.*"version": "\([^"]*\)".*/\1/p' "$dir/deno.json" | head -n 1)"
-
-            if npm view "${pkg}@${version}" version >/dev/null 2>&1; then
-              echo "[npm] ${pkg}@${version} already exists; skipping."
-              return 0
-            fi
-
-            echo "[npm] Building ${pkg}@${version}"
-            # Must cd into the package dir so dnt resolves ./src/index.ts
-            # against the package deno.json, not the workspace root.
-            (cd "$dir" && deno run -A --config deno.json _build_npm.ts)
-
-            echo "[npm] Publishing ${pkg}@${version}"
-            cd "$dir/npm"
-            npm publish --access public
-            cd "$OLDPWD"
-          }
-
-          publish_npm "rpc" "packages/rpc" "@lessjs/rpc"
-          publish_npm "ui" "packages/ui" "@lessjs/ui"
-          publish_npm "adapter-lit" "packages/adapter-lit" "@lessjs/adapter-lit"
-          publish_npm "core" "packages/core" "@lessjs/core"
-          publish_npm "create" "packages/create" "@lessjs/create"

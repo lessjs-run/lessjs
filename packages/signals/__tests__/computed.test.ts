@@ -1,5 +1,5 @@
 /**
- * @lessjs/signal - computed() unit tests
+ * @lessjs/signals - computed() unit tests
  *
  * Tests for computed signal with automatic dependency tracking.
  * NOTE: The TC39 signal polyfill has a known issue where effects that

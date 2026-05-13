@@ -1,10 +1,10 @@
 /**
- * @lessjs/signal - Framework Layer
+ * @lessjs/signals - Framework Layer
  *
  * Developer-friendly API wrapping the engine.
  * signal(), computed(), effect() — the primary API surface.
  *
- * @module @lessjs/signal/framework
+ * @module @lessjs/signals/framework
  */
 
 import { _engine, _log } from './engine.ts';

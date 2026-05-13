@@ -72,14 +72,14 @@ Deno.test('create-less: gitignore hides generated build artifacts', () => {
   assertExists(gitignore.includes('node_modules/'));
 });
 
-Deno.test('create-less: deno.json build:client uses @lessjs/core', () => {
+Deno.test('create-less: deno.json build:client uses @lessjs/adapter-vite', () => {
   const denoJson = JSON.parse(extractTemplate('deno.json'));
-  assertExists(denoJson.tasks['build:client'].includes('@lessjs/core'));
+  assertExists(denoJson.tasks['build:client'].includes('@lessjs/adapter-vite'));
 });
 
-Deno.test('create-less: deno.json build:ssg uses @lessjs/core', () => {
+Deno.test('create-less: deno.json build:ssg uses @lessjs/adapter-vite', () => {
   const denoJson = JSON.parse(extractTemplate('deno.json'));
-  assertExists(denoJson.tasks['build:ssg'].includes('@lessjs/core'));
+  assertExists(denoJson.tasks['build:ssg'].includes('@lessjs/adapter-vite'));
 });
 
 Deno.test('create-less: deno.json maps Lit and package imports explicitly', () => {
@@ -106,7 +106,7 @@ Deno.test('create-less: deno.json build uses the one-command LessJS build', () =
   const denoJson = JSON.parse(extractTemplate('deno.json'));
   assertEquals(
     denoJson.tasks['build'],
-    'deno run --config deno.json -A jsr:@lessjs/adapter-vite/cli/build',
+    'deno run --config deno.json -A jsr:@lessjs/adapter-vite@^${v.adapterVite}/cli/build',
   );
   assertExists(denoJson.tasks['build:ssr']);
   assertExists(denoJson.tasks['build:client']);
@@ -309,7 +309,7 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       "import { lessjs } from '@lessjs/app';",
       `import { less } from ${
         JSON.stringify(
-          vitePath(join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts')),
+          pathToFileURL(join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts')).href,
         )
       };`,
     );
@@ -321,7 +321,7 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       "import { lessRootColorCSS } from '@lessjs/ui/tokens/colors';",
       `import { lessRootColorCSS } from ${
         JSON.stringify(
-          vitePath(join(uiSrc, 'tokens', 'colors.ts')),
+          pathToFileURL(join(uiSrc, 'tokens', 'colors.ts')).href,
         )
       };`,
     );

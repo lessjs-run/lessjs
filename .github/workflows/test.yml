@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: deno install --node-modules-dir
       - name: Run type check
-        run: deno check packages/core/src/index.ts packages/rpc/src/index.ts packages/ui/src/index.ts packages/adapter-lit/src/index.ts packages/adapter-lit/src/ssr.ts packages/adapter-vite/src/index.ts packages/signals/src/index.ts packages/create/cli.ts packages/app/src/index.ts packages/i18n/src/index.ts packages/content/src/index.ts
+        run: deno task typecheck
 
   test-core:
     runs-on: ubuntu-latest
@@ -177,3 +177,24 @@ jobs:
         run: deno install --node-modules-dir
       - name: Build www site
         run: deno task build:docs
+
+  test-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: '2'
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
+      - name: Install dependencies
+        run: deno install --node-modules-dir
+      - name: Install Playwright Chromium
+        run: npx -y playwright install chromium --with-deps
+      - name: Build www site
+        run: deno task build:docs
+      - name: Run E2E tests
+        run: deno task test:e2e

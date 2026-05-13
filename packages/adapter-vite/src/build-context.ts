@@ -96,6 +96,9 @@ export class Phase3Meta {
   /** Extra HTML to inject into <head> */
   headExtras: string = '';
 
+  /** Whether headExtras scripts were produced by structured injection APIs. */
+  allowHeadExtrasScripts: boolean = false;
+
   /** SSR noExternal patterns (serialized) */
   ssrNoExternal: (string | { __type: 'RegExp'; source: string; flags: string })[] = [];
 
@@ -217,6 +220,7 @@ export class LessBuildContext {
     this.phase3.viewTransition = true;
     this.phase3.speculation = null;
     this.phase3.headExtras = '';
+    this.phase3.allowHeadExtrasScripts = false;
     this.phase3.ssrNoExternal = [];
     this.phase3.routesDir = 'app/routes';
     this.phase3.islandsDir = 'app/islands';

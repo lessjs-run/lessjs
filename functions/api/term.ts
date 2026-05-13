@@ -58,15 +58,22 @@ export async function onRequest(context: {
 }): Promise<Response> {
   if (context.request.method === 'OPTIONS') {
     return new Response(null, {
-      headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' },
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
     });
   }
 
   if (context.request.method !== 'POST') {
-    return new Response(JSON.stringify({ output: ['<span style="color:#ef4444;">method not allowed</span>'] }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-    });
+    return new Response(
+      JSON.stringify({ output: ['<span style="color:#ef4444;">method not allowed</span>'] }),
+      {
+        status: 405,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      },
+    );
   }
 
   let cmd = '';
@@ -74,20 +81,32 @@ export async function onRequest(context: {
     const body: TermBody = await context.request.json();
     cmd = (body.cmd || '').trim().toLowerCase();
   } catch {
-    return new Response(JSON.stringify({ output: ['<span style="color:#ef4444;">invalid json</span>'] }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({ output: ['<span style="color:#ef4444;">invalid json</span>'] }),
+      {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    );
   }
 
   let output: string[];
 
   switch (cmd) {
-    case 'build': output = BUILD; break;
-    case 'ls': output = LS; break;
-    case 'neofetch': output = NEOCAT; break;
-    case 'clear': output = ['__CLEAR__']; break;
-    default: output = [`<span style="color:#ef4444;">command not found:</span> ${cmd}`];
+    case 'build':
+      output = BUILD;
+      break;
+    case 'ls':
+      output = LS;
+      break;
+    case 'neofetch':
+      output = NEOCAT;
+      break;
+    case 'clear':
+      output = ['__CLEAR__'];
+      break;
+    default:
+      output = [`<span style="color:#ef4444;">command not found:</span> ${cmd}`];
   }
 
   return new Response(JSON.stringify({ output }), {

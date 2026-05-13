@@ -1,11 +1,11 @@
 {
   "name": "@lessjs/signals",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "exports": {
     ".": "./src/index.ts"
   },
   "publish": {
-    "include": ["src/**", "deno.json", "LICENSE"]
+    "include": ["src/**", "deno.json", "README.md", "LICENSE"]
   },
   "compilerOptions": {
     "skipLibCheck": true

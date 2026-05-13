@@ -4,9 +4,42 @@ import { defineConfig } from 'vite';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// All @lessjs/* packages resolve via Deno workspace (see root deno.json).
-// No Vite resolve.alias needed — workspace members resolve natively.
+// Keep Vite aligned with the Deno workspace when the docs site builds package sources.
 const __dir = dirname(fileURLToPath(import.meta.url));
+
+const workspaceAlias = [
+  { find: '@lessjs/core/context', replacement: resolve(__dir, '../packages/core/src/context.ts') },
+  { find: '@lessjs/core/errors', replacement: resolve(__dir, '../packages/core/src/errors.ts') },
+  { find: '@lessjs/core/logger', replacement: resolve(__dir, '../packages/core/src/logger.ts') },
+  {
+    find: '@lessjs/core/navigation',
+    replacement: resolve(__dir, '../packages/core/src/navigation.ts'),
+  },
+  { find: '@lessjs/core', replacement: resolve(__dir, '../packages/core/src/index.ts') },
+  { find: '@lessjs/ui', replacement: resolve(__dir, '../packages/ui/src/index.ts') },
+  {
+    find: '@lessjs/adapter-lit',
+    replacement: resolve(__dir, '../packages/adapter-lit/src/index.ts'),
+  },
+  {
+    find: '@lessjs/adapter-vite/build-context',
+    replacement: resolve(__dir, '../packages/adapter-vite/src/build-context.ts'),
+  },
+  {
+    find: '@lessjs/adapter-vite',
+    replacement: resolve(__dir, '../packages/adapter-vite/src/index.ts'),
+  },
+  {
+    find: '@lessjs/content/sitemap',
+    replacement: resolve(__dir, '../packages/content/src/sitemap/index.ts'),
+  },
+  {
+    find: '@lessjs/content',
+    replacement: resolve(__dir, '../packages/content/src/index.ts'),
+  },
+  { find: '@lessjs/i18n', replacement: resolve(__dir, '../packages/i18n/src/index.ts') },
+  { find: '@lessjs/app', replacement: resolve(__dir, '../packages/app/src/index.ts') },
+];
 
 // DRY: All color token values come from a single source of truth.
 // lessRootColorCSS is generated from lessDarkColors/lessLightColors in tokens/colors.ts.
@@ -16,6 +49,12 @@ const colorTokensStyle =
 
 export default defineConfig({
   base: '/',
+  resolve: {
+    alias: workspaceAlias,
+  },
+  build: {
+    chunkSizeWarningLimit: 1500,
+  },
   plugins: [
     lessjs({
       routesDir: 'app/routes',
@@ -42,7 +81,43 @@ export default defineConfig({
       speculation: true,
       inject: {
         stylesheets: [],
-        scripts: [],
+        scripts: [
+          { src: '/theme-init.js' },
+          { src: '/mobile-menu.js', defer: true },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js', defer: true },
+          {
+            src:
+              'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js',
+            defer: true,
+          },
+          {
+            src:
+              'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js',
+            defer: true,
+          },
+          {
+            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js',
+            defer: true,
+          },
+          {
+            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js',
+            defer: true,
+          },
+          {
+            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js',
+            defer: true,
+          },
+          {
+            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-html.min.js',
+            defer: true,
+          },
+          { src: '/prism-init.js', defer: true },
+          {
+            src: '//gc.zgo.at/count.js',
+            async: true,
+            attrs: { 'data-goatcounter': 'https://lessjs.goatcounter.com/count' },
+          },
+        ],
         headFragments: [
           // Meta: Open Graph / Twitter Cards
           '<meta property="og:site_name" content="LessJS">',
@@ -70,24 +145,13 @@ export default defineConfig({
           // DRY: CSS values come from @lessjs/ui/tokens/colors.ts (single source of truth)
           colorTokensStyle,
           // Init theme from localStorage or prefers-color-scheme
-          '<script src="/theme-init.js"></script>',
           // Mobile sidebar: universal JS for open/close (all browsers)
-          '<script defer src="/mobile-menu.js"></script>',
           // Code syntax highlighting (Prism, loaded async to avoid blocking)
           '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" media="print" onload="this.media=\'all\'">',
-          '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>',
           // Pre-load common grammars with PROPER dependency order:
           // typescript extends javascript → javascript MUST load before typescript
-          '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>',
-          '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>',
-          '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>',
-          '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>',
-          '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>',
-          '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-html.min.js"></script>',
           // Prism auto-init: adds default language class + highlights after DSD settles
-          '<script defer src="/prism-init.js"></script>',
           // Privacy-friendly analytics (GoatCounter, no cookies)
-          '<script data-goatcounter="https://lessjs.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>',
         ],
       },
       // @lessjs/content: Blog + Nav + Sitemap (unified content plugin)

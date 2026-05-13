@@ -145,6 +145,8 @@ export interface DocumentConfig {
    * developer-controlled content. Never pass user-supplied strings.
    */
   headExtras: string;
+  /** Whether headExtras script tags came from structured, URL-validated injection APIs. */
+  allowHeadExtrasScripts: boolean;
 }
 
 // ─── Top-level descriptor ──────────────────────────────────────
@@ -206,6 +208,7 @@ export function buildEntryDescriptor(
     packageIslands?: PackageIslandMeta[];
     /** @security Injected as raw HTML without sanitization */
     headExtras?: string;
+    allowHeadExtrasScripts?: boolean;
     html?: { lang?: string; title?: string };
     upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';
   } = {},
@@ -371,6 +374,7 @@ export function buildEntryDescriptor(
     lang: options.html?.lang || 'en',
     title: options.html?.title || 'LessJS',
     headExtras: options.headExtras || '',
+    allowHeadExtrasScripts: options.allowHeadExtrasScripts || false,
   };
 
   // --- Debug routes (dev only) ---

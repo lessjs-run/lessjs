@@ -11,6 +11,10 @@
  * Run: deno task test:e2e
  */
 import { defineConfig } from '@playwright/test';
+import process from 'node:process';
+
+const PORT = Number(process.env.LESSJS_E2E_PORT ?? 4174);
+const baseURL = `http://127.0.0.1:${PORT}`;
 
 export default defineConfig({
   testDir: '.',
@@ -23,15 +27,15 @@ export default defineConfig({
   timeout: 30_000,
 
   use: {
-    baseURL: 'http://localhost:4173',
+    baseURL,
     trace: 'on-first-retry',
   },
 
   // Auto-start a simple static file server for www/dist/
   webServer: {
-    command: 'npx -y serve ../dist -l 4173 --no-clipboard',
-    port: 4173,
-    reuseExistingServer: !process.env.CI,
+    command: `npx -y serve ../dist -l ${PORT} --no-clipboard`,
+    url: baseURL,
+    reuseExistingServer: false,
     timeout: 30_000,
   },
 

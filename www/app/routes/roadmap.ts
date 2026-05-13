@@ -26,8 +26,8 @@ export class RoadmapPage extends LitElement {
     <h1>Roadmap</h1>
     <p class="subtitle">LessJS 的路线图围绕一个判断展开：先把 SSG + DSD + Island Upgrade + Hono API 做可信，再扩展 serverless fullstack、ISR、PWA 和 compiler，最终在公共 API 稳定后承诺 1.0。</p>
 
-    <h2>Now: v0.13 — API Convergence + Phase Checks</h2>
-    <p>v0.13.0（ADR 0021）是架构硬化的里程碑。Core 公共 API 从 18 个收敛到 6 个，SSG 三阶段引入 branded type 编译期校验，Vite 虚拟模块 ID 从 core 迁出。最终状态：零 globalThis 桥接、零 barrel 文件、CI 覆盖率收集、268 测试通过。</p>
+    <h2>Now: v0.14.1 — Release Hardening</h2>
+    <p>v0.14.1 是发布硬化版本：统一 @lessjs/signals 命名，修复脚手架 CLI 子路径、发布流程、E2E 隔离、根质量任务和 SSG 产物稳定性。当前状态：零 dirty publish、CI 覆盖 E2E、475 测试通过。</p>
     <table class="version-table"><thead><tr><th>Area</th><th>Status</th><th>Notes</th></tr></thead><tbody>
       <tr><td>Core API 收敛</td><td>✅ Done</td><td>18 导出 → 6 子路径，/render-dsd /html-escape 移除</td></tr>
       <tr><td>ssr-handler.ts 删除</td><td>✅ Done</td><td>纯 re-export facade 彻底消失</td></tr>
@@ -44,7 +44,7 @@ export class RoadmapPage extends LitElement {
     <div class="phase"><div class="status">✅ Completed</div><h3>v0.10 — SSR Architecture Purification</h3><p>ADR 0008-0014 七条决策：消除 globalThis 桥接、消除 .less/ 临时文件、提取 @lessjs/app、消除 less-runtime barrel、SSR bundle 导出公共 API。448 测试。</p></div>
     <div class="phase"><div class="status">✅ Completed</div><h3>v0.11 — Runtime/Build Separation</h3><p>ADR 0017: @lessjs/core 拆为纯运行时 + @lessjs/adapter-vite。Core 零 node:*、零 npm:、零 Vite 依赖。5 个兼容性补丁消除。</p></div>
     <div class="phase"><div class="status">✅ Completed</div><h3>v0.12 — Virtual Data Modules</h3><p>ADR 0018: 消除所有插件模块状态，纯函数替代 stateful init/getter 模式，虚拟模块成为 SSR 数据唯一桥接。buildCoreSubpathAliases() 删除，@deno/vite-plugin 接管本地解析。20 条 resolve.alias 删除。</p></div>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.13 — API Convergence</h3><p>ADR 0021: Core API 收敛 18→6，Phase branded type 编译期校验，ssr-handler.ts 删除，零 barrel。</p></div>
+    <div class="phase"><div class="status">✅ Completed</div><h3>v0.14.1 — Release Hardening</h3><p>脚手架、发布、CI/E2E、signals 命名和 SSG 产物稳定性修复。</p></div>
     <div class="phase"><div class="status">Next Target</div><h3>v0.14 — DSD Engine + Islands Enhancement</h3><p>DSD 渲染引擎增强与 Islands 策略扩展（ADR 0020）。包括 DSD static 层性能优化、Island 加载策略细化、构建 metadata 硬化。暂无确切时间表。</p></div>
     <div class="phase"><div class="status">v1.0 Target</div><h3>v1.0 — Public API Stability</h3><p>所有 package 公共 API 稳定、遵循 SemVer、迁移文档完备。判定标准见 <a href="/blog/0006-version-strategy">ADR 0006</a>。</p></div>
     <div class="nav-row"><a href="/contributing" class="nav-link">&larr; Contributing</a><a href="/decisions" class="nav-link">Architecture Decisions &rarr;</a></div>
@@ -55,8 +55,8 @@ export class RoadmapPage extends LitElement {
     <p class="subtitle">The LessJS roadmap centers on one judgment: make SSG + DSD + Island Upgrade + Hono API trustworthy first, then expand to serverless fullstack, ISR, PWA, and compiler, and finally commit to 1.0 after public APIs stabilize.</p>
     <div class="callout"><p>This roadmap is not a marketing page. Future items listed here will only become stable user guides after they enter implementation and testing. See <a href="/blog/0006-version-strategy">ADR 0006</a> for versioning strategy.</p></div>
 
-    <h2>Now: v0.13 — API Convergence + Phase Checks</h2>
-    <p>v0.13.0 (ADR 0021) is the architecture hardening milestone. Core public API reduced from 18 to 6 exports, SSG 3-phase pipeline gets compile-time branded type validation, Vite virtual module IDs moved out of core. Final state: zero globalThis bridges, zero barrel files, CI coverage collection, 268 tests passing.</p>
+    <h2>Now: v0.14.1 — Release Hardening</h2>
+    <p>v0.14.1 hardens the release path: unified @lessjs/signals naming, fixed scaffolded CLI subpaths, publish safety, isolated E2E, root quality tasks, and stable SSG artifacts. Current state: no dirty publish path, E2E covered in CI, 475 tests passing.</p>
     <table class="version-table"><thead><tr><th>Area</th><th>Status</th><th>Notes</th></tr></thead><tbody>
       <tr><td>Core API convergence</td><td>✅ Done</td><td>18 exports → 6 subpaths, /render-dsd /html-escape removed</td></tr>
       <tr><td>ssr-handler.ts deleted</td><td>✅ Done</td><td>Pure re-export facade eliminated</td></tr>
@@ -73,7 +73,7 @@ export class RoadmapPage extends LitElement {
     <div class="phase"><div class="status">✅ Completed</div><h3>v0.10 — SSR Architecture Purification</h3><p>ADR 0008-0014 seven decisions: eliminate globalThis bridges, eliminate .less/ temp files, extract @lessjs/app, eliminate less-runtime barrel, SSR bundle public APIs. 448 tests.</p></div>
     <div class="phase"><div class="status">✅ Completed</div><h3>v0.11 — Runtime/Build Separation</h3><p>ADR 0017: @lessjs/core split into pure runtime + @lessjs/adapter-vite. Core: zero node:*, zero npm:, zero Vite deps. Five compatibility patches eliminated.</p></div>
     <div class="phase"><div class="status">✅ Completed</div><h3>v0.12 — Virtual Data Modules</h3><p>ADR 0018: Eliminated all plugin module state. Pure functions replace stateful init/getter patterns. Virtual modules become the only SSR data bridge. buildCoreSubpathAliases() deleted, @deno/vite-plugin handles local resolution. 20 resolve.alias entries removed.</p></div>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.13 — API Convergence</h3><p>ADR 0021: Core API 18→6 convergence, Phase branded type validation, ssr-handler.ts deleted, zero barrel files.</p></div>
+    <div class="phase"><div class="status">✅ Completed</div><h3>v0.14.1 — Release Hardening</h3><p>Scaffold, publishing, CI/E2E, signals naming, and SSG artifact stability fixes.</p></div>
     <div class="phase"><div class="status">Next Target</div><h3>v0.14 — DSD Engine + Islands Enhancement</h3><p>DSD rendering engine and island strategy enhancements (ADR 0020). DSD static layer performance optimization, island loading strategy refinement, build metadata hardening. No fixed timeline.</p></div>
     <div class="phase"><div class="status">v1.0 Target</div><h3>v1.0 — Public API Stability</h3><p>All package APIs stable, following SemVer, with complete migration docs. Criteria in <a href="/blog/0006-version-strategy">ADR 0006</a>.</p></div>
     <div class="nav-row"><a href="/contributing" class="nav-link">&larr; Contributing</a><a href="/decisions" class="nav-link">Architecture Decisions &rarr;</a></div>

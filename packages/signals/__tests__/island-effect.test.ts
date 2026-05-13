@@ -1,5 +1,5 @@
 /**
- * @lessjs/signal - islandEffect() unit tests
+ * @lessjs/signals - islandEffect() unit tests
  *
  * Tests for island-aware effect with auto-disconnect.
  * MutationObserver is mocked since Deno has no browser DOM.

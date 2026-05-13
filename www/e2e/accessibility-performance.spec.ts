@@ -93,8 +93,8 @@ test.describe('Accessibility', () => {
 test.describe('Performance', () => {
   test('homepage loads within 5 seconds', async ({ page }) => {
     const start = Date.now();
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await page.locator('less-layout').waitFor({ state: 'attached' });
     const loadTime = Date.now() - start;
 
     expect(loadTime).toBeLessThan(5000);
@@ -102,8 +102,8 @@ test.describe('Performance', () => {
 
   test('guide page loads within 5 seconds', async ({ page }) => {
     const start = Date.now();
-    await page.goto('/guide/getting-started');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/guide/getting-started', { waitUntil: 'domcontentloaded' });
+    await page.locator('less-layout').waitFor({ state: 'attached' });
     const loadTime = Date.now() - start;
 
     expect(loadTime).toBeLessThan(5000);

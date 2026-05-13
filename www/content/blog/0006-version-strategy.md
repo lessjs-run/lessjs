@@ -186,7 +186,7 @@ LessJS 是 Deno workspace monorepo，7 个包发布到 JSR。仓库 Release tag 
   @lessjs/content      0.1.0 → 0.2.0   (新增 nav/sitemap 模块)
   @lessjs/ui           0.6.2 → 不变    (无变更)
   @lessjs/rpc          0.6.1 → 不变    (无变更)
-  @lessjs/signal        0.6.2 → 不变   (无变更)
+  @lessjs/signals        0.6.2 → 不变   (无变更)
   @lessjs/create       0.6.1 → 不变    (无变更)
 ```
 

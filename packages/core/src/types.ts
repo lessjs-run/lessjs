@@ -61,8 +61,17 @@ export interface FrameworkOptions {
   inject?: {
     /** CSS stylesheet URLs to inject into <head> */
     stylesheets?: string[];
-    /** Module script URLs to inject into <head> */
-    scripts?: string[];
+    /** Script URLs to inject into <head>. String entries are emitted as module scripts. */
+    scripts?: Array<
+      | string
+      | {
+        src: string;
+        type?: string;
+        async?: boolean;
+        defer?: boolean;
+        attrs?: Record<string, string | number | boolean>;
+      }
+    >;
     /**
      * Arbitrary HTML fragments to inject into <head>.
      *

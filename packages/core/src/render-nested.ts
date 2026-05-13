@@ -17,6 +17,7 @@
 import * as parse5 from 'parse5';
 import type { DefaultTreeAdapterMap } from 'parse5';
 import { type DsdOptions, type DsdRenderCollector } from './types.js';
+import { renderDSD } from './render-dsd.js';
 
 type P5Element = DefaultTreeAdapterMap['element'];
 type P5ChildNode = DefaultTreeAdapterMap['childNode'];
@@ -178,9 +179,6 @@ export async function renderNestedCustomElements(
   maxDepth = 10,
 ): Promise<string> {
   if (!globalThis.customElements?.get) return html;
-
-  // Import renderDSD dynamically to avoid circular dependency
-  const { renderDSD } = await import('./render-dsd.js');
 
   // Use parseFragment() — NOT parse(). parse5.parse() wraps fragments in
   // <html><head><body>, which would appear inside shadow DOM when this

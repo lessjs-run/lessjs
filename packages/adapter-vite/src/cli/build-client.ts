@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - CLI: Client Island Build
+ * @lessjs/adapter-vite - CLI: Client Island Build
  *
  * Client build for Island components.
  * Produces dist/client/islands/*.js + manifest for SSG post-processing.
@@ -101,6 +101,7 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
     build: {
       outDir: clientOutDir,
       emptyOutDir: true,
+      chunkSizeWarningLimit: 1500,
       minify: 'oxc',
       // @ts-ignore — Vite's own manifest option (not Rollup's)
       manifest: true,

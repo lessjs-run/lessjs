@@ -36,16 +36,16 @@ adapter-lit  ui  signals  rpc  create
 
 | Package                | Version | Role                                         | External Deps       |
 | ---------------------- | ------- | -------------------------------------------- | ------------------- |
-| `@lessjs/core`         | 0.14.0  | DSD rendering, Islands, Navigation, Logger   | parse5 only         |
-| `@lessjs/adapter-vite` | 0.14.0  | Vite build: routes, islands, SSG 3-phase     | vite, hono, esbuild |
-| `@lessjs/adapter-lit`  | 0.14.0  | Lit TemplateResult → DSD HTML bridge         | lit                 |
-| `@lessjs/content`      | 0.14.0  | Blog + Nav + Sitemap build-time plugin       | marked, gray-matter |
-| `@lessjs/i18n`         | 0.14.0  | i18n locale expansion                        | none                |
-| `@lessjs/app`          | 0.14.0  | Umbrella: lessjs() = less() + content + i18n | —                   |
-| `@lessjs/ui`           | 0.14.0  | 8 Web Components (layout, button, input…)    | lit                 |
-| `@lessjs/signals`      | 0.14.0  | TC39 Signals polyfill + framework layer      | none                |
-| `@lessjs/rpc`          | 0.14.0  | Zero-dep fetch RPC controller                | none                |
-| `@lessjs/create`       | 0.14.0  | CLI scaffold                                 | none                |
+| `@lessjs/core`         | 0.14.1  | DSD rendering, Islands, Navigation, Logger   | parse5 only         |
+| `@lessjs/adapter-vite` | 0.14.1  | Vite build: routes, islands, SSG 3-phase     | vite, hono, esbuild |
+| `@lessjs/adapter-lit`  | 0.14.1  | Lit TemplateResult → DSD HTML bridge         | lit                 |
+| `@lessjs/content`      | 0.14.1  | Blog + Nav + Sitemap build-time plugin       | marked, gray-matter |
+| `@lessjs/i18n`         | 0.14.1  | i18n locale expansion                        | none                |
+| `@lessjs/app`          | 0.14.1  | Umbrella: lessjs() = less() + content + i18n | —                   |
+| `@lessjs/ui`           | 0.14.1  | 8 Web Components (layout, button, input…)    | lit                 |
+| `@lessjs/signals`      | 0.14.1  | TC39 Signals polyfill + framework layer      | none                |
+| `@lessjs/rpc`          | 0.14.1  | Zero-dep fetch RPC controller                | none                |
+| `@lessjs/create`       | 0.14.1  | CLI scaffold                                 | none                |
 
 ### Rendering Pipeline
 
@@ -127,6 +127,18 @@ All ADRs are in the [blog](/blog/) — search `type: adr` to filter. Key decisio
 - **Zero barrel files**: `content/src/nav/types.ts` and `sitemap/types.ts` deleted
 - **islandEffect interval**: 5000ms → 30000ms
 - **@lessjs/app tests**: 0 → 16 tests
+
+---
+
+## 0.14.1 Release Hardening
+
+- All packages are aligned on `0.14.1`, with `@lessjs/signals` as the current signals package name.
+- `@lessjs/adapter-vite` exposes CLI subpaths so scaffolded apps can run `deno task build` directly.
+- Publishing no longer allows dirty worktrees, and CI now uses the same quality tasks as local development.
+- E2E uses an isolated port and runs in CI, preventing accidental reuse of stale local servers.
+- Content, Markdown, `headExtras`, and `headFragments` trust developer-controlled repository content by default. Do not pass user-generated HTML directly; sanitize untrusted content first.
+
+Stable API candidates: `lessjs()` options, public `@lessjs/core` exports, `@lessjs/adapter-vite` CLI subpaths, `@lessjs/rpc`, `@lessjs/signals`, and `@lessjs/ui` component subpaths.
 
 ---
 

@@ -1,7 +1,7 @@
 /**
  * @lessjs/docs - API Reference: All Packages
  *
- * v0.13 API surface - organized by package.
+ * v0.14.1 API surface - organized by package.
  * Only public exports are listed.
  */
 
@@ -65,7 +65,7 @@ export default class ApiCorePage extends LitElement {
       >
         <div class="container">
           <h1>API Reference</h1>
-          <p class="subtitle">Public API surface of all LessJS packages (v0.13).</p>
+          <p class="subtitle">Public API surface of all LessJS packages (v0.14.1).</p>
 
           <div class="api-section">
             <!-- ─── @lessjs/core ───────────────────────────── -->
@@ -257,9 +257,9 @@ export default class ApiCorePage extends LitElement {
               less-theme-toggle, less-hero-ping, less-dialog.
             </p>
 
-            <!-- ─── @lessjs/signal ───────────────────────────── -->
-            <div class="pkg-name">@lessjs/signal</div>
-            <div class="pkg-import">import { signal, computed, effect } from '@lessjs/signal';</div>
+            <!-- ─── @lessjs/signals ───────────────────────────── -->
+            <div class="pkg-name">@lessjs/signals</div>
+            <div class="pkg-import">import { signal, computed, effect } from '@lessjs/signals';</div>
             <p>
               TC39 Signals polyfill. Also exports: batch, untracked, channel, islandEffect, themeSignal,
               isNativeSignal.

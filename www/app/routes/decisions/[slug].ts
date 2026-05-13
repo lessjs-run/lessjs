@@ -24,7 +24,7 @@ function adrId(slug: string): string {
   return m ? m[1] : slug.slice(0, 4);
 }
 
-export async function getStaticPaths(): Promise<Array<Record<string, string>>> {
+export function getStaticPaths(): Array<Record<string, string>> {
   return posts
     .filter((p) => p.frontmatter.type === 'adr')
     .map((p) => ({ slug: p.slug }));

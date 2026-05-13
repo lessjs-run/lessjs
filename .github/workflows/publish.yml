@@ -6,6 +6,8 @@ on:
     paths:
       - 'packages/*/deno.json'
       - 'packages/*/src/**'
+      - 'packages/*/README.md'
+      - 'packages/create/cli.ts'
       - '.github/workflows/publish.yml'
   workflow_dispatch:
 
@@ -45,8 +47,14 @@ jobs:
             fi
 
             echo "[JSR] Publishing ${pkg}@${version}"
-            (cd "$dir" && deno publish -c deno.json --allow-dirty)
+            (cd "$dir" && deno publish -c deno.json)
           }
+
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "::error::Refusing to publish from a dirty worktree"
+            git status --porcelain
+            exit 1
+          fi
 
           # Publish in dependency order: no-deps first, then dependents
           # rpc, signals have zero LessJS deps → publish first

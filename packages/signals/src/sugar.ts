@@ -1,10 +1,10 @@
 /**
- * @lessjs/signal - Sugar Layer
+ * @lessjs/signals - Sugar Layer
  *
  * Higher-level APIs built on framework.ts:
  * islandEffect, batch, untracked, channel, themeSignal.
  *
- * @module @lessjs/signal/sugar
+ * @module @lessjs/signals/sugar
  */
 
 import { _engine } from './engine.ts';

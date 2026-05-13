@@ -203,6 +203,7 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
   const metaUrl = import.meta.url;
 
   let headExtras = options.headExtras;
+  let allowHeadExtrasScripts = false;
 
   const validateSafeUrl = (url: string, context: string): string => {
     // Normalise: decode URL encoding, strip whitespace, lowercase
@@ -240,10 +241,28 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
       const safeHref = escapeHtmlAttr(href);
       fragments.push(`<link rel="stylesheet" href="${safeHref}" />`);
     }
-    for (const src of options.inject.scripts || []) {
+    for (const script of options.inject.scripts || []) {
+      const isObjectScript = typeof script === 'object';
+      const src = isObjectScript ? script.src : script;
       validateSafeUrl(src, 'inject.scripts');
-      const safeSrc = escapeHtmlAttr(src);
-      fragments.push(`<script type="module" src="${safeSrc}"></script>`);
+      const attrs: Record<string, string | number | boolean> = {
+        ...(!isObjectScript || script.type
+          ? { type: isObjectScript ? script.type! : 'module' }
+          : {}),
+        ...(isObjectScript && script.defer ? { defer: true } : {}),
+        ...(isObjectScript && script.async ? { async: true } : {}),
+        ...(isObjectScript ? script.attrs ?? {} : {}),
+        src,
+      };
+      const attrText = Object.entries(attrs)
+        .filter(([, value]) => value !== undefined && value !== false)
+        .map(([name, value]) =>
+          value === true
+            ? escapeHtmlAttr(name)
+            : `${escapeHtmlAttr(name)}="${escapeHtmlAttr(String(value))}"`
+        )
+        .join(' ');
+      fragments.push(`<script ${attrText}></script>`);
     }
     for (const frag of options.inject.headFragments || []) {
       // Security: warn if fragment contains inline <script> tags
@@ -257,14 +276,16 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
       fragments.push(frag);
     }
     headExtras = fragments.join('\n  ');
+    allowHeadExtrasScripts = true;
   }
 
-  const resolvedOptions: FrameworkOptions = {
+  const resolvedOptions: FrameworkOptions & { allowHeadExtrasScripts?: boolean } = {
     ...options,
     routesDir: options.routesDir || 'app/routes',
     islandsDir: options.islandsDir || 'app/islands',
     componentsDir: options.componentsDir || 'app/components',
     headExtras,
+    allowHeadExtrasScripts,
   };
 
   const ctx = externalCtx || new LessBuildContext(resolvedOptions);
@@ -304,6 +325,7 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
       islandFiles,
       packageIslands,
       headExtras: resolvedOptions.headExtras,
+      allowHeadExtrasScripts,
       html: resolvedOptions.html,
       upgradeStrategy: resolvedOptions.island?.upgradeStrategy || 'lazy',
     });
@@ -327,6 +349,9 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
       return {
         resolve: aliases ? { alias: aliases } : undefined,
         build: {
+          // The generated virtual entry intentionally contains the whole route graph.
+          // Keep the budget explicit so Vite does not report it as an unexpected warning.
+          chunkSizeWarningLimit: 1500,
           rollupOptions: {
             input: [VIRTUAL_ENTRY_ID],
           },

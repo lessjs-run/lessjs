@@ -159,7 +159,7 @@ function renderPageRoute(
   lines: string[],
   route: PageRouteDecl,
   renderers: RendererDecl[],
-  docConfig: { title: string; lang: string; headExtras: string },
+  docConfig: { title: string; lang: string; headExtras: string; allowHeadExtrasScripts: boolean },
   isSSG: boolean,
 ): void {
   // Find renderers whose scope matches this route's path prefix
@@ -199,6 +199,7 @@ function renderPageRoute(
   lines.push(`      title: ${JSON.stringify(docConfig.title)},`);
   lines.push(`      lang: ${JSON.stringify(docConfig.lang)},`);
   lines.push(`      headExtras: ${headExtrasExpr},`);
+  lines.push(`      allowHeadExtrasScripts: ${JSON.stringify(docConfig.allowHeadExtrasScripts)},`);
   lines.push(`      cspNonce: c.get('cspNonce'),`);
   lines.push(`    }))`);
 
@@ -409,6 +410,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     title: desc.document.title,
     lang: desc.document.lang,
     headExtras: desc.document.headExtras,
+    allowHeadExtrasScripts: desc.document.allowHeadExtrasScripts,
   };
   for (const route of desc.pageRoutes) {
     renderPageRoute(lines, route, desc.renderers, docConfig, desc.isSSG);
@@ -472,6 +474,32 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('];');
     lines.push('');
 
+    lines.push('function __rendererContext(routePath, params) {');
+    lines.push('  return {');
+    lines.push('    req: {');
+    lines.push('      path: routePath,');
+    lines.push('      param: (name) => name ? params[name] : params,');
+    lines.push('    },');
+    lines.push('    get: () => undefined,');
+    lines.push('    set: () => undefined,');
+    lines.push('  };');
+    lines.push('}');
+    lines.push('');
+    lines.push('function __matchingRenderers(routePath) {');
+    lines.push('  const renderers = [];');
+    for (const renderer of desc.renderers) {
+      if (renderer.scope === '/') {
+        lines.push(`  renderers.push(${renderer.varName}.default);`);
+      } else {
+        lines.push(
+          `  if (routePath === '${renderer.scope}' || routePath.startsWith('${renderer.scope}/')) renderers.push(${renderer.varName}.default);`,
+        );
+      }
+    }
+    lines.push('  return renderers;');
+    lines.push('}');
+    lines.push('');
+
     // --- renderRoute: path + options → full HTML ---
     lines.push('/**');
     lines.push(' * Render a route to complete HTML (ADR 0014).');
@@ -489,11 +517,18 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push(
       '  const html = await renderDSDByName(info.tagName, props, { route: routePath, source: info.tagName });',
     );
-    lines.push('  return wrapInDocument(html, {');
+    lines.push('  let content = html;');
+    lines.push('  for (const renderer of __matchingRenderers(routePath)) {');
+    lines.push('    content = await renderer.wrap(content, __rendererContext(routePath, params));');
+    lines.push('  }');
+    lines.push('  return wrapInDocument(content, {');
     lines.push('    title: title || "LessJS",');
     lines.push('    lang: lang || locale || "en",');
     lines.push(
       '    headExtras: headExtras !== undefined ? headExtras : (typeof __headExtras !== "undefined" ? __headExtras : ""),',
+    );
+    lines.push(
+      `    allowHeadExtrasScripts: ${JSON.stringify(desc.document.allowHeadExtrasScripts)},`,
     );
     lines.push('  });');
     lines.push('}');
@@ -543,6 +578,7 @@ export interface HonoEntryOptions {
   packageIslands?: PackageIslandMeta[];
   /** @security Injected as raw HTML without sanitization */
   headExtras?: string;
+  allowHeadExtrasScripts?: boolean;
   html?: { lang?: string; title?: string };
   upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';
 }

@@ -12,22 +12,85 @@ import { DsdLitElement } from '@lessjs/adapter-lit';
 
 export class LessTermDemo extends DsdLitElement {
   static override styles = css`
-    :host { display: block; }
-    .term { background: #09090b; border-radius: 10px; overflow: hidden; border: 0.5px solid #27272a; }
-    .term-bar { display: flex; align-items: center; gap: 5px; padding: 10px 14px; background: #18181b; border-bottom: 0.5px solid #27272a; }
-    .dot { width: 7px; height: 7px; border-radius: 50%; }
-    .dot.r { background: #ef4444; }
-    .dot.y { background: #eab308; }
-    .dot.g { background: #22c55e; }
-    .term-body { padding: 16px; font-family: "JetBrains Mono","Fira Code","SF Mono",Consolas,monospace; font-size: 12px; line-height: 1.9; color: #a1a1aa; max-height: 280px; overflow-y: auto; cursor: text; scrollbar-width: thin; scrollbar-color: #3f3f46 transparent; }
-    .term-body::-webkit-scrollbar { width: 4px; }
-    .term-body::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 2px; }
-    .term-body::-webkit-scrollbar-track { background: transparent; }
-    .term-body .prompt { color: #fbbf24; }
-    .term-body .hl { color: #7dd3fc; }
-    .term-body .err { color: #ef4444; }
-    .input-line { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
-    .input-line input { flex: 1; background: transparent; border: none; outline: none; color: #f4f4f5; font-family: inherit; font-size: inherit; padding: 0; caret-color: #f4f4f5; }
+    :host {
+      display: block;
+    }
+    .term {
+      background: #09090b;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 0.5px solid #27272a;
+    }
+    .term-bar {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 14px;
+      background: #18181b;
+      border-bottom: 0.5px solid #27272a;
+    }
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+    .dot.r {
+      background: #ef4444;
+    }
+    .dot.y {
+      background: #eab308;
+    }
+    .dot.g {
+      background: #22c55e;
+    }
+    .term-body {
+      padding: 16px;
+      font-family: "JetBrains Mono", "Fira Code", "SF Mono", Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.9;
+      color: #a1a1aa;
+      max-height: 280px;
+      overflow-y: auto;
+      cursor: text;
+      scrollbar-width: thin;
+      scrollbar-color: #3f3f46 transparent;
+    }
+    .term-body::-webkit-scrollbar {
+      width: 4px;
+    }
+    .term-body::-webkit-scrollbar-thumb {
+      background: #3f3f46;
+      border-radius: 2px;
+    }
+    .term-body::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .term-body .prompt {
+      color: #fbbf24;
+    }
+    .term-body .hl {
+      color: #7dd3fc;
+    }
+    .term-body .err {
+      color: #ef4444;
+    }
+    .input-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .input-line input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #f4f4f5;
+      font-family: inherit;
+      font-size: inherit;
+      padding: 0;
+      caret-color: #f4f4f5;
+    }
   `;
 
   static hydrateEvents = [
@@ -42,7 +105,9 @@ export class LessTermDemo extends DsdLitElement {
     if (this._dsdHydrated) return nothing;
     return html`
       <div class="term">
-        <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <div class="term-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        </div>
         <div class="term-body">
           <div class="output">
             <div><span class="prompt">$</span> type <span class="hl">help</span> to get started</div>
@@ -71,7 +136,8 @@ export class LessTermDemo extends DsdLitElement {
   }
 
   private _localCommands: Record<string, string[]> = {
-    help: ['<span class="hl">available commands:</span>',
+    help: [
+      '<span class="hl">available commands:</span>',
       '  <span style="color:#fbbf24;">help</span>      show this message',
       '  <span style="color:#fbbf24;">neofetch</span>  display system info',
       '  <span style="color:#fbbf24;">version</span>   show lessjs version',
@@ -80,14 +146,19 @@ export class LessTermDemo extends DsdLitElement {
       '  <span style="color:#fbbf24;">whoami</span>    who are you?',
       '  <span style="color:#fbbf24;">uname</span>     print system info',
       '  <span style="color:#fbbf24;">dsd</span>       what is dsd?',
-      '  <span style="color:#fbbf24;">clear</span>     clear terminal'],
-    version: ['<span class="hl">v0.13.0</span> — api convergence + phase checks'],
+      '  <span style="color:#fbbf24;">clear</span>     clear terminal',
+    ],
+    version: ['<span class="hl">v0.14.1</span> — release hardening'],
     whoami: ['<span style="color:#a1a1aa;">you are a lessjs developer. welcome.</span>'],
-    uname: ['<span class="hl">lessjs</span> <span style="color:#52525b;">deno 2.7+ node 18+ edge</span>'],
-    dsd: ['<span class="hl">declarative shadow dom:</span>',
+    uname: [
+      '<span class="hl">lessjs</span> <span style="color:#52525b;">deno 2.7+ node 18+ edge</span>',
+    ],
+    dsd: [
+      '<span class="hl">declarative shadow dom:</span>',
       'ssg renders your lit components into <span style="color:#fbbf24;">&lt;template shadowrootmode&gt;</span>',
       'browsers parse it natively — no js framework needed.',
-      'content is visible <span style="color:#86efac;">before</span> javascript downloads.'],
+      'content is visible <span style="color:#86efac;">before</span> javascript downloads.',
+    ],
   };
 
   private async _onKey(e: Event) {
@@ -133,16 +204,20 @@ export class LessTermDemo extends DsdLitElement {
 
     try {
       const res = await fetch('/api/term', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cmd }),
       });
       if (!res.ok) throw new Error(`status ${res.status}`);
       const data = await res.json();
-      if (data.output) for (const line of data.output) this._addLine(line);
+      if (data.output) { for (const line of data.output) this._addLine(line); }
     } catch {
-      this._addLine('<span class="err">error: could not reach api. try <span class="hl">help</span> for local commands.</span>');
+      this._addLine(
+        '<span class="err">error: could not reach api. try <span class="hl">help</span> for local commands.</span>',
+      );
     }
   }
 }
 
 customElements.define('less-term-demo', LessTermDemo);
+export default LessTermDemo;

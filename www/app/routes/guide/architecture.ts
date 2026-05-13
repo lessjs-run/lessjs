@@ -168,7 +168,7 @@ Phase 3: SSG
                 <td>8 个 Web Component（less-button、less-layout、less-theme-toggle 等）。</td>
               </tr>
               <tr>
-                <td><span class="inline-code">@lessjs/signal</span></td>
+                <td><span class="inline-code">@lessjs/signals</span></td>
                 <td>TC39 Signals polyfill + islandEffect。</td>
               </tr>
               <tr>
@@ -359,7 +359,7 @@ Phase 3: SSG
                 <td>8 Web Components (less-button, less-layout, less-theme-toggle, etc.).</td>
               </tr>
               <tr>
-                <td><span class="inline-code">@lessjs/signal</span></td>
+                <td><span class="inline-code">@lessjs/signals</span></td>
                 <td>TC39 Signals polyfill + islandEffect.</td>
               </tr>
               <tr>

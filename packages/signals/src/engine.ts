@@ -1,10 +1,10 @@
 /**
- * @lessjs/signal - Engine Layer
+ * @lessjs/signals - Engine Layer
  *
  * TC39 Signal primitives (polyfill or native).
  * Creates the _engine singleton that framework.ts uses.
  *
- * @module @lessjs/signal/engine
+ * @module @lessjs/signals/engine
  */
 
 // ─── Internal Logger ────────────────────────────────────────────

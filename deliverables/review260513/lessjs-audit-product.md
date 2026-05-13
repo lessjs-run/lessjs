@@ -79,7 +79,7 @@ LessJS 的三大支柱定位清晰且自洽：
 | @lessjs/i18n | 良好 | 与 app 集成和独立使用都有说明 |
 | @lessjs/app | 良好 | 伞包用法、选项表完整 |
 | @lessjs/ui | 良好 | 8 个组件清单 + 设计令牌说明 |
-| @lessjs/signal | 一般 | API 示例完整但缺少高级用法（如 islandEffect 生命周期） |
+| @lessjs/signals | 一般 | API 示例完整但缺少高级用法（如 islandEffect 生命周期） |
 | @lessjs/rpc | 良好 | 用法 + 重试配置 + 失败数据流完整 |
 | @lessjs/create | 良好 | 项目结构 + 添加 Islands/API 路由说明 |
 
@@ -128,7 +128,7 @@ LessJS 的三大支柱定位清晰且自洽：
 | @lessjs/i18n LICENSE | ✅ MIT | 与根目录一致 |
 | @lessjs/app LICENSE | ❌ 缺失 | `packages/app/` 目录下无 LICENSE 文件 |
 | @lessjs/ui LICENSE | ✅ MIT | 与根目录一致 |
-| @lessjs/signal LICENSE | ✅ MIT | 与根目录一致 |
+| @lessjs/signals LICENSE | ✅ MIT | 与根目录一致 |
 | @lessjs/rpc LICENSE | ✅ MIT | 与根目录一致 |
 | @lessjs/create LICENSE | ✅ MIT | 与根目录一致 |
 
@@ -273,19 +273,19 @@ LessJS 的三大支柱定位清晰且自洽：
 | V2 | `deno task publish` 使用 `--allow-dirty`，可能发布包含未提交更改的包 | `deno.json:41-49` | 中 |
 | V3 | 无 `changeset` 或类似的变更日志自动生成工具 | 全局 | 中 |
 | V4 | 无 `deno task publish:dry-run` 预检命令 | `deno.json` | 低 |
-| V5 | `publish:signal` task 名与包名 `@lessjs/signal` 一致，但 README 和架构图使用 `@lessjs/signals`（复数），命名不一致 | `deno.json:45` vs `README.md:47` | 高 |
+| V5 | `publish:signal` task 名与包名 `@lessjs/signals` 一致，但 README 和架构图使用 `@lessjs/signals`（复数），命名不一致 | `deno.json:45` vs `README.md:47` | 高 |
 
 ### 5.4 包命名不一致
 
 | 位置 | 名称 |
 |------|------|
-| `packages/signals/deno.json` | `@lessjs/signal`（单数） |
+| `packages/signals/deno.json` | `@lessjs/signals`（单数） |
 | README.md 架构图和版本表 | `@lessjs/signals`（复数） |
 | `deno.json` publish task | `publish:signal`（单数） |
-| `@lessjs/create` 生成的 deno.json | `@lessjs/signal`（单数） |
+| `@lessjs/create` 生成的 deno.json | `@lessjs/signals`（单数） |
 | README.en.md | `@lessjs/signals`（复数） |
 
-JSR 发布名为 `@lessjs/signal`，但文档中统称 `@lessjs/signals`。这会导致用户搜索不到包或导入了错误的包名。
+JSR 发布名为 `@lessjs/signals`，但文档中统称 `@lessjs/signals`。这会导致用户搜索不到包或导入了错误的包名。
 
 ---
 

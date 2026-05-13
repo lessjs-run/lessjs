@@ -1,5 +1,5 @@
 /**
- * @lessjs/signal - themeSignal unit tests
+ * @lessjs/signals - themeSignal unit tests
  */
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { themeSignal } from '../src/index.ts';

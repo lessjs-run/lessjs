@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/ui",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "exports": {
     ".": "./src/index.ts",
     "./less-button": "./src/less-button.ts",
@@ -17,14 +17,15 @@
   },
   "imports": {
     "lit": "npm:lit@^3.2.0",
-    "@lessjs/core": "jsr:@lessjs/core@^0.14",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.14/navigation",
-    "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^0.14"
+    "@lessjs/core": "jsr:@lessjs/core@^0.14.1",
+    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.14.1/navigation",
+    "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^0.14.1"
   },
   "publish": {
     "include": [
       "src/**",
       "deno.json",
+      "README.md",
       "LICENSE"
     ]
   },

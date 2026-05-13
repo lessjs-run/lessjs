@@ -1,6 +1,6 @@
 export const meta = { section: 'Core Model', label: 'RPC', order: 70 };
 import { navSections, headerNav } from 'virtual:less-nav';
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';

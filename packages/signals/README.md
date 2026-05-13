@@ -1,11 +1,11 @@
-# @lessjs/signal
+# @lessjs/signals
 
 TC39 Signals polyfill — 信号、计算属性、副作用、Island 生命周期绑定。
 
 ## 安装
 
 ```bash
-deno add jsr:@lessjs/signal
+deno add jsr:@lessjs/signals
 ```
 
 ## 功能
@@ -19,7 +19,7 @@ deno add jsr:@lessjs/signal
 ## 使用
 
 ```ts
-import { computed, effect, islandEffect, signal } from '@lessjs/signal';
+import { computed, effect, islandEffect, signal } from '@lessjs/signals';
 
 const count = signal(0);
 const doubled = computed(() => count.value * 2);

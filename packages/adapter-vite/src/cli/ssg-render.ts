@@ -75,6 +75,23 @@ function findHtmlFiles(dir: string): string[] {
   return results;
 }
 
+function joinUrlPath(...parts: string[]): string {
+  const segments = parts
+    .flatMap((part) => part.split('/'))
+    .map((part) => part.trim())
+    .filter(Boolean);
+  return '/' + segments.join('/');
+}
+
+function stableHash(input: string): string {
+  let hash = 2166136261;
+  for (let i = 0; i < input.length; i++) {
+    hash ^= input.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0).toString(36);
+}
+
 // ─── Core render pipeline ──────────────────────────────────────
 
 export async function ssgRender(
@@ -219,12 +236,13 @@ export async function ssgRender(
     const rel = nodePath.relative(outputDir, filePath);
     if (rel.endsWith('index.html') || rel === '404.html') continue;
     const baseName = rel.replace(/\.html$/, '');
+    const urlBaseName = baseName.replace(/\\/g, '/');
     const dirPath = join(outputDir, baseName);
     const indexPath = join(dirPath, 'index.html');
     if (existsSync(dirPath)) continue;
     nodeFs.mkdirSync(dirPath, { recursive: true });
     nodeFs.renameSync(filePath, indexPath);
-    log.info(`Clean URL: /${baseName} → ${baseName}/index.html`);
+    log.info(`Clean URL: /${urlBaseName} → ${urlBaseName}/index.html`);
   }
 
   log.info(`Static site generated → ${outputDir}`);
@@ -254,7 +272,7 @@ export async function ssgRender(
             for (const name of paramNames) {
               resolvedPath = resolvedPath.replace(`:${name}`, params[name] || name);
             }
-            const localePath = `/${locale}${resolvedPath}`;
+            const localePath = joinUrlPath(locale, resolvedPath);
             try {
               const html = await renderRoute(route.path, {
                 params,
@@ -327,9 +345,6 @@ export async function ssgRender(
   log.info('DSD polyfill injected');
 
   // ── Build manifest ──────────────────────────────────────────
-  const { printBuildManifest } = await import('../build-manifest.js');
-  printBuildManifest({ root, outDir, phase: 3, headExtras: options.headExtras });
-
   // ── PWA files ──────────────────────────────────────────────
   const pwa = options.pwa;
   if (pwa) {
@@ -345,7 +360,12 @@ export async function ssgRender(
     writeFileSync(join(outputDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
     log.info('PWA manifest.json generated');
 
-    const swCode = `const CACHE = 'less-${Date.now()}';
+    const cacheHash = stableHash(JSON.stringify({
+      basePath,
+      manifest,
+      routes: routeInfo.map((route) => route.path).sort(),
+    }));
+    const swCode = `const CACHE = 'less-${cacheHash}';
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(
   caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => clients.claim())
@@ -404,6 +424,9 @@ async function networkFirst(req) {
   }
 
   // ── Sitemap (via ctx) ──────────────────────────────────────
+  const { printBuildManifest } = await import('../build-manifest.js');
+  printBuildManifest({ root, outDir, phase: 3, headExtras: options.headExtras });
+
   try {
     if (ctx?.plugins?.sitemapOptions) {
       const sitemapPkg = '@lessjs/content/sitemap';

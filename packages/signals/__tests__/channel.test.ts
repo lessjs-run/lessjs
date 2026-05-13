@@ -1,5 +1,5 @@
 /**
- * @lessjs/signal - channel() unit tests
+ * @lessjs/signals - channel() unit tests
  *
  * Tests for named event channel (event bus).
  *

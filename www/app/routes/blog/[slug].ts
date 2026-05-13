@@ -1,3 +1,4 @@
+// deno-fmt-ignore-file
 /**
  * Blog Post Page — Dynamic Route
  *
@@ -13,7 +14,7 @@ import { posts, getPostBySlug } from 'virtual:less-blog-data';
 
 export const tagName = 'page-blog-slug';
 
-export async function getStaticPaths(): Promise<Array<Record<string, string>>> {
+export function getStaticPaths(): Array<Record<string, string>> {
   return posts.map((post) => ({ slug: post.slug }));
 }
 

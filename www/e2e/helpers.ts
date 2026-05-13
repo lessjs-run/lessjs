@@ -5,12 +5,12 @@
  * custom element rendering, and island script loading.
  */
 
-import type { Locator, Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
 
 /**
  * Check if an element has a DSD template with the expected shadowrootmode.
  */
-export async function hasDsdTemplate(
+export function hasDsdTemplate(
   page: Page,
   selector: string,
   mode: 'open' | 'closed' = 'open',
@@ -23,7 +23,7 @@ export async function hasDsdTemplate(
  * Get the shadow root content of a custom element via DSD.
  * Uses evaluate to read the template content from the DOM.
  */
-export async function getDsdContent(
+export function getDsdContent(
   page: Page,
   selector: string,
 ): Promise<string | null> {
@@ -53,7 +53,7 @@ export async function waitForCustomElement(
 /**
  * Check if an island script was loaded (by looking for its module script tag).
  */
-export async function isIslandScriptLoaded(
+export function isIslandScriptLoaded(
   page: Page,
   tagName: string,
 ): Promise<boolean> {
@@ -66,7 +66,7 @@ export async function isIslandScriptLoaded(
 /**
  * Collect all custom element tag names found in the page HTML.
  */
-export async function getCustomElementTags(page: Page): Promise<string[]> {
+export function getCustomElementTags(page: Page): Promise<string[]> {
   return page.evaluate(() => {
     const tags = new Set<string>();
     const all = document.querySelectorAll('*');
@@ -82,7 +82,7 @@ export async function getCustomElementTags(page: Page): Promise<string[]> {
 /**
  * Get the resolved theme ('light' | 'dark' | null) from document.documentElement.
  */
-export async function getDocumentTheme(page: Page): Promise<string | null> {
+export function getDocumentTheme(page: Page): Promise<string | null> {
   return page.evaluate(() => {
     return document.documentElement.getAttribute('data-theme');
   });
@@ -91,7 +91,7 @@ export async function getDocumentTheme(page: Page): Promise<string | null> {
 /**
  * Get all meta tag content by name or property.
  */
-export async function getMetaContent(
+export function getMetaContent(
   page: Page,
   attr: 'name' | 'property',
   value: string,
@@ -108,7 +108,7 @@ export async function getMetaContent(
 /**
  * Count shadow roots in the page (all custom elements with shadow DOM).
  */
-export async function countShadowRoots(page: Page): Promise<number> {
+export function countShadowRoots(page: Page): Promise<number> {
   return page.evaluate(() => {
     let count = 0;
     const all = document.querySelectorAll('*');

@@ -113,7 +113,7 @@ export class NotFoundPage extends LitElement {
   private _onSearchKeydown(e: KeyboardEvent) {
     if (e.key === 'Enter') {
       const q = (e.target as HTMLInputElement).value.trim();
-      if (q) window.location.href = `/search?q=${encodeURIComponent(q)}`;
+      if (q) globalThis.location.href = `/search?q=${encodeURIComponent(q)}`;
     }
   }
 

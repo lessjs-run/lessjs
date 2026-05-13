@@ -1,5 +1,5 @@
 /**
- * @lessjs/signal - batch() and untracked() unit tests
+ * @lessjs/signals - batch() and untracked() unit tests
  */
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { batch, computed, effect, signal, untracked } from '../src/index.ts';

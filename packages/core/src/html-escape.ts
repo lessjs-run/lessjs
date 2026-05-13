@@ -73,6 +73,8 @@ export function wrapInDocument(
     devMode?: boolean;
     routeModulePath?: string;
     headExtras?: string;
+    /** Trust script tags that were produced by structured framework injection APIs. */
+    allowHeadExtrasScripts?: boolean;
     /** CSP nonce, if provided, added to all generated <script> tags. */
     cspNonce?: string;
   } = {},
@@ -85,6 +87,7 @@ export function wrapInDocument(
     devMode = false,
     routeModulePath,
     headExtras = '',
+    allowHeadExtrasScripts = false,
     cspNonce,
   } = options;
   const nonceAttr = cspNonce ? ` nonce="${cspNonce}"` : '';
@@ -93,7 +96,10 @@ export function wrapInDocument(
   // user-supplied content being injected unsafely. Legitimate use cases exist
   // (e.g. analytics scripts), but developers should be aware of the risk.
   // Only warn once per process to avoid flooding SSG logs.
-  if (headExtras && /<script[\s>]/i.test(headExtras) && !_warnedHeadExtrasScripts) {
+  if (
+    !allowHeadExtrasScripts &&
+    headExtras && /<script[\s>]/i.test(headExtras) && !_warnedHeadExtrasScripts
+  ) {
     _warnedHeadExtrasScripts = true;
     log.warn(
       'headExtras contains <script> tags. Ensure this content is developer-controlled, ' +

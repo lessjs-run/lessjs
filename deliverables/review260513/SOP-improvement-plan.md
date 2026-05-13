@@ -48,7 +48,7 @@
 - `core/src/constants.ts` 为空文件
 - `core/src/strategy-recommender.ts` 零引用 → 死代码
 - `rpc` 包无 src 导出函数
-- `signals` 包命名不一致（`@lessjs/signal` vs `@lessjs/signals`）
+- `signals` 包命名不一致（`@lessjs/signals` vs `@lessjs/signals`）
 - `html-escape.ts` 中 `wrapInDocument` 和 `renderSsrError` 部分重复
 
 ### 新 SOP

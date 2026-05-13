@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - CLI: SSG Build
+ * @lessjs/adapter-vite - CLI: SSG Build
  *
  * SSG rendering + post-processing.
  * Builds a self-contained SSR bundle via viteBuild(ssr:true, noExternal),
@@ -16,7 +16,7 @@
 
 import { join, resolve } from 'node:path';
 import process from 'node:process';
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import type { Plugin } from 'vite';
 import type { FrameworkOptions, PackageIslandMeta } from '@lessjs/core';
 import type { LessBuildContext } from '../build-context.js';
@@ -30,6 +30,17 @@ const log = createLogger('ssg');
 
 const VIRTUAL_SSG_ENTRY_ID = 'virtual:less-ssg-entry';
 const RESOLVED_SSG_ENTRY_ID = '\0' + VIRTUAL_SSG_ENTRY_ID;
+const FALLBACK_LESSJS_VERSION = '0.14.1';
+
+function readWorkspacePackageVersion(root: string, packageDir: string): string {
+  try {
+    const denoJsonPath = resolve(root, '..', 'packages', packageDir, 'deno.json');
+    const json = JSON.parse(readFileSync(denoJsonPath, 'utf-8'));
+    return typeof json.version === 'string' ? json.version : FALLBACK_LESSJS_VERSION;
+  } catch {
+    return FALLBACK_LESSJS_VERSION;
+  }
+}
 
 // ─── Optional Package Stubs (ADR 0008 Phase C) ──────────────────────
 // Vite plugin that resolves optional LessJS packages to empty stubs
@@ -88,6 +99,7 @@ interface BuildSSGOptions {
   packageIslands?: PackageIslandMeta[];
   /** @security Injected as raw HTML without sanitization */
   headExtras?: string;
+  allowHeadExtrasScripts?: boolean;
   html?: { lang?: string; title?: string };
   upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';
   resolveAlias?: Record<string, string> | import('vite').Alias[];
@@ -123,6 +135,9 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
 
   // Read options from ctx
   if (!options.headExtras) options.headExtras = ctx.phase3.headExtras || undefined;
+  if (options.allowHeadExtrasScripts === undefined) {
+    options.allowHeadExtrasScripts = ctx.phase3.allowHeadExtrasScripts;
+  }
   if (!options.html) options.html = ctx.phase3.html || undefined;
   if (!options.middleware) options.middleware = ctx.phase3.middleware || undefined;
   if (!options.upgradeStrategy) options.upgradeStrategy = ctx.phase3.upgradeStrategy;
@@ -151,6 +166,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     islandFiles: ssgIslandFiles,
     packageIslands,
     headExtras: options.headExtras,
+    allowHeadExtrasScripts: options.allowHeadExtrasScripts,
     html: options.html,
     upgradeStrategy: options.upgradeStrategy || 'lazy',
   });
@@ -201,6 +217,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
       build: {
         ssr: true,
         outDir: ssrOutDir,
+        chunkSizeWarningLimit: 1500,
         rollupOptions: {
           input: { entry: VIRTUAL_SSG_ENTRY_ID },
           output: { format: 'esm' },
@@ -308,29 +325,24 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     // Currently emitted as metadata alongside the Vite-inline bundle; in the
     // esbuild --packages=external mode, it becomes the actual resolution map.
     try {
+      const coreVersion = readWorkspacePackageVersion(root, 'core');
+      const adapterLitVersion = readWorkspacePackageVersion(root, 'adapter-lit');
+      const uiVersion = readWorkspacePackageVersion(root, 'ui');
+
       const importMap: Record<string, string> = {
         'hono': 'npm:hono@4',
         'parse5': 'npm:parse5@7.0.0',
-        '@lessjs/core': 'npm:@jsr/lessjs__core@0.13.0',
+        '@lessjs/core': `npm:@jsr/lessjs__core@${coreVersion}`,
       };
 
-      // Add known LessJS subpath exports
-      for (
-        const subpath of [
-          '/logger',
-          '/errors',
-          '/html-escape',
-          '/context',
-          '/navigation',
-          '/render-dsd',
-        ]
-      ) {
-        importMap[`@lessjs/core${subpath}`] = `npm:@jsr/lessjs__core${subpath}@0.13.0`;
+      // Add public LessJS subpath exports
+      for (const subpath of ['/logger', '/errors', '/context', '/navigation']) {
+        importMap[`@lessjs/core${subpath}`] = `npm:@jsr/lessjs__core${subpath}@${coreVersion}`;
       }
 
       // Add adapter-lit if used
       if (ctx?.phase1.packageIslands?.length) {
-        importMap['@lessjs/adapter-lit'] = 'npm:@jsr/lessjs__adapter-lit@^0.8.0';
+        importMap['@lessjs/adapter-lit'] = `npm:@jsr/lessjs__adapter-lit@${adapterLitVersion}`;
         importMap['lit'] = 'npm:lit@3.3.2';
         importMap['@lit/reactive-element'] = 'npm:@lit/reactive-element@2.1.0';
       }
@@ -340,7 +352,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
         typeof n === 'string' ? n.includes('@lessjs/ui') : n.toString().includes('@lessjs/ui')
       );
       if (hasUi) {
-        importMap['@lessjs/ui'] = 'npm:@jsr/lessjs__ui@^0.7.0';
+        importMap['@lessjs/ui'] = `npm:@jsr/lessjs__ui@${uiVersion}`;
       }
 
       const importMapPath = join(ssrOutDir, 'importmap.json');

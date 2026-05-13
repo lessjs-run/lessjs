@@ -529,7 +529,7 @@ export class ChangelogPage extends LitElement {
               <ul class="change-list">
                 <li>
                   <strong>Signal 原生切换</strong>：
-                  <span class="inline-code">@lessjs/signal</span>
+                  <span class="inline-code">@lessjs/signals</span>
                   新增 <span class="inline-code">isNativeSignal()</span> 检测函数，优先使用浏览器原生
                   <span class="inline-code">globalThis.Signal</span>，不可用时自动回退 polyfill。
                   Native Signal 测试 2 个用例。
@@ -768,7 +768,7 @@ export class ChangelogPage extends LitElement {
               <h4>新增</h4>
               <ul class="change-list">
                 <li>
-                  <strong>TC39 Signals 二开</strong>：<span class="inline-code">@lessjs/signal</span>
+                  <strong>TC39 Signals 二开</strong>：<span class="inline-code">@lessjs/signals</span>
                   基于 signal-polyfill 实现
                   <span class="inline-code">signal()</span>、
                   <span class="inline-code">computed()</span>（自动依赖追踪）、
@@ -829,7 +829,7 @@ export class ChangelogPage extends LitElement {
               <ul class="change-list">
                 <li>
                   <strong>@lessjs/core 升至 0.6.0-alpha.1</strong>：包含 L2 Nested DSD、Navigation API、
-                  DsdOptions、renderNestedCustomElements 等。 @lessjs/signal 升至
+                  DsdOptions、renderNestedCustomElements 等。 @lessjs/signals 升至
                   0.6.0-alpha.1。@lessjs/ui 升至 0.6.0。 @lessjs/adapter-lit 升至 0.3.0。@lessjs/create
                   升至 0.4.7。 @lessjs/rpc 无变更（0.3.1）。
                 </li>

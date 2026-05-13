@@ -94,7 +94,7 @@ export const pageStyles = css`
   .section-label {
     font-size: 11px;
     font-weight: 600;
-    color: var(--less-brand, #534AB7);
+    color: var(--less-brand, #534ab7);
     text-transform: uppercase;
     letter-spacing: 0.14em;
     margin-bottom: 14px;

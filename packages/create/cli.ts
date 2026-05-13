@@ -27,7 +27,7 @@ const PKG_DIR_MAP: Record<string, string> = {
   content: 'content',
   i18n: 'i18n',
   ui: 'ui',
-  signal: 'signals',
+  signals: 'signals',
 };
 
 function loadWorkspaceVersion(pkg: string): string {
@@ -95,7 +95,7 @@ async function resolveVersions(): Promise<Record<string, string>> {
     content: 'content',
     i18n: 'i18n',
     ui: 'ui',
-    signal: 'signal',
+    signals: 'signals',
   };
   const entries = await Promise.all(
     keys.map(async (k) => [k, await fetchJsrVersion(jsrNames[k])]),
@@ -124,7 +124,7 @@ node_modules/
     "@lessjs/core": "jsr:@lessjs/core@^${v.core}",
     "@lessjs/core/navigation": "jsr:@lessjs/core@^${v.core}/navigation",
     "@lessjs/i18n": "jsr:@lessjs/i18n@^${v.i18n}",
-    "@lessjs/signal": "jsr:@lessjs/signal@^${v.signal}",
+    "@lessjs/signals": "jsr:@lessjs/signals@^${v.signals}",
     "@lessjs/ui": "jsr:@lessjs/ui@^${v.ui}",
     "@lessjs/ui/tokens/colors": "jsr:@lessjs/ui@^${v.ui}/tokens/colors",
     "@lessjs/ui/tokens/color-values": "jsr:@lessjs/ui@^${v.ui}/tokens/color-values",
@@ -133,10 +133,10 @@ node_modules/
   "nodeModulesDir": "auto",
   "tasks": {
     "dev": "deno run --config deno.json -A npm:vite",
-    "build": "deno run --config deno.json -A jsr:@lessjs/adapter-vite/cli/build",
+    "build": "deno run --config deno.json -A jsr:@lessjs/adapter-vite@^${v.adapterVite}/cli/build",
     "build:ssr": "deno run --config deno.json -A npm:vite build",
-    "build:client": "deno run --config deno.json -A jsr:@lessjs/adapter-vite/cli/build-client",
-    "build:ssg": "deno run --config deno.json -A jsr:@lessjs/adapter-vite/cli/build-ssg",
+    "build:client": "deno run --config deno.json -A jsr:@lessjs/adapter-vite@^${v.adapterVite}/cli/build-client",
+    "build:ssg": "deno run --config deno.json -A jsr:@lessjs/adapter-vite@^${v.adapterVite}/cli/build-ssg",
     "preview": "deno run --config deno.json -A npm:vite preview"
   },
   "compilerOptions": { "lib": ["ES2022", "DOM", "DOM.Iterable"] }

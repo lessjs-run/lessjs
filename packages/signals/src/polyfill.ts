@@ -1,11 +1,11 @@
 /**
- * @lessjs/signal - TC39 Signal Polyfill Implementation
+ * @lessjs/signals - TC39 Signal Polyfill Implementation
  *
  * Internal polyfill for Signal.State / Signal.Computed / Signal.subtle.Watcher.
  * Used when the browser does not provide native Signal support.
  * When browsers ship native Signal, this module becomes dead code.
  *
- * @module @lessjs/signal/polyfill
+ * @module @lessjs/signals/polyfill
  */
 
 import {

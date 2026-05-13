@@ -9,7 +9,11 @@
  *   - data-theme attribute is updated on document
  */
 
-import { expect, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
+
+function visibleThemeToggle(page: Page) {
+  return page.getByRole('button', { name: 'Toggle theme' }).filter({ visible: true }).first();
+}
 
 test.describe('Theme Toggle', () => {
   test.beforeEach(async ({ page }) => {
@@ -37,8 +41,9 @@ test.describe('Theme Toggle', () => {
     });
 
     // Click the toggle button inside the shadow DOM
-    const toggleBtn = page.locator('less-theme-toggle').locator('button.theme-toggle');
+    const toggleBtn = visibleThemeToggle(page);
     if ((await toggleBtn.count()) > 0) {
+      await expect(toggleBtn).toBeVisible();
       await toggleBtn.click();
 
       // Theme should have changed
@@ -50,8 +55,9 @@ test.describe('Theme Toggle', () => {
   });
 
   test('theme is persisted to localStorage after toggle', async ({ page }) => {
-    const toggleBtn = page.locator('less-theme-toggle').locator('button.theme-toggle');
+    const toggleBtn = visibleThemeToggle(page);
     if ((await toggleBtn.count()) > 0) {
+      await expect(toggleBtn).toBeVisible();
       await toggleBtn.click();
 
       // Check localStorage
@@ -72,8 +78,9 @@ test.describe('Theme Toggle', () => {
   });
 
   test('multiple toggles cycle between dark and light', async ({ page }) => {
-    const toggleBtn = page.locator('less-theme-toggle').locator('button.theme-toggle');
+    const toggleBtn = visibleThemeToggle(page);
     if ((await toggleBtn.count()) > 0) {
+      await expect(toggleBtn).toBeVisible();
       // Toggle twice should return to original theme
       const themeBefore = await page.evaluate(() => {
         return document.documentElement.getAttribute('data-theme');

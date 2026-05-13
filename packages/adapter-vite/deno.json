@@ -1,17 +1,20 @@
 {
   "name": "@lessjs/adapter-vite",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "exports": {
     ".": "./src/index.ts",
     "./build-context": "./src/build-context.ts",
-    "./virtual-ids": "./src/virtual-ids.ts"
+    "./virtual-ids": "./src/virtual-ids.ts",
+    "./cli/build": "./src/cli/build.ts",
+    "./cli/build-client": "./src/cli/build-client.ts",
+    "./cli/build-ssg": "./src/cli/build-ssg.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.14",
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.14/logger",
-    "@lessjs/core/errors": "jsr:@lessjs/core@^0.14/errors",
-    "@lessjs/core/context": "jsr:@lessjs/core@^0.14/context",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.14/navigation",
+    "@lessjs/core": "jsr:@lessjs/core@^0.14.1",
+    "@lessjs/core/logger": "jsr:@lessjs/core@^0.14.1/logger",
+    "@lessjs/core/errors": "jsr:@lessjs/core@^0.14.1/errors",
+    "@lessjs/core/context": "jsr:@lessjs/core@^0.14.1/context",
+    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.14.1/navigation",
     "esbuild": "npm:esbuild@^0.25",
     "hono": "npm:hono@^4",
     "@hono/vite-dev-server": "npm:@hono/vite-dev-server@^0.25.3",
@@ -22,7 +25,7 @@
     "test": "deno test --allow-read --allow-write --allow-env --allow-net __tests__/"
   },
   "publish": {
-    "include": ["src/**", "deno.json", "LICENSE"]
+    "include": ["src/**", "deno.json", "README.md", "LICENSE"]
   },
   "compilerOptions": {
     "skipLibCheck": true
