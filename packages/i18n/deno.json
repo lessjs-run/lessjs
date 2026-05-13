@@ -1,12 +1,12 @@
 {
   "name": "@lessjs/i18n",
-  "version": "0.1.1",
+  "version": "0.14.0",
   "exports": {
     ".": "./src/index.ts"
   },
   "imports": {
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.13/logger",
-    "@lessjs/adapter-vite/build-context": "jsr:@lessjs/adapter-vite@^0.3/build-context",
+    "@lessjs/core/logger": "jsr:@lessjs/core@^0.14/logger",
+    "@lessjs/adapter-vite/build-context": "jsr:@lessjs/adapter-vite@^0.14/build-context",
     "vite": "npm:vite@8.0.10"
   },
   "publish": {
