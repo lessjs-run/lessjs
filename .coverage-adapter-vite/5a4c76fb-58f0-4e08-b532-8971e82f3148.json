@@ -1,0 +1,61 @@
+{
+  "scriptId": "367",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/core/src/navigation.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 3950,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "hasNavigationApi",
+      "ranges": [
+        {
+          "startOffset": 628,
+          "endOffset": 714,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "navigate",
+      "ranges": [
+        {
+          "startOffset": 1079,
+          "endOffset": 1633,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "onNavigate",
+      "ranges": [
+        {
+          "startOffset": 1821,
+          "endOffset": 2608,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "matchRoute",
+      "ranges": [
+        {
+          "startOffset": 2841,
+          "endOffset": 3949,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

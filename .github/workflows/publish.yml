@@ -49,7 +49,7 @@ jobs:
           }
 
           # Publish in dependency order: no-deps first, then dependents
-          # rpc, signal have zero LessJS deps → publish first
+          # rpc, signals have zero LessJS deps → publish first
           # core (pure runtime) has zero LessJS deps → publish early
           # adapter-vite depends on core only (content dep is dynamic import → runtime only)
           # content, i18n need @lessjs/adapter-vite/build-context type → publish after adapter-vite
@@ -58,12 +58,11 @@ jobs:
           # app depends on adapter-vite + content + i18n → publish after all three
           # create has no LessJS runtime deps → publish anytime
           publish_if_missing "@lessjs/rpc" "packages/rpc"
-          publish_if_missing "@lessjs/signal" "packages/signals"
+          publish_if_missing "@lessjs/signals" "packages/signals"
           publish_if_missing "@lessjs/core" "packages/core"
           publish_if_missing "@lessjs/adapter-vite" "packages/adapter-vite"
           publish_if_missing "@lessjs/content" "packages/content"
           publish_if_missing "@lessjs/i18n" "packages/i18n"
-          publish_if_missing "@lessjs/adapter-vite" "packages/adapter-vite"
           publish_if_missing "@lessjs/adapter-lit" "packages/adapter-lit"
           publish_if_missing "@lessjs/ui" "packages/ui"
           publish_if_missing "@lessjs/app" "packages/app"

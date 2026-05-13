@@ -1,0 +1,17 @@
+{
+  "scriptId": "346",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/@hono+vite-dev-server@0.25.3/node_modules/@hono/vite-dev-server/dist/index.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 178,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

@@ -1,0 +1,379 @@
+{
+  "scriptId": "442",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/rolldown@1.0.0-rc.17/node_modules/rolldown/dist/shared/watch-Bd8v9ewv.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 11932,
+          "count": 1
+        },
+        {
+          "startOffset": 1589,
+          "endOffset": 7033,
+          "count": 0
+        },
+        {
+          "startOffset": 7034,
+          "endOffset": 7060,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "processOk",
+      "ranges": [
+        {
+          "startOffset": 1931,
+          "endOffset": 2266,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 2439,
+          "endOffset": 2567,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Emitter",
+      "ranges": [
+        {
+          "startOffset": 2570,
+          "endOffset": 2779,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "on",
+      "ranges": [
+        {
+          "startOffset": 2781,
+          "endOffset": 2827,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "removeListener",
+      "ranges": [
+        {
+          "startOffset": 2829,
+          "endOffset": 3071,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "emit",
+      "ranges": [
+        {
+          "startOffset": 3073,
+          "endOffset": 3349,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "signalExitWrap",
+      "ranges": [
+        {
+          "startOffset": 3407,
+          "endOffset": 3586,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "onExit",
+      "ranges": [
+        {
+          "startOffset": 3645,
+          "endOffset": 3677,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "load",
+      "ranges": [
+        {
+          "startOffset": 3679,
+          "endOffset": 3688,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "unload",
+      "ranges": [
+        {
+          "startOffset": 3690,
+          "endOffset": 3701,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 3777,
+          "endOffset": 3990,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "SignalExit",
+      "ranges": [
+        {
+          "startOffset": 3993,
+          "endOffset": 4797,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "onExit",
+      "ranges": [
+        {
+          "startOffset": 4799,
+          "endOffset": 5226,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "load",
+      "ranges": [
+        {
+          "startOffset": 5228,
+          "endOffset": 5617,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "unload",
+      "ranges": [
+        {
+          "startOffset": 5619,
+          "endOffset": 6132,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#processReallyExit",
+      "ranges": [
+        {
+          "startOffset": 6134,
+          "endOffset": 6437,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#processEmit",
+      "ranges": [
+        {
+          "startOffset": 6439,
+          "endOffset": 6885,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "onExit",
+      "ranges": [
+        {
+          "startOffset": 7111,
+          "endOffset": 7304,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 7389,
+          "endOffset": 7426,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "on",
+      "ranges": [
+        {
+          "startOffset": 7429,
+          "endOffset": 7604,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "off",
+      "ranges": [
+        {
+          "startOffset": 7606,
+          "endOffset": 7811,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "clear",
+      "ranges": [
+        {
+          "startOffset": 7813,
+          "endOffset": 7862,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "emit",
+      "ranges": [
+        {
+          "startOffset": 8033,
+          "endOffset": 8178,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "close",
+      "ranges": [
+        {
+          "startOffset": 8180,
+          "endOffset": 8196,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createEventCallback",
+      "ranges": [
+        {
+          "startOffset": 8316,
+          "endOffset": 9271,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 9295,
+          "endOffset": 9333,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Watcher",
+      "ranges": [
+        {
+          "startOffset": 9336,
+          "endOffset": 9653,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "close",
+      "ranges": [
+        {
+          "startOffset": 9655,
+          "endOffset": 9851,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "run",
+      "ranges": [
+        {
+          "startOffset": 9853,
+          "endOffset": 9924,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createWatcher",
+      "ranges": [
+        {
+          "startOffset": 9928,
+          "endOffset": 10505,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "warnMultiplePollingOptions",
+      "ranges": [
+        {
+          "startOffset": 10506,
+          "endOffset": 10959,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "watch",
+      "ranges": [
+        {
+          "startOffset": 11769,
+          "endOffset": 11882,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

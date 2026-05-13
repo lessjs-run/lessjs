@@ -1,0 +1,39 @@
+{
+  "scriptId": "455",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/@rolldown+pluginutils@1.0.0-rc.17/node_modules/@rolldown/pluginutils/dist/utils.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 519,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "cleanUrl",
+      "ranges": [
+        {
+          "startOffset": 36,
+          "endOffset": 101,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "extractQueryWithoutFragment",
+      "ranges": [
+        {
+          "startOffset": 109,
+          "endOffset": 518,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

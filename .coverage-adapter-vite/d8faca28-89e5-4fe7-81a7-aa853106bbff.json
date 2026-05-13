@@ -1,0 +1,99 @@
+{
+  "scriptId": "368",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/@hono+vite-dev-server@0.25.3/node_modules/@hono/vite-dev-server/dist/dev-server.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 6477,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "handleHotUpdate",
+      "ranges": [
+        {
+          "startOffset": 679,
+          "endOffset": 817,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "devServer",
+      "ranges": [
+        {
+          "startOffset": 857,
+          "endOffset": 5584,
+          "count": 33
+        },
+        {
+          "startOffset": 971,
+          "endOffset": 994,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "config",
+      "ranges": [
+        {
+          "startOffset": 1251,
+          "endOffset": 1537,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "configResolved",
+      "ranges": [
+        {
+          "startOffset": 1541,
+          "endOffset": 1903,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "configureServer",
+      "ranges": [
+        {
+          "startOffset": 1924,
+          "endOffset": 5499,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getAdapterFromOptions",
+      "ranges": [
+        {
+          "startOffset": 5615,
+          "endOffset": 5802,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "injectStringToResponse",
+      "ranges": [
+        {
+          "startOffset": 5804,
+          "endOffset": 6425,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

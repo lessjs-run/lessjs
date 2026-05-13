@@ -1,0 +1,22 @@
+{
+  "scriptId": "376",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/brace-expansion@2.1.0/node_modules/brace-expansion/index.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 641,
+          "count": 1
+        },
+        {
+          "startOffset": 189,
+          "endOffset": 374,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

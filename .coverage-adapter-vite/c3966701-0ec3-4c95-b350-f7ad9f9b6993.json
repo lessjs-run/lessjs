@@ -1,0 +1,113 @@
+{
+  "scriptId": "314",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/adapter-vite/src/island-manifest.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2854,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "extractCustomElementTags",
+      "ranges": [
+        {
+          "startOffset": 502,
+          "endOffset": 767,
+          "count": 6
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "generateIslandManifests",
+      "ranges": [
+        {
+          "startOffset": 856,
+          "endOffset": 2054,
+          "count": 3
+        },
+        {
+          "startOffset": 1001,
+          "endOffset": 1018,
+          "count": 0
+        },
+        {
+          "startOffset": 1151,
+          "endOffset": 1406,
+          "count": 0
+        },
+        {
+          "startOffset": 1867,
+          "endOffset": 1872,
+          "count": 1
+        },
+        {
+          "startOffset": 1873,
+          "endOffset": 1914,
+          "count": 2
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 1602,
+          "endOffset": 1630,
+          "count": 2
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 1636,
+          "endOffset": 1816,
+          "count": 2
+        },
+        {
+          "startOffset": 1748,
+          "endOffset": 1757,
+          "count": 1
+        },
+        {
+          "startOffset": 1790,
+          "endOffset": 1805,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "writeIslandManifests",
+      "ranges": [
+        {
+          "startOffset": 2193,
+          "endOffset": 2580,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "simpleHash",
+      "ranges": [
+        {
+          "startOffset": 2639,
+          "endOffset": 2853,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "scriptId": "312",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/adapter-vite/__tests__/ssg-smoke.test.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 3783,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "hasSsrBundle",
+      "ranges": [
+        {
+          "startOffset": 694,
+          "endOffset": 927,
+          "count": 2
+        },
+        {
+          "startOffset": 796,
+          "endOffset": 809,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 847,
+          "endOffset": 923,
+          "count": 26
+        },
+        {
+          "startOffset": 900,
+          "endOffset": 923,
+          "count": 2
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "findHtmlFiles",
+      "ranges": [
+        {
+          "startOffset": 928,
+          "endOffset": 1366,
+          "count": 273
+        },
+        {
+          "startOffset": 1050,
+          "endOffset": 1346,
+          "count": 561
+        },
+        {
+          "startOffset": 1124,
+          "endOffset": 1154,
+          "count": 274
+        },
+        {
+          "startOffset": 1155,
+          "endOffset": 1181,
+          "count": 274
+        },
+        {
+          "startOffset": 1182,
+          "endOffset": 1208,
+          "count": 273
+        },
+        {
+          "startOffset": 1210,
+          "endOffset": 1265,
+          "count": 272
+        },
+        {
+          "startOffset": 1265,
+          "endOffset": 1342,
+          "count": 289
+        },
+        {
+          "startOffset": 1305,
+          "endOffset": 1342,
+          "count": 264
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "ensureDocsBuild",
+      "ranges": [
+        {
+          "startOffset": 1367,
+          "endOffset": 1863,
+          "count": 1
+        },
+        {
+          "startOffset": 1485,
+          "endOffset": 1862,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 1934,
+          "endOffset": 3780,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 2039,
+          "endOffset": 2341,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 2418,
+          "endOffset": 2899,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 2981,
+          "endOffset": 3776,
+          "count": 1
+        },
+        {
+          "startOffset": 3141,
+          "endOffset": 3273,
+          "count": 264
+        },
+        {
+          "startOffset": 3404,
+          "endOffset": 3449,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

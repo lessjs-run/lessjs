@@ -1,0 +1,39 @@
+{
+  "scriptId": "365",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/core/src/adapter-registry.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 639,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "registerAdapter",
+      "ranges": [
+        {
+          "startOffset": 482,
+          "endOffset": 541,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getAdapter",
+      "ranges": [
+        {
+          "startOffset": 594,
+          "endOffset": 638,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

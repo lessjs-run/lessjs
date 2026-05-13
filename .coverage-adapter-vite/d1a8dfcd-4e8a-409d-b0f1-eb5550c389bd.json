@@ -1,0 +1,1237 @@
+{
+  "scriptId": "400",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/esbuild@0.25.12/node_modules/esbuild/lib/main.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 88706,
+          "count": 1
+        },
+        {
+          "startOffset": 5563,
+          "endOffset": 5894,
+          "count": 0
+        },
+        {
+          "startOffset": 5942,
+          "endOffset": 6270,
+          "count": 0
+        },
+        {
+          "startOffset": 73733,
+          "endOffset": 73744,
+          "count": 0
+        },
+        {
+          "startOffset": 73873,
+          "endOffset": 73887,
+          "count": 0
+        },
+        {
+          "startOffset": 73905,
+          "endOffset": 73919,
+          "count": 0
+        },
+        {
+          "startOffset": 73924,
+          "endOffset": 73958,
+          "count": 0
+        },
+        {
+          "startOffset": 74028,
+          "endOffset": 74036,
+          "count": 0
+        },
+        {
+          "startOffset": 74083,
+          "endOffset": 74102,
+          "count": 0
+        },
+        {
+          "startOffset": 88373,
+          "endOffset": 88404,
+          "count": 0
+        },
+        {
+          "startOffset": 88502,
+          "endOffset": 88704,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "__export",
+      "ranges": [
+        {
+          "startOffset": 300,
+          "endOffset": 411,
+          "count": 1
+        },
+        {
+          "startOffset": 347,
+          "endOffset": 409,
+          "count": 13
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "__copyProps",
+      "ranges": [
+        {
+          "startOffset": 431,
+          "endOffset": 777,
+          "count": 1
+        },
+        {
+          "startOffset": 500,
+          "endOffset": 529,
+          "count": 0
+        },
+        {
+          "startOffset": 584,
+          "endOffset": 758,
+          "count": 13
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "get",
+      "ranges": [
+        {
+          "startOffset": 669,
+          "endOffset": 684,
+          "count": 12
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "__toESM",
+      "ranges": [
+        {
+          "startOffset": 793,
+          "endOffset": 1302,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "__toCommonJS",
+      "ranges": [
+        {
+          "startOffset": 1323,
+          "endOffset": 1394,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "analyzeMetafile",
+      "ranges": [
+        {
+          "startOffset": 1483,
+          "endOffset": 1504,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "analyzeMetafileSync",
+      "ranges": [
+        {
+          "startOffset": 1529,
+          "endOffset": 1554,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "build",
+      "ranges": [
+        {
+          "startOffset": 1565,
+          "endOffset": 1576,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "buildSync",
+      "ranges": [
+        {
+          "startOffset": 1591,
+          "endOffset": 1606,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "context",
+      "ranges": [
+        {
+          "startOffset": 1619,
+          "endOffset": 1632,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "default",
+      "ranges": [
+        {
+          "startOffset": 1645,
+          "endOffset": 1663,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "formatMessages",
+      "ranges": [
+        {
+          "startOffset": 1683,
+          "endOffset": 1703,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "formatMessagesSync",
+      "ranges": [
+        {
+          "startOffset": 1727,
+          "endOffset": 1751,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "initialize",
+      "ranges": [
+        {
+          "startOffset": 1767,
+          "endOffset": 1783,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "stop",
+      "ranges": [
+        {
+          "startOffset": 1793,
+          "endOffset": 1803,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "transform",
+      "ranges": [
+        {
+          "startOffset": 1818,
+          "endOffset": 1833,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "transformSync",
+      "ranges": [
+        {
+          "startOffset": 1852,
+          "endOffset": 1871,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "version",
+      "ranges": [
+        {
+          "startOffset": 1884,
+          "endOffset": 1897,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "encodePacket",
+      "ranges": [
+        {
+          "startOffset": 1980,
+          "endOffset": 3020,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "decodePacket",
+      "ranges": [
+        {
+          "startOffset": 3021,
+          "endOffset": 4018,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "ByteBuffer",
+      "ranges": [
+        {
+          "startOffset": 4046,
+          "endOffset": 4147,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "_write",
+      "ranges": [
+        {
+          "startOffset": 4150,
+          "endOffset": 4382,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "write8",
+      "ranges": [
+        {
+          "startOffset": 4385,
+          "endOffset": 4467,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "write32",
+      "ranges": [
+        {
+          "startOffset": 4470,
+          "endOffset": 4567,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "write",
+      "ranges": [
+        {
+          "startOffset": 4570,
+          "endOffset": 4724,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "_read",
+      "ranges": [
+        {
+          "startOffset": 4727,
+          "endOffset": 4890,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "read8",
+      "ranges": [
+        {
+          "startOffset": 4893,
+          "endOffset": 4942,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "read32",
+      "ranges": [
+        {
+          "startOffset": 4945,
+          "endOffset": 5009,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "read",
+      "ranges": [
+        {
+          "startOffset": 5012,
+          "endOffset": 5207,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "encodeUTF8",
+      "ranges": [
+        {
+          "startOffset": 5429,
+          "endOffset": 5459,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "decodeUTF8",
+      "ranges": [
+        {
+          "startOffset": 5476,
+          "endOffset": 5508,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "encodeUTF8",
+      "ranges": [
+        {
+          "startOffset": 5621,
+          "endOffset": 5648,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "decodeUTF8",
+      "ranges": [
+        {
+          "startOffset": 5665,
+          "endOffset": 5800,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "readUInt32LE",
+      "ranges": [
+        {
+          "startOffset": 6271,
+          "endOffset": 6413,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "writeUInt32LE",
+      "ranges": [
+        {
+          "startOffset": 6414,
+          "endOffset": 6592,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "validateAndJoinStringArray",
+      "ranges": [
+        {
+          "startOffset": 6725,
+          "endOffset": 7003,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "canBeAnything",
+      "ranges": [
+        {
+          "startOffset": 7024,
+          "endOffset": 7034,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeBoolean",
+      "ranges": [
+        {
+          "startOffset": 7056,
+          "endOffset": 7114,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeString",
+      "ranges": [
+        {
+          "startOffset": 7135,
+          "endOffset": 7191,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeRegExp",
+      "ranges": [
+        {
+          "startOffset": 7212,
+          "endOffset": 7273,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeInteger",
+      "ranges": [
+        {
+          "startOffset": 7295,
+          "endOffset": 7378,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeValidPortNumber",
+      "ranges": [
+        {
+          "startOffset": 7408,
+          "endOffset": 7532,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeFunction",
+      "ranges": [
+        {
+          "startOffset": 7555,
+          "endOffset": 7615,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeArray",
+      "ranges": [
+        {
+          "startOffset": 7635,
+          "endOffset": 7686,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeArrayOfStrings",
+      "ranges": [
+        {
+          "startOffset": 7715,
+          "endOffset": 7822,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeObject",
+      "ranges": [
+        {
+          "startOffset": 7843,
+          "endOffset": 7943,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeEntryPoints",
+      "ranges": [
+        {
+          "startOffset": 7969,
+          "endOffset": 8056,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeWebAssemblyModule",
+      "ranges": [
+        {
+          "startOffset": 8088,
+          "endOffset": 8166,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeObjectOrNull",
+      "ranges": [
+        {
+          "startOffset": 8193,
+          "endOffset": 8283,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeStringOrBoolean",
+      "ranges": [
+        {
+          "startOffset": 8313,
+          "endOffset": 8412,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeStringOrObject",
+      "ranges": [
+        {
+          "startOffset": 8441,
+          "endOffset": 8582,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeStringOrArrayOfStrings",
+      "ranges": [
+        {
+          "startOffset": 8619,
+          "endOffset": 8767,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeStringOrUint8Array",
+      "ranges": [
+        {
+          "startOffset": 8800,
+          "endOffset": 8903,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mustBeStringOrURL",
+      "ranges": [
+        {
+          "startOffset": 8929,
+          "endOffset": 9018,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getFlag",
+      "ranges": [
+        {
+          "startOffset": 9020,
+          "endOffset": 9283,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "checkForInvalidFlags",
+      "ranges": [
+        {
+          "startOffset": 9284,
+          "endOffset": 9467,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "validateInitializeOptions",
+      "ranges": [
+        {
+          "startOffset": 9468,
+          "endOffset": 9900,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "validateMangleCache",
+      "ranges": [
+        {
+          "startOffset": 9901,
+          "endOffset": 10364,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "pushLogFlags",
+      "ranges": [
+        {
+          "startOffset": 10365,
+          "endOffset": 10843,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "validateStringValue",
+      "ranges": [
+        {
+          "startOffset": 10844,
+          "endOffset": 11085,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "pushCommonFlags",
+      "ranges": [
+        {
+          "startOffset": 11086,
+          "endOffset": 16493,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "flagsForBuildOptions",
+      "ranges": [
+        {
+          "startOffset": 16494,
+          "endOffset": 23907,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "flagsForTransformOptions",
+      "ranges": [
+        {
+          "startOffset": 23908,
+          "endOffset": 25008,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createChannel",
+      "ranges": [
+        {
+          "startOffset": 25009,
+          "endOffset": 34436,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "buildOrContextImpl",
+      "ranges": [
+        {
+          "startOffset": 34437,
+          "endOffset": 43813,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "handlePlugins",
+      "ranges": [
+        {
+          "startOffset": 43834,
+          "endOffset": 58215,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createObjectStash",
+      "ranges": [
+        {
+          "startOffset": 58217,
+          "endOffset": 58546,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "extractCallerV8",
+      "ranges": [
+        {
+          "startOffset": 58547,
+          "endOffset": 58959,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "extractErrorMessageV8",
+      "ranges": [
+        {
+          "startOffset": 58960,
+          "endOffset": 59362,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "parseStackLinesV8",
+      "ranges": [
+        {
+          "startOffset": 59363,
+          "endOffset": 60859,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "failureErrorWithLog",
+      "ranges": [
+        {
+          "startOffset": 60860,
+          "endOffset": 61759,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "replaceDetailsInMessages",
+      "ranges": [
+        {
+          "startOffset": 61760,
+          "endOffset": 61922,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "sanitizeLocation",
+      "ranges": [
+        {
+          "startOffset": 61923,
+          "endOffset": 63080,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "sanitizeMessages",
+      "ranges": [
+        {
+          "startOffset": 63081,
+          "endOffset": 64543,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "sanitizeStringArray",
+      "ranges": [
+        {
+          "startOffset": 64544,
+          "endOffset": 64794,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "sanitizeStringMap",
+      "ranges": [
+        {
+          "startOffset": 64795,
+          "endOffset": 65114,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "convertOutputFiles",
+      "ranges": [
+        {
+          "startOffset": 65115,
+          "endOffset": 65453,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "jsRegExpToGoRegExp",
+      "ranges": [
+        {
+          "startOffset": 65454,
+          "endOffset": 65600,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isValidBinaryPath",
+      "ranges": [
+        {
+          "startOffset": 65812,
+          "endOffset": 65850,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "pkgAndSubpathForCurrentPlatform",
+      "ranges": [
+        {
+          "startOffset": 67214,
+          "endOffset": 67910,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "pkgForSomeOtherPlatform",
+      "ranges": [
+        {
+          "startOffset": 67911,
+          "endOffset": 68612,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "downloadedBinPath",
+      "ranges": [
+        {
+          "startOffset": 68613,
+          "endOffset": 68823,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "generateBinPath",
+      "ranges": [
+        {
+          "startOffset": 68824,
+          "endOffset": 73399,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "esbuildCommandAndArgs",
+      "ranges": [
+        {
+          "startOffset": 74147,
+          "endOffset": 75216,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isTTY",
+      "ranges": [
+        {
+          "startOffset": 75230,
+          "endOffset": 75249,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "readFile",
+      "ranges": [
+        {
+          "startOffset": 75268,
+          "endOffset": 75524,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "writeFile",
+      "ranges": [
+        {
+          "startOffset": 75528,
+          "endOffset": 75725,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "readFile",
+      "ranges": [
+        {
+          "startOffset": 75747,
+          "endOffset": 76052,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "writeFile",
+      "ranges": [
+        {
+          "startOffset": 76056,
+          "endOffset": 76284,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "build",
+      "ranges": [
+        {
+          "startOffset": 76325,
+          "endOffset": 76377,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "context",
+      "ranges": [
+        {
+          "startOffset": 76393,
+          "endOffset": 76457,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transform",
+      "ranges": [
+        {
+          "startOffset": 76475,
+          "endOffset": 76545,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "formatMessages",
+      "ranges": [
+        {
+          "startOffset": 76568,
+          "endOffset": 76649,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "analyzeMetafile",
+      "ranges": [
+        {
+          "startOffset": 76673,
+          "endOffset": 76755,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "buildSync",
+      "ranges": [
+        {
+          "startOffset": 76773,
+          "endOffset": 77255,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transformSync",
+      "ranges": [
+        {
+          "startOffset": 77277,
+          "endOffset": 77803,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "formatMessagesSync",
+      "ranges": [
+        {
+          "startOffset": 77830,
+          "endOffset": 78329,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "analyzeMetafileSync",
+      "ranges": [
+        {
+          "startOffset": 78357,
+          "endOffset": 78927,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "stop",
+      "ranges": [
+        {
+          "startOffset": 78940,
+          "endOffset": 79066,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "initialize",
+      "ranges": [
+        {
+          "startOffset": 79118,
+          "endOffset": 79635,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "ensureServiceIsRunning",
+      "ranges": [
+        {
+          "startOffset": 79736,
+          "endOffset": 82398,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "runServiceSync",
+      "ranges": [
+        {
+          "startOffset": 82421,
+          "endOffset": 83325,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "randomFileName",
+      "ranges": [
+        {
+          "startOffset": 83348,
+          "endOffset": 83445,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "startWorkerThreadService",
+      "ranges": [
+        {
+          "startOffset": 83510,
+          "endOffset": 86356,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "startSyncServiceWorker",
+      "ranges": [
+        {
+          "startOffset": 86387,
+          "endOffset": 88343,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

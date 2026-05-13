@@ -1,0 +1,347 @@
+{
+  "scriptId": "378",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/minimatch@9.0.9/node_modules/minimatch/dist/esm/ast.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 27554,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "isExtglobType",
+      "ranges": [
+        {
+          "startOffset": 206,
+          "endOffset": 225,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isExtglobAST",
+      "ranges": [
+        {
+          "startOffset": 248,
+          "endOffset": 276,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "regExpEscape",
+      "ranges": [
+        {
+          "startOffset": 1693,
+          "endOffset": 1745,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 2167,
+          "endOffset": 2452,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "AST",
+      "ranges": [
+        {
+          "startOffset": 2458,
+          "endOffset": 3027,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get hasMagic",
+      "ranges": [
+        {
+          "startOffset": 3032,
+          "endOffset": 3502,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "toString",
+      "ranges": [
+        {
+          "startOffset": 3539,
+          "endOffset": 3896,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#fillNegs",
+      "ranges": [
+        {
+          "startOffset": 3901,
+          "endOffset": 5090,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "push",
+      "ranges": [
+        {
+          "startOffset": 5095,
+          "endOffset": 5466,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "toJSON",
+      "ranges": [
+        {
+          "startOffset": 5471,
+          "endOffset": 5941,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isStart",
+      "ranges": [
+        {
+          "startOffset": 5946,
+          "endOffset": 6543,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isEnd",
+      "ranges": [
+        {
+          "startOffset": 6548,
+          "endOffset": 7035,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "copyIn",
+      "ranges": [
+        {
+          "startOffset": 7040,
+          "endOffset": 7181,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "clone",
+      "ranges": [
+        {
+          "startOffset": 7186,
+          "endOffset": 7344,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#parseAST",
+      "ranges": [
+        {
+          "startOffset": 7356,
+          "endOffset": 11870,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#canAdoptWithSpace",
+      "ranges": [
+        {
+          "startOffset": 11875,
+          "endOffset": 11968,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#canAdopt",
+      "ranges": [
+        {
+          "startOffset": 11973,
+          "endOffset": 12411,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#canAdoptType",
+      "ranges": [
+        {
+          "startOffset": 12416,
+          "endOffset": 12512,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#adoptWithSpace",
+      "ranges": [
+        {
+          "startOffset": 12517,
+          "endOffset": 12734,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#adopt",
+      "ranges": [
+        {
+          "startOffset": 12739,
+          "endOffset": 13011,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#canUsurpType",
+      "ranges": [
+        {
+          "startOffset": 13016,
+          "endOffset": 13113,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#canUsurp",
+      "ranges": [
+        {
+          "startOffset": 13118,
+          "endOffset": 13572,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#usurp",
+      "ranges": [
+        {
+          "startOffset": 13577,
+          "endOffset": 14075,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#flatten",
+      "ranges": [
+        {
+          "startOffset": 14080,
+          "endOffset": 15249,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "fromGlob",
+      "ranges": [
+        {
+          "startOffset": 15261,
+          "endOffset": 15425,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "toMMPattern",
+      "ranges": [
+        {
+          "startOffset": 15525,
+          "endOffset": 16496,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get options",
+      "ranges": [
+        {
+          "startOffset": 16501,
+          "endOffset": 16552,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "toRegExpSource",
+      "ranges": [
+        {
+          "startOffset": 19995,
+          "endOffset": 25130,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#partsToRegExp",
+      "ranges": [
+        {
+          "startOffset": 25135,
+          "endOffset": 25780,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#parseGlob",
+      "ranges": [
+        {
+          "startOffset": 25792,
+          "endOffset": 27510,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

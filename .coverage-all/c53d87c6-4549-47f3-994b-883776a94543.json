@@ -1,0 +1,86 @@
+{
+  "scriptId": "314",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/core/src/context.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2171,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "extractParams",
+      "ranges": [
+        {
+          "startOffset": 720,
+          "endOffset": 1177,
+          "count": 7
+        },
+        {
+          "startOffset": 992,
+          "endOffset": 997,
+          "count": 0
+        },
+        {
+          "startOffset": 1003,
+          "endOffset": 1175,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "parseQuery",
+      "ranges": [
+        {
+          "startOffset": 1371,
+          "endOffset": 1796,
+          "count": 7
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 1471,
+          "endOffset": 1776,
+          "count": 8
+        },
+        {
+          "startOffset": 1510,
+          "endOffset": 1712,
+          "count": 2
+        },
+        {
+          "startOffset": 1582,
+          "endOffset": 1621,
+          "count": 0
+        },
+        {
+          "startOffset": 1712,
+          "endOffset": 1772,
+          "count": 6
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "createSsrContext",
+      "ranges": [
+        {
+          "startOffset": 1917,
+          "endOffset": 2170,
+          "count": 3
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

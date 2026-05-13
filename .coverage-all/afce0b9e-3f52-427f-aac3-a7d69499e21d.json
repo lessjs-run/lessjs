@@ -1,0 +1,28 @@
+{
+  "scriptId": "444",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/rolldown@1.0.0-rc.17/node_modules/rolldown/dist/shared/rolldown-D3JZ9rMt.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 986,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "rolldown",
+      "ranges": [
+        {
+          "startOffset": 822,
+          "endOffset": 945,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

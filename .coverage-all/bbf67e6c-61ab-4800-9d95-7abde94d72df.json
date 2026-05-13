@@ -1,0 +1,72 @@
+{
+  "scriptId": "363",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/core/src/html-escape.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 4657,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "escapeHtml",
+      "ranges": [
+        {
+          "startOffset": 807,
+          "endOffset": 1103,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "escapeAttr",
+      "ranges": [
+        {
+          "startOffset": 1149,
+          "endOffset": 1309,
+          "count": 8
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "escapeAttrValue",
+      "ranges": [
+        {
+          "startOffset": 1386,
+          "endOffset": 1513,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "wrapInDocument",
+      "ranges": [
+        {
+          "startOffset": 1676,
+          "endOffset": 3443,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "renderSsrError",
+      "ranges": [
+        {
+          "startOffset": 3614,
+          "endOffset": 4656,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

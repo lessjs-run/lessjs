@@ -1,0 +1,77 @@
+{
+  "scriptId": "394",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/entities@4.5.0/node_modules/entities/lib/esm/escape.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 3931,
+          "count": 1
+        },
+        {
+          "startOffset": 424,
+          "endOffset": 741,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 381,
+          "endOffset": 419,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getCodePoint",
+      "ranges": [
+        {
+          "startOffset": 506,
+          "endOffset": 741,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "encodeXML",
+      "ranges": [
+        {
+          "startOffset": 978,
+          "endOffset": 1654,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getEscaper",
+      "ranges": [
+        {
+          "startOffset": 2440,
+          "endOffset": 3015,
+          "count": 3
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "escape",
+      "ranges": [
+        {
+          "startOffset": 2485,
+          "endOffset": 3012,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

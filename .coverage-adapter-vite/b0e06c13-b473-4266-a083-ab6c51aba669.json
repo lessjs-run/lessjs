@@ -1,0 +1,28 @@
+{
+  "scriptId": "380",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/minimatch@9.0.9/node_modules/minimatch/dist/esm/unescape.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 847,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "unescape",
+      "ranges": [
+        {
+          "startOffset": 597,
+          "endOffset": 809,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

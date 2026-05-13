@@ -1,0 +1,84 @@
+{
+  "scriptId": "314",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/core/src/strategy-recommender.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2319,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "recommendStrategy",
+      "ranges": [
+        {
+          "startOffset": 844,
+          "endOffset": 1663,
+          "count": 8
+        },
+        {
+          "startOffset": 908,
+          "endOffset": 936,
+          "count": 2
+        },
+        {
+          "startOffset": 938,
+          "endOffset": 1059,
+          "count": 1
+        },
+        {
+          "startOffset": 1059,
+          "endOffset": 1087,
+          "count": 7
+        },
+        {
+          "startOffset": 1087,
+          "endOffset": 1213,
+          "count": 1
+        },
+        {
+          "startOffset": 1213,
+          "endOffset": 1247,
+          "count": 6
+        },
+        {
+          "startOffset": 1247,
+          "endOffset": 1419,
+          "count": 3
+        },
+        {
+          "startOffset": 1419,
+          "endOffset": 1544,
+          "count": 2
+        },
+        {
+          "startOffset": 1544,
+          "endOffset": 1662,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "buildRecommendation",
+      "ranges": [
+        {
+          "startOffset": 1789,
+          "endOffset": 2318,
+          "count": 1
+        },
+        {
+          "startOffset": 2154,
+          "endOffset": 2170,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

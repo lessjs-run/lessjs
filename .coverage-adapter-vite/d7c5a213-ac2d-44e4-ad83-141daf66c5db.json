@@ -1,0 +1,127 @@
+{
+  "scriptId": "394",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/picomatch@4.0.4/node_modules/picomatch/lib/picomatch.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 10091,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "isObject",
+      "ranges": [
+        {
+          "startOffset": 174,
+          "endOffset": 234,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "picomatch",
+      "ranges": [
+        {
+          "startOffset": 988,
+          "endOffset": 2794,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "picomatch.test",
+      "ranges": [
+        {
+          "startOffset": 3342,
+          "endOffset": 4143,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "picomatch.matchBase",
+      "ranges": [
+        {
+          "startOffset": 4558,
+          "endOffset": 4712,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "picomatch.isMatch",
+      "ranges": [
+        {
+          "startOffset": 5348,
+          "endOffset": 5409,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "picomatch.parse",
+      "ranges": [
+        {
+          "startOffset": 5819,
+          "endOffset": 5987,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "picomatch.scan",
+      "ranges": [
+        {
+          "startOffset": 6622,
+          "endOffset": 6662,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "picomatch.compileRe",
+      "ranges": [
+        {
+          "startOffset": 7384,
+          "endOffset": 7894,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "picomatch.makeRe",
+      "ranges": [
+        {
+          "startOffset": 8746,
+          "endOffset": 9252,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "picomatch.toRegex",
+      "ranges": [
+        {
+          "startOffset": 9714,
+          "endOffset": 9942,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

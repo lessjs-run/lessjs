@@ -1,0 +1,2318 @@
+{
+  "scriptId": "443",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/rolldown@1.0.0-rc.17/node_modules/rolldown/dist/shared/bindingify-input-options-DbbBhzky.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 76557,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "normalizeLog",
+      "ranges": [
+        {
+          "startOffset": 1611,
+          "endOffset": 1718,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getLogHandler",
+      "ranges": [
+        {
+          "startOffset": 1720,
+          "endOffset": 2124,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "normalizeHook",
+      "ranges": [
+        {
+          "startOffset": 2176,
+          "endOffset": 2519,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 2620,
+          "endOffset": 2646,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "MinimalPluginContextImpl",
+      "ranges": [
+        {
+          "startOffset": 2649,
+          "endOffset": 3136,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "error",
+      "ranges": [
+        {
+          "startOffset": 3138,
+          "endOffset": 3242,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "PlainObjectLike",
+      "ranges": [
+        {
+          "startOffset": 4435,
+          "endOffset": 4482,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "setupLazyProperties",
+      "ranges": [
+        {
+          "startOffset": 4705,
+          "endOffset": 5181,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getLazyFields",
+      "ranges": [
+        {
+          "startOffset": 5319,
+          "endOffset": 5491,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "lazyProp",
+      "ranges": [
+        {
+          "startOffset": 6496,
+          "endOffset": 6825,
+          "count": 66
+        },
+        {
+          "startOffset": 6592,
+          "endOffset": 6656,
+          "count": 5
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "transformAssetSource",
+      "ranges": [
+        {
+          "startOffset": 6875,
+          "endOffset": 6962,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingAssetSource",
+      "ranges": [
+        {
+          "startOffset": 6963,
+          "endOffset": 7029,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "__decorate",
+      "ranges": [
+        {
+          "startOffset": 7104,
+          "endOffset": 7626,
+          "count": 66
+        },
+        {
+          "startOffset": 7194,
+          "endOffset": 7202,
+          "count": 0
+        },
+        {
+          "startOffset": 7273,
+          "endOffset": 7279,
+          "count": 0
+        },
+        {
+          "startOffset": 7360,
+          "endOffset": 7412,
+          "count": 0
+        },
+        {
+          "startOffset": 7502,
+          "endOffset": 7508,
+          "count": 0
+        },
+        {
+          "startOffset": 7537,
+          "endOffset": 7553,
+          "count": 0
+        },
+        {
+          "startOffset": 7555,
+          "endOffset": 7559,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 7736,
+          "endOffset": 7750,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "OutputAssetImpl",
+      "ranges": [
+        {
+          "startOffset": 7753,
+          "endOffset": 7830,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get fileName",
+      "ranges": [
+        {
+          "startOffset": 7832,
+          "endOffset": 7893,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get originalFileName",
+      "ranges": [
+        {
+          "startOffset": 7895,
+          "endOffset": 7980,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get originalFileNames",
+      "ranges": [
+        {
+          "startOffset": 7982,
+          "endOffset": 8061,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get name",
+      "ranges": [
+        {
+          "startOffset": 8063,
+          "endOffset": 8126,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get names",
+      "ranges": [
+        {
+          "startOffset": 8128,
+          "endOffset": 8183,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get source",
+      "ranges": [
+        {
+          "startOffset": 8185,
+          "endOffset": 8264,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "__rolldown_external_memory_handle__",
+      "ranges": [
+        {
+          "startOffset": 8266,
+          "endOffset": 8413,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#evaluateAllLazyFields",
+      "ranges": [
+        {
+          "startOffset": 8415,
+          "endOffset": 8500,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transformToRenderedModule",
+      "ranges": [
+        {
+          "startOffset": 8988,
+          "endOffset": 9281,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transformRenderedChunk",
+      "ranges": [
+        {
+          "startOffset": 9343,
+          "endOffset": 10017,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transformChunkModules",
+      "ranges": [
+        {
+          "startOffset": 10018,
+          "endOffset": 10261,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 10371,
+          "endOffset": 10385,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "OutputChunkImpl",
+      "ranges": [
+        {
+          "startOffset": 10388,
+          "endOffset": 10465,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get fileName",
+      "ranges": [
+        {
+          "startOffset": 10467,
+          "endOffset": 10528,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get name",
+      "ranges": [
+        {
+          "startOffset": 10530,
+          "endOffset": 10583,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get exports",
+      "ranges": [
+        {
+          "startOffset": 10585,
+          "endOffset": 10644,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get isEntry",
+      "ranges": [
+        {
+          "startOffset": 10646,
+          "endOffset": 10705,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get facadeModuleId",
+      "ranges": [
+        {
+          "startOffset": 10707,
+          "endOffset": 10788,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get isDynamicEntry",
+      "ranges": [
+        {
+          "startOffset": 10790,
+          "endOffset": 10863,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get sourcemapFileName",
+      "ranges": [
+        {
+          "startOffset": 10865,
+          "endOffset": 10952,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get preliminaryFileName",
+      "ranges": [
+        {
+          "startOffset": 10954,
+          "endOffset": 11037,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get code",
+      "ranges": [
+        {
+          "startOffset": 11039,
+          "endOffset": 11092,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get modules",
+      "ranges": [
+        {
+          "startOffset": 11094,
+          "endOffset": 11176,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get imports",
+      "ranges": [
+        {
+          "startOffset": 11178,
+          "endOffset": 11237,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get dynamicImports",
+      "ranges": [
+        {
+          "startOffset": 11239,
+          "endOffset": 11312,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get moduleIds",
+      "ranges": [
+        {
+          "startOffset": 11314,
+          "endOffset": 11377,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get map",
+      "ranges": [
+        {
+          "startOffset": 11379,
+          "endOffset": 11508,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "__rolldown_external_memory_handle__",
+      "ranges": [
+        {
+          "startOffset": 11510,
+          "endOffset": 11657,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "#evaluateAllLazyFields",
+      "ranges": [
+        {
+          "startOffset": 11659,
+          "endOffset": 11744,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transformToRollupSourceMap",
+      "ranges": [
+        {
+          "startOffset": 12799,
+          "endOffset": 13079,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transformToRollupOutputChunk",
+      "ranges": [
+        {
+          "startOffset": 13080,
+          "endOffset": 13178,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transformToMutableRollupOutputChunk",
+      "ranges": [
+        {
+          "startOffset": 13179,
+          "endOffset": 14505,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transformToRollupOutputAsset",
+      "ranges": [
+        {
+          "startOffset": 14506,
+          "endOffset": 14604,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transformToMutableRollupOutputAsset",
+      "ranges": [
+        {
+          "startOffset": 14605,
+          "endOffset": 15334,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transformToRollupOutput",
+      "ranges": [
+        {
+          "startOffset": 15335,
+          "endOffset": 15563,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transformToMutableRollupOutput",
+      "ranges": [
+        {
+          "startOffset": 15564,
+          "endOffset": 15840,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transformToOutputBundle",
+      "ranges": [
+        {
+          "startOffset": 15841,
+          "endOffset": 16768,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "collectChangedBundle",
+      "ranges": [
+        {
+          "startOffset": 16769,
+          "endOffset": 17708,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "assertString",
+      "ranges": [
+        {
+          "startOffset": 17979,
+          "endOffset": 18078,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "import_binding.BindingMagicString.append",
+      "ranges": [
+        {
+          "startOffset": 18764,
+          "endOffset": 18885,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "import_binding.BindingMagicString.prepend",
+      "ranges": [
+        {
+          "startOffset": 18941,
+          "endOffset": 19063,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "import_binding.BindingMagicString.appendLeft",
+      "ranges": [
+        {
+          "startOffset": 19122,
+          "endOffset": 19264,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "import_binding.BindingMagicString.appendRight",
+      "ranges": [
+        {
+          "startOffset": 19324,
+          "endOffset": 19467,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "import_binding.BindingMagicString.prependLeft",
+      "ranges": [
+        {
+          "startOffset": 19527,
+          "endOffset": 19670,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "import_binding.BindingMagicString.prependRight",
+      "ranges": [
+        {
+          "startOffset": 19731,
+          "endOffset": 19875,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "import_binding.BindingMagicString.overwrite",
+      "ranges": [
+        {
+          "startOffset": 19933,
+          "endOffset": 20105,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "import_binding.BindingMagicString.update",
+      "ranges": [
+        {
+          "startOffset": 20160,
+          "endOffset": 20329,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "import_binding.BindingMagicString.replace",
+      "ranges": [
+        {
+          "startOffset": 20541,
+          "endOffset": 20955,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "import_binding.BindingMagicString.replaceAll",
+      "ranges": [
+        {
+          "startOffset": 21014,
+          "endOffset": 21392,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transformModuleInfo",
+      "ranges": [
+        {
+          "startOffset": 21595,
+          "endOffset": 22026,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isEmptySourcemapFiled",
+      "ranges": [
+        {
+          "startOffset": 22083,
+          "endOffset": 22216,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "normalizeTransformHookSourcemap",
+      "ranges": [
+        {
+          "startOffset": 22217,
+          "endOffset": 22605,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "e",
+      "ranges": [
+        {
+          "startOffset": 22722,
+          "endOffset": 22849,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "t$1",
+      "ranges": [
+        {
+          "startOffset": 22946,
+          "endOffset": 23107,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "t",
+      "ranges": [
+        {
+          "startOffset": 23208,
+          "endOffset": 23247,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "n",
+      "ranges": [
+        {
+          "startOffset": 23258,
+          "endOffset": 23376,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "generalHookFilterMatcherToFilterExprs",
+      "ranges": [
+        {
+          "startOffset": 23438,
+          "endOffset": 24023,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "generateAtomMatcher",
+      "ranges": [
+        {
+          "startOffset": 24024,
+          "endOffset": 24140,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transformFilterMatcherToFilterExprs",
+      "ranges": [
+        {
+          "startOffset": 24141,
+          "endOffset": 25245,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyGeneralHookFilter",
+      "ranges": [
+        {
+          "startOffset": 25246,
+          "endOffset": 25514,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyFilterExpr",
+      "ranges": [
+        {
+          "startOffset": 25515,
+          "endOffset": 25623,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "containsImporterId",
+      "ranges": [
+        {
+          "startOffset": 25624,
+          "endOffset": 25903,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "assertNoImporterId",
+      "ranges": [
+        {
+          "startOffset": 25904,
+          "endOffset": 26141,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyFilterExprImpl",
+      "ranges": [
+        {
+          "startOffset": 26142,
+          "endOffset": 27683,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyResolveIdFilter",
+      "ranges": [
+        {
+          "startOffset": 27684,
+          "endOffset": 27943,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyLoadFilter",
+      "ranges": [
+        {
+          "startOffset": 27944,
+          "endOffset": 28249,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyTransformFilter",
+      "ranges": [
+        {
+          "startOffset": 28250,
+          "endOffset": 28575,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyRenderChunkFilter",
+      "ranges": [
+        {
+          "startOffset": 28576,
+          "endOffset": 28901,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyPluginHookMeta",
+      "ranges": [
+        {
+          "startOffset": 28967,
+          "endOffset": 29067,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingPluginOrder",
+      "ranges": [
+        {
+          "startOffset": 29068,
+          "endOffset": 29347,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 29820,
+          "endOffset": 33088,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "getAssetFileNames",
+      "ranges": [
+        {
+          "startOffset": 33091,
+          "endOffset": 33452,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getFileName",
+      "ranges": [
+        {
+          "startOffset": 33454,
+          "endOffset": 33531,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getModuleIds",
+      "ranges": [
+        {
+          "startOffset": 33533,
+          "endOffset": 33599,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "addWatchFile",
+      "ranges": [
+        {
+          "startOffset": 33601,
+          "endOffset": 33655,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "parse",
+      "ranges": [
+        {
+          "startOffset": 33657,
+          "endOffset": 33718,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "LoadPluginContextImpl",
+      "ranges": [
+        {
+          "startOffset": 33842,
+          "endOffset": 34060,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "addWatchFile",
+      "ranges": [
+        {
+          "startOffset": 34062,
+          "endOffset": 34114,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "TransformPluginContextImpl",
+      "ranges": [
+        {
+          "startOffset": 34248,
+          "endOffset": 34885,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "error",
+      "ranges": [
+        {
+          "startOffset": 34887,
+          "endOffset": 35142,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getCombinedSourcemap",
+      "ranges": [
+        {
+          "startOffset": 35144,
+          "endOffset": 35227,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "addWatchFile",
+      "ranges": [
+        {
+          "startOffset": 35229,
+          "endOffset": 35281,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "sendMagicString",
+      "ranges": [
+        {
+          "startOffset": 35283,
+          "endOffset": 35339,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createPluginContext",
+      "ranges": [
+        {
+          "startOffset": 35403,
+          "endOffset": 35582,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyBuildStart",
+      "ranges": [
+        {
+          "startOffset": 35583,
+          "endOffset": 35923,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyBuildEnd",
+      "ranges": [
+        {
+          "startOffset": 35924,
+          "endOffset": 36268,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyResolveId",
+      "ranges": [
+        {
+          "startOffset": 36269,
+          "endOffset": 37500,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyResolveDynamicImport",
+      "ranges": [
+        {
+          "startOffset": 37501,
+          "endOffset": 38410,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyTransform",
+      "ranges": [
+        {
+          "startOffset": 38411,
+          "endOffset": 40504,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyLoad",
+      "ranges": [
+        {
+          "startOffset": 40505,
+          "endOffset": 41448,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "preProcessSourceMap",
+      "ranges": [
+        {
+          "startOffset": 41449,
+          "endOffset": 41824,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyModuleParsed",
+      "ranges": [
+        {
+          "startOffset": 41825,
+          "endOffset": 42217,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyRenderStart",
+      "ranges": [
+        {
+          "startOffset": 42279,
+          "endOffset": 42758,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyRenderChunk",
+      "ranges": [
+        {
+          "startOffset": 42759,
+          "endOffset": 45299,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyAugmentChunkHash",
+      "ranges": [
+        {
+          "startOffset": 45300,
+          "endOffset": 45735,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyRenderError",
+      "ranges": [
+        {
+          "startOffset": 45736,
+          "endOffset": 46161,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyGenerateBundle",
+      "ranges": [
+        {
+          "startOffset": 46162,
+          "endOffset": 46914,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyWriteBundle",
+      "ranges": [
+        {
+          "startOffset": 46915,
+          "endOffset": 47643,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyCloseBundle",
+      "ranges": [
+        {
+          "startOffset": 47644,
+          "endOffset": 48090,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyBanner",
+      "ranges": [
+        {
+          "startOffset": 48091,
+          "endOffset": 48558,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyFooter",
+      "ranges": [
+        {
+          "startOffset": 48559,
+          "endOffset": 49026,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyIntro",
+      "ranges": [
+        {
+          "startOffset": 49027,
+          "endOffset": 49492,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyOutro",
+      "ranges": [
+        {
+          "startOffset": 49493,
+          "endOffset": 49958,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyWatchChange",
+      "ranges": [
+        {
+          "startOffset": 50019,
+          "endOffset": 50431,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyCloseWatcher",
+      "ranges": [
+        {
+          "startOffset": 50432,
+          "endOffset": 50820,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 50904,
+          "endOffset": 50923,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "HookUsage",
+      "ranges": [
+        {
+          "startOffset": 50926,
+          "endOffset": 50942,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "union",
+      "ranges": [
+        {
+          "startOffset": 50944,
+          "endOffset": 50992,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "inner",
+      "ranges": [
+        {
+          "startOffset": 50994,
+          "endOffset": 51037,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "extractHookUsage",
+      "ranges": [
+        {
+          "startOffset": 51041,
+          "endOffset": 52063,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyPlugin",
+      "ranges": [
+        {
+          "startOffset": 52119,
+          "endOffset": 54963,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "wrapHandlers",
+      "ranges": [
+        {
+          "startOffset": 54964,
+          "endOffset": 55664,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 55794,
+          "endOffset": 55799,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "NormalizedInputOptionsImpl",
+      "ranges": [
+        {
+          "startOffset": 55802,
+          "endOffset": 55937,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get shimMissingExports",
+      "ranges": [
+        {
+          "startOffset": 55939,
+          "endOffset": 56008,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get input",
+      "ranges": [
+        {
+          "startOffset": 56010,
+          "endOffset": 56053,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get cwd",
+      "ranges": [
+        {
+          "startOffset": 56055,
+          "endOffset": 56094,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get platform",
+      "ranges": [
+        {
+          "startOffset": 56096,
+          "endOffset": 56145,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get context",
+      "ranges": [
+        {
+          "startOffset": 56147,
+          "endOffset": 56194,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get plugins",
+      "ranges": [
+        {
+          "startOffset": 56196,
+          "endOffset": 56242,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "NormalizedOutputOptionsImpl",
+      "ranges": [
+        {
+          "startOffset": 56778,
+          "endOffset": 56970,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get dir",
+      "ranges": [
+        {
+          "startOffset": 56972,
+          "endOffset": 57021,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get entryFileNames",
+      "ranges": [
+        {
+          "startOffset": 57023,
+          "endOffset": 57121,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get chunkFileNames",
+      "ranges": [
+        {
+          "startOffset": 57123,
+          "endOffset": 57221,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get assetFileNames",
+      "ranges": [
+        {
+          "startOffset": 57223,
+          "endOffset": 57321,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get format",
+      "ranges": [
+        {
+          "startOffset": 57323,
+          "endOffset": 57368,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get exports",
+      "ranges": [
+        {
+          "startOffset": 57370,
+          "endOffset": 57417,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get sourcemap",
+      "ranges": [
+        {
+          "startOffset": 57419,
+          "endOffset": 57470,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get sourcemapBaseUrl",
+      "ranges": [
+        {
+          "startOffset": 57472,
+          "endOffset": 57547,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get shimMissingExports",
+      "ranges": [
+        {
+          "startOffset": 57549,
+          "endOffset": 57618,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get name",
+      "ranges": [
+        {
+          "startOffset": 57620,
+          "endOffset": 57671,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get file",
+      "ranges": [
+        {
+          "startOffset": 57673,
+          "endOffset": 57724,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get codeSplitting",
+      "ranges": [
+        {
+          "startOffset": 57726,
+          "endOffset": 57785,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get inlineDynamicImports",
+      "ranges": [
+        {
+          "startOffset": 57840,
+          "endOffset": 57907,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get dynamicImportInCjs",
+      "ranges": [
+        {
+          "startOffset": 57909,
+          "endOffset": 57978,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get externalLiveBindings",
+      "ranges": [
+        {
+          "startOffset": 57980,
+          "endOffset": 58053,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get banner",
+      "ranges": [
+        {
+          "startOffset": 58055,
+          "endOffset": 58124,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get footer",
+      "ranges": [
+        {
+          "startOffset": 58126,
+          "endOffset": 58195,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get postBanner",
+      "ranges": [
+        {
+          "startOffset": 58197,
+          "endOffset": 58274,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get postFooter",
+      "ranges": [
+        {
+          "startOffset": 58276,
+          "endOffset": 58353,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get intro",
+      "ranges": [
+        {
+          "startOffset": 58355,
+          "endOffset": 58422,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get outro",
+      "ranges": [
+        {
+          "startOffset": 58424,
+          "endOffset": 58491,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get esModule",
+      "ranges": [
+        {
+          "startOffset": 58493,
+          "endOffset": 58542,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get extend",
+      "ranges": [
+        {
+          "startOffset": 58544,
+          "endOffset": 58589,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get globals",
+      "ranges": [
+        {
+          "startOffset": 58591,
+          "endOffset": 58668,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get paths",
+      "ranges": [
+        {
+          "startOffset": 58670,
+          "endOffset": 58721,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get hashCharacters",
+      "ranges": [
+        {
+          "startOffset": 58723,
+          "endOffset": 58784,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get sourcemapDebugIds",
+      "ranges": [
+        {
+          "startOffset": 58786,
+          "endOffset": 58853,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get sourcemapExcludeSources",
+      "ranges": [
+        {
+          "startOffset": 58855,
+          "endOffset": 58934,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get sourcemapIgnoreList",
+      "ranges": [
+        {
+          "startOffset": 58936,
+          "endOffset": 59015,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get sourcemapPathTransform",
+      "ranges": [
+        {
+          "startOffset": 59017,
+          "endOffset": 59102,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get minify",
+      "ranges": [
+        {
+          "startOffset": 59104,
+          "endOffset": 59298,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get legalComments",
+      "ranges": [
+        {
+          "startOffset": 59300,
+          "endOffset": 59359,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get comments",
+      "ranges": [
+        {
+          "startOffset": 59361,
+          "endOffset": 59519,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get polyfillRequire",
+      "ranges": [
+        {
+          "startOffset": 59521,
+          "endOffset": 59584,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get plugins",
+      "ranges": [
+        {
+          "startOffset": 59586,
+          "endOffset": 59643,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get preserveModules",
+      "ranges": [
+        {
+          "startOffset": 59645,
+          "endOffset": 59708,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get preserveModulesRoot",
+      "ranges": [
+        {
+          "startOffset": 59710,
+          "endOffset": 59781,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get virtualDirname",
+      "ranges": [
+        {
+          "startOffset": 59783,
+          "endOffset": 59844,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get topLevelVar",
+      "ranges": [
+        {
+          "startOffset": 59846,
+          "endOffset": 59910,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get minifyInternalExports",
+      "ranges": [
+        {
+          "startOffset": 59912,
+          "endOffset": 59996,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "normalizeAddon",
+      "ranges": [
+        {
+          "startOffset": 63392,
+          "endOffset": 63501,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 63592,
+          "endOffset": 63826,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "PluginContextData",
+      "ranges": [
+        {
+          "startOffset": 63829,
+          "endOffset": 64090,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "updateModuleOption",
+      "ranges": [
+        {
+          "startOffset": 64092,
+          "endOffset": 64529,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getModuleOption",
+      "ranges": [
+        {
+          "startOffset": 64531,
+          "endOffset": 64758,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getModuleInfo",
+      "ranges": [
+        {
+          "startOffset": 64760,
+          "endOffset": 64998,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "proxyModuleInfo",
+      "ranges": [
+        {
+          "startOffset": 65000,
+          "endOffset": 65363,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getModuleIds",
+      "ranges": [
+        {
+          "startOffset": 65365,
+          "endOffset": 65433,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "saveResolveOptions",
+      "ranges": [
+        {
+          "startOffset": 65435,
+          "endOffset": 65574,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getSavedResolveOptions",
+      "ranges": [
+        {
+          "startOffset": 65576,
+          "endOffset": 65658,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "removeSavedResolveOptions",
+      "ranges": [
+        {
+          "startOffset": 65660,
+          "endOffset": 65741,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "setRenderChunkMeta",
+      "ranges": [
+        {
+          "startOffset": 65743,
+          "endOffset": 65805,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getRenderChunkMeta",
+      "ranges": [
+        {
+          "startOffset": 65807,
+          "endOffset": 65865,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getInputOptions",
+      "ranges": [
+        {
+          "startOffset": 65867,
+          "endOffset": 66044,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getOutputOptions",
+      "ranges": [
+        {
+          "startOffset": 66046,
+          "endOffset": 66236,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "clear",
+      "ranges": [
+        {
+          "startOffset": 66238,
+          "endOffset": 66320,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "normalizeTransformOptions",
+      "ranges": [
+        {
+          "startOffset": 66646,
+          "endOffset": 67229,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyInputOptions",
+      "ranges": [
+        {
+          "startOffset": 67291,
+          "endOffset": 69741,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyDevMode",
+      "ranges": [
+        {
+          "startOffset": 69742,
+          "endOffset": 69884,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyAttachDebugInfo",
+      "ranges": [
+        {
+          "startOffset": 69885,
+          "endOffset": 70196,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyExternal",
+      "ranges": [
+        {
+          "startOffset": 70197,
+          "endOffset": 70465,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyExperimental",
+      "ranges": [
+        {
+          "startOffset": 70466,
+          "endOffset": 71540,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyResolve",
+      "ranges": [
+        {
+          "startOffset": 71541,
+          "endOffset": 72121,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyInject",
+      "ranges": [
+        {
+          "startOffset": 72122,
+          "endOffset": 72533,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyLogLevel",
+      "ranges": [
+        {
+          "startOffset": 72534,
+          "endOffset": 72906,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyInput",
+      "ranges": [
+        {
+          "startOffset": 72907,
+          "endOffset": 73223,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyWatch",
+      "ranges": [
+        {
+          "startOffset": 73224,
+          "endOffset": 73967,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyTreeshakeOptions",
+      "ranges": [
+        {
+          "startOffset": 73968,
+          "endOffset": 75400,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyMakeAbsoluteExternalsRelative",
+      "ranges": [
+        {
+          "startOffset": 75401,
+          "endOffset": 75706,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyPreserveEntrySignatures",
+      "ranges": [
+        {
+          "startOffset": 75707,
+          "endOffset": 76015,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

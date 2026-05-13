@@ -1,0 +1,28 @@
+{
+  "scriptId": "364",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/rolldown@1.0.0-rc.17/node_modules/rolldown/dist/plugins-index.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 1082,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "replacePlugin",
+      "ranges": [
+        {
+          "startOffset": 725,
+          "endOffset": 1016,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "scriptId": "439",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/rolldown@1.0.0-rc.17/node_modules/rolldown/dist/shared/constructors-C2EWPKW3.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2909,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "viteModulePreloadPolyfillPlugin",
+      "ranges": [
+        {
+          "startOffset": 186,
+          "endOffset": 313,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "viteDynamicImportVarsPlugin",
+      "ranges": [
+        {
+          "startOffset": 314,
+          "endOffset": 571,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "viteImportGlobPlugin",
+      "ranges": [
+        {
+          "startOffset": 572,
+          "endOffset": 676,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "viteReporterPlugin",
+      "ranges": [
+        {
+          "startOffset": 677,
+          "endOffset": 776,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "viteWasmFallbackPlugin",
+      "ranges": [
+        {
+          "startOffset": 777,
+          "endOffset": 898,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "viteLoadFallbackPlugin",
+      "ranges": [
+        {
+          "startOffset": 899,
+          "endOffset": 993,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "viteJsonPlugin",
+      "ranges": [
+        {
+          "startOffset": 994,
+          "endOffset": 1112,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "viteBuildImportAnalysisPlugin",
+      "ranges": [
+        {
+          "startOffset": 1113,
+          "endOffset": 1236,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "viteResolvePlugin",
+      "ranges": [
+        {
+          "startOffset": 1237,
+          "endOffset": 1438,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isolatedDeclarationPlugin",
+      "ranges": [
+        {
+          "startOffset": 1439,
+          "endOffset": 1552,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "viteWebWorkerPostPlugin",
+      "ranges": [
+        {
+          "startOffset": 1553,
+          "endOffset": 1650,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "esmExternalRequirePlugin",
+      "ranges": [
+        {
+          "startOffset": 1856,
+          "endOffset": 2017,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "oxcRuntimePlugin",
+      "ranges": [
+        {
+          "startOffset": 2072,
+          "endOffset": 2180,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "viteReactRefreshWrapperPlugin",
+      "ranges": [
+        {
+          "startOffset": 2181,
+          "endOffset": 2469,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

@@ -73,7 +73,7 @@ export {
 export type { SitemapOptions, SitemapUrl } from './types.ts';
 
 // ─── Virtual module IDs ─────────────────────────────────────────
-// VIRTUAL_NAV_ID / RESOLVED_NAV_ID are in @lessjs/core/constants
+// VIRTUAL_NAV_ID / RESOLVED_NAV_ID are in @lessjs/adapter-vite/virtual-ids
 
 // ─── Main Plugin ────────────────────────────────────────────────
 

@@ -1,0 +1,83 @@
+{
+  "scriptId": "393",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/parse5@7.0.0/node_modules/parse5/dist/common/unicode.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 3434,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 406,
+          "endOffset": 2598,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "isSurrogate",
+      "ranges": [
+        {
+          "startOffset": 2825,
+          "endOffset": 2892,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isSurrogatePair",
+      "ranges": [
+        {
+          "startOffset": 2900,
+          "endOffset": 2971,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getSurrogatePairCodePoint",
+      "ranges": [
+        {
+          "startOffset": 2979,
+          "endOffset": 3073,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isControlCodePoint",
+      "ranges": [
+        {
+          "startOffset": 3125,
+          "endOffset": 3314,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isUndefinedCodePoint",
+      "ranges": [
+        {
+          "startOffset": 3322,
+          "endOffset": 3433,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

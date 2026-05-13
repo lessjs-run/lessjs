@@ -1,0 +1,28 @@
+{
+  "scriptId": "379",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/minimatch@9.0.9/node_modules/minimatch/dist/esm/escape.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 848,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "escape",
+      "ranges": [
+        {
+          "startOffset": 458,
+          "endOffset": 812,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

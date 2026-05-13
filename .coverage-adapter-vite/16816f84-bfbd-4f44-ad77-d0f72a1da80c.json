@@ -1,0 +1,1402 @@
+{
+  "scriptId": "435",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/vite@8.0.10/node_modules/vite/dist/node/module-runner.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 54070,
+          "count": 1
+        },
+        {
+          "startOffset": 4187,
+          "endOffset": 4274,
+          "count": 0
+        },
+        {
+          "startOffset": 5867,
+          "endOffset": 5937,
+          "count": 64
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "unwrapId",
+      "ranges": [
+        {
+          "startOffset": 251,
+          "endOffset": 352,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "slash",
+      "ranges": [
+        {
+          "startOffset": 383,
+          "endOffset": 444,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "cleanUrl",
+      "ranges": [
+        {
+          "startOffset": 474,
+          "endOffset": 536,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isPrimitive",
+      "ranges": [
+        {
+          "startOffset": 537,
+          "endOffset": 642,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "AsyncFunction",
+      "ranges": [
+        {
+          "startOffset": 665,
+          "endOffset": 684,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getAsyncFunctionDeclarationPaddingLineCount",
+      "ranges": [
+        {
+          "startOffset": 744,
+          "endOffset": 1102,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "promiseWithResolvers",
+      "ranges": [
+        {
+          "startOffset": 1103,
+          "endOffset": 1289,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "normalizeWindowsPath",
+      "ranges": [
+        {
+          "startOffset": 1447,
+          "endOffset": 1592,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "cwd",
+      "ranges": [
+        {
+          "startOffset": 1702,
+          "endOffset": 1828,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "resolve",
+      "ranges": [
+        {
+          "startOffset": 1845,
+          "endOffset": 2438,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "normalizeString",
+      "ranges": [
+        {
+          "startOffset": 2440,
+          "endOffset": 3688,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isAbsolute",
+      "ranges": [
+        {
+          "startOffset": 3708,
+          "endOffset": 3756,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "dirname",
+      "ranges": [
+        {
+          "startOffset": 3768,
+          "endOffset": 4011,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 4127,
+          "endOffset": 4186,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "decodeBase64",
+      "ranges": [
+        {
+          "startOffset": 4189,
+          "endOffset": 4274,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "encodePathChars",
+      "ranges": [
+        {
+          "startOffset": 4431,
+          "endOffset": 4899,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "posixPathToFileHref",
+      "ranges": [
+        {
+          "startOffset": 4954,
+          "endOffset": 5454,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "toWindowsPath",
+      "ranges": [
+        {
+          "startOffset": 5455,
+          "endOffset": 5522,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "decodeInteger",
+      "ranges": [
+        {
+          "startOffset": 5938,
+          "endOffset": 6252,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "hasMoreVlq",
+      "ranges": [
+        {
+          "startOffset": 6253,
+          "endOffset": 6347,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "StringReader",
+      "ranges": [
+        {
+          "startOffset": 6376,
+          "endOffset": 6438,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "next",
+      "ranges": [
+        {
+          "startOffset": 6440,
+          "endOffset": 6496,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "peek",
+      "ranges": [
+        {
+          "startOffset": 6498,
+          "endOffset": 6552,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "indexOf",
+      "ranges": [
+        {
+          "startOffset": 6554,
+          "endOffset": 6678,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "decode",
+      "ranges": [
+        {
+          "startOffset": 6682,
+          "endOffset": 7720,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "sort",
+      "ranges": [
+        {
+          "startOffset": 7721,
+          "endOffset": 7772,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "sortComparator",
+      "ranges": [
+        {
+          "startOffset": 7773,
+          "endOffset": 7827,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "binarySearch",
+      "ranges": [
+        {
+          "startOffset": 8071,
+          "endOffset": 8341,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "upperBound",
+      "ranges": [
+        {
+          "startOffset": 8342,
+          "endOffset": 8499,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "lowerBound",
+      "ranges": [
+        {
+          "startOffset": 8500,
+          "endOffset": 8644,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "memoizedBinarySearch",
+      "ranges": [
+        {
+          "startOffset": 8645,
+          "endOffset": 9137,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "cast",
+      "ranges": [
+        {
+          "startOffset": 9308,
+          "endOffset": 9343,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "decodedMappings",
+      "ranges": [
+        {
+          "startOffset": 9344,
+          "endOffset": 9467,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "originalPositionFor",
+      "ranges": [
+        {
+          "startOffset": 9468,
+          "endOffset": 10243,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "OMapping",
+      "ranges": [
+        {
+          "startOffset": 10244,
+          "endOffset": 10342,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "traceSegmentInternal",
+      "ranges": [
+        {
+          "startOffset": 10343,
+          "endOffset": 10648,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 10737,
+          "endOffset": 10825,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "DecodedMap",
+      "ranges": [
+        {
+          "startOffset": 10828,
+          "endOffset": 11200,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "memoizedState",
+      "ranges": [
+        {
+          "startOffset": 11204,
+          "endOffset": 11295,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getOriginalPosition",
+      "ranges": [
+        {
+          "startOffset": 11296,
+          "endOffset": 11436,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 11646,
+          "endOffset": 11778,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "EvaluatedModuleNode",
+      "ranges": [
+        {
+          "startOffset": 11781,
+          "endOffset": 11864,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 11896,
+          "endOffset": 12031,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "getModuleById",
+      "ranges": [
+        {
+          "startOffset": 12313,
+          "endOffset": 12372,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getModulesByFile",
+      "ranges": [
+        {
+          "startOffset": 12621,
+          "endOffset": 12690,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getModuleByUrl",
+      "ranges": [
+        {
+          "startOffset": 12922,
+          "endOffset": 12997,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "ensureModule",
+      "ranges": [
+        {
+          "startOffset": 13290,
+          "endOffset": 13837,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "invalidateModule",
+      "ranges": [
+        {
+          "startOffset": 13839,
+          "endOffset": 13996,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getModuleSourceMapById",
+      "ranges": [
+        {
+          "startOffset": 14189,
+          "endOffset": 14734,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "clear",
+      "ranges": [
+        {
+          "startOffset": 14736,
+          "endOffset": 14840,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "normalizeModuleId",
+      "ranges": [
+        {
+          "startOffset": 14949,
+          "endOffset": 15170,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 15238,
+          "endOffset": 15250,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "HMRContext",
+      "ranges": [
+        {
+          "startOffset": 15253,
+          "endOffset": 15924,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get data",
+      "ranges": [
+        {
+          "startOffset": 15926,
+          "endOffset": 15994,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "accept",
+      "ranges": [
+        {
+          "startOffset": 15996,
+          "endOffset": 16329,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "acceptExports",
+      "ranges": [
+        {
+          "startOffset": 16331,
+          "endOffset": 16427,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "dispose",
+      "ranges": [
+        {
+          "startOffset": 16429,
+          "endOffset": 16498,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "prune",
+      "ranges": [
+        {
+          "startOffset": 16500,
+          "endOffset": 16565,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "decline",
+      "ranges": [
+        {
+          "startOffset": 16567,
+          "endOffset": 16579,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "invalidate",
+      "ranges": [
+        {
+          "startOffset": 16581,
+          "endOffset": 17000,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "on",
+      "ranges": [
+        {
+          "startOffset": 17002,
+          "endOffset": 17217,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "off",
+      "ranges": [
+        {
+          "startOffset": 17219,
+          "endOffset": 17579,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "send",
+      "ranges": [
+        {
+          "startOffset": 17581,
+          "endOffset": 17670,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "acceptDeps",
+      "ranges": [
+        {
+          "startOffset": 17672,
+          "endOffset": 17934,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 17959,
+          "endOffset": 19449,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "queueUpdate",
+      "ranges": [
+        {
+          "startOffset": 19671,
+          "endOffset": 20002,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "fetchUpdate",
+      "ranges": [
+        {
+          "startOffset": 20004,
+          "endOffset": 21003,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "analyzeImportedModDifference",
+      "ranges": [
+        {
+          "startOffset": 21298,
+          "endOffset": 22088,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "nanoid",
+      "ranges": [
+        {
+          "startOffset": 22203,
+          "endOffset": 22373,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "reviveInvokeError",
+      "ranges": [
+        {
+          "startOffset": 22434,
+          "endOffset": 22619,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createInvokeableTransport",
+      "ranges": [
+        {
+          "startOffset": 22654,
+          "endOffset": 25031,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "normalizeModuleRunnerTransport",
+      "ranges": [
+        {
+          "startOffset": 25066,
+          "endOffset": 26338,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createWebSocketModuleRunnerTransport",
+      "ranges": [
+        {
+          "startOffset": 26379,
+          "endOffset": 27579,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createIsBuiltin",
+      "ranges": [
+        {
+          "startOffset": 27626,
+          "endOffset": 27922,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "noop",
+      "ranges": [
+        {
+          "startOffset": 28264,
+          "endOffset": 28272,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "debug",
+      "ranges": [
+        {
+          "startOffset": 28344,
+          "endOffset": 28385,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "error",
+      "ranges": [
+        {
+          "startOffset": 28395,
+          "endOffset": 28434,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createHMRHandler",
+      "ranges": [
+        {
+          "startOffset": 28486,
+          "endOffset": 28610,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 28632,
+          "endOffset": 28657,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "enqueue",
+      "ranges": [
+        {
+          "startOffset": 28660,
+          "endOffset": 28812,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "dequeue",
+      "ranges": [
+        {
+          "startOffset": 28814,
+          "endOffset": 29051,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createHMRHandlerForRunner",
+      "ranges": [
+        {
+          "startOffset": 29110,
+          "endOffset": 31081,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getModulesByFile",
+      "ranges": [
+        {
+          "startOffset": 31082,
+          "endOffset": 31242,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getModulesEntrypoints",
+      "ranges": [
+        {
+          "startOffset": 31243,
+          "endOffset": 31769,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "findAllEntrypoints",
+      "ranges": [
+        {
+          "startOffset": 31770,
+          "endOffset": 31984,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createExecHandlers",
+      "ranges": [
+        {
+          "startOffset": 32279,
+          "endOffset": 32423,
+          "count": 2
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 32294,
+          "endOffset": 32422,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "resetInterceptor",
+      "ranges": [
+        {
+          "startOffset": 32643,
+          "endOffset": 33008,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "interceptStackTrace",
+      "ranges": [
+        {
+          "startOffset": 33009,
+          "endOffset": 33389,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "supportRelativeURL",
+      "ranges": [
+        {
+          "startOffset": 33390,
+          "endOffset": 33760,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getRunnerSourceMap",
+      "ranges": [
+        {
+          "startOffset": 33761,
+          "endOffset": 34027,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "retrieveFile",
+      "ranges": [
+        {
+          "startOffset": 34028,
+          "endOffset": 34260,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "retrieveSourceMapURL",
+      "ranges": [
+        {
+          "startOffset": 34261,
+          "endOffset": 34590,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "retrieveSourceMap",
+      "ranges": [
+        {
+          "startOffset": 34650,
+          "endOffset": 35299,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mapSourcePosition",
+      "ranges": [
+        {
+          "startOffset": 35300,
+          "endOffset": 36547,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mapEvalOrigin",
+      "ranges": [
+        {
+          "startOffset": 36548,
+          "endOffset": 37011,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "CallSiteToString",
+      "ranges": [
+        {
+          "startOffset": 37012,
+          "endOffset": 38363,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "cloneCallSite",
+      "ranges": [
+        {
+          "startOffset": 38364,
+          "endOffset": 38675,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "wrapCallSite",
+      "ranges": [
+        {
+          "startOffset": 38676,
+          "endOffset": 39958,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "prepareStackTrace",
+      "ranges": [
+        {
+          "startOffset": 39959,
+          "endOffset": 40406,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "enableSourceMapSupport",
+      "ranges": [
+        {
+          "startOffset": 40467,
+          "endOffset": 41232,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 41324,
+          "endOffset": 41383,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "runInlinedModule",
+      "ranges": [
+        {
+          "startOffset": 41386,
+          "endOffset": 41796,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "runExternalModule",
+      "ranges": [
+        {
+          "startOffset": 41798,
+          "endOffset": 41857,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "customizationHookResolve",
+      "ranges": [
+        {
+          "startOffset": 42449,
+          "endOffset": 42775,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createImportMetaResolver",
+      "ranges": [
+        {
+          "startOffset": 42803,
+          "endOffset": 43555,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "importMetaResolveWithCustomHook",
+      "ranges": [
+        {
+          "startOffset": 43556,
+          "endOffset": 43723,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get",
+      "ranges": [
+        {
+          "startOffset": 43851,
+          "endOffset": 44003,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createDefaultImportMeta",
+      "ranges": [
+        {
+          "startOffset": 44008,
+          "endOffset": 44595,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createNodeImportMeta",
+      "ranges": [
+        {
+          "startOffset": 44644,
+          "endOffset": 44965,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 45045,
+          "endOffset": 45212,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "ModuleRunner",
+      "ranges": [
+        {
+          "startOffset": 45215,
+          "endOffset": 46157,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "import",
+      "ranges": [
+        {
+          "startOffset": 46246,
+          "endOffset": 46375,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "clearCache",
+      "ranges": [
+        {
+          "startOffset": 46431,
+          "endOffset": 46506,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "close",
+      "ranges": [
+        {
+          "startOffset": 46645,
+          "endOffset": 46796,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isClosed",
+      "ranges": [
+        {
+          "startOffset": 46885,
+          "endOffset": 46922,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "processImport",
+      "ranges": [
+        {
+          "startOffset": 46924,
+          "endOffset": 47186,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isCircularModule",
+      "ranges": [
+        {
+          "startOffset": 47188,
+          "endOffset": 47315,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isCircularImport",
+      "ranges": [
+        {
+          "startOffset": 47317,
+          "endOffset": 47720,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "cachedRequest",
+      "ranges": [
+        {
+          "startOffset": 47722,
+          "endOffset": 48784,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "cachedModule",
+      "ranges": [
+        {
+          "startOffset": 48786,
+          "endOffset": 49252,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "ensureBuiltins",
+      "ranges": [
+        {
+          "startOffset": 49254,
+          "endOffset": 49858,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getModuleInformation",
+      "ranges": [
+        {
+          "startOffset": 49860,
+          "endOffset": 51031,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "directRequest",
+      "ranges": [
+        {
+          "startOffset": 51033,
+          "endOffset": 53355,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "exportAll",
+      "ranges": [
+        {
+          "startOffset": 53359,
+          "endOffset": 53780,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

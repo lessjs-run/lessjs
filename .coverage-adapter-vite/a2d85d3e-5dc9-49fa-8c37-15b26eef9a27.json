@@ -1,0 +1,116 @@
+{
+  "scriptId": "343",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/adapter-vite/src/route-scanner.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 9256,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "filePathToRoutePath",
+      "ranges": [
+        {
+          "startOffset": 1222,
+          "endOffset": 1792,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getRouteType",
+      "ranges": [
+        {
+          "startOffset": 1892,
+          "endOffset": 2074,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "pathToVarName",
+      "ranges": [
+        {
+          "startOffset": 2223,
+          "endOffset": 2480,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getSpecialFileType",
+      "ranges": [
+        {
+          "startOffset": 2585,
+          "endOffset": 2833,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isIgnoredFile",
+      "ranges": [
+        {
+          "startOffset": 2925,
+          "endOffset": 2996,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "scanRoutes",
+      "ranges": [
+        {
+          "startOffset": 3125,
+          "endOffset": 5525,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "fileToTagName",
+      "ranges": [
+        {
+          "startOffset": 5878,
+          "endOffset": 6060,
+          "count": 5
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "scanIslands",
+      "ranges": [
+        {
+          "startOffset": 6217,
+          "endOffset": 7215,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "scanPackageIslands",
+      "ranges": [
+        {
+          "startOffset": 7678,
+          "endOffset": 9255,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

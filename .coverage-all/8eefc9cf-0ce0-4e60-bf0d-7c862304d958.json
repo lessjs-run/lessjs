@@ -1,0 +1,28 @@
+{
+  "scriptId": "377",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/minimatch@9.0.9/node_modules/minimatch/dist/esm/assert-valid-pattern.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 336,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "assertValidPattern",
+      "ranges": [
+        {
+          "startOffset": 72,
+          "endOffset": 286,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

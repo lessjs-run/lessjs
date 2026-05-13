@@ -1,0 +1,149 @@
+{
+  "scriptId": "461",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/picomatch@4.0.4/node_modules/picomatch/lib/parse.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 33731,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "expandRange",
+      "ranges": [
+        {
+          "startOffset": 287,
+          "endOffset": 640,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "syntaxError",
+      "ranges": [
+        {
+          "startOffset": 713,
+          "endOffset": 819,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "splitTopLevel",
+      "ranges": [
+        {
+          "startOffset": 844,
+          "endOffset": 1756,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isPlainBranch",
+      "ranges": [
+        {
+          "startOffset": 1781,
+          "endOffset": 2072,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "normalizeSimpleBranch",
+      "ranges": [
+        {
+          "startOffset": 2105,
+          "endOffset": 2423,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "hasRepeatedCharPrefixOverlap",
+      "ranges": [
+        {
+          "startOffset": 2463,
+          "endOffset": 2946,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "parseRepeatedExtglob",
+      "ranges": [
+        {
+          "startOffset": 2978,
+          "endOffset": 4050,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getStarExtglobSequenceOutput",
+      "ranges": [
+        {
+          "startOffset": 4090,
+          "endOffset": 4813,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "repeatedExtglobRecursion",
+      "ranges": [
+        {
+          "startOffset": 4849,
+          "endOffset": 5078,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "analyzeRepeatedExtglob",
+      "ranges": [
+        {
+          "startOffset": 5112,
+          "endOffset": 5959,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "parse",
+      "ranges": [
+        {
+          "startOffset": 6090,
+          "endOffset": 31219,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "parse.fastpaths",
+      "ranges": [
+        {
+          "startOffset": 31442,
+          "endOffset": 33704,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

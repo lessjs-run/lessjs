@@ -1,0 +1,109 @@
+{
+  "scriptId": "343",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/signals/src/sugar.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 3952,
+          "count": 1
+        },
+        {
+          "startOffset": 1800,
+          "endOffset": 1815,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "islandEffect",
+      "ranges": [
+        {
+          "startOffset": 358,
+          "endOffset": 1437,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "batch",
+      "ranges": [
+        {
+          "startOffset": 1507,
+          "endOffset": 1544,
+          "count": 5
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "untracked",
+      "ranges": [
+        {
+          "startOffset": 1613,
+          "endOffset": 1676,
+          "count": 6
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "channel",
+      "ranges": [
+        {
+          "startOffset": 1907,
+          "endOffset": 3061,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createThemeSignal",
+      "ranges": [
+        {
+          "startOffset": 3131,
+          "endOffset": 3632,
+          "count": 1
+        },
+        {
+          "startOffset": 3213,
+          "endOffset": 3276,
+          "count": 0
+        },
+        {
+          "startOffset": 3327,
+          "endOffset": 3618,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 3365,
+          "endOffset": 3483,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isNativeSignal",
+      "ranges": [
+        {
+          "startOffset": 3833,
+          "endOffset": 3951,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

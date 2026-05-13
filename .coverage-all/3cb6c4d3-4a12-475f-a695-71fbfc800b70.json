@@ -1,0 +1,39 @@
+{
+  "scriptId": "352",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/adapter-vite/src/island-transform.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2459,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "islandTransformPlugin",
+      "ranges": [
+        {
+          "startOffset": 714,
+          "endOffset": 2458,
+          "count": 33
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "transform",
+      "ranges": [
+        {
+          "startOffset": 872,
+          "endOffset": 2451,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

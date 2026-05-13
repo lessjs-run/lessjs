@@ -1,0 +1,242 @@
+{
+  "scriptId": "352",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/adapter-vite/src/cli/build-ssg.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 13669,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "optionalPackageStubsPlugin",
+      "ranges": [
+        {
+          "startOffset": 1336,
+          "endOffset": 2882,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "buildSSG",
+      "ranges": [
+        {
+          "startOffset": 2883,
+          "endOffset": 13647,
+          "count": 4
+        },
+        {
+          "startOffset": 2975,
+          "endOffset": 2991,
+          "count": 0
+        },
+        {
+          "startOffset": 3046,
+          "endOffset": 3055,
+          "count": 0
+        },
+        {
+          "startOffset": 3119,
+          "endOffset": 3134,
+          "count": 0
+        },
+        {
+          "startOffset": 3201,
+          "endOffset": 3217,
+          "count": 0
+        },
+        {
+          "startOffset": 3362,
+          "endOffset": 3367,
+          "count": 0
+        },
+        {
+          "startOffset": 3446,
+          "endOffset": 3451,
+          "count": 0
+        },
+        {
+          "startOffset": 3634,
+          "endOffset": 3646,
+          "count": 3
+        },
+        {
+          "startOffset": 3700,
+          "endOffset": 3712,
+          "count": 3
+        },
+        {
+          "startOffset": 3784,
+          "endOffset": 3796,
+          "count": 3
+        },
+        {
+          "startOffset": 4575,
+          "endOffset": 4591,
+          "count": 0
+        },
+        {
+          "startOffset": 4971,
+          "endOffset": 4980,
+          "count": 0
+        },
+        {
+          "startOffset": 5049,
+          "endOffset": 5513,
+          "count": 0
+        },
+        {
+          "startOffset": 5514,
+          "endOffset": 5519,
+          "count": 0
+        },
+        {
+          "startOffset": 5727,
+          "endOffset": 7151,
+          "count": 0
+        },
+        {
+          "startOffset": 7152,
+          "endOffset": 7198,
+          "count": 0
+        },
+        {
+          "startOffset": 10738,
+          "endOffset": 10750,
+          "count": 0
+        },
+        {
+          "startOffset": 10766,
+          "endOffset": 11725,
+          "count": 0
+        },
+        {
+          "startOffset": 11740,
+          "endOffset": 11748,
+          "count": 0
+        },
+        {
+          "startOffset": 11750,
+          "endOffset": 12800,
+          "count": 0
+        },
+        {
+          "startOffset": 12801,
+          "endOffset": 12828,
+          "count": 0
+        },
+        {
+          "startOffset": 12876,
+          "endOffset": 13170,
+          "count": 0
+        },
+        {
+          "startOffset": 13436,
+          "endOffset": 13504,
+          "count": 0
+        },
+        {
+          "startOffset": 13563,
+          "endOffset": 13587,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 4613,
+          "endOffset": 4634,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "resolveId",
+      "ranges": [
+        {
+          "startOffset": 7524,
+          "endOffset": 7627,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "load",
+      "ranges": [
+        {
+          "startOffset": 7639,
+          "endOffset": 7729,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "resolveId",
+      "ranges": [
+        {
+          "startOffset": 8243,
+          "endOffset": 8439,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "load",
+      "ranges": [
+        {
+          "startOffset": 8451,
+          "endOffset": 9516,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "resolveId",
+      "ranges": [
+        {
+          "startOffset": 10080,
+          "endOffset": 10171,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "load",
+      "ranges": [
+        {
+          "startOffset": 10183,
+          "endOffset": 10527,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 12037,
+          "endOffset": 12128,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

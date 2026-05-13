@@ -1,0 +1,83 @@
+{
+  "scriptId": "342",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/signals/src/framework.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 1877,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "signal",
+      "ranges": [
+        {
+          "startOffset": 345,
+          "endOffset": 674,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "get value",
+      "ranges": [
+        {
+          "startOffset": 441,
+          "endOffset": 487,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "set value",
+      "ranges": [
+        {
+          "startOffset": 493,
+          "endOffset": 547,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "subscribe",
+      "ranges": [
+        {
+          "startOffset": 553,
+          "endOffset": 667,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "computed",
+      "ranges": [
+        {
+          "startOffset": 754,
+          "endOffset": 998,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "effect",
+      "ranges": [
+        {
+          "startOffset": 1123,
+          "endOffset": 1876,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "scriptId": "354",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/adapter-vite/src/build-manifest.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 7900,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "formatSize",
+      "ranges": [
+        {
+          "startOffset": 842,
+          "endOffset": 1101,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "collectFiles",
+      "ranges": [
+        {
+          "startOffset": 1170,
+          "endOffset": 1978,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "scanClientBuild",
+      "ranges": [
+        {
+          "startOffset": 2056,
+          "endOffset": 3428,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "scanSSGOutput",
+      "ranges": [
+        {
+          "startOffset": 3499,
+          "endOffset": 3630,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "printBuildManifest",
+      "ranges": [
+        {
+          "startOffset": 3832,
+          "endOffset": 7899,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

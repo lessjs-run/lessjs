@@ -1,0 +1,28 @@
+{
+  "scriptId": "397",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/entities@4.5.0/node_modules/entities/lib/esm/generated/decode-data-html.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 47680,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 47654,
+          "endOffset": 47676,
+          "count": 15242
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

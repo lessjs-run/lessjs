@@ -1,0 +1,127 @@
+{
+  "scriptId": "355",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/adapter-vite/src/ssg-postprocess.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 13410,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "walkHtmlFiles",
+      "ranges": [
+        {
+          "startOffset": 1093,
+          "endOffset": 1595,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "insertAfterHead",
+      "ranges": [
+        {
+          "startOffset": 1758,
+          "endOffset": 2197,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "insertBeforeBodyClose",
+      "ranges": [
+        {
+          "startOffset": 2259,
+          "endOffset": 2526,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "buildIslandChunkMap",
+      "ranges": [
+        {
+          "startOffset": 2748,
+          "endOffset": 3990,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "injectClientScript",
+      "ranges": [
+        {
+          "startOffset": 4055,
+          "endOffset": 4322,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "injectCspMeta",
+      "ranges": [
+        {
+          "startOffset": 4633,
+          "endOffset": 5329,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "injectDsdPolyfill",
+      "ranges": [
+        {
+          "startOffset": 6804,
+          "endOffset": 6985,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "injectViewTransitionMeta",
+      "ranges": [
+        {
+          "startOffset": 7791,
+          "endOffset": 8065,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "buildSpeculationRulesJson",
+      "ranges": [
+        {
+          "startOffset": 8910,
+          "endOffset": 12378,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "injectSpeculationRules",
+      "ranges": [
+        {
+          "startOffset": 13076,
+          "endOffset": 13409,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

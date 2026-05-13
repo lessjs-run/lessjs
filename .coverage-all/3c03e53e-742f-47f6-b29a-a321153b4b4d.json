@@ -1,0 +1,22 @@
+{
+  "scriptId": "342",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/esbuild@0.25.12/node_modules/esbuild/lib/main.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 1181,
+          "count": 1
+        },
+        {
+          "startOffset": 189,
+          "endOffset": 364,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

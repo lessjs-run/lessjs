@@ -1,0 +1,135 @@
+{
+  "scriptId": "362",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/vite@8.0.10/node_modules/vite/dist/node/chunks/chunk.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 1792,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "__esmMin",
+      "ranges": [
+        {
+          "startOffset": 363,
+          "endOffset": 413,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "__commonJSMin",
+      "ranges": [
+        {
+          "startOffset": 435,
+          "endOffset": 529,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 448,
+          "endOffset": 529,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "__exportAll",
+      "ranges": [
+        {
+          "startOffset": 549,
+          "endOffset": 776,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "__copyProps",
+      "ranges": [
+        {
+          "startOffset": 796,
+          "endOffset": 1206,
+          "count": 1
+        },
+        {
+          "startOffset": 864,
+          "endOffset": 893,
+          "count": 0
+        },
+        {
+          "startOffset": 977,
+          "endOffset": 1192,
+          "count": 43
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 1079,
+          "endOffset": 1093,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "__toESM",
+      "ranges": [
+        {
+          "startOffset": 1222,
+          "endOffset": 1441,
+          "count": 1
+        },
+        {
+          "startOffset": 1303,
+          "endOffset": 1307,
+          "count": 0
+        },
+        {
+          "startOffset": 1332,
+          "endOffset": 1339,
+          "count": 0
+        },
+        {
+          "startOffset": 1340,
+          "endOffset": 1358,
+          "count": 0
+        },
+        {
+          "startOffset": 1426,
+          "endOffset": 1434,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "__toCommonJS",
+      "ranges": [
+        {
+          "startOffset": 1462,
+          "endOffset": 1600,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

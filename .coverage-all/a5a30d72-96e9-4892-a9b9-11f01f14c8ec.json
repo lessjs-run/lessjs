@@ -1,0 +1,295 @@
+{
+  "scriptId": "314",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/core/src/island.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 9160,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "getSSRProps",
+      "ranges": [
+        {
+          "startOffset": 2020,
+          "endOffset": 2273,
+          "count": 9
+        },
+        {
+          "startOffset": 2108,
+          "endOffset": 2120,
+          "count": 2
+        },
+        {
+          "startOffset": 2120,
+          "endOffset": 2161,
+          "count": 7
+        },
+        {
+          "startOffset": 2161,
+          "endOffset": 2271,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "lessBind",
+      "ranges": [
+        {
+          "startOffset": 2802,
+          "endOffset": 3219,
+          "count": 4
+        },
+        {
+          "startOffset": 2873,
+          "endOffset": 2880,
+          "count": 1
+        },
+        {
+          "startOffset": 2880,
+          "endOffset": 3217,
+          "count": 3
+        },
+        {
+          "startOffset": 2973,
+          "endOffset": 3213,
+          "count": 1
+        },
+        {
+          "startOffset": 3192,
+          "endOffset": 3203,
+          "count": 0
+        },
+        {
+          "startOffset": 3217,
+          "endOffset": 3218,
+          "count": 3
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "createVisibleStrategy",
+      "ranges": [
+        {
+          "startOffset": 3488,
+          "endOffset": 4699,
+          "count": 1
+        },
+        {
+          "startOffset": 4361,
+          "endOffset": 4564,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "IntersectionObserver.rootMargin",
+      "ranges": [
+        {
+          "startOffset": 3612,
+          "endOffset": 3847,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "observeAll",
+      "ranges": [
+        {
+          "startOffset": 3959,
+          "endOffset": 4151,
+          "count": 1
+        },
+        {
+          "startOffset": 4051,
+          "endOffset": 4129,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 4076,
+          "endOffset": 4102,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 4187,
+          "endOffset": 4271,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 4413,
+          "endOffset": 4558,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createLazyStrategy",
+      "ranges": [
+        {
+          "startOffset": 4990,
+          "endOffset": 5305,
+          "count": 12
+        },
+        {
+          "startOffset": 5151,
+          "endOffset": 5303,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 5238,
+          "endOffset": 5254,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "island",
+      "ranges": [
+        {
+          "startOffset": 6654,
+          "endOffset": 8991,
+          "count": 22
+        },
+        {
+          "startOffset": 6747,
+          "endOffset": 6756,
+          "count": 12
+        },
+        {
+          "startOffset": 6852,
+          "endOffset": 6877,
+          "count": 21
+        },
+        {
+          "startOffset": 6879,
+          "endOffset": 7043,
+          "count": 2
+        },
+        {
+          "startOffset": 7043,
+          "endOffset": 7303,
+          "count": 20
+        },
+        {
+          "startOffset": 7303,
+          "endOffset": 7322,
+          "count": 18
+        },
+        {
+          "startOffset": 7323,
+          "endOffset": 7338,
+          "count": 2
+        },
+        {
+          "startOffset": 7780,
+          "endOffset": 8224,
+          "count": 19
+        },
+        {
+          "startOffset": 8224,
+          "endOffset": 8690,
+          "count": 20
+        },
+        {
+          "startOffset": 8690,
+          "endOffset": 8734,
+          "count": 7
+        },
+        {
+          "startOffset": 8739,
+          "endOffset": 8751,
+          "count": 10
+        },
+        {
+          "startOffset": 8756,
+          "endOffset": 8817,
+          "count": 11
+        },
+        {
+          "startOffset": 8822,
+          "endOffset": 8898,
+          "count": 1
+        },
+        {
+          "startOffset": 8903,
+          "endOffset": 8960,
+          "count": 1
+        },
+        {
+          "startOffset": 8964,
+          "endOffset": 8990,
+          "count": 20
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "componentClass.connectedCallback",
+      "ranges": [
+        {
+          "startOffset": 7888,
+          "endOffset": 8219,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "register",
+      "ranges": [
+        {
+          "startOffset": 8298,
+          "endOffset": 8644,
+          "count": 19
+        },
+        {
+          "startOffset": 8353,
+          "endOffset": 8640,
+          "count": 17
+        },
+        {
+          "startOffset": 8442,
+          "endOffset": 8634,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

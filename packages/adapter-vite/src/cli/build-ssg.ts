@@ -278,7 +278,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
         // This plugin resolves them to empty stubs when missing, so the
         // viteBuild() succeeds regardless of which packages are available.
         optionalPackageStubsPlugin(),
-        // Resolve virtual:less-nav — uses shared constants from @lessjs/core/constants
+        // Resolve virtual:less-nav — shared nav/pwa/speculation constants
         {
           name: 'less:ssg-virtual-nav',
           resolveId(id) {

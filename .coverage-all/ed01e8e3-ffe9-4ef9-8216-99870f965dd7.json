@@ -1,0 +1,197 @@
+{
+  "scriptId": "314",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/core/src/html-escape.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 4657,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "escapeHtml",
+      "ranges": [
+        {
+          "startOffset": 807,
+          "endOffset": 1103,
+          "count": 18
+        },
+        {
+          "startOffset": 865,
+          "endOffset": 875,
+          "count": 0
+        },
+        {
+          "startOffset": 912,
+          "endOffset": 923,
+          "count": 0
+        },
+        {
+          "startOffset": 962,
+          "endOffset": 973,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "escapeAttr",
+      "ranges": [
+        {
+          "startOffset": 1149,
+          "endOffset": 1309,
+          "count": 10
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "escapeAttrValue",
+      "ranges": [
+        {
+          "startOffset": 1386,
+          "endOffset": 1513,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "wrapInDocument",
+      "ranges": [
+        {
+          "startOffset": 1676,
+          "endOffset": 3443,
+          "count": 10
+        },
+        {
+          "startOffset": 1890,
+          "endOffset": 1914,
+          "count": 0
+        },
+        {
+          "startOffset": 2229,
+          "endOffset": 2264,
+          "count": 1
+        },
+        {
+          "startOffset": 2265,
+          "endOffset": 2293,
+          "count": 0
+        },
+        {
+          "startOffset": 2295,
+          "endOffset": 2526,
+          "count": 0
+        },
+        {
+          "startOffset": 2560,
+          "endOffset": 2573,
+          "count": 2
+        },
+        {
+          "startOffset": 2575,
+          "endOffset": 2782,
+          "count": 2
+        },
+        {
+          "startOffset": 2823,
+          "endOffset": 2858,
+          "count": 2
+        },
+        {
+          "startOffset": 2859,
+          "endOffset": 2863,
+          "count": 8
+        },
+        {
+          "startOffset": 2894,
+          "endOffset": 3070,
+          "count": 3
+        },
+        {
+          "startOffset": 2984,
+          "endOffset": 3063,
+          "count": 1
+        },
+        {
+          "startOffset": 3064,
+          "endOffset": 3068,
+          "count": 2
+        },
+        {
+          "startOffset": 3071,
+          "endOffset": 3075,
+          "count": 7
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "renderSsrError",
+      "ranges": [
+        {
+          "startOffset": 3614,
+          "endOffset": 4656,
+          "count": 6
+        },
+        {
+          "startOffset": 3728,
+          "endOffset": 3743,
+          "count": 5
+        },
+        {
+          "startOffset": 3744,
+          "endOffset": 3749,
+          "count": 1
+        },
+        {
+          "startOffset": 3773,
+          "endOffset": 3793,
+          "count": 3
+        },
+        {
+          "startOffset": 3794,
+          "endOffset": 3813,
+          "count": 3
+        },
+        {
+          "startOffset": 3873,
+          "endOffset": 4407,
+          "count": 3
+        },
+        {
+          "startOffset": 3905,
+          "endOffset": 3930,
+          "count": 2
+        },
+        {
+          "startOffset": 3931,
+          "endOffset": 3935,
+          "count": 1
+        },
+        {
+          "startOffset": 4356,
+          "endOffset": 4379,
+          "count": 2
+        },
+        {
+          "startOffset": 4380,
+          "endOffset": 4384,
+          "count": 1
+        },
+        {
+          "startOffset": 4407,
+          "endOffset": 4655,
+          "count": 3
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

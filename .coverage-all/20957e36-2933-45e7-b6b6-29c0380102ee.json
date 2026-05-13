@@ -1,0 +1,55 @@
+{
+  "scriptId": "399",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/entities@4.5.0/node_modules/entities/lib/esm/decode_codepoint.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2068,
+          "count": 1
+        },
+        {
+          "startOffset": 990,
+          "endOffset": 1296,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "fromCodePoint",
+      "ranges": [
+        {
+          "startOffset": 992,
+          "endOffset": 1296,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "replaceCodePoint",
+      "ranges": [
+        {
+          "startOffset": 1475,
+          "endOffset": 1723,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "decodeCodePoint",
+      "ranges": [
+        {
+          "startOffset": 1973,
+          "endOffset": 2067,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "scriptId": "342",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/signals/src/framework.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 1877,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "signal",
+      "ranges": [
+        {
+          "startOffset": 345,
+          "endOffset": 674,
+          "count": 13
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "get value",
+      "ranges": [
+        {
+          "startOffset": 441,
+          "endOffset": 487,
+          "count": 8
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "set value",
+      "ranges": [
+        {
+          "startOffset": 493,
+          "endOffset": 547,
+          "count": 8
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "subscribe",
+      "ranges": [
+        {
+          "startOffset": 553,
+          "endOffset": 667,
+          "count": 5
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 599,
+          "endOffset": 637,
+          "count": 8
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "computed",
+      "ranges": [
+        {
+          "startOffset": 754,
+          "endOffset": 998,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "effect",
+      "ranges": [
+        {
+          "startOffset": 1123,
+          "endOffset": 1876,
+          "count": 5
+        },
+        {
+          "startOffset": 1751,
+          "endOffset": 1813,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 1216,
+          "endOffset": 1262,
+          "count": 8
+        },
+        {
+          "startOffset": 1233,
+          "endOffset": 1237,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 1310,
+          "endOffset": 1680,
+          "count": 3
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 1379,
+          "endOffset": 1668,
+          "count": 3
+        },
+        {
+          "startOffset": 1554,
+          "endOffset": 1624,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 1823,
+          "endOffset": 1873,
+          "count": 1
+        },
+        {
+          "startOffset": 1840,
+          "endOffset": 1844,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

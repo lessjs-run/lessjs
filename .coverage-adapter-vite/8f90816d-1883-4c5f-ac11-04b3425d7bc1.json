@@ -1,0 +1,325 @@
+{
+  "scriptId": "396",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/entities@4.5.0/node_modules/entities/lib/esm/decode.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 19776,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 401,
+          "endOffset": 1048,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 1226,
+          "endOffset": 1468,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "isNumber",
+      "ranges": [
+        {
+          "startOffset": 1508,
+          "endOffset": 1596,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isHexadecimalCharacter",
+      "ranges": [
+        {
+          "startOffset": 1597,
+          "endOffset": 1777,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isAsciiAlphaNumeric",
+      "ranges": [
+        {
+          "startOffset": 1778,
+          "endOffset": 1981,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isEntityInAttributeInvalidEnd",
+      "ranges": [
+        {
+          "startOffset": 2293,
+          "endOffset": 2408,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 2434,
+          "endOffset": 2868,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 2946,
+          "endOffset": 3350,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "EntityDecoder",
+      "ranges": [
+        {
+          "startOffset": 3490,
+          "endOffset": 4800,
+          "count": 2
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "startEntity",
+      "ranges": [
+        {
+          "startOffset": 4857,
+          "endOffset": 5084,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "write",
+      "ranges": [
+        {
+          "startOffset": 5736,
+          "endOffset": 6745,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "stateNumericStart",
+      "ranges": [
+        {
+          "startOffset": 7150,
+          "endOffset": 7600,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "addToNumericResult",
+      "ranges": [
+        {
+          "startOffset": 7605,
+          "endOffset": 7930,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "stateNumericHex",
+      "ranges": [
+        {
+          "startOffset": 8315,
+          "endOffset": 8826,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "stateNumericDecimal",
+      "ranges": [
+        {
+          "startOffset": 9203,
+          "endOffset": 9686,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "emitNumericEntity",
+      "ranges": [
+        {
+          "startOffset": 10313,
+          "endOffset": 11214,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "stateNamedEntity",
+      "ranges": [
+        {
+          "startOffset": 11579,
+          "endOffset": 13502,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "emitNotTerminatedNamedEntity",
+      "ranges": [
+        {
+          "startOffset": 13650,
+          "endOffset": 14043,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "emitNamedEntityData",
+      "ranges": [
+        {
+          "startOffset": 14341,
+          "endOffset": 14797,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "end",
+      "ranges": [
+        {
+          "startOffset": 15026,
+          "endOffset": 16134,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getDecoder",
+      "ranges": [
+        {
+          "startOffset": 16301,
+          "endOffset": 17254,
+          "count": 2
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 16403,
+          "endOffset": 16439,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "decodeWithTrie",
+      "ranges": [
+        {
+          "startOffset": 16453,
+          "endOffset": 17251,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "determineBranch",
+      "ranges": [
+        {
+          "startOffset": 17654,
+          "endOffset": 18723,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "decodeHTML",
+      "ranges": [
+        {
+          "startOffset": 18965,
+          "endOffset": 19056,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "decodeHTMLAttribute",
+      "ranges": [
+        {
+          "startOffset": 19186,
+          "endOffset": 19276,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "decodeHTMLStrict",
+      "ranges": [
+        {
+          "startOffset": 19446,
+          "endOffset": 19530,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "decodeXML",
+      "ranges": [
+        {
+          "startOffset": 19699,
+          "endOffset": 19775,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

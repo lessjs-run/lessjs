@@ -1,0 +1,94 @@
+{
+  "scriptId": "370",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/core/src/render-nested.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 9939,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "kebabToCamel",
+      "ranges": [
+        {
+          "startOffset": 691,
+          "endOffset": 781,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "parseAttrsToProps",
+      "ranges": [
+        {
+          "startOffset": 956,
+          "endOffset": 2017,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "elementAlreadyHasDSD",
+      "ranges": [
+        {
+          "startOffset": 2426,
+          "endOffset": 2855,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isCustomElementName",
+      "ranges": [
+        {
+          "startOffset": 2938,
+          "endOffset": 3034,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "inferDsdOptions",
+      "ranges": [
+        {
+          "startOffset": 3417,
+          "endOffset": 3837,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isInsideDsdTemplate",
+      "ranges": [
+        {
+          "startOffset": 4047,
+          "endOffset": 4397,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "renderNestedCustomElements",
+      "ranges": [
+        {
+          "startOffset": 5698,
+          "endOffset": 9938,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

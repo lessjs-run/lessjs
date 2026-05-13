@@ -1,0 +1,83 @@
+{
+  "scriptId": "454",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/@rolldown+pluginutils@1.0.0-rc.17/node_modules/@rolldown/pluginutils/dist/filter/simple-filters.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 1952,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "exactRegex",
+      "ranges": [
+        {
+          "startOffset": 455,
+          "endOffset": 545,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "prefixRegex",
+      "ranges": [
+        {
+          "startOffset": 1032,
+          "endOffset": 1122,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "escapeRegex",
+      "ranges": [
+        {
+          "startOffset": 1170,
+          "endOffset": 1246,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "makeIdFiltersToMatchWithQuery",
+      "ranges": [
+        {
+          "startOffset": 1254,
+          "endOffset": 1577,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "makeIdFilterToMatchWithQuery",
+      "ranges": [
+        {
+          "startOffset": 1578,
+          "endOffset": 1754,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "makeRegexIdFilterToMatchWithQuery",
+      "ranges": [
+        {
+          "startOffset": 1755,
+          "endOffset": 1951,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

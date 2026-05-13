@@ -1,0 +1,413 @@
+{
+  "scriptId": "389",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/parse5@7.0.0/node_modules/parse5/dist/parser/open-element-stack.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 10405,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "OpenElementStack",
+      "ranges": [
+        {
+          "startOffset": 1222,
+          "endOffset": 1524,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get currentTmplContentOrNode",
+      "ranges": [
+        {
+          "startOffset": 1529,
+          "endOffset": 1671,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "_indexOf",
+      "ranges": [
+        {
+          "startOffset": 1699,
+          "endOffset": 1787,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "_isInTemplate",
+      "ranges": [
+        {
+          "startOffset": 1821,
+          "endOffset": 1955,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "_updateCurrentElement",
+      "ranges": [
+        {
+          "startOffset": 1960,
+          "endOffset": 2097,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "push",
+      "ranges": [
+        {
+          "startOffset": 2118,
+          "endOffset": 2458,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "pop",
+      "ranges": [
+        {
+          "startOffset": 2463,
+          "endOffset": 2720,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "replace",
+      "ranges": [
+        {
+          "startOffset": 2725,
+          "endOffset": 2935,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "insertAfter",
+      "ranges": [
+        {
+          "startOffset": 2940,
+          "endOffset": 3405,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "popUntilTagNamePopped",
+      "ranges": [
+        {
+          "startOffset": 3410,
+          "endOffset": 3742,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "shortenToLength",
+      "ranges": [
+        {
+          "startOffset": 3747,
+          "endOffset": 4114,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "popUntilElementPopped",
+      "ranges": [
+        {
+          "startOffset": 4119,
+          "endOffset": 4250,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "popUntilPopped",
+      "ranges": [
+        {
+          "startOffset": 4255,
+          "endOffset": 4409,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "popUntilNumberedHeaderPopped",
+      "ranges": [
+        {
+          "startOffset": 4414,
+          "endOffset": 4505,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "popUntilTableCellPopped",
+      "ranges": [
+        {
+          "startOffset": 4510,
+          "endOffset": 4594,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "popAllUpToHtmlElement",
+      "ranges": [
+        {
+          "startOffset": 4599,
+          "endOffset": 4844,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "_indexOfTagNames",
+      "ranges": [
+        {
+          "startOffset": 4849,
+          "endOffset": 5132,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "clearBackTo",
+      "ranges": [
+        {
+          "startOffset": 5137,
+          "endOffset": 5278,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "clearBackToTableContext",
+      "ranges": [
+        {
+          "startOffset": 5283,
+          "endOffset": 5366,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "clearBackToTableBodyContext",
+      "ranges": [
+        {
+          "startOffset": 5371,
+          "endOffset": 5463,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "clearBackToTableRowContext",
+      "ranges": [
+        {
+          "startOffset": 5468,
+          "endOffset": 5558,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "remove",
+      "ranges": [
+        {
+          "startOffset": 5563,
+          "endOffset": 6002,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "tryPeekProperlyNestedBodyElement",
+      "ranges": [
+        {
+          "startOffset": 6020,
+          "endOffset": 6227,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "contains",
+      "ranges": [
+        {
+          "startOffset": 6232,
+          "endOffset": 6301,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getCommonAncestor",
+      "ranges": [
+        {
+          "startOffset": 6306,
+          "endOffset": 6459,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isRootHtmlElementCurrent",
+      "ranges": [
+        {
+          "startOffset": 6464,
+          "endOffset": 6563,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "hasInScope",
+      "ranges": [
+        {
+          "startOffset": 6591,
+          "endOffset": 7003,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "hasNumberedHeaderInScope",
+      "ranges": [
+        {
+          "startOffset": 7008,
+          "endOffset": 7433,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "hasInListItemScope",
+      "ranges": [
+        {
+          "startOffset": 7438,
+          "endOffset": 7910,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "hasInButtonScope",
+      "ranges": [
+        {
+          "startOffset": 7915,
+          "endOffset": 8372,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "hasInTableScope",
+      "ranges": [
+        {
+          "startOffset": 8377,
+          "endOffset": 8869,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "hasTableBodyContextInTableScope",
+      "ranges": [
+        {
+          "startOffset": 8874,
+          "endOffset": 9390,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "hasInSelectScope",
+      "ranges": [
+        {
+          "startOffset": 9395,
+          "endOffset": 9872,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "generateImpliedEndTags",
+      "ranges": [
+        {
+          "startOffset": 9900,
+          "endOffset": 10033,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "generateImpliedEndTagsThoroughly",
+      "ranges": [
+        {
+          "startOffset": 10038,
+          "endOffset": 10192,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "generateImpliedEndTagsWithExclusion",
+      "ranges": [
+        {
+          "startOffset": 10197,
+          "endOffset": 10402,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

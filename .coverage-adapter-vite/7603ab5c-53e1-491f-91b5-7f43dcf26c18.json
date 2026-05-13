@@ -1,0 +1,391 @@
+{
+  "scriptId": "389",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/@rolldown+pluginutils@1.0.0-rc.17/node_modules/@rolldown/pluginutils/dist/filter/composable-filters.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 7116,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 85,
+          "endOffset": 99,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "And",
+      "ranges": [
+        {
+          "startOffset": 105,
+          "endOffset": 296,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 314,
+          "endOffset": 328,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Or",
+      "ranges": [
+        {
+          "startOffset": 334,
+          "endOffset": 523,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 542,
+          "endOffset": 556,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Not",
+      "ranges": [
+        {
+          "startOffset": 562,
+          "endOffset": 640,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 658,
+          "endOffset": 687,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Id",
+      "ranges": [
+        {
+          "startOffset": 693,
+          "endOffset": 861,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 887,
+          "endOffset": 916,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "ImporterId",
+      "ranges": [
+        {
+          "startOffset": 922,
+          "endOffset": 1098,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 1124,
+          "endOffset": 1141,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "ModuleType",
+      "ranges": [
+        {
+          "startOffset": 1147,
+          "endOffset": 1241,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 1261,
+          "endOffset": 1278,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Code",
+      "ranges": [
+        {
+          "startOffset": 1284,
+          "endOffset": 1366,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 1387,
+          "endOffset": 1413,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Query",
+      "ranges": [
+        {
+          "startOffset": 1419,
+          "endOffset": 1537,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 1560,
+          "endOffset": 1574,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Include",
+      "ranges": [
+        {
+          "startOffset": 1580,
+          "endOffset": 1662,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 1685,
+          "endOffset": 1699,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Exclude",
+      "ranges": [
+        {
+          "startOffset": 1705,
+          "endOffset": 1787,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "and",
+      "ranges": [
+        {
+          "startOffset": 1797,
+          "endOffset": 1851,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "or",
+      "ranges": [
+        {
+          "startOffset": 1859,
+          "endOffset": 1911,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "not",
+      "ranges": [
+        {
+          "startOffset": 1919,
+          "endOffset": 1967,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "id",
+      "ranges": [
+        {
+          "startOffset": 1975,
+          "endOffset": 2043,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "importerId",
+      "ranges": [
+        {
+          "startOffset": 2051,
+          "endOffset": 2135,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "moduleType",
+      "ranges": [
+        {
+          "startOffset": 2143,
+          "endOffset": 2211,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "code",
+      "ranges": [
+        {
+          "startOffset": 2219,
+          "endOffset": 2275,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "query",
+      "ranges": [
+        {
+          "startOffset": 2598,
+          "endOffset": 2666,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "include",
+      "ranges": [
+        {
+          "startOffset": 2674,
+          "endOffset": 2730,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "exclude",
+      "ranges": [
+        {
+          "startOffset": 2738,
+          "endOffset": 2794,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "queries",
+      "ranges": [
+        {
+          "startOffset": 3025,
+          "endOffset": 3194,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "interpreter",
+      "ranges": [
+        {
+          "startOffset": 3202,
+          "endOffset": 3451,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "interpreterImpl",
+      "ranges": [
+        {
+          "startOffset": 3459,
+          "endOffset": 4103,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "exprInterpreter",
+      "ranges": [
+        {
+          "startOffset": 4111,
+          "endOffset": 7115,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

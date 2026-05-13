@@ -1,0 +1,484 @@
+{
+  "scriptId": "372",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/@hono+node-server@1.19.14/node_modules/@hono/node-server/dist/index.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 19403,
+          "count": 1
+        },
+        {
+          "startOffset": 10301,
+          "endOffset": 10330,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "RequestError",
+      "ranges": [
+        {
+          "startOffset": 328,
+          "endOffset": 424,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "toRequestError",
+      "ranges": [
+        {
+          "startOffset": 449,
+          "endOffset": 564,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "Request",
+      "ranges": [
+        {
+          "startOffset": 648,
+          "endOffset": 925,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "newHeadersFromIncoming",
+      "ranges": [
+        {
+          "startOffset": 958,
+          "endOffset": 1279,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "newRequestFromIncoming",
+      "ranges": [
+        {
+          "startOffset": 1357,
+          "endOffset": 2589,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get method",
+      "ranges": [
+        {
+          "startOffset": 2931,
+          "endOffset": 2995,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get url",
+      "ranges": [
+        {
+          "startOffset": 2999,
+          "endOffset": 3039,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get headers",
+      "ranges": [
+        {
+          "startOffset": 3043,
+          "endOffset": 3137,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "requestPrototype",
+      "ranges": [
+        {
+          "startOffset": 3141,
+          "endOffset": 3235,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "requestPrototype",
+      "ranges": [
+        {
+          "startOffset": 3239,
+          "endOffset": 3500,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 3684,
+          "endOffset": 3806,
+          "count": 12
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "get",
+      "ranges": [
+        {
+          "startOffset": 3744,
+          "endOffset": 3798,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 3878,
+          "endOffset": 4014,
+          "count": 6
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "value",
+      "ranges": [
+        {
+          "startOffset": 3945,
+          "endOffset": 4006,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "value",
+      "ranges": [
+        {
+          "startOffset": 4110,
+          "endOffset": 4408,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "newRequest",
+      "ranges": [
+        {
+          "startOffset": 4490,
+          "endOffset": 5886,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 6110,
+          "endOffset": 6124,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Response2",
+      "ranges": [
+        {
+          "startOffset": 6128,
+          "endOffset": 6260,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "_Response",
+      "ranges": [
+        {
+          "startOffset": 6263,
+          "endOffset": 6927,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get headers",
+      "ranges": [
+        {
+          "startOffset": 6930,
+          "endOffset": 7239,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get status",
+      "ranges": [
+        {
+          "startOffset": 7242,
+          "endOffset": 7327,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get ok",
+      "ranges": [
+        {
+          "startOffset": 7330,
+          "endOffset": 7418,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 7506,
+          "endOffset": 7632,
+          "count": 7
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "get",
+      "ranges": [
+        {
+          "startOffset": 7569,
+          "endOffset": 7624,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 7704,
+          "endOffset": 7844,
+          "count": 6
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "value",
+      "ranges": [
+        {
+          "startOffset": 7774,
+          "endOffset": 7836,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "value",
+      "ranges": [
+        {
+          "startOffset": 7943,
+          "endOffset": 8242,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "readWithoutBlocking",
+      "ranges": [
+        {
+          "startOffset": 8384,
+          "endOffset": 8528,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "writeFromReadableStreamDefaultReader",
+      "ranges": [
+        {
+          "startOffset": 8529,
+          "endOffset": 9430,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "writeFromReadableStream",
+      "ranges": [
+        {
+          "startOffset": 9431,
+          "endOffset": 9690,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "buildOutgoingHttpHeaders",
+      "ranges": [
+        {
+          "startOffset": 9722,
+          "endOffset": 10129,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "drainIncoming",
+      "ranges": [
+        {
+          "startOffset": 10535,
+          "endOffset": 11562,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "handleRequestError",
+      "ranges": [
+        {
+          "startOffset": 11589,
+          "endOffset": 11632,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "handleFetchError",
+      "ranges": [
+        {
+          "startOffset": 11657,
+          "endOffset": 11800,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "handleResponseError",
+      "ranges": [
+        {
+          "startOffset": 11828,
+          "endOffset": 12240,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "flushHeaders",
+      "ranges": [
+        {
+          "startOffset": 12261,
+          "endOffset": 12368,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "responseViaCache",
+      "ranges": [
+        {
+          "startOffset": 12393,
+          "endOffset": 13810,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isPromise",
+      "ranges": [
+        {
+          "startOffset": 13828,
+          "endOffset": 13867,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "responseViaResponseObject",
+      "ranges": [
+        {
+          "startOffset": 13901,
+          "endOffset": 15961,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getRequestListener",
+      "ranges": [
+        {
+          "startOffset": 15988,
+          "endOffset": 18569,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createAdaptorServer",
+      "ranges": [
+        {
+          "startOffset": 18615,
+          "endOffset": 19040,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "serve",
+      "ranges": [
+        {
+          "startOffset": 19054,
+          "endOffset": 19320,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

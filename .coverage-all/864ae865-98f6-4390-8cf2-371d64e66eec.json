@@ -1,0 +1,50 @@
+{
+  "scriptId": "402",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/balanced-match@1.0.2/node_modules/balanced-match/index.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 1219,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "balanced",
+      "ranges": [
+        {
+          "startOffset": 41,
+          "endOffset": 368,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "maybeMatch",
+      "ranges": [
+        {
+          "startOffset": 370,
+          "endOffset": 455,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "range",
+      "ranges": [
+        {
+          "startOffset": 481,
+          "endOffset": 1218,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "scriptId": "438",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/rolldown@1.0.0-rc.17/node_modules/rolldown/dist/shared/normalize-string-or-regex-CbQQ69gT.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2113,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 339,
+          "endOffset": 346,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "BuiltinPlugin",
+      "ranges": [
+        {
+          "startOffset": 349,
+          "endOffset": 429,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "makeBuiltinPluginCallable",
+      "ranges": [
+        {
+          "startOffset": 433,
+          "endOffset": 1208,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyBuiltInPlugin",
+      "ranges": [
+        {
+          "startOffset": 1209,
+          "endOffset": 1317,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bindingifyManifestPlugin",
+      "ranges": [
+        {
+          "startOffset": 1318,
+          "endOffset": 1681,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "normalizedStringOrRegex",
+      "ranges": [
+        {
+          "startOffset": 1744,
+          "endOffset": 1879,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isReadonlyArray",
+      "ranges": [
+        {
+          "startOffset": 1880,
+          "endOffset": 1945,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

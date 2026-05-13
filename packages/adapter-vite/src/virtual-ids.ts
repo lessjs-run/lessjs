@@ -2,7 +2,7 @@
  * @lessjs/adapter-vite - Virtual module ID constants.
  *
  * Vite virtual module IDs used by adapter-vite, @lessjs/content,
- * and @lessjs/i18n. Separated from @lessjs/core/constants because
+ * and @lessjs/i18n. Kept in adapter-vite (not core) because
  * core is a pure runtime and should not contain Vite-specific knowledge.
  *
  * Prefix: VIRTUAL_ = user-facing virtual module name (e.g., 'virtual:less-blog-data')

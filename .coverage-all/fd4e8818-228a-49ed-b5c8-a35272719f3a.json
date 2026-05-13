@@ -1,0 +1,278 @@
+{
+  "scriptId": "371",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/tinyglobby@0.2.16/node_modules/tinyglobby/dist/index.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 12128,
+          "count": 1
+        },
+        {
+          "startOffset": 1673,
+          "endOffset": 1704,
+          "count": 0
+        },
+        {
+          "startOffset": 1705,
+          "endOffset": 1723,
+          "count": 0
+        },
+        {
+          "startOffset": 3469,
+          "endOffset": 3496,
+          "count": 0
+        },
+        {
+          "startOffset": 3497,
+          "endOffset": 3524,
+          "count": 0
+        },
+        {
+          "startOffset": 4076,
+          "endOffset": 4093,
+          "count": 0
+        },
+        {
+          "startOffset": 4094,
+          "endOffset": 4111,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "getPartialMatcher",
+      "ranges": [
+        {
+          "startOffset": 416,
+          "endOffset": 1579,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isRoot",
+      "ranges": [
+        {
+          "startOffset": 1675,
+          "endOffset": 1704,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isRoot",
+      "ranges": [
+        {
+          "startOffset": 1707,
+          "endOffset": 1723,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "buildFormat",
+      "ranges": [
+        {
+          "startOffset": 1725,
+          "endOffset": 2346,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "buildRelative",
+      "ranges": [
+        {
+          "startOffset": 2347,
+          "endOffset": 2658,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "splitPattern",
+      "ranges": [
+        {
+          "startOffset": 2704,
+          "endOffset": 2949,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "convertPosixPathToPattern",
+      "ranges": [
+        {
+          "startOffset": 3007,
+          "endOffset": 3082,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "convertWin32PathToPattern",
+      "ranges": [
+        {
+          "startOffset": 3083,
+          "endOffset": 3198,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "escapePosixPath",
+      "ranges": [
+        {
+          "startOffset": 3725,
+          "endOffset": 3785,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "escapeWin32Path",
+      "ranges": [
+        {
+          "startOffset": 3811,
+          "endOffset": 3871,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isDynamicPattern",
+      "ranges": [
+        {
+          "startOffset": 4694,
+          "endOffset": 4925,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "log",
+      "ranges": [
+        {
+          "startOffset": 4926,
+          "endOffset": 5049,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "ensureStringArray",
+      "ranges": [
+        {
+          "startOffset": 5050,
+          "endOffset": 5182,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "normalizePattern",
+      "ranges": [
+        {
+          "startOffset": 5317,
+          "endOffset": 7214,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "processPatterns",
+      "ranges": [
+        {
+          "startOffset": 7215,
+          "endOffset": 7889,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "buildCrawler",
+      "ranges": [
+        {
+          "startOffset": 7928,
+          "endOffset": 10137,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "formatPaths",
+      "ranges": [
+        {
+          "startOffset": 10174,
+          "endOffset": 10314,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getOptions",
+      "ranges": [
+        {
+          "startOffset": 10502,
+          "endOffset": 11101,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getCrawler",
+      "ranges": [
+        {
+          "startOffset": 11102,
+          "endOffset": 11690,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "glob",
+      "ranges": [
+        {
+          "startOffset": 11691,
+          "endOffset": 11870,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "globSync",
+      "ranges": [
+        {
+          "startOffset": 11871,
+          "endOffset": 12035,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

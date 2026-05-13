@@ -1,0 +1,72 @@
+{
+  "scriptId": "374",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/rolldown@1.0.0-rc.17/node_modules/rolldown/dist/shared/parse-B_ZnWxLZ.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2628,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "wrap",
+      "ranges": [
+        {
+          "startOffset": 238,
+          "endOffset": 665,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "jsonParseAst",
+      "ranges": [
+        {
+          "startOffset": 666,
+          "endOffset": 838,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "applyFix",
+      "ranges": [
+        {
+          "startOffset": 839,
+          "endOffset": 1082,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "parse",
+      "ranges": [
+        {
+          "startOffset": 1829,
+          "endOffset": 1962,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "parseSync",
+      "ranges": [
+        {
+          "startOffset": 2446,
+          "endOffset": 2575,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

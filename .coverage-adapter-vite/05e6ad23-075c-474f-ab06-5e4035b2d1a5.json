@@ -1,0 +1,83 @@
+{
+  "scriptId": "440",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/rolldown@1.0.0-rc.17/node_modules/rolldown/dist/shared/resolve-tsconfig-CfYpGzid.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 4420,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "minify",
+      "ranges": [
+        {
+          "startOffset": 448,
+          "endOffset": 810,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "minifySync",
+      "ranges": [
+        {
+          "startOffset": 882,
+          "endOffset": 1240,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transform",
+      "ranges": [
+        {
+          "startOffset": 2232,
+          "endOffset": 2536,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "transformSync",
+      "ranges": [
+        {
+          "startOffset": 3264,
+          "endOffset": 3564,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "TsconfigCache",
+      "ranges": [
+        {
+          "startOffset": 4075,
+          "endOffset": 4111,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "resolveTsconfig",
+      "ranges": [
+        {
+          "startOffset": 4171,
+          "endOffset": 4287,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

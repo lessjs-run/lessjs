@@ -1,0 +1,28 @@
+{
+  "scriptId": "456",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/picomatch@4.0.4/node_modules/picomatch/index.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 479,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "picomatch",
+      "ranges": [
+        {
+          "startOffset": 95,
+          "endOffset": 417,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

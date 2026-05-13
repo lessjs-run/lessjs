@@ -1,0 +1,231 @@
+{
+  "scriptId": "357",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/adapter-vite/src/entry-renderer.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 22345,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "renderImport",
+      "ranges": [
+        {
+          "startOffset": 1003,
+          "endOffset": 1170,
+          "count": 24
+        },
+        {
+          "startOffset": 1058,
+          "endOffset": 1093,
+          "count": 4
+        },
+        {
+          "startOffset": 1094,
+          "endOffset": 1116,
+          "count": 20
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "renderCorsOrigin",
+      "ranges": [
+        {
+          "startOffset": 1238,
+          "endOffset": 1388,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "renderMiddleware",
+      "ranges": [
+        {
+          "startOffset": 1618,
+          "endOffset": 4760,
+          "count": 16
+        },
+        {
+          "startOffset": 1740,
+          "endOffset": 1817,
+          "count": 4
+        },
+        {
+          "startOffset": 1822,
+          "endOffset": 1897,
+          "count": 4
+        },
+        {
+          "startOffset": 1902,
+          "endOffset": 2777,
+          "count": 4
+        },
+        {
+          "startOffset": 2011,
+          "endOffset": 2165,
+          "count": 0
+        },
+        {
+          "startOffset": 2782,
+          "endOffset": 2869,
+          "count": 4
+        },
+        {
+          "startOffset": 2874,
+          "endOffset": 4736,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "renderApiRoute",
+      "ranges": [
+        {
+          "startOffset": 5143,
+          "endOffset": 5331,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "renderPageRoute",
+      "ranges": [
+        {
+          "startOffset": 5399,
+          "endOffset": 8051,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "renderEntry",
+      "ranges": [
+        {
+          "startOffset": 8760,
+          "endOffset": 21933,
+          "count": 4
+        },
+        {
+          "startOffset": 9056,
+          "endOffset": 9096,
+          "count": 24
+        },
+        {
+          "startOffset": 9404,
+          "endOffset": 9463,
+          "count": 0
+        },
+        {
+          "startOffset": 10056,
+          "endOffset": 10136,
+          "count": 0
+        },
+        {
+          "startOffset": 10219,
+          "endOffset": 10305,
+          "count": 0
+        },
+        {
+          "startOffset": 10352,
+          "endOffset": 10436,
+          "count": 0
+        },
+        {
+          "startOffset": 12243,
+          "endOffset": 12494,
+          "count": 0
+        },
+        {
+          "startOffset": 13050,
+          "endOffset": 13194,
+          "count": 0
+        },
+        {
+          "startOffset": 13229,
+          "endOffset": 13638,
+          "count": 0
+        },
+        {
+          "startOffset": 14173,
+          "endOffset": 14428,
+          "count": 1
+        },
+        {
+          "startOffset": 15895,
+          "endOffset": 15933,
+          "count": 16
+        },
+        {
+          "startOffset": 16042,
+          "endOffset": 16254,
+          "count": 0
+        },
+        {
+          "startOffset": 16316,
+          "endOffset": 16355,
+          "count": 0
+        },
+        {
+          "startOffset": 16549,
+          "endOffset": 16628,
+          "count": 0
+        },
+        {
+          "startOffset": 19188,
+          "endOffset": 19421,
+          "count": 0
+        },
+        {
+          "startOffset": 21411,
+          "endOffset": 21847,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 12986,
+          "endOffset": 13013,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 21358,
+          "endOffset": 21374,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "generateHonoEntryCode",
+      "ranges": [
+        {
+          "startOffset": 22194,
+          "endOffset": 22344,
+          "count": 4
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

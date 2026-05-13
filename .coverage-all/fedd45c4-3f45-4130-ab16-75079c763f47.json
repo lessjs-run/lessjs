@@ -1,0 +1,171 @@
+{
+  "scriptId": "436",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/rolldown@1.0.0-rc.17/node_modules/rolldown/dist/shared/logs-D80CXhvg.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 5826,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "spaces",
+      "ranges": [
+        {
+          "startOffset": 34,
+          "endOffset": 126,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "tabsToSpaces",
+      "ranges": [
+        {
+          "startOffset": 127,
+          "endOffset": 230,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getCodeFrame",
+      "ranges": [
+        {
+          "startOffset": 337,
+          "endOffset": 1492,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "rangeContains",
+      "ranges": [
+        {
+          "startOffset": 1676,
+          "endOffset": 1767,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getLocator",
+      "ranges": [
+        {
+          "startOffset": 1847,
+          "endOffset": 2753,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "locate",
+      "ranges": [
+        {
+          "startOffset": 2901,
+          "endOffset": 3021,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "logParseError",
+      "ranges": [
+        {
+          "startOffset": 3321,
+          "endOffset": 3423,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "logInvalidLogPosition",
+      "ranges": [
+        {
+          "startOffset": 3424,
+          "endOffset": 3682,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "logInputHookInOutputPlugin",
+      "ranges": [
+        {
+          "startOffset": 3683,
+          "endOffset": 4049,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "logCycleLoading",
+      "ranges": [
+        {
+          "startOffset": 4050,
+          "endOffset": 4256,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "logMultipleWatcherOption",
+      "ranges": [
+        {
+          "startOffset": 4257,
+          "endOffset": 4439,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "logPluginError",
+      "ranges": [
+        {
+          "startOffset": 4440,
+          "endOffset": 4817,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "error",
+      "ranges": [
+        {
+          "startOffset": 4818,
+          "endOffset": 5037,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "augmentCodeLocation",
+      "ranges": [
+        {
+          "startOffset": 5038,
+          "endOffset": 5576,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

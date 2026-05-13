@@ -1,0 +1,28 @@
+{
+  "scriptId": "453",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/@rolldown+pluginutils@1.0.0-rc.17/node_modules/@rolldown/pluginutils/dist/filter/filter-vite-plugins.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2394,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "filterVitePlugins",
+      "ranges": [
+        {
+          "startOffset": 780,
+          "endOffset": 2393,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

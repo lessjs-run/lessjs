@@ -1,0 +1,127 @@
+{
+  "scriptId": "355",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/parse5@7.0.0/node_modules/parse5/dist/serializer/index.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 5266,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "isVoidElement",
+      "ranges": [
+        {
+          "startOffset": 479,
+          "endOffset": 706,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "serialize",
+      "ranges": [
+        {
+          "startOffset": 1348,
+          "endOffset": 1540,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "serializeOuter",
+      "ranges": [
+        {
+          "startOffset": 2030,
+          "endOffset": 2159,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "serializeChildNodes",
+      "ranges": [
+        {
+          "startOffset": 2160,
+          "endOffset": 2792,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "serializeNode",
+      "ranges": [
+        {
+          "startOffset": 2793,
+          "endOffset": 3333,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "serializeElement",
+      "ranges": [
+        {
+          "startOffset": 3334,
+          "endOffset": 3576,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "serializeAttributes",
+      "ranges": [
+        {
+          "startOffset": 3577,
+          "endOffset": 4527,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "serializeTextNode",
+      "ranges": [
+        {
+          "startOffset": 4528,
+          "endOffset": 5012,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "serializeCommentNode",
+      "ranges": [
+        {
+          "startOffset": 5013,
+          "endOffset": 5133,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "serializeDocumentTypeNode",
+      "ranges": [
+        {
+          "startOffset": 5134,
+          "endOffset": 5265,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

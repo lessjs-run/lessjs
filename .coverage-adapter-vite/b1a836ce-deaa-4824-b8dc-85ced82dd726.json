@@ -1,0 +1,138 @@
+{
+  "scriptId": "396",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/picomatch@4.0.4/node_modules/picomatch/lib/utils.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 1994,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "exports.isObject",
+      "ranges": [
+        {
+          "startOffset": 189,
+          "endOffset": 258,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "exports.hasRegexChars",
+      "ranges": [
+        {
+          "startOffset": 284,
+          "endOffset": 320,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "exports.isRegexChar",
+      "ranges": [
+        {
+          "startOffset": 344,
+          "endOffset": 397,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "exports.escapeRegex",
+      "ranges": [
+        {
+          "startOffset": 421,
+          "endOffset": 475,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "exports.toPosixSlashes",
+      "ranges": [
+        {
+          "startOffset": 502,
+          "endOffset": 542,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "exports.isWindows",
+      "ranges": [
+        {
+          "startOffset": 565,
+          "endOffset": 879,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "exports.removeBackslashes",
+      "ranges": [
+        {
+          "startOffset": 910,
+          "endOffset": 1022,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "exports.escapeLast",
+      "ranges": [
+        {
+          "startOffset": 1046,
+          "endOffset": 1291,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "exports.removePrefix",
+      "ranges": [
+        {
+          "startOffset": 1317,
+          "endOffset": 1474,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "exports.wrapOutput",
+      "ranges": [
+        {
+          "startOffset": 1498,
+          "endOffset": 1773,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "exports.basename",
+      "ranges": [
+        {
+          "startOffset": 1795,
+          "endOffset": 1992,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "scriptId": "361",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/parse5@7.0.0/node_modules/parse5/dist/parser/formatting-element-list.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 4074,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 60,
+          "endOffset": 188,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "FormattingElementList",
+      "ranges": [
+        {
+          "startOffset": 336,
+          "endOffset": 465,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "_getNoahArkConditionCandidates",
+      "ranges": [
+        {
+          "startOffset": 645,
+          "endOffset": 1577,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "_ensureNoahArkCondition",
+      "ranges": [
+        {
+          "startOffset": 1582,
+          "endOffset": 2682,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "insertMarker",
+      "ranges": [
+        {
+          "startOffset": 2703,
+          "endOffset": 2763,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "pushElement",
+      "ranges": [
+        {
+          "startOffset": 2768,
+          "endOffset": 2970,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "insertElementAfterBookmark",
+      "ranges": [
+        {
+          "startOffset": 2975,
+          "endOffset": 3225,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "removeEntry",
+      "ranges": [
+        {
+          "startOffset": 3230,
+          "endOffset": 3401,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "clearToLastMarker",
+      "ranges": [
+        {
+          "startOffset": 3406,
+          "endOffset": 3642,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getElementEntryInScopeWithTagName",
+      "ranges": [
+        {
+          "startOffset": 3660,
+          "endOffset": 3926,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getElementEntry",
+      "ranges": [
+        {
+          "startOffset": 3931,
+          "endOffset": 4071,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

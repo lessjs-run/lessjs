@@ -1,0 +1,102 @@
+{
+  "scriptId": "315",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/core/src/html-escape.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 4657,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "escapeHtml",
+      "ranges": [
+        {
+          "startOffset": 807,
+          "endOffset": 1103,
+          "count": 17
+        },
+        {
+          "startOffset": 865,
+          "endOffset": 875,
+          "count": 0
+        },
+        {
+          "startOffset": 912,
+          "endOffset": 923,
+          "count": 0
+        },
+        {
+          "startOffset": 962,
+          "endOffset": 973,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "escapeAttr",
+      "ranges": [
+        {
+          "startOffset": 1149,
+          "endOffset": 1309,
+          "count": 35
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "escapeAttrValue",
+      "ranges": [
+        {
+          "startOffset": 1386,
+          "endOffset": 1513,
+          "count": 30
+        },
+        {
+          "startOffset": 1441,
+          "endOffset": 1463,
+          "count": 29
+        },
+        {
+          "startOffset": 1465,
+          "endOffset": 1475,
+          "count": 2
+        },
+        {
+          "startOffset": 1475,
+          "endOffset": 1512,
+          "count": 28
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "wrapInDocument",
+      "ranges": [
+        {
+          "startOffset": 1676,
+          "endOffset": 3443,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "renderSsrError",
+      "ranges": [
+        {
+          "startOffset": 3614,
+          "endOffset": 4656,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "scriptId": "356",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/adapter-vite/src/island-manifest.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2854,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "extractCustomElementTags",
+      "ranges": [
+        {
+          "startOffset": 502,
+          "endOffset": 767,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "generateIslandManifests",
+      "ranges": [
+        {
+          "startOffset": 856,
+          "endOffset": 2054,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "writeIslandManifests",
+      "ranges": [
+        {
+          "startOffset": 2193,
+          "endOffset": 2580,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "simpleHash",
+      "ranges": [
+        {
+          "startOffset": 2639,
+          "endOffset": 2853,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

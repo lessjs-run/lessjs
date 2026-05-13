@@ -1,0 +1,2002 @@
+{
+  "scriptId": "428",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/rolldown@1.0.0-rc.17/node_modules/rolldown/dist/utils-index.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 70355,
+          "count": 1
+        },
+        {
+          "startOffset": 63360,
+          "endOffset": 70354,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "walkNode",
+      "ranges": [
+        {
+          "startOffset": 326,
+          "endOffset": 13498,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkDebuggerStatement",
+      "ranges": [
+        {
+          "startOffset": 13499,
+          "endOffset": 13607,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkEmptyStatement",
+      "ranges": [
+        {
+          "startOffset": 13608,
+          "endOffset": 13713,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkLiteral",
+      "ranges": [
+        {
+          "startOffset": 13714,
+          "endOffset": 13812,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkPrivateIdentifier",
+      "ranges": [
+        {
+          "startOffset": 13813,
+          "endOffset": 13921,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkSuper",
+      "ranges": [
+        {
+          "startOffset": 13922,
+          "endOffset": 14018,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTemplateElement",
+      "ranges": [
+        {
+          "startOffset": 14019,
+          "endOffset": 14125,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkThisExpression",
+      "ranges": [
+        {
+          "startOffset": 14126,
+          "endOffset": 14231,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkJSXClosingFragment",
+      "ranges": [
+        {
+          "startOffset": 14232,
+          "endOffset": 14341,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkJSXEmptyExpression",
+      "ranges": [
+        {
+          "startOffset": 14342,
+          "endOffset": 14451,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkJSXIdentifier",
+      "ranges": [
+        {
+          "startOffset": 14452,
+          "endOffset": 14556,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkJSXOpeningFragment",
+      "ranges": [
+        {
+          "startOffset": 14557,
+          "endOffset": 14667,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkJSXText",
+      "ranges": [
+        {
+          "startOffset": 14668,
+          "endOffset": 14767,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSAnyKeyword",
+      "ranges": [
+        {
+          "startOffset": 14768,
+          "endOffset": 14872,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSBigIntKeyword",
+      "ranges": [
+        {
+          "startOffset": 14873,
+          "endOffset": 14980,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSBooleanKeyword",
+      "ranges": [
+        {
+          "startOffset": 14981,
+          "endOffset": 15089,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSIntrinsicKeyword",
+      "ranges": [
+        {
+          "startOffset": 15090,
+          "endOffset": 15200,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSJSDocUnknownType",
+      "ranges": [
+        {
+          "startOffset": 15201,
+          "endOffset": 15311,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSNeverKeyword",
+      "ranges": [
+        {
+          "startOffset": 15312,
+          "endOffset": 15418,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSNullKeyword",
+      "ranges": [
+        {
+          "startOffset": 15419,
+          "endOffset": 15524,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSNumberKeyword",
+      "ranges": [
+        {
+          "startOffset": 15525,
+          "endOffset": 15632,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSObjectKeyword",
+      "ranges": [
+        {
+          "startOffset": 15633,
+          "endOffset": 15740,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSStringKeyword",
+      "ranges": [
+        {
+          "startOffset": 15741,
+          "endOffset": 15848,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSSymbolKeyword",
+      "ranges": [
+        {
+          "startOffset": 15849,
+          "endOffset": 15956,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSThisType",
+      "ranges": [
+        {
+          "startOffset": 15957,
+          "endOffset": 16059,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSUndefinedKeyword",
+      "ranges": [
+        {
+          "startOffset": 16060,
+          "endOffset": 16170,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSUnknownKeyword",
+      "ranges": [
+        {
+          "startOffset": 16171,
+          "endOffset": 16279,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSVoidKeyword",
+      "ranges": [
+        {
+          "startOffset": 16280,
+          "endOffset": 16385,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkAccessorProperty",
+      "ranges": [
+        {
+          "startOffset": 16386,
+          "endOffset": 16754,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkArrayExpression",
+      "ranges": [
+        {
+          "startOffset": 16755,
+          "endOffset": 17014,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkArrayPattern",
+      "ranges": [
+        {
+          "startOffset": 17015,
+          "endOffset": 17351,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkArrowFunctionExpression",
+      "ranges": [
+        {
+          "startOffset": 17352,
+          "endOffset": 17729,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkAssignmentExpression",
+      "ranges": [
+        {
+          "startOffset": 17730,
+          "endOffset": 18023,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkAssignmentPattern",
+      "ranges": [
+        {
+          "startOffset": 18024,
+          "endOffset": 18394,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkAwaitExpression",
+      "ranges": [
+        {
+          "startOffset": 18395,
+          "endOffset": 18654,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkBinaryExpression",
+      "ranges": [
+        {
+          "startOffset": 18655,
+          "endOffset": 18944,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkBlockStatement",
+      "ranges": [
+        {
+          "startOffset": 18945,
+          "endOffset": 19199,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkBreakStatement",
+      "ranges": [
+        {
+          "startOffset": 19200,
+          "endOffset": 19455,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkCallExpression",
+      "ranges": [
+        {
+          "startOffset": 19456,
+          "endOffset": 19790,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkCatchClause",
+      "ranges": [
+        {
+          "startOffset": 19791,
+          "endOffset": 20075,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkChainExpression",
+      "ranges": [
+        {
+          "startOffset": 20076,
+          "endOffset": 20337,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkClassBody",
+      "ranges": [
+        {
+          "startOffset": 20338,
+          "endOffset": 20587,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkClassDeclaration",
+      "ranges": [
+        {
+          "startOffset": 20588,
+          "endOffset": 21076,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkClassExpression",
+      "ranges": [
+        {
+          "startOffset": 21077,
+          "endOffset": 21564,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkConditionalExpression",
+      "ranges": [
+        {
+          "startOffset": 21565,
+          "endOffset": 21901,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkContinueStatement",
+      "ranges": [
+        {
+          "startOffset": 21902,
+          "endOffset": 22160,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkDecorator",
+      "ranges": [
+        {
+          "startOffset": 22161,
+          "endOffset": 22416,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkDoWhileStatement",
+      "ranges": [
+        {
+          "startOffset": 22417,
+          "endOffset": 22705,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkExportAllDeclaration",
+      "ranges": [
+        {
+          "startOffset": 22706,
+          "endOffset": 23042,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkExportDefaultDeclaration",
+      "ranges": [
+        {
+          "startOffset": 23043,
+          "endOffset": 23314,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkExportNamedDeclaration",
+      "ranges": [
+        {
+          "startOffset": 23315,
+          "endOffset": 23694,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkExportSpecifier",
+      "ranges": [
+        {
+          "startOffset": 23695,
+          "endOffset": 23987,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkExpressionStatement",
+      "ranges": [
+        {
+          "startOffset": 23988,
+          "endOffset": 24253,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkForInStatement",
+      "ranges": [
+        {
+          "startOffset": 24254,
+          "endOffset": 24573,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkForOfStatement",
+      "ranges": [
+        {
+          "startOffset": 24574,
+          "endOffset": 24893,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkForStatement",
+      "ranges": [
+        {
+          "startOffset": 24894,
+          "endOffset": 25244,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkFunctionDeclaration",
+      "ranges": [
+        {
+          "startOffset": 25245,
+          "endOffset": 25648,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkFunctionExpression",
+      "ranges": [
+        {
+          "startOffset": 25649,
+          "endOffset": 26051,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkIdentifier",
+      "ranges": [
+        {
+          "startOffset": 26052,
+          "endOffset": 26350,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkIfStatement",
+      "ranges": [
+        {
+          "startOffset": 26351,
+          "endOffset": 26677,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkImportAttribute",
+      "ranges": [
+        {
+          "startOffset": 26678,
+          "endOffset": 26965,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkImportDeclaration",
+      "ranges": [
+        {
+          "startOffset": 26966,
+          "endOffset": 27301,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkImportDefaultSpecifier",
+      "ranges": [
+        {
+          "startOffset": 27302,
+          "endOffset": 27565,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkImportExpression",
+      "ranges": [
+        {
+          "startOffset": 27566,
+          "endOffset": 27859,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkImportNamespaceSpecifier",
+      "ranges": [
+        {
+          "startOffset": 27860,
+          "endOffset": 28125,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkImportSpecifier",
+      "ranges": [
+        {
+          "startOffset": 28126,
+          "endOffset": 28418,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkLabeledStatement",
+      "ranges": [
+        {
+          "startOffset": 28419,
+          "endOffset": 28708,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkLogicalExpression",
+      "ranges": [
+        {
+          "startOffset": 28709,
+          "endOffset": 28999,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkMemberExpression",
+      "ranges": [
+        {
+          "startOffset": 29000,
+          "endOffset": 29294,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkMetaProperty",
+      "ranges": [
+        {
+          "startOffset": 29295,
+          "endOffset": 29583,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkMethodDefinition",
+      "ranges": [
+        {
+          "startOffset": 29584,
+          "endOffset": 29910,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkNewExpression",
+      "ranges": [
+        {
+          "startOffset": 29911,
+          "endOffset": 30244,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkObjectExpression",
+      "ranges": [
+        {
+          "startOffset": 30245,
+          "endOffset": 30507,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkObjectPattern",
+      "ranges": [
+        {
+          "startOffset": 30508,
+          "endOffset": 30847,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkParenthesizedExpression",
+      "ranges": [
+        {
+          "startOffset": 30848,
+          "endOffset": 31117,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkProgram",
+      "ranges": [
+        {
+          "startOffset": 31118,
+          "endOffset": 31365,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkProperty",
+      "ranges": [
+        {
+          "startOffset": 31366,
+          "endOffset": 31646,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkPropertyDefinition",
+      "ranges": [
+        {
+          "startOffset": 31647,
+          "endOffset": 32017,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkRestElement",
+      "ranges": [
+        {
+          "startOffset": 32018,
+          "endOffset": 32353,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkReturnStatement",
+      "ranges": [
+        {
+          "startOffset": 32354,
+          "endOffset": 32613,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkSequenceExpression",
+      "ranges": [
+        {
+          "startOffset": 32614,
+          "endOffset": 32879,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkSpreadElement",
+      "ranges": [
+        {
+          "startOffset": 32880,
+          "endOffset": 33137,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkStaticBlock",
+      "ranges": [
+        {
+          "startOffset": 33138,
+          "endOffset": 33389,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkSwitchCase",
+      "ranges": [
+        {
+          "startOffset": 33390,
+          "endOffset": 33678,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkSwitchStatement",
+      "ranges": [
+        {
+          "startOffset": 33679,
+          "endOffset": 33975,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTaggedTemplateExpression",
+      "ranges": [
+        {
+          "startOffset": 33976,
+          "endOffset": 34313,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTemplateLiteral",
+      "ranges": [
+        {
+          "startOffset": 34314,
+          "endOffset": 34610,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkThrowStatement",
+      "ranges": [
+        {
+          "startOffset": 34611,
+          "endOffset": 34869,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTryStatement",
+      "ranges": [
+        {
+          "startOffset": 34870,
+          "endOffset": 35195,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkUnaryExpression",
+      "ranges": [
+        {
+          "startOffset": 35196,
+          "endOffset": 35455,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkUpdateExpression",
+      "ranges": [
+        {
+          "startOffset": 35456,
+          "endOffset": 35716,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkV8IntrinsicExpression",
+      "ranges": [
+        {
+          "startOffset": 35717,
+          "endOffset": 36015,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkVariableDeclaration",
+      "ranges": [
+        {
+          "startOffset": 36016,
+          "endOffset": 36283,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkVariableDeclarator",
+      "ranges": [
+        {
+          "startOffset": 36284,
+          "endOffset": 36572,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkWhileStatement",
+      "ranges": [
+        {
+          "startOffset": 36573,
+          "endOffset": 36859,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkWithStatement",
+      "ranges": [
+        {
+          "startOffset": 36860,
+          "endOffset": 37147,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkYieldExpression",
+      "ranges": [
+        {
+          "startOffset": 37148,
+          "endOffset": 37407,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkJSXAttribute",
+      "ranges": [
+        {
+          "startOffset": 37408,
+          "endOffset": 37693,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkJSXClosingElement",
+      "ranges": [
+        {
+          "startOffset": 37694,
+          "endOffset": 37951,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkJSXElement",
+      "ranges": [
+        {
+          "startOffset": 37952,
+          "endOffset": 38290,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkJSXExpressionContainer",
+      "ranges": [
+        {
+          "startOffset": 38291,
+          "endOffset": 38559,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkJSXFragment",
+      "ranges": [
+        {
+          "startOffset": 38560,
+          "endOffset": 38902,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkJSXMemberExpression",
+      "ranges": [
+        {
+          "startOffset": 38903,
+          "endOffset": 39201,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkJSXNamespacedName",
+      "ranges": [
+        {
+          "startOffset": 39202,
+          "endOffset": 39497,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkJSXOpeningElement",
+      "ranges": [
+        {
+          "startOffset": 39498,
+          "endOffset": 39835,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkJSXSpreadAttribute",
+      "ranges": [
+        {
+          "startOffset": 39836,
+          "endOffset": 40099,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkJSXSpreadChild",
+      "ranges": [
+        {
+          "startOffset": 40100,
+          "endOffset": 40361,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSAbstractAccessorProperty",
+      "ranges": [
+        {
+          "startOffset": 40362,
+          "endOffset": 40708,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSAbstractMethodDefinition",
+      "ranges": [
+        {
+          "startOffset": 40709,
+          "endOffset": 41008,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSAbstractPropertyDefinition",
+      "ranges": [
+        {
+          "startOffset": 41009,
+          "endOffset": 41357,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSArrayType",
+      "ranges": [
+        {
+          "startOffset": 41358,
+          "endOffset": 41617,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSAsExpression",
+      "ranges": [
+        {
+          "startOffset": 41618,
+          "endOffset": 41921,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSCallSignatureDeclaration",
+      "ranges": [
+        {
+          "startOffset": 41922,
+          "endOffset": 42271,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSClassImplements",
+      "ranges": [
+        {
+          "startOffset": 42272,
+          "endOffset": 42577,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSConditionalType",
+      "ranges": [
+        {
+          "startOffset": 42578,
+          "endOffset": 42953,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSConstructSignatureDeclaration",
+      "ranges": [
+        {
+          "startOffset": 42954,
+          "endOffset": 43308,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSConstructorType",
+      "ranges": [
+        {
+          "startOffset": 43309,
+          "endOffset": 43649,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSDeclareFunction",
+      "ranges": [
+        {
+          "startOffset": 43650,
+          "endOffset": 44052,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSEmptyBodyFunctionExpression",
+      "ranges": [
+        {
+          "startOffset": 44053,
+          "endOffset": 44435,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSEnumBody",
+      "ranges": [
+        {
+          "startOffset": 44436,
+          "endOffset": 44690,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSEnumDeclaration",
+      "ranges": [
+        {
+          "startOffset": 44691,
+          "endOffset": 44979,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSEnumMember",
+      "ranges": [
+        {
+          "startOffset": 44980,
+          "endOffset": 45270,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSExportAssignment",
+      "ranges": [
+        {
+          "startOffset": 45271,
+          "endOffset": 45536,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSExternalModuleReference",
+      "ranges": [
+        {
+          "startOffset": 45537,
+          "endOffset": 45809,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSFunctionType",
+      "ranges": [
+        {
+          "startOffset": 45810,
+          "endOffset": 46147,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSImportEqualsDeclaration",
+      "ranges": [
+        {
+          "startOffset": 46148,
+          "endOffset": 46455,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSImportType",
+      "ranges": [
+        {
+          "startOffset": 46456,
+          "endOffset": 46824,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSIndexSignature",
+      "ranges": [
+        {
+          "startOffset": 46825,
+          "endOffset": 47130,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSIndexedAccessType",
+      "ranges": [
+        {
+          "startOffset": 47131,
+          "endOffset": 47434,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSInferType",
+      "ranges": [
+        {
+          "startOffset": 47435,
+          "endOffset": 47696,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSInstantiationExpression",
+      "ranges": [
+        {
+          "startOffset": 47697,
+          "endOffset": 48010,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSInterfaceBody",
+      "ranges": [
+        {
+          "startOffset": 48011,
+          "endOffset": 48267,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSInterfaceDeclaration",
+      "ranges": [
+        {
+          "startOffset": 48268,
+          "endOffset": 48638,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSInterfaceHeritage",
+      "ranges": [
+        {
+          "startOffset": 48639,
+          "endOffset": 48946,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSIntersectionType",
+      "ranges": [
+        {
+          "startOffset": 48947,
+          "endOffset": 49207,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSJSDocNonNullableType",
+      "ranges": [
+        {
+          "startOffset": 49208,
+          "endOffset": 49481,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSJSDocNullableType",
+      "ranges": [
+        {
+          "startOffset": 49482,
+          "endOffset": 49752,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSLiteralType",
+      "ranges": [
+        {
+          "startOffset": 49753,
+          "endOffset": 50010,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSMappedType",
+      "ranges": [
+        {
+          "startOffset": 50011,
+          "endOffset": 50379,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSMethodSignature",
+      "ranges": [
+        {
+          "startOffset": 50380,
+          "endOffset": 50751,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSModuleBlock",
+      "ranges": [
+        {
+          "startOffset": 50752,
+          "endOffset": 51006,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSModuleDeclaration",
+      "ranges": [
+        {
+          "startOffset": 51007,
+          "endOffset": 51297,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSNamedTupleMember",
+      "ranges": [
+        {
+          "startOffset": 51298,
+          "endOffset": 51597,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSNamespaceExportDeclaration",
+      "ranges": [
+        {
+          "startOffset": 51598,
+          "endOffset": 51865,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSNonNullExpression",
+      "ranges": [
+        {
+          "startOffset": 51866,
+          "endOffset": 52132,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSOptionalType",
+      "ranges": [
+        {
+          "startOffset": 52133,
+          "endOffset": 52398,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSParameterProperty",
+      "ranges": [
+        {
+          "startOffset": 52399,
+          "endOffset": 52702,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSParenthesizedType",
+      "ranges": [
+        {
+          "startOffset": 52703,
+          "endOffset": 52973,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSPropertySignature",
+      "ranges": [
+        {
+          "startOffset": 52974,
+          "endOffset": 53275,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSQualifiedName",
+      "ranges": [
+        {
+          "startOffset": 53276,
+          "endOffset": 53565,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSRestType",
+      "ranges": [
+        {
+          "startOffset": 53566,
+          "endOffset": 53827,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSSatisfiesExpression",
+      "ranges": [
+        {
+          "startOffset": 53828,
+          "endOffset": 54138,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSTemplateLiteralType",
+      "ranges": [
+        {
+          "startOffset": 54139,
+          "endOffset": 54436,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSTupleType",
+      "ranges": [
+        {
+          "startOffset": 54437,
+          "endOffset": 54697,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSTypeAliasDeclaration",
+      "ranges": [
+        {
+          "startOffset": 54698,
+          "endOffset": 55043,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSTypeAnnotation",
+      "ranges": [
+        {
+          "startOffset": 55044,
+          "endOffset": 55311,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSTypeAssertion",
+      "ranges": [
+        {
+          "startOffset": 55312,
+          "endOffset": 55616,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSTypeLiteral",
+      "ranges": [
+        {
+          "startOffset": 55617,
+          "endOffset": 55874,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSTypeOperator",
+      "ranges": [
+        {
+          "startOffset": 55875,
+          "endOffset": 56140,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSTypeParameter",
+      "ranges": [
+        {
+          "startOffset": 56141,
+          "endOffset": 56470,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSTypeParameterDeclaration",
+      "ranges": [
+        {
+          "startOffset": 56471,
+          "endOffset": 56740,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSTypeParameterInstantiation",
+      "ranges": [
+        {
+          "startOffset": 56741,
+          "endOffset": 57012,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSTypePredicate",
+      "ranges": [
+        {
+          "startOffset": 57013,
+          "endOffset": 57320,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSTypeQuery",
+      "ranges": [
+        {
+          "startOffset": 57321,
+          "endOffset": 57618,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSTypeReference",
+      "ranges": [
+        {
+          "startOffset": 57619,
+          "endOffset": 57920,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "walkTSUnionType",
+      "ranges": [
+        {
+          "startOffset": 57921,
+          "endOffset": 58174,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createCompiledVisitor",
+      "ranges": [
+        {
+          "startOffset": 63083,
+          "endOffset": 63228,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getEnterExitObject",
+      "ranges": [
+        {
+          "startOffset": 63716,
+          "endOffset": 64022,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createVisitFnArray",
+      "ranges": [
+        {
+          "startOffset": 64089,
+          "endOffset": 64411,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "addVisitorToCompiled",
+      "ranges": [
+        {
+          "startOffset": 64492,
+          "endOffset": 66312,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "finalizeCompiledVisitor",
+      "ranges": [
+        {
+          "startOffset": 66516,
+          "endOffset": 67399,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mergeVisitFns",
+      "ranges": [
+        {
+          "startOffset": 67997,
+          "endOffset": 68450,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createMerger",
+      "ranges": [
+        {
+          "startOffset": 68621,
+          "endOffset": 68863,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 68897,
+          "endOffset": 68963,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 68966,
+          "endOffset": 69056,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 69059,
+          "endOffset": 69173,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "mergers",
+      "ranges": [
+        {
+          "startOffset": 69176,
+          "endOffset": 69314,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 69889,
+          "endOffset": 69912,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Visitor",
+      "ranges": [
+        {
+          "startOffset": 69915,
+          "endOffset": 70098,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "visit",
+      "ranges": [
+        {
+          "startOffset": 70100,
+          "endOffset": 70239,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

@@ -1,0 +1,237 @@
+{
+  "scriptId": "432",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/rolldown@1.0.0-rc.17/node_modules/rolldown/dist/experimental-index.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 12939,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 1409,
+          "endOffset": 1450,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "create",
+      "ranges": [
+        {
+          "startOffset": 1460,
+          "endOffset": 3208,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "DevEngine",
+      "ranges": [
+        {
+          "startOffset": 3210,
+          "endOffset": 3256,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "run",
+      "ranges": [
+        {
+          "startOffset": 3258,
+          "endOffset": 3301,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "ensureCurrentBuildFinish",
+      "ranges": [
+        {
+          "startOffset": 3303,
+          "endOffset": 3597,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getBundleState",
+      "ranges": [
+        {
+          "startOffset": 3599,
+          "endOffset": 3665,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "ensureLatestBuildOutput",
+      "ranges": [
+        {
+          "startOffset": 3667,
+          "endOffset": 3750,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "invalidate",
+      "ranges": [
+        {
+          "startOffset": 3752,
+          "endOffset": 3858,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "registerModules",
+      "ranges": [
+        {
+          "startOffset": 3860,
+          "endOffset": 3961,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "removeClient",
+      "ranges": [
+        {
+          "startOffset": 3963,
+          "endOffset": 4040,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "close",
+      "ranges": [
+        {
+          "startOffset": 4042,
+          "endOffset": 4089,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "compileEntry",
+      "ranges": [
+        {
+          "startOffset": 4579,
+          "endOffset": 4677,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "dev",
+      "ranges": [
+        {
+          "startOffset": 4737,
+          "endOffset": 4775,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "freeExternalMemory",
+      "ranges": [
+        {
+          "startOffset": 6449,
+          "endOffset": 6573,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "scan",
+      "ranges": [
+        {
+          "startOffset": 7221,
+          "endOffset": 8023,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "defineParallelPlugin",
+      "ranges": [
+        {
+          "startOffset": 8078,
+          "endOffset": 8236,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "viteAliasPlugin",
+      "ranges": [
+        {
+          "startOffset": 8295,
+          "endOffset": 8388,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "bundleAnalyzerPlugin",
+      "ranges": [
+        {
+          "startOffset": 9400,
+          "endOffset": 9503,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "viteTransformPlugin",
+      "ranges": [
+        {
+          "startOffset": 9566,
+          "endOffset": 9992,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "viteManifestPlugin",
+      "ranges": [
+        {
+          "startOffset": 10059,
+          "endOffset": 10158,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

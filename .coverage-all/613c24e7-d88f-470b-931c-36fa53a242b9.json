@@ -1,0 +1,94 @@
+{
+  "scriptId": "448",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/rolldown@1.0.0-rc.17/node_modules/rolldown/dist/shared/error-DL-e8-oE.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2926,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "bindingifySourcemap",
+      "ranges": [
+        {
+          "startOffset": 96,
+          "endOffset": 572,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "unwrapBindingResult",
+      "ranges": [
+        {
+          "startOffset": 592,
+          "endOffset": 834,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "normalizeBindingResult",
+      "ranges": [
+        {
+          "startOffset": 835,
+          "endOffset": 1081,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "normalizeBindingError",
+      "ranges": [
+        {
+          "startOffset": 1082,
+          "endOffset": 1394,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "aggregateBindingErrorsIntoJsError",
+      "ranges": [
+        {
+          "startOffset": 1395,
+          "endOffset": 2041,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getErrorMessage",
+      "ranges": [
+        {
+          "startOffset": 2042,
+          "endOffset": 2655,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "joinNewLine",
+      "ranges": [
+        {
+          "startOffset": 2656,
+          "endOffset": 2752,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

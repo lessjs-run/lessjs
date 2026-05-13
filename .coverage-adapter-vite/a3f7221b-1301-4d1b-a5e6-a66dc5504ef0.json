@@ -1,0 +1,50 @@
+{
+  "scriptId": "395",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/picomatch@4.0.4/node_modules/picomatch/lib/scan.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 9189,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "isPathSeparator",
+      "ranges": [
+        {
+          "startOffset": 665,
+          "endOffset": 746,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "depth",
+      "ranges": [
+        {
+          "startOffset": 763,
+          "endOffset": 863,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "scan",
+      "ranges": [
+        {
+          "startOffset": 1512,
+          "endOffset": 9163,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

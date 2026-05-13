@@ -1,0 +1,39 @@
+{
+  "scriptId": "354",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/adapter-vite/src/cli/ssg-render.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 11850,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "findHtmlFiles",
+      "ranges": [
+        {
+          "startOffset": 657,
+          "endOffset": 1117,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "ssgRender",
+      "ranges": [
+        {
+          "startOffset": 1192,
+          "endOffset": 11849,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

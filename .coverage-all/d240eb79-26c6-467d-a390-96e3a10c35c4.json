@@ -1,0 +1,72 @@
+{
+  "scriptId": "366",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/core/src/island.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 9160,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "getSSRProps",
+      "ranges": [
+        {
+          "startOffset": 2020,
+          "endOffset": 2273,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "lessBind",
+      "ranges": [
+        {
+          "startOffset": 2802,
+          "endOffset": 3219,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createVisibleStrategy",
+      "ranges": [
+        {
+          "startOffset": 3488,
+          "endOffset": 4699,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createLazyStrategy",
+      "ranges": [
+        {
+          "startOffset": 4990,
+          "endOffset": 5305,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "island",
+      "ranges": [
+        {
+          "startOffset": 6654,
+          "endOffset": 8991,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

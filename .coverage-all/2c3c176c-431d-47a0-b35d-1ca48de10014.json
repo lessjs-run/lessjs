@@ -1,0 +1,463 @@
+{
+  "scriptId": "314",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/core/src/render-dsd.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 10612,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "camelToKebab",
+      "ranges": [
+        {
+          "startOffset": 1860,
+          "endOffset": 1945,
+          "count": 10
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "serializeAttributes",
+      "ranges": [
+        {
+          "startOffset": 2006,
+          "endOffset": 2936,
+          "count": 30
+        },
+        {
+          "startOffset": 2113,
+          "endOffset": 2878,
+          "count": 13
+        },
+        {
+          "startOffset": 2137,
+          "endOffset": 2152,
+          "count": 12
+        },
+        {
+          "startOffset": 2153,
+          "endOffset": 2173,
+          "count": 11
+        },
+        {
+          "startOffset": 2175,
+          "endOffset": 2184,
+          "count": 3
+        },
+        {
+          "startOffset": 2184,
+          "endOffset": 2407,
+          "count": 10
+        },
+        {
+          "startOffset": 2407,
+          "endOffset": 2441,
+          "count": 1
+        },
+        {
+          "startOffset": 2441,
+          "endOffset": 2874,
+          "count": 9
+        },
+        {
+          "startOffset": 2476,
+          "endOffset": 2803,
+          "count": 1
+        },
+        {
+          "startOffset": 2803,
+          "endOffset": 2874,
+          "count": 8
+        },
+        {
+          "startOffset": 2905,
+          "endOffset": 2928,
+          "count": 9
+        },
+        {
+          "startOffset": 2929,
+          "endOffset": 2933,
+          "count": 21
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "renderDSD",
+      "ranges": [
+        {
+          "startOffset": 3934,
+          "endOffset": 8740,
+          "count": 33
+        },
+        {
+          "startOffset": 4103,
+          "endOffset": 4224,
+          "count": 3
+        },
+        {
+          "startOffset": 4125,
+          "endOffset": 4157,
+          "count": 2
+        },
+        {
+          "startOffset": 4158,
+          "endOffset": 4162,
+          "count": 1
+        },
+        {
+          "startOffset": 4183,
+          "endOffset": 4217,
+          "count": 2
+        },
+        {
+          "startOffset": 4218,
+          "endOffset": 4222,
+          "count": 1
+        },
+        {
+          "startOffset": 4225,
+          "endOffset": 4229,
+          "count": 30
+        },
+        {
+          "startOffset": 4330,
+          "endOffset": 4780,
+          "count": 4
+        },
+        {
+          "startOffset": 4398,
+          "endOffset": 4411,
+          "count": 0
+        },
+        {
+          "startOffset": 4606,
+          "endOffset": 4613,
+          "count": 3
+        },
+        {
+          "startOffset": 4614,
+          "endOffset": 4667,
+          "count": 2
+        },
+        {
+          "startOffset": 4668,
+          "endOffset": 4672,
+          "count": 2
+        },
+        {
+          "startOffset": 4687,
+          "endOffset": 4695,
+          "count": 3
+        },
+        {
+          "startOffset": 4696,
+          "endOffset": 4751,
+          "count": 2
+        },
+        {
+          "startOffset": 4752,
+          "endOffset": 4756,
+          "count": 2
+        },
+        {
+          "startOffset": 4780,
+          "endOffset": 4866,
+          "count": 29
+        },
+        {
+          "startOffset": 4866,
+          "endOffset": 5140,
+          "count": 13
+        },
+        {
+          "startOffset": 4913,
+          "endOffset": 5136,
+          "count": 1
+        },
+        {
+          "startOffset": 5115,
+          "endOffset": 5126,
+          "count": 0
+        },
+        {
+          "startOffset": 5140,
+          "endOffset": 5320,
+          "count": 29
+        },
+        {
+          "startOffset": 5320,
+          "endOffset": 5347,
+          "count": 1
+        },
+        {
+          "startOffset": 5347,
+          "endOffset": 6074,
+          "count": 27
+        },
+        {
+          "startOffset": 5385,
+          "endOffset": 5416,
+          "count": 25
+        },
+        {
+          "startOffset": 5416,
+          "endOffset": 6074,
+          "count": 2
+        },
+        {
+          "startOffset": 5477,
+          "endOffset": 5489,
+          "count": 1
+        },
+        {
+          "startOffset": 5490,
+          "endOffset": 5508,
+          "count": 1
+        },
+        {
+          "startOffset": 5509,
+          "endOffset": 5538,
+          "count": 1
+        },
+        {
+          "startOffset": 5540,
+          "endOffset": 6068,
+          "count": 1
+        },
+        {
+          "startOffset": 5677,
+          "endOffset": 5761,
+          "count": 0
+        },
+        {
+          "startOffset": 6079,
+          "endOffset": 6560,
+          "count": 1
+        },
+        {
+          "startOffset": 6147,
+          "endOffset": 6160,
+          "count": 0
+        },
+        {
+          "startOffset": 6216,
+          "endOffset": 6220,
+          "count": 0
+        },
+        {
+          "startOffset": 6305,
+          "endOffset": 6309,
+          "count": 0
+        },
+        {
+          "startOffset": 6500,
+          "endOffset": 6504,
+          "count": 0
+        },
+        {
+          "startOffset": 6560,
+          "endOffset": 6879,
+          "count": 29
+        },
+        {
+          "startOffset": 6879,
+          "endOffset": 6894,
+          "count": 3
+        },
+        {
+          "startOffset": 6896,
+          "endOffset": 7188,
+          "count": 2
+        },
+        {
+          "startOffset": 6963,
+          "endOffset": 6968,
+          "count": 0
+        },
+        {
+          "startOffset": 6976,
+          "endOffset": 7184,
+          "count": 1
+        },
+        {
+          "startOffset": 7163,
+          "endOffset": 7174,
+          "count": 0
+        },
+        {
+          "startOffset": 7188,
+          "endOffset": 7414,
+          "count": 29
+        },
+        {
+          "startOffset": 7414,
+          "endOffset": 7421,
+          "count": 9
+        },
+        {
+          "startOffset": 7422,
+          "endOffset": 7439,
+          "count": 26
+        },
+        {
+          "startOffset": 7440,
+          "endOffset": 7455,
+          "count": 24
+        },
+        {
+          "startOffset": 7579,
+          "endOffset": 7779,
+          "count": 0
+        },
+        {
+          "startOffset": 7779,
+          "endOffset": 7819,
+          "count": 29
+        },
+        {
+          "startOffset": 7819,
+          "endOffset": 8151,
+          "count": 4
+        },
+        {
+          "startOffset": 8003,
+          "endOffset": 8066,
+          "count": 2
+        },
+        {
+          "startOffset": 8067,
+          "endOffset": 8071,
+          "count": 2
+        },
+        {
+          "startOffset": 8151,
+          "endOffset": 8324,
+          "count": 25
+        },
+        {
+          "startOffset": 8324,
+          "endOffset": 8387,
+          "count": 8
+        },
+        {
+          "startOffset": 8388,
+          "endOffset": 8392,
+          "count": 17
+        },
+        {
+          "startOffset": 8422,
+          "endOffset": 8458,
+          "count": 1
+        },
+        {
+          "startOffset": 8459,
+          "endOffset": 8463,
+          "count": 24
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "buildDsdTemplateAttrs",
+      "ranges": [
+        {
+          "startOffset": 8877,
+          "endOffset": 9365,
+          "count": 25
+        },
+        {
+          "startOffset": 8935,
+          "endOffset": 8945,
+          "count": 19
+        },
+        {
+          "startOffset": 8945,
+          "endOffset": 8996,
+          "count": 6
+        },
+        {
+          "startOffset": 8996,
+          "endOffset": 9036,
+          "count": 2
+        },
+        {
+          "startOffset": 9036,
+          "endOffset": 9065,
+          "count": 6
+        },
+        {
+          "startOffset": 9065,
+          "endOffset": 9103,
+          "count": 2
+        },
+        {
+          "startOffset": 9103,
+          "endOffset": 9147,
+          "count": 6
+        },
+        {
+          "startOffset": 9147,
+          "endOffset": 9196,
+          "count": 1
+        },
+        {
+          "startOffset": 9196,
+          "endOffset": 9234,
+          "count": 6
+        },
+        {
+          "startOffset": 9234,
+          "endOffset": 9338,
+          "count": 1
+        },
+        {
+          "startOffset": 9338,
+          "endOffset": 9364,
+          "count": 6
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "isLitTemplateResultHeuristic",
+      "ranges": [
+        {
+          "startOffset": 9584,
+          "endOffset": 9711,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "renderDSDByName",
+      "ranges": [
+        {
+          "startOffset": 10218,
+          "endOffset": 10611,
+          "count": 1
+        },
+        {
+          "startOffset": 10335,
+          "endOffset": 10340,
+          "count": 0
+        },
+        {
+          "startOffset": 10538,
+          "endOffset": 10610,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "scriptId": "342",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/core/src/logger.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2199,
+          "count": 1
+        },
+        {
+          "startOffset": 971,
+          "endOffset": 978,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 462,
+          "endOffset": 726,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 1076,
+          "endOffset": 1995,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "LessLogger",
+      "ranges": [
+        {
+          "startOffset": 1086,
+          "endOffset": 1287,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "logError",
+      "ranges": [
+        {
+          "startOffset": 1290,
+          "endOffset": 1629,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "logWarn",
+      "ranges": [
+        {
+          "startOffset": 1632,
+          "endOffset": 1807,
+          "count": 1
+        },
+        {
+          "startOffset": 1685,
+          "endOffset": 1745,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "logInfo",
+      "ranges": [
+        {
+          "startOffset": 1810,
+          "endOffset": 1870,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "logDebug",
+      "ranges": [
+        {
+          "startOffset": 1873,
+          "endOffset": 1962,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "createLogger",
+      "ranges": [
+        {
+          "startOffset": 2074,
+          "endOffset": 2198,
+          "count": 1
+        },
+        {
+          "startOffset": 2140,
+          "endOffset": 2162,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

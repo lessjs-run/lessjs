@@ -1,0 +1,119 @@
+{
+  "scriptId": "371",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/@hono+vite-dev-server@0.25.3/node_modules/@hono/vite-dev-server/dist/utils.mjs",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2668,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "safeParseUrlPath",
+      "ranges": [
+        {
+          "startOffset": 258,
+          "endOffset": 357,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "normalizeBasePath",
+      "ranges": [
+        {
+          "startOffset": 815,
+          "endOffset": 961,
+          "count": 66
+        },
+        {
+          "startOffset": 838,
+          "endOffset": 853,
+          "count": 0
+        },
+        {
+          "startOffset": 865,
+          "endOffset": 902,
+          "count": 0
+        },
+        {
+          "startOffset": 903,
+          "endOffset": 915,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "createBasePathRewriter",
+      "ranges": [
+        {
+          "startOffset": 1419,
+          "endOffset": 1909,
+          "count": 33
+        },
+        {
+          "startOffset": 1509,
+          "endOffset": 1908,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 1610,
+          "endOffset": 1906,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createBasePathGuard",
+      "ranges": [
+        {
+          "startOffset": 2284,
+          "endOffset": 2560,
+          "count": 33
+        },
+        {
+          "startOffset": 2385,
+          "endOffset": 2559,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "withTrailingSlash",
+      "ranges": [
+        {
+          "startOffset": 2374,
+          "endOffset": 2384,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 2443,
+          "endOffset": 2557,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

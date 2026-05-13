@@ -1,0 +1,61 @@
+{
+  "scriptId": "388",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/minimatch@9.0.9/node_modules/minimatch/dist/esm/brace-expressions.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 5631,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "braceEscape",
+      "ranges": [
+        {
+          "startOffset": 894,
+          "endOffset": 931,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "regexpEscape",
+      "ranges": [
+        {
+          "startOffset": 992,
+          "endOffset": 1044,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "rangesToString",
+      "ranges": [
+        {
+          "startOffset": 1130,
+          "endOffset": 1157,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "parseClass",
+      "ranges": [
+        {
+          "startOffset": 1522,
+          "endOffset": 5584,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

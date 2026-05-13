@@ -1,0 +1,193 @@
+{
+  "scriptId": "395",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/parse5@7.0.0/node_modules/parse5/dist/tokenizer/preprocessor.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 6853,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Preprocessor",
+      "ranges": [
+        {
+          "startOffset": 448,
+          "endOffset": 1082,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get col",
+      "ranges": [
+        {
+          "startOffset": 1200,
+          "endOffset": 1301,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "get offset",
+      "ranges": [
+        {
+          "startOffset": 1306,
+          "endOffset": 1376,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getError",
+      "ranges": [
+        {
+          "startOffset": 1381,
+          "endOffset": 1665,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "_err",
+      "ranges": [
+        {
+          "startOffset": 1670,
+          "endOffset": 1883,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "_addGap",
+      "ranges": [
+        {
+          "startOffset": 1888,
+          "endOffset": 1986,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "_processSurrogate",
+      "ranges": [
+        {
+          "startOffset": 1991,
+          "endOffset": 2850,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "willDropParsedChunk",
+      "ranges": [
+        {
+          "startOffset": 2855,
+          "endOffset": 2932,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "dropParsedChunk",
+      "ranges": [
+        {
+          "startOffset": 2937,
+          "endOffset": 3258,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "write",
+      "ranges": [
+        {
+          "startOffset": 3263,
+          "endOffset": 3511,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "insertHtmlAtCurrentPos",
+      "ranges": [
+        {
+          "startOffset": 3516,
+          "endOffset": 3691,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "startsWith",
+      "ranges": [
+        {
+          "startOffset": 3696,
+          "endOffset": 4283,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "peek",
+      "ranges": [
+        {
+          "startOffset": 4288,
+          "endOffset": 4521,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "advance",
+      "ranges": [
+        {
+          "startOffset": 4526,
+          "endOffset": 6376,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "_checkForProblematicCharacters",
+      "ranges": [
+        {
+          "startOffset": 6381,
+          "endOffset": 6638,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "retreat",
+      "ranges": [
+        {
+          "startOffset": 6643,
+          "endOffset": 6850,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

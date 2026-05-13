@@ -1,0 +1,50 @@
+{
+  "scriptId": "362",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/core/src/context.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2171,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "extractParams",
+      "ranges": [
+        {
+          "startOffset": 720,
+          "endOffset": 1177,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "parseQuery",
+      "ranges": [
+        {
+          "startOffset": 1371,
+          "endOffset": 1796,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createSsrContext",
+      "ranges": [
+        {
+          "startOffset": 1917,
+          "endOffset": 2170,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

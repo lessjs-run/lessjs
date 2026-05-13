@@ -1,0 +1,168 @@
+{
+  "scriptId": "343",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/signals/src/sugar.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 3952,
+          "count": 1
+        },
+        {
+          "startOffset": 1800,
+          "endOffset": 1815,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "islandEffect",
+      "ranges": [
+        {
+          "startOffset": 358,
+          "endOffset": 1437,
+          "count": 8
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "teardown",
+      "ranges": [
+        {
+          "startOffset": 454,
+          "endOffset": 599,
+          "count": 10
+        },
+        {
+          "startOffset": 494,
+          "endOffset": 501,
+          "count": 2
+        },
+        {
+          "startOffset": 501,
+          "endOffset": 598,
+          "count": 8
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 634,
+          "endOffset": 682,
+          "count": 3
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "observeParent",
+      "ranges": [
+        {
+          "startOffset": 687,
+          "endOffset": 881,
+          "count": 8
+        },
+        {
+          "startOffset": 773,
+          "endOffset": 791,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 1309,
+          "endOffset": 1407,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "batch",
+      "ranges": [
+        {
+          "startOffset": 1507,
+          "endOffset": 1544,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "untracked",
+      "ranges": [
+        {
+          "startOffset": 1613,
+          "endOffset": 1676,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "channel",
+      "ranges": [
+        {
+          "startOffset": 1907,
+          "endOffset": 3061,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createThemeSignal",
+      "ranges": [
+        {
+          "startOffset": 3131,
+          "endOffset": 3632,
+          "count": 1
+        },
+        {
+          "startOffset": 3213,
+          "endOffset": 3276,
+          "count": 0
+        },
+        {
+          "startOffset": 3327,
+          "endOffset": 3618,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 3365,
+          "endOffset": 3483,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isNativeSignal",
+      "ranges": [
+        {
+          "startOffset": 3833,
+          "endOffset": 3951,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

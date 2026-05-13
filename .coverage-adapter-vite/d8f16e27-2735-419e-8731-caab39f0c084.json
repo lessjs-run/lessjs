@@ -1,0 +1,155 @@
+{
+  "scriptId": "348",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/adapter-vite/src/workspace-alias.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2174,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "tryReadJson",
+      "ranges": [
+        {
+          "startOffset": 284,
+          "endOffset": 408,
+          "count": 408
+        },
+        {
+          "startOffset": 377,
+          "endOffset": 406,
+          "count": 18
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "findWorkspaceRoot",
+      "ranges": [
+        {
+          "startOffset": 495,
+          "endOffset": 825,
+          "count": 33
+        },
+        {
+          "startOffset": 619,
+          "endOffset": 648,
+          "count": 48
+        },
+        {
+          "startOffset": 649,
+          "endOffset": 808,
+          "count": 48
+        },
+        {
+          "startOffset": 718,
+          "endOffset": 729,
+          "count": 30
+        },
+        {
+          "startOffset": 730,
+          "endOffset": 761,
+          "count": 30
+        },
+        {
+          "startOffset": 763,
+          "endOffset": 774,
+          "count": 30
+        },
+        {
+          "startOffset": 774,
+          "endOffset": 808,
+          "count": 18
+        },
+        {
+          "startOffset": 808,
+          "endOffset": 824,
+          "count": 3
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "generateWorkspaceAliases",
+      "ranges": [
+        {
+          "startOffset": 983,
+          "endOffset": 2173,
+          "count": 30
+        },
+        {
+          "startOffset": 1118,
+          "endOffset": 1128,
+          "count": 0
+        },
+        {
+          "startOffset": 1165,
+          "endOffset": 1170,
+          "count": 0
+        },
+        {
+          "startOffset": 1225,
+          "endOffset": 2153,
+          "count": 330
+        },
+        {
+          "startOffset": 1369,
+          "endOffset": 1378,
+          "count": 0
+        },
+        {
+          "startOffset": 1465,
+          "endOffset": 1476,
+          "count": 300
+        },
+        {
+          "startOffset": 1478,
+          "endOffset": 1487,
+          "count": 30
+        },
+        {
+          "startOffset": 1487,
+          "endOffset": 1525,
+          "count": 300
+        },
+        {
+          "startOffset": 1525,
+          "endOffset": 1648,
+          "count": 30
+        },
+        {
+          "startOffset": 1648,
+          "endOffset": 1768,
+          "count": 270
+        },
+        {
+          "startOffset": 1768,
+          "endOffset": 1989,
+          "count": 960
+        },
+        {
+          "startOffset": 1800,
+          "endOffset": 1809,
+          "count": 270
+        },
+        {
+          "startOffset": 1809,
+          "endOffset": 1989,
+          "count": 690
+        },
+        {
+          "startOffset": 1989,
+          "endOffset": 2149,
+          "count": 270
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

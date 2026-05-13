@@ -1,0 +1,127 @@
+{
+  "scriptId": "401",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/brace-expansion@2.1.0/node_modules/brace-expansion/index.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 5178,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "numeric",
+      "ranges": [
+        {
+          "startOffset": 298,
+          "endOffset": 406,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "escapeBraces",
+      "ranges": [
+        {
+          "startOffset": 408,
+          "endOffset": 645,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "unescapeBraces",
+      "ranges": [
+        {
+          "startOffset": 647,
+          "endOffset": 876,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "parseCommaParts",
+      "ranges": [
+        {
+          "startOffset": 1040,
+          "endOffset": 1506,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "expandTop",
+      "ranges": [
+        {
+          "startOffset": 1508,
+          "endOffset": 2185,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "embrace",
+      "ranges": [
+        {
+          "startOffset": 2187,
+          "endOffset": 2238,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isPadded",
+      "ranges": [
+        {
+          "startOffset": 2239,
+          "endOffset": 2292,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "lte",
+      "ranges": [
+        {
+          "startOffset": 2294,
+          "endOffset": 2333,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "gte",
+      "ranges": [
+        {
+          "startOffset": 2334,
+          "endOffset": 2373,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "expand",
+      "ranges": [
+        {
+          "startOffset": 2375,
+          "endOffset": 5177,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

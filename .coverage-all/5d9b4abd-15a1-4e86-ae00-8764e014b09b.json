@@ -1,0 +1,39 @@
+{
+  "scriptId": "350",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/adapter-vite/src/devtools/index.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 7844,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "devtoolsPlugin",
+      "ranges": [
+        {
+          "startOffset": 516,
+          "endOffset": 904,
+          "count": 33
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "transformIndexHtml",
+      "ranges": [
+        {
+          "startOffset": 627,
+          "endOffset": 897,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

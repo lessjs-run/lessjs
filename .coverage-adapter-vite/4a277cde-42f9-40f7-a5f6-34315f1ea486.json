@@ -1,0 +1,17 @@
+{
+  "scriptId": "387",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/@rolldown+pluginutils@1.0.0-rc.17/node_modules/@rolldown/pluginutils/dist/index.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 35,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

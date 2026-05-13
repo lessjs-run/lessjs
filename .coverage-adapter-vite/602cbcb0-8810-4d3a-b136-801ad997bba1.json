@@ -1,0 +1,402 @@
+{
+  "scriptId": "382",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/parse5@7.0.0/node_modules/parse5/dist/tree-adapters/default.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 5507,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 73,
+          "endOffset": 311,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "createTextNode",
+      "ranges": [
+        {
+          "startOffset": 343,
+          "endOffset": 471,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createDocument",
+      "ranges": [
+        {
+          "startOffset": 536,
+          "endOffset": 700,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createDocumentFragment",
+      "ranges": [
+        {
+          "startOffset": 706,
+          "endOffset": 843,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createElement",
+      "ranges": [
+        {
+          "startOffset": 849,
+          "endOffset": 1083,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "createCommentNode",
+      "ranges": [
+        {
+          "startOffset": 1089,
+          "endOffset": 1236,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "appendChild",
+      "ranges": [
+        {
+          "startOffset": 1262,
+          "endOffset": 1388,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "insertBefore",
+      "ranges": [
+        {
+          "startOffset": 1394,
+          "endOffset": 1630,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "setTemplateContent",
+      "ranges": [
+        {
+          "startOffset": 1636,
+          "endOffset": 1745,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getTemplateContent",
+      "ranges": [
+        {
+          "startOffset": 1751,
+          "endOffset": 1834,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "setDocumentType",
+      "ranges": [
+        {
+          "startOffset": 1840,
+          "endOffset": 2452,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "setDocumentMode",
+      "ranges": [
+        {
+          "startOffset": 2458,
+          "endOffset": 2527,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getDocumentMode",
+      "ranges": [
+        {
+          "startOffset": 2533,
+          "endOffset": 2596,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "detachNode",
+      "ranges": [
+        {
+          "startOffset": 2602,
+          "endOffset": 2824,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "insertText",
+      "ranges": [
+        {
+          "startOffset": 2830,
+          "endOffset": 3221,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "insertTextBefore",
+      "ranges": [
+        {
+          "startOffset": 3227,
+          "endOffset": 3614,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "adoptAttributes",
+      "ranges": [
+        {
+          "startOffset": 3620,
+          "endOffset": 3924,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getFirstChild",
+      "ranges": [
+        {
+          "startOffset": 3952,
+          "endOffset": 4014,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getChildNodes",
+      "ranges": [
+        {
+          "startOffset": 4020,
+          "endOffset": 4079,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getParentNode",
+      "ranges": [
+        {
+          "startOffset": 4085,
+          "endOffset": 4144,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getAttrList",
+      "ranges": [
+        {
+          "startOffset": 4150,
+          "endOffset": 4208,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getTagName",
+      "ranges": [
+        {
+          "startOffset": 4230,
+          "endOffset": 4289,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getNamespaceURI",
+      "ranges": [
+        {
+          "startOffset": 4295,
+          "endOffset": 4364,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getTextNodeContent",
+      "ranges": [
+        {
+          "startOffset": 4370,
+          "endOffset": 4437,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getCommentNodeContent",
+      "ranges": [
+        {
+          "startOffset": 4443,
+          "endOffset": 4518,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getDocumentTypeNodeName",
+      "ranges": [
+        {
+          "startOffset": 4524,
+          "endOffset": 4601,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getDocumentTypeNodePublicId",
+      "ranges": [
+        {
+          "startOffset": 4607,
+          "endOffset": 4692,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getDocumentTypeNodeSystemId",
+      "ranges": [
+        {
+          "startOffset": 4698,
+          "endOffset": 4783,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isTextNode",
+      "ranges": [
+        {
+          "startOffset": 4806,
+          "endOffset": 4872,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isCommentNode",
+      "ranges": [
+        {
+          "startOffset": 4878,
+          "endOffset": 4950,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isDocumentTypeNode",
+      "ranges": [
+        {
+          "startOffset": 4956,
+          "endOffset": 5044,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isElementNode",
+      "ranges": [
+        {
+          "startOffset": 5050,
+          "endOffset": 5147,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "setNodeSourceCodeLocation",
+      "ranges": [
+        {
+          "startOffset": 5181,
+          "endOffset": 5274,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getNodeSourceCodeLocation",
+      "ranges": [
+        {
+          "startOffset": 5280,
+          "endOffset": 5359,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "updateNodeSourceCodeLocation",
+      "ranges": [
+        {
+          "startOffset": 5365,
+          "endOffset": 5502,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

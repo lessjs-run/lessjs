@@ -1,0 +1,127 @@
+{
+  "scriptId": "384",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/parse5@7.0.0/node_modules/parse5/dist/common/foreign-content.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 6369,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 1484,
+          "endOffset": 1520,
+          "count": 58
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 3257,
+          "endOffset": 3287,
+          "count": 36
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "causesExit",
+      "ranges": [
+        {
+          "startOffset": 3913,
+          "endOffset": 4209,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "adjustTokenMathMLAttrs",
+      "ranges": [
+        {
+          "startOffset": 4237,
+          "endOffset": 4488,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "adjustTokenSVGAttrs",
+      "ranges": [
+        {
+          "startOffset": 4496,
+          "endOffset": 4778,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "adjustTokenXMLAttrs",
+      "ranges": [
+        {
+          "startOffset": 4786,
+          "endOffset": 5198,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "adjustTokenSVGTagName",
+      "ranges": [
+        {
+          "startOffset": 5206,
+          "endOffset": 5453,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isMathMLTextIntegrationPoint",
+      "ranges": [
+        {
+          "startOffset": 5475,
+          "endOffset": 5633,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isHtmlIntegrationPoint",
+      "ranges": [
+        {
+          "startOffset": 5634,
+          "endOffset": 6115,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isIntegrationPoint",
+      "ranges": [
+        {
+          "startOffset": 6123,
+          "endOffset": 6368,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

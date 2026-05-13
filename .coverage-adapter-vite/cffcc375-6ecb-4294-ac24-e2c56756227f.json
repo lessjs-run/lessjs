@@ -1,0 +1,83 @@
+{
+  "scriptId": "364",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/packages/core/src/render-dsd.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 10612,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "camelToKebab",
+      "ranges": [
+        {
+          "startOffset": 1860,
+          "endOffset": 1945,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "serializeAttributes",
+      "ranges": [
+        {
+          "startOffset": 2006,
+          "endOffset": 2936,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "renderDSD",
+      "ranges": [
+        {
+          "startOffset": 3934,
+          "endOffset": 8740,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "buildDsdTemplateAttrs",
+      "ranges": [
+        {
+          "startOffset": 8877,
+          "endOffset": 9365,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isLitTemplateResultHeuristic",
+      "ranges": [
+        {
+          "startOffset": 9584,
+          "endOffset": 9711,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "renderDSDByName",
+      "ranges": [
+        {
+          "startOffset": 10218,
+          "endOffset": 10611,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

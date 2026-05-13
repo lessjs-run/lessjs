@@ -1,0 +1,50 @@
+{
+  "scriptId": "391",
+  "url": "file:///C:/Users/Administrator/WorkBuddy/Claw/src-tmp/node_modules/.deno/parse5@7.0.0/node_modules/parse5/dist/common/doctype.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 4661,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "hasPrefix",
+      "ranges": [
+        {
+          "startOffset": 3364,
+          "endOffset": 3473,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "isConforming",
+      "ranges": [
+        {
+          "startOffset": 3487,
+          "endOffset": 3677,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "getDocumentMode",
+      "ranges": [
+        {
+          "startOffset": 3685,
+          "endOffset": 4660,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}
