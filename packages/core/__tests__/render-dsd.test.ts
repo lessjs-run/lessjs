@@ -300,6 +300,13 @@ Deno.test('renderDSD — DSD options', async (t) => {
     assertStringIncludes(html, 'shadowrootserializable');
   });
 
+  await t.step('adds shadowrootclonable when clonable=true', async () => {
+    registerAdapter(undefined);
+    const cls = createMockClass('<span>clone me</span>');
+    const html = await renderDSD('clone-el-1', asCtor(cls), {}, undefined, { clonable: true });
+    assertStringIncludes(html, 'shadowrootclonable');
+  });
+
   await t.step('adds shadowrootslotassignment when slotAssignment=manual', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<slot></slot>');
@@ -309,13 +316,24 @@ Deno.test('renderDSD — DSD options', async (t) => {
     assertStringIncludes(html, 'shadowrootslotassignment="manual"');
   });
 
-  await t.step('adds shadowrootcustomelementregistry when specified', async () => {
+  await t.step('adds boolean shadowrootcustomelementregistry when enabled', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<slot></slot>');
     const html = await renderDSD('registry-el-1', asCtor(cls), {}, undefined, {
+      customElementRegistry: true,
+    });
+    assertStringIncludes(html, 'shadowrootcustomelementregistry');
+    assertFalse(html.includes('shadowrootcustomelementregistry='));
+  });
+
+  await t.step('serializes legacy customElementRegistry string as boolean attr', async () => {
+    registerAdapter(undefined);
+    const cls = createMockClass('<slot></slot>');
+    const html = await renderDSD('registry-el-2', asCtor(cls), {}, undefined, {
       customElementRegistry: 'myRegistry',
     });
-    assertStringIncludes(html, 'shadowrootcustomelementregistry="myRegistry"');
+    assertStringIncludes(html, 'shadowrootcustomelementregistry');
+    assertFalse(html.includes('myRegistry'));
   });
 
   await t.step('omits DSD attrs when options are not set', async () => {
@@ -323,6 +341,7 @@ Deno.test('renderDSD — DSD options', async (t) => {
     const cls = createMockClass('<div>x</div>');
     const html = await renderDSD('plain-el-1', asCtor(cls), {}, undefined, {});
     assertFalse(html.includes('shadowrootdelegatesfocus'));
+    assertFalse(html.includes('shadowrootclonable'));
     assertFalse(html.includes('shadowrootserializable'));
     assertFalse(html.includes('shadowrootslotassignment'));
     assertFalse(html.includes('shadowrootcustomelementregistry'));
@@ -333,9 +352,11 @@ Deno.test('renderDSD — DSD options', async (t) => {
     const cls = createMockClass('<input />');
     const html = await renderDSD('multi-el-1', asCtor(cls), {}, undefined, {
       delegatesFocus: true,
+      clonable: true,
       serializable: true,
     });
     assertStringIncludes(html, 'shadowrootdelegatesfocus');
+    assertStringIncludes(html, 'shadowrootclonable');
     assertStringIncludes(html, 'shadowrootserializable');
   });
 });

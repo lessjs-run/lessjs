@@ -92,6 +92,39 @@ function stableHash(input: string): string {
   return (hash >>> 0).toString(36);
 }
 
+function hasControlCharacter(value: string): boolean {
+  for (let i = 0; i < value.length; i++) {
+    const code = value.charCodeAt(i);
+    if (code <= 0x1F || code === 0x7F) return true;
+  }
+  return false;
+}
+
+export function resolveDynamicRoutePath(
+  routePath: string,
+  paramNames: string[],
+  params: Record<string, string>,
+): string {
+  let resolvedPath = routePath;
+  for (const name of paramNames) {
+    const raw = params[name];
+    if (raw === undefined || raw === null || raw === '') {
+      throw new Error(`Missing value for route parameter "${name}" in ${routePath}`);
+    }
+
+    const value = String(raw);
+    if (
+      value === '.' || value === '..' || /[\\/]/.test(value) ||
+      hasControlCharacter(value)
+    ) {
+      throw new Error(`Unsafe value for route parameter "${name}" in ${routePath}: ${value}`);
+    }
+
+    resolvedPath = resolvedPath.replace(`:${name}`, encodeURIComponent(value));
+  }
+  return resolvedPath;
+}
+
 // ─── Core render pipeline ──────────────────────────────────────
 
 export async function ssgRender(
@@ -147,9 +180,16 @@ export async function ssgRender(
       }
 
       for (const params of paramsList) {
-        let resolvedPath = route.path;
-        for (const name of paramNames) {
-          resolvedPath = resolvedPath.replace(`:${name}`, params[name] || name);
+        let resolvedPath: string;
+        try {
+          resolvedPath = resolveDynamicRoutePath(route.path, paramNames, params);
+        } catch (e) {
+          log.warn(
+            `Skipping unsafe dynamic route ${route.path}: ${
+              e instanceof Error ? e.message : String(e)
+            }`,
+          );
+          continue;
         }
 
         try {
@@ -268,9 +308,16 @@ export async function ssgRender(
 
           const paramNames = route.paramNames;
           for (const params of paramsList) {
-            let resolvedPath = route.path;
-            for (const name of paramNames) {
-              resolvedPath = resolvedPath.replace(`:${name}`, params[name] || name);
+            let resolvedPath: string;
+            try {
+              resolvedPath = resolveDynamicRoutePath(route.path, paramNames, params);
+            } catch (e) {
+              log.warn(
+                `i18n: skipping unsafe dynamic route ${route.path}: ${
+                  e instanceof Error ? e.message : String(e)
+                }`,
+              );
+              continue;
             }
             const localePath = joinUrlPath(locale, resolvedPath);
             try {

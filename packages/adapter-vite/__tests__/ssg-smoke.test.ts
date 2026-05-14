@@ -10,7 +10,7 @@
 
 import { assert, assertEquals, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
 import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -23,6 +23,22 @@ function hasSsrBundle(): boolean {
   if (!existsSync(assetsDir)) return false;
   return readdirSync(assetsDir).some((file) =>
     file.startsWith('_virtual_less-hono-entry-') && file.endsWith('.js')
+  );
+}
+
+function hasServerEntry(): boolean {
+  return existsSync(join(WWW_DIST, 'server', 'entry.js'));
+}
+
+function hasIslandChunk(prefix: string): boolean {
+  const islandsDir = join(WWW_DIST, 'client', 'islands');
+  if (!existsSync(islandsDir)) return false;
+  return readdirSync(islandsDir).some((file) => file.startsWith(prefix) && file.endsWith('.js'));
+}
+
+function hasRoadmapAdrOutput(): boolean {
+  return existsSync(
+    join(WWW_DIST, 'decisions', '0024-standards-first-wc-renderer-roadmap', 'index.html'),
   );
 }
 
@@ -44,7 +60,8 @@ function findHtmlFiles(dir: string): string[] {
 
 async function ensureDocsBuild(): Promise<void> {
   if (
-    hasSsrBundle() && existsSync(join(WWW_DIST, 'index.html'))
+    hasSsrBundle() && hasServerEntry() && hasRoadmapAdrOutput() &&
+    existsSync(join(WWW_DIST, 'index.html'))
   ) {
     return;
   }
@@ -66,10 +83,29 @@ Deno.test('SSG smoke: one-command build produces trusted www output', async (t) 
 
   await t.step('phase 1 output exists with SSR bundle and HTML', () => {
     assert(hasSsrBundle(), 'SSR bundle should exist');
+    assert(hasServerEntry(), 'Server entry bundle should exist');
 
     // ADR 0011: Build metadata is now in LessBuildContext, not .less/build-metadata.json.
     // Verify the build produced real output instead.
     assert(existsSync(join(WWW_DIST, 'index.html')), 'index.html should exist after build');
+  });
+
+  await t.step('server SSR bundle exports route metadata and renderRoute', async () => {
+    const serverEntry = join(WWW_DIST, 'server', 'entry.js');
+    const mod = await import(`${pathToFileURL(serverEntry).href}?t=${Date.now()}`) as Record<
+      string,
+      unknown
+    >;
+    assert(typeof mod.default === 'object', 'SSR bundle should export the Hono app');
+    assertEquals(typeof mod.renderRoute, 'function');
+    assert(Array.isArray(mod.routeInfo), 'SSR bundle should export routeInfo');
+
+    const html = await (mod.renderRoute as (
+      path: string,
+      opts?: Record<string, unknown>,
+    ) => Promise<string>)('/roadmap', { lang: 'en' });
+    assertStringIncludes(html, '<!DOCTYPE html>');
+    assertStringIncludes(html, '2026-05-14 Strategic Reset');
   });
 
   await t.step('phase 2 output exists without legacy SSR client runtime', () => {
@@ -97,7 +133,26 @@ Deno.test('SSG smoke: one-command build produces trusted www output', async (t) 
       indexHtml.includes('shadowrootmode="open"') || indexHtml.includes('<template shadowroot'),
       'SSG output should preserve Declarative Shadow DOM',
     );
+    assertStringIncludes(indexHtml, '<less-layout');
+    assert(hasIslandChunk('less-layout-'), 'UI package island chunk should exist');
     assert(existsSync(join(WWW_DIST, 'roadmap', 'index.html')), 'Clean URL output should exist');
+    assert(existsSync(join(WWW_DIST, 'en', 'roadmap', 'index.html')), 'i18n roadmap should exist');
+    const roadmapHtml = readFileSync(join(WWW_DIST, 'roadmap', 'index.html'), 'utf-8');
+    assertStringIncludes(roadmapHtml, '2026-05-14 Strategic Reset');
+    assertStringIncludes(roadmapHtml, 'No webpack');
+    assertStringIncludes(roadmapHtml, 'WC registry hub');
+    assert(
+      existsSync(
+        join(WWW_DIST, 'decisions', '0024-standards-first-wc-renderer-roadmap', 'index.html'),
+      ),
+      'ADR 0024 should be rendered through the decisions/content pipeline',
+    );
+    assert(
+      existsSync(
+        join(WWW_DIST, 'en', 'decisions', '0024-standards-first-wc-renderer-roadmap', 'index.html'),
+      ),
+      'ADR 0024 should have an i18n decisions output',
+    );
     assert(existsSync(join(WWW_DIST, 'manifest.json')), 'PWA manifest should exist');
     assert(existsSync(join(WWW_DIST, 'sw.js')), 'PWA service worker should exist');
   });

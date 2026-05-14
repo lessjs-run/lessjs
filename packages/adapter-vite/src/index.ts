@@ -205,6 +205,18 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
   let headExtras = options.headExtras;
   let allowHeadExtrasScripts = false;
 
+  const assertNoScriptTags = (html: string, context: string): void => {
+    if (/<script[\s>/]/i.test(html)) {
+      throw new LessError(
+        `${context} must not contain <script> tags. Use inject.scripts for scripts so ` +
+          'LessJS can validate script URLs and mark the generated head injection as trusted.',
+        'UNSAFE_HEAD_INJECTION',
+        400,
+        false,
+      );
+    }
+  };
+
   const validateSafeUrl = (url: string, context: string): string => {
     // Normalise: decode URL encoding, strip whitespace, lowercase
     const normalised = url.trim();
@@ -234,20 +246,17 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
     return normalised;
   };
 
+  if (headExtras) {
+    assertNoScriptTags(headExtras, 'headExtras');
+  }
+
   if (options.inject && !headExtras) {
     const fragments: string[] = [];
 
     // headFragments FIRST (meta, styles, anti-flash) — must exist in DOM
     // before scripts that reference them (e.g. theme-init.js removes anti-flash).
     for (const frag of options.inject.headFragments || []) {
-      // Security: warn if fragment contains inline <script> tags
-      if (/<script[\s>]/i.test(frag)) {
-        log.warn(
-          'inject.headFragments contains <script> tags. Ensure this content is ' +
-            'developer-controlled, not user-supplied, to prevent XSS. For safe URL injection, ' +
-            'use inject.scripts instead.',
-        );
-      }
+      assertNoScriptTags(frag, 'inject.headFragments');
       fragments.push(frag);
     }
 

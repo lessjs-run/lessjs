@@ -27,7 +27,7 @@
  */
 
 // ─── Internal imports ──────────────────────────────────────────
-import { escapeAttr, escapeAttrValue, escapeHtml } from './html-escape.js';
+import { escapeAttrValue, escapeHtml } from './html-escape.js';
 import { type DsdComponent, type DsdOptions, type DsdRenderCollector } from './types.js';
 import { getAdapter } from './adapter-registry.js';
 import { renderNestedCustomElements } from './render-nested.js';
@@ -251,11 +251,10 @@ function buildDsdTemplateAttrs(options?: DsdOptions): string {
   if (!options) return '';
   const parts: string[] = [];
   if (options.delegatesFocus) parts.push(' shadowrootdelegatesfocus');
+  if (options.clonable) parts.push(' shadowrootclonable');
   if (options.serializable) parts.push(' shadowrootserializable');
   if (options.slotAssignment === 'manual') parts.push(' shadowrootslotassignment="manual"');
-  if (options.customElementRegistry) {
-    parts.push(` shadowrootcustomelementregistry="${escapeAttr(options.customElementRegistry)}"`);
-  }
+  if (options.customElementRegistry) parts.push(' shadowrootcustomelementregistry');
   return parts.join('');
 }
 

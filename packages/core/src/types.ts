@@ -355,12 +355,20 @@ export interface DsdComponent {
 export interface DsdOptions {
   /** Add shadowrootdelegatesfocus — improves focus management for interactive components */
   delegatesFocus?: boolean;
+  /** Add shadowrootclonable — allows cloneNode()/importNode() to include the shadow root */
+  clonable?: boolean;
   /** Add shadowrootserializable — enables getInnerHTML() serialization */
   serializable?: boolean;
   /** Set shadowrootslotassignment="manual" — for precise slot control */
   slotAssignment?: 'named' | 'manual';
-  /** Set shadowrootcustomelementregistry — reference to a scoped registry */
-  customElementRegistry?: string;
+  /**
+   * Add shadowrootcustomelementregistry.
+   *
+   * Per the HTML Living Standard this is a boolean content attribute.
+   * String values are accepted for v0.x compatibility, but the value is not
+   * serialized because the standard attribute has no value.
+   */
+  customElementRegistry?: boolean | string;
   /**
    * Component layer — controls whether DSD template is emitted.
    * 'pure-island' → no DSD template, framework owns shadow root entirely.

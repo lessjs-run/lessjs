@@ -1,7 +1,7 @@
 /**
  * @lessjs/docs - API Reference: All Packages
  *
- * v0.14.1 API surface - organized by package.
+ * v0.14.2 API surface - organized by package.
  * Only public exports are listed.
  */
 
@@ -65,7 +65,7 @@ export default class ApiCorePage extends LitElement {
       >
         <div class="container">
           <h1>API Reference</h1>
-          <p class="subtitle">Public API surface of all LessJS packages (v0.14.1).</p>
+          <p class="subtitle">Public API surface of all LessJS packages (v0.14.2).</p>
 
           <div class="api-section">
             <!-- ─── @lessjs/core ───────────────────────────── -->
