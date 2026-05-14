@@ -148,7 +148,7 @@ export class LessTermDemo extends DsdLitElement {
       '  <span style="color:#fbbf24;">dsd</span>       what is dsd?',
       '  <span style="color:#fbbf24;">clear</span>     clear terminal',
     ],
-    version: ['<span class="hl">v0.14.1</span> — release hardening'],
+    version: ['<span class="hl">v0.14.2</span> — standards & safety patch'],
     whoami: ['<span style="color:#a1a1aa;">you are a lessjs developer. welcome.</span>'],
     uname: [
       '<span class="hl">lessjs</span> <span style="color:#52525b;">deno 2.7+ node 18+ edge</span>',

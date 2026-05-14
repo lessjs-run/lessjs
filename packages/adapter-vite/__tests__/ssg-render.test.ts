@@ -1,9 +1,9 @@
 /**
  * @lessjs/adapter-vite - ssg-render.ts tests
  */
-import { assertRejects } from 'jsr:@std/assert@^1.0.0';
+import { assertEquals, assertRejects, assertThrows } from 'jsr:@std/assert@^1.0.0';
 import { Hono } from 'hono';
-import { ssgRender } from '../src/cli/ssg-render.js';
+import { resolveDynamicRoutePath, ssgRender } from '../src/cli/ssg-render.js';
 import type { SsgRenderOptions, SsrBundle } from '../src/cli/ssg-render.js';
 
 function createMockBundle(overrides: Partial<SsrBundle> = {}): SsrBundle {
@@ -23,6 +23,39 @@ const defaultOptions: SsgRenderOptions = {
   root: Deno.cwd(),
   outDir: './dist-test-ssg-render',
 };
+
+Deno.test('resolveDynamicRoutePath encodes safe params', () => {
+  assertEquals(
+    resolveDynamicRoutePath('/blog/:slug', ['slug'], { slug: 'hello world' }),
+    '/blog/hello%20world',
+  );
+});
+
+Deno.test('resolveDynamicRoutePath rejects path traversal params', () => {
+  assertThrows(
+    () => resolveDynamicRoutePath('/blog/:slug', ['slug'], { slug: '../evil' }),
+    Error,
+    'Unsafe value',
+  );
+  assertThrows(
+    () => resolveDynamicRoutePath('/blog/:slug', ['slug'], { slug: '..' }),
+    Error,
+    'Unsafe value',
+  );
+  assertThrows(
+    () => resolveDynamicRoutePath('/blog/:slug', ['slug'], { slug: 'a/b' }),
+    Error,
+    'Unsafe value',
+  );
+});
+
+Deno.test('resolveDynamicRoutePath rejects missing params', () => {
+  assertThrows(
+    () => resolveDynamicRoutePath('/blog/:slug', ['slug'], {}),
+    Error,
+    'Missing value',
+  );
+});
 
 Deno.test('ssgRender — rejects when module has no default export', async () => {
   const bundle = createMockBundle({ default: undefined });

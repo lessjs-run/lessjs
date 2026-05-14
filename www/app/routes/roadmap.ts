@@ -1,83 +1,626 @@
-export const meta = { section: 'Roadmap & Decisions', label: 'Roadmap', order: 10 };
+export const meta = {
+  section: 'Roadmap & Decisions',
+  label: 'Roadmap',
+  order: 10,
+};
+
 import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 
 export class RoadmapPage extends LitElement {
-  static override styles = [pageStyles, css`
-    .phase { margin: 1rem 0; padding: 1rem 1.25rem; border-left: 2px solid var(--less-border-hover); background: var(--less-bg-surface); border-radius: 0 4px 4px 0; }
-    .phase h3 { margin-top: 0; }
-    .status { display: inline-block; margin-bottom: 0.35rem; color: var(--less-text-muted); font-size: 0.6875rem; letter-spacing: 0.06em; text-transform: uppercase; }
-    .version-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.8125rem; }
-    .version-table th, .version-table td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 0.5px solid var(--less-border); }
-    .version-table th { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--less-text-muted); }
-    .version-table td:first-child { font-weight: 600; color: var(--less-text-primary); white-space: nowrap; }
-    .criteria-list { list-style: none; padding: 0; margin: 0.5rem 0; }
-    .criteria-list li { padding: 0.25rem 0; padding-left: 1.25rem; position: relative; color: var(--less-text-secondary); font-size: 0.8125rem; }
-    .criteria-list li::before { content: "○"; position: absolute; left: 0; color: var(--less-text-muted); }
-    .criteria-list li.met::before { content: "●"; color: var(--less-accent); }
-    .callout { margin: 1.5rem 0; }
-  `];
+  static override styles = [
+    pageStyles,
+    css`
+      .callout {
+        padding: 1rem;
+        background: var(--less-bg-muted);
+        border-left: 4px solid var(--less-color-primary);
+        margin: 1.5rem 0;
+      }
 
-  override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
+      .callout p {
+        margin: 0;
+      }
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/roadmap"><div class="container">
-    <h1>Roadmap</h1>
-    <p class="subtitle">LessJS 的路线图围绕一个判断展开：先把 SSG + DSD + Island Upgrade + Hono API 做可信，再扩展 serverless fullstack、ISR、PWA 和 compiler，最终在公共 API 稳定后承诺 1.0。</p>
+      .reset-table,
+      .version-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+      }
 
-    <h2>Now: v0.14.1 — Release Hardening</h2>
-    <p>v0.14.1 是发布硬化版本：统一 @lessjs/signals 命名，修复脚手架 CLI 子路径、发布流程、E2E 隔离、根质量任务和 SSG 产物稳定性。当前状态：零 dirty publish、CI 覆盖 E2E、475 测试通过。</p>
-    <table class="version-table"><thead><tr><th>Area</th><th>Status</th><th>Notes</th></tr></thead><tbody>
-      <tr><td>Core API 收敛</td><td>✅ Done</td><td>18 导出 → 6 子路径，/render-dsd /html-escape 移除</td></tr>
-      <tr><td>ssr-handler.ts 删除</td><td>✅ Done</td><td>纯 re-export facade 彻底消失</td></tr>
-      <tr><td>编译期 Phase 校验</td><td>✅ Done</td><td>Phase1Token/Phase2Token/Phase3Token branded types</td></tr>
-      <tr><td>core-Vite 分离</td><td>✅ Done</td><td>虚拟模块 ID 迁至 @lessjs/adapter-vite/virtual-ids</td></tr>
-      <tr><td>CI coverage</td><td>✅ Done</td><td>所有 test job 加 --coverage</td></tr>
-      <tr><td>零 barrel 文件</td><td>✅ Done</td><td>content/src/nav/index.ts 和 sitemap/types.ts 内联</td></tr>
-    </tbody></table>
+      .reset-table th,
+      .reset-table td,
+      .version-table th,
+      .version-table td {
+        border: 1px solid var(--less-border);
+        padding: 0.75rem;
+        text-align: left;
+        vertical-align: top;
+      }
 
-    <h2>Release Phases</h2>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.7 — 稳定基线</h3><p>审计修复：render-dsd 测试、island 测试、XSS 修复、pre-commit hooks、CI 补全。73 个新增测试。</p></div>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.8 — 功能完善 + Island Manifest</h3><p>Signals 测试、DSD 拆分、UI 统一到 DsdLitElement、Playwright E2E、Island Manifest。390 测试。</p></div>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.9 — i18n + View Transitions + Speculation Rules</h3><p>@lessjs/i18n 独立包、SSG locale 展开、双语文档站、View Transitions API、Speculation Rules API、SSG 后处理管线重构。446 测试。</p></div>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.10 — SSR Architecture Purification</h3><p>ADR 0008-0014 七条决策：消除 globalThis 桥接、消除 .less/ 临时文件、提取 @lessjs/app、消除 less-runtime barrel、SSR bundle 导出公共 API。448 测试。</p></div>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.11 — Runtime/Build Separation</h3><p>ADR 0017: @lessjs/core 拆为纯运行时 + @lessjs/adapter-vite。Core 零 node:*、零 npm:、零 Vite 依赖。5 个兼容性补丁消除。</p></div>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.12 — Virtual Data Modules</h3><p>ADR 0018: 消除所有插件模块状态，纯函数替代 stateful init/getter 模式，虚拟模块成为 SSR 数据唯一桥接。buildCoreSubpathAliases() 删除，@deno/vite-plugin 接管本地解析。20 条 resolve.alias 删除。</p></div>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.14.1 — Release Hardening</h3><p>脚手架、发布、CI/E2E、signals 命名和 SSG 产物稳定性修复。</p></div>
-    <div class="phase"><div class="status">Next Target</div><h3>v0.14 — DSD Engine + Islands Enhancement</h3><p>DSD 渲染引擎增强与 Islands 策略扩展（ADR 0020）。包括 DSD static 层性能优化、Island 加载策略细化、构建 metadata 硬化。暂无确切时间表。</p></div>
-    <div class="phase"><div class="status">v1.0 Target</div><h3>v1.0 — Public API Stability</h3><p>所有 package 公共 API 稳定、遵循 SemVer、迁移文档完备。判定标准见 <a href="/blog/0006-version-strategy">ADR 0006</a>。</p></div>
-    <div class="nav-row"><a href="/contributing" class="nav-link">&larr; Contributing</a><a href="/decisions" class="nav-link">Architecture Decisions &rarr;</a></div>
-  </div></less-layout>`; }
+      .reset-table th,
+      .version-table th {
+        background: var(--less-bg-muted);
+        font-weight: 600;
+      }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/roadmap"><div class="container">
-    <h1>Roadmap</h1>
-    <p class="subtitle">The LessJS roadmap centers on one judgment: make SSG + DSD + Island Upgrade + Hono API trustworthy first, then expand to serverless fullstack, ISR, PWA, and compiler, and finally commit to 1.0 after public APIs stabilize.</p>
-    <div class="callout"><p>This roadmap is not a marketing page. Future items listed here will only become stable user guides after they enter implementation and testing. See <a href="/blog/0006-version-strategy">ADR 0006</a> for versioning strategy.</p></div>
+      .tracks {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
 
-    <h2>Now: v0.14.1 — Release Hardening</h2>
-    <p>v0.14.1 hardens the release path: unified @lessjs/signals naming, fixed scaffolded CLI subpaths, publish safety, isolated E2E, root quality tasks, and stable SSG artifacts. Current state: no dirty publish path, E2E covered in CI, 475 tests passing.</p>
-    <table class="version-table"><thead><tr><th>Area</th><th>Status</th><th>Notes</th></tr></thead><tbody>
-      <tr><td>Core API convergence</td><td>✅ Done</td><td>18 exports → 6 subpaths, /render-dsd /html-escape removed</td></tr>
-      <tr><td>ssr-handler.ts deleted</td><td>✅ Done</td><td>Pure re-export facade eliminated</td></tr>
-      <tr><td>Compile-time phase checks</td><td>✅ Done</td><td>Phase1Token/Phase2Token/Phase3Token branded types</td></tr>
-      <tr><td>Core-Vite separation</td><td>✅ Done</td><td>Virtual module IDs moved to @lessjs/adapter-vite/virtual-ids</td></tr>
-      <tr><td>CI coverage</td><td>✅ Done</td><td>All test jobs collect --coverage</td></tr>
-      <tr><td>Zero barrel files</td><td>✅ Done</td><td>content/src/nav/index.ts and sitemap/types.ts inlined</td></tr>
-    </tbody></table>
+      .track {
+        border: 1px solid var(--less-border);
+        border-radius: 8px;
+        padding: 1rem;
+        background: var(--less-bg-surface);
+      }
 
-    <h2>Release Phases</h2>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.7 — Stable Baseline</h3><p>Audit fixes: render-dsd tests, island tests, XSS fixes, pre-commit hooks, CI completion. 73 new tests.</p></div>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.8 — Feature Completeness + Island Manifest</h3><p>Signals tests, DSD split, UI unified to DsdLitElement, Playwright E2E, Island Manifest. 390 tests.</p></div>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.9 — i18n + View Transitions + Speculation Rules</h3><p>@lessjs/i18n standalone package, SSG locale expansion, bilingual docs, View Transitions API, Speculation Rules API, SSG post-process pipeline refactor. 446 tests.</p></div>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.10 — SSR Architecture Purification</h3><p>ADR 0008-0014 seven decisions: eliminate globalThis bridges, eliminate .less/ temp files, extract @lessjs/app, eliminate less-runtime barrel, SSR bundle public APIs. 448 tests.</p></div>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.11 — Runtime/Build Separation</h3><p>ADR 0017: @lessjs/core split into pure runtime + @lessjs/adapter-vite. Core: zero node:*, zero npm:, zero Vite deps. Five compatibility patches eliminated.</p></div>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.12 — Virtual Data Modules</h3><p>ADR 0018: Eliminated all plugin module state. Pure functions replace stateful init/getter patterns. Virtual modules become the only SSR data bridge. buildCoreSubpathAliases() deleted, @deno/vite-plugin handles local resolution. 20 resolve.alias entries removed.</p></div>
-    <div class="phase"><div class="status">✅ Completed</div><h3>v0.14.1 — Release Hardening</h3><p>Scaffold, publishing, CI/E2E, signals naming, and SSG artifact stability fixes.</p></div>
-    <div class="phase"><div class="status">Next Target</div><h3>v0.14 — DSD Engine + Islands Enhancement</h3><p>DSD rendering engine and island strategy enhancements (ADR 0020). DSD static layer performance optimization, island loading strategy refinement, build metadata hardening. No fixed timeline.</p></div>
-    <div class="phase"><div class="status">v1.0 Target</div><h3>v1.0 — Public API Stability</h3><p>All package APIs stable, following SemVer, with complete migration docs. Criteria in <a href="/blog/0006-version-strategy">ADR 0006</a>.</p></div>
-    <div class="nav-row"><a href="/contributing" class="nav-link">&larr; Contributing</a><a href="/decisions" class="nav-link">Architecture Decisions &rarr;</a></div>
-  </div></less-layout>`; }
+      .track h3 {
+        margin: 0 0 0.5rem;
+        font-size: 1rem;
+      }
+
+      .track p {
+        margin: 0;
+        color: var(--less-text-secondary);
+      }
+
+      .phase {
+        border-left: 4px solid var(--less-color-primary);
+        padding-left: 1rem;
+        margin: 2rem 0;
+      }
+
+      .phase h3 {
+        margin: 0 0 0.5rem;
+        color: var(--less-color-primary);
+      }
+
+      .phase.deferred {
+        border-left-color: var(--less-text-secondary);
+      }
+
+      .status {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .status.done {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .status.next {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .status.planned {
+        background: #cce5ff;
+        color: #004085;
+      }
+
+      .status.deferred {
+        background: var(--less-bg-muted);
+        color: var(--less-text-secondary);
+      }
+
+      .compact-list,
+      .criteria-list {
+        margin: 0.75rem 0 0;
+        padding-left: 1.25rem;
+      }
+
+      .compact-list li,
+      .criteria-list li {
+        margin: 0.45rem 0;
+      }
+
+      code {
+        font-size: 0.92em;
+        overflow-wrap: anywhere;
+      }
+
+      @media (max-width: 720px) {
+        .reset-table,
+        .version-table {
+          display: block;
+          overflow-x: auto;
+        }
+
+        .reset-table th,
+        .reset-table td,
+        .version-table th,
+        .version-table td {
+          min-width: 9rem;
+        }
+      }
+    `,
+  ];
+
+  override render() {
+    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+  }
+
+  private _renderZh() {
+    return html`
+      <less-layout
+        locale="${this.locale || 'zh'}"
+        .locales="${['en', 'zh']}"
+        .navItems="${navSections}"
+        .headerNav="${headerNav}"
+        current-path="/roadmap"
+      >
+        <div class="container">
+      <h1>Roadmap</h1>
+      <p class="subtitle">
+        LessJS 的路线图从 2026-05-14 起重新收束：不照搬 OpenWC、webpack 或旧 Web
+        Components 工具链，而是把已有的 DSD renderer、SSR bundle、SSG pipeline
+        和 package island metadata 抽象成面向 Web Components 的渲染与分发基础设施。
+      </p>
+
+      <div class="callout">
+        <p>
+          当前路线图的原则是项目优先和标准优先：已经稳定的能力进入文档和测试，尚未冻结的能力留在路线图和 ADR。
+          版本纪律继续遵循 ADR 0006，npm 发布策略继续遵循 ADR 0007。
+        </p>
+      </div>
+
+      <h2>2026-05-14 Strategic Reset</h2>
+      <p>
+        LessJS 应被定义为 Web Standards-first 的 DSD/WC 应用框架。近期目标不是追随
+        OpenWC，而是把 LessJS 自己已经具备的 DSD 渲染、SSR bundle、SSG pipeline
+        和 package island model 产品化。
+      </p>
+
+      <table class="reset-table">
+        <thead>
+          <tr>
+            <th>议题</th>
+            <th>中立判断</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>OpenWC</td>
+            <td>
+              只作为历史经验和概念参考，不作为路线图主轴。<code>@open-wc/testing</code>
+              与 <code>@open-wc/semantic-dom-diff</code> 已经明显老化；<code>@web/test-runner</code>
+              较新，但仍偏 Node/npm 工具链。LessJS 应继续以 Deno、Playwright 和自举 SSG
+              作为验证主线。
+            </td>
+          </tr>
+          <tr>
+            <td>构建工具</td>
+            <td>
+              不采用 webpack，也不把 Rollup/OpenWC building presets 写进路线图。当前的
+              Vite 8、ESM bundle 和 Phase 3 Vite-free 方向更贴近 LessJS，需要继续抽象构建边界，
+              而不是切换到旧生态方案。
+            </td>
+          </tr>
+          <tr>
+            <td>Open UI</td>
+            <td>
+              保留为组件契约参考：parts、states、events、a11y、form behavior 和设计 token
+              可以帮助 LessJS 描述组件能力，但不会把 LessJS 改造成 OpenWC 项目模板。
+            </td>
+          </tr>
+          <tr>
+            <td>SSR/SSG for WC</td>
+            <td>
+              这是更强的主线。LessJS 已有 <code>RenderAdapter</code>、<code>renderDSD()</code>、
+              <code>renderRoute()</code>、<code>ssgRender()</code> 和 <code>PackageIslandMeta</code>，
+              下一步应把它们整理为稳定的 Web Components 渲染内核。
+            </td>
+          </tr>
+          <tr>
+            <td>WC registry hub</td>
+            <td>
+              值得探索，但先做 manifest/protocol，不先承诺中心化市场。中心 hub 会带来治理、审核、
+              安全和长期维护压力；更合理的顺序是让包能自描述、被本地扫描、被文档站索引。
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Three Workstreams</h2>
+      <div class="tracks">
+        <section class="track">
+          <h3>Engine</h3>
+          <p>
+            把 DSD renderer、SSR bundle、route rendering 和 SSG pipeline 收束为一个可复用的
+            Web Components rendering kernel。
+          </p>
+        </section>
+        <section class="track">
+          <h3>Protocol</h3>
+          <p>
+            定义组件包如何声明 tag、module、SSR 可渲染性、upgrade strategy、parts、states、
+            events 和 tokens。
+          </p>
+        </section>
+        <section class="track">
+          <h3>Ecosystem</h3>
+          <p>
+            优先解决可发现性、文档索引、benchmark、interactive scaffold 和 npm 触达，而不是过早建设中心化 hub。
+          </p>
+        </section>
+      </div>
+
+      <h2>Foundation Already Built</h2>
+      <table class="version-table">
+        <thead>
+          <tr>
+            <th>Version</th>
+            <th>Outcome</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>v0.7-v0.10</td>
+            <td>建立 SSR、DSD、Island Upgrade、Hono API、SSG 与基础文档站。</td>
+            <td>Done</td>
+          </tr>
+          <tr>
+            <td>v0.11-v0.13</td>
+            <td>补强适配器、文档体系、npm 发布路径、组件包暴露方式。</td>
+            <td>Done</td>
+          </tr>
+          <tr>
+            <td>v0.14-v0.14.2</td>
+            <td>确立 DSD/WC 为主叙事，完成 docs 自举、发布纪律、标准审计入口和安全补丁。</td>
+            <td>Done</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Next Roadmap</h2>
+
+      <div class="phase">
+        <span class="status done">Done</span>
+        <h3>v0.14.2 Standards &amp; Safety Patch</h3>
+        <p>已完成：先修正真实标准和安全边界，再扩大生态叙事。</p>
+        <ul class="criteria-list">
+          <li>修正 DSD 属性输出，补齐 <code>shadowrootclonable</code>，重新核对 WHATWG template 属性。</li>
+          <li>收紧 <code>headExtras</code> / <code>headFragments</code> 的注入边界和文档说明。</li>
+          <li>修复 route regex 风险，避免路由参数生成过宽匹配。</li>
+          <li>补真实 SSR bundle 测试，并覆盖 i18n、content、UI、docs 自举的关键路径。</li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <span class="status next">Next</span>
+        <h3>v0.15 Renderer Kernel</h3>
+        <p>目标：把内部渲染能力变成稳定的 Web Component render protocol。</p>
+        <ul class="criteria-list">
+          <li>正式定义 adapter contract：输入、输出、错误模型、hydration hints 和 DSD 约束。</li>
+          <li>把 DSD metrics/report、nested custom element rendering、route rendering 整理成公开内核能力。</li>
+          <li>继续以 Playwright 作为真实浏览器验证主线，而不是引入老旧 DOM diff/test preset。</li>
+          <li>为 Lit 之外的 adapter 留出边界，但不在协议稳定前承诺多适配器矩阵。</li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <span class="status planned">Planned</span>
+        <h3>v0.16 WC Package Protocol</h3>
+        <p>目标：把 <code>PackageIslandMeta</code> 扩展为组件包 manifest。</p>
+        <ul class="criteria-list">
+          <li>声明 tag、module、SSR renderability、upgrade strategy、parts、states、events 和 tokens。</li>
+          <li>支持本地 registry index，使组件包可以被扫描、校验和文档站索引。</li>
+          <li>为 Open UI 风格的组件契约保留字段，但避免绑定到 OpenWC 项目模板。</li>
+          <li>提供 manifest 校验和迁移说明，避免生态入口先于协议成熟。</li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <span class="status planned">Planned</span>
+        <h3>v0.17 Ecosystem Entry</h3>
+        <p>目标：让 LessJS 组件和应用更容易被发现、试用和比较。</p>
+        <ul class="criteria-list">
+          <li>改善 npm 触达、文档搜索、benchmark 和 interactive scaffold。</li>
+          <li>建立 registry 页面原型，展示本地 index 和文档索引能力。</li>
+          <li>提供可复制的 starter 和 migration examples，但不承诺中心化 marketplace。</li>
+          <li>把性能、可访问性和 SSR/SSG 行为作为生态入口的展示指标。</li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <span class="status planned">Planned</span>
+        <h3>v0.18-v1.0 API Freeze</h3>
+        <p>目标：冻结真正支撑 1.0 的公共边界。</p>
+        <ul class="criteria-list">
+          <li>冻结 <code>lessjs()</code> 配置、renderer protocol、adapter contract 和 package manifest。</li>
+          <li>明确 breaking change policy、migration policy、support window 和 release cadence。</li>
+          <li>用 docs 自举、SSR bundle、SSG output、Playwright smoke 和 package manifest 校验作为发布门槛。</li>
+        </ul>
+      </div>
+
+      <div class="phase deferred">
+        <span class="status deferred">Long-term Bets</span>
+        <h3>v1.0+ Bets</h3>
+        <p>这些方向有价值，但应在 renderer/protocol 稳定之后推进。</p>
+        <ul class="criteria-list">
+          <li>Edge SSR、ISR、compiler pipeline 和 multi-adapter support。</li>
+          <li>WC registry hub：只有在 manifest/protocol、本地 index、安全模型和治理规则成熟后再考虑中心化。</li>
+          <li>更广义的 full-stack 能力：不能先于渲染协议稳定成为主承诺。</li>
+        </ul>
+      </div>
+
+      <h2>Rejected / Deferred</h2>
+      <ul class="criteria-list">
+        <li>No webpack：不把 LessJS 路线图倒回 webpack 或旧 bundler preset。</li>
+        <li>No OpenWC toolchain adoption：OpenWC 可学习，但不采用其旧测试栈和项目模板作为 LessJS 主路径。</li>
+        <li>No generic full-stack promise before renderer protocol stabilizes：先把 DSD/WC 渲染内核做稳，再扩展上层能力。</li>
+        <li>No centralized WC hub before manifest/protocol：先做自描述、扫描、索引和安全边界，再讨论中心化分发。</li>
+      </ul>
+
+      <h2>Reference Positioning</h2>
+      <p>
+        路线图参考 WHATWG template / DSD 属性、Open UI 组件契约方向、OpenWC/Modern Web 的历史经验，
+        以及 Playwright 的真实浏览器验证定位；这些参考不改变 LessJS 的 Deno-first、standards-first 路线。
+      </p>
+
+      <nav class="nav-row">
+        <a class="nav-link" href="/decisions/0024-standards-first-wc-renderer-roadmap">Strategic Roadmap ADR →</a>
+        <a class="nav-link" href="/docs/decisions/adr-0006-version-roadmap">Version Roadmap ADR →</a>
+        <a class="nav-link" href="/docs/decisions/adr-0007-npm-publishing-strategy">Publishing Strategy →</a>
+        <a class="nav-link" href="/docs/architecture">Architecture →</a>
+      </nav>
+        </div>
+      </less-layout>
+    `;
+  }
+
+  private _renderEn() {
+    return html`
+      <less-layout
+        locale="${this.locale || 'en'}"
+        .locales="${['en', 'zh']}"
+        .navItems="${navSections}"
+        .headerNav="${headerNav}"
+        current-path="/en/roadmap"
+      >
+        <div class="container">
+      <h1>Roadmap</h1>
+      <p class="subtitle">
+        As of 2026-05-14, the LessJS roadmap is narrowed around the project’s actual
+        strengths: not copying OpenWC, webpack, or older Web Components toolchains,
+        but turning the existing DSD renderer, SSR bundle, SSG pipeline, and package
+        island metadata into Web Components rendering and distribution infrastructure.
+      </p>
+
+      <div class="callout">
+        <p>
+          The roadmap is project-first and standards-first. Stable capabilities move into
+          docs and tests; unfinished boundaries stay in the roadmap and ADRs. Version
+          discipline follows ADR 0006, and npm publishing follows ADR 0007.
+        </p>
+      </div>
+
+      <h2>2026-05-14 Strategic Reset</h2>
+      <p>
+        LessJS should be positioned as a Web Standards-first DSD/WC application framework.
+        The near-term goal is not to follow OpenWC, but to productize LessJS’s own DSD
+        rendering, SSR bundle, SSG pipeline, and package island model.
+      </p>
+
+      <table class="reset-table">
+        <thead>
+          <tr>
+            <th>Topic</th>
+            <th>Neutral judgement</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>OpenWC</td>
+            <td>
+              Useful as historical and conceptual reference, but not as the roadmap spine.
+              <code>@open-wc/testing</code> and <code>@open-wc/semantic-dom-diff</code>
+              are visibly old; <code>@web/test-runner</code> is newer, but still leans into
+              the Node/npm toolchain. LessJS should continue validating through Deno,
+              Playwright, and its self-hosted SSG path.
+            </td>
+          </tr>
+          <tr>
+            <td>Build tooling</td>
+            <td>
+              Do not adopt webpack, and do not put Rollup/OpenWC building presets on the
+              roadmap. The current Vite 8, ESM bundle, and Phase 3 Vite-free direction fit
+              LessJS better. The next step is to abstract the build boundary, not switch to
+              an older ecosystem preset.
+            </td>
+          </tr>
+          <tr>
+            <td>Open UI</td>
+            <td>
+              Keep it as component contract guidance: parts, states, events, accessibility,
+              form behavior, and design tokens can help LessJS describe components without
+              turning LessJS into an OpenWC project template.
+            </td>
+          </tr>
+          <tr>
+            <td>SSR/SSG for WC</td>
+            <td>
+              This is the stronger mainline. LessJS already has <code>RenderAdapter</code>,
+              <code>renderDSD()</code>, <code>renderRoute()</code>, <code>ssgRender()</code>,
+              and <code>PackageIslandMeta</code>; these should become a stable Web Components
+              rendering kernel.
+            </td>
+          </tr>
+          <tr>
+            <td>WC registry hub</td>
+            <td>
+              Worth exploring, but manifest/protocol comes first. A central hub brings
+              governance, review, security, and maintenance costs. The better first step is
+              self-describing packages that can be locally scanned and indexed by docs.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Three Workstreams</h2>
+      <div class="tracks">
+        <section class="track">
+          <h3>Engine</h3>
+          <p>
+            Consolidate the DSD renderer, SSR bundle, route rendering, and SSG pipeline into
+            a reusable Web Components rendering kernel.
+          </p>
+        </section>
+        <section class="track">
+          <h3>Protocol</h3>
+          <p>
+            Define how component packages declare tags, modules, SSR renderability, upgrade
+            strategy, parts, states, events, and tokens.
+          </p>
+        </section>
+        <section class="track">
+          <h3>Ecosystem</h3>
+          <p>
+            Prioritize discoverability, docs indexing, benchmarks, interactive scaffolds, and
+            npm reach before committing to any centralized hub.
+          </p>
+        </section>
+      </div>
+
+      <h2>Foundation Already Built</h2>
+      <table class="version-table">
+        <thead>
+          <tr>
+            <th>Version</th>
+            <th>Outcome</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>v0.7-v0.10</td>
+            <td>Established SSR, DSD, Island Upgrade, Hono API, SSG, and the first docs site.</td>
+            <td>Done</td>
+          </tr>
+          <tr>
+            <td>v0.11-v0.13</td>
+            <td>Strengthened adapters, docs, npm publishing, and component package exports.</td>
+            <td>Done</td>
+          </tr>
+          <tr>
+            <td>v0.14-v0.14.2</td>
+            <td>Made DSD/WC the primary narrative and added docs self-hosting, release discipline, standards audit entry points, and the safety patch.</td>
+            <td>Done</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Next Roadmap</h2>
+
+      <div class="phase">
+        <span class="status done">Done</span>
+        <h3>v0.14.2 Standards &amp; Safety Patch</h3>
+        <p>Completed: fix standards and safety boundaries before expanding the ecosystem story.</p>
+        <ul class="criteria-list">
+          <li>Correct DSD attribute output, add <code>shadowrootclonable</code>, and re-check WHATWG template attributes.</li>
+          <li>Tighten <code>headExtras</code> / <code>headFragments</code> injection boundaries and documentation.</li>
+          <li>Fix route regex risk so parameterized routes do not generate overly broad matches.</li>
+          <li>Add real SSR bundle tests and cover the key i18n, content, UI, and docs self-hosting paths.</li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <span class="status next">Next</span>
+        <h3>v0.15 Renderer Kernel</h3>
+        <p>Goal: turn internal rendering capabilities into a stable Web Component render protocol.</p>
+        <ul class="criteria-list">
+          <li>Define the adapter contract: inputs, outputs, error model, hydration hints, and DSD constraints.</li>
+          <li>Make DSD metrics/reporting, nested custom element rendering, and route rendering part of the public kernel.</li>
+          <li>Keep Playwright as the real-browser validation mainline instead of adopting older DOM diff/test presets.</li>
+          <li>Leave room for non-Lit adapters without promising a full adapter matrix before the protocol stabilizes.</li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <span class="status planned">Planned</span>
+        <h3>v0.16 WC Package Protocol</h3>
+        <p>Goal: extend <code>PackageIslandMeta</code> into a component package manifest.</p>
+        <ul class="criteria-list">
+          <li>Declare tag, module, SSR renderability, upgrade strategy, parts, states, events, and tokens.</li>
+          <li>Support a local registry index so packages can be scanned, validated, and indexed by docs.</li>
+          <li>Keep fields for Open UI-style component contracts without binding LessJS to OpenWC templates.</li>
+          <li>Provide manifest validation and migration notes so ecosystem entry follows protocol maturity.</li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <span class="status planned">Planned</span>
+        <h3>v0.17 Ecosystem Entry</h3>
+        <p>Goal: make LessJS components and applications easier to discover, try, and compare.</p>
+        <ul class="criteria-list">
+          <li>Improve npm reach, docs search, benchmarks, and interactive scaffolds.</li>
+          <li>Create a registry page prototype that demonstrates local index and docs indexing.</li>
+          <li>Provide reproducible starters and migration examples without promising a centralized marketplace.</li>
+          <li>Use performance, accessibility, and SSR/SSG behavior as ecosystem-facing signals.</li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <span class="status planned">Planned</span>
+        <h3>v0.18-v1.0 API Freeze</h3>
+        <p>Goal: freeze the public boundaries that actually support 1.0.</p>
+        <ul class="criteria-list">
+          <li>Freeze <code>lessjs()</code> config, renderer protocol, adapter contract, and package manifest.</li>
+          <li>Define breaking change policy, migration policy, support window, and release cadence.</li>
+          <li>Use docs self-hosting, SSR bundle, SSG output, Playwright smoke, and package manifest validation as release gates.</li>
+        </ul>
+      </div>
+
+      <div class="phase deferred">
+        <span class="status deferred">Long-term Bets</span>
+        <h3>v1.0+ Bets</h3>
+        <p>These directions matter, but should follow renderer/protocol stability.</p>
+        <ul class="criteria-list">
+          <li>Edge SSR, ISR, compiler pipeline, and multi-adapter support.</li>
+          <li>WC registry hub: only after manifest/protocol, local index, security model, and governance mature.</li>
+          <li>Broader full-stack capabilities: do not make them the main promise before the rendering protocol is stable.</li>
+        </ul>
+      </div>
+
+      <h2>Rejected / Deferred</h2>
+      <ul class="criteria-list">
+        <li>No webpack: do not route LessJS back through webpack or older bundler presets.</li>
+        <li>No OpenWC toolchain adoption: learn from OpenWC without adopting its older testing stack or project template as the main path.</li>
+        <li>No generic full-stack promise before renderer protocol stabilizes: make the DSD/WC rendering kernel solid first.</li>
+        <li>No centralized WC hub before manifest/protocol: self-description, scanning, indexing, and security boundaries come first.</li>
+      </ul>
+
+      <h2>Reference Positioning</h2>
+      <p>
+        This roadmap considers WHATWG template / DSD attributes, Open UI component contract
+        direction, OpenWC/Modern Web historical experience, and Playwright’s real-browser
+        validation positioning. These references do not change LessJS’s Deno-first,
+        standards-first path.
+      </p>
+
+      <nav class="nav-row">
+        <a class="nav-link" href="/en/decisions/0024-standards-first-wc-renderer-roadmap">Strategic Roadmap ADR →</a>
+        <a class="nav-link" href="/en/docs/decisions/adr-0006-version-roadmap">Version Roadmap ADR →</a>
+        <a class="nav-link" href="/en/docs/decisions/adr-0007-npm-publishing-strategy">Publishing Strategy →</a>
+        <a class="nav-link" href="/en/docs/architecture">Architecture →</a>
+      </nav>
+        </div>
+      </less-layout>
+    `;
+  }
 }
 
 customElements.define('page-roadmap', RoadmapPage);

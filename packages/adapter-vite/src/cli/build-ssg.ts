@@ -30,7 +30,7 @@ const log = createLogger('ssg');
 
 const VIRTUAL_SSG_ENTRY_ID = 'virtual:less-ssg-entry';
 const RESOLVED_SSG_ENTRY_ID = '\0' + VIRTUAL_SSG_ENTRY_ID;
-const FALLBACK_LESSJS_VERSION = '0.14.1';
+const FALLBACK_LESSJS_VERSION = '0.14.2';
 
 function readWorkspacePackageVersion(root: string, packageDir: string): string {
   try {

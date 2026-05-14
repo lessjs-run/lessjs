@@ -10,6 +10,7 @@ import {
   assertEquals,
   assertExists,
   assertStringIncludes,
+  assertThrows,
 } from 'jsr:@std/assert@^1.0.0';
 import { join } from 'node:path';
 import { less } from '../src/index.ts';
@@ -130,6 +131,27 @@ Deno.test('less() headExtras takes precedence over inject', () => {
     headExtras: '<meta name="override" />',
     inject: { stylesheets: ['https://example.com/style.css'] },
   });
+  assertEquals(plugins.length, 8);
+});
+
+Deno.test('less() rejects script tags in raw headExtras', () => {
+  assertThrows(
+    () => less({ headExtras: '<script src="/x.js"></script>' }),
+    Error,
+    'headExtras must not contain <script> tags',
+  );
+});
+
+Deno.test('less() rejects script tags in inject.headFragments', () => {
+  assertThrows(
+    () => less({ inject: { headFragments: ['<script src="/x.js"></script>'] } }),
+    Error,
+    'inject.headFragments must not contain <script> tags',
+  );
+});
+
+Deno.test('less() allows scripts through structured inject.scripts', () => {
+  const plugins = less({ inject: { scripts: [{ src: '/x.js', defer: true }] } });
   assertEquals(plugins.length, 8);
 });
 
