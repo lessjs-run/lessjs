@@ -396,7 +396,10 @@ export function buildSpeculationRulesJson(
     for (const key of ['prerender', 'prefetch'] as const) {
       if (rules[key]) {
         for (const rule of rules[key] as Record<string, unknown>[]) {
-          (rule.where as Record<string, unknown>).not = { or_matches: excludeWhere };
+          // Only add exclusion to document rules (where) — list rules (source+urls) don't have where
+          if (rule.where && typeof rule.where === 'object') {
+            (rule.where as Record<string, unknown>).not = { or_matches: excludeWhere };
+          }
         }
       }
     }

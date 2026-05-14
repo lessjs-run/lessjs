@@ -108,7 +108,8 @@ export default defineConfig({
             defer: true,
           },
           {
-            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js',
+            src:
+              'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js',
             defer: true,
           },
           { src: '/prism-init.js', defer: true },
