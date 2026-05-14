@@ -77,14 +77,36 @@ export function declarations(values: Readonly<Record<string, string>>): string {
 /**
  * Generate page-level CSS for :root injection.
  *
+ * Includes inline gray scale values so color tokens resolve immediately
+ * without waiting for OpenProps CDN (prevents black flash on iOS dark mode).
+ *
  * Output format:
- *   :root,[data-theme="light"]{--less-bg-base:var(--gray-0);...;color-scheme:light}
- *   [data-theme="dark"]{--less-bg-base:var(--gray-12);...;color-scheme:dark}
+ *   :root,[data-theme="light"]{--gray-0:#f8f9fa;...;--less-bg-base:var(--gray-0);...;color-scheme:light}
+ *   [data-theme="dark"]{--gray-12:#030507;...;--less-bg-base:var(--gray-12);...;color-scheme:dark}
  *
  * Use in vite.config.ts `inject.headFragments` or SSG post-processing.
  */
 export function generateRootColorCSS(): string {
-  return `:root,[data-theme="light"]{${
+  // OpenProps gray scale — inlined to avoid CDN dependency for first paint
+  const grayScale = [
+    '--gray-0:#f8f9fa',
+    '--gray-1:#f1f3f5',
+    '--gray-2:#e9ecef',
+    '--gray-3:#dee2e6',
+    '--gray-4:#ced4da',
+    '--gray-5:#adb5bd',
+    '--gray-6:#868e96',
+    '--gray-7:#495057',
+    '--gray-8:#343a40',
+    '--gray-9:#212529',
+    '--gray-10:#16191d',
+    '--gray-11:#0d0f12',
+    '--gray-12:#030507',
+  ].join(';');
+
+  return `:root,[data-theme="light"]{${grayScale};${
     declarations(lessLightColors)
-  };color-scheme:light}[data-theme="dark"]{${declarations(lessDarkColors)};color-scheme:dark}`;
+  };color-scheme:light}[data-theme="dark"]{${grayScale};${
+    declarations(lessDarkColors)
+  };color-scheme:dark}`;
 }
