@@ -364,16 +364,19 @@ export function buildSpeculationRulesJson(
 
   if (prerenderPaths.length > 0) {
     rules.prerender = prerenderPaths.map((pattern) => {
-      const rule: Record<string, unknown> = {
-        where: pattern === '/' ? {} : { href_matches: pattern },
-      };
-      // Home gets moderate eagerness; top-level pages get conservative
-      rule.eagerness = pattern === '/' ? 'moderate' : 'conservative';
+      // Home page (/): use list rule (source + urls) — no document matcher
       if (pattern === '/') {
-        rule.source = 'list';
-        rule.urls = ['/'];
+        return {
+          source: 'list',
+          urls: ['/'],
+          eagerness: 'moderate',
+        };
       }
-      return rule;
+      // Top-level pages (/about, /blog): use document rule (where: href_matches)
+      return {
+        where: { href_matches: pattern },
+        eagerness: 'conservative',
+      };
     });
   }
 
