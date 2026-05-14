@@ -71,9 +71,12 @@ export default defineConfig({
       ssr: {
         noExternal: ['@lessjs/ui'],
       },
-      // PWA disabled for now — the service worker blocks goatcounter and
-      // other cross-origin requests, causing console errors and page load issues.
-      // pwa: { ... },
+      pwa: {
+        name: 'LessJS Framework — Less is More',
+        shortName: 'LessJS',
+        themeColor: '#000000',
+        backgroundColor: '#ffffff',
+      },
       viewTransition: true,
       speculation: true,
       inject: {

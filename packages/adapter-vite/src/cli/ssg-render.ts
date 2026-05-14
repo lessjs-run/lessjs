@@ -372,7 +372,8 @@ self.addEventListener('activate', (e) => e.waitUntil(
 ));
 self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
-  if (!url.protocol.startsWith('http')) return;
+  // Only handle same-origin requests — cross-origin (CDN, analytics) pass through
+  if (url.origin !== location.origin || !url.protocol.startsWith('http')) return;
   const isAsset = /\\.[a-z0-9]+$/i.test(url.pathname) && !url.pathname.includes('/api/');
   e.respondWith(
     (isAsset ? cacheFirst(e.request) : networkFirst(e.request))
@@ -400,7 +401,8 @@ async function networkFirst(req) {
   } catch {
     const cached = await caches.match(req);
     if (cached) return cached;
-    throw new Error('offline');
+    // Return a fallback rather than throwing — prevents unhandled rejections
+    return new Response('offline', { status: 503 });
   }
 }`;
     writeFileSync(join(outputDir, 'sw.js'), swCode);

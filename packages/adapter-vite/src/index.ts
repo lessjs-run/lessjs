@@ -236,11 +236,29 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
 
   if (options.inject && !headExtras) {
     const fragments: string[] = [];
+
+    // headFragments FIRST (meta, styles, anti-flash) — must exist in DOM
+    // before scripts that reference them (e.g. theme-init.js removes anti-flash).
+    for (const frag of options.inject.headFragments || []) {
+      // Security: warn if fragment contains inline <script> tags
+      if (/<script[\s>]/i.test(frag)) {
+        log.warn(
+          'inject.headFragments contains <script> tags. Ensure this content is ' +
+            'developer-controlled, not user-supplied, to prevent XSS. For safe URL injection, ' +
+            'use inject.scripts instead.',
+        );
+      }
+      fragments.push(frag);
+    }
+
+    // Stylesheets second
     for (const href of options.inject.stylesheets || []) {
       validateSafeUrl(href, 'inject.stylesheets');
       const safeHref = escapeHtmlAttr(href);
       fragments.push(`<link rel="stylesheet" href="${safeHref}" />`);
     }
+
+    // Scripts last — depend on headFragments being in DOM
     for (const script of options.inject.scripts || []) {
       const isObjectScript = typeof script === 'object';
       const src = isObjectScript ? script.src : script;
@@ -263,17 +281,6 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
         )
         .join(' ');
       fragments.push(`<script ${attrText}></script>`);
-    }
-    for (const frag of options.inject.headFragments || []) {
-      // Security: warn if fragment contains inline <script> tags
-      if (/<script[\s>]/i.test(frag)) {
-        log.warn(
-          'inject.headFragments contains <script> tags. Ensure this content is ' +
-            'developer-controlled, not user-supplied, to prevent XSS. For safe URL injection, ' +
-            'use inject.scripts instead.',
-        );
-      }
-      fragments.push(frag);
     }
     headExtras = fragments.join('\n  ');
     allowHeadExtrasScripts = true;
