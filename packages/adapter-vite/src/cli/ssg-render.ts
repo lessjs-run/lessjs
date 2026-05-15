@@ -25,6 +25,31 @@ import { stableHash } from '../island-manifest.js';
 
 const log = createLogger('ssg');
 
+// ─── Helpers ──────────────────────────────────────────────────────
+
+/**
+ * H-03 fix: Escape a string for safe use in HTML attributes.
+ * Prevents XSS when injecting user-controlled values like basePath into HTML.
+ */
+function escapeAttr(str: string): string {
+  return str.replace(/["'&<>]/g, (c) => {
+    switch (c) {
+      case '"':
+        return '&quot;';
+      case "'":
+        return '&#39;';
+      case '&':
+        return '&amp;';
+      case '<':
+        return '&lt;';
+      case '>':
+        return '&gt;';
+      default:
+        return c;
+    }
+  });
+}
+
 // ─── Types ──────────────────────────────────────────────────────
 
 export interface SsrBundle {
@@ -35,7 +60,10 @@ export interface SsrBundle {
     isDynamic: boolean;
     paramNames: string[];
   }>;
-  renderRoute?: (path: string, opts?: Record<string, unknown>) => Promise<string>;
+  renderRoute?: (
+    path: string,
+    opts?: Record<string, unknown>,
+  ) => Promise<string>;
   getStaticPaths?: (path: string) => Promise<Array<Record<string, string>>>;
   posts?: unknown[];
   [key: string]: unknown;
@@ -47,9 +75,16 @@ export interface SsgRenderOptions {
   base?: string;
   headExtras?: string;
   html?: { lang?: string; title?: string };
-  middleware?: { csp?: { policy?: string; reportOnly?: boolean; nonce?: boolean } };
+  middleware?: {
+    csp?: { policy?: string; reportOnly?: boolean; nonce?: boolean };
+  };
   upgradeStrategy?: string;
-  pwa?: { name?: string; shortName?: string; themeColor?: string; backgroundColor?: string };
+  pwa?: {
+    name?: string;
+    shortName?: string;
+    themeColor?: string;
+    backgroundColor?: string;
+  };
   viewTransition?: boolean;
   speculation?: boolean | Record<string, unknown>;
   islandTagNames?: string[];
@@ -87,7 +122,7 @@ function joinUrlPath(...parts: string[]): string {
 function hasControlCharacter(value: string): boolean {
   for (let i = 0; i < value.length; i++) {
     const code = value.charCodeAt(i);
-    if (code <= 0x1F || code === 0x7F) return true;
+    if (code <= 0x1f || code === 0x7f) return true;
   }
   return false;
 }
@@ -101,15 +136,21 @@ export function resolveDynamicRoutePath(
   for (const name of paramNames) {
     const raw = params[name];
     if (raw === undefined || raw === null || raw === '') {
-      throw new Error(`Missing value for route parameter "${name}" in ${routePath}`);
+      throw new Error(
+        `Missing value for route parameter "${name}" in ${routePath}`,
+      );
     }
 
     const value = String(raw);
     if (
-      value === '.' || value === '..' || /[\\/]/.test(value) ||
+      value === '.' ||
+      value === '..' ||
+      /[\\/]/.test(value) ||
       hasControlCharacter(value)
     ) {
-      throw new Error(`Unsafe value for route parameter "${name}" in ${routePath}: ${value}`);
+      throw new Error(
+        `Unsafe value for route parameter "${name}" in ${routePath}: ${value}`,
+      );
     }
 
     resolvedPath = resolvedPath.replace(`:${name}`, encodeURIComponent(value));
@@ -174,7 +215,11 @@ export async function ssgRender(
       for (const params of paramsList) {
         let resolvedPath: string;
         try {
-          resolvedPath = resolveDynamicRoutePath(route.path, paramNames, params);
+          resolvedPath = resolveDynamicRoutePath(
+            route.path,
+            paramNames,
+            params,
+          );
         } catch (e) {
           log.warn(
             `Skipping unsafe dynamic route ${route.path}: ${
@@ -196,7 +241,9 @@ export async function ssgRender(
           const pageDir = join(outputDir, resolvedPath);
           mkdirSync(pageDir, { recursive: true });
           writeFileSync(join(pageDir, 'index.html'), html, 'utf-8');
-          log.info(`Dynamic route: ${resolvedPath} → ${resolvedPath}/index.html`);
+          log.info(
+            `Dynamic route: ${resolvedPath} → ${resolvedPath}/index.html`,
+          );
         } catch (e) {
           log.warn(
             `Failed to render dynamic route ${resolvedPath}: ${
@@ -237,7 +284,9 @@ export async function ssgRender(
     | { fetch: (req: Request, ...args: unknown[]) => Promise<Response> }
     | undefined;
   if (!app) {
-    throw new Error('SSR bundle loaded but no Hono app found (no default export)');
+    throw new Error(
+      'SSR bundle loaded but no Hono app found (no default export)',
+    );
   }
   const result = await toSSG(app as never, fsModule, { dir: outputDir });
 
@@ -252,7 +301,9 @@ export async function ssgRender(
   if (existsSync(_404Index)) {
     // Check if target already exists before renaming
     if (existsSync(_404Html)) {
-      log.warn('404.html already exists in output dir — removing before rename');
+      log.warn(
+        '404.html already exists in output dir — removing before rename',
+      );
       rmSync(_404Html, { force: true });
     }
     renameSync(_404Index, _404Html);
@@ -296,7 +347,9 @@ export async function ssgRender(
             try {
               paramsList = await getStaticPaths(route.path);
             } catch {
-              log.warn(`i18n: getStaticPaths failed for ${route.path}, skipping`);
+              log.warn(
+                `i18n: getStaticPaths failed for ${route.path}, skipping`,
+              );
               continue;
             }
           } else {
@@ -308,7 +361,11 @@ export async function ssgRender(
           for (const params of paramsList) {
             let resolvedPath: string;
             try {
-              resolvedPath = resolveDynamicRoutePath(route.path, paramNames, params);
+              resolvedPath = resolveDynamicRoutePath(
+                route.path,
+                paramNames,
+                params,
+              );
             } catch (e) {
               log.warn(
                 `i18n: skipping unsafe dynamic route ${route.path}: ${
@@ -354,7 +411,12 @@ export async function ssgRender(
   } = await import('../ssg-postprocess.js');
 
   const islandTagNames = options.islandTagNames || [];
-  const _islandChunkMap = buildIslandChunkMap(root, outDir, islandTagNames, basePath);
+  const _islandChunkMap = buildIslandChunkMap(
+    root,
+    outDir,
+    islandTagNames,
+    basePath,
+  );
 
   if (options.viewTransition !== false) {
     injectViewTransitionMeta(outputDir);
@@ -362,9 +424,10 @@ export async function ssgRender(
   }
 
   if (options.speculation) {
-    const specOpts = typeof options.speculation === 'boolean'
-      ? {}
-      : options.speculation as Record<string, unknown>;
+    const specOpts =
+      typeof options.speculation === 'boolean'
+        ? {}
+        : (options.speculation as Record<string, unknown>);
     const rulesJson = buildSpeculationRulesJson(
       specOpts,
       routeInfo.map((r) => ({ path: r.path, type: 'page' as const })),
@@ -400,16 +463,23 @@ export async function ssgRender(
       display: 'standalone' as const,
       theme_color: pwa.themeColor || '#000000',
       background_color: pwa.backgroundColor || '#ffffff',
-      icons: [{ src: '/assets/less-logo.svg', sizes: 'any', type: 'image/svg+xml' }],
+      icons: [
+        { src: '/assets/less-logo.svg', sizes: 'any', type: 'image/svg+xml' },
+      ],
     };
-    writeFileSync(join(outputDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
+    writeFileSync(
+      join(outputDir, 'manifest.json'),
+      JSON.stringify(manifest, null, 2),
+    );
     log.info('PWA manifest.json generated');
 
-    const cacheHash = stableHash(JSON.stringify({
-      basePath,
-      manifest,
-      routes: routeInfo.map((route) => route.path).sort(),
-    }));
+    const cacheHash = stableHash(
+      JSON.stringify({
+        basePath,
+        manifest,
+        routes: routeInfo.map((route) => route.path).sort(),
+      }),
+    );
     const swCode = `const CACHE = 'less-${cacheHash}';
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(
@@ -453,9 +523,10 @@ async function networkFirst(req) {
     writeFileSync(join(outputDir, 'sw.js'), swCode);
     log.info('PWA sw.js generated');
 
-    const manifestLink = `<link rel="manifest" href="${basePath}manifest.json">`;
-    const swScript =
-      `<script>addEventListener("load",()=>{navigator.serviceWorker?.register("${basePath}sw.js")})</script>`;
+    // H-03 fix: Escape basePath to prevent attribute injection
+    const escapedBasePath = escapeAttr(basePath);
+    const manifestLink = `<link rel="manifest" href="${escapedBasePath}manifest.json">`;
+    const swScript = `<script>addEventListener("load",()=>{navigator.serviceWorker?.register("${escapedBasePath}sw.js")})</script>`;
     const htmlFiles = findHtmlFiles(outputDir);
     for (const htmlPath of htmlFiles) {
       let html = readFileSync(htmlPath, 'utf-8');
@@ -472,17 +543,27 @@ async function networkFirst(req) {
 
   // ── Sitemap (via ctx) ──────────────────────────────────────
   const { printBuildManifest } = await import('../build-manifest.js');
-  printBuildManifest({ root, outDir, phase: 3, headExtras: options.headExtras });
+  printBuildManifest({
+    root,
+    outDir,
+    phase: 3,
+    headExtras: options.headExtras,
+  });
 
   try {
     if (ctx?.plugins?.sitemapOptions) {
       const sitemapPkg = '@lessjs/content/sitemap';
-      const sitemapModule = await import(sitemapPkg) as Record<string, unknown>;
+      const sitemapModule = (await import(sitemapPkg)) as Record<
+        string,
+        unknown
+      >;
       if (typeof sitemapModule.generateSitemap === 'function') {
-        (sitemapModule.generateSitemap as (dir: string, opts: unknown) => string[])(
-          join(root, outDir),
-          ctx.plugins.sitemapOptions,
-        );
+        (
+          sitemapModule.generateSitemap as (
+            dir: string,
+            opts: unknown,
+          ) => string[]
+        )(join(root, outDir), ctx.plugins.sitemapOptions);
       }
     }
   } catch {

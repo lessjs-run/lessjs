@@ -30,7 +30,11 @@ let _historyPatchCount = 0;
 let _origPushState: any = null;
 // deno-lint-ignore no-explicit-any
 let _origReplaceState: any = null;
-let _lastNavWasPush = false;
+// H-08 fix: Use three-state navigation type instead of boolean
+let _lastNavType: 'push' | 'replace' | 'back' = 'back';
+
+// H-11 fix: Cache compiled regex patterns to avoid recompilation on each matchRoute call
+const _routeRegexCache = new Map<string, RegExp>();
 
 function _ensureHistoryOriginals(): void {
   // v0.14.5: Guard against SSR/SSG environments where history is unavailable
@@ -44,12 +48,13 @@ function _ensureHistoryOriginals(): void {
 function _installHistoryPatch(): void {
   _ensureHistoryOriginals();
   if (_historyPatchCount === 0) {
+    // H-08 fix: Track navigation type correctly (push vs replace)
     history.pushState = ((...args: any[]) => {
-      _lastNavWasPush = true;
+      _lastNavType = 'push';
       _origPushState(...args);
     }) as unknown as typeof history.pushState;
     history.replaceState = ((...args: any[]) => {
-      _lastNavWasPush = true;
+      _lastNavType = 'replace';
       _origReplaceState(...args);
     }) as unknown as typeof history.replaceState;
   }
@@ -100,7 +105,9 @@ declare var navigation: Navigation | undefined;
 
 /** Check if Navigation API is available */
 export function hasNavigationApi(): boolean {
-  return typeof (globalThis as Record<string, unknown>).navigation !== 'undefined';
+  return (
+    typeof (globalThis as Record<string, unknown>).navigation !== 'undefined'
+  );
 }
 
 /**
@@ -116,7 +123,8 @@ export function hasNavigationApi(): boolean {
  */
 export function navigate(url: string, options?: { replace?: boolean }): void {
   if (hasNavigationApi()) {
-    const nav = (globalThis as Record<string, unknown>).navigation as Navigation;
+    const nav = (globalThis as Record<string, unknown>)
+      .navigation as Navigation;
     if (options?.replace) {
       nav.navigate(url, { history: 'replace' });
     } else {
@@ -124,13 +132,16 @@ export function navigate(url: string, options?: { replace?: boolean }): void {
     }
   } else {
     // Fallback: History API
-    if (options?.replace) {
-      history.replaceState(null, '', url);
-    } else {
-      history.pushState(null, '', url);
+    // H-09 fix: Guard against SSR environments where history is undefined
+    if (typeof globalThis.history !== 'undefined') {
+      if (options?.replace) {
+        history.replaceState(null, '', url);
+      } else {
+        history.pushState(null, '', url);
+      }
+      // Dispatch popstate for listeners (History API doesn't fire it on pushState)
+      globalThis.dispatchEvent(new PopStateEvent('popstate'));
     }
-    // Dispatch popstate for listeners (History API doesn't fire it on pushState)
-    globalThis.dispatchEvent(new PopStateEvent('popstate'));
   }
 }
 
@@ -149,14 +160,18 @@ export type NavigationCallback = (
  */
 export function onNavigate(callback: NavigationCallback): () => void {
   if (hasNavigationApi()) {
-    const nav = (globalThis as Record<string, unknown>).navigation as Navigation;
+    const nav = (globalThis as Record<string, unknown>)
+      .navigation as Navigation;
     const handler = (e: Event) => {
       const navEvent = e as NavigationEvent;
       const dest = navEvent.destination;
       const url = new URL(dest.url);
-      const navType = navEvent.navigationType === 'traverse'
-        ? (navEvent.destination.index < 0 ? 'back' : 'forward')
-        : navEvent.navigationType;
+      const navType =
+        navEvent.navigationType === 'traverse'
+          ? navEvent.destination.index < 0
+            ? 'back'
+            : 'forward'
+          : navEvent.navigationType;
       callback(url, navType);
     };
     nav.addEventListener('navigatesuccess', handler);
@@ -173,9 +188,10 @@ export function onNavigate(callback: NavigationCallback): () => void {
     // declared at module scope. Multiple onNavigate() subscribers share the same
     // patched history methods. Each unsubscriber only decrements the counter;
     // the original methods are restored only when the last subscriber leaves.
+    // H-08 fix: Use _lastNavType to distinguish push/replace/back navigation
     const handler = () => {
-      const navType: 'push' | 'back' = _lastNavWasPush ? 'push' : 'back';
-      _lastNavWasPush = false;
+      const navType: 'push' | 'replace' | 'back' = _lastNavType;
+      _lastNavType = 'back'; // Reset to back after reading
       callback(new URL(globalThis.location.href), navType);
     };
 
@@ -198,7 +214,8 @@ export function matchRoute(
   url: string | URL,
   patterns: Array<{ path: string; name: string }>,
 ): { name: string; params: Record<string, string> } | null {
-  const urlObj = typeof url === 'string' ? new URL(url, 'http://localhost') : url;
+  const urlObj =
+    typeof url === 'string' ? new URL(url, 'http://localhost') : url;
   const pathname = urlObj.pathname;
 
   for (const pattern of patterns) {
@@ -223,14 +240,25 @@ export function matchRoute(
     // Fallback: simple regex matching for :param patterns
     // v0.14.5: Escape special regex characters in param names
     // to prevent ReDoS and SyntaxError on old engines
-    const regexStr = pattern.path.replace(/:([^/]+)/g, (_match, paramName: string) => {
-      const escaped = paramName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      return `(?<${escaped}>[^/]+)`;
-    });
-    const regex = new RegExp(`^${regexStr}$`);
+    // H-11 fix: Use cached regex to avoid recompilation on each call
+    let regex = _routeRegexCache.get(pattern.path);
+    if (!regex) {
+      const regexStr = pattern.path.replace(
+        /:([^/]+)/g,
+        (_match, paramName: string) => {
+          const escaped = paramName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          return `(?<${escaped}>[^/]+)`;
+        },
+      );
+      regex = new RegExp(`^${regexStr}$`);
+      _routeRegexCache.set(pattern.path, regex);
+    }
     const match = pathname.match(regex);
     if (match?.groups) {
-      return { name: pattern.name, params: match.groups as Record<string, string> };
+      return {
+        name: pattern.name,
+        params: match.groups as Record<string, string>,
+      };
     }
   }
 

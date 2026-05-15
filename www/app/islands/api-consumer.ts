@@ -62,7 +62,7 @@ export default class ApiConsumer extends LitElement {
     }
     .data-grid .key {
       color: var(--less-text-tertiary);
-      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
       font-size: 0.75rem;
     }
     .data-grid .val {
@@ -76,7 +76,7 @@ export default class ApiConsumer extends LitElement {
       border-radius: 6px;
       padding: 0.75rem 1rem;
       font-size: 0.75rem;
-      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
       color: var(--less-text-secondary);
       overflow-x: auto;
       margin: 0.75rem 0;
@@ -218,7 +218,8 @@ export default class ApiConsumer extends LitElement {
   }
 
   private get _base(): string {
-    return this.apiUrl || 'https://less-demo-api.sisyphuszheng.deno.net';
+    // H-15 fix: Use relative path if no apiUrl provided, avoiding hardcoded third-party URL
+    return this.apiUrl || '/api';
   }
 
   override connectedCallback() {
@@ -237,7 +238,7 @@ export default class ApiConsumer extends LitElement {
     try {
       const res = await fetch(`${this._base}/api`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      this.apiData = await res.json() as Record<string, unknown>;
+      this.apiData = (await res.json()) as Record<string, unknown>;
     } catch (e) {
       this.apiError = String(e);
       this.apiData = null;
@@ -253,9 +254,11 @@ export default class ApiConsumer extends LitElement {
     this.helloError = '';
     this.helloMsg = '';
     try {
-      const res = await fetch(`${this._base}/api/hello/${encodeURIComponent(t)}`);
+      const res = await fetch(
+        `${this._base}/api/hello/${encodeURIComponent(t)}`,
+      );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const j = await res.json() as { message: string };
+      const j = (await res.json()) as { message: string };
       this.helloMsg = j.message;
     } catch (e) {
       this.helloError = String(e);
@@ -276,52 +279,65 @@ export default class ApiConsumer extends LitElement {
       <div class="card">
         <h3>Server Status</h3>
         <div class="status-row">
-          <span class="status-dot ${this.apiLoading
-            ? 'loading'
-            : this.apiError
-            ? 'error'
-            : 'connected'}"></span>
+          <span
+            class="status-dot ${this.apiLoading
+              ? 'loading'
+              : this.apiError
+                ? 'error'
+                : 'connected'}"
+          ></span>
           ${this.apiLoading
             ? 'Contacting server...'
             : this.apiError
-            ? 'Connection failed'
-            : 'API online'}
+              ? 'Connection failed'
+              : 'API online'}
         </div>
         ${this.apiData
           ? html`
-            <div class="data-grid">
-              <span class="key">framework</span><span class="val">${this.apiData.framework}</span>
-              <span class="key">version</span><span class="val">${this.apiData.version}</span>
-              <span class="key">jamstack</span><span class="val">${String(
-                this.apiData.jamstack,
-              )}</span>
-              <span class="key">serverless</span><span class="val">${String(
-                this.apiData.serverless,
-              )}</span>
-            </div>
-          `
-          : ''} ${this.apiLoading
-          ? html`
-            <div class="pre-box">Loading...</div>
-          `
-          : ''} ${this.apiData
-          ? html`
-            <div class="pre-box">${JSON.stringify(this.apiData, null, 2)}</div>
-          `
-          : ''} ${this.apiError
-          ? html`
-            <div class="pre-box" style="color:var(--less-error)">${this.apiError}</div>
-          `
+              <div class="data-grid">
+                <span class="key">framework</span
+                ><span class="val">${this.apiData.framework}</span>
+                <span class="key">version</span
+                ><span class="val">${this.apiData.version}</span>
+                <span class="key">jamstack</span
+                ><span class="val">${String(this.apiData.jamstack)}</span>
+                <span class="key">serverless</span
+                ><span class="val">${String(this.apiData.serverless)}</span>
+              </div>
+            `
           : ''}
-        <button class="btn" @click="${this._fetchStatus}" ?disabled="${this
-          .apiLoading}">⟳ Refresh</button>
+        ${this.apiLoading ? html` <div class="pre-box">Loading...</div> ` : ''}
+        ${this.apiData
+          ? html`
+              <div class="pre-box">
+                ${JSON.stringify(this.apiData, null, 2)}
+              </div>
+            `
+          : ''}
+        ${this.apiError
+          ? html`
+              <div class="pre-box" style="color:var(--less-error)">
+                ${this.apiError}
+              </div>
+            `
+          : ''}
+        <button
+          class="btn"
+          @click="${this._fetchStatus}"
+          ?disabled="${this.apiLoading}"
+        >
+          ⟳ Refresh
+        </button>
 
         <hr class="divider" />
 
         <h3>Say Hello</h3>
-        <p style="font-size:0.8125rem;color:var(--less-text-tertiary);margin:0 0 0.75rem;line-height:1.6">
-          Type your name and the serverless API will greet you back. Calls <code style="font-size:0.75rem"
-          >GET /api/hello/:name</code> on Deno Deploy.
+        <p
+          style="font-size:0.8125rem;color:var(--less-text-tertiary);margin:0 0 0.75rem;line-height:1.6"
+        >
+          Type your name and the serverless API will greet you back. Calls
+          <code style="font-size:0.75rem">GET /api/hello/:name</code> on Deno
+          Deploy.
         </p>
         <div class="form-row">
           <input
@@ -340,13 +356,10 @@ export default class ApiConsumer extends LitElement {
           </button>
         </div>
         ${this.helloMsg
-          ? html`
-            <div class="greeting">${this.helloMsg}</div>
-          `
-          : ''} ${this.helloError
-          ? html`
-            <div class="err-msg">${this.helloError}</div>
-          `
+          ? html` <div class="greeting">${this.helloMsg}</div> `
+          : ''}
+        ${this.helloError
+          ? html` <div class="err-msg">${this.helloError}</div> `
           : ''}
       </div>
     `;
@@ -356,4 +369,6 @@ export default class ApiConsumer extends LitElement {
 // Guard: idempotent across SSR paths
 try {
   customElements.define(tagName, ApiConsumer);
-} catch { /* already defined */ }
+} catch {
+  /* already defined */
+}

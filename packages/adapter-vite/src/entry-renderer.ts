@@ -12,6 +12,11 @@
  * - HTML document wrapping delegates to wrapInDocument from html-escape.ts
  *   (imported at runtime — single source of truth, no duplicate HTML logic)
  * - DSD output must remain plain HTML, without Lit SSR marker comments.
+ *
+ * H-16 KNOWN ISSUE: Circular dependency between adapter-vite ↔ content
+ *   adapter-vite generates code that imports @lessjs/content/sitemap
+ *   content package imports @lessjs/adapter-vite/build-context
+ * TODO: Extract shared types to @lessjs/build-types, or move sitemap generation into adapter-vite
  */
 
 import type {
@@ -23,7 +28,11 @@ import type {
   PageRouteDecl,
   RendererDecl,
 } from './entry-descriptor.js';
-import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from '@lessjs/core';
+import type {
+  FrameworkOptions,
+  PackageIslandMeta,
+  RouteEntry,
+} from '@lessjs/core';
 import { buildEntryDescriptor } from './entry-descriptor.js';
 
 // Re-export for backward compatibility (consumers import from hono-entry.ts)
@@ -33,7 +42,9 @@ export type { EntryDescriptor } from './entry-descriptor.js';
 // ─── Import rendering ──────────────────────────────────────────
 
 function renderImport(imp: ImportDecl): string {
-  const names = imp.alias ? `${imp.names[0]} as ${imp.alias}` : imp.names.join(', ');
+  const names = imp.alias
+    ? `${imp.names[0]} as ${imp.alias}`
+    : imp.names.join(', ');
   return `import { ${names} } from '${imp.from}'`;
 }
 
@@ -67,7 +78,9 @@ function renderMiddleware(lines: string[], mw: MiddlewareDecl): void {
       const corsOrigin = mw.config?.corsOrigin;
       if (corsOrigin !== undefined) {
         const originStr = renderCorsOrigin(corsOrigin);
-        lines.push(`app.use('*', cors({ origin: ${originStr}, ${CORS_ALLOW} }))`);
+        lines.push(
+          `app.use('*', cors({ origin: ${originStr}, ${CORS_ALLOW} }))`,
+        );
       } else {
         // v0.3.0: Tightened default — only allow localhost.
         // Production deployments MUST explicitly configure corsOrigin.
@@ -104,9 +117,9 @@ function renderMiddleware(lines: string[], mw: MiddlewareDecl): void {
           const hasScriptSrc = /script-src/i.test(basePolicy);
           const policyTemplate = hasScriptSrc
             ? basePolicy.replace(
-              /script-src\s+([^;]*)/i,
-              "script-src 'nonce-NONCE_PLACEHOLDER' $1",
-            )
+                /script-src\s+([^;]*)/i,
+                "script-src 'nonce-NONCE_PLACEHOLDER' $1",
+              )
             : basePolicy + "; script-src 'nonce-NONCE_PLACEHOLDER'";
           lines.push(
             `// CSP with auto-nonce: generates a per-request nonce and adds it to script tags`,
@@ -115,9 +128,9 @@ function renderMiddleware(lines: string[], mw: MiddlewareDecl): void {
           lines.push(`  const nonce = crypto.randomUUID().replace(/-/g, '')`);
           lines.push(`  c.set('cspNonce', nonce)`);
           lines.push(
-            `  const policy = ${
-              JSON.stringify(policyTemplate)
-            }.replace('NONCE_PLACEHOLDER', nonce)`,
+            `  const policy = ${JSON.stringify(
+              policyTemplate,
+            )}.replace('NONCE_PLACEHOLDER', nonce)`,
           );
           lines.push(`  await next()`);
           lines.push(`  c.header('${headerName}', policy)`);
@@ -125,7 +138,9 @@ function renderMiddleware(lines: string[], mw: MiddlewareDecl): void {
         } else {
           lines.push(`app.use('*', async (c, next) => {`);
           lines.push(`  await next()`);
-          lines.push(`  c.header('${headerName}', ${JSON.stringify(cspConfig.policy)})`);
+          lines.push(
+            `  c.header('${headerName}', ${JSON.stringify(cspConfig.policy)})`,
+          );
           lines.push(`})`);
         }
       }
@@ -159,7 +174,12 @@ function renderPageRoute(
   lines: string[],
   route: PageRouteDecl,
   renderers: RendererDecl[],
-  docConfig: { title: string; lang: string; headExtras: string; allowHeadExtrasScripts: boolean },
+  docConfig: {
+    title: string;
+    lang: string;
+    headExtras: string;
+    allowHeadExtrasScripts: boolean;
+  },
   isSSG: boolean,
 ): void {
   // Find renderers whose scope matches this route's path prefix
@@ -169,15 +189,21 @@ function renderPageRoute(
   });
 
   lines.push(`// Page: ${route.path} (${route.filePath})`);
-  lines.push(`app.get('${route.path}', async (c) => {`);
+  // H-02 fix: Use JSON.stringify to escape route path (handles single quotes, special chars)
+  lines.push(`app.get(${JSON.stringify(route.path)}, async (c) => {`);
   lines.push(`  try {`);
-  lines.push(`    const tag = ${route.varName}.tagName || '${route.defaultTagName}'`);
+  lines.push(
+    `    const tag = ${route.varName}.tagName || '${route.defaultTagName}'`,
+  );
   // v0.5.0: DSD renderer - no <!--lit-part--> markers, no old upgrade marker.
   // __ssr() uses renderDSD() which outputs standard DSD HTML.
   // Components receive route params as props for SSR-time data access.
   // v0.6: Pass route/source context for error visibility.
+  // H-02 fix: Use JSON.stringify to escape route path and file path
   lines.push(
-    `    const raw = await __ssr(tag, c.req.param() || {}, { route: '${route.path}', source: '${route.filePath}' })`,
+    `    const raw = await __ssr(tag, c.req.param() || {}, { route: ${JSON.stringify(
+      route.path,
+    )}, source: ${JSON.stringify(route.filePath)} })`,
   );
   lines.push(`    const html = raw`);
   lines.push('');
@@ -186,7 +212,9 @@ function renderPageRoute(
   // SSG mode: headExtras is injected via Vite define as __LESS_HEAD_EXTRAS__
   // (ADR 0008 Phase A: replaces the old .less/head-extras.html runtime file read).
   // Dev mode: headExtras is inlined via JSON.stringify (safe for dev server).
-  const headExtrasExpr = isSSG ? '__headExtras' : JSON.stringify(docConfig.headExtras);
+  const headExtrasExpr = isSSG
+    ? '__headExtras'
+    : JSON.stringify(docConfig.headExtras);
 
   lines.push(`    let content = html`);
   if (matchingRenderers.length > 0) {
@@ -199,7 +227,9 @@ function renderPageRoute(
   lines.push(`      title: ${JSON.stringify(docConfig.title)},`);
   lines.push(`      lang: ${JSON.stringify(docConfig.lang)},`);
   lines.push(`      headExtras: ${headExtrasExpr},`);
-  lines.push(`      allowHeadExtrasScripts: ${JSON.stringify(docConfig.allowHeadExtrasScripts)},`);
+  lines.push(
+    `      allowHeadExtrasScripts: ${JSON.stringify(docConfig.allowHeadExtrasScripts)},`,
+  );
   lines.push(`      cspNonce: c.get('cspNonce'),`);
   lines.push(`    }))`);
 
@@ -212,7 +242,9 @@ function renderPageRoute(
   lines.push(`      return c.html('<h1>500 Internal Server Error</h1>', 500)`);
   lines.push(`    } else {`);
   lines.push(`      const safeErr = escapeHtml(String(err.stack || err))`);
-  lines.push(`      return c.html('<h1>500</h1><pre>' + safeErr + '</pre>', 500)`);
+  lines.push(
+    `      return c.html('<h1>500</h1><pre>' + safeErr + '</pre>', 500)`,
+  );
   lines.push(`    }`);
   lines.push(`  }`);
   lines.push(`})`);
@@ -257,7 +289,9 @@ export function renderEntry(desc: EntryDescriptor): string {
     islandLookup[island.tagName] = island.modulePath;
   }
 
-  lines.push(`// Known islands (determined at build time by scanning islandsDir)`);
+  lines.push(
+    `// Known islands (determined at build time by scanning islandsDir)`,
+  );
   lines.push(`const __islandMap = ${JSON.stringify(islandLookup)}`);
   lines.push('');
 
@@ -290,7 +324,9 @@ export function renderEntry(desc: EntryDescriptor): string {
   {
     lines.push('// Auto-install Lit adapter for SSR rendering');
     lines.push('try {');
-    lines.push("  const { installLitAdapter } = await import('@lessjs/adapter-lit');");
+    lines.push(
+      "  const { installLitAdapter } = await import('@lessjs/adapter-lit');",
+    );
     lines.push('  installLitAdapter();');
     lines.push('} catch { /* @lessjs/adapter-lit not available */ }');
     lines.push('');
@@ -306,16 +342,24 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push(
       '// Multiple routes may import the same UI modules, causing duplicate define() calls.',
     );
-    lines.push('// Patch once inside the bundle — external code does not touch customElements.');
-    lines.push('const _origDefine = customElements.define.bind(customElements);');
+    lines.push(
+      '// Patch once inside the bundle — external code does not touch customElements.',
+    );
+    lines.push(
+      'const _origDefine = customElements.define.bind(customElements);',
+    );
     lines.push('customElements.define = (name, ctor, options) => {');
     lines.push('  if (customElements.get(name)) return;');
-    lines.push('  try { _origDefine(name, ctor, options); } catch { /* already defined */ }');
+    lines.push(
+      '  try { _origDefine(name, ctor, options); } catch { /* already defined */ }',
+    );
     lines.push('};');
     lines.push('');
   }
   for (const route of desc.pageRoutes) {
-    lines.push(`if (!customElements.get(${route.varName}.tagName || '${route.defaultTagName}')) {`);
+    lines.push(
+      `if (!customElements.get(${route.varName}.tagName || '${route.defaultTagName}')) {`,
+    );
     lines.push(
       `  customElements.define(${route.varName}.tagName || '${route.defaultTagName}', ${route.varName}.default)`,
     );
@@ -338,7 +382,9 @@ export function renderEntry(desc: EntryDescriptor): string {
     const varName = `__island_${island.tagName.replace(/-/g, '_')}`;
     const componentVar = `__island_component_${island.tagName.replace(/-/g, '_')}`;
     lines.push(`const ${componentVar} = ${varName}?.default`);
-    lines.push(`if (${componentVar} && !customElements.get('${island.tagName}')) {`);
+    lines.push(
+      `if (${componentVar} && !customElements.get('${island.tagName}')) {`,
+    );
     lines.push(`  customElements.define('${island.tagName}', ${componentVar})`);
     lines.push(`}`);
   }
@@ -352,7 +398,9 @@ export function renderEntry(desc: EntryDescriptor): string {
   // The build-ssg.ts SSR build config includes:
   //   define: { __LESS_HEAD_EXTRAS__: JSON.stringify(headExtras) }
   if (desc.isSSG && desc.document.headExtras) {
-    lines.push('// SSG: headExtras injected via Vite define (ADR 0008 Phase A)');
+    lines.push(
+      '// SSG: headExtras injected via Vite define (ADR 0008 Phase A)',
+    );
     lines.push('// Replaces the old .less/head-extras.html runtime file read');
     lines.push('const __headExtras = __LESS_HEAD_EXTRAS__ || "";');
     lines.push('');
@@ -368,7 +416,9 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('// SSR helper: render a registered custom element to DSD HTML');
   lines.push('// Outputs standard DSD; no client render markers needed');
   lines.push('async function __ssr(tag, props = {}, sourceInfo = {}) {');
-  lines.push('  // Validate tag name — must be a valid Custom Element (contains hyphen)');
+  lines.push(
+    '  // Validate tag name — must be a valid Custom Element (contains hyphen)',
+  );
   lines.push('  if (!tag || !tag.includes("-")) {');
   lines.push(
     '    throw new Error("[LessJS] Invalid custom element tag: " + String(tag) + ". Must contain a hyphen.")',
@@ -433,16 +483,24 @@ export function renderEntry(desc: EntryDescriptor): string {
   // provides empty stubs when the real package is not installed.
   if (desc.isSSG) {
     lines.push('');
-    lines.push('// ── SSG Utility Re-exports (ADR 0008 Phase C) ───────────────');
+    lines.push(
+      '// ── SSG Utility Re-exports (ADR 0008 Phase C) ───────────────',
+    );
     lines.push('// Used by build-ssg.ts after importing the SSR bundle.');
-    lines.push('// Shared module scope ensures adapter/data state is consistent.');
+    lines.push(
+      '// Shared module scope ensures adapter/data state is consistent.',
+    );
     lines.push('');
     lines.push(
       'export { renderDSD, renderDSDByName, wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core"',
     );
-    lines.push('export { installLitAdapter, uninstallLitAdapter } from "@lessjs/adapter-lit"');
+    lines.push(
+      'export { installLitAdapter, uninstallLitAdapter } from "@lessjs/adapter-lit"',
+    );
     // ADR 0018: Blog data comes from virtual:less-blog-data (zero module state)
-    lines.push('export { posts, getPostBySlug, getBlogOptions } from "virtual:less-blog-data"');
+    lines.push(
+      'export { posts, getPostBySlug, getBlogOptions } from "virtual:less-blog-data"',
+    );
     lines.push('export { generateSitemap } from "@lessjs/content/sitemap"');
     // ADR 0018: i18n data comes from virtual:less-i18n-data (zero module state)
     lines.push(
@@ -455,8 +513,12 @@ export function renderEntry(desc: EntryDescriptor): string {
     // build-ssg.ts only calls renderRoute() and getStaticPaths() —
     // no globalThis access, no source file regex, no direct renderDSD().
     lines.push('');
-    lines.push('// ── ADR 0014: DSD-first rendering API ──────────────────────');
-    lines.push('// build-ssg.ts calls these — never touches customElements directly.');
+    lines.push(
+      '// ── ADR 0014: DSD-first rendering API ──────────────────────',
+    );
+    lines.push(
+      '// build-ssg.ts calls these — never touches customElements directly.',
+    );
     lines.push('');
 
     // --- routeInfo: structured route metadata ---
@@ -466,9 +528,9 @@ export function renderEntry(desc: EntryDescriptor): string {
     for (const r of desc.pageRoutes) {
       const tagNameExpr = `${r.varName}.tagName || '${r.defaultTagName}'`;
       lines.push(
-        `  { path: '${r.path}', tagName: ${tagNameExpr}, isDynamic: ${!!r.isDynamic}, paramNames: ${
-          JSON.stringify(r.paramNames || [])
-        } },`,
+        `  { path: '${r.path}', tagName: ${tagNameExpr}, isDynamic: ${!!r.isDynamic}, paramNames: ${JSON.stringify(
+          r.paramNames || [],
+        )} },`,
       );
     }
     lines.push('];');
@@ -504,15 +566,21 @@ export function renderEntry(desc: EntryDescriptor): string {
     // --- renderRoute: path + options → full HTML ---
     lines.push('/**');
     lines.push(' * Render a route to complete HTML (ADR 0014).');
-    lines.push(' * Uses customElements + renderDSD + wrapInDocument internally.');
-    lines.push(' * Caller does not need to know tagName, ComponentClass, or renderDSD.');
+    lines.push(
+      ' * Uses customElements + renderDSD + wrapInDocument internally.',
+    );
+    lines.push(
+      ' * Caller does not need to know tagName, ComponentClass, or renderDSD.',
+    );
     lines.push(' */');
     lines.push('export async function renderRoute(routePath, options = {}) {');
     lines.push('  const info = routeInfo.find(r => r.path === routePath);');
     lines.push(
       "  if (!info) throw new Error('[LessJS] renderRoute: route not found: ' + routePath);",
     );
-    lines.push('  const { params = {}, locale, title, lang, headExtras } = options;');
+    lines.push(
+      '  const { params = {}, locale, title, lang, headExtras } = options;',
+    );
     lines.push('  const props = { ...params };');
     lines.push('  if (locale) props.locale = locale;');
     lines.push(
@@ -520,7 +588,9 @@ export function renderEntry(desc: EntryDescriptor): string {
     );
     lines.push('  let content = html;');
     lines.push('  for (const renderer of __matchingRenderers(routePath)) {');
-    lines.push('    content = await renderer.wrap(content, __rendererContext(routePath, params));');
+    lines.push(
+      '    content = await renderer.wrap(content, __rendererContext(routePath, params));',
+    );
     lines.push('  }');
     lines.push('  return wrapInDocument(content, {');
     lines.push('    title: title || "LessJS",');
@@ -549,8 +619,11 @@ export function renderEntry(desc: EntryDescriptor): string {
     if (dynamicRoutes.length > 0) {
       lines.push("  // Dispatch to the route module's getStaticPaths()");
       for (const r of dynamicRoutes) {
-        lines.push(`  if (routePath === '${r.path}') {`);
-        lines.push(`    if (typeof ${r.varName}.getStaticPaths === 'function') {`);
+        // H-02 fix: Use JSON.stringify to escape route path
+        lines.push(`  if (routePath === ${JSON.stringify(r.path)}) {`);
+        lines.push(
+          `    if (typeof ${r.varName}.getStaticPaths === 'function') {`,
+        );
         lines.push(`      return await ${r.varName}.getStaticPaths();`);
         lines.push(`    }`);
         lines.push(`    return [];`);

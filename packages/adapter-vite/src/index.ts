@@ -15,7 +15,11 @@
  */
 
 import type { Plugin } from 'vite';
-import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from '@lessjs/core';
+import type {
+  FrameworkOptions,
+  PackageIslandMeta,
+  RouteEntry,
+} from '@lessjs/core';
 
 import { join } from 'node:path';
 import process from 'node:process';
@@ -28,12 +32,20 @@ const log = createLogger('adapter-vite');
 
 import honoDevServer from '@hono/vite-dev-server';
 import { LessBuildContext } from './build-context.js';
-import { findWorkspaceRoot, generateWorkspaceAliases } from './workspace-alias.js';
+import {
+  findWorkspaceRoot,
+  generateWorkspaceAliases,
+} from './workspace-alias.js';
 import { buildPlugin } from './build.js';
 import { devtoolsPlugin } from './devtools/index.js';
 import { generateHonoEntryCode } from './hono-entry.js';
 import { islandTransformPlugin } from './island-transform.js';
-import { fileToTagName, scanIslands, scanPackageIslands, scanRoutes } from './route-scanner.js';
+import {
+  fileToTagName,
+  scanIslands,
+  scanPackageIslands,
+  scanRoutes,
+} from './route-scanner.js';
 
 // ─── Subpath resolution (ADR 0016 — JSR remote only) ─────────────
 //
@@ -52,9 +64,9 @@ const VIRTUAL_CORE_PREFIX = '\0lessjs:core/src/';
 
 /** Mapping of @lessjs/core/* subpath specifiers to source files (used by JSR remote resolution only) */
 const CORE_SUBPATHS: Record<string, string> = {
-  'logger': 'logger.ts',
+  logger: 'logger.ts',
   'build-context': 'build-context.ts',
-  'navigation': 'navigation.ts',
+  navigation: 'navigation.ts',
 };
 
 // ADR 0018: buildCoreSubpathAliases() DELETED.
@@ -73,7 +85,8 @@ const jsrSourceCache = new Map<string, string>();
  * through virtual modules, bypassing Node.js ESM loader entirely.
  */
 function createCoreResolvePlugin(metaUrl: string): Plugin {
-  const isRemote = metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
+  const isRemote =
+    metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
 
   // Compute JSR base URL for source fetching.
   let jsrSrcBase = '';
@@ -93,23 +106,29 @@ function createCoreResolvePlugin(metaUrl: string): Plugin {
 
       // Case 1: Bare specifier @lessjs/core or @lessjs/core/*
       if (source === '@lessjs/core' || source.startsWith('@lessjs/core/')) {
-        const subpath = source === '@lessjs/core'
-          ? 'index.ts'
-          : (CORE_SUBPATHS[source.slice('@lessjs/core/'.length)] ||
-            `${source.slice('@lessjs/core/'.length)}.ts`);
+        const subpath =
+          source === '@lessjs/core'
+            ? 'index.ts'
+            : CORE_SUBPATHS[source.slice('@lessjs/core/'.length)] ||
+              `${source.slice('@lessjs/core/'.length)}.ts`;
         return `${VIRTUAL_CORE_PREFIX}${subpath}`;
       }
 
       // Case 2: Relative imports from within our virtual modules
-      if (importer?.startsWith(VIRTUAL_CORE_PREFIX) && source.startsWith('./')) {
+      if (
+        importer?.startsWith(VIRTUAL_CORE_PREFIX) &&
+        source.startsWith('./')
+      ) {
         const importerDir = importer.replace(/[/\\][^/\\]+$/, '');
         return `${importerDir}/${source.slice(2)}`;
       }
 
       // Case 3: Third-party bare specifiers from virtual modules
       if (
-        importer?.startsWith(VIRTUAL_CORE_PREFIX) && !source.startsWith('/') &&
-        !source.startsWith('.') && !source.startsWith('\0')
+        importer?.startsWith(VIRTUAL_CORE_PREFIX) &&
+        !source.startsWith('/') &&
+        !source.startsWith('.') &&
+        !source.startsWith('\0')
       ) {
         return this.resolve(source, undefined, { ...options, skipSelf: true });
       }
@@ -199,7 +218,10 @@ function createCoreResolvePlugin(metaUrl: string): Plugin {
  * @param options - Framework options
  * @param externalCtx - Optional shared LessBuildContext (used by lessjs() umbrella)
  */
-export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildContext): Plugin[] {
+export function less(
+  options: FrameworkOptions = {},
+  externalCtx?: LessBuildContext,
+): Plugin[] {
   const metaUrl = import.meta.url;
 
   let headExtras = options.headExtras;
@@ -235,6 +257,8 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
         }
       }
     } catch (e) {
+      // H-01 fix: Re-throw LessError so security warnings are not swallowed
+      if (e instanceof LessError) throw e;
       // v0.14.3: decodeURIComponent can throw for two reasons:
       //   1. Malicious URLs with invalid percent-encoding (e.g., "%ZZ")
       //   2. Legitimate URLs with lone surrogates (rare, but valid URI-encoded)
@@ -287,7 +311,7 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
           : {}),
         ...(isObjectScript && script.defer ? { defer: true } : {}),
         ...(isObjectScript && script.async ? { async: true } : {}),
-        ...(isObjectScript ? script.attrs ?? {} : {}),
+        ...(isObjectScript ? (script.attrs ?? {}) : {}),
         src,
       };
       const attrText = Object.entries(attrs)
@@ -295,7 +319,7 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
         .map(([name, value]) =>
           value === true
             ? escapeHtmlAttr(name)
-            : `${escapeHtmlAttr(name)}="${escapeHtmlAttr(String(value))}"`
+            : `${escapeHtmlAttr(name)}="${escapeHtmlAttr(String(value))}"`,
         )
         .join(' ');
       fragments.push(`<script ${attrText}></script>`);
@@ -304,7 +328,9 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
     allowHeadExtrasScripts = true;
   }
 
-  const resolvedOptions: FrameworkOptions & { allowHeadExtrasScripts?: boolean } = {
+  const resolvedOptions: FrameworkOptions & {
+    allowHeadExtrasScripts?: boolean;
+  } = {
     ...options,
     routesDir: options.routesDir || 'app/routes',
     islandsDir: options.islandsDir || 'app/islands',
@@ -406,13 +432,21 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
       try {
         const routes = await scanRoutes(resolvedOptions.routesDir!);
 
-        const islandsRoot = join(process.cwd(), resolvedOptions.islandsDir || 'app/islands');
+        const islandsRoot = join(
+          process.cwd(),
+          resolvedOptions.islandsDir || 'app/islands',
+        );
         const islandFiles = await scanIslands(islandsRoot);
         ctx.phase1.islandTagNames = islandFiles.map((f) => fileToTagName(f));
         ctx.phase1.islandFiles = islandFiles;
 
-        if (resolvedOptions.packageIslands && resolvedOptions.packageIslands.length > 0) {
-          ctx.phase1.packageIslands = await scanPackageIslands(resolvedOptions.packageIslands);
+        if (
+          resolvedOptions.packageIslands &&
+          resolvedOptions.packageIslands.length > 0
+        ) {
+          ctx.phase1.packageIslands = await scanPackageIslands(
+            resolvedOptions.packageIslands,
+          );
           if (ctx.phase1.packageIslands.length > 0) {
             log.info(
               `Package islands: ${ctx.phase1.packageIslands.map((i) => i.tagName).join(', ')}`,
@@ -430,9 +464,14 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
           ctx.phase1.packageIslands,
           ctx.phase1.islandFiles,
         );
-        const pageCount = routes.filter((r) => r.type === 'page' && !r.special).length;
-        const apiCount = routes.filter((r) => r.type === 'api' && !r.special).length;
-        const totalIslands = ctx.phase1.islandTagNames.length + ctx.phase1.packageIslands.length;
+        const pageCount = routes.filter(
+          (r) => r.type === 'page' && !r.special,
+        ).length;
+        const apiCount = routes.filter(
+          (r) => r.type === 'api' && !r.special,
+        ).length;
+        const totalIslands =
+          ctx.phase1.islandTagNames.length + ctx.phase1.packageIslands.length;
         log.info(
           `Routes: ${pageCount} page(s), ${apiCount} API route(s), ` +
             `${totalIslands} island(s) - LessJS Architecture`,
@@ -541,9 +580,10 @@ function dispatchDataPlugin(ctx: LessBuildContext): Plugin {
         const real = entry.get();
         if (!real?.resolveId) return entry.resolved;
         // Vite 8 Plugin hook can be function or {handler, order}
-        const fn = typeof real.resolveId === 'function'
-          ? real.resolveId
-          : (real.resolveId as Record<string, unknown>).handler;
+        const fn =
+          typeof real.resolveId === 'function'
+            ? real.resolveId
+            : (real.resolveId as Record<string, unknown>).handler;
         if (!fn) return entry.resolved;
         // deno-lint-ignore no-explicit-any
         const result = (fn as any)(id);
@@ -556,9 +596,10 @@ function dispatchDataPlugin(ctx: LessBuildContext): Plugin {
         const real = entry.get();
         if (!real?.load) return entry.emptyCode;
         // Vite 8 Plugin hook can be function or {handler, order}
-        const fn = typeof real.load === 'function'
-          ? real.load
-          : (real.load as Record<string, unknown>).handler;
+        const fn =
+          typeof real.load === 'function'
+            ? real.load
+            : (real.load as Record<string, unknown>).handler;
         if (!fn) return entry.emptyCode;
         // deno-lint-ignore no-explicit-any
         return (fn as any)(id) ?? entry.emptyCode;
@@ -570,7 +611,11 @@ function dispatchDataPlugin(ctx: LessBuildContext): Plugin {
 // Re-export build utilities for CLI consumers
 export { LessBuildContext } from './build-context.js';
 export type { ArtifactInfo, BuildManifest } from './build-manifest.js';
-export { printBuildManifest, scanClientBuild, scanSSGOutput } from './build-manifest.js';
+export {
+  printBuildManifest,
+  scanClientBuild,
+  scanSSGOutput,
+} from './build-manifest.js';
 export {
   buildIslandChunkMap,
   buildSpeculationRulesJson,

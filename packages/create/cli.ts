@@ -32,7 +32,8 @@ const PKG_DIR_MAP: Record<string, string> = {
 
 function loadWorkspaceVersion(pkg: string): string {
   const metaUrl = import.meta.url;
-  const isRemote = metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
+  const isRemote =
+    metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
 
   if (isRemote) {
     // Will be resolved lazily via JSR API in resolveVersions()
@@ -68,7 +69,9 @@ async function fetchJsrVersion(pkg: string): Promise<string> {
   const meta = await resp.json();
   const version = meta?.latestVersion ?? meta?.versions?.[0];
   if (!version) {
-    throw new Error(`No version found for ${JSR_SCOPE}/${pkg} in JSR Registry response`);
+    throw new Error(
+      `No version found for ${JSR_SCOPE}/${pkg} in JSR Registry response`,
+    );
   }
   return version;
 }
@@ -76,7 +79,8 @@ async function fetchJsrVersion(pkg: string): Promise<string> {
 /** Resolve all package versions — local from workspace, remote from JSR API. */
 async function resolveVersions(): Promise<Record<string, string>> {
   const metaUrl = import.meta.url;
-  const isRemote = metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
+  const isRemote =
+    metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
 
   const keys = Object.keys(PKG_DIR_MAP);
   if (!isRemote) {
@@ -91,6 +95,7 @@ async function resolveVersions(): Promise<Record<string, string>> {
   const jsrNames: Record<string, string> = {
     core: 'core',
     adapterLit: 'adapter-lit',
+    adapterVite: 'adapter-vite', // H-13 fix: Added missing adapterVite entry
     app: 'app',
     content: 'content',
     i18n: 'i18n',
@@ -261,15 +266,27 @@ async function main() {
     Deno.exit(1);
   }
 
+  // H-14 fix: Validate project name format to prevent path traversal
+  if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
+    console.error(
+      `Invalid project name: "${name}". Project name must only contain letters, numbers, underscores, and hyphens.`,
+    );
+    Deno.exit(1);
+  }
+
   const cwd = Deno.cwd();
   const targetDir = resolve(cwd, name);
   const relativeTarget = relative(cwd, targetDir);
 
   if (
-    !relativeTarget || relativeTarget === '..' || relativeTarget.startsWith(`..${sep}`) ||
+    !relativeTarget ||
+    relativeTarget === '..' ||
+    relativeTarget.startsWith(`..${sep}`) ||
     isAbsolute(relativeTarget)
   ) {
-    console.error(`Refusing to create project outside the current directory: ${name}`);
+    console.error(
+      `Refusing to create project outside the current directory: ${name}`,
+    );
     Deno.exit(1);
   }
 

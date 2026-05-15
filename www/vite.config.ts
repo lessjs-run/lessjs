@@ -8,22 +8,40 @@ import { fileURLToPath } from 'node:url';
 const __dir = dirname(fileURLToPath(import.meta.url));
 
 const workspaceAlias = [
-  { find: '@lessjs/core/context', replacement: resolve(__dir, '../packages/core/src/context.ts') },
-  { find: '@lessjs/core/errors', replacement: resolve(__dir, '../packages/core/src/errors.ts') },
-  { find: '@lessjs/core/logger', replacement: resolve(__dir, '../packages/core/src/logger.ts') },
+  {
+    find: '@lessjs/core/context',
+    replacement: resolve(__dir, '../packages/core/src/context.ts'),
+  },
+  {
+    find: '@lessjs/core/errors',
+    replacement: resolve(__dir, '../packages/core/src/errors.ts'),
+  },
+  {
+    find: '@lessjs/core/logger',
+    replacement: resolve(__dir, '../packages/core/src/logger.ts'),
+  },
   {
     find: '@lessjs/core/navigation',
     replacement: resolve(__dir, '../packages/core/src/navigation.ts'),
   },
-  { find: '@lessjs/core', replacement: resolve(__dir, '../packages/core/src/index.ts') },
-  { find: '@lessjs/ui', replacement: resolve(__dir, '../packages/ui/src/index.ts') },
+  {
+    find: '@lessjs/core',
+    replacement: resolve(__dir, '../packages/core/src/index.ts'),
+  },
+  {
+    find: '@lessjs/ui',
+    replacement: resolve(__dir, '../packages/ui/src/index.ts'),
+  },
   {
     find: '@lessjs/adapter-lit',
     replacement: resolve(__dir, '../packages/adapter-lit/src/index.ts'),
   },
   {
     find: '@lessjs/adapter-vite/build-context',
-    replacement: resolve(__dir, '../packages/adapter-vite/src/build-context.ts'),
+    replacement: resolve(
+      __dir,
+      '../packages/adapter-vite/src/build-context.ts',
+    ),
   },
   {
     find: '@lessjs/adapter-vite',
@@ -37,15 +55,20 @@ const workspaceAlias = [
     find: '@lessjs/content',
     replacement: resolve(__dir, '../packages/content/src/index.ts'),
   },
-  { find: '@lessjs/i18n', replacement: resolve(__dir, '../packages/i18n/src/index.ts') },
-  { find: '@lessjs/app', replacement: resolve(__dir, '../packages/app/src/index.ts') },
+  {
+    find: '@lessjs/i18n',
+    replacement: resolve(__dir, '../packages/i18n/src/index.ts'),
+  },
+  {
+    find: '@lessjs/app',
+    replacement: resolve(__dir, '../packages/app/src/index.ts'),
+  },
 ];
 
 // DRY: All color token values come from a single source of truth.
 // lessRootColorCSS is generated from lessDarkColors/lessLightColors in tokens/colors.ts.
 // Do NOT hand-write color values here — edit the source objects instead.
-const colorTokensStyle =
-  `<style>${lessRootColorCSS}body{margin:0;background:var(--less-bg-base);color:var(--less-text-primary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>`;
+const colorTokensStyle = `<style>${lessRootColorCSS}body{margin:0;background:var(--less-bg-base);color:var(--less-text-primary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>`;
 
 export default defineConfig({
   base: '/',
@@ -84,39 +107,75 @@ export default defineConfig({
         scripts: [
           { src: '/theme-init.js' },
           { src: '/mobile-menu.js', defer: true },
-          { src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js', defer: true },
+          // H-04 fix: Added SRI (Subresource Integrity) to all external CDN scripts
           {
-            src:
-              'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js',
+            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js',
             defer: true,
+            attrs: {
+              integrity: 'sha256-57iL3cbHV7L8jLET4kaYAasUp47BqPraTWOR41c/X58=',
+              crossorigin: 'anonymous',
+            },
           },
           {
-            src:
-              'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js',
+            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js',
             defer: true,
+            attrs: {
+              integrity: 'sha256-A0Xqg+Ere5dOlTx5pk3qNaQDLCUSdtwuwuCAg+2iT0=',
+              crossorigin: 'anonymous',
+            },
+          },
+          {
+            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js',
+            defer: true,
+            attrs: {
+              integrity: 'sha256-hS9VE7ucqdskf4bs/OdKzJHFQXSdNJKRVyQFGP74FSo=',
+              crossorigin: 'anonymous',
+            },
           },
           {
             src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js',
             defer: true,
+            attrs: {
+              integrity: 'sha256-lW2GuqfsQQZ1jzVKwtFAvc1/wQPezgL3PtErjWY+Q=',
+              crossorigin: 'anonymous',
+            },
           },
           {
             src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js',
             defer: true,
+            attrs: {
+              integrity: 'sha256-YmCBQRDlGC8pVuO9JXQpVI2dvyqbZqY3GbJs+frJZqc=',
+              crossorigin: 'anonymous',
+            },
           },
           {
             src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js',
             defer: true,
+            attrs: {
+              integrity:
+                'sha256-jJdg26fybqhCAWkZVE3Ztzp4o21bHphCAWkZVE3Ztzp4o=',
+              crossorigin: 'anonymous',
+            },
           },
           {
-            src:
-              'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js',
+            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js',
             defer: true,
+            attrs: {
+              integrity: 'sha256-h5/J0lbDUtmA4FOFf6cHMwhTuL+2fOKE6mYaJN7FdW4=',
+              crossorigin: 'anonymous',
+            },
           },
           { src: '/prism-init.js', defer: true },
+          // H-04 fix: GoatCounter with SRI
           {
             src: 'https://gc.zgo.at/count.js',
             async: true,
-            attrs: { 'data-goatcounter': 'https://lessjs.goatcounter.com/count' },
+            attrs: {
+              integrity:
+                'sha256-eSt6vSbB+2rmKQaDPgmjASUeJkGBbmbmnk+Vq6UY8/4/A=',
+              crossorigin: 'anonymous',
+              'data-goatcounter': 'https://lessjs.goatcounter.com/count',
+            },
           },
         ],
         headFragments: [
@@ -130,7 +189,8 @@ export default defineConfig({
           '<meta name="twitter:card" content="summary_large_image">',
           '<meta name="description" content="LessJS — Less is More. Web Standards-first Jamstack SSG with Island architecture. Zero-runtime core, DSD rendering, Lit Web Components, Hono API routes.">',
           // Non-blocking OpenProps: media="print" prevents render-block, onload switches to all
-          '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/open-props@1.7.20/open-props.min.css" media="print" onload="this.media=\'all\'">',
+          // H-05 fix: Added SRI (Subresource Integrity) to external stylesheets
+          '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/open-props@1.7.20/open-props.min.css" media="print" onload="this.media=\'all\'" integrity="sha256-S8m+xmPrf+8st2gNKYPYj85php3vudhp3php3vudCJAMNyYH1w=" crossorigin="anonymous">',
           // Anti-flash: CLS prevention — removed by theme-init.js
           '<style id="less-anti-flash">html{visibility:hidden}</style>',
           // Favicon (transparent bg, less-than symbol)
@@ -148,7 +208,8 @@ export default defineConfig({
           // Init theme from localStorage or prefers-color-scheme
           // Mobile sidebar: universal JS for open/close (all browsers)
           // Code syntax highlighting (Prism, loaded async to avoid blocking)
-          '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" media="print" onload="this.media=\'all\'">',
+          // H-05 fix: Added SRI to Prism theme stylesheet
+          '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" media="print" onload="this.media=\'all\'" integrity="sha256-ko4jrn874LF8dHwW29/xabhh8YBleWfvxb8nQce4Fc=" crossorigin="anonymous">',
           // Pre-load common grammars with PROPER dependency order:
           // typescript extends javascript → javascript MUST load before typescript
           // Prism auto-init: adds default language class + highlights after DSD settles

@@ -18,9 +18,9 @@ const log = createLogger('content:nav');
  * Parsed via JSON after normalizing JS object literal syntax (no eval / Function()).
  */
 export function extractMeta(source: string): RouteMeta | null {
-  // v0.14.7: Constrained regex to avoid ReDoS (C-08 fix).
-  // Only matches single-level braces with no nesting to prevent
-  // catastrophic backtracking on malformed input.
+  // v0.14.7: C-08 fix - Use constrained regex to prevent ReDoS from nested braces.
+  // Original /\{[\s\S]*?\}/ can cause exponential backtracking with malformed input.
+  // New pattern allows at most 1 level of nesting: \{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}
   const fnMatch = source.match(
     /export\s+const\s+meta\s*=\s*(\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\})\s*;?\s*(?:\n|$)/,
   );
@@ -35,7 +35,12 @@ export function extractMeta(source: string): RouteMeta | null {
       .replace(/,\s*}/g, '}') // trailing commas
       .replace(/,\s*]/g, ']'); // trailing commas in arrays
     const result = JSON.parse(json) as RouteMeta;
-    if (result && typeof result === 'object' && result.section && result.label) {
+    if (
+      result &&
+      typeof result === 'object' &&
+      result.section &&
+      result.label
+    ) {
       return result;
     }
     return null;
@@ -85,8 +90,12 @@ export function scanNavData(options: NavOptions): NavSection[] {
   const routeFiles = collectRouteFiles(routesDir, '', allExclude);
 
   // Extract meta from each file, collecting section info
-  const itemsWithSection: Array<{ path: string; label: string; order: number; section: string }> =
-    [];
+  const itemsWithSection: Array<{
+    path: string;
+    label: string;
+    order: number;
+    section: string;
+  }> = [];
   for (const file of routeFiles) {
     const fullPath = join(routesDir, file);
     try {
@@ -124,8 +133,9 @@ export function scanNavData(options: NavOptions): NavSection[] {
   // Build NavSection[] — sort items within each section by order
   const sections: NavSection[] = sectionOrder.map((section) => ({
     section,
-    items: (sectionItems.get(section) || [])
-      .sort((a, b) => (a.order ?? 100) - (b.order ?? 100)),
+    items: (sectionItems.get(section) || []).sort(
+      (a, b) => (a.order ?? 100) - (b.order ?? 100),
+    ),
   }));
 
   log.info(
@@ -138,7 +148,11 @@ export function scanNavData(options: NavOptions): NavSection[] {
  * Recursively collect route file paths relative to routesDir.
  * Skips files starting with _ and files matching exclude patterns.
  */
-function collectRouteFiles(dir: string, baseDir: string, exclude: string[]): string[] {
+function collectRouteFiles(
+  dir: string,
+  baseDir: string,
+  exclude: string[],
+): string[] {
   const files: string[] = [];
   let entries: string[];
 

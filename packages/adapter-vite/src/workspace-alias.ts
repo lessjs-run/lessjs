@@ -15,7 +15,13 @@ export interface AliasEntry {
 
 function tryReadJson(path: string): Record<string, unknown> | null {
   try {
-    return JSON.parse(Deno.readTextFileSync(path));
+    // H-12 fix: Use platform-appropriate file reading API
+    // Deno.readTextFileSync in Deno environments, node:fs in Node.js (Vite)
+    const content =
+      typeof Deno !== 'undefined'
+        ? Deno.readTextFileSync(path)
+        : require('node:fs').readFileSync(path, 'utf-8');
+    return JSON.parse(content);
   } catch {
     return null;
   }
@@ -52,7 +58,10 @@ export function generateWorkspaceAliases(workspaceRoot: string): AliasEntry[] {
     if (!memberCfg) continue;
 
     const name = memberCfg.name as string | undefined;
-    const exports = memberCfg.exports as Record<string, string> | string | undefined;
+    const exports = memberCfg.exports as
+      | Record<string, string>
+      | string
+      | undefined;
     if (!name || !exports) continue;
 
     if (typeof exports === 'string') {
@@ -71,7 +80,10 @@ export function generateWorkspaceAliases(workspaceRoot: string): AliasEntry[] {
     }
     // Parent alias last
     if (exports['.']) {
-      aliases.push({ find: name, replacement: resolve(memberDir, exports['.'] as string) });
+      aliases.push({
+        find: name,
+        replacement: resolve(memberDir, exports['.'] as string),
+      });
     }
   }
   return aliases;

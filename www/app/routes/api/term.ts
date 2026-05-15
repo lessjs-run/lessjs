@@ -4,14 +4,18 @@
  * Commands: help, neofetch, build, ls, whoami, uname, version, clear, dsd
  * Mounted as a Hono sub-app at /api/term
  */
-import { Hono } from 'hono';
+import { Hono } from "hono";
 
 const app = new Hono();
 
 /** Escape HTML entities — prevents reflected XSS when cmd is embedded in HTML response (C-07 fix). */
 function escapeHtml(s: string): string {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function neofetch(): string[] {
@@ -23,7 +27,7 @@ function neofetch(): string[] {
     '<span style="color:#7dd3fc;">    ██   ────────   ██</span>',
     '<span style="color:#7dd3fc;">     ██            ██</span>',
     '<span style="color:#7dd3fc;">       ████████████</span>',
-    '',
+    "",
     `<span style="color:#f4f4f5;">lessjs</span><span style="color:#52525b;">@</span><span style="color:#86efac;">v0.14.7</span>`,
     `<span style="color:#a1a1aa;">os</span>         deno 2.7+ / node 18+ / bun / cloudflare workers`,
     `<span style="color:#a1a1aa;">packages</span>  10`,
@@ -61,14 +65,14 @@ function ls(): string[] {
   ];
 }
 
-app.post('/', async (c) => {
+app.post("/", async (c) => {
   const body = await c.req.json<{ cmd: string }>();
-  const cmd = body.cmd?.trim().toLowerCase() || '';
+  const cmd = body.cmd?.trim().toLowerCase() || "";
 
   let output: string[];
 
   switch (cmd) {
-    case 'help':
+    case "help":
       output = [
         '<span style="color:#86efac;">available commands:</span>',
         '  <span style="color:#fbbf24;">help</span>      show this message',
@@ -83,52 +87,58 @@ app.post('/', async (c) => {
       ];
       break;
 
-    case 'neofetch':
+    case "neofetch":
       output = neofetch();
       break;
 
-    case 'version':
-      output = ['<span style="color:#86efac;">v0.14.7</span> — security hardening patch'];
+    case "version":
+      output = [
+        '<span style="color:#86efac;">v0.14.7</span> — security hardening patch',
+      ];
       break;
 
-    case 'build':
+    case "build":
       output = buildSim();
       break;
 
-    case 'ls':
+    case "ls":
       output = ls();
       break;
 
-    case 'whoami':
-      output = ['<span style="color:#a1a1aa;">you are a lessjs developer. welcome.</span>'];
+    case "whoami":
+      output = [
+        '<span style="color:#a1a1aa;">you are a lessjs developer. welcome.</span>',
+      ];
       break;
 
-    case 'uname':
+    case "uname":
       output = [
         '<span style="color:#86efac;">lessjs</span> <span style="color:#52525b;">deno 2.7+ node 18+ edge</span>',
       ];
       break;
 
-    case 'dsd':
+    case "dsd":
       output = [
         '<span style="color:#7dd3fc;">declarative shadow dom:</span>',
         'ssg renders your lit components into <span style="color:#fbbf24;">&lt;template shadowrootmode&gt;</span>',
-        'browsers parse it natively — no js framework needed.',
+        "browsers parse it natively — no js framework needed.",
         'content is visible <span style="color:#86efac;">before</span> javascript downloads.',
       ];
       break;
 
-    case 'clear':
-      output = ['__CLEAR__'];
+    case "clear":
+      output = ["__CLEAR__"];
       break;
 
-    case '':
+    case "":
       output = [];
       break;
 
     default:
       output = [
-        `<span style="color:#ef4444;">command not found:</span> ${escapeHtml(cmd)}. type <span style="color:#fbbf24;">help</span> for available commands.`,
+        `<span style="color:#ef4444;">command not found:</span> ${escapeHtml(
+          cmd,
+        )}. type <span style="color:#fbbf24;">help</span> for available commands.`,
       ];
   }
 
