@@ -285,12 +285,8 @@ export async function ssgRender(
     const locales: string[] = i18nOpts.locales || [];
     if (locales.length > 1) {
       log.info(`i18n: expanding for locales: ${locales.join(', ')}`);
-      const defaultLocale = i18nOpts.defaultLocale || locales[0];
       for (const locale of locales) {
         for (const route of routeInfo) {
-          // v0.14.6: Skip static routes for default locale (already rendered by main toSSG() flow)
-          // but DO render them for non-default locales
-          if (!route.isDynamic && locale === defaultLocale) continue;
           let paramsList: Array<Record<string, string>> = [{}];
           if (!getStaticPaths) continue;
           try {

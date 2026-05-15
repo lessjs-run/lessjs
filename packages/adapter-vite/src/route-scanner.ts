@@ -278,12 +278,21 @@ export async function scanPackageIslands(
 
   for (const pkg of packageNames) {
     // v0.14.6: @vite-ignore suppresses unanalyzable-dynamic-import JSR warning.
-    // Non-existent packages intentionally throw (fail-fast for misconfiguration).
+    // Non-existent packages intentionally throw LessError (fail-fast for misconfiguration).
     // deno-lint-ignore no-explicit-any
-    const mod: Record<string, unknown> = await import(/* @vite-ignore */ pkg) as Record<
-      string,
-      unknown
-    >;
+    let mod: Record<string, unknown>;
+    try {
+      mod = await import(/* @vite-ignore */ pkg) as Record<string, unknown>;
+    } catch (e) {
+      throw new LessError(
+        `Failed to scan package islands from "${pkg}": ${
+          e instanceof Error ? e.message : String(e)
+        }`,
+        'PACKAGE_SCAN_ERROR',
+        500,
+        false,
+      );
+    }
     if (mod.islands && Array.isArray(mod.islands)) {
       // Validate each island has required fields
       for (const island of mod.islands) {
