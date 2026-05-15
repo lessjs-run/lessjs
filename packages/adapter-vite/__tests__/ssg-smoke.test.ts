@@ -105,7 +105,7 @@ Deno.test('SSG smoke: one-command build produces trusted www output', async (t) 
       opts?: Record<string, unknown>,
     ) => Promise<string>)('/roadmap', { lang: 'en' });
     assertStringIncludes(html, '<!DOCTYPE html>');
-    assertStringIncludes(html, '2026-05-14 Strategic Reset');
+    assertStringIncludes(html, '2026-05-15 Main-Branch Review Reset');
   });
 
   await t.step('phase 2 output exists without legacy SSR client runtime', () => {
@@ -138,9 +138,15 @@ Deno.test('SSG smoke: one-command build produces trusted www output', async (t) 
     assert(existsSync(join(WWW_DIST, 'roadmap', 'index.html')), 'Clean URL output should exist');
     assert(existsSync(join(WWW_DIST, 'en', 'roadmap', 'index.html')), 'i18n roadmap should exist');
     const roadmapHtml = readFileSync(join(WWW_DIST, 'roadmap', 'index.html'), 'utf-8');
-    assertStringIncludes(roadmapHtml, '2026-05-14 Strategic Reset');
+    assertStringIncludes(roadmapHtml, '2026-05-15 Main-Branch Review Reset');
     assertStringIncludes(roadmapHtml, 'No webpack');
     assertStringIncludes(roadmapHtml, 'WC registry hub');
+    assert(
+      existsSync(
+        join(WWW_DIST, 'decisions', '20260515-1-renderer-kernel-registry-sop', 'index.html'),
+      ),
+      'ADR 20260515-1 should be rendered through the decisions route pipeline',
+    );
     assert(
       existsSync(
         join(WWW_DIST, 'decisions', '0024-standards-first-wc-renderer-roadmap', 'index.html'),
