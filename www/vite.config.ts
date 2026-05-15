@@ -32,6 +32,53 @@ const workspaceAlias = [
     find: '@lessjs/ui',
     replacement: resolve(__dir, '../packages/ui/src/index.ts'),
   },
+  // rolldown does not support subpath resolution from a file:// alias
+  // (treats index.ts/less-layout as a directory path → ENOTDIR).
+  // Each component subpath must be listed explicitly in the Vite alias.
+  {
+    find: '@lessjs/ui/design-tokens',
+    replacement: resolve(__dir, '../packages/ui/src/design-tokens.ts'),
+  },
+  {
+    find: '@lessjs/ui/less-button',
+    replacement: resolve(__dir, '../packages/ui/src/less-button.ts'),
+  },
+  {
+    find: '@lessjs/ui/less-card',
+    replacement: resolve(__dir, '../packages/ui/src/less-card.ts'),
+  },
+  {
+    find: '@lessjs/ui/less-code-block',
+    replacement: resolve(__dir, '../packages/ui/src/less-code-block.ts'),
+  },
+  {
+    find: '@lessjs/ui/less-dialog',
+    replacement: resolve(__dir, '../packages/ui/src/less-dialog.ts'),
+  },
+  {
+    find: '@lessjs/ui/less-hero-ping',
+    replacement: resolve(__dir, '../packages/ui/src/less-hero-ping.ts'),
+  },
+  {
+    find: '@lessjs/ui/less-input',
+    replacement: resolve(__dir, '../packages/ui/src/less-input.ts'),
+  },
+  {
+    find: '@lessjs/ui/less-layout',
+    replacement: resolve(__dir, '../packages/ui/src/less-layout.ts'),
+  },
+  {
+    find: '@lessjs/ui/less-theme-toggle',
+    replacement: resolve(__dir, '../packages/ui/src/less-theme-toggle.ts'),
+  },
+  {
+    find: '@lessjs/ui/tokens/color-values',
+    replacement: resolve(__dir, '../packages/ui/src/tokens/color-values.ts'),
+  },
+  {
+    find: '@lessjs/ui/tokens/colors',
+    replacement: resolve(__dir, '../packages/ui/src/tokens/colors.ts'),
+  },
   {
     find: '@lessjs/adapter-lit',
     replacement: resolve(__dir, '../packages/adapter-lit/src/index.ts'),
