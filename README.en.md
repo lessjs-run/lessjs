@@ -36,16 +36,16 @@ adapter-lit  ui  signals  rpc  create
 
 | Package                | Version | Role                                         | External Deps       |
 | ---------------------- | ------- | -------------------------------------------- | ------------------- |
-| `@lessjs/core`         | 0.14.1  | DSD rendering, Islands, Navigation, Logger   | parse5 only         |
-| `@lessjs/adapter-vite` | 0.14.1  | Vite build: routes, islands, SSG 3-phase     | vite, hono, esbuild |
-| `@lessjs/adapter-lit`  | 0.14.1  | Lit TemplateResult → DSD HTML bridge         | lit                 |
-| `@lessjs/content`      | 0.14.1  | Blog + Nav + Sitemap build-time plugin       | marked, gray-matter |
-| `@lessjs/i18n`         | 0.14.1  | i18n locale expansion                        | none                |
-| `@lessjs/app`          | 0.14.1  | Umbrella: lessjs() = less() + content + i18n | —                   |
-| `@lessjs/ui`           | 0.14.1  | 8 Web Components (layout, button, input…)    | lit                 |
-| `@lessjs/signals`      | 0.14.1  | TC39 Signals polyfill + framework layer      | none                |
-| `@lessjs/rpc`          | 0.14.1  | Zero-dep fetch RPC controller                | none                |
-| `@lessjs/create`       | 0.14.1  | CLI scaffold                                 | none                |
+| `@lessjs/core`         | 0.14.6  | DSD rendering, Islands, Navigation, Logger   | parse5 only         |
+| `@lessjs/adapter-vite` | 0.14.6  | Vite build: routes, islands, SSG 3-phase     | vite, hono, esbuild |
+| `@lessjs/adapter-lit`  | 0.14.6  | Lit TemplateResult → DSD HTML bridge         | lit                 |
+| `@lessjs/content`      | 0.14.6  | Blog + Nav + Sitemap build-time plugin       | marked, gray-matter |
+| `@lessjs/i18n`         | 0.14.6  | i18n locale expansion                        | none                |
+| `@lessjs/app`          | 0.14.6  | Umbrella: lessjs() = less() + content + i18n | —                   |
+| `@lessjs/ui`           | 0.14.6  | 8 Web Components (layout, button, input…)    | lit                 |
+| `@lessjs/signals`      | 0.14.6  | TC39 Signals polyfill + framework layer      | none                |
+| `@lessjs/rpc`          | 0.14.6  | Zero-dep fetch RPC controller                | none                |
+| `@lessjs/create`       | 0.14.6  | CLI scaffold                                 | none                |
 
 ### Rendering Pipeline
 
@@ -139,6 +139,32 @@ All ADRs are in the [blog](/blog/) — search `type: adr` to filter. Key decisio
 - Content, Markdown, `headExtras`, and `headFragments` trust developer-controlled repository content by default. Do not pass user-generated HTML directly; sanitize untrusted content first.
 
 Stable API candidates: `lessjs()` options, public `@lessjs/core` exports, `@lessjs/adapter-vite` CLI subpaths, `@lessjs/rpc`, `@lessjs/signals`, and `@lessjs/ui` component subpaths.
+
+---
+
+## v0.14.5 — First-Round Code Review Fixes (2026-05-15)
+
+Fixed 12 issues (5 blockers + 5 suggestions + 2 nits):
+
+**Blockers**: effect() pending window signal loss, CSP nonce validation, dialog inert compat, DSD rendering graceful degradation, observer memory leak
+**Suggestions**: batch() deprecation, islandEffect polling opt, renderDSD adapter reuse, SSR history guard, regex escaping
+**Nits**: JSON.parse opt, UI registration docs
+
+See [CHANGELOG-v0.14.5](deliverables/review260515/CHANGELOG-v0.14.5.md)
+
+---
+
+## v0.14.6 — Second-Round Deep Review Fixes (2026-05-15)
+
+Fixed 16 issues (3 blockers + 9 suggestions + 3 nits + 1 pre-existing bug):
+
+**Blockers**: case-sensitive renderer matching, SSG 404 dir residual, allNoExternal duplicate paths
+**Suggestions**: tree-shaking docs, adapter-registry warning, polyfill swap+pop guard, dynamic import JSR warning, c.req.param() defensive, i18n static route skip (with pre-existing bugfix), CE tag exclude comments, monorepo path fallback, Map O(1) lookup
+**Nits**: configResolved clarification, fs/promises async I/O, polyfill symbols to module scope
+
+Bonus: fixed a pre-existing i18n bug where `getStaticPaths()` returned `[]` for static routes, causing locale pages to be silently skipped.
+
+See [CHANGELOG-v0.14.6](deliverables/review260515/CHANGELOG-v0.14.6.md)
 
 ---
 
