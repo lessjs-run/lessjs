@@ -52,7 +52,7 @@
     // H-18 fix: Use least-privilege permissions instead of -A (all)
     // Note: --allow-ffi is required for rolldown native bindings (.node files)
     "dev": "deno run --allow-read --allow-write --allow-net --allow-env npm:vite www --config www/vite.config.ts",
-    "build": "cd www && deno run --config ../deno.json --allow-read --allow-write --allow-net --allow-env --allow-ffi ../packages/adapter-vite/src/cli/build.ts",
+    "build": "cd www && deno run --config ../deno.json --allow-read --allow-write --allow-net --allow-env --allow-ffi --allow-sys ../packages/adapter-vite/src/cli/build.ts",
     "preview": "deno run --allow-read --allow-write --allow-net --allow-env npm:vite preview www --config www/vite.config.ts",
     "build:docs": "deno task build",
     "publish:core": "cd packages/core && deno publish",
