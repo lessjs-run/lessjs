@@ -182,8 +182,12 @@ export async function renderDSD(
     // In production, leaking file paths and code structure in HTML comments
     // is a security risk — anyone viewing page source can see internal info.
     // Cross-runtime environment detection: check Deno first, then Node, else production.
-    // deno-lint-ignore no-process-global
-    const _nodeIsDev = typeof process !== 'undefined' && process.env?.NODE_ENV !== 'production';
+    // Use globalThis bracket access to avoid TS2580 in Deno type-checker
+    // (bare `process` is not a Deno global and triggers "Cannot find name").
+    // deno-lint-ignore no-explicit-any
+    const _nodeProcess = (globalThis as any).process as
+      { env?: Record<string, string | undefined> } | undefined;
+    const _nodeIsDev = _nodeProcess?.env?.NODE_ENV !== 'production';
     const isDev = typeof Deno !== 'undefined'
       ? Deno.env?.get('LESSJS_ENV') !== 'production'
       : _nodeIsDev;
