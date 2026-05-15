@@ -177,7 +177,7 @@ export default class LessSearch extends LitElement {
     try {
       const [res, FlexSearchModule] = await Promise.all([
         fetch('/search-index.json'),
-        import('https://esm.sh/flexsearch@0.8.212'),
+        import('flexsearch'),
       ]);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const FlexSearch = (FlexSearchModule as any).default || FlexSearchModule;
@@ -193,7 +193,8 @@ export default class LessSearch extends LitElement {
         (this._index as { add: (e: SearchEntry) => void }).add(entry);
       }
     } catch {
-      // Search index or FlexSearch not available
+      // Search index or FlexSearch not available — allow retry
+      this._loaded = false;
     }
   }
 

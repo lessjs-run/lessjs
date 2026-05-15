@@ -22,6 +22,7 @@
     "npm:@types/sanitize-html@2": "2.16.1",
     "npm:entities@^4.5.0": "4.5.0",
     "npm:esbuild@0.25": "0.25.12",
+    "npm:flexsearch@0.8.212": "0.8.212",
     "npm:gray-matter@^4.0.3": "4.0.3",
     "npm:hono@4": "4.12.18",
     "npm:hono@^4.12.18": "4.12.18",
@@ -842,6 +843,9 @@
         "picomatch"
       ]
     },
+    "flexsearch@0.8.212": {
+      "integrity": "sha512-wSyJr1GUWoOOIISRu+X2IXiOcVfg9qqBRyCPRUdLMIGJqPzMo+jMRlvE83t14v1j0dRMEaBbER/adQjp6Du2pw=="
+    },
     "fsevents@2.3.2": {
       "integrity": "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==",
       "os": ["darwin"],
@@ -1184,6 +1188,7 @@
       "npm:@playwright/test@1.59.1",
       "npm:@types/node@22",
       "npm:entities@^4.5.0",
+      "npm:flexsearch@0.8.212",
       "npm:hono@^4.12.18",
       "npm:lit-element@4",
       "npm:lit-html@3",

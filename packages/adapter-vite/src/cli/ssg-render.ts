@@ -374,6 +374,12 @@ export async function ssgRender(
               );
               continue;
             }
+            // v0.14.10: Skip routes already under a locale prefix (e.g. /zh/decisions/...)
+            // to prevent duplicate expansion like /en/zh/... or /zh/zh/...
+            const pathSegment = resolvedPath.split('/')[1] || '';
+            if (locales.includes(pathSegment)) {
+              continue;
+            }
             const localePath = joinUrlPath(locale, resolvedPath);
             try {
               const html = await renderRoute(route.path, {

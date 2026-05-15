@@ -181,6 +181,30 @@ export function buildPlugin(
         log.info('No Phase 2 — client script injection skipped');
       }
 
+      // ── Clean Phase 1 SSR artifacts from public dist (v0.14.10) ──
+      // The SSR virtual entry bundle and its source map are build-time only;
+      // they must not be deployed to public static hosting.
+      try {
+        const { readdir, unlink } = await import('node:fs/promises');
+        const assetsDir = join(root, outDir, 'assets');
+        const entries = await readdir(assetsDir).catch(() => [] as string[]);
+        const toDelete = entries.filter(
+          (f) =>
+            f.startsWith('_virtual_less-hono-entry') ||
+            (f.startsWith('src-') && f.endsWith('.js') && !f.includes('client')),
+        );
+        for (const f of toDelete) {
+          const p = join(assetsDir, f);
+          await unlink(p).catch(() => {});
+          log.info(`Cleaned SSR artifact: ${f}`);
+        }
+        if (toDelete.length > 0) {
+          log.info(`Removed ${toDelete.length} unreferenced SSR artifact(s) from dist/assets/`);
+        }
+      } catch {
+        // Non-critical — assets dir may not exist in some configs
+      }
+
       log.info('Build complete.');
     },
   };

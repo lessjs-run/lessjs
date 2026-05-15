@@ -57,6 +57,7 @@
     "@types/node": "npm:@types/node@^22.0.0",
     "parse5": "npm:parse5@7.0.0",
     "entities": "npm:entities@^4.5.0",
+    "flexsearch": "npm:flexsearch@0.8.212",
     "@playwright/test": "npm:@playwright/test@1.59.1"
   },
   "vendor": true,
