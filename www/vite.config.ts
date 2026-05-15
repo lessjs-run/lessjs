@@ -113,7 +113,8 @@ const workspaceAlias = [
 // DRY: All color token values come from a single source of truth.
 // lessRootColorCSS is generated from lessDarkColors/lessLightColors in tokens/colors.ts.
 // Do NOT hand-write color values here — edit the source objects instead.
-const colorTokensStyle = `<style>${lessRootColorCSS}body{margin:0;background:var(--less-bg-base);color:var(--less-text-primary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>`;
+const colorTokensStyle =
+  `<style>${lessRootColorCSS}body{margin:0;background:var(--less-bg-base);color:var(--less-text-primary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>`;
 
 export default defineConfig({
   base: '/',
@@ -162,7 +163,8 @@ export default defineConfig({
             },
           },
           {
-            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js',
+            src:
+              'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js',
             defer: true,
             attrs: {
               integrity: 'sha256-A0Xqg+Ere5dOlTx5pk3qNaQDLCUSdtwuwuCAg+2iT0=',
@@ -170,7 +172,8 @@ export default defineConfig({
             },
           },
           {
-            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js',
+            src:
+              'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js',
             defer: true,
             attrs: {
               integrity: 'sha256-hS9VE7ucqdskf4bs/OdKzJHFQXSdNJKRVyQFGP74FSo=',
@@ -197,13 +200,13 @@ export default defineConfig({
             src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js',
             defer: true,
             attrs: {
-              integrity:
-                'sha256-jJdg26fybqhCAWkZVE3Ztzp4o21bHphCAWkZVE3Ztzp4o=',
+              integrity: 'sha256-jJdg26fybqhCAWkZVE3Ztzp4o21bHphCAWkZVE3Ztzp4o=',
               crossorigin: 'anonymous',
             },
           },
           {
-            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js',
+            src:
+              'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js',
             defer: true,
             attrs: {
               integrity: 'sha256-h5/J0lbDUtmA4FOFf6cHMwhTuL+2fOKE6mYaJN7FdW4=',
@@ -216,8 +219,7 @@ export default defineConfig({
             src: 'https://gc.zgo.at/count.js',
             async: true,
             attrs: {
-              integrity:
-                'sha256-eSt6vSbB+2rmKQaDPgmjASUeJkGBbmbmnk+Vq6UY8/4/A=',
+              integrity: 'sha256-eSt6vSbB+2rmKQaDPgmjASUeJkGBbmbmnk+Vq6UY8/4/A=',
               crossorigin: 'anonymous',
               'data-goatcounter': 'https://lessjs.goatcounter.com/count',
             },

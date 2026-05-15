@@ -32,8 +32,7 @@ const PKG_DIR_MAP: Record<string, string> = {
 
 function loadWorkspaceVersion(pkg: string): string {
   const metaUrl = import.meta.url;
-  const isRemote =
-    metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
+  const isRemote = metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
 
   if (isRemote) {
     // Will be resolved lazily via JSR API in resolveVersions()
@@ -79,8 +78,7 @@ async function fetchJsrVersion(pkg: string): Promise<string> {
 /** Resolve all package versions — local from workspace, remote from JSR API. */
 async function resolveVersions(): Promise<Record<string, string>> {
   const metaUrl = import.meta.url;
-  const isRemote =
-    metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
+  const isRemote = metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
 
   const keys = Object.keys(PKG_DIR_MAP);
   if (!isRemote) {

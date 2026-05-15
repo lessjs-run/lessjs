@@ -166,12 +166,9 @@ export function onNavigate(callback: NavigationCallback): () => void {
       const navEvent = e as NavigationEvent;
       const dest = navEvent.destination;
       const url = new URL(dest.url);
-      const navType =
-        navEvent.navigationType === 'traverse'
-          ? navEvent.destination.index < 0
-            ? 'back'
-            : 'forward'
-          : navEvent.navigationType;
+      const navType = navEvent.navigationType === 'traverse'
+        ? navEvent.destination.index < 0 ? 'back' : 'forward'
+        : navEvent.navigationType;
       callback(url, navType);
     };
     nav.addEventListener('navigatesuccess', handler);
@@ -214,8 +211,7 @@ export function matchRoute(
   url: string | URL,
   patterns: Array<{ path: string; name: string }>,
 ): { name: string; params: Record<string, string> } | null {
-  const urlObj =
-    typeof url === 'string' ? new URL(url, 'http://localhost') : url;
+  const urlObj = typeof url === 'string' ? new URL(url, 'http://localhost') : url;
   const pathname = urlObj.pathname;
 
   for (const pattern of patterns) {

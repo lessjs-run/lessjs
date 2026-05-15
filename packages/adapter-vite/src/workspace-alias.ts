@@ -17,10 +17,9 @@ function tryReadJson(path: string): Record<string, unknown> | null {
   try {
     // H-12 fix: Use platform-appropriate file reading API
     // Deno.readTextFileSync in Deno environments, node:fs in Node.js (Vite)
-    const content =
-      typeof Deno !== 'undefined'
-        ? Deno.readTextFileSync(path)
-        : require('node:fs').readFileSync(path, 'utf-8');
+    const content = typeof Deno !== 'undefined'
+      ? Deno.readTextFileSync(path)
+      : require('node:fs').readFileSync(path, 'utf-8');
     return JSON.parse(content);
   } catch {
     return null;

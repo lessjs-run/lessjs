@@ -15,11 +15,7 @@
  */
 
 import type { Plugin } from 'vite';
-import type {
-  FrameworkOptions,
-  PackageIslandMeta,
-  RouteEntry,
-} from '@lessjs/core';
+import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from '@lessjs/core';
 
 import { join } from 'node:path';
 import process from 'node:process';
@@ -32,20 +28,12 @@ const log = createLogger('adapter-vite');
 
 import honoDevServer from '@hono/vite-dev-server';
 import { LessBuildContext } from './build-context.js';
-import {
-  findWorkspaceRoot,
-  generateWorkspaceAliases,
-} from './workspace-alias.js';
+import { findWorkspaceRoot, generateWorkspaceAliases } from './workspace-alias.js';
 import { buildPlugin } from './build.js';
 import { devtoolsPlugin } from './devtools/index.js';
 import { generateHonoEntryCode } from './hono-entry.js';
 import { islandTransformPlugin } from './island-transform.js';
-import {
-  fileToTagName,
-  scanIslands,
-  scanPackageIslands,
-  scanRoutes,
-} from './route-scanner.js';
+import { fileToTagName, scanIslands, scanPackageIslands, scanRoutes } from './route-scanner.js';
 
 // ─── Subpath resolution (ADR 0016 — JSR remote only) ─────────────
 //
@@ -85,8 +73,7 @@ const jsrSourceCache = new Map<string, string>();
  * through virtual modules, bypassing Node.js ESM loader entirely.
  */
 function createCoreResolvePlugin(metaUrl: string): Plugin {
-  const isRemote =
-    metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
+  const isRemote = metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
 
   // Compute JSR base URL for source fetching.
   let jsrSrcBase = '';
@@ -106,11 +93,10 @@ function createCoreResolvePlugin(metaUrl: string): Plugin {
 
       // Case 1: Bare specifier @lessjs/core or @lessjs/core/*
       if (source === '@lessjs/core' || source.startsWith('@lessjs/core/')) {
-        const subpath =
-          source === '@lessjs/core'
-            ? 'index.ts'
-            : CORE_SUBPATHS[source.slice('@lessjs/core/'.length)] ||
-              `${source.slice('@lessjs/core/'.length)}.ts`;
+        const subpath = source === '@lessjs/core'
+          ? 'index.ts'
+          : CORE_SUBPATHS[source.slice('@lessjs/core/'.length)] ||
+            `${source.slice('@lessjs/core/'.length)}.ts`;
         return `${VIRTUAL_CORE_PREFIX}${subpath}`;
       }
 
@@ -319,7 +305,7 @@ export function less(
         .map(([name, value]) =>
           value === true
             ? escapeHtmlAttr(name)
-            : `${escapeHtmlAttr(name)}="${escapeHtmlAttr(String(value))}"`,
+            : `${escapeHtmlAttr(name)}="${escapeHtmlAttr(String(value))}"`
         )
         .join(' ');
       fragments.push(`<script ${attrText}></script>`);
@@ -470,8 +456,7 @@ export function less(
         const apiCount = routes.filter(
           (r) => r.type === 'api' && !r.special,
         ).length;
-        const totalIslands =
-          ctx.phase1.islandTagNames.length + ctx.phase1.packageIslands.length;
+        const totalIslands = ctx.phase1.islandTagNames.length + ctx.phase1.packageIslands.length;
         log.info(
           `Routes: ${pageCount} page(s), ${apiCount} API route(s), ` +
             `${totalIslands} island(s) - LessJS Architecture`,
@@ -580,10 +565,9 @@ function dispatchDataPlugin(ctx: LessBuildContext): Plugin {
         const real = entry.get();
         if (!real?.resolveId) return entry.resolved;
         // Vite 8 Plugin hook can be function or {handler, order}
-        const fn =
-          typeof real.resolveId === 'function'
-            ? real.resolveId
-            : (real.resolveId as Record<string, unknown>).handler;
+        const fn = typeof real.resolveId === 'function'
+          ? real.resolveId
+          : (real.resolveId as Record<string, unknown>).handler;
         if (!fn) return entry.resolved;
         // deno-lint-ignore no-explicit-any
         const result = (fn as any)(id);
@@ -596,10 +580,9 @@ function dispatchDataPlugin(ctx: LessBuildContext): Plugin {
         const real = entry.get();
         if (!real?.load) return entry.emptyCode;
         // Vite 8 Plugin hook can be function or {handler, order}
-        const fn =
-          typeof real.load === 'function'
-            ? real.load
-            : (real.load as Record<string, unknown>).handler;
+        const fn = typeof real.load === 'function'
+          ? real.load
+          : (real.load as Record<string, unknown>).handler;
         if (!fn) return entry.emptyCode;
         // deno-lint-ignore no-explicit-any
         return (fn as any)(id) ?? entry.emptyCode;
@@ -611,11 +594,7 @@ function dispatchDataPlugin(ctx: LessBuildContext): Plugin {
 // Re-export build utilities for CLI consumers
 export { LessBuildContext } from './build-context.js';
 export type { ArtifactInfo, BuildManifest } from './build-manifest.js';
-export {
-  printBuildManifest,
-  scanClientBuild,
-  scanSSGOutput,
-} from './build-manifest.js';
+export { printBuildManifest, scanClientBuild, scanSSGOutput } from './build-manifest.js';
 export {
   buildIslandChunkMap,
   buildSpeculationRulesJson,

@@ -73,7 +73,7 @@ export default class HeroPing extends LitElement {
     }
 
     .info {
-      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
       font-size: 9px;
       color: #666;
       white-space: nowrap;
@@ -121,8 +121,7 @@ export default class HeroPing extends LitElement {
     this.requestUpdate();
     try {
       // H-06 fix: Use apiUrl property if provided, fallback to default
-      const url =
-        this.apiUrl || 'https://less-demo-api.sisyphuszheng.deno.net/api';
+      const url = this.apiUrl || 'https://less-demo-api.sisyphuszheng.deno.net/api';
       const r = await fetch(url, { signal: this._abortController.signal });
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const d = await r.json();
@@ -133,9 +132,7 @@ export default class HeroPing extends LitElement {
       if (e instanceof DOMException && e.name === 'AbortError') return;
       const err = e as Error;
       this._state = 'err';
-      this._msg = String(e).includes('HTTP')
-        ? err.message
-        : 'connection failed';
+      this._msg = String(e).includes('HTTP') ? err.message : 'connection failed';
     } finally {
       this.requestUpdate();
     }
@@ -154,10 +151,8 @@ export default class HeroPing extends LitElement {
       </button>
       ${this._msg
         ? html`
-            <span class="info"
-              ><span class="${this._state}">${this._msg}</span></span
-            >
-          `
+          <span class="info"><span class="${this._state}">${this._msg}</span></span>
+        `
         : ''}
     `;
   }

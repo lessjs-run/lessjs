@@ -62,7 +62,7 @@ export default class ApiConsumer extends LitElement {
     }
     .data-grid .key {
       color: var(--less-text-tertiary);
-      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
       font-size: 0.75rem;
     }
     .data-grid .val {
@@ -76,7 +76,7 @@ export default class ApiConsumer extends LitElement {
       border-radius: 6px;
       padding: 0.75rem 1rem;
       font-size: 0.75rem;
-      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
       color: var(--less-text-secondary);
       overflow-x: auto;
       margin: 0.75rem 0;
@@ -283,43 +283,44 @@ export default class ApiConsumer extends LitElement {
             class="status-dot ${this.apiLoading
               ? 'loading'
               : this.apiError
-                ? 'error'
-                : 'connected'}"
+              ? 'error'
+              : 'connected'}"
           ></span>
           ${this.apiLoading
             ? 'Contacting server...'
             : this.apiError
-              ? 'Connection failed'
-              : 'API online'}
+            ? 'Connection failed'
+            : 'API online'}
         </div>
         ${this.apiData
           ? html`
-              <div class="data-grid">
-                <span class="key">framework</span
-                ><span class="val">${this.apiData.framework}</span>
-                <span class="key">version</span
-                ><span class="val">${this.apiData.version}</span>
-                <span class="key">jamstack</span
-                ><span class="val">${String(this.apiData.jamstack)}</span>
-                <span class="key">serverless</span
-                ><span class="val">${String(this.apiData.serverless)}</span>
-              </div>
-            `
-          : ''}
-        ${this.apiLoading ? html` <div class="pre-box">Loading...</div> ` : ''}
-        ${this.apiData
+            <div class="data-grid">
+              <span class="key">framework</span><span class="val">${this.apiData.framework}</span>
+              <span class="key">version</span><span class="val">${this.apiData.version}</span>
+              <span class="key">jamstack</span><span class="val">${String(
+                this.apiData.jamstack,
+              )}</span>
+              <span class="key">serverless</span><span class="val">${String(
+                this.apiData.serverless,
+              )}</span>
+            </div>
+          `
+          : ''} ${this.apiLoading
           ? html`
-              <div class="pre-box">
-                ${JSON.stringify(this.apiData, null, 2)}
-              </div>
-            `
-          : ''}
-        ${this.apiError
+            <div class="pre-box">Loading...</div>
+          `
+          : ''} ${this.apiData
           ? html`
-              <div class="pre-box" style="color:var(--less-error)">
-                ${this.apiError}
-              </div>
-            `
+            <div class="pre-box">
+              ${JSON.stringify(this.apiData, null, 2)}
+            </div>
+          `
+          : ''} ${this.apiError
+          ? html`
+            <div class="pre-box" style="color:var(--less-error)">
+              ${this.apiError}
+            </div>
+          `
           : ''}
         <button
           class="btn"
@@ -336,8 +337,7 @@ export default class ApiConsumer extends LitElement {
           style="font-size:0.8125rem;color:var(--less-text-tertiary);margin:0 0 0.75rem;line-height:1.6"
         >
           Type your name and the serverless API will greet you back. Calls
-          <code style="font-size:0.75rem">GET /api/hello/:name</code> on Deno
-          Deploy.
+          <code style="font-size:0.75rem">GET /api/hello/:name</code> on Deno Deploy.
         </p>
         <div class="form-row">
           <input
@@ -356,10 +356,13 @@ export default class ApiConsumer extends LitElement {
           </button>
         </div>
         ${this.helloMsg
-          ? html` <div class="greeting">${this.helloMsg}</div> `
-          : ''}
-        ${this.helloError
-          ? html` <div class="err-msg">${this.helloError}</div> `
+          ? html`
+            <div class="greeting">${this.helloMsg}</div>
+          `
+          : ''} ${this.helloError
+          ? html`
+            <div class="err-msg">${this.helloError}</div>
+          `
           : ''}
       </div>
     `;

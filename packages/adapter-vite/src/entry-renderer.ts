@@ -28,11 +28,7 @@ import type {
   PageRouteDecl,
   RendererDecl,
 } from './entry-descriptor.js';
-import type {
-  FrameworkOptions,
-  PackageIslandMeta,
-  RouteEntry,
-} from '@lessjs/core';
+import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from '@lessjs/core';
 import { buildEntryDescriptor } from './entry-descriptor.js';
 
 // Re-export for backward compatibility (consumers import from hono-entry.ts)
@@ -42,9 +38,7 @@ export type { EntryDescriptor } from './entry-descriptor.js';
 // ─── Import rendering ──────────────────────────────────────────
 
 function renderImport(imp: ImportDecl): string {
-  const names = imp.alias
-    ? `${imp.names[0]} as ${imp.alias}`
-    : imp.names.join(', ');
+  const names = imp.alias ? `${imp.names[0]} as ${imp.alias}` : imp.names.join(', ');
   return `import { ${names} } from '${imp.from}'`;
 }
 
@@ -117,9 +111,9 @@ function renderMiddleware(lines: string[], mw: MiddlewareDecl): void {
           const hasScriptSrc = /script-src/i.test(basePolicy);
           const policyTemplate = hasScriptSrc
             ? basePolicy.replace(
-                /script-src\s+([^;]*)/i,
-                "script-src 'nonce-NONCE_PLACEHOLDER' $1",
-              )
+              /script-src\s+([^;]*)/i,
+              "script-src 'nonce-NONCE_PLACEHOLDER' $1",
+            )
             : basePolicy + "; script-src 'nonce-NONCE_PLACEHOLDER'";
           lines.push(
             `// CSP with auto-nonce: generates a per-request nonce and adds it to script tags`,
@@ -128,9 +122,11 @@ function renderMiddleware(lines: string[], mw: MiddlewareDecl): void {
           lines.push(`  const nonce = crypto.randomUUID().replace(/-/g, '')`);
           lines.push(`  c.set('cspNonce', nonce)`);
           lines.push(
-            `  const policy = ${JSON.stringify(
-              policyTemplate,
-            )}.replace('NONCE_PLACEHOLDER', nonce)`,
+            `  const policy = ${
+              JSON.stringify(
+                policyTemplate,
+              )
+            }.replace('NONCE_PLACEHOLDER', nonce)`,
           );
           lines.push(`  await next()`);
           lines.push(`  c.header('${headerName}', policy)`);
@@ -202,9 +198,11 @@ function renderPageRoute(
   // v0.6: Pass route/source context for error visibility.
   // H-02 fix: Use JSON.stringify to escape route path and file path
   lines.push(
-    `    const raw = await __ssr(tag, c.req.param() || {}, { route: ${JSON.stringify(
-      route.path,
-    )}, source: ${JSON.stringify(route.filePath)} })`,
+    `    const raw = await __ssr(tag, c.req.param() || {}, { route: ${
+      JSON.stringify(
+        route.path,
+      )
+    }, source: ${JSON.stringify(route.filePath)} })`,
   );
   lines.push(`    const html = raw`);
   lines.push('');
@@ -213,9 +211,7 @@ function renderPageRoute(
   // SSG mode: headExtras is injected via Vite define as __LESS_HEAD_EXTRAS__
   // (ADR 0008 Phase A: replaces the old .less/head-extras.html runtime file read).
   // Dev mode: headExtras is inlined via JSON.stringify (safe for dev server).
-  const headExtrasExpr = isSSG
-    ? '__headExtras'
-    : JSON.stringify(docConfig.headExtras);
+  const headExtrasExpr = isSSG ? '__headExtras' : JSON.stringify(docConfig.headExtras);
 
   lines.push(`    let content = html`);
   if (matchingRenderers.length > 0) {
@@ -529,9 +525,11 @@ export function renderEntry(desc: EntryDescriptor): string {
     for (const r of desc.pageRoutes) {
       const tagNameExpr = `${r.varName}.tagName || '${r.defaultTagName}'`;
       lines.push(
-        `  { path: '${r.path}', tagName: ${tagNameExpr}, isDynamic: ${!!r.isDynamic}, paramNames: ${JSON.stringify(
-          r.paramNames || [],
-        )} },`,
+        `  { path: '${r.path}', tagName: ${tagNameExpr}, isDynamic: ${!!r.isDynamic}, paramNames: ${
+          JSON.stringify(
+            r.paramNames || [],
+          )
+        } },`,
       );
     }
     lines.push('];');

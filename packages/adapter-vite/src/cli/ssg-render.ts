@@ -424,10 +424,9 @@ export async function ssgRender(
   }
 
   if (options.speculation) {
-    const specOpts =
-      typeof options.speculation === 'boolean'
-        ? {}
-        : (options.speculation as Record<string, unknown>);
+    const specOpts = typeof options.speculation === 'boolean'
+      ? {}
+      : (options.speculation as Record<string, unknown>);
     const rulesJson = buildSpeculationRulesJson(
       specOpts,
       routeInfo.map((r) => ({ path: r.path, type: 'page' as const })),
@@ -526,7 +525,8 @@ async function networkFirst(req) {
     // H-03 fix: Escape basePath to prevent attribute injection
     const escapedBasePath = escapeAttr(basePath);
     const manifestLink = `<link rel="manifest" href="${escapedBasePath}manifest.json">`;
-    const swScript = `<script>addEventListener("load",()=>{navigator.serviceWorker?.register("${escapedBasePath}sw.js")})</script>`;
+    const swScript =
+      `<script>addEventListener("load",()=>{navigator.serviceWorker?.register("${escapedBasePath}sw.js")})</script>`;
     const htmlFiles = findHtmlFiles(outputDir);
     for (const htmlPath of htmlFiles) {
       let html = readFileSync(htmlPath, 'utf-8');

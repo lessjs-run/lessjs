@@ -341,19 +341,21 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
         // Normalize alias replacements to absolute paths for rolldown.
         // Relative paths can cause subpath ENOTDIR errors when rolldown
         // continues resolution after a parent alias match.
-        alias: alias ? (Array.isArray(alias) ? alias.map((a) => ({
-          find: a.find,
-          replacement: a.replacement.startsWith('/') || /^[A-Za-z]:/.test(a.replacement)
-            ? a.replacement
-            : resolve(root, a.replacement),
-        })) : Object.fromEntries(
-          Object.entries(alias).map(([k, v]) => [
-            k,
-            v.startsWith('/') || /^[A-Za-z]:/.test(v)
-              ? v
-              : resolve(root, v),
-          ]),
-        )) : undefined,
+        alias: alias
+          ? (Array.isArray(alias)
+            ? alias.map((a) => ({
+              find: a.find,
+              replacement: a.replacement.startsWith('/') || /^[A-Za-z]:/.test(a.replacement)
+                ? a.replacement
+                : resolve(root, a.replacement),
+            }))
+            : Object.fromEntries(
+              Object.entries(alias).map(([k, v]) => [
+                k,
+                v.startsWith('/') || /^[A-Za-z]:/.test(v) ? v : resolve(root, v),
+              ]),
+            ))
+          : undefined,
       },
     });
     log.info('SSR bundle built successfully');

@@ -28,11 +28,7 @@
 
 // ─── Internal imports ──────────────────────────────────────────
 import { escapeAttrValue, escapeHtml } from './html-escape.js';
-import {
-  type DsdComponent,
-  type DsdOptions,
-  type DsdRenderCollector,
-} from './types.js';
+import { type DsdComponent, type DsdOptions, type DsdRenderCollector } from './types.js';
 import { getAdapter } from './adapter-registry.js';
 import { renderNestedCustomElements } from './render-nested.js';
 import { createLogger } from './logger.js';
@@ -119,8 +115,8 @@ export async function renderDSD(
   const adapter = getAdapter();
   const sourceStr = sourceInfo
     ? `${sourceInfo.route ? ` route="${sourceInfo.route}"` : ''}${
-        sourceInfo.source ? ` source="${sourceInfo.source}"` : ''
-      }`
+      sourceInfo.source ? ` source="${sourceInfo.source}"` : ''
+    }`
     : '';
 
   // 1. Instantiate the component
@@ -131,15 +127,13 @@ export async function renderDSD(
     const errMsg = err instanceof Error ? err.message : String(err);
     log.error(`Failed to instantiate <${tagName}>:`, errMsg);
     return (
-      `<${tagName}${sourceStr}><!-- LessJS ERROR: Failed to instantiate <${tagName}>: ${escapeHtml(
-        errMsg,
-      )} -->` +
-      (sourceInfo?.route
-        ? `\n<!-- Route: ${escapeHtml(sourceInfo.route)} -->`
-        : '') +
-      (sourceInfo?.source
-        ? `\n<!-- Source: ${escapeHtml(sourceInfo.source)} -->`
-        : '') +
+      `<${tagName}${sourceStr}><!-- LessJS ERROR: Failed to instantiate <${tagName}>: ${
+        escapeHtml(
+          errMsg,
+        )
+      } -->` +
+      (sourceInfo?.route ? `\n<!-- Route: ${escapeHtml(sourceInfo.route)} -->` : '') +
+      (sourceInfo?.source ? `\n<!-- Source: ${escapeHtml(sourceInfo.source)} -->` : '') +
       `</${tagName}>`
     );
   }
@@ -189,7 +183,8 @@ export async function renderDSD(
         log.error(
           `<${tagName}> render() returned ${typeof result} instead of string. ${errDetail}`,
         );
-        content = `<!-- LessJS ERROR: <${tagName}> render() returned ${typeof result}, expected string. ${errDetail} -->`;
+        content =
+          `<!-- LessJS ERROR: <${tagName}> render() returned ${typeof result}, expected string. ${errDetail} -->`;
       }
     }
   } catch (err) {
@@ -209,20 +204,17 @@ export async function renderDSD(
       | { env?: Record<string, string | undefined> }
       | undefined;
     const _nodeIsDev = _nodeProcess?.env?.NODE_ENV !== 'production';
-    const isDev =
-      typeof Deno !== 'undefined'
-        ? Deno.env?.get('LESSJS_ENV') !== 'production'
-        : _nodeIsDev;
+    const isDev = typeof Deno !== 'undefined'
+      ? Deno.env?.get('LESSJS_ENV') !== 'production'
+      : _nodeIsDev;
     if (isDev) {
-      content =
-        `<!-- LessJS ERROR: <${tagName}> render() threw: ${escapeHtml(errMsg)} -->\n` +
+      content = `<!-- LessJS ERROR: <${tagName}> render() threw: ${escapeHtml(errMsg)} -->\n` +
         (errStack
           ? `<!-- Stack: ${escapeHtml(errStack.split('\n').slice(0, 3).join(' | '))} -->\n`
           : '') +
         '<!-- Check console for full error details -->';
     } else {
-      content =
-        `<!-- LessJS ERROR: <${tagName}> render() failed -->` +
+      content = `<!-- LessJS ERROR: <${tagName}> render() failed -->` +
         '<!-- Check console for full error details -->';
     }
   }
@@ -273,20 +265,18 @@ export async function renderDSD(
     // (parseAttrsToProps in render-nested.ts). The data-ssr-props form is the
     // authoritative source for client-side property restoration. This dual
     // serialization is by design, not a bug.
-    const ssrPropsAttr =
-      Object.keys(props).length > 0
-        ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
-        : '';
+    const ssrPropsAttr = Object.keys(props).length > 0
+      ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
+      : '';
     return `<${tagName}${attrs}${ssrPropsAttr}${sourceStr}></${tagName}>`;
   }
 
   // Layer 1 (dsd-static) and Layer 2 (dsd-interactive): emit DSD template
   const attrs = serializeAttributes(props);
   // NOTE (v0.14.3): See above — dual serialization is intentional.
-  const ssrPropsAttr =
-    Object.keys(props).length > 0
-      ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
-      : '';
+  const ssrPropsAttr = Object.keys(props).length > 0
+    ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
+    : '';
   const styleTag = styleCss ? `\n    <style>${styleCss}</style>` : '';
 
   // Build DSD template attributes per HTML Living Standard
@@ -309,10 +299,12 @@ function buildDsdTemplateAttrs(options?: DsdOptions): string {
   if (options.delegatesFocus) parts.push(' shadowrootdelegatesfocus');
   if (options.clonable) parts.push(' shadowrootclonable');
   if (options.serializable) parts.push(' shadowrootserializable');
-  if (options.slotAssignment === 'manual')
+  if (options.slotAssignment === 'manual') {
     parts.push(' shadowrootslotassignment="manual"');
-  if (options.customElementRegistry)
+  }
+  if (options.customElementRegistry) {
     parts.push(' shadowrootcustomelementregistry');
+  }
   return parts.join('');
 }
 
