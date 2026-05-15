@@ -18,8 +18,11 @@ const log = createLogger('content:nav');
  * Parsed via JSON after normalizing JS object literal syntax (no eval / Function()).
  */
 export function extractMeta(source: string): RouteMeta | null {
+  // v0.14.7: Constrained regex to avoid ReDoS (C-08 fix).
+  // Only matches single-level braces with no nesting to prevent
+  // catastrophic backtracking on malformed input.
   const fnMatch = source.match(
-    /export\s+const\s+meta\s*=\s*(\{[\s\S]*?\})\s*;?\s*(?:\n|$)/,
+    /export\s+const\s+meta\s*=\s*(\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\})\s*;?\s*(?:\n|$)/,
   );
   if (!fnMatch) return null;
 

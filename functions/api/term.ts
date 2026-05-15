@@ -10,6 +10,12 @@ interface TermBody {
   cmd?: string;
 }
 
+/** Escape HTML entities — prevents reflected XSS when cmd is embedded in HTML response (C-07 fix). */
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 const NEOCAT = [
   '<span style="color:#7dd3fc;">       ████████████</span>',
   '<span style="color:#7dd3fc;">     ██            ██</span>',
@@ -19,10 +25,10 @@ const NEOCAT = [
   '<span style="color:#7dd3fc;">     ██            ██</span>',
   '<span style="color:#7dd3fc;">       ████████████</span>',
   '',
-  '<span style="color:#f4f4f5;">lessjs</span><span style="color:#52525b;">@</span><span style="color:#86efac;">v0.13.0</span>',
+  '<span style="color:#f4f4f5;">lessjs</span><span style="color:#52525b;">@</span><span style="color:#86efac;">v0.14.7</span>',
   '<span style="color:#a1a1aa;">os</span>         deno 2.7+ / node 18+ / bun / cloudflare workers',
   '<span style="color:#a1a1aa;">packages</span>  10',
-  '<span style="color:#a1a1aa;">tests</span>     268 passing',
+  '<span style="color:#a1a1aa;">tests</span>     475 passing',
   '<span style="color:#a1a1aa;">core deps</span> 1 (parse5)',
   '<span style="color:#a1a1aa;">license</span>   mit',
   '<span style="color:#a1a1aa;">runtime</span>   zero node:* imports, zero vite deps',
@@ -30,7 +36,7 @@ const NEOCAT = [
 
 const BUILD = [
   '<span style="color:#fbbf24;">$</span> deno task build',
-  '<span style="color:#52525b;">│</span> <span style="color:#7dd3fc;">less</span> v0.13.0 — ssg pipeline',
+  '<span style="color:#52525b;">│</span> <span style="color:#7dd3fc;">less</span> v0.14.7 — ssg pipeline',
   '<span style="color:#52525b;">├─ phase 1</span> route scan  <span style="color:#52525b;">··</span> <span style="color:#86efac;">8 pages, 2 islands</span>',
   '<span style="color:#52525b;">├─ phase 2</span> client build <span style="color:#52525b;">··</span> <span style="color:#86efac;">2 island chunks (1.2 kb)</span>',
   '<span style="color:#52525b;">├─ phase 3</span> ssg render  <span style="color:#52525b;">··</span> <span style="color:#86efac;">8/8 pages rendered</span>',
@@ -106,7 +112,7 @@ export async function onRequest(context: {
       output = ['__CLEAR__'];
       break;
     default:
-      output = [`<span style="color:#ef4444;">command not found:</span> ${cmd}`];
+      output = [`<span style="color:#ef4444;">command not found:</span> ${escapeHtml(cmd)}`];
   }
 
   return new Response(JSON.stringify({ output }), {

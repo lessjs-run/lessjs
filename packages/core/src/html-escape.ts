@@ -124,6 +124,16 @@ export function wrapInDocument(
     );
   }
 
+  // v0.14.7: Detect on* event handler attributes in headExtras (C-02 fix).
+  // These are a strong indicator of XSS (e.g., onload="alert(1)").
+  // Only warn — don't strip, because headExtras is developer-controlled by design.
+  if (headExtras && /\s+on\w+\s*=/i.test(headExtras)) {
+    log.warn(
+      'headExtras contains on* event handler attributes (e.g., onclick, onload). ' +
+        'This is a potential XSS vector. Ensure this content is developer-controlled.',
+    );
+  }
+
   // v0.14.3: Basic HTML tag balance validation for headExtras.
   // Checks that opening and closing tag counts match for major HTML elements.
   // This catches obviously malformed HTML (e.g., unclosed <!-- comments).

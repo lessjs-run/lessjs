@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/adapter-vite",
-  "version": "0.14.6",
+  "version": "0.14.7",
   "exports": {
     ".": "./src/index.ts",
     "./build-context": "./src/build-context.ts",

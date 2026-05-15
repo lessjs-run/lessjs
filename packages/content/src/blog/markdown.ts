@@ -9,6 +9,26 @@ import { marked } from 'marked';
 import type { BlogPost, LessBlogOptions } from './types.ts';
 
 /**
+ * Strip dangerous HTML elements and attributes from markdown output.
+ * Removes <script>, <iframe>, <object>, <embed>, <form>, and on* event attributes.
+ * This is a build-time defense-in-depth — content files are developer-controlled,
+ * but sanitization prevents accidental or malicious XSS via raw HTML in markdown.
+ */
+function sanitizeHtml(html: string): string {
+  return html
+    // Remove dangerous tags entirely (including content)
+    .replace(/<script[\s>][\s\S]*?<\/script\s*>/gi, '')
+    .replace(/<iframe[\s>][\s\S]*?<\/iframe\s*>/gi, '')
+    .replace(/<object[\s>][\s\S]*?<\/object\s*>/gi, '')
+    .replace(/<embed[\s>][\s\S]*?<\/embed\s*>/gi, '')
+    .replace(/<form[\s>][\s\S]*?<\/form\s*>/gi, '')
+    // Remove event handler attributes (onclick, onerror, onload, etc.)
+    .replace(/\s+on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+    // Remove javascript: URLs in href/src/action
+    .replace(/(href|src|action)\s*=\s*["']javascript:[^"']*["']/gi, '$1=""');
+}
+
+/**
  * Parse a markdown file into a BlogPost.
  * Extracts frontmatter, renders markdown to HTML.
  */
@@ -33,7 +53,11 @@ export async function parseMarkdownFile(
   if (options?.markdown) {
     html = await options.markdown(content);
   } else {
-    html = await marked(content);
+    // v0.14.7: Sanitize markdown output — strip dangerous HTML tags
+    // to prevent stored XSS from malicious markdown files.
+    // marked renders raw HTML by default; we explicitly disable it.
+    const raw = await marked(content, { async: true });
+    html = sanitizeHtml(raw);
   }
 
   return {

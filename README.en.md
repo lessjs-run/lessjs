@@ -130,9 +130,9 @@ All ADRs are in the [blog](/blog/) — search `type: adr` to filter. Key decisio
 
 ---
 
-## 0.14.1 Release Hardening
+## 0.14.7 Release Hardening
 
-- All packages are aligned on `0.14.1`, with `@lessjs/signals` as the current signals package name.
+- All packages are aligned on `0.14.7`, with `@lessjs/signals` as the current signals package name.
 - `@lessjs/adapter-vite` exposes CLI subpaths so scaffolded apps can run `deno task build` directly.
 - Publishing no longer allows dirty worktrees, and CI now uses the same quality tasks as local development.
 - E2E uses an isolated port and runs in CI, preventing accidental reuse of stale local servers.

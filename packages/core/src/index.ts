@@ -42,6 +42,6 @@ export {
   type UnsafeHtml,
 } from './html-escape.js';
 export { createLogger, LessLogger, LogLevel } from './logger.js';
-export { getSSRProps, island, type IslandOptions, lessBind } from './island.js';
+export { DANGEROUS_KEYS, getSSRProps, island, type IslandOptions, lessBind } from './island.js';
 export { hasNavigationApi, matchRoute, navigate, onNavigate } from './navigation.js';
 export type { NavigationCallback } from './navigation.js';

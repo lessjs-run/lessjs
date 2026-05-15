@@ -127,8 +127,28 @@ export function getSSRProps(el: HTMLElement): Record<string, unknown> | null {
  * @param el - The upgraded custom element
  */
 
-/** Keys that could cause prototype pollution if assigned to an object instance */
-const DANGEROUS_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+/** Keys that could cause prototype pollution if assigned to an object instance.
+ * v0.14.7: Extended to cover all Object.prototype methods that could be
+ * exploited via arbitrary property assignment (C-03 fix).
+ */
+const DANGEROUS_KEYS = new Set([
+  '__proto__',
+  'constructor',
+  'prototype',
+  '__defineGetter__',
+  '__defineSetter__',
+  '__lookupGetter__',
+  '__lookupSetter__',
+  'hasOwnProperty',
+  'isPrototypeOf',
+  'propertyIsEnumerable',
+  'toString',
+  'toLocaleString',
+  'valueOf',
+]);
+
+/** Export DANGEROUS_KEYS for reuse in render-dsd.ts (C-04 fix). */
+export { DANGEROUS_KEYS };
 
 export function lessBind(el: HTMLElement): void {
   const props = getSSRProps(el);

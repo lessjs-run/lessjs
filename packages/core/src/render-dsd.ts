@@ -32,6 +32,7 @@ import { type DsdComponent, type DsdOptions, type DsdRenderCollector } from './t
 import { getAdapter } from './adapter-registry.js';
 import { renderNestedCustomElements } from './render-nested.js';
 import { createLogger } from './logger.js';
+import { DANGEROUS_KEYS } from './island.js';
 
 const log = createLogger('core');
 
@@ -136,6 +137,14 @@ export async function renderDSD(
 
   // 2. Set attributes/properties
   for (const [key, value] of Object.entries(props)) {
+    // v0.14.7: Prevent prototype pollution — skip dangerous keys (C-04 fix).
+    // Uses shared DANGEROUS_KEYS from island.ts for consistency.
+    if (DANGEROUS_KEYS.has(key)) {
+      log.warn(
+        `Skipping dangerous prop key "${key}" on <${tagName}> — potential prototype pollution`,
+      );
+      continue;
+    }
     try {
       (instance as Record<string, unknown>)[key] = value;
     } catch (e) {

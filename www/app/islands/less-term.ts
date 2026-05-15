@@ -11,6 +11,13 @@ import { css, html, nothing } from 'lit';
 import { DsdLitElement } from '@lessjs/adapter-lit';
 
 export class LessTermDemo extends DsdLitElement {
+
+  /** Escape HTML entities for safe text insertion */
+  private static _escapeHtml(s: string): string {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
   static override styles = css`
     :host {
       display: block;
@@ -129,10 +136,35 @@ export class LessTermDemo extends DsdLitElement {
     const out = this.shadowRoot?.querySelector('.output');
     if (!out) return;
     const div = document.createElement('div');
-    div.innerHTML = htmlStr;
+    // v0.14.7: Sanitize before innerHTML assignment to prevent XSS (C-06 fix).
+    // Only allow safe inline styling tags used by terminal output.
+    div.innerHTML = this._sanitizeTermHtml(htmlStr);
     out.appendChild(div);
     const body = this.shadowRoot?.querySelector('.term-body');
     if (body) body.scrollTop = body.scrollHeight;
+  }
+
+  /**
+   * Sanitize terminal HTML output — only allow <span> with style/class attributes.
+   * This prevents XSS from compromised API responses while preserving terminal formatting.
+   */
+  private _sanitizeTermHtml(html: string): string {
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    // Remove any non-span elements (script, iframe, img, etc.)
+    const allowed = temp.querySelectorAll('span');
+    const result = document.createElement('div');
+    for (const span of allowed) {
+      // Only keep style and class attributes
+      const clone = document.createElement('span');
+      if (span.className) clone.className = span.className;
+      const style = span.getAttribute('style');
+      if (style) clone.setAttribute('style', style);
+      clone.textContent = span.textContent;
+      result.appendChild(clone);
+    }
+    // If no spans found, treat as plain text
+    return result.innerHTML || LessTermDemo._escapeHtml(html);
   }
 
   private _localCommands: Record<string, string[]> = {
@@ -148,7 +180,7 @@ export class LessTermDemo extends DsdLitElement {
       '  <span style="color:#fbbf24;">dsd</span>       what is dsd?',
       '  <span style="color:#fbbf24;">clear</span>     clear terminal',
     ],
-    version: ['<span class="hl">v0.14.2</span> — standards & safety patch'],
+    version: ['<span class="hl">v0.14.7</span> — security hardening patch'],
     whoami: ['<span style="color:#a1a1aa;">you are a lessjs developer. welcome.</span>'],
     uname: [
       '<span class="hl">lessjs</span> <span style="color:#52525b;">deno 2.7+ node 18+ edge</span>',
@@ -187,7 +219,7 @@ export class LessTermDemo extends DsdLitElement {
     input.value = '';
     this._cmdHistory.push(cmd);
     this._historyIdx = this._cmdHistory.length;
-    this._addLine(`<span class="prompt">$</span> ${cmd}`);
+    this._addLine(`<span class="prompt">$</span> ${LessTermDemo._escapeHtml(cmd)}`);
 
     if (cmd.toLowerCase() === 'clear') {
       const out = this.shadowRoot?.querySelector('.output');
