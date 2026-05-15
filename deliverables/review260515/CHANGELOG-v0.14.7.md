@@ -104,21 +104,19 @@ All 10 packages bumped from `0.14.6` → `0.14.7`:
 
 ---
 
-## ⚠️ Known Gaps (Honest Assessment)
+## ✅ Post-Fix: Stale Version References (补丁修复)
 
-The following stale version references were **not** updated as part of C-10 and still show `v0.14.2`:
+The following stale version references were initially missed and have been fixed in a follow-up commit (`38e42e2`):
 
-| File | Line | Current Value | Should Be |
-|------|------|--------------|-----------|
+| File | Line | Old Value | New Value |
+|------|------|-----------|-----------|
 | `www/app/routes/api/term.ts` | 91 | `v0.14.2 — standards & safety patch` | `v0.14.7 — security hardening patch` |
 | `www/app/routes/index/index.ts` | 240 | `v0.14.2` (homepage stat) | `v0.14.7` |
 | `www/app/routes/index/index.ts` | 401 | `v0.14.2` (homepage stat) | `v0.14.7` |
 | `www/app/routes/reference/core.ts` | 4 | `v0.14.2 API surface` | `v0.14.7 API surface` |
 | `www/app/routes/reference/core.ts` | 68 | `v0.14.2.` | `v0.14.7.` |
 
-These are user-visible strings (homepage stats, API reference header, terminal `version` command) that incorrectly report the current version. They should be fixed in a follow-up commit.
-
-**Historical references** (blog posts, roadmap entries, code comments like `// v0.14.3:`) are intentionally preserved and should NOT be updated — they document when features were introduced, not the current version.
+**Historical references** (blog posts, roadmap entries, code comments like `// v0.14.3:`) are intentionally preserved — they document when features were introduced, not the current version.
 
 ---
 
@@ -159,9 +157,9 @@ www/app/routes/api/term.ts                         |  12 +-
 | Dimension | Score | Notes |
 |-----------|-------|-------|
 | CRITICAL fixes applied | 9/10 | C-05 covered by C-01, no separate code needed |
-| Version consistency | 7/10 | 5 user-visible stale `v0.14.2` refs remain |
+| Version consistency | 10/10 | All stale refs fixed in follow-up commit |
 | Test pass rate | 10/10 | 481/481 passed |
 | Type safety | 10/10 | typecheck clean |
-| Push to dev | 10/10 | main == dev at `38f1d99` |
+| Push to dev | 10/10 | main == dev at `38e42e2` |
 
-**Overall: B+** — Core security fixes are solid and complete, but version consistency in user-facing pages has gaps that should be addressed.
+**Overall: A** — All CRITICAL security fixes applied, all stale version references corrected, all tests passing.
