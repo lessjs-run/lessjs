@@ -57,6 +57,9 @@ export class LessDialog extends DsdLitElement {
   /** Element internals for form participation + :state() */
   private _internals?: ElementInternals;
 
+  /** v0.14.5: Track original inert state of siblings for proper restoration */
+  private static _originalInertStates = new WeakMap<Element, boolean>();
+
   static override styles: CSSResult[] = [
     lessDesignTokens,
     css`
@@ -170,6 +173,14 @@ export class LessDialog extends DsdLitElement {
     this._updateStates();
   }
 
+  /** v0.14.5: Clean up inert states if dialog is removed from DOM while open */
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    if (this.open) {
+      this._syncInert();
+    }
+  }
+
   private _updateStates(): void {
     if (!this._internals?.states) return;
     if (this.open) {
@@ -217,20 +228,40 @@ export class LessDialog extends DsdLitElement {
     }
   }
 
-  /** Set inert on siblings when dialog is open (accessibility) */
+  /** v0.14.5: Set inert on siblings when dialog is open (accessibility).
+   *  Uses WeakMap to preserve original inert states.
+   *  Handles ShadowRoot parentNode compatibility. */
   private _syncInert(): void {
-    if (!this.parentNode) return;
-    const parent = this.parentNode as Element;
+    const parent = this.parentNode;
+    if (!parent) return;
+
+    // Handle ShadowRoot: use host element's parent instead
+    const parentEl = parent instanceof ShadowRoot
+      ? (parent.host.parentNode as Element)
+      : (parent as Element);
+    if (!parentEl) return;
+
+    const children = [...parentEl.children];
     if (this.open) {
-      for (const child of [...parent.children]) {
+      for (const child of children) {
         if (child !== this) {
+          // Save original inert state before modifying
+          if (!LessDialog._originalInertStates.has(child)) {
+            LessDialog._originalInertStates.set(child, child.hasAttribute('inert'));
+          }
           child.setAttribute('inert', '');
         }
       }
     } else {
-      for (const child of [...parent.children]) {
+      for (const child of children) {
         if (child !== this) {
-          child.removeAttribute('inert');
+          const wasOriginallyInert = LessDialog._originalInertStates.get(child);
+          if (wasOriginallyInert) {
+            child.setAttribute('inert', '');
+          } else {
+            child.removeAttribute('inert');
+          }
+          LessDialog._originalInertStates.delete(child);
         }
       }
     }
@@ -280,5 +311,7 @@ export class LessDialog extends DsdLitElement {
   }
 }
 
-// Guard: idempotent across SSR paths
+// v0.14.5: Direct registration guard supports both island() and direct import paths.
+// When used via island(), the registration here is a no-op (idempotent guard).
+// When imported directly without island(), this ensures the element is still registered.
 if (!customElements.get(tagName)) customElements.define(tagName, LessDialog);

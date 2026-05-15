@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/core",
-  "version": "0.14.4",
+  "version": "0.14.5",
   "exports": {
     ".": "./src/index.ts",
     "./errors": "./src/errors.ts",

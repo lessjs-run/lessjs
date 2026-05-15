@@ -33,6 +33,8 @@ let _origReplaceState: any = null;
 let _lastNavWasPush = false;
 
 function _ensureHistoryOriginals(): void {
+  // v0.14.5: Guard against SSR/SSG environments where history is unavailable
+  if (typeof globalThis.history === 'undefined') return;
   if (_origPushState === null) {
     _origPushState = history.pushState.bind(history);
     _origReplaceState = history.replaceState.bind(history);
@@ -219,7 +221,12 @@ export function matchRoute(
     }
 
     // Fallback: simple regex matching for :param patterns
-    const regexStr = pattern.path.replace(/:([^/]+)/g, '(?<$1>[^/]+)');
+    // v0.14.5: Escape special regex characters in param names
+    // to prevent ReDoS and SyntaxError on old engines
+    const regexStr = pattern.path.replace(/:([^/]+)/g, (_match, paramName: string) => {
+      const escaped = paramName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return `(?<${escaped}>[^/]+)`;
+    });
     const regex = new RegExp(`^${regexStr}$`);
     const match = pathname.match(regex);
     if (match?.groups) {

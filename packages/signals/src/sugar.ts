@@ -43,6 +43,9 @@ export function islandEffect(
   }
   observeParent();
 
+  // v0.14.5: Track last parent to avoid unnecessary MO reconnect
+  let lastParent = host.parentElement ?? host.parentNode;
+
   // Periodic check for two edge cases that MutationObserver alone cannot cover:
   // 1. The element is moved to a new parent — MO still watches the old parent
   //    (there's no DOM event for "element reparented")
@@ -52,7 +55,12 @@ export function islandEffect(
     if (!host.isConnected) {
       teardown();
     } else {
-      observeParent();
+      // Only re-observe if parent changed since last check
+      const currentParent = host.parentElement ?? host.parentNode;
+      if (currentParent !== lastParent) {
+        lastParent = currentParent;
+        observeParent();
+      }
     }
   }, 30000);
 
@@ -60,7 +68,14 @@ export function islandEffect(
 }
 
 /**
- * Batch multiple signal writes into a single update.
+ * @deprecated
+ * Current implementation is a no-op placeholder until the TC39 Signal
+ * specification finalizes native batching support. At that point, this
+ * function will be updated to batch multiple signal writes into a single
+ * reactive update.
+ *
+ * Using this function currently provides no optimization benefit.
+ * You can safely remove calls to batch() without changing behavior.
  */
 export function batch<T>(fn: () => T): T {
   return fn();

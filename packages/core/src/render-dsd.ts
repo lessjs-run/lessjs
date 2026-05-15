@@ -110,6 +110,7 @@ export async function renderDSD(
   nestingDepth = 0,
 ): Promise<string> {
   const startTime = performance.now();
+  const adapter = getAdapter();
   const sourceStr = sourceInfo
     ? `${sourceInfo.route ? ` route="${sourceInfo.route}"` : ''}${
       sourceInfo.source ? ` source="${sourceInfo.source}"` : ''
@@ -157,8 +158,6 @@ export async function renderDSD(
     } else if (typeof result === 'string') {
       content = result;
     } else {
-      const adapter = getAdapter();
-
       if (adapter?.isTemplate && adapter?.render && adapter.isTemplate(result)) {
         content = await adapter.render(result, tagName);
       } else {
@@ -210,7 +209,6 @@ export async function renderDSD(
 
   // 5. Extract static styles from component class
   let styleCss = '';
-  const adapter = getAdapter();
   if (adapter?.extractStyles) {
     try {
       styleCss = adapter.extractStyles(componentClass) || '';

@@ -253,5 +253,7 @@ export class LessThemeToggle extends DsdLitElement {
     }
   }
 
-  // Guard: idempotent across SSR paths
+  // v0.14.5: Direct registration guard supports both island() and direct import paths.
+  // When used via island(), the registration here is a no-op (idempotent guard).
+  // When imported directly without island(), this ensures the element is still registered.
   if (!customElements.get(tagName)) customElements.define(tagName, LessThemeToggle);

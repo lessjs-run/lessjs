@@ -198,6 +198,15 @@ function createVisibleStrategy(
   const mo = new MutationObserver((_mutations, mutObs) => {
     if (observeAll()) {
       mutObs.disconnect();
+    } else {
+      // v0.14.5: If elements were removed from DOM, disconnect all observers
+      const elements = document.querySelectorAll(tagName);
+      if (elements.length === 0 && !registered) {
+        mutObs.disconnect();
+        observer.disconnect();
+        clearTimeout(timeoutId);
+        _visibilityTimeouts.delete(timeoutId);
+      }
     }
   });
 
