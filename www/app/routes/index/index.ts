@@ -122,11 +122,13 @@ export default class DocsHome extends LitElement {
     .demo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 2.5rem; }
     .demo-card { background: #18181b; border-radius: 10px; padding: 1.25rem; }
     .demo-card h4 { margin: 0 0 12px; font-size: 12px; font-weight: 600; color: #d4d4d8; letter-spacing: 0.02em; }
-    .demo-card pre { background: #101012 !important; border: 0.5px solid #27272a !important; border-radius: 6px; padding: 10px 12px !important; margin: 0 !important; font-size: 11px !important; line-height: 1.7 !important; color: #a1a1aa !important; overflow-x: auto; }
+    .demo-card pre { background: #101012 !important; border: 0.5px solid #27272a !important; border-radius: 6px; padding: 10px 12px !important; margin: 0 !important; font-size: 11px !important; line-height: 1.7 !important; color: #a1a1aa !important; overflow-x: auto; max-width: 100%; box-sizing: border-box; }
+    .demo-card pre code { white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
     .demo-card .note { font-size: 11px; color: #71717a; margin-top: 10px; line-height: 1.5; }
     .demo-card.combined { padding: 1.5rem; margin-bottom: 2rem; border: none; }
     .demo-card.combined:hover { border-color: transparent; }
     .demo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .demo-half { min-width: 0; }
     .counter { display: flex; align-items: center; gap: 10px; }
     .counter button { width: 34px; height: 34px; border-radius: 6px; border: 0.5px solid #3f3f46; background: #27272a; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #f4f4f5; }
     .counter button:hover { background: #3f3f46; }

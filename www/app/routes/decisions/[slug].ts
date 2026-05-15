@@ -74,6 +74,8 @@ export default class DecisionSlugPage extends LitElement {
         font-size: 0.9375rem;
         line-height: 1.75;
         color: var(--less-text-secondary);
+        min-width: 0;
+        overflow-wrap: anywhere;
       }
       .markdown h2 {
         margin-top: 2.5rem;
@@ -106,6 +108,7 @@ export default class DecisionSlugPage extends LitElement {
         border-radius: 2px;
         font-size: 0.8125rem;
         font-family: "SF Mono", monospace;
+        overflow-wrap: anywhere;
       }
       .markdown pre {
         background: var(--less-bg-surface);
@@ -120,6 +123,10 @@ export default class DecisionSlugPage extends LitElement {
         padding: 0;
         font-size: 0.75rem;
         line-height: 1.6;
+        white-space: pre-wrap;
+      }
+      h1 {
+        overflow-wrap: anywhere;
       }
       .markdown table {
         width: 100%;

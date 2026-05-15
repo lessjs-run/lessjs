@@ -6,7 +6,7 @@ export const meta = {
 
 import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
-import { pageStyles } from '../../components/page-styles.js';
+import { pageStyles } from '../../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 
 export const tagName = 'decision-20260515-1-renderer-kernel-registry-sop';
@@ -86,7 +86,7 @@ export default class RendererKernelRegistrySopDecision extends LitElement {
         .locales="${['en', 'zh']}"
         .navItems="${navSections}"
         .headerNav="${headerNav}"
-        current-path="/decisions/20260515-1-renderer-kernel-registry-sop"
+        current-path="/zh/decisions/20260515-1-renderer-kernel-registry-sop"
       >
         <div class="container">
           <h1>ADR 20260515-1: Renderer Kernel, WC Package Protocol, and Registry SOP</h1>
@@ -225,7 +225,7 @@ export default class RendererKernelRegistrySopDecision extends LitElement {
 
           <div class="nav-row">
             <a href="/roadmap" class="nav-link">&larr; Roadmap</a>
-            <a href="/decisions" class="nav-link">Architecture Decisions &rarr;</a>
+            <a href="/zh/decisions" class="nav-link">Architecture Decisions &rarr;</a>
           </div>
         </div>
       </less-layout>
@@ -239,7 +239,7 @@ export default class RendererKernelRegistrySopDecision extends LitElement {
         .locales="${['en', 'zh']}"
         .navItems="${navSections}"
         .headerNav="${headerNav}"
-        current-path="/en/decisions/20260515-1-renderer-kernel-registry-sop"
+        current-path="/zh/decisions/20260515-1-renderer-kernel-registry-sop"
       >
         <div class="container">
           <h1>ADR 20260515-1: Renderer Kernel, WC Package Protocol, and Registry SOP</h1>

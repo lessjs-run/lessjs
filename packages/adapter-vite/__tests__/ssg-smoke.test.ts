@@ -42,6 +42,12 @@ function hasRoadmapAdrOutput(): boolean {
   );
 }
 
+function hasRendererSopOutput(): boolean {
+  return existsSync(
+    join(WWW_DIST, 'zh', 'decisions', '20260515-1-renderer-kernel-registry-sop', 'index.html'),
+  );
+}
+
 function findHtmlFiles(dir: string): string[] {
   const results: string[] = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -61,6 +67,7 @@ function findHtmlFiles(dir: string): string[] {
 async function ensureDocsBuild(): Promise<void> {
   if (
     hasSsrBundle() && hasServerEntry() && hasRoadmapAdrOutput() &&
+    hasRendererSopOutput() &&
     existsSync(join(WWW_DIST, 'index.html'))
   ) {
     return;
@@ -143,9 +150,9 @@ Deno.test('SSG smoke: one-command build produces trusted www output', async (t) 
     assertStringIncludes(roadmapHtml, 'WC registry hub');
     assert(
       existsSync(
-        join(WWW_DIST, 'decisions', '20260515-1-renderer-kernel-registry-sop', 'index.html'),
+        join(WWW_DIST, 'zh', 'decisions', '20260515-1-renderer-kernel-registry-sop', 'index.html'),
       ),
-      'ADR 20260515-1 should be rendered through the decisions route pipeline',
+      'ADR 20260515-1 should be rendered under zh/decisions',
     );
     assert(
       existsSync(
