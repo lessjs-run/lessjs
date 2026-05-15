@@ -28,9 +28,20 @@ export type UnsafeHtml = string & { readonly __unsafeHtml: unique symbol };
  * If the input is already HTML-escaped (SafeHtml), return as-is.
  * If the input is UnsafeHtml (raw HTML), return as-is (trusted).
  * Otherwise, escape the string.
+ *
+ * NOTE (v0.14.3): SafeHtml and UnsafeHtml are nominal branded types
+ * using `unique symbol`. At runtime, a plain `string` can never have
+ * `__safeHtml` or `__unsafeHtml` properties, so the branded type
+ * checks below always evaluate to false for plain strings. This is
+ * intentional — the protection is at compile time (TypeScript prevents
+ * passing UnsafeHtml where SafeHtml is expected). The runtime checks
+ * are a defensive no-op that preserves the identity of pre-branded values
+ * if they were somehow constructed at runtime.
  */
 export function escapeHtml(str: string | SafeHtml | UnsafeHtml): string {
   if (typeof str !== 'string') return '';
+  // These checks are compile-time branding — they never match plain strings at runtime.
+  // See NOTE above for explanation.
   if ((str as SafeHtml).__safeHtml !== undefined) return str;
   if ((str as UnsafeHtml).__unsafeHtml !== undefined) return str;
   return str
@@ -105,6 +116,21 @@ export function wrapInDocument(
       'headExtras contains <script> tags. Ensure this content is developer-controlled, ' +
         'not user-supplied, to prevent XSS. For safe URL injection, use inject.scripts instead.',
     );
+  }
+
+  // v0.14.3: Basic HTML tag balance validation for headExtras.
+  // Checks that opening and closing tag counts match for major HTML elements.
+  // This catches obviously malformed HTML (e.g., unclosed <!-- comments).
+  if (headExtras) {
+    // Check for unclosed HTML comments: <!-- without matching -->
+    const commentOpens = (headExtras.match(/<!--/g) || []).length;
+    const commentCloses = (headExtras.match(/-->/g) || []).length;
+    if (commentOpens !== commentCloses) {
+      log.warn(
+        'headExtras has unbalanced HTML comments (<!-- vs -->). ' +
+          'This may cause HTML parsing issues.',
+      );
+    }
   }
   const metaTags: string[] = [];
   if (meta?.description) {

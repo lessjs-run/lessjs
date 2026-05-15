@@ -34,6 +34,11 @@
 // which are implemented by LitElement, HTMLElement subclasses,
 // and any custom element framework.
 //
+// v0.14.3: addController, removeController, and requestUpdate are now
+// optional to support plain HTMLElement hosts (not just Lit ReactiveElement).
+// When these methods are absent, the controller still works for state tracking
+// but cannot trigger host re-renders automatically.
+//
 // Any object with these methods works at runtime (structural typing).
 interface ReactiveController {
   hostConnected?(): void;
@@ -41,10 +46,10 @@ interface ReactiveController {
 }
 
 interface ReactiveElement {
-  addController(controller: ReactiveController): void;
-  removeController(controller: ReactiveController): void;
-  requestUpdate(): void;
-  readonly updateComplete: Promise<boolean>;
+  addController?(controller: ReactiveController): void;
+  removeController?(controller: ReactiveController): void;
+  requestUpdate?(): void;
+  readonly updateComplete?: Promise<boolean>;
 }
 
 /**
@@ -130,7 +135,8 @@ export class RpcController implements ReactiveController {
     private host: ReactiveElement,
     options?: RpcControllerOptions,
   ) {
-    host.addController(this);
+    // v0.14.3: addController is optional — plain HTMLElement hosts don't have it
+    host.addController?.(this);
     this._options = {
       maxRetries: options?.maxRetries ?? 0,
       retryDelay: options?.retryDelay ?? 1000,
@@ -203,7 +209,7 @@ export class RpcController implements ReactiveController {
 
     this._loading = true;
     this._error = null;
-    this.host.requestUpdate();
+    this.host.requestUpdate?.();
 
     let lastError: RpcError | undefined;
     const maxAttempts = this._options.maxRetries + 1;
@@ -212,7 +218,7 @@ export class RpcController implements ReactiveController {
       // Check if aborted before attempting
       if (signal.aborted) {
         this._loading = false;
-        this.host.requestUpdate();
+        this.host.requestUpdate?.();
         throw new RpcError(0, 'Request aborted', 'ABORTED');
       }
 
@@ -220,7 +226,7 @@ export class RpcController implements ReactiveController {
         const result = await fn(signal);
         this._loading = false;
         this._abortController = null;
-        this.host.requestUpdate();
+        this.host.requestUpdate?.();
         return result;
       } catch (err) {
         let rpcError: RpcError;
@@ -230,7 +236,7 @@ export class RpcController implements ReactiveController {
           if (err.name === 'AbortError') {
             this._loading = false;
             this._abortController = null;
-            this.host.requestUpdate();
+            this.host.requestUpdate?.();
             throw new RpcError(0, 'Request aborted', 'ABORTED');
           }
           rpcError = new RpcError(0, err.message);
@@ -264,7 +270,7 @@ export class RpcController implements ReactiveController {
     this._error = lastError ?? new RpcError(0, 'Unknown error');
     this._loading = false;
     this._abortController = null;
-    this.host.requestUpdate();
+    this.host.requestUpdate?.();
     throw this._error;
   }
 }

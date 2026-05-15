@@ -87,9 +87,9 @@ export function extractParams(
  */
 export function parseQuery(url: URL): Record<string, string | string[]> {
   const query: Record<string, string | string[]> = {};
-  const seen = new Set<string>();
+  // v0.14.3: Simplified — use `key in query` instead of separate `seen` Set
   url.searchParams.forEach((value, key) => {
-    if (seen.has(key)) {
+    if (key in query) {
       const existing = query[key];
       if (Array.isArray(existing)) {
         existing.push(value);
@@ -97,7 +97,6 @@ export function parseQuery(url: URL): Record<string, string | string[]> {
         query[key] = [existing as string, value];
       }
     } else {
-      seen.add(key);
       query[key] = value;
     }
   });

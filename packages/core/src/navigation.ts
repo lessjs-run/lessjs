@@ -115,11 +115,38 @@ export function onNavigate(callback: NavigationCallback): () => void {
     return () => nav.removeEventListener('navigatesuccess', handler);
   } else {
     // Fallback: popstate
+    // v0.14.3: Track whether the last navigation was a pushState/replaceState
+    // so we can distinguish 'push' from 'back' in the popstate handler.
+    // History API fires popstate for back/forward navigation but NOT for
+    // pushState/replaceState — so we dispatch it manually in navigate()
+    // and use a flag to tell them apart.
+    let _lastNavWasPush = false;
+
     const handler = () => {
-      callback(new URL(globalThis.location.href), 'push');
+      const navType: 'push' | 'back' = _lastNavWasPush ? 'push' : 'back';
+      _lastNavWasPush = false;
+      callback(new URL(globalThis.location.href), navType);
     };
+
+    // Intercept pushState/replaceState to mark user-initiated navigations
+    const origPushState = history.pushState.bind(history);
+    const origReplaceState = history.replaceState.bind(history);
+    history.pushState = (...args: Parameters<typeof history.pushState>) => {
+      _lastNavWasPush = true;
+      origPushState(...args);
+    };
+    history.replaceState = (...args: Parameters<typeof history.replaceState>) => {
+      _lastNavWasPush = true;
+      origReplaceState(...args);
+    };
+
     globalThis.addEventListener('popstate', handler);
-    return () => globalThis.removeEventListener('popstate', handler);
+    return () => {
+      globalThis.removeEventListener('popstate', handler);
+      // Restore original methods on cleanup
+      history.pushState = origPushState;
+      history.replaceState = origReplaceState;
+    };
   }
 }
 

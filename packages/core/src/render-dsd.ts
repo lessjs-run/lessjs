@@ -174,11 +174,24 @@ export async function renderDSD(
     log.error(
       `<${tagName}> render() failed: ${errMsg}${errStack ? `\n${errStack}` : ''}`,
     );
-    content = `<!-- LessJS ERROR: <${tagName}> render() threw: ${escapeHtml(errMsg)} -->\n` +
-      (errStack
-        ? `<!-- Stack: ${escapeHtml(errStack.split('\n').slice(0, 3).join(' | '))} -->\n`
-        : '') +
-      '<!-- Check console for full error details -->';
+    // v0.14.3: Only include error details in HTML comments during development.
+    // In production, leaking file paths and code structure in HTML comments
+    // is a security risk — anyone viewing page source can see internal info.
+    const isDev = typeof Deno !== 'undefined'
+      ? Deno.env?.get('LESSJS_ENV') !== 'production'
+      : typeof process !== 'undefined'
+        ? process.env?.NODE_ENV !== 'production'
+        : false;
+    if (isDev) {
+      content = `<!-- LessJS ERROR: <${tagName}> render() threw: ${escapeHtml(errMsg)} -->\n` +
+        (errStack
+          ? `<!-- Stack: ${escapeHtml(errStack.split('\n').slice(0, 3).join(' | '))} -->\n`
+          : '') +
+        '<!-- Check console for full error details -->';
+    } else {
+      content = `<!-- LessJS ERROR: <${tagName}> render() failed -->` +
+        '<!-- Check console for full error details -->';
+    }
   }
 
   // v0.6: L2 Nested DSD — recursively render nested Custom Elements
@@ -220,6 +233,13 @@ export async function renderDSD(
   if (resolvedLayer === 'pure-island') {
     // Pure Island: no DSD template, framework will create shadow root on client
     const attrs = serializeAttributes(props);
+    // NOTE (v0.14.3): Object-type props are intentionally serialized TWICE:
+    //   1. In HTML attributes via serializeAttributes() — used by SSR rendering
+    //   2. In data-ssr-props — used by client-side lessBind() for hydration
+    // The HTML attribute form is needed for nested custom element SSR processing
+    // (parseAttrsToProps in render-nested.ts). The data-ssr-props form is the
+    // authoritative source for client-side property restoration. This dual
+    // serialization is by design, not a bug.
     const ssrPropsAttr = Object.keys(props).length > 0
       ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
       : '';
@@ -228,6 +248,7 @@ export async function renderDSD(
 
   // Layer 1 (dsd-static) and Layer 2 (dsd-interactive): emit DSD template
   const attrs = serializeAttributes(props);
+  // NOTE (v0.14.3): See above — dual serialization is intentional.
   const ssrPropsAttr = Object.keys(props).length > 0
     ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
     : '';

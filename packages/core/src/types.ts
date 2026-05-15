@@ -413,8 +413,10 @@ export class DsdRenderCollector {
   getReport(): DsdReport {
     const dsdComponents = this._metrics.filter((m) => m.layer !== 'pure-island');
     const pureIslands = this._metrics.filter((m) => m.layer === 'pure-island');
+    // v0.14.3: Only dsd-interactive components need hydration.
+    // dsd-static components have no event bindings — they don't need hydration.
     const hydrated = this._metrics.filter(
-      (m) => !m.hasError && m.layer !== 'pure-island',
+      (m) => !m.hasError && m.layer === 'dsd-interactive',
     );
 
     return {

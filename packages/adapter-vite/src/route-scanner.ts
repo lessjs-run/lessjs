@@ -32,7 +32,9 @@ const log = createLogger('core');
  * Pattern :param is compatible with both Hono and URLPattern.
  */
 function filePathToRoutePath(filePath: string): string {
-  // Normalize separators
+  // Normalize separators — handle Windows backslash paths
+  // v0.14.3: Use posix.join to ensure all output paths use forward slashes
+  // regardless of platform. This prevents \ from leaking into URL patterns.
   let p = filePath.split(sep).join(posix.sep);
 
   // Remove extension

@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/content",
-  "version": "0.14.2",
+  "version": "0.14.3",
   "exports": {
     ".": "./src/index.ts",
     "./blog-data": "./src/blog/blog-data.ts",
@@ -10,9 +10,9 @@
   "imports": {
     "marked": "npm:marked@^15",
     "gray-matter": "npm:gray-matter@^4.0.3",
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.14.2/logger",
-    "@lessjs/adapter-vite/build-context": "jsr:@lessjs/adapter-vite@^0.14.2/build-context",
-    "@lessjs/adapter-vite/virtual-ids": "jsr:@lessjs/adapter-vite@^0.14.2/virtual-ids",
+    "@lessjs/core/logger": "jsr:@lessjs/core@^0.14.3/logger",
+    "@lessjs/adapter-vite/build-context": "jsr:@lessjs/adapter-vite@^0.14.3/build-context",
+    "@lessjs/adapter-vite/virtual-ids": "jsr:@lessjs/adapter-vite@^0.14.3/virtual-ids",
     "vite": "npm:vite@8.0.10"
   },
   "publish": {

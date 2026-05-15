@@ -72,8 +72,13 @@ function _producerAccessed(node: ReactiveNode): void {
   _activeConsumer.producerLastReadVersion![idx] = node.version;
 }
 
+// v0.14.3: Added overflow protection — reset epoch before MAX_SAFE_INTEGER
+// to prevent stale computed signals from not recalculating.
 function _producerIncrementEpoch(): void {
   _epoch++;
+  if (_epoch > Number.MAX_SAFE_INTEGER - 1000) {
+    _epoch = 1;
+  }
 }
 
 function _producerUpdateValueVersion(node: ReactiveNode): void {

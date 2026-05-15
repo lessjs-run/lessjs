@@ -234,8 +234,17 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
           );
         }
       }
-    } catch {
-      // decodeURIComponent threw — malformed encoding, treat as unsafe
+    } catch (e) {
+      // v0.14.3: decodeURIComponent can throw for two reasons:
+      //   1. Malicious URLs with invalid percent-encoding (e.g., "%ZZ")
+      //   2. Legitimate URLs with lone surrogates (rare, but valid URI-encoded)
+      // We treat actual URIError as unsafe, but log the distinction for debugging.
+      if (e instanceof URIError) {
+        log.debug(
+          `decodeURIComponent failed for URL in ${context}: "${url}" — ${e.message}. ` +
+            'This may be a legitimate encoding issue or a malicious URL.',
+        );
+      }
       throw new LessError(
         `Invalid URL in ${context}: "${url}" — malformed percent-encoding`,
         'UNSAFE_URL',
