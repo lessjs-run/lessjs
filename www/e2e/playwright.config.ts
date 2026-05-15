@@ -33,7 +33,7 @@ export default defineConfig({
 
   // Auto-start a simple static file server for www/dist/
   webServer: {
-    command: `npx -y serve ../dist -l ${PORT} --no-clipboard`,
+    command: `npx -y serve@14.2.0 ../dist -l ${PORT} --no-clipboard`,
     url: baseURL,
     reuseExistingServer: false,
     timeout: 30_000,

@@ -176,6 +176,13 @@ export function lessContent(
       server.watcher.on('change', invalidateBlogData);
       server.watcher.on('add', invalidateBlogData);
       server.watcher.on('unlink', invalidateBlogData);
+
+      // M-19 fix: Clean up watcher listeners on server close
+      server.httpServer?.on('close', () => {
+        server.watcher.off('change', invalidateBlogData);
+        server.watcher.off('add', invalidateBlogData);
+        server.watcher.off('unlink', invalidateBlogData);
+      });
     },
   };
 

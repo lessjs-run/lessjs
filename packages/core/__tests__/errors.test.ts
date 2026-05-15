@@ -18,7 +18,7 @@ Deno.test('errors', async (t) => {
     const err = new SsrRenderError('app/routes/index.ts', cause);
     assertEquals(err.statusCode, 500);
     assertEquals(err.isOperational, false);
-    assertEquals(err.cause, cause);
+    assertEquals(err.sourceError, cause);
   });
 
   await t.step('toJSON returns structured error', () => {

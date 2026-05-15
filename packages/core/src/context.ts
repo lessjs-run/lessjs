@@ -91,11 +91,8 @@ export function parseQuery(url: URL): Record<string, string | string[]> {
   url.searchParams.forEach((value, key) => {
     if (key in query) {
       const existing = query[key];
-      if (Array.isArray(existing)) {
-        existing.push(value);
-      } else {
-        query[key] = [existing as string, value];
-      }
+      // M-02 fix: Use Array.isArray check instead of fragile type assertion
+      query[key] = Array.isArray(existing) ? [...existing, value] : [existing, value];
     } else {
       query[key] = value;
     }

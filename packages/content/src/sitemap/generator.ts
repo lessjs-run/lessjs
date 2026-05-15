@@ -63,7 +63,7 @@ export function renderSitemapXml(urls: SitemapUrl[]): string {
       xml += `    <lastmod>${escapeXml(url.lastmod)}</lastmod>\n`;
     }
     if (url.changefreq) {
-      xml += `    <changefreq>${url.changefreq}</changefreq>\n`;
+      xml += `    <changefreq>${escapeXml(url.changefreq)}</changefreq>\n`;
     }
     if (url.priority !== undefined) {
       xml += `    <priority>${url.priority.toFixed(1)}</priority>\n`;

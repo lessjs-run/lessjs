@@ -212,16 +212,22 @@ export class LessCodeBlock extends DsdLitElement {
     }
   }
 
+  // M-25 fix: Max retries for Prism highlight attempts
+  private static MAX_HIGHLIGHT_RETRIES = 20;
+  private _highlightRetries = 0;
+
   /**
    * Read raw code from light DOM, tokenize with Prism, then inject the
    * highlighted HTML directly into the shadow root (replacing the <slot>).
    *
-   * Retries if Prism hasn't loaded yet.
+   * Retries if Prism hasn't loaded yet (capped at MAX_HIGHLIGHT_RETRIES).
    */
   private _tryHighlight(): void {
     const p = (globalThis as any).Prism;
     if (typeof p === 'undefined') {
-      this._highlightTimer = globalThis.setTimeout(() => this._tryHighlight(), 50);
+      if (this._highlightRetries++ < LessCodeBlock.MAX_HIGHLIGHT_RETRIES) {
+        this._highlightTimer = globalThis.setTimeout(() => this._tryHighlight(), 50);
+      }
       return;
     }
 
@@ -251,10 +257,14 @@ export class LessCodeBlock extends DsdLitElement {
     // Tokenize
     const grammar = p.languages[lang];
     if (!grammar) {
-      // Grammar not loaded — try again (the defer-loaded grammars may not be ready yet)
-      this._highlightTimer = globalThis.setTimeout(() => this._tryHighlight(), 100);
+      // Grammar not loaded — try again (capped)
+      if (this._highlightRetries++ < LessCodeBlock.MAX_HIGHLIGHT_RETRIES) {
+        this._highlightTimer = globalThis.setTimeout(() => this._tryHighlight(), 100);
+      }
       return;
     }
+    // Reset retry counter on success
+    this._highlightRetries = 0;
     const highlightedHtml = p.highlight(raw, grammar, lang);
 
     // Inject highlighted HTML into shadow root (replaces <slot>)

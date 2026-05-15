@@ -198,6 +198,10 @@ export class LessBuildContext {
 
   /** Reset all mutable state (for watch mode / testing) */
   reset(): void {
+    // M-12 fix: Clear phase tokens to prevent stale state in watch mode
+    this._phaseTokens[1] = null;
+    this._phaseTokens[2] = null;
+    this._phaseTokens[3] = null;
     this.phase1.honoEntryCode = '';
     this.phase1.cachedRoutes = [];
     this.phase1.islandTagNames = [];

@@ -8,6 +8,7 @@
  */
 import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import { posts, getPostBySlug } from 'virtual:less-blog-data';
@@ -95,4 +96,3 @@ export default class BlogPostPage extends LitElement {
 }
 
 customElements.define(tagName, BlogPostPage);
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';

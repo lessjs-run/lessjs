@@ -16,6 +16,9 @@ export default class HeroPing extends LitElement {
 
   static override properties = {
     apiUrl: { type: String, attribute: 'api-url' },
+    // P-03 fix: Declare as reactive state for proper re-rendering
+    _state: { state: true },
+    _msg: { state: true },
   };
 
   // H-06 fix: Initialize apiUrl as a declared property
@@ -95,6 +98,7 @@ export default class HeroPing extends LitElement {
     }
   `;
 
+  // P-03 fix: _state and _msg declared as reactive state via static properties above
   _state: 'idle' | 'loading' | 'ok' | 'err' = 'idle';
   _msg = '';
   // H-07 fix: Add AbortController to cancel in-flight requests on navigation/disconnect

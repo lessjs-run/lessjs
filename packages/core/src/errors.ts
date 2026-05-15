@@ -29,7 +29,8 @@ export class LessError extends Error {
 export class SsrRenderError extends LessError {
   constructor(
     public readonly componentPath: string,
-    public override readonly cause: Error,
+    // M-06 fix: renamed from 'cause' to avoid shadowing Error.cause
+    public readonly sourceError: Error,
   ) {
     super(`SSR render failed: ${componentPath}`, 'SSR_RENDER_ERROR', 500, false);
   }

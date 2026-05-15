@@ -173,6 +173,8 @@ export function WithDsdHydration<T extends Constructor<LitElement>>(
       const { signal } = this._hydrateAbortController;
 
       for (const desc of events) {
+        // M-17 fix: Guard against prototype pollution — skip methods starting with __
+        if (desc.method.startsWith('__')) continue;
         const elements = this.shadowRoot.querySelectorAll(desc.selector);
         for (const el of elements) {
           const handler = (this as unknown as Record<string, unknown>)[desc.method];

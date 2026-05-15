@@ -421,7 +421,9 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
 
     // Load the SSR bundle and run SSG rendering pipeline
     const ssrBundlePath = resolve(ssrOutDir, 'entry.js');
-    const ssrBundleUrl = Deno.build.os === 'windows'
+    // M-18 fix: Use process.platform instead of Deno.build.os for Node.js compat
+    const isWindows = typeof process !== 'undefined' && process.platform === 'win32';
+    const ssrBundleUrl = isWindows
       ? 'file:///' + ssrBundlePath.replace(/\\/g, '/')
       : 'file://' + ssrBundlePath;
     const module = await import(ssrBundleUrl) as Record<string, unknown>;

@@ -12,7 +12,7 @@ const colorTokensStyle =
 export default defineConfig({
   base: '/',
   build: {
-    chunkSizeWarningLimit: 1500,
+    chunkSizeWarningLimit: 600,
   },
   plugins: [
     lessjs({
@@ -35,42 +35,63 @@ export default defineConfig({
       viewTransition: true,
       speculation: true,
       inject: {
-        stylesheets: [],
+        // H-05 fix: Use structured stylesheets with SRI for CDN CSS
+        stylesheets: [
+          {
+            href: 'https://cdn.jsdelivr.net/npm/open-props@1.7.20/open-props.min.css',
+            integrity: 'sha384-fsyUJwnN3qLArJUL5oaEYS3/WnhCmI4K5x+oB8wFigOMTJaIvys56ozH3+nE/qcf',
+            attrs: { media: 'print', onload: "this.media='all'" },
+          },
+          {
+            href: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css',
+            integrity: 'sha384-rCCjoCPCsizaAAYVoz1Q0CmCTvnctK0JkfCSjx7IIxexTBg+uCKtFYycedUjMyA2',
+            attrs: { media: 'print', onload: "this.media='all'" },
+          },
+        ],
+        // H-04 fix: All CDN scripts now have SRI integrity hashes
         scripts: [
           { src: '/theme-init.js' },
           { src: '/mobile-menu.js', defer: true },
-          { src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js', defer: true },
           {
-            src:
-              'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js',
+            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js',
             defer: true,
+            integrity: 'sha384-06z5D//U/xpvxZHuUz92xBvq3DqBBFi7Up53HRrbV7Jlv7Yvh/MZ7oenfUe9iCEt',
           },
           {
-            src:
-              'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js',
+            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js',
             defer: true,
+            integrity: 'sha384-D44bgYYKvaiDh4cOGlj1dbSDpSctn2FSUj118HZGmZEShZcO2v//Q5vvhNy206pp',
+          },
+          {
+            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js',
+            defer: true,
+            integrity: 'sha384-PeOqKNW/piETaCg8rqKFy+Pm6KEk7e36/5YZE5XO/OaFdO+/Aw3O8qZ9qDPKVUgx',
           },
           {
             src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js',
             defer: true,
+            integrity: 'sha384-RhrmFFMb0ZCHImjFMpR/UE3VEtIVTCtNrtKQqXCzqXZNJala02N3UbVhi+qzw3CY',
           },
           {
             src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js',
             defer: true,
+            integrity: 'sha384-9WmlN8ABpoFSSHvBGGjhvB3E/D8UkNB9HpLJjBQFC2VSQsM1odiQDv4NbEo+7l15',
           },
           {
             src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js',
             defer: true,
+            integrity: 'sha384-0mV13Neu0xhJFylI+HV43C+XiR13bGSeL7D0/7e6hK7sJgvyvK6HVjeQwmvXTstY',
           },
           {
-            src:
-              'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js',
+            src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js',
             defer: true,
+            integrity: 'sha384-HkMr0bZB9kBW4iVtXn6nd35kO/L/dQtkkUBkL9swzTEDMdIe5ExJChVDSnC79aNA',
           },
           { src: '/prism-init.js', defer: true },
           {
             src: 'https://gc.zgo.at/count.js',
             async: true,
+            integrity: 'sha384-2UjvVpptg4JlEVgJI2PdscrjOjPcil/4F1ZvIMJ81CShQnEDSlPI+l4PfogvTLYi',
             attrs: { 'data-goatcounter': 'https://lessjs.goatcounter.com/count' },
           },
         ],
@@ -83,12 +104,10 @@ export default defineConfig({
           '<meta property="og:image" content="https://lessjs.org/assets/og-image.svg">',
           '<meta name="twitter:card" content="summary_large_image">',
           '<meta name="description" content="LessJS — Less is More. Web Standards-first Jamstack SSG with Island architecture. Zero-runtime core, DSD rendering, Lit Web Components, Hono API routes.">',
-          '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/open-props@1.7.20/open-props.min.css" media="print" onload="this.media=\'all\'">',
           '<style id="less-anti-flash">html{visibility:hidden}</style>',
           '<link rel="icon" type="image/svg+xml" href="/assets/less-logo.svg" />',
           '<link rel="apple-touch-icon" href="/assets/less-logo.svg" />',
           colorTokensStyle,
-          '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" media="print" onload="this.media=\'all\'">',
         ],
       },
       content: {

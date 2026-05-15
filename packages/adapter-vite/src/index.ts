@@ -62,7 +62,20 @@ const CORE_SUBPATHS: Record<string, string> = {
 // Remote JSR mode uses createCoreResolvePlugin below.
 
 /** Source cache for JSR-fetched modules (avoids redundant network requests) */
+// M-08 fix: Add max size limit to prevent unbounded memory growth in long dev sessions
+const JSR_CACHE_MAX = 100;
 const jsrSourceCache = new Map<string, string>();
+function cacheGet(key: string): string | undefined {
+  return jsrSourceCache.get(key);
+}
+function cacheSet(key: string, value: string): void {
+  if (jsrSourceCache.size >= JSR_CACHE_MAX) {
+    // Evict oldest entry
+    const firstKey = jsrSourceCache.keys().next().value;
+    if (firstKey !== undefined) jsrSourceCache.delete(firstKey);
+  }
+  jsrSourceCache.set(key, value);
+}
 
 /**
  * Create the core subpath resolution plugin for JSR remote execution.
@@ -130,7 +143,7 @@ function createCoreResolvePlugin(metaUrl: string): Plugin {
       if (!id.startsWith(VIRTUAL_CORE_PREFIX)) return;
 
       // Check cache
-      if (jsrSourceCache.has(id)) return jsrSourceCache.get(id);
+      if (jsrSourceCache.has(id)) return cacheGet(id);
 
       // Normalize .js → .ts (Deno convention: imports use .js, files are .ts)
       let filePath = id.slice(VIRTUAL_CORE_PREFIX.length);
@@ -141,15 +154,20 @@ function createCoreResolvePlugin(metaUrl: string): Plugin {
       // Fetch TypeScript source from JSR
       const url = `${jsrSrcBase}${filePath}`;
       let tsCode: string;
+      // M-09 fix: Add 30s timeout for JSR fetches to prevent hanging builds
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30_000);
       try {
-        const resp = await fetch(url);
+        const resp = await fetch(url, { signal: controller.signal });
         if (!resp.ok) {
           throw new Error(
             `[less:core-resolve] Failed to fetch ${url}: HTTP ${resp.status}`,
           );
         }
         tsCode = await resp.text();
+        clearTimeout(timeoutId);
       } catch (err) {
+        clearTimeout(timeoutId);
         throw new LessError(
           `Failed to load @lessjs/core module from JSR: ${filePath}. ` +
             `URL: ${url}. Error: ${err instanceof Error ? err.message : String(err)}`,
@@ -189,7 +207,7 @@ function createCoreResolvePlugin(metaUrl: string): Plugin {
         },
       );
 
-      jsrSourceCache.set(id, jsCode);
+      cacheSet(id, jsCode);
       return jsCode;
     },
   };
@@ -280,10 +298,29 @@ export function less(
     }
 
     // Stylesheets second
-    for (const href of options.inject.stylesheets || []) {
+    for (const entry of options.inject.stylesheets || []) {
+      const isObj = typeof entry === 'object';
+      const href = isObj ? entry.href : entry;
       validateSafeUrl(href, 'inject.stylesheets');
       const safeHref = escapeHtmlAttr(href);
-      fragments.push(`<link rel="stylesheet" href="${safeHref}" />`);
+      const linkAttrs: string[] = [`rel="stylesheet"`, `href="${safeHref}"`];
+      if (isObj) {
+        if (entry.integrity) linkAttrs.push(`integrity="${escapeHtmlAttr(entry.integrity)}"`);
+        if (entry.crossorigin) linkAttrs.push(`crossorigin="${escapeHtmlAttr(entry.crossorigin)}"`);
+        if (entry.integrity && !entry.crossorigin) linkAttrs.push('crossorigin="anonymous"');
+        if (entry.attrs) {
+          for (const [k, v] of Object.entries(entry.attrs)) {
+            if (v !== undefined && v !== false) {
+              linkAttrs.push(
+                v === true
+                  ? escapeHtmlAttr(k)
+                  : `${escapeHtmlAttr(k)}="${escapeHtmlAttr(String(v))}"`,
+              );
+            }
+          }
+        }
+      }
+      fragments.push(`<link ${linkAttrs.join(' ')} />`);
     }
 
     // Scripts last — depend on headFragments being in DOM
@@ -300,6 +337,12 @@ export function less(
         ...(isObjectScript ? (script.attrs ?? {}) : {}),
         src,
       };
+      // H-04/05 fix: Add SRI attributes for CDN security
+      if (isObjectScript) {
+        if (script.integrity) attrs.integrity = script.integrity;
+        if (script.crossorigin) attrs.crossorigin = script.crossorigin;
+        else if (script.integrity) attrs.crossorigin = 'anonymous';
+      }
       const attrText = Object.entries(attrs)
         .filter(([, value]) => value !== undefined && value !== false)
         .map(([name, value]) =>

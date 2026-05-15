@@ -25,31 +25,19 @@ export type UnsafeHtml = string & { readonly __unsafeHtml: unique symbol };
 
 /**
  * Escape a string for safe HTML text content insertion.
- * If the input is already HTML-escaped (SafeHtml), return as-is.
- * If the input is UnsafeHtml (raw HTML), return as-is (trusted).
- * Otherwise, escape the string.
- *
- * NOTE (v0.14.3): SafeHtml and UnsafeHtml are nominal branded types
- * using `unique symbol`. At runtime, a plain `string` can never have
- * `__safeHtml` or `__unsafeHtml` properties, so the branded type
- * checks below always evaluate to false for plain strings. This is
- * intentional — the protection is at compile time (TypeScript prevents
- * passing UnsafeHtml where SafeHtml is expected). The runtime checks
- * are a defensive no-op that preserves the identity of pre-branded values
- * if they were somehow constructed at runtime.
+ * Uses single-pass replacement for performance (P-01 fix).
+ * Branded types are compile-time only — removed dead runtime branches (M-01 fix).
  */
-export function escapeHtml(str: string | SafeHtml | UnsafeHtml): string {
+const ESCAPE_MAP: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+};
+export function escapeHtml(str: string): string {
   if (typeof str !== 'string') return '';
-  // These checks are compile-time branding — they never match plain strings at runtime.
-  // See NOTE above for explanation.
-  if ((str as SafeHtml).__safeHtml !== undefined) return str;
-  if ((str as UnsafeHtml).__unsafeHtml !== undefined) return str;
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+  return str.replace(/[&<>"']/g, (ch) => ESCAPE_MAP[ch] || ch);
 }
 
 /** Escape an HTML attribute value */
@@ -109,29 +97,30 @@ export function wrapInDocument(
   }
   const nonceAttr = validNonce ? ` nonce="${validNonce}"` : '';
 
-  // Security: warn if headExtras contains <script> tags, which may indicate
-  // user-supplied content being injected unsafely. Legitimate use cases exist
-  // (e.g. analytics scripts), but developers should be aware of the risk.
-  // Only warn once per process to avoid flooding SSG logs.
-  if (
-    !allowHeadExtrasScripts &&
-    headExtras && /<script[\s>]/i.test(headExtras) && !_warnedHeadExtrasScripts
-  ) {
-    _warnedHeadExtrasScripts = true;
-    log.warn(
-      'headExtras contains <script> tags. Ensure this content is developer-controlled, ' +
-        'not user-supplied, to prevent XSS. For safe URL injection, use inject.scripts instead.',
-    );
-  }
-
-  // v0.14.7: Detect on* event handler attributes in headExtras (C-02 fix).
-  // These are a strong indicator of XSS (e.g., onload="alert(1)").
-  // Only warn — don't strip, because headExtras is developer-controlled by design.
-  if (headExtras && /\s+on\w+\s*=/i.test(headExtras)) {
-    log.warn(
-      'headExtras contains on* event handler attributes (e.g., onclick, onload). ' +
-        'This is a potential XSS vector. Ensure this content is developer-controlled.',
-    );
+  // v0.14.8: C-02 fix — Runtime enforcement for headExtras.
+  // If headExtras contains <script> tags and allowHeadExtrasScripts is false,
+  // strip them to prevent XSS. Developer should use inject.scripts for safe injection.
+  let safeHeadExtras = headExtras;
+  if (!allowHeadExtrasScripts && headExtras) {
+    // Strip <script> tags and their content
+    safeHeadExtras = headExtras.replace(/<script[\s>][\s\S]*?<\/script\s*>/gi, '');
+    if (safeHeadExtras !== headExtras && !_warnedHeadExtrasScripts) {
+      _warnedHeadExtrasScripts = true;
+      log.warn(
+        'headExtras contained <script> tags which were stripped for security. ' +
+          'Use inject.scripts for safe script injection, or set allowHeadExtrasScripts: true.',
+      );
+    }
+    // Strip on* event handler attributes (strong XSS indicator)
+    if (/\s+on\w+\s*=/i.test(safeHeadExtras)) {
+      safeHeadExtras = safeHeadExtras.replace(
+        /\s+on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi,
+        '',
+      );
+      log.warn(
+        'headExtras contained on* event handler attributes which were stripped for security.',
+      );
+    }
   }
 
   // v0.14.3: Basic HTML tag balance validation for headExtras.
@@ -180,7 +169,7 @@ export function wrapInDocument(
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${safeTitle}</title>${metaBlock}
-  ${headExtras}
+  ${safeHeadExtras}
 </head>
 <body>
   ${html}

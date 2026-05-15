@@ -61,7 +61,12 @@ export function effect(fn: () => void | (() => void)): Unsubscribe {
   let pendingCount = 0;
 
   const c = new _engine.Computed(() => {
-    cleanup?.();
+    // M-07 fix: Wrap cleanup in try/catch to prevent swallowed errors
+    try {
+      cleanup?.();
+    } catch (e) {
+      console.warn('[LessJS/Signal] effect cleanup threw:', e);
+    }
     cleanup = fn();
   });
 

@@ -60,7 +60,18 @@ export interface FrameworkOptions {
    */
   inject?: {
     /** CSS stylesheet URLs to inject into <head> */
-    stylesheets?: string[];
+    stylesheets?: Array<
+      | string
+      | {
+        href: string;
+        /** Subresource Integrity hash for CDN security */
+        integrity?: string;
+        /** CORS mode for SRI-enabled resources */
+        crossorigin?: 'anonymous' | 'use-credentials';
+        /** Additional <link> attributes */
+        attrs?: Record<string, string | number | boolean>;
+      }
+    >;
     /** Script URLs to inject into <head>. String entries are emitted as module scripts. */
     scripts?: Array<
       | string
@@ -69,6 +80,10 @@ export interface FrameworkOptions {
         type?: string;
         async?: boolean;
         defer?: boolean;
+        /** Subresource Integrity hash (e.g. "sha384-...") for CDN security */
+        integrity?: string;
+        /** CORS mode for SRI-enabled resources (default: "anonymous" when integrity is set) */
+        crossorigin?: 'anonymous' | 'use-credentials';
         attrs?: Record<string, string | number | boolean>;
       }
     >;

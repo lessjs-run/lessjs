@@ -90,13 +90,21 @@ export function untracked<T>(fn: () => T): T {
 
 // ─── Channel (Event Bus) ────────────────────────────────────────
 
-const _channelTarget = typeof document !== 'undefined' ? document.body : null;
+// M-05 fix: Lazy getter for _getChannelTarget() — deferred until first access,
+// so SSR environments don't capture null at module load time.
+let _channelTargetCache: EventTarget | null | undefined = undefined;
+function _getChannelTarget(): EventTarget | null {
+  if (_channelTargetCache === undefined) {
+    _channelTargetCache = typeof document !== 'undefined' ? document.body : null;
+  }
+  return _channelTargetCache;
+}
 
 /**
  * Create a named event channel for island-to-island communication.
  */
 export function channel<T = unknown>(name: string): Channel<T> {
-  if (!_channelTarget) {
+  if (!_getChannelTarget()) {
     console.warn(
       '[LessJS/Signal] No DOM available — channel events will be no-ops (expected in SSR/SSG).',
     );
@@ -105,8 +113,8 @@ export function channel<T = unknown>(name: string): Channel<T> {
   return {
     name,
     emit(event: string, data?: T): void {
-      if (!_channelTarget) return;
-      _channelTarget.dispatchEvent(
+      if (!_getChannelTarget()) return;
+      _getChannelTarget()!.dispatchEvent(
         new CustomEvent(`less:${name}:${event}`, {
           detail: data,
           bubbles: false,
@@ -115,24 +123,26 @@ export function channel<T = unknown>(name: string): Channel<T> {
       );
     },
     on(event: string, handler: ChannelHandler<T>): Unsubscribe {
-      if (!_channelTarget) return () => {};
+      const target = _getChannelTarget();
+      if (!target) return () => {};
       const fullEvent = `less:${name}:${event}`;
       const listener = (e: Event) => handler((e as CustomEvent).detail as T);
-      _channelTarget.addEventListener(fullEvent, listener);
+      target.addEventListener(fullEvent, listener);
       return () => {
-        _channelTarget?.removeEventListener(fullEvent, listener);
+        target.removeEventListener(fullEvent, listener);
       };
     },
     once(event: string, handler: ChannelHandler<T>): Unsubscribe {
-      if (!_channelTarget) return () => {};
+      const target = _getChannelTarget();
+      if (!target) return () => {};
       const fullEvent = `less:${name}:${event}`;
       const listener = (e: Event) => {
-        _channelTarget?.removeEventListener(fullEvent, listener);
+        target.removeEventListener(fullEvent, listener);
         handler((e as CustomEvent).detail as T);
       };
-      _channelTarget.addEventListener(fullEvent, listener);
+      target.addEventListener(fullEvent, listener);
       return () => {
-        _channelTarget?.removeEventListener(fullEvent, listener);
+        target.removeEventListener(fullEvent, listener);
       };
     },
   };
@@ -147,6 +157,7 @@ function createThemeSignal(): WritableSignal<string> {
       : 'dark',
   );
 
+  // M-03 fix: Expose cleanup so MutationObserver can be disconnected in tests
   if (typeof document !== 'undefined') {
     const mo = new MutationObserver(() => {
       const theme = document.documentElement.getAttribute('data-theme');
@@ -156,6 +167,9 @@ function createThemeSignal(): WritableSignal<string> {
       attributes: true,
       attributeFilter: ['data-theme'],
     });
+    // Expose cleanup for test environments
+    (s as WritableSignal<string> & { _cleanupThemeSignal?: () => void })
+      ._cleanupThemeSignal = () => mo.disconnect();
   }
 
   return s;
