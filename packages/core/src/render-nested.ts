@@ -18,6 +18,9 @@ import * as parse5 from 'parse5';
 import type { DefaultTreeAdapterMap } from 'parse5';
 import { type DsdOptions, type DsdRenderCollector } from './types.js';
 import { renderDSD } from './render-dsd.js';
+import { createLogger } from './logger.js';
+
+const log = createLogger('core');
 
 type P5Element = DefaultTreeAdapterMap['element'];
 type P5ChildNode = DefaultTreeAdapterMap['childNode'];
@@ -53,15 +56,23 @@ function parseAttrsToProps(attrs: Array<{ name: string; value: string }>): Recor
       // Try to parse as JSON for array/object values from SSR property bindings.
       // The Lit SSR adapter converts .navItems="${arr}" → nav-items="[{...}]"
       // so we need to parse the JSON back to a JS value for renderDSD().
+      // v0.14.5: Quick structural checks to avoid unnecessary JSON.parse exceptions
       if (value.startsWith('[') || value.startsWith('{')) {
-        try {
-          const parsed = JSON.parse(value);
-          if (typeof parsed === 'object' && parsed !== null) {
-            props[camelKey] = parsed;
-            continue;
+        // Fast check: JSON must end with matching bracket
+        const lastChar = value[value.length - 1];
+        if (
+          (value.startsWith('{') && lastChar === '}') ||
+          (value.startsWith('[') && lastChar === ']')
+        ) {
+          try {
+            const parsed = JSON.parse(value);
+            if (typeof parsed === 'object' && parsed !== null) {
+              props[camelKey] = parsed;
+              continue;
+            }
+          } catch {
+            // Not valid JSON — treat as string
           }
-        } catch {
-          // Not valid JSON — treat as string
         }
       }
       props[camelKey] = value;
@@ -186,7 +197,7 @@ export async function renderNestedCustomElements(
   const ast = parse5.parseFragment(html);
 
   // Collect custom element nodes in bottom-up (deepest-first) order
-  const ceNodes: P5Element[] = [];
+  const ceNodes: Array<{ node: P5Element; depth: number }> = [];
 
   function collectCustomElements(node: P5ChildNode, depth = 0): void {
     if (!('tagName' in node)) return;
@@ -215,7 +226,7 @@ export async function renderNestedCustomElements(
     // Skip if exceeds max depth (prevents stack overflow on pathological nesting)
     if (depth > maxDepth) return;
 
-    ceNodes.push(element);
+    ceNodes.push({ node: element, depth });
   }
 
   // Fragment childNodes are the top-level nodes directly
@@ -224,7 +235,7 @@ export async function renderNestedCustomElements(
   }
 
   // Process each custom element (already in bottom-up order)
-  for (const ceNode of ceNodes) {
+  for (const { node: ceNode, depth } of ceNodes) {
     const tagName = ceNode.tagName;
     const Cls = globalThis.customElements!.get(tagName) as CustomElementConstructor;
     if (!Cls) continue;
@@ -233,7 +244,7 @@ export async function renderNestedCustomElements(
     const dsdOpts = inferDsdOptions(tagName, Cls);
 
     // Render DSD HTML for this component
-    const dsdHtml = await renderDSD(tagName, Cls, props, undefined, dsdOpts, collector);
+    const dsdHtml = await renderDSD(tagName, Cls, props, undefined, dsdOpts, collector, depth);
 
     // Parse the DSD HTML into a fragment
     const dsdFragment = parse5.parseFragment(dsdHtml);
@@ -267,6 +278,14 @@ export async function renderNestedCustomElements(
 
     // Clear the CE node and repopulate with DSD content + light DOM
     ceNode.childNodes = [];
+
+    // v0.14.5: Graceful degradation when renderDSD returns unexpected content
+    if (!dsdCeElement) {
+      log.warn(
+        `renderDSD() for <${tagName}> returned unexpected content — ` +
+          'DSD element not found in rendered output. Falling back to raw fragment.',
+      );
+    }
 
     // Insert only the CHILDREN of the DSD CE element (not the CE wrapper itself)
     // This is the <template shadowrootmode="open"> and any other shadow DOM content

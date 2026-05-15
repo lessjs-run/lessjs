@@ -50,7 +50,8 @@ function walkHtmlFiles(
 
 /** Insert content immediately after <head> opening tag (handles attributes) */
 export function insertAfterHead(html: string, content: string): string {
-  const headMatch = html.match(/<head(\s[^>]*)?>/i);
+  // v0.14.3 N-7: Use [\s\S] instead of [^>] to handle multi-line <head> tags
+  const headMatch = html.match(/<head(\s[\s\S]*?)?>/i);
   if (!headMatch) {
     return html.startsWith('<!') || html.startsWith('<html')
       ? html.replace(/(<(?:!DOCTYPE|html)[^>]*>)/i, `$1\n<head>\n  ${content}\n</head>`)
@@ -352,10 +353,13 @@ export function buildSpeculationRulesJson(
       // Highest probability: prerender with moderate eagerness
       prerenderPaths.push(path);
     } else if (path.split('/').filter(Boolean).length <= 1) {
-      // Top-level: prerender with conservative eagerness
-      prerenderPaths.push(`${path}/*`);
+      // v0.14.3: Top-level pages get exact-match patterns, NOT wildcards.
+      // Adding /about/* would waste bandwidth prefetching all /about/* sub-paths
+      // that may not exist. Use exact match for single pages.
+      prerenderPaths.push(path);
     } else {
       // Deeper pages: prefetch only (lighter than prerender)
+      // Use wildcard for nested sections (e.g., /blog/* matches /blog/post-1, /blog/post-2)
       prefetchPaths.push(`${path}/*`);
     }
   }

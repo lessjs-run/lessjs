@@ -111,7 +111,6 @@ function isNothing(value: unknown): boolean {
 // ADR 0021: Always import from @lessjs/core main entry, never from subpaths.
 export { camelToKebab, escapeAttr, escapeHtml } from '@lessjs/core';
 import { camelToKebab, escapeAttr, escapeHtml } from '@lessjs/core';
-import type { RenderAdapter } from '@lessjs/core';
 import { registerAdapter } from '@lessjs/core';
 import { createLogger } from '@lessjs/core/logger';
 
@@ -490,6 +489,8 @@ export function installLitAdapter(): void {
  * default behavior (only accepting string from render()).
  */
 export function uninstallLitAdapter(): void {
-  registerAdapter(undefined as unknown as RenderAdapter); // Clear adapter
+  // v0.14.3: registerAdapter already accepts RenderAdapter | undefined,
+  // no need for the type-unsafe `undefined as unknown as RenderAdapter` cast.
+  registerAdapter(undefined);
   _installed = false;
 }

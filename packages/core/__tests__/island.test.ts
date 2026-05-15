@@ -15,7 +15,7 @@
  */
 
 import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
-import { getSSRProps, island, lessBind } from '../src/island.ts';
+import { _clearAllVisibilityTimeouts, getSSRProps, island, lessBind } from '../src/island.ts';
 
 // ─── Mock infrastructure ─────────────────────────────────────────
 
@@ -94,6 +94,8 @@ function teardownMocks() {
       configurable: true,
     });
   }
+  // Clear all visibility strategy timeouts (prevent timer leaks in tests)
+  _clearAllVisibilityTimeouts();
 }
 
 /** Create a mock element class with connectedCallback */

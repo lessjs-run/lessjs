@@ -16,6 +16,54 @@ import { createLogger } from './logger.js';
 
 const log = createLogger('core');
 
+// ─── Module-level shared state for History API monkey-patching ────
+// v0.14.3 B-4 fix: Use a shared reference counter so multiple onNavigate
+// subscribers don't corrupt each other's monkey-patches.
+// Each call to onNavigate increments the counter; each unsubscribe decrements.
+// Only the first subscriber installs the patch; only the last removes it.
+let _historyPatchCount = 0;
+
+// Capture originals lazily — not at module load time (SSR/tests may not
+// have `history`). Use null as sentinel; patching is only needed when
+// onNavigate() is actually called in a browser context.
+// deno-lint-ignore no-explicit-any
+let _origPushState: any = null;
+// deno-lint-ignore no-explicit-any
+let _origReplaceState: any = null;
+let _lastNavWasPush = false;
+
+function _ensureHistoryOriginals(): void {
+  // v0.14.5: Guard against SSR/SSG environments where history is unavailable
+  if (typeof globalThis.history === 'undefined') return;
+  if (_origPushState === null) {
+    _origPushState = history.pushState.bind(history);
+    _origReplaceState = history.replaceState.bind(history);
+  }
+}
+
+function _installHistoryPatch(): void {
+  _ensureHistoryOriginals();
+  if (_historyPatchCount === 0) {
+    history.pushState = ((...args: any[]) => {
+      _lastNavWasPush = true;
+      _origPushState(...args);
+    }) as unknown as typeof history.pushState;
+    history.replaceState = ((...args: any[]) => {
+      _lastNavWasPush = true;
+      _origReplaceState(...args);
+    }) as unknown as typeof history.replaceState;
+  }
+  _historyPatchCount++;
+}
+
+function _uninstallHistoryPatch(): void {
+  _historyPatchCount--;
+  if (_historyPatchCount === 0) {
+    history.pushState = _origPushState;
+    history.replaceState = _origReplaceState;
+  }
+}
+
 interface NavigationDestination {
   url: string;
   index: number;
@@ -115,11 +163,28 @@ export function onNavigate(callback: NavigationCallback): () => void {
     return () => nav.removeEventListener('navigatesuccess', handler);
   } else {
     // Fallback: popstate
+    // v0.14.3: Track whether the last navigation was a pushState/replaceState
+    // so we can distinguish 'push' from 'back' in the popstate handler.
+    // History API fires popstate for back/forward navigation but NOT for
+    // pushState/replaceState — so we dispatch it manually in navigate()
+    // and use a flag to tell them apart.
+    //
+    // B-4 fix: Monkey-patching uses a shared reference counter (_historyPatchCount)
+    // declared at module scope. Multiple onNavigate() subscribers share the same
+    // patched history methods. Each unsubscriber only decrements the counter;
+    // the original methods are restored only when the last subscriber leaves.
     const handler = () => {
-      callback(new URL(globalThis.location.href), 'push');
+      const navType: 'push' | 'back' = _lastNavWasPush ? 'push' : 'back';
+      _lastNavWasPush = false;
+      callback(new URL(globalThis.location.href), navType);
     };
+
+    _installHistoryPatch();
     globalThis.addEventListener('popstate', handler);
-    return () => globalThis.removeEventListener('popstate', handler);
+    return () => {
+      globalThis.removeEventListener('popstate', handler);
+      _uninstallHistoryPatch();
+    };
   }
 }
 
@@ -156,7 +221,12 @@ export function matchRoute(
     }
 
     // Fallback: simple regex matching for :param patterns
-    const regexStr = pattern.path.replace(/:([^/]+)/g, '(?<$1>[^/]+)');
+    // v0.14.5: Escape special regex characters in param names
+    // to prevent ReDoS and SyntaxError on old engines
+    const regexStr = pattern.path.replace(/:([^/]+)/g, (_match, paramName: string) => {
+      const escaped = paramName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return `(?<${escaped}>[^/]+)`;
+    });
     const regex = new RegExp(`^${regexStr}$`);
     const match = pathname.match(regex);
     if (match?.groups) {

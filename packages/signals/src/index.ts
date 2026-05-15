@@ -34,7 +34,8 @@ export type {
 export { computed, effect, signal } from './framework.ts';
 export { batch, channel, islandEffect, isNativeSignal, themeSignal, untracked } from './sugar.ts';
 
-// Default export for convenient import
+// Default export for convenient import — tree-shakable since bundlers
+// eliminate the default object when only named imports are used.
 import { computed, effect, signal } from './framework.ts';
 import { batch, channel, islandEffect, isNativeSignal, themeSignal, untracked } from './sugar.ts';
 

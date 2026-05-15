@@ -74,18 +74,20 @@ ${
 var __observedTags = [];
 function __observeVisible() {
   __visibleTags.forEach(function(tag) {
-    var el = document.querySelector(tag);
-    if (el && __observedTags.indexOf(tag) === -1) {
+    var els = document.querySelectorAll(tag);
+    if (els.length > 0 && __observedTags.indexOf(tag) === -1) {
       __observedTags.push(tag);
-      var obs = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            __load(tag);
-            obs.disconnect();
-          }
-        });
-      }, { rootMargin: '200px' });
-      obs.observe(el);
+      els.forEach(function(el) {
+        var obs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              __load(tag);
+              obs.disconnect();
+            }
+          });
+        }, { rootMargin: '200px' });
+        obs.observe(el);
+      });
     }
   });
 }

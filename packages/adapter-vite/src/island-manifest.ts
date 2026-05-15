@@ -39,12 +39,19 @@ export type IslandLayerMap = Record<string, 'dsd-static' | 'dsd-interactive' | '
 /**
  * Extract custom element tag names from HTML content.
  * Matches <xxx-yyy> or <xxx-yyy ...> patterns (custom elements must contain a hyphen).
+ * v0.14.6: Strips HTML comments, script blocks, and style blocks before matching
+ * to avoid false positives (e.g., CE tags inside comments or script content).
  */
 export function extractCustomElementTags(html: string): string[] {
+  // Strip HTML comments, script blocks, and style blocks first
+  const cleaned = html
+    .replace(/<!--[\s\S]*?-->/g, '') // Remove HTML comments
+    .replace(/<script[\s>][\s\S]*?<\/script>/gi, '') // Remove script blocks
+    .replace(/<style[\s>][\s\S]*?<\/style>/gi, ''); // Remove style blocks
   const tagPattern = /<([a-z][a-z0-9]*-[a-z0-9-]+)[\s>\/]/gi;
   const tags = new Set<string>();
   let match: RegExpExecArray | null;
-  while ((match = tagPattern.exec(html)) !== null) {
+  while ((match = tagPattern.exec(cleaned)) !== null) {
     tags.add(match[1].toLowerCase());
   }
   return [...tags];
@@ -112,19 +119,31 @@ export function writeIslandManifests(outputDir: string, manifests: PageIslandMan
   mkdirSync(manifestDir, { recursive: true });
 
   for (const manifest of manifests) {
-    const hash = simpleHash(manifest.route);
+    const hash = stableHash(manifest.route);
     const filename = `page-${hash}.json`;
     writeFileSync(join(manifestDir, filename), JSON.stringify(manifest, null, 2), 'utf-8');
   }
 }
 
-/** Simple string hash for generating stable filenames */
-function simpleHash(str: string): string {
-  let hash = 0;
+/**
+ * FNV-1a 64-bit hash for generating stable filenames.
+ * v0.14.3: Replaced simpleHash (32-bit DJB2 variant) with FNV-1a 64-bit
+ * to significantly reduce collision probability for large sites.
+ * Uses BigInt for the 64-bit arithmetic, falling back to 32-bit
+ * if BigInt is unavailable.
+ *
+ * Exported as shared utility for use by other modules (e.g., ssg-render.ts).
+ */
+export function stableHash(str: string): string {
+  // FNV-1a 64-bit parameters
+  const FNV_OFFSET_BASIS = 14695981039346656037n;
+  const FNV_PRIME = 1099511628211n;
+  const MASK64 = (1n << 64n) - 1n;
+
+  let hash = FNV_OFFSET_BASIS;
   for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash |= 0;
+    hash ^= BigInt(str.charCodeAt(i));
+    hash = (hash * FNV_PRIME) & MASK64;
   }
-  return Math.abs(hash).toString(36);
+  return hash.toString(36);
 }

@@ -234,8 +234,17 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
           );
         }
       }
-    } catch {
-      // decodeURIComponent threw — malformed encoding, treat as unsafe
+    } catch (e) {
+      // v0.14.3: decodeURIComponent can throw for two reasons:
+      //   1. Malicious URLs with invalid percent-encoding (e.g., "%ZZ")
+      //   2. Legitimate URLs with lone surrogates (rare, but valid URI-encoded)
+      // We treat actual URIError as unsafe, but log the distinction for debugging.
+      if (e instanceof URIError) {
+        log.debug(
+          `decodeURIComponent failed for URL in ${context}: "${url}" — ${e.message}. ` +
+            'This may be a legitimate encoding issue or a malicious URL.',
+        );
+      }
       throw new LessError(
         `Invalid URL in ${context}: "${url}" — malformed percent-encoding`,
         'UNSAFE_URL',
@@ -379,6 +388,10 @@ export function less(options: FrameworkOptions = {}, externalCtx?: LessBuildCont
       if (cfg.resolve?.alias && !ctx.phase1.userResolveAlias) {
         ctx.phase1.userResolveAlias = cfg.resolve.alias;
       }
+      // v0.14.6: Generate placeholder entry code with empty routes in configResolved.
+      // This is a Vite requirement — the virtual entry must exist before buildStart().
+      // The real entry with actual routes is generated in buildStart() which runs later.
+      // This is NOT a duplicate — both calls are intentional and serve different phases.
       ctx.phase1.honoEntryCode = generateEntry(
         [],
         ctx.phase1.islandTagNames,
@@ -515,38 +528,40 @@ function dispatchDataPlugin(ctx: LessBuildContext): Plugin {
     },
   ];
 
+  // v0.14.6: Use Map for O(1) virtual module ID lookup
+  const ENTRIES_MAP = new Map(ENTRIES.map((e) => [e.virtual, e]));
+  const RESOLVED_MAP = new Map(ENTRIES.map((e) => [e.resolved, e]));
+
   return {
     name: 'less:data-dispatch',
     enforce: 'pre',
     resolveId(id) {
-      for (const e of ENTRIES) {
-        if (id === e.virtual) {
-          const real = e.get();
-          if (!real?.resolveId) return e.resolved;
-          // Vite 8 Plugin hook can be function or {handler, order}
-          const fn = typeof real.resolveId === 'function'
-            ? real.resolveId
-            : (real.resolveId as Record<string, unknown>).handler;
-          if (!fn) return e.resolved;
-          // deno-lint-ignore no-explicit-any
-          const result = (fn as any)(id);
-          return result ?? e.resolved;
-        }
+      const entry = ENTRIES_MAP.get(id);
+      if (entry) {
+        const real = entry.get();
+        if (!real?.resolveId) return entry.resolved;
+        // Vite 8 Plugin hook can be function or {handler, order}
+        const fn = typeof real.resolveId === 'function'
+          ? real.resolveId
+          : (real.resolveId as Record<string, unknown>).handler;
+        if (!fn) return entry.resolved;
+        // deno-lint-ignore no-explicit-any
+        const result = (fn as any)(id);
+        return result ?? entry.resolved;
       }
     },
     load(id) {
-      for (const e of ENTRIES) {
-        if (id === e.resolved) {
-          const real = e.get();
-          if (!real?.load) return e.emptyCode;
-          // Vite 8 Plugin hook can be function or {handler, order}
-          const fn = typeof real.load === 'function'
-            ? real.load
-            : (real.load as Record<string, unknown>).handler;
-          if (!fn) return e.emptyCode;
-          // deno-lint-ignore no-explicit-any
-          return (fn as any)(id) ?? e.emptyCode;
-        }
+      const entry = RESOLVED_MAP.get(id);
+      if (entry) {
+        const real = entry.get();
+        if (!real?.load) return entry.emptyCode;
+        // Vite 8 Plugin hook can be function or {handler, order}
+        const fn = typeof real.load === 'function'
+          ? real.load
+          : (real.load as Record<string, unknown>).handler;
+        if (!fn) return entry.emptyCode;
+        // deno-lint-ignore no-explicit-any
+        return (fn as any)(id) ?? entry.emptyCode;
       }
     },
   };

@@ -44,6 +44,19 @@
 import { createLogger } from './logger.js';
 const log = createLogger('core');
 
+// Module-level store of active visibility strategy timeout IDs.
+// Used for test cleanup — tests can call _clearAllVisibilityTimeouts()
+// to prevent timer leaks.
+const _visibilityTimeouts: Set<number> = new Set();
+
+/** Clear all active visibility strategy timeouts (for test cleanup). */
+export function _clearAllVisibilityTimeouts(): void {
+  for (const id of _visibilityTimeouts) {
+    clearTimeout(id);
+  }
+  _visibilityTimeouts.clear();
+}
+
 export interface IslandOptions {
   /** Upgrade strategy:
    *   - 'eager': load immediately when module is imported
@@ -108,13 +121,27 @@ export function getSSRProps(el: HTMLElement): Record<string, unknown> | null {
  * state sync) is handled at the component level via WithDsdHydration
  * Mixin and declarative hydrateEvents.
  *
+ * v0.14.3: Prototype pollution fix — filters dangerous keys
+ * (__proto__, constructor, prototype) from parsed SSR props.
+ *
  * @param el - The upgraded custom element
  */
+
+/** Keys that could cause prototype pollution if assigned to an object instance */
+const DANGEROUS_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
 export function lessBind(el: HTMLElement): void {
   const props = getSSRProps(el);
   if (!props) return;
 
   for (const [key, value] of Object.entries(props)) {
+    // v0.14.3: Prevent prototype pollution — skip dangerous keys
+    if (DANGEROUS_KEYS.has(key)) {
+      log.warn(
+        `Skipping dangerous key "${key}" in data-ssr-props on <${el.tagName.toLowerCase()}>`,
+      );
+      continue;
+    }
     try {
       (el as unknown as Record<string, unknown>)[key] = value;
     } catch (e) {
@@ -147,6 +174,8 @@ function createVisibleStrategy(
           observer.disconnect();
           if (!registered) {
             registered = true;
+            clearTimeout(timeoutId);
+            _visibilityTimeouts.delete(timeoutId);
             registerFn();
           }
           return;
@@ -169,8 +198,31 @@ function createVisibleStrategy(
   const mo = new MutationObserver((_mutations, mutObs) => {
     if (observeAll()) {
       mutObs.disconnect();
+    } else {
+      // v0.14.5: If elements were removed from DOM, disconnect all observers
+      const elements = document.querySelectorAll(tagName);
+      if (elements.length === 0 && !registered) {
+        mutObs.disconnect();
+        observer.disconnect();
+        clearTimeout(timeoutId);
+        _visibilityTimeouts.delete(timeoutId);
+      }
     }
   });
+
+  // v0.14.3: Timeout guard — if the target element never appears
+  // (e.g., route changed after island was registered), disconnect
+  // both observers after 30 seconds to prevent memory/perf leaks.
+  const VISIBILITY_TIMEOUT = 30_000; // 30s
+  const timeoutId = setTimeout(() => {
+    _visibilityTimeouts.delete(timeoutId);
+    if (!registered) {
+      mo.disconnect();
+      observer.disconnect();
+      log.debug(`Visibility strategy for <${tagName}> timed out after ${VISIBILITY_TIMEOUT}ms`);
+    }
+  }, VISIBILITY_TIMEOUT);
+  _visibilityTimeouts.add(timeoutId);
 
   // Start observing after DOM content loaded
   if (document.readyState === 'loading') {
@@ -273,6 +325,12 @@ export function island<T extends CustomElementConstructor>(
   // that calls the original callback + auto-binds SSR props.
   // This is safer than monkey-patching because it doesn't interfere
   // with Lit's own connectedCallback chain.
+  //
+  // v0.14.3: Added __lessBindDone idempotency guard to prevent
+  // double lessBind() calls when a subclass island inherits from a
+  // parent island (both registered via island()). Without this guard,
+  // the parent's wrapped connectedCallback and the subclass's both
+  // call lessBind on the same element.
   const origConnected = componentClass.prototype.connectedCallback;
   if (!componentClass.prototype.__lessIslandWrapped) {
     componentClass.prototype.__lessIslandWrapped = true;
@@ -281,8 +339,9 @@ export function island<T extends CustomElementConstructor>(
       if (typeof origConnected === 'function') {
         origConnected.call(this);
       }
-      // Auto-bind SSR props on upgrade
-      if (this.hasAttribute('data-ssr-props')) {
+      // Auto-bind SSR props on upgrade (idempotent — only once per element)
+      if (this.hasAttribute('data-ssr-props') && !(this as any).__lessBindDone) {
+        (this as any).__lessBindDone = true;
         Promise.resolve().then(() => lessBind(this));
       }
     } as unknown as typeof componentClass.prototype.connectedCallback;
@@ -331,5 +390,6 @@ export function island<T extends CustomElementConstructor>(
 
 /**
  * Exports the `island` function as default for convenience imports.
+ * Tree-shakable: bundlers can eliminate unused named exports from the same module.
  */
 export default island;

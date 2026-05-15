@@ -58,7 +58,7 @@ export function computed<T>(fn: () => T): ReadonlySignal<T> {
  */
 export function effect(fn: () => void | (() => void)): Unsubscribe {
   let cleanup: (() => void) | void;
-  let pending = false;
+  let pendingCount = 0;
 
   const c = new _engine.Computed(() => {
     cleanup?.();
@@ -66,16 +66,20 @@ export function effect(fn: () => void | (() => void)): Unsubscribe {
   });
 
   const watcher = new _engine.subtle.Watcher(() => {
-    if (!pending) {
-      pending = true;
+    pendingCount++;
+    if (pendingCount === 1) {
       queueMicrotask(() => {
-        pending = false;
-        for (const s of watcher.getPending()) {
-          try {
-            // deno-lint-ignore no-explicit-any
-            (s as any).get();
-          } catch (err) {
-            _log.warn('Effect error:', err);
+        pendingCount = 0;
+        // Loop to handle signal changes that occurred during processing
+        let pendingSignals: unknown[];
+        while ((pendingSignals = watcher.getPending()).length > 0) {
+          for (const s of pendingSignals) {
+            try {
+              // deno-lint-ignore no-explicit-any
+              (s as any).get();
+            } catch (err) {
+              _log.warn('Effect error:', err);
+            }
           }
         }
         watcher.watch(c);

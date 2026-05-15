@@ -72,8 +72,13 @@ function _producerAccessed(node: ReactiveNode): void {
   _activeConsumer.producerLastReadVersion![idx] = node.version;
 }
 
+// v0.14.3: Added overflow protection — reset epoch before MAX_SAFE_INTEGER
+// to prevent stale computed signals from not recalculating.
 function _producerIncrementEpoch(): void {
   _epoch++;
+  if (_epoch > Number.MAX_SAFE_INTEGER - 1000) {
+    _epoch = 1;
+  }
 }
 
 function _producerUpdateValueVersion(node: ReactiveNode): void {
@@ -162,6 +167,8 @@ function _producerAddLiveConsumer(
 function _producerRemoveLiveConsumerAtIndex(node: ReactiveNode, idx: number): void {
   _assertProducerNode(node);
   _assertConsumerNode(node);
+  // v0.14.6: Guard against index out of bounds (duplicate unwatch calls)
+  if (idx < 0 || idx >= (node.liveConsumerNode?.length ?? 0)) return;
   if (node.liveConsumerNode!.length === 1) {
     node.unwatched?.call(node.wrapper);
     for (let i = 0; i < node.producerNode!.length; i++) {
@@ -196,13 +203,22 @@ function _assertProducerNode(node: ReactiveNode): void {
   node.liveConsumerIndexOfThis ??= [];
 }
 
+// ─── Module-level sentinel symbols ───────────────────────────────
+// v0.14.3 N-8: Moved from inside _createPolyfill to module scope so they
+// are created once (not per-call). If _createPolyfill is called more than
+// once (e.g., in tests), the sentinels remain consistent across instances.
+const _UNSET = Symbol('UNSET');
+const _COMPUTING = Symbol('COMPUTING');
+const _ERRORED = Symbol('ERRORED');
+
+// v0.14.6 N-5: Symbols for watched/unwatched hooks moved to module scope
+// so they are created once and shared across all _createPolyfill() calls.
+const subtle_watched = Symbol('watched');
+const subtle_unwatched = Symbol('unwatched');
+
 // ─── _createPolyfill: Signal.State / Signal.Computed / Signal.subtle.Watcher ──
 
 export function _createPolyfill(): SignalEngineNamespace {
-  const UNSET = Symbol('UNSET');
-  const COMPUTING = Symbol('COMPUTING');
-  const ERRORED = Symbol('ERRORED');
-
   // --- Signal.State ---
   class State<T> {
     readonly [NODE]: SignalNode<T>;
@@ -255,23 +271,23 @@ export function _createPolyfill(): SignalEngineNamespace {
       const node: ComputedNode<T> = Object.create({
         ...REACTIVE_NODE,
         equal: (a: T, b: T) => Object.is(a, b),
-        value: UNSET as any,
+        value: _UNSET as any,
         error: undefined,
         computation,
       });
       node.consumerAllowSignalWrites = true;
       node.wrapper = this;
 
-      node.producerMustRecompute = (n: unknown) => (n as ComputedNode<T>).value === UNSET;
+      node.producerMustRecompute = (n: unknown) => (n as ComputedNode<T>).value === _UNSET;
       node.producerRecomputeValue = (n: unknown) => {
         const cNode = n as ComputedNode<T>;
         const prevConsumer = _consumerBeforeComputation(cNode);
-        cNode.value = COMPUTING as any;
+        cNode.value = _COMPUTING as any;
         try {
           cNode.value = cNode.computation.call(cNode.wrapper);
           cNode.error = undefined;
         } catch (err) {
-          cNode.value = ERRORED as any;
+          cNode.value = _ERRORED as any;
           cNode.error = err;
         } finally {
           _consumerAfterComputation(cNode, prevConsumer);
@@ -292,7 +308,7 @@ export function _createPolyfill(): SignalEngineNamespace {
       }
       _producerUpdateValueVersion(this[NODE]);
       _producerAccessed(this[NODE]);
-      if (this[NODE].value === ERRORED) throw this[NODE].error;
+      if (this[NODE].value === _ERRORED) throw this[NODE].error;
       return this[NODE].value;
     }
   }
@@ -349,10 +365,6 @@ export function _createPolyfill(): SignalEngineNamespace {
       return node.producerNode!.filter((n) => n.dirty).map((n) => n.wrapper);
     }
   }
-
-  // Symbols for watched/unwatched hooks
-  const subtle_watched = Symbol('watched');
-  const subtle_unwatched = Symbol('unwatched');
 
   // Build the Signal namespace matching TC39 spec
   const Sig = {

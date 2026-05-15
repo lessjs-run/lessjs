@@ -104,8 +104,13 @@ export async function renderDSD(
   sourceInfo?: { route?: string; source?: string },
   dsdOptions?: DsdOptions,
   collector?: DsdRenderCollector,
+  // v0.14.3 N-6: Accept actual nesting depth from renderNestedCustomElements
+  // instead of always recording 0. This makes the build report's maxNestingDepth
+  // metric meaningful.
+  nestingDepth = 0,
 ): Promise<string> {
   const startTime = performance.now();
+  const adapter = getAdapter();
   const sourceStr = sourceInfo
     ? `${sourceInfo.route ? ` route="${sourceInfo.route}"` : ''}${
       sourceInfo.source ? ` source="${sourceInfo.source}"` : ''
@@ -153,8 +158,6 @@ export async function renderDSD(
     } else if (typeof result === 'string') {
       content = result;
     } else {
-      const adapter = getAdapter();
-
       if (adapter?.isTemplate && adapter?.render && adapter.isTemplate(result)) {
         content = await adapter.render(result, tagName);
       } else {
@@ -174,11 +177,30 @@ export async function renderDSD(
     log.error(
       `<${tagName}> render() failed: ${errMsg}${errStack ? `\n${errStack}` : ''}`,
     );
-    content = `<!-- LessJS ERROR: <${tagName}> render() threw: ${escapeHtml(errMsg)} -->\n` +
-      (errStack
-        ? `<!-- Stack: ${escapeHtml(errStack.split('\n').slice(0, 3).join(' | '))} -->\n`
-        : '') +
-      '<!-- Check console for full error details -->';
+    // v0.14.3: Only include error details in HTML comments during development.
+    // In production, leaking file paths and code structure in HTML comments
+    // is a security risk — anyone viewing page source can see internal info.
+    // Cross-runtime environment detection: check Deno first, then Node, else production.
+    // Use globalThis bracket access to avoid TS2580 in Deno type-checker
+    // (bare `process` is not a Deno global and triggers "Cannot find name").
+    // deno-lint-ignore no-explicit-any
+    const _nodeProcess = (globalThis as any).process as
+      | { env?: Record<string, string | undefined> }
+      | undefined;
+    const _nodeIsDev = _nodeProcess?.env?.NODE_ENV !== 'production';
+    const isDev = typeof Deno !== 'undefined'
+      ? Deno.env?.get('LESSJS_ENV') !== 'production'
+      : _nodeIsDev;
+    if (isDev) {
+      content = `<!-- LessJS ERROR: <${tagName}> render() threw: ${escapeHtml(errMsg)} -->\n` +
+        (errStack
+          ? `<!-- Stack: ${escapeHtml(errStack.split('\n').slice(0, 3).join(' | '))} -->\n`
+          : '') +
+        '<!-- Check console for full error details -->';
+    } else {
+      content = `<!-- LessJS ERROR: <${tagName}> render() failed -->` +
+        '<!-- Check console for full error details -->';
+    }
   }
 
   // v0.6: L2 Nested DSD — recursively render nested Custom Elements
@@ -187,7 +209,6 @@ export async function renderDSD(
 
   // 5. Extract static styles from component class
   let styleCss = '';
-  const adapter = getAdapter();
   if (adapter?.extractStyles) {
     try {
       styleCss = adapter.extractStyles(componentClass) || '';
@@ -213,13 +234,21 @@ export async function renderDSD(
       templateSize: content.length,
       layer: resolvedLayer,
       hasError: false,
-      nestingDepth: 0,
+      // v0.14.3 N-6: Use actual nesting depth passed from renderNestedCustomElements
+      nestingDepth,
     });
   }
 
   if (resolvedLayer === 'pure-island') {
     // Pure Island: no DSD template, framework will create shadow root on client
     const attrs = serializeAttributes(props);
+    // NOTE (v0.14.3): Object-type props are intentionally serialized TWICE:
+    //   1. In HTML attributes via serializeAttributes() — used by SSR rendering
+    //   2. In data-ssr-props — used by client-side lessBind() for hydration
+    // The HTML attribute form is needed for nested custom element SSR processing
+    // (parseAttrsToProps in render-nested.ts). The data-ssr-props form is the
+    // authoritative source for client-side property restoration. This dual
+    // serialization is by design, not a bug.
     const ssrPropsAttr = Object.keys(props).length > 0
       ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
       : '';
@@ -228,6 +257,7 @@ export async function renderDSD(
 
   // Layer 1 (dsd-static) and Layer 2 (dsd-interactive): emit DSD template
   const attrs = serializeAttributes(props);
+  // NOTE (v0.14.3): See above — dual serialization is intentional.
   const ssrPropsAttr = Object.keys(props).length > 0
     ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
     : '';

@@ -32,7 +32,9 @@ const log = createLogger('core');
  * Pattern :param is compatible with both Hono and URLPattern.
  */
 function filePathToRoutePath(filePath: string): string {
-  // Normalize separators
+  // Normalize separators — handle Windows backslash paths
+  // v0.14.3: Use posix.join to ensure all output paths use forward slashes
+  // regardless of platform. This prevents \ from leaking into URL patterns.
   let p = filePath.split(sep).join(posix.sep);
 
   // Remove extension
@@ -275,34 +277,13 @@ export async function scanPackageIslands(
   const allIslands: PackageIslandMeta[] = [];
 
   for (const pkg of packageNames) {
+    // v0.14.6: @vite-ignore suppresses unanalyzable-dynamic-import JSR warning.
+    // Non-existent packages intentionally throw LessError (fail-fast for misconfiguration).
+    // deno-lint-ignore no-explicit-any
+    let mod: Record<string, unknown>;
     try {
-      // JSR publishes a warning[unanalyzable-dynamic-import] here because
-      // `pkg` is a variable — JSR cannot resolve it at publish time.
-      // This is intentional: packageNames are user-configured (e.g. ['@lessjs/ui'])
-      // and must resolve at runtime via the consumer's import map / package.json.
-      // The warning does NOT block publishing; the import resolves correctly
-      // in the consuming project where the target package is a declared dependency.
-      const mod = await import(pkg);
-      if (mod.islands && Array.isArray(mod.islands)) {
-        // Validate each island has required fields
-        for (const island of mod.islands) {
-          if (island.tagName && island.modulePath) {
-            allIslands.push({
-              tagName: island.tagName,
-              modulePath: island.modulePath,
-              strategy: island.strategy || 'lazy',
-            });
-          } else {
-            log.warn(
-              `Invalid island in ${pkg}: missing tagName or modulePath`,
-            );
-          }
-        }
-      }
+      mod = await import(/* @vite-ignore */ pkg) as Record<string, unknown>;
     } catch (e) {
-      // Package scan failure is fatal — misconfigured packages should break
-      // the build, not silently produce a broken site. This is consistent
-      // with how route scanning failures are handled (throw LessError).
       throw new LessError(
         `Failed to scan package islands from "${pkg}": ${
           e instanceof Error ? e.message : String(e)
@@ -311,6 +292,22 @@ export async function scanPackageIslands(
         500,
         false,
       );
+    }
+    if (mod.islands && Array.isArray(mod.islands)) {
+      // Validate each island has required fields
+      for (const island of mod.islands) {
+        if (island.tagName && island.modulePath) {
+          allIslands.push({
+            tagName: island.tagName,
+            modulePath: island.modulePath,
+            strategy: island.strategy || 'lazy',
+          });
+        } else {
+          log.warn(
+            `Invalid island in ${pkg}: missing tagName or modulePath`,
+          );
+        }
+      }
     }
   }
 

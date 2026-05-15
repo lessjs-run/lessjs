@@ -33,13 +33,23 @@ const RESOLVED_SSG_ENTRY_ID = '\0' + VIRTUAL_SSG_ENTRY_ID;
 const FALLBACK_LESSJS_VERSION = '0.14.2';
 
 function readWorkspacePackageVersion(root: string, packageDir: string): string {
-  try {
-    const denoJsonPath = resolve(root, '..', 'packages', packageDir, 'deno.json');
-    const json = JSON.parse(readFileSync(denoJsonPath, 'utf-8'));
-    return typeof json.version === 'string' ? json.version : FALLBACK_LESSJS_VERSION;
-  } catch {
-    return FALLBACK_LESSJS_VERSION;
+  // v0.14.6: Try import.meta.url fallback when root does not point to workspace root
+  const possibleRoots = [
+    root && resolve(root, '..'),
+    // Fallback: infer monorepo root from this file's location
+    resolve(new URL('.', import.meta.url).pathname, '..', '..', '..', '..'),
+  ].filter(Boolean) as string[];
+
+  for (const base of possibleRoots) {
+    try {
+      const denoJsonPath = resolve(base, 'packages', packageDir, 'deno.json');
+      const json = JSON.parse(readFileSync(denoJsonPath, 'utf-8'));
+      if (typeof json.version === 'string') return json.version;
+    } catch {
+      continue;
+    }
   }
+  return FALLBACK_LESSJS_VERSION;
 }
 
 // ─── Optional Package Stubs (ADR 0008 Phase C) ──────────────────────
@@ -197,10 +207,25 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     if (alias) {
       if (Array.isArray(alias)) {
         for (const a of alias) {
-          if (a.find === '@lessjs/ui') allNoExternal.push(a.replacement);
+          if (a.find === '@lessjs/ui') {
+            // v0.14.6: Check if replacement is already covered by defaultNoExternal
+            const isAlreadyCovered = defaultNoExternal.some(
+              (pattern: string | RegExp) =>
+                pattern instanceof RegExp && pattern.test(a.replacement),
+            );
+            if (!isAlreadyCovered) {
+              allNoExternal.push(a.replacement);
+            }
+          }
         }
       } else if ('@lessjs/ui' in alias) {
-        allNoExternal.push(alias['@lessjs/ui']);
+        const isAlreadyCovered = defaultNoExternal.some(
+          (pattern: string | RegExp) =>
+            pattern instanceof RegExp && pattern.test(alias['@lessjs/ui']),
+        );
+        if (!isAlreadyCovered) {
+          allNoExternal.push(alias['@lessjs/ui']);
+        }
       }
     }
 
