@@ -101,7 +101,7 @@ const CLIENT_PANEL_CODE = `
       this.attachShadow({ mode: 'open' });
       if (!this.shadowRoot) return;
       this.shadowRoot.innerHTML = STYLES + \`
-        <button class="ljt-toggle" id="toggle">鈴?/button>
+        <button class="ljt-toggle" id="toggle">🔧</button>
         <div class="ljt-panel" id="panel">
           <div class="ljt-header">LessJS DSD Inspector</div>
           <div id="ljt-content">Scanning page...</div>
@@ -117,9 +117,8 @@ const CLIENT_PANEL_CODE = `
         if (panel.classList.contains('open')) this._scan();
       });
 
-      // Start with panel open by default
-      panel.classList.add('open');
-      this._scan();
+      // v0.14.10: Panel starts closed — scan only on explicit toggle open.
+      // Avoids full querySelectorAll('*') on every page load in dev mode.
     }
 
     private _scan(): void {
@@ -188,11 +187,11 @@ const CLIENT_PANEL_CODE = `
           <div class="ljt-header">Runtime Checks</div>
           <div class="ljt-row">
             <span class="ljt-label">DSD Polyfill</span>
-            <span class="ljt-value">\${typeof HTMLTemplateElement.prototype.shadowRootMode !== 'undefined' ? '鉁?Native' : '鈿狅笍 Polyfill'}</span>
+            <span class="ljt-value">\${typeof HTMLTemplateElement.prototype.shadowRootMode !== 'undefined' ? '✓ Native' : '⚠ Polyfill'}</span>
           </div>
           <div class="ljt-row">
             <span class="ljt-label">Navigation API</span>
-            <span class="ljt-value">\${'navigation' in window ? '鉁?Supported' : '鈩癸笍 History API fallback'}</span>
+            <span class="ljt-value">\${'navigation' in window ? '✓ Supported' : '⚠ History API fallback'}</span>
           </div>
         </div>
       \`;

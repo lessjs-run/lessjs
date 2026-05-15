@@ -25,6 +25,23 @@ jobs:
       - name: Run type check
         run: deno task typecheck
 
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: '2'
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
+      - name: Install dependencies
+        run: deno install --node-modules-dir
+      - name: Run dependency audit
+        run: deno audit
+
   test-core:
     runs-on: ubuntu-latest
     steps:

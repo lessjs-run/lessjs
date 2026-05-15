@@ -36,16 +36,16 @@ adapter-lit  ui  signals  rpc  create
 
 | Package                | Version | Role                                         | External Deps       |
 | ---------------------- | ------- | -------------------------------------------- | ------------------- |
-| `@lessjs/core`         | 0.14.6  | DSD rendering, Islands, Navigation, Logger   | parse5 only         |
-| `@lessjs/adapter-vite` | 0.14.6  | Vite build: routes, islands, SSG 3-phase     | vite, hono, esbuild |
-| `@lessjs/adapter-lit`  | 0.14.6  | Lit TemplateResult → DSD HTML bridge         | lit                 |
-| `@lessjs/content`      | 0.14.6  | Blog + Nav + Sitemap build-time plugin       | marked, gray-matter |
-| `@lessjs/i18n`         | 0.14.6  | i18n locale expansion                        | none                |
-| `@lessjs/app`          | 0.14.6  | Umbrella: lessjs() = less() + content + i18n | —                   |
-| `@lessjs/ui`           | 0.14.6  | 8 Web Components (layout, button, input…)    | lit                 |
-| `@lessjs/signals`      | 0.14.6  | TC39 Signals polyfill + framework layer      | none                |
-| `@lessjs/rpc`          | 0.14.6  | Zero-dep fetch RPC controller                | none                |
-| `@lessjs/create`       | 0.14.6  | CLI scaffold                                 | none                |
+| `@lessjs/core`         | 0.14.9  | DSD rendering, Islands, Navigation, Logger   | parse5 only         |
+| `@lessjs/adapter-vite` | 0.14.9  | Vite build: routes, islands, SSG 3-phase     | vite, hono, esbuild |
+| `@lessjs/adapter-lit`  | 0.14.9  | Lit TemplateResult → DSD HTML bridge         | lit                 |
+| `@lessjs/content`      | 0.14.9  | Blog + Nav + Sitemap build-time plugin       | marked, gray-matter |
+| `@lessjs/i18n`         | 0.14.9  | i18n locale expansion                        | none                |
+| `@lessjs/app`          | 0.14.9  | Umbrella: lessjs() = less() + content + i18n | —                   |
+| `@lessjs/ui`           | 0.14.9  | 8 Web Components (layout, button, input…)    | lit                 |
+| `@lessjs/signals`      | 0.14.9  | TC39 Signals polyfill + framework layer      | none                |
+| `@lessjs/rpc`          | 0.14.9  | Zero-dep fetch RPC controller                | none                |
+| `@lessjs/create`       | 0.14.9  | CLI scaffold                                 | none                |
 
 ### Rendering Pipeline
 
@@ -154,7 +154,7 @@ See [CHANGELOG-v0.14.5](deliverables/review260515/CHANGELOG-v0.14.5.md)
 
 ---
 
-## v0.14.6 — Second-Round Deep Review Fixes (2026-05-15)
+## v0.14.9 — Second-Round Deep Review Fixes (2026-05-15)
 
 Fixed 16 issues (3 blockers + 9 suggestions + 3 nits + 1 pre-existing bug):
 
@@ -164,7 +164,7 @@ Fixed 16 issues (3 blockers + 9 suggestions + 3 nits + 1 pre-existing bug):
 
 Bonus: fixed a pre-existing i18n bug where `getStaticPaths()` returned `[]` for static routes, causing locale pages to be silently skipped.
 
-See [CHANGELOG-v0.14.6](deliverables/review260515/CHANGELOG-v0.14.6.md)
+See [CHANGELOG-v0.14.9](deliverables/review260515/CHANGELOG-v0.14.9.md)
 
 ---
 

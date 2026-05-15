@@ -290,6 +290,10 @@ export class LessCodeBlock extends DsdLitElement {
     const highlightedPre = document.createElement('pre');
     const highlightedCode = document.createElement('code');
     highlightedCode.className = this._langClass || 'language-typescript';
+    // SECURITY: innerHTML is safe here — `html` comes from Prism.highlight()
+    // which only produces styled <span> elements from tokenized code.
+    // Raw user code is tokenized before highlighting, not rendered as-is.
+    // Do NOT pass untrusted HTML to this path.
     highlightedCode.innerHTML = html;
     highlightedPre.appendChild(highlightedCode);
 

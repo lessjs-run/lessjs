@@ -50,13 +50,10 @@
     "@lit-labs/ssr-dom-shim": "npm:@lit-labs/ssr-dom-shim@^1.5.0",
     "hono": "npm:hono@^4.12.18",
     "@hono/vite-dev-server": "npm:@hono/vite-dev-server@^0.25.3",
-    "ts-morph": "npm:ts-morph@^28.0.0",
     "vite": "npm:vite@8.0.10",
     "typescript": "npm:typescript@^5.9.0",
-    "tsx": "npm:tsx@^4.21.0",
     "@types/node": "npm:@types/node@^22.0.0",
     "parse5": "npm:parse5@7.0.0",
-    "entities": "npm:entities@^4.5.0",
     "flexsearch": "npm:flexsearch@0.8.212",
     "@playwright/test": "npm:@playwright/test@1.59.1"
   },

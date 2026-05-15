@@ -4,8 +4,18 @@
 // Default: light theme (white background, black text).
 (function () {
   if (typeof document === 'undefined') return;
-  const saved = localStorage.getItem('less-theme');
-  const prefersDark = globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
+  let saved;
+  let prefersDark = false;
+  try {
+    saved = localStorage.getItem('less-theme');
+  } catch {
+    // localStorage may be blocked in private browsing or restricted contexts
+  }
+  try {
+    prefersDark = globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+  } catch {
+    // matchMedia may be unavailable in old WebViews
+  }
   const theme = saved || (prefersDark ? 'dark' : 'light');
   document.documentElement.setAttribute('data-theme', theme);
   // Remove anti-flash cloak — done before first paint
