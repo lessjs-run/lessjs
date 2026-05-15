@@ -20,8 +20,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --global --node-modules-dir
       - name: Run type check
         run: deno task typecheck
 
@@ -37,8 +35,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --global --node-modules-dir
       - name: Run core tests
         run: deno test packages/core/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-run --allow-ffi
 
@@ -54,8 +50,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --global --node-modules-dir
       - name: Run adapter-vite tests
         run: deno test packages/adapter-vite/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-run --allow-ffi
 
@@ -71,8 +65,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --global --node-modules-dir
       - name: Run rpc tests
         run: deno test packages/rpc/__tests__/ --coverage --allow-read --allow-write
 
@@ -88,8 +80,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --global --node-modules-dir
       - name: Run ui tests
         run: deno test packages/ui/__tests__/ --coverage --allow-read --allow-write --allow-env
 
@@ -105,8 +95,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --global --node-modules-dir
       - name: Run create tests
         run: deno test packages/create/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-run --allow-ffi
 
@@ -122,8 +110,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --global --node-modules-dir
       - name: Run i18n tests
         run: deno test packages/i18n/__tests__/ --coverage --allow-read --allow-write --allow-env
 
@@ -139,8 +125,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --global --node-modules-dir
       - name: Run content tests
         run: deno test packages/content/__tests__/ --coverage --allow-read --allow-write --allow-env
 
@@ -156,8 +140,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --global --node-modules-dir
       - name: Run adapter-lit tests
         run: deno test packages/adapter-lit/__tests__/ --coverage --allow-read --allow-write --allow-env
 
@@ -173,8 +155,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --global --node-modules-dir
       - name: Build www site
         run: deno task build:docs
 
@@ -190,8 +170,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --global --node-modules-dir
       - name: Install Playwright Chromium
         run: npx -y playwright install chromium --with-deps
       - name: Build www site
