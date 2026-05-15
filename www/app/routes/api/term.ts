@@ -88,7 +88,7 @@ app.post('/', async (c) => {
       break;
 
     case 'version':
-      output = ['<span style="color:#86efac;">v0.14.2</span> — standards & safety patch'];
+      output = ['<span style="color:#86efac;">v0.14.7</span> — security hardening patch'];
       break;
 
     case 'build':

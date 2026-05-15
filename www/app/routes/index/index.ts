@@ -237,7 +237,7 @@ export default class DocsHome extends LitElement {
             </div>
             <less-term-demo></less-term-demo>
             <div class="stats">
-              <div class="stat"><strong>v0.14.2</strong><span>最新版本</span></div>
+              <div class="stat"><strong>v0.14.7</strong><span>最新版本</span></div>
               <div class="stat"><strong>475</strong><span>测试通过</span></div>
               <div class="stat"><strong>10</strong><span>个包</span></div>
               <div class="stat"><strong>1</strong><span>运行时依赖 (core)</span></div>
@@ -398,7 +398,7 @@ export default class DocsHome extends LitElement {
             </div>
             <less-term-demo></less-term-demo>
             <div class="stats">
-              <div class="stat"><strong>v0.14.2</strong><span>latest release</span></div>
+              <div class="stat"><strong>v0.14.7</strong><span>latest release</span></div>
               <div class="stat"><strong>475</strong><span>tests passing</span></div>
               <div class="stat"><strong>10</strong><span>packages</span></div>
               <div class="stat"><strong>1</strong><span>runtime dep (core)</span></div>
