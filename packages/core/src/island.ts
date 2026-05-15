@@ -390,5 +390,6 @@ export function island<T extends CustomElementConstructor>(
 
 /**
  * Exports the `island` function as default for convenience imports.
+ * Tree-shakable: bundlers can eliminate unused named exports from the same module.
  */
 export default island;

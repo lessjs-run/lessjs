@@ -177,7 +177,7 @@ function renderPageRoute(
   // Components receive route params as props for SSR-time data access.
   // v0.6: Pass route/source context for error visibility.
   lines.push(
-    `    const raw = await __ssr(tag, c.req.param(), { route: '${route.path}', source: '${route.filePath}' })`,
+    `    const raw = await __ssr(tag, c.req.param() || {}, { route: '${route.path}', source: '${route.filePath}' })`,
   );
   lines.push(`    const html = raw`);
   lines.push('');
@@ -491,8 +491,9 @@ export function renderEntry(desc: EntryDescriptor): string {
       if (renderer.scope === '/') {
         lines.push(`  renderers.push(${renderer.varName}.default);`);
       } else {
+        // v0.14.6: Case-insensitive scope matching for routePath
         lines.push(
-          `  if (routePath === '${renderer.scope}' || routePath.startsWith('${renderer.scope}/')) renderers.push(${renderer.varName}.default);`,
+          `  if (routePath.toLowerCase() === '${renderer.scope.toLowerCase()}' || routePath.toLowerCase().startsWith('${renderer.scope.toLowerCase()}/')) renderers.push(${renderer.varName}.default);`,
         );
       }
     }

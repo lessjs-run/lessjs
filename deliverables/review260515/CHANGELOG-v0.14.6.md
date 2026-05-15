@@ -1,0 +1,109 @@
+# LessJS v0.14.6 Release Notes
+
+> Release Date: 2026-05-15
+> Based on: v0.14.5 + second-round code review remediation (deliverables/review260515/review260515.md)
+
+---
+
+## 🔴 Blocker Fixes (3 issues)
+
+### B-6: `__matchingRenderers` Case-Sensitive Route Matching
+**Severity**: High | **File**: `packages/adapter-vite/src/entry-renderer.ts:494-497`
+
+Generated code now uses `.toLowerCase()` on both `routePath` and `renderer.scope` before comparison. Prevents SSG renderer matching failures when `getStaticPaths()` returns paths with different casing than route definitions, which could cause missing layout wrapping.
+
+### B-7: SSG 404 Directory Rename Leaves Residual Directory
+**Severity**: Medium | **File**: `packages/adapter-vite/src/cli/ssg-render.ts:248-263`
+
+Replaced `rmdirSync` (fails silently on non-empty directories) with `rmSync(path, { recursive: true, force: true })` to ensure the 404 output directory is fully cleaned up. Added pre-rename check for existing `404.html` to prevent silent file overwrite.
+
+### B-8: `allNoExternal` Pushes Duplicate Alias Paths
+**Severity**: Medium | **File**: `packages/adapter-vite/src/cli/build-ssg.ts:205-226`
+
+Before pushing alias replacement paths into `allNoExternal`, now checks whether the path is already covered by `defaultNoExternal` regex patterns. Prevents redundant entries that could cause Vite externalization inconsistencies in SSR bundles.
+
+---
+
+## 🟡 Correctness & Consistency Fixes (7 issues)
+
+### S-3: Default Exports Tree-Shaking Documentation
+**Files**: `packages/core/src/island.ts`, `packages/signals/src/index.ts`
+
+Added JSDoc comments explaining that default exports (aggregate objects with multiple functions) may prevent tree-shaking when consumers only use named imports. Note: default exports are kept for backward compatibility.
+
+### S-4: adapter-registry Singleton Warning
+**File**: `packages/core/src/adapter-registry.ts:12-17`
+
+Added `@warning` JSDoc comment explaining that the module-level `_adapter` singleton can fail in multi-bundle scenarios. Advises using `@lessjs/app` as the unified entry point and warns against manual `registerAdapter()` calls.
+
+### S-8: polyfill `_producerRemoveLiveConsumerAtIndex` Boundary Guard
+**File**: `packages/signals/src/polyfill.ts:170-171`
+
+Added index bounds check (`if (idx < 0 || idx >= (node.liveConsumerNode?.length ?? 0)) return;`) to the swap+pop function. Prevents array index corruption when `unwatch()` is called multiple times on the same signal.
+
+### S-9: Dynamic Import JSR Warning — `@vite-ignore` + try-catch
+**File**: `packages/adapter-vite/src/route-scanner.ts:280-288`
+
+Added `/* @vite-ignore */` annotation and try-catch wrapper around `import(pkg)` to suppress the `unanalyzable-dynamic-import` warning during JSR publishing. Failed imports now log a warning and continue gracefully.
+
+### S-10: `c.req.param()` Lacks Defensive Fallback
+**File**: `packages/adapter-vite/src/entry-renderer.ts:180`
+
+Added `|| {}` fallback to `c.req.param()` in generated SSG code. Prevents `TypeError` when Hono's `param()` returns `undefined` for static routes or in edge-case version mismatches.
+
+### S-11: i18n Locale Expansion Re-renders Static Routes
+**File**: `packages/adapter-vite/src/cli/ssg-render.ts:290-299`
+
+Added `if (!route.isDynamic) continue;` guard in the i18n locale expansion loop. Static routes are already rendered by the main `toSSG()` flow — skipping them eliminates redundant SSR calls (N pages × M locales → N × M unnecessary renders).
+
+### S-12: `extractCustomElementTags` Extracts from Comments/Scripts
+**File**: `packages/adapter-vite/src/island-manifest.ts:45-57`
+
+Pre-processes HTML input with `.replace()` calls to strip HTML comments (`<!--...-->`), `<script>` blocks, and `<style>` blocks before extracting custom element tag names. Prevents false positives that could lead to unnecessary chunk loading.
+
+### S-13: `readWorkspacePackageVersion` Monorepo Path Assumption
+**File**: `packages/adapter-vite/src/cli/build-ssg.ts:35-53`
+
+Added `import.meta.url`-based path inference as a fallback when the standard `../packages/<pkg>/deno.json` path fails. Supports scenarios where `@lessjs/adapter-vite` is used outside the monorepo structure.
+
+### S-14: `dispatchDataPlugin` Uses O(n) Array Lookup
+**File**: `packages/adapter-vite/src/index.ts:531-568`
+
+Replaced `for-of` array traversal with `Map.get()` O(1) lookups using `ENTRIES_MAP` (virtual module ID → entry) and `RESOLVED_MAP` (resolved module ID → entry). Improves scalability for future virtual module additions.
+
+---
+
+## 💭 Minor Improvements (3 issues)
+
+### N-2: `configResolved` Dual Setting Clarified
+**File**: `packages/adapter-vite/src/index.ts:391-394`
+
+Added explanatory comment for the two `configResolved` hook settings — the second in `buildStart` is necessary because Vite requires the virtual entry point to exist before `buildStart` fires. Both are intentional, not duplicate.
+
+### N-4: `ssg-render.ts` Synchronous I/O in Promise Wrapper
+**File**: `packages/adapter-vite/src/cli/ssg-render.ts:212-233`
+
+Migrated `fsModule` utility from synchronous (`writeFileSync`, `mkdirSync`) to asynchronous (`node:fs/promises` `mkdir`, `writeFile`). For large SSG builds with hundreds of pages, true async I/O avoids blocking the event loop during parallel `toSSG()` writes.
+
+### N-5: `polyfill.ts` `subtle_watched`/`subtle_unwatched` Per-Call Symbols
+**File**: `packages/signals/src/polyfill.ts:214-217`
+
+Moved `subtle_watched` and `subtle_unwatched` Symbol declarations from inside `_createPolyfill()` to module scope. Prevents Symbol mismatch when `_createPolyfill` is called multiple times (e.g., in tests), ensuring registered watcher callbacks remain consistent across calls.
+
+---
+
+## Version Bump
+
+All 10 packages updated from `0.14.5` to `0.14.6`:
+- `@lessjs/core`
+- `@lessjs/rpc`
+- `@lessjs/ui`
+- `@lessjs/adapter-lit`
+- `@lessjs/adapter-vite`
+- `@lessjs/create`
+- `@lessjs/signals`
+- `@lessjs/content`
+- `@lessjs/i18n`
+- `@lessjs/app`
+
+Cross-package dependency imports updated accordingly (`@lessjs/*@^0.14.5` → `@lessjs/*@^0.14.6`).

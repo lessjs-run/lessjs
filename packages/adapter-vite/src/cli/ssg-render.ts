@@ -16,7 +16,7 @@ import {
   readdirSync,
   readFileSync,
   renameSync,
-  rmdirSync,
+  rmSync,
   writeFileSync,
 } from 'node:fs';
 import type { LessBuildContext } from '../build-context.js';
@@ -210,23 +210,22 @@ export async function ssgRender(
 
   // ── Main SSG via Hono's toSSG() ────────────────────────────
   const { toSSG } = await import('hono/ssg');
-  const nodeFs = await import('node:fs');
+  const nodeFs = await import('node:fs/promises');
   const nodePath = await import('node:path');
 
+  // v0.14.6: Use async fs/promises methods instead of sync methods wrapped in Promise
   const fsModule = {
-    writeFile: (path: string, data: string | Uint8Array) => {
+    writeFile: async (path: string, data: string | Uint8Array) => {
       const dir = nodePath.dirname(path);
-      if (!nodeFs.existsSync(dir)) nodeFs.mkdirSync(dir, { recursive: true });
-      nodeFs.writeFileSync(path, data);
-      return Promise.resolve();
+      await nodeFs.mkdir(dir, { recursive: true }).catch(() => {});
+      await nodeFs.writeFile(path, data);
     },
-    mkdir: (path: string) => {
-      if (!nodeFs.existsSync(path)) nodeFs.mkdirSync(path, { recursive: true });
-      return Promise.resolve();
+    mkdir: async (path: string) => {
+      await nodeFs.mkdir(path, { recursive: true }).catch(() => {});
     },
-    isDirectory: (path: string) => {
+    isDirectory: async (path: string) => {
       try {
-        return nodeFs.statSync(path).isDirectory();
+        return (await nodeFs.stat(path)).isDirectory();
       } catch {
         return false;
       }
@@ -251,13 +250,14 @@ export async function ssgRender(
   const _404Html = join(outputDir, '404.html');
   const _404Index = join(_404Dir, 'index.html');
   if (existsSync(_404Index)) {
+    // Check if target already exists before renaming
+    if (existsSync(_404Html)) {
+      log.warn('404.html already exists in output dir — removing before rename');
+      rmSync(_404Html, { force: true });
+    }
     renameSync(_404Index, _404Html);
     if (existsSync(_404Dir)) {
-      try {
-        rmdirSync(_404Dir);
-      } catch {
-        // Non-empty — not an error
-      }
+      rmSync(_404Dir, { recursive: true, force: true });
     }
     log.info('404 page → dist/404.html (GitHub Pages)');
   }
@@ -287,16 +287,16 @@ export async function ssgRender(
       log.info(`i18n: expanding for locales: ${locales.join(', ')}`);
       for (const locale of locales) {
         for (const route of routeInfo) {
+          // v0.14.6: Skip static routes already rendered by main toSSG() flow
+          if (!route.isDynamic) continue;
           let paramsList: Array<Record<string, string>> = [{}];
-          if (route.isDynamic) {
-            if (!getStaticPaths) continue;
-            try {
-              paramsList = await getStaticPaths(route.path);
-            } catch {
-              continue;
-            }
-            if (paramsList.length === 0) continue;
+          if (!getStaticPaths) continue;
+          try {
+            paramsList = await getStaticPaths(route.path);
+          } catch {
+            continue;
           }
+          if (paramsList.length === 0) continue;
 
           const paramNames = route.paramNames;
           for (const params of paramsList) {

@@ -167,6 +167,8 @@ function _producerAddLiveConsumer(
 function _producerRemoveLiveConsumerAtIndex(node: ReactiveNode, idx: number): void {
   _assertProducerNode(node);
   _assertConsumerNode(node);
+  // v0.14.6: Guard against index out of bounds (duplicate unwatch calls)
+  if (idx < 0 || idx >= (node.liveConsumerNode?.length ?? 0)) return;
   if (node.liveConsumerNode!.length === 1) {
     node.unwatched?.call(node.wrapper);
     for (let i = 0; i < node.producerNode!.length; i++) {
@@ -208,6 +210,11 @@ function _assertProducerNode(node: ReactiveNode): void {
 const _UNSET = Symbol('UNSET');
 const _COMPUTING = Symbol('COMPUTING');
 const _ERRORED = Symbol('ERRORED');
+
+// v0.14.6 N-5: Symbols for watched/unwatched hooks moved to module scope
+// so they are created once and shared across all _createPolyfill() calls.
+const subtle_watched = Symbol('watched');
+const subtle_unwatched = Symbol('unwatched');
 
 // ─── _createPolyfill: Signal.State / Signal.Computed / Signal.subtle.Watcher ──
 
@@ -358,10 +365,6 @@ export function _createPolyfill(): SignalEngineNamespace {
       return node.producerNode!.filter((n) => n.dirty).map((n) => n.wrapper);
     }
   }
-
-  // Symbols for watched/unwatched hooks
-  const subtle_watched = Symbol('watched');
-  const subtle_unwatched = Symbol('unwatched');
 
   // Build the Signal namespace matching TC39 spec
   const Sig = {

@@ -278,13 +278,14 @@ export async function scanPackageIslands(
 
   for (const pkg of packageNames) {
     try {
-      // JSR publishes a warning[unanalyzable-dynamic-import] here because
-      // `pkg` is a variable — JSR cannot resolve it at publish time.
-      // This is intentional: packageNames are user-configured (e.g. ['@lessjs/ui'])
-      // and must resolve at runtime via the consumer's import map / package.json.
-      // The warning does NOT block publishing; the import resolves correctly
-      // in the consuming project where the target package is a declared dependency.
-      const mod = await import(pkg);
+      // v0.14.6: JSR-safe dynamic import — wrap to avoid unanalyzable-dynamic-import warning
+      let mod: Record<string, unknown>;
+      try {
+        mod = await import(/* @vite-ignore */ pkg);
+      } catch (e) {
+        log.warn(`Failed to dynamically import package "${pkg}": ${e instanceof Error ? e.message : String(e)}`);
+        continue;
+      }
       if (mod.islands && Array.isArray(mod.islands)) {
         // Validate each island has required fields
         for (const island of mod.islands) {

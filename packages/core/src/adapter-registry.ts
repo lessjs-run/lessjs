@@ -8,6 +8,12 @@
  * instance — so a plain module variable replaces the former globalThis bridge.
  *
  * The public API (registerAdapter / getAdapter) is unchanged.
+ *
+ * @warning Do NOT call registerAdapter() manually more than once unless you
+ * are intentionally switching adapters. Each call overwrites the previous
+ * adapter. In normal usage, the framework calls registerAdapter() automatically
+ * via installLitAdapter() or equivalent. Manual double-registration can cause
+ * subtle rendering bugs where the wrong adapter is active at render time.
  */
 
 import type { RenderAdapter } from './types.js';

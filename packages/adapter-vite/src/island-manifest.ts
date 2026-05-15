@@ -39,12 +39,19 @@ export type IslandLayerMap = Record<string, 'dsd-static' | 'dsd-interactive' | '
 /**
  * Extract custom element tag names from HTML content.
  * Matches <xxx-yyy> or <xxx-yyy ...> patterns (custom elements must contain a hyphen).
+ * v0.14.6: Strips HTML comments, script blocks, and style blocks before matching
+ * to avoid false positives (e.g., CE tags inside comments or script content).
  */
 export function extractCustomElementTags(html: string): string[] {
+  // Strip HTML comments, script blocks, and style blocks first
+  const cleaned = html
+    .replace(/<!--[\s\S]*?-->/g, '')           // Remove HTML comments
+    .replace(/<script[\s>][\s\S]*?<\/script>/gi, '') // Remove script blocks
+    .replace(/<style[\s>][\s\S]*?<\/style>/gi, '');  // Remove style blocks
   const tagPattern = /<([a-z][a-z0-9]*-[a-z0-9-]+)[\s>\/]/gi;
   const tags = new Set<string>();
   let match: RegExpExecArray | null;
-  while ((match = tagPattern.exec(html)) !== null) {
+  while ((match = tagPattern.exec(cleaned)) !== null) {
     tags.add(match[1].toLowerCase());
   }
   return [...tags];
