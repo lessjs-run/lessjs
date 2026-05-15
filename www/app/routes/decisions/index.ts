@@ -49,11 +49,25 @@ export class DecisionsIndexPage extends LitElement {
         color: var(--less-text-primary);
         font-size: 0.9375rem;
         font-weight: 500;
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+      .decision-title span:first-child {
+        min-width: 0;
       }
       .decision-status {
         color: var(--less-text-muted);
         font-size: 0.75rem;
         white-space: nowrap;
+      }
+      @media (max-width: 640px) {
+        .decision-title {
+          display: grid;
+          gap: 0.375rem;
+        }
+        .decision-status {
+          white-space: normal;
+        }
       }
       .decision-summary {
         margin-top: 0.5rem;

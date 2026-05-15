@@ -380,7 +380,7 @@ export class RoadmapPage extends LitElement {
       </p>
 
       <nav class="nav-row">
-        <a class="nav-link" href="/decisions/20260515-1-renderer-kernel-registry-sop">20260515 ADR/SOP →</a>
+        <a class="nav-link" href="/zh/decisions/20260515-1-renderer-kernel-registry-sop">20260515 ADR/SOP →</a>
         <a class="nav-link" href="/decisions/0024-standards-first-wc-renderer-roadmap">Strategic Roadmap ADR →</a>
         <a class="nav-link" href="/docs/decisions/adr-0006-version-roadmap">Version Roadmap ADR →</a>
         <a class="nav-link" href="/docs/decisions/adr-0007-npm-publishing-strategy">Publishing Strategy →</a>
@@ -631,7 +631,7 @@ export class RoadmapPage extends LitElement {
       </p>
 
       <nav class="nav-row">
-        <a class="nav-link" href="/en/decisions/20260515-1-renderer-kernel-registry-sop">20260515 ADR/SOP →</a>
+        <a class="nav-link" href="/zh/decisions/20260515-1-renderer-kernel-registry-sop">20260515 ADR/SOP →</a>
         <a class="nav-link" href="/en/decisions/0024-standards-first-wc-renderer-roadmap">Strategic Roadmap ADR →</a>
         <a class="nav-link" href="/en/docs/decisions/adr-0006-version-roadmap">Version Roadmap ADR →</a>
         <a class="nav-link" href="/en/docs/decisions/adr-0007-npm-publishing-strategy">Publishing Strategy →</a>
