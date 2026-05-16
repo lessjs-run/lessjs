@@ -6,6 +6,8 @@ import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 export class IslandsGuidePage extends LitElement {
+  declare locale?: string;
+
   static override styles = [
     pageStyles,
     css`
@@ -117,9 +119,9 @@ export class IslandsGuidePage extends LitElement {
               count = 0;
               override render() {
                 return html&#96;
-                  &lt;button @click=\\${() => this.count--}&gt;-&lt;/button&gt;
-                  &lt;span&gt;\\${this.count}&lt;/span&gt;
-                  &lt;button @click=\\${() => this.count++}&gt;+&lt;/button&gt;
+                  &lt;button @click=\${() => this.count--}&gt;-&lt;/button&gt;
+                  &lt;span&gt;\${this.count}&lt;/span&gt;
+                  &lt;button @click=\${() => this.count++}&gt;+&lt;/button&gt;
                 &#96;;
               }
             }
@@ -221,11 +223,17 @@ export class IslandsGuidePage extends LitElement {
             Reusable packages can export island metadata. LessJS reads this at build time for SSR
             registration and client entry generation.
           </p>
+          <p>
+            Today that metadata is intentionally minimal. Future package islands should be driven by a
+            CEM-compatible manifest that declares tag, module, export, strategy, SSR renderability, DSD
+            constraints, hydration events, diagnostics, and fallback behavior. That protocol is required
+            before <code>less add</code>, automatic registration, or registry hub claims are stable.
+          </p>
           <h2>Current Boundaries</h2>
           <p>
-            The current implementation still uses a global island entry. The next phase needs to carry
-            strategy from metadata into the client build and introduce page-level island manifests so each
-            page only loads the islands it actually uses.
+            The current implementation should be treated as framework-supported package island scanning,
+            not a general-purpose component marketplace. If a package cannot explain its SSR and hydration
+            behavior, LessJS should render it as static host markup or a pure island instead of guessing.
           </p>
           <div class="nav-row">
             <a href="/guide/ssg" class="nav-link">&larr; Rendering &amp; SSG</a>

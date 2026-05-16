@@ -10,6 +10,8 @@ import { pageStyles } from '../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 
 export class RoadmapPage extends LitElement {
+  declare locale?: string;
+
   static override styles = [
     pageStyles,
     css`
@@ -177,6 +179,49 @@ export class RoadmapPage extends LitElement {
               见 ADR 20260515-1。
             </p>
           </div>
+
+          <h2>2026-05-16 愿景可行性评估</h2>
+          <p>
+            长期愿景可以成立，但“通用”必须定义为<strong>协议通用</strong>，不是“任意 Web Component 都能被魔法 SSR
+            和水合”。LessJS 更现实的目标是 WC SSR/SSG 渲染内核、CEM-compatible 包协议、本地 registry index、
+            <code>less add</code> 安装辅助、自动注册、受控自动渲染和声明式水合。
+          </p>
+          <table class="reset-table">
+            <thead>
+              <tr>
+                <th>方向</th>
+                <th>现实判断</th>
+                <th>必须满足的条件</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>WC SSR/SSG 渲染内核</td>
+                <td>可行，是当前最强主线。</td>
+                <td>公开 renderer protocol、adapter contract、错误模型、DSD metrics 和真实浏览器验证。</td>
+              </tr>
+              <tr>
+                <td>一键 install</td>
+                <td>只对可信 manifest 包可行。</td>
+                <td>读取 package manifest，更新配置，生成注册入口，保留 lockfile 和权限提示。</td>
+              </tr>
+              <tr>
+                <td>自动注册 / 自动渲染</td>
+                <td>可做，但必须可解释、可关闭、可降级。</td>
+                <td>组件声明 tag、module、export、SSR renderability、adapter、DSD 约束和 fallback。</td>
+              </tr>
+              <tr>
+                <td>自动水合</td>
+                <td>只能声明式水合，不能猜事件。</td>
+                <td>manifest 或组件类声明 strategy、events、selectors 和 cleanup 规则。</td>
+              </tr>
+              <tr>
+                <td>WC registry hub</td>
+                <td>有市场缺口，但治理成本高。</td>
+                <td>先完成本地 index、manifest validator、验证产物、provenance、安全响应和维护边界。</td>
+              </tr>
+            </tbody>
+          </table>
 
           <h2>2026-05-15 Main-Branch Review Reset</h2>
           <p>
@@ -421,9 +466,18 @@ export class RoadmapPage extends LitElement {
 
           <h2>Reference Positioning</h2>
           <p>
-            路线图参考 WHATWG template / DSD 属性、Open UI 组件契约方向、OpenWC/Modern Web 的历史经验，
-            以及 Playwright 的真实浏览器验证定位；这些参考不改变 LessJS 的 Deno-first、standards-first
-            路线。
+            路线图参考
+            <a href="https://html.spec.whatwg.org/multipage/scripting.html#the-template-element"
+            >WHATWG HTML template / DSD 属性</a>、
+            <a href="https://custom-elements-manifest.open-wc.org/">Custom Elements Manifest</a>、
+            <a href="https://open-ui.org/">Open UI</a> 组件契约方向、
+            <a href="https://open-wc.org/docs/">OpenWC</a> 的历史工具链经验、
+            <a href="https://lit.dev/docs/v2/ssr/overview/">Lit SSR</a>、
+            <a href="https://fast.design/docs/getting-started/quick-start">FAST</a>、
+            <a href="https://wicg.github.io/webcomponents/proposals/Scoped-Custom-Element-Registries.html"
+            >Scoped Custom Element Registries</a> 和
+            <a href="https://drafts.css-houdini.org/">CSS Houdini</a>。这些参考只校准边界，不改变 LessJS
+            的 Deno-first、standards-first 路线。
           </p>
 
           <nav class="nav-row">
@@ -468,6 +522,51 @@ export class RoadmapPage extends LitElement {
               20260515-1.
             </p>
           </div>
+
+          <h2>2026-05-16 Vision Feasibility Check</h2>
+          <p>
+            The long-term vision is feasible, but "universal" must mean
+            <strong>protocol-universal</strong>, not "magically SSR and hydrate every arbitrary Web
+            Component." The realistic target is a WC SSR/SSG rendering kernel, a CEM-compatible package
+            protocol, a local registry index, <code>less add</code> install assistance, generated
+            registration, controlled automatic rendering, and declarative hydration.
+          </p>
+          <table class="reset-table">
+            <thead>
+              <tr>
+                <th>Direction</th>
+                <th>Reality Check</th>
+                <th>Required Contract</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>WC SSR/SSG rendering kernel</td>
+                <td>Feasible and the strongest mainline.</td>
+                <td>Public renderer protocol, adapter contract, error model, DSD metrics, and browser validation.</td>
+              </tr>
+              <tr>
+                <td>One-command install</td>
+                <td>Feasible only for trusted manifest packages.</td>
+                <td>Read package manifest, update config, generate registration, and preserve lockfile/permission signals.</td>
+              </tr>
+              <tr>
+                <td>Automatic registration / rendering</td>
+                <td>Feasible, but it must be explainable, disableable, and degradable.</td>
+                <td>Components declare tag, module, export, SSR renderability, adapter, DSD constraints, and fallback.</td>
+              </tr>
+              <tr>
+                <td>Automatic hydration</td>
+                <td>Only declarative hydration is credible; event guessing is not.</td>
+                <td>Manifest or component class declares strategy, events, selectors, and cleanup behavior.</td>
+              </tr>
+              <tr>
+                <td>WC registry hub</td>
+                <td>There is a market gap, but governance cost is high.</td>
+                <td>Local index, manifest validator, validation artifacts, provenance, security response, and maintenance rules first.</td>
+              </tr>
+            </tbody>
+          </table>
 
           <h2>2026-05-15 Main-Branch Review Reset</h2>
           <p>
@@ -767,9 +866,18 @@ export class RoadmapPage extends LitElement {
 
           <h2>Reference Positioning</h2>
           <p>
-            This roadmap considers WHATWG template / DSD attributes, Open UI component contract direction,
-            OpenWC/Modern Web historical experience, and Playwright’s real-browser validation positioning.
-            These references do not change LessJS’s Deno-first, standards-first path.
+            This roadmap considers
+            <a href="https://html.spec.whatwg.org/multipage/scripting.html#the-template-element"
+            >WHATWG HTML template / DSD attributes</a>,
+            <a href="https://custom-elements-manifest.open-wc.org/">Custom Elements Manifest</a>,
+            <a href="https://open-ui.org/">Open UI</a> component-contract work,
+            <a href="https://open-wc.org/docs/">OpenWC</a> historical tooling experience,
+            <a href="https://lit.dev/docs/v2/ssr/overview/">Lit SSR</a>,
+            <a href="https://fast.design/docs/getting-started/quick-start">FAST</a>,
+            <a href="https://wicg.github.io/webcomponents/proposals/Scoped-Custom-Element-Registries.html"
+            >Scoped Custom Element Registries</a>, and
+            <a href="https://drafts.css-houdini.org/">CSS Houdini</a>. These references calibrate
+            boundaries; they do not change LessJS's Deno-first, standards-first path.
           </p>
 
           <nav class="nav-row">

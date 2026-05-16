@@ -1,18 +1,36 @@
 export const meta = { section: 'Core Model', label: 'DSD Rendering', order: 30 };
-import { navSections, headerNav } from 'virtual:less-nav';
+
+import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 export class DsdGuidePage extends LitElement {
+  declare locale?: string;
+
   static override styles = [
     pageStyles,
     css`
-      .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0 1.5rem; }
-      .comparison-item { padding: 1rem 1.25rem; border: 0.5px solid var(--less-border); border-radius: 4px; }
-      .comparison-item.less { background: var(--less-bg-surface); }
-      @media (max-width: 720px) { .comparison { grid-template-columns: 1fr; } }
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0 1.5rem;
+      }
+      .comparison-item {
+        padding: 1rem 1.25rem;
+        border: 0.5px solid var(--less-border);
+        border-radius: 4px;
+      }
+      .comparison-item.less {
+        background: var(--less-bg-surface);
+      }
+      @media (max-width: 720px) {
+        .comparison {
+          grid-template-columns: 1fr;
+        }
+      }
     `,
   ];
 
@@ -22,65 +40,88 @@ export class DsdGuidePage extends LitElement {
 
   private _renderZh() {
     return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/guide/dsd">
+      <less-layout
+        locale="${this.locale || 'zh'}"
+        .locales="${['en', 'zh']}"
+        .navItems="${navSections}"
+        .headerNav="${headerNav}"
+        current-path="/guide/dsd"
+      >
         <div class="container">
           <h1>DSD 渲染架构</h1>
-          <p class="subtitle">Declarative Shadow DOM 是 LessJS 渲染模型的核心。浏览器原生解析 HTML，内容在 JavaScript 运行前就已经可见——这不是渐进增强的噱头，而是架构基线。</p>
+          <p class="subtitle">
+            Declarative Shadow DOM 是 LessJS 的核心渲染模型：服务端输出标准 HTML，浏览器在解析阶段创建
+            shadow root，JavaScript 只负责后续升级和必要事件绑定。
+          </p>
+
           <h2>什么是 DSD</h2>
-          <p>Declarative Shadow DOM (DSD) 是 WHATWG HTML 标准的一部分，允许在 HTML 中声明式地创建 Shadow DOM。浏览器在解析 HTML 时自动创建 shadow root 并填充内容，无需任何 JavaScript 执行。</p>
-          <less-code-block><pre><code>&lt;my-component&gt;
+          <p>
+            DSD 是 WHATWG HTML 中的 template 语义，核心属性是 <code>shadowrootmode</code>。它允许 HTML
+            直接携带 shadow root 内容，使服务端渲染的 Web Components 在 JS 加载前已经可见。
+          </p>
+          <less-code-block><pre><code>&lt;my-card&gt;
   &lt;template shadowrootmode="open"&gt;
     &lt;style&gt;:host { display: block; }&lt;/style&gt;
-    &lt;p&gt;内容在 JS 加载前就已经可见&lt;/p&gt;
+    &lt;p&gt;内容在 JavaScript 加载前可见。&lt;/p&gt;
   &lt;/template&gt;
-&lt;/my-component&gt;</code></pre></less-code-block>
-          <h2>为什么选择 DSD</h2>
+&lt;/my-card&gt;</code></pre></less-code-block>
+
+          <h2>为什么 LessJS 选择 DSD</h2>
           <div class="comparison">
             <div class="comparison-item">
-              <h3>传统 SSR Hydration</h3>
-              <ul><li>服务端渲染完整 DOM，客户端需要恢复整棵组件树。</li><li>Hydration 不匹配会导致闪烁、重复渲染或交互丢失。</li><li>框架通常依赖专有标记（注释节点、data 属性）做水合。</li></ul>
+              <h3>传统 hydration</h3>
+              <ul>
+                <li>客户端通常需要恢复整棵组件树。</li>
+                <li>容易出现 mismatch、重复渲染或交互丢失。</li>
+                <li>常依赖框架私有标记。</li>
+              </ul>
             </div>
             <div class="comparison-item less">
               <h3>DSD-first</h3>
-              <ul><li>浏览器原生解析 shadow root，零 JS 开销。</li><li>Custom Element upgrade 是幂等操作：重复定义不会破坏已有 DOM。</li><li>输出是纯净 HTML，无框架标记、无注释节点。</li></ul>
+              <ul>
+                <li>HTML 解析阶段已有 shadow root。</li>
+                <li>Custom Element upgrade 只激活已有 host。</li>
+                <li>输出接近平台语义，便于 SSG 和缓存。</li>
+              </ul>
             </div>
           </div>
-          <h2>三层组件模型</h2>
-          <p>LessJS 将组件按交互需求分为三层。层级越高，客户端 JavaScript 参与越多。详见 <a href="/guide/islands-deep">Island 深度指南</a>。</p>
-          <table><thead><tr><th>层级</th><th>名称</th><th>客户端 JS</th><th>典型场景</th></tr></thead><tbody>
-            <tr><td>Layer 1</td><td>dsd-static</td><td>零</td><td>导航栏、文章内容、页脚</td></tr>
-            <tr><td>Layer 2</td><td>dsd-interactive</td><td>仅事件绑定</td><td>展开/折叠、主题切换、Tab 切换</td></tr>
-            <tr><td>Layer 3</td><td>pure-island</td><td>完整框架</td><td>实时图表、复杂表单、WebSocket</td></tr>
-          </tbody></table>
-          <h2>Slot 投影机制</h2>
-          <p>LessJS 的 DSD 渲染器支持 Slot 投影。当组件的 light DOM 中包含子元素时，SSR 会将它们放置在 &lt;/template&gt; 之后，浏览器自动投影到 shadow DOM 中对应的 &lt;slot&gt; 位置。</p>
-          <less-code-block><pre><code>&lt;less-layout current-path="/guide/dsd"&gt;
-  &lt;template shadowrootmode="open"&gt;
-    &lt;style&gt;...&lt;/style&gt;
-    &lt;main&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/main&gt;
-  &lt;/template&gt;
-  &lt;div class="container"&gt;
-    &lt;h1&gt;DSD 渲染架构&lt;/h1&gt;
-  &lt;/div&gt;
-&lt;/less-layout&gt;</code></pre></less-code-block>
+
           <h2>WHATWG DSD 属性</h2>
-          <p>LessJS 支持 WHATWG HTML Living Standard 定义的 DSD 模板属性，通过 DsdOptions 配置或组件静态属性自动推断。</p>
-          <table><thead><tr><th>属性</th><th>配置项</th><th>作用</th></tr></thead><tbody>
-            <tr><td>shadowrootdelegatesfocus</td><td>delegatesFocus: true</td><td>自动将焦点委托给 shadow DOM 内第一个可聚焦元素</td></tr>
-            <tr><td>shadowrootserializable</td><td>serializable: true</td><td>启用 getInnerHTML() 序列化</td></tr>
-            <tr><td>shadowrootslotassignment="manual"</td><td>slotAssignment: 'manual'</td><td>手动控制 slot 分配</td></tr>
-            <tr><td>shadowrootcustomelementregistry</td><td>customElementRegistry: 'name'</td><td>使用作用域自定义元素注册表</td></tr>
-          </tbody></table>
-          <h2>DSD-first 原则</h2>
-          <ul><li><strong>零闪烁</strong>：内容在 HTML 解析阶段就已渲染，不存在 hydration 闪烁。</li><li><strong>渐进增强</strong>：即使 JavaScript 加载失败或被禁用，内容仍然可见。</li><li><strong>SEO 友好</strong>：搜索引擎爬虫无需执行 JavaScript 即可获取完整内容。</li></ul>
-          <h2>常见问题</h2>
-          <h3>DSD 在哪些浏览器中支持？</h3>
-          <p>Chrome 90+、Edge 90+、Safari 16.4+、Firefox 123+ 已原生支持 DSD。对于旧版浏览器，LessJS 的 client entry 会在升级时创建 shadow root 并填充内容，功能等价。</p>
-          <h3>为什么不用 @lit-labs/ssr？</h3>
-          <p>@lit-labs/ssr 的输出包含 &lt;!--lit-part--&gt; 标记注释。LessJS 需要纯净的 DSD HTML，不依赖任何框架专有标记。</p>
+          <table>
+            <thead><tr><th>属性</th><th>LessJS 选项</th><th>用途</th></tr></thead>
+            <tbody>
+              <tr><td><code>shadowrootmode</code></td><td>固定输出 open</td><td>启用声明式 shadow root。</td></tr>
+              <tr><td><code>shadowrootdelegatesfocus</code></td><td><code>delegatesFocus</code></td><td>焦点委托。</td></tr>
+              <tr><td><code>shadowrootslotassignment</code></td><td><code>slotAssignment</code></td><td>slot 分配策略。</td></tr>
+              <tr><td><code>shadowrootclonable</code></td><td><code>clonable</code></td><td>允许 clone 时保留 shadow root。</td></tr>
+              <tr><td><code>shadowrootserializable</code></td><td><code>serializable</code></td><td>允许序列化 shadow root。</td></tr>
+              <tr><td><code>shadowrootcustomelementregistry</code></td><td><code>customElementRegistry</code></td><td>为 scoped registry 方向预留语义。</td></tr>
+            </tbody>
+          </table>
+
+          <h2>三层组件模型</h2>
+          <table>
+            <thead><tr><th>层级</th><th>类型</th><th>客户端 JS</th><th>适合场景</th></tr></thead>
+            <tbody>
+              <tr><td>Layer 1</td><td><code>dsd-static</code></td><td>无</td><td>布局、导航、文章内容。</td></tr>
+              <tr><td>Layer 2</td><td><code>dsd-interactive</code></td><td>只绑定事件</td><td>主题切换、折叠、tabs。</td></tr>
+              <tr><td>Layer 3</td><td><code>pure-island</code></td><td>完整客户端逻辑</td><td>图表、复杂表单、WebSocket。</td></tr>
+            </tbody>
+          </table>
+
+          <h2>边界</h2>
+          <p>
+            DSD 不是“任意组件 SSR”的保证。组件如果依赖浏览器布局、全局 DOM、副作用、timer 或第三方脚本，
+            就必须降级为 pure island，或通过 manifest 明确声明 SSR/fallback 行为。
+          </p>
+          <p>
+            LessJS 应通过 Playwright 验证目标浏览器行为。旧浏览器 polyfill 只能作为降级路径，不能替代真实浏览器验证。
+          </p>
+
           <div class="nav-row">
-            <a href="/guide/ssg" class="nav-link">&larr; Rendering & SSG</a>
-            <a href="/guide/islands-deep" class="nav-link">Island 深度指南 &rarr;</a>
+            <a href="/guide/ssg" class="nav-link">&larr; Rendering &amp; SSG</a>
+            <a href="/guide/islands" class="nav-link">Island Upgrade &rarr;</a>
+            <a href="/guide/standards-registry" class="nav-link">Standards &amp; Registry &rarr;</a>
           </div>
         </div>
       </less-layout>
@@ -89,55 +130,92 @@ export class DsdGuidePage extends LitElement {
 
   private _renderEn() {
     return html`
-      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/guide/dsd">
+      <less-layout
+        locale="${this.locale || 'en'}"
+        .locales="${['en', 'zh']}"
+        .navItems="${navSections}"
+        .headerNav="${headerNav}"
+        current-path="/en/guide/dsd"
+      >
         <div class="container">
-          <h1>DSD Architecture</h1>
-          <p class="subtitle">Declarative Shadow DOM is the core of LessJS's rendering model. The browser natively parses HTML, content is visible before JavaScript runs — this is not a progressive enhancement gimmick, it is the architectural baseline.</p>
+          <h1>DSD Rendering Architecture</h1>
+          <p class="subtitle">
+            Declarative Shadow DOM is the core LessJS rendering model: the server emits standard HTML,
+            the browser creates shadow roots during parsing, and JavaScript only upgrades components and
+            binds necessary events.
+          </p>
+
           <h2>What Is DSD</h2>
-          <p>Declarative Shadow DOM (DSD) is part of the WHATWG HTML standard, allowing declarative creation of Shadow DOM in HTML. The browser automatically creates shadow roots and populates content during HTML parsing, with zero JavaScript execution.</p>
-          <less-code-block><pre><code>&lt;my-component&gt;
+          <p>
+            DSD is template semantics in WHATWG HTML. The key attribute is
+            <code>shadowrootmode</code>. It lets HTML carry shadow root content so server-rendered Web
+            Components are visible before their JavaScript implementation loads.
+          </p>
+          <less-code-block><pre><code>&lt;my-card&gt;
   &lt;template shadowrootmode="open"&gt;
     &lt;style&gt;:host { display: block; }&lt;/style&gt;
-    &lt;p&gt;Content visible before JS loads.&lt;/p&gt;
+    &lt;p&gt;Content is visible before JavaScript loads.&lt;/p&gt;
   &lt;/template&gt;
-&lt;/my-component&gt;</code></pre></less-code-block>
-          <h2>Why DSD</h2>
+&lt;/my-card&gt;</code></pre></less-code-block>
+
+          <h2>Why LessJS Uses DSD</h2>
           <div class="comparison">
             <div class="comparison-item">
-              <h3>Traditional SSR Hydration</h3>
-              <ul><li>Server renders full DOM, client must restore entire component tree.</li><li>Hydration mismatches cause flicker, re-renders, or lost interactivity.</li><li>Frameworks rely on proprietary markers (comment nodes, data attributes).</li></ul>
+              <h3>Traditional Hydration</h3>
+              <ul>
+                <li>The client often restores a full component tree.</li>
+                <li>Mismatches can cause re-rendering, flicker, or lost interactivity.</li>
+                <li>Framework-private markers are common.</li>
+              </ul>
             </div>
             <div class="comparison-item less">
               <h3>DSD-first</h3>
-              <ul><li>Browser natively parses shadow roots, zero JS cost.</li><li>Custom Element upgrade is idempotent: re-definition does not break existing DOM.</li><li>Output is clean HTML — no framework markers, no comment nodes.</li></ul>
+              <ul>
+                <li>Shadow roots exist during HTML parsing.</li>
+                <li>Custom Element upgrade activates existing hosts.</li>
+                <li>The output stays close to platform semantics and works well with SSG/caching.</li>
+              </ul>
             </div>
           </div>
-          <h2>Three-Layer Component Model</h2>
-          <p>LessJS classifies components by interactivity needs. See <a href="/guide/islands-deep">Island Deep Guide</a> for details.</p>
-          <table><thead><tr><th>Layer</th><th>Type</th><th>Client JS</th><th>Use Cases</th></tr></thead><tbody>
-            <tr><td>Layer 1</td><td>dsd-static</td><td>None</td><td>Nav, article content, footer</td></tr>
-            <tr><td>Layer 2</td><td>dsd-interactive</td><td>Events only</td><td>Collapse, theme toggle, tabs</td></tr>
-            <tr><td>Layer 3</td><td>pure-island</td><td>Full framework</td><td>Charts, complex forms, WebSocket</td></tr>
-          </tbody></table>
-          <h2>Slot Projection</h2>
-          <p>The DSD renderer supports slot projection. Light DOM children are placed after &lt;/template&gt; and the browser automatically projects them into the corresponding &lt;slot&gt; positions.</p>
+
           <h2>WHATWG DSD Attributes</h2>
-          <table><thead><tr><th>Attribute</th><th>Option</th><th>Purpose</th></tr></thead><tbody>
-            <tr><td>shadowrootdelegatesfocus</td><td>delegatesFocus: true</td><td>Delegates focus to the first focusable element in shadow DOM</td></tr>
-            <tr><td>shadowrootserializable</td><td>serializable: true</td><td>Enables getInnerHTML() serialization</td></tr>
-            <tr><td>shadowrootslotassignment="manual"</td><td>slotAssignment: 'manual'</td><td>Manual slot assignment control</td></tr>
-            <tr><td>shadowrootcustomelementregistry</td><td>customElementRegistry: 'name'</td><td>Scoped custom element registry</td></tr>
-          </tbody></table>
-          <h2>DSD-first Principles</h2>
-          <ul><li><strong>Zero flicker</strong>: Content renders during HTML parsing — no hydration flicker.</li><li><strong>Progressive enhancement</strong>: Content remains visible even if JS fails to load or is disabled.</li><li><strong>SEO-friendly</strong>: Crawlers get full content without executing JavaScript.</li></ul>
-          <h2>FAQ</h2>
-          <h3>Which browsers support DSD?</h3>
-          <p>Chrome 90+, Edge 90+, Safari 16.4+, Firefox 123+ natively support DSD. For older browsers, LessJS client entry creates shadow roots during upgrade — functionally equivalent.</p>
-          <h3>Why not @lit-labs/ssr?</h3>
-          <p>@lit-labs/ssr output includes &lt;!--lit-part--&gt; marker comments. LessJS requires clean DSD HTML with no framework-specific markers.</p>
+          <table>
+            <thead><tr><th>Attribute</th><th>LessJS Option</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>shadowrootmode</code></td><td>always open</td><td>Enables declarative shadow root output.</td></tr>
+              <tr><td><code>shadowrootdelegatesfocus</code></td><td><code>delegatesFocus</code></td><td>Delegates focus into the shadow root.</td></tr>
+              <tr><td><code>shadowrootslotassignment</code></td><td><code>slotAssignment</code></td><td>Controls slot assignment.</td></tr>
+              <tr><td><code>shadowrootclonable</code></td><td><code>clonable</code></td><td>Allows cloned hosts to include the shadow root.</td></tr>
+              <tr><td><code>shadowrootserializable</code></td><td><code>serializable</code></td><td>Allows shadow root serialization.</td></tr>
+              <tr><td><code>shadowrootcustomelementregistry</code></td><td><code>customElementRegistry</code></td><td>Leaves room for scoped registry semantics.</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Three-Layer Component Model</h2>
+          <table>
+            <thead><tr><th>Layer</th><th>Type</th><th>Client JS</th><th>Good Fit</th></tr></thead>
+            <tbody>
+              <tr><td>Layer 1</td><td><code>dsd-static</code></td><td>None</td><td>Layout, navigation, article content.</td></tr>
+              <tr><td>Layer 2</td><td><code>dsd-interactive</code></td><td>Events only</td><td>Theme toggles, disclosure, tabs.</td></tr>
+              <tr><td>Layer 3</td><td><code>pure-island</code></td><td>Full client logic</td><td>Charts, complex forms, WebSocket.</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Boundary</h2>
+          <p>
+            DSD is not a guarantee that every component can be SSR-rendered. Components that depend on
+            browser layout, global DOM, side effects, timers, or third-party scripts must degrade to pure
+            islands or declare their SSR/fallback behavior in a manifest.
+          </p>
+          <p>
+            LessJS should validate target browser behavior with Playwright. Polyfills for older browsers
+            are graceful fallback, not a replacement for real-browser validation.
+          </p>
+
           <div class="nav-row">
-            <a href="/guide/ssg" class="nav-link">&larr; Rendering &amp; SSG</a>
-            <a href="/guide/islands-deep" class="nav-link">Island Deep Guide &rarr;</a>
+            <a href="/en/guide/ssg" class="nav-link">&larr; Rendering &amp; SSG</a>
+            <a href="/en/guide/islands" class="nav-link">Island Upgrade &rarr;</a>
+            <a href="/en/guide/standards-registry" class="nav-link">Standards &amp; Registry &rarr;</a>
           </div>
         </div>
       </less-layout>

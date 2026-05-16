@@ -375,6 +375,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
       const importMap: Record<string, string> = {
         'hono': 'npm:hono@4',
         'parse5': 'npm:parse5@7.0.0',
+        'entities': 'npm:entities@4',
         '@lessjs/core': `npm:@jsr/lessjs__core@${coreVersion}`,
       };
 

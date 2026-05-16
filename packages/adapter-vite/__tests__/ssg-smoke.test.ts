@@ -19,11 +19,11 @@ const WWW_DIR = join(ROOT, 'www');
 const WWW_DIST = join(WWW_DIR, 'dist');
 
 function hasSsrBundle(): boolean {
-  const assetsDir = join(WWW_DIST, 'assets');
-  if (!existsSync(assetsDir)) return false;
-  return readdirSync(assetsDir).some((file) =>
-    file.startsWith('_virtual_less-hono-entry-') && file.endsWith('.js')
-  );
+  // ADR 0011 + S2 fix: Phase 1 artifacts (_virtual_less-hono-entry-*.js)
+  // are cleaned from dist/assets/ by closeBundle because they are build-time
+  // only and must not be deployed to public static hosting.
+  // The real SSR bundle is at dist/server/entry.js.
+  return hasServerEntry();
 }
 
 function hasServerEntry(): boolean {

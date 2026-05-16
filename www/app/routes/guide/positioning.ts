@@ -5,6 +5,8 @@ import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 
 export class PositioningPage extends LitElement {
+  declare locale?: string;
+
   static override styles = [pageStyles];
 
   override render() {
@@ -226,6 +228,13 @@ export class PositioningPage extends LitElement {
             </p>
           </div>
 
+          <p>
+            If LessJS grows into a WC registry hub, the same boundary still applies: renderer kernel and
+            package protocol first, then local indexing and <code>less add</code>, then a public hub.
+            Automatic registration, rendering, and hydration must be manifest-driven; they should not
+            guess arbitrary component behavior.
+          </p>
+
           <h2>Design Principles</h2>
 
           <div class="pillar">
@@ -386,6 +395,7 @@ export class PositioningPage extends LitElement {
           <div class="nav-row">
             <a href="/guide/getting-started" class="nav-link">Getting Started &rarr;</a>
             <a href="/guide/architecture" class="nav-link">Architecture &rarr;</a>
+            <a href="/guide/standards-registry" class="nav-link">Standards &amp; Registry &rarr;</a>
           </div>
         </div>
       </less-layout>

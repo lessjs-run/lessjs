@@ -1,7 +1,7 @@
 /**
  * @lessjs/docs - API Reference: All Packages
  *
- * v0.14.7 API surface - organized by package.
+ * v0.14.9 API surface - organized by package.
  * Only public exports are listed.
  */
 
@@ -15,6 +15,8 @@ export const tagName = 'api-core-page';
 export const meta = { section: 'Packages', label: 'API Reference', order: 5 };
 
 export default class ApiCorePage extends LitElement {
+  declare locale?: string;
+
   static override styles = [
     pageStyles,
     css`
@@ -65,7 +67,15 @@ export default class ApiCorePage extends LitElement {
       >
         <div class="container">
           <h1>API Reference</h1>
-          <p class="subtitle">Public API surface of all LessJS packages (v0.14.7).</p>
+          <p class="subtitle">Public API surface of all LessJS packages (v0.14.9).</p>
+
+          <p>
+            Package island support is intentionally small in the current API: packages export an
+            <code>islands</code> array with <code>tagName</code>, <code>modulePath</code>, and optional
+            <code>strategy</code>. One-command install, automatic registration, automatic rendering, and
+            automatic hydration are roadmap features that require a Custom Elements Manifest-compatible
+            package protocol first.
+          </p>
 
           <div class="api-section">
             <!-- ─── @lessjs/core ───────────────────────────── -->
@@ -117,7 +127,9 @@ export default class ApiCorePage extends LitElement {
             </div>
             <div class="fn-desc">
               Plugin interface for SSR renderers (e.g., Lit TemplateResult → DSD HTML via
-              @lessjs/adapter-lit).
+              @lessjs/adapter-lit). The current registry stores one active adapter. A future renderer
+              protocol must define adapter identity, capabilities, errors, hydration hints, and DSD
+              constraints before multi-adapter behavior is documented as stable.
             </div>
 
             <div class="fn-name">createSsrContext() / extractParams() / parseQuery()</div>
@@ -179,6 +191,16 @@ export default class ApiCorePage extends LitElement {
               >injectViewTransitionMeta()</code>,<br>
               <code>extractCustomElementTags()</code>, <code>generateIslandManifests()</code>, <code
               >writeIslandManifests()</code>
+            </div>
+
+            <div class="fn-name">Package islands and future manifests</div>
+            <div class="fn-desc">
+              <code>packageIslands</code> currently scans packages that export an <code>islands</code>
+              metadata array. The future WC package protocol will add CEM-compatible fields for tags,
+              modules, exports, attributes, properties, events, slots, CSS parts, CSS custom properties,
+              custom states, <code>ssr</code>, <code>dsd</code>, <code>hydrate</code>, and diagnostics.
+              Until that protocol ships, registry hub and <code>less add</code> behavior remain roadmap
+              items.
             </div>
 
             <p class="fn-desc" style="margin-top:1rem">

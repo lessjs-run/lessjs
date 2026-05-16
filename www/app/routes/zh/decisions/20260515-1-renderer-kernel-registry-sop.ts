@@ -108,10 +108,10 @@ export default class RendererKernelRegistrySopDecision extends LitElement {
             <code>PackageIslandMeta</code>。这些能力足够支撑一个 Web Components-first 的渲染内核。
           </p>
           <p>
-            但当前 main 也暴露出几个不能绕过的事实：源码版本是 <code>0.14.6</code>，registry 最新线仍停在
-            <code>0.14.2</code>；<code>@lessjs/create</code> 的远程 JSR 元数据解析不稳；package islands
-            目前更像 client upgrade 输入，不是完整 SSR 输入；per-page island manifest 有工具函数但尚未接入
-            SSG 输出。
+            2026-05-16 复核后，源码包版本已统一到 <code>0.14.9</code>，但 SOP 仍然保留同一条硬边界：
+            registry、install automation 和 hub 不能先于 renderer protocol、package manifest、package
+            island SSR 和验证产物成熟。<code>@lessjs/create</code>、package islands、per-page island
+            manifest、release metadata 仍需要作为发布门槛持续检查，而不是只写进路线图。
           </p>
 
           <h2>Decision</h2>
@@ -159,6 +159,17 @@ export default class RendererKernelRegistrySopDecision extends LitElement {
               </tr>
             </tbody>
           </table>
+
+          <h2>2026-05-16 Vision Boundary</h2>
+          <p>
+            “通用 WC 渲染引擎”只按协议成立：包必须声明 tag、module、export、SSR 可渲染性、DSD 约束、
+            hydrate strategy、events、selectors、fallback 和 diagnostics。LessJS
+            不应该尝试猜测任意组件的浏览器副作用。
+          </p>
+          <p>
+            <code>less add</code> 的第一版应先执行 manifest 读取、schema validation、dry-run diff
+            和注册入口生成。 只有 manifest 合格的包才能进入自动注册、自动渲染和自动水合路径。
+          </p>
 
           <h2>Roadmap Plan</h2>
           <div class="steps">
@@ -263,10 +274,11 @@ export default class RendererKernelRegistrySopDecision extends LitElement {
             kernel.
           </p>
           <p>
-            The current main branch also exposes blocking gaps: source packages are
-            <code>0.14.6</code> while the registry line is still <code>0.14.2</code>;
-            <code>@lessjs/create</code> remote metadata resolution is unreliable; package islands are not
-            a complete SSR input; and per-page island manifest utilities are not wired into SSG output.
+            After the 2026-05-16 review, source packages are aligned on <code>0.14.9</code>, but the SOP
+            keeps the same hard boundary: registry work, install automation, and the hub must not outrun
+            the renderer protocol, package manifest, package island SSR, and validation artifacts.
+            <code>@lessjs/create</code>, package islands, per-page island manifests, and release metadata
+            remain release-gate concerns, not only roadmap prose.
           </p>
 
           <h2>Decision</h2>
@@ -319,6 +331,18 @@ export default class RendererKernelRegistrySopDecision extends LitElement {
               </tr>
             </tbody>
           </table>
+
+          <h2>2026-05-16 Vision Boundary</h2>
+          <p>
+            A "universal WC renderer" is only credible as a protocol: packages must declare tag, module,
+            export, SSR renderability, DSD constraints, hydrate strategy, events, selectors, fallback, and
+            diagnostics. LessJS should not guess browser-only side effects in arbitrary components.
+          </p>
+          <p>
+            The first <code>less add</code> should read manifests, validate schema, show a dry-run diff,
+            and generate registration. Only manifest-valid packages enter automatic registration,
+            rendering, and hydration.
+          </p>
 
           <h2>Roadmap Plan</h2>
           <div class="steps">

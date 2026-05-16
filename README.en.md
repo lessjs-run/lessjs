@@ -2,8 +2,14 @@
 
 [简体中文](./README.md) | [English](./README.en.md)
 
-A Deno-first static site framework built on **Declarative Shadow DOM + Island Architecture**.
-HTML exists before JavaScript — not as a runtime artifact.
+LessJS is a Deno-first Web Components framework for **SSR/SSG with Declarative
+Shadow DOM**. It renders HTML before JavaScript, then upgrades only the
+interactive islands that actually need browser APIs.
+
+The current project is a working early framework, not a mature registry
+ecosystem. The roadmap is intentionally protocol-first: stabilize the renderer
+kernel, define a Custom Elements Manifest-compatible package protocol, then build
+a local registry index before any public WC hub.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
@@ -11,162 +17,115 @@ HTML exists before JavaScript — not as a runtime artifact.
 [![@lessjs/core](https://img.shields.io/jsr/v/@lessjs/core?label=core&style=flat-square)](https://jsr.io/@lessjs/core)
 [![@lessjs/ui](https://img.shields.io/jsr/v/@lessjs/ui?label=ui&style=flat-square)](https://jsr.io/@lessjs/ui)
 
----
+## What LessJS Is
 
-## Architecture
+LessJS is best understood as a Web Standards-first rendering stack:
 
-```
-                 ┌── @lessjs/app (umbrella entry)
-                 │
-       ┌─────────┼─────────┐
-       ▼         ▼         ▼
- adapter-vite   content    i18n
- (build)        (content)  (i18n)
-       │
-       ▼
-  @lessjs/core (pure runtime)
-       │
-  ┌────┼────┬────┬────┐
-  │    │    │    │    │
-adapter-lit  ui  signals  rpc  create
-(Lit)  (components)  (reactive)  (RPC)  (scaffold)
-```
+- **Engine**: `renderDSD()`, nested custom element rendering, route rendering,
+  SSG output, DSD render metrics, and adapter hooks.
+- **Protocol**: package island metadata today; a CEM-compatible WC package
+  manifest on the roadmap.
+- **Ecosystem**: local package indexing, validation artifacts, install helpers,
+  and eventually a public WC registry hub.
 
-### Package Overview
+LessJS does not promise to SSR every arbitrary Web Component. Automatic install,
+registration, rendering, and hydration are only reliable for packages that expose
+an explicit manifest and pass validation.
 
-| Package                | Version | Role                                         | External Deps       |
-| ---------------------- | ------- | -------------------------------------------- | ------------------- |
-| `@lessjs/core`         | 0.14.9  | DSD rendering, Islands, Navigation, Logger   | parse5 only         |
-| `@lessjs/adapter-vite` | 0.14.9  | Vite build: routes, islands, SSG 3-phase     | vite, hono, esbuild |
-| `@lessjs/adapter-lit`  | 0.14.9  | Lit TemplateResult → DSD HTML bridge         | lit                 |
-| `@lessjs/content`      | 0.14.9  | Blog + Nav + Sitemap build-time plugin       | marked, gray-matter |
-| `@lessjs/i18n`         | 0.14.9  | i18n locale expansion                        | none                |
-| `@lessjs/app`          | 0.14.9  | Umbrella: lessjs() = less() + content + i18n | —                   |
-| `@lessjs/ui`           | 0.14.9  | 8 Web Components (layout, button, input…)    | lit                 |
-| `@lessjs/signals`      | 0.14.9  | TC39 Signals polyfill + framework layer      | none                |
-| `@lessjs/rpc`          | 0.14.9  | Zero-dep fetch RPC controller                | none                |
-| `@lessjs/create`       | 0.14.9  | CLI scaffold                                 | none                |
+## Package Overview
 
-### Rendering Pipeline
+| Package                | Version | Role                                               | External deps             |
+| ---------------------- | ------- | -------------------------------------------------- | ------------------------- |
+| `@lessjs/core`         | 0.14.9  | DSD renderer, islands, navigation, errors, logging | `parse5`                  |
+| `@lessjs/adapter-vite` | 0.14.9  | Vite orchestration, route scan, SSG, island chunks | `vite`, `hono`, `esbuild` |
+| `@lessjs/adapter-lit`  | 0.14.9  | Lit `TemplateResult` to DSD HTML bridge            | `lit`                     |
+| `@lessjs/app`          | 0.14.9  | Recommended `lessjs()` umbrella entry              | workspace packages        |
+| `@lessjs/content`      | 0.14.9  | Blog, nav, sitemap build plugins                   | `marked`, `gray-matter`   |
+| `@lessjs/i18n`         | 0.14.9  | Locale expansion and route helpers                 | none                      |
+| `@lessjs/ui`           | 0.14.9  | LessJS Web Components and package islands          | `lit`                     |
+| `@lessjs/signals`      | 0.14.9  | Signals helpers and island effects                 | none                      |
+| `@lessjs/rpc`          | 0.14.9  | Fetch-based RPC controller                         | none                      |
+| `@lessjs/create`       | 0.14.9  | Project scaffold CLI                               | none                      |
 
-```
-Route module (Web Component / LitElement)
-  → render() → string / TemplateResult
-  → renderDSD() → L2 nested DSD HTML (parse5 AST recursive)
-  → SSG output: static HTML + inline DSD templates
-  → Browser: native DSD attachment → Custom Element upgrade
-  → DSD Hydration: skip re-render, bind events only
-  → Island chunk lazy loading (4 strategies)
+## Rendering Pipeline
+
+```text
+Route module or Web Component
+  -> render() returns string or Lit TemplateResult
+  -> renderDSD() emits Declarative Shadow DOM HTML
+  -> nested custom elements are rendered through parse5-backed expansion
+  -> SSG writes static HTML and island assets
+  -> browser parses <template shadowrootmode="open">
+  -> Custom Elements upgrade existing hosts
+  -> dsd-interactive components bind declared hydrateEvents
 ```
 
-**DSD Hydration**: After the browser natively parses `<template shadowrootmode>`, Lit components detect existing shadow roots and skip `render()`. Components that need event bindings use the `WithDsdHydration` Mixin with declarative `hydrateEvents`.
-
-### SSG Build (3-Phase)
-
-```
-Phase 1: less() Vite plugin
-  → Route scanning + Island scanning
-  → Generate virtual:less-hono-entry (Hono app code)
-  → closeBundle() triggers Phase 2/3
-
-Phase 2: buildClient()
-  → Generate virtual:less-client-entry
-  → viteBuild() islands → dist/client/islands/*.js
-
-Phase 3: buildSSG()
-  → Generate virtual:less-ssg-entry
-  → viteBuild(ssr:true, noExternal) → SSR bundle
-  → Load bundle → Hono toSSG() → static HTML
-  → Post-processing: client script, View Transitions, Speculation Rules,
-    CSP, DSD polyfill, PWA
-```
-
----
+The stable current model is SSG-first. ISR, edge SSR, a multi-adapter matrix, and
+a public registry hub are roadmap items, not current production guarantees.
 
 ## Quick Start
 
 ```bash
-# Scaffold
 deno run -A jsr:@lessjs/create my-app
 cd my-app
-
-# Dev
 deno task dev
-
-# Build (SSG 3-phase)
 deno task build
 ```
 
 Requirements:
 
 - Deno 2.7+
-- Modern browser with Declarative Shadow DOM support
+- A modern browser with Declarative Shadow DOM support
 
----
+## Roadmap Boundary
 
-## Architecture Decisions (ADRs)
+The realistic path is:
 
-All ADRs are in the [blog](/blog/) — search `type: adr` to filter. Key decisions:
+1. **Renderer kernel**: harden DSD rendering, adapter contracts, route rendering,
+   metrics, and package island SSR.
+2. **WC package protocol**: extend `PackageIslandMeta` toward a
+   Custom Elements Manifest-compatible schema with `ssr`, `dsd`, `hydrate`, and
+   diagnostics fields.
+3. **Local registry index**: scan installed/workspace packages, validate
+   manifests, and show SSR/SSG output, bundle cost, docs completeness, and test
+   status.
+4. **Install automation**: `less add <package>` can update config and generated
+   registration only for validated packages.
+5. **Public hub**: publish reproducible manifests and validation reports after
+   provenance, review, reporting, and security response rules exist.
 
-| ADR  | Decision                                                 |
-| ---- | -------------------------------------------------------- |
-| 0017 | Runtime/build separation (core vs adapter-vite)          |
-| 0018 | Virtual data modules replace module state                |
-| 0019 | @deno/vite-plugin replaces 20 resolve.alias entries      |
-| 0021 | API surface convergence + Phase tokens + core-Vite split |
+## Standards Positioning
 
----
+LessJS follows the platform where it is already useful and treats emerging
+standards as explicit roadmap boundaries:
 
-## v0.12 → v0.13 Changes
+- WHATWG HTML defines Declarative Shadow DOM attributes such as
+  `shadowrootmode`, `shadowrootdelegatesfocus`, `shadowrootclonable`,
+  `shadowrootserializable`, and `shadowrootcustomelementregistry`.
+- Custom Elements Manifest provides the metadata base for tags, attributes,
+  properties, events, slots, CSS parts, CSS custom properties, and custom states.
+- Open UI is used as vocabulary for parts, states, behaviors, accessibility, and
+  form semantics, not as a toolchain dependency.
+- OpenWC is useful ecosystem history for testing, linting, demoing, and
+  publishing conventions, but LessJS keeps Deno, Playwright, and self-hosted SSG
+  as its validation mainline.
+- Lit and FAST prove that Web Components can support real component authoring;
+  LessJS should integrate through adapters and manifests rather than assume one
+  authoring library.
+- Scoped Custom Element Registries and CSS Houdini are tracked as future
+  integration surfaces, not current core promises.
 
-- **Core API surface**: 18 exports → 6. Internal subpaths (`./render-dsd`, `./html-escape`) removed
-- **ssr-handler.ts deleted**: Pure re-export facade, consumers use `@lessjs/core`
-- **Core-Vite split**: Virtual module IDs moved to `@lessjs/adapter-vite/virtual-ids`
-- **Phase compile-time checks**: Branded types `Phase1Token`/`Phase2Token`/`Phase3Token`
-- **CI coverage**: All test jobs now collect `--coverage`
-- **Zero barrel files**: `content/src/nav/types.ts` and `sitemap/types.ts` deleted
-- **islandEffect interval**: 5000ms → 30000ms
-- **@lessjs/app tests**: 0 → 16 tests
+## Key Docs
 
----
-
-## 0.14.7 Release Hardening
-
-- All packages are aligned on `0.14.7`, with `@lessjs/signals` as the current signals package name.
-- `@lessjs/adapter-vite` exposes CLI subpaths so scaffolded apps can run `deno task build` directly.
-- Publishing no longer allows dirty worktrees, and CI now uses the same quality tasks as local development.
-- E2E uses an isolated port and runs in CI, preventing accidental reuse of stale local servers.
-- Content, Markdown, `headExtras`, and `headFragments` trust developer-controlled repository content by default. Do not pass user-generated HTML directly; sanitize untrusted content first.
-
-Stable API candidates: `lessjs()` options, public `@lessjs/core` exports, `@lessjs/adapter-vite` CLI subpaths, `@lessjs/rpc`, `@lessjs/signals`, and `@lessjs/ui` component subpaths.
-
----
-
-## v0.14.5 — First-Round Code Review Fixes (2026-05-15)
-
-Fixed 12 issues (5 blockers + 5 suggestions + 2 nits):
-
-**Blockers**: effect() pending window signal loss, CSP nonce validation, dialog inert compat, DSD rendering graceful degradation, observer memory leak
-**Suggestions**: batch() deprecation, islandEffect polling opt, renderDSD adapter reuse, SSR history guard, regex escaping
-**Nits**: JSON.parse opt, UI registration docs
-
-See [CHANGELOG-v0.14.5](deliverables/review260515/CHANGELOG-v0.14.5.md)
-
----
-
-## v0.14.9 — Second-Round Deep Review Fixes (2026-05-15)
-
-Fixed 16 issues (3 blockers + 9 suggestions + 3 nits + 1 pre-existing bug):
-
-**Blockers**: case-sensitive renderer matching, SSG 404 dir residual, allNoExternal duplicate paths
-**Suggestions**: tree-shaking docs, adapter-registry warning, polyfill swap+pop guard, dynamic import JSR warning, c.req.param() defensive, i18n static route skip (with pre-existing bugfix), CE tag exclude comments, monorepo path fallback, Map O(1) lookup
-**Nits**: configResolved clarification, fs/promises async I/O, polyfill symbols to module scope
-
-Bonus: fixed a pre-existing i18n bug where `getStaticPaths()` returned `[]` for static routes, causing locale pages to be silently skipped.
-
-See [CHANGELOG-v0.14.9](deliverables/review260515/CHANGELOG-v0.14.9.md)
-
----
+- [Roadmap](www/app/routes/roadmap.ts)
+- [Standards-first renderer ADR](www/content/blog/0024-standards-first-wc-renderer-roadmap.md)
+- [Renderer kernel / registry SOP](www/app/routes/zh/decisions/20260515-1-renderer-kernel-registry-sop.ts)
+- [Architecture guide](www/app/routes/guide/architecture.ts)
+- [Standards & registry guide](www/app/routes/guide/standards-registry.ts)
+- [DSD guide](www/app/routes/guide/dsd.ts)
+- [Island guide](www/app/routes/guide/islands.ts)
+- [API reference](www/app/routes/reference/core.ts)
+- [v0.14.9 changelog](deliverables/review260516/CHANGELOG-v0.14.9.md)
 
 ## License
 

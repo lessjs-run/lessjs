@@ -6,6 +6,8 @@ import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 export class ConfigurationPage extends LitElement {
+  declare locale?: string;
+
   static override styles = [pageStyles];
   override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
 
@@ -54,8 +56,13 @@ export default defineConfig({ plugins: [lessjs()] });</code></pre></less-code-bl
       <tr><td>routesDir</td><td>'app/routes'</td><td>Page routes, API routes, renderer and route-tree middleware.</td></tr>
       <tr><td>islandsDir</td><td>'app/islands'</td><td>Custom Elements for local client-side upgrade.</td></tr>
       <tr><td>componentsDir</td><td>'app/components'</td><td>Shared server-rendered components.</td></tr>
-      <tr><td>packageIslands</td><td>[]</td><td>Packages exporting an islands metadata array.</td></tr>
+      <tr><td>packageIslands</td><td>[]</td><td>Packages exporting an islands metadata array. This is not yet a full registry protocol.</td></tr>
     </tbody></table>
+    <p>
+      Future <code>less add</code> support should update this option only after a package manifest passes
+      validation. Until then, third-party packages should be added explicitly and reviewed like any other
+      dependency.
+    </p>
     <p>See <a href="/guide/api">API Reference</a> for the complete options table, or check the <a href="/guide/security-middleware">Security &amp; Middleware</a> guide for CSP and middleware configuration.</p>
     <div class="nav-row"><a href="/guide/api-design" class="nav-link">&larr; API Design</a><a href="/guide/security-middleware" class="nav-link">Security &amp; Middleware &rarr;</a></div>
   </div></less-layout>`; }

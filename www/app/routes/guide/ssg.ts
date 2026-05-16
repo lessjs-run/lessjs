@@ -6,6 +6,8 @@ import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 export class SSGGuidePage extends LitElement {
+  declare locale?: string;
+
   static override styles = [pageStyles];
 
   override render() {
@@ -93,6 +95,12 @@ export class SSGGuidePage extends LitElement {
           <p>SSG output must preserve the security behavior from the generated Hono entry. CSP metadata, nonces, PWA head tags, and island scripts should be injected through a shared post-processing path, ensuring static deployment does not silently lose protections present in SSR mode.</p>
           <h2>ISR Not Yet Supported</h2>
           <p>LessJS's current stable delivery is SSG. ISR requires route-level revalidation, cache locking, adapter contracts, failure fallback, and CDN semantics. It belongs on the roadmap, not as a currently dependable production capability.</p>
+          <h2>Universal Rendering Boundary</h2>
+          <p>
+            SSG can pre-render LessJS pages and manifest-valid Web Components, but it cannot safely
+            execute arbitrary browser-only components. Registry-driven rendering must be opt-in through
+            SSR metadata, adapter capability checks, and diagnostics.
+          </p>
           <div class="nav-row">
             <a href="/guide/routing" class="nav-link">&larr; Routing</a>
             <a href="/guide/dsd" class="nav-link">DSD Architecture &rarr;</a>

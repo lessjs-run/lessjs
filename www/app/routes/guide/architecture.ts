@@ -6,6 +6,8 @@ import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 export class ArchitecturePage extends LitElement {
+  declare locale?: string;
+
   static override styles = [pageStyles];
 
   override render() {
@@ -277,9 +279,16 @@ Phase 3: SSG
           </p>
 
           <p>
-            The current implementation supports both local islands and package islands, but the
-            build metadata still needs tightening: page-level island manifests, loading strategies,
-            local island paths in nested routes, and package island policies are now implemented.
+            The current implementation supports both local islands and package islands. The remaining
+            architectural work is protocol clarity: package islands must become a reliable SSR input,
+            page-level island manifests must be treated as validation artifacts, and loading strategies
+            must survive every build phase.
+          </p>
+
+          <p>
+            Registry and one-command install work belongs above this boundary, not inside it. The
+            renderer kernel should expose what was rendered, what needs upgrade, what failed, and which
+            adapter handled it; the registry layer can then index those facts.
           </p>
 
           <h2>Server Runtime</h2>
@@ -384,6 +393,7 @@ Phase 3: SSG
           <div class="nav-row">
             <a href="/guide/design-philosophy" class="nav-link">&larr; Design Philosophy</a>
             <a href="/guide/routing" class="nav-link">Routing &rarr;</a>
+            <a href="/guide/standards-registry" class="nav-link">Standards &amp; Registry &rarr;</a>
           </div>
         </div>
       </less-layout>
