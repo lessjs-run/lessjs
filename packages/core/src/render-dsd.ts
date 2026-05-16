@@ -4,7 +4,7 @@
  * Pure string-based Declarative Shadow DOM SSR renderer.
  * Framework-agnostic: no Lit dependency and no TemplateResult knowledge.
  *
- * LessJS Architecture (v0.6.0):
+ * LessJS Architecture (v0.15.0):
  * - Takes a registered Custom Element class + props and returns DSD HTML
  * - Components MUST implement render(): string
  * - Rendering is synchronous string concatenation; no DOM shim needed
@@ -27,52 +27,22 @@
  */
 
 // ─── Internal imports ──────────────────────────────────────────
-import { escapeAttrValue, escapeHtml } from './html-escape.js';
-import { type DsdComponent, type DsdOptions, type DsdRenderCollector } from './types.js';
+import { type DsdOptions, type DsdRenderCollector } from './types.js';
 import { getAdapter } from './adapter-registry.js';
 import { renderNestedCustomElements } from './render-nested.js';
 import { createLogger } from './logger.js';
-import { DANGEROUS_KEYS } from './island.js';
+
+// ─── Extracted modules ─────────────────────────────────────────
+import { injectProps, instantiateComponent } from './render-instantiate.js';
+import { instantiationErrorHtml, renderErrorHtml, wrongTypeErrorHtml } from './render-errors.js';
+import { serializeAttributes, wrapDsdOutput } from './render-serialize.js';
+
+// Re-export for backward compat (camelToKebab was previously exported from here)
+export { camelToKebab } from './render-serialize.js';
 
 const log = createLogger('core');
 
 // ─── DSD Rendering ──────────────────────────────────────────────
-
-/**
- * Convert camelCase to kebab-case for HTML attribute names.
- * e.g. currentPath → current-path, navItems → nav-items
- *
- * HTML attributes are case-insensitive — browsers lowercase them.
- * Lit's @property({attribute: 'current-path'}) expects kebab-case.
- * Without this conversion, currentPath would render as "currentpath"
- * (lowercased by the browser) and never match "current-path".
- */
-export function camelToKebab(str: string): string {
-  return str.replace(/([A-Z])/g, '-$1').toLowerCase();
-}
-
-/** Serialize key-value strings to HTML attribute string */
-function serializeAttributes(props: Record<string, unknown>): string {
-  const parts: string[] = [];
-  for (const [key, val] of Object.entries(props)) {
-    if (val === false || val === null || val === undefined) continue;
-    // Convert camelCase to kebab-case so Lit's attribute observer
-    // can read the value back on client-side upgrade.
-    // e.g. currentPath → current-path
-    const attrKey = camelToKebab(key);
-    if (val === true) {
-      parts.push(attrKey);
-    } else if (typeof val === 'object') {
-      // Array or Object: JSON-encode and escape for safe HTML attribute embedding.
-      // Client-side Lit deserializes via property setter (not attribute), so the
-      // JSON string only needs to survive HTML parsing, not be human-readable.
-      parts.push(`${attrKey}="${escapeAttrValue(JSON.stringify(val))}"`);
-    } else {
-      parts.push(`${attrKey}="${escapeAttrValue(val)}"`);
-    }
-  }
-  return parts.length > 0 ? ' ' + parts.join(' ') : '';
-}
 
 /**
  * Render a single component to DSD HTML string.
@@ -105,9 +75,6 @@ export async function renderDSD(
   sourceInfo?: { route?: string; source?: string },
   dsdOptions?: DsdOptions,
   collector?: DsdRenderCollector,
-  // v0.14.3 N-6: Accept actual nesting depth from renderNestedCustomElements
-  // instead of always recording 0. This makes the build report's maxNestingDepth
-  // metric meaningful.
   nestingDepth = 0,
 ): Promise<string> {
   // H-10 fix: Guard against SSR environments where performance is undefined
@@ -120,45 +87,20 @@ export async function renderDSD(
     : '';
 
   // 1. Instantiate the component
-  let instance: DsdComponent;
-  try {
-    instance = new componentClass() as unknown as DsdComponent;
-  } catch (err) {
-    const errMsg = err instanceof Error ? err.message : String(err);
-    log.error(`Failed to instantiate <${tagName}>:`, errMsg);
-    return (
-      `<${tagName}${sourceStr}><!-- LessJS ERROR: Failed to instantiate <${tagName}>: ${
-        escapeHtml(
-          errMsg,
-        )
-      } -->` +
-      (sourceInfo?.route ? `\n<!-- Route: ${escapeHtml(sourceInfo.route)} -->` : '') +
-      (sourceInfo?.source ? `\n<!-- Source: ${escapeHtml(sourceInfo.source)} -->` : '') +
-      `</${tagName}>`
+  const instance = instantiateComponent(tagName, componentClass);
+  if (!instance) {
+    const errMsg = 'Failed to instantiate';
+    return instantiationErrorHtml(
+      tagName,
+      errMsg,
+      sourceStr,
+      sourceInfo?.route,
+      sourceInfo?.source,
     );
   }
 
   // 2. Set attributes/properties
-  for (const [key, value] of Object.entries(props)) {
-    // v0.14.7: Prevent prototype pollution — skip dangerous keys (C-04 fix).
-    // Uses shared DANGEROUS_KEYS from island.ts for consistency.
-    if (DANGEROUS_KEYS.has(key)) {
-      log.warn(
-        `Skipping dangerous prop key "${key}" on <${tagName}> — potential prototype pollution`,
-      );
-      continue;
-    }
-    try {
-      (instance as Record<string, unknown>)[key] = value;
-    } catch (e) {
-      // Some properties may be read-only — safe to skip, but log for debuggability
-      log.debug(
-        `Cannot set read-only property "${key}" on <${tagName}>: ${
-          e instanceof Error ? e.message : String(e)
-        }`,
-      );
-    }
-  }
+  injectProps(instance, tagName, props);
 
   // 3. DO NOT call connectedCallback in SSR.
   // 4. Call render() to get Shadow DOM content
@@ -180,47 +122,14 @@ export async function renderDSD(
         const errDetail = isLitTemplateResultHeuristic(result)
           ? 'This looks like a Lit TemplateResult — install @lessjs/adapter-lit to handle it.'
           : `Components must return a string from render(), got ${typeof result}.`;
-        log.error(
-          `<${tagName}> render() returned ${typeof result} instead of string. ${errDetail}`,
-        );
-        content =
-          `<!-- LessJS ERROR: <${tagName}> render() returned ${typeof result}, expected string. ${errDetail} -->`;
+        content = wrongTypeErrorHtml(tagName, typeof result, errDetail);
       }
     }
   } catch (err) {
-    const errMsg = err instanceof Error ? err.message : String(err);
-    const errStack = err instanceof Error ? err.stack : '';
-    log.error(
-      `<${tagName}> render() failed: ${errMsg}${errStack ? `\n${errStack}` : ''}`,
-    );
-    // v0.14.3: Only include error details in HTML comments during development.
-    // In production, leaking file paths and code structure in HTML comments
-    // is a security risk — anyone viewing page source can see internal info.
-    // Cross-runtime environment detection: check Deno first, then Node, else production.
-    // Use globalThis bracket access to avoid TS2580 in Deno type-checker
-    // (bare `process` is not a Deno global and triggers "Cannot find name").
-    // deno-lint-ignore no-explicit-any
-    const _nodeProcess = (globalThis as any).process as
-      | { env?: Record<string, string | undefined> }
-      | undefined;
-    const _nodeIsDev = _nodeProcess?.env?.NODE_ENV !== 'production';
-    const isDev = typeof Deno !== 'undefined'
-      ? Deno.env?.get('LESSJS_ENV') !== 'production'
-      : _nodeIsDev;
-    if (isDev) {
-      content = `<!-- LessJS ERROR: <${tagName}> render() threw: ${escapeHtml(errMsg)} -->\n` +
-        (errStack
-          ? `<!-- Stack: ${escapeHtml(errStack.split('\n').slice(0, 3).join(' | '))} -->\n`
-          : '') +
-        '<!-- Check console for full error details -->';
-    } else {
-      content = `<!-- LessJS ERROR: <${tagName}> render() failed -->` +
-        '<!-- Check console for full error details -->';
-    }
+    content = renderErrorHtml(tagName, err);
   }
 
   // v0.6: L2 Nested DSD — recursively render nested Custom Elements
-  // v0.12.0: Pass collector through for build-time DSD reporting
   content = await renderNestedCustomElements(content, collector);
 
   // 5. Extract static styles from component class
@@ -229,16 +138,13 @@ export async function renderDSD(
     try {
       styleCss = adapter.extractStyles(componentClass) || '';
     } catch (e) {
-      // Style extraction failed — continue without styles, but log for debuggability
       log.debug(
         `extractStyles failed for <${tagName}>: ${e instanceof Error ? e.message : String(e)}`,
       );
     }
   }
 
-  // 6. Wrap in DSD (or skip for Pure Island layer)
-  // v0.6.2: Layer 3 (pure-island) components skip DSD entirely.
-  // The framework fully owns the shadow root — no pre-rendered template.
+  // 6. Resolve component layer
   const resolvedLayer = dsdOptions?.layer || instance.layer || 'dsd-static';
 
   // ─── Collect DSD render metrics (if collector provided) ─────
@@ -250,62 +156,20 @@ export async function renderDSD(
       templateSize: content.length,
       layer: resolvedLayer,
       hasError: false,
-      // v0.14.3 N-6: Use actual nesting depth passed from renderNestedCustomElements
       nestingDepth,
     });
   }
 
-  if (resolvedLayer === 'pure-island') {
-    // Pure Island: no DSD template, framework will create shadow root on client
-    const attrs = serializeAttributes(props);
-    // NOTE (v0.14.3): Object-type props are intentionally serialized TWICE:
-    //   1. In HTML attributes via serializeAttributes() — used by SSR rendering
-    //   2. In data-ssr-props — used by client-side lessBind() for hydration
-    // The HTML attribute form is needed for nested custom element SSR processing
-    // (parseAttrsToProps in render-nested.ts). The data-ssr-props form is the
-    // authoritative source for client-side property restoration. This dual
-    // serialization is by design, not a bug.
-    const ssrPropsAttr = Object.keys(props).length > 0
-      ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
-      : '';
-    return `<${tagName}${attrs}${ssrPropsAttr}${sourceStr}></${tagName}>`;
-  }
-
-  // Layer 1 (dsd-static) and Layer 2 (dsd-interactive): emit DSD template
-  const attrs = serializeAttributes(props);
-  // NOTE (v0.14.3): See above — dual serialization is intentional.
-  const ssrPropsAttr = Object.keys(props).length > 0
-    ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
-    : '';
-  const styleTag = styleCss ? `\n    <style>${styleCss}</style>` : '';
-
-  // Build DSD template attributes per HTML Living Standard
-  const dsdAttrs = buildDsdTemplateAttrs(dsdOptions);
-
-  return `<${tagName}${attrs}${ssrPropsAttr}${sourceStr}>
-  <template shadowrootmode="open"${dsdAttrs}>${styleTag}
-    ${content}
-  </template>
-</${tagName}>`;
-}
-
-/**
- * Build DSD template attributes per WHATWG HTML Living Standard.
- * Only includes non-default attributes to keep output clean.
- */
-function buildDsdTemplateAttrs(options?: DsdOptions): string {
-  if (!options) return '';
-  const parts: string[] = [];
-  if (options.delegatesFocus) parts.push(' shadowrootdelegatesfocus');
-  if (options.clonable) parts.push(' shadowrootclonable');
-  if (options.serializable) parts.push(' shadowrootserializable');
-  if (options.slotAssignment === 'manual') {
-    parts.push(' shadowrootslotassignment="manual"');
-  }
-  if (options.customElementRegistry) {
-    parts.push(' shadowrootcustomelementregistry');
-  }
-  return parts.join('');
+  // 7. Wrap in DSD output
+  return wrapDsdOutput({
+    tagName,
+    props,
+    content,
+    styleCss,
+    layer: resolvedLayer,
+    sourceStr,
+    dsdOptions,
+  });
 }
 
 /**
@@ -329,11 +193,6 @@ function isLitTemplateResultHeuristic(value: unknown): boolean {
  * @param props - Attribute/property key-value pairs
  * @param sourceInfo - Optional context for error messages (route path, source file)
  * @returns DSD HTML string, or error HTML if tag is not registered
- *
- * @example
- * ```ts
- * const html = renderDSDByName('less-button', { variant: 'primary' })
- * ```
  */
 export async function renderDSDByName(
   tagName: string,

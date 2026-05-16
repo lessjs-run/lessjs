@@ -8,7 +8,10 @@
     "./logger": "./src/logger.ts",
     "./navigation": "./src/navigation.ts",
     "./build-types": "./src/build-types.ts",
-    "./virtual-ids": "./src/virtual-ids.ts"
+    "./virtual-ids": "./src/virtual-ids.ts",
+    "./render-serialize": "./src/render-serialize.ts",
+    "./render-instantiate": "./src/render-instantiate.ts",
+    "./render-errors": "./src/render-errors.ts"
   },
   "imports": {
     "parse5": "npm:parse5@7.0.0"
@@ -18,11 +21,21 @@
     "test": "deno test --allow-read --allow-write --allow-env --allow-net __tests__/"
   },
   "publish": {
-    "include": ["src/**", "deno.json", "README.md", "LICENSE"]
+    "include": [
+      "src/**",
+      "deno.json",
+      "README.md",
+      "LICENSE"
+    ]
   },
   "compilerOptions": {
     "skipLibCheck": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
