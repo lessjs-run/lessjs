@@ -32,36 +32,14 @@ export const tagName = 'media-chrome-showcase';
 export const less = { ssr: false };
 
 export default class MediaChromeShowcase extends MediaChromeBase {
-  static styles = `
-    :host { display: block; }
-    .mc-wrap {
-      background: #000;
-      border-radius: 8px;
-      overflow: hidden;
-      width: 100%;
-      max-width: 480px;
-    }
-    media-controller {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      --media-control-background: rgba(20, 20, 20, 0.9);
-      --media-control-hover-background: rgba(40, 40, 40, 0.9);
-      --media-icon-color: #e0e0e0;
-      --media-range-thumb-color: #6366f1;
-      --media-range-bar-color: #6366f1;
-    }
-    video { width: 100%; height: 100%; object-fit: cover; }
-    .mc-label {
-      color: #a1a1aa;
-      font-size: 11px;
-      margin-top: 6px;
-      line-height: 1.5;
-    }
-  `;
-
   private _mcLoaded = false;
 
   override connectedCallback(): void {
+    // Ensure shadow root exists so the mixin's connectedCallback
+    // can detect it and invoke render() to populate content.
+    if (!this.shadowRoot) {
+      this.attachShadow({ mode: 'open' });
+    }
     super.connectedCallback();
     // Load media-chrome dynamically on the client only.
     // This avoids SSR crashes from browser-only DOM APIs.
@@ -73,6 +51,32 @@ export default class MediaChromeShowcase extends MediaChromeBase {
 
   render(): string {
     return `
+      <style>
+        :host { display: block; }
+        .mc-wrap {
+          background: #000;
+          border-radius: 8px;
+          overflow: hidden;
+          width: 100%;
+          max-width: 480px;
+        }
+        media-controller {
+          width: 100%;
+          aspect-ratio: 16 / 9;
+          --media-control-background: rgba(20, 20, 20, 0.9);
+          --media-control-hover-background: rgba(40, 40, 40, 0.9);
+          --media-icon-color: #e0e0e0;
+          --media-range-thumb-color: #6366f1;
+          --media-range-bar-color: #6366f1;
+        }
+        video { width: 100%; height: 100%; object-fit: cover; }
+        .mc-label {
+          color: #a1a1aa;
+          font-size: 11px;
+          margin-top: 6px;
+          line-height: 1.5;
+        }
+      </style>
       <div class="mc-wrap">
         <media-controller>
           <video slot="media"
