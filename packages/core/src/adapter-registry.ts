@@ -3,7 +3,7 @@
  *
  * Module-level adapter storage for framework-specific rendering.
  *
- * v0.15: Supports named adapters via RendererProtocol.
+ * Supports named adapters via RendererProtocol.
  * The last registered adapter is the default (returned by getAdapter()).
  * Named lookup is available via getAdapter(name).
  *
@@ -17,27 +17,27 @@
  * via installLitAdapter() or equivalent.
  */
 
-import type { RenderAdapter, RendererProtocol } from './types.js';
+import type { RendererProtocol } from './types.js';
 
 // Re-export for consumers who import from @lessjs/core/adapter-registry
-export type { RenderAdapter, RendererProtocol } from './types.js';
+export type { RendererProtocol } from './types.js';
 
-let _adapter: RenderAdapter | RendererProtocol | undefined;
+let _adapter: RendererProtocol | undefined;
 const _namedAdapters: Map<string, RendererProtocol> = new Map();
 
 /** Register a render adapter explicitly. */
 export function registerAdapter(
-  adapter: RenderAdapter | RendererProtocol | undefined,
+  adapter: RendererProtocol | undefined,
 ): void {
   _adapter = adapter;
   // If adapter has a name, register it in the named map
-  if (adapter && 'name' in adapter && adapter.name) {
-    _namedAdapters.set(adapter.name, adapter as RendererProtocol);
+  if (adapter && adapter.name) {
+    _namedAdapters.set(adapter.name, adapter);
   }
 }
 
-/** Get the currently registered (default) adapter. */
-export function getAdapter(name?: string): RenderAdapter | RendererProtocol | undefined {
+/** Get the currently registered (default) adapter, or look up by name. */
+export function getAdapter(name?: string): RendererProtocol | undefined {
   if (name) {
     return _namedAdapters.get(name);
   }

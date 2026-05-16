@@ -10,7 +10,7 @@
 import { assertEquals, assertFalse, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
 import { renderDSD, renderDSDByName } from '../src/render-dsd.ts';
 import { escapeAttr, escapeAttrValue, escapeHtml } from '../src/html-escape.ts';
-import { registerAdapter, type RenderAdapter } from '../src/adapter-registry.ts';
+import { registerAdapter, type RendererProtocol } from '../src/adapter-registry.ts';
 
 // ─── Mock Component Classes ──────────────────────────────────
 //
@@ -326,16 +326,6 @@ Deno.test('renderDSD — DSD options', async (t) => {
     assertFalse(html.includes('shadowrootcustomelementregistry='));
   });
 
-  await t.step('serializes legacy customElementRegistry string as boolean attr', async () => {
-    registerAdapter(undefined);
-    const cls = createMockClass('<slot></slot>');
-    const html = await renderDSD('registry-el-2', asCtor(cls), {}, undefined, {
-      customElementRegistry: 'myRegistry',
-    });
-    assertStringIncludes(html, 'shadowrootcustomelementregistry');
-    assertFalse(html.includes('myRegistry'));
-  });
-
   await t.step('omits DSD attrs when options are not set', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<div>x</div>');
@@ -443,7 +433,8 @@ Deno.test('renderDSD — adapter protocol', async (t) => {
     const fakeTemplate = { _$litType$: 1, __brand: 'TemplateResult' };
     let renderCalled = false;
 
-    const adapter: RenderAdapter = {
+    const adapter: RendererProtocol = {
+      name: 'test',
       isTemplate: (value: unknown) =>
         typeof value === 'object' && value !== null &&
         '_$litType$' in (value as Record<string, unknown>),
@@ -464,7 +455,8 @@ Deno.test('renderDSD — adapter protocol', async (t) => {
   });
 
   await t.step('adapter extractStyles injects <style> into template', async () => {
-    const adapter: RenderAdapter = {
+    const adapter: RendererProtocol = {
+      name: 'test',
       extractStyles: (_cls: CustomElementConstructor) => ':host { display: block; }',
     };
 
@@ -479,7 +471,8 @@ Deno.test('renderDSD — adapter protocol', async (t) => {
   });
 
   await t.step('adapter extractStyles failure is handled gracefully', async () => {
-    const adapter: RenderAdapter = {
+    const adapter: RendererProtocol = {
+      name: 'test',
       extractStyles: () => {
         throw new Error('Style extraction blew up');
       },

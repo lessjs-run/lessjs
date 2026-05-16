@@ -9,7 +9,7 @@
  *
  * Rendering: DSD (Declarative Shadow DOM) string concatenation
  * Islands: Custom Element registration + prop deserialization
- * Adapter: registerAdapter() + RenderAdapter interface
+ * Adapter: registerAdapter() + RendererProtocol interface
  *
  * Build orchestration (Vite plugins) lives in @lessjs/adapter-vite.
  * For the unified lessjs() entry, use @lessjs/app instead.
@@ -38,7 +38,6 @@ export type {
   DsdOptions,
   HydrateEventDescriptor,
   HydrationHint,
-  RenderAdapter,
   RendererProtocol,
   RenderError,
   RenderInput,

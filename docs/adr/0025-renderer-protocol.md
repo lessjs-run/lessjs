@@ -1,6 +1,6 @@
 # ADR-0025: Renderer Protocol
 
-- Status: PROPOSED
+- Status: ACCEPTED
 - Date: 2026-05-16
 
 ## Context
@@ -9,7 +9,7 @@ ADR-0024 defined the strategic direction: LessJS is a Web Standards-first DSD/We
 Components application framework. v0.15's goal is to productize the existing DSD
 renderer into a reusable rendering kernel.
 
-The current rendering interface (`RenderAdapter`) has three optional methods and
+The previous rendering interface (`RenderAdapter`) had three optional methods and
 no error taxonomy:
 
 ```ts
@@ -39,6 +39,8 @@ Problems:
 
 ### 1. Replace `RenderAdapter` with `RendererProtocol`
 
+`RenderAdapter` is fully removed — no aliases, no backward compatibility.
+
 ```ts
 /** Structured error from the render pipeline */
 interface RenderError {
@@ -66,14 +68,14 @@ interface RenderOutput {
 
 /** Adapter interface for framework-specific rendering */
 interface RendererProtocol {
+  /** Adapter name for diagnostics and named lookup */
+  name: string;
   /** Check if a value is a template type this adapter handles */
   isTemplate?: (value: unknown) => boolean;
   /** Render a template value to HTML string */
   render?: (value: unknown, tagName: string) => Promise<string>;
   /** Extract static CSS from a component class */
   extractStyles?: (componentClass: CustomElementConstructor) => string | undefined;
-  /** Adapter name for diagnostics */
-  name: string;
 }
 
 /** Lifecycle hooks for the render pipeline */
@@ -107,9 +109,8 @@ to:
 renderDSD(...): Promise<RenderOutput>
 ```
 
-**Backward compatibility**: `renderDSDString()` wraps `renderDSD()` and returns
-only the HTML string. Existing code that doesn't need structured output can use
-this wrapper.
+No backward-compatible wrapper is provided — LessJS is pre-1.0 and breaks are
+acceptable.
 
 ### 3. Split `render-dsd.ts` into focused modules
 
@@ -129,7 +130,7 @@ SSG builds. The SSG CLI (`adapter-vite/src/cli/ssg-render.ts`) calls
 ### 5. Adapter registry supports named adapters
 
 ```ts
-function registerAdapter(adapter: RendererProtocol): void;
+function registerAdapter(adapter: RendererProtocol | undefined): void;
 function getAdapter(name?: string): RendererProtocol | undefined;
 function getRegisteredAdapters(): readonly RendererProtocol[];
 ```
@@ -143,6 +144,12 @@ multi-adapter scenarios (e.g., Lit for some components, vanilla for others).
 - Update scaffold template to reference `@lessjs/core@^0.15.0`
 - Add `app/routes/about.ts` template for a more complete scaffold
 
+### 7. `DsdOptions.customElementRegistry` simplified
+
+Type changed from `boolean | string` to `boolean` to match the WHATWG HTML
+Living Standard, where `shadowrootcustomelementregistry` is a boolean content
+attribute with no value.
+
 ## Consequences
 
 ### Positive
@@ -154,28 +161,26 @@ multi-adapter scenarios (e.g., Lit for some components, vanilla for others).
 - DSD report gives build-time visibility into rendering performance.
 - Named adapters unblock future multi-adapter support without committing to it
   now.
+- Clean codebase with no dead backward-compatibility code.
 
 ### Negative
 
-- Breaking change to `renderDSD()` return type (mitigated by
-  `renderDSDString()` wrapper).
-- More types to learn for adapter authors (but the old `RenderAdapter` was
-  underspecified, not simple).
+- Breaking change to `renderDSD()` return type.
+- Breaking change: `RenderAdapter` removed entirely — all adapters must
+  implement `RendererProtocol` (add `name: string`).
+- Breaking change: `DsdOptions.customElementRegistry` no longer accepts strings.
 - `render-dsd.ts` split touches a core hot path — requires careful regression
   testing.
 
 ### Neutral
 
-- `RendererProtocol` is a superset of `RenderAdapter`. Existing Lit adapter
-  gains a `name` field but is otherwise unchanged.
 - `RenderHooks` are defined but not yet used in v0.15. They exist as
   extension points for v0.16 (package protocol observers).
 
 ## Validation
 
-- [ ] All 47 existing tests pass after refactoring
+- [ ] All existing tests pass after refactoring
 - [ ] New tests for `RenderOutput`, `RenderError`, `HydrationHint` types
-- [ ] `renderDSDString()` produces identical output to old `renderDSD()`
 - [ ] `dsd-report.json` is generated during `deno task build:ssg`
 - [ ] `deno run -A jsr:@lessjs/create test-app` produces a working scaffold
 - [ ] `deno task typecheck && deno lint && deno fmt --check` all pass

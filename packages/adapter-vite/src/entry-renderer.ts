@@ -31,7 +31,7 @@ import type {
 import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from '@lessjs/core';
 import { buildEntryDescriptor } from './entry-descriptor.js';
 
-// Re-export for backward compatibility (consumers import from hono-entry.ts)
+// Re-export for consumers that import from entry-renderer.ts
 export { buildEntryDescriptor } from './entry-descriptor.js';
 export type { EntryDescriptor } from './entry-descriptor.js';
 

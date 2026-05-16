@@ -310,32 +310,13 @@ export interface HydrateEventDescriptor {
 }
 
 /**
- * Adapter interface for framework-specific rendering.
+ * Renderer Protocol — the adapter interface for framework-specific rendering.
  *
- * v0.6.2: DSD hydration is handled at the component level via
- * WithDsdHydration Mixin (in @lessjs/adapter-lit) and declarative
- * hydrateEvents. The adapter only needs render + isTemplate + extractStyles.
- */
-export interface RenderAdapter {
-  /** Check if a value is a template type this adapter handles */
-  isTemplate?: (value: unknown) => boolean;
-  /** Render a template value to HTML string */
-  render?: (value: unknown, tagName: string) => Promise<string>;
-  /** Extract static CSS from a component class */
-  extractStyles?: (componentClass: CustomElementConstructor) => string | undefined;
-}
-
-/**
- * Renderer Protocol — the v0.15 successor to RenderAdapter.
- *
- * Adds a required `name` field for diagnostics and multi-adapter support.
- * All existing RenderAdapter methods are preserved as optional.
- *
- * @deprecated Use `RendererProtocol` instead of `RenderAdapter` in new code.
- * `RenderAdapter` is kept as a type alias for backward compatibility.
+ * Every adapter MUST provide a `name` for diagnostics and multi-adapter support.
+ * The last registered adapter is the default (returned by `getAdapter()`).
  */
 export interface RendererProtocol {
-  /** Adapter name for diagnostics and logging */
+  /** Adapter name for diagnostics, logging, and named lookup */
   name: string;
   /** Check if a value is a template type this adapter handles */
   isTemplate?: (value: unknown) => boolean;
@@ -400,9 +381,7 @@ export interface HydrationHint {
 /**
  * Structured output from renderDSD().
  *
- * v0.15: renderDSD() returns this instead of a bare string,
- * providing errors, metrics, and hydration hints alongside the HTML.
- * Use renderDSDString() for backward-compatible string output.
+ * Provides errors, metrics, and hydration hints alongside the HTML.
  */
 export interface RenderOutput {
   /** Rendered DSD HTML string */
@@ -470,10 +449,8 @@ export interface DsdOptions {
    * Add shadowrootcustomelementregistry.
    *
    * Per the HTML Living Standard this is a boolean content attribute.
-   * String values are accepted for v0.x compatibility, but the value is not
-   * serialized because the standard attribute has no value.
    */
-  customElementRegistry?: boolean | string;
+  customElementRegistry?: boolean;
   /**
    * Component layer — controls whether DSD template is emitted.
    * 'pure-island' → no DSD template, framework owns shadow root entirely.

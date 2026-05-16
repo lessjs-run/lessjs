@@ -43,7 +43,7 @@ import type {
   FrameworkOptions,
   HydrateEventDescriptor,
   PackageIslandMeta,
-  RenderAdapter,
+  RendererProtocol,
   SafeHtml,
   UnsafeHtml,
 } from '@lessjs/core';
@@ -61,7 +61,7 @@ component render()
 ```
 
 `renderDSD()` is framework-agnostic. Lit support is installed through
-`@lessjs/adapter-lit`, which registers a `RenderAdapter`.
+`@lessjs/adapter-lit`, which registers a `RendererProtocol`.
 
 ## Current Protocol Boundary
 

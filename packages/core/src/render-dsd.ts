@@ -37,9 +37,6 @@ import { injectProps, instantiateComponent } from './render-instantiate.js';
 import { instantiationErrorHtml, renderErrorHtml, wrongTypeErrorHtml } from './render-errors.js';
 import { serializeAttributes, wrapDsdOutput } from './render-serialize.js';
 
-// Re-export for backward compat (camelToKebab was previously exported from here)
-export { camelToKebab } from './render-serialize.js';
-
 const log = createLogger('core');
 
 // ─── DSD Rendering ──────────────────────────────────────────────

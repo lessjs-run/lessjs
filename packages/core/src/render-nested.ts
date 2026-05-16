@@ -128,9 +128,7 @@ function inferDsdOptions(_tagName: string, cls: CustomElementConstructor): DsdOp
   if (proto.delegatesFocus === true) opts.delegatesFocus = true;
   if (proto.serializable === true) opts.serializable = true;
   if (proto.slotAssignment === 'manual') opts.slotAssignment = 'manual';
-  if (typeof proto.customElementRegistry === 'string') {
-    opts.customElementRegistry = proto.customElementRegistry;
-  }
+  if (proto.customElementRegistry === true) opts.customElementRegistry = true;
 
   return opts;
 }

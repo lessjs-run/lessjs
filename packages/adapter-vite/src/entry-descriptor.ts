@@ -351,7 +351,7 @@ export function buildEntryDescriptor(
 
   // Local islands — use real file paths when available to support
   // nested directories (e.g. posts/index.ts → tag "posts-index").
-  // Fallback to tagName-based path for backwards compatibility.
+  // Fallback to tagName-based path when no real file path is available.
   const localIslands: IslandDecl[] = islandTagNames.map((tagName, i) => ({
     tagName,
     modulePath: islandFiles[i]
