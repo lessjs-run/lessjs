@@ -20,6 +20,7 @@ import { LessError } from '@lessjs/core/errors';
 import { createLogger } from '@lessjs/core/logger';
 import { readdir, stat } from 'node:fs/promises';
 import { join, posix, sep } from 'node:path';
+import { type ClientIslandEntry, validateClientIslandEntry } from './entry-generators.js';
 
 const log = createLogger('core');
 
@@ -258,7 +259,13 @@ export async function scanIslands(
 
 /**
  * Scan package exports for island metadata.
- * Packages should export an `islands` array in their main entry.
+ * Packages may export an `islands` array in their main entry.
+ *
+ * Security boundary: this dynamic import path is trusted backward compatibility
+ * for explicit `packageIslands` config. New third-party registry work should
+ * prefer static manifests (`custom-elements.json`, `lessjs.manifest.json`, or a
+ * trusted manifest module) so package discovery does not execute arbitrary
+ * package entry code.
  *
  * Example package export:
  * ```ts
@@ -296,14 +303,19 @@ export async function scanPackageIslands(
       // Validate each island has required fields
       for (const island of mod.islands) {
         if (island.tagName && island.modulePath) {
-          allIslands.push({
+          const meta = {
             tagName: island.tagName,
             modulePath: island.modulePath,
             strategy: island.strategy || 'lazy',
-          });
+          };
+          validatePackageIslandMeta(meta, pkg);
+          allIslands.push(meta);
         } else {
-          log.warn(
+          throw new LessError(
             `Invalid island in ${pkg}: missing tagName or modulePath`,
+            'PACKAGE_ISLAND_META_ERROR',
+            500,
+            false,
           );
         }
       }
@@ -311,4 +323,22 @@ export async function scanPackageIslands(
   }
 
   return allIslands;
+}
+
+export function validatePackageIslandMeta(
+  island: PackageIslandMeta,
+  packageName: string,
+): void {
+  try {
+    validateClientIslandEntry(island as ClientIslandEntry);
+  } catch (e) {
+    throw new LessError(
+      `Invalid package island metadata in "${packageName}": ${
+        e instanceof Error ? e.message : String(e)
+      }`,
+      'PACKAGE_ISLAND_META_ERROR',
+      500,
+      false,
+    );
+  }
 }

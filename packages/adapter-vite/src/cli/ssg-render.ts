@@ -491,12 +491,18 @@ self.addEventListener('activate', (e) => e.waitUntil(
   caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => clients.claim())
 ));
 self.addEventListener('fetch', (e) => {
+  if (e.request.method !== 'GET') return;
+  if (e.request.headers.has('authorization')) return;
   const url = new URL(e.request.url);
   // Only handle same-origin requests — cross-origin (CDN, analytics) pass through
   if (url.origin !== location.origin || !url.protocol.startsWith('http')) return;
-  const isAsset = /\\.[a-z0-9]+$/i.test(url.pathname) && !url.pathname.includes('/api/');
+  if (/\\/(api|rpc)(?:\\/|$)/.test(url.pathname)) return;
+  if (/\\/(auth|session|login|logout)(?:\\/|$)/.test(url.pathname)) return;
+  const destination = e.request.destination;
+  const isStaticDestination = ['style', 'script', 'image', 'font', 'manifest'].includes(destination);
+  const isAsset = /\\.[a-z0-9]+$/i.test(url.pathname) && isStaticDestination;
   e.respondWith(
-    (isAsset ? cacheFirst(e.request) : networkFirst(e.request))
+    (isAsset ? cacheFirst(e.request) : fetch(e.request))
       .catch(() => fetch(e.request))
   );
 });

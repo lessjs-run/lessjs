@@ -3,7 +3,7 @@
  *
  * Tests build manifest scanning and formatting using temp directories.
  */
-import { assertEquals, assertExists, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
+import { assert, assertEquals, assertExists, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
 import { printBuildManifest, scanClientBuild, scanSSGOutput } from '../src/build-manifest.ts';
 
 import { join } from 'node:path';
@@ -53,7 +53,7 @@ Deno.test('scanClientBuild finds island chunks', () => {
     assertExists(result.islands.find((i) => i.name === 'island-theme-def456.js'));
     assertExists(result.clientEntry);
     assertEquals(result.clientEntry!.name, 'client.js');
-    assertExists(result.totalJsBytes > 7000);
+    assert(result.totalJsBytes > 1500);
   } finally {
     cleanup(tmp);
   }
@@ -270,7 +270,7 @@ Deno.test('scanClientBuild: shared chunks counted in totalJsBytes', () => {
     assertEquals(result.islands.length, 2);
     assertExists(result.clientEntry);
     // Total should include both islands + client.js + shared chunk
-    assertExists(result.totalJsBytes > 3000);
+    assert(result.totalJsBytes > 3000);
   } finally {
     cleanup(tmp);
   }
@@ -305,7 +305,7 @@ Deno.test('formatSize: large file displays in MB range', () => {
     const manifest = printBuildManifest({ root: tmp, outDir: 'dist', phase: 2 });
     assertEquals(manifest.islands.length, 1);
     // sizeKB should contain "MB"
-    assertExists(manifest.islands[0].sizeKB.includes('MB'));
+    assert(manifest.islands[0].sizeKB.includes('MB'));
   } finally {
     cleanup(tmp);
   }

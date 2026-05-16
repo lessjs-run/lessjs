@@ -57,8 +57,8 @@ Deno.test('build - generateClientEntry', async (t) => {
     ];
     const code = generateClientEntry(islands);
     // All islands use dynamic import for CE auto-upgrade
-    assertStringIncludes(code, "import('/app/islands/my-counter.ts')");
-    assertStringIncludes(code, "import('/app/islands/theme-toggle.ts')");
+    assertStringIncludes(code, 'import("/app/islands/my-counter.ts")');
+    assertStringIncludes(code, 'import("/app/islands/theme-toggle.ts")');
   });
 
   await t.step('islands self-register via dynamic import side effects', () => {

@@ -2,13 +2,13 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version: 0.15.0
+## Current Version: 0.15.1
 
 ## Branch Status
 
 | Branch        | HEAD      | Status             |
 | ------------- | --------- | ------------------ |
-| `origin/dev`  | `d4f9cc2` | v0.15 development  |
+| `origin/dev`  | pending   | v0.15.1 hardening  |
 | `origin/main` | `d7571b3` | Behind dev (v0.14) |
 
 ## Tags
@@ -18,27 +18,27 @@
 | v0.14.11 | `32dcc7c` | 2026-05-16 |
 | v0.14.10 | `0c4264e` | 2026-05-16 |
 
-## Last Release: 0.14.11 (2026-05-16)
+## Last Release: 0.15.1 (2026-05-16)
 
-- G1: Use single quotes in route formatting (adapter-vite)
-- G5: Replace fragile nav scanner regex with char-by-char parser
-- G10: Break circular dep — extract build-types.ts & virtual-ids.ts to @lessjs/core
-- G11: Deduplicate term command logic into shared term-commands.ts
-- G12: Remove no-explicit-any from global lint exclude; per-file exemptions only
+- Safe package island metadata validation before generated client code.
+- Safe client entry literal generation with `JSON.stringify()`.
+- Generated PWA service worker cache boundary tightened for API/auth/user-specific requests.
+- Build-output tests now validate `www/dist` and fail on missing output.
+- Audit-gate tests added for `assertExists(boolean)` regressions.
 
 ## Known Issues
 
 - 3 JSR `unanalyzable-dynamic-import` warnings in adapter-vite (expected, runtime-only deps, not blocking publish)
+- Full `deno task fmt:check` is currently blocked by pre-existing v0.16 planning document formatting diffs.
 
 ## In Progress
 
-- v0.15 Renderer Kernel — code complete on dev, awaiting JSR publish and main sync
-  - See `docs/sop/v0.15-renderer-kernel.md` for full status
-  - ADR-0025 partial delivery; deferred items tracked in ADR-0026
+- v0.15.1 Audit Gates complete on dev; awaiting push and optional JSR publish.
+- v0.15.2 RenderOutput + RenderHooks is the next implementation step.
 
 ## Next Target: v0.16 Structured Render Pipeline
 
-Per ADR-0026: complete `renderDSD()` → `RenderOutput`, `RenderHooks`, `dsd-report.json`,
+Per ADR-0026: complete `renderDSD()` �?`RenderOutput`, `RenderHooks`, `dsd-report.json`,
 package islands SSR via hooks, pre-publish checks, Playwright E2E baseline.
 See `docs/sop/v0.16-structured-render-pipeline.md`.
 
@@ -46,7 +46,7 @@ See `docs/sop/v0.16-structured-render-pipeline.md`.
 
 1. `@lessjs/rpc` (no LessJS deps)
 2. `@lessjs/signals` (no LessJS deps)
-3. `@lessjs/core` (no LessJS deps) — must be published before all others
+3. `@lessjs/core` (no LessJS deps) �?must be published before all others
 4. `@lessjs/adapter-lit` (depends on core only)
 5. `@lessjs/content` (depends on core only)
 6. `@lessjs/i18n` (depends on core only)
@@ -57,7 +57,7 @@ See `docs/sop/v0.16-structured-render-pipeline.md`.
 
 ## Historical Reviews
 
-Archived in [docs/status/reviews/](./reviews/) — organized by date:
+Archived in [docs/status/reviews/](./reviews/) �?organized by date:
 
 | Date       | Directory                            | Description                          |
 | ---------- | ------------------------------------ | ------------------------------------ |

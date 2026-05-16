@@ -1,9 +1,14 @@
 /**
  * @lessjs/adapter-vite - route-scanner.ts tests (Deno)
  */
-import { assertEquals } from 'jsr:@std/assert@^1.0.0';
+import { assertEquals, assertThrows } from 'jsr:@std/assert@^1.0.0';
 import { join } from 'jsr:@std/path@^1.0.0';
-import { fileToTagName, scanIslands, scanRoutes } from '../src/route-scanner.ts';
+import {
+  fileToTagName,
+  scanIslands,
+  scanRoutes,
+  validatePackageIslandMeta,
+} from '../src/route-scanner.ts';
 
 const FIXTURES_DIR = join(Deno.cwd(), 'packages/core/__test_fixtures__');
 
@@ -233,4 +238,43 @@ Deno.test('route-scanner - scanIslands with non-existent dir', async () => {
   const { scanIslands } = await import('../src/route-scanner.ts');
   const result = await scanIslands('/nonexistent/path/islands');
   assertEquals(result, []);
+});
+
+Deno.test('route-scanner - validates package island metadata before registry work', () => {
+  validatePackageIslandMeta(
+    {
+      tagName: 'less-safe',
+      modulePath: '@lessjs/ui/less-safe',
+      strategy: 'lazy',
+    },
+    '@lessjs/ui',
+  );
+
+  assertThrows(
+    () =>
+      validatePackageIslandMeta(
+        {
+          tagName: "less-bad');alert(1);//",
+          modulePath: '@lessjs/ui/less-safe',
+          strategy: 'lazy',
+        },
+        '@evil/pkg',
+      ),
+    Error,
+    'Invalid package island metadata',
+  );
+
+  assertThrows(
+    () =>
+      validatePackageIslandMeta(
+        {
+          tagName: 'less-safe',
+          modulePath: 'data:text/javascript,alert(1)',
+          strategy: 'lazy',
+        },
+        '@evil/pkg',
+      ),
+    Error,
+    'Invalid package island metadata',
+  );
 });

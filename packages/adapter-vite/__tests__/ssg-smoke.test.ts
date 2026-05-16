@@ -48,6 +48,14 @@ function hasRendererSopOutput(): boolean {
   );
 }
 
+function hasHardenedServiceWorker(): boolean {
+  const swPath = join(WWW_DIST, 'sw.js');
+  if (!existsSync(swPath)) return false;
+  const sw = readFileSync(swPath, 'utf-8');
+  return sw.includes("if (e.request.method !== 'GET') return;") &&
+    sw.includes("e.request.headers.has('authorization')");
+}
+
 function findHtmlFiles(dir: string): string[] {
   const results: string[] = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -68,6 +76,7 @@ async function ensureDocsBuild(): Promise<void> {
   if (
     hasSsrBundle() && hasServerEntry() && hasRoadmapAdrOutput() &&
     hasRendererSopOutput() &&
+    hasHardenedServiceWorker() &&
     existsSync(join(WWW_DIST, 'index.html'))
   ) {
     return;
@@ -168,5 +177,10 @@ Deno.test('SSG smoke: one-command build produces trusted www output', async (t) 
     );
     assert(existsSync(join(WWW_DIST, 'manifest.json')), 'PWA manifest should exist');
     assert(existsSync(join(WWW_DIST, 'sw.js')), 'PWA service worker should exist');
+    const sw = readFileSync(join(WWW_DIST, 'sw.js'), 'utf-8');
+    assertStringIncludes(sw, "if (e.request.method !== 'GET') return;");
+    assertStringIncludes(sw, "e.request.headers.has('authorization')");
+    assertStringIncludes(sw, '/\\/(api|rpc)(?:\\/|$)/');
+    assertStringIncludes(sw, "['style', 'script', 'image', 'font', 'manifest']");
   });
 });

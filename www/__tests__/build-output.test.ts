@@ -10,11 +10,12 @@ import { assert, assertEquals } from 'jsr:@std/assert';
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
-const DIST = join(import.meta.dirname ?? '.', '..', '..', 'dist');
+const DIST = join(import.meta.dirname ?? '.', '..', 'dist');
 
 Deno.test('build output: no Hono virtual entry in public assets', () => {
+  assert(existsSync(DIST), `Build output is missing: ${DIST}`);
   const assetsDir = join(DIST, 'assets');
-  if (!existsSync(assetsDir)) return; // skip if no build yet
+  assert(existsSync(assetsDir), `Build assets directory is missing: ${assetsDir}`);
 
   const files = readdirSync(assetsDir);
   const honoEntry = files.find((f) => f.startsWith('_virtual_less-hono-entry'));
@@ -26,8 +27,9 @@ Deno.test('build output: no Hono virtual entry in public assets', () => {
 });
 
 Deno.test('build output: client island JS total under 200KB', () => {
+  assert(existsSync(DIST), `Build output is missing: ${DIST}`);
   const clientDir = join(DIST, 'client');
-  if (!existsSync(clientDir)) return; // skip if no build yet
+  assert(existsSync(clientDir), `Client output directory is missing: ${clientDir}`);
 
   const files = readdirSync(clientDir, { recursive: true }) as string[];
   let totalBytes = 0;

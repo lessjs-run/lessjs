@@ -16,29 +16,56 @@ export interface ClientIslandEntry {
   strategy?: 'eager' | 'lazy' | 'visible' | 'idle';
 }
 
+const CUSTOM_ELEMENT_NAME_RE = /^[a-z][.0-9_a-z]*-[\-.0-9_a-z]*$/;
+const UNSAFE_IMPORT_PROTOCOL_RE = /^(?:javascript|data|vbscript|node):/i;
+
+function hasControlCharacter(value: string): boolean {
+  for (let i = 0; i < value.length; i++) {
+    const code = value.charCodeAt(i);
+    if (code <= 0x1f || code === 0x7f) return true;
+  }
+  return false;
+}
+
+export function validateClientIslandEntry(entry: ClientIslandEntry): void {
+  if (!CUSTOM_ELEMENT_NAME_RE.test(entry.tagName)) {
+    throw new Error(`Invalid island tagName: ${entry.tagName}`);
+  }
+  if (
+    !entry.modulePath ||
+    hasControlCharacter(entry.modulePath) ||
+    /[\r\n]/.test(entry.modulePath) ||
+    UNSAFE_IMPORT_PROTOCOL_RE.test(entry.modulePath)
+  ) {
+    throw new Error(`Invalid island modulePath for ${entry.tagName}: ${entry.modulePath}`);
+  }
+}
+
 export function generateClientEntry(
   islands: ClientIslandEntry[],
 ): string {
+  islands.forEach(validateClientIslandEntry);
+
   if (islands.length === 0) {
     return '// LessJS Client Entry — No islands detected, zero client JS needed\n';
   }
 
   const islandMap = islands
-    .map((i) => `  '${i.tagName}': () => import('${i.modulePath}')`)
+    .map((i) => `  ${JSON.stringify(i.tagName)}: () => import(${JSON.stringify(i.modulePath)})`)
     .join(',\n');
 
-  const tags = islands.map((i) => `'${i.tagName}'`).join(', ');
+  const tags = islands.map((i) => JSON.stringify(i.tagName)).join(', ');
   const eagerTags = islands
     .filter((i) => i.strategy === 'eager')
-    .map((i) => `'${i.tagName}'`)
+    .map((i) => JSON.stringify(i.tagName))
     .join(', ');
   const visibleTags = islands
     .filter((i) => i.strategy === 'visible')
-    .map((i) => `'${i.tagName}'`)
+    .map((i) => JSON.stringify(i.tagName))
     .join(', ');
   const lazyTags = islands
     .filter((i) => !i.strategy || i.strategy === 'lazy' || i.strategy === 'idle')
-    .map((i) => `'${i.tagName}'`)
+    .map((i) => JSON.stringify(i.tagName))
     .join(', ');
 
   return `// LessJS Client Entry (v0.6 — eager/lazy/visible)
