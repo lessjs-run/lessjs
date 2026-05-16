@@ -99,10 +99,10 @@ export function WithDsdHydration<T extends Constructor<HTMLElement>>(
      * For non-DSD elements, mount the React tree via createRoot().
      */
     connectedCallback(): void {
-      // Call parent connectedCallback if it exists (Custom Element lifecycle)
-      const parentProto = Object.getPrototypeOf(Object.getPrototypeOf(this));
-      if (parentProto && typeof parentProto.connectedCallback === 'function') {
-        parentProto.connectedCallback.call(this);
+      // Call the actual parent class (captured in mixin closure),
+      // NOT Object.getPrototypeOf which can find our own method → infinite recursion.
+      if (typeof superClass.prototype.connectedCallback === 'function') {
+        superClass.prototype.connectedCallback.call(this);
       }
       if (this._dsdHydrated) {
         this._hydrateEvents();
@@ -115,9 +115,8 @@ export function WithDsdHydration<T extends Constructor<HTMLElement>>(
      * Clean up on disconnect.
      */
     disconnectedCallback(): void {
-      const parentProto = Object.getPrototypeOf(Object.getPrototypeOf(this));
-      if (parentProto && typeof parentProto.disconnectedCallback === 'function') {
-        parentProto.disconnectedCallback.call(this);
+      if (typeof superClass.prototype.disconnectedCallback === 'function') {
+        superClass.prototype.disconnectedCallback.call(this);
       }
       if (this._hydrateAbortController) {
         this._hydrateAbortController.abort();

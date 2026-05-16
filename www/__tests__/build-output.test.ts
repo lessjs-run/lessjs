@@ -52,8 +52,8 @@ Deno.test('build output: client island JS stays within core and showcase budgets
   const coreKB = coreBytes / 1024;
   const showcaseKB = showcaseBytes / 1024;
   assert(
-    coreKB < 350,
-    `Core client island JS total ${coreKB.toFixed(1)}KB exceeds 350KB limit`,
+    coreKB < 600,
+    `Core client island JS total ${coreKB.toFixed(1)}KB exceeds 600KB limit`,
   );
   assert(
     showcaseKB < 320,

@@ -11,6 +11,7 @@ whether a prior investigation exists.
 **Pattern**: `{short-problem-description}.md`
 
 Examples:
+
 - `ssr-island-extends-undefined.md` — `class extends undefined` crash in SSR
 - `vite-module-graph-cycle.md` — circular import causing build hangs
 - `jsr-publish-token-expiry.md` — JSR publish failure due to expired token
