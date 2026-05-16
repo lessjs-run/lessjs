@@ -2,60 +2,64 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version: 0.17.0
+## Current Version: 0.17.1
 
 ## Branch Status
 
 | Branch        | HEAD      | Status          |
 | ------------- | --------- | --------------- |
-| `origin/dev`  | pending   | v0.17.0 release |
-| `origin/main` | `a02feb6` | v0.16.0 release |
+| `origin/dev`  | pending   | v0.17.1 release |
+| `origin/main` | `1f93fa2` | v0.17.0 release |
 
 ## Tags
 
 | Tag      | Commit    | Date       |
 | -------- | --------- | ---------- |
-| v0.17.0  | pending   | 2026-05-16 |
+| v0.17.1  | pending   | 2026-05-16 |
+| v0.17.0  | `1f93fa2` | 2026-05-16 |
 | v0.16.0  | `a02feb6` | 2026-05-16 |
 | v0.15.3  | `5e06fc9` | 2026-05-16 |
 | v0.15.2  | `64dadd8` | 2026-05-16 |
 | v0.15.1  | `dd36eea` | 2026-05-16 |
 | v0.14.11 | `32dcc7c` | 2026-05-16 |
 
-## Last Release: 0.17.0 (2026-05-16)
+## Last Release: 0.17.1 (2026-05-16)
 
-- **Breaking**: `PackageIslandMeta` deleted — use
-  `LessPackageManifest.declarations` instead.
-- **Breaking**: `packageIslandFromManifest()` deleted — read
-  `manifest.declarations` directly.
-- **Breaking**: `@lessjs/ui` no longer exports `islands` — only `manifest`.
-- adapter-vite reads `LessPackageManifest` directly (manifest-native pipeline).
-- `IslandDecl` extended with `hydrate`, `ssr`, `dsd` fields from manifest.
-- `scanPackageManifests()` replaces `scanPackageIslands()`.
-- `Phase1Meta.packageManifests` + `packageIslandDecls` replace
-  `packageIslands`.
-- Release gate: 76 core tests pass; fmt, lint, typecheck clean.
+- Cross-runtime adapter-vite: `Deno.build.os` → `process.platform`,
+  `Deno.exit(1)` → `process.exit(1)`.
+- Zero hard Deno dependencies in `ssg.ts`.
+- v0.17.0 SOP verification: build + e2e gates passed.
+- 522 tests passing, fmt/lint/typecheck clean.
 
 ## Known Issues
 
 - 3 JSR `unanalyzable-dynamic-import` warnings in adapter-vite (expected,
   runtime-only deps, not blocking publish)
+- v0.17.0 SOP: SSR filtering (`less.ssr: false`) and `dsd-report.json`
+  manifest decisions not yet implemented — deferred to v0.17.2
 
 ## In Progress
 
-- v0.17.1: `less add <pkg>`, `less validate-manifest`, npm compat layer.
-- SSR-aware rendering per manifest flags (ssr/dsd) for third-party packages.
+- v0.17.2: SSR filtering + dsd-report manifest decisions
+- v0.17.3: Multi-framework adapters
 
 ## Version Ladder
 
-| Version | SOP                                               | Main outcome                                     | Status  |
-| ------- | ------------------------------------------------- | ------------------------------------------------ | ------- |
-| v0.15.1 | `docs/sop/v0.15.1-audit-gates.md`                 | Security and test gates                          | ✅ Done |
-| v0.15.2 | `docs/sop/v0.15.2-render-output-hooks.md`         | `RenderOutput` + `RenderHooks`                   | ✅ Done |
-| v0.15.3 | `docs/sop/v0.15.3-dsd-report-and-release-gate.md` | `dsd-report.json` + release gate                 | ✅ Done |
-| v0.16.0 | `docs/sop/v0.16.0-package-protocol.md`            | CEM manifest + local registry                    | ✅ Done |
-| v0.17.0 | `docs/sop/v0.17.0-manifest-native-pipeline.md`    | Delete `PackageIslandMeta`, manifest-native pipe | ✅ Done |
-| v0.17.1 | —                                                 | `less add`, npm compat, CLI tooling              | Next    |
+| Version | SOP                                               | Main outcome                                       | Status  |
+| ------- | ------------------------------------------------- | -------------------------------------------------- | ------- |
+| v0.15.1 | `docs/sop/v0.15.1-audit-gates.md`                 | Security and test gates                            | Done    |
+| v0.15.2 | `docs/sop/v0.15.2-render-output-hooks.md`         | `RenderOutput` + `RenderHooks`                     | Done    |
+| v0.15.3 | `docs/sop/v0.15.3-dsd-report-and-release-gate.md` | `dsd-report.json` + release gate                   | Done    |
+| v0.16.0 | `docs/sop/v0.16.0-package-protocol.md`            | CEM manifest + local registry                      | Done    |
+| v0.17.0 | `docs/sop/v0.17.0-manifest-native-pipeline.md`    | Delete `PackageIslandMeta`, manifest-native pipe   | Done    |
+| v0.17.1 | `docs/sop/v0.17.1-cross-runtime.md`               | Cross-runtime adapter-vite, build + e2e gates      | Done    |
+| v0.17.2 | `docs/sop/v0.17.2-ssr-filtering-dsd-report.md`    | SSR filtering + dsd-report manifest decisions      | Next    |
+| v0.17.3 | —                                                 | Multi-framework adapters                           | Planned |
+| v0.18.0 | `docs/sop/v0.18.0-universal-wc-engine.md`         | CEM parser + third-party WC SSR fallback           | Far     |
+| v0.18.1 | —                                                 | `less add` package discovery + registration        | Far     |
+| v0.18.2 | —                                                 | Zero-config SSG/SSG for any CEM WC package         | Far     |
+| v0.19.0 | —                                                 | Registry Hub + search + snapshots + Edge rendering | Far     |
+| v1.0.0  | —                                                 | General-Purpose Engine + API freeze                | Vision  |
 
 ## JSR Publish Order
 
