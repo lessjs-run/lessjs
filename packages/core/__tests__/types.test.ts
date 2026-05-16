@@ -7,14 +7,12 @@ import { assertExists } from 'jsr:@std/assert@^1.0.0';
 import type {
   FrameworkOptions,
   LessMiddleware,
+  LessPackageManifest,
   LessRenderer,
-  PackageIslandMeta,
   RouteEntry,
   SpecialFileType,
   SsrContext,
 } from '../src/types.ts';
-// v0.5.0: UpgradeStrategy type is defined inline in types.ts (FrameworkOptions.island.upgradeStrategy)
-// No longer exported from entry-generators.ts
 
 // Compile-time type existence checks (lint compliance: consume the imported types)
 type _LessMiddleware = LessMiddleware;
@@ -70,14 +68,25 @@ Deno.test('types: RouteEntry has required fields', () => {
   assertEquals(specialRoute.special, 'renderer');
 });
 
-Deno.test('types: PackageIslandMeta has required fields', () => {
-  const pkg: PackageIslandMeta = {
-    tagName: 'less-button',
-    modulePath: '@lessjs/ui/less-button',
-    strategy: 'eager',
+Deno.test('types: LessPackageManifest has required fields', () => {
+  const manifest: LessPackageManifest = {
+    schemaVersion: '1.0.0',
+    packageName: '@test/ui',
+    version: '0.1.0',
+    declarations: [
+      {
+        tagName: 'test-button',
+        less: {
+          ssr: true,
+          dsd: true,
+          module: '@test/ui/test-button',
+          hydrate: 'eager',
+        },
+      },
+    ],
   };
-  assertEquals(pkg.tagName, 'less-button');
-  assertEquals(pkg.modulePath, '@lessjs/ui/less-button');
+  assertEquals(manifest.packageName, '@test/ui');
+  assertEquals(manifest.declarations[0].tagName, 'test-button');
 });
 
 Deno.test('types: SsrContext has expected properties', () => {

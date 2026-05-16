@@ -10,14 +10,14 @@ minor-level goals only — patch breakdowns are written when we get there.
 
 ## Phase Overview
 
-| Phase | Version | Name                   | Goal                                                   | Est. Sessions | Status  |
-| ----- | ------- | ---------------------- | ------------------------------------------------------ | ------------- | ------- |
-| 1     | v0.15.x | Renderer Kernel        | Structured render output, error taxonomy, build report | 6 (done)      | Done    |
-| 2     | v0.16.x | WC Package Protocol    | CEM manifest + local registry + build integration      | 6-8           | Next    |
-| 3     | v0.17.x | Ecosystem Entry        | Third-party WC packages, CLI tooling, multi-adapter    | 5-8           | Planned |
-| 4     | v0.18.x | Hub Foundation         | Public registry API, search, snapshots, security audit | 8-12          | Far     |
-| 5     | v0.19.x | Platform Maturity      | Scoped registries, design system CI/CD, Edge runtime   | 8-12          | Far     |
-| 6     | v1.0.x  | General-Purpose Engine | Zero-config SSR/SSG for any CEM manifest WC package    | 12+           | Vision  |
+| Phase | Version | Name                   | Goal                                                   | Est. Sessions | Status |
+| ----- | ------- | ---------------------- | ------------------------------------------------------ | ------------- | ------ |
+| 1     | v0.15.x | Renderer Kernel        | Structured render output, error taxonomy, build report | 6 (done)      | Done   |
+| 2     | v0.16.x | WC Package Protocol    | CEM manifest + local registry                          | 4 (done)      | Done   |
+| 3     | v0.17.x | Ecosystem Entry        | Manifest-native pipeline, compat removal, CLI tooling  | 6-10          | Next   |
+| 4     | v0.18.x | Hub Foundation         | Public registry API, search, snapshots, security audit | 8-12          | Far    |
+| 5     | v0.19.x | Platform Maturity      | Scoped registries, design system CI/CD, Edge runtime   | 8-12          | Far    |
+| 6     | v1.0.x  | General-Purpose Engine | Zero-config SSR/SSG for any CEM manifest WC package    | 12+           | Vision |
 
 ## Phase 1: Renderer Kernel (v0.15.x) — Done
 
@@ -33,7 +33,7 @@ Delivered across v0.15.1, v0.15.2, v0.15.3:
 
 Exit criteria: all met. 505 unit tests + 92 e2e tests passing.
 
-## Phase 2: WC Package Protocol (v0.16.x) — Next
+## Phase 2: WC Package Protocol (v0.16.x) — Done
 
 **Goal**: LessJS can describe WC packages as data (manifest) instead of only
 executing package code. The local registry provides validation and indexing.
@@ -43,26 +43,25 @@ Patch breakdown: see [v0.16.md](./v0.16.md).
 | Patch   | Main outcome                                                              | Sessions |
 | ------- | ------------------------------------------------------------------------- | -------- |
 | v0.16.0 | `LessPackageManifest` + `LessRegistry` + validate + `@lessjs/ui` manifest | 3-4      |
-| v0.16.1 | Manifest-driven SSR/SSG build integration (conditional — may defer)       | 3-4      |
+
+Exit criteria: all met. `PackageIslandMeta` deprecated, manifest + registry
+shipped, 526 tests + 90 e2e passing.
+
+## Phase 3: Ecosystem Entry (v0.17.x) — Next
+
+**Goal**: Eliminate backward compat layer. Pipeline is manifest-native.
+Third-party WC packages can be ingested.
+
+| Patch   | Main outcome                                                                           | Est. Sessions |
+| ------- | -------------------------------------------------------------------------------------- | ------------- |
+| v0.17.0 | Delete `PackageIslandMeta`, manifest-native adapter-vite pipeline, SSR-aware rendering | 5-6           |
+| v0.17.1 | `less add <pkg>`, `less validate-manifest`, npm compat layer                           | 3-4           |
+| v0.17.2 | Third-party WC SSR fallback strategies                                                 | 2-3           |
+| v0.17.3 | Multi-framework adapters (adapter-vanilla enhanced, adapter-react)                     | 3-4           |
 
 Exit criteria:
 
-- Package metadata is static, validated, and tool-consumable.
-- `@lessjs/ui` islands work identically via manifest path.
-- LessJS has a credible local registry foundation for future hub work.
-
-## Phase 3: Ecosystem Entry (v0.17.x) — Planned
-
-**Goal**: LessJS can ingest third-party WC packages, not just its own.
-
-| Minor   | Main outcome                                                       | Est. Sessions |
-| ------- | ------------------------------------------------------------------ | ------------- |
-| v0.17.0 | `less add <pkg>`, `less validate-manifest`, npm compat layer       | 3-4           |
-| v0.17.1 | Third-party WC SSR compat layer (fallback strategies)              | 2-3           |
-| v0.17.2 | Multi-framework adapters (adapter-vanilla enhanced, adapter-react) | 3-4           |
-
-Exit criteria:
-
+- Zero `PackageIslandMeta` references in the codebase.
 - `less add @third-party/wc-button` installs, registers, and renders.
 - Invalid manifests fail before code generation with actionable errors.
 - SSR-incompatible packages degrade gracefully (pure-island fallback).

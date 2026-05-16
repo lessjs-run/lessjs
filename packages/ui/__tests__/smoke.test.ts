@@ -6,19 +6,20 @@
  */
 import { assertEquals, assertExists } from 'jsr:@std/assert@^1.0.0';
 
-Deno.test('less-ui — index exports islands array', async () => {
+Deno.test('less-ui — index exports manifest (WC Package Protocol)', async () => {
   const mod = await import('../src/index.ts');
-  assertExists(mod.islands, 'islands export should exist');
-  assertEquals(Array.isArray(mod.islands), true);
-  assertEquals(mod.islands.length, 7);
-  assertEquals(mod.islands[0].tagName, 'less-theme-toggle');
-  assertEquals(mod.islands[0].strategy, 'eager');
-  assertEquals(mod.islands[1].tagName, 'less-button');
-  assertEquals(mod.islands[2].tagName, 'less-input');
-  assertEquals(mod.islands[3].tagName, 'less-code-block');
-  assertEquals(mod.islands[4].tagName, 'less-layout');
-  assertEquals(mod.islands[5].tagName, 'less-hero-ping');
-  assertEquals(mod.islands[6].tagName, 'less-dialog');
+  assertExists(mod.manifest, 'manifest export should exist');
+  assertEquals(typeof mod.manifest, 'object');
+  assertEquals(mod.manifest.packageName, '@lessjs/ui');
+  assertEquals(mod.manifest.declarations.length, 7);
+  assertEquals(mod.manifest.declarations[0].tagName, 'less-theme-toggle');
+  assertEquals(mod.manifest.declarations[0].less?.hydrate, 'eager');
+  assertEquals(mod.manifest.declarations[1].tagName, 'less-button');
+  assertEquals(mod.manifest.declarations[2].tagName, 'less-input');
+  assertEquals(mod.manifest.declarations[3].tagName, 'less-code-block');
+  assertEquals(mod.manifest.declarations[4].tagName, 'less-layout');
+  assertEquals(mod.manifest.declarations[5].tagName, 'less-hero-ping');
+  assertEquals(mod.manifest.declarations[6].tagName, 'less-dialog');
 });
 
 Deno.test('less-ui — less-theme-toggle exports tagName', async () => {

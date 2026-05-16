@@ -113,17 +113,21 @@ Deno.test('index: re-exports all components', async () => {
   // Plugin removed — lessUI() was dead code (zero consumers)
 });
 
-Deno.test('index: islands array has correct entries', async () => {
-  const { islands } = await import('../src/index.ts');
-  assertExists(islands);
-  assertEquals(Array.isArray(islands), true);
+Deno.test('index: manifest has correct declarations', async () => {
+  const { manifest } = await import('../src/index.ts');
+  assertExists(manifest);
+  assertEquals(typeof manifest, 'object');
+  assertEquals(manifest.packageName, '@lessjs/ui');
+  assertEquals(Array.isArray(manifest.declarations), true);
 
-  // Each island entry must have tagName, modulePath, strategy
-  for (const island of islands) {
-    assertExists(island.tagName, 'island must have tagName');
-    assertExists(island.modulePath, 'island must have modulePath');
-    assertExists(island.strategy, 'island must have an upgrade strategy');
-    assertEquals(typeof island.strategy, 'string');
+  // Each declaration with `less.module` is an island entry
+  const islandDecls = manifest.declarations.filter((d: any) => d.less?.module);
+  assertEquals(islandDecls.length > 0, true, 'manifest should have island declarations');
+
+  for (const decl of islandDecls) {
+    assertExists(decl.tagName, 'island declaration must have tagName');
+    assertExists(decl.less!.module, 'island declaration must have less.module');
+    assertEquals(typeof decl.less!.hydrate, 'string');
   }
 });
 

@@ -144,7 +144,8 @@ Deno.test({
 
     await t.step('no islands in ctx', () => {
       assertEquals(ctx.phase1.islandTagNames.length, 0);
-      assertEquals(ctx.phase1.packageIslands.length, 0);
+      assertEquals(ctx.phase1.packageManifests.length, 0);
+      assertEquals(ctx.phase1.packageIslandDecls.length, 0);
     });
   },
 });

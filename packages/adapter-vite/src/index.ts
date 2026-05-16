@@ -15,7 +15,7 @@
  */
 
 import type { Plugin } from 'vite';
-import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from '@lessjs/core';
+import type { FrameworkOptions, LessPackageManifest, RouteEntry } from '@lessjs/core';
 
 import { join } from 'node:path';
 import process from 'node:process';
@@ -33,7 +33,7 @@ import { buildPlugin } from './build.js';
 import { devtoolsPlugin } from './devtools/index.js';
 import { generateHonoEntryCode } from './hono-entry.js';
 import { islandTransformPlugin } from './island-transform.js';
-import { fileToTagName, scanIslands, scanPackageIslands, scanRoutes } from './route-scanner.js';
+import { fileToTagName, scanIslands, scanPackageManifests, scanRoutes } from './route-scanner.js';
 
 // ─── Subpath resolution (ADR 0016 — JSR remote only) ─────────────
 //
@@ -393,7 +393,7 @@ export function less(
   function generateEntry(
     routes: RouteEntry[],
     islandTagNames: string[] = [],
-    packageIslands: PackageIslandMeta[] = [],
+    packageManifests: LessPackageManifest[] = [],
     islandFiles: string[] = [],
   ): string {
     return generateHonoEntryCode(routes, {
@@ -403,7 +403,7 @@ export function less(
       middleware: resolvedOptions.middleware,
       islandTagNames,
       islandFiles,
-      packageIslands,
+      packageManifests,
       headExtras: resolvedOptions.headExtras,
       allowHeadExtrasScripts,
       html: resolvedOptions.html,
@@ -450,7 +450,7 @@ export function less(
       ctx.phase1.honoEntryCode = generateEntry(
         [],
         ctx.phase1.islandTagNames,
-        ctx.phase1.packageIslands,
+        ctx.phase1.packageManifests,
         ctx.phase1.islandFiles,
       );
     },
@@ -473,12 +473,25 @@ export function less(
           resolvedOptions.packageIslands &&
           resolvedOptions.packageIslands.length > 0
         ) {
-          ctx.phase1.packageIslands = await scanPackageIslands(
+          ctx.phase1.packageManifests = await scanPackageManifests(
             resolvedOptions.packageIslands,
           );
-          if (ctx.phase1.packageIslands.length > 0) {
+          if (ctx.phase1.packageManifests.length > 0) {
+            // Extract island declarations from manifests
+            ctx.phase1.packageIslandDecls = ctx.phase1.packageManifests.flatMap((pkg) =>
+              pkg.declarations
+                .filter((d) => d.less?.module)
+                .map((d) => ({
+                  tagName: d.tagName,
+                  modulePath: d.less!.module!,
+                  isPackage: true,
+                  hydrate: d.less?.hydrate as 'eager' | 'lazy' | 'idle' | 'visible' | undefined,
+                  ssr: d.less?.ssr,
+                  dsd: d.less?.dsd,
+                }))
+            );
             log.info(
-              `Package islands: ${ctx.phase1.packageIslands.map((i) => i.tagName).join(', ')}`,
+              `Package islands: ${ctx.phase1.packageIslandDecls.map((i) => i.tagName).join(', ')}`,
             );
           }
         }
@@ -490,7 +503,7 @@ export function less(
         ctx.phase1.honoEntryCode = generateEntry(
           routes,
           ctx.phase1.islandTagNames,
-          ctx.phase1.packageIslands,
+          ctx.phase1.packageManifests,
           ctx.phase1.islandFiles,
         );
         const pageCount = routes.filter(
@@ -499,7 +512,8 @@ export function less(
         const apiCount = routes.filter(
           (r) => r.type === 'api' && !r.special,
         ).length;
-        const totalIslands = ctx.phase1.islandTagNames.length + ctx.phase1.packageIslands.length;
+        const totalIslands = ctx.phase1.islandTagNames.length +
+          ctx.phase1.packageIslandDecls.length;
         log.info(
           `Routes: ${pageCount} page(s), ${apiCount} API route(s), ` +
             `${totalIslands} island(s) - LessJS Architecture`,
@@ -531,7 +545,7 @@ export function less(
         return generateEntry(
           ctx.phase1.cachedRoutes || [],
           ctx.phase1.islandTagNames,
-          ctx.phase1.packageIslands,
+          ctx.phase1.packageManifests,
           ctx.phase1.islandFiles,
         );
       }

@@ -24,9 +24,6 @@
  * @module @lessjs/ui
  */
 
-import type { PackageIslandMeta } from '@lessjs/core';
-import { packageIslandFromManifest } from '@lessjs/core';
-
 // Design tokens (CSS custom properties)
 export { lessDesignTokens } from './design-tokens.js';
 // Individual token sub-modules (for partial imports)
@@ -46,11 +43,6 @@ export { LessThemeToggle, tagName as lessThemeToggleTagName } from './less-theme
 export { default as LessHeroPing, tagName as lessHeroPingTagName } from './less-hero-ping.js';
 export { LessDialog, tagName as lessDialogTagName } from './less-dialog.js';
 
-// Package manifest (v0.16 WC Package Protocol)
+// Package manifest (WC Package Protocol)
+// Consumers (adapter-vite) read manifest.declarations to derive island metadata.
 export { manifest } from './manifest.js';
-import { manifest } from './manifest.js';
-
-// Island metadata for auto-detection by @lessjs/core
-// Generated from the manifest via packageIslandFromManifest().
-// This preserves backward compatibility with v0.15 consumers.
-export const islands: PackageIslandMeta[] = packageIslandFromManifest(manifest);

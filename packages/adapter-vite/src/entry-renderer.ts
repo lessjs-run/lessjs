@@ -28,7 +28,7 @@ import type {
   PageRouteDecl,
   RendererDecl,
 } from './entry-descriptor.js';
-import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from '@lessjs/core';
+import type { FrameworkOptions, LessPackageManifest, RouteEntry } from '@lessjs/core';
 import { buildEntryDescriptor } from './entry-descriptor.js';
 
 // Re-export for consumers that import from entry-renderer.ts
@@ -664,7 +664,7 @@ export interface HonoEntryOptions {
   islandTagNames?: string[];
   /** Relative file paths for local islands (preserves subdirectory structure) */
   islandFiles?: string[];
-  packageIslands?: PackageIslandMeta[];
+  packageManifests?: LessPackageManifest[];
   /** @security Injected as raw HTML without sanitization */
   headExtras?: string;
   allowHeadExtrasScripts?: boolean;

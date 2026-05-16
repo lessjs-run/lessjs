@@ -18,7 +18,7 @@ import { join, resolve } from 'node:path';
 import process from 'node:process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import type { Plugin } from 'vite';
-import type { FrameworkOptions, PackageIslandMeta } from '@lessjs/core';
+import type { FrameworkOptions, LessPackageManifest } from '@lessjs/core';
 import type { LessBuildContext } from '../build-context.js';
 import type { SsgRenderOptions } from './ssg-render.js';
 import { SsrRenderError } from '@lessjs/core/errors';
@@ -108,7 +108,7 @@ interface BuildSSGOptions {
   middleware?: FrameworkOptions['middleware'];
   ssr?: FrameworkOptions['ssr'];
   islandTagNames?: string[];
-  packageIslands?: PackageIslandMeta[];
+  packageManifests?: LessPackageManifest[];
   /** @security Injected as raw HTML without sanitization */
   headExtras?: string;
   allowHeadExtrasScripts?: boolean;
@@ -141,7 +141,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
 
   // Read island metadata from ctx (ADR 0010: no .less/ fallback)
   const islandTagNames = options.islandTagNames || ctx.phase1.islandTagNames || [];
-  const packageIslands = options.packageIslands || ctx.phase1.packageIslands || [];
+  const packageManifests = options.packageManifests || ctx.phase1.packageManifests || [];
   const metadataResolveAlias = options.resolveAlias ||
     (ctx.phase1.userResolveAlias as Record<string, string> | import('vite').Alias[] | undefined);
 
@@ -176,7 +176,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     ssg: true,
     islandTagNames: ssgIslandTagNames,
     islandFiles: ssgIslandFiles,
-    packageIslands,
+    packageManifests,
     headExtras: options.headExtras,
     allowHeadExtrasScripts: options.allowHeadExtrasScripts,
     html: options.html,
@@ -385,27 +385,28 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
       }
 
       // Add adapter-lit if used
-      if (ctx?.phase1.packageIslands?.length) {
+      if (ctx?.phase1.packageManifests?.length) {
         importMap['@lessjs/adapter-lit'] = `npm:@jsr/lessjs__adapter-lit@${adapterLitVersion}`;
         importMap['lit'] = 'npm:lit@3.3.2';
         importMap['@lit/reactive-element'] = 'npm:@lit/reactive-element@2.1.0';
       }
 
-      // Add @lessjs/ui if used (root + all subpath exports used by packageIslands)
+      // Add @lessjs/ui if used (root + all subpath exports used by package manifests)
       const hasUi = allNoExternal.some((n: string | RegExp) =>
         typeof n === 'string' ? n.includes('@lessjs/ui') : n.toString().includes('@lessjs/ui')
       );
       if (hasUi) {
         const uiPkg = `npm:@jsr/lessjs__ui@${uiVersion}`;
         importMap['@lessjs/ui'] = uiPkg;
-        // Also map each subpath used by packageIslands so the SSR bundle's
+        // Map each subpath used by package manifests so the SSR bundle's
         // dynamic imports (e.g. @lessjs/ui/less-layout) resolve at runtime.
-        // The npm package exports field exposes the same subpaths as deno.json.
         const uiSubpaths = new Set<string>();
-        for (const island of packageIslands) {
-          const mp = island.modulePath;
-          if (mp.startsWith('@lessjs/ui/')) {
-            uiSubpaths.add(mp);
+        for (const pkg of packageManifests) {
+          for (const decl of pkg.declarations) {
+            const mp = decl.less?.module;
+            if (mp && mp.startsWith('@lessjs/ui/')) {
+              uiSubpaths.add(mp);
+            }
           }
         }
         for (const subpath of uiSubpaths) {

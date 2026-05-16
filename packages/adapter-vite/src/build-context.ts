@@ -18,7 +18,13 @@
  */
 
 import type { Alias, Plugin, ResolvedConfig } from 'vite';
-import type { FrameworkOptions, LessPluginMeta, PackageIslandMeta, RouteEntry } from '@lessjs/core';
+import type {
+  FrameworkOptions,
+  LessPackageManifest,
+  LessPluginMeta,
+  RouteEntry,
+} from '@lessjs/core';
+import type { IslandDecl } from './entry-descriptor.js';
 
 // ─── Phase Branded Types (compile-time ordering enforcement) ───
 // These branded types ensure Phase 2 can only run after Phase 1,
@@ -42,8 +48,11 @@ export class Phase1Meta {
   /** Relative file paths for local islands */
   islandFiles: string[] = [];
 
-  /** Package islands discovered from npm/JSR packages */
-  packageIslands: PackageIslandMeta[] = [];
+  /** Package manifests discovered from npm/JSR packages */
+  packageManifests: LessPackageManifest[] = [];
+
+  /** Package island declarations extracted from manifests */
+  packageIslandDecls: IslandDecl[] = [];
 
   /** Whether the SSR+client build has completed */
   buildCompleted: boolean = false;
@@ -209,7 +218,8 @@ export class LessBuildContext {
     this.phase1.cachedRoutes = [];
     this.phase1.islandTagNames = [];
     this.phase1.islandFiles = [];
-    this.phase1.packageIslands = [];
+    this.phase1.packageManifests = [];
+    this.phase1.packageIslandDecls = [];
     this.phase1.buildCompleted = false;
     this.phase1.resolvedConfig = null;
     // NOTE: userResolveAlias is NOT reset — it's user configuration, not

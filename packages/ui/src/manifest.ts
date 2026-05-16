@@ -2,10 +2,8 @@
  * @lessjs/ui - Package Manifest
  *
  * CEM-compatible LessPackageManifest for the @lessjs/ui package.
- * Replaces the inline `islands` array in index.ts.
- *
- * The `islands` export in index.ts is generated from this manifest
- * via packageIslandFromManifest().
+ * Consumers (adapter-vite) read manifest.declarations to derive
+ * island metadata (tagName, module, hydrate, ssr, dsd).
  */
 
 import type { LessPackageManifest } from '@lessjs/core';

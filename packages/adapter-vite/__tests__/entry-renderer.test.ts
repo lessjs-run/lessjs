@@ -200,9 +200,24 @@ Deno.test('buildEntryDescriptor: default upgradeStrategy is lazy', () => {
 
 Deno.test('renderEntry: package islands are included in island upgrade entry', () => {
   const desc = buildEntryDescriptor(basicRoutes, {
-    packageIslands: [
-      { tagName: 'less-layout', modulePath: '@lessjs/ui/less-layout' },
-      { tagName: 'less-button', modulePath: '@lessjs/ui/less-button' },
+    packageManifests: [
+      {
+        schemaVersion: '1.0.0',
+        packageName: '@lessjs/ui',
+        version: '0.17.0',
+        declarations: [
+          {
+            tagName: 'less-layout',
+            className: 'LessLayout',
+            less: { module: '@lessjs/ui/less-layout', hydrate: 'eager' },
+          },
+          {
+            tagName: 'less-button',
+            className: 'LessButton',
+            less: { module: '@lessjs/ui/less-button', hydrate: 'lazy' },
+          },
+        ],
+      },
     ],
   });
   const code = renderEntry(desc);
@@ -214,9 +229,24 @@ Deno.test('renderEntry: package islands are included in island upgrade entry', (
 
 Deno.test('renderEntry: package islands are not imported by SSR entry', () => {
   const desc = buildEntryDescriptor(basicRoutes, {
-    packageIslands: [
-      { tagName: 'less-layout', modulePath: '@lessjs/ui/less-layout' },
-      { tagName: 'less-button', modulePath: '@lessjs/ui/less-button' },
+    packageManifests: [
+      {
+        schemaVersion: '1.0.0',
+        packageName: '@lessjs/ui',
+        version: '0.17.0',
+        declarations: [
+          {
+            tagName: 'less-layout',
+            className: 'LessLayout',
+            less: { module: '@lessjs/ui/less-layout', hydrate: 'eager' },
+          },
+          {
+            tagName: 'less-button',
+            className: 'LessButton',
+            less: { module: '@lessjs/ui/less-button', hydrate: 'lazy' },
+          },
+        ],
+      },
     ],
   });
   const code = renderEntry(desc);
@@ -306,8 +336,19 @@ Deno.test('generateHonoEntryCode: complex scenario with all features', () => {
       securityHeaders: true,
     },
     islandTagNames: ['code-block', 'counter-island'],
-    packageIslands: [
-      { tagName: 'less-layout', modulePath: '@lessjs/ui/less-layout' },
+    packageManifests: [
+      {
+        schemaVersion: '1.0.0',
+        packageName: '@lessjs/ui',
+        version: '0.17.0',
+        declarations: [
+          {
+            tagName: 'less-layout',
+            className: 'LessLayout',
+            less: { module: '@lessjs/ui/less-layout', hydrate: 'eager' },
+          },
+        ],
+      },
     ],
     html: { lang: 'zh-CN', title: 'LessJS 文档' },
     headExtras: '<link rel="stylesheet" href="/styles.css" />',

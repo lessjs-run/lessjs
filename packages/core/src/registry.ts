@@ -12,7 +12,6 @@
 import type {
   LessDeclaration,
   LessPackageManifest,
-  PackageIslandMeta,
   RegistryIndex,
   RegistryIndexEntry,
   ValidationError,
@@ -230,28 +229,6 @@ export function generateIndex(): RegistryIndex {
 /** Clear all registered manifests (useful for testing). */
 export function clear(): void {
   _packages.length = 0;
-}
-
-// ─── Backward compat adapter ──────────────────────────────────────
-
-/** Convert a LessPackageManifest to the legacy PackageIslandMeta[] format.
- *
- * This provides backward compatibility for packages that still consume
- * the `islands` array. New code should use the manifest directly.
- *
- * @deprecated This function exists only to bridge v0.15 → v0.16.
- * Removal target: v0.18+.
- */
-export function packageIslandFromManifest(
-  manifest: LessPackageManifest,
-): PackageIslandMeta[] {
-  return manifest.declarations
-    .filter((decl) => decl.less?.module)
-    .map((decl) => ({
-      tagName: decl.tagName,
-      modulePath: decl.less!.module!,
-      strategy: decl.less?.hydrate as PackageIslandMeta['strategy'],
-    }));
 }
 
 // ─── Internal helpers ──────────────────────────────────────────────

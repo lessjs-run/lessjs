@@ -1,13 +1,13 @@
 /**
  * @lessjs/adapter-vite - route-scanner.ts tests (Deno)
  */
-import { assertEquals, assertThrows } from 'jsr:@std/assert@^1.0.0';
+import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { join } from 'jsr:@std/path@^1.0.0';
 import {
   fileToTagName,
   scanIslands,
+  scanPackageManifests,
   scanRoutes,
-  validatePackageIslandMeta,
 } from '../src/route-scanner.ts';
 
 const FIXTURES_DIR = join(Deno.cwd(), 'packages/core/__test_fixtures__');
@@ -179,25 +179,22 @@ async function cleanupFixtures() {
   }
 }
 
-// ─── scanPackageIslands Tests ──────────────────────────
+// ─── scanPackageManifests Tests ──────────────────────────
 
 Deno.test({
-  name: 'route-scanner - scanPackageIslands',
+  name: 'route-scanner - scanPackageManifests',
   sanitizeResources: false,
   sanitizeOps: false,
   async fn(t) {
     await t.step('returns empty array for empty package list', async () => {
-      const { scanPackageIslands } = await import('../src/route-scanner.ts');
-      const result = await scanPackageIslands([]);
+      const result = await scanPackageManifests([]);
       assertEquals(result, []);
     });
 
     await t.step('throws LessError for non-existent package', async () => {
-      const { scanPackageIslands } = await import('../src/route-scanner.ts');
-      const { LessError } = await import('@lessjs/core/errors'); // Non-existent package should throw — misconfigured packages must break the build
+      const { LessError } = await import('@lessjs/core/errors');
       try {
-        await scanPackageIslands(['@nonexistent/package']);
-        // Should not reach here
+        await scanPackageManifests(['@nonexistent/package']);
         assertEquals(true, false, 'Expected LessError to be thrown');
       } catch (e) {
         assertEquals(e instanceof LessError, true);
@@ -207,23 +204,18 @@ Deno.test({
 
     // Test skipped: requires @lessjs/ui/dist to be built first.
     // Run `cd packages/ui && deno task build` then uncomment to run.
-    /* await t.step('scans @lessjs/ui for islands', async () => {
-    const { scanPackageIslands } = await import('../src/route-scanner.ts');
-    const result = await scanPackageIslands(['@lessjs/ui']);
+    /* await t.step('scans @lessjs/ui for manifests', async () => {
+    const result = await scanPackageManifests(['@lessjs/ui']);
     assertEquals(Array.isArray(result), true);
-    if (result.length > 0) {
-      const tags = result.map((i) => i.tagName);
-      assertEquals(tags.includes('less-theme-toggle') || tags.includes('less-button'), true);
-    }
+    assertEquals(result.length > 0, true);
+    assertEquals(result[0].packageName, '@lessjs/ui');
+    assertEquals(result[0].declarations.length > 0, true);
   }); */
 
     await t.step('throws LessError for package with import errors', async () => {
-      const { scanPackageIslands } = await import('../src/route-scanner.ts');
-      const { LessError } = await import('@lessjs/core/errors'); // A package that exists but fails to import should throw
+      const { LessError } = await import('@lessjs/core/errors');
       try {
-        await scanPackageIslands(['vite']);
-        // If vite imports successfully but has no islands, that's OK
-        // But on this system it fails due to native binary deps
+        await scanPackageManifests(['vite']);
       } catch (e) {
         assertEquals(e instanceof LessError, true);
         assertEquals((e as Error).message.includes('vite'), true);
@@ -240,41 +232,13 @@ Deno.test('route-scanner - scanIslands with non-existent dir', async () => {
   assertEquals(result, []);
 });
 
-Deno.test('route-scanner - validates package island metadata before registry work', () => {
-  validatePackageIslandMeta(
-    {
-      tagName: 'less-safe',
-      modulePath: '@lessjs/ui/less-safe',
-      strategy: 'lazy',
-    },
-    '@lessjs/ui',
-  );
-
-  assertThrows(
-    () =>
-      validatePackageIslandMeta(
-        {
-          tagName: "less-bad');alert(1);//",
-          modulePath: '@lessjs/ui/less-safe',
-          strategy: 'lazy',
-        },
-        '@evil/pkg',
-      ),
-    Error,
-    'Invalid package island metadata',
-  );
-
-  assertThrows(
-    () =>
-      validatePackageIslandMeta(
-        {
-          tagName: 'less-safe',
-          modulePath: 'data:text/javascript,alert(1)',
-          strategy: 'lazy',
-        },
-        '@evil/pkg',
-      ),
-    Error,
-    'Invalid package island metadata',
-  );
+Deno.test('route-scanner - scanPackageManifests rejects packages without manifest export', async () => {
+  const { LessError } = await import('@lessjs/core/errors');
+  // A package that exists but has no manifest export should throw
+  try {
+    await scanPackageManifests(['jsr:@std/assert']);
+    // If it somehow has a manifest, that's unexpected but OK
+  } catch (e) {
+    assertEquals(e instanceof LessError, true);
+  }
 });

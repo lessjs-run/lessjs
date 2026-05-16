@@ -21,7 +21,6 @@ export type {
   FrameworkOptions,
   LessMiddleware,
   LessRenderer,
-  PackageIslandMeta,
   RouteEntry,
   SpecialFileType,
   SsrContext,
@@ -88,13 +87,12 @@ export type {
   LessPluginMeta,
 } from './build-types.js';
 
-// WC Package Protocol (v0.16)
+// WC Package Protocol (v0.17+)
 export {
   clear as clearRegistry,
   generateIndex,
   getAll as getAllManifests,
   getByTagName,
-  packageIslandFromManifest,
   register as registerManifest,
   validate as validateManifest,
 } from './registry.js';

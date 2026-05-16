@@ -15,7 +15,8 @@ Deno.test('LessBuildContext has empty default mutable state', () => {
   // Empty state
   assertEquals(ctx.phase1.honoEntryCode, '');
   assertEquals(ctx.phase1.islandTagNames.length, 0);
-  assertEquals(ctx.phase1.packageIslands.length, 0);
+  assertEquals(ctx.phase1.packageManifests.length, 0);
+  assertEquals(ctx.phase1.packageIslandDecls.length, 0);
   assertEquals(ctx.phase1.buildCompleted, false);
   assertEquals(ctx.phase1.resolvedConfig, null);
   assertEquals(ctx.phase1.userResolveAlias, null);
@@ -27,7 +28,7 @@ Deno.test('LessBuildContext reset clears all mutable state', () => {
   // Mutate
   ctx.phase1.honoEntryCode = 'test code';
   ctx.phase1.islandTagNames = ['a', 'b'];
-  ctx.phase1.packageIslands = [{ tagName: 'x', modulePath: './x', strategy: 'lazy' }];
+  ctx.phase1.packageIslandDecls = [{ tagName: 'x', modulePath: './x', hydrate: 'lazy' }];
   ctx.phase1.buildCompleted = true;
   ctx.phase1.resolvedConfig = {} as unknown as NonNullable<typeof ctx.phase1.resolvedConfig>;
   ctx.phase1.userResolveAlias = { '@lessjs/ui': './ui' };
@@ -36,7 +37,8 @@ Deno.test('LessBuildContext reset clears all mutable state', () => {
 
   assertEquals(ctx.phase1.honoEntryCode, '');
   assertEquals(ctx.phase1.islandTagNames.length, 0);
-  assertEquals(ctx.phase1.packageIslands.length, 0);
+  assertEquals(ctx.phase1.packageManifests.length, 0);
+  assertEquals(ctx.phase1.packageIslandDecls.length, 0);
   assertEquals(ctx.phase1.buildCompleted, false);
   assertEquals(ctx.phase1.resolvedConfig, null);
   // NOTE: userResolveAlias is intentionally NOT reset — it's user configuration,
