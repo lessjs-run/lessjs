@@ -119,9 +119,9 @@ export class IslandsGuidePage extends LitElement {
               count = 0;
               override render() {
                 return html&#96;
-                  &lt;button @click=\\${() => this.count--}&gt;-&lt;/button&gt;
-                  &lt;span&gt;\\${this.count}&lt;/span&gt;
-                  &lt;button @click=\\${() => this.count++}&gt;+&lt;/button&gt;
+                  &lt;button @click=\${() => this.count--}&gt;-&lt;/button&gt;
+                  &lt;span&gt;\${this.count}&lt;/span&gt;
+                  &lt;button @click=\${() => this.count++}&gt;+&lt;/button&gt;
                 &#96;;
               }
             }
