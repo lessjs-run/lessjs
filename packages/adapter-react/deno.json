@@ -1,0 +1,40 @@
+{
+  "name": "@lessjs/adapter-react",
+  "version": "0.17.4",
+  "exports": {
+    ".": "./src/index.ts",
+    "./ssr": "./src/ssr.ts",
+    "./dsd-hydration": "./src/dsd-hydration.ts"
+  },
+  "imports": {
+    "@lessjs/core": "jsr:@lessjs/core@^0.17.0",
+    "@lessjs/core/logger": "jsr:@lessjs/core@^0.17.0/logger",
+    "react": "npm:react@^19",
+    "react-dom": "npm:react-dom@^19",
+    "react-dom/server": "npm:react-dom@^19/server.node"
+  },
+  "tasks": {
+    "build": "deno check src/index.ts src/ssr.ts src/dsd-hydration.ts",
+    "test": "deno test --allow-read --allow-write --allow-env --allow-net __tests__/"
+  },
+  "publish": {
+    "include": [
+      "src/**",
+      "deno.json",
+      "README.md",
+      "LICENSE"
+    ]
+  },
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

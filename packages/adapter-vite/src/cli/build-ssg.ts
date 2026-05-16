@@ -15,6 +15,7 @@
  */
 
 import { join, resolve } from 'node:path';
+import { normalizePath } from 'vite';
 import process from 'node:process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import type { Plugin } from 'vite';
@@ -65,6 +66,18 @@ function optionalPackageStubsPlugin(): import('vite').Plugin {
       'export const DsdLitElement = undefined;',
       'export const WithDsdHydration = undefined;',
     ].join('\n'),
+    '@lessjs/adapter-vanilla': [
+      'export function installVanillaAdapter() {}',
+      'export function uninstallVanillaAdapter() {}',
+      'export const DsdVanillaElement = undefined;',
+    ].join('\n'),
+    '@lessjs/adapter-react': [
+      'export function installReactAdapter() {}',
+      'export function uninstallReactAdapter() {}',
+      'export const DsdReactElement = undefined;',
+      'export function renderReactToString() { return ""; }',
+      'export function isReactElement() { return false; }',
+    ].join('\n'),
     // ADR 0018: @lessjs/content no longer exports initBlogData/getPosts/getPostBySlug/getBlogOptions
     // Route components import from virtual:less-blog-data instead.
     // This stub is for the generateSitemap re-export only.
@@ -108,6 +121,7 @@ interface BuildSSGOptions {
   middleware?: FrameworkOptions['middleware'];
   ssr?: FrameworkOptions['ssr'];
   islandTagNames?: string[];
+  islandMeta?: Record<string, Partial<import('../entry-descriptor.js').IslandDecl>>;
   packageManifests?: LessPackageManifest[];
   /** @security Injected as raw HTML without sanitization */
   headExtras?: string;
@@ -141,6 +155,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
 
   // Read island metadata from ctx (ADR 0010: no .less/ fallback)
   const islandTagNames = options.islandTagNames || ctx.phase1.islandTagNames || [];
+  const islandMeta = options.islandMeta || ctx.phase1.islandMeta || {};
   const packageManifests = options.packageManifests || ctx.phase1.packageManifests || [];
   const metadataResolveAlias = options.resolveAlias ||
     (ctx.phase1.userResolveAlias as Record<string, string> | import('vite').Alias[] | undefined);
@@ -159,7 +174,9 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
   if (!options.speculation) options.speculation = ctx.phase3.speculation || undefined;
 
   // Generate SSG entry code
-  const { scanRoutes, scanIslands, fileToTagName } = await import('../route-scanner.js');
+  const { scanRoutes, scanIslands, scanIslandMeta, fileToTagName } = await import(
+    '../route-scanner.js'
+  );
   const { generateHonoEntryCode } = await import('../hono-entry.js');
 
   const routes = await scanRoutes(routesDir);
@@ -168,6 +185,19 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
   const ssgIslandTagNames = islandTagNames.length > 0
     ? islandTagNames
     : ssgIslandFiles.map((f) => fileToTagName(f));
+  const ssgIslandMeta = Object.keys(islandMeta).length > 0
+    ? islandMeta
+    : await scanIslandMeta(islandsRoot, ssgIslandFiles);
+  const { buildEntryDescriptor } = await import('../entry-descriptor.js');
+  ctx.phase1.ssrAdmissionPlan = buildEntryDescriptor(routes, {
+    routesDir,
+    islandsDir,
+    ssg: true,
+    islandTagNames: ssgIslandTagNames,
+    islandFiles: ssgIslandFiles,
+    islandMeta: ssgIslandMeta,
+    packageManifests,
+  }).ssrAdmissionPlan;
 
   const ssgEntryCode = generateHonoEntryCode(routes, {
     routesDir,
@@ -176,6 +206,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     ssg: true,
     islandTagNames: ssgIslandTagNames,
     islandFiles: ssgIslandFiles,
+    islandMeta: ssgIslandMeta,
     packageManifests,
     headExtras: options.headExtras,
     allowHeadExtrasScripts: options.allowHeadExtrasScripts,
@@ -237,6 +268,15 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     // so module-level variables (Phase B) are shared across the entire graph.
     const ssrOutDir = join(root, outDir, 'server');
     log.info(`Building SSR bundle → ${ssrOutDir}`);
+    const clientOnlyIslandIds = new Set(
+      Object.entries(ssgIslandMeta)
+        .filter(([, meta]) => meta.ssr === false)
+        .map(([tag]) => {
+          const file = ssgIslandFiles[ssgIslandTagNames.indexOf(tag)];
+          return file ? normalizePath(resolve(root, islandsDir, file)) : '';
+        })
+        .filter(Boolean),
+    );
 
     await viteBuild({
       configFile: false,
@@ -247,7 +287,15 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
         chunkSizeWarningLimit: 1500,
         rollupOptions: {
           input: { entry: VIRTUAL_SSG_ENTRY_ID },
-          output: { format: 'esm' },
+          output: {
+            format: 'esm',
+            // ADR-0028: Inject globalThis.HTMLElement polyfill as banner.
+            // This ensures ssr-dom-shim's HTMLElement is available BEFORE
+            // any module-level `extends globalThis.HTMLElement` evaluates.
+            banner: `import { HTMLElement as _SsrDomShimHTMLElement } from '@lit-labs/ssr-dom-shim';
+if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
+`,
+          },
         },
       },
       ssr: { noExternal: allNoExternal },
@@ -322,6 +370,19 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
         // This plugin resolves them to empty stubs when missing, so the
         // viteBuild() succeeds regardless of which packages are available.
         optionalPackageStubsPlugin(),
+        {
+          name: 'less:ssg-client-only-island-stubs',
+          enforce: 'pre',
+          load(id) {
+            const normalized = normalizePath(id.split('?')[0]);
+            if (!clientOnlyIslandIds.has(normalized)) return;
+            return [
+              'export const tagName = "less-client-only-stub";',
+              'export const less = { ssr: false };',
+              'export default class LessClientOnlyStub extends HTMLElement {}',
+            ].join('\n');
+          },
+        },
         // Resolve virtual:less-nav — shared nav/pwa/speculation constants
         {
           name: 'less:ssg-virtual-nav',

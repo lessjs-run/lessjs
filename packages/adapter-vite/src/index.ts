@@ -57,6 +57,45 @@ const CORE_SUBPATHS: Record<string, string> = {
   navigation: 'navigation.ts',
 };
 
+const OPTIONAL_PACKAGE_STUBS: Record<string, string> = {
+  '@lessjs/adapter-lit': [
+    'export function installLitAdapter() {}',
+    'export function uninstallLitAdapter() {}',
+    'export const DsdLitElement = undefined;',
+    'export const WithDsdHydration = undefined;',
+  ].join('\n'),
+  '@lessjs/adapter-vanilla': [
+    'export function installVanillaAdapter() {}',
+    'export function uninstallVanillaAdapter() {}',
+    'export const DsdVanillaElement = undefined;',
+  ].join('\n'),
+  '@lessjs/adapter-react': [
+    'export function installReactAdapter() {}',
+    'export function uninstallReactAdapter() {}',
+    'export const DsdReactElement = undefined;',
+    'export function renderReactToString() { return ""; }',
+    'export function isReactElement() { return false; }',
+  ].join('\n'),
+};
+
+function optionalPackageStubsPlugin(): Plugin {
+  return {
+    name: 'less:optional-package-stubs',
+    enforce: 'pre',
+    async resolveId(id) {
+      if (!(id in OPTIONAL_PACKAGE_STUBS)) return;
+      const resolved = await this.resolve(id, undefined, { skipSelf: true });
+      if (resolved) return null;
+      return `\0less:optional-stub:${id}`;
+    },
+    load(id) {
+      const prefix = '\0less:optional-stub:';
+      if (!id.startsWith(prefix)) return;
+      return OPTIONAL_PACKAGE_STUBS[id.slice(prefix.length)];
+    },
+  };
+}
+
 // ADR 0018: buildCoreSubpathAliases() DELETED.
 // Local mode relies on @deno/vite-plugin (to be integrated).
 // Remote JSR mode uses createCoreResolvePlugin below.
@@ -403,6 +442,7 @@ export function less(
       middleware: resolvedOptions.middleware,
       islandTagNames,
       islandFiles,
+      islandMeta: ctx.phase1.islandMeta,
       packageManifests,
       headExtras: resolvedOptions.headExtras,
       allowHeadExtrasScripts,
@@ -468,6 +508,8 @@ export function less(
         const islandFiles = await scanIslands(islandsRoot);
         ctx.phase1.islandTagNames = islandFiles.map((f) => fileToTagName(f));
         ctx.phase1.islandFiles = islandFiles;
+        const { scanIslandMeta } = await import('./route-scanner.js');
+        ctx.phase1.islandMeta = await scanIslandMeta(islandsRoot, islandFiles);
 
         if (
           resolvedOptions.packageIslands &&
@@ -506,6 +548,15 @@ export function less(
           ctx.phase1.packageManifests,
           ctx.phase1.islandFiles,
         );
+        const { buildEntryDescriptor } = await import('./entry-descriptor.js');
+        ctx.phase1.ssrAdmissionPlan = buildEntryDescriptor(routes, {
+          routesDir: resolvedOptions.routesDir,
+          islandsDir: resolvedOptions.islandsDir,
+          islandTagNames: ctx.phase1.islandTagNames,
+          islandFiles: ctx.phase1.islandFiles,
+          islandMeta: ctx.phase1.islandMeta,
+          packageManifests: ctx.phase1.packageManifests,
+        }).ssrAdmissionPlan;
         const pageCount = routes.filter(
           (r) => r.type === 'page' && !r.special,
         ).length;
@@ -564,6 +615,7 @@ export function less(
     // and @lessjs/i18n during buildStart(). We dispatch resolve/load to
     // whatever plugin is registered in ctx.plugins at call time.
     dispatchDataPlugin(ctx),
+    optionalPackageStubsPlugin(),
     virtualEntryPlugin,
     devServerPlugin,
     islandTransformPlugin(resolvedOptions.islandsDir!),

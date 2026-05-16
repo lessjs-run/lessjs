@@ -38,7 +38,7 @@ import {
   type RenderInput,
   type RenderOutput,
 } from './types.js';
-import { getAdapter } from './adapter-registry.js';
+import { getRegisteredAdapters } from './adapter-registry.js';
 import { renderNestedCustomElements } from './render-nested.js';
 import { createLogger } from './logger.js';
 
@@ -83,7 +83,6 @@ export async function renderDSD(
 ): Promise<RenderOutput> {
   // H-10 fix: Guard against SSR environments where performance is undefined
   const startTime = typeof performance !== 'undefined' ? performance.now() : 0;
-  const adapter = getAdapter();
   const sourceStr = sourceInfo
     ? `${sourceInfo.route ? ` route="${sourceInfo.route}"` : ''}${
       sourceInfo.source ? ` source="${sourceInfo.source}"` : ''
@@ -151,7 +150,7 @@ export async function renderDSD(
 
   // 3. DO NOT call connectedCallback in SSR.
   // 4. Call render() to get Shadow DOM content
-  let content: string;
+  let content = '';
   try {
     const result = instance.render();
     if (result == null) {
@@ -159,13 +158,18 @@ export async function renderDSD(
     } else if (typeof result === 'string') {
       content = result;
     } else {
-      if (
-        adapter?.isTemplate &&
-        adapter?.render &&
-        adapter.isTemplate(result)
-      ) {
-        content = await adapter.render(result, tagName);
-      } else {
+      // v0.17.3: Multi-adapter dispatch — try all registered adapters
+      // until one claims the result via isTemplate(). This allows Lit,
+      // Vanilla, React, and future adapters to coexist.
+      let rendered = false;
+      for (const adapter of getRegisteredAdapters()) {
+        if (adapter.isTemplate && adapter.render && adapter.isTemplate(result)) {
+          content = await adapter.render(result, tagName);
+          rendered = true;
+          break;
+        }
+      }
+      if (!rendered) {
         const errDetail = isLitTemplateResultHeuristic(result)
           ? 'This looks like a Lit TemplateResult — install @lessjs/adapter-lit to handle it.'
           : `Components must return a string from render(), got ${typeof result}.`;
@@ -197,17 +201,26 @@ export async function renderDSD(
   }
 
   // 5. Extract static styles from component class
+  // v0.17.3: Try all registered adapters for style extraction.
+  // Each adapter knows how to extract styles from its framework's components.
   let styleCss = '';
-  if (adapter?.extractStyles) {
-    try {
-      styleCss = adapter.extractStyles(componentClass) || '';
-    } catch (e) {
-      const styleErr = classifyError('style', tagName, e, true);
-      collectedErrors.push(styleErr);
-      hooks?.onError?.(styleErr);
-      log.debug(
-        `extractStyles failed for <${tagName}>: ${e instanceof Error ? e.message : String(e)}`,
-      );
+  for (const adapter of getRegisteredAdapters()) {
+    if (adapter.extractStyles) {
+      try {
+        const extracted = adapter.extractStyles(componentClass);
+        if (extracted) {
+          styleCss += extracted;
+        }
+      } catch (e) {
+        const styleErr = classifyError('style', tagName, e, true);
+        collectedErrors.push(styleErr);
+        hooks?.onError?.(styleErr);
+        log.debug(
+          `extractStyles failed for <${tagName}> via '${adapter.name}' adapter: ${
+            e instanceof Error ? e.message : String(e)
+          }`,
+        );
+      }
     }
   }
 

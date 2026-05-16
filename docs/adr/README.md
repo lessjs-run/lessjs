@@ -23,18 +23,20 @@ architectural decision, its context, and consequences.
 
 ## Active ADRs
 
-| ADR  | Title                               | Status                                   |
-| ---- | ----------------------------------- | ---------------------------------------- |
-| 0006 | Version Roadmap                     | Accepted                                 |
-| 0007 | npm Publishing Strategy             | Accepted                                 |
-| 0010 | Eliminate .less/ temp files         | Accepted, Implemented                    |
-| 0011 | Eliminate globalThis bridge         | Accepted, Implemented                    |
-| 0016 | Dual-mode subpath resolution        | Accepted, Implemented                    |
-| 0017 | Runtime/Build separation            | Accepted, Implemented                    |
-| 0018 | Virtual Data Modules                | Accepted, Implemented                    |
-| 0024 | Standards-first WC Renderer Roadmap | Accepted                                 |
-| 0025 | Renderer Protocol                   | Accepted (v0.15 partial, v0.16 deferred) |
-| 0026 | Structured Render Pipeline (v0.16)  | Proposed                                 |
+| ADR  | Title                                     | Status                                   |
+| ---- | ----------------------------------------- | ---------------------------------------- |
+| 0006 | Version Roadmap                           | Accepted                                 |
+| 0007 | npm Publishing Strategy                   | Accepted                                 |
+| 0010 | Eliminate .less/ temp files               | Accepted, Implemented                    |
+| 0011 | Eliminate globalThis bridge               | Accepted, Implemented                    |
+| 0016 | Dual-mode subpath resolution              | Accepted, Implemented                    |
+| 0017 | Runtime/Build separation                  | Accepted, Implemented                    |
+| 0018 | Virtual Data Modules                      | Accepted, Implemented                    |
+| 0024 | Standards-first WC Renderer Roadmap       | Accepted                                 |
+| 0025 | Renderer Protocol                         | Accepted (v0.15 partial, v0.16 deferred) |
+| 0026 | Structured Render Pipeline (v0.16)        | Proposed                                 |
+| 0027 | Roadmap Reorder: Engine Before Hub        | Accepted                                 |
+| 0028 | Conservative Third-Party WC SSR Admission | Proposed                                 |
 
 ## Superseded / Historical
 

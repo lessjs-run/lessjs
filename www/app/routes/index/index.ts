@@ -9,6 +9,9 @@ import { css, html, LitElement } from 'lit';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '../../islands/less-term.js';
+import '../../islands/shoelace-showcase.js';
+import '../../islands/react-showcase.js';
+import '../../islands/media-chrome-showcase.js';
 
 export const tagName = 'docs-home';
 
@@ -167,6 +170,22 @@ export default class DocsHome extends LitElement {
     .live-counter button:hover { background: #3f3f46; }
     .live-counter .val { font-size: 22px; font-weight: 500; color: #f4f4f5; min-width: 30px; text-align: center; }
 
+    /* ── Multi-framework showcase ── */
+    .mfa { margin-bottom: 2.5rem; }
+    .mfa-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 1rem; }
+    .mfa-card { border: 0.5px solid var(--less-border); border-radius: 10px; padding: 1.25rem; background: var(--less-bg-surface); }
+    .mfa-card:hover { border-color: var(--less-border-hover); }
+    .mfa-tag { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 8px; border-radius: 4px; margin-bottom: 10px; }
+    .mfa-tag.lit { background: #E6F1FB; color: #185FA5; }
+    .mfa-tag.react { background: #E1F0FF; color: #0D6EFD; }
+    .mfa-tag.vanilla { background: #E1F5EE; color: #0F6E56; }
+    .mfa-card h4 { margin: 0 0 8px; font-size: 13px; font-weight: 600; color: var(--less-text-primary); }
+    .mfa-card p { margin: 0; font-size: 12px; color: var(--less-text-secondary); line-height: 1.5; }
+    .mfa-card .lib-name { font-weight: 600; color: var(--less-text-primary); }
+    .mfa-live { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px; }
+    .mfa-live-card { background: #18181b; border-radius: 10px; padding: 1.25rem; min-width: 0; }
+    .mfa-live-card h5 { margin: 0 0 10px; font-size: 11px; font-weight: 600; color: #71717a; text-transform: uppercase; letter-spacing: 0.08em; }
+
     @media (max-width: 760px) {
       .hero-inner { padding: 2rem 1.25rem 1.5rem; }
       .code-strip { padding: 1.5rem 0; }
@@ -187,6 +206,8 @@ export default class DocsHome extends LitElement {
       .sec-lbl { margin: 0 1.25rem 10px; }
       .sec-bd { padding: 0 1.25rem; }
       .doc-link { padding: 0.75rem; }
+      .mfa-grid { grid-template-columns: 1fr; }
+      .mfa-live { grid-template-columns: 1fr; }
     }
     @media (max-width: 480px) {
       .hero h1 { font-size: 1.75rem; }
@@ -322,6 +343,45 @@ export default class DocsHome extends LitElement {
                 <text x="450" y="54" text-anchor="middle" fill="#993C1D" font-size="11" font-weight="500">adapter-lit / ui</text>
                 <text x="300" y="70" text-anchor="middle" fill="#5F5E5A" font-size="10">@lessjs/core — 纯运行时，1 个依赖 (parse5)</text>
               </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec">
+          <div class="sec-lbl">多框架共存</div>
+          <div class="sec-bd">
+            <div class="mfa">
+              <div class="mfa-grid">
+                <div class="mfa-card">
+                  <span class="mfa-tag lit">Lit Adapter</span>
+                  <h4>Shoelace</h4>
+                  <p><span class="lib-name">Shoelace</span> — 80+ 精美 Lit 组件，企业级 Web Components 库</p>
+                </div>
+                <div class="mfa-card">
+                  <span class="mfa-tag react">React Adapter</span>
+                  <h4>React 19</h4>
+                  <p><span class="lib-name">React</span> — ReactDOMServer → Declarative Shadow DOM，零配置 SSR 渲染</p>
+                </div>
+                <div class="mfa-card">
+                  <span class="mfa-tag vanilla">Vanilla Adapter</span>
+                  <h4>Media Chrome</h4>
+                  <p><span class="lib-name">Media Chrome</span> — 纯原生 Web Components 媒体播放器控件</p>
+                </div>
+              </div>
+              <div class="mfa-live">
+                <div class="mfa-live-card">
+                  <h5>Shoelace · Lit</h5>
+                  <shoelace-showcase></shoelace-showcase>
+                </div>
+                <div class="mfa-live-card">
+                  <h5>React 19 · React Adapter</h5>
+                  <react-showcase></react-showcase>
+                </div>
+                <div class="mfa-live-card">
+                  <h5>Media Chrome · Vanilla</h5>
+                  <media-chrome-showcase></media-chrome-showcase>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -483,6 +543,45 @@ export default class DocsHome extends LitElement {
                 <text x="450" y="54" text-anchor="middle" fill="#993C1D" font-size="11" font-weight="500">adapter-lit / ui</text>
                 <text x="300" y="70" text-anchor="middle" fill="#5F5E5A" font-size="10">@lessjs/core — pure runtime, 1 dep (parse5)</text>
               </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec">
+          <div class="sec-lbl">multi-framework coexistence</div>
+          <div class="sec-bd">
+            <div class="mfa">
+              <div class="mfa-grid">
+                <div class="mfa-card">
+                  <span class="mfa-tag lit">Lit Adapter</span>
+                  <h4>Shoelace</h4>
+                  <p><span class="lib-name">Shoelace</span> — 80+ polished Lit components, enterprise-grade Web Components</p>
+                </div>
+                <div class="mfa-card">
+                  <span class="mfa-tag react">React Adapter</span>
+                  <h4>React 19</h4>
+                  <p><span class="lib-name">React</span> — ReactDOMServer → Declarative Shadow DOM, zero-config SSR rendering</p>
+                </div>
+                <div class="mfa-card">
+                  <span class="mfa-tag vanilla">Vanilla Adapter</span>
+                  <h4>Media Chrome</h4>
+                  <p><span class="lib-name">Media Chrome</span> — pure vanilla Web Components for media player controls</p>
+                </div>
+              </div>
+              <div class="mfa-live">
+                <div class="mfa-live-card">
+                  <h5>Shoelace · Lit</h5>
+                  <shoelace-showcase></shoelace-showcase>
+                </div>
+                <div class="mfa-live-card">
+                  <h5>React 19 · React Adapter</h5>
+                  <react-showcase></react-showcase>
+                </div>
+                <div class="mfa-live-card">
+                  <h5>Media Chrome · Vanilla</h5>
+                  <media-chrome-showcase></media-chrome-showcase>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -793,6 +793,19 @@ export interface ManifestDecision {
   hydrate?: string;
   /** Resolved render path: 'ssr+client' = SSR rendering + client upgrade; 'client-only' = client-only */
   renderPath: 'ssr+client' | 'client-only';
+  /** Admission reason shown in build reports */
+  reason?: string;
+  /** Source of the declaration */
+  source?: 'local' | 'package' | 'nested';
+}
+
+/** SSR admission decision emitted by adapter-vite before SSR bundle generation. */
+export interface SsrAdmissionDecision {
+  tagName: string;
+  modulePath: string;
+  source: 'local' | 'package' | 'nested';
+  renderPath: 'ssr+client' | 'client-only' | 'rejected';
+  reason: string;
 }
 
 /**
@@ -823,6 +836,8 @@ export interface DsdBuildReport {
    * Empty when no package manifests are configured.
    */
   manifestDecisions?: ManifestDecision[];
+  /** v0.17.4: all SSR admission decisions, including local client-only islands. */
+  admissionDecisions?: SsrAdmissionDecision[];
 }
 
 /** Collects DSD render metrics during SSR for post-build reporting */

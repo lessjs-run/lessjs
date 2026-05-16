@@ -26,12 +26,26 @@ import { printBuildManifest, scanClientBuild, scanSSGOutput } from '../src/build
 
 // ─── less() Plugin Factory ─────────────────────────────────────
 
-Deno.test('less() returns an array of plugins', () => {
-  const plugins = less();
+function assertLessPluginArray(plugins: ReturnType<typeof less>): void {
   assertExists(plugins);
   assertEquals(Array.isArray(plugins), true);
-  // ADR 0018: 8 plugins (added blog-data + i18n-data virtual module plugins)
-  assertEquals(plugins.length, 8);
+  const names = plugins.map((p) => p.name);
+  assertArrayIncludes(names, [
+    'less:core',
+    'less:core-resolve',
+    'less:data-dispatch',
+    'less:optional-package-stubs',
+    'less:virtual-entry',
+    '@hono/vite-dev-server',
+    'less:island-transform',
+    'less:build',
+    'less:devtools',
+  ]);
+}
+
+Deno.test('less() returns an array of plugins', () => {
+  const plugins = less();
+  assertLessPluginArray(plugins);
 });
 
 Deno.test('less() plugins have names starting with less:', () => {
@@ -75,7 +89,7 @@ Deno.test('less() accepts options without error', () => {
     middleware: { corsOrigin: '*' },
   });
 
-  assertEquals(plugins.length, 8);
+  assertLessPluginArray(plugins);
 });
 
 Deno.test('less() core plugin has config hook defined', () => {
@@ -92,27 +106,27 @@ Deno.test('less() core plugin has buildStart hook defined', () => {
 
 // ─── less() inject / headExtras branches ─────────────────────
 
-Deno.test('less() inject.stylesheets → headExtras', () => {
+Deno.test('less() inject.stylesheets �?headExtras', () => {
   const plugins = less({
     inject: { stylesheets: ['https://cdn.example.com/app.css'] },
   });
-  assertEquals(plugins.length, 8);
+  assertLessPluginArray(plugins);
   // headExtras computed internally from inject.stylesheets
   // Verification: plugin construction succeeds for inject-only config
 });
 
-Deno.test('less() inject.scripts → headExtras', () => {
+Deno.test('less() inject.scripts �?headExtras', () => {
   const plugins = less({
     inject: { scripts: ['https://cdn.example.com/app.js'] },
   });
-  assertEquals(plugins.length, 8);
+  assertLessPluginArray(plugins);
 });
 
-Deno.test('less() inject.headFragments → headExtras', () => {
+Deno.test('less() inject.headFragments �?headExtras', () => {
   const plugins = less({
     inject: { headFragments: ['<meta name="theme-color" content="#000">'] },
   });
-  assertEquals(plugins.length, 8);
+  assertLessPluginArray(plugins);
 });
 
 Deno.test('less() inject all combined', () => {
@@ -123,7 +137,7 @@ Deno.test('less() inject all combined', () => {
       headFragments: ['<meta charset="utf-8">'],
     },
   });
-  assertEquals(plugins.length, 8);
+  assertLessPluginArray(plugins);
 });
 
 Deno.test('less() headExtras takes precedence over inject', () => {
@@ -131,7 +145,7 @@ Deno.test('less() headExtras takes precedence over inject', () => {
     headExtras: '<meta name="override" />',
     inject: { stylesheets: ['https://example.com/style.css'] },
   });
-  assertEquals(plugins.length, 8);
+  assertLessPluginArray(plugins);
 });
 
 Deno.test('less() rejects script tags in raw headExtras', () => {
@@ -152,7 +166,7 @@ Deno.test('less() rejects script tags in inject.headFragments', () => {
 
 Deno.test('less() allows scripts through structured inject.scripts', () => {
   const plugins = less({ inject: { scripts: [{ src: '/x.js', defer: true }] } });
-  assertEquals(plugins.length, 8);
+  assertLessPluginArray(plugins);
 });
 
 // ─── less() config hook (captures userConfig.resolve.alias) ───
@@ -203,7 +217,7 @@ Deno.test('less() virtualEntryPlugin.resolveId matches VIRTUAL_ENTRY_ID', () => 
   const plugins = less();
   const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
   assertExists(virtualPlugin.resolveId);
-  // The resolved ID includes '\0' prefix — we just verify it returns non-null for the ID
+  // The resolved ID includes '\0' prefix �?we just verify it returns non-null for the ID
   const result = (virtualPlugin.resolveId as Function)(
     'virtual:less-hono-entry',
     undefined as never,
@@ -226,15 +240,15 @@ Deno.test('less() virtualEntryPlugin.load returns code for resolved ID', () => {
 
 Deno.test('less() with packageIslands option (empty array)', () => {
   const plugins = less({ packageIslands: [] });
-  // v0.3.1: 5 plugins (html-template removed — was a no-op)
-  assertEquals(plugins.length, 8);
+  // v0.3.1: 5 plugins (html-template removed �?was a no-op)
+  assertLessPluginArray(plugins);
 });
 
 // ─── less() default dirs ────────────────────────────────────
 
 Deno.test('less() applies default routesDir and islandsDir', () => {
   const plugins = less();
-  assertEquals(plugins.length, 8);
+  assertLessPluginArray(plugins);
   // Defaults applied internally via resolvedOptions
 });
 
@@ -244,7 +258,7 @@ Deno.test('less() corePlugin.buildStart is callable', () => {
   const plugins = less();
   const corePlugin = plugins.find((p) => p.name === 'less:core')!;
   assertExists(corePlugin.buildStart, 'core plugin must have buildStart');
-  // buildStart is async and requires filesystem — just verify it's callable
+  // buildStart is async and requires filesystem �?just verify it's callable
   assertEquals(typeof corePlugin.buildStart, 'function');
 });
 
@@ -265,35 +279,35 @@ Deno.test('less() with all options branches covered', () => {
       headFragments: ['<meta name="x" content="y">'],
     },
   });
-  assertEquals(plugins.length, 8);
+  assertLessPluginArray(plugins);
 });
 
 Deno.test('less() with middleware.corsOrigin as string', () => {
   const plugins = less({
     middleware: { corsOrigin: '*' },
   });
-  assertEquals(plugins.length, 8);
+  assertLessPluginArray(plugins);
 });
 
 Deno.test('less() with middleware.corsOrigin as array', () => {
   const plugins = less({
     middleware: { corsOrigin: ['http://localhost:3000', 'http://localhost:3001'] },
   });
-  assertEquals(plugins.length, 8);
+  assertLessPluginArray(plugins);
 });
 
 Deno.test('less() with island.upgradeStrategy=eager', () => {
   const plugins = less({
     island: { upgradeStrategy: 'eager' },
   });
-  assertEquals(plugins.length, 8);
+  assertLessPluginArray(plugins);
 });
 
 Deno.test('less() with island.upgradeStrategy=eager', () => {
   const plugins = less({
     island: { upgradeStrategy: 'eager' },
   });
-  assertEquals(plugins.length, 8);
+  assertLessPluginArray(plugins);
 });
 
 // ─── less() buildStart hook (actual execution) ──────────
@@ -322,7 +336,7 @@ Deno.test('less() corePlugin.buildStart scans routes and islands', async () => {
     const corePlugin = plugins.find((p) => p.name === 'less:core')!;
     assertExists(corePlugin.buildStart);
 
-    // Call buildStart — it should succeed with valid directory structure
+    // Call buildStart �?it should succeed with valid directory structure
     await (corePlugin.buildStart as Function)();
 
     Deno.chdir(origCwd);
@@ -348,7 +362,7 @@ Deno.test('less() corePlugin.buildStart handles empty directories gracefully', a
     });
     const corePlugin = plugins.find((p) => p.name === 'less:core')!;
 
-    // buildStart should NOT throw — scanRoutes returns empty array for missing dirs
+    // buildStart should NOT throw �?scanRoutes returns empty array for missing dirs
     await (corePlugin.buildStart as Function)();
 
     Deno.chdir(origCwd);
@@ -371,7 +385,7 @@ Deno.test('less() corePlugin.buildStart with packageIslands config', async () =>
     const origCwd = Deno.cwd();
     Deno.chdir(tmp);
 
-    // packageIslands with non-existent package — should still not crash buildStart
+    // packageIslands with non-existent package �?should still not crash buildStart
     const plugins = less({
       routesDir: 'app/routes',
       islandsDir: 'app/islands',
@@ -383,7 +397,7 @@ Deno.test('less() corePlugin.buildStart with packageIslands config', async () =>
     try {
       await (corePlugin.buildStart as Function)();
     } catch {
-      // Expected — @nonexistent/package import will fail, but route scan should succeed first
+      // Expected �?@nonexistent/package import will fail, but route scan should succeed first
     }
 
     Deno.chdir(origCwd);
@@ -431,14 +445,14 @@ Deno.test('less() inject.stylesheets escapes special chars in URLs', () => {
   const plugins = less({
     inject: { stylesheets: ['https://cdn.example.com/app.css?v=1&x<"test">'] },
   });
-  assertEquals(plugins.length, 8);
+  assertLessPluginArray(plugins);
 });
 
 Deno.test('less() inject.scripts escapes special chars in URLs', () => {
   const plugins = less({
     inject: { scripts: ['https://cdn.example.com/app.js?v=1&x<"test">'] },
   });
-  assertEquals(plugins.length, 8);
+  assertLessPluginArray(plugins);
 });
 
 // ─── less() config hook without resolve ──────────

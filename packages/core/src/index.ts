@@ -62,6 +62,7 @@ export type {
   RenderInput,
   RenderOutput,
   RenderPhase,
+  SsrAdmissionDecision,
   ValidationError,
   ValidationResult,
   ValidationWarning,

@@ -5,6 +5,7 @@ import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { join } from 'jsr:@std/path@^1.0.0';
 import {
   fileToTagName,
+  scanIslandMeta,
   scanIslands,
   scanPackageManifests,
   scanRoutes,
@@ -96,6 +97,26 @@ Deno.test('route-scanner', { permissions: { read: true, write: true } }, async (
     const islands = await scanIslands(join(FIXTURES_DIR, 'islands'));
     assertEquals(islands.includes('my-counter.ts'), true);
     assertEquals(islands.includes('theme-toggle.ts'), true);
+  });
+
+  await t.step('scanIslandMeta - reads local less metadata without importing modules', async () => {
+    await Deno.writeTextFile(
+      join(FIXTURES_DIR, 'islands', 'client-only.ts'),
+      [
+        'throw new Error("must not import");',
+        'export const less = { ssr: false, dsd: false, hydrate: "idle" };',
+        'export default class ClientOnly {}',
+      ].join('\n'),
+    );
+    const meta = await scanIslandMeta(join(FIXTURES_DIR, 'islands'), [
+      'client-only.ts',
+      'my-counter.ts',
+    ]);
+    assertEquals(meta['client-only'].ssr, false);
+    assertEquals(meta['client-only'].dsd, false);
+    assertEquals(meta['client-only'].hydrate, 'idle');
+    assertEquals(meta['client-only'].reason, 'local island exports less.ssr=false');
+    assertEquals(meta['my-counter'], undefined);
   });
 
   await t.step('scanIslands - returns empty for non-existent directory', async () => {

@@ -543,8 +543,9 @@ Deno.test('renderEntry: package island with ssr===false excluded from SSR but in
   });
   const code = renderEntry(desc);
 
-  // Package islands are never SSR-registered (they go client-only)
-  assertFalse(code.includes("customElements.define('less-layout'"));
+  // v0.17.4: Package islands with ssr:true are now SSR-registered
+  assertStringIncludes(code, "customElements.define('less-layout'");
+  // Package islands with ssr:false remain client-only
   assertFalse(code.includes("customElements.define('less-widget'"));
   // But both should be in the island map
   assertStringIncludes(code, '"less-layout":"@lessjs/ui/less-layout"');

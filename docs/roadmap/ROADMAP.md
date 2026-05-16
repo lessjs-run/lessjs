@@ -1,171 +1,193 @@
 # LessJS Roadmap
 
-> From Renderer Kernel to General-Purpose WC SSR/SSG Engine + Registry Hub.
-> This document is the single source of truth for version planning.
+> From renderer kernel to Web Components SSR/SSG engine and registry Hub.
+> This document is the source of truth for version planning.
 
 ## Principle
 
-**Near-term fine, far-term coarse.** v0.17 has patch-level SOPs. v0.18+ has
-minor-level goals only — patch breakdowns are written when we get there.
+Near-term versions are patch-level and evidence-driven. Far-term versions are
+minor-level targets until the previous admission gate is met.
+
+The central rule from v0.17.3 onward:
+
+**LessJS promises deterministic outcomes, not universal magic.** A component is
+SSR-rendered only when a declared adapter or validated package contract makes it
+safe. Otherwise it becomes client-only or fails validation before build output
+is generated.
 
 ## Phase Overview
 
-| Phase | Version | Name                   | Goal                                                               | Est. Sessions | Status |
-| ----- | ------- | ---------------------- | ------------------------------------------------------------------ | ------------- | ------ |
-| 1     | v0.15.x | Renderer Kernel        | Structured render output, error taxonomy, build report             | 6 (done)      | Done   |
-| 2     | v0.16.x | WC Package Protocol    | CEM manifest + local registry                                      | 4 (done)      | Done   |
-| 3     | v0.17.x | Ecosystem Entry        | Manifest-native pipeline, cross-runtime, CLI tooling               | 6-10          | Next   |
-| 4     | v0.18.x | Universal WC Engine    | CEM parser, third-party WC SSR fallback, zero-config SSG/SSR       | 10-14         | Far    |
-| 5     | v0.19.x | Platform + Hub         | Registry Hub, search, snapshots, Edge rendering, scoped registries | 12-16         | Far    |
-| 6     | v1.0.x  | General-Purpose Engine | Any CEM manifest WC package → automatic SSR/SSG, API freeze        | 12+           | Vision |
+| Phase | Version | Name                | Goal                                                           | Status  |
+| ----- | ------- | ------------------- | -------------------------------------------------------------- | ------- |
+| 1     | v0.15.x | Renderer Kernel     | Structured render output, hooks, build report                  | Done    |
+| 2     | v0.16.x | WC Package Protocol | Manifest + local registry                                      | Done    |
+| 3     | v0.17.x | Ecosystem Entry     | Manifest-native pipeline, filtering, multi-adapter boundary    | Active  |
+| 4     | v0.18.x | Universal WC Engine | CEM parser, compatibility tiers, validation CLI, safe add flow | Planned |
+| 5     | v0.19.x | Registry Hub MVP    | Searchable validated package index with reports and snapshots  | Planned |
+| 6     | v1.0.x  | Stable Engine       | API freeze and deterministic package admission guarantees      | Vision  |
 
-## Phase 1: Renderer Kernel (v0.15.x) — Done
+## Compatibility Admission Model
 
-Delivered across v0.15.1, v0.15.2, v0.15.3:
+| Package/component state                                     | Outcome                                       | Build behavior                                                |
+| ----------------------------------------------------------- | --------------------------------------------- | ------------------------------------------------------------- |
+| Less manifest says `ssr: true` and a renderer can handle it | SSR/SSG                                       | Render through declared adapter                               |
+| Less manifest says `ssr: false`                             | Client-only                                   | Do not import/register in SSR bundle; emit hydration metadata |
+| CEM exists but no Less SSR declaration exists               | Client-only by default                        | Validate metadata, do not assume SSR                          |
+| No CEM and no Less manifest                                 | Reject or require manual config               | Avoid guessing package shape                                  |
+| Duplicate custom-element tags                               | Reject unless scoped registry support applies | Avoid global registry conflict                                |
+| Browser-only render dependency is detected                  | Client-only or explicit experimental path     | Report reason in diagnostics                                  |
+| DOM simulation is enabled                                   | Experimental opt-in                           | Timeout-bound, isolated, and reported                         |
 
-- `RenderOutput` + `RenderError` + `HydrationHint` structured types
+## Phase 1: Renderer Kernel (v0.15.x) - Done
+
+Delivered across v0.15.1, v0.15.2, and v0.15.3:
+
+- `RenderOutput`, `RenderError`, and `HydrationHint` structured types
 - `RendererProtocol` with named adapters
-- `RenderHooks` lifecycle (beforeRender / afterRender / onError)
-- `render-dsd.ts` split into 4 focused modules
-- `DsdBuildReport` + `dsd-report.json` written after SSG
+- `RenderHooks` lifecycle
+- `render-dsd.ts` split into focused modules
+- `DsdBuildReport` and `dsd-report.json`
 - `SsgPageOutput` structured return from `renderRoute()`
-- 7-gate release pipeline (fmt / lint / typecheck / audit / test / build / e2e)
+- repeatable release gate: fmt, lint, typecheck, audit, test, build, e2e
 
-Exit criteria: all met. 505 unit tests + 92 e2e tests passing.
+Exit criteria: met.
 
-## Phase 2: WC Package Protocol (v0.16.x) — Done
+## Phase 2: WC Package Protocol (v0.16.x) - Done
 
-**Goal**: LessJS can describe WC packages as data (manifest) instead of only
-executing package code. The local registry provides validation and indexing.
+Goal: LessJS can describe WC packages as data instead of only executing package
+code. The local registry validates and indexes package metadata.
 
 Patch breakdown: see [v0.16.md](./v0.16.md).
 
-| Patch   | Main outcome                                                              | Sessions |
-| ------- | ------------------------------------------------------------------------- | -------- |
-| v0.16.0 | `LessPackageManifest` + `LessRegistry` + validate + `@lessjs/ui` manifest | 3-4      |
+Exit criteria: manifest + registry shipped; legacy `PackageIslandMeta`
+removed in later v0.17 work.
 
-Exit criteria: all met. `PackageIslandMeta` deprecated, manifest + registry
-shipped, 526 tests + 90 e2e passing.
+## Phase 3: Ecosystem Entry (v0.17.x) - Active
 
-## Phase 3: Ecosystem Entry (v0.17.x) — Next
+Goal: make the pipeline manifest-native and prove that multiple rendering
+families can coexist without overclaiming third-party compatibility.
 
-**Goal**: Eliminate backward compat layer. Pipeline is manifest-native.
-Cross-runtime support. CLI tooling foundation.
+| Patch   | Main outcome                          | Admission gate                                                                                 |
+| ------- | ------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| v0.17.0 | Manifest-native adapter-vite pipeline | No legacy `PackageIslandMeta` in runtime path                                                  |
+| v0.17.1 | Cross-runtime adapter-vite hardening  | No hard Deno-only process/runtime assumptions                                                  |
+| v0.17.2 | SSR filtering + report visibility     | `ssr: false` decisions are visible in build reports                                            |
+| v0.17.3 | Vanilla + React adapters              | Multi-adapter works for declared renderers; third-party UI libs are not automatically SSR-safe |
+| v0.17.4 | Compatibility boundary hardening      | Local island metadata controls SSR imports before bundle generation                            |
 
-| Patch   | Main outcome                                                                           | Est. Sessions |
-| ------- | -------------------------------------------------------------------------------------- | ------------- |
-| v0.17.0 | Delete `PackageIslandMeta`, manifest-native adapter-vite pipeline, SSR-aware rendering | 5-6           |
-| v0.17.1 | Cross-runtime adapter-vite (Deno → process.platform/process.exit), build + e2e gates   | 1-2           |
-| v0.17.2 | SSR filtering (`less.ssr: false`) + `dsd-report.json` manifest decisions               | 2-3           |
-| v0.17.3 | Multi-framework adapters (adapter-vanilla enhanced, adapter-react)                     | 3-4           |
+v0.17.4 is complete and now provides the cleanup boundary before v0.18:
 
-Exit criteria:
+- local island `less.ssr === false` is read before SSR entry generation
+- client-only modules are not imported or registered in the SSR bundle
+- package-level SSR is opt-in unless a validated manifest says otherwise
+- nested custom-element rendering respects client-only decisions
+- `dsd-report.json` records admission decisions with reasons
 
-- Zero `PackageIslandMeta` references in the codebase.
-- adapter-vite runs under Deno, Node.js, and Bun (no hard `Deno.*` calls).
-- SSR-aware rendering driven by manifest flags.
-- All CI gates green.
+## Phase 4: Universal WC Engine (v0.18.x) - Planned
 
-Key uncertainty: What percentage of open-source WC packages support SSR?
-This determines how much fallback logic is needed in v0.18.
+Goal: make third-party WC packages installable and renderable through explicit
+compatibility tiers.
 
-## Phase 4: Universal WC Engine (v0.18.x) — Far
+Planned patch ladder:
 
-**Goal**: Any WC package with a CEM manifest gets automatic SSR/SSG rendering.
-LessJS becomes a general-purpose rendering engine, not just a framework for
-its own packages.
+| Patch   | Main outcome                     | Admission gate                                                         |
+| ------- | -------------------------------- | ---------------------------------------------------------------------- |
+| v0.18.0 | CEM parser + compatibility tiers | CEM is parsed, but unknown packages default to client-only             |
+| v0.18.1 | `less validate-manifest`         | Invalid, ambiguous, unsafe, and unsupported packages fail before build |
+| v0.18.2 | `less add` dry-run/install       | Install flow updates config only after validation passes               |
+| v0.18.3 | DOM simulation prototype         | Explicit opt-in only; timeout-bound and reported                       |
 
-Planned capabilities:
+v0.18 must not claim that "any CEM package SSRs." The stronger and realistic
+claim is:
 
-- CEM manifest parser — read standard `custom-elements.json` from any WC package
-- Third-party WC SSR fallback strategies:
-  - `dsd: true` → include in SSR bundle, render with `renderDSD()`
-  - `dsd: false` → pure-island path, client-only
-  - No manifest → conservative fallback (pure-island, no SSR)
-- `less add @third-party/wc-button` — package discovery, registration, and rendering
-- `less validate-manifest` — validate any package's CEM manifest
-- Zero-config SSG/SSG for any compliant WC package
+> Any package with enough validated metadata gets a deterministic outcome:
+> SSR/SSG, client-only fallback, or actionable rejection.
 
-Exit criteria:
+Primary validation targets:
 
-- `less add @shoelace-style/button && deno task build` produces SSR HTML.
-- Third-party packages without SSR support degrade gracefully (pure-island).
-- Invalid manifests fail before code generation with actionable errors.
+- LessJS packages and examples
+- vanilla Web Components with `render(): string`
+- React-wrapped Web Components through `@lessjs/adapter-react`
+- selected third-party WC libraries, initially as compatibility fixtures rather
+  than marketing claims
 
-Key uncertainty: CEM manifest adoption rate in the WC ecosystem. Shoelace is
-the primary validation target; broader coverage depends on community adoption.
+## Phase 5: Registry Hub MVP (v0.19.x) - Planned
 
-## Phase 5: Platform + Hub (v0.19.x) — Far
+Goal: move from local registry to a public, searchable registry index that is
+fed by validation artifacts.
 
-**Goal**: From local registry to public registry with quality data.
-Hub lives in the main LessJS repository (monorepo) until scale demands
-separation.
+MVP scope:
 
-Planned capabilities:
+- package search and detail pages
+- manifest/compatibility report ingestion
+- SSR/SSG snapshot previews only for packages that pass admission
+- bundle size and hydration metadata
+- security/audit status from lockfiles and package metadata
+- duplicate tag and version conflict reporting
+- v0.19.1 previews and quality gates after ingestion is stable
 
-- Hub Web service (API + search + browse) — in `packages/hub/`
-- Per-package SSR/SSG snapshot previews
-- Bundle cost analysis (KB per component)
-- Version conflict detection across packages
-- Security audit (dependency scanning, CVE marking)
-- Publisher authentication + package signing
-- Scoped Custom Element Registries (multi-version tag isolation)
-- Edge runtime rendering (Deno Deploy, Cloudflare Workers, Vercel Edge)
-- Design system CI/CD integration (`less validate` + `less build-snapshot` in CI)
+Deferred until after MVP:
 
-Exit criteria:
+- publisher accounts
+- package signing
+- scoped Custom Element Registries
+- edge rendering support
+- plugin marketplace
 
-- `less search button` returns packages with SSR preview and quality score.
-- `less audit @pkg/name` reports security and compatibility status.
-- Scoped registries isolate conflicting tag names from different packages.
-- At least 2 Edge runtimes supported.
+Hub rule:
 
-Key uncertainty: Hub requires Web infrastructure (Deno Deploy/Edge, storage,
-CI/CD). Not a pure code project — involves ops, security policy, and ongoing
-cost. Monorepo keeps dogfooding tight; split when deployment rhythm diverges.
+**The Hub does not execute arbitrary packages as a trust decision. It displays
+validation output produced by the engine and its CI jobs.**
 
-## Phase 6: General-Purpose Engine (v1.0) — Vision
+## Phase 6: Stable Engine (v1.0) - Vision
 
-**Goal**: Any CEM manifest WC package gets automatic SSR/SSG, zero config.
-API freeze — no breaking changes without major version bump.
+Goal: freeze the public API and support Web Components through stable package
+admission guarantees.
 
-This is the "standard, not tool" milestone. LessJS becomes the rendering
-kernel that any WC ecosystem can plug into.
+v1.0 should promise:
 
-Planned capabilities:
+- stable renderer protocol
+- stable manifest/compatibility schema
+- stable `dsd-report.json` schema
+- stable client-only fallback behavior
+- stable `less add` and `less validate-manifest` flows
+- documented package compatibility tiers
 
-- Zero-config SSR/SSG for any CEM manifest WC package
-- Plugin system (custom adapters, validators, renderers)
-- Full a11y audit integration
-- Performance regression tracking per package version
-- Plugin marketplace (hosted on Hub)
+v1.0 should not promise:
 
-Exit criteria:
+- SSR for every CEM package
+- browser-equivalent DOM simulation
+- automatic safe execution of arbitrary package code
+- public Hub marketplace maturity
 
-- `less init && less add @shoelace-style/button && deno task build` produces
-  SSR HTML with no manual configuration.
-- v1.0 API freeze — no breaking changes without major version bump.
-- Hub is operational with search, snapshots, and security reports.
+v1.0 exit criteria:
+
+- `less init && less add <validated-package> && deno task build` produces
+  either SSR/SSG output or a documented client-only fallback with no manual
+  patching.
+- all exported APIs are documented with stability level
+- v0.x migration guide exists
+- validation, report, and add/install flows are covered by tests
+- no breaking changes after v1.0 without a major version bump
 
 ## Cross-Phase Concerns
 
-These are not versioned but tracked across all phases:
-
-| Concern                    | Current State                                   | Target                  |
-| -------------------------- | ----------------------------------------------- | ----------------------- |
-| Documentation sync         | README versions stale, nav 404s                 | Auto-sync on release    |
-| Test coverage              | 522 unit + e2e                                  | 80%+ on core + registry |
-| Open source governance     | Missing CODE_OF_CONDUCT, CONTRIBUTING, SECURITY | Complete before v0.18   |
-| `deno task check:versions` | Not implemented                                 | Needed before v0.18.0   |
-| Playwright E2E             | Existing baseline                               | Expand per-phase        |
-| Lockfile drift prevention  | Manual `deno install` check                     | `check:versions` script |
+| Concern                      | Current State            | Target                                      |
+| ---------------------------- | ------------------------ | ------------------------------------------- |
+| Third-party UI compatibility | Active v0.17.3 issue     | Admission tiers + client-only fallback      |
+| Documentation sync           | Manual                   | Release checklist and changelog index       |
+| Test coverage                | Strong unit/e2e baseline | Add compatibility fixtures                  |
+| Open source governance       | Partial                  | Complete before public Hub                  |
+| Version checks               | Manual                   | `check:versions` before v0.18               |
+| Security                     | Basic audit              | Package admission and Hub policy            |
+| Build reports                | `dsd-report.json` exists | Include skip reasons and compatibility tier |
 
 ## Document Cross-Reference
 
-| Document Type | Rhythm                                        | Location                |
-| ------------- | --------------------------------------------- | ----------------------- |
-| SOP           | Per patch (near-term) or per minor (far-term) | `docs/sop/`             |
-| ADR           | Decision-driven (not version-bound)           | `docs/adr/`             |
-| Changelog     | Per patch                                     | `docs/changelog/`       |
-| Status        | Always current                                | `docs/status/STATUS.md` |
-| Roadmap       | This document + per-minor detail pages        | `docs/roadmap/`         |
+| Document Type | Rhythm                                  | Location                |
+| ------------- | --------------------------------------- | ----------------------- |
+| SOP           | Per patch near-term; per minor far-term | `docs/sop/`             |
+| ADR           | Decision-driven                         | `docs/adr/`             |
+| Changelog     | Per patch                               | `docs/changelog/`       |
+| Status        | Always current                          | `docs/status/STATUS.md` |
+| Roadmap       | This document + per-minor pages         | `docs/roadmap/`         |

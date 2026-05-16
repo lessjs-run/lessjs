@@ -284,13 +284,13 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
     assertEquals(decisions.length, 3);
   });
 
-  await t.step('ssr: true → renderPath ssr+client', () => {
+  await t.step('package ssr:true is client-only before v0.18 admission', () => {
     const layout = decisions.find((d) => d.tagName === 'less-layout');
     assertExists(layout);
-    assertEquals(layout.ssr, true);
+    assertEquals(layout.ssr, false);
     assertEquals(layout.dsd, true);
     assertEquals(layout.hydrate, 'eager');
-    assertEquals(layout.renderPath, 'ssr+client');
+    assertEquals(layout.renderPath, 'client-only');
     assertEquals(layout.packageName, '@lessjs/ui');
   });
 
@@ -303,11 +303,11 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
     assertEquals(button.renderPath, 'client-only');
   });
 
-  await t.step('undefined ssr → defaults to true → renderPath ssr+client', () => {
+  await t.step('undefined package ssr defaults to client-only', () => {
     const card = decisions.find((d) => d.tagName === 'less-card');
     assertExists(card);
-    assertEquals(card.ssr, true);
-    assertEquals(card.renderPath, 'ssr+client');
+    assertEquals(card.ssr, false);
+    assertEquals(card.renderPath, 'client-only');
   });
 
   // Clean up

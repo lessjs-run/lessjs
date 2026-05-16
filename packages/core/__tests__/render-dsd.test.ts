@@ -529,6 +529,42 @@ Deno.test('renderDSD — edge cases', async (t) => {
     assertStringIncludes(output.html, deepContent);
   });
 
+  await t.step('skips nested client-only tags from global admission set', async () => {
+    registerAdapter(undefined);
+    const previousCustomElements = globalThis.customElements;
+    const previousClientOnly = (globalThis as typeof globalThis & {
+      __LESS_CLIENT_ONLY_TAGS__?: Set<string>;
+    }).__LESS_CLIENT_ONLY_TAGS__;
+    const childCls = createMockClass('<span>should-not-render</span>');
+    const registry = new Map<string, CustomElementConstructor>([
+      ['child-widget', asCtor(childCls)],
+    ]);
+    (globalThis as typeof globalThis & {
+      customElements: CustomElementRegistry;
+      __LESS_CLIENT_ONLY_TAGS__?: Set<string>;
+    }).customElements = {
+      get: (tagName: string) => registry.get(tagName),
+    } as CustomElementRegistry;
+    (globalThis as typeof globalThis & {
+      __LESS_CLIENT_ONLY_TAGS__?: Set<string>;
+    }).__LESS_CLIENT_ONLY_TAGS__ = new Set(['child-widget']);
+
+    try {
+      const parentCls = createMockClass('<div><child-widget></child-widget></div>');
+      const output = await renderDSD('parent-widget', asCtor(parentCls), {});
+      assertStringIncludes(output.html, '<child-widget></child-widget>');
+      assertFalse(output.html.includes('should-not-render'));
+    } finally {
+      (globalThis as typeof globalThis & {
+        customElements?: CustomElementRegistry;
+        __LESS_CLIENT_ONLY_TAGS__?: Set<string>;
+      }).customElements = previousCustomElements;
+      (globalThis as typeof globalThis & {
+        __LESS_CLIENT_ONLY_TAGS__?: Set<string>;
+      }).__LESS_CLIENT_ONLY_TAGS__ = previousClientOnly;
+    }
+  });
+
   await t.step('handles component with very large attribute value', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<div>x</div>');

@@ -225,6 +225,8 @@ export default class ApiConsumer extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
+    // Defer fetch until after first render to avoid Lit update races
+    // inside parent DSD shadow root (H-15).
     this.updateComplete.then(() => this._fetchStatus());
   }
 

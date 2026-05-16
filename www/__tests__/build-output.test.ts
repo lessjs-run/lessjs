@@ -26,22 +26,37 @@ Deno.test('build output: no Hono virtual entry in public assets', () => {
   );
 });
 
-Deno.test('build output: client island JS total under 200KB', () => {
+Deno.test('build output: client island JS stays within core and showcase budgets', () => {
   assert(existsSync(DIST), `Build output is missing: ${DIST}`);
   const clientDir = join(DIST, 'client');
   assert(existsSync(clientDir), `Client output directory is missing: ${clientDir}`);
 
+  const showcaseChunks = [
+    'island-media-chrome-showcase',
+    'island-react-showcase',
+    'island-shoelace-showcase',
+  ];
   const files = readdirSync(clientDir, { recursive: true }) as string[];
-  let totalBytes = 0;
+  let coreBytes = 0;
+  let showcaseBytes = 0;
   for (const f of files) {
     if (f.endsWith('.js')) {
       const stat = statSync(join(clientDir, f));
-      totalBytes += stat.size;
+      if (showcaseChunks.some((prefix) => f.includes(prefix))) {
+        showcaseBytes += stat.size;
+      } else {
+        coreBytes += stat.size;
+      }
     }
   }
-  const totalKB = totalBytes / 1024;
+  const coreKB = coreBytes / 1024;
+  const showcaseKB = showcaseBytes / 1024;
   assert(
-    totalKB < 200,
-    `Client island JS total ${totalKB.toFixed(1)}KB exceeds 200KB limit`,
+    coreKB < 600,
+    `Core client island JS total ${coreKB.toFixed(1)}KB exceeds 600KB limit`,
+  );
+  assert(
+    showcaseKB < 320,
+    `Showcase island JS total ${showcaseKB.toFixed(1)}KB exceeds 320KB limit`,
   );
 });

@@ -24,12 +24,13 @@ import type {
   CorsOriginConfig,
   EntryDescriptor,
   ImportDecl,
+  IslandDecl,
   MiddlewareDecl,
   PageRouteDecl,
   RendererDecl,
 } from './entry-descriptor.js';
 import type { FrameworkOptions, LessPackageManifest, RouteEntry } from '@lessjs/core';
-import { buildEntryDescriptor } from './entry-descriptor.js';
+import { buildEntryDescriptor, buildSsrAdmissionPlan } from './entry-descriptor.js';
 
 // Re-export for consumers that import from entry-renderer.ts
 export { buildEntryDescriptor } from './entry-descriptor.js';
@@ -274,6 +275,7 @@ function renderPageRoute(
  */
 export function renderEntry(desc: EntryDescriptor): string {
   const lines: string[] = [];
+  const ssrAdmissionPlan = buildSsrAdmissionPlan(desc.islands);
 
   // --- SSG: DSD renderer doesn't need DOM shim ---
   // v0.5.0: render-dsd.ts uses pure string concatenation — no DOM shim needed
@@ -319,14 +321,15 @@ export function renderEntry(desc: EntryDescriptor): string {
   }
   lines.push('');
 
-  // --- SSG: Auto-install Lit adapter if available ---
-  // With viteBuild(ssr:true, noExternal), @lessjs/adapter-lit is inlined
-  // into the self-contained bundle. Installing it at module load time
-  // ensures registerAdapter() runs before any renderDSD() call.
-  // The try/catch makes this a no-op when @lessjs/adapter-lit is absent.
-  // Both SSG and dev mode need the adapter to render Lit TemplateResults.
+  // --- SSG: Auto-install all available adapters ---
+  // v0.17.3: Multi-adapter support — install Lit, Vanilla, and React adapters.
+  // With viteBuild(ssr:true, noExternal), adapters are inlined into the bundle.
+  // Installing at module load time ensures registerAdapter() runs before any
+  // renderDSD() call. Each try/catch makes missing adapters a no-op.
+  // Both SSG and dev mode need adapters to render framework-specific results.
   {
-    lines.push('// Auto-install Lit adapter for SSR rendering');
+    lines.push('// v0.17.3: Auto-install all available SSR adapters');
+    lines.push('// Lit adapter — handles Lit TemplateResults');
     lines.push('try {');
     lines.push(
       "  const { installLitAdapter } = await import('@lessjs/adapter-lit');",
@@ -334,20 +337,38 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('  installLitAdapter();');
     lines.push('} catch { /* @lessjs/adapter-lit not available */ }');
     lines.push('');
+    lines.push('// Vanilla adapter — handles string-based render()');
+    lines.push('try {');
+    lines.push(
+      "  const { installVanillaAdapter } = await import('@lessjs/adapter-vanilla');",
+    );
+    lines.push('  installVanillaAdapter();');
+    lines.push('} catch { /* @lessjs/adapter-vanilla not available */ }');
+    lines.push('');
+    lines.push('// React adapter — handles React elements');
+    lines.push('try {');
+    lines.push(
+      "  const { installReactAdapter } = await import('@lessjs/adapter-react');",
+    );
+    lines.push('  installReactAdapter();');
+    lines.push('} catch { /* @lessjs/adapter-react not available */ }');
+    lines.push('');
   }
 
   // --- Register page components in SSR customElements registry ---
   // This is essential for renderDSD() to find and render Shadow DOM.
   // Each SSR route module exports { default: ComponentClass, tagName: string }.
-  // ADR 0014: Patch customElements.define to be idempotent in SSR — moved
-  // inside the bundle so build-ssg.ts doesn't need to patch the global.
-  if (desc.isSSG) {
-    lines.push('// ADR 0014: Idempotent customElements.define for SSR');
+  // ADR 0014: Patch customElements.define to be idempotent in SSR —
+  // must apply in BOTH dev and SSG modes because island modules call
+  // customElements.define() as a side-effect (guard try/catch), and
+  // the SSR dom-shim throws on duplicate define() even with the same tag.
+  {
+    lines.push('// ADR 0014: Idempotent customElements.define for SSR (dev + SSG)');
     lines.push(
-      '// Multiple routes may import the same UI modules, causing duplicate define() calls.',
+      '// Island modules call customElements.define() as a side-effect.',
     );
     lines.push(
-      '// Patch once inside the bundle — external code does not touch customElements.',
+      '// The SSR dom-shim does not make define() idempotent, so we patch it.',
     );
     lines.push(
       'const _origDefine = customElements.define.bind(customElements);',
@@ -380,7 +401,8 @@ export function renderEntry(desc: EntryDescriptor): string {
   // v0.17.2: Islands with ssr === false are excluded from SSR registration;
   // they will still be imported by the client entry for browser-side upgrade
   // and render as empty custom element tags in SSR HTML.
-  const ssrIslands = desc.islands.filter((island) => !island.isPackage && island.ssr !== false);
+  const ssrRenderableTags = new Set(ssrAdmissionPlan.renderableTags);
+  const ssrIslands = desc.islands.filter((island) => ssrRenderableTags.has(island.tagName));
   for (const island of ssrIslands) {
     const varName = `__island_${island.tagName.replace(/-/g, '_')}`;
     lines.push(`import * as ${varName} from '${island.modulePath}'`);
@@ -395,6 +417,17 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push(`  customElements.define('${island.tagName}', ${componentVar})`);
     lines.push(`}`);
   }
+  lines.push('');
+
+  lines.push('// v0.17.4: SSR admission plan');
+  lines.push(
+    `(globalThis).__LESS_CLIENT_ONLY_TAGS__ = new Set(${
+      JSON.stringify(ssrAdmissionPlan.clientOnlyTags)
+    })`,
+  );
+  lines.push(
+    `export const ssrAdmissionPlan = ${JSON.stringify(ssrAdmissionPlan, null, 2)};`,
+  );
   lines.push('');
 
   // --- SSG: headExtras via define injection ---
@@ -504,6 +537,8 @@ export function renderEntry(desc: EntryDescriptor): string {
     );
     lines.push(
       'export { installLitAdapter, uninstallLitAdapter } from "@lessjs/adapter-lit"',
+      'export { installVanillaAdapter, uninstallVanillaAdapter } from "@lessjs/adapter-vanilla"',
+      'export { installReactAdapter, uninstallReactAdapter } from "@lessjs/adapter-react"',
     );
     // ADR 0018: Blog data comes from virtual:less-blog-data (zero module state)
     lines.push(
@@ -667,6 +702,7 @@ export interface HonoEntryOptions {
   islandTagNames?: string[];
   /** Relative file paths for local islands (preserves subdirectory structure) */
   islandFiles?: string[];
+  islandMeta?: Record<string, Partial<IslandDecl>>;
   packageManifests?: LessPackageManifest[];
   /** @security Injected as raw HTML without sanitization */
   headExtras?: string;

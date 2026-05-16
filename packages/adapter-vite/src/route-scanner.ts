@@ -18,7 +18,7 @@
 import type { LessPackageManifest, RouteEntry, SpecialFileType } from '@lessjs/core';
 import { LessError } from '@lessjs/core/errors';
 import { createLogger } from '@lessjs/core/logger';
-import { readdir, stat } from 'node:fs/promises';
+import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, posix, sep } from 'node:path';
 
 const log = createLogger('core');
@@ -256,6 +256,68 @@ export async function scanIslands(
   return files.sort();
 }
 
+export interface LocalIslandMeta {
+  tagName: string;
+  filePath: string;
+  ssr?: boolean;
+  dsd?: boolean;
+  hydrate?: 'eager' | 'lazy' | 'idle' | 'visible';
+  reason?: string;
+}
+
+function readBooleanMeta(source: string, key: 'ssr' | 'dsd'): boolean | undefined {
+  const match = source.match(new RegExp(`${key}\\s*:\\s*(true|false)`));
+  return match ? match[1] === 'true' : undefined;
+}
+
+function readHydrateMeta(source: string): LocalIslandMeta['hydrate'] | undefined {
+  const match = source.match(/hydrate\s*:\s*['"](eager|lazy|idle|visible)['"]/);
+  return match ? match[1] as LocalIslandMeta['hydrate'] : undefined;
+}
+
+/**
+ * Read static local island metadata without importing island modules.
+ *
+ * Supported form:
+ *   export const less = { ssr: false, dsd: true, hydrate: 'idle' }
+ */
+export async function scanIslandMeta(
+  islandsDir: string,
+  islandFiles: string[],
+): Promise<Record<string, LocalIslandMeta>> {
+  const meta: Record<string, LocalIslandMeta> = {};
+
+  for (const filePath of islandFiles) {
+    const tagName = fileToTagName(filePath);
+    const fullPath = join(islandsDir, filePath);
+    let source = '';
+    try {
+      source = await readFile(fullPath, 'utf-8');
+    } catch (e) {
+      log.debug(
+        `Unable to read island metadata: ${fullPath}${e instanceof Error ? `: ${e.message}` : ''}`,
+      );
+      continue;
+    }
+
+    if (!/export\s+const\s+less\s*=/.test(source)) continue;
+
+    const ssr = readBooleanMeta(source, 'ssr');
+    const dsd = readBooleanMeta(source, 'dsd');
+    const hydrate = readHydrateMeta(source);
+    meta[tagName] = {
+      tagName,
+      filePath,
+      ssr,
+      dsd,
+      hydrate,
+      reason: ssr === false ? 'local island exports less.ssr=false' : undefined,
+    };
+  }
+
+  return meta;
+}
+
 /**
  * Scan package exports for LessPackageManifest.
  * Packages should export a `manifest` LessPackageManifest in their main entry.
@@ -280,6 +342,12 @@ export async function scanPackageManifests(
     try {
       mod = await import(/* @vite-ignore */ pkg) as Record<string, unknown>;
     } catch (e) {
+      if (isBrowserOnlyPackageImportError(e)) {
+        log.warn(
+          `Skipping package manifest from "${pkg}": browser-only package cannot be imported during SSR discovery`,
+        );
+        continue;
+      }
       throw new LessError(
         `Failed to scan package manifest from "${pkg}": ${
           e instanceof Error ? e.message : String(e)
@@ -312,4 +380,11 @@ export async function scanPackageManifests(
   }
 
   return allManifests;
+}
+
+function isBrowserOnlyPackageImportError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return /\b(window|document|HTMLElement|customElements|navigator)\b.*\bis not defined\b/i.test(
+    message,
+  );
 }

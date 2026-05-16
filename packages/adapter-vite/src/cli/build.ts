@@ -14,8 +14,11 @@ import { build as viteBuild } from 'vite';
 import process from 'node:process';
 
 if (import.meta.main) {
-  viteBuild({ configLoader: 'native' }).catch((error) => {
+  try {
+    await viteBuild({ configLoader: 'native' });
+    process.exit(0);
+  } catch (error) {
     console.error('Build failed:', error);
     process.exit(1);
-  });
+  }
 }

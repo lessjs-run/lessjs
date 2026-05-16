@@ -110,6 +110,28 @@ export interface IslandDecl {
   ssr?: boolean;
   /** Whether this island uses Declarative Shadow DOM (from manifest) */
   dsd?: boolean;
+  /** Admission source used by SSR planning. */
+  source?: 'local' | 'package' | 'nested';
+  /** Human-readable admission reason for reports. */
+  reason?: string;
+}
+
+/** One resolved SSR admission decision for an island/custom element tag. */
+export interface SsrAdmissionDecision {
+  tagName: string;
+  modulePath: string;
+  source: 'local' | 'package' | 'nested';
+  renderPath: 'ssr+client' | 'client-only' | 'rejected';
+  reason: string;
+}
+
+/** Build-time plan that decides which tags may enter the SSR bundle. */
+export interface SsrAdmissionPlan {
+  renderableTags: string[];
+  clientOnlyTags: string[];
+  rejectedTags: string[];
+  reasons: Record<string, string>;
+  decisions: SsrAdmissionDecision[];
 }
 
 // ─── Special file declarations (v0.3.0) ─────────────────────────
@@ -177,6 +199,9 @@ export interface EntryDescriptor {
   /** Known islands for runtime upgrade detection */
   islands: IslandDecl[];
 
+  /** SSR admission plan computed before entry code is generated. */
+  ssrAdmissionPlan: SsrAdmissionPlan;
+
   /** Renderer declarations (from _renderer.ts files) — v0.3.0 */
   renderers: RendererDecl[];
 
@@ -211,6 +236,8 @@ export function buildEntryDescriptor(
     islandTagNames?: string[];
     /** Relative file paths for local islands (preserves subdirectory structure) */
     islandFiles?: string[];
+    /** Local island metadata indexed by tag name. */
+    islandMeta?: Record<string, Partial<IslandDecl>>;
     /** Package manifests discovered from npm/JSR packages */
     packageManifests?: LessPackageManifest[];
     /** @security Injected as raw HTML without sanitization */
@@ -354,6 +381,7 @@ export function buildEntryDescriptor(
   // --- Islands ---
   const islandTagNames = options.islandTagNames || [];
   const islandFiles = options.islandFiles || [];
+  const islandMeta = options.islandMeta || {};
   const packageManifests = options.packageManifests || [];
 
   // Local islands — use real file paths when available to support
@@ -364,6 +392,11 @@ export function buildEntryDescriptor(
     modulePath: islandFiles[i]
       ? `/${islandsDir}/${islandFiles[i]}`
       : `/${islandsDir}/${tagName}.ts`,
+    source: 'local',
+    ssr: islandMeta[tagName]?.ssr,
+    dsd: islandMeta[tagName]?.dsd,
+    hydrate: islandMeta[tagName]?.hydrate,
+    reason: islandMeta[tagName]?.reason,
   }));
 
   // Package islands (extracted from LessPackageManifest declarations)
@@ -374,6 +407,7 @@ export function buildEntryDescriptor(
         tagName: d.tagName,
         modulePath: d.less!.module!,
         isPackage: true,
+        source: 'package',
         hydrate: d.less?.hydrate as IslandDecl['hydrate'],
         ssr: d.less?.ssr,
         dsd: d.less?.dsd,
@@ -382,6 +416,7 @@ export function buildEntryDescriptor(
 
   // Merge all islands
   const islands: IslandDecl[] = [...localIslands, ...packageIslandDecls];
+  const ssrAdmissionPlan = buildSsrAdmissionPlan(islands);
 
   // --- Document ---
   const document: DocumentConfig = {
@@ -403,10 +438,76 @@ export function buildEntryDescriptor(
     apiRoutes,
     pageRoutes,
     islands,
+    ssrAdmissionPlan,
     renderers,
     middlewareScopes,
     document,
     upgradeStrategy: options.upgradeStrategy || 'lazy',
     debugRoutes,
   };
+}
+
+export function buildSsrAdmissionPlan(islands: IslandDecl[]): SsrAdmissionPlan {
+  const renderableTags: string[] = [];
+  const clientOnlyTags: string[] = [];
+  const rejectedTags: string[] = [];
+  const reasons: Record<string, string> = {};
+  const decisions: SsrAdmissionDecision[] = [];
+  const seen = new Set<string>();
+
+  for (const island of islands) {
+    const source = island.source || (island.isPackage ? 'package' : 'local');
+
+    if (seen.has(island.tagName)) {
+      const reason = 'duplicate custom element tag';
+      rejectedTags.push(island.tagName);
+      reasons[island.tagName] = reason;
+      decisions.push({
+        tagName: island.tagName,
+        modulePath: island.modulePath,
+        source,
+        renderPath: 'rejected',
+        reason,
+      });
+      continue;
+    }
+    seen.add(island.tagName);
+
+    let renderPath: SsrAdmissionDecision['renderPath'];
+    let reason: string;
+
+    if (island.ssr === false) {
+      renderPath = 'client-only';
+      reason = island.reason || 'less.ssr is false';
+    } else if (source === 'package') {
+      // v0.17.4: Package islands with explicit ssr:true now go through SSR.
+      // This enables DSD output for package islands like less-layout,
+      // which is critical for FCP — styles render before JS upgrade.
+      // Package islands without explicit ssr:true remain client-only.
+      if (island.ssr === true) {
+        renderPath = 'ssr+client';
+        reason = 'package island with less.ssr=true';
+      } else {
+        renderPath = 'client-only';
+        reason = 'package island has no validated SSR capability';
+      }
+    } else {
+      renderPath = 'ssr+client';
+      reason = island.ssr === true ? 'less.ssr is true' : 'local island default SSR path';
+    }
+
+    if (renderPath === 'ssr+client') renderableTags.push(island.tagName);
+    if (renderPath === 'client-only') clientOnlyTags.push(island.tagName);
+
+    reasons[island.tagName] = reason;
+    decisions.push({
+      tagName: island.tagName,
+      modulePath: island.modulePath,
+      source,
+      renderPath,
+      reason,
+    });
+  }
+
+  return { renderableTags, clientOnlyTags, rejectedTags, reasons, decisions };
 }

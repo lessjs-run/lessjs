@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/signals",
-  "version": "0.17.0",
+  "version": "0.17.4",
   "exports": {
     ".": "./src/index.ts"
   },

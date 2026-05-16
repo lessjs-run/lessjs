@@ -22,9 +22,17 @@ export default defineConfig({
       html: {
         title: 'LessJS',
       },
-      packageIslands: ['@lessjs/ui'],
+      packageIslands: ['@lessjs/ui', '@shoelace-style/shoelace'],
       ssr: {
-        noExternal: ['@lessjs/ui'],
+        noExternal: [
+          '@lessjs/ui',
+          '@lessjs/adapter-react',
+          '@lessjs/adapter-vanilla',
+          '@shoelace-style/shoelace',
+          'media-chrome',
+          'react',
+          'react-dom',
+        ],
       },
       pwa: {
         name: 'LessJS Framework — Less is More',
