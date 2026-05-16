@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/rpc",
-  "version": "0.14.11",
+  "version": "0.15.0",
   "exports": {
     ".": "./src/index.ts"
   },
@@ -8,11 +8,21 @@
     "build": "deno check src/index.ts"
   },
   "publish": {
-    "include": ["src/**", "deno.json", "README.md", "LICENSE"]
+    "include": [
+      "src/**",
+      "deno.json",
+      "README.md",
+      "LICENSE"
+    ]
   },
   "compilerOptions": {
     "skipLibCheck": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

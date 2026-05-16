@@ -1,21 +1,31 @@
 {
   "name": "@lessjs/i18n",
-  "version": "0.14.11",
+  "version": "0.15.0",
   "exports": {
     ".": "./src/index.ts"
   },
   "imports": {
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.14.11/logger",
-    "@lessjs/core/build-types": "jsr:@lessjs/core@^0.14.11/build-types",
-    "@lessjs/core/virtual-ids": "jsr:@lessjs/core@^0.14.11/virtual-ids",
+    "@lessjs/core/logger": "jsr:@lessjs/core@^0.15.0/logger",
+    "@lessjs/core/build-types": "jsr:@lessjs/core@^0.15.0/build-types",
+    "@lessjs/core/virtual-ids": "jsr:@lessjs/core@^0.15.0/virtual-ids",
     "vite": "npm:vite@8.0.10"
   },
   "publish": {
-    "include": ["src/**", "deno.json", "README.md", "LICENSE"]
+    "include": [
+      "src/**",
+      "deno.json",
+      "README.md",
+      "LICENSE"
+    ]
   },
   "compilerOptions": {
     "skipLibCheck": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

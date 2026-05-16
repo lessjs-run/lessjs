@@ -1,20 +1,32 @@
 {
   "name": "@lessjs/signals",
-  "version": "0.14.11",
+  "version": "0.15.0",
   "exports": {
     ".": "./src/index.ts"
   },
   "publish": {
-    "include": ["src/**", "deno.json", "README.md", "LICENSE"]
+    "include": [
+      "src/**",
+      "deno.json",
+      "README.md",
+      "LICENSE"
+    ]
   },
   "compilerOptions": {
     "skipLibCheck": true
   },
   "lint": {
     "rules": {
-      "exclude": ["no-explicit-any"]
+      "exclude": [
+        "no-explicit-any"
+      ]
     }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

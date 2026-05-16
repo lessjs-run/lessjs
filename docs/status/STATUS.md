@@ -2,7 +2,7 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version: 0.14.11
+## Current Version: 0.15.0
 
 ## Branch Status
 
@@ -32,11 +32,11 @@
 
 ## In Progress
 
-- None
+- v0.15 Renderer Kernel (Phase 4-6 remaining: DSD report, create CLI fix, tests)
 
-## Next Target: v0.15 Renderer Kernel & Release Parity
+## Next Target: v0.16 WC Package Protocol
 
-Per ADR-0024 and roadmap: adapter contract, DSD metrics, create CLI fix, release parity checks.
+Per ADR-0024: extend PackageIslandMeta toward CEM-compatible package manifest.
 
 ## JSR Publish Order
 
