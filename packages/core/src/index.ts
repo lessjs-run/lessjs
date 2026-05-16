@@ -35,7 +35,11 @@ export { camelToKebab } from './render-serialize.js';
 export { getAdapter, getRegisteredAdapters, registerAdapter } from './adapter-registry.js';
 export type {
   ComponentLayer,
+  DsdBuildReport,
+  DsdHydrationHintSummary,
+  DsdMetricsSummary,
   DsdOptions,
+  DsdPageDiagnostics,
   HydrateEventDescriptor,
   HydrationHint,
   RendererProtocol,

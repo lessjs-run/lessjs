@@ -570,14 +570,14 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('}');
     lines.push('');
 
-    // --- renderRoute: path + options → full HTML ---
+    // --- renderRoute: path + options → structured output ---
     lines.push('/**');
-    lines.push(' * Render a route to complete HTML (ADR 0014).');
+    lines.push(' * Render a route to structured output with diagnostics (ADR 0014, v0.15.3).');
     lines.push(
-      ' * Uses customElements + renderDSD + wrapInDocument internally.',
+      ' * Returns { html, errors, hydrationHints, componentCount, renderTimeMs }.',
     );
     lines.push(
-      ' * Caller does not need to know tagName, ComponentClass, or renderDSD.',
+      ' * Caller can inspect errors/hints for observability or use .html for output.',
     );
     lines.push(' */');
     lines.push('export async function renderRoute(routePath, options = {}) {');
@@ -591,15 +591,16 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('  const props = { ...params };');
     lines.push('  if (locale) props.locale = locale;');
     lines.push(
-      '  const html = (await renderDSDByName(info.tagName, props, { route: routePath, source: info.tagName })).html;',
+      '  const dsdOutput = await renderDSDByName(info.tagName, props, { route: routePath, source: info.tagName });',
     );
+    lines.push('  const html = dsdOutput.html;');
     lines.push('  let content = html;');
     lines.push('  for (const renderer of __matchingRenderers(routePath)) {');
     lines.push(
       '    content = await renderer.wrap(content, __rendererContext(routePath, params));',
     );
     lines.push('  }');
-    lines.push('  return wrapInDocument(content, {');
+    lines.push('  const fullHtml = wrapInDocument(content, {');
     lines.push('    title: title || "LessJS",');
     lines.push('    lang: lang || locale || "en",');
     lines.push(
@@ -609,6 +610,13 @@ export function renderEntry(desc: EntryDescriptor): string {
       `    allowHeadExtrasScripts: ${JSON.stringify(desc.document.allowHeadExtrasScripts)},`,
     );
     lines.push('  });');
+    lines.push('  return {');
+    lines.push('    html: fullHtml,');
+    lines.push('    errors: dsdOutput.errors,');
+    lines.push('    hydrationHints: dsdOutput.hydrationHints,');
+    lines.push('    componentCount: 1,');
+    lines.push('    renderTimeMs: dsdOutput.metrics.renderTimeMs,');
+    lines.push('  };');
     lines.push('}');
     lines.push('');
 

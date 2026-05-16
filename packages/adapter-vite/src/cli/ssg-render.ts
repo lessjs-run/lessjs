@@ -20,6 +20,7 @@ import {
   writeFileSync,
 } from 'node:fs';
 import type { LessBuildContext } from '../build-context.js';
+import type { HydrationHint, RenderError } from '@lessjs/core';
 import { createLogger } from '@lessjs/core/logger';
 import { stableHash } from '../island-manifest.js';
 
@@ -52,6 +53,20 @@ function escapeAttr(str: string): string {
 
 // ─── Types ──────────────────────────────────────────────────────
 
+/** Per-page render diagnostics returned by renderRoute() */
+export interface SsgPageOutput {
+  /** Rendered HTML string */
+  html: string;
+  /** Render errors collected during rendering */
+  errors: RenderError[];
+  /** Hydration hints collected during rendering */
+  hydrationHints: HydrationHint[];
+  /** Number of DSD components rendered on this page */
+  componentCount: number;
+  /** Total render time for all components on this page (ms) */
+  renderTimeMs: number;
+}
+
 export interface SsrBundle {
   default: unknown;
   routeInfo?: Array<{
@@ -63,7 +78,7 @@ export interface SsrBundle {
   renderRoute?: (
     path: string,
     opts?: Record<string, unknown>,
-  ) => Promise<string>;
+  ) => Promise<SsgPageOutput>;
   getStaticPaths?: (path: string) => Promise<Array<Record<string, string>>>;
   posts?: unknown[];
   [key: string]: unknown;
@@ -169,6 +184,33 @@ export async function ssgRender(
   const outDir = options.outDir || 'dist';
   const basePath = options.base || '/';
 
+  // ── Report collection (v0.15.3: dsd-report.json) ──────────────
+  const pageDiagnostics: Array<{
+    path: string;
+    errors: RenderError[];
+    hydrationHints: HydrationHint[];
+    componentCount: number;
+    renderTimeMs: number;
+  }> = [];
+
+  function collectPageOutput(
+    routePath: string,
+    output: SsgPageOutput | string,
+  ): string {
+    // Backward compat: renderRoute may return string from older bundles
+    const html = typeof output === 'string' ? output : output.html;
+    if (typeof output !== 'string') {
+      pageDiagnostics.push({
+        path: routePath,
+        errors: output.errors,
+        hydrationHints: output.hydrationHints,
+        componentCount: output.componentCount,
+        renderTimeMs: output.renderTimeMs,
+      });
+    }
+    return html;
+  }
+
   // ── Dynamic route expansion via bundle.getStaticPaths() ──────
   const routeInfo = (module.routeInfo ?? []) as Array<{
     path: string;
@@ -177,7 +219,7 @@ export async function ssgRender(
     paramNames: string[];
   }>;
   const renderRoute = module.renderRoute as
-    | ((path: string, opts?: Record<string, unknown>) => Promise<string>)
+    | ((path: string, opts?: Record<string, unknown>) => Promise<SsgPageOutput>)
     | undefined;
   const getStaticPaths = module.getStaticPaths as
     | ((path: string) => Promise<Array<Record<string, string>>>)
@@ -230,12 +272,13 @@ export async function ssgRender(
         }
 
         try {
-          const html = await renderRoute(route.path, {
+          const output = await renderRoute(route.path, {
             params,
             title: options.html?.title,
             lang: options.html?.lang,
             headExtras: options.headExtras,
           });
+          const html = collectPageOutput(resolvedPath, output);
 
           const outputDir = join(root, outDir);
           const pageDir = join(outputDir, resolvedPath);
@@ -382,13 +425,14 @@ export async function ssgRender(
             }
             const localePath = joinUrlPath(locale, resolvedPath);
             try {
-              const html = await renderRoute(route.path, {
+              const output = await renderRoute(route.path, {
                 params,
                 locale,
                 title: options.html?.title,
                 lang: locale,
                 headExtras: options.headExtras,
               });
+              const html = collectPageOutput(localePath, output);
               const pageDir = join(outputDir, localePath);
               mkdirSync(pageDir, { recursive: true });
               writeFileSync(join(pageDir, 'index.html'), html, 'utf-8');
@@ -576,4 +620,57 @@ async function networkFirst(req) {
   } catch {
     log.debug('Sitemap generation skipped or failed');
   }
+
+  // ── dsd-report.json (v0.15.3) ──────────────────────────────────
+  const totalErrors = pageDiagnostics.reduce((sum, p) => sum + p.errors.length, 0);
+  const totalComponents = pageDiagnostics.reduce((sum, p) => sum + p.componentCount, 0);
+  const totalRenderTimeMs = pageDiagnostics.reduce((sum, p) => sum + p.renderTimeMs, 0);
+  const totalTemplateSize = pageDiagnostics.reduce(
+    (sum, p) => sum + p.hydrationHints.length, // proxy — exact size from collector
+    0,
+  );
+  const errorComponentCount = pageDiagnostics.filter((p) => p.errors.length > 0).length;
+  const maxNestingDepth = 0; // Determined from collector, not per-page
+  const interactiveCount = pageDiagnostics.reduce(
+    (sum, p) => sum + p.hydrationHints.filter((h) => h.layer === 'dsd-interactive').length,
+    0,
+  );
+  const pureIslandCount = pageDiagnostics.reduce(
+    (sum, p) => sum + p.hydrationHints.filter((h) => h.layer === 'pure-island').length,
+    0,
+  );
+  const totalHints = pageDiagnostics.reduce((sum, p) => sum + p.hydrationHints.length, 0);
+
+  const report: import('@lessjs/core').DsdBuildReport = {
+    reportVersion: '1.0.0',
+    timestamp: new Date().toISOString(),
+    totalPages: pageDiagnostics.length,
+    totalErrors,
+    renderErrors: pageDiagnostics.map((p) => ({
+      path: p.path,
+      errors: p.errors,
+      hydrationHints: p.hydrationHints,
+      componentCount: p.componentCount,
+      renderTimeMs: p.renderTimeMs,
+    })),
+    metricsSummary: {
+      totalComponents,
+      totalRenderTimeMs,
+      avgRenderTimeMs: totalComponents > 0
+        ? Math.round(totalRenderTimeMs / totalComponents * 100) / 100
+        : 0,
+      totalTemplateSize,
+      maxNestingDepth,
+      errorComponentCount,
+    },
+    hydrationHintSummary: {
+      totalHints,
+      interactiveCount,
+      pureIslandCount,
+    },
+  };
+
+  const reportPath = join(outputDir, 'dsd-report.json');
+  writeFileSync(reportPath, JSON.stringify(report, null, 2), 'utf-8');
+  log.info(`DSD report → ${reportPath} (${pageDiagnostics.length} pages, ${totalErrors} errors)`);
 }

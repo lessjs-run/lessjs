@@ -2,42 +2,41 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version: 0.15.2
+## Current Version: 0.15.3
 
 ## Branch Status
 
-| Branch        | HEAD      | Status             |
-| ------------- | --------- | ------------------ |
-| `origin/dev`  | pending   | v0.15.2 release    |
-| `origin/main` | `d7571b3` | Behind dev (v0.14) |
+| Branch        | HEAD      | Status          |
+| ------------- | --------- | --------------- |
+| `origin/dev`  | pending   | v0.15.3 release |
+| `origin/main` | `32f3579` | v0.15.2 merged  |
 
 ## Tags
 
 | Tag      | Commit    | Date       |
 | -------- | --------- | ---------- |
-| v0.15.2  | pending   | 2026-05-16 |
+| v0.15.3  | pending   | 2026-05-16 |
+| v0.15.2  | `64dadd8` | 2026-05-16 |
 | v0.15.1  | `dd36eea` | 2026-05-16 |
 | v0.14.11 | `32dcc7c` | 2026-05-16 |
-| v0.14.10 | `0c4264e` | 2026-05-16 |
 
-## Last Release: 0.15.2 (2026-05-16)
+## Last Release: 0.15.3 (2026-05-16)
 
-- `renderDSD()` returns `Promise<RenderOutput>` instead of `Promise<string>`.
-- `RenderHooks` pipeline: `beforeRender`, `afterRender`, `onError` wired into render pipeline.
-- Nested render errors and hydration hints propagate up to parent `RenderOutput`.
-- `renderDSDByName()` returns `Promise<RenderOutput>`.
-- All callers updated to destructure `out.html`.
-- New test coverage for hooks (success, failure, undefined).
+- `dsd-report.json` written to SSG output directory after rendering.
+- New types: `DsdBuildReport`, `DsdPageDiagnostics`, `DsdMetricsSummary`, `DsdHydrationHintSummary`.
+- `SsrBundle.renderRoute()` returns `SsgPageOutput` (structured) instead of `string`.
+- `collectPageOutput()` provides backward compat for string-only returns.
+- Integration tests for report shape, diagnostics collection, and backward compat.
+- Release gate: all 7 checks pass (fmt, lint, typecheck, audit, test, build, e2e).
 
 ## Known Issues
 
 - 3 JSR `unanalyzable-dynamic-import` warnings in adapter-vite (expected, runtime-only deps, not blocking publish)
-- Full `deno task fmt:check` is currently blocked by pre-existing v0.16 planning document formatting diffs.
 
 ## In Progress
 
-- v0.15.2 RenderOutput + RenderHooks complete on dev.
-- v0.15.3 DSD Report + Release Gate is the next implementation step.
+- v0.15.3 DSD Report + Release Gate complete on dev.
+- v0.16.0 Package Protocol is the next implementation step.
 
 ## Version Ladder
 
@@ -45,8 +44,8 @@
 | ------- | ---------------------------------------------------- | --------------------------------- | ------- |
 | v0.15.1 | `docs/sop/v0.15.1-audit-gates.md`                    | Security and test gates           | ✅ Done |
 | v0.15.2 | `docs/sop/v0.15.2-render-output-hooks.md`            | `RenderOutput` + `RenderHooks`    | ✅ Done |
-| v0.15.3 | `docs/sop/v0.15.3-dsd-report-and-release-gate.md`    | `dsd-report.json` + release gate  | Next    |
-| v0.16.0 | `docs/sop/v0.16.0-package-protocol.md`               | CEM manifest + local registry     | —       |
+| v0.15.3 | `docs/sop/v0.15.3-dsd-report-and-release-gate.md`    | `dsd-report.json` + release gate  | ✅ Done |
+| v0.16.0 | `docs/sop/v0.16.0-package-protocol.md`               | CEM manifest + local registry     | Next    |
 | v0.16.1 | `docs/sop/v0.16.1-build-time-package-integration.md` | Manifest-driven build integration | —       |
 
 ## JSR Publish Order

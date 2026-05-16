@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/adapter-vite",
-  "version": "0.15.2",
+  "version": "0.15.3",
   "exports": {
     ".": "./src/index.ts",
     "./build-context": "./src/build-context.ts",
@@ -10,13 +10,13 @@
     "./cli/build-ssg": "./src/cli/build-ssg.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.15.2",
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.15.2/logger",
-    "@lessjs/core/errors": "jsr:@lessjs/core@^0.15.2/errors",
-    "@lessjs/core/context": "jsr:@lessjs/core@^0.15.2/context",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.15.2/navigation",
-    "@lessjs/core/build-types": "jsr:@lessjs/core@^0.15.2/build-types",
-    "@lessjs/core/virtual-ids": "jsr:@lessjs/core@^0.15.2/virtual-ids",
+    "@lessjs/core": "jsr:@lessjs/core@^0.15.3",
+    "@lessjs/core/logger": "jsr:@lessjs/core@^0.15.3/logger",
+    "@lessjs/core/errors": "jsr:@lessjs/core@^0.15.3/errors",
+    "@lessjs/core/context": "jsr:@lessjs/core@^0.15.3/context",
+    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.15.3/navigation",
+    "@lessjs/core/build-types": "jsr:@lessjs/core@^0.15.3/build-types",
+    "@lessjs/core/virtual-ids": "jsr:@lessjs/core@^0.15.3/virtual-ids",
     "esbuild": "npm:esbuild@^0.25",
     "hono": "npm:hono@^4",
     "@hono/vite-dev-server": "npm:@hono/vite-dev-server@^0.25.3",

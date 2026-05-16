@@ -495,6 +495,77 @@ export interface DsdReport {
   maxNestingDepth: number;
 }
 
+/**
+ * Per-page render diagnostics collected during SSG build.
+ * One entry per rendered page/route.
+ */
+export interface DsdPageDiagnostics {
+  /** Route path or URL path of the rendered page */
+  path: string;
+  /** Render errors collected from all components on this page */
+  errors: RenderError[];
+  /** Hydration hints collected from all components on this page */
+  hydrationHints: HydrationHint[];
+  /** Number of DSD components rendered on this page */
+  componentCount: number;
+  /** Total render time for all components on this page (ms) */
+  renderTimeMs: number;
+}
+
+/**
+ * Metrics summary aggregated across all pages in the SSG build.
+ */
+export interface DsdMetricsSummary {
+  /** Total number of DSD components rendered across all pages */
+  totalComponents: number;
+  /** Total render time across all pages and components (ms) */
+  totalRenderTimeMs: number;
+  /** Average render time per component (ms) */
+  avgRenderTimeMs: number;
+  /** Total template size (bytes) across all components */
+  totalTemplateSize: number;
+  /** Maximum nesting depth encountered */
+  maxNestingDepth: number;
+  /** Number of components that had errors */
+  errorComponentCount: number;
+}
+
+/**
+ * Hydration hint summary aggregated across all pages.
+ */
+export interface DsdHydrationHintSummary {
+  /** Total number of hydration hints */
+  totalHints: number;
+  /** Count of dsd-interactive components needing hydration */
+  interactiveCount: number;
+  /** Count of pure-island components */
+  pureIslandCount: number;
+}
+
+/**
+ * Build report written to `dsd-report.json` after SSG rendering.
+ *
+ * Provides a machine-readable summary of render diagnostics,
+ * enabling CI/release to fail on render errors and making
+ * SSG output observable.
+ */
+export interface DsdBuildReport {
+  /** Report schema version (semver) — bump when fields change */
+  reportVersion: string;
+  /** ISO 8601 timestamp of when the report was generated */
+  timestamp: string;
+  /** Total number of pages rendered */
+  totalPages: number;
+  /** Total number of render errors across all pages */
+  totalErrors: number;
+  /** All render errors, grouped by page */
+  renderErrors: DsdPageDiagnostics[];
+  /** Aggregated metrics across all pages */
+  metricsSummary: DsdMetricsSummary;
+  /** Aggregated hydration hint summary */
+  hydrationHintSummary: DsdHydrationHintSummary;
+}
+
 /** Collects DSD render metrics during SSR for post-build reporting */
 export class DsdRenderCollector {
   private _metrics: DsdRenderMetrics[] = [];

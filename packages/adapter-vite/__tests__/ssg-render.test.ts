@@ -4,7 +4,7 @@
 import { assertEquals, assertRejects, assertThrows } from 'jsr:@std/assert@^1.0.0';
 import { Hono } from 'hono';
 import { resolveDynamicRoutePath, ssgRender } from '../src/cli/ssg-render.js';
-import type { SsgRenderOptions, SsrBundle } from '../src/cli/ssg-render.js';
+import type { SsgPageOutput, SsgRenderOptions, SsrBundle } from '../src/cli/ssg-render.js';
 
 function createMockBundle(overrides: Partial<SsrBundle> = {}): SsrBundle {
   const app = new Hono();
@@ -88,7 +88,15 @@ Deno.test('ssgRender — handles getStaticPaths failure gracefully', async () =>
       { path: '/blog/:slug', tagName: 'blog-page', isDynamic: true, paramNames: ['slug'] },
     ],
     renderRoute: (() =>
-      Promise.resolve('<html><body>test</body></html>')) as SsrBundle['renderRoute'],
+      Promise.resolve(
+        {
+          html: '<html><body>test</body></html>',
+          errors: [],
+          hydrationHints: [],
+          componentCount: 0,
+          renderTimeMs: 0,
+        } as SsgPageOutput,
+      )) as SsrBundle['renderRoute'],
     getStaticPaths: (() => Promise.reject(new Error('fail'))) as SsrBundle['getStaticPaths'],
   });
   await ssgRender(bundle, defaultOptions);
@@ -100,7 +108,15 @@ Deno.test('ssgRender — handles empty getStaticPaths gracefully', async () => {
       { path: '/blog/:slug', tagName: 'blog-page', isDynamic: true, paramNames: ['slug'] },
     ],
     renderRoute: (() =>
-      Promise.resolve('<html><body>test</body></html>')) as SsrBundle['renderRoute'],
+      Promise.resolve(
+        {
+          html: '<html><body>test</body></html>',
+          errors: [],
+          hydrationHints: [],
+          componentCount: 0,
+          renderTimeMs: 0,
+        } as SsgPageOutput,
+      )) as SsrBundle['renderRoute'],
     getStaticPaths: (() => Promise.resolve([])) as SsrBundle['getStaticPaths'],
   });
   await ssgRender(bundle, defaultOptions);

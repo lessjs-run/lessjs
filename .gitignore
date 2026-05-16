@@ -63,3 +63,4 @@ node_modules
 /less-logo*.svg
 /less-favicon.svg
 www/dist/
+dist-test-ssg-render/

@@ -116,12 +116,20 @@ Deno.test('SSG smoke: one-command build produces trusted www output', async (t) 
     assertEquals(typeof mod.renderRoute, 'function');
     assert(Array.isArray(mod.routeInfo), 'SSR bundle should export routeInfo');
 
-    const html = await (mod.renderRoute as (
+    const result = await (mod.renderRoute as (
       path: string,
       opts?: Record<string, unknown>,
-    ) => Promise<string>)('/roadmap', { lang: 'en' });
-    assertStringIncludes(html, '<!DOCTYPE html>');
-    assertStringIncludes(html, '2026-05-15 Main-Branch Review Reset');
+    ) => Promise<
+      {
+        html: string;
+        errors: unknown[];
+        hydrationHints: unknown[];
+        componentCount: number;
+        renderTimeMs: number;
+      }
+    >)('/roadmap', { lang: 'en' });
+    assertStringIncludes(result.html, '<!DOCTYPE html>');
+    assertStringIncludes(result.html, '2026-05-15 Main-Branch Review Reset');
   });
 
   await t.step('phase 2 output exists without legacy SSR client runtime', () => {
