@@ -6,10 +6,10 @@
 
 ## Branch Status
 
-| Branch        | HEAD      | Status            |
-| ------------- | --------- | ----------------- |
-| `origin/dev`  | pending   | v0.17.2 release   |
-| `origin/main` | `08f267d` | v0.17.1 release   |
+| Branch        | HEAD      | Status          |
+| ------------- | --------- | --------------- |
+| `origin/dev`  | pending   | v0.17.2 release |
+| `origin/main` | `08f267d` | v0.17.1 release |
 
 ## Tags
 
