@@ -535,6 +535,10 @@ self.addEventListener('activate', (e) => e.waitUntil(
   caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => clients.claim())
 ));
 self.addEventListener('fetch', (e) => {
+  if (e.request.mode === 'navigate') {
+    e.respondWith(networkFirst(e.request));
+    return;
+  }
   if (e.request.method !== 'GET') return;
   if (e.request.headers.has('authorization')) return;
   const url = new URL(e.request.url);
@@ -545,20 +549,24 @@ self.addEventListener('fetch', (e) => {
   const destination = e.request.destination;
   const isStaticDestination = ['style', 'script', 'image', 'font', 'manifest'].includes(destination);
   const isAsset = /\\.[a-z0-9]+$/i.test(url.pathname) && isStaticDestination;
-  e.respondWith(
-    (isAsset ? cacheFirst(e.request) : fetch(e.request))
-      .catch(() => fetch(e.request))
-  );
+  if (isAsset) {
+    e.respondWith(cacheFirst(e.request));
+  }
+  // Non-asset, non-navigate GET requests pass through without SW interception
 });
 async function cacheFirst(req) {
   const cached = await caches.match(req);
   if (cached) return cached;
-  const res = await fetch(req);
-  if (res.ok) {
-    const cl = res.clone();
-    caches.open(CACHE).then(c => c.put(req, cl)).catch(() => {});
+  try {
+    const res = await fetch(req);
+    if (res.ok) {
+      const cl = res.clone();
+      caches.open(CACHE).then(c => c.put(req, cl)).catch(() => {});
+    }
+    return res;
+  } catch {
+    return new Response('', { status: 408, statusText: 'Request timeout' });
   }
-  return res;
 }
 async function networkFirst(req) {
   try {
@@ -571,7 +579,6 @@ async function networkFirst(req) {
   } catch {
     const cached = await caches.match(req);
     if (cached) return cached;
-    // Return a fallback rather than throwing — prevents unhandled rejections
     return new Response('offline', { status: 503 });
   }
 }`;
