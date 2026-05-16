@@ -40,6 +40,7 @@ export type {
   HydrationHint,
   RendererProtocol,
   RenderError,
+  RenderHooks,
   RenderInput,
   RenderOutput,
   RenderPhase,

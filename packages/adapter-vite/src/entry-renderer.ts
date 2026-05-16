@@ -433,7 +433,8 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('    log.warn("<" + tag + "> not registered — rendering empty")');
   lines.push('    return "<" + tag + "></" + tag + ">"');
   lines.push('  }');
-  lines.push('  return renderDSD(tag, Cls, props, sourceInfo)');
+  lines.push('  const out = await renderDSD(tag, Cls, props, sourceInfo)');
+  lines.push('  return out.html');
   lines.push('}');
   lines.push('');
 
@@ -590,7 +591,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('  const props = { ...params };');
     lines.push('  if (locale) props.locale = locale;');
     lines.push(
-      '  const html = await renderDSDByName(info.tagName, props, { route: routePath, source: info.tagName });',
+      '  const html = (await renderDSDByName(info.tagName, props, { route: routePath, source: info.tagName })).html;',
     );
     lines.push('  let content = html;');
     lines.push('  for (const renderer of __matchingRenderers(routePath)) {');

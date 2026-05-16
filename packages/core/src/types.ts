@@ -379,6 +379,21 @@ export interface HydrationHint {
 }
 
 /**
+ * Hooks for observing and intercepting the render pipeline.
+ *
+ * All hooks are optional — when omitted, the pipeline behaves exactly
+ * as before (zero overhead).
+ */
+export interface RenderHooks {
+  /** Called before component instantiation. */
+  beforeRender?: (input: RenderInput) => void;
+  /** Called after serialization is complete. */
+  afterRender?: (output: RenderOutput) => void;
+  /** Called for any classified render error (from any phase). */
+  onError?: (error: RenderError) => void;
+}
+
+/**
  * Structured output from renderDSD().
  *
  * Provides errors, metrics, and hydration hints alongside the HTML.

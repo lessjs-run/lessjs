@@ -16,7 +16,7 @@
 
 import * as parse5 from 'parse5';
 import type { DefaultTreeAdapterMap } from 'parse5';
-import { type DsdOptions, type DsdRenderCollector } from './types.js';
+import { type DsdOptions, type DsdRenderCollector, type RenderHooks, type RenderOutput, type RenderError, type HydrationHint } from './types.js';
 import { renderDSD } from './render-dsd.js';
 import { createLogger } from './logger.js';
 
@@ -159,6 +159,9 @@ function isInsideDsdTemplate(node: P5Element): boolean {
 /**
  * Recursively render nested Custom Elements with DSD using parse5 AST.
  *
+ * v0.15.2: Returns `Promise<RenderOutput>` instead of `Promise<string>`.
+ * Propagates child render errors and hydration hints up to the parent.
+ *
  * v0.8: Replaced regex-based O(n²) approach with parse5 AST traversal.
  * v0.8.1: Fixed two critical bugs:
  *   - Use parseFragment() instead of parse() to avoid <html><head><body> wrapping
@@ -180,14 +183,18 @@ function isInsideDsdTemplate(node: P5Element): boolean {
  * @param html - HTML string to process
  * @param collector - Optional collector for DSD render metrics
  * @param maxDepth - Maximum CE nesting depth. Nodes beyond this are skipped (default 10)
- * @returns Processed HTML with nested DSD rendered
+ * @param hooks - Optional render pipeline hooks
+ * @returns Structured render output with html, errors, and hydration hints
  */
 export async function renderNestedCustomElements(
   html: string,
   collector?: DsdRenderCollector,
   maxDepth = 10,
-): Promise<string> {
-  if (!globalThis.customElements?.get) return html;
+  hooks?: RenderHooks,
+): Promise<RenderOutput> {
+  if (!globalThis.customElements?.get) {
+    return { html, errors: [], metrics: { tagName: '__nested__', renderTimeMs: 0, templateSize: html.length, layer: 'dsd-static', hasError: false, nestingDepth: 0 }, hydrationHints: [] };
+  }
 
   // Use parseFragment() — NOT parse(). parse5.parse() wraps fragments in
   // <html><head><body>, which would appear inside shadow DOM when this
@@ -233,6 +240,9 @@ export async function renderNestedCustomElements(
   }
 
   // Process each custom element (already in bottom-up order)
+  const allNestedErrors: RenderError[] = [];
+  const allNestedHints: HydrationHint[] = [];
+
   for (const { node: ceNode, depth } of ceNodes) {
     const tagName = ceNode.tagName;
     const Cls = globalThis.customElements!.get(tagName) as CustomElementConstructor;
@@ -241,8 +251,17 @@ export async function renderNestedCustomElements(
     const props = parseAttrsToProps(ceNode.attrs);
     const dsdOpts = inferDsdOptions(tagName, Cls);
 
-    // Render DSD HTML for this component
-    const dsdHtml = await renderDSD(tagName, Cls, props, undefined, dsdOpts, collector, depth);
+    // Render DSD for this component — now returns RenderOutput
+    const dsdResult = await renderDSD(tagName, Cls, props, undefined, dsdOpts, collector, depth, hooks);
+    const dsdHtml = dsdResult.html;
+
+    // Propagate nested errors and hydration hints
+    if (dsdResult.errors.length > 0) {
+      allNestedErrors.push(...dsdResult.errors);
+    }
+    if (dsdResult.hydrationHints.length > 0) {
+      allNestedHints.push(...dsdResult.hydrationHints);
+    }
 
     // Parse the DSD HTML into a fragment
     const dsdFragment = parse5.parseFragment(dsdHtml);
@@ -309,5 +328,11 @@ export async function renderNestedCustomElements(
   }
 
   // Serialize fragment back to HTML (no <html><head><body> wrapper)
-  return parse5.serialize(ast);
+  const resultHtml = parse5.serialize(ast);
+  return {
+    html: resultHtml,
+    errors: allNestedErrors,
+    metrics: { tagName: '__nested__', renderTimeMs: 0, templateSize: resultHtml.length, layer: 'dsd-static', hasError: allNestedErrors.length > 0, nestingDepth: 0 },
+    hydrationHints: allNestedHints,
+  };
 }

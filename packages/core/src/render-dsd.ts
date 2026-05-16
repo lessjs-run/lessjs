@@ -27,7 +27,7 @@
  */
 
 // ─── Internal imports ──────────────────────────────────────────
-import { type DsdOptions, type DsdRenderCollector } from './types.js';
+import { type DsdOptions, type DsdRenderCollector, type RenderHooks, type RenderOutput, type RenderError, type RenderInput, type HydrationHint, type DsdRenderMetrics, type ComponentLayer } from './types.js';
 import { getAdapter } from './adapter-registry.js';
 import { renderNestedCustomElements } from './render-nested.js';
 import { createLogger } from './logger.js';
@@ -35,6 +35,7 @@ import { createLogger } from './logger.js';
 // ─── Extracted modules ─────────────────────────────────────────
 import { injectProps, instantiateComponent } from './render-instantiate.js';
 import { instantiationErrorHtml, renderErrorHtml, wrongTypeErrorHtml } from './render-errors.js';
+import { classifyError } from './render-errors.js';
 import { serializeAttributes, wrapDsdOutput } from './render-serialize.js';
 
 const log = createLogger('core');
@@ -42,28 +43,23 @@ const log = createLogger('core');
 // ─── DSD Rendering ──────────────────────────────────────────────
 
 /**
- * Render a single component to DSD HTML string.
+ * Render a single component to DSD HTML as structured RenderOutput.
  *
- * v0.6': DSD spec alignment — shadowrootdelegatesfocus, shadowrootserializable,
- * shadowrootslotassignment, shadowrootcustomelementregistry per WHATWG spec.
+ * v0.15.2: Returns `Promise<RenderOutput>` instead of `Promise<string>`.
+ * Callers should destructure: `const { html, errors, metrics, hydrationHints } = await renderDSD(...)`
+ *
+ * v0.15.2: Accepts optional `RenderHooks` for pipeline observation.
+ * Hooks are optional and do not change behavior when omitted.
  *
  * @param tagName - Custom element tag name (e.g. 'less-button')
  * @param componentClass - Registered Custom Element class constructor
  * @param props - Attribute/property key-value pairs
  * @param sourceInfo - Optional context for error messages (route path, source file)
  * @param dsdOptions - Optional DSD template attributes per HTML Living Standard
- * @returns Complete DSD HTML string
- *
- * @example
- * ```ts
- * const html = renderDSD('less-button', LessButton, { variant: 'primary' }, undefined, { delegatesFocus: true })
- * // → <less-button variant="primary">
- * //      <template shadowrootmode="open" shadowrootdelegatesfocus>
- * //        <style>:host{...}</style>
- * //        <button>Click</button>
- * //      </template>
- * //    </less-button>
- * ```
+ * @param collector - Optional DSD render metrics collector
+ * @param nestingDepth - Current nesting depth (0 = top-level)
+ * @param hooks - Optional render pipeline hooks (beforeRender, afterRender, onError)
+ * @returns Structured render output (html + errors + metrics + hydrationHints)
  */
 export async function renderDSD(
   tagName: string,
@@ -73,7 +69,8 @@ export async function renderDSD(
   dsdOptions?: DsdOptions,
   collector?: DsdRenderCollector,
   nestingDepth = 0,
-): Promise<string> {
+  hooks?: RenderHooks,
+): Promise<RenderOutput> {
   // H-10 fix: Guard against SSR environments where performance is undefined
   const startTime = typeof performance !== 'undefined' ? performance.now() : 0;
   const adapter = getAdapter();
@@ -83,17 +80,53 @@ export async function renderDSD(
     }`
     : '';
 
+  const collectedErrors: RenderError[] = [];
+  const collectedHints: HydrationHint[] = [];
+  let hasError = false;
+
+  // Build RenderInput for hooks
+  const renderInput: RenderInput = {
+    tagName,
+    componentClass,
+    props,
+    dsdOptions,
+    nestingDepth,
+  };
+
+  // ── Hook: beforeRender ──────────────────────────────────────
+  if (hooks?.beforeRender) {
+    try {
+      hooks.beforeRender(renderInput);
+    } catch (e) {
+      log.debug(`beforeRender hook threw: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+
   // 1. Instantiate the component
   const instance = instantiateComponent(tagName, componentClass);
   if (!instance) {
     const errMsg = 'Failed to instantiate';
-    return instantiationErrorHtml(
+    const err = classifyError('instantiate', tagName, errMsg, false);
+    collectedErrors.push(err);
+    hasError = true;
+    hooks?.onError?.(err);
+
+    const html = instantiationErrorHtml(
       tagName,
       errMsg,
       sourceStr,
       sourceInfo?.route,
       sourceInfo?.source,
     );
+
+    const result: RenderOutput = {
+      html,
+      errors: collectedErrors,
+      metrics: { tagName, renderTimeMs: 0, templateSize: 0, layer: 'dsd-static', hasError: true, nestingDepth },
+      hydrationHints: collectedHints,
+    };
+    hooks?.afterRender?.(result);
+    return result;
   }
 
   // 2. Set attributes/properties
@@ -119,15 +152,32 @@ export async function renderDSD(
         const errDetail = isLitTemplateResultHeuristic(result)
           ? 'This looks like a Lit TemplateResult — install @lessjs/adapter-lit to handle it.'
           : `Components must return a string from render(), got ${typeof result}.`;
+        const err = classifyError('render', tagName, errDetail, true);
+        collectedErrors.push(err);
+        hooks?.onError?.(err);
         content = wrongTypeErrorHtml(tagName, typeof result, errDetail);
       }
     }
   } catch (err) {
+    const classifiedErr = classifyError('render', tagName, err, true);
+    collectedErrors.push(classifiedErr);
+    hasError = true;
+    hooks?.onError?.(classifiedErr);
     content = renderErrorHtml(tagName, err);
   }
 
   // v0.6: L2 Nested DSD — recursively render nested Custom Elements
-  content = await renderNestedCustomElements(content, collector);
+  const nestedOutput = await renderNestedCustomElements(content, collector, 10, hooks);
+  content = nestedOutput.html;
+
+  // Propagate nested errors and hydration hints
+  if (nestedOutput.errors.length > 0) {
+    collectedErrors.push(...nestedOutput.errors);
+    hasError = true;
+  }
+  if (nestedOutput.hydrationHints.length > 0) {
+    collectedHints.push(...nestedOutput.hydrationHints);
+  }
 
   // 5. Extract static styles from component class
   let styleCss = '';
@@ -135,6 +185,9 @@ export async function renderDSD(
     try {
       styleCss = adapter.extractStyles(componentClass) || '';
     } catch (e) {
+      const styleErr = classifyError('style', tagName, e, true);
+      collectedErrors.push(styleErr);
+      hooks?.onError?.(styleErr);
       log.debug(
         `extractStyles failed for <${tagName}>: ${e instanceof Error ? e.message : String(e)}`,
       );
@@ -145,20 +198,33 @@ export async function renderDSD(
   const resolvedLayer = dsdOptions?.layer || instance.layer || 'dsd-static';
 
   // ─── Collect DSD render metrics (if collector provided) ─────
-  const renderEnd = performance.now();
+  const renderEnd = typeof performance !== 'undefined' ? performance.now() : renderEnd_timeFallback();
+  const renderTimeMs = renderEnd - startTime;
+
+  const metrics: DsdRenderMetrics = {
+    tagName,
+    renderTimeMs,
+    templateSize: content.length,
+    layer: resolvedLayer,
+    hasError,
+    nestingDepth,
+  };
+
   if (collector) {
-    collector.add({
+    collector.add(metrics);
+  }
+
+  // Collect hydration hint for this component
+  if (resolvedLayer !== 'dsd-static' || instance.hydrateEvents?.length) {
+    collectedHints.push({
       tagName,
-      renderTimeMs: renderEnd - startTime,
-      templateSize: content.length,
-      layer: resolvedLayer,
-      hasError: false,
-      nestingDepth,
+      layer: resolvedLayer as ComponentLayer,
+      events: instance.hydrateEvents,
     });
   }
 
   // 7. Wrap in DSD output
-  return wrapDsdOutput({
+  const html = wrapDsdOutput({
     tagName,
     props,
     content,
@@ -167,6 +233,31 @@ export async function renderDSD(
     sourceStr,
     dsdOptions,
   });
+
+  const output: RenderOutput = {
+    html,
+    errors: collectedErrors,
+    metrics,
+    hydrationHints: collectedHints,
+  };
+
+  // ── Hook: afterRender ───────────────────────────────────────
+  if (hooks?.afterRender) {
+    try {
+      hooks.afterRender(output);
+    } catch (e) {
+      log.debug(`afterRender hook threw: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+
+  return output;
+}
+
+/**
+ * Fallback for renderEnd when performance is not available.
+ */
+function renderEnd_timeFallback(): number {
+  return Date.now();
 }
 
 /**
@@ -186,23 +277,34 @@ function isLitTemplateResultHeuristic(value: unknown): boolean {
  * Render a component from the global Custom Element registry.
  * Looks up the class by tag name using customElements.get().
  *
+ * v0.15.2: Returns `Promise<RenderOutput>`. Callers should destructure `html`.
+ *
  * @param tagName - Registered custom element tag name
  * @param props - Attribute/property key-value pairs
  * @param sourceInfo - Optional context for error messages (route path, source file)
- * @returns DSD HTML string, or error HTML if tag is not registered
+ * @param dsdOptions - Optional DSD template attributes
+ * @param hooks - Optional render pipeline hooks
+ * @returns Structured render output
  */
 export async function renderDSDByName(
   tagName: string,
   props: Record<string, unknown> = {},
   sourceInfo?: { route?: string; source?: string },
   dsdOptions?: DsdOptions,
-): Promise<string> {
+  hooks?: RenderHooks,
+): Promise<RenderOutput> {
   const cls = globalThis.customElements?.get(tagName);
 
   if (!cls) {
     log.warn(`<${tagName}> is not registered — rendering as void element`);
     const attrs = serializeAttributes(props);
-    return `<${tagName}${attrs}></${tagName}>`;
+    const html = `<${tagName}${attrs}></${tagName}>`;
+    return {
+      html,
+      errors: [],
+      metrics: { tagName, renderTimeMs: 0, templateSize: 0, layer: 'dsd-static', hasError: false, nestingDepth: 0 },
+      hydrationHints: [],
+    };
   }
 
   return await renderDSD(
@@ -211,5 +313,8 @@ export async function renderDSDByName(
     props,
     sourceInfo,
     dsdOptions,
+    undefined,
+    0,
+    hooks,
   );
 }
