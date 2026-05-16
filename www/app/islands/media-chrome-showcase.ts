@@ -72,10 +72,6 @@ export default class MediaChromeShowcase extends MediaChromeBase {
   }
 
   render(): string {
-    // When DSD-hydrated, return empty to avoid duplicate DOM
-    // deno-lint-ignore no-explicit-any
-    if ((this as any)._dsdHydrated) return '';
-
     return `
       <div class="mc-wrap">
         <media-controller>

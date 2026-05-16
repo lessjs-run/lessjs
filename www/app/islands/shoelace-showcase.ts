@@ -11,6 +11,7 @@
  * @lessjs/app island — auto-detected and SSR'd by adapter-vite.
  */
 import { css, html, LitElement } from 'lit';
+import '@shoelace-style/shoelace/dist/themes/light.css';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/badge/badge.js';
 import '@shoelace-style/shoelace/dist/components/input/input.js';
