@@ -167,7 +167,7 @@ export class RoadmapPage extends LitElement {
           <h1>Roadmap</h1>
           <p class="subtitle">
             从渲染内核到通用 WC SSR/SSG 引擎 + Registry Hub。六个 Phase，近细远粗。 当前版本 <code
-            >v0.16.0</code>，下一里程碑 <code>v0.17.x</code>。
+            >v0.17.1</code>，下一里程碑 <code>v0.18.x</code>。
           </p>
 
           <div class="callout">
@@ -208,28 +208,28 @@ export class RoadmapPage extends LitElement {
                 <td>3</td>
                 <td>v0.17.x</td>
                 <td>Ecosystem Entry</td>
-                <td>第三方 WC 包接入、CLI 工具、多适配器</td>
+                <td>Manifest-native pipeline、跨运行时、CLI 工具</td>
                 <td><span class="status next">Next</span></td>
               </tr>
               <tr>
                 <td>4</td>
                 <td>v0.18.x</td>
-                <td>Hub Foundation</td>
-                <td>公共 registry API、搜索、快照预览、安全审计</td>
+                <td>Universal WC Engine</td>
+                <td>CEM 解析器、第三方 WC SSR fallback、零配置 SSG/SSR</td>
                 <td><span class="status deferred">Far</span></td>
               </tr>
               <tr>
                 <td>5</td>
                 <td>v0.19.x</td>
-                <td>Platform Maturity</td>
-                <td>Scoped Registries、设计系统 CI/CD、Edge 渲染</td>
+                <td>Platform + Hub</td>
+                <td>Registry Hub、搜索、快照预览、Edge 渲染、Scoped Registries</td>
                 <td><span class="status deferred">Far</span></td>
               </tr>
               <tr>
                 <td>6</td>
                 <td>v1.0.x</td>
                 <td>General-Purpose Engine</td>
-                <td>任意 CEM manifest WC 包 → 自动 SSR/SSG</td>
+                <td>任意 CEM manifest WC 包 → 自动 SSR/SSG，API freeze</td>
                 <td><span class="status deferred">Vision</span></td>
               </tr>
             </tbody>
@@ -263,44 +263,50 @@ export class RoadmapPage extends LitElement {
               <code>LessPackageManifest</code>。LessJS 第一次能以数据描述 WC 包。
             </p>
             <ul class="compact-list">
-              <li>v0.16.0: Manifest 类型系统 + 本地 registry + validate + @lessjs/ui manifest ✓</li>
-              <li>v0.16.1: Manifest 驱动构建集成（条件性 — 可能推到 v0.17）</li>
+              <li>v0.16.0: Manifest 类型系统 + 本地 registry + validate + @lessjs/ui manifest</li>
             </ul>
           </div>
 
           <div class="phase">
             <span class="status next">Next</span>
             <h3>Phase 3: v0.17.x — Ecosystem Entry</h3>
-            <p>从"只能用自己的包"变成"能接入生态"。</p>
+            <p>消除向后兼容层，管道 manifest-native 化，跨运行时支持。</p>
             <ul class="compact-list">
-              <li><code>less add &lt;pkg&gt;</code> 一键安装第三方 WC 包</li>
-              <li><code>less validate-manifest</code> 验证任意包的 manifest</li>
-              <li>npm 兼容层 + 第三方 WC 包 SSR 降级策略</li>
-              <li>多框架适配器探索（adapter-vanilla 增强、adapter-react）</li>
+              <li>v0.17.0: 删除 PackageIslandMeta + manifest-native pipeline</li>
+              <li>v0.17.1: 跨运行时 adapter-vite（Deno API → Node.js compat）</li>
+              <li>v0.17.2: SSR filtering + dsd-report manifest 决策</li>
+              <li>v0.17.3: 多框架适配器探索（adapter-vanilla 增强、adapter-react）</li>
             </ul>
           </div>
 
           <div class="phase">
             <span class="status planned">Planned</span>
-            <h3>Phase 4: v0.18.x — Hub Foundation</h3>
-            <p>从本地 registry 到公共 registry，需要 Web 服务基础设施。</p>
+            <h3>Phase 4: v0.18.x — Universal WC Engine</h3>
+            <p>任意 CEM manifest WC 包自动 SSR/SSG。LessJS 从"自有包框架"变成"通用渲染引擎"。</p>
             <ul class="compact-list">
-              <li>Hub API + 包搜索 + 浏览界面</li>
-              <li>SSR/SSG 快照预览 + bundle cost 分析</li>
-              <li>版本冲突检测 + 安全审计 + 发布者身份验证</li>
+              <li>CEM manifest 解析器 — 读取标准 custom-elements.json</li>
+              <li>第三方 WC SSR fallback 策略（DSD / pure-island / conservative）</li>
+              <li><code>less add @third-party/wc-button</code> 包发现 + 注册</li>
+              <li>零配置 SSG/SSG for 任意合规 WC 包</li>
             </ul>
           </div>
 
           <div class="phase deferred">
             <span class="status deferred">Far</span>
-            <h3>Phase 5: v0.19.x — Platform Maturity</h3>
-            <p>生产就绪平台：Scoped Registries、设计系统 CI/CD、Edge 渲染。</p>
+            <h3>Phase 5: v0.19.x — Platform + Hub</h3>
+            <p>从本地 registry 到公共 registry。Hub 放在主仓库 monorepo，直到规模需要分离。</p>
+            <ul class="compact-list">
+              <li>Hub API + 包搜索 + 浏览界面</li>
+              <li>SSR/SSG 快照预览 + bundle cost 分析</li>
+              <li>版本冲突检测 + 安全审计 + 发布者身份验证</li>
+              <li>Scoped Custom Element Registries + Edge runtime 渲染</li>
+            </ul>
           </div>
 
           <div class="phase deferred">
             <span class="status deferred">Vision</span>
             <h3>Phase 6: v1.0.x — General-Purpose Engine</h3>
-            <p>任意 CEM manifest WC 包 → 自动 SSR/SSG，零配置。从"工具"走向"标准"。</p>
+            <p>任意 CEM manifest WC 包 → 自动 SSR/SSG，零配置。API freeze。从"工具"走向"标准"。</p>
           </div>
 
           <h2>Rejected / Deferred</h2>
@@ -364,8 +370,8 @@ export class RoadmapPage extends LitElement {
           <h1>Roadmap</h1>
           <p class="subtitle">
             From renderer kernel to general-purpose WC SSR/SSG engine + Registry Hub. Six phases,
-            near-term fine and far-term coarse. Current version <code>v0.16.0</code>, next milestone <code
-            >v0.17.x</code>.
+            near-term fine and far-term coarse. Current version <code>v0.17.1</code>, next milestone <code
+            >v0.18.x</code>.
           </p>
 
           <div class="callout">
@@ -406,28 +412,28 @@ export class RoadmapPage extends LitElement {
                 <td>3</td>
                 <td>v0.17.x</td>
                 <td>Ecosystem Entry</td>
-                <td>Third-party WC packages, CLI tooling, multi-adapter</td>
+                <td>Manifest-native pipeline, cross-runtime, CLI tooling</td>
                 <td><span class="status next">Next</span></td>
               </tr>
               <tr>
                 <td>4</td>
                 <td>v0.18.x</td>
-                <td>Hub Foundation</td>
-                <td>Public registry API, search, snapshots, security audit</td>
+                <td>Universal WC Engine</td>
+                <td>CEM parser, third-party WC SSR fallback, zero-config SSG/SSR</td>
                 <td><span class="status deferred">Far</span></td>
               </tr>
               <tr>
                 <td>5</td>
                 <td>v0.19.x</td>
-                <td>Platform Maturity</td>
-                <td>Scoped Registries, design system CI/CD, Edge rendering</td>
+                <td>Platform + Hub</td>
+                <td>Registry Hub, search, snapshots, Edge rendering, Scoped Registries</td>
                 <td><span class="status deferred">Far</span></td>
               </tr>
               <tr>
                 <td>6</td>
                 <td>v1.0.x</td>
                 <td>General-Purpose Engine</td>
-                <td>Any CEM manifest WC package → automatic SSR/SSG</td>
+                <td>Any CEM manifest WC package → automatic SSR/SSG, API freeze</td>
                 <td><span class="status deferred">Vision</span></td>
               </tr>
             </tbody>
@@ -462,45 +468,51 @@ export class RoadmapPage extends LitElement {
               time.
             </p>
             <ul class="compact-list">
-              <li>v0.16.0: Manifest type system + local registry + validate + @lessjs/ui manifest ✓</li>
-              <li>v0.16.1: Manifest-driven build integration (conditional — may defer to v0.17)</li>
+              <li>v0.16.0: Manifest type system + local registry + validate + @lessjs/ui manifest</li>
             </ul>
           </div>
 
           <div class="phase">
             <span class="status next">Next</span>
             <h3>Phase 3: v0.17.x — Ecosystem Entry</h3>
-            <p>From "own packages only" to "ecosystem-ready".</p>
+            <p>Eliminate backward compat layer, manifest-native pipeline, cross-runtime support.</p>
             <ul class="compact-list">
-              <li><code>less add &lt;pkg&gt;</code> one-command install of third-party WC packages</li>
-              <li><code>less validate-manifest</code> validate any package's manifest</li>
-              <li>npm compat layer + third-party WC SSR fallback strategies</li>
-              <li>Multi-framework adapter exploration (adapter-vanilla enhanced, adapter-react)</li>
+              <li>v0.17.0: Delete PackageIslandMeta + manifest-native pipeline</li>
+              <li>v0.17.1: Cross-runtime adapter-vite (Deno API → Node.js compat)</li>
+              <li>v0.17.2: SSR filtering + dsd-report manifest decisions</li>
+              <li>v0.17.3: Multi-framework adapter exploration (adapter-vanilla enhanced, adapter-react)</li>
             </ul>
           </div>
 
           <div class="phase">
             <span class="status planned">Planned</span>
-            <h3>Phase 4: v0.18.x — Hub Foundation</h3>
-            <p>From local registry to public registry. Requires Web service infrastructure.</p>
+            <h3>Phase 4: v0.18.x — Universal WC Engine</h3>
+            <p>Any WC package with a CEM manifest gets automatic SSR/SSG. From "framework for own packages" to "general-purpose rendering engine".</p>
             <ul class="compact-list">
-              <li>Hub API + package search + browse UI</li>
-              <li>SSR/SSG snapshot previews + bundle cost analysis</li>
-              <li>Version conflict detection + security audit + publisher authentication</li>
+              <li>CEM manifest parser — read standard custom-elements.json</li>
+              <li>Third-party WC SSR fallback strategies (DSD / pure-island / conservative)</li>
+              <li><code>less add @third-party/wc-button</code> package discovery + registration</li>
+              <li>Zero-config SSG/SSG for any compliant WC package</li>
             </ul>
           </div>
 
           <div class="phase deferred">
             <span class="status deferred">Far</span>
-            <h3>Phase 5: v0.19.x — Platform Maturity</h3>
-            <p>Production-ready platform: Scoped Registries, design system CI/CD, Edge rendering.</p>
+            <h3>Phase 5: v0.19.x — Platform + Hub</h3>
+            <p>From local registry to public registry. Hub lives in main repo monorepo until scale demands separation.</p>
+            <ul class="compact-list">
+              <li>Hub API + package search + browse UI</li>
+              <li>SSR/SSG snapshot previews + bundle cost analysis</li>
+              <li>Version conflict detection + security audit + publisher authentication</li>
+              <li>Scoped Custom Element Registries + Edge runtime rendering</li>
+            </ul>
           </div>
 
           <div class="phase deferred">
             <span class="status deferred">Vision</span>
             <h3>Phase 6: v1.0.x — General-Purpose Engine</h3>
             <p>
-              Any CEM manifest WC package → automatic SSR/SSG, zero config. From "tool" to "standard".
+              Any CEM manifest WC package → automatic SSR/SSG, zero config. API freeze. From "tool" to "standard".
             </p>
           </div>
 

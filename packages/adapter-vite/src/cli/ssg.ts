@@ -69,7 +69,7 @@ async function loadSsrBundle(ssrDir: string) {
     log.info(`  → pass --import-map=${importMapPath} to Deno for bare specifier resolution`);
   }
 
-  const bundleUrl = Deno.build.os === 'windows'
+  const bundleUrl = process.platform === 'win32'
     ? 'file:///' + bundlePath.replace(/\\/g, '/')
     : 'file://' + bundlePath;
 
@@ -111,7 +111,7 @@ async function main() {
     if (err instanceof Error && err.stack) {
       log.error(err.stack.split('\n').slice(0, 5).join('\n'));
     }
-    Deno.exit(1);
+    process.exit(1);
   }
 }
 
