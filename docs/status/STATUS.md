@@ -12,10 +12,10 @@ into CEM/manifest-based validation.
 
 ## Branch Status
 
-| Branch        | HEAD      | Status                                                |
-| ------------- | --------- | ----------------------------------------------------- |
-| `origin/dev`  | `3b5db70` | v0.17.4 compatibility hardening + second-round fix    |
-| `origin/main` | `249d704` | v0.17.2 release                                       |
+| Branch        | HEAD      | Status                                             |
+| ------------- | --------- | -------------------------------------------------- |
+| `origin/dev`  | `3b5db70` | v0.17.4 compatibility hardening + second-round fix |
+| `origin/main` | `249d704` | v0.17.2 release                                    |
 
 ## Tags
 
@@ -94,17 +94,17 @@ Third-party package handling is conservative:
 
 ## Version Ladder With Admission And Exit Gates
 
-| Version | SOP                                                    | Status       | Entry Gate                                    | Exit Gate                                                 |
-| ------- | ------------------------------------------------------ | ------------ | --------------------------------------------- | --------------------------------------------------------- |
-| v0.17.3 | `docs/sop/v0.17.3-multi-framework-adapters.md`         | Done         | v0.17.2 SSR filtering exists                  | Vanilla/React adapters documented; no universal SSR claim |
-| v0.17.4 | `docs/sop/v0.17.4-compatibility-boundary-hardening.md` | Done         | v0.17.3 docs closed                           | Client-only modules excluded before SSR entry generation  |
+| Version | SOP                                                    | Status       | Entry Gate                                                           | Exit Gate                                                 |
+| ------- | ------------------------------------------------------ | ------------ | -------------------------------------------------------------------- | --------------------------------------------------------- |
+| v0.17.3 | `docs/sop/v0.17.3-multi-framework-adapters.md`         | Done         | v0.17.2 SSR filtering exists                                         | Vanilla/React adapters documented; no universal SSR claim |
+| v0.17.4 | `docs/sop/v0.17.4-compatibility-boundary-hardening.md` | Done         | v0.17.3 docs closed                                                  | Client-only modules excluded before SSR entry generation  |
 | v0.18.0 | `docs/sop/v0.18.0-universal-wc-engine.md`              | Next         | v0.17.4 admission planner complete + package SSR admission validated | CEM parser + compatibility tiers + report reasons         |
-| v0.18.1 | `docs/sop/v0.18.1-validate-manifest-cli.md`            | Planned      | v0.18.0 classifier stable                     | `less validate-manifest` emits stable diagnostics         |
-| v0.18.2 | `docs/sop/v0.18.2-less-add-install-flow.md`            | Planned      | validation CLI stable                         | `less add` dry-run/install is validation-gated            |
-| v0.18.3 | `docs/sop/v0.18.3-dom-simulation-experiment.md`        | Experimental | client-only fallback stable                   | opt-in DOM simulation decision recorded                   |
-| v0.19.0 | `docs/sop/v0.19.0-platform-hub.md`                     | Planned      | validation/build reports stable               | Hub ingests artifacts and shows compatibility             |
-| v0.19.1 | `docs/sop/v0.19.1-hub-previews-quality-gates.md`       | Planned      | Hub ingestion MVP stable                      | previews/quality gates reflect validation evidence        |
-| v1.0.0  | `docs/sop/v1.0.0-general-purpose-engine.md`            | Vision       | engine, reports, add flow, Hub records stable | API/schema freeze with deterministic package outcomes     |
+| v0.18.1 | `docs/sop/v0.18.1-validate-manifest-cli.md`            | Planned      | v0.18.0 classifier stable                                            | `less validate-manifest` emits stable diagnostics         |
+| v0.18.2 | `docs/sop/v0.18.2-less-add-install-flow.md`            | Planned      | validation CLI stable                                                | `less add` dry-run/install is validation-gated            |
+| v0.18.3 | `docs/sop/v0.18.3-dom-simulation-experiment.md`        | Experimental | client-only fallback stable                                          | opt-in DOM simulation decision recorded                   |
+| v0.19.0 | `docs/sop/v0.19.0-platform-hub.md`                     | Planned      | validation/build reports stable                                      | Hub ingests artifacts and shows compatibility             |
+| v0.19.1 | `docs/sop/v0.19.1-hub-previews-quality-gates.md`       | Planned      | Hub ingestion MVP stable                                             | previews/quality gates reflect validation evidence        |
+| v1.0.0  | `docs/sop/v1.0.0-general-purpose-engine.md`            | Vision       | engine, reports, add flow, Hub records stable                        | API/schema freeze with deterministic package outcomes     |
 
 ## Operator Checklist
 

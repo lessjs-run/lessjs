@@ -17,6 +17,7 @@
 ### 第一步：确认线上代码是否包含修复
 
 对比线上 JS 文件名 hash：
+
 - **线上**: `island-media-chrome-showcase-DjdF7uaP.js`
 - **本地**: `Island-media-chrome-showcase-SPujsrd2.js`
 
@@ -111,15 +112,15 @@ source === 'package'
 
 ## 验证结果
 
-| 检查项 | 结果 |
-|--------|------|
+| 检查项                        | 结果                                                     |
+| ----------------------------- | -------------------------------------------------------- |
 | `less-layout` 是否有 DSD 模板 | ✅ 是 — line 422 `<template shadowrootmode="open">` 出现 |
-| 每页 DSD 模板数量 | ✅ 从 9 个增加到 13 个 |
-| SW networkFirst fallback | ✅ navigate 失败返回 408 而非抛异常 |
-| SW cacheFirst try/catch | ✅ asset fetch 失败优雅降级 |
-| `deno task test` | ✅ 554 passed |
-| `deno task build` | ✅ 298 pages, 0 errors |
-| `deno task dev` | ✅ 首页正常渲染 |
+| 每页 DSD 模板数量             | ✅ 从 9 个增加到 13 个                                   |
+| SW networkFirst fallback      | ✅ navigate 失败返回 408 而非抛异常                      |
+| SW cacheFirst try/catch       | ✅ asset fetch 失败优雅降级                              |
+| `deno task test`              | ✅ 554 passed                                            |
+| `deno task build`             | ✅ 298 pages, 0 errors                                   |
+| `deno task dev`               | ✅ 首页正常渲染                                          |
 
 ## 关键教训
 
@@ -131,9 +132,9 @@ source === 'package'
 
 ## 修改文件
 
-| 文件 | 修改内容 |
-|------|----------|
-| `packages/adapter-vite/src/cli/ssg-render.ts` | SW networkFirst + cacheFirst try/catch + 非资产放行 |
-| `packages/adapter-vite/src/entry-descriptor.ts` | Package island SSR admission 尊重 `ssr: true` |
-| `packages/core/src/render-nested.ts` | 删除 `isInsideDsdTemplate()` |
-| `packages/adapter-vite/__tests__/entry-renderer.test.ts` | 更新 package island SSR 测试断言 |
+| 文件                                                     | 修改内容                                            |
+| -------------------------------------------------------- | --------------------------------------------------- |
+| `packages/adapter-vite/src/cli/ssg-render.ts`            | SW networkFirst + cacheFirst try/catch + 非资产放行 |
+| `packages/adapter-vite/src/entry-descriptor.ts`          | Package island SSR admission 尊重 `ssr: true`       |
+| `packages/core/src/render-nested.ts`                     | 删除 `isInsideDsdTemplate()`                        |
+| `packages/adapter-vite/__tests__/entry-renderer.test.ts` | 更新 package island SSR 测试断言                    |

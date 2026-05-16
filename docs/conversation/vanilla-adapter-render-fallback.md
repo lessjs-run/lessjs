@@ -12,11 +12,11 @@
 `media-chrome-showcase`（vanilla adapter + `ssr: false`）在页面上显示为完全空白。
 对比其他 showcase：
 
-| Island | Base Class | ssr | 渲染机制 | 结果 |
-|--------|-----------|-----|---------|------|
-| Shoelace | `LitElement` | false | Lit 生命周期自动调 `render()` ✅ | 可见 |
-| React | `WithDsdHydration(HTMLElement)` | true | DSD 内容直接水合 ✅ | 可见 |
-| Media Chrome | `WithDsdHydration(HTMLElement)` | false | 无 DSD + 无自动 render ❌ | 空白 |
+| Island       | Base Class                      | ssr   | 渲染机制                         | 结果 |
+| ------------ | ------------------------------- | ----- | -------------------------------- | ---- |
+| Shoelace     | `LitElement`                    | false | Lit 生命周期自动调 `render()` ✅ | 可见 |
+| React        | `WithDsdHydration(HTMLElement)` | true  | DSD 内容直接水合 ✅              | 可见 |
+| Media Chrome | `WithDsdHydration(HTMLElement)` | false | 无 DSD + 无自动 render ❌        | 空白 |
 
 ### 问题 2 — Shoelace 颜色对比度不足
 
@@ -28,11 +28,13 @@ Shoelace 默认 Primary `#6366f1`、Success `#10b981`、Neutral `#71717a` 在 do
 ### 根因 1 — `WithDsdHydration` 设计缺口
 
 Mixin 的设计隐含了一个假设："只在 DSD 场景下使用"。它提供：
+
 - `createRenderRoot()` — 检测已有 shadow root（DSD 内容）
 - `connectedCallback()` — 调用父类 + 绑定事件
 - `disconnectedCallback()` — 清理
 
 但它**没有为无 DSD 内容的场景提供兜底渲染机制**。当 `ssr: false` 时：
+
 1. SSR 输出空标签
 2. 客户端 upgrade → `createRenderRoot()` 创建新 shadow root
 3. `_dsdHydrated = false`
@@ -80,20 +82,20 @@ connectedCallback(): void {
 覆盖 Shoelace CSS 自定义属性，使用更高对比度的值：
 
 ```css
---sl-color-primary-600: #4f46e5;  /* indigo-600 */
---sl-color-success-600: #059669;  /* emerald-600 */
---sl-color-neutral-600: #52525b;  /* zinc-600 */
+--sl-color-primary-600: #4f46e5; /* indigo-600 */
+--sl-color-success-600: #059669; /* emerald-600 */
+--sl-color-neutral-600: #52525b; /* zinc-600 */
 ```
 
 ## 验证结果
 
-| 检查项 | 结果 |
-|--------|------|
-| `deno task test` | ✅ 554 passed |
-| `deno task typecheck` | ✅ clean |
-| `deno task build` | ✅ 298 pages |
+| 检查项                         | 结果                                |
+| ------------------------------ | ----------------------------------- |
+| `deno task test`               | ✅ 554 passed                       |
+| `deno task typecheck`          | ✅ clean                            |
+| `deno task build`              | ✅ 298 pages                        |
 | mixin render fallback 在产物中 | ✅ `shadowRoot.innerHTML=String(t)` |
-| Shoelace 颜色 token 覆盖 | ✅ `--sl-color-*-600` 覆写 |
+| Shoelace 颜色 token 覆盖       | ✅ `--sl-color-*-600` 覆写          |
 
 ## 关键教训
 
@@ -107,7 +109,7 @@ connectedCallback(): void {
 
 ## 修改文件
 
-| 文件 | 修改内容 |
-|------|----------|
+| 文件                                            | 修改内容                   |
+| ----------------------------------------------- | -------------------------- |
 | `packages/adapter-vanilla/src/dsd-hydration.ts` | 添加客户端 render fallback |
-| `www/app/islands/shoelace-showcase.ts` | 覆写 Shoelace 颜色 token |
+| `www/app/islands/shoelace-showcase.ts`          | 覆写 Shoelace 颜色 token   |
