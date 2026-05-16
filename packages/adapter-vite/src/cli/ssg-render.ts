@@ -20,7 +20,7 @@ import {
   writeFileSync,
 } from 'node:fs';
 import type { LessBuildContext } from '../build-context.js';
-import type { HydrationHint, RenderError } from '@lessjs/core';
+import type { HydrationHint, ManifestDecision, RenderError } from '@lessjs/core';
 import { createLogger } from '@lessjs/core/logger';
 import { stableHash } from '../island-manifest.js';
 
@@ -668,9 +668,52 @@ async function networkFirst(req) {
       interactiveCount,
       pureIslandCount,
     },
+    // v0.17.2: Manifest-driven render decisions per package island
+    manifestDecisions: buildManifestDecisions(ctx),
   };
 
   const reportPath = join(outputDir, 'dsd-report.json');
   writeFileSync(reportPath, JSON.stringify(report, null, 2), 'utf-8');
   log.info(`DSD report → ${reportPath} (${pageDiagnostics.length} pages, ${totalErrors} errors)`);
+}
+
+// ─── Manifest Decisions Builder (v0.17.2) ───────────────────────
+
+/**
+ * Build manifest-driven render decisions from ctx.
+ *
+ * For each package island declaration, records how the pipeline resolved
+ * manifest flags (ssr, dsd, hydrate) into a concrete render path:
+ * - 'ssr+client': component is SSR-rendered + client-upgraded
+ * - 'client-only': component is client-only (ssr === false)
+ *
+ * When ctx or packageIslandDecls is absent, returns an empty array.
+ */
+function buildManifestDecisions(ctx?: LessBuildContext): ManifestDecision[] {
+  const decls = ctx?.phase1?.packageIslandDecls;
+  const manifests = ctx?.phase1?.packageManifests;
+  if (!decls?.length || !manifests?.length) return [];
+
+  // Build a tagName → packageName lookup from manifests
+  const tagNameToPackage = new Map<string, string>();
+  for (const pkg of manifests) {
+    for (const decl of pkg.declarations) {
+      tagNameToPackage.set(decl.tagName, pkg.packageName);
+    }
+  }
+
+  return decls.map((island) => {
+    const ssr = island.ssr !== false; // default: true
+    const dsd = island.dsd !== false; // default: true
+    const renderPath: ManifestDecision['renderPath'] = ssr ? 'ssr+client' : 'client-only';
+
+    return {
+      tagName: island.tagName,
+      packageName: tagNameToPackage.get(island.tagName) || 'unknown',
+      ssr,
+      dsd,
+      hydrate: island.hydrate,
+      renderPath,
+    };
+  });
 }

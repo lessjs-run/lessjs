@@ -2,20 +2,21 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version: 0.17.1
+## Current Version: 0.17.2
 
 ## Branch Status
 
-| Branch        | HEAD      | Status          |
-| ------------- | --------- | --------------- |
-| `origin/dev`  | pending   | v0.17.1 release |
-| `origin/main` | `1f93fa2` | v0.17.0 release |
+| Branch        | HEAD      | Status            |
+| ------------- | --------- | ----------------- |
+| `origin/dev`  | pending   | v0.17.2 release   |
+| `origin/main` | `08f267d` | v0.17.1 release   |
 
 ## Tags
 
 | Tag      | Commit    | Date       |
 | -------- | --------- | ---------- |
-| v0.17.1  | pending   | 2026-05-16 |
+| v0.17.2  | pending   | 2026-05-16 |
+| v0.17.1  | `08f267d` | 2026-05-16 |
 | v0.17.0  | `1f93fa2` | 2026-05-16 |
 | v0.16.0  | `a02feb6` | 2026-05-16 |
 | v0.15.3  | `5e06fc9` | 2026-05-16 |
@@ -23,24 +24,22 @@
 | v0.15.1  | `dd36eea` | 2026-05-16 |
 | v0.14.11 | `32dcc7c` | 2026-05-16 |
 
-## Last Release: 0.17.1 (2026-05-16)
+## Last Release: 0.17.2 (2026-05-16)
 
-- Cross-runtime adapter-vite: `Deno.build.os` → `process.platform`,
-  `Deno.exit(1)` → `process.exit(1)`.
-- Zero hard Deno dependencies in `ssg.ts`.
-- v0.17.0 SOP verification: build + e2e gates passed.
-- 522 tests passing, fmt/lint/typecheck clean.
+- SSR filtering: islands with `less.ssr: false` excluded from SSR registration
+  (render as empty custom element tags, upgraded client-side).
+- `ManifestDecision` type added to core — records per-island render path
+  (`ssr+client` | `client-only`) derived from manifest flags.
+- `dsd-report.json` now includes `manifestDecisions` field.
+- 528 tests passing, fmt/lint/typecheck/build/e2e all clean.
 
 ## Known Issues
 
 - 3 JSR `unanalyzable-dynamic-import` warnings in adapter-vite (expected,
   runtime-only deps, not blocking publish)
-- v0.17.0 SOP: SSR filtering (`less.ssr: false`) and `dsd-report.json`
-  manifest decisions not yet implemented — deferred to v0.17.2
 
 ## In Progress
 
-- v0.17.2: SSR filtering + dsd-report manifest decisions
 - v0.17.3: Multi-framework adapters
 
 ## Version Ladder
@@ -53,7 +52,7 @@
 | v0.16.0 | `docs/sop/v0.16.0-package-protocol.md`            | CEM manifest + local registry                      | Done    |
 | v0.17.0 | `docs/sop/v0.17.0-manifest-native-pipeline.md`    | Delete `PackageIslandMeta`, manifest-native pipe   | Done    |
 | v0.17.1 | `docs/sop/v0.17.1-cross-runtime.md`               | Cross-runtime adapter-vite, build + e2e gates      | Done    |
-| v0.17.2 | `docs/sop/v0.17.2-ssr-filtering-dsd-report.md`    | SSR filtering + dsd-report manifest decisions      | Next    |
+| v0.17.2 | `docs/sop/v0.17.2-ssr-filtering-dsd-report.md`    | SSR filtering + dsd-report manifest decisions      | Done    |
 | v0.17.3 | —                                                 | Multi-framework adapters                           | Planned |
 | v0.18.0 | `docs/sop/v0.18.0-universal-wc-engine.md`         | CEM parser + third-party WC SSR fallback           | Far     |
 | v0.18.1 | —                                                 | `less add` package discovery + registration        | Far     |

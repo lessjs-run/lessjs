@@ -377,7 +377,10 @@ export function renderEntry(desc: EntryDescriptor): string {
   // Package islands are imported by the client entry for browser upgrade.
   // SSR only imports local app islands, which avoids forcing Vite to resolve
   // package-manager-specific JSR specifiers in the server module runner.
-  const ssrIslands = desc.islands.filter((island) => !island.isPackage);
+  // v0.17.2: Islands with ssr === false are excluded from SSR registration;
+  // they will still be imported by the client entry for browser-side upgrade
+  // and render as empty custom element tags in SSR HTML.
+  const ssrIslands = desc.islands.filter((island) => !island.isPackage && island.ssr !== false);
   for (const island of ssrIslands) {
     const varName = `__island_${island.tagName.replace(/-/g, '_')}`;
     lines.push(`import * as ${varName} from '${island.modulePath}'`);

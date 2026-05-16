@@ -7,7 +7,7 @@
  * v0.15.3: DSD report + release gate SOP.
  */
 
-import { assert, assertEquals, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
+import { assert, assertEquals, assertExists, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
 import { existsSync, readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { Hono } from 'hono';
@@ -200,6 +200,115 @@ Deno.test('SSG report: handles string return from renderRoute (backward compat)'
   const report = readReport(TEST_OUT_DIR);
   assertEquals(typeof report.reportVersion, 'string');
   assertEquals(report.totalErrors, 0);
+
+  // Clean up
+  if (existsSync(TEST_OUT_DIR)) {
+    rmSync(TEST_OUT_DIR, { recursive: true, force: true });
+  }
+});
+
+// ─── Manifest Decisions (v0.17.2) ──────────────────────────────
+
+Deno.test('SSG report: manifestDecisions is present (empty when no ctx)', async () => {
+  if (existsSync(TEST_OUT_DIR)) {
+    rmSync(TEST_OUT_DIR, { recursive: true, force: true });
+  }
+
+  const bundle = createMockBundle();
+  // No ctx passed → manifestDecisions should be empty array
+  await ssgRender(bundle, defaultOptions);
+
+  const report = readReport(TEST_OUT_DIR);
+  assert(Array.isArray(report.manifestDecisions));
+  assertEquals((report.manifestDecisions as unknown[]).length, 0);
+
+  // Clean up
+  if (existsSync(TEST_OUT_DIR)) {
+    rmSync(TEST_OUT_DIR, { recursive: true, force: true });
+  }
+});
+
+Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
+  if (existsSync(TEST_OUT_DIR)) {
+    rmSync(TEST_OUT_DIR, { recursive: true, force: true });
+  }
+
+  // Create ctx with package island declarations
+  const { LessBuildContext } = await import('../src/build-context.js');
+  const ctx = new LessBuildContext({});
+  ctx.phase1.packageManifests = [
+    {
+      schemaVersion: '1.0.0',
+      packageName: '@lessjs/ui',
+      version: '0.17.2',
+      declarations: [
+        {
+          tagName: 'less-layout',
+          less: { module: '@lessjs/ui/less-layout', hydrate: 'eager', ssr: true },
+        },
+        {
+          tagName: 'less-button',
+          less: { module: '@lessjs/ui/less-button', hydrate: 'lazy', ssr: false },
+        },
+        { tagName: 'less-card', less: { module: '@lessjs/ui/less-card' } }, // no ssr field → default true
+      ],
+    },
+  ];
+  ctx.phase1.packageIslandDecls = [
+    {
+      tagName: 'less-layout',
+      modulePath: '@lessjs/ui/less-layout',
+      isPackage: true,
+      hydrate: 'eager',
+      ssr: true,
+      dsd: true,
+    },
+    {
+      tagName: 'less-button',
+      modulePath: '@lessjs/ui/less-button',
+      isPackage: true,
+      hydrate: 'lazy',
+      ssr: false,
+      dsd: true,
+    },
+    { tagName: 'less-card', modulePath: '@lessjs/ui/less-card', isPackage: true, hydrate: 'lazy' }, // no ssr → default true
+  ];
+
+  const bundle = createMockBundle();
+  await ssgRender(bundle, defaultOptions, ctx);
+
+  const report = readReport(TEST_OUT_DIR);
+  const decisions = report.manifestDecisions as Array<Record<string, unknown>>;
+
+  await t.step('has 3 decisions', () => {
+    assertEquals(decisions.length, 3);
+  });
+
+  await t.step('ssr: true → renderPath ssr+client', () => {
+    const layout = decisions.find((d) => d.tagName === 'less-layout');
+    assertExists(layout);
+    assertEquals(layout.ssr, true);
+    assertEquals(layout.dsd, true);
+    assertEquals(layout.hydrate, 'eager');
+    assertEquals(layout.renderPath, 'ssr+client');
+    assertEquals(layout.packageName, '@lessjs/ui');
+  });
+
+  await t.step('ssr: false → renderPath client-only', () => {
+    const button = decisions.find((d) => d.tagName === 'less-button');
+    assertExists(button);
+    assertEquals(button.ssr, false);
+    assertEquals(button.dsd, true);
+    assertEquals(button.hydrate, 'lazy');
+    assertEquals(button.renderPath, 'client-only');
+  });
+
+  await t.step('undefined ssr → defaults to true → renderPath ssr+client', () => {
+    const card = decisions.find((d) => d.tagName === 'less-card');
+    assertExists(card);
+    assertEquals(card.ssr, true);
+    assertEquals(card.renderPath, 'ssr+client');
+  });
 
   // Clean up
   if (existsSync(TEST_OUT_DIR)) {

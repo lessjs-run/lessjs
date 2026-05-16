@@ -772,6 +772,30 @@ export interface DsdHydrationHintSummary {
 }
 
 /**
+ * Manifest-driven render decision for a single island declaration.
+ *
+ * Records how the build pipeline resolved each package island's manifest
+ * flags (ssr, dsd, hydrate) into a concrete render path. Written to
+ * `dsd-report.json` for build observability and CI assertion.
+ *
+ * v0.17.2: Added to DsdBuildReport.
+ */
+export interface ManifestDecision {
+  /** Custom element tag name */
+  tagName: string;
+  /** Package name that declares this component */
+  packageName: string;
+  /** Whether this component supports SSR (from manifest `less.ssr`) */
+  ssr: boolean;
+  /** Whether this component uses Declarative Shadow DOM (from manifest `less.dsd`) */
+  dsd: boolean;
+  /** Hydration strategy from manifest (eager/lazy/idle/visible) */
+  hydrate?: string;
+  /** Resolved render path: 'ssr+client' = SSR rendering + client upgrade; 'client-only' = client-only */
+  renderPath: 'ssr+client' | 'client-only';
+}
+
+/**
  * Build report written to `dsd-report.json` after SSG rendering.
  *
  * Provides a machine-readable summary of render diagnostics,
@@ -793,6 +817,12 @@ export interface DsdBuildReport {
   metricsSummary: DsdMetricsSummary;
   /** Aggregated hydration hint summary */
   hydrationHintSummary: DsdHydrationHintSummary;
+  /**
+   * Manifest-driven render decisions per package island.
+   * Records how each island's manifest flags resolved to a render path.
+   * Empty when no package manifests are configured.
+   */
+  manifestDecisions?: ManifestDecision[];
 }
 
 /** Collects DSD render metrics during SSR for post-build reporting */

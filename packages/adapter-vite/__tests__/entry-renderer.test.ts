@@ -484,3 +484,106 @@ Deno.test('renderEntry: SSG mode disabled by default', () => {
 
   assertEquals(code.includes('install-global-dom-shim'), false);
 });
+
+// ─── SSR Filtering (v0.17.2) ──────────────────────────────────
+
+Deno.test('renderEntry: local island with ssr===true is registered in SSR', () => {
+  const desc = buildEntryDescriptor(basicRoutes, {
+    ssg: true,
+    islandTagNames: ['my-counter'],
+    islandFiles: ['my-counter.ts'],
+  });
+  // Mark island as ssr: true
+  desc.islands[0].ssr = true;
+  const code = renderEntry(desc);
+
+  // SSR registration should happen
+  assertStringIncludes(code, "customElements.define('my-counter'");
+});
+
+Deno.test('renderEntry: local island with ssr===false is excluded from SSR registration', () => {
+  const desc = buildEntryDescriptor(basicRoutes, {
+    ssg: true,
+    islandTagNames: ['client-only-widget'],
+    islandFiles: ['client-only-widget.ts'],
+  });
+  // Mark island as ssr: false
+  desc.islands[0].ssr = false;
+  const code = renderEntry(desc);
+
+  // SSR registration should NOT happen for ssr:false islands
+  assertFalse(code.includes("customElements.define('client-only-widget'"));
+  assertFalse(code.includes('import * as __island_client_only_widget from'));
+  // But it should still be in the island map for client-side upgrade
+  assertStringIncludes(code, 'client-only-widget');
+});
+
+Deno.test('renderEntry: package island with ssr===false excluded from SSR but in island map', () => {
+  const desc = buildEntryDescriptor(basicRoutes, {
+    ssg: true,
+    packageManifests: [
+      {
+        schemaVersion: '1.0.0',
+        packageName: '@lessjs/ui',
+        version: '0.17.0',
+        declarations: [
+          {
+            tagName: 'less-layout',
+            className: 'LessLayout',
+            less: { module: '@lessjs/ui/less-layout', hydrate: 'eager', ssr: true },
+          },
+          {
+            tagName: 'less-widget',
+            className: 'LessWidget',
+            less: { module: '@lessjs/ui/less-widget', hydrate: 'lazy', ssr: false },
+          },
+        ],
+      },
+    ],
+  });
+  const code = renderEntry(desc);
+
+  // Package islands are never SSR-registered (they go client-only)
+  assertFalse(code.includes("customElements.define('less-layout'"));
+  assertFalse(code.includes("customElements.define('less-widget'"));
+  // But both should be in the island map
+  assertStringIncludes(code, '"less-layout":"@lessjs/ui/less-layout"');
+  assertStringIncludes(code, '"less-widget":"@lessjs/ui/less-widget"');
+});
+
+Deno.test('buildEntryDescriptor: ssr field is extracted from manifest declarations', () => {
+  const desc = buildEntryDescriptor(basicRoutes, {
+    packageManifests: [
+      {
+        schemaVersion: '1.0.0',
+        packageName: '@lessjs/ui',
+        version: '0.17.0',
+        declarations: [
+          {
+            tagName: 'ssr-component',
+            className: 'SsrComponent',
+            less: { module: '@lessjs/ui/ssr-component', ssr: true },
+          },
+          {
+            tagName: 'client-only-component',
+            className: 'ClientOnlyComponent',
+            less: { module: '@lessjs/ui/client-only-component', ssr: false },
+          },
+          {
+            tagName: 'default-component',
+            className: 'DefaultComponent',
+            less: { module: '@lessjs/ui/default-component' },
+          },
+        ],
+      },
+    ],
+  });
+
+  const ssrComp = desc.islands.find((i) => i.tagName === 'ssr-component');
+  const clientOnly = desc.islands.find((i) => i.tagName === 'client-only-component');
+  const defaultComp = desc.islands.find((i) => i.tagName === 'default-component');
+
+  assertEquals(ssrComp?.ssr, true);
+  assertEquals(clientOnly?.ssr, false);
+  assertEquals(defaultComp?.ssr, undefined); // no ssr field in manifest → undefined
+});

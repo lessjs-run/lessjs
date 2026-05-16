@@ -53,6 +53,7 @@ export type {
   LessPackageExtensions,
   LessPackageManifest,
   LessSlot,
+  ManifestDecision,
   RegistryIndex,
   RegistryIndexEntry,
   RendererProtocol,
