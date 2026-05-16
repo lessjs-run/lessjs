@@ -111,7 +111,7 @@ export function buildPlugin(
       }
 
       const totalIslands = (ctx.phase1.islandTagNames?.length || 0) +
-        (ctx.phase1.packageIslands?.length || 0);
+        (ctx.phase1.packageIslandDecls?.length || 0);
 
       log.info('Phase 1/3 complete — SSR bundle + metadata written to ctx');
 

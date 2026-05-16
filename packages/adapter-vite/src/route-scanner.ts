@@ -15,12 +15,11 @@
  * - Files starting with _ are not route handlers but are loaded by the framework
  */
 
-import type { PackageIslandMeta, RouteEntry, SpecialFileType } from '@lessjs/core';
+import type { LessPackageManifest, RouteEntry, SpecialFileType } from '@lessjs/core';
 import { LessError } from '@lessjs/core/errors';
 import { createLogger } from '@lessjs/core/logger';
 import { readdir, stat } from 'node:fs/promises';
 import { join, posix, sep } from 'node:path';
-import { type ClientIslandEntry, validateClientIslandEntry } from './entry-generators.js';
 
 const log = createLogger('core');
 
@@ -258,40 +257,31 @@ export async function scanIslands(
 }
 
 /**
- * Scan package exports for island metadata.
- * Packages may export an `islands` array in their main entry.
- *
- * Security boundary: this dynamic import path is trusted backward compatibility
- * for explicit `packageIslands` config. New third-party registry work should
- * prefer static manifests (`custom-elements.json`, `lessjs.manifest.json`, or a
- * trusted manifest module) so package discovery does not execute arbitrary
- * package entry code.
+ * Scan package exports for LessPackageManifest.
+ * Packages should export a `manifest` LessPackageManifest in their main entry.
  *
  * Example package export:
  * ```ts
  * // @lessjs/ui/index.ts
- * export const islands = [
- *   { tagName: 'less-theme-toggle', modulePath: '@lessjs/ui/less-theme-toggle', strategy: 'eager' }
- * ] as const;
+ * export { manifest } from './manifest.js';
  * ```
  *
  * @param packageNames - List of package names to scan (e.g., ['@lessjs/ui'])
- * @returns Array of PackageIslandMeta
+ * @returns Array of LessPackageManifest
  */
-export async function scanPackageIslands(
+export async function scanPackageManifests(
   packageNames: string[],
-): Promise<PackageIslandMeta[]> {
-  const allIslands: PackageIslandMeta[] = [];
+): Promise<LessPackageManifest[]> {
+  const allManifests: LessPackageManifest[] = [];
 
   for (const pkg of packageNames) {
-    // v0.14.6: @vite-ignore suppresses unanalyzable-dynamic-import JSR warning.
-    // Non-existent packages intentionally throw LessError (fail-fast for misconfiguration).
+    // @vite-ignore suppresses unanalyzable-dynamic-import JSR warning.
     let mod: Record<string, unknown>;
     try {
       mod = await import(/* @vite-ignore */ pkg) as Record<string, unknown>;
     } catch (e) {
       throw new LessError(
-        `Failed to scan package islands from "${pkg}": ${
+        `Failed to scan package manifest from "${pkg}": ${
           e instanceof Error ? e.message : String(e)
         }`,
         'PACKAGE_SCAN_ERROR',
@@ -299,46 +289,27 @@ export async function scanPackageIslands(
         false,
       );
     }
-    if (mod.islands && Array.isArray(mod.islands)) {
-      // Validate each island has required fields
-      for (const island of mod.islands) {
-        if (island.tagName && island.modulePath) {
-          const meta = {
-            tagName: island.tagName,
-            modulePath: island.modulePath,
-            strategy: island.strategy || 'lazy',
-          };
-          validatePackageIslandMeta(meta, pkg);
-          allIslands.push(meta);
-        } else {
-          throw new LessError(
-            `Invalid island in ${pkg}: missing tagName or modulePath`,
-            'PACKAGE_ISLAND_META_ERROR',
-            500,
-            false,
-          );
-        }
+    if (mod.manifest && typeof mod.manifest === 'object') {
+      const manifest = mod.manifest as LessPackageManifest;
+      if (manifest.packageName && manifest.declarations) {
+        allManifests.push(manifest);
+      } else {
+        throw new LessError(
+          `Invalid manifest in ${pkg}: missing packageName or declarations`,
+          'PACKAGE_MANIFEST_ERROR',
+          500,
+          false,
+        );
       }
+    } else {
+      throw new LessError(
+        `Package ${pkg} does not export a manifest`,
+        'PACKAGE_MANIFEST_ERROR',
+        500,
+        false,
+      );
     }
   }
 
-  return allIslands;
-}
-
-export function validatePackageIslandMeta(
-  island: PackageIslandMeta,
-  packageName: string,
-): void {
-  try {
-    validateClientIslandEntry(island as ClientIslandEntry);
-  } catch (e) {
-    throw new LessError(
-      `Invalid package island metadata in "${packageName}": ${
-        e instanceof Error ? e.message : String(e)
-      }`,
-      'PACKAGE_ISLAND_META_ERROR',
-      500,
-      false,
-    );
-  }
+  return allManifests;
 }

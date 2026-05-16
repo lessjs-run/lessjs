@@ -1,5 +1,5 @@
 /**
- * Tests for LessPackageManifest types and packageIslandFromManifest().
+ * Tests for LessPackageManifest types and LessRegistry.
  */
 
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
@@ -9,7 +9,6 @@ import {
   generateIndex,
   getAll as getAllManifests,
   getByTagName,
-  packageIslandFromManifest,
   register as registerManifest,
   validate as validateManifest,
 } from '../src/registry.js';
@@ -51,64 +50,6 @@ function createTestManifest(overrides?: Partial<LessPackageManifest>): LessPacka
     ...overrides,
   };
 }
-
-Deno.test('packageIslandFromManifest - converts declarations to PackageIslandMeta[]', () => {
-  const manifest = createTestManifest();
-  const islands = packageIslandFromManifest(manifest);
-
-  assertEquals(islands.length, 2);
-  assertEquals(islands[0].tagName, 'test-button');
-  assertEquals(islands[0].modulePath, '@test/ui/test-button');
-  assertEquals(islands[0].strategy, 'lazy');
-  assertEquals(islands[1].tagName, 'test-card');
-});
-
-Deno.test('packageIslandFromManifest - skips declarations without module', () => {
-  const manifest = createTestManifest({
-    declarations: [
-      {
-        tagName: 'test-no-module',
-        className: 'TestNoModule',
-        less: {
-          ssr: true,
-          dsd: true,
-          layer: 'dsd-static',
-        },
-      },
-      {
-        tagName: 'test-with-module',
-        className: 'TestWithModule',
-        less: {
-          ssr: true,
-          dsd: true,
-          layer: 'dsd-interactive',
-          module: '@test/ui/test-with-module',
-        },
-      },
-    ],
-  });
-  const islands = packageIslandFromManifest(manifest);
-  assertEquals(islands.length, 1);
-  assertEquals(islands[0].tagName, 'test-with-module');
-});
-
-Deno.test('packageIslandFromManifest - maps hydrate to strategy', () => {
-  const manifest = createTestManifest({
-    declarations: [
-      {
-        tagName: 'test-eager',
-        less: { module: '@test/ui/test-eager', hydrate: 'eager' },
-      },
-      {
-        tagName: 'test-visible',
-        less: { module: '@test/ui/test-visible', hydrate: 'visible' },
-      },
-    ],
-  });
-  const islands = packageIslandFromManifest(manifest);
-  assertEquals(islands[0].strategy, 'eager');
-  assertEquals(islands[1].strategy, 'visible');
-});
 
 Deno.test('validateManifest - valid manifest passes', () => {
   const manifest = createTestManifest();

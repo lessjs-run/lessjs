@@ -2,38 +2,39 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version: 0.16.0
+## Current Version: 0.17.0
 
 ## Branch Status
 
-| Branch        | HEAD      | Status           |
-| ------------- | --------- | ---------------- |
-| `origin/dev`  | `a02feb6` | v0.17.0 planning |
-| `origin/main` | `a02feb6` | v0.16.0 release  |
+| Branch        | HEAD      | Status          |
+| ------------- | --------- | --------------- |
+| `origin/dev`  | pending   | v0.17.0 release |
+| `origin/main` | `a02feb6` | v0.16.0 release |
 
 ## Tags
 
 | Tag      | Commit    | Date       |
 | -------- | --------- | ---------- |
+| v0.17.0  | pending   | 2026-05-16 |
 | v0.16.0  | `a02feb6` | 2026-05-16 |
 | v0.15.3  | `5e06fc9` | 2026-05-16 |
 | v0.15.2  | `64dadd8` | 2026-05-16 |
 | v0.15.1  | `dd36eea` | 2026-05-16 |
 | v0.14.11 | `32dcc7c` | 2026-05-16 |
 
-## Last Release: 0.16.0 (2026-05-16)
+## Last Release: 0.17.0 (2026-05-16)
 
-- CEM-compatible `LessPackageManifest` with 20+ fields.
-- Local `LessRegistry` with register/validate/getByTagName/generateIndex.
-- 7 validation rules: missing fields, invalid tags, unsafe paths, invalid
-  strategies, duplicate tags, unresolved refs, registry conflicts.
-- `packageIslandFromManifest()` for backward compat with v0.15
-  `PackageIslandMeta` (to be removed in v0.17.0).
-- `@lessjs/ui` manifest with CEM metadata for all 7 components.
-- `PackageIslandMeta` marked `@deprecated` (removal target: v0.17.0).
-- Global 6-phase roadmap: `docs/roadmap/ROADMAP.md`.
-- Public roadmap page updated with 6-phase vision.
-- Release gate: 526 tests + 90 e2e pass; fmt, lint, typecheck, build clean.
+- **Breaking**: `PackageIslandMeta` deleted — use
+  `LessPackageManifest.declarations` instead.
+- **Breaking**: `packageIslandFromManifest()` deleted — read
+  `manifest.declarations` directly.
+- **Breaking**: `@lessjs/ui` no longer exports `islands` — only `manifest`.
+- adapter-vite reads `LessPackageManifest` directly (manifest-native pipeline).
+- `IslandDecl` extended with `hydrate`, `ssr`, `dsd` fields from manifest.
+- `scanPackageManifests()` replaces `scanPackageIslands()`.
+- `Phase1Meta.packageManifests` + `packageIslandDecls` replace
+  `packageIslands`.
+- Release gate: 76 core tests pass; fmt, lint, typecheck clean.
 
 ## Known Issues
 
@@ -42,9 +43,8 @@
 
 ## In Progress
 
-- v0.17.0 SOP written: `docs/sop/v0.17.0-manifest-native-pipeline.md`
-- Next: implement v0.17.0 — delete `PackageIslandMeta`, manifest-native
-  adapter-vite pipeline, SSR-aware rendering.
+- v0.17.1: `less add <pkg>`, `less validate-manifest`, npm compat layer.
+- SSR-aware rendering per manifest flags (ssr/dsd) for third-party packages.
 
 ## Version Ladder
 
@@ -54,7 +54,8 @@
 | v0.15.2 | `docs/sop/v0.15.2-render-output-hooks.md`         | `RenderOutput` + `RenderHooks`                   | ✅ Done |
 | v0.15.3 | `docs/sop/v0.15.3-dsd-report-and-release-gate.md` | `dsd-report.json` + release gate                 | ✅ Done |
 | v0.16.0 | `docs/sop/v0.16.0-package-protocol.md`            | CEM manifest + local registry                    | ✅ Done |
-| v0.17.0 | `docs/sop/v0.17.0-manifest-native-pipeline.md`    | Delete `PackageIslandMeta`, manifest-native pipe | Next    |
+| v0.17.0 | `docs/sop/v0.17.0-manifest-native-pipeline.md`    | Delete `PackageIslandMeta`, manifest-native pipe | ✅ Done |
+| v0.17.1 | —                                                 | `less add`, npm compat, CLI tooling              | Next    |
 
 ## JSR Publish Order
 

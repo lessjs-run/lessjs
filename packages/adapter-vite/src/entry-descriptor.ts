@@ -12,7 +12,7 @@
  * entry pipeline testable, serializable, and diffable.
  */
 
-import type { FrameworkOptions, PackageIslandMeta, RouteEntry } from '@lessjs/core';
+import type { FrameworkOptions, LessPackageManifest, RouteEntry } from '@lessjs/core';
 import { fileToTagName } from './route-scanner.js';
 
 // ─── Import declarations ───────────────────────────────────────
@@ -104,6 +104,12 @@ export interface IslandDecl {
   modulePath: string;
   /** Package islands are upgraded by the client entry and are not SSR-registered here. */
   isPackage?: boolean;
+  /** Hydration strategy from manifest (eager/lazy/idle/visible) */
+  hydrate?: 'eager' | 'lazy' | 'idle' | 'visible';
+  /** Whether this island supports SSR rendering (from manifest) */
+  ssr?: boolean;
+  /** Whether this island uses Declarative Shadow DOM (from manifest) */
+  dsd?: boolean;
 }
 
 // ─── Special file declarations (v0.3.0) ─────────────────────────
@@ -205,7 +211,8 @@ export function buildEntryDescriptor(
     islandTagNames?: string[];
     /** Relative file paths for local islands (preserves subdirectory structure) */
     islandFiles?: string[];
-    packageIslands?: PackageIslandMeta[];
+    /** Package manifests discovered from npm/JSR packages */
+    packageManifests?: LessPackageManifest[];
     /** @security Injected as raw HTML without sanitization */
     headExtras?: string;
     allowHeadExtrasScripts?: boolean;
@@ -347,7 +354,7 @@ export function buildEntryDescriptor(
   // --- Islands ---
   const islandTagNames = options.islandTagNames || [];
   const islandFiles = options.islandFiles || [];
-  const packageIslands = options.packageIslands || [];
+  const packageManifests = options.packageManifests || [];
 
   // Local islands — use real file paths when available to support
   // nested directories (e.g. posts/index.ts → tag "posts-index").
@@ -359,12 +366,19 @@ export function buildEntryDescriptor(
       : `/${islandsDir}/${tagName}.ts`,
   }));
 
-  // Package islands (from npm/JSR packages)
-  const packageIslandDecls: IslandDecl[] = packageIslands.map((island) => ({
-    tagName: island.tagName,
-    modulePath: island.modulePath,
-    isPackage: true,
-  }));
+  // Package islands (extracted from LessPackageManifest declarations)
+  const packageIslandDecls: IslandDecl[] = packageManifests.flatMap((pkg) =>
+    pkg.declarations
+      .filter((d) => d.less?.module)
+      .map((d) => ({
+        tagName: d.tagName,
+        modulePath: d.less!.module!,
+        isPackage: true,
+        hydrate: d.less?.hydrate as IslandDecl['hydrate'],
+        ssr: d.less?.ssr,
+        dsd: d.less?.dsd,
+      }))
+  );
 
   // Merge all islands
   const islands: IslandDecl[] = [...localIslands, ...packageIslandDecls];

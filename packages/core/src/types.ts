@@ -8,22 +8,7 @@
  * - Islands are the only client JS allowed
  */
 
-/** Package Island metadata exported from npm/JSR packages
- *
- * @deprecated Use LessPackageManifest instead. This type will be removed
- * in v0.18+. Migration: use packageIslandFromManifest() to generate
- * PackageIslandMeta[] from a LessPackageManifest.
- */
-export interface PackageIslandMeta {
-  /** Custom element tag name (e.g. 'less-theme-toggle') */
-  tagName: string;
-  /** Module path for import (e.g. '@lessjs/ui/less-theme-toggle') */
-  modulePath: string;
-  /** Island upgrade strategy */
-  strategy?: 'eager' | 'lazy' | 'idle' | 'visible';
-}
-
-// ─── WC Package Protocol (v0.16) ──────────────────────────────────────
+// ─── WC Package Protocol (v0.16+) ───────────────────────────────────
 
 /** Custom element attribute descriptor (CEM-compatible) */
 export interface LessAttribute {
@@ -177,8 +162,7 @@ export interface LessModule {
 
 /** CEM-compatible package manifest for LessJS Web Component packages.
  *
- * This is the v0.16 replacement for PackageIslandMeta. It provides
- * structured, tool-consumable metadata for an entire WC package.
+ * Structured, tool-consumable metadata for an entire WC package.
  */
 export interface LessPackageManifest {
   /** Schema version of the manifest format */
@@ -273,9 +257,9 @@ export interface FrameworkOptions {
   componentsDir?: string;
 
   /**
-   * Package islands to auto-import from npm/JSR packages.
-   * Each package should export an `islands` array in its main entry.
-   * Example: ['@lessjs/ui'] will scan package.main.islands.
+   * Package names to scan for WC manifests.
+   * Each package should export a `manifest` LessPackageManifest in its main entry.
+   * Example: ['@lessjs/ui'] will scan package.main.manifest.
    */
   packageIslands?: string[];
 
