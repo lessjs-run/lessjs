@@ -23,16 +23,16 @@ architectural decision, its context, and consequences.
 
 ## Active ADRs
 
-| ADR | Title | Status |
-|-----|-------|--------|
-| 0006 | Version Roadmap | Accepted |
-| 0007 | npm Publishing Strategy | Accepted |
-| 0010 | Eliminate .less/ temp files | Accepted, Implemented |
-| 0011 | Eliminate globalThis bridge | Accepted, Implemented |
-| 0016 | Dual-mode subpath resolution | Accepted, Implemented |
-| 0017 | Runtime/Build separation | Accepted, Implemented |
-| 0018 | Virtual Data Modules | Accepted, Implemented |
-| 0024 | Standards-first WC Renderer Roadmap | Accepted |
+| ADR  | Title                               | Status                |
+| ---- | ----------------------------------- | --------------------- |
+| 0006 | Version Roadmap                     | Accepted              |
+| 0007 | npm Publishing Strategy             | Accepted              |
+| 0010 | Eliminate .less/ temp files         | Accepted, Implemented |
+| 0011 | Eliminate globalThis bridge         | Accepted, Implemented |
+| 0016 | Dual-mode subpath resolution        | Accepted, Implemented |
+| 0017 | Runtime/Build separation            | Accepted, Implemented |
+| 0018 | Virtual Data Modules                | Accepted, Implemented |
+| 0024 | Standards-first WC Renderer Roadmap | Accepted              |
 
 ## Superseded / Historical
 

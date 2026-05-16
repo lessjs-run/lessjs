@@ -6,15 +6,15 @@
 
 ## Branch Status
 
-| Branch | HEAD | Status |
-|--------|------|--------|
-| `origin/dev` | `b7550cb` | Active development |
-| `origin/main` | `b7550cb` | Synced with dev |
+| Branch        | HEAD      | Status             |
+| ------------- | --------- | ------------------ |
+| `origin/dev`  | `b7550cb` | Active development |
+| `origin/main` | `b7550cb` | Synced with dev    |
 
 ## Tags
 
-| Tag | Commit | Date |
-|-----|--------|------|
+| Tag      | Commit    | Date       |
+| -------- | --------- | ---------- |
 | v0.14.11 | `32dcc7c` | 2026-05-16 |
 | v0.14.10 | `0c4264e` | 2026-05-16 |
 
