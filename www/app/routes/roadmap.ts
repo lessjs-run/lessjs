@@ -284,12 +284,19 @@ export class RoadmapPage extends LitElement {
           <div class="phase">
             <span class="status done">Done</span>
             <h3>Phase 4: v0.18.x — Universal WC Engine</h3>
-            <p>CEM 解析器 + 4 级兼容分类 + 构建时自动检测 + dsd-report 报告扩展。第三方 WC 包默认 client-only，安全接入 LessJS 生态。</p>
+            <p>
+              CEM 解析器 + 4 级兼容分类 + 构建时自动检测 + dsd-report 报告扩展。第三方 WC 包默认
+              client-only，安全接入 LessJS 生态。
+            </p>
             <ul class="compact-list">
-              <li>v0.18.0: CEM 解析器、4 级兼容分类器（ssr-capable / client-only / rejected / experimental-dom）、SSR admission 集成、dsd-report cemCompatibility 报告、构建时自动扫描 node_modules</li>
-              <li>v0.18.1（计划）: <code>less validate-manifest</code> CLI — 安装前验证包兼容性</li>
-              <li>v0.18.2（计划）: <code>less add</code> 一键安装流程</li>
-              <li>v0.18.3（实验）: DOM 模拟渲染 client-only 组件</li>
+              <li>
+                v0.18.0: CEM 解析器、4 级兼容分类器（ssr-capable / client-only / rejected /
+                experimental-dom）、SSR admission 集成、dsd-report cemCompatibility 报告、构建时自动扫描
+                node_modules
+              </li>
+              <li>v0.18.1: <code>less validate-manifest</code> CLI — 安装前验证包兼容性</li>
+              <li>v0.18.2: <code>less add</code> 一键安装流程</li>
+              <li>v0.18.3（实验）: DOM 模拟渲染 client-only 组件 (Happy DOM)</li>
             </ul>
           </div>
 
@@ -421,7 +428,10 @@ export class RoadmapPage extends LitElement {
                 <td>4</td>
                 <td>v0.18.x</td>
                 <td>Universal WC Engine</td>
-                <td>CEM parser + 4-tier compatibility, third-party WC auto-detection, dsd-report compatibility report</td>
+                <td>
+                  CEM parser + 4-tier compatibility, third-party WC auto-detection, dsd-report
+                  compatibility report
+                </td>
                 <td><span class="status done">Done</span></td>
               </tr>
               <tr>
@@ -477,12 +487,17 @@ export class RoadmapPage extends LitElement {
           <div class="phase">
             <span class="status done">Done</span>
             <h3>Phase 3: v0.17.x — Ecosystem Entry</h3>
-            <p>Eliminate backward compat layer, manifest-native pipeline, cross-runtime support, SSR admission boundary hardening.</p>
+            <p>
+              Eliminate backward compat layer, manifest-native pipeline, cross-runtime support, SSR
+              admission boundary hardening.
+            </p>
             <ul class="compact-list">
               <li>v0.17.0: Delete PackageIslandMeta + manifest-native pipeline</li>
               <li>v0.17.1: Cross-runtime adapter-vite (Deno API → Node.js compat)</li>
               <li>v0.17.2: SSR filtering + dsd-report manifest decisions</li>
-              <li>v0.17.3: Multi-framework adapter exploration (adapter-vanilla enhanced, adapter-react)</li>
+              <li>
+                v0.17.3: Multi-framework adapter exploration (adapter-vanilla enhanced, adapter-react)
+              </li>
               <li>v0.17.4: Compatibility boundary hardening + SSR admission planner</li>
               <li>v0.17.5: Audit comments + test fixtures</li>
             </ul>
@@ -491,19 +506,33 @@ export class RoadmapPage extends LitElement {
           <div class="phase">
             <span class="status done">Done</span>
             <h3>Phase 4: v0.18.x — Universal WC Engine</h3>
-            <p>CEM parser + 4-tier compatibility classifier + build-time auto-detection + dsd-report schema extensions. Third-party WC packages default to client-only, safely integrated into LessJS ecosystem.</p>
+            <p>
+              CEM parser + 4-tier compatibility classifier + build-time auto-detection + dsd-report schema
+              extensions. Third-party WC packages default to client-only, safely integrated into LessJS
+              ecosystem.
+            </p>
             <ul class="compact-list">
-              <li>v0.18.0: CEM parser, 4-tier classifier (ssr-capable / client-only / rejected / experimental-dom), SSR admission integration, dsd-report cemCompatibility section, build-time node_modules auto-scan</li>
-              <li>v0.18.1 (planned): <code>less validate-manifest</code> CLI — pre-install package compatibility validation</li>
-              <li>v0.18.2 (planned): <code>less add</code> one-click install flow</li>
-              <li>v0.18.3 (experimental): DOM simulation for client-only components</li>
+              <li>
+                v0.18.0: CEM parser, 4-tier classifier (ssr-capable / client-only / rejected /
+                experimental-dom), SSR admission integration, dsd-report cemCompatibility section,
+                build-time node_modules auto-scan
+              </li>
+              <li>
+                v0.18.1: <code>less validate-manifest</code> CLI — pre-install package compatibility
+                validation
+              </li>
+              <li>v0.18.2: <code>less add</code> one-click install flow</li>
+              <li>v0.18.3 (experimental): DOM simulation for client-only components (Happy DOM)</li>
             </ul>
           </div>
 
           <div class="phase deferred">
             <span class="status deferred">Far</span>
             <h3>Phase 5: v0.19.x — Platform + Hub</h3>
-            <p>From local registry to public registry. Hub lives in main repo monorepo until scale demands separation.</p>
+            <p>
+              From local registry to public registry. Hub lives in main repo monorepo until scale demands
+              separation.
+            </p>
             <ul class="compact-list">
               <li>Hub API + package search + browse UI</li>
               <li>SSR/SSG snapshot previews + bundle cost analysis</li>
@@ -516,7 +545,8 @@ export class RoadmapPage extends LitElement {
             <span class="status deferred">Vision</span>
             <h3>Phase 6: v1.0.x — General-Purpose Engine</h3>
             <p>
-              Any CEM manifest WC package → automatic SSR/SSG, zero config. API freeze. From "tool" to "standard".
+              Any CEM manifest WC package → automatic SSR/SSG, zero config. API freeze. From "tool" to
+              "standard".
             </p>
           </div>
 

@@ -2,11 +2,11 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version: 0.18.2
+## Current Version: 0.18.3
 
-## Next Planned Version: 0.18.3 (experimental)
+## Next Planned Version: 0.19.0 (Platform + Hub)
 
-v0.18.2 `less add` install flow complete. v0.18.3 DOM simulation experiment is next.
+v0.18.3 DOM simulation experiment is complete. v0.19.x Platform + Hub is next.
 
 ## Branch Status
 
@@ -29,12 +29,16 @@ v0.18.2 `less add` install flow complete. v0.18.3 DOM simulation experiment is n
 | v0.16.0 | `a02feb6` | 2026-05-16 |
 | v0.15.3 | `5e06fc9` | 2026-05-16 |
 
-## Last Completed Release: 0.18.2 (2026-05-17)
+## Last Completed Release: 0.18.3 (2026-05-17)
 
-- **`less add` safe install flow**: dry-run + validation gate + plan generation
-- **New types**: `AddPlan`, `AddTagEntry`, `FileMutation`, `PackageSource`
-- **Compatibility-aware**: SSR-capable → full setup, client-only → limited, rejected → blocked
-- **14 new tests, 673 total**
+- **DOM Simulation Experiment**: Happy DOM integration for client-only WC rendering
+- **Config**: `ssr.domSimulation: 'off' | 'explicit'`, `ssr.domSimulationTimeoutMs`
+- **Report**: `dsd-report.json.domSimulation` section with per-attempt results
+- **Safety**: Timeout-bound, isolated env, failure degrades to client-only
+- **ADR-0029**: Happy DOM chosen over JSDOM and self-implementation
+- **8 new tests, 681 total**
+
+**v0.18.x series complete.**
 
 - **Lint fix**: removed `any` type from parent-with-client-child fixture
 
@@ -57,17 +61,17 @@ Third-party package handling is conservative:
 
 ## Version Ladder With Admission And Exit Gates
 
-| Version | SOP                                                    | Status       | Entry Gate                                                           | Exit Gate                                                 |
-| ------- | ------------------------------------------------------ | ------------ | -------------------------------------------------------------------- | --------------------------------------------------------- |
-| v0.17.3 | `docs/sop/v0.17.3-multi-framework-adapters.md`         | Done         | v0.17.2 SSR filtering exists                                         | Vanilla/React adapters documented; no universal SSR claim |
-| v0.17.4 | `docs/sop/v0.17.4-compatibility-boundary-hardening.md` | Done         | v0.17.3 docs closed                                                  | Client-only modules excluded before SSR entry generation  |
-| v0.18.0 | `docs/sop/v0.18.0-universal-wc-engine.md`              | **Done**     | v0.17.4 admission planner complete + package SSR admission validated | CEM parser + compatibility tiers + report reasons         |
-| v0.18.1 | `docs/sop/v0.18.1-validate-manifest-cli.md`            | **Done**     | v0.18.0 classifier stable                                            | `less validate-manifest` emits stable diagnostics         |
-| v0.18.2 | `docs/sop/v0.18.2-less-add-install-flow.md`            | Planned      | validation CLI stable                                                | `less add` dry-run/install is validation-gated            |
-| v0.18.3 | `docs/sop/v0.18.3-dom-simulation-experiment.md`        | Experimental | client-only fallback stable                                          | opt-in DOM simulation decision recorded                   |
-| v0.19.0 | `docs/sop/v0.19.0-platform-hub.md`                     | Planned      | validation/build reports stable                                      | Hub ingests artifacts and shows compatibility             |
-| v0.19.1 | `docs/sop/v0.19.1-hub-previews-quality-gates.md`       | Planned      | Hub ingestion MVP stable                                             | previews/quality gates reflect validation evidence        |
-| v1.0.0  | `docs/sop/v1.0.0-general-purpose-engine.md`            | Vision       | engine, reports, add flow, Hub records stable                        | API/schema freeze with deterministic package outcomes     |
+| Version | SOP                                                    | Status   | Entry Gate                                                           | Exit Gate                                                 |
+| ------- | ------------------------------------------------------ | -------- | -------------------------------------------------------------------- | --------------------------------------------------------- |
+| v0.17.3 | `docs/sop/v0.17.3-multi-framework-adapters.md`         | Done     | v0.17.2 SSR filtering exists                                         | Vanilla/React adapters documented; no universal SSR claim |
+| v0.17.4 | `docs/sop/v0.17.4-compatibility-boundary-hardening.md` | Done     | v0.17.3 docs closed                                                  | Client-only modules excluded before SSR entry generation  |
+| v0.18.0 | `docs/sop/v0.18.0-universal-wc-engine.md`              | **Done** | v0.17.4 admission planner complete + package SSR admission validated | CEM parser + compatibility tiers + report reasons         |
+| v0.18.1 | `docs/sop/v0.18.1-validate-manifest-cli.md`            | **Done** | v0.18.0 classifier stable                                            | `less validate-manifest` emits stable diagnostics         |
+| v0.18.2 | `docs/sop/v0.18.2-less-add-install-flow.md`            | Planned  | validation CLI stable                                                | `less add` dry-run/install is validation-gated            |
+| v0.18.3 | `docs/sop/v0.18.3-dom-simulation-experiment.md`        | **Done** | client-only fallback stable                                          | opt-in DOM simulation decision recorded                   |
+| v0.19.0 | `docs/sop/v0.19.0-platform-hub.md`                     | Planned  | validation/build reports stable                                      | Hub ingests artifacts and shows compatibility             |
+| v0.19.1 | `docs/sop/v0.19.1-hub-previews-quality-gates.md`       | Planned  | Hub ingestion MVP stable                                             | previews/quality gates reflect validation evidence        |
+| v1.0.0  | `docs/sop/v1.0.0-general-purpose-engine.md`            | Vision   | engine, reports, add flow, Hub records stable                        | API/schema freeze with deterministic package outcomes     |
 
 ## Operator Checklist
 

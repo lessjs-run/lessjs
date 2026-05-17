@@ -17,6 +17,7 @@ Deno-first Web Components 框架。基于 **Declarative Shadow DOM SSR/SSG + Isl
 - **Universal WC Engine** (v0.18.0) — 自动检测第三方 Web Component，4 级兼容性分类（ssr-capable / client-only / rejected / experimental-dom）
 - **validate-manifest CLI** (v0.18.1) — 安装前验证 CEM manifest 兼容性
 - **less add 安全安装** (v0.18.2) — dry-run + 验证门禁 + 计划生成
+- **DOM 模拟实验** (v0.18.3) — Happy DOM 驱动的 client-only 组件 SSR 实验
 - **Renderer Protocol** — 结构化渲染输出 + 错误分类 + DSD 指标
 - **多适配器** — Lit / React / Vanilla 适配器
 - **Deno workspace** — 纯 ESM，零 `package.json`
@@ -80,7 +81,7 @@ node_modules/*/custom-elements.json → CEM Parser → 4级分类器 → SSR adm
 | v0.18.0 | CEM 解析器 + 4级分类 + 自动检测 | ✅ 完成   |
 | v0.18.1 | validate-manifest CLI           | ✅ 完成   |
 | v0.18.2 | less add 安全安装流             | ✅ 完成   |
-| v0.18.3 | DOM 模拟实验（计划）            | 📋 计划中 |
+| v0.18.3 | DOM 模拟实验（Happy DOM）       | ✅ 完成   |
 | v0.19   | Registry Hub + Platform         | 📋 计划中 |
 | v1.0    | API Freeze                      | 🚀 远期   |
 

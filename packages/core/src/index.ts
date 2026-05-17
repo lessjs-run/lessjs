@@ -37,6 +37,8 @@ export type {
   CompatibilityClassification,
   CompatibilityTier,
   ComponentLayer,
+  DomSimulationAttempt,
+  DomSimulationReport,
   DsdBuildReport,
   DsdHydrationHintSummary,
   DsdMetricsSummary,
@@ -114,6 +116,10 @@ export {
 // Less Add Install Flow (v0.18.2)
 export { generateAddPlan } from './less-add.js';
 export type { AddPlan, AddTagEntry, FileMutation, PackageSource } from './less-add.js';
+
+// DOM Simulation Experiment (v0.18.3)
+export { buildDomSimulationReport, renderWithDomSimulation } from './dom-simulation.js';
+export type { DomSimulationOptions, DomSimulationResult } from './dom-simulation.js';
 
 // G10 fix: Virtual module IDs — shared across adapter-vite, content, i18n
 export {

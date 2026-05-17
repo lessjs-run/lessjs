@@ -19,6 +19,7 @@ interactive components that need browser APIs.
 - **Universal WC Engine** (v0.18.0) — auto-detect third-party WC packages, 4-tier compatibility (ssr-capable / client-only / rejected / experimental-dom)
 - **validate-manifest CLI** (v0.18.1) — validate CEM manifests before install
 - **less add safe install** (v0.18.2) — dry-run + validation gate + plan generation
+- **DOM simulation experiment** (v0.18.3) — Happy DOM-driven SSR experiment for client-only components
 - **Renderer Protocol** — structured render output, error taxonomy, DSD metrics
 - **Multi-adapter** — Lit / React / Vanilla adapters
 - **Deno workspace** — pure ESM, no `package.json`
@@ -73,18 +74,19 @@ node_modules/*/custom-elements.json → CEM Parser → 4-tier classifier → SSR
 
 ## Roadmap
 
-| Version | Target                              | Status      |
-| ------- | ----------------------------------- | ----------- |
-| v0.15   | Renderer Kernel Protocol            | ✅ Done     |
-| v0.16   | WC Package Protocol                 | ✅ Done     |
-| v0.17   | Ecosystem Entry + SSR Boundary      | ✅ Done     |
-| v0.18   | **Universal WC Engine**             | **Current** |
-| v0.18.0 | CEM parser + 4-tier + auto-detect   | ✅ Done     |
-| v0.18.1 | validate-manifest CLI               | ✅ Done     |
-| v0.18.2 | less add safe install flow          | ✅ Done     |
-| v0.18.3 | DOM simulation experiment (planned) | 📋 Planned  |
-| v0.19   | Registry Hub + Platform             | 📋 Planned  |
-| v1.0    | API Freeze                          | 🚀 Far term |
+| Version | Target                                | Status      |
+| ------- | ------------------------------------- | ----------- |
+| v0.15   | Renderer Kernel Protocol              | ✅ Done     |
+| v0.16   | WC Package Protocol                   | ✅ Done     |
+| v0.17   | Ecosystem Entry + SSR Boundary        | ✅ Done     |
+| v0.18   | **Universal WC Engine**               | **Current** |
+| v0.18.0 | CEM parser + 4-tier + auto-detect     | ✅ Done     |
+| v0.18.1 | validate-manifest CLI                 | ✅ Done     |
+| v0.18.2 | less add safe install flow            | ✅ Done     |
+| v0.18.3 | DOM simulation experiment (Happy DOM) | ✅ Done     |
+| v0.19   | Registry Hub + Platform               | 📋 Planned  |
+| v1.0    | API Freeze                            | 🚀 Far term |
+| v1.0    | API Freeze                            | 🚀 Far term |
 
 See [ADR docs](docs/adr/) and [lessjs.org](https://lessjs.org) for details.
 
