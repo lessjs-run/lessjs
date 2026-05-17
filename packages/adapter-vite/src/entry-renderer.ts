@@ -19,6 +19,28 @@
  * TODO: Extract shared types to @lessjs/build-types, or move sitemap generation into adapter-vite
  */
 
+// ─── SSR Import Discovery Audit (Step1) ─────────────────────
+// This file controls which islands become SSR imports:
+//
+// 1. Local island files:
+//    - Imported at lines 406-419 (only if in ssrAdmissionPlan.renderableTags)
+//    - Example: `import * as __island_counter from '/app/islands/counter.ts'`
+//
+// 2. Package manifest islands:
+//    - NOT imported in this file (SSR entry)
+//    - Package islands are registered client-side only
+//    - See: `packages/adapter-vite/src/plugin.ts` for client entry generation
+//
+// 3. Nested custom elements (from rendered HTML):
+//    - Handled by `renderDSD()` in core/src/render-dsd.ts
+//    - Filtered by `ssrAdmissionPlan.clientOnlyTags`
+//    - See: core/src/render-nested.ts for nested rendering guard
+//
+// Audit completed: 2026-05-17
+// Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
+//
+// ─────────────────────────────────────────────────────────────
+
 import type {
   ApiRouteDecl,
   CorsOriginConfig,

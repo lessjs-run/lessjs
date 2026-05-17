@@ -10,6 +10,28 @@
  *
  * Separating "what to generate" from "how to render it" makes the
  * entry pipeline testable, serializable, and diffable.
+ *
+ * ─── SSR Import Discovery Audit (Step 1) ─────────────────────
+ *
+ * This file records where each island source becomes an SSR import:
+ *
+ * 1. Local island file:
+ *    - Scanned by `scanIslands()` in route-scanner.ts
+ *    - Metadata read by `scanIslandMeta()` (static, no import)
+ *    - Imported in `renderEntry()` lines 406-419 (only if in ssrAdmissionPlan.renderableTags)
+ *
+ * 2. Package manifest island:
+ *    - Discovered by `scanPackageManifests()` in route-scanner.ts
+ *    - Manifest declarations extracted in `buildEntryDescriptor()` lines 402-415
+ *    - NOT imported in SSR entry (package islands registered client-side only)
+ *
+ * 3. Nested custom element (from rendered HTML):
+ *    - Detected during `renderDSD()` in core/src/render-dsd.ts
+ *    - Checked against `ssrAdmissionPlan.clientOnlyTags`
+ *    - Skipped if in clientOnlyTags (see core/src/render-nested.ts)
+ *
+ * Audit completed: 2026-05-17
+ * Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
  */
 
 import type { FrameworkOptions, LessPackageManifest, RouteEntry } from '@lessjs/core';
@@ -454,6 +476,9 @@ export function buildSsrAdmissionPlan(islands: IslandDecl[]): SsrAdmissionPlan {
   const reasons: Record<string, string> = {};
   const decisions: SsrAdmissionDecision[] = [];
   const seen = new Set<string>();
+  // Track which tags have been added to renderableTags/clientOnlyTags
+  // so we can remove them if a duplicate is found later.
+  const admittedTags = new Set<string>();
 
   for (const island of islands) {
     const source = island.source || (island.isPackage ? 'package' : 'local');
@@ -462,6 +487,16 @@ export function buildSsrAdmissionPlan(islands: IslandDecl[]): SsrAdmissionPlan {
       const reason = 'duplicate custom element tag';
       rejectedTags.push(island.tagName);
       reasons[island.tagName] = reason;
+
+      // Remove from renderableTags/clientOnlyTags if previously admitted
+      if (admittedTags.has(island.tagName)) {
+        const rIdx = renderableTags.indexOf(island.tagName);
+        if (rIdx !== -1) renderableTags.splice(rIdx, 1);
+        const cIdx = clientOnlyTags.indexOf(island.tagName);
+        if (cIdx !== -1) clientOnlyTags.splice(cIdx, 1);
+        admittedTags.delete(island.tagName);
+      }
+
       decisions.push({
         tagName: island.tagName,
         modulePath: island.modulePath,
@@ -496,8 +531,14 @@ export function buildSsrAdmissionPlan(islands: IslandDecl[]): SsrAdmissionPlan {
       reason = island.ssr === true ? 'less.ssr is true' : 'local island default SSR path';
     }
 
-    if (renderPath === 'ssr+client') renderableTags.push(island.tagName);
-    if (renderPath === 'client-only') clientOnlyTags.push(island.tagName);
+    if (renderPath === 'ssr+client') {
+      renderableTags.push(island.tagName);
+      admittedTags.add(island.tagName);
+    }
+    if (renderPath === 'client-only') {
+      clientOnlyTags.push(island.tagName);
+      admittedTags.add(island.tagName);
+    }
 
     reasons[island.tagName] = reason;
     decisions.push({

@@ -13,6 +13,28 @@
  * - _renderer.ts: exports a LitElement class used as the page layout wrapper
  * - _middleware.ts: exports a Hono middleware function applied before the route
  * - Files starting with _ are not route handlers but are loaded by the framework
+ *
+ * ─── SSR Import Discovery Audit (Step1) ─────────────────────
+ *
+ * This file discovers islands but does NOT import them (static scan only):
+ *
+ * 1. Local island files:
+ *    - Scanned by `scanIslands()` (lines 212-257)
+ *    - Metadata read by `scanIslandMeta()` (lines 284-319)
+ *    - SSR decision: `less.ssr` field (static read, no import)
+ *
+ * 2. Package manifest islands:
+ *    - Discovered by `scanPackageManifests()` (lines 334-383)
+ *    - Imports package module to read `manifest` export
+ *    - Browser-only packages: caught by try/catch (line 345-349)
+ *    - SSR decision: `manifest.declarations[].less.ssr` field
+ *
+ * 3. Nested custom elements (from rendered HTML):
+ *    - NOT handled in this file
+ *    - See: `packages/core/src/render-dsd.ts` and `render-nested.ts`
+ *
+ * Audit completed: 2026-05-17
+ * Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
  */
 
 import type { LessPackageManifest, RouteEntry, SpecialFileType } from '@lessjs/core';
