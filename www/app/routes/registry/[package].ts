@@ -4,7 +4,12 @@
  * v0.19.0: Detailed view of a Hub package with compatibility evidence,
  * tags, install guidance, and snapshot previews.
  *
- * Route parameter: [package] — e.g. /registry/@shoelace-style/shoelace
+ * Route parameter: [package] — e.g. /registry/@shoelace-style~shoelace
+ * Scoped packages (e.g. @lessjs/ui) use ~ as separator in the URL
+ * and are decoded by the connectedCallback.
+ *
+ * Data is fetched client-side from /hub/packages/*.json.
+ * SSR renders a loading state, then client hydrates with real data.
  *
  * @see docs/sop/v0.19.0-platform-hub.md
  * @see ADR-0030
@@ -15,6 +20,8 @@ import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
+
+// ─── Types ────────────────────────────────────────────────────────────────
 
 interface HubTagRecord {
   tagName: string;
@@ -83,280 +90,60 @@ export default class DocsRegistryDetail extends LitElement {
   static override styles = [
     pageStyles,
     css`
-      .detail-header {
-        margin-bottom: 2rem;
-      }
-
-      .breadcrumb {
-        font-size: 0.8125rem;
-        color: var(--less-text-tertiary);
-        margin-bottom: 0.75rem;
-      }
-
-      .breadcrumb a {
-        color: var(--less-accent);
-        text-decoration: none;
-      }
-
-      .breadcrumb a:hover {
-        text-decoration: underline;
-      }
-
-      .pkg-title {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        flex-wrap: wrap;
-        margin: 0 0 0.5rem;
-      }
-
-      .pkg-title h1 {
-        font-size: 1.75rem;
-        font-weight: 700;
-        margin: 0;
-      }
-
-      .pkg-title code {
-        font-size: 1.25rem;
-        background: var(--less-bg-code);
-        padding: 0.125rem 0.5rem;
-        border-radius: 4px;
-      }
-
-      .compat-badge-lg {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.375rem;
-        padding: 0.25rem 0.75rem;
-        border-radius: 14px;
-        font-size: 0.8125rem;
-        font-weight: 600;
-      }
-
-      .compat-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        display: inline-block;
-      }
-
-      .pkg-desc {
-        font-size: 0.9375rem;
-        color: var(--less-text-secondary);
-        line-height: 1.6;
-        margin: 0 0 0.75rem;
-        max-width: 640px;
-      }
-
-      .pkg-links {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        margin-bottom: 0.5rem;
-      }
-
-      .pkg-links a {
-        font-size: 0.8125rem;
-        color: var(--less-accent);
-        text-decoration: none;
-      }
-
-      .pkg-links a:hover {
-        text-decoration: underline;
-      }
-
-      /* Section cards */
-      .section {
-        border: 0.5px solid var(--less-border);
-        border-radius: 8px;
-        padding: 1.25rem;
-        margin-bottom: 1.25rem;
-        background: var(--less-bg-surface);
-      }
-
-      .section-title {
-        font-size: 1rem;
-        font-weight: 600;
-        margin: 0 0 0.75rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      /* Install guidance */
-      .install-box {
-        padding: 1rem;
-        border-radius: 6px;
-        margin-bottom: 0.75rem;
-      }
-
-      .install-safe {
-        background: rgba(34, 197, 94, 0.08);
-        border: 0.5px solid rgba(34, 197, 94, 0.2);
-      }
-
-      .install-unsafe {
-        background: rgba(239, 68, 68, 0.08);
-        border: 0.5px solid rgba(239, 68, 68, 0.2);
-      }
-
-      .install-cmd {
-        font-family: monospace;
-        background: var(--less-bg-code);
-        padding: 0.5rem 0.75rem;
-        border-radius: 4px;
-        font-size: 0.875rem;
-        margin: 0.5rem 0;
-        user-select: all;
-      }
-
-      .warning-list {
-        list-style: none;
-        padding: 0;
-        margin: 0.5rem 0 0;
-      }
-
-      .warning-list li {
-        font-size: 0.8125rem;
-        padding: 0.25rem 0;
-        padding-left: 1.25rem;
-        position: relative;
-        color: var(--less-text-secondary);
-      }
-
-      .warning-list li::before {
-        content: '⚠️';
-        position: absolute;
-        left: 0;
-      }
-
-      /* Tags */
-      .tag-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-      }
-
-      .tag-item {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.375rem;
-        padding: 0.375rem 0.625rem;
-        background: var(--less-bg-code);
-        border-radius: 4px;
-        font-size: 0.8125rem;
-        font-family: monospace;
-      }
-
-      .tag-status {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-      }
-
-      /* Metadata table */
-      .meta-table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-
-      .meta-table th, .meta-table td {
-        text-align: left;
-        padding: 0.375rem 0.5rem;
-        font-size: 0.8125rem;
-        border-bottom: 0.5px solid var(--less-border);
-      }
-
-      .meta-table th {
-        width: 140px;
-        color: var(--less-text-tertiary);
-        font-weight: 500;
-      }
-
-      /* Snapshot preview */
-      .snapshot-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 1rem;
-      }
-
-      .snapshot-card {
-        border: 0.5px solid var(--less-border);
-        border-radius: 6px;
-        overflow: hidden;
-      }
-
-      .snapshot-header {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        background: var(--less-bg-code);
-        border-bottom: 0.5px solid var(--less-border);
-        font-family: monospace;
-      }
-
-      .snapshot-body {
-        padding: 1rem;
-        font-size: 0.75rem;
-        color: var(--less-text-secondary);
-        text-align: center;
-      }
-
-      .no-snapshot {
-        padding: 2rem;
-        text-align: center;
-        color: var(--less-text-tertiary);
-        font-size: 0.875rem;
-      }
-
-      /* Accordion */
-      .accordion-toggle {
-        background: none;
-        border: none;
-        color: var(--less-accent);
-        cursor: pointer;
-        font-size: 0.8125rem;
-        padding: 0.25rem 0;
-      }
-
-      .accordion-toggle:hover {
-        text-decoration: underline;
-      }
-
-      .accordion-content {
-        margin-top: 0.75rem;
-        padding: 0.75rem;
-        background: var(--less-bg-code);
-        border-radius: 4px;
-        font-family: monospace;
-        font-size: 0.75rem;
-        white-space: pre-wrap;
-        max-height: 400px;
-        overflow: auto;
-      }
-
-      .loading-state, .error-state {
-        text-align: center;
-        padding: 3rem 1rem;
-        color: var(--less-text-tertiary);
-      }
+      .detail-header { margin-bottom: 2rem; }
+      .breadcrumb { font-size: 0.8125rem; color: var(--less-text-tertiary); margin-bottom: 0.75rem; }
+      .breadcrumb a { color: var(--less-accent); text-decoration: none; }
+      .breadcrumb a:hover { text-decoration: underline; }
+      .pkg-title { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin: 0 0 0.5rem; }
+      .pkg-title h1 { font-size: 1.75rem; font-weight: 700; margin: 0; }
+      .pkg-title code { font-size: 1.25rem; background: var(--less-bg-code); padding: 0.125rem 0.5rem; border-radius: 4px; }
+      .compat-badge-lg { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.75rem; border-radius: 14px; font-size: 0.8125rem; font-weight: 600; }
+      .compat-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+      .pkg-desc { font-size: 0.9375rem; color: var(--less-text-secondary); line-height: 1.6; margin: 0 0 0.75rem; max-width: 640px; }
+      .pkg-links { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem; font-size: 0.8125rem; }
+      .pkg-links a { color: var(--less-accent); text-decoration: none; }
+      .pkg-links a:hover { text-decoration: underline; }
+      .section { border: 0.5px solid var(--less-border); border-radius: 8px; padding: 1.25rem; margin-bottom: 1.25rem; background: var(--less-bg-surface); }
+      .section-title { font-size: 1rem; font-weight: 600; margin: 0 0 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+      .install-box { padding: 1rem; border-radius: 6px; margin-bottom: 0.75rem; }
+      .install-safe { background: rgba(34, 197, 94, 0.08); border: 0.5px solid rgba(34, 197, 94, 0.2); }
+      .install-unsafe { background: rgba(239, 68, 68, 0.08); border: 0.5px solid rgba(239, 68, 68, 0.2); }
+      .install-cmd { font-family: monospace; background: var(--less-bg-code); padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.875rem; margin: 0.5rem 0; user-select: all; }
+      .warning-list { list-style: none; padding: 0; margin: 0.5rem 0 0; }
+      .warning-list li { font-size: 0.8125rem; padding: 0.25rem 0; padding-left: 1.25rem; position: relative; color: var(--less-text-secondary); }
+      .warning-list li::before { content: '⚠️'; position: absolute; left: 0; }
+      .tag-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+      .tag-item { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.625rem; background: var(--less-bg-code); border-radius: 4px; font-size: 0.8125rem; font-family: monospace; }
+      .tag-status { width: 6px; height: 6px; border-radius: 50%; }
+      .meta-table { width: 100%; border-collapse: collapse; }
+      .meta-table th, .meta-table td { text-align: left; padding: 0.375rem 0.5rem; font-size: 0.8125rem; border-bottom: 0.5px solid var(--less-border); }
+      .meta-table th { width: 140px; color: var(--less-text-tertiary); font-weight: 500; }
+      .snapshot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+      .snapshot-card { border: 0.5px solid var(--less-border); border-radius: 6px; overflow: hidden; }
+      .snapshot-header { padding: 0.5rem 0.75rem; font-size: 0.75rem; font-weight: 600; background: var(--less-bg-code); border-bottom: 0.5px solid var(--less-border); font-family: monospace; }
+      .snapshot-body { padding: 1rem; font-size: 0.75rem; color: var(--less-text-secondary); text-align: center; }
+      .no-snapshot { padding: 2rem; text-align: center; color: var(--less-text-tertiary); font-size: 0.875rem; }
+      .accordion-toggle { background: none; border: none; color: var(--less-accent); cursor: pointer; font-size: 0.8125rem; padding: 0.25rem 0; }
+      .accordion-toggle:hover { text-decoration: underline; }
+      .accordion-content { margin-top: 0.75rem; padding: 0.75rem; background: var(--less-bg-code); border-radius: 4px; font-family: monospace; font-size: 0.75rem; white-space: pre-wrap; max-height: 400px; overflow: auto; }
+      .loading-state, .error-state { text-align: center; padding: 3rem 1rem; color: var(--less-text-tertiary); }
     `,
   ];
 
-  override async connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
+    this._loadData();
+  }
 
-    // Parse package name from route: @scope~name → @scope/name
-    const path = window.location.pathname;
-    const rawPkgPath = path.replace('/registry/', '');
-    const pkgPath = rawPkgPath.replace('~', '/'); // decode scoped package
-    this.packageName = pkgPath;
+  private async _loadData() {
+    if (!this.packageName) return;
+
+    // Decode scoped package names: ~ → /
+    const pkgPath = this.packageName.replace('~', '/');
 
     try {
       const res = await fetch(`/hub/packages/${pkgPath}.json`);
-      if (!res.ok) {
-        throw new Error(`Package not found (${res.status})`);
-      }
+      if (!res.ok) throw new Error(`Package not found (${res.status})`);
       this._record = await res.json() as HubPackageRecord;
     } catch (e) {
       this._error = `Could not load package: ${e}`;
@@ -371,6 +158,11 @@ export default class DocsRegistryDetail extends LitElement {
     this.requestUpdate();
   }
 
+  private _formatJson(json: string): string {
+    try { return JSON.stringify(JSON.parse(json), null, 2); }
+    catch { return json; }
+  }
+
   override render() {
     if (this._loading) {
       return html`
@@ -381,12 +173,13 @@ export default class DocsRegistryDetail extends LitElement {
     }
 
     if (this._error || !this._record) {
+      const fullName = this.packageName?.replace('~', '/') || 'unknown';
       return html`
         <less-layout .navItems="${navSections}" .headerNav="${headerNav}" current-path="/registry/${this.packageName}" locale="en" .locales="${['en', 'zh']}">
           <div class="container">
             <div class="error-state">
               <h2>Package Not Found</h2>
-              <p>${this._error || 'The requested package could not be found in the registry.'}</p>
+              <p>${this._error || `The package "${fullName}" is not in the registry.`}</p>
               <a href="/registry" style="color:var(--less-accent);font-size:0.875rem;">← Back to Registry</a>
             </div>
           </div>
@@ -409,33 +202,25 @@ export default class DocsRegistryDetail extends LitElement {
         .locales="${['en', 'zh']}"
       >
         <div class="container">
-          <!-- Breadcrumb -->
-          <div class="breadcrumb">
-            <a href="/registry">Registry</a> / <span>${fullName}</span>
-          </div>
+          <div class="breadcrumb"><a href="/registry">Registry</a> / <span>${fullName}</span></div>
 
-          <!-- Header -->
           <div class="detail-header">
             <div class="pkg-title">
               <code>${fullName}</code>
-              <span class="package-version" style="font-size:1rem;color:var(--less-text-tertiary);">v${pkg.version}</span>
+              <span style="font-size:1rem;color:var(--less-text-tertiary);">v${pkg.version}</span>
               <span class="compat-badge-lg" style="background:${compatColor}15;border:0.5px solid ${compatColor}40;">
-                <span class="compat-dot" style="background:${compatColor}"></span>
-                ${compatLabel}
+                <span class="compat-dot" style="background:${compatColor}"></span>${compatLabel}
               </span>
             </div>
-
             ${pkg.description ? html`<p class="pkg-desc">${pkg.description}</p>` : ''}
-
             <div class="pkg-links">
               ${pkg.repository ? html`<a href="${pkg.repository}" target="_blank">Repository →</a>` : ''}
               ${pkg.homepage ? html`<a href="${pkg.homepage}" target="_blank">Homepage →</a>` : ''}
-              <span style="font-size:0.8125rem;color:var(--less-text-tertiary);">Source: ${pkg.source}</span>
-              <span style="font-size:0.8125rem;color:var(--less-text-tertiary);">Validated: ${new Date(pkg.submittedAt).toLocaleDateString()}</span>
+              <span>Source: ${pkg.source}</span>
+              <span>Validated: ${new Date(pkg.submittedAt).toLocaleDateString()}</span>
             </div>
           </div>
 
-          <!-- Install Guidance -->
           <div class="section">
             <div class="section-title">📦 Install</div>
             <div class="install-box ${pkg.installGuidance.safeToInstall ? 'install-safe' : 'install-unsafe'}">
@@ -443,12 +228,9 @@ export default class DocsRegistryDetail extends LitElement {
                 ${pkg.installGuidance.safeToInstall ? '✅ Safe to install' : '❌ Not installable'}
               </div>
               <div style="font-size:0.8125rem;color:var(--less-text-secondary);margin-bottom:0.5rem;">
-                ${pkg.installGuidance.ssrCapable
-                  ? 'This package is SSR-capable. Components will be server-rendered.'
-                  : 'This package will render on the client only.'}
+                ${pkg.installGuidance.ssrCapable ? 'SSR-capable. Server-rendered.' : 'Client-only rendering.'}
               </div>
               <div class="install-cmd">${pkg.installGuidance.command}</div>
-
               ${pkg.installGuidance.configChanges.length > 0 ? html`
                 <div style="font-size:0.8125rem;color:var(--less-text-secondary);margin-top:0.5rem;">
                   <strong>Config changes:</strong>
@@ -457,28 +239,20 @@ export default class DocsRegistryDetail extends LitElement {
                   </ul>
                 </div>
               ` : ''}
-
               ${pkg.installGuidance.warnings.length > 0 ? html`
-                <ul class="warning-list">
-                  ${pkg.installGuidance.warnings.map(w => html`<li>${w}</li>`)}
-                </ul>
+                <ul class="warning-list">${pkg.installGuidance.warnings.map(w => html`<li>${w}</li>`)}</ul>
               ` : ''}
             </div>
           </div>
 
-          <!-- Compatibility -->
           <div class="section">
             <div class="section-title">🔍 Compatibility</div>
             <div style="margin-bottom:0.75rem;">
               <span class="compat-badge-lg" style="background:${compatColor}15;border:0.5px solid ${compatColor}40;">
-                <span class="compat-dot" style="background:${compatColor}"></span>
-                ${compatLabel}
+                <span class="compat-dot" style="background:${compatColor}"></span>${compatLabel}
               </span>
             </div>
-            <p style="font-size:0.875rem;color:var(--less-text-secondary);margin:0 0 0.75rem;line-height:1.6;">
-              ${pkg.compatibilityJustification}
-            </p>
-
+            <p style="font-size:0.875rem;color:var(--less-text-secondary);margin:0 0 0.75rem;line-height:1.6;">${pkg.compatibilityJustification}</p>
             <table class="meta-table">
               <tr><th>Validator</th><td>@lessjs/core v${pkg.validatorVersion}</td></tr>
               <tr><th>Manifest hash</th><td style="font-family:monospace;font-size:0.75rem;">${pkg.manifestHash}</td></tr>
@@ -486,7 +260,6 @@ export default class DocsRegistryDetail extends LitElement {
             </table>
           </div>
 
-          <!-- Tags -->
           <div class="section">
             <div class="section-title">🏷️ Components (${pkg.tags.length})</div>
             <div class="tag-list">
@@ -504,7 +277,6 @@ export default class DocsRegistryDetail extends LitElement {
             </div>
           </div>
 
-          <!-- Snapshots -->
           <div class="section">
             <div class="section-title">🖼️ Previews</div>
             ${hasSnapshots ? html`
@@ -512,26 +284,20 @@ export default class DocsRegistryDetail extends LitElement {
                 ${Object.entries(pkg.snapshotPaths).map(([tagName]) => html`
                   <div class="snapshot-card">
                     <div class="snapshot-header">&lt;${tagName}&gt;</div>
-                    <div class="snapshot-body">
-                      SSR snapshot available.
-                    </div>
+                    <div class="snapshot-body">SSR snapshot available.</div>
                   </div>
                 `)}
               </div>
             ` : html`
               <div class="no-snapshot">
-                ${pkg.compatibility === 'ssr-capable'
-                  ? 'No SSR snapshots generated for this version.'
-                  : 'No preview available. ' + (pkg.compatibility === 'client-only'
-                    ? 'This package is client-only, so SSR previews are not applicable.'
-                    : pkg.compatibility === 'rejected'
-                    ? 'This package was rejected, so no preview was generated.'
-                    : '')}
+                ${pkg.compatibility === 'ssr-capable' ? 'No SSR snapshots generated.'
+                  : pkg.compatibility === 'client-only' ? 'Client-only package — no SSR preview.'
+                  : pkg.compatibility === 'rejected' ? 'Rejected — no preview.'
+                  : ''}
               </div>
             `}
           </div>
 
-          <!-- Validation Report -->
           <div class="section">
             <div class="section-title">📋 Validation Report</div>
             <button class="accordion-toggle" @click="${this._toggleValidation}">
@@ -544,14 +310,6 @@ export default class DocsRegistryDetail extends LitElement {
         </div>
       </less-layout>
     `;
-  }
-
-  private _formatJson(json: string): string {
-    try {
-      return JSON.stringify(JSON.parse(json), null, 2);
-    } catch {
-      return json;
-    }
   }
 }
 
