@@ -17,6 +17,7 @@
 **Tests**: 4 new CLI tests (`hub-submit.test.ts`)
 
 **Verification**:
+
 ```bash
 deno run --allow-read --allow-write --allow-env --allow-run packages/hub/src/cli/hub-submit.ts --help
 deno run --allow-read --allow-write --allow-env --allow-run packages/hub/src/cli/hub-submit.ts --dir packages/hub --dry-run
@@ -39,13 +40,15 @@ deno run --allow-read --allow-write --allow-env --allow-run packages/hub/src/cli
 **Tests**: 2 new tests in `builder.test.ts` (hash computation + determinism)
 
 **Verification**:
+
 ```bash
 deno test packages/hub/__tests__/builder.test.ts
 ```
 
 ### 4. Hub CI is too shallow to be a trust gate ✅
 
-**Fix**: 
+**Fix**:
+
 - New `packages/hub/src/cli/validate.ts` — schema validation, manifest hash check, duplicate tag hard failure, missing artifact hard failure
 - New `packages/hub/src/cli/check-index.ts` — regenerates index.json and exits 1 on drift
 - Updated `hub-ci.yml` uses Deno validator instead of ad hoc jq checks
@@ -53,6 +56,7 @@ deno test packages/hub/__tests__/builder.test.ts
 **Files**: `.github/workflows/hub-ci.yml`, `packages/hub/src/cli/validate.ts`, `packages/hub/src/cli/check-index.ts`
 
 **Verification**:
+
 ```bash
 deno task hub:validate
 deno task hub:check-index
@@ -63,6 +67,7 @@ deno task hub:check-index
 **Fix**: Added `getStaticPaths()` to `[package].ts` that reads hub-index and returns all package paths. SSG emits detail pages for all records.
 
 **SSG output**:
+
 - `www/dist/registry/%40lessjs~ui/index.html`
 - `www/dist/registry/%40shoelace-style~shoelace/index.html`
 - `www/dist/registry/media-chrome/index.html`
@@ -70,6 +75,7 @@ deno task hub:check-index
 **Files**: `www/app/routes/registry/[package].ts`
 
 **Verification**:
+
 ```bash
 deno task build
 find www/dist/registry -type f
@@ -83,7 +89,8 @@ find www/dist/registry -type f
 
 ### 7. Root validation and publish flows do not include Hub ✅
 
-**Fix**: 
+**Fix**:
+
 - Hub entrypoints added to root `typecheck` task
 - `publish:hub` and `publish:hub --dry-run` tasks added
 - Hub added to `publish` and `publish:dry-run` chains
@@ -96,6 +103,7 @@ find www/dist/registry -type f
 **Fix**: All lint errors (6 issues) and format errors (7 files) fixed.
 
 **Verification**:
+
 ```bash
 deno lint    # passes
 deno fmt --check  # passes

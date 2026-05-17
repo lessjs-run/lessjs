@@ -1,0 +1,32 @@
+{
+  "schema": "hub-submission-v1",
+  "package": {
+    "schema": "hub-package-v1",
+    "name": "hub",
+    "scope": "@lessjs",
+    "version": "0.19.0",
+    "source": "local",
+    "manifestHash": "",
+    "compatibility": "client-only",
+    "compatibilityJustification": "No CEM manifest found; default client-only.",
+    "tags": [],
+    "reports": {
+      "validation": "{\"packageName\":\"@lessjs/hub\",\"version\":\"0.19.0\",\"valid\":true,\"compatibility\":\"client-only\",\"tags\":0,\"errors\":[],\"warnings\":[]}"
+    },
+    "snapshotPaths": {},
+    "installGuidance": {
+      "safeToInstall": true,
+      "command": "less add @lessjs/hub",
+      "configChanges": [
+        "packages[\"@lessjs/hub\"] — client-only (no SSR)"
+      ],
+      "warnings": [
+        "This package has no SSR metadata. It will render on the client only."
+      ],
+      "ssrCapable": false
+    },
+    "submittedAt": "2026-05-17T09:06:05.328Z",
+    "validatorVersion": "0.19.0"
+  },
+  "artifacts": []
+}

@@ -4,7 +4,7 @@
  * Usage: deno run -A packages/hub/scan.ts
  */
 
-import { scanInstalledPackages, writeScanOutput, writeIndexTs } from './src/scanner.ts';
+import { scanInstalledPackages, writeIndexTs, writeScanOutput } from './src/scanner.ts';
 
 const RESULT_DIR = `${Deno.cwd()}/hub-index`;
 const PUBLIC_DIR = `${Deno.cwd()}/www/public/hub`;
