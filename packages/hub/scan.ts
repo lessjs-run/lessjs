@@ -4,7 +4,7 @@
  * Usage: deno run -A packages/hub/scan.ts
  */
 
-import { scanInstalledPackages, writeScanOutput } from './src/scanner.ts';
+import { scanInstalledPackages, writeScanOutput, writeIndexTs } from './src/scanner.ts';
 
 const RESULT_DIR = `${Deno.cwd()}/hub-index`;
 const PUBLIC_DIR = `${Deno.cwd()}/www/public/hub`;
@@ -23,5 +23,9 @@ await writeScanOutput(RESULT_DIR, result);
 // Write to www/public/hub/ (Vite serves public/ at root)
 console.log(`\n  Writing to www/public/hub/...`);
 await writeScanOutput(PUBLIC_DIR, result);
+
+// Write TypeScript module for SSR import (route modules can import this directly)
+console.log(`\n  Writing www/app/routes/registry/hub-data.ts...`);
+await writeIndexTs(result, `${Deno.cwd()}/www/app/routes/registry/hub-data.ts`);
 
 console.log(`\n  ✅ Done!`);
