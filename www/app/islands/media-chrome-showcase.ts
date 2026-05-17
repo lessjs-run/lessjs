@@ -2,12 +2,12 @@
  * Media Chrome Showcase — Vanilla adapter demo (ssr: false)
  *
  * Renders Media Chrome's native Web Components (video player controls)
- * as a client-only island. Media Chrome directly manipulates real DOM
- * in connectedCallback(), so it cannot be SSR-rendered (ADR-0028).
+ * as a client-only island. Media Chrome is a set of vanilla Web Components
+ * that provide customizable media player controls.
  *
- * With `less.ssr: false`, the SSG pipeline skips this island's SSR
- * rendering and emits an empty custom element tag. The browser then
- * upgrades it on the client side.
+ * Video source: Date A Live OP1 (1080p, Blu-ray) from AnimeThemes.moe.
+ * Media Chrome elements are dynamically imported on the client side
+ * to avoid SSR crashes from browser-only DOM APIs.
  *
  * CEM note (v0.18.0): media-chrome does not ship a custom-elements.json,
  * so CEM auto-detection returns no results. It falls through to the
@@ -38,23 +38,33 @@ export const less = { ssr: false };
 
 export default class MediaChromeShowcase extends MediaChromeBase {
   private _mcLoaded = false;
+  private _mcError = false;
 
   override connectedCallback(): void {
-    // Ensure shadow root exists so the mixin's connectedCallback
-    // can detect it and invoke render() to populate content.
     if (!this.shadowRoot) {
       this.attachShadow({ mode: 'open' });
     }
     super.connectedCallback();
+
     // Load media-chrome dynamically on the client only.
-    // This avoids SSR crashes from browser-only DOM APIs.
+    // Using import() to define media-chrome custom elements
+    // without crashing during SSR.
     if (!this._mcLoaded && typeof globalThis.HTMLElement !== 'undefined') {
       this._mcLoaded = true;
-      import('media-chrome').catch(() => {/* media-chrome not available */});
+      import('media-chrome').then(() => {
+        this._mcError = false;
+      }).catch((err: Error) => {
+        this._mcError = true;
+        console.warn('[media-chrome] failed to load:', err.message);
+      });
     }
   }
 
   render(): string {
+    const label = this._mcError
+      ? '⚠️ Media Chrome components failed to load. Try a Chromium-based browser.'
+      : 'Media Chrome — pure vanilla Web Components via @lessjs/adapter-vanilla';
+
     return `
       <style>
         :host { display: block; }
@@ -63,7 +73,7 @@ export default class MediaChromeShowcase extends MediaChromeBase {
           border-radius: 8px;
           overflow: hidden;
           width: 100%;
-          max-width: 480px;
+          max-width: 520px;
         }
         media-controller {
           width: 100%;
@@ -80,19 +90,29 @@ export default class MediaChromeShowcase extends MediaChromeBase {
           font-size: 11px;
           margin-top: 6px;
           line-height: 1.5;
+          padding: 4px 0;
+        }
+        .mc-label.warn { color: #f59e0b; }
+        .mc-source {
+          font-size: 10px;
+          color: #71717a;
+          margin-top: 0;
         }
       </style>
       <div class="mc-wrap">
         <media-controller>
-          <video slot="media"
-            src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBstwaxU/low.mp4"
-            preload="none"
-            crossorigin
-            playsinline>
+          <video
+            slot="media"
+            preload="metadata"
+            playsinline
+            controlsList="nodownload"
+            ${/* AnimeThemes.moe — Date A Live OP1, 1080p Blu-ray */ ''}
+          >
+            <source
+              src="https://v.animethemes.moe/DateALive-OP1.webm"
+              type="video/webm"
+            />
           </video>
-          <media-poster-image slot="poster"
-            src="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBstwaxU/thumbnail.webp?time=0">
-          </media-poster-image>
           <media-control-bar>
             <media-play-button></media-play-button>
             <media-time-range></media-time-range>
@@ -103,7 +123,8 @@ export default class MediaChromeShowcase extends MediaChromeBase {
           </media-control-bar>
         </media-controller>
       </div>
-      <div class="mc-label">Media Chrome — pure vanilla Web Components via @lessjs/adapter-vanilla</div>
+      <div class="mc-label${this._mcError ? ' warn' : ''}">${label}</div>
+      <div class="mc-source">🎬 Date A Live OP1 — 1080p (AnimeThemes.moe)</div>
     `;
   }
 }
