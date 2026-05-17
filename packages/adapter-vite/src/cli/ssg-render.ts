@@ -174,7 +174,9 @@ export function resolveDynamicRoutePath(
       );
     }
 
-    resolvedPath = resolvedPath.replace(`:${name}`, encodeURIComponent(value));
+    // Use raw value — getStaticPaths already validates for .., /, \\, control chars
+    // encodeURIComponent would encode @ → %40, breaking file-to-URL matching
+    resolvedPath = resolvedPath.replace(`:${name}`, value);
   }
   return resolvedPath;
 }

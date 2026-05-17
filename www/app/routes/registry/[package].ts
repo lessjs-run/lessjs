@@ -16,7 +16,7 @@ import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
-import pkgRecords from './hub-data-full.ts';
+import pkgRecords from './_hub-data-full.ts';
 
 interface HubTagRecord {
   tagName: string;

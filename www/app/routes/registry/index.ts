@@ -20,8 +20,8 @@ import '@lessjs/ui/less-layout';
 // During SSR/SSG: the full data is inlined into the TS module.
 // During dev: the same import works because the file exists.
 
-import hubData from './hub-data.ts';
-import type { HubIndexEntry, HubIndexData } from './hub-data.ts';
+import hubData from './_hub-data.ts';
+import type { HubIndexEntry, HubIndexData } from './_hub-data.ts';
 
 export const tagName = 'docs-registry-home';
 
@@ -387,7 +387,7 @@ export default class DocsRegistryHome extends LitElement {
                 const compatColor = COMPAT_COLORS[pkg.compatibility] || '#888';
                 const ssrIcon = pkg.ssrCapable ? '🖥️' : '🌐';
                 return html`
-                  <a class="package-card" href="${this._packageLink(pkg)}">
+                  <a class="package-card" href="${this._packageLink(pkg)}" data-compat="${pkg.compatibility}">
                     <div class="package-info">
                       <div class="package-name">
                         <code>${fullName}</code>
