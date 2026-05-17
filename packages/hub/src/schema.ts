@@ -176,6 +176,9 @@ export interface BuildPackageRecordOptions {
   homepage?: string;
   submittedBy?: string;
   validatorVersion: string;
+
+  /** Raw CEM content to compute manifestHash from (optional) */
+  manifestContent?: string;
 }
 
 // ─── Submission Options ──────────────────────────────────────────────────
@@ -190,6 +193,18 @@ export interface SubmissionOptions {
 }
 
 // ─── Schema Validation ───────────────────────────────────────────────────
+
+/**
+ * Compute SHA-256 hash of a CEM manifest string.
+ */
+export async function computeManifestHash(content: string): Promise<string> {
+  const hashBuffer = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(content),
+  );
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+}
 
 export interface SchemaValidationError {
   path: string;

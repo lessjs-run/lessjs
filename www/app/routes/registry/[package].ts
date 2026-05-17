@@ -62,6 +62,21 @@ interface HubPackageRecord {
 
 export const tagName = 'docs-registry-detail';
 
+/** Static paths for SSG — reads hub-index to pre-render all package detail pages */
+export function getStaticPaths(): Array<Record<string, string>> {
+  try {
+    const cwd = Deno.cwd(); // www/ during SSG build
+    const indexPath = `${cwd}/public/hub/index.json`;
+    const content = Deno.readTextFileSync(indexPath);
+    const index = JSON.parse(content) as { packages: Array<{ name: string; scope: string }> };
+    return index.packages.map((pkg) => ({
+      package: pkg.scope ? `${pkg.scope}/${pkg.name}`.replace('/', '~') : pkg.name,
+    }));
+  } catch {
+    return [];
+  }
+}
+
 const COMPAT_LABELS: Record<string, string> = {
   'ssr-capable': 'SSR Capable',
   'client-only': 'Client Only',

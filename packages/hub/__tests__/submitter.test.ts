@@ -5,7 +5,7 @@
  * GitHub PR creation is tested via integration tests only.
  */
 
-import { assert, assertEquals } from 'jsr:@std/assert@^1.0.0';
+import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import {
   buildSubmissionBundle,
   createHtmlArtifact,
@@ -14,7 +14,7 @@ import {
   deserializeBundle,
   serializeBundle,
 } from '../src/submitter.ts';
-import type { HubArtifact, HubPackageRecord, HubSubmission } from '../src/schema.ts';
+import type { HubArtifact, HubPackageRecord } from '../src/schema.ts';
 
 const sampleRecord: HubPackageRecord = {
   schema: 'hub-package-v1',

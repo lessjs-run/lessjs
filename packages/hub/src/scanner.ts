@@ -47,14 +47,22 @@ const WC_PACKAGES: KnownWcPackage[] = [
     scope: '@lessjs',
     version: '0.18.3',
     source: 'local',
-    description: 'LessJS UI component library with DSD-first Lit elements. All components are SSR-capable.',
+    description:
+      'LessJS UI component library with DSD-first Lit elements. All components are SSR-capable.',
     repository: 'https://github.com/lessjs-run/lessjs',
     homepage: 'https://lessjs.dev',
     compatibility: 'ssr-capable',
-    justification: 'First-party LessJS package. All components extend DsdLitElement with declared SSR metadata.',
+    justification:
+      'First-party LessJS package. All components extend DsdLitElement with declared SSR metadata.',
     tagNames: [
-      'less-button', 'less-card', 'less-code-block', 'less-dialog',
-      'less-hero-ping', 'less-input', 'less-layout', 'less-theme-toggle',
+      'less-button',
+      'less-card',
+      'less-code-block',
+      'less-dialog',
+      'less-hero-ping',
+      'less-input',
+      'less-layout',
+      'less-theme-toggle',
     ],
   },
 
@@ -64,20 +72,52 @@ const WC_PACKAGES: KnownWcPackage[] = [
     scope: '@shoelace-style',
     version: '2.20.1',
     source: 'npm',
-    description: 'A forward-thinking library of Web Components. 50+ components for building modern UIs.',
+    description:
+      'A forward-thinking library of Web Components. 50+ components for building modern UIs.',
     repository: 'https://github.com/shoelace-style/shoelace',
     homepage: 'https://shoelace.style',
     compatibility: 'client-only',
-    justification: 'Shoelace uses Lit internally but does not publish LessJS SSR metadata. All components are client-only.',
+    justification:
+      'Shoelace uses Lit internally but does not publish LessJS SSR metadata. All components are client-only.',
     tagNames: [
-      'sl-alert', 'sl-animated-image', 'sl-avatar', 'sl-badge', 'sl-button',
-      'sl-card', 'sl-carousel', 'sl-checkbox', 'sl-color-picker', 'sl-details',
-      'sl-dialog', 'sl-divider', 'sl-drawer', 'sl-dropdown', 'sl-icon',
-      'sl-icon-button', 'sl-image-comparer', 'sl-input', 'sl-menu',
-      'sl-menu-item', 'sl-progress-bar', 'sl-radio', 'sl-radio-group',
-      'sl-range', 'sl-rating', 'sl-select', 'sl-skeleton', 'sl-spinner',
-      'sl-split-panel', 'sl-switch', 'sl-tab', 'sl-tab-group', 'sl-tab-panel',
-      'sl-table', 'sl-tag', 'sl-textarea', 'sl-tooltip', 'sl-tree',
+      'sl-alert',
+      'sl-animated-image',
+      'sl-avatar',
+      'sl-badge',
+      'sl-button',
+      'sl-card',
+      'sl-carousel',
+      'sl-checkbox',
+      'sl-color-picker',
+      'sl-details',
+      'sl-dialog',
+      'sl-divider',
+      'sl-drawer',
+      'sl-dropdown',
+      'sl-icon',
+      'sl-icon-button',
+      'sl-image-comparer',
+      'sl-input',
+      'sl-menu',
+      'sl-menu-item',
+      'sl-progress-bar',
+      'sl-radio',
+      'sl-radio-group',
+      'sl-range',
+      'sl-rating',
+      'sl-select',
+      'sl-skeleton',
+      'sl-spinner',
+      'sl-split-panel',
+      'sl-switch',
+      'sl-tab',
+      'sl-tab-group',
+      'sl-tab-panel',
+      'sl-table',
+      'sl-tag',
+      'sl-textarea',
+      'sl-tooltip',
+      'sl-tree',
       'sl-tree-item',
     ],
   },
@@ -92,10 +132,15 @@ const WC_PACKAGES: KnownWcPackage[] = [
     repository: 'https://github.com/muxinc/media-chrome',
     homepage: 'https://media-chrome.mux.dev',
     compatibility: 'client-only',
-    justification: 'Media Chrome components depend on browser-specific HTMLMediaElement APIs. Not available in SSR.',
+    justification:
+      'Media Chrome components depend on browser-specific HTMLMediaElement APIs. Not available in SSR.',
     tagNames: [
-      'media-controller', 'media-play-button', 'media-time-range',
-      'media-volume-range', 'media-poster-image', 'media-loading-indicator',
+      'media-controller',
+      'media-play-button',
+      'media-time-range',
+      'media-volume-range',
+      'media-poster-image',
+      'media-loading-indicator',
     ],
   },
 ];
@@ -111,9 +156,7 @@ export interface ScanResult {
 /**
  * Scan known WC packages and generate Hub records + search index.
  */
-export async function scanInstalledPackages(
-  nodeModulesRoot?: string,
-): Promise<ScanResult> {
+export async function scanInstalledPackages(): Promise<ScanResult> {
   const errors: string[] = [];
   const records: HubPackageRecord[] = [];
 
@@ -151,12 +194,14 @@ export async function scanInstalledPackages(
       validatorVersion: '0.19.0',
     };
 
-    const record = buildPackageRecord(opts);
+    const record = await buildPackageRecord(opts);
 
     const schemaErrors = validateHubPackageRecord(record);
     if (schemaErrors.length > 0) {
       errors.push(
-        `${pkg.scope ? pkg.scope + '/' : ''}${pkg.name}: ${schemaErrors.map((e) => e.message).join(', ')}`,
+        `${pkg.scope ? pkg.scope + '/' : ''}${pkg.name}: ${
+          schemaErrors.map((e) => e.message).join(', ')
+        }`,
       );
       continue;
     }
@@ -195,9 +240,7 @@ export async function writeScanOutput(
 
   // Write individual package records
   for (const record of result.records) {
-    const fullName = record.scope
-      ? `${record.scope}/${record.name}`
-      : record.name;
+    const fullName = record.scope ? `${record.scope}/${record.name}` : record.name;
     const pkgPath = `${packagesDir}/${fullName}.json`;
     // Ensure parent directory exists (for scoped packages like @scope/name)
     const parentDir = pkgPath.substring(0, pkgPath.lastIndexOf('/'));
@@ -215,9 +258,7 @@ export async function writeScanOutput(
   console.log(`  ✅ Written ${result.records.length} records to ${outputDir}`);
   console.log(`  📄 index.json`);
   for (const record of result.records) {
-    const fullName = record.scope
-      ? `${record.scope}/${record.name}`
-      : record.name;
+    const fullName = record.scope ? `${record.scope}/${record.name}` : record.name;
     console.log(`  📄 packages/${fullName}.json`);
   }
   if (result.errors.length > 0) {

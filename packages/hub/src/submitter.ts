@@ -106,7 +106,7 @@ export async function runSubmission(
   const bundle = buildSubmissionBundle(record, artifacts);
 
   // Write bundle to file
-  let bundlePath = options.outputPath;
+  const bundlePath = options.outputPath;
   try {
     const json = JSON.stringify(bundle, null, 2);
     await Deno.writeTextFile(bundlePath, json);

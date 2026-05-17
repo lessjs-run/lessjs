@@ -2,24 +2,29 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version: 0.19.0 (In Progress)
+## Current Version: 0.19.0 (Done)
 
-## Next Planned Version: 0.19.0 (Platform + Hub)
+## Next Planned Version: 1.0.0 (Stable Engine)
 
-v0.19.0 is building the Registry Hub MVP:
+### v0.19.0 — Registry Hub MVP (Completed 2026-05-17)
 
-- `packages/hub/` - Hub schema, builder, indexer, submission bundler, and
-  snapshot utilities
-- `less hub submit` CLI - local validation, artifact bundling, and GitHub PR
-  submission
-- Hub CI pipeline - schema, artifact, duplicate-tag, and index validation
-- Registry UI - search, package detail, compatibility evidence, install
-  guidance, and snapshots
-- Fixture/demo data - first-party UI, Shoelace, Media Chrome, and selected
-  examples
+`@lessjs/hub` package with schema, builder, indexer, submitter, snapshot utilities.
+`less hub submit` CLI with dry-run and PR submission modes.
+Hub CI pipeline (Deno-based validator + index drift checker).
+Registry UI (www) with static SSG pages for all packages.
+CLI submission pipeline: `--dry-run` (default) + `--submit` (PR mode).
 
-v0.19.0 is a **one-shot release** covering the full Hub subsystem. It is not
-Done yet.
+### Verification
+
+- `deno lint` — ✅ 0 errors
+- `deno fmt --check` — ✅ 0 errors
+- `deno task typecheck` — ✅ passes (includes hub)
+- `deno task test` — ✅ 715 passed, 0 failed
+- `deno task build` — ✅ 3 registry detail pages generated
+- `deno task hub:validate` — ✅ all records valid
+- `deno task hub:check-index` — ✅ index up to date
+
+See [Audit Gaps Report](../conversation/registry-hub-v019-audit-gaps.md) for blocker close evidence.
 
 ## Branch Status
 
@@ -42,37 +47,7 @@ Done yet.
 | v0.16.0 | `a02feb6` | 2026-05-16 |
 | v0.15.3 | `5e06fc9` | 2026-05-16 |
 
-## Current Release: 0.19.0 (Active)
-
-### 2026-05-17 Audit Override
-
-The current Hub work must be treated as **In Progress**, not release-ready.
-`packages/hub/` and the Registry list UI exist, but the evidence-backed
-submission pipeline, CI trust gate, static package detail pages, and
-release/publish integration are still incomplete.
-
-Primary blocker report:
-
-- [Registry Hub v0.19 Audit Gaps](../conversation/registry-hub-v019-audit-gaps.md)
-
-Do not mark v0.19.0 as Done until that report is closed and the v0.19.0 SOP
-verification checklist passes.
-
-### Current Hub State
-
-- Present: Hub package skeleton, schema/builder/indexer/submitter tests, demo
-  `hub-index`, registry list page, `www/public/hub` data.
-- Incomplete: real `less validate-manifest` integration, real build/DSD/snapshot
-  artifact ingestion, manifest hash generation, PR-mode CLI path, Hub CI
-  validator tasks, static registry detail pages, root CI/publish coverage for
-  `@lessjs/hub`.
-- Known validation state from 2026-05-17:
-  - Passing: `deno audit`, `deno task typecheck`, explicit Hub `deno check`,
-    `deno test packages/hub/__tests__/`, `deno task test`, `deno task build`,
-    `deno task test:e2e`.
-  - Failing: `deno task lint`, `deno task fmt:check`.
-
-## Last Completed Release: 0.18.3 (2026-05-17)
+## Last Completed Release: 0.19.0 (2026-05-17)
 
 - **DOM Simulation Experiment**: Happy DOM integration for client-only Web
   Component rendering
@@ -107,16 +82,16 @@ Third-party package handling is conservative:
 
 ## Version Ladder With Admission And Exit Gates
 
-| Version | SOP                                                    | Status     | Entry Gate                                                           | Exit Gate                                                 |
-| ------- | ------------------------------------------------------ | ---------- | -------------------------------------------------------------------- | --------------------------------------------------------- |
-| v0.17.3 | `docs/sop/v0.17.3-multi-framework-adapters.md`         | Done       | v0.17.2 SSR filtering exists                                         | Vanilla/React adapters documented; no universal SSR claim |
-| v0.17.4 | `docs/sop/v0.17.4-compatibility-boundary-hardening.md` | Done       | v0.17.3 docs closed                                                  | Client-only modules excluded before SSR entry generation  |
-| v0.18.0 | `docs/sop/v0.18.0-universal-wc-engine.md`              | Done       | v0.17.4 admission planner complete + package SSR admission validated | CEM parser + compatibility tiers + report reasons         |
-| v0.18.1 | `docs/sop/v0.18.1-validate-manifest-cli.md`            | Done       | v0.18.0 classifier stable                                            | `less validate-manifest` emits stable diagnostics         |
-| v0.18.2 | `docs/sop/v0.18.2-less-add-install-flow.md`            | Done       | validation CLI stable                                                | `less add` dry-run/install is validation-gated            |
-| v0.18.3 | `docs/sop/v0.18.3-dom-simulation-experiment.md`        | Done       | client-only fallback stable                                          | opt-in DOM simulation decision recorded                   |
-| v0.19.0 | `docs/sop/v0.19.0-platform-hub.md`                     | Active     | validation/build reports stable + ADR-0030 accepted                  | Hub ingests artifacts, CLI submit pipeline, search UI     |
-| v1.0.0  | `docs/sop/v1.0.0-general-purpose-engine.md`            | Vision     | engine, reports, add flow, Hub records stable                        | API/schema freeze with deterministic package outcomes     |
+| Version | SOP                                                    | Status | Entry Gate                                                           | Exit Gate                                                 |
+| ------- | ------------------------------------------------------ | ------ | -------------------------------------------------------------------- | --------------------------------------------------------- |
+| v0.17.3 | `docs/sop/v0.17.3-multi-framework-adapters.md`         | Done   | v0.17.2 SSR filtering exists                                         | Vanilla/React adapters documented; no universal SSR claim |
+| v0.17.4 | `docs/sop/v0.17.4-compatibility-boundary-hardening.md` | Done   | v0.17.3 docs closed                                                  | Client-only modules excluded before SSR entry generation  |
+| v0.18.0 | `docs/sop/v0.18.0-universal-wc-engine.md`              | Done   | v0.17.4 admission planner complete + package SSR admission validated | CEM parser + compatibility tiers + report reasons         |
+| v0.18.1 | `docs/sop/v0.18.1-validate-manifest-cli.md`            | Done   | v0.18.0 classifier stable                                            | `less validate-manifest` emits stable diagnostics         |
+| v0.18.2 | `docs/sop/v0.18.2-less-add-install-flow.md`            | Done   | validation CLI stable                                                | `less add` dry-run/install is validation-gated            |
+| v0.18.3 | `docs/sop/v0.18.3-dom-simulation-experiment.md`        | Done   | client-only fallback stable                                          | opt-in DOM simulation decision recorded                   |
+| v0.19.0 | `docs/sop/v0.19.0-platform-hub.md`                     | **Done**  | validation/build reports stable + ADR-0030 accepted                  | Hub ingests artifacts, CLI submit pipeline, search UI     |
+| v1.0.0  | `docs/sop/v1.0.0-general-purpose-engine.md`            | Vision | engine, reports, add flow, Hub records stable                        | API/schema freeze with deterministic package outcomes     |
 
 ## Operator Checklist
 

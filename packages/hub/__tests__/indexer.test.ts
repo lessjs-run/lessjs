@@ -4,7 +4,7 @@
  * v0.19.0: Test search index building and filtering.
  */
 
-import { assert, assertEquals } from 'jsr:@std/assert@^1.0.0';
+import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { buildIndex, filterByCompatibility, searchPackages, sortEntries } from '../src/indexer.ts';
 import type { CompatibilityTier, HubIndexEntry, HubPackageRecord } from '../src/schema.ts';
 

@@ -22,8 +22,7 @@ jobs:
     name: Validate Hub Submission
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -32,114 +31,30 @@ jobs:
         with:
           deno-version: v2.x
 
-      - name: Detect changed package files
-        id: changed
+      - name: Run Hub record validator
         run: |
-          CHANGED=$(gh pr view ${{ github.event.pull_request.number }} \
-            --json files \
-            --jq '[.files[].path | select(startswith("hub-index/packages/")) | .]' \
-            | jq -r '.[] // empty')
-          echo "changed<<EOF" >> $GITHUB_OUTPUT
-          echo "$CHANGED" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-        env:
-          GH_TOKEN: ${{ github.token }}
+          deno run -A packages/hub/src/cli/validate.ts --strict
 
-      - name: Validate submission schema
+      - name: Regenerate and check hub-index drift
         run: |
-          for file in ${{ steps.changed.outputs.changed }}; do
-            echo "  Validating: $file"
-            # Basic JSON validation
-            if ! jq empty "$file" 2>/dev/null; then
-              echo "❌ Invalid JSON: $file"
-              exit 1
-            fi
-
-            # Check schema marker
-            SCHEMA=$(jq -r '.schema // "none"' "$file")
-            if [ "$SCHEMA" != "hub-package-v1" ]; then
-              echo "❌ Invalid schema marker in $file: $SCHEMA"
-              echo "   Expected: hub-package-v1"
-              exit 1
-            fi
-
-            echo "  ✅ Schema valid: $file"
-          done
-
-      - name: Check mandatory fields
-        run: |
-          for file in ${{ steps.changed.outputs.changed }}; do
-            NAME=$(jq -r '.name // empty' "$file")
-            VERSION=$(jq -r '.version // empty' "$file")
-            TIER=$(jq -r '.compatibility // empty' "$file")
-
-            if [ -z "$NAME" ]; then
-              echo "❌ Missing 'name' in $file"
-              exit 1
-            fi
-            if [ -z "$VERSION" ]; then
-              echo "❌ Missing 'version' in $file"
-              exit 1
-            fi
-            if ! echo "ssr-capable client-only rejected experimental-dom" | grep -q "$TIER"; then
-              echo "❌ Invalid compatibility tier '$TIER' in $file"
-              exit 1
-            fi
-
-            echo "  ✅ Fields OK: $NAME v$VERSION ($TIER)"
-          done
-
-      - name: Check duplicate tag names
-        run: |
-          # Collect all tags from existing hub-index
-          ALL_TAGS=$(jq '[.packages[].records[].tags[].tagName] | add // []' hub-index/index.json 2>/dev/null || echo "[]")
-
-          for file in ${{ steps.changed.outputs.changed }}; do
-            NEW_TAGS=$(jq -r '.tags[].tagName' "$file" 2>/dev/null)
-            for tag in $NEW_TAGS; do
-              if echo "$ALL_TAGS" | grep -q "$tag"; then
-                echo "⚠️  Warning: tag '$tag' already exists in the index"
-              fi
-            done
-          done
-          echo "  ✅ Duplicate check complete"
-
-      - name: Verify artifact references
-        run: |
-          for file in ${{ steps.changed.outputs.changed }}; do
-            SNAPSHOT_PATHS=$(jq -r '.snapshotPaths[] // empty' "$file" 2>/dev/null)
-            for snap in $SNAPSHOT_PATHS; do
-              if [ ! -f "hub-index/$snap" ]; then
-                echo "⚠️  Warning: snapshot '$snap' referenced but not found in hub-index/"
-              fi
-            done
-          done
-          echo "  ✅ Artifact check complete"
+          deno run -A packages/hub/src/cli/check-index.ts
 
       - name: Conditional auto-merge
         if: success() && github.actor != 'dependabot[bot]'
         run: |
-          # Determine if all changed packages are safe to auto-merge
-          AUTO_MERGE=true
-          for file in ${{ steps.changed.outputs.changed }}; do
+          FAILED=false
+          for file in $(git diff --name-only origin/${{ github.base_ref }}...HEAD -- 'hub-index/packages/*.json'); do
             TIER=$(jq -r '.compatibility // "unknown"' "$file")
             case "$TIER" in
               ssr-capable|client-only)
-                echo "  ✅ $file ($TIER): auto-merge eligible"
-                ;;
+                echo "  ✅ $file ($TIER): auto-merge eligible" ;;
               rejected|experimental-dom)
-                echo "  👁️  $file ($TIER): requires manual review"
-                AUTO_MERGE=false
-                ;;
+                echo "  👁️  $file ($TIER): requires manual review"; FAILED=true ;;
               *)
-                echo "  ❓ $file ($TIER): unknown tier, manual review required"
-                AUTO_MERGE=false
-                ;;
+                echo "  ❓ $file ($TIER): unknown tier, manual review required"; FAILED=true ;;
             esac
           done
-
-          if [ "$AUTO_MERGE" = "true" ] && [ -n "${{ steps.changed.outputs.changed }}" ]; then
-            echo "  All submissions eligible for auto-merge."
+          if [ "$FAILED" = "false" ]; then
             gh pr merge --auto --squash "${{ github.event.pull_request.number }}"
           fi
         env:

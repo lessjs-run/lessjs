@@ -26,7 +26,7 @@
  * @see ADR-0030
  */
 
-import { buildInstallGuidance, buildPackageRecord } from '../builder.ts';
+import { buildPackageRecord } from '../builder.ts';
 import { runSubmission } from '../submitter.ts';
 import { validateHubPackageRecord } from '../schema.ts';
 import type {
@@ -70,6 +70,10 @@ function parseArgs(args: string[]): CliFlags {
       case '--source':
         flags.source = (args[++i] || 'local') as 'jsr' | 'npm' | 'local';
         break;
+      case '--submit':
+        flags.dryRun = false;
+        flags.skipPr = false;
+        break;
       case '--dry-run':
         flags.dryRun = true;
         break;
@@ -105,7 +109,9 @@ USAGE:
 OPTIONS:
   --dir <path>      Package directory (default: cwd)
   --source <type>   Package source: jsr | npm | local (default: local)
+  --submit          Actually submit: run validation, bundle, create PR (default: dry-run only)
   --dry-run         Only validate, do not create PR (default: true)
+  --no-pr           Skip GitHub PR, output submission bundle only
   --no-pr           Skip GitHub PR, output submission bundle only
   --out <path>      Output path (default: ./hub-submission.json)
   --json            Output as JSON (default: human-readable)
@@ -290,7 +296,7 @@ async function main() {
     validatorVersion: '0.19.0',
   };
 
-  const record = buildPackageRecord(recordOptions);
+  const record = await buildPackageRecord(recordOptions);
 
   // ─── Step 5: Validate the record ──────────────────────────────────────
 

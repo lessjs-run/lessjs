@@ -16,17 +16,22 @@ import type {
   HubTagRecord,
 } from './schema.ts';
 
+import { computeManifestHash } from './schema.ts';
+
 // ─── Build Package Record ────────────────────────────────────────────────
 
 /**
  * Build a HubPackageRecord from structured input.
  *
+ * If `manifestContent` is provided in opts, computes the SHA-256 hash
+ * automatically.
+ *
  * @param opts — All required fields assembled from engine artifacts
  * @returns A fully populated HubPackageRecord
  */
-export function buildPackageRecord(
+export async function buildPackageRecord(
   opts: BuildPackageRecordOptions,
-): HubPackageRecord {
+): Promise<HubPackageRecord> {
   const now = new Date().toISOString();
 
   const installGuidance = buildInstallGuidance(
@@ -44,6 +49,12 @@ export function buildPackageRecord(
     reports.dsd = opts.dsdReport;
   }
 
+  // Compute manifest hash if manifest content is provided
+  let manifestHash = '';
+  if (opts.manifestContent) {
+    manifestHash = await computeManifestHash(opts.manifestContent);
+  }
+
   return {
     schema: 'hub-package-v1',
     name: opts.name,
@@ -53,7 +64,7 @@ export function buildPackageRecord(
     repository: opts.repository,
     description: opts.description,
     homepage: opts.homepage,
-    manifestHash: '', // caller should set via opts or compute externally
+    manifestHash,
     manifestPath: undefined,
     compatibility: opts.compatibility,
     compatibilityJustification: opts.compatibilityJustification,
