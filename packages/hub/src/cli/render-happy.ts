@@ -221,15 +221,24 @@ async function render(impSpec: string, tag: string): Promise<string> {
       shadowHtml = el.shadowRoot.innerHTML.trim();
     }
 
-    // Extract slot content from light DOM children
+    // Extract slot content from light DOM children (including text nodes)
     const slotMap = new Map<string, string>();
     const defaultSlots: string[] = [];
-    for (const child of el.children) {
-      const slotName = child.getAttribute('slot');
-      if (slotName) {
-        slotMap.set(slotName, (child as HTMLElement).outerHTML);
-      } else {
-        defaultSlots.push((child as HTMLElement).outerHTML);
+    for (const child of el.childNodes) {
+      if (child.nodeType === 1) {
+        // Element node
+        const slotName = (child as HTMLElement).getAttribute('slot');
+        if (slotName) {
+          slotMap.set(slotName, (child as HTMLElement).outerHTML);
+        } else {
+          defaultSlots.push((child as HTMLElement).outerHTML);
+        }
+      } else if (child.nodeType === 3) {
+        // Text node — include trimmed text as default slot fallback
+        const text = child.textContent?.trim();
+        if (text) {
+          defaultSlots.push(text);
+        }
       }
     }
     if (defaultSlots.length) {
