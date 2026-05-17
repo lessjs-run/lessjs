@@ -57,7 +57,7 @@ const _records: Record<string, HubPackageRecord> = {
         "compatibility": "ssr-capable",
         "validationErrors": 0,
         "validationWarnings": 0,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><button class=\"btn btn--default btn--md\" ?disabled=\"false\" type=\"button\">\n        <slot></slot>\n      </button></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><button class=\"btn btn--default btn--md\" type=\"button\">\n        <slot></slot>\n      </button></div>"
       },
       {
         "tagName": "less-card",
@@ -71,42 +71,42 @@ const _records: Record<string, HubPackageRecord> = {
         "compatibility": "ssr-capable",
         "validationErrors": 0,
         "validationWarnings": 0,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><slot></slot>\n      <button\n        class=\"copy-btn  \"\n        @click=\"()=&gt;this._copy()\"\n      >\n        Copy\n      </button></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><slot></slot>\n      <button\n        class=\"copy-btn  \"\n       \n      >\n        Copy\n      </button></div>"
       },
       {
         "tagName": "less-dialog",
         "compatibility": "ssr-capable",
         "validationErrors": 0,
         "validationWarnings": 0,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><slot name=\"trigger\" @click=\"_handleTrigger() {\n    this.toggle();\n  }\"></slot>\n      <dialog\n        ?open=\"false\"\n        aria-label=\"Symbol(lit-nothing)\"\n        @cancel=\"_handleCancel(e) {\n    e.preventDefault();\n    this._handleClose();\n  }\"\n        @close=\"_handleClose() {\n    this.open = false;\n    this._updateStates();\n    this._syncDialogElement();\n    this._syncInert();\n    this.dispatchEvent(new CustomEvent('less-dialog-close', {\n      bubbles: true,\n      composed: true\n    }));\n  }\"\n      >\n        <div class=\"dialog-header\">\n          <h2 class=\"dialog-title\"></h2>\n          <button class=\"dialog-close\" @click=\"_handleClose() {\n    this.open = false;\n    this._updateStates();\n    this._syncDialogElement();\n    this._syncInert();\n    this.dispatchEvent(new CustomEvent('less-dialog-close', {\n      bubbles: true,\n      composed: true\n    }));\n  }\" aria-label=\"Close\">&times;</button>\n        </div>\n        <div class=\"dialog-body\">\n          <slot></slot>\n        </div>\n        <div class=\"dialog-footer\">\n          <slot name=\"footer\"></slot>\n        </div>\n      </dialog></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><slot name=\"trigger\"></slot>\n      <dialog\n       \n       \n       \n       \n      >\n        <div class=\"dialog-header\">\n          <h2 class=\"dialog-title\"></h2>\n          <button class=\"dialog-close\" aria-label=\"Close\">&times;</button>\n        </div>\n        <div class=\"dialog-body\">\n          <slot></slot>\n        </div>\n        <div class=\"dialog-footer\">\n          <slot name=\"footer\"></slot>\n        </div>\n      </dialog></div>"
       },
       {
         "tagName": "less-hero-ping",
         "compatibility": "ssr-capable",
         "validationErrors": 0,
         "validationWarnings": 0,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span class=\"dot idle\"></span>\n      <button\n        class=\"ping\"\n        @click=\"async ()=&gt;{\n    // H-07 fix: Cancel any previous in-flight request\n    this._abortController?.abort();\n    this._abortController = new AbortController();\n    this._state = 'loading';\n    this._msg = '';\n    this.requestUpdate();\n    try {\n      // H-06 fix: Use apiUrl property if provided, fallback to default\n      const url = this.apiUrl || 'https://less-demo-api.sisyphuszheng.deno.net/api';\n      const r = await fetch(url, {\n        signal: this._abortController.signal\n      });\n      if (!r.ok) throw new Error(`HTTP ${r.status}`);\n      const d = await r.json();\n      this._state = 'ok';\n      this._msg = `${d.framework} v${d.version}  ${d.timestamp.slice(11, 19)}`;\n    } catch (e) {\n      // Ignore AbortError (cancelled requests are expected behavior)\n      if (e instanceof DOMException &amp;&amp; e.name === 'AbortError') return;\n      const err = e;\n      this._state = 'err';\n      this._msg = String(e).includes('HTTP') ? err.message : 'connection failed';\n    } finally{\n      this.requestUpdate();\n    }\n  }\"\n        ?disabled=\"false\"\n      >\n        ping server\n      </button></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><span class=\"dot idle\"></span>\n      <button\n        class=\"ping\"\n       \n       \n      >\n        ping server\n      </button></div>"
       },
       {
         "tagName": "less-input",
         "compatibility": "ssr-capable",
         "validationErrors": 0,
         "validationWarnings": 0,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><div class=\"input-wrapper\">\n        \n        <input\n          id=\"input\"\n          class=\"input \"\n          type=\"text\"\n          placeholder=\"\"\n          .value=\"\"\n          name=\"\"\n          ?disabled=\"false\"\n          ?required=\"false\"\n          aria-invalid=\"Symbol(lit-nothing)\"\n          aria-describedby=\"Symbol(lit-nothing)\"\n          aria-errormessage=\"Symbol(lit-nothing)\"\n          @input=\"(e)=&gt;this._handleInput(e)\"\n        />\n        \n      </div></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><div class=\"input-wrapper\">\n        \n        <input\n          id=\"input\"\n          class=\"input \"\n          type=\"text\"\n          placeholder=\"\"\n          value=\"\"\n          name=\"\"\n         \n         \n         \n         \n         \n         \n        />\n        \n      </div></div>"
       },
       {
         "tagName": "less-layout",
         "compatibility": "ssr-capable",
         "validationErrors": 0,
         "validationWarnings": 0,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><div class=\"app-layout\" ?home=\"false\">\n          <header class=\"app-header\">\n            <nav class=\"header-inner\" aria-label=\"Primary navigation\">\n              <a class=\"logo\" href=\"/\">LessJS<span class=\"logo-sub\"></span></a>\n              \n        <nav class=\"header-nav\">\n          \n        </nav>\n      \n              <div class=\"header-right\">\n                <slot name=\"header-actions\"></slot>\n                <details class=\"mobile-menu\">\n                  <summary class=\"mobile-menu-btn\" aria-label=\"Toggle navigation\" @click=\"_toggleMenu(e) {\n    e.preventDefault();\n    const details = this.shadowRoot?.querySelector('details.mobile-menu');\n    if (!details) return;\n    const willOpen = !details.hasAttribute('open');\n    details.toggleAttribute('open', willOpen);\n    this.toggleAttribute('menu-open', willOpen);\n    // Accessibility: set inert on main content when menu is open\n    this._syncInert(willOpen);\n  }\">\n                    <svg\n                      width=\"18\"\n                      height=\"18\"\n                      viewBox=\"0 0 18 18\"\n                      fill=\"none\"\n                      stroke=\"currentColor\"\n                      stroke-width=\"1.5\"\n                      stroke-linecap=\"round\"\n                    >\n                      <line x1=\"3\" y1=\"4.5\" x2=\"15\" y2=\"4.5\" />\n                      <line x1=\"3\" y1=\"9\" x2=\"15\" y2=\"9\" />\n                      <line x1=\"3\" y1=\"13.5\" x2=\"15\" y2=\"13.5\" />\n                    </svg>\n                  </summary>\n                </details>\n                <less-theme-toggle></less-theme-toggle>\n                Symbol(lit-nothing)\n                <a class=\"github-link\" href=\"https://github.com/lessjs-run/LessJS\" aria-label=\"GitHub repository\">\n                  <svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"currentColor\">\n                    <path\n                      d=\"M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z\"\n                    />\n                  </svg>\n                  <span class=\"github-text\">GitHub</span>\n                </a>\n              </div>\n            </nav>\n          </header>\n          <div class=\"mobile-backdrop\"></div>\n          <div class=\"layout-body\">\n            \n        <nav class=\"docs-sidebar\" aria-label=\"Documentation navigation\">\n          \n        \n      \n        </nav>\n      \n            <main class=\"layout-main\">\n              <slot></slot>\n            </main>\n          </div>\n          <footer class=\"app-footer\">\n            <p>\n              Symbol(lit-nothing) Built with <a href=\"https://github.com/lessjs-run/LessJS\" target=\"_blank\" rel=\"noopener noreferrer\"\n              >LessJS Framework</a>\n              <span class=\"divider\"></span>\n              Self-bootstrapped from JSR\n              <span class=\"divider\"></span>\n              LESS IS MORE\n            </p>\n          </footer>\n        </div></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><div class=\"app-layout\">\n          <header class=\"app-header\">\n            <nav class=\"header-inner\" aria-label=\"Primary navigation\">\n              <a class=\"logo\" href=\"/\">LessJS<span class=\"logo-sub\"></span></a>\n              \n        <nav class=\"header-nav\">\n          \n        </nav>\n      \n              <div class=\"header-right\">\n                <slot name=\"header-actions\"></slot>\n                <details class=\"mobile-menu\">\n                  <summary class=\"mobile-menu-btn\" aria-label=\"Toggle navigation\">\n                    <svg\n                      width=\"18\"\n                      height=\"18\"\n                      viewBox=\"0 0 18 18\"\n                      fill=\"none\"\n                      stroke=\"currentColor\"\n                      stroke-width=\"1.5\"\n                      stroke-linecap=\"round\"\n                    >\n                      <line x1=\"3\" y1=\"4.5\" x2=\"15\" y2=\"4.5\" />\n                      <line x1=\"3\" y1=\"9\" x2=\"15\" y2=\"9\" />\n                      <line x1=\"3\" y1=\"13.5\" x2=\"15\" y2=\"13.5\" />\n                    </svg>\n                  </summary>\n                </details>\n                <less-theme-toggle></less-theme-toggle>\n                \n                <a class=\"github-link\" href=\"https://github.com/lessjs-run/LessJS\" aria-label=\"GitHub repository\">\n                  <svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"currentColor\">\n                    <path\n                      d=\"M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z\"\n                    />\n                  </svg>\n                  <span class=\"github-text\">GitHub</span>\n                </a>\n              </div>\n            </nav>\n          </header>\n          <div class=\"mobile-backdrop\"></div>\n          <div class=\"layout-body\">\n            \n        <nav class=\"docs-sidebar\" aria-label=\"Documentation navigation\">\n          \n        \n      \n        </nav>\n      \n            <main class=\"layout-main\">\n              <slot></slot>\n            </main>\n          </div>\n          <footer class=\"app-footer\">\n            <p>\n               Built with <a href=\"https://github.com/lessjs-run/LessJS\" target=\"_blank\" rel=\"noopener noreferrer\"\n              >LessJS Framework</a>\n              <span class=\"divider\"></span>\n              Self-bootstrapped from JSR\n              <span class=\"divider\"></span>\n              LESS IS MORE\n            </p>\n          </footer>\n        </div></div>"
       },
       {
         "tagName": "less-theme-toggle",
         "compatibility": "ssr-capable",
         "validationErrors": 0,
         "validationWarnings": 0,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><button\n          class=\"theme-toggle \"\n          title=\"Switch to light theme\"\n          aria-label=\"Toggle theme\"\n          @click=\"()=&gt;this._handleToggle()\"\n        >\n          <svg\n            class=\"icon-sun\"\n            viewBox=\"0 0 16 16\"\n            fill=\"none\"\n            stroke=\"currentColor\"\n            stroke-width=\"1.2\"\n            stroke-linecap=\"round\"\n          >\n            <circle cx=\"8\" cy=\"8\" r=\"3\" />\n            <line x1=\"8\" y1=\"1\" x2=\"8\" y2=\"3\" />\n            <line x1=\"8\" y1=\"13\" x2=\"8\" y2=\"15\" />\n            <line x1=\"1\" y1=\"8\" x2=\"3\" y2=\"8\" />\n            <line x1=\"13\" y1=\"8\" x2=\"15\" y2=\"8\" />\n            <line x1=\"3.05\" y1=\"3.05\" x2=\"4.46\" y2=\"4.46\" />\n            <line x1=\"11.54\" y1=\"11.54\" x2=\"12.95\" y2=\"12.95\" />\n            <line x1=\"3.05\" y1=\"12.95\" x2=\"4.46\" y2=\"11.54\" />\n            <line x1=\"11.54\" y1=\"4.46\" x2=\"12.95\" y2=\"3.05\" />\n          </svg>\n          <svg\n            class=\"icon-moon\"\n            viewBox=\"0 0 16 16\"\n            fill=\"none\"\n            stroke=\"currentColor\"\n            stroke-width=\"1.2\"\n            stroke-linecap=\"round\"\n          >\n            <path d=\"M13.5 9.14A5.5 5.5 0 0 1 6.86 2.5 5.5 5.5 0 1 0 13.5 9.14Z\" />\n          </svg>\n        </button></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><button\n          class=\"theme-toggle \"\n          title=\"Switch to light theme\"\n          aria-label=\"Toggle theme\"\n         \n        >\n          <svg\n            class=\"icon-sun\"\n            viewBox=\"0 0 16 16\"\n            fill=\"none\"\n            stroke=\"currentColor\"\n            stroke-width=\"1.2\"\n            stroke-linecap=\"round\"\n          >\n            <circle cx=\"8\" cy=\"8\" r=\"3\" />\n            <line x1=\"8\" y1=\"1\" x2=\"8\" y2=\"3\" />\n            <line x1=\"8\" y1=\"13\" x2=\"8\" y2=\"15\" />\n            <line x1=\"1\" y1=\"8\" x2=\"3\" y2=\"8\" />\n            <line x1=\"13\" y1=\"8\" x2=\"15\" y2=\"8\" />\n            <line x1=\"3.05\" y1=\"3.05\" x2=\"4.46\" y2=\"4.46\" />\n            <line x1=\"11.54\" y1=\"11.54\" x2=\"12.95\" y2=\"12.95\" />\n            <line x1=\"3.05\" y1=\"12.95\" x2=\"4.46\" y2=\"11.54\" />\n            <line x1=\"11.54\" y1=\"4.46\" x2=\"12.95\" y2=\"3.05\" />\n          </svg>\n          <svg\n            class=\"icon-moon\"\n            viewBox=\"0 0 16 16\"\n            fill=\"none\"\n            stroke=\"currentColor\"\n            stroke-width=\"1.2\"\n            stroke-linecap=\"round\"\n          >\n            <path d=\"M13.5 9.14A5.5 5.5 0 0 1 6.86 2.5 5.5 5.5 0 1 0 13.5 9.14Z\" />\n          </svg>\n        </button></div>"
       }
     ],
     "reports": {
@@ -122,7 +122,7 @@ const _records: Record<string, HubPackageRecord> = {
       "warnings": [],
       "ssrCapable": true
     },
-    "submittedAt": "2026-05-17T10:21:36.631Z",
+    "submittedAt": "2026-05-17T11:03:44.470Z",
     "submittedBy": "hub-scanner",
     "validatorVersion": "0.19.0"
   },
@@ -144,42 +144,42 @@ const _records: Record<string, HubPackageRecord> = {
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-alert</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" role=\"alert\" class=\" alert alert--primary \" aria-hidden=\"true\" hidden=\"\">\n        <div part=\"icon\" class=\"alert__icon\">\n          <slot name=\"icon\"></slot>\n        </div>\n\n        <div part=\"message\" class=\"alert__message\" aria-live=\"polite\">\n          <slot></slot>\n        </div>\n\n        <!--?lit$985527680$-->\n\n        <div role=\"timer\" class=\"alert__timer\"><!--?lit$985527680$-->Infinity</div>\n\n        <!--?lit$985527680$-->\n      </div></div>"
       },
       {
         "tagName": "sl-animated-image",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-animated-image</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div class=\"animated-image\">\n        <img class=\"animated-image__animated\" crossorigin=\"anonymous\" src=\"\" alt=\"\" aria-hidden=\"true\">\n\n        <!--?lit$486043667$-->\n      </div></div>"
       },
       {
         "tagName": "sl-avatar",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-avatar</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" role=\"img\" class=\" avatar avatar--circle \" aria-label=\"\">\n        <!--?lit$615709510$-->\n        <div part=\"icon\" class=\"avatar__icon\" aria-hidden=\"true\">\n          <slot name=\"icon\">\n            <sl-icon name=\"person-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n          </slot>\n        </div>\n      \n      </div></div>"
       },
       {
         "tagName": "sl-badge",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-badge</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <span part=\"base\" role=\"status\" class=\" badge badge--primary \">\n        <slot></slot>\n      </span></div>"
       },
       {
         "tagName": "sl-button",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-button</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <button part=\"base\" class=\" button button--default button--medium button--standard \" type=\"button\" title=\"\" name=\"\" value=\"\" role=\"button\" aria-disabled=\"false\" tabindex=\"0\">\n        <slot name=\"prefix\" part=\"prefix\" class=\"button__prefix\"></slot>\n        <slot part=\"label\" class=\"button__label\"></slot>\n        <slot name=\"suffix\" part=\"suffix\" class=\"button__suffix\"></slot>\n        <!--?lit$716053325$-->\n        <!--?lit$716053325$-->\n      </button></div>"
       },
       {
         "tagName": "sl-card",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-card</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" card \">\n        <slot name=\"image\" part=\"image\" class=\"card__image\"></slot>\n        <slot name=\"header\" part=\"header\" class=\"card__header\"></slot>\n        <slot part=\"body\" class=\"card__body\"></slot>\n        <slot name=\"footer\" part=\"footer\" class=\"card__footer\"></slot>\n      </div></div>"
       },
       {
         "tagName": "sl-carousel",
@@ -193,182 +193,182 @@ const _records: Record<string, HubPackageRecord> = {
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-checkbox</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div class=\" form-control form-control--medium \">\n        <label part=\"base\" class=\" checkbox checkbox--medium \">\n          <input class=\"checkbox__input\" type=\"checkbox\" aria-describedby=\"help-text\" title=\"\" name=\"\" aria-checked=\"false\">\n\n          <span class=\"checkbox__control\" part=\"control\">\n            <!--?lit$510555922$-->\n            <!--?lit$510555922$-->\n          </span>\n\n          <div part=\"label\" class=\"checkbox__label\">\n            <slot></slot>\n          </div>\n        </label>\n\n        <div class=\"form-control__help-text\" id=\"help-text\" part=\"form-control-help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$510555922$--></slot>\n        </div>\n      </div></div>"
       },
       {
         "tagName": "sl-color-picker",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-color-picker</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <sl-dropdown class=\"color-dropdown\" aria-disabled=\"false\" placement=\"bottom-start\">\n        <button part=\"trigger\" slot=\"trigger\" type=\"button\" class=\" color-dropdown__trigger color-dropdown__trigger--medium color-dropdown__trigger--empty color-picker__transparent-bg \" style=\"color:#ffffffff;\">\n          <sl-visually-hidden>\n            <slot name=\"label\"><!--?lit$793617353$--></slot>\n          </sl-visually-hidden>\n        </button>\n        <!--?lit$793617353$-->\n      <div part=\"base\" aria-labelledby=\"label\" class=\" color-picker \" aria-disabled=\"false\" tabindex=\"-1\">\n        <!--?lit$793617353$-->\n\n        <div part=\"grid\" class=\"color-picker__grid\" style=\"background-color:#ff0000ff;\">\n          <span part=\"grid-handle\" role=\"application\" aria-label=\"HSV\" class=\" color-picker__grid-handle \" style=\"top:0%;left:0%;background-color:#ffffffff;\" tabindex=\"0\"></span>\n        </div>\n\n        <div class=\"color-picker__controls\">\n          <div class=\"color-picker__sliders\">\n            <div part=\"slider hue-slider\" class=\"color-picker__hue color-picker__slider\">\n              <span part=\"slider-handle hue-slider-handle\" class=\"color-picker__slider-handle\" role=\"slider\" aria-label=\"hue\" aria-orientation=\"horizontal\" aria-valuemin=\"0\" aria-valuemax=\"360\" style=\"left:0%;\" aria-valuenow=\"0\" tabindex=\"0\"></span>\n            </div>\n\n            <!--?lit$793617353$-->\n          </div>\n\n          <button type=\"button\" part=\"preview\" class=\"color-picker__preview color-picker__transparent-bg\" aria-label=\"Copy\" style=\"--preview-color:#ffffffff;\"></button>\n        </div>\n\n        <div class=\"color-picker__user-input\" aria-live=\"polite\">\n          <sl-input part=\"input\" type=\"text\" autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" name=\"\" value=\"\" aria-label=\"Current value\" size=\"medium\" form=\"\" data-optional=\"\" data-valid=\"\"></sl-input>\n\n          <sl-button-group>\n            <!--?lit$793617353$-->\n                  <sl-button part=\"format-button\" exportparts=\"\n                      base:format-button__base,\n                      prefix:format-button__prefix,\n                      label:format-button__label,\n                      suffix:format-button__suffix,\n                      caret:format-button__caret\n                    \" aria-label=\"Toggle color format\" variant=\"default\" size=\"medium\" data-optional=\"\" data-valid=\"\">\n                    <!--?lit$793617353$-->hex\n                  </sl-button>\n                \n            <!--?lit$793617353$-->\n          </sl-button-group>\n        </div>\n\n        <!--?lit$793617353$-->\n      </div>\n    \n      </sl-dropdown></div>"
       },
       {
         "tagName": "sl-details",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-details</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <details part=\"base\" class=\" details \">\n        <summary part=\"header\" id=\"header\" class=\"details__header\" role=\"button\" aria-controls=\"content\" aria-expanded=\"false\" aria-disabled=\"false\" tabindex=\"0\">\n          <slot name=\"summary\" part=\"summary\" class=\"details__summary\"><!--?lit$955689301$--></slot>\n\n          <span part=\"summary-icon\" class=\"details__summary-icon\">\n            <slot name=\"expand-icon\">\n              <sl-icon library=\"system\" name=\"chevron-right\" aria-hidden=\"true\"></sl-icon>\n            </slot>\n            <slot name=\"collapse-icon\">\n              <sl-icon library=\"system\" name=\"chevron-right\" aria-hidden=\"true\"></sl-icon>\n            </slot>\n          </span>\n        </summary>\n\n        <div class=\"details__body\" role=\"region\" aria-labelledby=\"header\" style=\"height: 0px;\">\n          <slot part=\"content\" id=\"content\" class=\"details__content\"></slot>\n        </div>\n      </details></div>"
       },
       {
         "tagName": "sl-dialog",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-dialog</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" dialog \" hidden=\"\">\n        <div part=\"overlay\" class=\"dialog__overlay\" tabindex=\"-1\"></div>\n\n        <div part=\"panel\" class=\"dialog__panel\" role=\"dialog\" aria-modal=\"true\" tabindex=\"-1\" aria-hidden=\"true\" aria-labelledby=\"title\">\n          <!--?lit$138525688$-->\n                <header part=\"header\" class=\"dialog__header\">\n                  <h2 part=\"title\" class=\"dialog__title\" id=\"title\">\n                    <slot name=\"label\"> <!--?lit$138525688$-->﻿ </slot>\n                  </h2>\n                  <div part=\"header-actions\" class=\"dialog__header-actions\">\n                    <slot name=\"header-actions\"></slot>\n                    <sl-icon-button part=\"close-button\" exportparts=\"base:close-button__base\" class=\"dialog__close\" name=\"x-lg\" library=\"system\" label=\"Close\"></sl-icon-button>\n                  </div>\n                </header>\n              \n          <!--?lit$138525688$-->\n          <div part=\"body\" class=\"dialog__body\" tabindex=\"-1\"><slot></slot></div>\n\n          <footer part=\"footer\" class=\"dialog__footer\">\n            <slot name=\"footer\"></slot>\n          </footer>\n        </div>\n      </div></div>"
       },
       {
         "tagName": "sl-divider",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-divider</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!----></div>"
       },
       {
         "tagName": "sl-drawer",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-drawer</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" drawer drawer--end drawer--fixed \" hidden=\"\">\n        <div part=\"overlay\" class=\"drawer__overlay\" tabindex=\"-1\"></div>\n\n        <div part=\"panel\" class=\"drawer__panel\" role=\"dialog\" aria-modal=\"true\" tabindex=\"0\" aria-hidden=\"true\" aria-labelledby=\"title\">\n          <!--?lit$652446400$-->\n                <header part=\"header\" class=\"drawer__header\">\n                  <h2 part=\"title\" class=\"drawer__title\" id=\"title\">\n                    <!-- If there's no label, use an invisible character to prevent the header from collapsing -->\n                    <slot name=\"label\"> <!--?lit$652446400$-->﻿ </slot>\n                  </h2>\n                  <div part=\"header-actions\" class=\"drawer__header-actions\">\n                    <slot name=\"header-actions\"></slot>\n                    <sl-icon-button part=\"close-button\" exportparts=\"base:close-button__base\" class=\"drawer__close\" name=\"x-lg\" library=\"system\" label=\"Close\"></sl-icon-button>\n                  </div>\n                </header>\n              \n\n          <slot part=\"body\" class=\"drawer__body\"></slot>\n\n          <footer part=\"footer\" class=\"drawer__footer\">\n            <slot name=\"footer\"></slot>\n          </footer>\n        </div>\n      </div></div>"
       },
       {
         "tagName": "sl-dropdown",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-dropdown</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <sl-popup part=\"base\" exportparts=\"popup:base__popup\" id=\"dropdown\" flip=\"\" shift=\"\" auto-size=\"vertical\" auto-size-padding=\"10\" placement=\"bottom-start\" distance=\"0\" skidding=\"0\" strategy=\"absolute\" class=\" dropdown \">\n        <slot name=\"trigger\" slot=\"anchor\" part=\"trigger\" class=\"dropdown__trigger\"></slot>\n\n        <div aria-labelledby=\"dropdown\" aria-hidden=\"true\">\n          <slot part=\"panel\" class=\"dropdown__panel\" hidden=\"\"></slot>\n        </div>\n      </sl-popup></div>"
       },
       {
         "tagName": "sl-icon",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-icon</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!----></div>"
       },
       {
         "tagName": "sl-icon-button",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-icon-button</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <button part=\"base\" class=\" icon-button \" type=\"button\" role=\"button\" aria-disabled=\"false\" aria-label=\"\" tabindex=\"0\">\n        <sl-icon class=\"icon-button__icon\" aria-hidden=\"true\" library=\"default\"></sl-icon>\n      </button></div>"
       },
       {
         "tagName": "sl-image-comparer",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-image-comparer</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" id=\"image-comparer\" class=\" image-comparer \">\n        <div class=\"image-comparer__image\">\n          <div part=\"before\" class=\"image-comparer__before\">\n            <slot name=\"before\"></slot>\n          </div>\n\n          <div part=\"after\" class=\"image-comparer__after\" style=\"clip-path:inset(0 50% 0 0);\">\n            <slot name=\"after\"></slot>\n          </div>\n        </div>\n\n        <div part=\"divider\" class=\"image-comparer__divider\" style=\"left:50%;\">\n          <div part=\"handle\" class=\"image-comparer__handle\" role=\"scrollbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-controls=\"image-comparer\" tabindex=\"0\" aria-valuenow=\"50\">\n            <slot name=\"handle\">\n              <sl-icon library=\"system\" name=\"grip-vertical\"></sl-icon>\n            </slot>\n          </div>\n        </div>\n      </div></div>"
       },
       {
         "tagName": "sl-input",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-input</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"form-control\" class=\" form-control form-control--medium \">\n        <label part=\"form-control-label\" class=\"form-control__label\" for=\"input\" aria-hidden=\"true\">\n          <slot name=\"label\"><!--?lit$827652107$--></slot>\n        </label>\n\n        <div part=\"form-control-input\" class=\"form-control-input\">\n          <div part=\"base\" class=\" input input--medium input--standard input--empty \">\n            <span part=\"prefix\" class=\"input__prefix\">\n              <slot name=\"prefix\"></slot>\n            </span>\n\n            <input part=\"input\" id=\"input\" class=\"input__control\" aria-describedby=\"help-text\" type=\"text\" title=\"\" name=\"\" placeholder=\"\" spellcheck=\"true\">\n\n            <!--?lit$827652107$-->\n            <!--?lit$827652107$-->\n\n            <span part=\"suffix\" class=\"input__suffix\">\n              <slot name=\"suffix\"></slot>\n            </span>\n          </div>\n        </div>\n\n        <div part=\"form-control-help-text\" id=\"help-text\" class=\"form-control__help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$827652107$--></slot>\n        </div>\n      </div></div>"
       },
       {
         "tagName": "sl-menu",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-menu</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <slot></slot></div>"
       },
       {
         "tagName": "sl-menu-item",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-menu-item</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div id=\"anchor\" part=\"base\" class=\" menu-item \">\n        <span part=\"checked-icon\" class=\"menu-item__check\">\n          <sl-icon name=\"check\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n        </span>\n\n        <slot name=\"prefix\" part=\"prefix\" class=\"menu-item__prefix\"></slot>\n\n        <slot part=\"label\" class=\"menu-item__label\"></slot>\n\n        <slot name=\"suffix\" part=\"suffix\" class=\"menu-item__suffix\"></slot>\n\n        <span part=\"submenu-icon\" class=\"menu-item__chevron\">\n          <sl-icon library=\"system\" aria-hidden=\"true\" name=\"chevron-right\"></sl-icon>\n        </span>\n\n        <!--?lit$302542959$--> <slot name=\"submenu\" hidden=\"\"></slot> \n        <!--?lit$302542959$-->\n      </div></div>"
       },
       {
         "tagName": "sl-progress-bar",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-progress-bar</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" class=\" progress-bar \" title=\"\" aria-label=\"Progress\" aria-valuenow=\"0\">\n        <div part=\"indicator\" class=\"progress-bar__indicator\" style=\"width:0%;\">\n          <!--?lit$141308689$--> <slot part=\"label\" class=\"progress-bar__label\"></slot> \n        </div>\n      </div></div>"
       },
       {
         "tagName": "sl-radio",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-radio</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <span part=\"base\" class=\" radio radio--medium \">\n        <span class=\"radio__control\" part=\"control\">\n          <!--?lit$197347924$-->\n        </span>\n\n        <slot part=\"label\" class=\"radio__label\"></slot>\n      </span></div>"
       },
       {
         "tagName": "sl-radio-group",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-radio-group</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <fieldset part=\"form-control\" role=\"radiogroup\" aria-labelledby=\"label\" aria-describedby=\"help-text\" aria-errormessage=\"error-message\" class=\" form-control form-control--medium form-control--radio-group \">\n        <label part=\"form-control-label\" id=\"label\" class=\"form-control__label\" aria-hidden=\"true\">\n          <slot name=\"label\"><!--?lit$800890153$--></slot>\n        </label>\n\n        <div part=\"form-control-input\" class=\"form-control-input\">\n          <div class=\"visually-hidden\">\n            <div id=\"error-message\" aria-live=\"assertive\"><!--?lit$800890153$--></div>\n            <label class=\"radio-group__validation\">\n              <input type=\"text\" class=\"radio-group__validation-input\" tabindex=\"-1\" hidden=\"\">\n            </label>\n          </div>\n\n          <!--?lit$800890153$-->\n      <slot></slot>\n    \n        </div>\n\n        <div part=\"form-control-help-text\" id=\"help-text\" class=\"form-control__help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$800890153$--></slot>\n        </div>\n      </fieldset></div>"
       },
       {
         "tagName": "sl-range",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-range</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"form-control\" class=\" form-control form-control--medium \">\n        <label part=\"form-control-label\" class=\"form-control__label\" for=\"input\" aria-hidden=\"true\">\n          <slot name=\"label\"><!--?lit$625354517$--></slot>\n        </label>\n\n        <div part=\"form-control-input\" class=\"form-control-input\">\n          <div part=\"base\" class=\" range range--tooltip-top \">\n            <input part=\"input\" id=\"input\" class=\"range__control\" type=\"range\" aria-describedby=\"help-text\" title=\"\" name=\"\" min=\"0\" max=\"100\" step=\"1\" style=\"--percent: 0%;\">\n            <!--?lit$625354517$-->\n                  <output part=\"tooltip\" class=\"range__tooltip\">\n                    <!--?lit$625354517$-->0\n                  </output>\n                \n          </div>\n        </div>\n\n        <div part=\"form-control-help-text\" id=\"help-text\" class=\"form-control__help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$625354517$--></slot>\n        </div>\n      </div></div>"
       },
       {
         "tagName": "sl-rating",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-rating</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" role=\"slider\" class=\" rating \" aria-label=\"\" aria-disabled=\"false\" aria-readonly=\"false\" aria-valuenow=\"0\" aria-valuemin=\"0\" aria-valuemax=\"5\" tabindex=\"0\">\n        <span class=\"rating__symbols\">\n          <!--?lit$976023051$--><!---->\n              <span role=\"presentation\" class=\" rating__symbol \">\n                <!--?lit$976023051$--><sl-icon name=\"star-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n              </span>\n            <!----><!---->\n              <span role=\"presentation\" class=\" rating__symbol \">\n                <!--?lit$976023051$--><sl-icon name=\"star-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n              </span>\n            <!----><!---->\n              <span role=\"presentation\" class=\" rating__symbol \">\n                <!--?lit$976023051$--><sl-icon name=\"star-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n              </span>\n            <!----><!---->\n              <span role=\"presentation\" class=\" rating__symbol \">\n                <!--?lit$976023051$--><sl-icon name=\"star-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n              </span>\n            <!----><!---->\n              <span role=\"presentation\" class=\" rating__symbol \">\n                <!--?lit$976023051$--><sl-icon name=\"star-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n              </span>\n            <!---->\n        </span>\n      </div></div>"
       },
       {
         "tagName": "sl-select",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-select</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"form-control\" class=\" form-control form-control--medium \">\n        <label id=\"label\" part=\"form-control-label\" class=\"form-control__label\" aria-hidden=\"true\">\n          <slot name=\"label\"><!--?lit$626289195$--></slot>\n        </label>\n\n        <div part=\"form-control-input\" class=\"form-control-input\">\n          <sl-popup flip=\"\" shift=\"\" sync=\"width\" auto-size=\"vertical\" auto-size-padding=\"10\" class=\" select select--standard select--bottom select--medium \" placement=\"bottom\" strategy=\"absolute\">\n            <div part=\"combobox\" class=\"select__combobox\" slot=\"anchor\">\n              <slot part=\"prefix\" name=\"prefix\" class=\"select__prefix\"></slot>\n\n              <input part=\"display-input\" class=\"select__display-input\" type=\"text\" autocomplete=\"off\" spellcheck=\"false\" autocapitalize=\"off\" readonly=\"\" aria-controls=\"listbox\" aria-haspopup=\"listbox\" aria-labelledby=\"label\" aria-describedby=\"help-text\" role=\"combobox\" tabindex=\"0\" placeholder=\"\" aria-expanded=\"false\" aria-disabled=\"false\">\n\n              <!--?lit$626289195$-->\n\n              <input class=\"select__value-input\" type=\"text\" tabindex=\"-1\" aria-hidden=\"true\">\n\n              <!--?lit$626289195$-->\n\n              <slot name=\"suffix\" part=\"suffix\" class=\"select__suffix\"></slot>\n\n              <slot name=\"expand-icon\" part=\"expand-icon\" class=\"select__expand-icon\">\n                <sl-icon library=\"system\" name=\"chevron-down\" aria-hidden=\"true\"></sl-icon>\n              </slot>\n            </div>\n\n            <div id=\"listbox\" role=\"listbox\" aria-labelledby=\"label\" part=\"listbox\" class=\"select__listbox\" tabindex=\"-1\" aria-expanded=\"false\" aria-multiselectable=\"false\">\n              <slot></slot>\n            </div>\n          </sl-popup>\n        </div>\n\n        <div part=\"form-control-help-text\" id=\"help-text\" class=\"form-control__help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$626289195$--></slot>\n        </div>\n      </div></div>"
       },
       {
         "tagName": "sl-skeleton",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-skeleton</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" skeleton \">\n        <div part=\"indicator\" class=\"skeleton__indicator\"></div>\n      </div></div>"
       },
       {
         "tagName": "sl-spinner",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-spinner</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <svg part=\"base\" class=\"spinner\" role=\"progressbar\" aria-label=\"Loading\">\n        <circle class=\"spinner__track\"></circle>\n        <circle class=\"spinner__indicator\"></circle>\n      </svg></div>"
       },
       {
         "tagName": "sl-split-panel",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-split-panel</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <slot name=\"start\" part=\"panel start\" class=\"start\"></slot>\n\n      <div part=\"divider\" class=\"divider\" role=\"separator\" aria-valuemin=\"0\" aria-valuemax=\"100\" tabindex=\"0\" aria-valuenow=\"50\" aria-label=\"Resize\">\n        <slot name=\"divider\"></slot>\n      </div>\n\n      <slot name=\"end\" part=\"panel end\" class=\"end\"></slot></div>"
       },
       {
         "tagName": "sl-switch",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-switch</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div class=\" form-control form-control--medium \">\n        <label part=\"base\" class=\" switch switch--medium \">\n          <input class=\"switch__input\" type=\"checkbox\" role=\"switch\" aria-describedby=\"help-text\" title=\"\" name=\"\" aria-checked=\"false\">\n\n          <span part=\"control\" class=\"switch__control\">\n            <span part=\"thumb\" class=\"switch__thumb\"></span>\n          </span>\n\n          <div part=\"label\" class=\"switch__label\">\n            <slot></slot>\n          </div>\n        </label>\n\n        <div class=\"form-control__help-text\" id=\"help-text\" part=\"form-control-help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$044007361$--></slot>\n        </div>\n      </div></div>"
       },
       {
         "tagName": "sl-tab",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tab</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" tab \">\n        <slot></slot>\n        <!--?lit$937146676$-->\n      </div></div>"
       },
       {
         "tagName": "sl-tab-group",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tab-group</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" tab-group tab-group--top \">\n        <div class=\"tab-group__nav-container\" part=\"nav\">\n          <!--?lit$017930216$-->\n\n          <div class=\"tab-group__nav\">\n            <div part=\"tabs\" class=\"tab-group__tabs\" role=\"tablist\">\n              <div part=\"active-tab-indicator\" class=\"tab-group__indicator\" style=\"display: none;\"></div>\n              <sl-resize-observer>\n                <slot name=\"nav\"></slot>\n              </sl-resize-observer>\n            </div>\n          </div>\n\n          <!--?lit$017930216$-->\n        </div>\n\n        <slot part=\"body\" class=\"tab-group__body\"></slot>\n      </div></div>"
       },
       {
         "tagName": "sl-tab-panel",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tab-panel</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <slot part=\"base\" class=\" tab-panel \"></slot></div>"
       },
       {
         "tagName": "sl-table",
@@ -382,35 +382,35 @@ const _records: Record<string, HubPackageRecord> = {
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tag</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <span part=\"base\" class=\" tag tag--neutral tag--medium \">\n        <slot part=\"content\" class=\"tag__content\"></slot>\n\n        <!--?lit$336952971$-->\n      </span></div>"
       },
       {
         "tagName": "sl-textarea",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-textarea</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"form-control\" class=\" form-control form-control--medium \">\n        <label part=\"form-control-label\" class=\"form-control__label\" for=\"input\" aria-hidden=\"true\">\n          <slot name=\"label\"><!--?lit$380277553$--></slot>\n        </label>\n\n        <div part=\"form-control-input\" class=\"form-control-input\">\n          <div part=\"base\" class=\" textarea textarea--medium textarea--standard textarea--empty textarea--resize-vertical \">\n            <textarea part=\"textarea\" id=\"input\" class=\"textarea__control\" aria-describedby=\"help-text\" title=\"\" name=\"\" placeholder=\"\" rows=\"4\" spellcheck=\"true\"></textarea>\n            <!-- This \"adjuster\" exists to prevent layout shifting. https://github.com/shoelace-style/shoelace/issues/2180 -->\n            <div part=\"textarea-adjuster\" class=\"textarea__size-adjuster\" hidden=\"\"></div>\n          </div>\n        </div>\n\n        <div part=\"form-control-help-text\" id=\"help-text\" class=\"form-control__help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$380277553$--></slot>\n        </div>\n      </div></div>"
       },
       {
         "tagName": "sl-tooltip",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tooltip</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <sl-popup part=\"base\" exportparts=\"\n          popup:base__popup,\n          arrow:base__arrow\n        \" flip=\"\" shift=\"\" arrow=\"\" hover-bridge=\"\" class=\" tooltip \" placement=\"top\" distance=\"8\" skidding=\"0\" strategy=\"absolute\">\n        <!--?lit$558487803$-->\n        <slot slot=\"anchor\" aria-describedby=\"tooltip\"></slot>\n\n        <!--?lit$558487803$-->\n        <div part=\"body\" id=\"tooltip\" class=\"tooltip__body\" role=\"tooltip\" aria-live=\"off\" hidden=\"\">\n          <slot name=\"content\"><!--?lit$558487803$--></slot>\n        </div>\n      </sl-popup></div>"
       },
       {
         "tagName": "sl-tree",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tree</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\"tree\">\n        <slot></slot>\n        <span hidden=\"\" aria-hidden=\"true\"><slot name=\"expand-icon\"></slot></span>\n        <span hidden=\"\" aria-hidden=\"true\"><slot name=\"collapse-icon\"></slot></span>\n      </div></div>"
       },
       {
         "tagName": "sl-tree-item",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tree-item</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\"tree-item tree-item--leaf\">\n        <div class=\"tree-item__item\" part=\"\n            item\n            \n            \n            \n            \n          \">\n          <div class=\"tree-item__indentation\" part=\"indentation\"></div>\n\n          <div part=\"expand-button\" aria-hidden=\"true\" class=\"tree-item__expand-button\">\n            <!--?lit$633705412$-->\n            <slot class=\"tree-item__expand-icon-slot\" name=\"expand-icon\">\n              <sl-icon library=\"system\" name=\"chevron-right\" aria-hidden=\"true\"></sl-icon>\n            </slot>\n            <slot class=\"tree-item__expand-icon-slot\" name=\"collapse-icon\">\n              <sl-icon library=\"system\" name=\"chevron-right\" aria-hidden=\"true\"></sl-icon>\n            </slot>\n          </div>\n\n          <!--?lit$633705412$-->\n\n          <slot class=\"tree-item__label\" part=\"label\"></slot>\n        </div>\n\n        <div class=\"tree-item__children\" part=\"children\" role=\"group\" hidden=\"\" style=\"height: 0px;\">\n          <slot name=\"children\"></slot>\n        </div>\n      </div></div>"
       }
     ],
     "reports": {
@@ -428,7 +428,7 @@ const _records: Record<string, HubPackageRecord> = {
       ],
       "ssrCapable": false
     },
-    "submittedAt": "2026-05-17T10:21:36.631Z",
+    "submittedAt": "2026-05-17T11:03:55.234Z",
     "submittedBy": "hub-scanner",
     "validatorVersion": "0.19.0"
   },
@@ -450,14 +450,14 @@ const _records: Record<string, HubPackageRecord> = {
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-controller</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><slot name=\"media\" part=\"layer media-layer\"></slot>\n    <slot name=\"poster\" part=\"layer poster-layer\"></slot>\n    <slot name=\"gestures-chrome\" part=\"layer gesture-layer\">\n      <media-gesture-receiver slot=\"gestures-chrome\" tabindex=\"-1\" aria-hidden=\"true\" mediapaused=\"\">\n        <template shadowrootmode=\"open\">\n          \n    \n  \n        </template>\n      </media-gesture-receiver>\n    </slot>\n    <span part=\"layer vertical-layer\">\n      <slot name=\"top-chrome\" part=\"top chrome\"></slot>\n      <slot name=\"middle-chrome\" part=\"middle chrome\"></slot>\n      <slot name=\"centered-chrome\" part=\"layer centered-layer center centered chrome\"></slot>\n      \n      <slot part=\"bottom chrome\"></slot>\n    </span>\n    <slot name=\"dialog\" part=\"layer dialog-layer\"></slot></div>"
       },
       {
         "tagName": "media-play-button",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-play-button</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><slot name=\"icon\">\n      <slot name=\"play\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\">\n  <path d=\"m6 21 15-9L6 3v18Z\"></path>\n</svg></slot>\n      <slot name=\"pause\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\">\n  <path d=\"M6 20h4V4H6v16Zm8-16v16h4V4h-4Z\"></path>\n</svg></slot>\n    </slot>\n  \n\n    <slot name=\"tooltip\">\n      <media-tooltip part=\"tooltip\" aria-hidden=\"true\">\n        <template shadowrootmode=\"open\">\n          \n    \n    <slot></slot>\n    <div id=\"arrow\"></div>\n  \n        </template>\n        <slot name=\"tooltip-content\">\n          \n    <slot name=\"tooltip-play\">Play</slot>\n    <slot name=\"tooltip-pause\">Pause</slot>\n  \n        </slot>\n      </media-tooltip>\n    </slot></div>"
       },
       {
         "tagName": "media-time-range",
@@ -478,14 +478,14 @@ const _records: Record<string, HubPackageRecord> = {
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-poster-image</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><img part=\"poster img\" aria-hidden=\"true\" id=\"image\"></div>"
       },
       {
         "tagName": "media-loading-indicator",
         "compatibility": "client-only",
         "validationErrors": 0,
         "validationWarnings": 1,
-        "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-loading-indicator</span></div>"
+        "ssrSnapshot": "<div class=\"snapshot-preview\"><slot name=\"icon\">\n<svg aria-hidden=\"true\" viewBox=\"0 0 100 100\">\n  <path d=\"M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50\">\n    <animateTransform attributeName=\"transform\" attributeType=\"XML\" type=\"rotate\" dur=\"1s\" from=\"0 50 50\" to=\"360 50 50\" repeatCount=\"indefinite\"></animateTransform>\n  </path>\n</svg>\n</slot>\n    <div id=\"status\" role=\"status\" aria-live=\"polite\">media loading</div></div>"
       }
     ],
     "reports": {
@@ -503,7 +503,7 @@ const _records: Record<string, HubPackageRecord> = {
       ],
       "ssrCapable": false
     },
-    "submittedAt": "2026-05-17T10:21:36.631Z",
+    "submittedAt": "2026-05-17T11:03:56.803Z",
     "submittedBy": "hub-scanner",
     "validatorVersion": "0.19.0"
   }

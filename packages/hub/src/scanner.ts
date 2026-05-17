@@ -20,7 +20,7 @@ import type {
   HubPackageRecord,
   HubTagRecord,
 } from './schema.ts';
-import { renderSnapshotLit, formatSnapshotForDisplay } from './snapshot-renderer.ts';
+import { renderSnapshotLit, renderSnapshotWithHappyDom, formatSnapshotForDisplay } from './snapshot-renderer.ts';
 
 // ─── Known WC Packages ──────────────────────────────────────────────────
 
@@ -134,6 +134,47 @@ const WC_PACKAGES: KnownWcPackage[] = [
       'sl-tree',
       'sl-tree-item',
     ],
+    modulePaths: {
+      'sl-alert': '@shoelace-style/shoelace/dist/components/alert/alert.js',
+      'sl-animated-image': '@shoelace-style/shoelace/dist/components/animated-image/animated-image.js',
+      'sl-avatar': '@shoelace-style/shoelace/dist/components/avatar/avatar.js',
+      'sl-badge': '@shoelace-style/shoelace/dist/components/badge/badge.js',
+      'sl-button': '@shoelace-style/shoelace/dist/components/button/button.js',
+      'sl-card': '@shoelace-style/shoelace/dist/components/card/card.js',
+      'sl-carousel': '@shoelace-style/shoelace/dist/components/carousel/carousel.js',
+      'sl-checkbox': '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js',
+      'sl-color-picker': '@shoelace-style/shoelace/dist/components/color-picker/color-picker.js',
+      'sl-details': '@shoelace-style/shoelace/dist/components/details/details.js',
+      'sl-dialog': '@shoelace-style/shoelace/dist/components/dialog/dialog.js',
+      'sl-divider': '@shoelace-style/shoelace/dist/components/divider/divider.js',
+      'sl-drawer': '@shoelace-style/shoelace/dist/components/drawer/drawer.js',
+      'sl-dropdown': '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js',
+      'sl-icon': '@shoelace-style/shoelace/dist/components/icon/icon.js',
+      'sl-icon-button': '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js',
+      'sl-image-comparer': '@shoelace-style/shoelace/dist/components/image-comparer/image-comparer.js',
+      'sl-input': '@shoelace-style/shoelace/dist/components/input/input.js',
+      'sl-menu': '@shoelace-style/shoelace/dist/components/menu/menu.js',
+      'sl-menu-item': '@shoelace-style/shoelace/dist/components/menu-item/menu-item.js',
+      'sl-progress-bar': '@shoelace-style/shoelace/dist/components/progress-bar/progress-bar.js',
+      'sl-radio': '@shoelace-style/shoelace/dist/components/radio/radio.js',
+      'sl-radio-group': '@shoelace-style/shoelace/dist/components/radio-group/radio-group.js',
+      'sl-range': '@shoelace-style/shoelace/dist/components/range/range.js',
+      'sl-rating': '@shoelace-style/shoelace/dist/components/rating/rating.js',
+      'sl-select': '@shoelace-style/shoelace/dist/components/select/select.js',
+      'sl-skeleton': '@shoelace-style/shoelace/dist/components/skeleton/skeleton.js',
+      'sl-spinner': '@shoelace-style/shoelace/dist/components/spinner/spinner.js',
+      'sl-split-panel': '@shoelace-style/shoelace/dist/components/split-panel/split-panel.js',
+      'sl-switch': '@shoelace-style/shoelace/dist/components/switch/switch.js',
+      'sl-tab': '@shoelace-style/shoelace/dist/components/tab/tab.js',
+      'sl-tab-group': '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js',
+      'sl-tab-panel': '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js',
+      'sl-table': '@shoelace-style/shoelace/dist/components/table/table.js',
+      'sl-tag': '@shoelace-style/shoelace/dist/components/tag/tag.js',
+      'sl-textarea': '@shoelace-style/shoelace/dist/components/textarea/textarea.js',
+      'sl-tooltip': '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js',
+      'sl-tree': '@shoelace-style/shoelace/dist/components/tree/tree.js',
+      'sl-tree-item': '@shoelace-style/shoelace/dist/components/tree-item/tree-item.js',
+    },
   },
 
   // ── Media Chrome (npm, client-only) ──
@@ -156,6 +197,14 @@ const WC_PACKAGES: KnownWcPackage[] = [
       'media-poster-image',
       'media-loading-indicator',
     ],
+    modulePaths: {
+      'media-controller': 'media-chrome/dist/media-controller.js',
+      'media-play-button': 'media-chrome/dist/media-play-button.js',
+      'media-time-range': 'media-chrome/dist/media-time-range.js',
+      'media-volume-range': 'media-chrome/dist/media-volume-range.js',
+      'media-poster-image': 'media-chrome/dist/media-poster-image.js',
+      'media-loading-indicator': 'media-chrome/dist/media-loading-indicator.js',
+    },
   },
 ];
 
@@ -179,7 +228,7 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
     for (const tag of pkg.tagNames) {
       let ssrSnapshot: string | undefined;
 
-      // Generate SSR snapshot for SSR-capable components
+      // Generate snapshot for SSR-capable Lit components using @lit-labs/ssr-dom-shim
       if (pkg.compatibility === 'ssr-capable' && pkg.modulePaths?.[tag]) {
         try {
           const modPath = resolve(Deno.cwd(), pkg.modulePaths[tag]);
@@ -190,6 +239,38 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
           }
         } catch (e) {
           console.warn(`  ⚠  Snapshot failed for <${tag}>: ${e instanceof Error ? e.message : String(e)}`);
+        }
+      }
+
+      // For client-only npm packages, try Happy DOM rendering
+      if (!ssrSnapshot && pkg.modulePaths?.[tag] && pkg.compatibility !== 'ssr-capable') {
+        try {
+          const importSpec = pkg.modulePaths[tag];
+          // Spawn a fresh Deno subprocess for each component to avoid
+          // global state / module caching conflicts with the parent process
+          const cmd = new Deno.Command(Deno.execPath(), {
+            args: [
+              'run', '-A',
+              '--config', resolve(Deno.cwd(), 'deno.json'),
+              resolve(Deno.cwd(), 'packages/hub/src/cli/render-happy.ts'),
+              importSpec, tag,
+            ],
+            stdout: 'piped',
+            stderr: 'piped',
+          });
+          const { stdout, stderr, success: procSuccess } = await cmd.output();
+          const stderrStr = new TextDecoder().decode(stderr).trim();
+          if (!procSuccess) {
+            if (stderrStr) console.warn(`  ⚠  Happy DOM failed for <${tag}>: ${stderrStr.split('\n').pop()}`);
+          } else if (stdout.length > 0) {
+            const output = new TextDecoder().decode(stdout).trim();
+            // Check if result is real HTML, not placeholder
+            if (!output.includes('padding:0.75rem 1.25rem;border:1px dashed')) {
+              ssrSnapshot = formatSnapshotForDisplay(output);
+            }
+          }
+        } catch (e) {
+          console.warn(`  ⚠  Happy DOM snapshot failed for <${tag}>: ${e instanceof Error ? e.message : String(e)}`);
         }
       }
 

@@ -1,12 +1,12 @@
 /**
  * @lessjs/hub — Snapshot Renderer
  *
- * v0.19.0 Phase 2: Renders Lit components to static HTML for Hub previews.
+ * v0.19.0 Phase 2: Renders Lit components / Web Components to static HTML
+ * for Hub previews. Supports three strategies:
  *
- * Uses @lit-labs/ssr-dom-shim for minimal DOM environment and the framework's
- * own renderLitToString to convert Lit TemplateResult to HTML string.
- *
- * For client-only components: generates a simple placeholder.
+ * 1. @lit-labs/ssr-dom-shim: for SSR-capable Lit components (@lessjs/ui)
+ * 2. Happy DOM: for browser-dependent npm packages (Shoelace, Media Chrome)
+ * 3. Placeholder: fallback when rendering fails
  *
  * @see ADR-0031
  */
@@ -27,18 +27,11 @@ function warn(msg: string) {
   }
 }
 
-// ─── SSR Snapshot Renderer ───────────────────────────────────────────────
+// ─── SSR Snapshot Renderer (@lit-labs/ssr-dom-shim) ──────────────────────
 
 /**
- * Render a Lit-based Web Component to a static HTML snapshot.
- *
- * Strategy:
- * 1. Set up @lit-labs/ssr-dom-shim globals so the Lit module can import
- *    and define its custom element using shimmed HTMLElement
- * 2. Import the component module
- * 3. Create an instance and trigger render cycle
- * 4. Use renderLitToString to convert TemplateResult to HTML
- * 5. Wrap in tag name and return
+ * Render a Lit-based Web Component to a static HTML snapshot using
+ * @lit-labs/ssr-dom-shim for the DOM environment.
  *
  * @param modUrl - file:// URL to the component module
  * @param tagName - Custom element tag name
@@ -102,8 +95,6 @@ export async function renderSnapshotLit(
     const instance = new ComponentClass() as any;
 
     // Call render() to get the Lit TemplateResult
-    // In Lit SSR context, render() returns a TemplateResult that
-    // renderLitToString can serialize to HTML.
     let templateResult: unknown;
     try {
       templateResult = instance.render();
@@ -118,15 +109,13 @@ export async function renderSnapshotLit(
     }
 
     // Step 5: Convert to HTML string using renderLitToString
-    // This is in @lessjs/adapter-lit/ssr — no extra deps
     let htmlString: string;
     try {
       // Try adapter-lit SSR renderer first
-      const adapterLit = await import('../adapter-lit/ssr.ts');
+      const adapterLit = await import('../../adapter-lit/src/ssr.ts');
       if (typeof adapterLit.renderLitToString === 'function') {
         htmlString = adapterLit.renderLitToString(templateResult, tagName);
       } else {
-        // Fallback: use Lit's renderToString if available
         throw new Error('renderLitToString not found');
       }
     } catch {
@@ -134,13 +123,9 @@ export async function renderSnapshotLit(
       htmlString = templateResultToString(templateResult, tagName);
     }
 
-    // Wrap in tag for display — strip DSD template wrapper since
-    // this snapshot is embedded in another SSG page where DSD
-    // polyfill won't process nested templates.
+    // Strip DSD template wrapper
     const innerHtml = stripDsdTemplate(htmlString);
 
-    // Wrap in a live-like preview: just the outer tag so the
-    // rendered content (button, card, etc.) is visible inline
     const html = `<div class="snapshot-preview">${innerHtml}</div>`;
 
     return { html, success: true };
@@ -154,7 +139,131 @@ export async function renderSnapshotLit(
   }
 }
 
-// ─── Fallback: Manual TemplateResult Serialization ─────────────────────
+// ─── Happy DOM Snapshot Renderer (for browser-dependent npm packages) ────
+
+/**
+ * Render a browser-dependent Web Component using Happy DOM.
+ *
+ * Happy DOM provides a full browser-environment simulation so that
+ * npm packages like Shoelace and Media Chrome (which access
+ * document.body, HTMLMediaElement, etc.) can render their shadow DOM
+ * content at build time.
+ *
+ * @param importSpec - npm import specifier with subpath
+ * @param tagName - Custom element tag name
+ */
+export async function renderSnapshotWithHappyDom(
+  importSpec: string,
+  tagName: string,
+): Promise<SnapshotRenderResult> {
+  // 1. Load Happy DOM
+  let HappyWindowClass: typeof import('happy-dom').Window;
+  try {
+    const happyDom = await import('happy-dom');
+    HappyWindowClass = happyDom.Window;
+  } catch (err) {
+    return renderPlaceholder(
+      tagName,
+      `Happy DOM not available: ${err instanceof Error ? err.message : String(err)}`,
+    );
+  }
+
+  // 2. Create isolated Happy DOM environment
+  const hWin = new HappyWindowClass({ url: 'https://localhost:8080' });
+  const hDoc = hWin.document;
+
+  // 3. Save and replace ALL global constructors from Happy DOM Window
+  // This ensures components can reference Document, Node, Event, etc.
+  const _savedGlobals = new Map<string, unknown>();
+  const _hdPropNames = ['window', 'self', 'document', 'customElements', 'HTMLElement',
+    'ShadowRoot', 'Document', 'Node', 'Element', 'Text', 'Comment',
+    'Event', 'CustomEvent', 'MouseEvent', 'KeyboardEvent', 'FocusEvent',
+    'HTMLMediaElement', 'HTMLVideoElement', 'HTMLAudioElement',
+    'HTMLInputElement', 'HTMLButtonElement', 'HTMLDivElement',
+    'MutationObserver', 'Selection', 'Range',
+    'CSSStyleSheet', 'CSS', 'CSSStyleDeclaration', 'CSSRule',
+    'getComputedStyle',
+  ];
+  for (const k of _hdPropNames) {
+    try {
+      _savedGlobals.set(k, (globalThis as any)[k]);
+      const val = (hWin as any)[k];
+      if (val !== undefined) {
+        (globalThis as any)[k] = val;
+      }
+    } catch { /* skip */ }
+  }
+
+  try {
+    // 5. Import the npm component module (calls customElements.define)
+    await import(importSpec);
+
+    // 6. Verify element registration
+    if (!hWin.customElements.get(tagName)) {
+      throw new Error(`Component <${tagName}> was not registered after module import`);
+    }
+
+    // 7. Create element instance
+    const Ctor = hWin.customElements.get(tagName);
+    if (!Ctor) {
+      throw new Error(`Component <${tagName}> was not registered`);
+    }
+    let el: HTMLElement;
+    try {
+      el = new Ctor() as HTMLElement;
+    } catch {
+      el = hDoc.createElement(tagName);
+    }
+    // Polyfill ElementInternals for components that use it
+    if (typeof (el as any).attachInternals !== 'function') {
+      (el as any).attachInternals = () => ({
+        setFormValue: () => {},
+        setValidity: () => {},
+      });
+    }
+    // Manually trigger connectedCallback (more reliable than DOM append)
+    if (typeof (el as any).connectedCallback === 'function') {
+      try { (el as any).connectedCallback(); } catch { /* ignore callback errors */ }
+    }
+    await new Promise((r) => setTimeout(r, 0));
+    // Append to DOM for a more complete environment
+    if (hDoc.body) {
+      hDoc.body.appendChild(el);
+    }
+    // Give microtasks time for connectedCallback to fire
+    await new Promise((r) => setTimeout(r, 0));
+
+    // 8. Serialize rendered HTML
+    let html = '';
+    if (el.shadowRoot) {
+      html = el.shadowRoot.innerHTML.replace(/<style>[\s\S]*?<\/style>/gi, '').trim();
+    } else {
+      html = el.innerHTML || `<${tagName}></${tagName}>`;
+    }
+
+    // 9. Detach element
+    if (el.parentNode) {
+      el.parentNode.removeChild(el);
+    }
+
+    return { html: `<div class="snapshot-preview">${html}</div>`, success: true };
+  } catch (err) {
+    // Throw so the caller sees the failure (scanner's own try/catch will handle it)
+    throw new Error(
+      `Happy DOM render failed for <${tagName}>: ${err instanceof Error ? err.message : String(err)}`,
+    );
+  } finally {
+    // 10. Restore original globals
+    for (const [k, v] of _savedGlobals) {
+      (globalThis as any)[k] = v;
+    }
+
+    // 11. Clean up Happy DOM
+    try { hWin.happyDOM?.cancelAsync(); } catch { /* ignore */ }
+  }
+}
+
+// ─── Manual TemplateResult Serialization (Fallback) ─────────────────────
 
 /**
  * Convert a Lit TemplateResult to HTML string without renderLitToString.
@@ -229,29 +338,17 @@ function htmlEscape(str: string): string {
     .replace(/"/g, '&quot;');
 }
 
-// ─── Client-Only Placeholder ─────────────────────────────────────────────
+// ─── Placeholder ─────────────────────────────────────────────────────────
 
 /**
- * Generate a placeholder snapshot for client-only components.
+ * Generate a placeholder snapshot for components that cannot be rendered.
  */
 function renderPlaceholder(tagName: string, reason?: string): SnapshotRenderResult {
   const html = `<div class="snapshot-preview"><span style="display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;">${tagName}</span></div>`;
-  return { html, success: true };
+  return { html, success: true, error: reason };
 }
 
 // ─── Public helpers ──────────────────────────────────────────────────────
-
-/**
- * Render a snapshot for display. Determines the approach based on ssrCapable flag.
- */
-export async function renderComponentSnapshot(
-  _tagName: string,
-  _modulePath?: string,
-  _ssrCapable?: boolean,
-): Promise<SnapshotRenderResult> {
-  // Deprecated — use renderSnapshotLit directly for SSR-capable components
-  return renderPlaceholder(_tagName, 'Use renderSnapshotLit for SSR render');
-}
 
 /**
  * Format a snapshot HTML for embedding in an SSG page.
@@ -267,19 +364,17 @@ export function formatSnapshotForDisplay(html: string): string {
  * For snapshot previews, we only want the inner rendered HTML without DSD syntax.
  */
 function stripDsdTemplate(html: string): string {
-  // Strip <template shadowrootmode="open" ...> and </template> tags
   let result = html.replace(/<template\s+shadowrootmode[^>]*>/gi, '');
   result = result.replace(/<\/template>/gi, '');
 
   // Strip <style> blocks (they pollute the preview with host styles)
   result = result.replace(/<style>[\s\S]*?<\/style>/gi, '');
 
-  // Strip duplicate wrapping tag names (the <less-button> that wraps the template)
+  // Strip duplicate wrapping tag names
   const tagMatch = html.match(/^<([a-z][a-z0-9-]*)>/i);
   if (tagMatch) {
     const tagName = tagMatch[1];
     const closeTag = `</${tagName}>`;
-    // Remove outermost wrapper tag  
     result = result.replace(new RegExp(`^<${tagName}[^>]*>`, 'i'), '');
     result = result.replace(new RegExp(escapeRegex(closeTag) + '$'), '');
   }
