@@ -323,6 +323,11 @@ async function renderSingleComponent(
     // Sanitize: strip scripts, event handlers, javascript: URLs
     shadowHtml = sanitizeSnapshot(shadowHtml);
 
+    // Degrade <button> to <div> in shadowHtml to avoid nested-button
+    // rendering issues when the WC library upgrades and re-creates shadow DOM.
+    // The .button class styles are preserved so the static preview still looks right.
+    shadowHtml = shadowHtml.replace(/<button\b/g, '<div').replace(/<\/button>/g, '</div>');
+
     // Wrap in snapshot container
     let themeCss = options.themeCss || '';
     // Auto-read Shoelace theme CSS so snapshot is self-contained
@@ -334,8 +339,19 @@ async function renderSingleComponent(
       } catch { /* theme CSS not available — skip */ }
     }
     const themeBlock = themeCss ? `<style>${themeCss}</style>` : '';
+
+    // Build attributes + slot content so the snapshot tag mirrors the fixture.
+    // This ensures the WC library sees correct light-DOM content after upgrade.
+    const attrs = options.demoAttrs
+      ? Object.entries(options.demoAttrs)
+        .map(([k, v]) => v === '' ? k : `${k}="${escapeAttr(v)}"`)
+        .join(' ')
+      : '';
+    const attrStr = attrs ? ` ${attrs}` : '';
+    const slotContent = options.demoSlots || '';
+
     const html =
-      `<div class="snapshot-preview">${themeBlock}<${tagName}>${shadowHtml}</${tagName}></div>`;
+      `<div class="snapshot-preview">${themeBlock}<${tagName}${attrStr}>${slotContent}${shadowHtml}</${tagName}></div>`;
 
     return { html, success: true };
   } catch (err) {

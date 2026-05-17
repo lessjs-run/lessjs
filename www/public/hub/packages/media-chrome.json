@@ -44,7 +44,7 @@
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><media-poster-image>\n    <style>\n      media-poster-image {\n        pointer-events: none;\n        display: var(--media-poster-image-display, inline-block);\n        box-sizing: border-box;\n      }\n\n      img {\n        max-width: 100%;\n        max-height: 100%;\n        min-width: 100%;\n        min-height: 100%;\n        background-repeat: no-repeat;\n        background-position: var(--media-poster-image-background-position, var(--media-object-position, center));\n        background-size: var(--media-poster-image-background-size, var(--media-object-fit, contain));\n        object-fit: var(--media-object-fit, contain);\n        object-position: var(--media-object-position, center);\n      }\n    </style>\n\n    <img part=\"poster img\" aria-hidden=\"true\" id=\"image\" src=\"https://placehold.co/400x225/111/fff?text=Video\">\n  </media-poster-image></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><media-poster-image src=\"https://placehold.co/400x225/111/fff?text=Video\">\n    <style>\n      media-poster-image {\n        pointer-events: none;\n        display: var(--media-poster-image-display, inline-block);\n        box-sizing: border-box;\n      }\n\n      img {\n        max-width: 100%;\n        max-height: 100%;\n        min-width: 100%;\n        min-height: 100%;\n        background-repeat: no-repeat;\n        background-position: var(--media-poster-image-background-position, var(--media-object-position, center));\n        background-size: var(--media-poster-image-background-size, var(--media-object-fit, contain));\n        object-fit: var(--media-object-fit, contain);\n        object-position: var(--media-object-position, center);\n      }\n    </style>\n\n    <img part=\"poster img\" aria-hidden=\"true\" id=\"image\" src=\"https://placehold.co/400x225/111/fff?text=Video\">\n  </media-poster-image></div>"
     },
     {
       "tagName": "media-loading-indicator",
@@ -69,7 +69,7 @@
     ],
     "ssrCapable": false
   },
-  "submittedAt": "2026-05-17T16:12:21.508Z",
+  "submittedAt": "2026-05-17T16:34:36.838Z",
   "submittedBy": "hub-scanner",
   "validatorVersion": "0.19.0"
 }
