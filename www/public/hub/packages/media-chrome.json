@@ -15,37 +15,43 @@
       "tagName": "media-controller",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<media-controller style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-controller</media-controller>"
     },
     {
       "tagName": "media-play-button",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<media-play-button style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-play-button</media-play-button>"
     },
     {
       "tagName": "media-time-range",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<media-time-range style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-time-range</media-time-range>"
     },
     {
       "tagName": "media-volume-range",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<media-volume-range style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-volume-range</media-volume-range>"
     },
     {
       "tagName": "media-poster-image",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<media-poster-image style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-poster-image</media-poster-image>"
     },
     {
       "tagName": "media-loading-indicator",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<media-loading-indicator style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-loading-indicator</media-loading-indicator>"
     }
   ],
   "reports": {
@@ -63,7 +69,7 @@
     ],
     "ssrCapable": false
   },
-  "submittedAt": "2026-05-17T09:18:48.948Z",
+  "submittedAt": "2026-05-17T10:14:14.731Z",
   "submittedBy": "hub-scanner",
   "validatorVersion": "0.19.0"
 }

@@ -15,6 +15,7 @@
 export const meta = { section: 'Registry', label: 'Component Detail', order: 6 };
 
 import { css, html, LitElement } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -269,7 +270,7 @@ export default class DocsRegistryComponentDetail extends LitElement {
             <div class="preview-label">Pre-rendered at build time</div>
             <div class="preview-frame">
               ${hasSnapshot ? html`
-                <div style="width:100%;">${tag.ssrSnapshot}</div>
+                <div style="width:100%;">${unsafeHTML(tag.ssrSnapshot)}</div>
               ` : html`
                 <div class="preview-placeholder">
                   <div style="font-size:0.875rem;margin-bottom:0.25rem;">&lt;${tagName}&gt;</div>

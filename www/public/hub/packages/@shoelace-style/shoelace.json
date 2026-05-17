@@ -15,235 +15,274 @@
       "tagName": "sl-alert",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-alert style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-alert</sl-alert>"
     },
     {
       "tagName": "sl-animated-image",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-animated-image style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-animated-image</sl-animated-image>"
     },
     {
       "tagName": "sl-avatar",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-avatar style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-avatar</sl-avatar>"
     },
     {
       "tagName": "sl-badge",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-badge style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-badge</sl-badge>"
     },
     {
       "tagName": "sl-button",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-button style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-button</sl-button>"
     },
     {
       "tagName": "sl-card",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-card style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-card</sl-card>"
     },
     {
       "tagName": "sl-carousel",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-carousel style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-carousel</sl-carousel>"
     },
     {
       "tagName": "sl-checkbox",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-checkbox style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-checkbox</sl-checkbox>"
     },
     {
       "tagName": "sl-color-picker",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-color-picker style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-color-picker</sl-color-picker>"
     },
     {
       "tagName": "sl-details",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-details style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-details</sl-details>"
     },
     {
       "tagName": "sl-dialog",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-dialog style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-dialog</sl-dialog>"
     },
     {
       "tagName": "sl-divider",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-divider style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-divider</sl-divider>"
     },
     {
       "tagName": "sl-drawer",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-drawer style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-drawer</sl-drawer>"
     },
     {
       "tagName": "sl-dropdown",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-dropdown style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-dropdown</sl-dropdown>"
     },
     {
       "tagName": "sl-icon",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-icon style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-icon</sl-icon>"
     },
     {
       "tagName": "sl-icon-button",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-icon-button style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-icon-button</sl-icon-button>"
     },
     {
       "tagName": "sl-image-comparer",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-image-comparer style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-image-comparer</sl-image-comparer>"
     },
     {
       "tagName": "sl-input",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-input style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-input</sl-input>"
     },
     {
       "tagName": "sl-menu",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-menu style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-menu</sl-menu>"
     },
     {
       "tagName": "sl-menu-item",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-menu-item style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-menu-item</sl-menu-item>"
     },
     {
       "tagName": "sl-progress-bar",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-progress-bar style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-progress-bar</sl-progress-bar>"
     },
     {
       "tagName": "sl-radio",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-radio style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-radio</sl-radio>"
     },
     {
       "tagName": "sl-radio-group",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-radio-group style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-radio-group</sl-radio-group>"
     },
     {
       "tagName": "sl-range",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-range style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-range</sl-range>"
     },
     {
       "tagName": "sl-rating",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-rating style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-rating</sl-rating>"
     },
     {
       "tagName": "sl-select",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-select style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-select</sl-select>"
     },
     {
       "tagName": "sl-skeleton",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-skeleton style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-skeleton</sl-skeleton>"
     },
     {
       "tagName": "sl-spinner",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-spinner style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-spinner</sl-spinner>"
     },
     {
       "tagName": "sl-split-panel",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-split-panel style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-split-panel</sl-split-panel>"
     },
     {
       "tagName": "sl-switch",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-switch style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-switch</sl-switch>"
     },
     {
       "tagName": "sl-tab",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-tab style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tab</sl-tab>"
     },
     {
       "tagName": "sl-tab-group",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-tab-group style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tab-group</sl-tab-group>"
     },
     {
       "tagName": "sl-tab-panel",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-tab-panel style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tab-panel</sl-tab-panel>"
     },
     {
       "tagName": "sl-table",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-table style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-table</sl-table>"
     },
     {
       "tagName": "sl-tag",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-tag style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tag</sl-tag>"
     },
     {
       "tagName": "sl-textarea",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-textarea style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-textarea</sl-textarea>"
     },
     {
       "tagName": "sl-tooltip",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-tooltip style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tooltip</sl-tooltip>"
     },
     {
       "tagName": "sl-tree",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-tree style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tree</sl-tree>"
     },
     {
       "tagName": "sl-tree-item",
       "compatibility": "client-only",
       "validationErrors": 0,
-      "validationWarnings": 1
+      "validationWarnings": 1,
+      "ssrSnapshot": "<sl-tree-item style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tree-item</sl-tree-item>"
     }
   ],
   "reports": {
@@ -261,7 +300,7 @@
     ],
     "ssrCapable": false
   },
-  "submittedAt": "2026-05-17T09:18:48.948Z",
+  "submittedAt": "2026-05-17T10:14:14.731Z",
   "submittedBy": "hub-scanner",
   "validatorVersion": "0.19.0"
 }

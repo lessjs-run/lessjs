@@ -56,49 +56,57 @@ const _records: Record<string, HubPackageRecord> = {
         "tagName": "less-button",
         "compatibility": "ssr-capable",
         "validationErrors": 0,
-        "validationWarnings": 0
+        "validationWarnings": 0,
+        "ssrSnapshot": "<less-button>\n      <button class=\"btn btn--default btn--md\" ?disabled=\"false\" type=\"button\">\n        <slot></slot>\n      </button>\n    </less-button>"
       },
       {
         "tagName": "less-card",
         "compatibility": "ssr-capable",
         "validationErrors": 0,
-        "validationWarnings": 0
+        "validationWarnings": 0,
+        "ssrSnapshot": "<less-card>\n      <article part=\"base\">\n        <slot name=\"header\"></slot>\n        <div class=\"card-body\">\n          <slot></slot>\n        </div>\n        <slot name=\"footer\"></slot>\n      </article>\n    </less-card>"
       },
       {
         "tagName": "less-code-block",
         "compatibility": "ssr-capable",
         "validationErrors": 0,
-        "validationWarnings": 0
+        "validationWarnings": 0,
+        "ssrSnapshot": "<less-code-block>\n      <slot></slot>\n      <button\n        class=\"copy-btn  \"\n        @click=\"()=&gt;this._copy()\"\n      >\n        Copy\n      </button>\n    </less-code-block>"
       },
       {
         "tagName": "less-dialog",
         "compatibility": "ssr-capable",
         "validationErrors": 0,
-        "validationWarnings": 0
+        "validationWarnings": 0,
+        "ssrSnapshot": "<less-dialog>\n      <slot name=\"trigger\" @click=\"_handleTrigger() {\n    this.toggle();\n  }\"></slot>\n      <dialog\n        ?open=\"false\"\n        aria-label=\"Symbol(lit-nothing)\"\n        @cancel=\"_handleCancel(e) {\n    e.preventDefault();\n    this._handleClose();\n  }\"\n        @close=\"_handleClose() {\n    this.open = false;\n    this._updateStates();\n    this._syncDialogElement();\n    this._syncInert();\n    this.dispatchEvent(new CustomEvent('less-dialog-close', {\n      bubbles: true,\n      composed: true\n    }));\n  }\"\n      >\n        <div class=\"dialog-header\">\n          <h2 class=\"dialog-title\"></h2>\n          <button class=\"dialog-close\" @click=\"_handleClose() {\n    this.open = false;\n    this._updateStates();\n    this._syncDialogElement();\n    this._syncInert();\n    this.dispatchEvent(new CustomEvent('less-dialog-close', {\n      bubbles: true,\n      composed: true\n    }));\n  }\" aria-label=\"Close\">&times;</button>\n        </div>\n        <div class=\"dialog-body\">\n          <slot></slot>\n        </div>\n        <div class=\"dialog-footer\">\n          <slot name=\"footer\"></slot>\n        </div>\n      </dialog>\n    </less-dialog>"
       },
       {
         "tagName": "less-hero-ping",
         "compatibility": "ssr-capable",
         "validationErrors": 0,
-        "validationWarnings": 0
+        "validationWarnings": 0,
+        "ssrSnapshot": "<less-hero-ping>\n      <span class=\"dot idle\"></span>\n      <button\n        class=\"ping\"\n        @click=\"async ()=&gt;{\n    // H-07 fix: Cancel any previous in-flight request\n    this._abortController?.abort();\n    this._abortController = new AbortController();\n    this._state = 'loading';\n    this._msg = '';\n    this.requestUpdate();\n    try {\n      // H-06 fix: Use apiUrl property if provided, fallback to default\n      const url = this.apiUrl || 'https://less-demo-api.sisyphuszheng.deno.net/api';\n      const r = await fetch(url, {\n        signal: this._abortController.signal\n      });\n      if (!r.ok) throw new Error(`HTTP ${r.status}`);\n      const d = await r.json();\n      this._state = 'ok';\n      this._msg = `${d.framework} v${d.version}  ${d.timestamp.slice(11, 19)}`;\n    } catch (e) {\n      // Ignore AbortError (cancelled requests are expected behavior)\n      if (e instanceof DOMException &amp;&amp; e.name === 'AbortError') return;\n      const err = e;\n      this._state = 'err';\n      this._msg = String(e).includes('HTTP') ? err.message : 'connection failed';\n    } finally{\n      this.requestUpdate();\n    }\n  }\"\n        ?disabled=\"false\"\n      >\n        ping server\n      </button>\n      \n    </less-hero-ping>"
       },
       {
         "tagName": "less-input",
         "compatibility": "ssr-capable",
         "validationErrors": 0,
-        "validationWarnings": 0
+        "validationWarnings": 0,
+        "ssrSnapshot": "<less-input>\n      <div class=\"input-wrapper\">\n        \n        <input\n          id=\"input\"\n          class=\"input \"\n          type=\"text\"\n          placeholder=\"\"\n          .value=\"\"\n          name=\"\"\n          ?disabled=\"false\"\n          ?required=\"false\"\n          aria-invalid=\"Symbol(lit-nothing)\"\n          aria-describedby=\"Symbol(lit-nothing)\"\n          aria-errormessage=\"Symbol(lit-nothing)\"\n          @input=\"(e)=&gt;this._handleInput(e)\"\n        />\n        \n      </div>\n    </less-input>"
       },
       {
         "tagName": "less-layout",
         "compatibility": "ssr-capable",
         "validationErrors": 0,
-        "validationWarnings": 0
+        "validationWarnings": 0,
+        "ssrSnapshot": "<less-layout>\n        <div class=\"app-layout\" ?home=\"false\">\n          <header class=\"app-header\">\n            <nav class=\"header-inner\" aria-label=\"Primary navigation\">\n              <a class=\"logo\" href=\"/\">LessJS<span class=\"logo-sub\"></span></a>\n              \n        <nav class=\"header-nav\">\n          \n        </nav>\n      \n              <div class=\"header-right\">\n                <slot name=\"header-actions\"></slot>\n                <details class=\"mobile-menu\">\n                  <summary class=\"mobile-menu-btn\" aria-label=\"Toggle navigation\" @click=\"_toggleMenu(e) {\n    e.preventDefault();\n    const details = this.shadowRoot?.querySelector('details.mobile-menu');\n    if (!details) return;\n    const willOpen = !details.hasAttribute('open');\n    details.toggleAttribute('open', willOpen);\n    this.toggleAttribute('menu-open', willOpen);\n    // Accessibility: set inert on main content when menu is open\n    this._syncInert(willOpen);\n  }\">\n                    <svg\n                      width=\"18\"\n                      height=\"18\"\n                      viewBox=\"0 0 18 18\"\n                      fill=\"none\"\n                      stroke=\"currentColor\"\n                      stroke-width=\"1.5\"\n                      stroke-linecap=\"round\"\n                    >\n                      <line x1=\"3\" y1=\"4.5\" x2=\"15\" y2=\"4.5\" />\n                      <line x1=\"3\" y1=\"9\" x2=\"15\" y2=\"9\" />\n                      <line x1=\"3\" y1=\"13.5\" x2=\"15\" y2=\"13.5\" />\n                    </svg>\n                  </summary>\n                </details>\n                <less-theme-toggle></less-theme-toggle>\n                Symbol(lit-nothing)\n                <a class=\"github-link\" href=\"https://github.com/lessjs-run/LessJS\" aria-label=\"GitHub repository\">\n                  <svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"currentColor\">\n                    <path\n                      d=\"M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z\"\n                    />\n                  </svg>\n                  <span class=\"github-text\">GitHub</span>\n                </a>\n              </div>\n            </nav>\n          </header>\n          <div class=\"mobile-backdrop\"></div>\n          <div class=\"layout-body\">\n            \n        <nav class=\"docs-sidebar\" aria-label=\"Documentation navigation\">\n          \n        \n      \n        </nav>\n      \n            <main class=\"layout-main\">\n              <slot></slot>\n            </main>\n          </div>\n          <footer class=\"app-footer\">\n            <p>\n              Symbol(lit-nothing) Built with <a href=\"https://github.com/lessjs-run/LessJS\" target=\"_blank\" rel=\"noopener noreferrer\"\n              >LessJS Framework</a>\n              <span class=\"divider\"></span>\n              Self-bootstrapped from JSR\n              <span class=\"divider\"></span>\n              LESS IS MORE\n            </p>\n          </footer>\n        </div>\n      </less-layout>"
       },
       {
         "tagName": "less-theme-toggle",
         "compatibility": "ssr-capable",
         "validationErrors": 0,
-        "validationWarnings": 0
+        "validationWarnings": 0,
+        "ssrSnapshot": "<less-theme-toggle>\n        <button\n          class=\"theme-toggle \"\n          title=\"Switch to light theme\"\n          aria-label=\"Toggle theme\"\n          @click=\"()=&gt;this._handleToggle()\"\n        >\n          <svg\n            class=\"icon-sun\"\n            viewBox=\"0 0 16 16\"\n            fill=\"none\"\n            stroke=\"currentColor\"\n            stroke-width=\"1.2\"\n            stroke-linecap=\"round\"\n          >\n            <circle cx=\"8\" cy=\"8\" r=\"3\" />\n            <line x1=\"8\" y1=\"1\" x2=\"8\" y2=\"3\" />\n            <line x1=\"8\" y1=\"13\" x2=\"8\" y2=\"15\" />\n            <line x1=\"1\" y1=\"8\" x2=\"3\" y2=\"8\" />\n            <line x1=\"13\" y1=\"8\" x2=\"15\" y2=\"8\" />\n            <line x1=\"3.05\" y1=\"3.05\" x2=\"4.46\" y2=\"4.46\" />\n            <line x1=\"11.54\" y1=\"11.54\" x2=\"12.95\" y2=\"12.95\" />\n            <line x1=\"3.05\" y1=\"12.95\" x2=\"4.46\" y2=\"11.54\" />\n            <line x1=\"11.54\" y1=\"4.46\" x2=\"12.95\" y2=\"3.05\" />\n          </svg>\n          <svg\n            class=\"icon-moon\"\n            viewBox=\"0 0 16 16\"\n            fill=\"none\"\n            stroke=\"currentColor\"\n            stroke-width=\"1.2\"\n            stroke-linecap=\"round\"\n          >\n            <path d=\"M13.5 9.14A5.5 5.5 0 0 1 6.86 2.5 5.5 5.5 0 1 0 13.5 9.14Z\" />\n          </svg>\n        </button>\n      </less-theme-toggle>"
       }
     ],
     "reports": {
@@ -114,7 +122,7 @@ const _records: Record<string, HubPackageRecord> = {
       "warnings": [],
       "ssrCapable": true
     },
-    "submittedAt": "2026-05-17T09:18:48.947Z",
+    "submittedAt": "2026-05-17T10:14:14.730Z",
     "submittedBy": "hub-scanner",
     "validatorVersion": "0.19.0"
   },
@@ -135,235 +143,274 @@ const _records: Record<string, HubPackageRecord> = {
         "tagName": "sl-alert",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-alert style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-alert</sl-alert>"
       },
       {
         "tagName": "sl-animated-image",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-animated-image style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-animated-image</sl-animated-image>"
       },
       {
         "tagName": "sl-avatar",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-avatar style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-avatar</sl-avatar>"
       },
       {
         "tagName": "sl-badge",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-badge style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-badge</sl-badge>"
       },
       {
         "tagName": "sl-button",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-button style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-button</sl-button>"
       },
       {
         "tagName": "sl-card",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-card style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-card</sl-card>"
       },
       {
         "tagName": "sl-carousel",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-carousel style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-carousel</sl-carousel>"
       },
       {
         "tagName": "sl-checkbox",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-checkbox style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-checkbox</sl-checkbox>"
       },
       {
         "tagName": "sl-color-picker",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-color-picker style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-color-picker</sl-color-picker>"
       },
       {
         "tagName": "sl-details",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-details style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-details</sl-details>"
       },
       {
         "tagName": "sl-dialog",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-dialog style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-dialog</sl-dialog>"
       },
       {
         "tagName": "sl-divider",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-divider style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-divider</sl-divider>"
       },
       {
         "tagName": "sl-drawer",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-drawer style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-drawer</sl-drawer>"
       },
       {
         "tagName": "sl-dropdown",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-dropdown style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-dropdown</sl-dropdown>"
       },
       {
         "tagName": "sl-icon",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-icon style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-icon</sl-icon>"
       },
       {
         "tagName": "sl-icon-button",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-icon-button style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-icon-button</sl-icon-button>"
       },
       {
         "tagName": "sl-image-comparer",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-image-comparer style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-image-comparer</sl-image-comparer>"
       },
       {
         "tagName": "sl-input",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-input style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-input</sl-input>"
       },
       {
         "tagName": "sl-menu",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-menu style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-menu</sl-menu>"
       },
       {
         "tagName": "sl-menu-item",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-menu-item style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-menu-item</sl-menu-item>"
       },
       {
         "tagName": "sl-progress-bar",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-progress-bar style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-progress-bar</sl-progress-bar>"
       },
       {
         "tagName": "sl-radio",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-radio style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-radio</sl-radio>"
       },
       {
         "tagName": "sl-radio-group",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-radio-group style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-radio-group</sl-radio-group>"
       },
       {
         "tagName": "sl-range",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-range style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-range</sl-range>"
       },
       {
         "tagName": "sl-rating",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-rating style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-rating</sl-rating>"
       },
       {
         "tagName": "sl-select",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-select style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-select</sl-select>"
       },
       {
         "tagName": "sl-skeleton",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-skeleton style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-skeleton</sl-skeleton>"
       },
       {
         "tagName": "sl-spinner",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-spinner style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-spinner</sl-spinner>"
       },
       {
         "tagName": "sl-split-panel",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-split-panel style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-split-panel</sl-split-panel>"
       },
       {
         "tagName": "sl-switch",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-switch style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-switch</sl-switch>"
       },
       {
         "tagName": "sl-tab",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-tab style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tab</sl-tab>"
       },
       {
         "tagName": "sl-tab-group",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-tab-group style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tab-group</sl-tab-group>"
       },
       {
         "tagName": "sl-tab-panel",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-tab-panel style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tab-panel</sl-tab-panel>"
       },
       {
         "tagName": "sl-table",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-table style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-table</sl-table>"
       },
       {
         "tagName": "sl-tag",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-tag style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tag</sl-tag>"
       },
       {
         "tagName": "sl-textarea",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-textarea style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-textarea</sl-textarea>"
       },
       {
         "tagName": "sl-tooltip",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-tooltip style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tooltip</sl-tooltip>"
       },
       {
         "tagName": "sl-tree",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-tree style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tree</sl-tree>"
       },
       {
         "tagName": "sl-tree-item",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<sl-tree-item style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-tree-item</sl-tree-item>"
       }
     ],
     "reports": {
@@ -381,7 +428,7 @@ const _records: Record<string, HubPackageRecord> = {
       ],
       "ssrCapable": false
     },
-    "submittedAt": "2026-05-17T09:18:48.948Z",
+    "submittedAt": "2026-05-17T10:14:14.731Z",
     "submittedBy": "hub-scanner",
     "validatorVersion": "0.19.0"
   },
@@ -402,37 +449,43 @@ const _records: Record<string, HubPackageRecord> = {
         "tagName": "media-controller",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<media-controller style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-controller</media-controller>"
       },
       {
         "tagName": "media-play-button",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<media-play-button style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-play-button</media-play-button>"
       },
       {
         "tagName": "media-time-range",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<media-time-range style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-time-range</media-time-range>"
       },
       {
         "tagName": "media-volume-range",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<media-volume-range style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-volume-range</media-volume-range>"
       },
       {
         "tagName": "media-poster-image",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<media-poster-image style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-poster-image</media-poster-image>"
       },
       {
         "tagName": "media-loading-indicator",
         "compatibility": "client-only",
         "validationErrors": 0,
-        "validationWarnings": 1
+        "validationWarnings": 1,
+        "ssrSnapshot": "<media-loading-indicator style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">media-loading-indicator</media-loading-indicator>"
       }
     ],
     "reports": {
@@ -450,7 +503,7 @@ const _records: Record<string, HubPackageRecord> = {
       ],
       "ssrCapable": false
     },
-    "submittedAt": "2026-05-17T09:18:48.948Z",
+    "submittedAt": "2026-05-17T10:14:14.731Z",
     "submittedBy": "hub-scanner",
     "validatorVersion": "0.19.0"
   }

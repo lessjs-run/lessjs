@@ -11,6 +11,7 @@
 
 import { buildPackageRecord } from './builder.ts';
 import { buildIndex } from './indexer.ts';
+import { resolve } from 'node:path';
 import { validateHubPackageRecord } from './schema.ts';
 import type {
   BuildPackageRecordOptions,
@@ -19,6 +20,7 @@ import type {
   HubPackageRecord,
   HubTagRecord,
 } from './schema.ts';
+import { renderSnapshotLit, formatSnapshotForDisplay } from './snapshot-renderer.ts';
 
 // ─── Known WC Packages ──────────────────────────────────────────────────
 
@@ -33,6 +35,8 @@ interface KnownWcPackage {
   compatibility: CompatibilityTier;
   justification: string;
   tagNames: string[];
+  /** Module paths for SSR-capable components (relative to project root, used for snapshot generation) */
+  modulePaths?: Record<string, string>;
 }
 
 /**
@@ -64,6 +68,16 @@ const WC_PACKAGES: KnownWcPackage[] = [
       'less-layout',
       'less-theme-toggle',
     ],
+    modulePaths: {
+      'less-button': 'packages/ui/src/less-button.ts',
+      'less-card': 'packages/ui/src/less-card.ts',
+      'less-code-block': 'packages/ui/src/less-code-block.ts',
+      'less-dialog': 'packages/ui/src/less-dialog.ts',
+      'less-hero-ping': 'packages/ui/src/less-hero-ping.ts',
+      'less-input': 'packages/ui/src/less-input.ts',
+      'less-layout': 'packages/ui/src/less-layout.ts',
+      'less-theme-toggle': 'packages/ui/src/less-theme-toggle.ts',
+    },
   },
 
   // ── Shoelace (npm, client-only) ──
@@ -161,12 +175,37 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
   const records: HubPackageRecord[] = [];
 
   for (const pkg of WC_PACKAGES) {
-    const tags: HubTagRecord[] = pkg.tagNames.map((tag) => ({
-      tagName: tag,
-      compatibility: pkg.compatibility,
-      validationErrors: 0,
-      validationWarnings: pkg.compatibility === 'client-only' ? 1 : 0,
-    }));
+    const tags: HubTagRecord[] = [];
+    for (const tag of pkg.tagNames) {
+      let ssrSnapshot: string | undefined;
+
+      // Generate SSR snapshot for SSR-capable components
+      if (pkg.compatibility === 'ssr-capable' && pkg.modulePaths?.[tag]) {
+        try {
+          const modPath = resolve(Deno.cwd(), pkg.modulePaths[tag]);
+          const modUrl = modPath.startsWith('/') ? `file://${modPath}` : `file:///${modPath.replace(/\\/g, '/')}`;
+          const result = await renderSnapshotLit(modUrl, tag);
+          if (result.success && result.html) {
+            ssrSnapshot = formatSnapshotForDisplay(result.html);
+          }
+        } catch (e) {
+          console.warn(`  ⚠  Snapshot failed for <${tag}>: ${e instanceof Error ? e.message : String(e)}`);
+        }
+      }
+
+      // For client-only, generate placeholder snapshot
+      if (!ssrSnapshot && pkg.compatibility === 'client-only') {
+        ssrSnapshot = `<${tag} style="display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;">${tag}</${tag}>`;
+      }
+
+      tags.push({
+        tagName: tag,
+        compatibility: pkg.compatibility,
+        validationErrors: 0,
+        validationWarnings: pkg.compatibility === 'client-only' ? 1 : 0,
+        ssrSnapshot,
+      });
+    }
 
     const opts: BuildPackageRecordOptions = {
       name: pkg.name,
