@@ -132,7 +132,10 @@ function generateFixtureHtml(options: PlaywrightRenderOptions): string {
 }
 
 function escapeAttr(str: string): string {
-  return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(
+    />/g,
+    '&gt;',
+  );
 }
 
 // ─── Temp HTTP Server ────────────────────────────────────────────────────
@@ -172,7 +175,9 @@ function startTempServer(initialHtml: string): Promise<TempServer> {
         resolve({
           port,
           close: () => controller.abort(),
-          setFixture: (html: string) => { currentFixture = html; },
+          setFixture: (html: string) => {
+            currentFixture = html;
+          },
         });
       },
     });
@@ -280,18 +285,20 @@ async function renderSingleComponent(
 
     // Replace <slot> with fallback content from light DOM
     const slotMap = captured.slotMap as Record<string, string>;
+    // 1. Named slots first — match <slot name="..."> regardless of other attrs
     shadowHtml = shadowHtml.replace(
-      /<slot name="([^"]*)"([^>]*)><\/slot>/gi,
-      (_m: string, name: string, attrs: string) => {
+      /<slot\b[^>]*?\sname\s*=\s*"([^"]*)"[^>]*><\/slot>/gi,
+      (_m: string, name: string) => {
         const content = slotMap[name] || '';
-        return `<SLOT-FALLBACK name="${name}"${attrs}>${content}</SLOT-FALLBACK>`;
+        return `<SLOT-FALLBACK name="${name}">${content}</SLOT-FALLBACK>`;
       },
     );
+    // 2. Default slots — any remaining <slot> without name= attribute
     shadowHtml = shadowHtml.replace(
-      /<slot(?![a-z0-9-])([^>]*)><\/slot>/gi,
-      (_m: string, attrs: string) => {
+      /<slot\b[^>]*><\/slot>/gi,
+      (_m: string) => {
         const content = slotMap['default'] || '';
-        return `<SLOT-FALLBACK${attrs}>${content}</SLOT-FALLBACK>`;
+        return `<SLOT-FALLBACK>${content}</SLOT-FALLBACK>`;
       },
     );
     shadowHtml = shadowHtml.replace(/<SLOT-FALLBACK/g, '<slot').replace(
@@ -307,7 +314,8 @@ async function renderSingleComponent(
 
     // Wrap in snapshot container
     const themeCss = options.themeCss || '';
-    const html = `<div class="snapshot-preview">${themeCss}<${tagName}>${shadowHtml}</${tagName}></div>`;
+    const html =
+      `<div class="snapshot-preview">${themeCss}<${tagName}>${shadowHtml}</${tagName}></div>`;
 
     return { html, success: true };
   } catch (err) {
