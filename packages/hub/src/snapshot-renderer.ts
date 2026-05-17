@@ -210,7 +210,7 @@ export async function renderSnapshotWithHappyDom(
     'getComputedStyle',
   ];
   const g = globalThis as Record<string, unknown>;
-  const w = hWin as Record<string, unknown>;
+  const w = hWin as unknown as Record<string, unknown>;
   for (const k of _hdPropNames) {
     try {
       _savedGlobals.set(k, g[k]);
@@ -237,9 +237,9 @@ export async function renderSnapshotWithHappyDom(
     }
     let el: HTMLElement;
     try {
-      el = new Ctor() as HTMLElement;
+      el = new Ctor() as unknown as HTMLElement;
     } catch {
-      el = hDoc.createElement(tagName);
+      el = hDoc.createElement(tagName) as unknown as HTMLElement;
     }
 
     // Apply demo attributes so the component is visible / meaningful
@@ -329,7 +329,7 @@ export async function renderSnapshotWithHappyDom(
     }
 
     // Polyfill ElementInternals for components that use it
-    const elRecord = el as Record<string, unknown>;
+    const elRecord = el as unknown as Record<string, unknown>;
     if (typeof elRecord.attachInternals !== 'function') {
       elRecord.attachInternals = () => ({
         setFormValue: () => {},
@@ -345,7 +345,7 @@ export async function renderSnapshotWithHappyDom(
     await new Promise((r) => setTimeout(r, 0));
     // Append to DOM for a more complete environment
     if (hDoc.body) {
-      hDoc.body.appendChild(el);
+      (hDoc.body as unknown as { appendChild(n: unknown): unknown }).appendChild(el);
     }
     // Give microtasks time for connectedCallback to fire
     await new Promise((r) => setTimeout(r, 0));
