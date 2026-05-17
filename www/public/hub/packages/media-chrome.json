@@ -1,0 +1,69 @@
+{
+  "schema": "hub-package-v1",
+  "name": "media-chrome",
+  "scope": "",
+  "version": "4.19.0",
+  "source": "npm",
+  "repository": "https://github.com/muxinc/media-chrome",
+  "description": "Custom elements for building media player UIs. Browser-dependent media APIs.",
+  "homepage": "https://media-chrome.mux.dev",
+  "manifestHash": "",
+  "compatibility": "client-only",
+  "compatibilityJustification": "Media Chrome components depend on browser-specific HTMLMediaElement APIs. Not available in SSR.",
+  "tags": [
+    {
+      "tagName": "media-controller",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "media-play-button",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "media-time-range",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "media-volume-range",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "media-poster-image",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "media-loading-indicator",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    }
+  ],
+  "reports": {
+    "validation": "{\"packageName\":\"media-chrome\",\"version\":\"4.19.0\",\"valid\":true,\"compatibility\":\"client-only\",\"tags\":6,\"errors\":[],\"warnings\":[{\"code\":\"NO_LESS_SSR\",\"severity\":\"warning\",\"message\":\"No LessJS SSR metadata found.\"}]}"
+  },
+  "snapshotPaths": {},
+  "installGuidance": {
+    "safeToInstall": true,
+    "command": "less add media-chrome",
+    "configChanges": [
+      "packages[\"media-chrome\"] — client-only (no SSR)"
+    ],
+    "warnings": [
+      "This package has no SSR metadata. It will render on the client only."
+    ],
+    "ssrCapable": false
+  },
+  "submittedAt": "2026-05-17T07:45:00.203Z",
+  "submittedBy": "hub-scanner",
+  "validatorVersion": "0.19.0"
+}

@@ -1,0 +1,267 @@
+{
+  "schema": "hub-package-v1",
+  "name": "shoelace",
+  "scope": "@shoelace-style",
+  "version": "2.20.1",
+  "source": "npm",
+  "repository": "https://github.com/shoelace-style/shoelace",
+  "description": "A forward-thinking library of Web Components. 50+ components for building modern UIs.",
+  "homepage": "https://shoelace.style",
+  "manifestHash": "",
+  "compatibility": "client-only",
+  "compatibilityJustification": "Shoelace uses Lit internally but does not publish LessJS SSR metadata. All components are client-only.",
+  "tags": [
+    {
+      "tagName": "sl-alert",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-animated-image",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-avatar",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-badge",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-button",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-card",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-carousel",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-checkbox",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-color-picker",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-details",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-dialog",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-divider",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-drawer",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-dropdown",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-icon",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-icon-button",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-image-comparer",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-input",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-menu",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-menu-item",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-progress-bar",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-radio",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-radio-group",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-range",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-rating",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-select",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-skeleton",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-spinner",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-split-panel",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-switch",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-tab",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-tab-group",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-tab-panel",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-table",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-tag",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-textarea",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-tooltip",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-tree",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    },
+    {
+      "tagName": "sl-tree-item",
+      "compatibility": "client-only",
+      "validationErrors": 0,
+      "validationWarnings": 1
+    }
+  ],
+  "reports": {
+    "validation": "{\"packageName\":\"@shoelace-style/shoelace\",\"version\":\"2.20.1\",\"valid\":true,\"compatibility\":\"client-only\",\"tags\":39,\"errors\":[],\"warnings\":[{\"code\":\"NO_LESS_SSR\",\"severity\":\"warning\",\"message\":\"No LessJS SSR metadata found.\"}]}"
+  },
+  "snapshotPaths": {},
+  "installGuidance": {
+    "safeToInstall": true,
+    "command": "less add @shoelace-style/shoelace",
+    "configChanges": [
+      "packages[\"@shoelace-style/shoelace\"] — client-only (no SSR)"
+    ],
+    "warnings": [
+      "This package has no SSR metadata. It will render on the client only."
+    ],
+    "ssrCapable": false
+  },
+  "submittedAt": "2026-05-17T07:45:00.203Z",
+  "submittedBy": "hub-scanner",
+  "validatorVersion": "0.19.0"
+}
