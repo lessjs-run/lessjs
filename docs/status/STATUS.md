@@ -2,18 +2,18 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version: 0.18.0
+## Current Version: 0.18.1
 
-## Next Planned Version: 0.18.1 (planned)
+## Next Planned Version: 0.18.2 (planned)
 
-v0.18.0 Universal WC Engine is complete. v0.18.1 validate-manifest CLI is next on the roadmap.
+v0.18.1 validate-manifest CLI is complete. v0.18.2 `less add` install flow is next on the roadmap.
 
 ## Branch Status
 
-| Branch        | HEAD      | Status                                                                  |
-| ------------- | --------- | ----------------------------------------------------------------------- |
-| `origin/dev`  | `de78fdd` | v0.18.0 release (CEM parser + compatibility tiers + plugin integration) |
-| `origin/main` | `de78fdd` | v0.18.0 release                                                         |
+| Branch        | HEAD     | Status                                                           |
+| ------------- | -------- | ---------------------------------------------------------------- |
+| `origin/dev`  | `latest` | v0.18.1 release (validate-manifest CLI + core validation module) |
+| `origin/main` | `latest` | v0.18.0 release                                                  |
 
 ## Tags
 
@@ -29,11 +29,13 @@ v0.18.0 Universal WC Engine is complete. v0.18.1 validate-manifest CLI is next o
 | v0.16.0 | `a02feb6` | 2026-05-16 |
 | v0.15.3 | `5e06fc9` | 2026-05-16 |
 
-## Last Completed Release: 0.18.0 (2026-05-17)
+## Last Completed Release: 0.18.1 (2026-05-17)
 
-- **Universal WC Engine**: CEM parser + compatibility classifier + SSR admission planner + report schema + CEM plugin auto-detection
-- **Conservative defaults**: CEM without Less extension → client-only (safe default)
-- **630 tests passing**
+- **CEM Manifest Validator**: `validateManifest()` in core with per-tag diagnostics
+- **CLI**: `validate-manifest` CLI with human-readable and `--json` output
+- **Validation checks**: schema shape, tag names, duplicates, module paths, Less extensions
+- **Conservative defaults**: CEM-only → client-only; errors → rejected
+- **29 new tests, 659 total**
 
 - **Lint fix**: removed `any` type from parent-with-client-child fixture
 
@@ -61,7 +63,7 @@ Third-party package handling is conservative:
 | v0.17.3 | `docs/sop/v0.17.3-multi-framework-adapters.md`         | Done         | v0.17.2 SSR filtering exists                                         | Vanilla/React adapters documented; no universal SSR claim |
 | v0.17.4 | `docs/sop/v0.17.4-compatibility-boundary-hardening.md` | Done         | v0.17.3 docs closed                                                  | Client-only modules excluded before SSR entry generation  |
 | v0.18.0 | `docs/sop/v0.18.0-universal-wc-engine.md`              | **Done**     | v0.17.4 admission planner complete + package SSR admission validated | CEM parser + compatibility tiers + report reasons         |
-| v0.18.1 | `docs/sop/v0.18.1-validate-manifest-cli.md`            | **Planned**  | v0.18.0 classifier stable                                            | `less validate-manifest` emits stable diagnostics         |
+| v0.18.1 | `docs/sop/v0.18.1-validate-manifest-cli.md`            | **Done**     | v0.18.0 classifier stable                                            | `less validate-manifest` emits stable diagnostics         |
 | v0.18.2 | `docs/sop/v0.18.2-less-add-install-flow.md`            | Planned      | validation CLI stable                                                | `less add` dry-run/install is validation-gated            |
 | v0.18.3 | `docs/sop/v0.18.3-dom-simulation-experiment.md`        | Experimental | client-only fallback stable                                          | opt-in DOM simulation decision recorded                   |
 | v0.19.0 | `docs/sop/v0.19.0-platform-hub.md`                     | Planned      | validation/build reports stable                                      | Hub ingests artifacts and shows compatibility             |

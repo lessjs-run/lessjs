@@ -1254,3 +1254,75 @@ export interface CompatibilityClassification {
   /** Hydration strategy */
   hydrate?: string;
 }
+
+// ─── CEM Validation Types (v0.18.1) ───────────────────────────
+
+/**
+ * A single validation diagnostic — either an error or warning.
+ *
+ * Used in ManifestValidationReport to communicate actionable
+ * feedback about a CEM manifest. Every diagnostic includes
+ * a machine-readable code, severity, human message, and
+ * an actionable fix suggestion.
+ */
+export interface ValidationDiagnostic {
+  /** Machine-readable error/warning code (e.g. 'INVALID_TAG_NAME', 'MISSING_MODULE_PATH') */
+  code: string;
+  /** Severity */
+  severity: 'error' | 'warning';
+  /** Human-readable message */
+  message: string;
+  /** Custom element tag name this diagnostic applies to (if applicable) */
+  tagName?: string;
+  /** File or module path this diagnostic applies to (if applicable) */
+  filePath?: string;
+  /** Actionable fix suggestion */
+  fix?: string;
+}
+
+/**
+ * Result of validating a single custom element declaration
+ * from a CEM manifest.
+ */
+export interface ValidatedTag {
+  /** Tag name */
+  tagName: string;
+  /** Whether the tag passed all validations */
+  valid: boolean;
+  /** Assigned compatibility tier */
+  compatibility: CompatibilityTier;
+  /** Module path (from CEM declaration) */
+  modulePath?: string;
+  /** Class name (from CEM declaration) */
+  className?: string;
+  /** Whether SSR is declared as supported */
+  ssr?: boolean;
+  /** Whether DSD is declared as supported */
+  dsd?: boolean;
+}
+
+/**
+ * Full validation report for a CEM manifest.
+ *
+ * Produced by validateManifest() as the standard output,
+ * consumed by the `less validate-manifest` CLI and by
+ * CI pipelines for pre-install gating.
+ */
+export interface ManifestValidationReport {
+  /** Package name (from CEM or inferred) */
+  packageName?: string;
+  /** Package version (from CEM or inferred) */
+  version?: string;
+  /** Whether the manifest as a whole is valid */
+  valid: boolean;
+  /** CEM schema version */
+  schemaVersion?: string;
+  /** Overall compatibility tier of the package */
+  compatibility: CompatibilityTier;
+  /** Validation errors (fatal) */
+  errors: ValidationDiagnostic[];
+  /** Validation warnings (non-fatal) */
+  warnings: ValidationDiagnostic[];
+  /** Per-tag validation results */
+  tags: ValidatedTag[];
+}

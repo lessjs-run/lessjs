@@ -1,0 +1,104 @@
+#!/usr/bin/env -S deno run --allow-read
+/**
+ * @lessjs/validate-manifest — CLI for validating CEM manifests.
+ *
+ * Usage:
+ *   deno run -A jsr:@lessjs/core/validate-manifest ./custom-elements.json
+ *   deno run -A jsr:@lessjs/core/validate-manifest ./custom-elements.json --json
+ *   deno run -A jsr:@lessjs/core/validate-manifest ./custom-elements.json --strict
+ *
+ * Exit codes:
+ *   0 — manifest is valid
+ *   1 — manifest has errors
+ */
+
+import { readTextFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { validateManifestFromJson } from './validate-manifest.ts';
+
+// ─── CLI Entry Point ──────────────────────────────────────────────────
+
+async function main() {
+  const args = Deno.args;
+  const flags = {
+    json: args.includes('--json'),
+    strict: args.includes('--strict'),
+  };
+
+  // Filter out flags to get the file path
+  const fileArg = args.find((a) => !a.startsWith('--'));
+  if (!fileArg) {
+    console.error('Usage: validate-manifest <path-to-custom-elements.json> [--json] [--strict]');
+    Deno.exit(1);
+  }
+
+  const filePath = resolve(fileArg);
+
+  let json: string;
+  try {
+    json = await readTextFile(filePath, { encoding: 'utf-8' });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error(`Error reading file "${filePath}": ${msg}`);
+    Deno.exit(1);
+  }
+
+  const report = validateManifestFromJson(json);
+
+  // ─── Output ────────────────────────────────────────────────────────
+
+  if (flags.json) {
+    console.log(JSON.stringify(report, null, 2));
+  } else {
+    // Human-readable output
+    const pkgInfo = report.packageName
+      ? `${report.packageName}${report.version ? ` v${report.version}` : ''}`
+      : 'unknown package';
+    console.log(`\n  Manifest: ${pkgInfo}`);
+    console.log(`  Schema:   ${report.schemaVersion || 'unknown'}`);
+    console.log(`  Valid:    ${report.valid ? '✅ yes' : '❌ no'}`);
+    console.log(`  Tier:     ${report.compatibility}`);
+    console.log(`  Tags:     ${report.tags.length}`);
+
+    if (report.errors.length > 0) {
+      console.log(`\n  Errors (${report.errors.length}):`);
+      for (const err of report.errors) {
+        const tag = err.tagName ? ` [${err.tagName}]` : '';
+        console.log(`    ❌ ${err.code}${tag}: ${err.message}`);
+        if (err.fix) console.log(`       Fix: ${err.fix}`);
+      }
+    }
+
+    if (report.warnings.length > 0) {
+      console.log(`\n  Warnings (${report.warnings.length}):`);
+      for (const warn of report.warnings) {
+        const tag = warn.tagName ? ` [${warn.tagName}]` : '';
+        console.log(`    ⚠️  ${warn.code}${tag}: ${warn.message}`);
+        if (warn.fix) console.log(`       Fix: ${warn.fix}`);
+      }
+    }
+
+    if (report.tags.length > 0) {
+      console.log(`\n  Components:`);
+      for (const tag of report.tags) {
+        const status = tag.valid ? '✅' : '❌';
+        const ssr = tag.ssr !== undefined ? ` ssr=${tag.ssr}` : '';
+        const dsd = tag.dsd !== undefined ? ` dsd=${tag.dsd}` : '';
+        console.log(`    ${status} <${tag.tagName}> — ${tag.compatibility}${ssr}${dsd}`);
+      }
+    }
+
+    console.log();
+  }
+
+  // Strict mode: fail on warnings too
+  if (flags.strict && report.warnings.length > 0) {
+    Deno.exit(1);
+  }
+
+  Deno.exit(report.valid ? 0 : 1);
+}
+
+if (import.meta.main) {
+  main();
+}

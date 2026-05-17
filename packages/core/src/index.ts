@@ -57,6 +57,7 @@ export type {
   LessPackageManifest,
   LessSlot,
   ManifestDecision,
+  ManifestValidationReport,
   RegistryIndex,
   RegistryIndexEntry,
   RendererProtocol,
@@ -66,6 +67,8 @@ export type {
   RenderOutput,
   RenderPhase,
   SsrAdmissionDecision,
+  ValidatedTag,
+  ValidationDiagnostic,
   ValidationError,
   ValidationResult,
   ValidationWarning,
@@ -101,6 +104,12 @@ export {
   register as registerManifest,
   validate as validateManifest,
 } from './registry.js';
+
+// CEM Manifest Validation (v0.18.1)
+export {
+  validateManifest as validateCemManifest,
+  validateManifestFromJson as validateCemFromJson,
+} from './validate-manifest.js';
 
 // G10 fix: Virtual module IDs — shared across adapter-vite, content, i18n
 export {
