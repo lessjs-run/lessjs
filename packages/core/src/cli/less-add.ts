@@ -12,7 +12,7 @@
  *   1 — plan failed (invalid package or error)
  */
 
-import { readTextFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { generateAddPlan } from '../less-add.ts';
 
@@ -41,7 +41,8 @@ async function main() {
   if (spec.startsWith('.') || spec.startsWith('/') || spec.includes('\\')) {
     const filePath = resolve(spec);
     try {
-      manifestJson = await readTextFile(filePath, { encoding: 'utf-8' });
+      const buf = await readFile(filePath);
+      manifestJson = new TextDecoder().decode(buf);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error(`Error reading file "${filePath}": ${msg}`);

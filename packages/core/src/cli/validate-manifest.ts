@@ -12,9 +12,9 @@
  *   1 — manifest has errors
  */
 
-import { readTextFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { validateManifestFromJson } from './validate-manifest.ts';
+import { validateManifestFromJson } from '../validate-manifest.ts';
 
 // ─── CLI Entry Point ──────────────────────────────────────────────────
 
@@ -36,7 +36,8 @@ async function main() {
 
   let json: string;
   try {
-    json = await readTextFile(filePath, { encoding: 'utf-8' });
+    const buf = await readFile(filePath);
+    json = new TextDecoder().decode(buf);
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error(`Error reading file "${filePath}": ${msg}`);
