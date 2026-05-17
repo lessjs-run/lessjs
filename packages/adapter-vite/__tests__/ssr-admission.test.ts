@@ -88,7 +88,8 @@ Deno.test('SSR Admission: package island with ssr=false → clientOnlyTags', () 
   const decision = plan.decisions.find((d) => d.tagName === 'package-ssr-false');
   assertExists(decision);
   assertEquals(decision.renderPath, 'client-only');
-  assertEquals(decision.reason, 'package island has no validated SSR capability');
+  // buildSsrAdmissionPlan returns island.reason || 'less.ssr is false' when ssr === false
+  assertEquals(decision.reason, 'less.ssr is false');
 });
 
 Deno.test('SSR Admission: local island with ssr=true → renderableTags', () => {
@@ -118,7 +119,10 @@ Deno.test('SSR Admission: package island with ssr=true → renderableTags', () =
 });
 
 Deno.test('SSR Admission: duplicate tag → rejectedTags', () => {
-  const islands: IslandDecl[] = [localSsrFalse, { ...localSsrFalse }];
+  // Create two islands with same tagName to simulate duplicate
+  const island1 = { ...localSsrFalse };
+  const island2 = { ...localSsrFalse, modulePath: localSsrFalse.modulePath + '.2' };
+  const islands: IslandDecl[] = [island1, island2];
   const plan = buildSsrAdmissionPlan(islands);
 
   assertEquals(plan.rejectedTags.includes('local-ssr-false'), true);

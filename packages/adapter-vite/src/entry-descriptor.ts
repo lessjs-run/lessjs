@@ -476,6 +476,9 @@ export function buildSsrAdmissionPlan(islands: IslandDecl[]): SsrAdmissionPlan {
   const reasons: Record<string, string> = {};
   const decisions: SsrAdmissionDecision[] = [];
   const seen = new Set<string>();
+  // Track which tags have been added to renderableTags/clientOnlyTags
+  // so we can remove them if a duplicate is found later.
+  const admittedTags = new Set<string>();
 
   for (const island of islands) {
     const source = island.source || (island.isPackage ? 'package' : 'local');
@@ -484,6 +487,16 @@ export function buildSsrAdmissionPlan(islands: IslandDecl[]): SsrAdmissionPlan {
       const reason = 'duplicate custom element tag';
       rejectedTags.push(island.tagName);
       reasons[island.tagName] = reason;
+
+      // Remove from renderableTags/clientOnlyTags if previously admitted
+      if (admittedTags.has(island.tagName)) {
+        const rIdx = renderableTags.indexOf(island.tagName);
+        if (rIdx !== -1) renderableTags.splice(rIdx, 1);
+        const cIdx = clientOnlyTags.indexOf(island.tagName);
+        if (cIdx !== -1) clientOnlyTags.splice(cIdx, 1);
+        admittedTags.delete(island.tagName);
+      }
+
       decisions.push({
         tagName: island.tagName,
         modulePath: island.modulePath,
@@ -518,8 +531,14 @@ export function buildSsrAdmissionPlan(islands: IslandDecl[]): SsrAdmissionPlan {
       reason = island.ssr === true ? 'less.ssr is true' : 'local island default SSR path';
     }
 
-    if (renderPath === 'ssr+client') renderableTags.push(island.tagName);
-    if (renderPath === 'client-only') clientOnlyTags.push(island.tagName);
+    if (renderPath === 'ssr+client') {
+      renderableTags.push(island.tagName);
+      admittedTags.add(island.tagName);
+    }
+    if (renderPath === 'client-only') {
+      clientOnlyTags.push(island.tagName);
+      admittedTags.add(island.tagName);
+    }
 
     reasons[island.tagName] = reason;
     decisions.push({

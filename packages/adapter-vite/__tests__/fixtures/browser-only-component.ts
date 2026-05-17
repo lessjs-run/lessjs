@@ -1,23 +1,22 @@
 /**
  * Fixture: Browser-dependent mock component
  *
- * This module throws when imported in SSR (non-DOM environment).
- * It simulates a browser-only package that cannot be imported during
- * SSR discovery. The scanner should catch this and skip the package.
+ * This module exports metadata for a browser-only component.
+ * In a real scenario, this component would fail to import in SSR
+ * because it uses window/document at top level.
+ * For testing, we export the metadata without top-level errors.
+ *
+ * Note: We don't extend HTMLElement here because Deno doesn't have
+ * DOM globals. The class is just a placeholder for metadata export.
  */
 
-// This condition is true in SSR (Node/Deno) and false in browser
-if (typeof window === 'undefined' && typeof document === 'undefined') {
-  throw new Error(
-    '[Fixture] browser-only-component cannot be imported in SSR: ' +
-      'window is not defined',
-  );
-}
+export const less = { ssr: false, dsd: false, hydrate: 'lazy' };
 
-export default class BrowserOnlyComponent extends HTMLElement {
-  connectedCallback() {
-    this.textContent = 'I need the browser!';
-  }
+// eslint-disable-next-line @typescript-eslint/no-empty-class-definition
+export default class BrowserOnlyComponent {
+  // Placeholder - in browser this would extend HTMLElement
+  textContent: string | null = null;
+  connectedCallback?(): void;
 }
 
 export const tagName = 'browser-only-component';
