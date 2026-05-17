@@ -24,7 +24,8 @@
  */
 
 import { buildInstallGuidance } from '../builder.ts';
-import type { CompatibilityTier, HubTagRecord } from '../schema.ts';
+import type { CompatibilityTier, HubPackageRecord, HubTagRecord } from '../schema.ts';
+import { resolve } from 'node:path';
 
 // ─── Logger ───────────────────────────────────────────────────────────────
 
@@ -283,21 +284,29 @@ async function resolveNpm(
 /**
  * Classify a package's compatibility tier based on available evidence.
  *
- * This is a simplified version of the full CEM classifier used in adapter-vite.
- * For a full classification, the package should be run through `less validate-manifest`.
+ * Strategy:
+ *   1. Try to load from local hub-index (pre-scanned data)
+ *   2. Parse CEM manifest if available from the resolved package
+ *   3. Default to client-only with no component tags
  */
-function classifyCompatibility(
-  _pkg: ResolvedPackage,
-): { tier: CompatibilityTier; justification: string; tags: HubTagRecord[] } {
-  // TODO: In the future, integrate with the full CEM classifier from adapter-vite.
-  // For now, use a heuristic based on available metadata.
+async function classifyCompatibility(
+  pkg: ResolvedPackage,
+): Promise<{ tier: CompatibilityTier; justification: string; tags: HubTagRecord[] }> {
+  // Strategy 1: Load from local hub-index
+  const hubRecord = await loadHubRecord(pkg);
+  if (hubRecord) {
+    return {
+      tier: hubRecord.compatibility,
+      justification: hubRecord.compatibilityJustification,
+      tags: hubRecord.tags,
+    };
+  }
 
+  // Strategy 2: Parse CEM manifest from resolved package
   const tags: HubTagRecord[] = [];
-
-  // If we have a CEM manifest, parse it for component tags
-  if (_pkg.manifestContent) {
+  if (pkg.manifestContent) {
     try {
-      const cem = JSON.parse(_pkg.manifestContent);
+      const cem = JSON.parse(pkg.manifestContent);
       const declarations = cem.modules
         ? cem.modules.flatMap((m: Record<string, unknown>) =>
             (m.declarations || []) as Array<Record<string, unknown>>
@@ -308,7 +317,7 @@ function classifyCompatibility(
         if (tagName) {
           tags.push({
             tagName,
-            compatibility: 'client-only', // default; overridden if SSR metadata found
+            compatibility: 'client-only',
             validationErrors: 0,
             validationWarnings: 0,
           });
@@ -320,13 +329,40 @@ function classifyCompatibility(
   }
 
   // Default: client-only
-  // SSR-capable requires explicit LessJS SSR metadata which we'd detect
-  // in a full validation pass. For the CLI, we're conservative.
   return {
     tier: 'client-only',
     justification: 'No LessJS SSR metadata detected. Client-only by default.',
     tags,
   };
+}
+
+/**
+ * Try to load a HubPackageRecord from the local hub-index directory.
+ */
+async function loadHubRecord(
+  pkg: ResolvedPackage,
+): Promise<HubPackageRecord | null> {
+  // Look in hub-index/packages/<scope>/<name>.json or hub-index/packages/<name>.json
+  const cwd = Deno.cwd();
+  const baseDir = `${cwd}/hub-index/packages`;
+
+  let recordPath: string;
+  if (pkg.scope) {
+    recordPath = `${baseDir}/${pkg.scope}/${pkg.name}.json`;
+  } else {
+    recordPath = `${baseDir}/${pkg.name}.json`;
+  }
+
+  try {
+    const text = await Deno.readTextFile(recordPath);
+    const record = JSON.parse(text) as HubPackageRecord;
+    if (record.schema === 'hub-package-v1') {
+      return record;
+    }
+  } catch {
+    // Not found or invalid
+  }
+  return null;
 }
 
 // ─── Print Summary ────────────────────────────────────────────────────────
@@ -392,6 +428,91 @@ function printSummary(
   }
 }
 
+// ─── Config Mutation ──────────────────────────────────────────────────────
+
+/**
+ * Apply package addition to the project's deno.json configuration.
+ *
+ * Adds an import entry for the package. For npm packages, uses the
+ * `npm:` specifier; for JSR packages, uses the `jsr:` specifier.
+ *
+ * @returns true if config was updated, false if skipped
+ */
+async function applyToConfig(
+  fullName: string,
+  pkg: ResolvedPackage,
+  tier: CompatibilityTier,
+  options: LessAddOptions,
+): Promise<boolean> {
+  const configPath = resolve(options.projectDir, 'deno.json');
+
+  let configText: string;
+  try {
+    configText = await Deno.readTextFile(configPath);
+  } catch {
+    error(`No deno.json found at ${configPath}`);
+    error('Run this command from your LessJS project root.');
+    return false;
+  }
+
+  let config: Record<string, unknown>;
+  try {
+    config = JSON.parse(configText);
+  } catch {
+    error('deno.json is not valid JSON');
+    return false;
+  }
+
+  // Build import specifier
+  let importSpecifier: string;
+  if (pkg.source === 'npm') {
+    importSpecifier = `npm:${fullName}@${pkg.version}`;
+  } else if (pkg.source === 'jsr') {
+    importSpecifier = `jsr:${fullName}@${pkg.version}`;
+  } else {
+    // Local — use a relative path hint
+    importSpecifier = fullName;
+  }
+
+  // Ensure imports object exists
+  if (!config.imports || typeof config.imports !== 'object') {
+    config.imports = {};
+  }
+  const imports = config.imports as Record<string, string>;
+
+  // Check if already present
+  if (imports[fullName] !== undefined) {
+    log(`  ℹ️  ${fullName} already in imports (${imports[fullName]})`);
+    return false;
+  }
+
+  // Add the import
+  imports[fullName] = importSpecifier;
+
+  // Write back
+  const newConfigText = JSON.stringify(config, null, 2) + '\n';
+  await Deno.writeTextFile(configPath, newConfigText);
+
+  if (options.verbose) {
+    log(`  Added import: "${fullName}": "${importSpecifier}"`);
+  }
+
+  // Print next-step guidance
+  log('');
+  log('  Next steps:');
+  log(`    1. Import in your route:  import '${fullName}';`);
+  if (tier === 'client-only') {
+    log('    2. This is a client-only component — avoid SSR import.');
+    log('       Use <less-client-only> wrapper or client:only directive.');
+  } else {
+    log('    2. Use the component in your template.');
+  }
+  log(`    3. Run:  deno task build`);
+  log('');
+
+  return true;
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -409,7 +530,7 @@ async function main() {
   }
 
   // Step 2: Classify compatibility
-  const { tier, tags } = classifyCompatibility(pkg);
+  const { tier, tags } = await classifyCompatibility(pkg);
 
   // Step 3: Build install guidance
   const guidance = buildInstallGuidance(tier, tags, pkg.name, pkg.scope);
@@ -420,11 +541,10 @@ async function main() {
   // Step 5: Apply if requested
   if (args.apply && guidance.safeToInstall) {
     const fullName = pkg.scope ? `${pkg.scope}/${pkg.name}` : pkg.name;
-    log(`  ✅ Applied: ${fullName} added to project config.`);
-
-    // TODO: Actual config mutation
-    // For now, --apply just acknowledges the action.
-    // Full config mutation will be implemented in a follow-up.
+    const updated = await applyToConfig(fullName, pkg, tier, args);
+    if (updated) {
+      log(`  ✅ Applied: ${fullName} added to project config.`);
+    }
   }
 
   if (!guidance.safeToInstall) {

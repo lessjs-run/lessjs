@@ -129,7 +129,8 @@ export default class DocsRegistryComponentDetail extends LitElement {
 
       .meta-table { width: 100%; border-collapse: collapse; }
       .meta-table th, .meta-table td { text-align: left; padding: 0.375rem 0.5rem; font-size: 0.8125rem; border-bottom: 0.5px solid var(--less-border); }
-      .meta-table th { width: 140px; color: var(--less-text-tertiary); font-weight: 500; }
+      .meta-table th { color: var(--less-text-tertiary); font-weight: 500; }
+      .meta-table th:not(:first-child) { width: auto; }
 
       .not-found { text-align: center; padding: 3rem 1rem; color: var(--less-text-tertiary); }
 
@@ -168,7 +169,7 @@ export default class DocsRegistryComponentDetail extends LitElement {
     record: HubPackageRecord,
   ): string {
     const fullName = record.scope ? `${record.scope}/${record.name}` : record.name;
-    let lines: string[] = [];
+    const lines: string[] = [];
 
     if (record.source === 'npm') {
       lines.push(`import '${fullName}';`);
@@ -320,6 +321,55 @@ export default class DocsRegistryComponentDetail extends LitElement {
               This preview was generated during package validation and stored as a static HTML snapshot.
               The snapshot is pre-rendered at build time — no client-side rendering needed.
             </div>
+          </div>
+          ` : ''}
+
+          <!-- API Reference (from CEM) -->
+          ${tag.attributes && tag.attributes.length > 0 ? html`
+          <div class="section">
+            <div class="section-title">Attributes</div>
+            <table class="meta-table">
+              <tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+              ${tag.attributes.map(a => html`
+                <tr>
+                  <td style="font-family:monospace;font-size:0.8125rem;">${a.name}</td>
+                  <td style="font-size:0.75rem;color:var(--less-text-tertiary);">${a.type || '—'}</td>
+                  <td style="font-size:0.75rem;color:var(--less-text-tertiary);">${a.default || '—'}</td>
+                  <td style="font-size:0.8125rem;">${a.description || ''}</td>
+                </tr>
+              `)}
+            </table>
+          </div>
+          ` : ''}
+
+          ${tag.events && tag.events.length > 0 ? html`
+          <div class="section">
+            <div class="section-title">Events</div>
+            <table class="meta-table">
+              <tr><th>Name</th><th>Type</th><th>Description</th></tr>
+              ${tag.events.map(e => html`
+                <tr>
+                  <td style="font-family:monospace;font-size:0.8125rem;">${e.name}</td>
+                  <td style="font-size:0.75rem;color:var(--less-text-tertiary);">${e.type || '—'}</td>
+                  <td style="font-size:0.8125rem;">${e.description || ''}</td>
+                </tr>
+              `)}
+            </table>
+          </div>
+          ` : ''}
+
+          ${tag.slots && tag.slots.length > 0 ? html`
+          <div class="section">
+            <div class="section-title">Slots</div>
+            <table class="meta-table">
+              <tr><th>Name</th><th>Description</th></tr>
+              ${tag.slots.map(s => html`
+                <tr>
+                  <td style="font-family:monospace;font-size:0.8125rem;">${s.name || '(default)'}</td>
+                  <td style="font-size:0.8125rem;">${s.description || ''}</td>
+                </tr>
+              `)}
+            </table>
           </div>
           ` : ''}
 

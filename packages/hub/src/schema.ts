@@ -27,6 +27,34 @@ export interface HubTagRecord {
   validationErrors: number;
   validationWarnings: number;
   ssrSnapshot?: string; // relative path to SSR snapshot (HTML)
+
+  // CEM API reference data (from custom-elements.json)
+  attributes?: CemAttribute[];
+  events?: CemEvent[];
+  slots?: CemSlot[];
+  usageExample?: string;
+}
+
+/** CEM attribute descriptor */
+export interface CemAttribute {
+  name: string;
+  type?: string;
+  default?: string;
+  description?: string;
+  fieldName?: string;
+}
+
+/** CEM event descriptor */
+export interface CemEvent {
+  name: string;
+  type?: string;
+  description?: string;
+}
+
+/** CEM slot descriptor */
+export interface CemSlot {
+  name: string; // empty string for default slot
+  description?: string;
 }
 
 // ─── Install Guidance ────────────────────────────────────────────────────

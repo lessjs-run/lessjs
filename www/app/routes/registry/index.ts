@@ -44,6 +44,7 @@ export default class DocsRegistryHome extends LitElement {
   private _filtered: HubIndexEntry[] = [];
   private _query = '';
   private _tierFilter = 'all';
+  private _sortBy: 'name' | 'tags' | 'compatibility' = 'name';
   private _loading = true;
 
   static override styles = [
@@ -99,6 +100,16 @@ export default class DocsRegistryHome extends LitElement {
         display: flex;
         gap: 0.25rem;
         flex-wrap: wrap;
+      }
+
+      .sort-select {
+        padding: 0.375rem 0.5rem;
+        border: 0.5px solid var(--less-border);
+        border-radius: 14px;
+        background: transparent;
+        color: var(--less-text-secondary);
+        font-size: 0.75rem;
+        cursor: pointer;
       }
 
       .filter-btn {
@@ -311,10 +322,21 @@ export default class DocsRegistryHome extends LitElement {
       result = result.filter((p) => p.compatibility === this._tierFilter);
     }
 
+    // Sort
     result.sort((a, b) => {
-      const aName = a.scope ? `${a.scope}/${a.name}` : a.name;
-      const bName = b.scope ? `${b.scope}/${b.name}` : b.name;
-      return aName.localeCompare(bName);
+      switch (this._sortBy) {
+        case 'tags':
+          return b.tags.length - a.tags.length;
+        case 'compatibility': {
+          const order: Record<string, number> = { 'ssr-capable': 0, 'client-only': 1, 'experimental-dom': 2, 'rejected': 3 };
+          return (order[a.compatibility] ?? 9) - (order[b.compatibility] ?? 9);
+        }
+        default: {
+          const aName = a.scope ? `${a.scope}/${a.name}` : a.name;
+          const bName = b.scope ? `${b.scope}/${b.name}` : b.name;
+          return aName.localeCompare(bName);
+        }
+      }
     });
 
     this._filtered = result;
@@ -367,6 +389,11 @@ export default class DocsRegistryHome extends LitElement {
                 @click="${() => this._setFilter('rejected')}"
               >Rejected</button>
             </div>
+            <select class="sort-select" @change="${(e: Event) => { this._sortBy = (e.target as HTMLSelectElement).value as 'name' | 'tags' | 'compatibility'; this._applyFilters(); }}">
+              <option value="name" ?selected=${this._sortBy === 'name'}>Sort: Name</option>
+              <option value="tags" ?selected=${this._sortBy === 'tags'}>Sort: Components</option>
+              <option value="compatibility" ?selected=${this._sortBy === 'compatibility'}>Sort: Compatibility</option>
+            </select>
           </div>
 
           ${this._loading ? html`

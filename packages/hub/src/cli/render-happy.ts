@@ -34,10 +34,14 @@ async function render(impSpec: string, tag: string): Promise<string> {
     // Required by some components
     'MutationObserver',
   ];
+  // eslint-disable-next-line no-explicit-any -- globalThis index access requires any
+  const g = globalThis as Record<string, unknown>;
+  // eslint-disable-next-line no-explicit-any -- Happy DOM window index access requires any
+  const w = hWin as Record<string, unknown>;
   for (const k of patches) {
-    orig[k] = (globalThis as any)[k];
-    const val = (hWin as any)[k];
-    if (val !== undefined) (globalThis as any)[k] = val;
+    orig[k] = g[k];
+    const val = w[k];
+    if (val !== undefined) g[k] = val;
   }
 
   try {
@@ -74,8 +78,9 @@ async function render(impSpec: string, tag: string): Promise<string> {
     return `<div class="snapshot-preview">${html}</div>`;
   } finally {
     // Restore globals
+    const g = globalThis as Record<string, unknown>;
     for (const k of patches) {
-      (globalThis as any)[k] = orig[k];
+      g[k] = orig[k];
     }
     // Clean up Happy DOM
     try { hWin.happyDOM?.cancelAsync(); } catch { /* ignore */ }

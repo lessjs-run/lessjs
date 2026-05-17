@@ -19,7 +19,7 @@ export interface SnapshotRenderResult {
   error?: string;
 }
 
-function warn(msg: string) {
+function _warn(msg: string) {
   try {
     console.warn('[hub:snapshot]', msg);
   } catch {
@@ -49,12 +49,13 @@ export async function renderSnapshotLit(
   }
 
   const origHTMLElement = globalThis.HTMLElement;
-  const origCustomElements = (globalThis as any).customElements;
+  const origCustomElements = (globalThis as Record<string, unknown>).customElements;
 
   try {
     // Patch globals with DOM shim
-    (globalThis as any).HTMLElement = domShim.HTMLElement;
-    (globalThis as any).customElements = domShim.customElements;
+    const g = globalThis as Record<string, unknown>;
+    g.HTMLElement = domShim.HTMLElement;
+    g.customElements = domShim.customElements;
 
     // Step 2: Import the component module
     const mod = await import(modUrl);
@@ -70,9 +71,9 @@ export async function renderSnapshotLit(
     // Try registered element (some modules call customElements.define internally)
     if (!ComponentClass) {
       try {
-        const ce = (globalThis as any).customElements;
-        if (ce?.get) {
-          ComponentClass = ce.get(tagName);
+        const ce = globalThis.customElements;
+        if (ce && 'get' in ce) {
+          ComponentClass = (ce as CustomElementRegistry).get(tagName) ?? null;
         }
       } catch {
         // ignore
@@ -92,7 +93,7 @@ export async function renderSnapshotLit(
     }
 
     // Step 4: Create instance and get TemplateResult
-    const instance = new ComponentClass() as any;
+    const instance = new ComponentClass() as HTMLElement & { render(): unknown };
 
     // Call render() to get the Lit TemplateResult
     let templateResult: unknown;
@@ -134,8 +135,9 @@ export async function renderSnapshotLit(
     return renderPlaceholder(tagName, msg);
   } finally {
     // Restore globals
-    (globalThis as any).HTMLElement = origHTMLElement;
-    (globalThis as any).customElements = origCustomElements;
+    const g = globalThis as Record<string, unknown>;
+    g.HTMLElement = origHTMLElement;
+    g.customElements = origCustomElements;
   }
 }
 
@@ -184,12 +186,14 @@ export async function renderSnapshotWithHappyDom(
     'CSSStyleSheet', 'CSS', 'CSSStyleDeclaration', 'CSSRule',
     'getComputedStyle',
   ];
+  const g = globalThis as Record<string, unknown>;
+  const w = hWin as Record<string, unknown>;
   for (const k of _hdPropNames) {
     try {
-      _savedGlobals.set(k, (globalThis as any)[k]);
-      const val = (hWin as any)[k];
+      _savedGlobals.set(k, g[k]);
+      const val = w[k];
       if (val !== undefined) {
-        (globalThis as any)[k] = val;
+        g[k] = val;
       }
     } catch { /* skip */ }
   }
@@ -215,15 +219,16 @@ export async function renderSnapshotWithHappyDom(
       el = hDoc.createElement(tagName);
     }
     // Polyfill ElementInternals for components that use it
-    if (typeof (el as any).attachInternals !== 'function') {
-      (el as any).attachInternals = () => ({
+    const elRecord = el as Record<string, unknown>;
+    if (typeof elRecord.attachInternals !== 'function') {
+      elRecord.attachInternals = () => ({
         setFormValue: () => {},
         setValidity: () => {},
       });
     }
     // Manually trigger connectedCallback (more reliable than DOM append)
-    if (typeof (el as any).connectedCallback === 'function') {
-      try { (el as any).connectedCallback(); } catch { /* ignore callback errors */ }
+    if (typeof elRecord.connectedCallback === 'function') {
+      try { (elRecord.connectedCallback as () => void)(); } catch { /* ignore callback errors */ }
     }
     await new Promise((r) => setTimeout(r, 0));
     // Append to DOM for a more complete environment
@@ -255,7 +260,7 @@ export async function renderSnapshotWithHappyDom(
   } finally {
     // 10. Restore original globals
     for (const [k, v] of _savedGlobals) {
-      (globalThis as any)[k] = v;
+      (globalThis as Record<string, unknown>)[k] = v;
     }
 
     // 11. Clean up Happy DOM
@@ -303,13 +308,13 @@ function templateResultToString(result: unknown, tagName: string): string {
           output += htmlEscape(item);
         } else if (isLitTemplateResult(item)) {
           output += templateResultToString(item, tagName);
-        } else if (item && typeof item === 'object' && 'strings' in (item as any)) {
+        } else if (item && typeof item === 'object' && 'strings' in (item as Record<string, unknown>)) {
           output += templateResultToString(item, tagName);
         } else {
           output += htmlEscape(String(item));
         }
       }
-    } else if (val && typeof val === 'object' && 'strings' in (val as any)) {
+    } else if (val && typeof val === 'object' && 'strings' in (val as Record<string, unknown>)) {
       output += templateResultToString(val, tagName);
     } else {
       output += htmlEscape(String(val));

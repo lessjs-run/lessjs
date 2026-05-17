@@ -16,11 +16,14 @@ import { validateHubPackageRecord } from './schema.ts';
 import type {
   BuildPackageRecordOptions,
   CompatibilityTier,
+  CemAttribute,
+  CemEvent,
+  CemSlot,
   HubIndex,
   HubPackageRecord,
   HubTagRecord,
 } from './schema.ts';
-import { renderSnapshotLit, renderSnapshotWithHappyDom, formatSnapshotForDisplay } from './snapshot-renderer.ts';
+import { renderSnapshotLit, formatSnapshotForDisplay } from './snapshot-renderer.ts';
 
 // ─── Known WC Packages ──────────────────────────────────────────────────
 
@@ -37,6 +40,8 @@ interface KnownWcPackage {
   tagNames: string[];
   /** Module paths for SSR-capable components (relative to project root, used for snapshot generation) */
   modulePaths?: Record<string, string>;
+  /** Path to custom-elements.json (relative to project root) */
+  cemPath?: string;
 }
 
 /**
@@ -93,6 +98,7 @@ const WC_PACKAGES: KnownWcPackage[] = [
     compatibility: 'client-only',
     justification:
       'Shoelace uses Lit internally but does not publish LessJS SSR metadata. All components are client-only.',
+    cemPath: 'node_modules/@shoelace-style/shoelace/cdn/custom-elements.json',
     tagNames: [
       'sl-alert',
       'sl-animated-image',
@@ -210,6 +216,95 @@ const WC_PACKAGES: KnownWcPackage[] = [
 
 // ─── Scanner ────────────────────────────────────────────────────────────
 
+// ─── CEM Data Extraction ────────────────────────────────────────────────
+
+interface CemDeclaration {
+  tagName?: string;
+  name?: string;
+  attributes?: Array<{
+    name: string;
+    type?: { text: string } | string;
+    default?: string;
+    description?: string;
+    fieldName?: string;
+  }>;
+  events?: Array<{
+    name: string;
+    type?: { text: string } | string;
+    description?: string;
+  }>;
+  slots?: Array<{
+    name: string;
+    description?: string;
+  }>;
+}
+
+/**
+ * Load and parse CEM manifest, returning a Map of tagName → CemDeclaration.
+ */
+function loadCemDeclarations(cemPath: string): Map<string, CemDeclaration> {
+  const map = new Map<string, CemDeclaration>();
+  try {
+    const absPath = resolve(Deno.cwd(), cemPath);
+    const text = Deno.readTextFileSync(absPath);
+    const cem = JSON.parse(text) as {
+      modules?: Array<{ declarations?: CemDeclaration[] }>;
+    };
+    if (cem.modules) {
+      for (const mod of cem.modules) {
+        if (mod.declarations) {
+          for (const decl of mod.declarations) {
+            if (decl.tagName) {
+              map.set(decl.tagName, decl);
+            }
+          }
+        }
+      }
+    }
+  } catch {
+    // CEM not found or invalid — non-fatal
+  }
+  return map;
+}
+
+/**
+ * Extract CEM API data from a declaration into HubTagRecord fields.
+ */
+function extractCemApi(decl: CemDeclaration | undefined): {
+  attributes?: CemAttribute[];
+  events?: CemEvent[];
+  slots?: CemSlot[];
+} {
+  if (!decl) return {};
+
+  const attributes: CemAttribute[] = (decl.attributes || [])
+    .filter((a) => !a.name.startsWith('aria-')) // skip ARIA reflected attributes
+    .map((a) => ({
+      name: a.name,
+      type: typeof a.type === 'object' ? a.type.text : a.type,
+      default: a.default,
+      description: a.description,
+      fieldName: a.fieldName,
+    }));
+
+  const events: CemEvent[] = (decl.events || []).map((e) => ({
+    name: e.name,
+    type: typeof e.type === 'object' ? e.type.text : e.type,
+    description: e.description,
+  }));
+
+  const slots: CemSlot[] = (decl.slots || []).map((s) => ({
+    name: s.name,
+    description: s.description,
+  }));
+
+  return {
+    attributes: attributes.length > 0 ? attributes : undefined,
+    events: events.length > 0 ? events : undefined,
+    slots: slots.length > 0 ? slots : undefined,
+  };
+}
+
 export interface ScanResult {
   records: HubPackageRecord[];
   index: HubIndex;
@@ -225,6 +320,10 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
 
   for (const pkg of WC_PACKAGES) {
     const tags: HubTagRecord[] = [];
+
+    // Load CEM data for this package if available
+    const cemDecls = pkg.cemPath ? loadCemDeclarations(pkg.cemPath) : new Map<string, CemDeclaration>();
+
     for (const tag of pkg.tagNames) {
       let ssrSnapshot: string | undefined;
 
@@ -279,12 +378,15 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
         ssrSnapshot = `<div class="snapshot-preview"><span style="display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;">${tag}</span></div>`;
       }
 
+      const cemApi = extractCemApi(cemDecls.get(tag));
+
       tags.push({
         tagName: tag,
         compatibility: pkg.compatibility,
         validationErrors: 0,
         validationWarnings: pkg.compatibility === 'client-only' ? 1 : 0,
         ssrSnapshot,
+        ...cemApi,
       });
     }
 

@@ -16,189 +16,2166 @@
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" role=\"alert\" class=\" alert alert--primary \" aria-hidden=\"true\" hidden=\"\">\n        <div part=\"icon\" class=\"alert__icon\">\n          <slot name=\"icon\"></slot>\n        </div>\n\n        <div part=\"message\" class=\"alert__message\" aria-live=\"polite\">\n          <slot></slot>\n        </div>\n\n        <!--?lit$985527680$-->\n\n        <div role=\"timer\" class=\"alert__timer\"><!--?lit$985527680$-->Infinity</div>\n\n        <!--?lit$985527680$-->\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" role=\"alert\" class=\" alert alert--primary \" aria-hidden=\"true\" hidden=\"\">\n        <div part=\"icon\" class=\"alert__icon\">\n          <slot name=\"icon\"></slot>\n        </div>\n\n        <div part=\"message\" class=\"alert__message\" aria-live=\"polite\">\n          <slot></slot>\n        </div>\n\n        <!--?lit$280513257$-->\n\n        <div role=\"timer\" class=\"alert__timer\"><!--?lit$280513257$-->Infinity</div>\n\n        <!--?lit$280513257$-->\n      </div></div>",
+      "attributes": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "Indicates whether or not the alert is open. You can toggle this attribute to show and hide the alert, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the alert's open state.",
+          "fieldName": "open"
+        },
+        {
+          "name": "closable",
+          "type": "boolean",
+          "default": "false",
+          "description": "Enables a close button that allows the user to dismiss the alert.",
+          "fieldName": "closable"
+        },
+        {
+          "name": "variant",
+          "type": "'primary' | 'success' | 'neutral' | 'warning' | 'danger'",
+          "default": "'primary'",
+          "description": "The alert's theme variant.",
+          "fieldName": "variant"
+        },
+        {
+          "name": "duration",
+          "default": "Infinity",
+          "description": "The length of time, in milliseconds, the alert will show before closing itself. If the user interacts with\nthe alert before it closes (e.g. moves the mouse over it), the timer will restart. Defaults to `Infinity`, meaning\nthe alert will not close on its own.",
+          "fieldName": "duration"
+        },
+        {
+          "name": "countdown",
+          "type": "'rtl' | 'ltr' | undefined",
+          "description": "Enables a countdown that indicates the remaining time the alert will be displayed.\nTypically used to indicate the remaining time before a whole app refresh.",
+          "fieldName": "countdown"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-show",
+          "description": "Emitted when the alert opens."
+        },
+        {
+          "name": "sl-after-show",
+          "description": "Emitted after the alert opens and all animations are complete."
+        },
+        {
+          "name": "sl-hide",
+          "description": "Emitted when the alert closes."
+        },
+        {
+          "name": "sl-after-hide",
+          "description": "Emitted after the alert closes and all animations are complete."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The alert's main content."
+        },
+        {
+          "name": "icon",
+          "description": "An icon to show in the alert. Works best with `<sl-icon>`."
+        }
+      ]
     },
     {
       "tagName": "sl-animated-image",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div class=\"animated-image\">\n        <img class=\"animated-image__animated\" crossorigin=\"anonymous\" src=\"\" alt=\"\" aria-hidden=\"true\">\n\n        <!--?lit$486043667$-->\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div class=\"animated-image\">\n        <img class=\"animated-image__animated\" crossorigin=\"anonymous\" src=\"\" alt=\"\" aria-hidden=\"true\">\n\n        <!--?lit$560173610$-->\n      </div></div>",
+      "attributes": [
+        {
+          "name": "src",
+          "type": "string",
+          "description": "The path to the image to load.",
+          "fieldName": "src"
+        },
+        {
+          "name": "alt",
+          "type": "string",
+          "description": "A description of the image used by assistive devices.",
+          "fieldName": "alt"
+        },
+        {
+          "name": "play",
+          "type": "boolean",
+          "description": "Plays the animation. When this attribute is remove, the animation will pause.",
+          "fieldName": "play"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-load",
+          "description": "Emitted when the image loads successfully."
+        },
+        {
+          "name": "sl-error",
+          "description": "Emitted when the image fails to load."
+        }
+      ],
+      "slots": [
+        {
+          "name": "play-icon",
+          "description": "Optional play icon to use instead of the default. Works best with `<sl-icon>`."
+        },
+        {
+          "name": "pause-icon",
+          "description": "Optional pause icon to use instead of the default. Works best with `<sl-icon>`."
+        }
+      ]
     },
     {
       "tagName": "sl-avatar",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" role=\"img\" class=\" avatar avatar--circle \" aria-label=\"\">\n        <!--?lit$615709510$-->\n        <div part=\"icon\" class=\"avatar__icon\" aria-hidden=\"true\">\n          <slot name=\"icon\">\n            <sl-icon name=\"person-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n          </slot>\n        </div>\n      \n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" role=\"img\" class=\" avatar avatar--circle \" aria-label=\"\">\n        <!--?lit$469821084$-->\n        <div part=\"icon\" class=\"avatar__icon\" aria-hidden=\"true\">\n          <slot name=\"icon\">\n            <sl-icon name=\"person-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n          </slot>\n        </div>\n      \n      </div></div>",
+      "attributes": [
+        {
+          "name": "image",
+          "type": "string",
+          "default": "''",
+          "description": "The image source to use for the avatar.",
+          "fieldName": "image"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "''",
+          "description": "A label to use to describe the avatar to assistive devices.",
+          "fieldName": "label"
+        },
+        {
+          "name": "initials",
+          "type": "string",
+          "default": "''",
+          "description": "Initials to use as a fallback when no image is available (1-2 characters max recommended).",
+          "fieldName": "initials"
+        },
+        {
+          "name": "loading",
+          "type": "'eager' | 'lazy'",
+          "default": "'eager'",
+          "description": "Indicates how the browser should load the image.",
+          "fieldName": "loading"
+        },
+        {
+          "name": "shape",
+          "type": "'circle' | 'square' | 'rounded'",
+          "default": "'circle'",
+          "description": "The shape of the avatar.",
+          "fieldName": "shape"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-error",
+          "description": "The image could not be loaded. This may because of an invalid URL, a temporary network condition, or some unknown cause."
+        }
+      ],
+      "slots": [
+        {
+          "name": "icon",
+          "description": "The default icon to use when no image or initials are present. Works best with `<sl-icon>`."
+        }
+      ]
     },
     {
       "tagName": "sl-badge",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <span part=\"base\" role=\"status\" class=\" badge badge--primary \">\n        <slot></slot>\n      </span></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <span part=\"base\" role=\"status\" class=\" badge badge--primary \">\n        <slot></slot>\n      </span></div>",
+      "attributes": [
+        {
+          "name": "variant",
+          "type": "'primary' | 'success' | 'neutral' | 'warning' | 'danger'",
+          "default": "'primary'",
+          "description": "The badge's theme variant.",
+          "fieldName": "variant"
+        },
+        {
+          "name": "pill",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws a pill-style badge with rounded edges.",
+          "fieldName": "pill"
+        },
+        {
+          "name": "pulse",
+          "type": "boolean",
+          "default": "false",
+          "description": "Makes the badge pulsate to draw attention.",
+          "fieldName": "pulse"
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The badge's content."
+        }
+      ]
     },
     {
       "tagName": "sl-button",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <button part=\"base\" class=\" button button--default button--medium button--standard \" type=\"button\" title=\"\" name=\"\" value=\"\" role=\"button\" aria-disabled=\"false\" tabindex=\"0\">\n        <slot name=\"prefix\" part=\"prefix\" class=\"button__prefix\"></slot>\n        <slot part=\"label\" class=\"button__label\"></slot>\n        <slot name=\"suffix\" part=\"suffix\" class=\"button__suffix\"></slot>\n        <!--?lit$716053325$-->\n        <!--?lit$716053325$-->\n      </button></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <button part=\"base\" class=\" button button--default button--medium button--standard \" type=\"button\" title=\"\" name=\"\" value=\"\" role=\"button\" aria-disabled=\"false\" tabindex=\"0\">\n        <slot name=\"prefix\" part=\"prefix\" class=\"button__prefix\"></slot>\n        <slot part=\"label\" class=\"button__label\"></slot>\n        <slot name=\"suffix\" part=\"suffix\" class=\"button__suffix\"></slot>\n        <!--?lit$787241462$-->\n        <!--?lit$787241462$-->\n      </button></div>",
+      "attributes": [
+        {
+          "name": "title",
+          "type": "string",
+          "default": "''",
+          "fieldName": "title"
+        },
+        {
+          "name": "variant",
+          "type": "'default' | 'primary' | 'success' | 'neutral' | 'warning' | 'danger' | 'text'",
+          "default": "'default'",
+          "description": "The button's theme variant.",
+          "fieldName": "variant"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "default": "'medium'",
+          "description": "The button's size.",
+          "fieldName": "size"
+        },
+        {
+          "name": "caret",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws the button with a caret. Used to indicate that the button triggers a dropdown menu or similar behavior.",
+          "fieldName": "caret"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the button.",
+          "fieldName": "disabled"
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws the button in a loading state.",
+          "fieldName": "loading"
+        },
+        {
+          "name": "outline",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws an outlined button.",
+          "fieldName": "outline"
+        },
+        {
+          "name": "pill",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws a pill-style button with rounded edges.",
+          "fieldName": "pill"
+        },
+        {
+          "name": "circle",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws a circular icon button. When this attribute is present, the button expects a single `<sl-icon>` in the\ndefault slot.",
+          "fieldName": "circle"
+        },
+        {
+          "name": "type",
+          "type": "'button' | 'submit' | 'reset'",
+          "default": "'button'",
+          "description": "The type of button. Note that the default value is `button` instead of `submit`, which is opposite of how native\n`<button>` elements behave. When the type is `submit`, the button will submit the surrounding form.",
+          "fieldName": "type"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": "''",
+          "description": "The name of the button, submitted as a name/value pair with form data, but only when this button is the submitter.\nThis attribute is ignored when `href` is present.",
+          "fieldName": "name"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default": "''",
+          "description": "The value of the button, submitted as a pair with the button's name as part of the form data, but only when this\nbutton is the submitter. This attribute is ignored when `href` is present.",
+          "fieldName": "value"
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "default": "''",
+          "description": "When set, the underlying button will be rendered as an `<a>` with this `href` instead of a `<button>`.",
+          "fieldName": "href"
+        },
+        {
+          "name": "target",
+          "type": "'_blank' | '_parent' | '_self' | '_top'",
+          "description": "Tells the browser where to open the link. Only used when `href` is present.",
+          "fieldName": "target"
+        },
+        {
+          "name": "rel",
+          "type": "string",
+          "default": "'noreferrer noopener'",
+          "description": "When using `href`, this attribute will map to the underlying link's `rel` attribute. Unlike regular links, the\ndefault is `noreferrer noopener` to prevent security exploits. However, if you're using `target` to point to a\nspecific tab/window, this will prevent that from working correctly. You can remove or change the default value by\nsetting the attribute to an empty string or a value of your choice, respectively.",
+          "fieldName": "rel"
+        },
+        {
+          "name": "download",
+          "type": "string | undefined",
+          "description": "Tells the browser to download the linked file as this filename. Only used when `href` is present.",
+          "fieldName": "download"
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "description": "The \"form owner\" to associate the button with. If omitted, the closest containing form will be used instead. The\nvalue of this attribute must be an id of a form in the same document or shadow root as the button.",
+          "fieldName": "form"
+        },
+        {
+          "name": "formaction",
+          "type": "string",
+          "description": "Used to override the form owner's `action` attribute.",
+          "fieldName": "formAction"
+        },
+        {
+          "name": "formenctype",
+          "type": "'application/x-www-form-urlencoded' | 'multipart/form-data' | 'text/plain'",
+          "description": "Used to override the form owner's `enctype` attribute.",
+          "fieldName": "formEnctype"
+        },
+        {
+          "name": "formmethod",
+          "type": "'post' | 'get'",
+          "description": "Used to override the form owner's `method` attribute.",
+          "fieldName": "formMethod"
+        },
+        {
+          "name": "formnovalidate",
+          "type": "boolean",
+          "description": "Used to override the form owner's `novalidate` attribute.",
+          "fieldName": "formNoValidate"
+        },
+        {
+          "name": "formtarget",
+          "type": "'_self' | '_blank' | '_parent' | '_top' | string",
+          "description": "Used to override the form owner's `target` attribute.",
+          "fieldName": "formTarget"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-blur",
+          "description": "Emitted when the button loses focus."
+        },
+        {
+          "name": "sl-focus",
+          "description": "Emitted when the button gains focus."
+        },
+        {
+          "name": "sl-invalid",
+          "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The button's label."
+        },
+        {
+          "name": "prefix",
+          "description": "A presentational prefix icon or similar element."
+        },
+        {
+          "name": "suffix",
+          "description": "A presentational suffix icon or similar element."
+        }
+      ]
     },
     {
       "tagName": "sl-card",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" card \">\n        <slot name=\"image\" part=\"image\" class=\"card__image\"></slot>\n        <slot name=\"header\" part=\"header\" class=\"card__header\"></slot>\n        <slot part=\"body\" class=\"card__body\"></slot>\n        <slot name=\"footer\" part=\"footer\" class=\"card__footer\"></slot>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" card \">\n        <slot name=\"image\" part=\"image\" class=\"card__image\"></slot>\n        <slot name=\"header\" part=\"header\" class=\"card__header\"></slot>\n        <slot part=\"body\" class=\"card__body\"></slot>\n        <slot name=\"footer\" part=\"footer\" class=\"card__footer\"></slot>\n      </div></div>",
+      "slots": [
+        {
+          "name": "",
+          "description": "The card's main content."
+        },
+        {
+          "name": "header",
+          "description": "An optional header for the card."
+        },
+        {
+          "name": "footer",
+          "description": "An optional footer for the card."
+        },
+        {
+          "name": "image",
+          "description": "An optional image to render at the start of the card."
+        }
+      ]
     },
     {
       "tagName": "sl-carousel",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-carousel</span></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><span style=\"display:inline-block;padding:0.75rem 1.25rem;border:1px dashed #d0d0d0;border-radius:6px;font-family:monospace;font-size:0.8125rem;color:#999;background:#fafafa;\">sl-carousel</span></div>",
+      "attributes": [
+        {
+          "name": "loop",
+          "type": "boolean",
+          "default": "false",
+          "description": "When set, allows the user to navigate the carousel in the same direction indefinitely.",
+          "fieldName": "loop"
+        },
+        {
+          "name": "navigation",
+          "type": "boolean",
+          "default": "false",
+          "description": "When set, show the carousel's navigation.",
+          "fieldName": "navigation"
+        },
+        {
+          "name": "pagination",
+          "type": "boolean",
+          "default": "false",
+          "description": "When set, show the carousel's pagination indicators.",
+          "fieldName": "pagination"
+        },
+        {
+          "name": "autoplay",
+          "type": "boolean",
+          "default": "false",
+          "description": "When set, the slides will scroll automatically when the user is not interacting with them.",
+          "fieldName": "autoplay"
+        },
+        {
+          "name": "autoplay-interval",
+          "type": "number",
+          "default": "3000",
+          "description": "Specifies the amount of time, in milliseconds, between each automatic scroll.",
+          "fieldName": "autoplayInterval"
+        },
+        {
+          "name": "slides-per-page",
+          "type": "number",
+          "default": "1",
+          "description": "Specifies how many slides should be shown at a given time.",
+          "fieldName": "slidesPerPage"
+        },
+        {
+          "name": "slides-per-move",
+          "type": "number",
+          "default": "1",
+          "description": "Specifies the number of slides the carousel will advance when scrolling, useful when specifying a `slides-per-page`\ngreater than one. It can't be higher than `slides-per-page`.",
+          "fieldName": "slidesPerMove"
+        },
+        {
+          "name": "orientation",
+          "type": "'horizontal' | 'vertical'",
+          "default": "'horizontal'",
+          "description": "Specifies the orientation in which the carousel will lay out.",
+          "fieldName": "orientation"
+        },
+        {
+          "name": "mouse-dragging",
+          "type": "boolean",
+          "default": "false",
+          "description": "When set, it is possible to scroll through the slides by dragging them with the mouse.",
+          "fieldName": "mouseDragging"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-slide-change",
+          "type": "{ index: number, slide: SlCarouselItem }",
+          "description": "Emitted when the active slide changes."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The carousel's main content, one or more `<sl-carousel-item>` elements."
+        },
+        {
+          "name": "next-icon",
+          "description": "Optional next icon to use instead of the default. Works best with `<sl-icon>`."
+        },
+        {
+          "name": "previous-icon",
+          "description": "Optional previous icon to use instead of the default. Works best with `<sl-icon>`."
+        }
+      ]
     },
     {
       "tagName": "sl-checkbox",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div class=\" form-control form-control--medium \">\n        <label part=\"base\" class=\" checkbox checkbox--medium \">\n          <input class=\"checkbox__input\" type=\"checkbox\" aria-describedby=\"help-text\" title=\"\" name=\"\" aria-checked=\"false\">\n\n          <span class=\"checkbox__control\" part=\"control\">\n            <!--?lit$510555922$-->\n            <!--?lit$510555922$-->\n          </span>\n\n          <div part=\"label\" class=\"checkbox__label\">\n            <slot></slot>\n          </div>\n        </label>\n\n        <div class=\"form-control__help-text\" id=\"help-text\" part=\"form-control-help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$510555922$--></slot>\n        </div>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div class=\" form-control form-control--medium \">\n        <label part=\"base\" class=\" checkbox checkbox--medium \">\n          <input class=\"checkbox__input\" type=\"checkbox\" aria-describedby=\"help-text\" title=\"\" name=\"\" aria-checked=\"false\">\n\n          <span class=\"checkbox__control\" part=\"control\">\n            <!--?lit$116323936$-->\n            <!--?lit$116323936$-->\n          </span>\n\n          <div part=\"label\" class=\"checkbox__label\">\n            <slot></slot>\n          </div>\n        </label>\n\n        <div class=\"form-control__help-text\" id=\"help-text\" part=\"form-control-help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$116323936$--></slot>\n        </div>\n      </div></div>",
+      "attributes": [
+        {
+          "name": "title",
+          "type": "string",
+          "default": "''",
+          "fieldName": "title"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": "''",
+          "description": "The name of the checkbox, submitted as a name/value pair with form data.",
+          "fieldName": "name"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The current value of the checkbox, submitted as a name/value pair with form data.",
+          "fieldName": "value"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "default": "'medium'",
+          "description": "The checkbox's size.",
+          "fieldName": "size"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the checkbox.",
+          "fieldName": "disabled"
+        },
+        {
+          "name": "checked",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws the checkbox in a checked state.",
+          "fieldName": "checked"
+        },
+        {
+          "name": "indeterminate",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws the checkbox in an indeterminate state. This is usually applied to checkboxes that represents a \"select\nall/none\" behavior when associated checkboxes have a mix of checked and unchecked states.",
+          "fieldName": "indeterminate"
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": "''",
+          "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside of a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+          "fieldName": "form"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Makes the checkbox a required field.",
+          "fieldName": "required"
+        },
+        {
+          "name": "help-text",
+          "type": "string",
+          "default": "''",
+          "description": "The checkbox's help text. If you need to display HTML, use the `help-text` slot instead.",
+          "fieldName": "helpText"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-blur",
+          "description": "Emitted when the checkbox loses focus."
+        },
+        {
+          "name": "sl-change",
+          "description": "Emitted when the checked state changes."
+        },
+        {
+          "name": "sl-focus",
+          "description": "Emitted when the checkbox gains focus."
+        },
+        {
+          "name": "sl-input",
+          "description": "Emitted when the checkbox receives input."
+        },
+        {
+          "name": "sl-invalid",
+          "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The checkbox's label."
+        },
+        {
+          "name": "help-text",
+          "description": "Text that describes how to use the checkbox. Alternatively, you can use the `help-text` attribute."
+        }
+      ]
     },
     {
       "tagName": "sl-color-picker",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <sl-dropdown class=\"color-dropdown\" aria-disabled=\"false\" placement=\"bottom-start\">\n        <button part=\"trigger\" slot=\"trigger\" type=\"button\" class=\" color-dropdown__trigger color-dropdown__trigger--medium color-dropdown__trigger--empty color-picker__transparent-bg \" style=\"color:#ffffffff;\">\n          <sl-visually-hidden>\n            <slot name=\"label\"><!--?lit$793617353$--></slot>\n          </sl-visually-hidden>\n        </button>\n        <!--?lit$793617353$-->\n      <div part=\"base\" aria-labelledby=\"label\" class=\" color-picker \" aria-disabled=\"false\" tabindex=\"-1\">\n        <!--?lit$793617353$-->\n\n        <div part=\"grid\" class=\"color-picker__grid\" style=\"background-color:#ff0000ff;\">\n          <span part=\"grid-handle\" role=\"application\" aria-label=\"HSV\" class=\" color-picker__grid-handle \" style=\"top:0%;left:0%;background-color:#ffffffff;\" tabindex=\"0\"></span>\n        </div>\n\n        <div class=\"color-picker__controls\">\n          <div class=\"color-picker__sliders\">\n            <div part=\"slider hue-slider\" class=\"color-picker__hue color-picker__slider\">\n              <span part=\"slider-handle hue-slider-handle\" class=\"color-picker__slider-handle\" role=\"slider\" aria-label=\"hue\" aria-orientation=\"horizontal\" aria-valuemin=\"0\" aria-valuemax=\"360\" style=\"left:0%;\" aria-valuenow=\"0\" tabindex=\"0\"></span>\n            </div>\n\n            <!--?lit$793617353$-->\n          </div>\n\n          <button type=\"button\" part=\"preview\" class=\"color-picker__preview color-picker__transparent-bg\" aria-label=\"Copy\" style=\"--preview-color:#ffffffff;\"></button>\n        </div>\n\n        <div class=\"color-picker__user-input\" aria-live=\"polite\">\n          <sl-input part=\"input\" type=\"text\" autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" name=\"\" value=\"\" aria-label=\"Current value\" size=\"medium\" form=\"\" data-optional=\"\" data-valid=\"\"></sl-input>\n\n          <sl-button-group>\n            <!--?lit$793617353$-->\n                  <sl-button part=\"format-button\" exportparts=\"\n                      base:format-button__base,\n                      prefix:format-button__prefix,\n                      label:format-button__label,\n                      suffix:format-button__suffix,\n                      caret:format-button__caret\n                    \" aria-label=\"Toggle color format\" variant=\"default\" size=\"medium\" data-optional=\"\" data-valid=\"\">\n                    <!--?lit$793617353$-->hex\n                  </sl-button>\n                \n            <!--?lit$793617353$-->\n          </sl-button-group>\n        </div>\n\n        <!--?lit$793617353$-->\n      </div>\n    \n      </sl-dropdown></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <sl-dropdown class=\"color-dropdown\" aria-disabled=\"false\" placement=\"bottom-start\">\n        <button part=\"trigger\" slot=\"trigger\" type=\"button\" class=\" color-dropdown__trigger color-dropdown__trigger--medium color-dropdown__trigger--empty color-picker__transparent-bg \" style=\"color:#ffffffff;\">\n          <sl-visually-hidden>\n            <slot name=\"label\"><!--?lit$712198641$--></slot>\n          </sl-visually-hidden>\n        </button>\n        <!--?lit$712198641$-->\n      <div part=\"base\" aria-labelledby=\"label\" class=\" color-picker \" aria-disabled=\"false\" tabindex=\"-1\">\n        <!--?lit$712198641$-->\n\n        <div part=\"grid\" class=\"color-picker__grid\" style=\"background-color:#ff0000ff;\">\n          <span part=\"grid-handle\" role=\"application\" aria-label=\"HSV\" class=\" color-picker__grid-handle \" style=\"top:0%;left:0%;background-color:#ffffffff;\" tabindex=\"0\"></span>\n        </div>\n\n        <div class=\"color-picker__controls\">\n          <div class=\"color-picker__sliders\">\n            <div part=\"slider hue-slider\" class=\"color-picker__hue color-picker__slider\">\n              <span part=\"slider-handle hue-slider-handle\" class=\"color-picker__slider-handle\" role=\"slider\" aria-label=\"hue\" aria-orientation=\"horizontal\" aria-valuemin=\"0\" aria-valuemax=\"360\" style=\"left:0%;\" aria-valuenow=\"0\" tabindex=\"0\"></span>\n            </div>\n\n            <!--?lit$712198641$-->\n          </div>\n\n          <button type=\"button\" part=\"preview\" class=\"color-picker__preview color-picker__transparent-bg\" aria-label=\"Copy\" style=\"--preview-color:#ffffffff;\"></button>\n        </div>\n\n        <div class=\"color-picker__user-input\" aria-live=\"polite\">\n          <sl-input part=\"input\" type=\"text\" autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" name=\"\" value=\"\" aria-label=\"Current value\" size=\"medium\" form=\"\" data-optional=\"\" data-valid=\"\"></sl-input>\n\n          <sl-button-group>\n            <!--?lit$712198641$-->\n                  <sl-button part=\"format-button\" exportparts=\"\n                      base:format-button__base,\n                      prefix:format-button__prefix,\n                      label:format-button__label,\n                      suffix:format-button__suffix,\n                      caret:format-button__caret\n                    \" aria-label=\"Toggle color format\" variant=\"default\" size=\"medium\" data-optional=\"\" data-valid=\"\">\n                    <!--?lit$712198641$-->hex\n                  </sl-button>\n                \n            <!--?lit$712198641$-->\n          </sl-button-group>\n        </div>\n\n        <!--?lit$712198641$-->\n      </div>\n    \n      </sl-dropdown></div>",
+      "attributes": [
+        {
+          "name": "value",
+          "type": "string",
+          "default": "''",
+          "description": "The current value of the color picker. The value's format will vary based the `format` attribute. To get the value\nin a specific format, use the `getFormattedValue()` method. The value is submitted as a name/value pair with form\ndata.",
+          "fieldName": "value"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "''",
+          "description": "The color picker's label. This will not be displayed, but it will be announced by assistive devices. If you need to\ndisplay HTML, you can use the `label` slot` instead.",
+          "fieldName": "label"
+        },
+        {
+          "name": "format",
+          "type": "'hex' | 'rgb' | 'hsl' | 'hsv'",
+          "default": "'hex'",
+          "description": "The format to use. If opacity is enabled, these will translate to HEXA, RGBA, HSLA, and HSVA respectively. The color\npicker will accept user input in any format (including CSS color names) and convert it to the desired format.",
+          "fieldName": "format"
+        },
+        {
+          "name": "inline",
+          "type": "boolean",
+          "default": "false",
+          "description": "Renders the color picker inline rather than in a dropdown.",
+          "fieldName": "inline"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "default": "'medium'",
+          "description": "Determines the size of the color picker's trigger. This has no effect on inline color pickers.",
+          "fieldName": "size"
+        },
+        {
+          "name": "no-format-toggle",
+          "type": "boolean",
+          "default": "false",
+          "description": "Removes the button that lets users toggle between format.",
+          "fieldName": "noFormatToggle"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": "''",
+          "description": "The name of the form control, submitted as a name/value pair with form data.",
+          "fieldName": "name"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the color picker.",
+          "fieldName": "disabled"
+        },
+        {
+          "name": "hoist",
+          "type": "boolean",
+          "default": "false",
+          "description": "Enable this option to prevent the panel from being clipped when the component is placed inside a container with\n`overflow: auto|scroll`. Hoisting uses a fixed positioning strategy that works in many, but not all, scenarios.",
+          "fieldName": "hoist"
+        },
+        {
+          "name": "opacity",
+          "type": "boolean",
+          "default": "false",
+          "description": "Shows the opacity slider. Enabling this will cause the formatted value to be HEXA, RGBA, or HSLA.",
+          "fieldName": "opacity"
+        },
+        {
+          "name": "uppercase",
+          "type": "boolean",
+          "default": "false",
+          "description": "By default, values are lowercase. With this attribute, values will be uppercase instead.",
+          "fieldName": "uppercase"
+        },
+        {
+          "name": "swatches",
+          "type": "string | string[]",
+          "default": "''",
+          "description": "One or more predefined color swatches to display as presets in the color picker. Can include any format the color\npicker can parse, including HEX(A), RGB(A), HSL(A), HSV(A), and CSS color names. Each color must be separated by a\nsemicolon (`;`). Alternatively, you can pass an array of color values to this property using JavaScript.",
+          "fieldName": "swatches"
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": "''",
+          "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside of a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+          "fieldName": "form"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Makes the color picker a required field.",
+          "fieldName": "required"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-blur",
+          "description": "Emitted when the color picker loses focus."
+        },
+        {
+          "name": "sl-change",
+          "description": "Emitted when the color picker's value changes."
+        },
+        {
+          "name": "sl-focus",
+          "description": "Emitted when the color picker receives focus."
+        },
+        {
+          "name": "sl-input",
+          "description": "Emitted when the color picker receives input."
+        },
+        {
+          "name": "sl-invalid",
+          "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
+        }
+      ],
+      "slots": [
+        {
+          "name": "label",
+          "description": "The color picker's form label. Alternatively, you can use the `label` attribute."
+        }
+      ]
     },
     {
       "tagName": "sl-details",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <details part=\"base\" class=\" details \">\n        <summary part=\"header\" id=\"header\" class=\"details__header\" role=\"button\" aria-controls=\"content\" aria-expanded=\"false\" aria-disabled=\"false\" tabindex=\"0\">\n          <slot name=\"summary\" part=\"summary\" class=\"details__summary\"><!--?lit$955689301$--></slot>\n\n          <span part=\"summary-icon\" class=\"details__summary-icon\">\n            <slot name=\"expand-icon\">\n              <sl-icon library=\"system\" name=\"chevron-right\" aria-hidden=\"true\"></sl-icon>\n            </slot>\n            <slot name=\"collapse-icon\">\n              <sl-icon library=\"system\" name=\"chevron-right\" aria-hidden=\"true\"></sl-icon>\n            </slot>\n          </span>\n        </summary>\n\n        <div class=\"details__body\" role=\"region\" aria-labelledby=\"header\" style=\"height: 0px;\">\n          <slot part=\"content\" id=\"content\" class=\"details__content\"></slot>\n        </div>\n      </details></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <details part=\"base\" class=\" details \">\n        <summary part=\"header\" id=\"header\" class=\"details__header\" role=\"button\" aria-controls=\"content\" aria-expanded=\"false\" aria-disabled=\"false\" tabindex=\"0\">\n          <slot name=\"summary\" part=\"summary\" class=\"details__summary\"><!--?lit$751871623$--></slot>\n\n          <span part=\"summary-icon\" class=\"details__summary-icon\">\n            <slot name=\"expand-icon\">\n              <sl-icon library=\"system\" name=\"chevron-right\" aria-hidden=\"true\"></sl-icon>\n            </slot>\n            <slot name=\"collapse-icon\">\n              <sl-icon library=\"system\" name=\"chevron-right\" aria-hidden=\"true\"></sl-icon>\n            </slot>\n          </span>\n        </summary>\n\n        <div class=\"details__body\" role=\"region\" aria-labelledby=\"header\" style=\"height: 0px;\">\n          <slot part=\"content\" id=\"content\" class=\"details__content\"></slot>\n        </div>\n      </details></div>",
+      "attributes": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "Indicates whether or not the details is open. You can toggle this attribute to show and hide the details, or you\ncan use the `show()` and `hide()` methods and this attribute will reflect the details' open state.",
+          "fieldName": "open"
+        },
+        {
+          "name": "summary",
+          "type": "string",
+          "description": "The summary to show in the header. If you need to display HTML, use the `summary` slot instead.",
+          "fieldName": "summary"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the details so it can't be toggled.",
+          "fieldName": "disabled"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-show",
+          "description": "Emitted when the details opens."
+        },
+        {
+          "name": "sl-after-show",
+          "description": "Emitted after the details opens and all animations are complete."
+        },
+        {
+          "name": "sl-hide",
+          "description": "Emitted when the details closes."
+        },
+        {
+          "name": "sl-after-hide",
+          "description": "Emitted after the details closes and all animations are complete."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The details' main content."
+        },
+        {
+          "name": "summary",
+          "description": "The details' summary. Alternatively, you can use the `summary` attribute."
+        },
+        {
+          "name": "expand-icon",
+          "description": "Optional expand icon to use instead of the default. Works best with `<sl-icon>`."
+        },
+        {
+          "name": "collapse-icon",
+          "description": "Optional collapse icon to use instead of the default. Works best with `<sl-icon>`."
+        }
+      ]
     },
     {
       "tagName": "sl-dialog",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" dialog \" hidden=\"\">\n        <div part=\"overlay\" class=\"dialog__overlay\" tabindex=\"-1\"></div>\n\n        <div part=\"panel\" class=\"dialog__panel\" role=\"dialog\" aria-modal=\"true\" tabindex=\"-1\" aria-hidden=\"true\" aria-labelledby=\"title\">\n          <!--?lit$138525688$-->\n                <header part=\"header\" class=\"dialog__header\">\n                  <h2 part=\"title\" class=\"dialog__title\" id=\"title\">\n                    <slot name=\"label\"> <!--?lit$138525688$-->﻿ </slot>\n                  </h2>\n                  <div part=\"header-actions\" class=\"dialog__header-actions\">\n                    <slot name=\"header-actions\"></slot>\n                    <sl-icon-button part=\"close-button\" exportparts=\"base:close-button__base\" class=\"dialog__close\" name=\"x-lg\" library=\"system\" label=\"Close\"></sl-icon-button>\n                  </div>\n                </header>\n              \n          <!--?lit$138525688$-->\n          <div part=\"body\" class=\"dialog__body\" tabindex=\"-1\"><slot></slot></div>\n\n          <footer part=\"footer\" class=\"dialog__footer\">\n            <slot name=\"footer\"></slot>\n          </footer>\n        </div>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" dialog \" hidden=\"\">\n        <div part=\"overlay\" class=\"dialog__overlay\" tabindex=\"-1\"></div>\n\n        <div part=\"panel\" class=\"dialog__panel\" role=\"dialog\" aria-modal=\"true\" tabindex=\"-1\" aria-hidden=\"true\" aria-labelledby=\"title\">\n          <!--?lit$971859034$-->\n                <header part=\"header\" class=\"dialog__header\">\n                  <h2 part=\"title\" class=\"dialog__title\" id=\"title\">\n                    <slot name=\"label\"> <!--?lit$971859034$-->﻿ </slot>\n                  </h2>\n                  <div part=\"header-actions\" class=\"dialog__header-actions\">\n                    <slot name=\"header-actions\"></slot>\n                    <sl-icon-button part=\"close-button\" exportparts=\"base:close-button__base\" class=\"dialog__close\" name=\"x-lg\" library=\"system\" label=\"Close\"></sl-icon-button>\n                  </div>\n                </header>\n              \n          <!--?lit$971859034$-->\n          <div part=\"body\" class=\"dialog__body\" tabindex=\"-1\"><slot></slot></div>\n\n          <footer part=\"footer\" class=\"dialog__footer\">\n            <slot name=\"footer\"></slot>\n          </footer>\n        </div>\n      </div></div>",
+      "attributes": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "Indicates whether or not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the dialog's open state.",
+          "fieldName": "open"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "''",
+          "description": "The dialog's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
+          "fieldName": "label"
+        },
+        {
+          "name": "no-header",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the header. This will also remove the default close button, so please ensure you provide an easy,\naccessible way for users to dismiss the dialog.",
+          "fieldName": "noHeader"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-show",
+          "description": "Emitted when the dialog opens."
+        },
+        {
+          "name": "sl-after-show",
+          "description": "Emitted after the dialog opens and all animations are complete."
+        },
+        {
+          "name": "sl-hide",
+          "description": "Emitted when the dialog closes."
+        },
+        {
+          "name": "sl-after-hide",
+          "description": "Emitted after the dialog closes and all animations are complete."
+        },
+        {
+          "name": "sl-initial-focus",
+          "description": "Emitted when the dialog opens and is ready to receive focus. Calling `event.preventDefault()` will prevent focusing and allow you to set it on a different element, such as an input."
+        },
+        {
+          "name": "sl-request-close",
+          "type": "{ source: 'close-button' | 'keyboard' | 'overlay' }",
+          "description": "Emitted when the user attempts to close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in destructive behavior such as data loss."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The dialog's main content."
+        },
+        {
+          "name": "label",
+          "description": "The dialog's label. Alternatively, you can use the `label` attribute."
+        },
+        {
+          "name": "header-actions",
+          "description": "Optional actions to add to the header. Works best with `<sl-icon-button>`."
+        },
+        {
+          "name": "footer",
+          "description": "The dialog's footer, usually one or more buttons representing various options."
+        }
+      ]
     },
     {
       "tagName": "sl-divider",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!----></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!----></div>",
+      "attributes": [
+        {
+          "name": "vertical",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws the divider in a vertical orientation.",
+          "fieldName": "vertical"
+        }
+      ]
     },
     {
       "tagName": "sl-drawer",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" drawer drawer--end drawer--fixed \" hidden=\"\">\n        <div part=\"overlay\" class=\"drawer__overlay\" tabindex=\"-1\"></div>\n\n        <div part=\"panel\" class=\"drawer__panel\" role=\"dialog\" aria-modal=\"true\" tabindex=\"0\" aria-hidden=\"true\" aria-labelledby=\"title\">\n          <!--?lit$652446400$-->\n                <header part=\"header\" class=\"drawer__header\">\n                  <h2 part=\"title\" class=\"drawer__title\" id=\"title\">\n                    <!-- If there's no label, use an invisible character to prevent the header from collapsing -->\n                    <slot name=\"label\"> <!--?lit$652446400$-->﻿ </slot>\n                  </h2>\n                  <div part=\"header-actions\" class=\"drawer__header-actions\">\n                    <slot name=\"header-actions\"></slot>\n                    <sl-icon-button part=\"close-button\" exportparts=\"base:close-button__base\" class=\"drawer__close\" name=\"x-lg\" library=\"system\" label=\"Close\"></sl-icon-button>\n                  </div>\n                </header>\n              \n\n          <slot part=\"body\" class=\"drawer__body\"></slot>\n\n          <footer part=\"footer\" class=\"drawer__footer\">\n            <slot name=\"footer\"></slot>\n          </footer>\n        </div>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" drawer drawer--end drawer--fixed \" hidden=\"\">\n        <div part=\"overlay\" class=\"drawer__overlay\" tabindex=\"-1\"></div>\n\n        <div part=\"panel\" class=\"drawer__panel\" role=\"dialog\" aria-modal=\"true\" tabindex=\"0\" aria-hidden=\"true\" aria-labelledby=\"title\">\n          <!--?lit$002014771$-->\n                <header part=\"header\" class=\"drawer__header\">\n                  <h2 part=\"title\" class=\"drawer__title\" id=\"title\">\n                    <!-- If there's no label, use an invisible character to prevent the header from collapsing -->\n                    <slot name=\"label\"> <!--?lit$002014771$-->﻿ </slot>\n                  </h2>\n                  <div part=\"header-actions\" class=\"drawer__header-actions\">\n                    <slot name=\"header-actions\"></slot>\n                    <sl-icon-button part=\"close-button\" exportparts=\"base:close-button__base\" class=\"drawer__close\" name=\"x-lg\" library=\"system\" label=\"Close\"></sl-icon-button>\n                  </div>\n                </header>\n              \n\n          <slot part=\"body\" class=\"drawer__body\"></slot>\n\n          <footer part=\"footer\" class=\"drawer__footer\">\n            <slot name=\"footer\"></slot>\n          </footer>\n        </div>\n      </div></div>",
+      "attributes": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "Indicates whether or not the drawer is open. You can toggle this attribute to show and hide the drawer, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the drawer's open state.",
+          "fieldName": "open"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "''",
+          "description": "The drawer's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
+          "fieldName": "label"
+        },
+        {
+          "name": "placement",
+          "type": "'top' | 'end' | 'bottom' | 'start'",
+          "default": "'end'",
+          "description": "The direction from which the drawer will open.",
+          "fieldName": "placement"
+        },
+        {
+          "name": "contained",
+          "type": "boolean",
+          "default": "false",
+          "description": "By default, the drawer slides out of its containing block (usually the viewport). To make the drawer slide out of\nits parent element, set this attribute and add `position: relative` to the parent.",
+          "fieldName": "contained"
+        },
+        {
+          "name": "no-header",
+          "type": "boolean",
+          "default": "false",
+          "description": "Removes the header. This will also remove the default close button, so please ensure you provide an easy,\naccessible way for users to dismiss the drawer.",
+          "fieldName": "noHeader"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-show",
+          "description": "Emitted when the drawer opens."
+        },
+        {
+          "name": "sl-after-show",
+          "description": "Emitted after the drawer opens and all animations are complete."
+        },
+        {
+          "name": "sl-hide",
+          "description": "Emitted when the drawer closes."
+        },
+        {
+          "name": "sl-after-hide",
+          "description": "Emitted after the drawer closes and all animations are complete."
+        },
+        {
+          "name": "sl-initial-focus",
+          "description": "Emitted when the drawer opens and is ready to receive focus. Calling `event.preventDefault()` will prevent focusing and allow you to set it on a different element, such as an input."
+        },
+        {
+          "name": "sl-request-close",
+          "type": "{ source: 'close-button' | 'keyboard' | 'overlay' }",
+          "description": "Emitted when the user attempts to close the drawer by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the drawer open. Avoid using this unless closing the drawer will result in destructive behavior such as data loss."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The drawer's main content."
+        },
+        {
+          "name": "label",
+          "description": "The drawer's label. Alternatively, you can use the `label` attribute."
+        },
+        {
+          "name": "header-actions",
+          "description": "Optional actions to add to the header. Works best with `<sl-icon-button>`."
+        },
+        {
+          "name": "footer",
+          "description": "The drawer's footer, usually one or more buttons representing various options."
+        }
+      ]
     },
     {
       "tagName": "sl-dropdown",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <sl-popup part=\"base\" exportparts=\"popup:base__popup\" id=\"dropdown\" flip=\"\" shift=\"\" auto-size=\"vertical\" auto-size-padding=\"10\" placement=\"bottom-start\" distance=\"0\" skidding=\"0\" strategy=\"absolute\" class=\" dropdown \">\n        <slot name=\"trigger\" slot=\"anchor\" part=\"trigger\" class=\"dropdown__trigger\"></slot>\n\n        <div aria-labelledby=\"dropdown\" aria-hidden=\"true\">\n          <slot part=\"panel\" class=\"dropdown__panel\" hidden=\"\"></slot>\n        </div>\n      </sl-popup></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <sl-popup part=\"base\" exportparts=\"popup:base__popup\" id=\"dropdown\" flip=\"\" shift=\"\" auto-size=\"vertical\" auto-size-padding=\"10\" placement=\"bottom-start\" distance=\"0\" skidding=\"0\" strategy=\"absolute\" class=\" dropdown \">\n        <slot name=\"trigger\" slot=\"anchor\" part=\"trigger\" class=\"dropdown__trigger\"></slot>\n\n        <div aria-labelledby=\"dropdown\" aria-hidden=\"true\">\n          <slot part=\"panel\" class=\"dropdown__panel\" hidden=\"\"></slot>\n        </div>\n      </sl-popup></div>",
+      "attributes": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "Indicates whether or not the dropdown is open. You can toggle this attribute to show and hide the dropdown, or you\ncan use the `show()` and `hide()` methods and this attribute will reflect the dropdown's open state.",
+          "fieldName": "open"
+        },
+        {
+          "name": "placement",
+          "type": "| 'top'\n    | 'top-start'\n    | 'top-end'\n    | 'bottom'\n    | 'bottom-start'\n    | 'bottom-end'\n    | 'right'\n    | 'right-start'\n    | 'right-end'\n    | 'left'\n    | 'left-start'\n    | 'left-end'",
+          "default": "'bottom-start'",
+          "description": "The preferred placement of the dropdown panel. Note that the actual placement may vary as needed to keep the panel\ninside of the viewport.",
+          "fieldName": "placement"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the dropdown so the panel will not open.",
+          "fieldName": "disabled"
+        },
+        {
+          "name": "stay-open-on-select",
+          "type": "boolean",
+          "default": "false",
+          "description": "By default, the dropdown is closed when an item is selected. This attribute will keep it open instead. Useful for\ndropdowns that allow for multiple interactions.",
+          "fieldName": "stayOpenOnSelect"
+        },
+        {
+          "name": "distance",
+          "type": "number",
+          "default": "0",
+          "description": "The distance in pixels from which to offset the panel away from its trigger.",
+          "fieldName": "distance"
+        },
+        {
+          "name": "skidding",
+          "type": "number",
+          "default": "0",
+          "description": "The distance in pixels from which to offset the panel along its trigger.",
+          "fieldName": "skidding"
+        },
+        {
+          "name": "hoist",
+          "type": "boolean",
+          "default": "false",
+          "description": "Enable this option to prevent the panel from being clipped when the component is placed inside a container with\n`overflow: auto|scroll`. Hoisting uses a fixed positioning strategy that works in many, but not all, scenarios.",
+          "fieldName": "hoist"
+        },
+        {
+          "name": "sync",
+          "type": "'width' | 'height' | 'both' | undefined",
+          "default": "undefined",
+          "description": "Syncs the popup width or height to that of the trigger element.",
+          "fieldName": "sync"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-show",
+          "description": "Emitted when the dropdown opens."
+        },
+        {
+          "name": "sl-after-show",
+          "description": "Emitted after the dropdown opens and all animations are complete."
+        },
+        {
+          "name": "sl-hide",
+          "description": "Emitted when the dropdown closes."
+        },
+        {
+          "name": "sl-after-hide",
+          "description": "Emitted after the dropdown closes and all animations are complete."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The dropdown's main content."
+        },
+        {
+          "name": "trigger",
+          "description": "The dropdown's trigger, usually a `<sl-button>` element."
+        }
+      ]
     },
     {
       "tagName": "sl-icon",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!----></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!----></div>",
+      "attributes": [
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "description": "The name of the icon to draw. Available names depend on the icon library being used.",
+          "fieldName": "name"
+        },
+        {
+          "name": "src",
+          "type": "string | undefined",
+          "description": "An external URL of an SVG file. Be sure you trust the content you are including, as it will be executed as code and\ncan result in XSS attacks.",
+          "fieldName": "src"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "''",
+          "description": "An alternate description to use for assistive devices. If omitted, the icon will be considered presentational and\nignored by assistive devices.",
+          "fieldName": "label"
+        },
+        {
+          "name": "library",
+          "type": "string",
+          "default": "'default'",
+          "description": "The name of a registered custom icon library.",
+          "fieldName": "library"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-load",
+          "description": "Emitted when the icon has loaded. When using `spriteSheet: true` this will not emit."
+        },
+        {
+          "name": "sl-error",
+          "description": "Emitted when the icon fails to load due to an error. When using `spriteSheet: true` this will not emit."
+        }
+      ]
     },
     {
       "tagName": "sl-icon-button",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <button part=\"base\" class=\" icon-button \" type=\"button\" role=\"button\" aria-disabled=\"false\" aria-label=\"\" tabindex=\"0\">\n        <sl-icon class=\"icon-button__icon\" aria-hidden=\"true\" library=\"default\"></sl-icon>\n      </button></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <button part=\"base\" class=\" icon-button \" type=\"button\" role=\"button\" aria-disabled=\"false\" aria-label=\"\" tabindex=\"0\">\n        <sl-icon class=\"icon-button__icon\" aria-hidden=\"true\" library=\"default\"></sl-icon>\n      </button></div>",
+      "attributes": [
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "description": "The name of the icon to draw. Available names depend on the icon library being used.",
+          "fieldName": "name"
+        },
+        {
+          "name": "library",
+          "type": "string | undefined",
+          "description": "The name of a registered custom icon library.",
+          "fieldName": "library"
+        },
+        {
+          "name": "src",
+          "type": "string | undefined",
+          "description": "An external URL of an SVG file. Be sure you trust the content you are including, as it will be executed as code and\ncan result in XSS attacks.",
+          "fieldName": "src"
+        },
+        {
+          "name": "href",
+          "type": "string | undefined",
+          "description": "When set, the underlying button will be rendered as an `<a>` with this `href` instead of a `<button>`.",
+          "fieldName": "href"
+        },
+        {
+          "name": "target",
+          "type": "'_blank' | '_parent' | '_self' | '_top' | undefined",
+          "description": "Tells the browser where to open the link. Only used when `href` is set.",
+          "fieldName": "target"
+        },
+        {
+          "name": "download",
+          "type": "string | undefined",
+          "description": "Tells the browser to download the linked file as this filename. Only used when `href` is set.",
+          "fieldName": "download"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "''",
+          "description": "A description that gets read by assistive devices. For optimal accessibility, you should always include a label\nthat describes what the icon button does.",
+          "fieldName": "label"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the button.",
+          "fieldName": "disabled"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-blur",
+          "description": "Emitted when the icon button loses focus."
+        },
+        {
+          "name": "sl-focus",
+          "description": "Emitted when the icon button gains focus."
+        }
+      ]
     },
     {
       "tagName": "sl-image-comparer",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" id=\"image-comparer\" class=\" image-comparer \">\n        <div class=\"image-comparer__image\">\n          <div part=\"before\" class=\"image-comparer__before\">\n            <slot name=\"before\"></slot>\n          </div>\n\n          <div part=\"after\" class=\"image-comparer__after\" style=\"clip-path:inset(0 50% 0 0);\">\n            <slot name=\"after\"></slot>\n          </div>\n        </div>\n\n        <div part=\"divider\" class=\"image-comparer__divider\" style=\"left:50%;\">\n          <div part=\"handle\" class=\"image-comparer__handle\" role=\"scrollbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-controls=\"image-comparer\" tabindex=\"0\" aria-valuenow=\"50\">\n            <slot name=\"handle\">\n              <sl-icon library=\"system\" name=\"grip-vertical\"></sl-icon>\n            </slot>\n          </div>\n        </div>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" id=\"image-comparer\" class=\" image-comparer \">\n        <div class=\"image-comparer__image\">\n          <div part=\"before\" class=\"image-comparer__before\">\n            <slot name=\"before\"></slot>\n          </div>\n\n          <div part=\"after\" class=\"image-comparer__after\" style=\"clip-path:inset(0 50% 0 0);\">\n            <slot name=\"after\"></slot>\n          </div>\n        </div>\n\n        <div part=\"divider\" class=\"image-comparer__divider\" style=\"left:50%;\">\n          <div part=\"handle\" class=\"image-comparer__handle\" role=\"scrollbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-controls=\"image-comparer\" tabindex=\"0\" aria-valuenow=\"50\">\n            <slot name=\"handle\">\n              <sl-icon library=\"system\" name=\"grip-vertical\"></sl-icon>\n            </slot>\n          </div>\n        </div>\n      </div></div>",
+      "attributes": [
+        {
+          "name": "position",
+          "type": "number",
+          "default": "50",
+          "description": "The position of the divider as a percentage.",
+          "fieldName": "position"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-change",
+          "description": "Emitted when the position changes."
+        }
+      ],
+      "slots": [
+        {
+          "name": "before",
+          "description": "The before image, an `<img>` or `<svg>` element."
+        },
+        {
+          "name": "after",
+          "description": "The after image, an `<img>` or `<svg>` element."
+        },
+        {
+          "name": "handle",
+          "description": "The icon used inside the handle."
+        }
+      ]
     },
     {
       "tagName": "sl-input",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"form-control\" class=\" form-control form-control--medium \">\n        <label part=\"form-control-label\" class=\"form-control__label\" for=\"input\" aria-hidden=\"true\">\n          <slot name=\"label\"><!--?lit$827652107$--></slot>\n        </label>\n\n        <div part=\"form-control-input\" class=\"form-control-input\">\n          <div part=\"base\" class=\" input input--medium input--standard input--empty \">\n            <span part=\"prefix\" class=\"input__prefix\">\n              <slot name=\"prefix\"></slot>\n            </span>\n\n            <input part=\"input\" id=\"input\" class=\"input__control\" aria-describedby=\"help-text\" type=\"text\" title=\"\" name=\"\" placeholder=\"\" spellcheck=\"true\">\n\n            <!--?lit$827652107$-->\n            <!--?lit$827652107$-->\n\n            <span part=\"suffix\" class=\"input__suffix\">\n              <slot name=\"suffix\"></slot>\n            </span>\n          </div>\n        </div>\n\n        <div part=\"form-control-help-text\" id=\"help-text\" class=\"form-control__help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$827652107$--></slot>\n        </div>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"form-control\" class=\" form-control form-control--medium \">\n        <label part=\"form-control-label\" class=\"form-control__label\" for=\"input\" aria-hidden=\"true\">\n          <slot name=\"label\"><!--?lit$194113142$--></slot>\n        </label>\n\n        <div part=\"form-control-input\" class=\"form-control-input\">\n          <div part=\"base\" class=\" input input--medium input--standard input--empty \">\n            <span part=\"prefix\" class=\"input__prefix\">\n              <slot name=\"prefix\"></slot>\n            </span>\n\n            <input part=\"input\" id=\"input\" class=\"input__control\" aria-describedby=\"help-text\" type=\"text\" title=\"\" name=\"\" placeholder=\"\" spellcheck=\"true\">\n\n            <!--?lit$194113142$-->\n            <!--?lit$194113142$-->\n\n            <span part=\"suffix\" class=\"input__suffix\">\n              <slot name=\"suffix\"></slot>\n            </span>\n          </div>\n        </div>\n\n        <div part=\"form-control-help-text\" id=\"help-text\" class=\"form-control__help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$194113142$--></slot>\n        </div>\n      </div></div>",
+      "attributes": [
+        {
+          "name": "title",
+          "type": "string",
+          "default": "''",
+          "fieldName": "title"
+        },
+        {
+          "name": "type",
+          "type": "| 'date'\n    | 'datetime-local'\n    | 'email'\n    | 'number'\n    | 'password'\n    | 'search'\n    | 'tel'\n    | 'text'\n    | 'time'\n    | 'url'",
+          "default": "'text'",
+          "description": "The type of input. Works the same as a native `<input>` element, but only a subset of types are supported. Defaults\nto `text`.",
+          "fieldName": "type"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": "''",
+          "description": "The name of the input, submitted as a name/value pair with form data.",
+          "fieldName": "name"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default": "''",
+          "description": "The current value of the input, submitted as a name/value pair with form data.",
+          "fieldName": "value"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "default": "'medium'",
+          "description": "The input's size.",
+          "fieldName": "size"
+        },
+        {
+          "name": "filled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws a filled input.",
+          "fieldName": "filled"
+        },
+        {
+          "name": "pill",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws a pill-style input with rounded edges.",
+          "fieldName": "pill"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "''",
+          "description": "The input's label. If you need to display HTML, use the `label` slot instead.",
+          "fieldName": "label"
+        },
+        {
+          "name": "help-text",
+          "type": "string",
+          "default": "''",
+          "description": "The input's help text. If you need to display HTML, use the `help-text` slot instead.",
+          "fieldName": "helpText"
+        },
+        {
+          "name": "clearable",
+          "type": "boolean",
+          "default": "false",
+          "description": "Adds a clear button when the input is not empty.",
+          "fieldName": "clearable"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the input.",
+          "fieldName": "disabled"
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "default": "''",
+          "description": "Placeholder text to show as a hint when the input is empty.",
+          "fieldName": "placeholder"
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "default": "false",
+          "description": "Makes the input readonly.",
+          "fieldName": "readonly"
+        },
+        {
+          "name": "password-toggle",
+          "type": "boolean",
+          "default": "false",
+          "description": "Adds a button to toggle the password's visibility. Only applies to password types.",
+          "fieldName": "passwordToggle"
+        },
+        {
+          "name": "password-visible",
+          "type": "boolean",
+          "default": "false",
+          "description": "Determines whether or not the password is currently visible. Only applies to password input types.",
+          "fieldName": "passwordVisible"
+        },
+        {
+          "name": "no-spin-buttons",
+          "type": "boolean",
+          "default": "false",
+          "description": "Hides the browser's built-in increment/decrement spin buttons for number inputs.",
+          "fieldName": "noSpinButtons"
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": "''",
+          "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside of a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+          "fieldName": "form"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Makes the input a required field.",
+          "fieldName": "required"
+        },
+        {
+          "name": "pattern",
+          "type": "string",
+          "description": "A regular expression pattern to validate input against.",
+          "fieldName": "pattern"
+        },
+        {
+          "name": "minlength",
+          "type": "number",
+          "description": "The minimum length of input that will be considered valid.",
+          "fieldName": "minlength"
+        },
+        {
+          "name": "maxlength",
+          "type": "number",
+          "description": "The maximum length of input that will be considered valid.",
+          "fieldName": "maxlength"
+        },
+        {
+          "name": "min",
+          "type": "number | string",
+          "description": "The input's minimum value. Only applies to date and number input types.",
+          "fieldName": "min"
+        },
+        {
+          "name": "max",
+          "type": "number | string",
+          "description": "The input's maximum value. Only applies to date and number input types.",
+          "fieldName": "max"
+        },
+        {
+          "name": "step",
+          "type": "number | 'any'",
+          "description": "Specifies the granularity that the value must adhere to, or the special value `any` which means no stepping is\nimplied, allowing any numeric value. Only applies to date and number input types.",
+          "fieldName": "step"
+        },
+        {
+          "name": "autocapitalize",
+          "type": "'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters'",
+          "description": "Controls whether and how text input is automatically capitalized as it is entered by the user.",
+          "fieldName": "autocapitalize"
+        },
+        {
+          "name": "autocorrect",
+          "type": "'off' | 'on'",
+          "description": "Indicates whether the browser's autocorrect feature is on or off.",
+          "fieldName": "autocorrect"
+        },
+        {
+          "name": "autocomplete",
+          "type": "string",
+          "description": "Specifies what permission the browser has to provide assistance in filling out form field values. Refer to\n[this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.",
+          "fieldName": "autocomplete"
+        },
+        {
+          "name": "autofocus",
+          "type": "boolean",
+          "description": "Indicates that the input should receive focus on page load.",
+          "fieldName": "autofocus"
+        },
+        {
+          "name": "enterkeyhint",
+          "type": "'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'",
+          "description": "Used to customize the label or icon of the Enter key on virtual keyboards.",
+          "fieldName": "enterkeyhint"
+        },
+        {
+          "name": "spellcheck",
+          "type": "boolean",
+          "default": "true",
+          "description": "Enables spell checking on the input.",
+          "fieldName": "spellcheck"
+        },
+        {
+          "name": "inputmode",
+          "type": "'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'",
+          "description": "Tells the browser what type of data will be entered by the user, allowing it to display the appropriate virtual\nkeyboard on supportive devices.",
+          "fieldName": "inputmode"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-blur",
+          "description": "Emitted when the control loses focus."
+        },
+        {
+          "name": "sl-change",
+          "description": "Emitted when an alteration to the control's value is committed by the user."
+        },
+        {
+          "name": "sl-clear",
+          "description": "Emitted when the clear button is activated."
+        },
+        {
+          "name": "sl-focus",
+          "description": "Emitted when the control gains focus."
+        },
+        {
+          "name": "sl-input",
+          "description": "Emitted when the control receives input."
+        },
+        {
+          "name": "sl-invalid",
+          "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
+        }
+      ],
+      "slots": [
+        {
+          "name": "label",
+          "description": "The input's label. Alternatively, you can use the `label` attribute."
+        },
+        {
+          "name": "prefix",
+          "description": "Used to prepend a presentational icon or similar element to the input."
+        },
+        {
+          "name": "suffix",
+          "description": "Used to append a presentational icon or similar element to the input."
+        },
+        {
+          "name": "clear-icon",
+          "description": "An icon to use in lieu of the default clear icon."
+        },
+        {
+          "name": "show-password-icon",
+          "description": "An icon to use in lieu of the default show password icon."
+        },
+        {
+          "name": "hide-password-icon",
+          "description": "An icon to use in lieu of the default hide password icon."
+        },
+        {
+          "name": "help-text",
+          "description": "Text that describes how to use the input. Alternatively, you can use the `help-text` attribute."
+        }
+      ]
     },
     {
       "tagName": "sl-menu",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <slot></slot></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <slot></slot></div>",
+      "events": [
+        {
+          "name": "sl-select",
+          "type": "{ item: SlMenuItem }",
+          "description": "Emitted when a menu item is selected."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The menu's content, including menu items, menu labels, and dividers."
+        }
+      ]
     },
     {
       "tagName": "sl-menu-item",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div id=\"anchor\" part=\"base\" class=\" menu-item \">\n        <span part=\"checked-icon\" class=\"menu-item__check\">\n          <sl-icon name=\"check\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n        </span>\n\n        <slot name=\"prefix\" part=\"prefix\" class=\"menu-item__prefix\"></slot>\n\n        <slot part=\"label\" class=\"menu-item__label\"></slot>\n\n        <slot name=\"suffix\" part=\"suffix\" class=\"menu-item__suffix\"></slot>\n\n        <span part=\"submenu-icon\" class=\"menu-item__chevron\">\n          <sl-icon library=\"system\" aria-hidden=\"true\" name=\"chevron-right\"></sl-icon>\n        </span>\n\n        <!--?lit$302542959$--> <slot name=\"submenu\" hidden=\"\"></slot> \n        <!--?lit$302542959$-->\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div id=\"anchor\" part=\"base\" class=\" menu-item \">\n        <span part=\"checked-icon\" class=\"menu-item__check\">\n          <sl-icon name=\"check\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n        </span>\n\n        <slot name=\"prefix\" part=\"prefix\" class=\"menu-item__prefix\"></slot>\n\n        <slot part=\"label\" class=\"menu-item__label\"></slot>\n\n        <slot name=\"suffix\" part=\"suffix\" class=\"menu-item__suffix\"></slot>\n\n        <span part=\"submenu-icon\" class=\"menu-item__chevron\">\n          <sl-icon library=\"system\" aria-hidden=\"true\" name=\"chevron-right\"></sl-icon>\n        </span>\n\n        <!--?lit$117062584$--> <slot name=\"submenu\" hidden=\"\"></slot> \n        <!--?lit$117062584$-->\n      </div></div>",
+      "attributes": [
+        {
+          "name": "type",
+          "type": "'normal' | 'checkbox'",
+          "default": "'normal'",
+          "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
+          "fieldName": "type"
+        },
+        {
+          "name": "checked",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws the item in a checked state.",
+          "fieldName": "checked"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default": "''",
+          "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
+          "fieldName": "value"
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws the menu item in a loading state.",
+          "fieldName": "loading"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws the menu item in a disabled state, preventing selection.",
+          "fieldName": "disabled"
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The menu item's label."
+        },
+        {
+          "name": "prefix",
+          "description": "Used to prepend an icon or similar element to the menu item."
+        },
+        {
+          "name": "suffix",
+          "description": "Used to append an icon or similar element to the menu item."
+        },
+        {
+          "name": "submenu",
+          "description": "Used to denote a nested menu."
+        }
+      ]
     },
     {
       "tagName": "sl-progress-bar",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" class=\" progress-bar \" title=\"\" aria-label=\"Progress\" aria-valuenow=\"0\">\n        <div part=\"indicator\" class=\"progress-bar__indicator\" style=\"width:0%;\">\n          <!--?lit$141308689$--> <slot part=\"label\" class=\"progress-bar__label\"></slot> \n        </div>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" class=\" progress-bar \" title=\"\" aria-label=\"Progress\" aria-valuenow=\"0\">\n        <div part=\"indicator\" class=\"progress-bar__indicator\" style=\"width:0%;\">\n          <!--?lit$224870775$--> <slot part=\"label\" class=\"progress-bar__label\"></slot> \n        </div>\n      </div></div>",
+      "attributes": [
+        {
+          "name": "value",
+          "type": "number",
+          "default": "0",
+          "description": "The current progress as a percentage, 0 to 100.",
+          "fieldName": "value"
+        },
+        {
+          "name": "indeterminate",
+          "type": "boolean",
+          "default": "false",
+          "description": "When true, percentage is ignored, the label is hidden, and the progress bar is drawn in an indeterminate state.",
+          "fieldName": "indeterminate"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "''",
+          "description": "A custom label for assistive devices.",
+          "fieldName": "label"
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "A label to show inside the progress indicator."
+        }
+      ]
     },
     {
       "tagName": "sl-radio",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <span part=\"base\" class=\" radio radio--medium \">\n        <span class=\"radio__control\" part=\"control\">\n          <!--?lit$197347924$-->\n        </span>\n\n        <slot part=\"label\" class=\"radio__label\"></slot>\n      </span></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <span part=\"base\" class=\" radio radio--medium \">\n        <span class=\"radio__control\" part=\"control\">\n          <!--?lit$717929848$-->\n        </span>\n\n        <slot part=\"label\" class=\"radio__label\"></slot>\n      </span></div>",
+      "attributes": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The radio's value. When selected, the radio group will receive this value.",
+          "fieldName": "value"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "default": "'medium'",
+          "description": "The radio's size. When used inside a radio group, the size will be determined by the radio group's size so this\nattribute can typically be omitted.",
+          "fieldName": "size"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the radio.",
+          "fieldName": "disabled"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-blur",
+          "description": "Emitted when the control loses focus."
+        },
+        {
+          "name": "sl-focus",
+          "description": "Emitted when the control gains focus."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The radio's label."
+        }
+      ]
     },
     {
       "tagName": "sl-radio-group",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <fieldset part=\"form-control\" role=\"radiogroup\" aria-labelledby=\"label\" aria-describedby=\"help-text\" aria-errormessage=\"error-message\" class=\" form-control form-control--medium form-control--radio-group \">\n        <label part=\"form-control-label\" id=\"label\" class=\"form-control__label\" aria-hidden=\"true\">\n          <slot name=\"label\"><!--?lit$800890153$--></slot>\n        </label>\n\n        <div part=\"form-control-input\" class=\"form-control-input\">\n          <div class=\"visually-hidden\">\n            <div id=\"error-message\" aria-live=\"assertive\"><!--?lit$800890153$--></div>\n            <label class=\"radio-group__validation\">\n              <input type=\"text\" class=\"radio-group__validation-input\" tabindex=\"-1\" hidden=\"\">\n            </label>\n          </div>\n\n          <!--?lit$800890153$-->\n      <slot></slot>\n    \n        </div>\n\n        <div part=\"form-control-help-text\" id=\"help-text\" class=\"form-control__help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$800890153$--></slot>\n        </div>\n      </fieldset></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <fieldset part=\"form-control\" role=\"radiogroup\" aria-labelledby=\"label\" aria-describedby=\"help-text\" aria-errormessage=\"error-message\" class=\" form-control form-control--medium form-control--radio-group \">\n        <label part=\"form-control-label\" id=\"label\" class=\"form-control__label\" aria-hidden=\"true\">\n          <slot name=\"label\"><!--?lit$875135843$--></slot>\n        </label>\n\n        <div part=\"form-control-input\" class=\"form-control-input\">\n          <div class=\"visually-hidden\">\n            <div id=\"error-message\" aria-live=\"assertive\"><!--?lit$875135843$--></div>\n            <label class=\"radio-group__validation\">\n              <input type=\"text\" class=\"radio-group__validation-input\" tabindex=\"-1\" hidden=\"\">\n            </label>\n          </div>\n\n          <!--?lit$875135843$-->\n      <slot></slot>\n    \n        </div>\n\n        <div part=\"form-control-help-text\" id=\"help-text\" class=\"form-control__help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$875135843$--></slot>\n        </div>\n      </fieldset></div>",
+      "attributes": [
+        {
+          "name": "label",
+          "type": "string",
+          "default": "''",
+          "description": "The radio group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
+          "fieldName": "label"
+        },
+        {
+          "name": "help-text",
+          "type": "string",
+          "default": "''",
+          "description": "The radio groups's help text. If you need to display HTML, use the `help-text` slot instead.",
+          "fieldName": "helpText"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": "'option'",
+          "description": "The name of the radio group, submitted as a name/value pair with form data.",
+          "fieldName": "name"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default": "''",
+          "description": "The current value of the radio group, submitted as a name/value pair with form data.",
+          "fieldName": "value"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "default": "'medium'",
+          "description": "The radio group's size. This size will be applied to all child radios and radio buttons.",
+          "fieldName": "size"
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": "''",
+          "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside of a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+          "fieldName": "form"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Ensures a child radio is checked before allowing the containing form to submit.",
+          "fieldName": "required"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-change",
+          "description": "Emitted when the radio group's selected value changes."
+        },
+        {
+          "name": "sl-input",
+          "description": "Emitted when the radio group receives user input."
+        },
+        {
+          "name": "sl-invalid",
+          "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The default slot where `<sl-radio>` or `<sl-radio-button>` elements are placed."
+        },
+        {
+          "name": "label",
+          "description": "The radio group's label. Required for proper accessibility. Alternatively, you can use the `label` attribute."
+        },
+        {
+          "name": "help-text",
+          "description": "Text that describes how to use the radio group. Alternatively, you can use the `help-text` attribute."
+        }
+      ]
     },
     {
       "tagName": "sl-range",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"form-control\" class=\" form-control form-control--medium \">\n        <label part=\"form-control-label\" class=\"form-control__label\" for=\"input\" aria-hidden=\"true\">\n          <slot name=\"label\"><!--?lit$625354517$--></slot>\n        </label>\n\n        <div part=\"form-control-input\" class=\"form-control-input\">\n          <div part=\"base\" class=\" range range--tooltip-top \">\n            <input part=\"input\" id=\"input\" class=\"range__control\" type=\"range\" aria-describedby=\"help-text\" title=\"\" name=\"\" min=\"0\" max=\"100\" step=\"1\" style=\"--percent: 0%;\">\n            <!--?lit$625354517$-->\n                  <output part=\"tooltip\" class=\"range__tooltip\">\n                    <!--?lit$625354517$-->0\n                  </output>\n                \n          </div>\n        </div>\n\n        <div part=\"form-control-help-text\" id=\"help-text\" class=\"form-control__help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$625354517$--></slot>\n        </div>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"form-control\" class=\" form-control form-control--medium \">\n        <label part=\"form-control-label\" class=\"form-control__label\" for=\"input\" aria-hidden=\"true\">\n          <slot name=\"label\"><!--?lit$459343139$--></slot>\n        </label>\n\n        <div part=\"form-control-input\" class=\"form-control-input\">\n          <div part=\"base\" class=\" range range--tooltip-top \">\n            <input part=\"input\" id=\"input\" class=\"range__control\" type=\"range\" aria-describedby=\"help-text\" title=\"\" name=\"\" min=\"0\" max=\"100\" step=\"1\" style=\"--percent: 0%;\">\n            <!--?lit$459343139$-->\n                  <output part=\"tooltip\" class=\"range__tooltip\">\n                    <!--?lit$459343139$-->0\n                  </output>\n                \n          </div>\n        </div>\n\n        <div part=\"form-control-help-text\" id=\"help-text\" class=\"form-control__help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$459343139$--></slot>\n        </div>\n      </div></div>",
+      "attributes": [
+        {
+          "name": "title",
+          "type": "string",
+          "default": "''",
+          "fieldName": "title"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": "''",
+          "description": "The name of the range, submitted as a name/value pair with form data.",
+          "fieldName": "name"
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "default": "0",
+          "description": "The current value of the range, submitted as a name/value pair with form data.",
+          "fieldName": "value"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "''",
+          "description": "The range's label. If you need to display HTML, use the `label` slot instead.",
+          "fieldName": "label"
+        },
+        {
+          "name": "help-text",
+          "type": "string",
+          "default": "''",
+          "description": "The range's help text. If you need to display HTML, use the help-text slot instead.",
+          "fieldName": "helpText"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the range.",
+          "fieldName": "disabled"
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "default": "0",
+          "description": "The minimum acceptable value of the range.",
+          "fieldName": "min"
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "default": "100",
+          "description": "The maximum acceptable value of the range.",
+          "fieldName": "max"
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "default": "1",
+          "description": "The interval at which the range will increase and decrease.",
+          "fieldName": "step"
+        },
+        {
+          "name": "tooltip",
+          "type": "'top' | 'bottom' | 'none'",
+          "default": "'top'",
+          "description": "The preferred placement of the range's tooltip.",
+          "fieldName": "tooltip"
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": "''",
+          "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside of a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+          "fieldName": "form"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-blur",
+          "description": "Emitted when the control loses focus."
+        },
+        {
+          "name": "sl-change",
+          "description": "Emitted when an alteration to the control's value is committed by the user."
+        },
+        {
+          "name": "sl-focus",
+          "description": "Emitted when the control gains focus."
+        },
+        {
+          "name": "sl-input",
+          "description": "Emitted when the control receives input."
+        },
+        {
+          "name": "sl-invalid",
+          "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
+        }
+      ],
+      "slots": [
+        {
+          "name": "label",
+          "description": "The range's label. Alternatively, you can use the `label` attribute."
+        },
+        {
+          "name": "help-text",
+          "description": "Text that describes how to use the input. Alternatively, you can use the `help-text` attribute."
+        }
+      ]
     },
     {
       "tagName": "sl-rating",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" role=\"slider\" class=\" rating \" aria-label=\"\" aria-disabled=\"false\" aria-readonly=\"false\" aria-valuenow=\"0\" aria-valuemin=\"0\" aria-valuemax=\"5\" tabindex=\"0\">\n        <span class=\"rating__symbols\">\n          <!--?lit$976023051$--><!---->\n              <span role=\"presentation\" class=\" rating__symbol \">\n                <!--?lit$976023051$--><sl-icon name=\"star-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n              </span>\n            <!----><!---->\n              <span role=\"presentation\" class=\" rating__symbol \">\n                <!--?lit$976023051$--><sl-icon name=\"star-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n              </span>\n            <!----><!---->\n              <span role=\"presentation\" class=\" rating__symbol \">\n                <!--?lit$976023051$--><sl-icon name=\"star-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n              </span>\n            <!----><!---->\n              <span role=\"presentation\" class=\" rating__symbol \">\n                <!--?lit$976023051$--><sl-icon name=\"star-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n              </span>\n            <!----><!---->\n              <span role=\"presentation\" class=\" rating__symbol \">\n                <!--?lit$976023051$--><sl-icon name=\"star-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n              </span>\n            <!---->\n        </span>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" role=\"slider\" class=\" rating \" aria-label=\"\" aria-disabled=\"false\" aria-readonly=\"false\" aria-valuenow=\"0\" aria-valuemin=\"0\" aria-valuemax=\"5\" tabindex=\"0\">\n        <span class=\"rating__symbols\">\n          <!--?lit$690177439$--><!---->\n              <span role=\"presentation\" class=\" rating__symbol \">\n                <!--?lit$690177439$--><sl-icon name=\"star-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n              </span>\n            <!----><!---->\n              <span role=\"presentation\" class=\" rating__symbol \">\n                <!--?lit$690177439$--><sl-icon name=\"star-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n              </span>\n            <!----><!---->\n              <span role=\"presentation\" class=\" rating__symbol \">\n                <!--?lit$690177439$--><sl-icon name=\"star-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n              </span>\n            <!----><!---->\n              <span role=\"presentation\" class=\" rating__symbol \">\n                <!--?lit$690177439$--><sl-icon name=\"star-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n              </span>\n            <!----><!---->\n              <span role=\"presentation\" class=\" rating__symbol \">\n                <!--?lit$690177439$--><sl-icon name=\"star-fill\" library=\"system\" aria-hidden=\"true\"></sl-icon>\n              </span>\n            <!---->\n        </span>\n      </div></div>",
+      "attributes": [
+        {
+          "name": "label",
+          "type": "string",
+          "default": "''",
+          "description": "A label that describes the rating to assistive devices.",
+          "fieldName": "label"
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "default": "0",
+          "description": "The current rating.",
+          "fieldName": "value"
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "default": "5",
+          "description": "The highest rating to show.",
+          "fieldName": "max"
+        },
+        {
+          "name": "precision",
+          "type": "number",
+          "default": "1",
+          "description": "The precision at which the rating will increase and decrease. For example, to allow half-star ratings, set this\nattribute to `0.5`.",
+          "fieldName": "precision"
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "default": "false",
+          "description": "Makes the rating readonly.",
+          "fieldName": "readonly"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the rating.",
+          "fieldName": "disabled"
+        },
+        {
+          "name": "getSymbol",
+          "type": "(value: number) => string",
+          "description": "A function that customizes the symbol to be rendered. The first and only argument is the rating's current value.\nThe function should return a string containing trusted HTML of the symbol to render at the specified value. Works\nwell with `<sl-icon>` elements.",
+          "fieldName": "getSymbol"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-change",
+          "description": "Emitted when the rating's value changes."
+        },
+        {
+          "name": "sl-hover",
+          "type": "{ phase: 'start' | 'move' | 'end', value: number }",
+          "description": "Emitted when the user hovers over a value. The `phase` property indicates when hovering starts, moves to a new value, or ends. The `value` property tells what the rating's value would be if the user were to commit to the hovered value."
+        }
+      ]
     },
     {
       "tagName": "sl-select",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"form-control\" class=\" form-control form-control--medium \">\n        <label id=\"label\" part=\"form-control-label\" class=\"form-control__label\" aria-hidden=\"true\">\n          <slot name=\"label\"><!--?lit$626289195$--></slot>\n        </label>\n\n        <div part=\"form-control-input\" class=\"form-control-input\">\n          <sl-popup flip=\"\" shift=\"\" sync=\"width\" auto-size=\"vertical\" auto-size-padding=\"10\" class=\" select select--standard select--bottom select--medium \" placement=\"bottom\" strategy=\"absolute\">\n            <div part=\"combobox\" class=\"select__combobox\" slot=\"anchor\">\n              <slot part=\"prefix\" name=\"prefix\" class=\"select__prefix\"></slot>\n\n              <input part=\"display-input\" class=\"select__display-input\" type=\"text\" autocomplete=\"off\" spellcheck=\"false\" autocapitalize=\"off\" readonly=\"\" aria-controls=\"listbox\" aria-haspopup=\"listbox\" aria-labelledby=\"label\" aria-describedby=\"help-text\" role=\"combobox\" tabindex=\"0\" placeholder=\"\" aria-expanded=\"false\" aria-disabled=\"false\">\n\n              <!--?lit$626289195$-->\n\n              <input class=\"select__value-input\" type=\"text\" tabindex=\"-1\" aria-hidden=\"true\">\n\n              <!--?lit$626289195$-->\n\n              <slot name=\"suffix\" part=\"suffix\" class=\"select__suffix\"></slot>\n\n              <slot name=\"expand-icon\" part=\"expand-icon\" class=\"select__expand-icon\">\n                <sl-icon library=\"system\" name=\"chevron-down\" aria-hidden=\"true\"></sl-icon>\n              </slot>\n            </div>\n\n            <div id=\"listbox\" role=\"listbox\" aria-labelledby=\"label\" part=\"listbox\" class=\"select__listbox\" tabindex=\"-1\" aria-expanded=\"false\" aria-multiselectable=\"false\">\n              <slot></slot>\n            </div>\n          </sl-popup>\n        </div>\n\n        <div part=\"form-control-help-text\" id=\"help-text\" class=\"form-control__help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$626289195$--></slot>\n        </div>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"form-control\" class=\" form-control form-control--medium \">\n        <label id=\"label\" part=\"form-control-label\" class=\"form-control__label\" aria-hidden=\"true\">\n          <slot name=\"label\"><!--?lit$160981452$--></slot>\n        </label>\n\n        <div part=\"form-control-input\" class=\"form-control-input\">\n          <sl-popup flip=\"\" shift=\"\" sync=\"width\" auto-size=\"vertical\" auto-size-padding=\"10\" class=\" select select--standard select--bottom select--medium \" placement=\"bottom\" strategy=\"absolute\">\n            <div part=\"combobox\" class=\"select__combobox\" slot=\"anchor\">\n              <slot part=\"prefix\" name=\"prefix\" class=\"select__prefix\"></slot>\n\n              <input part=\"display-input\" class=\"select__display-input\" type=\"text\" autocomplete=\"off\" spellcheck=\"false\" autocapitalize=\"off\" readonly=\"\" aria-controls=\"listbox\" aria-haspopup=\"listbox\" aria-labelledby=\"label\" aria-describedby=\"help-text\" role=\"combobox\" tabindex=\"0\" placeholder=\"\" aria-expanded=\"false\" aria-disabled=\"false\">\n\n              <!--?lit$160981452$-->\n\n              <input class=\"select__value-input\" type=\"text\" tabindex=\"-1\" aria-hidden=\"true\">\n\n              <!--?lit$160981452$-->\n\n              <slot name=\"suffix\" part=\"suffix\" class=\"select__suffix\"></slot>\n\n              <slot name=\"expand-icon\" part=\"expand-icon\" class=\"select__expand-icon\">\n                <sl-icon library=\"system\" name=\"chevron-down\" aria-hidden=\"true\"></sl-icon>\n              </slot>\n            </div>\n\n            <div id=\"listbox\" role=\"listbox\" aria-labelledby=\"label\" part=\"listbox\" class=\"select__listbox\" tabindex=\"-1\" aria-expanded=\"false\" aria-multiselectable=\"false\">\n              <slot></slot>\n            </div>\n          </sl-popup>\n        </div>\n\n        <div part=\"form-control-help-text\" id=\"help-text\" class=\"form-control__help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$160981452$--></slot>\n        </div>\n      </div></div>",
+      "attributes": [
+        {
+          "name": "name",
+          "type": "string",
+          "default": "''",
+          "description": "The name of the select, submitted as a name/value pair with form data.",
+          "fieldName": "name"
+        },
+        {
+          "name": "value",
+          "type": "string | string[]",
+          "default": "''",
+          "description": "The default value of the form control. Primarily used for resetting the form control.",
+          "fieldName": "defaultValue"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "default": "'medium'",
+          "description": "The select's size.",
+          "fieldName": "size"
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "default": "''",
+          "description": "Placeholder text to show as a hint when the select is empty.",
+          "fieldName": "placeholder"
+        },
+        {
+          "name": "multiple",
+          "type": "boolean",
+          "default": "false",
+          "description": "Allows more than one option to be selected.",
+          "fieldName": "multiple"
+        },
+        {
+          "name": "max-options-visible",
+          "type": "number",
+          "default": "3",
+          "description": "The maximum number of selected options to show when `multiple` is true. After the maximum, \"+n\" will be shown to\nindicate the number of additional items that are selected. Set to 0 to remove the limit.",
+          "fieldName": "maxOptionsVisible"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the select control.",
+          "fieldName": "disabled"
+        },
+        {
+          "name": "clearable",
+          "type": "boolean",
+          "default": "false",
+          "description": "Adds a clear button when the select is not empty.",
+          "fieldName": "clearable"
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "Indicates whether or not the select is open. You can toggle this attribute to show and hide the menu, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the select's open state.",
+          "fieldName": "open"
+        },
+        {
+          "name": "hoist",
+          "type": "boolean",
+          "default": "false",
+          "description": "Enable this option to prevent the listbox from being clipped when the component is placed inside a container with\n`overflow: auto|scroll`. Hoisting uses a fixed positioning strategy that works in many, but not all, scenarios.",
+          "fieldName": "hoist"
+        },
+        {
+          "name": "filled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws a filled select.",
+          "fieldName": "filled"
+        },
+        {
+          "name": "pill",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws a pill-style select with rounded edges.",
+          "fieldName": "pill"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "''",
+          "description": "The select's label. If you need to display HTML, use the `label` slot instead.",
+          "fieldName": "label"
+        },
+        {
+          "name": "placement",
+          "type": "'top' | 'bottom'",
+          "default": "'bottom'",
+          "description": "The preferred placement of the select's menu. Note that the actual placement may vary as needed to keep the listbox\ninside of the viewport.",
+          "fieldName": "placement"
+        },
+        {
+          "name": "help-text",
+          "type": "string",
+          "default": "''",
+          "description": "The select's help text. If you need to display HTML, use the `help-text` slot instead.",
+          "fieldName": "helpText"
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": "''",
+          "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside of a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+          "fieldName": "form"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "The select's required attribute.",
+          "fieldName": "required"
+        },
+        {
+          "name": "getTag",
+          "type": "(option: SlOption, index: number) => TemplateResult | string | HTMLElement",
+          "description": "A function that customizes the tags to be rendered when multiple=true. The first argument is the option, the second\nis the current tag's index.  The function should return either a Lit TemplateResult or a string containing trusted HTML of the symbol to render at\nthe specified value.",
+          "fieldName": "getTag"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-change",
+          "description": "Emitted when the control's value changes."
+        },
+        {
+          "name": "sl-clear",
+          "description": "Emitted when the control's value is cleared."
+        },
+        {
+          "name": "sl-input",
+          "description": "Emitted when the control receives input."
+        },
+        {
+          "name": "sl-focus",
+          "description": "Emitted when the control gains focus."
+        },
+        {
+          "name": "sl-blur",
+          "description": "Emitted when the control loses focus."
+        },
+        {
+          "name": "sl-show",
+          "description": "Emitted when the select's menu opens."
+        },
+        {
+          "name": "sl-after-show",
+          "description": "Emitted after the select's menu opens and all animations are complete."
+        },
+        {
+          "name": "sl-hide",
+          "description": "Emitted when the select's menu closes."
+        },
+        {
+          "name": "sl-after-hide",
+          "description": "Emitted after the select's menu closes and all animations are complete."
+        },
+        {
+          "name": "sl-invalid",
+          "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The listbox options. Must be `<sl-option>` elements. You can use `<sl-divider>` to group items visually."
+        },
+        {
+          "name": "label",
+          "description": "The input's label. Alternatively, you can use the `label` attribute."
+        },
+        {
+          "name": "prefix",
+          "description": "Used to prepend a presentational icon or similar element to the combobox."
+        },
+        {
+          "name": "suffix",
+          "description": "Used to append a presentational icon or similar element to the combobox."
+        },
+        {
+          "name": "clear-icon",
+          "description": "An icon to use in lieu of the default clear icon."
+        },
+        {
+          "name": "expand-icon",
+          "description": "The icon to show when the control is expanded and collapsed. Rotates on open and close."
+        },
+        {
+          "name": "help-text",
+          "description": "Text that describes how to use the input. Alternatively, you can use the `help-text` attribute."
+        }
+      ]
     },
     {
       "tagName": "sl-skeleton",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" skeleton \">\n        <div part=\"indicator\" class=\"skeleton__indicator\"></div>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" skeleton \">\n        <div part=\"indicator\" class=\"skeleton__indicator\"></div>\n      </div></div>",
+      "attributes": [
+        {
+          "name": "effect",
+          "type": "'pulse' | 'sheen' | 'none'",
+          "default": "'none'",
+          "description": "Determines which effect the skeleton will use.",
+          "fieldName": "effect"
+        }
+      ]
     },
     {
       "tagName": "sl-spinner",
@@ -212,35 +2189,314 @@
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <slot name=\"start\" part=\"panel start\" class=\"start\"></slot>\n\n      <div part=\"divider\" class=\"divider\" role=\"separator\" aria-valuemin=\"0\" aria-valuemax=\"100\" tabindex=\"0\" aria-valuenow=\"50\" aria-label=\"Resize\">\n        <slot name=\"divider\"></slot>\n      </div>\n\n      <slot name=\"end\" part=\"panel end\" class=\"end\"></slot></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <slot name=\"start\" part=\"panel start\" class=\"start\"></slot>\n\n      <div part=\"divider\" class=\"divider\" role=\"separator\" aria-valuemin=\"0\" aria-valuemax=\"100\" tabindex=\"0\" aria-valuenow=\"50\" aria-label=\"Resize\">\n        <slot name=\"divider\"></slot>\n      </div>\n\n      <slot name=\"end\" part=\"panel end\" class=\"end\"></slot></div>",
+      "attributes": [
+        {
+          "name": "position",
+          "type": "number",
+          "default": "50",
+          "description": "The current position of the divider from the primary panel's edge as a percentage 0-100. Defaults to 50% of the\ncontainer's initial size.",
+          "fieldName": "position"
+        },
+        {
+          "name": "position-in-pixels",
+          "type": "number",
+          "description": "The current position of the divider from the primary panel's edge in pixels.",
+          "fieldName": "positionInPixels"
+        },
+        {
+          "name": "vertical",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws the split panel in a vertical orientation with the start and end panels stacked.",
+          "fieldName": "vertical"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables resizing. Note that the position may still change as a result of resizing the host element.",
+          "fieldName": "disabled"
+        },
+        {
+          "name": "primary",
+          "type": "'start' | 'end' | undefined",
+          "description": "If no primary panel is designated, both panels will resize proportionally when the host element is resized. If a\nprimary panel is designated, it will maintain its size and the other panel will grow or shrink as needed when the\nhost element is resized.",
+          "fieldName": "primary"
+        },
+        {
+          "name": "snap",
+          "type": "string | SnapFunction",
+          "description": "Either one or more space-separated values at which the divider should snap, in pixels, percentages, or repeat expressions e.g. `'100px 50% 500px' or `repeat(50%) 10px`,\nor a function which takes in a `SnapFunctionParams`, and returns a position to snap to, e.g. `({ pos }) => Math.round(pos / 8) * 8`.",
+          "fieldName": "snap"
+        },
+        {
+          "name": "snap-threshold",
+          "type": "number",
+          "default": "12",
+          "description": "How close the divider must be to a snap point until snapping occurs.",
+          "fieldName": "snapThreshold"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-reposition",
+          "description": "Emitted when the divider's position changes."
+        }
+      ],
+      "slots": [
+        {
+          "name": "start",
+          "description": "Content to place in the start panel."
+        },
+        {
+          "name": "end",
+          "description": "Content to place in the end panel."
+        },
+        {
+          "name": "divider",
+          "description": "The divider. Useful for slotting in a custom icon that renders as a handle."
+        }
+      ]
     },
     {
       "tagName": "sl-switch",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div class=\" form-control form-control--medium \">\n        <label part=\"base\" class=\" switch switch--medium \">\n          <input class=\"switch__input\" type=\"checkbox\" role=\"switch\" aria-describedby=\"help-text\" title=\"\" name=\"\" aria-checked=\"false\">\n\n          <span part=\"control\" class=\"switch__control\">\n            <span part=\"thumb\" class=\"switch__thumb\"></span>\n          </span>\n\n          <div part=\"label\" class=\"switch__label\">\n            <slot></slot>\n          </div>\n        </label>\n\n        <div class=\"form-control__help-text\" id=\"help-text\" part=\"form-control-help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$044007361$--></slot>\n        </div>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div class=\" form-control form-control--medium \">\n        <label part=\"base\" class=\" switch switch--medium \">\n          <input class=\"switch__input\" type=\"checkbox\" role=\"switch\" aria-describedby=\"help-text\" title=\"\" name=\"\" aria-checked=\"false\">\n\n          <span part=\"control\" class=\"switch__control\">\n            <span part=\"thumb\" class=\"switch__thumb\"></span>\n          </span>\n\n          <div part=\"label\" class=\"switch__label\">\n            <slot></slot>\n          </div>\n        </label>\n\n        <div class=\"form-control__help-text\" id=\"help-text\" part=\"form-control-help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$142842991$--></slot>\n        </div>\n      </div></div>",
+      "attributes": [
+        {
+          "name": "title",
+          "type": "string",
+          "default": "''",
+          "fieldName": "title"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": "''",
+          "description": "The name of the switch, submitted as a name/value pair with form data.",
+          "fieldName": "name"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The current value of the switch, submitted as a name/value pair with form data.",
+          "fieldName": "value"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "default": "'medium'",
+          "description": "The switch's size.",
+          "fieldName": "size"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the switch.",
+          "fieldName": "disabled"
+        },
+        {
+          "name": "checked",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws the switch in a checked state.",
+          "fieldName": "checked"
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": "''",
+          "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside of a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+          "fieldName": "form"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Makes the switch a required field.",
+          "fieldName": "required"
+        },
+        {
+          "name": "help-text",
+          "type": "string",
+          "default": "''",
+          "description": "The switch's help text. If you need to display HTML, use the `help-text` slot instead.",
+          "fieldName": "helpText"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-blur",
+          "description": "Emitted when the control loses focus."
+        },
+        {
+          "name": "sl-change",
+          "description": "Emitted when the control's checked state changes."
+        },
+        {
+          "name": "sl-input",
+          "description": "Emitted when the control receives input."
+        },
+        {
+          "name": "sl-focus",
+          "description": "Emitted when the control gains focus."
+        },
+        {
+          "name": "sl-invalid",
+          "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The switch's label."
+        },
+        {
+          "name": "help-text",
+          "description": "Text that describes how to use the switch. Alternatively, you can use the `help-text` attribute."
+        }
+      ]
     },
     {
       "tagName": "sl-tab",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" tab \">\n        <slot></slot>\n        <!--?lit$937146676$-->\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" tab \">\n        <slot></slot>\n        <!--?lit$599539360$-->\n      </div></div>",
+      "attributes": [
+        {
+          "name": "panel",
+          "type": "string",
+          "default": "''",
+          "description": "The name of the tab panel this tab is associated with. The panel must be located in the same tab group.",
+          "fieldName": "panel"
+        },
+        {
+          "name": "active",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws the tab in an active state.",
+          "fieldName": "active"
+        },
+        {
+          "name": "closable",
+          "type": "boolean",
+          "default": "false",
+          "description": "Makes the tab closable and shows a close button.",
+          "fieldName": "closable"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the tab and prevents selection.",
+          "fieldName": "disabled"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-close",
+          "description": "Emitted when the tab is closable and the close button is activated."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The tab's label."
+        }
+      ]
     },
     {
       "tagName": "sl-tab-group",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" tab-group tab-group--top \">\n        <div class=\"tab-group__nav-container\" part=\"nav\">\n          <!--?lit$017930216$-->\n\n          <div class=\"tab-group__nav\">\n            <div part=\"tabs\" class=\"tab-group__tabs\" role=\"tablist\">\n              <div part=\"active-tab-indicator\" class=\"tab-group__indicator\" style=\"display: none;\"></div>\n              <sl-resize-observer>\n                <slot name=\"nav\"></slot>\n              </sl-resize-observer>\n            </div>\n          </div>\n\n          <!--?lit$017930216$-->\n        </div>\n\n        <slot part=\"body\" class=\"tab-group__body\"></slot>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\" tab-group tab-group--top \">\n        <div class=\"tab-group__nav-container\" part=\"nav\">\n          <!--?lit$948925816$-->\n\n          <div class=\"tab-group__nav\">\n            <div part=\"tabs\" class=\"tab-group__tabs\" role=\"tablist\">\n              <div part=\"active-tab-indicator\" class=\"tab-group__indicator\" style=\"display: none;\"></div>\n              <sl-resize-observer>\n                <slot name=\"nav\"></slot>\n              </sl-resize-observer>\n            </div>\n          </div>\n\n          <!--?lit$948925816$-->\n        </div>\n\n        <slot part=\"body\" class=\"tab-group__body\"></slot>\n      </div></div>",
+      "attributes": [
+        {
+          "name": "placement",
+          "type": "'top' | 'bottom' | 'start' | 'end'",
+          "default": "'top'",
+          "description": "The placement of the tabs.",
+          "fieldName": "placement"
+        },
+        {
+          "name": "activation",
+          "type": "'auto' | 'manual'",
+          "default": "'auto'",
+          "description": "When set to auto, navigating tabs with the arrow keys will instantly show the corresponding tab panel. When set to\nmanual, the tab will receive focus but will not show until the user presses spacebar or enter.",
+          "fieldName": "activation"
+        },
+        {
+          "name": "no-scroll-controls",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the scroll arrows that appear when tabs overflow.",
+          "fieldName": "noScrollControls"
+        },
+        {
+          "name": "fixed-scroll-controls",
+          "type": "boolean",
+          "default": "false",
+          "description": "Prevent scroll buttons from being hidden when inactive.",
+          "fieldName": "fixedScrollControls"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-tab-show",
+          "type": "{ name: String }",
+          "description": "Emitted when a tab is shown."
+        },
+        {
+          "name": "sl-tab-hide",
+          "type": "{ name: String }",
+          "description": "Emitted when a tab is hidden."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "Used for grouping tab panels in the tab group. Must be `<sl-tab-panel>` elements."
+        },
+        {
+          "name": "nav",
+          "description": "Used for grouping tabs in the tab group. Must be `<sl-tab>` elements."
+        }
+      ]
     },
     {
       "tagName": "sl-tab-panel",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <slot part=\"base\" class=\" tab-panel \"></slot></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <slot part=\"base\" class=\" tab-panel \"></slot></div>",
+      "attributes": [
+        {
+          "name": "name",
+          "type": "string",
+          "default": "''",
+          "description": "The tab panel's name.",
+          "fieldName": "name"
+        },
+        {
+          "name": "active",
+          "type": "boolean",
+          "default": "false",
+          "description": "When true, the tab panel will be shown.",
+          "fieldName": "active"
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The tab panel's content."
+        }
+      ]
     },
     {
       "tagName": "sl-table",
@@ -254,35 +2510,449 @@
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <span part=\"base\" class=\" tag tag--neutral tag--medium \">\n        <slot part=\"content\" class=\"tag__content\"></slot>\n\n        <!--?lit$336952971$-->\n      </span></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <span part=\"base\" class=\" tag tag--neutral tag--medium \">\n        <slot part=\"content\" class=\"tag__content\"></slot>\n\n        <!--?lit$826386654$-->\n      </span></div>",
+      "attributes": [
+        {
+          "name": "variant",
+          "type": "'primary' | 'success' | 'neutral' | 'warning' | 'danger' | 'text'",
+          "default": "'neutral'",
+          "description": "The tag's theme variant.",
+          "fieldName": "variant"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "default": "'medium'",
+          "description": "The tag's size.",
+          "fieldName": "size"
+        },
+        {
+          "name": "pill",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws a pill-style tag with rounded edges.",
+          "fieldName": "pill"
+        },
+        {
+          "name": "removable",
+          "type": "boolean",
+          "default": "false",
+          "description": "Makes the tag removable and shows a remove button.",
+          "fieldName": "removable"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-remove",
+          "description": "Emitted when the remove button is activated."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The tag's content."
+        }
+      ]
     },
     {
       "tagName": "sl-textarea",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"form-control\" class=\" form-control form-control--medium \">\n        <label part=\"form-control-label\" class=\"form-control__label\" for=\"input\" aria-hidden=\"true\">\n          <slot name=\"label\"><!--?lit$380277553$--></slot>\n        </label>\n\n        <div part=\"form-control-input\" class=\"form-control-input\">\n          <div part=\"base\" class=\" textarea textarea--medium textarea--standard textarea--empty textarea--resize-vertical \">\n            <textarea part=\"textarea\" id=\"input\" class=\"textarea__control\" aria-describedby=\"help-text\" title=\"\" name=\"\" placeholder=\"\" rows=\"4\" spellcheck=\"true\"></textarea>\n            <!-- This \"adjuster\" exists to prevent layout shifting. https://github.com/shoelace-style/shoelace/issues/2180 -->\n            <div part=\"textarea-adjuster\" class=\"textarea__size-adjuster\" hidden=\"\"></div>\n          </div>\n        </div>\n\n        <div part=\"form-control-help-text\" id=\"help-text\" class=\"form-control__help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$380277553$--></slot>\n        </div>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"form-control\" class=\" form-control form-control--medium \">\n        <label part=\"form-control-label\" class=\"form-control__label\" for=\"input\" aria-hidden=\"true\">\n          <slot name=\"label\"><!--?lit$191084155$--></slot>\n        </label>\n\n        <div part=\"form-control-input\" class=\"form-control-input\">\n          <div part=\"base\" class=\" textarea textarea--medium textarea--standard textarea--empty textarea--resize-vertical \">\n            <textarea part=\"textarea\" id=\"input\" class=\"textarea__control\" aria-describedby=\"help-text\" title=\"\" name=\"\" placeholder=\"\" rows=\"4\" spellcheck=\"true\"></textarea>\n            <!-- This \"adjuster\" exists to prevent layout shifting. https://github.com/shoelace-style/shoelace/issues/2180 -->\n            <div part=\"textarea-adjuster\" class=\"textarea__size-adjuster\" hidden=\"\"></div>\n          </div>\n        </div>\n\n        <div part=\"form-control-help-text\" id=\"help-text\" class=\"form-control__help-text\" aria-hidden=\"true\">\n          <slot name=\"help-text\"><!--?lit$191084155$--></slot>\n        </div>\n      </div></div>",
+      "attributes": [
+        {
+          "name": "title",
+          "type": "string",
+          "default": "''",
+          "fieldName": "title"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "default": "''",
+          "description": "The name of the textarea, submitted as a name/value pair with form data.",
+          "fieldName": "name"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default": "''",
+          "description": "The current value of the textarea, submitted as a name/value pair with form data.",
+          "fieldName": "value"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "default": "'medium'",
+          "description": "The textarea's size.",
+          "fieldName": "size"
+        },
+        {
+          "name": "filled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws a filled textarea.",
+          "fieldName": "filled"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "''",
+          "description": "The textarea's label. If you need to display HTML, use the `label` slot instead.",
+          "fieldName": "label"
+        },
+        {
+          "name": "help-text",
+          "type": "string",
+          "default": "''",
+          "description": "The textarea's help text. If you need to display HTML, use the `help-text` slot instead.",
+          "fieldName": "helpText"
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "default": "''",
+          "description": "Placeholder text to show as a hint when the input is empty.",
+          "fieldName": "placeholder"
+        },
+        {
+          "name": "rows",
+          "type": "number",
+          "default": "4",
+          "description": "The number of rows to display by default.",
+          "fieldName": "rows"
+        },
+        {
+          "name": "resize",
+          "type": "'none' | 'vertical' | 'auto'",
+          "default": "'vertical'",
+          "description": "Controls how the textarea can be resized.",
+          "fieldName": "resize"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the textarea.",
+          "fieldName": "disabled"
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "default": "false",
+          "description": "Makes the textarea readonly.",
+          "fieldName": "readonly"
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "default": "''",
+          "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside of a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+          "fieldName": "form"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Makes the textarea a required field.",
+          "fieldName": "required"
+        },
+        {
+          "name": "minlength",
+          "type": "number",
+          "description": "The minimum length of input that will be considered valid.",
+          "fieldName": "minlength"
+        },
+        {
+          "name": "maxlength",
+          "type": "number",
+          "description": "The maximum length of input that will be considered valid.",
+          "fieldName": "maxlength"
+        },
+        {
+          "name": "autocapitalize",
+          "type": "'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters'",
+          "description": "Controls whether and how text input is automatically capitalized as it is entered by the user.",
+          "fieldName": "autocapitalize"
+        },
+        {
+          "name": "autocorrect",
+          "type": "string",
+          "description": "Indicates whether the browser's autocorrect feature is on or off.",
+          "fieldName": "autocorrect"
+        },
+        {
+          "name": "autocomplete",
+          "type": "string",
+          "description": "Specifies what permission the browser has to provide assistance in filling out form field values. Refer to\n[this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.",
+          "fieldName": "autocomplete"
+        },
+        {
+          "name": "autofocus",
+          "type": "boolean",
+          "description": "Indicates that the input should receive focus on page load.",
+          "fieldName": "autofocus"
+        },
+        {
+          "name": "enterkeyhint",
+          "type": "'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'",
+          "description": "Used to customize the label or icon of the Enter key on virtual keyboards.",
+          "fieldName": "enterkeyhint"
+        },
+        {
+          "name": "spellcheck",
+          "type": "boolean",
+          "default": "true",
+          "description": "Enables spell checking on the textarea.",
+          "fieldName": "spellcheck"
+        },
+        {
+          "name": "inputmode",
+          "type": "'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'",
+          "description": "Tells the browser what type of data will be entered by the user, allowing it to display the appropriate virtual\nkeyboard on supportive devices.",
+          "fieldName": "inputmode"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-blur",
+          "description": "Emitted when the control loses focus."
+        },
+        {
+          "name": "sl-change",
+          "description": "Emitted when an alteration to the control's value is committed by the user."
+        },
+        {
+          "name": "sl-focus",
+          "description": "Emitted when the control gains focus."
+        },
+        {
+          "name": "sl-input",
+          "description": "Emitted when the control receives input."
+        },
+        {
+          "name": "sl-invalid",
+          "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
+        }
+      ],
+      "slots": [
+        {
+          "name": "label",
+          "description": "The textarea's label. Alternatively, you can use the `label` attribute."
+        },
+        {
+          "name": "help-text",
+          "description": "Text that describes how to use the input. Alternatively, you can use the `help-text` attribute."
+        }
+      ]
     },
     {
       "tagName": "sl-tooltip",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <sl-popup part=\"base\" exportparts=\"\n          popup:base__popup,\n          arrow:base__arrow\n        \" flip=\"\" shift=\"\" arrow=\"\" hover-bridge=\"\" class=\" tooltip \" placement=\"top\" distance=\"8\" skidding=\"0\" strategy=\"absolute\">\n        <!--?lit$558487803$-->\n        <slot slot=\"anchor\" aria-describedby=\"tooltip\"></slot>\n\n        <!--?lit$558487803$-->\n        <div part=\"body\" id=\"tooltip\" class=\"tooltip__body\" role=\"tooltip\" aria-live=\"off\" hidden=\"\">\n          <slot name=\"content\"><!--?lit$558487803$--></slot>\n        </div>\n      </sl-popup></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <sl-popup part=\"base\" exportparts=\"\n          popup:base__popup,\n          arrow:base__arrow\n        \" flip=\"\" shift=\"\" arrow=\"\" hover-bridge=\"\" class=\" tooltip \" placement=\"top\" distance=\"8\" skidding=\"0\" strategy=\"absolute\">\n        <!--?lit$558653033$-->\n        <slot slot=\"anchor\" aria-describedby=\"tooltip\"></slot>\n\n        <!--?lit$558653033$-->\n        <div part=\"body\" id=\"tooltip\" class=\"tooltip__body\" role=\"tooltip\" aria-live=\"off\" hidden=\"\">\n          <slot name=\"content\"><!--?lit$558653033$--></slot>\n        </div>\n      </sl-popup></div>",
+      "attributes": [
+        {
+          "name": "content",
+          "type": "string",
+          "default": "''",
+          "description": "The tooltip's content. If you need to display HTML, use the `content` slot instead.",
+          "fieldName": "content"
+        },
+        {
+          "name": "placement",
+          "type": "| 'top'\n    | 'top-start'\n    | 'top-end'\n    | 'right'\n    | 'right-start'\n    | 'right-end'\n    | 'bottom'\n    | 'bottom-start'\n    | 'bottom-end'\n    | 'left'\n    | 'left-start'\n    | 'left-end'",
+          "default": "'top'",
+          "description": "The preferred placement of the tooltip. Note that the actual placement may vary as needed to keep the tooltip\ninside of the viewport.",
+          "fieldName": "placement"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the tooltip so it won't show when triggered.",
+          "fieldName": "disabled"
+        },
+        {
+          "name": "distance",
+          "type": "number",
+          "default": "8",
+          "description": "The distance in pixels from which to offset the tooltip away from its target.",
+          "fieldName": "distance"
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "description": "Indicates whether or not the tooltip is open. You can use this in lieu of the show/hide methods.",
+          "fieldName": "open"
+        },
+        {
+          "name": "skidding",
+          "type": "number",
+          "default": "0",
+          "description": "The distance in pixels from which to offset the tooltip along its target.",
+          "fieldName": "skidding"
+        },
+        {
+          "name": "trigger",
+          "type": "string",
+          "default": "'hover focus'",
+          "description": "Controls how the tooltip is activated. Possible options include `click`, `hover`, `focus`, and `manual`. Multiple\noptions can be passed by separating them with a space. When manual is used, the tooltip must be activated\nprogrammatically.",
+          "fieldName": "trigger"
+        },
+        {
+          "name": "hoist",
+          "type": "boolean",
+          "default": "false",
+          "description": "Enable this option to prevent the tooltip from being clipped when the component is placed inside a container with\n`overflow: auto|hidden|scroll`. Hoisting uses a fixed positioning strategy that works in many, but not all,\nscenarios.",
+          "fieldName": "hoist"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-show",
+          "description": "Emitted when the tooltip begins to show."
+        },
+        {
+          "name": "sl-after-show",
+          "description": "Emitted after the tooltip has shown and all animations are complete."
+        },
+        {
+          "name": "sl-hide",
+          "description": "Emitted when the tooltip begins to hide."
+        },
+        {
+          "name": "sl-after-hide",
+          "description": "Emitted after the tooltip has hidden and all animations are complete."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The tooltip's target element. Avoid slotting in more than one element, as subsequent ones will be ignored."
+        },
+        {
+          "name": "content",
+          "description": "The content to render in the tooltip. Alternatively, you can use the `content` attribute."
+        }
+      ]
     },
     {
       "tagName": "sl-tree",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\"tree\">\n        <slot></slot>\n        <span hidden=\"\" aria-hidden=\"true\"><slot name=\"expand-icon\"></slot></span>\n        <span hidden=\"\" aria-hidden=\"true\"><slot name=\"collapse-icon\"></slot></span>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\"tree\">\n        <slot></slot>\n        <span hidden=\"\" aria-hidden=\"true\"><slot name=\"expand-icon\"></slot></span>\n        <span hidden=\"\" aria-hidden=\"true\"><slot name=\"collapse-icon\"></slot></span>\n      </div></div>",
+      "attributes": [
+        {
+          "name": "selection",
+          "type": "'single' | 'multiple' | 'leaf'",
+          "default": "'single'",
+          "description": "The selection behavior of the tree. Single selection allows only one node to be selected at a time. Multiple\ndisplays checkboxes and allows more than one node to be selected. Leaf allows only leaf nodes to be selected.",
+          "fieldName": "selection"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-selection-change",
+          "type": "{ selection: SlTreeItem[] }",
+          "description": "Emitted when a tree item is selected or deselected."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The default slot."
+        },
+        {
+          "name": "expand-icon",
+          "description": "The icon to show when the tree item is expanded. Works best with `<sl-icon>`."
+        },
+        {
+          "name": "collapse-icon",
+          "description": "The icon to show when the tree item is collapsed. Works best with `<sl-icon>`."
+        }
+      ]
     },
     {
       "tagName": "sl-tree-item",
       "compatibility": "client-only",
       "validationErrors": 0,
       "validationWarnings": 1,
-      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\"tree-item tree-item--leaf\">\n        <div class=\"tree-item__item\" part=\"\n            item\n            \n            \n            \n            \n          \">\n          <div class=\"tree-item__indentation\" part=\"indentation\"></div>\n\n          <div part=\"expand-button\" aria-hidden=\"true\" class=\"tree-item__expand-button\">\n            <!--?lit$633705412$-->\n            <slot class=\"tree-item__expand-icon-slot\" name=\"expand-icon\">\n              <sl-icon library=\"system\" name=\"chevron-right\" aria-hidden=\"true\"></sl-icon>\n            </slot>\n            <slot class=\"tree-item__expand-icon-slot\" name=\"collapse-icon\">\n              <sl-icon library=\"system\" name=\"chevron-right\" aria-hidden=\"true\"></sl-icon>\n            </slot>\n          </div>\n\n          <!--?lit$633705412$-->\n\n          <slot class=\"tree-item__label\" part=\"label\"></slot>\n        </div>\n\n        <div class=\"tree-item__children\" part=\"children\" role=\"group\" hidden=\"\" style=\"height: 0px;\">\n          <slot name=\"children\"></slot>\n        </div>\n      </div></div>"
+      "ssrSnapshot": "<div class=\"snapshot-preview\"><!---->\n      <div part=\"base\" class=\"tree-item tree-item--leaf\">\n        <div class=\"tree-item__item\" part=\"\n            item\n            \n            \n            \n            \n          \">\n          <div class=\"tree-item__indentation\" part=\"indentation\"></div>\n\n          <div part=\"expand-button\" aria-hidden=\"true\" class=\"tree-item__expand-button\">\n            <!--?lit$973628306$-->\n            <slot class=\"tree-item__expand-icon-slot\" name=\"expand-icon\">\n              <sl-icon library=\"system\" name=\"chevron-right\" aria-hidden=\"true\"></sl-icon>\n            </slot>\n            <slot class=\"tree-item__expand-icon-slot\" name=\"collapse-icon\">\n              <sl-icon library=\"system\" name=\"chevron-right\" aria-hidden=\"true\"></sl-icon>\n            </slot>\n          </div>\n\n          <!--?lit$973628306$-->\n\n          <slot class=\"tree-item__label\" part=\"label\"></slot>\n        </div>\n\n        <div class=\"tree-item__children\" part=\"children\" role=\"group\" hidden=\"\" style=\"height: 0px;\">\n          <slot name=\"children\"></slot>\n        </div>\n      </div></div>",
+      "attributes": [
+        {
+          "name": "expanded",
+          "type": "boolean",
+          "default": "false",
+          "description": "Expands the tree item.",
+          "fieldName": "expanded"
+        },
+        {
+          "name": "selected",
+          "type": "boolean",
+          "default": "false",
+          "description": "Draws the tree item in a selected state.",
+          "fieldName": "selected"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Disables the tree item.",
+          "fieldName": "disabled"
+        },
+        {
+          "name": "lazy",
+          "type": "boolean",
+          "default": "false",
+          "description": "Enables lazy loading behavior.",
+          "fieldName": "lazy"
+        }
+      ],
+      "events": [
+        {
+          "name": "sl-expand",
+          "description": "Emitted when the tree item expands."
+        },
+        {
+          "name": "sl-after-expand",
+          "description": "Emitted after the tree item expands and all animations are complete."
+        },
+        {
+          "name": "sl-collapse",
+          "description": "Emitted when the tree item collapses."
+        },
+        {
+          "name": "sl-after-collapse",
+          "description": "Emitted after the tree item collapses and all animations are complete."
+        },
+        {
+          "name": "sl-lazy-change",
+          "description": "Emitted when the tree item's lazy state changes."
+        },
+        {
+          "name": "sl-lazy-load",
+          "description": "Emitted when a lazy item is selected. Use this event to asynchronously load data and append items to the tree before expanding. After appending new items, remove the `lazy` attribute to remove the loading state and update the tree."
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The default slot."
+        },
+        {
+          "name": "expand-icon",
+          "description": "The icon to show when the tree item is expanded."
+        },
+        {
+          "name": "collapse-icon",
+          "description": "The icon to show when the tree item is collapsed."
+        }
+      ]
     }
   ],
   "reports": {
@@ -300,7 +2970,7 @@
     ],
     "ssrCapable": false
   },
-  "submittedAt": "2026-05-17T11:03:55.234Z",
+  "submittedAt": "2026-05-17T11:48:46.961Z",
   "submittedBy": "hub-scanner",
   "validatorVersion": "0.19.0"
 }
