@@ -23,6 +23,28 @@
  *   3. connectedCallback fires and attaches event listeners to existing DOM
  *   4. No duplicate client render is needed
  *
+ * ─── SSR Import Discovery Audit (Step1) ─────────────────────
+ *
+ * This file handles nested custom elements during SSR:
+ *
+ * 1. Local island files:
+ *    - NOT handled in this file (see entry-renderer.ts)
+ *    - This file only renders registered custom elements
+ *
+ * 2. Package manifest islands:
+ *    - NOT handled in this file
+ *    - Package islands are client-side only
+ *
+ * 3. Nested custom elements (from rendered HTML):
+ *    - Detected during `renderDSD()` → `renderComponent()`
+ *    - Calls `detectNestedCustomElements()` (lines 178-215)
+ *    - Each nested tag checked against `ssrAdmissionPlan.clientOnlyTags`
+ *    - If in clientOnlyTags → skipped (outputs empty custom element)
+ *    - If not in clientOnlyTags → attempts to render (may recurse)
+ *
+ * Audit completed: 2026-05-17
+ * Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
+ *
  * @module @lessjs/core/render-dsd
  */
 

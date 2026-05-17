@@ -6,6 +6,18 @@
  * - No CSR/SPA mode
  * - UI is generic head injection, not tied to one component library
  * - Islands are the only client JS allowed
+ *
+ * ─── SSR Import Discovery Audit (Step1) ─────────────────────
+ *
+ * This file ONLY defines types. It does NOT handle SSR imports.
+ * For SSR import logic, see:
+ *   - entry-descriptor.ts (SsrAdmissionPlan interface)
+ *   - entry-renderer.ts (SSR entry code generation)
+ *   - route-scanner.ts (island discovery)
+ *   - render-dsd.ts (nested element rendering)
+ *
+ * Audit completed: 2026-05-17
+ * Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
  */
 
 // ─── WC Package Protocol (v0.16+) ───────────────────────────────────

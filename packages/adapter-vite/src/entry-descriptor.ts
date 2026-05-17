@@ -10,6 +10,28 @@
  *
  * Separating "what to generate" from "how to render it" makes the
  * entry pipeline testable, serializable, and diffable.
+ *
+ * ─── SSR Import Discovery Audit (Step 1) ─────────────────────
+ *
+ * This file records where each island source becomes an SSR import:
+ *
+ * 1. Local island file:
+ *    - Scanned by `scanIslands()` in route-scanner.ts
+ *    - Metadata read by `scanIslandMeta()` (static, no import)
+ *    - Imported in `renderEntry()` lines 406-419 (only if in ssrAdmissionPlan.renderableTags)
+ *
+ * 2. Package manifest island:
+ *    - Discovered by `scanPackageManifests()` in route-scanner.ts
+ *    - Manifest declarations extracted in `buildEntryDescriptor()` lines 402-415
+ *    - NOT imported in SSR entry (package islands registered client-side only)
+ *
+ * 3. Nested custom element (from rendered HTML):
+ *    - Detected during `renderDSD()` in core/src/render-dsd.ts
+ *    - Checked against `ssrAdmissionPlan.clientOnlyTags`
+ *    - Skipped if in clientOnlyTags (see core/src/render-nested.ts)
+ *
+ * Audit completed: 2026-05-17
+ * Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
  */
 
 import type { FrameworkOptions, LessPackageManifest, RouteEntry } from '@lessjs/core';
