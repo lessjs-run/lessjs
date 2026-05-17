@@ -218,6 +218,41 @@ export async function renderSnapshotWithHappyDom(
     } catch {
       el = hDoc.createElement(tagName);
     }
+
+    // Apply demo attributes so the component is visible / meaningful
+    const DEMO_ATTRS: Record<string, Record<string, string>> = {
+      'sl-alert': { open: '', variant: 'primary' },
+      'sl-dialog': { open: '', label: 'Dialog' },
+      'sl-drawer': { open: '', label: 'Drawer' },
+      'sl-details': { open: '', summary: 'Details' },
+      'sl-dropdown': { open: '' },
+      'sl-tooltip': { content: 'Tooltip content', open: '', placement: 'top' },
+      'sl-progress-bar': { value: '50' },
+      'sl-progress-ring': { value: '50' },
+      'sl-range': { value: '50' },
+      'sl-rating': { value: '3' },
+      'sl-icon': { name: 'star' },
+      'sl-icon-button': { name: 'gear', label: 'Settings' },
+      'sl-input': { placeholder: 'Type something...', value: 'Hello' },
+      'sl-textarea': { placeholder: 'Type something...', value: 'Hello World' },
+      'sl-select': { placeholder: 'Choose an option' },
+      'sl-color-picker': { value: '#339af0' },
+      'sl-badge': { variant: 'primary' },
+      'sl-tag': { variant: 'primary', size: 'medium' },
+      'sl-button': { variant: 'primary' },
+      'sl-avatar': { image: 'https://placehold.co/40x40/339af0/fff?text=JS' },
+      'sl-carousel': { navigation: '', pagination: '', loop: '' },
+      'sl-spinner': {},
+      'media-poster-image': { src: 'https://placehold.co/400x225/111/fff?text=Video' },
+    };
+    const demos = DEMO_ATTRS[tagName];
+    if (demos) {
+      for (const [k, v] of Object.entries(demos)) {
+        if (v === '') el.setAttribute(k, '');
+        else el.setAttribute(k, v);
+      }
+    }
+
     // Polyfill ElementInternals for components that use it
     const elRecord = el as Record<string, unknown>;
     if (typeof elRecord.attachInternals !== 'function') {
@@ -238,10 +273,10 @@ export async function renderSnapshotWithHappyDom(
     // Give microtasks time for connectedCallback to fire
     await new Promise((r) => setTimeout(r, 0));
 
-    // 8. Serialize rendered HTML
+    // 8. Serialize rendered HTML — keep <style> tags for preview styling
     let html = '';
     if (el.shadowRoot) {
-      html = el.shadowRoot.innerHTML.replace(/<style>[\s\S]*?<\/style>/gi, '').trim();
+      html = el.shadowRoot.innerHTML.trim();
     } else {
       html = el.innerHTML || `<${tagName}></${tagName}>`;
     }

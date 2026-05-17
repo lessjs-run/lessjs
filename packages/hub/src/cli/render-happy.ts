@@ -18,6 +18,61 @@ if (!importSpec || !tagName) {
   Deno.exit(1);
 }
 
+/** Demo attributes to make component snapshots visible and meaningful.
+ *  Many WC libraries default to hidden/closed states (e.g. sl-alert open=false).
+ */
+const DEMO_ATTRS: Record<string, Record<string, string>> = {
+  // Shoelace — need 'open' to be visible
+  'sl-alert': { open: '', variant: 'primary' },
+  'sl-dialog': { open: '', label: 'Dialog' },
+  'sl-drawer': { open: '', label: 'Drawer' },
+  'sl-details': { open: '', summary: 'Details' },
+  'sl-dropdown': { open: '' },
+  'sl-tooltip': { content: 'Tooltip content', open: '', placement: 'top' },
+  // Shoelace — need value/content to show state
+  'sl-progress-bar': { value: '50' },
+  'sl-progress-ring': { value: '50' },
+  'sl-range': { value: '50' },
+  'sl-rating': { value: '3' },
+  'sl-icon': { name: 'star' },
+  'sl-icon-button': { name: 'gear', label: 'Settings' },
+  'sl-input': { placeholder: 'Type something...', value: 'Hello' },
+  'sl-textarea': { placeholder: 'Type something...', value: 'Hello World' },
+  'sl-select': { placeholder: 'Choose an option' },
+  'sl-color-picker': { value: '#339af0' },
+  'sl-badge': { variant: 'primary' },
+  'sl-tag': { variant: 'primary', size: 'medium' },
+  'sl-button': { variant: 'primary' },
+  'sl-avatar': { image: 'https://placehold.co/40x40/339af0/fff?text=JS' },
+  'sl-carousel': { navigation: '', pagination: '', loop: '' },
+  'sl-animated-image': { src: 'https://placehold.co/200x150/339af0/fff?text=GIF' },
+  'sl-image-comparer': {},
+  'sl-skeleton': { effect: 'pulse' },
+  'sl-spinner': {},
+  'sl-split-panel': {},
+  'sl-switch': { checked: '' },
+  'sl-checkbox': { checked: '' },
+  'sl-radio': { checked: '' },
+  'sl-radio-group': { label: 'Select one' },
+  'sl-tab-group': {},
+  'sl-tab': {},
+  'sl-tab-panel': {},
+  'sl-table': {},
+  'sl-tree': {},
+  'sl-tree-item': { expanded: '' },
+  'sl-card': {},
+  'sl-divider': {},
+  'sl-menu': {},
+  'sl-menu-item': { checked: '' },
+  // Media Chrome
+  'media-controller': {},
+  'media-play-button': {},
+  'media-time-range': {},
+  'media-volume-range': {},
+  'media-poster-image': { src: 'https://placehold.co/400x225/111/fff?text=Video' },
+  'media-loading-indicator': {},
+};
+
 async function render(impSpec: string, tag: string): Promise<string> {
   const { Window } = await import('npm:happy-dom@^20.8.9');
   const hWin = new Window({ url: 'https://localhost:8080' });
@@ -56,16 +111,29 @@ async function render(impSpec: string, tag: string): Promise<string> {
 
     // Instantiate
     const el = new Ctor() as HTMLElement;
+
+    // Apply demo attributes so the component is visible / meaningful
+    const demos = DEMO_ATTRS[tag];
+    if (demos) {
+      for (const [k, v] of Object.entries(demos)) {
+        if (v === '') {
+          el.setAttribute(k, '');
+        } else {
+          el.setAttribute(k, v);
+        }
+      }
+    }
+
     // Append to trigger lifecycle
     if (hDoc.body) {
       hDoc.body.appendChild(el);
     }
     await new Promise((r) => setTimeout(r, 0));
 
-    // Serialize
+    // Serialize — keep <style> tags so the preview has scoped component styles
     let html = '';
     if (el.shadowRoot) {
-      html = el.shadowRoot.innerHTML.replace(/<style>[\s\S]*?<\/style>/gi, '').trim();
+      html = el.shadowRoot.innerHTML.trim();
     } else {
       html = el.innerHTML || '';
     }
