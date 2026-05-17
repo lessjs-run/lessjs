@@ -7,14 +7,14 @@
 ## Next Planned Version: 0.18.0 (in progress)
 
 v0.17.5 closed the lint fix. v0.18.0 is actively in progress.
-All 5 SOP items are implemented on `dev` branch. Verification and merge pending.
+All 5 SOP items are implemented on `dev` branch. CEM plugin integration also complete (2026-05-17).
 
 ## Branch Status
 
-| Branch        | HEAD      | Status                                             |
-| ------------- | --------- | -------------------------------------------------- |
-| `origin/dev`  | `707e67e` | v0.18.0 SOP items 1-5 complete (on dev)            |
-| `origin/main` | `c71a662` | v0.17.5 release                                    |
+| Branch        | HEAD      | Status                                                         |
+| ------------- | --------- | -------------------------------------------------------------- |
+| `origin/dev`  | `fecdbb1` | v0.18.0 SOP items 1-5 + CEM plugin integration complete       |
+| `origin/main` | `c71a662` | v0.17.5 release                                                |
 
 ## Tags
 
@@ -59,7 +59,19 @@ All 5 SOP items implemented on `dev`:
 
 ### SOP Item 5: Fixtures and Tests ✅
 - 4 new tests for CEM compatibility in ssg-report.test.ts
-- Total: 624 tests passing
+- 6 new tests for CEM auto-detection in route-scanner.test.ts
+- Total: 630 tests passing
+
+### CEM Plugin Integration ✅ (v0.18.0 completion — 2026-05-17)
+- `packages/adapter-vite/src/route-scanner.ts` — `scanCemManifests()` + `detectAndClassifyCemPackages()`
+  - Scans node_modules for `custom-elements.json` without executing package code
+  - Handles scoped packages (@org/pkg), skips invalid JSON (non-fatal)
+  - Calls `parseCem()` + `classifyCemManifest()` pipeline
+- `packages/adapter-vite/src/index.ts` — `buildStart()` now calls `detectAndClassifyCemPackages()`
+  - Stores results in `ctx.phase1.cemClassifications`
+  - Passes `cemClassifications` to `buildEntryDescriptor()`
+  - Failure is non-fatal (best-effort, debug log only)
+- `packages/core/deno.json` — added `./compatibility` subpath export
 
 ## Last Completed Release: 0.17.5 (2026-05-17)
 
@@ -72,9 +84,6 @@ All 5 SOP items implemented on `dev`:
 - Docs showcase chunks intentionally exceed the old 200KB total JS budget. The
   gate now tracks core and showcase budgets separately; v0.18+ should add
   package-level bundle classification.
-- CEM classification is now wired in planner and report, but no Vite plugin code
-  yet calls the CEM parser during build. v0.18 still needs plugin integration
-  to auto-detect third-party WC packages and run the classifier.
 
 ## Active Rule
 

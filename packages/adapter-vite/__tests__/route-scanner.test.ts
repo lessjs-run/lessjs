@@ -4,7 +4,9 @@
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { join } from 'jsr:@std/path@^1.0.0';
 import {
+  detectAndClassifyCemPackages,
   fileToTagName,
+  scanCemManifests,
   scanIslandMeta,
   scanIslands,
   scanPackageManifests,
@@ -263,3 +265,130 @@ Deno.test('route-scanner - scanPackageManifests rejects packages without manifes
     assertEquals(e instanceof LessError, true);
   }
 });
+
+// ─── scanCemManifests Tests ──────────────────────────
+
+Deno.test(
+  'route-scanner - scanCemManifests returns empty for non-existent dir',
+  { permissions: { read: true } },
+  async () => {
+    const result = await scanCemManifests('/nonexistent/fake/node_modules');
+    assertEquals(result, []);
+  },
+);
+
+Deno.test(
+  'route-scanner - scanCemManifests finds custom-elements.json files',
+  { permissions: { read: true, write: true } },
+  async () => {
+    const tmpDir = await Deno.makeTempDir();
+    try {
+      // Create a fake node_modules with two packages: one with CEM, one without
+      const pkgWithCem = join(tmpDir, 'wc-with-cem');
+      const pkgNoCem = join(tmpDir, 'no-cem-pkg');
+      await Deno.mkdir(pkgWithCem, { recursive: true });
+      await Deno.mkdir(pkgNoCem, { recursive: true });
+
+      const cem = JSON.stringify({
+        schemaVersion: '1.0.0',
+        modules: [],
+      });
+      await Deno.writeTextFile(join(pkgWithCem, 'custom-elements.json'), cem);
+      await Deno.writeTextFile(join(pkgNoCem, 'package.json'), '{"name":"no-cem-pkg"}');
+
+      const results = await scanCemManifests(tmpDir);
+      assertEquals(results.length, 1);
+      assertEquals(results[0].packageName, 'wc-with-cem');
+      assertEquals(typeof results[0].json, 'string');
+    } finally {
+      await Deno.remove(tmpDir, { recursive: true });
+    }
+  },
+);
+
+Deno.test(
+  'route-scanner - scanCemManifests handles scoped packages (@org/pkg)',
+  { permissions: { read: true, write: true } },
+  async () => {
+    const tmpDir = await Deno.makeTempDir();
+    try {
+      const scopedPkg = join(tmpDir, '@my-org', 'my-wc');
+      await Deno.mkdir(scopedPkg, { recursive: true });
+      const cem = JSON.stringify({ schemaVersion: '1.0.0', modules: [] });
+      await Deno.writeTextFile(join(scopedPkg, 'custom-elements.json'), cem);
+
+      const results = await scanCemManifests(tmpDir);
+      assertEquals(results.length, 1);
+      assertEquals(results[0].packageName, '@my-org/my-wc');
+    } finally {
+      await Deno.remove(tmpDir, { recursive: true });
+    }
+  },
+);
+
+Deno.test(
+  'route-scanner - detectAndClassifyCemPackages returns empty for empty node_modules',
+  { permissions: { read: true, write: true } },
+  async () => {
+    const tmpDir = await Deno.makeTempDir();
+    try {
+      const result = await detectAndClassifyCemPackages(tmpDir);
+      assertEquals(Array.isArray(result), true);
+      assertEquals(result.length, 0);
+    } finally {
+      await Deno.remove(tmpDir, { recursive: true });
+    }
+  },
+);
+
+Deno.test(
+  'route-scanner - detectAndClassifyCemPackages classifies client-only by default (no Less extension)',
+  { permissions: { read: true, write: true } },
+  async () => {
+    const tmpDir = await Deno.makeTempDir();
+    try {
+      const pkg = join(tmpDir, 'vanilla-wc');
+      await Deno.mkdir(pkg, { recursive: true });
+      // CEM with a custom element but no Less extension → conservative default: client-only
+      const cem = JSON.stringify({
+        schemaVersion: '1.0.0',
+        modules: [{
+          kind: 'javascript-module',
+          path: './src/index.js',
+          declarations: [{
+            kind: 'custom-element',
+            tagName: 'my-button',
+            name: 'MyButton',
+          }],
+        }],
+      });
+      await Deno.writeTextFile(join(pkg, 'custom-elements.json'), cem);
+
+      const result = await detectAndClassifyCemPackages(tmpDir);
+      assertEquals(result.length, 1);
+      assertEquals(result[0].tagName, 'my-button');
+      assertEquals(result[0].tier, 'client-only');
+    } finally {
+      await Deno.remove(tmpDir, { recursive: true });
+    }
+  },
+);
+
+Deno.test(
+  'route-scanner - detectAndClassifyCemPackages skips invalid CEM JSON',
+  { permissions: { read: true, write: true } },
+  async () => {
+    const tmpDir = await Deno.makeTempDir();
+    try {
+      const pkg = join(tmpDir, 'broken-wc');
+      await Deno.mkdir(pkg, { recursive: true });
+      await Deno.writeTextFile(join(pkg, 'custom-elements.json'), 'not-valid-json{{{');
+
+      // Should not throw, should return empty
+      const result = await detectAndClassifyCemPackages(tmpDir);
+      assertEquals(result.length, 0);
+    } finally {
+      await Deno.remove(tmpDir, { recursive: true });
+    }
+  },
+);
