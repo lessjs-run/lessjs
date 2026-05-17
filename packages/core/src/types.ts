@@ -342,6 +342,18 @@ export interface FrameworkOptions {
   ssr?: {
     /** Packages that should not be externalized in SSR build (default: lit packages) */
     noExternal?: (string | RegExp)[];
+    /**
+     * v0.18.3: DOM simulation experiment for client-only components.
+     * When set to 'explicit', selected client-only packages attempt rendering
+     * through an isolated DOM environment (Happy DOM).
+     * @default 'off'
+     */
+    domSimulation?: 'off' | 'explicit';
+    /**
+     * Timeout in milliseconds for DOM simulation rendering.
+     * @default 500
+     */
+    domSimulationTimeoutMs?: number;
   };
 
   /** Island configuration */
@@ -857,6 +869,52 @@ export interface DsdBuildReport {
    * Empty when no CEM manifests were parsed.
    */
   cemCompatibility?: CemCompatibilityReport;
+  /**
+   * v0.18.3: DOM simulation experiment results.
+   * Records attempt outcomes for experimental-dom components rendered
+   * through the Happy DOM simulation path. Absent when domSimulation is 'off'.
+   */
+  domSimulation?: DomSimulationReport;
+}
+
+/**
+ * v0.18.3: DOM simulation report section in dsd-report.json.
+ */
+export interface DomSimulationReport {
+  /** Whether DOM simulation is enabled */
+  enabled: boolean;
+  /** Strategy used (always 'experimental-dom' for v0.18.3) */
+  strategy: string;
+  /** Total number of components attempted */
+  attemptedCount: number;
+  /** Number of successful renders */
+  succeededCount: number;
+  /** Number of failed renders */
+  failedCount: number;
+  /** Number of timed-out renders */
+  timeoutCount: number;
+  /** Per-component attempt details */
+  attempts: DomSimulationAttempt[];
+}
+
+/**
+ * Per-component DOM simulation attempt detail.
+ */
+export interface DomSimulationAttempt {
+  /** Tag name */
+  tagName: string;
+  /** Whether the simulation succeeded */
+  success: boolean;
+  /** Render time in milliseconds */
+  renderTimeMs: number;
+  /** Serialized byte size (on success) */
+  byteSize?: number;
+  /** Error message (on failure) */
+  error?: string;
+  /** Whether a timeout occurred */
+  timedOut: boolean;
+  /** Fallback decision */
+  fallback: 'client-only' | 'none';
 }
 
 /** Collects DSD render metrics during SSR for post-build reporting */

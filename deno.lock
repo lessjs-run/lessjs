@@ -19,6 +19,7 @@
     "npm:esbuild@0.25": "0.25.12",
     "npm:flexsearch@0.8.212": "0.8.212",
     "npm:gray-matter@^4.0.3": "4.0.3",
+    "npm:happy-dom@^16.8.1": "16.8.1",
     "npm:hono@4": "4.12.19",
     "npm:hono@^4.12.18": "4.12.19",
     "npm:lit-element@4": "4.2.2",
@@ -549,6 +550,13 @@
         "strip-bom-string"
       ]
     },
+    "happy-dom@16.8.1": {
+      "integrity": "sha512-n0QrmT9lD81rbpKsyhnlz3DgnMZlaOkJPpgi746doA+HvaMC79bdWkwjrNnGJRvDrWTI8iOcJiVTJ5CdT/AZRw==",
+      "dependencies": [
+        "webidl-conversions",
+        "whatwg-mimetype"
+      ]
+    },
     "hono@4.12.19": {
       "integrity": "sha512-xa3eYXYXx68XTT4hZ7dRzsXBhaq85ToSrlUJNoR0gwz/1Ap/CNwX47wfvV7pc/xWhjKVVkLT7zBJy8chhNguqQ=="
     },
@@ -842,6 +850,12 @@
         "esbuild"
       ],
       "bin": true
+    },
+    "webidl-conversions@7.0.0": {
+      "integrity": "sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g=="
+    },
+    "whatwg-mimetype@3.0.0": {
+      "integrity": "sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q=="
     }
   },
   "remote": {
@@ -891,6 +905,7 @@
       "npm:@types/react@^19.1.0",
       "npm:entities@4",
       "npm:flexsearch@0.8.212",
+      "npm:happy-dom@^16.8.1",
       "npm:hono@^4.12.18",
       "npm:lit-element@4",
       "npm:lit-html@3",
