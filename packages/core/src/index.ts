@@ -111,6 +111,10 @@ export {
   validateManifestFromJson as validateCemFromJson,
 } from './validate-manifest.js';
 
+// Less Add Install Flow (v0.18.2)
+export { generateAddPlan } from './less-add.js';
+export type { AddPlan, AddTagEntry, FileMutation, PackageSource } from './less-add.js';
+
 // G10 fix: Virtual module IDs — shared across adapter-vite, content, i18n
 export {
   RESOLVED_BLOG_DATA_ID,

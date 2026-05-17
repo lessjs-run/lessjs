@@ -2,11 +2,11 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version: 0.18.1
+## Current Version: 0.18.2
 
-## Next Planned Version: 0.18.2 (planned)
+## Next Planned Version: 0.18.3 (experimental)
 
-v0.18.1 validate-manifest CLI is complete. v0.18.2 `less add` install flow is next on the roadmap.
+v0.18.2 `less add` install flow complete. v0.18.3 DOM simulation experiment is next.
 
 ## Branch Status
 
@@ -29,13 +29,12 @@ v0.18.1 validate-manifest CLI is complete. v0.18.2 `less add` install flow is ne
 | v0.16.0 | `a02feb6` | 2026-05-16 |
 | v0.15.3 | `5e06fc9` | 2026-05-16 |
 
-## Last Completed Release: 0.18.1 (2026-05-17)
+## Last Completed Release: 0.18.2 (2026-05-17)
 
-- **CEM Manifest Validator**: `validateManifest()` in core with per-tag diagnostics
-- **CLI**: `validate-manifest` CLI with human-readable and `--json` output
-- **Validation checks**: schema shape, tag names, duplicates, module paths, Less extensions
-- **Conservative defaults**: CEM-only → client-only; errors → rejected
-- **29 new tests, 659 total**
+- **`less add` safe install flow**: dry-run + validation gate + plan generation
+- **New types**: `AddPlan`, `AddTagEntry`, `FileMutation`, `PackageSource`
+- **Compatibility-aware**: SSR-capable → full setup, client-only → limited, rejected → blocked
+- **14 new tests, 673 total**
 
 - **Lint fix**: removed `any` type from parent-with-client-child fixture
 

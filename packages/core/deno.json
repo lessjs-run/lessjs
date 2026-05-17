@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/core",
-  "version": "0.18.1",
+  "version": "0.18.2",
   "exports": {
     ".": "./src/index.ts",
     "./errors": "./src/errors.ts",
@@ -15,7 +15,9 @@
     "./cem-parser": "./src/cem-parser.ts",
     "./compatibility": "./src/compatibility.ts",
     "./validate-manifest": "./src/validate-manifest.ts",
-    "./cli/validate-manifest": "./src/cli/validate-manifest.ts"
+    "./cli/validate-manifest": "./src/cli/validate-manifest.ts",
+    "./less-add": "./src/less-add.ts",
+    "./cli/less-add": "./src/cli/less-add.ts"
   },
   "imports": {
     "parse5": "npm:parse5@7.0.0"
