@@ -33,6 +33,9 @@ export { renderDSD, renderDSDByName } from './render-dsd.js';
 export { camelToKebab } from './render-serialize.js';
 export { getAdapter, getRegisteredAdapters, registerAdapter } from './adapter-registry.js';
 export type {
+  CemCompatibilityReport,
+  CompatibilityClassification,
+  CompatibilityTier,
   ComponentLayer,
   DsdBuildReport,
   DsdHydrationHintSummary,

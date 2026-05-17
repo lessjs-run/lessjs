@@ -167,7 +167,7 @@ export class RoadmapPage extends LitElement {
           <h1>Roadmap</h1>
           <p class="subtitle">
             从渲染内核到通用 WC SSR/SSG 引擎 + Registry Hub。六个 Phase，近细远粗。 当前版本 <code
-            >v0.17.1</code>，下一里程碑 <code>v0.18.x</code>。
+            >v0.18.0</code>，下一里程碑 <code>v0.18.1</code>。
           </p>
 
           <div class="callout">
@@ -209,14 +209,14 @@ export class RoadmapPage extends LitElement {
                 <td>v0.17.x</td>
                 <td>Ecosystem Entry</td>
                 <td>Manifest-native pipeline、跨运行时、CLI 工具</td>
-                <td><span class="status next">Next</span></td>
+                <td><span class="status done">Done</span></td>
               </tr>
               <tr>
                 <td>4</td>
                 <td>v0.18.x</td>
                 <td>Universal WC Engine</td>
-                <td>CEM 解析器、第三方 WC SSR fallback、零配置 SSG/SSR</td>
-                <td><span class="status deferred">Far</span></td>
+                <td>CEM 解析器 + 4 级兼容分类、第三方 WC 自动检测、dsd-report 兼容性报告</td>
+                <td><span class="status done">Done</span></td>
               </tr>
               <tr>
                 <td>5</td>
@@ -268,26 +268,28 @@ export class RoadmapPage extends LitElement {
           </div>
 
           <div class="phase">
-            <span class="status next">Next</span>
+            <span class="status done">Done</span>
             <h3>Phase 3: v0.17.x — Ecosystem Entry</h3>
-            <p>消除向后兼容层，管道 manifest-native 化，跨运行时支持。</p>
+            <p>消除向后兼容层，管道 manifest-native 化，跨运行时支持，SSR admission 边界硬化。</p>
             <ul class="compact-list">
               <li>v0.17.0: 删除 PackageIslandMeta + manifest-native pipeline</li>
               <li>v0.17.1: 跨运行时 adapter-vite（Deno API → Node.js compat）</li>
               <li>v0.17.2: SSR filtering + dsd-report manifest 决策</li>
               <li>v0.17.3: 多框架适配器探索（adapter-vanilla 增强、adapter-react）</li>
+              <li>v0.17.4: 兼容性边界硬化 + SSR admission planner</li>
+              <li>v0.17.5: 审计注释 + 测试固件</li>
             </ul>
           </div>
 
           <div class="phase">
-            <span class="status planned">Planned</span>
+            <span class="status done">Done</span>
             <h3>Phase 4: v0.18.x — Universal WC Engine</h3>
-            <p>任意 CEM manifest WC 包自动 SSR/SSG。LessJS 从"自有包框架"变成"通用渲染引擎"。</p>
+            <p>CEM 解析器 + 4 级兼容分类 + 构建时自动检测 + dsd-report 报告扩展。第三方 WC 包默认 client-only，安全接入 LessJS 生态。</p>
             <ul class="compact-list">
-              <li>CEM manifest 解析器 — 读取标准 custom-elements.json</li>
-              <li>第三方 WC SSR fallback 策略（DSD / pure-island / conservative）</li>
-              <li><code>less add @third-party/wc-button</code> 包发现 + 注册</li>
-              <li>零配置 SSG/SSG for 任意合规 WC 包</li>
+              <li>v0.18.0: CEM 解析器、4 级兼容分类器（ssr-capable / client-only / rejected / experimental-dom）、SSR admission 集成、dsd-report cemCompatibility 报告、构建时自动扫描 node_modules</li>
+              <li>v0.18.1（计划）: <code>less validate-manifest</code> CLI — 安装前验证包兼容性</li>
+              <li>v0.18.2（计划）: <code>less add</code> 一键安装流程</li>
+              <li>v0.18.3（实验）: DOM 模拟渲染 client-only 组件</li>
             </ul>
           </div>
 
@@ -370,8 +372,8 @@ export class RoadmapPage extends LitElement {
           <h1>Roadmap</h1>
           <p class="subtitle">
             From renderer kernel to general-purpose WC SSR/SSG engine + Registry Hub. Six phases,
-            near-term fine and far-term coarse. Current version <code>v0.17.1</code>, next milestone <code
-            >v0.18.x</code>.
+            near-term fine and far-term coarse. Current version <code>v0.18.0</code>, next milestone <code
+            >v0.18.1</code>.
           </p>
 
           <div class="callout">
@@ -413,14 +415,14 @@ export class RoadmapPage extends LitElement {
                 <td>v0.17.x</td>
                 <td>Ecosystem Entry</td>
                 <td>Manifest-native pipeline, cross-runtime, CLI tooling</td>
-                <td><span class="status next">Next</span></td>
+                <td><span class="status done">Done</span></td>
               </tr>
               <tr>
                 <td>4</td>
                 <td>v0.18.x</td>
                 <td>Universal WC Engine</td>
-                <td>CEM parser, third-party WC SSR fallback, zero-config SSG/SSR</td>
-                <td><span class="status deferred">Far</span></td>
+                <td>CEM parser + 4-tier compatibility, third-party WC auto-detection, dsd-report compatibility report</td>
+                <td><span class="status done">Done</span></td>
               </tr>
               <tr>
                 <td>5</td>
@@ -473,26 +475,28 @@ export class RoadmapPage extends LitElement {
           </div>
 
           <div class="phase">
-            <span class="status next">Next</span>
+            <span class="status done">Done</span>
             <h3>Phase 3: v0.17.x — Ecosystem Entry</h3>
-            <p>Eliminate backward compat layer, manifest-native pipeline, cross-runtime support.</p>
+            <p>Eliminate backward compat layer, manifest-native pipeline, cross-runtime support, SSR admission boundary hardening.</p>
             <ul class="compact-list">
               <li>v0.17.0: Delete PackageIslandMeta + manifest-native pipeline</li>
               <li>v0.17.1: Cross-runtime adapter-vite (Deno API → Node.js compat)</li>
               <li>v0.17.2: SSR filtering + dsd-report manifest decisions</li>
               <li>v0.17.3: Multi-framework adapter exploration (adapter-vanilla enhanced, adapter-react)</li>
+              <li>v0.17.4: Compatibility boundary hardening + SSR admission planner</li>
+              <li>v0.17.5: Audit comments + test fixtures</li>
             </ul>
           </div>
 
           <div class="phase">
-            <span class="status planned">Planned</span>
+            <span class="status done">Done</span>
             <h3>Phase 4: v0.18.x — Universal WC Engine</h3>
-            <p>Any WC package with a CEM manifest gets automatic SSR/SSG. From "framework for own packages" to "general-purpose rendering engine".</p>
+            <p>CEM parser + 4-tier compatibility classifier + build-time auto-detection + dsd-report schema extensions. Third-party WC packages default to client-only, safely integrated into LessJS ecosystem.</p>
             <ul class="compact-list">
-              <li>CEM manifest parser — read standard custom-elements.json</li>
-              <li>Third-party WC SSR fallback strategies (DSD / pure-island / conservative)</li>
-              <li><code>less add @third-party/wc-button</code> package discovery + registration</li>
-              <li>Zero-config SSG/SSG for any compliant WC package</li>
+              <li>v0.18.0: CEM parser, 4-tier classifier (ssr-capable / client-only / rejected / experimental-dom), SSR admission integration, dsd-report cemCompatibility section, build-time node_modules auto-scan</li>
+              <li>v0.18.1 (planned): <code>less validate-manifest</code> CLI — pre-install package compatibility validation</li>
+              <li>v0.18.2 (planned): <code>less add</code> one-click install flow</li>
+              <li>v0.18.3 (experimental): DOM simulation for client-only components</li>
             </ul>
           </div>
 

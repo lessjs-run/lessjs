@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/core",
-  "version": "0.17.5",
+  "version": "0.18.0",
   "exports": {
     ".": "./src/index.ts",
     "./errors": "./src/errors.ts",
@@ -11,7 +11,9 @@
     "./virtual-ids": "./src/virtual-ids.ts",
     "./render-serialize": "./src/render-serialize.ts",
     "./render-instantiate": "./src/render-instantiate.ts",
-    "./render-errors": "./src/render-errors.ts"
+    "./render-errors": "./src/render-errors.ts",
+    "./cem-parser": "./src/cem-parser.ts",
+    "./compatibility": "./src/compatibility.ts"
   },
   "imports": {
     "parse5": "npm:parse5@7.0.0"

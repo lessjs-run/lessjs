@@ -297,7 +297,7 @@ function renderPageRoute(
  */
 export function renderEntry(desc: EntryDescriptor): string {
   const lines: string[] = [];
-  const ssrAdmissionPlan = buildSsrAdmissionPlan(desc.islands);
+  const ssrAdmissionPlan = buildSsrAdmissionPlan(desc.islands, desc.cemClassifications);
 
   // --- SSG: DSD renderer doesn't need DOM shim ---
   // v0.5.0: render-dsd.ts uses pure string concatenation — no DOM shim needed

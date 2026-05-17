@@ -9,6 +9,11 @@
  * rendering and emits an empty custom element tag. The browser then
  * upgrades it on the client side.
  *
+ * CEM note (v0.18.0): media-chrome does not ship a custom-elements.json,
+ * so CEM auto-detection returns no results. It falls through to the
+ * explicit `vite.config.ts` configuration. This is the typical case
+ * for browser-only WC packages in today's ecosystem.
+ *
  * SSR Safety: This module is imported by route components, so it evaluates
  * in the SSR module runner where globalThis.HTMLElement may be undefined.
  * - We use a safe base class pattern (fallback to plain class in SSR)

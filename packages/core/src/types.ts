@@ -850,6 +850,13 @@ export interface DsdBuildReport {
   manifestDecisions?: ManifestDecision[];
   /** v0.17.4: all SSR admission decisions, including local client-only islands. */
   admissionDecisions?: SsrAdmissionDecision[];
+  /**
+   * v0.18.0: CEM compatibility tier summary.
+   * Records how each third-party WC package component was classified
+   * by the compatibility classifier (ssr-capable, client-only, rejected, experimental-dom).
+   * Empty when no CEM manifests were parsed.
+   */
+  cemCompatibility?: CemCompatibilityReport;
 }
 
 /** Collects DSD render metrics during SSR for post-build reporting */
@@ -882,4 +889,368 @@ export class DsdRenderCollector {
       maxNestingDepth: Math.max(...this._metrics.map((m) => m.nestingDepth), 0),
     };
   }
+}
+
+// ─── CEM (Custom Elements Manifest) Types (v0.18.0) ───────────────────────
+
+/**
+ * CEM compatibility report section in dsd-report.json.
+ *
+ * Records how the CEM compatibility classifier classified each component
+ * from third-party WC packages. This enables CI assertion on compatibility
+ * tiers and provides a machine-readable summary of the admission decisions.
+ *
+ * v0.18.0: Added to DsdBuildReport.
+ */
+export interface CemCompatibilityReport {
+  /** Total number of CEM components classified */
+  totalClassified: number;
+  /** Number of components classified as ssr-capable */
+  ssrCapableCount: number;
+  /** Number of components classified as client-only */
+  clientOnlyCount: number;
+  /** Number of components classified as rejected */
+  rejectedCount: number;
+  /** Number of components classified as experimental-dom */
+  experimentalDomCount: number;
+  /** All classifications, ordered by tier (rejected first, then ssr-capable, client-only) */
+  classifications: CompatibilityClassification[];
+  /** Human-readable summary for CI logs */
+  summary: string;
+}
+
+/**
+ * Standard Custom Elements Manifest (CEM) schema types.
+ *
+ * CEM is a community standard for describing custom elements metadata.
+ * @see https://github.com/webcomponents/custom-elements-manifest
+ */
+
+/** CEM schema version */
+export type CemSchemaVersion = string;
+
+/** CEM module kind */
+export type CemModuleKind = 'javascript-module' | 'css' | 'html';
+
+/** CEM declaration kind */
+export type CemDeclarationKind =
+  | 'custom-element'
+  | 'custom-element-definition'
+  | 'mixin'
+  | 'variable'
+  | 'function'
+  | 'class'
+  | 'method'
+  | 'field'
+  | 'property'
+  | 'attribute'
+  | 'event'
+  | 'slot'
+  | 'css-property'
+  | 'css-part';
+
+/** CEM visibility/privacy */
+export type CemPrivacy = 'public' | 'protected' | 'private';
+
+/** CEM attribute type */
+export type CemAttributeType = 'string' | 'boolean' | 'number' | 'array' | 'object' | 'function';
+
+/** CEM member type */
+export type CemMemberType = 'field' | 'method' | 'property';
+
+/** CEM export kind */
+export type CemExportKind = 'default' | 'named';
+
+/**
+ * Base CEM entry with common fields.
+ */
+interface CemBase {
+  /** Declaration kind */
+  kind: CemDeclarationKind;
+  /** Human-readable description */
+  description?: string;
+  /** Deprecation notice */
+  deprecated?: boolean | string;
+  /** Since version */
+  since?: string;
+  /** Author name */
+  author?: string;
+  /** Additional metadata (preserve unknown CEM fields) */
+  [key: string]: unknown;
+}
+
+/** CEM attribute descriptor */
+export interface CemAttribute extends CemBase {
+  kind: 'attribute';
+  /** Attribute name */
+  name: string;
+  /** Attribute type */
+  type?: CemAttributeType | string;
+  /** Default value */
+  defaultValue?: string;
+  /** Whether the attribute reflects to a property */
+  reflects?: boolean;
+  /** Property name (if different from attribute name) */
+  propertyName?: string;
+  /** Whether the attribute is required */
+  required?: boolean;
+}
+
+/** CEM property descriptor */
+export interface CemProperty extends CemBase {
+  kind: 'property';
+  /** Property name */
+  name: string;
+  /** Property type */
+  type?: string;
+  /** Default value */
+  defaultValue?: string;
+  /** Whether the property is readonly */
+  readonly?: boolean;
+  /** Whether the property is static */
+  static?: boolean;
+  /** Privacy level */
+  privacy?: CemPrivacy;
+}
+
+/** CEM method descriptor */
+export interface CemMethod extends CemBase {
+  kind: 'method';
+  /** Method name */
+  name: string;
+  /** Return type */
+  returns?: string;
+  /** Parameters */
+  params?: CemParameter[];
+  /** Privacy level */
+  privacy?: CemPrivacy;
+  /** Whether the method is static */
+  static?: boolean;
+  /** Whether the method is async */
+  async?: boolean;
+}
+
+/** CEM parameter descriptor */
+export interface CemParameter {
+  /** Parameter name */
+  name: string;
+  /** Parameter type */
+  type?: string;
+  /** Whether the parameter is optional */
+  optional?: boolean;
+  /** Default value */
+  default?: string;
+  /** Whether the parameter is a rest parameter */
+  rest?: boolean;
+}
+
+/** CEM event descriptor */
+export interface CemEvent extends CemBase {
+  kind: 'event';
+  /** Event name */
+  name: string;
+  /** Event type (e.g. 'CustomEvent', 'Event') */
+  type?: string;
+  /** Event detail type */
+  detailType?: string;
+  /** Whether the event bubbles */
+  bubbles?: boolean;
+  /** Whether the event is cancelable */
+  cancelable?: boolean;
+  /** Whether the event is composed */
+  composed?: boolean;
+}
+
+/** CEM slot descriptor */
+export interface CemSlot extends CemBase {
+  kind: 'slot';
+  /** Slot name (empty string for default slot) */
+  name: string;
+  /** Whether the slot is required */
+  required?: boolean;
+}
+
+/** CEM CSS custom property descriptor */
+export interface CemCssProperty extends CemBase {
+  kind: 'css-property';
+  /** CSS property name (e.g. '--button-padding') */
+  name: string;
+  /** Default value */
+  defaultValue?: string;
+  /** CSS type (e.g. 'length', 'color', 'number') */
+  syntax?: string;
+  /** Whether the property inherits */
+  inherits?: boolean;
+  /** Initial value */
+  initialValue?: string;
+}
+
+/** CEM CSS part descriptor */
+export interface CemCssPart extends CemBase {
+  kind: 'css-part';
+  /** Part name */
+  name: string;
+  /** Whether the part is required */
+  required?: boolean;
+}
+
+/** CEM custom element declaration */
+export interface CemCustomElement extends CemBase {
+  kind: 'custom-element';
+  /** Custom element tag name */
+  tagName: string;
+  /** Class name */
+  className?: string;
+  /** Super class name or reference */
+  superClass?: CemReference;
+  /** Attributes */
+  attributes?: CemAttribute[];
+  /** Properties */
+  properties?: CemProperty[];
+  /** Methods */
+  methods?: CemMethod[];
+  /** Events */
+  events?: CemEvent[];
+  /** Slots */
+  slots?: CemSlot[];
+  /** CSS custom properties */
+  cssProperties?: CemCssProperty[];
+  /** CSS shadow parts */
+  cssParts?: CemCssPart[];
+  /** Whether the element uses shadow DOM */
+  shadowDOM?: boolean;
+  /** Shadow root mode */
+  shadowRootMode?: 'open' | 'closed';
+  /** Whether the element is a form-associated custom element */
+  formAssociated?: boolean;
+  /** LessJS SSR/DSD/hydration extensions (non-standard, LessJS-specific) */
+  less?: LessElementExtensions;
+}
+
+/** CEM reference to another declaration */
+export interface CemReference {
+  /** Module path */
+  module?: string;
+  /** Declaration name */
+  name: string;
+}
+
+/** CEM custom element definition (e.g. customElements.define call) */
+export interface CemCustomElementDefinition extends CemBase {
+  kind: 'custom-element-definition';
+  /** Custom element tag name */
+  tagName: string;
+  /** Reference to the class declaration */
+  declaration: CemReference;
+  /** Module where the definition occurs */
+  module?: string;
+}
+
+/** CEM export descriptor */
+export interface CemExport {
+  /** Export kind */
+  kind: CemExportKind;
+  /** Exported name (for named exports) */
+  name?: string;
+  /** Declaration reference */
+  declaration: CemReference;
+}
+
+/** CEM module descriptor */
+export interface CemModule {
+  /** Module kind */
+  kind: CemModuleKind;
+  /** Module path relative to package root */
+  path: string;
+  /** Declarations defined in this module */
+  declarations?: (CemCustomElement | CemCustomElementDefinition | CemBase)[];
+  /** Exports from this module */
+  exports?: CemExport[];
+  /** Imports in this module */
+  imports?: CemImport[];
+}
+
+/** CEM import descriptor */
+export interface CemImport {
+  /** Imported name */
+  name: string;
+  /** Export name in the source module */
+  exportName?: string;
+  /** Source module path or package name */
+  module: string;
+  /** Whether the import is a type-only import */
+  typeOnly?: boolean;
+}
+
+/** Custom Elements Manifest (CEM) root schema */
+export interface CustomElementsManifest {
+  /** Schema version */
+  schemaVersion: CemSchemaVersion;
+  /** Package name */
+  packageName?: string;
+  /** Package version */
+  version?: string;
+  /** Readme content */
+  readme?: string;
+  /** Modules described by this manifest */
+  modules: CemModule[];
+  /** Preserve unknown top-level fields for future compatibility */
+  [key: string]: unknown;
+}
+
+// ─── CEM Parse Result Types ─────────────────────────────────────
+
+/** Result of parsing a CEM file */
+export interface CemParseResult {
+  /** Whether parsing succeeded */
+  success: boolean;
+  /** Parsed manifest (when success is true) */
+  manifest?: CustomElementsManifest;
+  /** Parse errors */
+  errors: CemParseError[];
+  /** Parse warnings */
+  warnings: CemParseWarning[];
+}
+
+/** CEM parse error */
+export interface CemParseError {
+  /** Error code */
+  code: string;
+  /** Error message */
+  message: string;
+  /** Path to the problematic field */
+  path?: string;
+}
+
+/** CEM parse warning */
+export interface CemParseWarning {
+  /** Warning code */
+  code: string;
+  /** Warning message */
+  message: string;
+  /** Path to the field that triggered the warning */
+  path?: string;
+}
+
+/** Compatibility tier for a package/component */
+export type CompatibilityTier = 'ssr-capable' | 'client-only' | 'rejected' | 'experimental-dom';
+
+/** Compatibility classification result */
+export interface CompatibilityClassification {
+  /** Tag name */
+  tagName: string;
+  /** Assigned tier */
+  tier: CompatibilityTier;
+  /** Reason for the classification */
+  reason: string;
+  /** Source of the declaration */
+  source: 'local' | 'package' | 'nested';
+  /** Module path */
+  modulePath?: string;
+  /** Whether SSR is supported */
+  ssr?: boolean;
+  /** Whether DSD is supported */
+  dsd?: boolean;
+  /** Hydration strategy */
+  hydrate?: string;
 }

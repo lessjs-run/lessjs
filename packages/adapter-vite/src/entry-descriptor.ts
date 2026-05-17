@@ -34,7 +34,12 @@
  * Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
  */
 
-import type { FrameworkOptions, LessPackageManifest, RouteEntry } from '@lessjs/core';
+import type {
+  CompatibilityClassification,
+  FrameworkOptions,
+  LessPackageManifest,
+  RouteEntry,
+} from '@lessjs/core';
 import { fileToTagName } from './route-scanner.js';
 
 // ─── Import declarations ───────────────────────────────────────
@@ -154,6 +159,8 @@ export interface SsrAdmissionPlan {
   rejectedTags: string[];
   reasons: Record<string, string>;
   decisions: SsrAdmissionDecision[];
+  /** CEM-derived compatibility classifications (from compatibility classifier) */
+  cemClassifications?: CompatibilityClassification[];
 }
 
 // ─── Special file declarations (v0.3.0) ─────────────────────────
@@ -224,6 +231,9 @@ export interface EntryDescriptor {
   /** SSR admission plan computed before entry code is generated. */
   ssrAdmissionPlan: SsrAdmissionPlan;
 
+  /** CEM-derived compatibility classifications (from compatibility classifier) */
+  cemClassifications?: CompatibilityClassification[];
+
   /** Renderer declarations (from _renderer.ts files) — v0.3.0 */
   renderers: RendererDecl[];
 
@@ -262,6 +272,8 @@ export function buildEntryDescriptor(
     islandMeta?: Record<string, Partial<IslandDecl>>;
     /** Package manifests discovered from npm/JSR packages */
     packageManifests?: LessPackageManifest[];
+    /** CEM-derived compatibility classifications (from compatibility classifier) */
+    cemClassifications?: CompatibilityClassification[];
     /** @security Injected as raw HTML without sanitization */
     headExtras?: string;
     allowHeadExtrasScripts?: boolean;
@@ -438,7 +450,8 @@ export function buildEntryDescriptor(
 
   // Merge all islands
   const islands: IslandDecl[] = [...localIslands, ...packageIslandDecls];
-  const ssrAdmissionPlan = buildSsrAdmissionPlan(islands);
+  const cemClassifications = options.cemClassifications || [];
+  const ssrAdmissionPlan = buildSsrAdmissionPlan(islands, cemClassifications);
 
   // --- Document ---
   const document: DocumentConfig = {
@@ -461,6 +474,7 @@ export function buildEntryDescriptor(
     pageRoutes,
     islands,
     ssrAdmissionPlan,
+    cemClassifications,
     renderers,
     middlewareScopes,
     document,
@@ -469,7 +483,10 @@ export function buildEntryDescriptor(
   };
 }
 
-export function buildSsrAdmissionPlan(islands: IslandDecl[]): SsrAdmissionPlan {
+export function buildSsrAdmissionPlan(
+  islands: IslandDecl[],
+  cemClassifications: CompatibilityClassification[] = [],
+): SsrAdmissionPlan {
   const renderableTags: string[] = [];
   const clientOnlyTags: string[] = [];
   const rejectedTags: string[] = [];
@@ -479,6 +496,12 @@ export function buildSsrAdmissionPlan(islands: IslandDecl[]): SsrAdmissionPlan {
   // Track which tags have been added to renderableTags/clientOnlyTags
   // so we can remove them if a duplicate is found later.
   const admittedTags = new Set<string>();
+
+  // Build a lookup map from tagName to CEM classification
+  const cemMap = new Map<string, CompatibilityClassification>();
+  for (const classification of cemClassifications) {
+    cemMap.set(classification.tagName, classification);
+  }
 
   for (const island of islands) {
     const source = island.source || (island.isPackage ? 'package' : 'local');
@@ -511,20 +534,48 @@ export function buildSsrAdmissionPlan(islands: IslandDecl[]): SsrAdmissionPlan {
     let renderPath: SsrAdmissionDecision['renderPath'];
     let reason: string;
 
-    if (island.ssr === false) {
+    // Check for CEM classification first (v0.18.0: integrate compatibility classifier)
+    const cemClassification = cemMap.get(island.tagName);
+
+    if (cemClassification) {
+      // Use CEM classification tier for admission decision
+      switch (cemClassification.tier) {
+        case 'ssr-capable':
+          renderPath = 'ssr+client';
+          reason = `CEM ssr-capable: ${cemClassification.reason}`;
+          break;
+        case 'client-only':
+          renderPath = 'client-only';
+          reason = `CEM client-only: ${cemClassification.reason}`;
+          break;
+        case 'experimental-dom':
+          // Experimental DOM simulation: treat as client-only unless explicitly enabled
+          renderPath = 'client-only';
+          reason = `CEM experimental-dom: ${cemClassification.reason}`;
+          break;
+        case 'rejected':
+          renderPath = 'rejected';
+          reason = `CEM rejected: ${cemClassification.reason}`;
+          break;
+        default:
+          // Unknown tier: conservative default to client-only
+          renderPath = 'client-only';
+          reason =
+            `Unknown CEM tier (${cemClassification.tier}) - conservative default to client-only`;
+      }
+    } else if (island.ssr === false) {
       renderPath = 'client-only';
       reason = island.reason || 'less.ssr is false';
     } else if (source === 'package') {
       // v0.17.4: Package islands with explicit ssr:true now go through SSR.
-      // This enables DSD output for package islands like less-layout,
-      // which is critical for FCP — styles render before JS upgrade.
-      // Package islands without explicit ssr:true remain client-only.
+      // v0.18.0: If no CEM classification exists, apply conservative default.
+      // CEM without Less extension defaults to client-only (ADR-0028).
       if (island.ssr === true) {
         renderPath = 'ssr+client';
         reason = 'package island with less.ssr=true';
       } else {
         renderPath = 'client-only';
-        reason = 'package island has no validated SSR capability';
+        reason = 'package island has no validated SSR capability (conservative default)';
       }
     } else {
       renderPath = 'ssr+client';
@@ -539,6 +590,10 @@ export function buildSsrAdmissionPlan(islands: IslandDecl[]): SsrAdmissionPlan {
       clientOnlyTags.push(island.tagName);
       admittedTags.add(island.tagName);
     }
+    if (renderPath === 'rejected') {
+      rejectedTags.push(island.tagName);
+      admittedTags.delete(island.tagName);
+    }
 
     reasons[island.tagName] = reason;
     decisions.push({
@@ -550,5 +605,12 @@ export function buildSsrAdmissionPlan(islands: IslandDecl[]): SsrAdmissionPlan {
     });
   }
 
-  return { renderableTags, clientOnlyTags, rejectedTags, reasons, decisions };
+  return {
+    renderableTags,
+    clientOnlyTags,
+    rejectedTags,
+    reasons,
+    decisions,
+    cemClassifications,
+  };
 }

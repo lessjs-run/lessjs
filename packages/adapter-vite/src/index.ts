@@ -33,7 +33,13 @@ import { buildPlugin } from './build.js';
 import { devtoolsPlugin } from './devtools/index.js';
 import { generateHonoEntryCode } from './hono-entry.js';
 import { islandTransformPlugin } from './island-transform.js';
-import { fileToTagName, scanIslands, scanPackageManifests, scanRoutes } from './route-scanner.js';
+import {
+  detectAndClassifyCemPackages,
+  fileToTagName,
+  scanIslands,
+  scanPackageManifests,
+  scanRoutes,
+} from './route-scanner.js';
 
 // ─── Subpath resolution (ADR 0016 — JSR remote only) ─────────────
 //
@@ -549,6 +555,27 @@ export function less(
           ctx.phase1.islandFiles,
         );
         const { buildEntryDescriptor } = await import('./entry-descriptor.js');
+
+        // v0.18.0: CEM auto-detection — scan node_modules for custom-elements.json
+        // without importing or executing any package code.
+        try {
+          const nodeModulesDir = join(process.cwd(), 'node_modules');
+          ctx.phase1.cemClassifications = await detectAndClassifyCemPackages(nodeModulesDir);
+          if (ctx.phase1.cemClassifications.length > 0) {
+            log.info(
+              `CEM auto-detection: classified ${ctx.phase1.cemClassifications.length} component(s) from node_modules`,
+            );
+          }
+        } catch (err) {
+          // CEM detection is best-effort — never fail the build
+          log.debug(
+            `CEM auto-detection failed (non-fatal): ${
+              err instanceof Error ? err.message : String(err)
+            }`,
+          );
+          ctx.phase1.cemClassifications = [];
+        }
+
         ctx.phase1.ssrAdmissionPlan = buildEntryDescriptor(routes, {
           routesDir: resolvedOptions.routesDir,
           islandsDir: resolvedOptions.islandsDir,
@@ -556,6 +583,7 @@ export function less(
           islandFiles: ctx.phase1.islandFiles,
           islandMeta: ctx.phase1.islandMeta,
           packageManifests: ctx.phase1.packageManifests,
+          cemClassifications: ctx.phase1.cemClassifications,
         }).ssrAdmissionPlan;
         const pageCount = routes.filter(
           (r) => r.type === 'page' && !r.special,

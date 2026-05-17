@@ -1,5 +1,5 @@
 /**
- * Shoelace Showcase — Lit adapter demo
+ * Shoelace Showcase — Lit adapter demo (client-only)
  *
  * Renders Shoelace Web Components (Lit-based) through
  * @lessjs/adapter-lit's DSD pipeline.
@@ -7,6 +7,13 @@
  * Shoelace is a popular Lit-based Web Component library with
  * 80+ components. It uses Lit internally, so it renders through
  * our Lit adapter natively.
+ *
+ * CEM note (v0.18.0): Shoelace does NOT ship a custom-elements.json
+ * in its package, so LessJS's CEM auto-detection returns no results
+ * for it. It relies on the explicit `packageIslands` declaration in
+ * vite.config.ts. This is a real-world example showing why CEM
+ * adoption across the ecosystem is still low — most packages need
+ * explicit configuration until they publish CEM manifests.
  *
  * @lessjs/app island — auto-detected and SSR'd by adapter-vite.
  */

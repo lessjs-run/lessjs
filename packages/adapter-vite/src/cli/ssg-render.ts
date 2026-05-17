@@ -20,7 +20,13 @@ import {
   writeFileSync,
 } from 'node:fs';
 import type { LessBuildContext } from '../build-context.js';
-import type { HydrationHint, ManifestDecision, RenderError } from '@lessjs/core';
+import type {
+  CemCompatibilityReport,
+  CompatibilityClassification,
+  HydrationHint,
+  ManifestDecision,
+  RenderError,
+} from '@lessjs/core';
 import { createLogger } from '@lessjs/core/logger';
 import { stableHash } from '../island-manifest.js';
 
@@ -649,7 +655,7 @@ async function networkFirst(req) {
   const totalHints = pageDiagnostics.reduce((sum, p) => sum + p.hydrationHints.length, 0);
 
   const report: import('@lessjs/core').DsdBuildReport = {
-    reportVersion: '1.0.0',
+    reportVersion: '1.1.0',
     timestamp: new Date().toISOString(),
     totalPages: pageDiagnostics.length,
     totalErrors,
@@ -678,6 +684,8 @@ async function networkFirst(req) {
     // v0.17.2: Manifest-driven render decisions per package island
     manifestDecisions: buildManifestDecisions(ctx),
     admissionDecisions: ctx?.phase1?.ssrAdmissionPlan?.decisions || [],
+    // v0.18.0: CEM compatibility classification summary
+    cemCompatibility: buildCemCompatibilityReport(ctx?.phase1?.cemClassifications),
   };
 
   const reportPath = join(outputDir, 'dsd-report.json');
@@ -729,4 +737,50 @@ function buildManifestDecisions(ctx?: LessBuildContext): ManifestDecision[] {
       source: 'package',
     };
   });
+}
+
+// ─── CEM Compatibility Report Builder (v0.18.0) ─────────────────
+
+/**
+ * Build a CEM compatibility report from CEM classifications.
+ *
+ * Summarizes how the compatibility classifier classified each third-party
+ * WC package component into a tier (ssr-capable, client-only, rejected,
+ * experimental-dom). Written to dsd-report.json for CI assertion.
+ *
+ * Returns undefined when no CEM classifications exist.
+ */
+function buildCemCompatibilityReport(
+  classifications?: CompatibilityClassification[],
+): CemCompatibilityReport | undefined {
+  if (!classifications?.length) return undefined;
+
+  const ssrCapableCount = classifications.filter((c) => c.tier === 'ssr-capable').length;
+  const clientOnlyCount = classifications.filter((c) => c.tier === 'client-only').length;
+  const rejectedCount = classifications.filter((c) => c.tier === 'rejected').length;
+  const experimentalDomCount = classifications.filter((c) => c.tier === 'experimental-dom').length;
+
+  // Order: rejected first (most critical), then ssr-capable, client-only, experimental-dom
+  const sortedClassifications = [...classifications].sort((a, b) => {
+    const tierOrder = { rejected: 0, 'ssr-capable': 1, 'client-only': 2, 'experimental-dom': 3 };
+    return (tierOrder[a.tier] ?? 99) - (tierOrder[b.tier] ?? 99);
+  });
+
+  const summaryParts: string[] = [];
+  if (ssrCapableCount > 0) summaryParts.push(`${ssrCapableCount} ssr-capable`);
+  if (clientOnlyCount > 0) summaryParts.push(`${clientOnlyCount} client-only`);
+  if (rejectedCount > 0) summaryParts.push(`${rejectedCount} rejected`);
+  if (experimentalDomCount > 0) summaryParts.push(`${experimentalDomCount} experimental-dom`);
+
+  return {
+    totalClassified: classifications.length,
+    ssrCapableCount,
+    clientOnlyCount,
+    rejectedCount,
+    experimentalDomCount,
+    classifications: sortedClassifications,
+    summary: summaryParts.length > 0
+      ? `CEM: ${summaryParts.join(', ')}`
+      : 'CEM: no components classified',
+  };
 }

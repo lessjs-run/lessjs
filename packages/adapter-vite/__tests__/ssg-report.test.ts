@@ -64,9 +64,9 @@ Deno.test('SSG report: dsd-report.json is produced after ssgRender', async (t) =
     assertEquals(typeof report.hydrationHintSummary, 'object');
   });
 
-  await t.step('report version is 1.0.0', () => {
+  await t.step('report version is 1.1.0', () => {
     const report = readReport(TEST_OUT_DIR);
-    assertEquals(report.reportVersion, '1.0.0');
+    assertEquals(report.reportVersion, '1.1.0');
   });
 
   await t.step('timestamp is valid ISO 8601', () => {
@@ -311,6 +311,173 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
   });
 
   // Clean up
+  if (existsSync(TEST_OUT_DIR)) {
+    rmSync(TEST_OUT_DIR, { recursive: true, force: true });
+  }
+});
+
+// ─── CEM Compatibility Report (v0.18.0) ─────────────────────────
+
+Deno.test('SSG report: cemCompatibility is absent when no CEM classifications', async () => {
+  if (existsSync(TEST_OUT_DIR)) {
+    rmSync(TEST_OUT_DIR, { recursive: true, force: true });
+  }
+
+  const bundle = createMockBundle();
+  // No ctx → no CEM classifications
+  await ssgRender(bundle, defaultOptions);
+
+  const report = readReport(TEST_OUT_DIR);
+  // cemCompatibility should be undefined/absent when no CEM data
+  assertEquals(report.cemCompatibility, undefined);
+
+  if (existsSync(TEST_OUT_DIR)) {
+    rmSync(TEST_OUT_DIR, { recursive: true, force: true });
+  }
+});
+
+Deno.test('SSG report: cemCompatibility populated from ctx.phase1.cemClassifications', async (t) => {
+  if (existsSync(TEST_OUT_DIR)) {
+    rmSync(TEST_OUT_DIR, { recursive: true, force: true });
+  }
+
+  const { LessBuildContext } = await import('../src/build-context.js');
+  const ctx = new LessBuildContext({});
+
+  // Set up CEM classifications
+  ctx.phase1.cemClassifications = [
+    {
+      tagName: 'ssr-button',
+      tier: 'ssr-capable',
+      reason: 'LitElement with ssr: true (LessJS adapter required)',
+      source: 'package',
+      modulePath: './ssr-button.js',
+      ssr: true,
+      dsd: true,
+      hydrate: 'eager',
+    },
+    {
+      tagName: 'client-button',
+      tier: 'client-only',
+      reason: 'CEM-only package (no LessJS SSR declaration)',
+      source: 'package',
+      modulePath: './client-button.js',
+      ssr: false,
+      dsd: false,
+      hydrate: 'lazy',
+    },
+    {
+      tagName: 'invalid-tag',
+      tier: 'rejected',
+      reason: 'Invalid tag name: invalid-tag (must contain a hyphen per HTML spec)',
+      source: 'package',
+      modulePath: './invalid.js',
+      ssr: false,
+      dsd: false,
+    },
+  ];
+
+  const bundle = createMockBundle();
+  await ssgRender(bundle, defaultOptions, ctx);
+
+  const report = readReport(TEST_OUT_DIR);
+  const cem = report.cemCompatibility as Record<string, unknown>;
+
+  await t.step('cemCompatibility is present', () => {
+    assertExists(cem);
+  });
+
+  await t.step('totalClassified is correct', () => {
+    assertEquals(cem.totalClassified, 3);
+  });
+
+  await t.step('tier counts are correct', () => {
+    assertEquals(cem.ssrCapableCount, 1);
+    assertEquals(cem.clientOnlyCount, 1);
+    assertEquals(cem.rejectedCount, 1);
+    assertEquals(cem.experimentalDomCount, 0);
+  });
+
+  await t.step('classifications array is present', () => {
+    assert(Array.isArray(cem.classifications));
+    assertEquals((cem.classifications as unknown[]).length, 3);
+  });
+
+  await t.step('rejected tags appear first in classifications', () => {
+    const classifications = cem.classifications as Array<Record<string, unknown>>;
+    assertEquals(classifications[0].tier, 'rejected');
+  });
+
+  await t.step('summary is human-readable', () => {
+    assertEquals(typeof cem.summary, 'string');
+    assertStringIncludes(cem.summary as string, 'CEM:');
+    assertStringIncludes(cem.summary as string, 'ssr-capable');
+    assertStringIncludes(cem.summary as string, 'client-only');
+    assertStringIncludes(cem.summary as string, 'rejected');
+  });
+
+  if (existsSync(TEST_OUT_DIR)) {
+    rmSync(TEST_OUT_DIR, { recursive: true, force: true });
+  }
+});
+
+Deno.test('SSG report: cemCompatibility with only ssr-capable components', async () => {
+  if (existsSync(TEST_OUT_DIR)) {
+    rmSync(TEST_OUT_DIR, { recursive: true, force: true });
+  }
+
+  const { LessBuildContext } = await import('../src/build-context.js');
+  const ctx = new LessBuildContext({});
+
+  ctx.phase1.cemClassifications = [
+    {
+      tagName: 'ssr-card',
+      tier: 'ssr-capable',
+      reason: 'LitElement with ssr: true',
+      source: 'package',
+      modulePath: './ssr-card.js',
+      ssr: true,
+      dsd: true,
+    },
+    {
+      tagName: 'ssr-badge',
+      tier: 'ssr-capable',
+      reason: 'HTMLElement (via @lessjs/adapter-vanilla) with ssr: true',
+      source: 'package',
+      modulePath: './ssr-badge.js',
+      ssr: true,
+      dsd: false,
+    },
+  ];
+
+  const bundle = createMockBundle();
+  await ssgRender(bundle, defaultOptions, ctx);
+
+  const report = readReport(TEST_OUT_DIR);
+  const cem = report.cemCompatibility as Record<string, unknown>;
+
+  assertEquals(cem.totalClassified, 2);
+  assertEquals(cem.ssrCapableCount, 2);
+  assertEquals(cem.clientOnlyCount, 0);
+  assertEquals(cem.rejectedCount, 0);
+  assertStringIncludes(cem.summary as string, 'ssr-capable');
+
+  if (existsSync(TEST_OUT_DIR)) {
+    rmSync(TEST_OUT_DIR, { recursive: true, force: true });
+  }
+});
+
+Deno.test('SSG report: reportVersion is 1.1.0 with CEM support', async () => {
+  if (existsSync(TEST_OUT_DIR)) {
+    rmSync(TEST_OUT_DIR, { recursive: true, force: true });
+  }
+
+  const bundle = createMockBundle();
+  await ssgRender(bundle, defaultOptions);
+
+  const report = readReport(TEST_OUT_DIR);
+  assertEquals(report.reportVersion, '1.1.0');
+
   if (existsSync(TEST_OUT_DIR)) {
     rmSync(TEST_OUT_DIR, { recursive: true, force: true });
   }
