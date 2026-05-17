@@ -10,7 +10,7 @@
 if (typeof window === 'undefined' && typeof document === 'undefined') {
   throw new Error(
     '[Fixture] browser-only-component cannot be imported in SSR: ' +
-    'window is not defined',
+      'window is not defined',
   );
 }
 

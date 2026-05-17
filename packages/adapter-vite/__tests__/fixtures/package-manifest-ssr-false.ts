@@ -9,6 +9,8 @@ import type { LessPackageManifest } from '@lessjs/core';
 
 export const manifest: LessPackageManifest = {
   packageName: '@test/package-island-ssr-false',
+  schemaVersion: '1.0.0',
+  version: '0.0.1',
   declarations: [
     {
       tagName: 'package-ssr-false',
