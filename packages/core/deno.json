@@ -11,7 +11,8 @@
     "./virtual-ids": "./src/virtual-ids.ts",
     "./render-serialize": "./src/render-serialize.ts",
     "./render-instantiate": "./src/render-instantiate.ts",
-    "./render-errors": "./src/render-errors.ts"
+    "./render-errors": "./src/render-errors.ts",
+    "./cem-parser": "./src/cem-parser.ts"
   },
   "imports": {
     "parse5": "npm:parse5@7.0.0"
