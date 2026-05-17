@@ -850,6 +850,13 @@ export interface DsdBuildReport {
   manifestDecisions?: ManifestDecision[];
   /** v0.17.4: all SSR admission decisions, including local client-only islands. */
   admissionDecisions?: SsrAdmissionDecision[];
+  /**
+   * v0.18.0: CEM compatibility tier summary.
+   * Records how each third-party WC package component was classified
+   * by the compatibility classifier (ssr-capable, client-only, rejected, experimental-dom).
+   * Empty when no CEM manifests were parsed.
+   */
+  cemCompatibility?: CemCompatibilityReport;
 }
 
 /** Collects DSD render metrics during SSR for post-build reporting */
@@ -885,6 +892,32 @@ export class DsdRenderCollector {
 }
 
 // ─── CEM (Custom Elements Manifest) Types (v0.18.0) ───────────────────────
+
+/**
+ * CEM compatibility report section in dsd-report.json.
+ *
+ * Records how the CEM compatibility classifier classified each component
+ * from third-party WC packages. This enables CI assertion on compatibility
+ * tiers and provides a machine-readable summary of the admission decisions.
+ *
+ * v0.18.0: Added to DsdBuildReport.
+ */
+export interface CemCompatibilityReport {
+  /** Total number of CEM components classified */
+  totalClassified: number;
+  /** Number of components classified as ssr-capable */
+  ssrCapableCount: number;
+  /** Number of components classified as client-only */
+  clientOnlyCount: number;
+  /** Number of components classified as rejected */
+  rejectedCount: number;
+  /** Number of components classified as experimental-dom */
+  experimentalDomCount: number;
+  /** All classifications, ordered by tier (rejected first, then ssr-capable, client-only) */
+  classifications: CompatibilityClassification[];
+  /** Human-readable summary for CI logs */
+  summary: string;
+}
 
 /**
  * Standard Custom Elements Manifest (CEM) schema types.

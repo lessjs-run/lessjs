@@ -19,6 +19,7 @@
 
 import type { Alias, Plugin, ResolvedConfig } from 'vite';
 import type {
+  CompatibilityClassification,
   FrameworkOptions,
   LessPackageManifest,
   LessPluginMeta,
@@ -59,6 +60,9 @@ export class Phase1Meta {
 
   /** SSR admission plan produced before SSR entry generation. */
   ssrAdmissionPlan: SsrAdmissionPlan | null = null;
+
+  /** v0.18.0: CEM-derived compatibility classifications from the classifier. */
+  cemClassifications: CompatibilityClassification[] = [];
 
   /** Whether the SSR+client build has completed */
   buildCompleted: boolean = false;
@@ -228,6 +232,7 @@ export class LessBuildContext {
     this.phase1.packageManifests = [];
     this.phase1.packageIslandDecls = [];
     this.phase1.ssrAdmissionPlan = null;
+    this.phase1.cemClassifications = [];
     this.phase1.buildCompleted = false;
     this.phase1.resolvedConfig = null;
     // NOTE: userResolveAlias is NOT reset — it's user configuration, not
