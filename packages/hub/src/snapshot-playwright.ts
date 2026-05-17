@@ -114,7 +114,18 @@ function generateFixtureHtml(options: PlaywrightRenderOptions): string {
     : `<${tagName}>${innerHtml}</${tagName}>`;
 
   // Theme CSS (e.g., Shoelace light.css variables)
-  const themeStyle = themeCss || '';
+  let themeStyle = themeCss || '';
+
+  // Auto-inject Shoelace theme CSS so component variables resolve
+  if (!themeStyle && importSpec.includes('@shoelace-style/shoelace')) {
+    try {
+      const cssPath =
+        'node_modules/.deno/@shoelace-style+shoelace@2.20.1/node_modules/@shoelace-style/shoelace/dist/themes/light.css';
+      themeStyle = Deno.readTextFileSync(cssPath);
+    } catch { /* theme CSS not available — skip */ }
+  }
+
+  const themeBlock = themeStyle ? `<style>${themeStyle}</style>` : '';
 
   return `<!DOCTYPE html>
 <html>
@@ -123,7 +134,7 @@ function generateFixtureHtml(options: PlaywrightRenderOptions): string {
   <script type="module">
     import '${esmUrl}';
   </script>
-  ${themeStyle ? `<style>${themeStyle}</style>` : ''}
+  ${themeBlock}
 </head>
 <body>
   ${componentTag}
@@ -313,9 +324,18 @@ async function renderSingleComponent(
     shadowHtml = sanitizeSnapshot(shadowHtml);
 
     // Wrap in snapshot container
-    const themeCss = options.themeCss || '';
+    let themeCss = options.themeCss || '';
+    // Auto-read Shoelace theme CSS so snapshot is self-contained
+    if (!themeCss && options.importSpec.includes('@shoelace-style/shoelace')) {
+      try {
+        const cssPath =
+          'node_modules/.deno/@shoelace-style+shoelace@2.20.1/node_modules/@shoelace-style/shoelace/dist/themes/light.css';
+        themeCss = Deno.readTextFileSync(cssPath);
+      } catch { /* theme CSS not available — skip */ }
+    }
+    const themeBlock = themeCss ? `<style>${themeCss}</style>` : '';
     const html =
-      `<div class="snapshot-preview">${themeCss}<${tagName}>${shadowHtml}</${tagName}></div>`;
+      `<div class="snapshot-preview">${themeBlock}<${tagName}>${shadowHtml}</${tagName}></div>`;
 
     return { html, success: true };
   } catch (err) {
