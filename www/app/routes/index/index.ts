@@ -683,6 +683,12 @@ export default class DocsHome extends LitElement {
       border-radius: 10px;
       padding: 1.25rem;
       min-width: 0;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+    }
+    .mfa-live-card > :last-child {
+      flex: 1;
     }
     .mfa-live-card h5 {
       margin: 0 0 10px;

@@ -67,13 +67,12 @@ export default class MediaChromeShowcase extends MediaChromeBase {
 
     return `
       <style>
-        :host { display: block; }
+        :host { display: block; height: 100%; }
         .mc-wrap {
           background: #000;
           border-radius: 8px;
           overflow: hidden;
           width: 100%;
-          max-width: 520px;
         }
         media-controller {
           width: 100%;
