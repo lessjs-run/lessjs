@@ -11,12 +11,9 @@
 
 export const less = { ssr: true, dsd: true, hydrate: 'eager' };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-class-definition
 export default class ParentWithClientChild {
   // Placeholder - in browser this would extend HTMLElement
   textContent: string | null = null;
-  shadowRoot: any = null;
-  innerHTML: string = '';
 
   render() {
     return `
@@ -27,8 +24,6 @@ export default class ParentWithClientChild {
       </div>
     `;
   }
-
-  connectedCallback?(): void;
 }
 
 export const tagName = 'parent-with-client-child';
