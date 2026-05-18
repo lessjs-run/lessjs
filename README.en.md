@@ -32,11 +32,13 @@ LessJS
     └── One-click install (less add)
 ```
 
-**Not an SSG framework** — SSG is one mode of the rendering engine. `renderDSD()` is rendering-timing-agnostic: the same engine works at build-time (SSG), cache-expiry-time (ISR), or request-time (SSR).
+**Not an SSG framework** — SSG is one mode of the rendering engine. `renderDSD()` is **architecturally** rendering-timing-agnostic: the same engine works at build-time (SSG), cache-expiry-time (ISR), or request-time (SSR). **Current implementation**: SSG only, ISR/SSR planned.
 
 ## Features
 
 ### Pillar 1: Full-Stack Framework
+
+> ⚠️ Early stage: routing, dev server, and API Routes are production-ready. Hydration strategies, ISR, and SSR are planned for v0.20.
 - **File-convention routing** — `app/routes/` auto-scan + Hono mounting
 - **API Routes** — `app/routes/api/*.ts` → Hono sub-app, serverless deployment
 - **Hono runtime** — Fetch API aligned, Deno / Node / Edge multi-runtime
@@ -128,7 +130,7 @@ node_modules/*/custom-elements.json → CEM Parser → 4-tier classifier → SSR
 | **Registry** | ✅ Built-in Hub | ❌ | ❌ | ❌ |
 | **Backend** | Hono + Serverless | Built-in | Oak | Built-in |
 
-**Core differentiation**: DSD zero-JS first paint + WC cross-framework rendering engine + Registry Hub. This is a browser-native capability — other frameworks cannot match it through engineering optimization.
+**Core differentiation**: LessJS makes DSD and Web Components the primary rendering contract, rather than an optimization layered on top of a framework-specific component model.
 
 ## Roadmap
 

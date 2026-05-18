@@ -66,6 +66,31 @@ export default class DocsRegistryHome extends LitElement {
         font-size: 0.9375rem;
       }
 
+      .badge-early-access {
+        display: inline-block;
+        font-size: 0.625rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.15em 0.5em;
+        border-radius: 4px;
+        background: var(--less-color-primary-50, #eff6ff);
+        color: var(--less-color-primary-600, #2563eb);
+        vertical-align: middle;
+        margin-left: 0.5rem;
+      }
+
+      .early-access-note {
+        margin-top: 0.5rem !important;
+        font-size: 0.8125rem !important;
+        font-style: italic;
+      }
+
+      .early-access-note a {
+        color: var(--less-color-primary-600, #2563eb);
+        text-decoration: underline;
+      }
+
       /* Controls */
       .controls {
         display: flex;
@@ -399,10 +424,14 @@ export default class DocsRegistryHome extends LitElement {
       >
         <div class="container">
           <div class="registry-header">
-            <h1>Registry Hub</h1>
+            <h1>Registry Hub <span class="badge-early-access">Early Access</span></h1>
             <p>
               Discover validated Web Component packages. Each package includes compatibility evidence,
               installation guidance, and snapshot previews.
+            </p>
+            <p class="early-access-note">
+              🚧 Currently indexing 3 packages. We're actively onboarding more Web Components libraries.
+              <a href="https://github.com/lessjs-run/lessjs/issues?q=label%3Ahub-submit">Submit your package →</a>
             </p>
           </div>
 

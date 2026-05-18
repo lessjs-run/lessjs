@@ -32,11 +32,13 @@ LessJS
     └── 一键安装（less add）
 ```
 
-**不是 SSG 框架** — SSG 只是渲染引擎的当前使用模式。`renderDSD()` 是渲染时机无关的：build-time (SSG)、cache-expiry-time (ISR)、request-time (SSR) 用的是同一套引擎。
+**不是 SSG 框架** — SSG 只是渲染引擎的当前使用模式。`renderDSD()` **架构上**是渲染时机无关的：build-time (SSG)、cache-expiry-time (ISR)、request-time (SSR) 用的是同一套引擎。**当前实现**: SSG only, ISR/SSR 计划中。
 
 ## 特性
 
 ### 支柱 1：全栈框架
+
+> ⚠️ 早期阶段：路由、开发服务器和 API Route 已可用。Hydration 策略、ISR 和 SSR 计划在 v0.20 实现。
 - **文件约定路由** — `app/routes/` 自动扫描 + Hono 挂载
 - **API Route** — `app/routes/api/*.ts` → Hono sub-app，Serverless 部署
 - **Hono 运行时** — Fetch API 对齐，Deno / Node / Edge 多运行时
@@ -128,7 +130,7 @@ node_modules/*/custom-elements.json → CEM Parser → 4级分类器 → SSR adm
 | **Registry** | ✅ Hub 内建 | ❌ | ❌ | ❌ |
 | **后端** | Hono + Serverless | 内置 | Oak | 内置 |
 
-**核心差异化**：DSD 零 JS 首屏 + WC 跨框架渲染引擎 + Registry Hub。浏览器原生能力，其他框架无法通过工程优化追平。
+**核心差异化**：LessJS 以 DSD 和 Web Components 作为首要渲染契约，而非在框架特定组件模型之上叠加优化。
 
 ## 路线图
 
