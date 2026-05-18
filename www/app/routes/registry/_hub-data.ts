@@ -11,6 +11,7 @@ export interface HubIndexEntry {
   source: string;
   safeToInstall: boolean;
   ssrCapable: boolean;
+  submittedAt: string;
 }
 
 export interface HubIndexData {
@@ -21,7 +22,7 @@ export interface HubIndexData {
 
 const _data: HubIndexData = {
   schema: "hub-index-v1",
-  updatedAt: "2026-05-17T17:37:05.915Z",
+  updatedAt: "2026-05-18T03:46:27.945Z",
   packages: [
   {
     "name": "ui",
@@ -41,7 +42,8 @@ const _data: HubIndexData = {
     ],
     "source": "local",
     "safeToInstall": true,
-    "ssrCapable": true
+    "ssrCapable": true,
+    "submittedAt": "2026-05-18T03:45:39.709Z"
   },
   {
     "name": "shoelace",
@@ -92,7 +94,8 @@ const _data: HubIndexData = {
     ],
     "source": "npm",
     "safeToInstall": true,
-    "ssrCapable": false
+    "ssrCapable": false,
+    "submittedAt": "2026-05-18T03:46:27.902Z"
   },
   {
     "name": "media-chrome",
@@ -110,7 +113,8 @@ const _data: HubIndexData = {
     ],
     "source": "npm",
     "safeToInstall": true,
-    "ssrCapable": false
+    "ssrCapable": false,
+    "submittedAt": "2026-05-18T03:46:27.911Z"
   }
 ],
 };

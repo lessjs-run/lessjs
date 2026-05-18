@@ -80,7 +80,7 @@ export const DEMO_SLOTS: Record<string, string> = {
   'sl-menu': '<sl-menu-item>Item 1</sl-menu-item><sl-menu-item>Item 2</sl-menu-item>',
   'sl-menu-item': 'Menu Item',
   'sl-tab-group':
-    '<sl-tab slot="nav" panel="a">Tab A</sl-tab><sl-tab slot="nav" panel="b">Tab B</sl-tab><sl-tab-panel name="a">Panel A</sl-tab-panel><sl-tab-panel name="b">Panel B</sl-tab-panel>',
+    '<sl-tab slot="nav" panel="a">Tab A</sl-tab> <sl-tab slot="nav" panel="b">Tab B</sl-tab><sl-tab-panel name="a">Panel A</sl-tab-panel> <sl-tab-panel name="b">Panel B</sl-tab-panel>',
   'sl-tree': '<sl-tree-item expanded>Branch<sl-tree-item>Leaf</sl-tree-item></sl-tree-item>',
   'sl-tree-item': 'Tree Item',
 };

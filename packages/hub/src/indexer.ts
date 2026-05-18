@@ -29,6 +29,7 @@ export function buildIndex(records: HubPackageRecord[]): HubIndex {
     source: r.source,
     safeToInstall: r.installGuidance.safeToInstall,
     ssrCapable: r.installGuidance.ssrCapable,
+    submittedAt: r.submittedAt,
   }));
 
   return {

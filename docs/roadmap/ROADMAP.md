@@ -23,7 +23,7 @@ is generated.
 | 2     | v0.16.x | WC Package Protocol   | Manifest + local registry                                      | Done    |
 | 3     | v0.17.x | Ecosystem Entry       | Manifest-native pipeline, filtering, multi-adapter boundary    | Done    |
 | 4     | v0.18.x | Universal WC Engine   | CEM parser, compatibility tiers, validation CLI, safe add flow | Done    |
-| 5     | v0.19.x | Registry Hub MVP      | Searchable validated package index with reports and snapshots  | Active  |
+| 5     | v0.19.x | Registry Hub MVP      | Searchable validated package index with reports and snapshots  | Done    |
 | 6     | v0.20.x | Full-Stack Groundwork | Hono API Route, request-time SSR, Supabase integration         | Planned |
 | 7     | v0.21.x | Full-Stack Framework  | Vue adapter, Signals rendering, ISR/DPR, edge runtime          | Vision  |
 | 8     | v1.0.x  | Stable Engine         | API freeze and deterministic package admission guarantees      | Vision  |
@@ -118,7 +118,7 @@ Primary validation targets:
 Goal: move from local registry to a public, searchable registry index with a
 complete discovery-to-usage workflow.
 
-### v0.19.0 — Hub MVP + Component Browser (Active)
+### v0.19.0 — Hub MVP + Component Browser (Complete)
 
 Phase 1 — Hub MVP (Completed 2026-05-17):
 
@@ -130,22 +130,20 @@ Phase 1 — Hub MVP (Completed 2026-05-17):
 - `less hub submit` CLI submission pipeline
 - GitHub Actions CI gate for incoming submissions
 
-Phase 2 — Component Browser + Usage Workflow (In Progress):
+Phase 2 — Component Browser + Usage Workflow (Completed 2026-05-18):
 
-Goal: close the gap between "finding a package" and "using a component."
+- `less add <package>` CLI implementation
+- Component detail pages with rendered previews, API reference, usage snippets
+- SSR snapshot generation (Playwright for npm packages, Lit renderer for @lessjs/ui)
+- Enhanced package list with SSR/client breakdown and "New" badge
+- Component drill-down navigation links
 
-Scope:
+Phase 3 — Real Browser Snapshot Rendering (Completed 2026-05-18):
 
-- `less add <package>` CLI implementation (from v0.18.2 SOP spec)
-- Component detail pages: `/registry/:package/:component` with rendered previews
-- Usage example code snippets on package and component detail pages
-- SSR snapshot generation for per-component previews during `hub:scan`
-- Component-level API reference from CEM manifest (attributes, events, slots)
-- Enhanced package list with badges, metrics, and sort options
-- Component → Component drill-down navigation links
-
-See [ADR-0031](../adr/0031-hub-v2-component-browser-workflow.md) for full
-architecture.
+- Replaced happy-dom with Playwright for client-only component snapshots (ADR-0032)
+- 52/53 components render via Playwright (was 49/53 with happy-dom)
+- `renderSnapshotLit()` retained for SSR-capable @lessjs/ui components
+- XSS sanitizer, slot whitespace fix, `--skip-snapshots` flag
 
 ### Deferred until after v0.19.x
 

@@ -151,6 +151,7 @@ export interface HubIndexEntry {
   source: 'jsr' | 'npm' | 'local';
   safeToInstall: boolean;
   ssrCapable: boolean;
+  submittedAt: string; // ISO 8601 — for "New" badge (< 7 days)
 }
 
 /** Full search index, regenerated on each merge */

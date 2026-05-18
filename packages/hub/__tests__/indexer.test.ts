@@ -26,6 +26,7 @@ function entry(
     source: 'npm' as const,
     safeToInstall: compat !== 'rejected',
     ssrCapable: ssr,
+    submittedAt: '2026-05-17T00:00:00.000Z',
   };
 }
 

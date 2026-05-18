@@ -263,12 +263,17 @@ async function renderSingleComponent(
       const slotMap: Record<string, string> = {};
       for (const child of el.childNodes) {
         if (child.nodeType === 1) {
-          // Element node
+          // Element node — append to its assigned slot.
+          // Insert a space between consecutive elements in the same slot
+          // so inline siblings (e.g. <sl-tab>) don't render squished together.
           const slotName = (child as Element).getAttribute('slot') || 'default';
           const existing = slotMap[slotName] || '';
-          slotMap[slotName] = existing + (child as Element).outerHTML;
+          const separator = existing ? ' ' : '';
+          slotMap[slotName] = existing + separator + (child as Element).outerHTML;
         } else if (child.nodeType === 3) {
-          // Text node
+          // Text node — only non-empty text goes to the default slot.
+          // Whitespace-only nodes are intentionally dropped to avoid polluting
+          // named-slot content (they belong to the default slot per spec).
           const text = child.textContent?.trim();
           if (text) {
             const existing = slotMap['default'] || '';

@@ -148,6 +148,7 @@ Deno.test('validateHubIndex: valid index passes', () => {
         source: 'npm',
         safeToInstall: true,
         ssrCapable: false,
+        submittedAt: '2026-05-17T00:00:00.000Z',
       },
     ],
   };

@@ -2,7 +2,7 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version: 0.19.0 (In Progress — Audit Remediation)
+## Current Version: 0.19.0 (Complete — Phase 1/2/3 All Done)
 
 ## Next Planned Version: 0.19.0 (Component Browser + Usage Workflow)
 
@@ -14,7 +14,7 @@ Hub CI pipeline (Deno-based validator + index drift checker).
 Registry UI (www) with static SSG pages for all packages.
 CLI submission pipeline: `--dry-run` (default) + `--submit` (PR mode).
 
-### v0.19.0 — Component Browser + Full-Stack Usage Workflow (Phase 2: In Progress — Audit Remediation)
+### v0.19.0 — Component Browser + Full-Stack Usage Workflow (Phase 2: Complete)
 
 **Goal**: Transform the Hub from a "package list" into a complete discovery →
 evaluation → installation → usage pipeline.
@@ -113,7 +113,7 @@ Third-party package handling is conservative:
 | v0.18.3 | `docs/sop/v0.18.3-dom-simulation-experiment.md`        | Done                 | client-only fallback stable                                          | opt-in DOM simulation decision recorded                   |
 | v0.19.0 | `docs/sop/v0.19.0-platform-hub.md`                     | **Done**             | validation/build reports stable + ADR-0030 accepted                  | Hub ingests artifacts, CLI submit pipeline, search UI     |
 | v0.19.0 | `docs/sop/v0.19.0-platform-hub.md`                     | **Done (Phase 1)**   | validation/build reports stable + ADR-0030 accepted                  | Hub ingests artifacts, CLI submit pipeline, search UI     |
-| v0.19.0 | `docs/sop/v0.19.0-component-browser.md`                | **Active (Phase 2)** | v0.19.0 Phase 1 deployed + fixture packages indexed                  | Component drill-down, rendered previews, `less add` CLI   |
+| v0.19.0 | `docs/sop/v0.19.0-component-browser.md`                | **Done**           | v0.19.0 Phase 1 deployed + fixture packages indexed                  | Component drill-down, rendered previews, `less add` CLI   |
 | v1.0.0  | `docs/sop/v1.0.0-general-purpose-engine.md`            | Vision               | engine, reports, add flow, Hub records stable                        | API/schema freeze with deterministic package outcomes     |
 
 ## Operator Checklist

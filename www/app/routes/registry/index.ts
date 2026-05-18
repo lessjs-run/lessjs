@@ -261,6 +261,41 @@ export default class DocsRegistryHome extends LitElement {
         color: #ef4444;
       }
 
+      .new-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.625rem;
+        font-weight: 600;
+        padding: 0.0625rem 0.375rem;
+        border-radius: 6px;
+        background: rgba(99, 102, 241, 0.1);
+        color: #6366f1;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+      }
+
+      .component-breakdown {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.6875rem;
+        color: var(--less-text-tertiary);
+      }
+
+      .breakdown-segment {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      .breakdown-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
       .empty-state {
         text-align: center;
         padding: 3rem 1rem;
@@ -441,7 +476,18 @@ export default class DocsRegistryHome extends LitElement {
                   const fullName = pkg.scope ? `${pkg.scope}/${pkg.name}` : pkg.name;
                   const compatLabel = COMPAT_LABELS[pkg.compatibility] || pkg.compatibility;
                   const compatColor = COMPAT_COLORS[pkg.compatibility] || '#888';
-                  const ssrIcon = pkg.ssrCapable ? '🖥️' : '🌐';
+
+                  // "New" badge: submitted within 7 days
+                  const submittedDate = new Date(pkg.submittedAt);
+                  const daysSinceSubmit = (Date.now() - submittedDate.getTime()) /
+                    (1000 * 60 * 60 * 24);
+                  const isNew = daysSinceSubmit < 7;
+
+                  // SSR vs client component breakdown
+                  const totalTags = pkg.tags.length;
+                  const ssrCount = pkg.ssrCapable ? totalTags : 0;
+                  const clientCount = totalTags - ssrCount;
+
                   return html`
                     <a class="package-card" href="${this._packageLink(pkg)}" data-compat="${pkg
                       .compatibility}">
@@ -449,6 +495,11 @@ export default class DocsRegistryHome extends LitElement {
                         <div class="package-name">
                           <code>${fullName}</code>
                           <span class="package-version">v${pkg.version}</span>
+                          ${isNew
+                            ? html`
+                              <span class="new-badge">New</span>
+                            `
+                            : ''}
                         </div>
                         <div class="package-desc">${pkg.description || 'No description'}</div>
                         <div class="package-meta">
@@ -461,12 +512,21 @@ export default class DocsRegistryHome extends LitElement {
                             : 'install-unsafe'}">
                             ${pkg.safeToInstall ? '✅ Safe install' : '❌ Not installable'}
                           </span>
-                          <span class="tag-pill">${pkg.tags.length} tag${pkg.tags.length !== 1
-                            ? 's'
-                            : ''}</span>
-                          <span class="tag-pill">${ssrIcon} ${pkg.ssrCapable
-                            ? 'SSR'
-                            : 'client'}</span>
+                          <span class="component-breakdown">
+                            ${ssrCount > 0
+                              ? html`
+                                <span class="breakdown-segment">
+                                  <span class="breakdown-dot" style="background:#22c55e"></span>${ssrCount} SSR
+                                </span>
+                              `
+                              : ''} ${clientCount > 0
+                              ? html`
+                                <span class="breakdown-segment">
+                                  <span class="breakdown-dot" style="background:#f59e0b"></span>${clientCount} client
+                                </span>
+                              `
+                              : ''}
+                          </span>
                         </div>
                       </div>
                     </a>

@@ -1,6 +1,6 @@
 {
   "schema": "hub-index-v1",
-  "updatedAt": "2026-05-17T17:37:05.889Z",
+  "updatedAt": "2026-05-18T03:46:27.915Z",
   "packages": [
     {
       "name": "ui",
@@ -20,7 +20,8 @@
       ],
       "source": "local",
       "safeToInstall": true,
-      "ssrCapable": true
+      "ssrCapable": true,
+      "submittedAt": "2026-05-18T03:45:39.709Z"
     },
     {
       "name": "shoelace",
@@ -71,7 +72,8 @@
       ],
       "source": "npm",
       "safeToInstall": true,
-      "ssrCapable": false
+      "ssrCapable": false,
+      "submittedAt": "2026-05-18T03:46:27.902Z"
     },
     {
       "name": "media-chrome",
@@ -89,7 +91,8 @@
       ],
       "source": "npm",
       "safeToInstall": true,
-      "ssrCapable": false
+      "ssrCapable": false,
+      "submittedAt": "2026-05-18T03:46:27.911Z"
     }
   ]
 }
