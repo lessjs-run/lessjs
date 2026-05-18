@@ -53,7 +53,7 @@ LessJS
 - **Universal WC Engine** — auto-detect third-party WC packages, 4-tier compatibility classification
 - **Renderer Protocol** — structured render output, error taxonomy, DSD metrics
 
-### Pillar 3: Registry Hub
+### Pillar 3: Registry Hub (Early Access)
 
 - **Package search + filtering** — discover compatible Web Component libraries
 - **Compatibility validation + reporting** — check SSR capability before installing

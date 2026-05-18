@@ -103,8 +103,8 @@ Web Standards First, Deno Second
 > 以 Web Components 为一等公民的全栈开发平台。
 
 **不是SSG框架**。SSG只是渲染引擎的当前使用方式，不是框架身份。
-`renderDSD()` 是渲染时机无关的——build-time (SSG) / ISR / request-time (SSR)
-用的是同一套引擎。
+`renderDSD()` **架构上**是渲染时机无关的——build-time (SSG) / ISR / request-time (SSR)
+用的是同一套引擎。**当前实现**: SSG only, ISR/SSR 计划中。
 
 ### 架构模型：SSG Islands（Build-Time SSR）
 

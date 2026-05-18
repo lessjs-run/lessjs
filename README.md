@@ -53,7 +53,7 @@ LessJS
 - **Universal WC Engine** — 自动检测第三方 Web Component，4 级兼容性分类
 - **Renderer Protocol** — 结构化渲染输出 + 错误分类 + DSD 指标
 
-### 支柱 3：Registry Hub
+### 支柱 3：Registry Hub（Early Access）
 
 - **包搜索 + 过滤** — 发现兼容的 Web Component 库
 - **兼容性验证 + 报告** — 安装前检查 SSR 能力

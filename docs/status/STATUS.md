@@ -66,8 +66,7 @@ average. Key deductions for Pillar 1 (Full-Stack Framework):
 
 Pillar 3 (Registry Hub) reduced from 65% to 55%: 3 packages do not yet
 constitute an ecosystem-grade registry. Core pipeline is solid, but
-content scale and CLI availability (`less add` not exported) lower the
-practical score.
+content scale lower the practical score (CLI exports now available).
 
 ## Next Planned Version: 0.20.x (Hydration Strategies + Full-Stack Groundwork)
 
@@ -166,14 +165,19 @@ See [ADR-0031](../adr/0031-hub-v2-component-browser-workflow.md) for architectur
   access DOM APIs (`querySelector`, layout properties) during SSR. These are
   expected failures — the components are not SSR-admission-approved. See
   Phase 6 SSR admission hardening for remediation.
+  Gate currently passes at threshold Infinity (report-only mode).
+  v0.19.x will tighten to non-recoverable ≤ 6 (current count).
+  v0.20 will tighten to ≤ 10 total. v0.21 will target 0 unknown errors.
+- Hub snapshots depend on esm.sh CDN with hard-coded package versions.
+  Snapshots are not hermetic — results may vary by CDN availability.
+  See ADR-0034 for hermetic migration plan (Proposed).
 - `deno fmt --check` may emit a Rust panic message but exits with code 0.
   This is a Deno CLI bug, not a project issue. Formatting is verified correct.
-- `@lessjs/hub` does not yet export `./cli/less-add`, `./cli/validate`,
-  `./cli/check-index` via `deno.json` exports. These CLIs exist in source
-  but are not available as JSR subpath imports. Fix tracked in Phase C.
-- `hub:check-index` currently writes `hub-index/index.json` when drift is
-  detected. Should be split into read-only check and explicit update.
-  Fix tracked in Phase C.
+- `@lessjs/hub` CLI subpath exports (`./cli/less-add`, `./cli/validate`,
+  `./cli/check-index`) are now available via `deno.json` exports. ✅ Fixed in
+  audit remediation Phase C.
+- `hub:check-index` is now read-only (exits 1 on drift, no write). Use
+  `deno task hub:index:update` for explicit write. ✅ Fixed in Phase C.
 
 ## Active Rule
 

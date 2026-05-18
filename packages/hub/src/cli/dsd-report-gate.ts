@@ -10,9 +10,16 @@
  * 2. New error types not in the allowlist cause a warning
  *
  * Thresholds will be tightened progressively:
- * - v0.19.x: No fail (report only)
+ * - v0.19.x: No fail (report only, current: 6 non-recoverable from sl-input)
  * - v0.20.0: non-recoverable errors ≤ 10
  * - v0.21.0: non-recoverable errors = 0
+ *
+ * NOTE: Current threshold is Infinity (report-only mode).
+ * This gate classifies errors but does not fail the build.
+ * Tightening schedule:
+ *   v0.19.x → non-recoverable ≤ 6 (no new non-recoverable errors)
+ *   v0.20   → total errors ≤ 10
+ *   v0.21   → 0 unknown errors
  */
 
 interface RenderError {
