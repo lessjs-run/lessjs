@@ -129,14 +129,10 @@ export default defineConfig({
         nav: {
           routesDir: 'app/routes',
           headerNav: [
-            { href: '/guide/positioning', label: 'Docs' },
-            { href: '/guide/architecture', label: 'Architecture' },
-            { href: '/registry', label: 'Registry' },
+            { href: '/guide/positioning', label: 'Framework' },
+            { href: '/engine/architecture', label: 'Engine' },
+            { href: '/registry', label: 'RegistryHub' },
             { href: '/blog', label: 'Blog' },
-            { href: '/ui', label: 'UI' },
-            { href: '/roadmap', label: 'Roadmap' },
-            { href: '/community', label: 'Community' },
-            { href: 'https://jsr.io/@lessjs/core', label: 'JSR' },
           ],
         },
         sitemap: {

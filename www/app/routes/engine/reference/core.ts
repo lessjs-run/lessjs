@@ -6,13 +6,14 @@
  */
 
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterEngineNav } from '../../../utils/nav-filter.ts';
 import { css, html, LitElement } from 'lit';
-import { pageStyles } from '../../components/page-styles.js';
+import { pageStyles } from '../../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 
 export const tagName = 'api-core-page';
 
-export const meta = { section: 'Packages', label: 'API Reference', order: 5 };
+export const meta = { section: 'Reference', label: 'API Reference', order: 5 };
 
 export default class ApiCorePage extends LitElement {
   declare locale?: string;
@@ -62,8 +63,9 @@ export default class ApiCorePage extends LitElement {
       <less-layout
         locale="${this.locale || 'zh'}"
         .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
+        .navItems="${filterEngineNav(navSections)}"
         .headerNav="${headerNav}"
+        current-path="/engine/reference/core"
       >
         <div class="container">
           <h1>API Reference</h1>
@@ -102,7 +104,7 @@ export default class ApiCorePage extends LitElement {
 
             <div class="fn-name">escapeHtml() / escapeAttr() / escapeAttrValue()</div>
             <div class="fn-sig">
-              escapeHtml(str): string — escapeAttrValue(value): string — escapeAttr(value): string
+              escapeHtml(str): string — escapeAttrValue(value): string — escapeAttr(attr): string
             </div>
             <div class="fn-desc">
               HTML/attribute escaping with SafeHtml/UnsafeHtml branded types for double-escape prevention.

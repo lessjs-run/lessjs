@@ -1,5 +1,6 @@
 export const meta = { section: 'Production', label: 'Deployment', order: 50 };
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -10,7 +11,7 @@ export class DeploymentPage extends LitElement {
 
   override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/guide/deployment"><div class="container">
+  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/deployment"><div class="container">
     <h1>部署</h1>
     <p class="subtitle">LessJS 优先部署静态文件。运行时 API 路由在应用需要动态行为时，通过 serverless 或 edge adapter 单独部署。</p>
     <h2>Build Once</h2>
@@ -38,7 +39,7 @@ export class DeploymentPage extends LitElement {
     <div class="nav-row"><a href="/guide/testing" class="nav-link">&larr; 测试</a><a href="/roadmap" class="nav-link">开发计划 &rarr;</a></div>
   </div></less-layout>`; }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/guide/deployment"><div class="container">
+  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/deployment"><div class="container">
     <h1>Deployment</h1>
     <p class="subtitle">LessJS prioritizes static file deployment. Runtime API routes are deployed separately via serverless or edge adapters when the app needs dynamic behavior.</p>
     <h2>Build Once</h2>

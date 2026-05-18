@@ -3,7 +3,7 @@
  *
  * Displays all ADRs (posts with type === 'adr') in a card layout.
  */
-export const meta = { section: 'Roadmap & Decisions', label: 'Architecture Decisions', order: 20 };
+export const meta = { section: '', label: 'Architecture Decisions', order: 20 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
@@ -105,7 +105,7 @@ export class DecisionsIndexPage extends LitElement {
             )}
           </div>
           <div class="nav-row">
-            <a href="/guide/content-system" class="nav-link">&larr; Content System</a>
+            <a href="/engine/content-system" class="nav-link">&larr; Content System</a>
             <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
           </div>
         </div>

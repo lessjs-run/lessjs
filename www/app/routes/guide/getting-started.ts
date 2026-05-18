@@ -1,6 +1,7 @@
 // deno-fmt-ignore-file
-export const meta = { section: 'Start Here', label: 'Getting Started', order: 20 };
+export const meta = { section: 'Quick Start', label: 'Getting Started', order: 20 };
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -38,7 +39,7 @@ export class GettingStartedPage extends LitElement {
 
   private _renderZh() {
     return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/guide/getting-started">
+      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/getting-started">
         <div class="container">
           <h1>快速开始</h1>
           <p class="subtitle">
@@ -127,14 +128,14 @@ export const tagName = 'page-home';</code></pre></less-code-block>
 
           <div class="note">
             <p>
-              下一步建议先读 <a href="/guide/architecture">架构</a>， 再读 <a href="/guide/routing">路由</a>、<a href="/guide/ssg">渲染与 SSG</a>
-              和 <a href="/guide/islands">Island Upgrade</a>。
+              下一步建议先读 <a href="/engine/architecture">架构</a>， 再读 <a href="/guide/routing">路由</a>、<a href="/guide/ssg">渲染与 SSG</a>
+              和 <a href="/engine/islands">Island Upgrade</a>。
             </p>
           </div>
 
           <div class="nav-row">
             <a href="/guide/positioning" class="nav-link">&larr; 框架定位</a>
-            <a href="/guide/architecture" class="nav-link">设计哲学 &rarr;</a>
+            <a href="/engine/architecture" class="nav-link">设计哲学 &rarr;</a>
           </div>
         </div>
       </less-layout>
@@ -143,7 +144,7 @@ export const tagName = 'page-home';</code></pre></less-code-block>
 
   private _renderEn() {
     return html`
-      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/guide/getting-started">
+      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/getting-started">
         <div class="container">
           <h1>Getting Started</h1>
           <p class="subtitle">
@@ -239,16 +240,16 @@ export const tagName = 'page-home';</code></pre></less-code-block>
 
           <div class="note">
             <p>
-              Next steps: <a href="/guide/architecture">Architecture</a>,
+              Next steps: <a href="/engine/architecture">Architecture</a>,
               <a href="/guide/routing">Routing</a>,
               <a href="/guide/ssg">Rendering &amp; SSG</a>, and
-              <a href="/guide/islands">Island Upgrade</a>.
+              <a href="/engine/islands">Island Upgrade</a>.
             </p>
           </div>
 
           <div class="nav-row">
             <a href="/guide/positioning" class="nav-link">&larr; Framework Positioning</a>
-            <a href="/guide/architecture" class="nav-link">Design Philosophy &rarr;</a>
+            <a href="/engine/architecture" class="nav-link">Design Philosophy &rarr;</a>
           </div>
         </div>
       </less-layout>

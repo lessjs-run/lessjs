@@ -1,5 +1,6 @@
-export const meta = { section: 'Core Model', label: 'API Routes', order: 60 };
+export const meta = { section: 'Core', label: 'API Routes', order: 60 };
 import { navSections, headerNav } from 'virtual:less-nav';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -9,7 +10,7 @@ export class ApiPage extends LitElement {
   static override styles = [pageStyles, css`.principle { padding: 1rem 1.25rem; background: var(--less-bg-surface); border-left: 2px solid var(--less-border-hover); border-radius: 0 4px 4px 0; margin: 1rem 0; }`];
   override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/guide/api"><div class="container">
+  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/api"><div class="container">
     <h1>API Routes</h1>
     <p class="subtitle">LessJS 的服务端层是 Hono。API routes 使用标准 Request/Response 语义，适合部署到 serverless 或 edge runtime。</p>
     <h2>Design Principles</h2>
@@ -23,7 +24,7 @@ export class ApiPage extends LitElement {
     <div class="nav-row"><a href="/guide/rpc" class="nav-link">&larr; RPC 远程调用</a><a href="/guide/configuration" class="nav-link">Configuration &rarr;</a></div>
   </div></less-layout>`; }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/guide/api"><div class="container">
+  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/api"><div class="container">
     <h1>API Routes</h1>
     <p class="subtitle">LessJS's server layer is Hono. API routes use standard Request/Response semantics and are suitable for serverless or edge runtime deployment.</p>
     <h2>Design Principles</h2>

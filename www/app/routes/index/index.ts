@@ -832,9 +832,9 @@ export default class DocsHome extends LitElement {
               </svg>
               <span>LessJS</span>
             </div>
-            <h1>html <em>先于</em> javascript 存在。</h1>
+            <h1>全栈框架 <em>+</em> WC 渲染引擎 <em>+</em> Registry Hub</h1>
             <p class="hero-desc">
-              SSG 产出的 Declarative Shadow DOM。Island 架构只对交互组件下发 JS。默认交付物是静态文件。
+              Declarative Shadow DOM 零 JS 首屏。Island 架构按需升级交互。Hono API Route 提供后端能力。Registry Hub 一键发现安装 WC 组件。SSG / ISR / SSR 同一套渲染引擎。
             </p>
             <div class="hero-actions">
               <a class="hero-pri" href="/guide/getting-started">开始使用 →</a>
@@ -842,9 +842,9 @@ export default class DocsHome extends LitElement {
             </div>
             <less-term-demo></less-term-demo>
             <div class="stats">
-              <div class="stat"><strong>v0.18.3</strong><span>最新版本</span></div>
+              <div class="stat"><strong>v0.19.0</strong><span>最新版本</span></div>
               <div class="stat"><strong>681</strong><span>测试通过</span></div>
-              <div class="stat"><strong>12</strong><span>个包</span></div>
+              <div class="stat"><strong>13</strong><span>个包</span></div>
               <div class="stat"><strong>1</strong><span>运行时依赖 (core)</span></div>
             </div>
           </div>
@@ -875,25 +875,23 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">核心模型</div>
+          <div class="sec-lbl">三支柱</div>
           <div class="sec-bd">
             <div class="cards">
               <div class="card">
+                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">F</div>
+                <h3>全栈框架</h3>
+                <p>文件约定路由 + Hono API Route + Serverless 部署。SSG/ISR/SSR 同一套渲染引擎，按需选择渲染时机。</p>
+              </div>
+              <div class="card">
                 <div class="card-icon" style="background:#EEEDFE;color:#534AB7;">D</div>
-                <h3>DSD 渲染</h3>
-                <p>Declarative Shadow DOM 是标准 HTML。浏览器原生解析，首屏无需 JS 框架参与。</p>
+                <h3>WC 渲染引擎</h3>
+                <p>Declarative Shadow DOM 零 JS 首屏。Lit/React/Vanilla 多框架适配器共存。渲染时机无关——build-time、ISR、request-time 同一套引擎。</p>
               </div>
               <div class="card">
-                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">I</div>
-                <h3>Island 升级</h3>
-                <p>只有交互组件下发 JS。四种加载策略。静态内容零 JS 开销。</p>
-              </div>
-              <div class="card">
-                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">S</div>
-                <h3>静态部署</h3>
-                <p>
-                  构建产物为纯 HTML。部署到任意 CDN、S3、Cloudflare Pages、GitHub Pages，无需运行服务器。
-                </p>
+                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">I</div>
+                <h3>Registry Hub</h3>
+                <p>Web Component 发现、兼容性验证、一键安装。Playwright 渲染真实组件预览。安装即渲染，验证即分层。</p>
               </div>
             </div>
           </div>
@@ -936,52 +934,51 @@ export default class DocsHome extends LitElement {
                   <tr>
                     <th style="width:140px;">指标</th>
                     <th style="width:100px;">LessJS</th>
-                    <th>Next.js (App)</th>
+                    <th>Fresh</th>
                     <th>Astro</th>
+                    <th>Next.js</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>默认输出</td>
-                    <td class="win">静态 HTML</td>
-                    <td class="lose">需服务器</td>
-                    <td class="win">静态 HTML</td>
+                    <td>定位</td>
+                    <td class="win">全栈+引擎+Hub</td>
+                    <td>全栈 (Preact)</td>
+                    <td>全栈 (多框架)</td>
+                    <td>全栈 (React)</td>
                   </tr>
                   <tr>
                     <td>首屏 JS</td>
                     <td class="win">0 KB</td>
-                    <td class="lose">~90 KB React</td>
+                    <td class="lose">~23 KB</td>
                     <td class="win">0 KB</td>
+                    <td class="lose">~90 KB</td>
                   </tr>
                   <tr>
-                    <td>组件模型</td>
-                    <td class="win">Web 标准</td>
-                    <td>React</td>
+                    <td>WC 原生</td>
+                    <td class="win">DSD 一等公民</td>
+                    <td>Preact-only</td>
+                    <td>当普通元素</td>
+                    <td>❌</td>
+                  </tr>
+                  <tr>
+                    <td>跨框架</td>
+                    <td class="win">Lit/React/Vanilla</td>
+                    <td>Preact</td>
                     <td>任意框架</td>
+                    <td>React</td>
                   </tr>
                   <tr>
-                    <td>服务端运行时</td>
-                    <td class="win">Deno、Node、Edge</td>
-                    <td>仅 Node</td>
-                    <td>仅 Node</td>
-                  </tr>
-                  <tr>
-                    <td>SSG 渲染</td>
-                    <td class="win">Declarative Shadow DOM</td>
-                    <td>HTML + JSON (RSC)</td>
-                    <td>HTML (无 DSD)</td>
-                  </tr>
-                  <tr>
-                    <td>交互模型</td>
-                    <td class="win">Island 升级</td>
-                    <td class="lose">整页 Hydration</td>
-                    <td class="win">Island</td>
+                    <td>Registry</td>
+                    <td class="win">内建 Hub</td>
+                    <td>❌</td>
+                    <td>❌</td>
+                    <td>❌</td>
                   </tr>
                 </tbody>
               </table>
               <div class="bench-foot">
-                LessJS 理念上最接近 Astro，但使用 Lit + DSD 作为组件模型而非元框架模式。关键差异是原生 DSD
-                —— 内容在 JS 运行前就是结构化 HTML。
+                LessJS 的核心差异：DSD 零 JS 首屏 + WC 跨框架渲染引擎 + Registry Hub。这是浏览器原生能力，其他框架无法通过工程优化追平。
               </div>
             </div>
           </div>
@@ -1184,10 +1181,10 @@ export default class DocsHome extends LitElement {
               </svg>
               <span>LessJS</span>
             </div>
-            <h1>html <em>before</em> javascript.</h1>
+            <h1>full-stack <em>+</em> wc engine <em>+</em> registry hub</h1>
             <p class="hero-desc">
-              SSG-rendered declarative shadow dom. Island-only js. Hono api routes. Everything compiles to
-              static html and ships to a cdn.
+              Declarative Shadow DOM zero-JS first paint. Island architecture for on-demand interactivity.
+              Hono API routes for backend. Registry Hub for one-click WC discovery. SSG/ISR/SSR — same rendering engine.
             </p>
             <div class="hero-actions">
               <a class="hero-pri" href="/guide/getting-started">get started →</a>
@@ -1195,9 +1192,9 @@ export default class DocsHome extends LitElement {
             </div>
             <less-term-demo></less-term-demo>
             <div class="stats">
-              <div class="stat"><strong>v0.18.3</strong><span>latest release</span></div>
+              <div class="stat"><strong>v0.19.0</strong><span>latest release</span></div>
               <div class="stat"><strong>681</strong><span>tests passing</span></div>
-              <div class="stat"><strong>12</strong><span>packages</span></div>
+              <div class="stat"><strong>13</strong><span>packages</span></div>
               <div class="stat"><strong>1</strong><span>runtime dep (core)</span></div>
             </div>
           </div>
@@ -1228,31 +1225,23 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">core model</div>
+          <div class="sec-lbl">three pillars</div>
           <div class="sec-bd">
             <div class="cards">
               <div class="card">
+                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">F</div>
+                <h3>full-stack framework</h3>
+                <p>File-convention routing + Hono API routes + serverless deploy. SSG/ISR/SSR — same rendering engine, choose your timing.</p>
+              </div>
+              <div class="card">
                 <div class="card-icon" style="background:#EEEDFE;color:#534AB7;">D</div>
-                <h3>dsd rendering</h3>
-                <p>
-                  Declarative shadow dom is standard html. Browsers parse it natively — no js framework
-                  needed for first paint.
-                </p>
+                <h3>wc rendering engine</h3>
+                <p>Declarative Shadow DOM zero-JS first paint. Lit/React/Vanilla adapters coexist. Rendering-timing-agnostic — build-time, ISR, request-time, same engine.</p>
               </div>
               <div class="card">
-                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">I</div>
-                <h3>island upgrade</h3>
-                <p>
-                  Only interactive components ship js. Four loading strategies. Static content is zero-js.
-                </p>
-              </div>
-              <div class="card">
-                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">S</div>
-                <h3>static deploy</h3>
-                <p>
-                  Build emits plain html. Deploy to any cdn, s3, cloudflare pages, github pages — no
-                  server to run.
-                </p>
+                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">I</div>
+                <h3>registry hub</h3>
+                <p>Web Component discovery, compatibility validation, one-click install. Playwright-rendered real component previews. Install-to-render, validate-to-tier.</p>
               </div>
             </div>
           </div>
@@ -1295,52 +1284,52 @@ export default class DocsHome extends LitElement {
                   <tr>
                     <th style="width:140px;">metric</th>
                     <th style="width:100px;">lessjs</th>
-                    <th>next.js (app)</th>
+                    <th>fresh</th>
                     <th>astro</th>
+                    <th>next.js</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>default output</td>
-                    <td class="win">static html</td>
-                    <td class="lose">server required</td>
-                    <td class="win">static html</td>
+                    <td>positioning</td>
+                    <td class="win">full-stack+engine+hub</td>
+                    <td>full-stack (preact)</td>
+                    <td>full-stack (multi)</td>
+                    <td>full-stack (react)</td>
                   </tr>
                   <tr>
                     <td>js at first paint</td>
                     <td class="win">0 kb</td>
-                    <td class="lose">~90 kb react</td>
+                    <td class="lose">~23 kb</td>
                     <td class="win">0 kb</td>
+                    <td class="lose">~90 kb</td>
                   </tr>
                   <tr>
-                    <td>component model</td>
-                    <td class="win">web standards</td>
-                    <td>react</td>
+                    <td>wc native</td>
+                    <td class="win">dsd first-class</td>
+                    <td>preact-only</td>
+                    <td>plain elements</td>
+                    <td>❌</td>
+                  </tr>
+                  <tr>
+                    <td>cross-framework</td>
+                    <td class="win">lit/react/vanilla</td>
+                    <td>preact</td>
                     <td>any framework</td>
+                    <td>react</td>
                   </tr>
                   <tr>
-                    <td>server runtime</td>
-                    <td class="win">deno, node, edge</td>
-                    <td>node only</td>
-                    <td>node only</td>
-                  </tr>
-                  <tr>
-                    <td>ssg rendering</td>
-                    <td class="win">declarative shadow dom</td>
-                    <td>html + json (rsc)</td>
-                    <td>html (no dsd)</td>
-                  </tr>
-                  <tr>
-                    <td>interactive model</td>
-                    <td class="win">island upgrade</td>
-                    <td class="lose">page hydration</td>
-                    <td class="win">island</td>
+                    <td>registry</td>
+                    <td class="win">built-in hub</td>
+                    <td>❌</td>
+                    <td>❌</td>
+                    <td>❌</td>
                   </tr>
                 </tbody>
               </table>
               <div class="bench-foot">
-                lessjs is closest to astro in philosophy but uses lit + dsd for components. the key
-                differentiator is native dsd — content is structured html before any js runs.
+                lessjs core differentiation: dsd zero-js first paint + wc cross-framework engine + registry hub.
+                this is a browser-native capability — other frameworks cannot match it through engineering optimization.
               </div>
             </div>
           </div>

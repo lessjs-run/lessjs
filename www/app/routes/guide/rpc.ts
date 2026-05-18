@@ -1,5 +1,6 @@
-export const meta = { section: 'Core Model', label: 'RPC', order: 70 };
+export const meta = { section: 'Core', label: 'RPC', order: 70 };
 import { navSections, headerNav } from 'virtual:less-nav';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -9,7 +10,7 @@ export class RpcGuidePage extends LitElement {
   static override styles = [pageStyles];
   override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/guide/rpc"><div class="container">
+  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/rpc"><div class="container">
     <h1>RPC 远程调用</h1>
     <p class="subtitle">@lessjs/rpc 是零依赖的 fetch 抽象层，用原生 Web API（fetch、AbortController）管理 Island 的远程调用。框架无关，可以和 Lit、原生 HTMLElement 或任何 Web Component 库一起使用。</p>
     <h2>设计理念</h2>
@@ -37,7 +38,7 @@ class PostList extends LitElement {
     <div class="nav-row"><a href="/guide/api" class="nav-link">&larr; API Routes</a><a href="/guide/content-system" class="nav-link">Content System &rarr;</a></div>
   </div></less-layout>`; }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/guide/rpc"><div class="container">
+  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/rpc"><div class="container">
     <h1>RPC</h1>
     <p class="subtitle"><span class="inline-code">@lessjs/rpc</span> is a zero-dependency fetch abstraction layer that uses native Web APIs (fetch, AbortController) to manage remote calls from Islands. Framework-agnostic — works with Lit, native HTMLElement, or any Web Component library.</p>
     <h2>Design Philosophy</h2>

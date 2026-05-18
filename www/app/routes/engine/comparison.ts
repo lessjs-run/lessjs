@@ -3,13 +3,14 @@
  */
 
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterEngineNav } from '../../utils/nav-filter.ts';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 
 export const tagName = 'comparison-page';
 
-export const meta = { section: 'Strategy', label: 'Comparison', order: 50 };
+export const meta = { section: 'Principles', label: 'Comparison', order: 20 };
 
 export default class ComparisonPage extends LitElement {
   static override styles = [
@@ -110,21 +111,21 @@ export default class ComparisonPage extends LitElement {
       <less-layout
         locale="${this.locale || 'zh'}"
         .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
+        .navItems="${filterEngineNav(navSections)}"
         .headerNav="${headerNav}"
+        current-path="/engine/comparison"
       >
         <div class="container">
           <h1>LessJS vs Alternatives</h1>
           <p class="subtitle">
-            A candid comparison with similar frameworks. LessJS is opinionated — it makes different
-            trade-offs.
+            LessJS = 全栈框架 + 通用 WC 渲染引擎 + Registry Hub。与同级框架的对比基于三支柱视角。
           </p>
 
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>Dimension</th>
+                  <th>维度</th>
                   <th>LessJS</th>
                   <th>Astro</th>
                   <th>Fresh (Deno)</th>
@@ -133,6 +134,13 @@ export default class ComparisonPage extends LitElement {
               </thead>
               <tbody>
                 <tr>
+                  <td>定位</td>
+                  <td>全栈 + WC引擎 + Hub</td>
+                  <td>全栈（多框架）</td>
+                  <td>全栈（Preact）</td>
+                  <td>全栈（React）</td>
+                </tr>
+                <tr>
                   <td>Runtime</td>
                   <td>Deno</td>
                   <td>Node.js</td>
@@ -140,39 +148,60 @@ export default class ComparisonPage extends LitElement {
                   <td>Node.js</td>
                 </tr>
                 <tr>
+                  <td>首屏 JS</td>
+                  <td><span class="tag-yes">0 KB</span></td>
+                  <td><span class="tag-yes">0 KB</span></td>
+                  <td><span class="tag-no">~23 KB</span></td>
+                  <td><span class="tag-no">~90 KB</span></td>
+                </tr>
+                <tr>
+                  <td>WC 原生</td>
+                  <td><span class="tag-yes">DSD 一等公民</span></td>
+                  <td><span class="tag-no">当普通元素</span></td>
+                  <td><span class="tag-no">Preact-only</span></td>
+                  <td><span class="tag-no">❌</span></td>
+                </tr>
+                <tr>
+                  <td>跨框架</td>
+                  <td>Lit / React / Vanilla 共存</td>
+                  <td>多框架共存</td>
+                  <td>Preact</td>
+                  <td>React</td>
+                </tr>
+                <tr>
                   <td>Rendering</td>
-                  <td>SSG + DSD + Islands</td>
+                  <td>SSG + DSD + Islands (ISR planned)</td>
                   <td>SSG + SSR + Islands</td>
                   <td>SSR + Islands</td>
                   <td>SSR + RSC + SSG</td>
                 </tr>
                 <tr>
-                  <td>Minimum JS</td>
-                  <td><span class="tag-yes">0 KB</span></td>
-                  <td><span class="tag-yes">0 KB</span></td>
-                  <td><span class="tag-no">~23 KB</span></td>
-                  <td><span class="tag-no">~70 KB</span></td>
+                  <td>Registry Hub</td>
+                  <td><span class="tag-yes">内建</span></td>
+                  <td><span class="tag-no">❌</span></td>
+                  <td><span class="tag-no">❌</span></td>
+                  <td><span class="tag-no">❌</span></td>
                 </tr>
                 <tr>
-                  <td>Web Standards</td>
-                  <td><span class="tag-yes">DSD, CE, WA</span></td>
-                  <td><span class="tag-no">.astro syntax</span></td>
-                  <td><span class="tag-no">JSX + Preact</span></td>
-                  <td><span class="tag-no">React-specific</span></td>
+                  <td>Server</td>
+                  <td>Hono + Serverless</td>
+                  <td>Built-in + adapters</td>
+                  <td>Oak (optional)</td>
+                  <td>Next.js server</td>
                 </tr>
                 <tr>
-                  <td>Component Model</td>
-                  <td>3-layer (DSD/Island)</td>
+                  <td>组件模型</td>
+                  <td>3-layer (DSD/Island) + 多适配器</td>
                   <td>Islands only</td>
                   <td>Islands only</td>
                   <td>Full hydration</td>
                 </tr>
                 <tr>
-                  <td>Server</td>
-                  <td>Hono (optional)</td>
-                  <td>Built-in + adapters</td>
-                  <td>Oak (optional)</td>
-                  <td>Next.js server</td>
+                  <td>渲染时机</td>
+                  <td>SSG ✅ / ISR 📋 / SSR 📋</td>
+                  <td>SSG ✅ / SSR ✅</td>
+                  <td>SSR ✅</td>
+                  <td>SSR ✅ / SSG ✅</td>
                 </tr>
                 <tr>
                   <td>Ecosystem</td>
@@ -182,82 +211,28 @@ export default class ComparisonPage extends LitElement {
                   <td>Massive</td>
                 </tr>
                 <tr>
-                  <td>Learning Curve</td>
-                  <td><span class="tag-yes">Low (Web Standards)</span></td>
-                  <td>Medium (.astro syntax)</td>
-                  <td>Low (JSX)</td>
-                  <td>High (React + concepts)</td>
-                </tr>
-                <tr>
-                  <td>UI Framework</td>
-                  <td>Lit (pluggable)</td>
-                  <td>Any (React, Vue, Svelte)</td>
-                  <td>Preact</td>
-                  <td>React only</td>
-                </tr>
-                <tr>
                   <td>Package Registry</td>
-                  <td>JSR only</td>
+                  <td>JSR</td>
                   <td>npm</td>
                   <td>JSR + npm</td>
                   <td>npm</td>
-                </tr>
-                <tr>
-                  <td>SSR (request-time)</td>
-                  <td><span class="tag-no">No (by design)</span></td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                </tr>
-                <tr>
-                  <td>Tailwind / CSS</td>
-                  <td>Lit CSS + tokens</td>
-                  <td>Any</td>
-                  <td>Twind + any</td>
-                  <td>Any (CSS Modules)</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <h2>What LessJS Optimizes For</h2>
+          <h2>LessJS 三支柱差异化</h2>
           <ul>
-            <li><strong>Zero JS by default</strong> — Content sites deliver 0 KB client JS</li>
-            <li>
-              <strong>Web Standards first</strong> — DSD, Custom Elements, Shadow DOM. No compiler step
-            </li>
-            <li>
-              <strong>DSD-first rendering</strong> — Readable HTML before JS exists. Not 'SSR also
-              supports DSD'
-            </li>
-            <li>
-              <strong>Framework-agnostic core</strong> — Zero UI framework dependency. Lit is a choice,
-              not a requirement
-            </li>
-            <li>
-              <strong>Fine-grained interactivity</strong> — Three-layer component model controls exactly
-              how much JS each component needs
-            </li>
+            <li><strong>支柱 2 独有价值</strong> — DSD 零 runtime 首屏。Astro 不做 WC 原生，Fresh 不做 DSD，Next 必须加载 React runtime。浏览器原生能力，无法通过工程优化追平</li>
+            <li><strong>支柱 2+3 组合</strong> — 渲染引擎 + Registry 一体。安装即渲染，验证即分层</li>
+            <li><strong>支柱 1 差异</strong> — WC 原生全栈。不是"全栈框架 + WC 容忍"，而是"WC 是一等公民"</li>
           </ul>
 
-          <h2>What LessJS Does Not Optimize For</h2>
+          <h2>LessJS 不优化的方向</h2>
           <ul>
-            <li>
-              <strong>Per-request SSR</strong> — For highly personalized pages, use islands + client fetch
-              + serverless
-            </li>
-            <li>
-              <strong>Large SPA apps</strong> — LessJS starts from static-first. Dynamic pages are
-              explicit islands
-            </li>
-            <li>
-              <strong>npm ecosystem</strong> — JSR-only package distribution requires extra setup for npm
-              users
-            </li>
-            <li>
-              <strong>Browser compatibility</strong> — Requires DSD-supporting browsers (Chrome 90+,
-              Safari 16.4+, Firefox 123+)
-            </li>
+            <li><strong>大而全的元框架</strong> — LessJS 三支柱各有独立价值，不是什么都做的平台</li>
+            <li><strong>npm 生态优先</strong> — JSR-only 包分发对 npm 用户需要额外配置</li>
+            <li><strong>旧浏览器兼容</strong> — 需要 DSD 支持的浏览器（Chrome 90+、Safari 16.4+、Firefox 123+）</li>
           </ul>
         </div>
       </less-layout>

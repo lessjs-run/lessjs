@@ -141,7 +141,8 @@ Phase 2 — Component Browser + Usage Workflow (Completed 2026-05-18):
 Phase 3 — Real Browser Snapshot Rendering (Completed 2026-05-18):
 
 - Replaced happy-dom with Playwright for client-only component snapshots (ADR-0032)
-- 52/53 components render via Playwright (was 49/53 with happy-dom)
+- 47/48 components render via Playwright (was 49/53 with happy-dom;
+1 sl-table timeout; may vary by environment)
 - `renderSnapshotLit()` retained for SSR-capable @lessjs/ui components
 - XSS sanitizer, slot whitespace fix, `--skip-snapshots` flag
 
@@ -160,8 +161,36 @@ validation output produced by the engine and its CI jobs.**
 
 ## Phase 6: Full-Stack Groundwork (v0.20.x) - Planned
 
-Goal: evolve LessJS from a pure SSG engine into a framework that supports
-both static and dynamic rendering with API routes.
+Goal: advance all three pillars toward maturity.
+
+### Three-Pillar Model (ADR-0033)
+
+LessJS is **not** an "SSG framework" — it has three independent cores:
+
+1. **全栈框架** — Routing, API routes, dev server, build pipeline, deployment
+2. **通用WC渲染引擎** — DSD rendering, multi-framework adapters, Tier 1/2, hydration
+3. **Registry Hub** — Discovery, validation, one-click install
+
+SSG is one mode of the rendering engine, not the framework's identity.
+`renderDSD()` is **architecturally** rendering-timing-agnostic:
+the same engine can be invoked at build-time (SSG), cache-expiry-time (ISR),
+or request-time (SSR). **Current implementation**: SSG only.
+ISR and SSR are Phase 6/7 planned work.
+
+### Hydration Strategies (P0 — Pillar 2)
+
+Current islands model is binary: `ssr:true` (DSD pre-render + hydrate) or
+`ssr:false` (client-only). This needs to become nuanced:
+
+| Strategy | Behavior | Equivalent |
+|----------|----------|------------|
+| `client:load` | Hydrate immediately | ≈ current `ssr:true` |
+| `client:idle` | Hydrate when browser is idle | New |
+| `client:visible` | Hydrate when entering viewport | New |
+| `client:only` | Client-only, no SSR | ≈ current `ssr:false` |
+
+This is the highest-ROI change: transforms islands from "works" to "works well"
+without architectural changes.
 
 ### WC Rendering Strategy Overhaul
 
@@ -183,14 +212,29 @@ best case, not a prerequisite.
 See [Vision & Strategy](../strategy/vision-and-differentiation.md) for full
 analysis.
 
+### ISR (Stale-While-Revalidate)
+
+ISR is preferred over request-time SSR for LessJS because `renderDSD()` is
+pure string concatenation (~1-5ms per component). ISR logic:
+1. Serve cached HTML → check revalidation window → regenerate in background
+2. 99% of requests hit cache, 1% trigger re-render
+
+This is more efficient than request-time SSR for most pages.
+
 ### Full-Stack Capabilities
 
-| Capability           | Priority | Description                                           |
-| -------------------- | -------- | ----------------------------------------------------- |
-| Hono API Route       | P0       | `app/api/**/*.ts` → Hono route → CF Pages Function    |
-| Request-time SSR     | P1       | Dynamic routes render at request time, not build time |
-| Supabase integration | P1       | Auth + DB + Realtime via Deno-native client           |
-| Request context      | P0       | Environment variables, Supabase client, user identity |
+| Capability           | Priority | Description                                           | Status |
+| -------------------- | -------- | ----------------------------------------------------- | ------ |
+| Hydration strategies | P0       | `client:load/idle/visible/only` directives            | New    |
+| ISR cache layer      | P1       | Stale-while-revalidate for static pages               | New    |
+| Hono API Route       | P1       | `app/api/**/*.ts` → Hono route → CF Pages Function    | Exists |
+| Request context      | P1       | Environment variables, Supabase client, user identity | New    |
+| Request-time SSR     | P2       | Dynamic routes render at request time, not build time | New    |
+| Supabase integration | P2       | Auth + DB + Realtime via Deno-native client           | New    |
+
+Note: Hono API Route is already implemented (route scanner, entry renderer,
+`/api/term` working). The P1 work is formalizing dev/build parity and
+adding request context injection.
 
 ### Blog Validation
 
@@ -200,8 +244,9 @@ the first real-world validation: pages mixing Shoelace, Media Chrome,
 
 ### Exit Criteria
 
+- Hydration strategies (`client:load/idle/visible/only`) work in both dev and build
 - Hono API Route serves JSON from `app/api/` in both dev and production
-- At least one dynamic route renders at request time on CF Pages
+- ISR cache layer serves stale-while-revalidate for at least one route
 - Blog is live and mixing 3+ WC UI libraries
 - Tier 2 default behavior is documented and reflected in CLI output
 
@@ -265,7 +310,8 @@ v1.0 exit criteria:
 | Concern                      | Current State            | Target                                               |
 | ---------------------------- | ------------------------ | ---------------------------------------------------- |
 | Third-party UI compatibility | Active v0.17.3 issue     | Tier 1/2 model with DSD pre-render for verified libs |
-| Full-stack capabilities      | SSG only                 | API Route + request-time SSR + Supabase              |
+| Full-stack capabilities      | Hono+API Route exists    | ISR + request context + Supabase                     |
+| Islands hydration            | Binary ssr:true/false     | client:load/idle/visible/only strategies             |
 | Documentation sync           | Manual                   | Release checklist and changelog index                |
 | Test coverage                | Strong unit/e2e baseline | Add compatibility fixtures + API route tests         |
 | Open source governance       | Partial                  | Complete before public Hub                           |

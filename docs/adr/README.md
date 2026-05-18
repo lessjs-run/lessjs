@@ -41,6 +41,7 @@ architectural decision, its context, and consequences.
 | 0030 | Hub Architecture + Submission Pipeline    | Proposed                                 |
 | 0031 | Hub v2 Component Browser Workflow         | Proposed                                 |
 | 0032 | Real Browser Snapshot Rendering           | Proposed                                 |
+| 0033 | Architecture Positioning: SSG Islands      | Accepted                                 |
 
 ## Superseded / Historical
 

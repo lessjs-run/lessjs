@@ -22,7 +22,7 @@ export interface HubIndexData {
 
 const _data: HubIndexData = {
   schema: "hub-index-v1",
-  updatedAt: "2026-05-18T03:46:27.945Z",
+  updatedAt: "2026-05-18T14:26:18.533Z",
   packages: [
   {
     "name": "ui",
@@ -43,7 +43,7 @@ const _data: HubIndexData = {
     "source": "local",
     "safeToInstall": true,
     "ssrCapable": true,
-    "submittedAt": "2026-05-18T03:45:39.709Z"
+    "submittedAt": "2026-05-18T14:25:32.549Z"
   },
   {
     "name": "shoelace",
@@ -95,7 +95,7 @@ const _data: HubIndexData = {
     "source": "npm",
     "safeToInstall": true,
     "ssrCapable": false,
-    "submittedAt": "2026-05-18T03:46:27.902Z"
+    "submittedAt": "2026-05-18T14:26:18.500Z"
   },
   {
     "name": "media-chrome",
@@ -114,7 +114,7 @@ const _data: HubIndexData = {
     "source": "npm",
     "safeToInstall": true,
     "ssrCapable": false,
-    "submittedAt": "2026-05-18T03:46:27.911Z"
+    "submittedAt": "2026-05-18T14:26:18.510Z"
   }
 ],
 };

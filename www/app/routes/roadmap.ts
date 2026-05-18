@@ -1,8 +1,4 @@
-export const meta = {
-  section: 'Roadmap & Decisions',
-  label: 'Roadmap',
-  order: 10,
-};
+export const meta = { section: '', label: 'Roadmap', order: 10 };
 
 import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
@@ -356,10 +352,10 @@ export class RoadmapPage extends LitElement {
             >20260515 ADR/SOP →</a>
             <a class="nav-link" href="/decisions/0024-standards-first-wc-renderer-roadmap"
             >Strategic Roadmap ADR →</a>
-            <a class="nav-link" href="/docs/decisions/adr-0006-version-roadmap">Version Roadmap ADR →</a>
-            <a class="nav-link" href="/docs/decisions/adr-0007-npm-publishing-strategy"
+            <a class="nav-link" href="/decisions/adr-0006-version-roadmap">Version Roadmap ADR →</a>
+            <a class="nav-link" href="/decisions/adr-0007-npm-publishing-strategy"
             >Publishing Strategy →</a>
-            <a class="nav-link" href="/docs/architecture">Architecture →</a>
+            <a class="nav-link" href="/engine/architecture">Architecture →</a>
           </nav>
         </div>
       </less-layout>
@@ -588,11 +584,11 @@ export class RoadmapPage extends LitElement {
             >20260515 ADR/SOP →</a>
             <a class="nav-link" href="/en/decisions/0024-standards-first-wc-renderer-roadmap"
             >Strategic Roadmap ADR →</a>
-            <a class="nav-link" href="/en/docs/decisions/adr-0006-version-roadmap"
+            <a class="nav-link" href="/en/decisions/adr-0006-version-roadmap"
             >Version Roadmap ADR →</a>
-            <a class="nav-link" href="/en/docs/decisions/adr-0007-npm-publishing-strategy"
+            <a class="nav-link" href="/en/decisions/adr-0007-npm-publishing-strategy"
             >Publishing Strategy →</a>
-            <a class="nav-link" href="/en/docs/architecture">Architecture →</a>
+            <a class="nav-link" href="/en/engine/architecture">Architecture →</a>
           </nav>
         </div>
       </less-layout>

@@ -1,7 +1,7 @@
 /**
  * Contributing Page — LessJS Framework Contribution Guide
  */
-export const meta = { section: 'History', label: 'Contributing', order: 30 };
+export const meta = { section: '', label: 'Contributing', order: 30 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';

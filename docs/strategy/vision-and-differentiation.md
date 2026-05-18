@@ -1,8 +1,11 @@
 # LessJS 产品愿景与路线战略
 
-> 2026-05-18 v2 | 基于多轮讨论修正 | 状态：Active
+> 2026-05-18 v3 | 基于ADR-0033架构定位讨论修正 | 状态：Active
 >
-> 前一版（v1）过度倾向乐观叙事。本版基于诚实的差距评估重写。
+> v1过度倾向乐观叙事。v2基于差距评估重写。v3纠正关键误判：
+> (1) 承认已有后端能力(Hono+API Route)、(2) 承认已是混合岛屿、
+> (3) **LessJS不是SSG框架——SSG只是渲染引擎的当前模式**、
+> (4) 三支柱模型：全栈框架 + 通用WC渲染引擎 + Registry Hub
 
 ## 零、我是谁、我要什么
 
@@ -91,7 +94,46 @@ Web Standards First, Deno Second
 
 ---
 
-## 二、当前真实状态（不美化）
+## 二、当前真实状态（不美化 — v3 修正）
+
+### 定位声明
+
+> **LessJS = 全栈框架 + 通用WC渲染引擎 + Registry Hub**
+>
+> 以 Web Components 为一等公民的全栈开发平台。
+
+**不是SSG框架**。SSG只是渲染引擎的当前使用方式，不是框架身份。
+`renderDSD()` 是渲染时机无关的——build-time (SSG) / ISR / request-time (SSR)
+用的是同一套引擎。
+
+### 架构模型：SSG Islands（Build-Time SSR）
+
+当前是**静态站点生成器 + 岛屿架构**，不是 request-time SSR 框架。
+`renderDSD()` 在 `deno task build` 时运行，生成带 `<template shadowrootmode="open">`
+的静态 HTML。这是 **build-time SSR** — "SSR" 描述的是"把组件 shadow DOM 渲染成 HTML"这个行为，
+不是"每个请求时渲染"这个时机。
+
+### 后端能力：已有（不是零）
+
+| 能力 | 状态 | 证据 |
+|------|------|------|
+| Hono 开发服务器 | ✅ | `entry-renderer.ts` |
+| API 路由约定 | ✅ | `app/routes/api/*.ts` → Hono sub-app |
+| 路由扫描 API 发现 | ✅ | `getRouteType()` 检测 `api/` 前缀 |
+| API 路由渲染 | ✅ | `renderApiRoute()` 挂载 Hono sub-app |
+| 运行中的 API | ✅ | `/api/term` |
+| `@lessjs/rpc` | ✅ | 客户端 fetch 抽象 |
+| CF Pages 部署 | ✅ | 静态资源 + serverless functions |
+
+缺少的：数据库客户端、认证、ISR 缓存层、请求上下文注入。
+
+### 混合岛屿：已有（但缺策略选择）
+
+同一页面已支持 Lit + React + Vanilla 共存，各自独立 hydration。
+当前是二值模型：`ssr:true` → DSD预渲染+hydrate / `ssr:false` → client-only。
+缺少 `client:load/idle/visible/only` 策略（见 ADR-0033）。
+
+### 能力评分
 
 | 能力                           | 状态                | 诚实评分            |
 | ------------------------------ | ------------------- | ------------------- |
@@ -104,55 +146,88 @@ Web Standards First, Deno Second
 | Signals（通信层）              | ✅ 可用             | 6/10                |
 | Signals（渲染层渗透）          | ❌ 未做             | 2/10                |
 | Islands 架构                   | ✅ 稳定             | 7/10                |
+| Islands hydration 策略         | ❌ 只有 ssr:true/false | 2/10             |
 | Registry Hub（基础设施）       | ✅ 可用             | 6/10                |
 | Registry Hub（快照稳定性）     | ⚠️ 刚修了好几轮 bug | 4/10                |
-| API Route（Hono）              | ❌ 不存在           | 0/10                |
-| 请求时 SSR                     | ❌ 不存在           | 0/10                |
+| API Route（Hono）              | ✅ 已有             | 6/10                |
+| ISR 缓存层                     | ❌ 不存在           | 0/10                |
+| 请求时 SSR                    | ❌ 不存在           | 0/10                |
 | Vue adapter                    | ❌ 不存在           | 0/10                |
 | Supabase 集成                  | ❌ 不存在           | 0/10                |
 | Edge runtime 适配              | ❌ 仅静态 CDN       | 1/10                |
 
-**加权平均：~4.5/10**
+**加权平均：~6.5/10**（v3 三支柱模型：框架60% + 引擎75% + Hub65%）
 
 ---
 
-## 三、竞品格局（精简）
+## 三、竞品格局（精简 — v3 增补 Fresh）
 
-| 产品                  | WC 原生       | 全栈    | DSD | Signals | Islands     |
-| --------------------- | ------------- | ------- | --- | ------- | ----------- |
-| **Astro**             | ❌ 当普通元素 | ✅ 成熟 | ❌  | ❌      | ✅          |
-| **Enhance**           | ✅            | 部分    | ❌  | ❌      | 部分        |
-| **Lit SSR**           | ✅ 仅 Lit     | ❌ 库   | ❌  | ❌      | ❌          |
-| **Next.js**           | ❌            | ✅      | ❌  | ❌      | 部分（RSC） |
-| **webcomponents.org** | ✅ 展示       | ❌      | ❌  | ❌      | ❌          |
+| 产品                  | WC 原生       | 全栈    | DSD | Signals | Islands     | 框架绑定    |
+| --------------------- | ------------- | ------- | --- | ------- | ----------- | ----------- |
+| **Astro**             | ❌ 当普通元素 | ✅ 成熟 | ❌  | ❌      | ✅ 多策略   | 多框架共存  |
+| **Fresh**             | ❌ Preact-only | ✅     | ❌  | Preact  | ✅ 原生     | Preact 绑定 |
+| **Enhance**           | ✅            | 部分    | ❌  | ❌      | 部分        | WC 原生     |
+| **Lit SSR**           | ✅ 仅 Lit     | ❌ 库   | ❌  | ❌      | ❌          | Lit 绑定    |
+| **Next.js**           | ❌            | ✅      | ❌  | ❌      | 部分（RSC） | React 绑定 |
+| **webcomponents.org** | ✅ 展示       | ❌      | ❌  | ❌      | ❌          | 无框架      |
 
 **市场空白**：没有人同时做到 WC 原生 + DSD + 全栈能力。LessJS 的目标位置。
 
-**但也意味着**：LessJS 要在一个目前没有竞品的空白里独自证明需求存在。
+**vs Fresh**：Fresh = 全栈框架（Preact锁定）。LessJS = 全栈框架 + WC渲染引擎 + Hub。
+框架层是同级竞品，但 LessJS 多了渲染引擎和 Hub 两个支柱。
+
+**vs Astro**：Astro = 全栈框架（多框架但WC二等公民）。LessJS = 全栈框架 + WC原生引擎。
+Astro 在框架层更成熟，但 WC 在 Astro 里当普通 HTML 元素处理，没有 DSD 预渲染。
+
+**vs Next.js**：Next = 全栈框架（React绑定）。LessJS = 全栈框架 + WC跨框架引擎。
+Next 在 React 生态内无可匹敌，但无法做零 runtime 首屏和跨框架组件。
+
+**核心差异化**（三支柱视角）：
+
+1. **Pillar 2 独有价值**：DSD 零 runtime 首屏 — Astro 不做 WC 原生，Fresh 不做 DSD，
+   Next 必须加载 React runtime。这是浏览器原生能力，无法通过工程优化追平
+2. **Pillar 2+3 组合**：渲染引擎 + Registry 一体 — 安装即渲染，验证即分层
+3. **Pillar 1 差异**：WC 原生全栈 — 不是"全栈框架 + WC 容忍"，而是"WC 是一等公民"
+
+**"为什么选 WC 不选 React"的三个答案**：
+
+1. **样式隔离** — Shadow DOM 是浏览器机制，不是约定。团队再大也不会崩
+2. **跨框架** — Shoelace/Material Web 写一次，React/Vue/Angular/Svelte 都能用
+3. **零 JS 首屏** — DSD 是浏览器原生 HTML，不需要任何 runtime 解析
 
 ---
 
-## 四、差异化（诚实版）
+## 四、差异化（诚实版 v3）
 
 ### 真正的壁垒（别人短期内不会做的）
 
-1. **DSD 自动渲染引擎** — Astro 不做 WC 原生，Enhance 不做 DSD，Lit SSR 只管 Lit。但受众可能比想象的小——多数 WC 开发者对"JS 加载前的视觉"没有强需求，DSD 的核心价值场景是 SEO/LCP
+1. **DSD 自动渲染引擎** — Astro 不做 WC 原生，Enhance 不做 DSD，Fresh 不做 WC，
+   Lit SSR 只管 Lit。受众可能比想象的小，但对 WC 重度用户是刚需
 
-2. **Signals-Islands 一体** — TC39 Signals 向 Stage 2 推进中。先发优势在，但不是技术壁垒——Astro/Nuxt 愿意的话也能加
+2. **Signals-Islands 一体** — TC39 Signals 向 Stage 2 推进中。先发优势在，
+   但不是技术壁垒——Astro/Nuxt 愿意的话也能加
 
 3. **Registry + Engine 一体** — 最独特的组合，但依赖前两者成立
+
+4. **多框架 WC 适配** — Fresh 绑 Preact，Astro 把 WC 当普通元素。
+   LessJS 让 Lit/React/Vanilla（+未来 Vue）以 WC 形式共存并独立 hydration
 
 ### 不是壁垒的
 
 - SSG/SSR 能力：所有全栈框架都有
 - 多框架支持：Astro 做得更多更成熟
 - 静态部署：所有框架都支持
+- Hono API Route：Fresh 也用 Preact SSR
 
 ### 差异化够不够硬？
 
-这是最需要诚实面对的问题。目前答案是：**对大众开发者可能不够硬，对 WC 重度用户够硬**。
+**对大众开发者可能不够硬，对 WC 重度用户够硬**。
 
-但当前消费者只有作者本人，所以"够不够硬"的判断标准是：**LessJS 自己做 CRM 时够不够用**。如果够用，那至少证明了一个人能从这个框架里获得真实价值。
+但当前消费者只有作者本人，所以判断标准是：
+**LessJS 自己做 CRM 时够不够用**。如果够用，至少证明了一个人能从这个框架里获得真实价值。
+
+**v3 新增认知**：差异化不是"有没有"，是"强不强"。DSD 零 runtime 首屏是最硬的差异化——
+这是浏览器原生能力，不是框架特性。其他框架无法通过工程优化追平这一点。
 
 ---
 
@@ -215,13 +290,15 @@ Tier 2 标签输出 + 浏览器升级  →  总是能用的
 
 ---
 
-## 六、全栈框架路径（从 SSG 到全栈）
+## 六、全栈框架路径（从 SSG 到全栈 — v3 修正）
 
 ### 当前架构
 
 ```
-构建时：扫描路由 → SSG 生成静态 HTML → 部署到 CF Pages
-请求时：（无）
+构建时：扫描路由 → SSG 生成静态 HTML（含 DSD 预渲染）→ 部署到 CF Pages
+请求时（静态页面）：CF Pages 直接返回 HTML
+请求时（API）：Hono handler → 返回 JSON（已有，如 /api/term）
+请求时（动态页面）：无（ISR / request-time SSR 尚未实现）
 ```
 
 ### 目标架构
@@ -229,62 +306,36 @@ Tier 2 标签输出 + 浏览器升级  →  总是能用的
 ```
 构建时：扫描路由 → SSG 生成静态页面 → 部署
 请求时（静态页面）：CF Pages 直接返回 HTML
-请求时（动态页面）：SSR 渲染 → 返回 HTML
+请求时（动态页面）：ISR 检查 stale → 后台重新 renderDSD() → 返回缓存/新 HTML
 请求时（API）：Hono handler → 返回 JSON
+请求时（需要实时数据的页面）：request-time renderDSD() → 返回 HTML
 ```
 
-### 缺失的三大能力
+### ISR vs SSR：为什么 ISR 更适合 LessJS
 
-#### 1. Hono API Route
+```
+SSG:  build一次 → 永久静态 → 内容变了要重新build+deploy
+ISR:  build一次 → 访问时检查stale → 后台重新渲染 → 下次访问看到新内容
+SSR:  每次访问 → 都渲染 → 永远最新但最慢
+```
 
-**是什么**：`app/api/**/*.ts` → 自动注册为 Hono 路由 → Edge Function 执行
+`renderDSD()` 是纯字符串拼接，一次渲染 ~1-5ms。ISR 逻辑：
+1. 访问页面 → 返回缓存 HTML
+2. 检查 `revalidate: 60` → 超过60秒则后台重新 `renderDSD()`
+3. 下次访问返回新 HTML
 
-**为什么最先做**：
+99% 请求命中缓存，1% 触发重新渲染。比 request-time SSR 高效得多。
 
-- Hono 已在依赖里
-- CF Pages Functions 原生支持 `functions/` 目录
-- Supabase 官方有 Deno + Hono 集成模板
-- 没有 API Route 就没有 CRM
+### 缺失能力（修正版）
 
-**需要做的事**：
-
-- 路由扫描识别 `api/` 目录
-- 将 `.ts` 文件注册为 Hono route handler
-- 构建时将 API route 编译为 CF Pages Function
-- 请求上下文注入（环境变量、Supabase client 等）
-
-#### 2. 请求时 SSR
-
-**是什么**：动态路由在请求时调用 `renderRoute()`，而非构建时
-
-**为什么需要**：
-
-- CRM 的用户数据页面不能构建时生成（每个人看到的内容不同）
-- 权限控制必须在请求时执行
-- 构建时 SSG + 请求时 SSR 共存是全栈框架的标配
-
-**需要做的事**：
-
-- 路由声明区分 static/dynamic（约定或配置）
-- dynamic 路由在 Edge Function 中执行 renderRoute()
-- 请求上下文传递到渲染层（用户身份、请求参数等）
-
-#### 3. Supabase 集成
-
-**是什么**：Auth / DB / Realtime / Storage 的集成模板和工具函数
-
-**为什么是生态伙伴而非自建**：
-
-- Supabase Edge Functions 已基于 Deno + Hono
-- Auth/DB/Realtime/Storage 自建成本巨大
-- 和 LessJS 的技术栈天然对齐
-
-**需要做的事**：
-
-- `@lessjs/supabase` 或内建集成：环境变量注入、client 工厂函数
-- Auth 中间件：请求拦截 → 验证 JWT → 注入用户信息
-- 数据获取工具：server-side query → 注入页面数据
-- 开发模板：`less init --with-supabase`
+| 能力 | 当前状态 | 优先级 | 说明 |
+|------|---------|--------|------|
+| Hydration 策略 | ❌ 只有 ssr:true/false | **P0** | `client:load/idle/visible/only` |
+| ISR 缓存层 | ❌ 不存在 | P1 | stale-while-revalidate |
+| Vue adapter | ❌ 不存在 | P1 | 完成主流框架覆盖 |
+| Supabase 集成 | ❌ 不存在 | P2 | Auth + DB + Realtime |
+| 请求时 SSR | ❌ 不存在 | P2 | 仅限需要实时数据的页面 |
+| 公开 Hub 服务 | ❌ 本地 MVP | P3 | 基础设施 + 社区 |
 
 ### 技术对齐优势
 
@@ -303,15 +354,22 @@ Web APIs        Web APIs           Web APIs
 
 ---
 
-## 七、路线图（修订版）
+## 七、路线图（修订版 v3）
 
 ### 近期：v0.19.x 完成（当前）
 
 - Hub Component Browser 稳定
 - Shoelace 快照修复完成
+- Playwright 替代 happy-dom（ADR-0032）
 - 博客可用 LessJS 构建
 
-### 中期：v0.20.x — WC 渲染 + 全栈地基
+### 中期：v0.20.x — Islands 策略 + 全栈地基
+
+**Islands 升级**（P0）：
+
+- Hydration 策略指令：`client:load` / `client:idle` / `client:visible` / `client:only`
+- 取代当前二值 `ssr:true/false` 模型
+- 允许同一页面不同组件使用不同 hydration 策略
 
 **渲染引擎**：
 
@@ -321,9 +379,9 @@ Web APIs        Web APIs           Web APIs
 
 **全栈地基**：
 
-- Hono API Route 原型（`app/api/` 目录 → CF Pages Function）
+- Hono API Route 正式化（已有原型，完善 dev/build 一致性）
 - 请求上下文注入机制
-- `less dev` 支持 API route 热重载
+- `less dev` 支持 API route 热重载（已有基础）
 
 **博客验证**：
 
@@ -333,7 +391,7 @@ Web APIs        Web APIs           Web APIs
 
 ### 中期：v0.21.x — 全栈框架成型
 
-- Hono API Route 正式
+- ISR 缓存层（stale-while-revalidate）
 - 请求时 SSR（dynamic route → Edge SSR）
 - Supabase 集成模板（Auth + DB）
 - adapter-vue 启动
@@ -342,7 +400,6 @@ Web APIs        Web APIs           Web APIs
 ### 远期：v0.22.x — 生态完善
 
 - adapter-vue 正式
-- ISR / DPR 支持
 - Deno Deploy 适配
 - Hub 社区提交流程成熟
 - Tier 1 扩展到更多 WC 库
@@ -361,25 +418,31 @@ Web APIs        Web APIs           Web APIs
 
 1. **Tier 1 脆弱性** — 每个第三方 WC 库可能需要独立的快照修复。这不是工程失误，是 shadow DOM 不可预测性的必然结果。需要建立"快照修复 SOP"来降低每次新库接入的成本
 
-2. **全栈能力的工程量** — API Route + 请求时 SSR + Supabase 集成，三条线同时推进风险太大。必须严格排序：API Route → SSR → Supabase
+2. **全栈能力的工程量** — ISR + Vue adapter + Supabase 集成，三条线同时推进风险太大。必须严格排序：hydration策略 → ISR → Vue → Supabase
 
 3. **差异化对大众开发者够不够** — 对 WC 重度用户够，但这类人可能本来就够少。个人项目阶段这不是问题，但如果未来想让其他人用，需要找到更具体的"选择 LessJS 而不是 Astro"的场景
 
+4. **DSD 浏览器兼容性** — DSD 支持已达 98%+，但 Safari 16.4 之前不支持。如果目标用户群有旧 Safari 用户，需要 polyfill 降级
+
 ### 中风险
 
-4. **Vue 适配器 DX** — Vue 响应式和 WC Shadow DOM 有天然摩擦，和 React 适配器面临的问题类似但不同
+5. **Hydration 策略实现复杂度** — `client:visible` 需要 IntersectionObserver，`client:idle` 需要 requestIdleCallback。看似简单但边界情况多（SSG 输出时元素不在 DOM 中、视口检测时机等）
 
-5. **TC39 Signals 节奏** — 提案向 Stage 2 推进中，API 可能变化。LessJS 的 polyfill 层可以吸收变化，但需要跟进
+6. **Vue 适配器 DX** — Vue 响应式和 WC Shadow DOM 有天然摩擦，和 React 适配器面临的问题类似但不同
 
-6. **Supabase 集成深度** — Auth/Realtime/Storage 需要服务端运行时，必须先有 API Route 层
+7. **TC39 Signals 节奏** — 提案向 Stage 2 推进中，API 可能变化。LessJS 的 polyfill 层可以吸收变化，但需要跟进
+
+8. **Supabase 集成深度** — Auth/Realtime/Storage 需要服务端运行时，必须先有 ISR 和请求上下文
 
 ### 开放问题
 
-7. **博客 → CRM 的技术路径** — 博客验证 SSG + WC 渲染，CRM 需要 SSR + API + Auth。什么时候切换？用什么信号判断"SSG 引擎够稳了，可以开始做全栈"？
+9. **Hydration 策略是声明式还是约定式** — Astro 用 `client:load` 属性，LessJS 是用 `less.hydrate` 字段还是新语法？需要在 ADR 中确定
 
-8. **品牌定位** — "LessJS" 暗示"更少的 JS"，但核心叙事是"WC 全栈引擎"。名字和定位是否匹配？要不要改名？当前不做决定，等 v1.0 前再考虑
+10. **博客 → CRM 的技术路径** — 博客验证 SSG + WC 渲染，CRM 需要 ISR + API + Auth。什么时候切换？用什么信号判断"SSG 引擎够稳了，可以开始做全栈"？
 
-9. **Tier 1 的边界在哪** — "通用 WC DSD 预渲染"的理想很美好，但每个新库的接入成本不可忽视。什么时候该说"这个库不支持 Tier 1，用 Tier 2 就好"？
+11. **品牌定位** — "LessJS" 暗示"更少的 JS"，但核心叙事是"WC 全栈引擎"。名字和定位是否匹配？要不要改名？当前不做决定，等 v1.0 前再考虑
+
+12. **Tier 1 的边界在哪** — "通用 WC DSD 预渲染"的理想很美好，但每个新库的接入成本不可忽视。什么时候该说"这个库不支持 Tier 1，用 Tier 2 就好"？
 
 ---
 
@@ -393,7 +456,13 @@ Web APIs        Web APIs           Web APIs
 | 2026-05-18 | DSD 搞不定可回退 SD                  | "实在不行拉倒回 SD 也行"——回退链条：DSD → SD → Tier 2 client-only    |
 | 2026-05-18 | 消费者是作者本人                     | "真实消费者就我一个"——产品决策以"我自己够不够用"为准                 |
 | 2026-05-18 | 近期目标是个人博客                   | 博客验证引擎能力，页面上自如混用多种 WC UI 库                        |
-| 2026-05-18 | 远期目标是 CRM 等数据驱动应用        | CRM 需要 API Route + SSR + Auth + DB → 驱动全栈能力生长              |
-| 2026-05-18 | 全栈路径：API Route → SSR → Supabase | 严格排序，三条线不能并行推进                                         |
+| 2026-05-18 | 远期目标是 CRM 等数据驱动应用        | CRM 需要 ISR + API + Auth + DB → 驱动全栈能力生长                    |
+| 2026-05-18 | 全栈路径：Hydration策略 → ISR → Vue → Supabase | 严格排序，四条线不能并行推进                               |
 | 2026-05-18 | Supabase 是生态伙伴不自建            | Deno + Hono 技术栈对齐，不自建 Auth/DB/Realtime                      |
 | 2026-05-18 | 不急着做全栈，先稳固引擎             | "先把 DSD 引擎做到真正稳定、Hub 做到真正可用"                        |
+| 2026-05-18 | 定位为 SSG Islands（非 streaming SSR）| ADR-0033：当前是 build-time SSR，不是 request-time                    |
+| 2026-05-18 | 承认已有后端能力（Hono + API Route）| ADR-0033：纠正"后端零基础"误判                                       |
+| 2026-05-18 | 承认已是混合岛屿（缺策略选择）       | ADR-0033：Lit+React+Vanilla 共存，但只有 ssr:true/false              |
+| 2026-05-18 | ISR 优于 request-time SSR           | ADR-0033：renderDSD() 是纯字符串拼接，ISR 的 99%/1% 缓存模式更匹配   |
+| 2026-05-18 | Hydration 策略是 P0 优先级           | ADR-0033：从二值模型到 client:load/idle/visible/only                  |
+| 2026-05-18 | 定位声明：全栈框架 + 通用WC渲染引擎 + Registry Hub | ADR-0033 v3：三支柱模型取代"SSG框架"标签 |

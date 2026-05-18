@@ -1,6 +1,7 @@
-export const meta = { section: 'Core Model', label: 'DSD Rendering', order: 30 };
+export const meta = { section: 'Principles', label: 'DSD Rendering', order: 30 };
 
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterEngineNav } from '../../utils/nav-filter.ts';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -43,9 +44,9 @@ export class DsdGuidePage extends LitElement {
       <less-layout
         locale="${this.locale || 'zh'}"
         .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
+        .navItems="${filterEngineNav(navSections)}"
         .headerNav="${headerNav}"
-        current-path="/guide/dsd"
+        current-path="/engine/dsd"
       >
         <div class="container">
           <h1>DSD 渲染架构</h1>
@@ -111,7 +112,7 @@ export class DsdGuidePage extends LitElement {
 
           <h2>边界</h2>
           <p>
-            DSD 不是“任意组件 SSR”的保证。组件如果依赖浏览器布局、全局 DOM、副作用、timer 或第三方脚本，
+            DSD 不是"任意组件 SSR"的保证。组件如果依赖浏览器布局、全局 DOM、副作用、timer 或第三方脚本，
             就必须降级为 pure island，或通过 manifest 明确声明 SSR/fallback 行为。
           </p>
           <p>
@@ -119,9 +120,9 @@ export class DsdGuidePage extends LitElement {
           </p>
 
           <div class="nav-row">
-            <a href="/guide/ssg" class="nav-link">&larr; Rendering &amp; SSG</a>
-            <a href="/guide/islands" class="nav-link">Island Upgrade &rarr;</a>
-            <a href="/guide/standards-registry" class="nav-link">Standards &amp; Registry &rarr;</a>
+            <a href="/engine/architecture" class="nav-link">&larr; Architecture</a>
+            <a href="/engine/islands" class="nav-link">Island Upgrade &rarr;</a>
+            <a href="/engine/standards-registry" class="nav-link">Standards &amp; Registry &rarr;</a>
           </div>
         </div>
       </less-layout>
@@ -133,9 +134,9 @@ export class DsdGuidePage extends LitElement {
       <less-layout
         locale="${this.locale || 'en'}"
         .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
+        .navItems="${filterEngineNav(navSections)}"
         .headerNav="${headerNav}"
-        current-path="/en/guide/dsd"
+        current-path="/en/engine/dsd"
       >
         <div class="container">
           <h1>DSD Rendering Architecture</h1>
@@ -213,9 +214,9 @@ export class DsdGuidePage extends LitElement {
           </p>
 
           <div class="nav-row">
-            <a href="/en/guide/ssg" class="nav-link">&larr; Rendering &amp; SSG</a>
-            <a href="/en/guide/islands" class="nav-link">Island Upgrade &rarr;</a>
-            <a href="/en/guide/standards-registry" class="nav-link">Standards &amp; Registry &rarr;</a>
+            <a href="/engine/architecture" class="nav-link">&larr; Architecture</a>
+            <a href="/engine/islands" class="nav-link">Island Upgrade &rarr;</a>
+            <a href="/engine/standards-registry" class="nav-link">Standards &amp; Registry &rarr;</a>
           </div>
         </div>
       </less-layout>

@@ -1,7 +1,7 @@
 /**
  * Changelog Page — LessJS Framework Version History
  */
-export const meta = { section: 'History', label: 'Changelog', order: 20 };
+export const meta = { section: '', label: 'Changelog', order: 20 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';

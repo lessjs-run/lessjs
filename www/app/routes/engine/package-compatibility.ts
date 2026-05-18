@@ -1,6 +1,7 @@
-export const meta = { section: 'Core Model', label: 'Package Compatibility', order: 25 };
+export const meta = { section: 'Compatibility', label: 'Package Compatibility', order: 10 };
 
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterEngineNav } from '../../utils/nav-filter.ts';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -20,9 +21,9 @@ export class PackageCompatibilityGuidePage extends LitElement {
   private _renderZh() {
     return html`
       <less-layout
-        .navItems="${navSections}"
+        .navItems="${filterEngineNav(navSections)}"
         .headerNav="${headerNav}"
-        current-path="/guide/package-compatibility"
+        current-path="/engine/package-compatibility"
         locale="${this.locale || 'zh'}"
         .locales="${['en', 'zh']}"
       >
@@ -172,8 +173,8 @@ for (const pkg of node_modules) {
           </ul>
 
           <nav class="nav-row">
-            <a class="nav-link" href="/zh/guide/ssg">← 渲染与 SSG</a>
-            <a class="nav-link" href="/zh/guide/islands">Island 升级 →</a>
+            <a class="nav-link" href="/engine/architecture">← Architecture</a>
+            <a class="nav-link" href="/engine/standards-registry">Standards &amp; Registry →</a>
           </nav>
         </div>
       </less-layout>
@@ -183,9 +184,9 @@ for (const pkg of node_modules) {
   private _renderEn() {
     return html`
       <less-layout
-        .navItems="${navSections}"
+        .navItems="${filterEngineNav(navSections)}"
         .headerNav="${headerNav}"
-        current-path="/guide/package-compatibility"
+        current-path="/en/engine/package-compatibility"
         locale="${this.locale || 'en'}"
         .locales="${['en', 'zh']}"
       >
@@ -341,8 +342,8 @@ for (const pkg of node_modules) {
           </ul>
 
           <nav class="nav-row">
-            <a class="nav-link" href="/en/guide/ssg">← Rendering & SSG</a>
-            <a class="nav-link" href="/en/guide/islands">Island Upgrade →</a>
+            <a class="nav-link" href="/engine/architecture">← Architecture</a>
+            <a class="nav-link" href="/engine/standards-registry">Standards &amp; Registry →</a>
           </nav>
         </div>
       </less-layout>

@@ -4,6 +4,7 @@ date: '2026-05-11'
 type: 'adr'
 tags: ['architecture', 'decision']
 draft: false
+archived: true
 ---
 
 ## Summary

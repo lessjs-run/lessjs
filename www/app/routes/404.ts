@@ -1,5 +1,5 @@
 /**
- * 404 Not Found Page — with search and helpful links
+ * 404 Not Found Page — with search, helpful links, and old URL redirects
  */
 import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
@@ -8,14 +8,29 @@ import '@lessjs/ui/less-layout';
 
 const POPULAR_LINKS = [
   { href: '/guide/getting-started', label: 'Getting Started' },
-  { href: '/guide/architecture', label: 'Architecture Overview' },
+  { href: '/engine/architecture', label: 'Architecture Overview' },
   { href: '/guide/routing', label: 'Routing' },
-  { href: '/guide/dsd', label: 'DSD Rendering' },
-  { href: '/guide/islands', label: 'Island Upgrade' },
+  { href: '/engine/dsd', label: 'DSD Rendering' },
+  { href: '/engine/islands', label: 'Island Upgrade' },
   { href: '/guide/ssg', label: 'Rendering & SSG' },
-  { href: '/ui', label: 'Design System (UI)' },
+  { href: '/engine/design-system', label: 'Design System (UI)' },
   { href: '/roadmap', label: 'Roadmap' },
 ];
+
+/** Mapping of old URLs to new URLs for client-side redirects. */
+const REDIRECT_MAP: Record<string, string> = {
+  '/guide/architecture': '/engine/architecture',
+  '/guide/dsd': '/engine/dsd',
+  '/guide/islands': '/engine/islands',
+  '/guide/islands-deep': '/engine/islands-deep',
+  '/guide/package-compatibility': '/engine/package-compatibility',
+  '/guide/standards-registry': '/engine/standards-registry',
+  '/guide/comparison': '/engine/comparison',
+  '/reference/core': '/engine/reference/core',
+  '/ui': '/engine/design-system',
+  '/styling/web-awesome': '/engine/design-system',
+  '/community': '/',
+};
 
 export class NotFoundPage extends LitElement {
   static override styles = [
@@ -114,6 +129,16 @@ export class NotFoundPage extends LitElement {
     if (e.key === 'Enter') {
       const q = (e.target as HTMLInputElement).value.trim();
       if (q) globalThis.location.href = `/search?q=${encodeURIComponent(q)}`;
+    }
+  }
+
+  override connectedCallback() {
+    super.connectedCallback();
+    // Check if the current path matches an old URL that should redirect
+    const pathname = globalThis.location?.pathname || '';
+    const newPath = REDIRECT_MAP[pathname];
+    if (newPath) {
+      globalThis.location.replace(newPath);
     }
   }
 

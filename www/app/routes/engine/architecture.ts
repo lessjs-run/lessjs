@@ -1,5 +1,6 @@
-export const meta = { section: 'Start Here', label: 'Architecture', order: 30 };
+export const meta = { section: 'Principles', label: 'Architecture', order: 10 };
 import { navSections, headerNav } from 'virtual:less-nav';
+import { filterEngineNav } from '../../utils/nav-filter.ts';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -16,13 +17,47 @@ export class ArchitecturePage extends LitElement {
 
   private _renderZh() {
     return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/guide/architecture">
+      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${filterEngineNav(navSections)}" .headerNav="${headerNav}" current-path="/engine/architecture">
         <div class="container">
           <h1>Architecture</h1>
           <p class="subtitle">
-            LessJS 的架构核心是把路由、渲染、island、API 和静态产物连接成一条可观察的构建链。
+            LessJS 架构基于三支柱模型：全栈框架 + 通用 WC 渲染引擎 + Registry Hub。
             这页描述当前模型，也明确哪些边界还在硬化中。
           </p>
+
+          <h2>三支柱模型</h2>
+          <p>
+            LessJS <strong>不是 SSG 框架</strong>。SSG 只是渲染引擎的当前使用模式。
+            <span class="inline-code">renderDSD()</span> 是渲染时机无关的——build-time (SSG)、
+            cache-expiry-time (ISR)、request-time (SSR) 用同一套引擎。
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>支柱</th>
+                <th>职责</th>
+                <th>当前完成度</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1. 全栈框架</td>
+                <td>路由 + API Route + Serverless 部署 + Hono 运行时</td>
+                <td>60% — 缺 ISR/auth/DB/context</td>
+              </tr>
+              <tr>
+                <td>2. WC 渲染引擎</td>
+                <td>DSD 渲染 + 多框架适配器 + 兼容性分类</td>
+                <td>75% — 缺 Vue/hydration策略/streaming</td>
+              </tr>
+              <tr>
+                <td>3. Registry Hub</td>
+                <td>包发现 + 验证 + 预览 + 一键安装</td>
+                <td>65% — 缺公开服务</td>
+              </tr>
+            </tbody>
+          </table>
 
           <h2>System Shape</h2>
           <p>
@@ -192,7 +227,7 @@ Phase 3: SSG
           </p>
 
           <div class="nav-row">
-            <a href="/guide/design-philosophy" class="nav-link">&larr; 设计哲学</a>
+            <a href="/engine/comparison" class="nav-link">Comparison &rarr;</a>
             <a href="/guide/routing" class="nav-link">路由 &rarr;</a>
           </div>
         </div>
@@ -202,14 +237,48 @@ Phase 3: SSG
 
   private _renderEn() {
     return html`
-      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/guide/architecture">
+      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${filterEngineNav(navSections)}" .headerNav="${headerNav}" current-path="/en/engine/architecture">
         <div class="container">
           <h1>Architecture</h1>
           <p class="subtitle">
-            The core of LessJS architecture connects routing, rendering, islands, API, and static output
-            into an observable build chain. This page describes the current model and identifies
+            LessJS architecture is based on the three-pillar model: Full-Stack Framework + Universal WC
+            Rendering Engine + Registry Hub. This page describes the current model and identifies
             boundaries that are still being hardened.
           </p>
+
+          <h2>Three-Pillar Model</h2>
+          <p>
+            LessJS is <strong>not an SSG framework</strong>. SSG is one mode of the rendering engine.
+            <span class="inline-code">renderDSD()</span> is rendering-timing-agnostic — build-time (SSG),
+            cache-expiry-time (ISR), request-time (SSR), same engine.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Pillar</th>
+                <th>Responsibility</th>
+                <th>Current Completion</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1. Full-Stack Framework</td>
+                <td>Routing + API Routes + Serverless deployment + Hono runtime</td>
+                <td>60% — missing ISR/auth/DB/context</td>
+              </tr>
+              <tr>
+                <td>2. WC Rendering Engine</td>
+                <td>DSD rendering + multi-framework adapters + compatibility classification</td>
+                <td>75% — missing Vue/hydration strategies/streaming</td>
+              </tr>
+              <tr>
+                <td>3. Registry Hub</td>
+                <td>Package discovery + validation + preview + one-click install</td>
+                <td>65% — missing public service</td>
+              </tr>
+            </tbody>
+          </table>
 
           <h2>System Shape</h2>
           <p>
@@ -391,9 +460,8 @@ Phase 3: SSG
           </p>
 
           <div class="nav-row">
-            <a href="/guide/design-philosophy" class="nav-link">&larr; Design Philosophy</a>
+            <a href="/engine/comparison" class="nav-link">Comparison &rarr;</a>
             <a href="/guide/routing" class="nav-link">Routing &rarr;</a>
-            <a href="/guide/standards-registry" class="nav-link">Standards &amp; Registry &rarr;</a>
           </div>
         </div>
       </less-layout>

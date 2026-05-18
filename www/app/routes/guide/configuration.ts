@@ -1,5 +1,6 @@
 export const meta = { section: 'Production', label: 'Configuration', order: 10 };
 import { navSections, headerNav } from 'virtual:less-nav';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -11,7 +12,7 @@ export class ConfigurationPage extends LitElement {
   static override styles = [pageStyles];
   override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/guide/configuration"><div class="container">
+  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/configuration"><div class="container">
     <h1>配置</h1>
     <p class="subtitle">LessJS 通过 Vite 插件配置。路由、island、静态输出、head 注入、PWA 和 middleware 是各自独立的关注点。</p>
     <h2>Minimal Configuration</h2>
@@ -42,7 +43,7 @@ export default defineConfig({ plugins: [lessjs()] });</code></pre></less-code-bl
     <div class="nav-row"><a href="/guide/api-design" class="nav-link">&larr; API Design</a><a href="/guide/security-middleware" class="nav-link">Security &amp; Middleware &rarr;</a></div>
   </div></less-layout>`; }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/guide/configuration"><div class="container">
+  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/configuration"><div class="container">
     <h1>Configuration</h1>
     <p class="subtitle">LessJS is configured through Vite plugins. Routes, islands, static output, head injection, PWA, and middleware are independent concerns.</p>
     <p>All options are the same as the Chinese version. Refer to the code examples below:</p>

@@ -4,7 +4,72 @@
 
 ## Current Version: 0.19.0 (Complete — Phase 1/2/3 All Done)
 
-## Next Planned Version: 0.19.0 (Component Browser + Usage Workflow)
+## Architecture Positioning (ADR-0033)
+
+LessJS is **not** an "SSG framework" — it has three independent cores:
+
+1. **全栈框架** — Routing, API routes, dev server, build pipeline, deployment
+2. **通用WC渲染引擎** — DSD rendering, multi-framework adapters, Tier 1/2, hydration
+3. **Registry Hub** — Discovery, validation, one-click install
+
+SSG is one mode of the rendering engine, not the framework's identity.
+`renderDSD()` is **architecturally** rendering-timing-agnostic — designed to
+work at build-time (SSG), cache-expiry-time (ISR), or request-time (SSR).
+**Current implementation**: build-time (SSG) only.
+ISR and SSR are planned — see ROADMAP Phase 6/7.
+
+### Current rendering mode: Build-time (SSG)
+
+`renderDSD()` runs during `deno task build`, producing static HTML with
+`<template shadowrootmode="open">` for SSR-capable components.
+Next step: ISR (stale-while-revalidate).
+
+### Backend capability: Already exists
+
+Hono + API Routes are working (`app/routes/api/*.ts` → Hono sub-app).
+Example: `/api/term` in the www project. Missing: DB/Auth/ISR/context.
+
+### Mixed islands: Already exists
+
+Lit + React + Vanilla coexist with independent hydration.
+Gap: only binary `ssr:true/false`, no `client:load/idle/visible/only`.
+
+### Completion by pillar
+
+| Pillar | Completion |
+|--------|-----------|
+| 1. Full-Stack Framework | 45% |
+| 2. WC Rendering Engine | 75% |
+| 3. Registry Hub | 55% |
+| **Overall** | **~55%** |
+
+### Completion Methodology
+
+Percentages use a weighted capability model. Each pillar has N capabilities
+with weights; each capability is scored 0–100%. Pillar score is the weighted
+average. Key deductions for Pillar 1 (Full-Stack Framework):
+
+| Capability | Weight | Status | Score |
+|-----------|--------|--------|-------|
+| Routing (file + dynamic) | 15% | ✅ Complete | 15% |
+| Dev server + HMR | 10% | ✅ Complete | 10% |
+| Build pipeline | 10% | ✅ Complete | 10% |
+| API routes (Hono) | 10% | ⚠️ Basic | 5% |
+| Hydration strategies | 15% | ❌ Binary only | 3% |
+| SSR (request-time) | 10% | ❌ Not implemented | 0% |
+| ISR | 10% | ❌ Not implemented | 0% |
+| DB/Auth | 5% | ❌ Not implemented | 0% |
+| Deployment adapters | 5% | ⚠️ CF Pages only | 2% |
+| Request context | 5% | ❌ Not implemented | 0% |
+| Documentation | 5% | ⚠️ Partial | 2% |
+| **Total** | **100%** | | **47% → ~45%** |
+
+Pillar 3 (Registry Hub) reduced from 65% to 55%: 3 packages do not yet
+constitute an ecosystem-grade registry. Core pipeline is solid, but
+content scale and CLI availability (`less add` not exported) lower the
+practical score.
+
+## Next Planned Version: 0.20.x (Hydration Strategies + Full-Stack Groundwork)
 
 ### v0.19.0 — Registry Hub MVP (Phase 1: Completed 2026-05-17)
 
@@ -38,7 +103,7 @@ preventing release-ready status. All fixed:
 - `deno lint` — ✅ 0 errors
 - `deno fmt --check` — ✅ 0 errors
 - `deno task typecheck` — ✅ passes (includes hub CLI files)
-- `deno task test` — ✅ 715 passed, 0 failed
+- `deno task test` — ✅ 729 passed, 0 failed (verified 2026-05-18)
 - `deno task build` — ✅ 3 registry detail pages generated
 - `deno task hub:validate` — ✅ 3 records valid (was 1)
 - `deno task hub:check-index` — ✅ index up to date
@@ -51,22 +116,27 @@ See [ADR-0031](../adr/0031-hub-v2-component-browser-workflow.md) for architectur
 
 | Branch        | HEAD     | Status                                                      |
 | ------------- | -------- | ----------------------------------------------------------- |
-| `origin/dev`  | `latest` | v0.19.0 Phase 2 active (Component Browser + Usage Workflow) |
+| `origin/dev`  | `latest` | v0.19.0 Phase 1/2/3 complete (Component Browser + Playwright Snapshots) |
 | `origin/main` | `latest` | v0.18.3 release                                             |
 
 ## Tags
 
-| Tag     | Commit    | Date       |
-| ------- | --------- | ---------- |
-| v0.18.0 | `de78fdd` | 2026-05-17 |
-| v0.17.5 | `c71a662` | 2026-05-17 |
-| v0.17.4 | `3b5db70` | 2026-05-16 |
-| v0.17.3 | `be3cf0c` | 2026-05-16 |
-| v0.17.2 | pending   | 2026-05-16 |
-| v0.17.1 | `08f267d` | 2026-05-16 |
-| v0.17.0 | `1f93fa2` | 2026-05-16 |
-| v0.16.0 | `a02feb6` | 2026-05-16 |
-| v0.15.3 | `5e06fc9` | 2026-05-16 |
+> Last verified: 2026-05-18 via `git tag -l`. Tags not listed here do not
+> exist in the repository.
+
+| Tag     | Commit    | Date       | Note |
+| ------- | --------- | ---------- | ---- |
+| v0.19.0 | `6a5edcd` | 2026-05-18 | Pending (workspace not yet committed) |
+| v0.18.3 | `1d3c003` | 2026-05-17 | ✅ Created |
+| v0.18.0 | `0322699` | 2026-05-17 | ✅ Created |
+| v0.17.5 | `ed88eaa` | 2026-05-17 | ✅ Created |
+| v0.17.4 | `3b5db70` | 2026-05-16 | ✅ Existing |
+| v0.17.3 | `be3cf0c` | 2026-05-16 | ✅ Existing |
+| v0.17.2 | pending   | 2026-05-16 | Commit not identifiable |
+| v0.17.1 | `08f267d` | 2026-05-16 | ✅ Existing |
+| v0.17.0 | `1f93fa2` | 2026-05-16 | ✅ Existing |
+| v0.16.0 | `a02feb6` | 2026-05-16 | ✅ Existing |
+| v0.15.3 | `5e06fc9` | 2026-05-16 | ✅ Existing |
 
 ## Last Completed Release: 0.19.0 (2026-05-17)
 
@@ -91,6 +161,19 @@ See [ADR-0031](../adr/0031-hub-v2-component-browser-workflow.md) for architectur
 - Docs showcase chunks intentionally exceed the old 200KB total JS budget. The
   gate tracks core and showcase budgets separately; v0.19+ should add
   package-level bundle classification.
+- `www/dist/dsd-report.json` contains 72 SSR rendering errors from third-party
+  components (Shoelace). All errors are from browser-heavy components that
+  access DOM APIs (`querySelector`, layout properties) during SSR. These are
+  expected failures — the components are not SSR-admission-approved. See
+  Phase 6 SSR admission hardening for remediation.
+- `deno fmt --check` may emit a Rust panic message but exits with code 0.
+  This is a Deno CLI bug, not a project issue. Formatting is verified correct.
+- `@lessjs/hub` does not yet export `./cli/less-add`, `./cli/validate`,
+  `./cli/check-index` via `deno.json` exports. These CLIs exist in source
+  but are not available as JSR subpath imports. Fix tracked in Phase C.
+- `hub:check-index` currently writes `hub-index/index.json` when drift is
+  detected. Should be split into read-only check and explicit update.
+  Fix tracked in Phase C.
 
 ## Active Rule
 
@@ -111,8 +194,7 @@ Third-party package handling is conservative:
 | v0.18.1 | `docs/sop/v0.18.1-validate-manifest-cli.md`            | Done                 | v0.18.0 classifier stable                                            | `less validate-manifest` emits stable diagnostics         |
 | v0.18.2 | `docs/sop/v0.18.2-less-add-install-flow.md`            | Done                 | validation CLI stable                                                | `less add` dry-run/install is validation-gated            |
 | v0.18.3 | `docs/sop/v0.18.3-dom-simulation-experiment.md`        | Done                 | client-only fallback stable                                          | opt-in DOM simulation decision recorded                   |
-| v0.19.0 | `docs/sop/v0.19.0-platform-hub.md`                     | **Done**             | validation/build reports stable + ADR-0030 accepted                  | Hub ingests artifacts, CLI submit pipeline, search UI     |
-| v0.19.0 | `docs/sop/v0.19.0-platform-hub.md`                     | **Done (Phase 1)**   | validation/build reports stable + ADR-0030 accepted                  | Hub ingests artifacts, CLI submit pipeline, search UI     |
+| v0.19.0 | `docs/sop/v0.19.0-platform-hub.md` + `v0.19.0-component-browser.md` | **Done** | validation/build reports stable + ADR-0030 accepted | Hub ingests artifacts, CLI submit, component browser, Playwright snapshots |
 | v0.19.0 | `docs/sop/v0.19.0-component-browser.md`                | **Done**           | v0.19.0 Phase 1 deployed + fixture packages indexed                  | Component drill-down, rendered previews, `less add` CLI   |
 | v1.0.0  | `docs/sop/v1.0.0-general-purpose-engine.md`            | Vision               | engine, reports, add flow, Hub records stable                        | API/schema freeze with deterministic package outcomes     |
 

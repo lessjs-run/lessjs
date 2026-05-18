@@ -1,6 +1,7 @@
-export const meta = { section: 'Start Here', label: 'Standards & Registry', order: 35 };
+export const meta = { section: 'Compatibility', label: 'Standards & Registry', order: 20 };
 
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterEngineNav } from '../../utils/nav-filter.ts';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -17,9 +18,9 @@ export class StandardsRegistryGuidePage extends LitElement {
   private _renderZh() {
     return html`
       <less-layout
-        .navItems="${navSections}"
+        .navItems="${filterEngineNav(navSections)}"
         .headerNav="${headerNav}"
-        current-path="/guide/standards-registry"
+        current-path="/engine/standards-registry"
         locale="zh"
         .locales="${['en', 'zh']}"
       >
@@ -33,7 +34,7 @@ export class StandardsRegistryGuidePage extends LitElement {
           <h2>一句话边界</h2>
           <p>
             LessJS 可以成为 Web Components 的 SSR/SSG 渲染内核和包协议，但不能承诺任意 Web Component
-            都能被自动 SSR、自动注册和自动水合。所谓“自动”必须来自 manifest，而不是运行时猜测。
+            都能被自动 SSR、自动注册和自动水合。所谓"自动"必须来自 manifest，而不是运行时猜测。
           </p>
 
           <h2>参考标准与生态</h2>
@@ -144,7 +145,7 @@ export class StandardsRegistryGuidePage extends LitElement {
           </ol>
 
           <div class="nav-row">
-            <a href="/guide/architecture" class="nav-link">&larr; Architecture</a>
+            <a href="/engine/architecture" class="nav-link">&larr; Architecture</a>
             <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
           </div>
         </div>
@@ -155,9 +156,9 @@ export class StandardsRegistryGuidePage extends LitElement {
   private _renderEn() {
     return html`
       <less-layout
-        .navItems="${navSections}"
+        .navItems="${filterEngineNav(navSections)}"
         .headerNav="${headerNav}"
-        current-path="/en/guide/standards-registry"
+        current-path="/en/engine/standards-registry"
         locale="en"
         .locales="${['en', 'zh']}"
       >
@@ -295,8 +296,8 @@ export class StandardsRegistryGuidePage extends LitElement {
           </ol>
 
           <div class="nav-row">
-            <a href="/en/guide/architecture" class="nav-link">&larr; Architecture</a>
-            <a href="/en/roadmap" class="nav-link">Roadmap &rarr;</a>
+            <a href="/engine/architecture" class="nav-link">&larr; Architecture</a>
+            <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
           </div>
         </div>
       </less-layout>

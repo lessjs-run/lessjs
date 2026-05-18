@@ -4,6 +4,7 @@ date: '2026-05-12'
 type: 'adr'
 tags: ['architecture', 'decision']
 draft: false
+hidden: true
 ---
 
 ## 状态

@@ -1,5 +1,6 @@
 export const meta = { section: 'Production', label: 'Error Handling', order: 30 };
 import { navSections, headerNav } from 'virtual:less-nav';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -9,7 +10,7 @@ export class ErrorHandlingPage extends LitElement {
   static override styles = [pageStyles, css`.error-hierarchy { padding: 1rem; background: var(--less-bg-surface); border-left: 2px solid var(--less-border-hover); border-radius: 0 4px 4px 0; margin: 1rem 0; font-family: "SF Mono", monospace; font-size: 0.8125rem; line-height: 1.8; color: var(--less-text-secondary); }`];
   override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/guide/error-handling"><div class="container">
+  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/error-handling"><div class="container">
     <h1>错误处理</h1>
     <p class="subtitle">LessJS 区分框架错误、构建时渲染错误、API 错误和浏览器 island 故障。目标是在不泄露生产环境内部信息的前提下实现清晰诊断。</p>
     <h2>Error Hierarchy</h2>
@@ -21,7 +22,7 @@ export class ErrorHandlingPage extends LitElement {
     <div class="nav-row"><a href="/guide/security-middleware" class="nav-link">&larr; 安全与 Middleware</a><a href="/guide/testing" class="nav-link">Testing &rarr;</a></div>
   </div></less-layout>`; }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/guide/error-handling"><div class="container">
+  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/error-handling"><div class="container">
     <h1>Error Handling</h1>
     <p class="subtitle">LessJS distinguishes between framework errors, build-time render errors, API errors, and browser island failures. The goal is clear diagnostics without leaking internal information in production.</p>
     <h2>Error Hierarchy</h2>

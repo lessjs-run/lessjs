@@ -1,0 +1,287 @@
+# LessJS 项目文件全面审查报告
+
+> 审查日期：2026-05-18
+> 审查对象：两份审计报告 + 仓库实际状态交叉验证
+> 审查员：独立技术审计员（按审计提示词执行）
+
+---
+
+## 审查范围
+
+本报告审查以下两份文件，并与仓库真实数据交叉验证：
+
+1. **文件A**：`lessjs-audit-report(1).md` — LessJS 独立技术产品审计报告
+2. **文件B**：`LessJS-full-stack-framework-audit-2026-05-18.md` — LessJS 全站框架架构与市场审查报告
+
+同时以 `docs/status/STATUS.md` 和 `docs/roadmap/ROADMAP.md` 作为项目自述的参照基准。
+
+---
+
+## 一、仓库真实数据快照（2026-05-18 22:XX）
+
+### 1.1 版本与包信息
+
+| 包名 | 真实版本 | 文件A/B/STATUS 声称 |
+|------|---------|---------------------|
+| @lessjs/core | 0.18.3 | 一致 |
+| @lessjs/adapter-lit | 0.18.3 | 一致 |
+| @lessjs/adapter-react | 0.18.3 | 一致 |
+| @lessjs/adapter-vanilla | 0.18.3 | 一致 |
+| @lessjs/adapter-vite | 0.18.3 | 一致 |
+| @lessjs/app | 0.18.3 | 一致 |
+| @lessjs/content | 0.18.3 | 一致 |
+| @lessjs/create | 0.18.3 | 一致 |
+| @lessjs/hub | **0.19.0** | 一致 |
+| @lessjs/i18n | 0.18.3 | 一致 |
+| @lessjs/rpc | 0.18.3 | 一致 |
+| @lessjs/signals | 0.18.3 | 一致 |
+| @lessjs/ui | 0.18.3 | 一致 |
+
+**包数量：13 个**（不含 www），与两份审计报告一致。
+
+### 1.2 质量门禁（实际运行结果）
+
+| 门禁 | 真实结果 | 文件A说法 | 文件B说法 | STATUS.md说法 |
+|------|---------|----------|----------|-------------|
+| `deno task test` | ✅ **729** passed, 0 failed | 未提及具体数 | 729 passed | ❌ **715 passed**（过时） |
+| `deno lint` | ✅ 0 errors | 一致 | 一致 | 一致 |
+| `deno fmt --check` | ✅ 通过（有 panic 但 exit=0） | 未提及 | ❌ **说 8 文件未格式化** | ❌ **说过时** |
+| `deno task typecheck` | ✅ 通过 | 一致 | 一致 | 一致 |
+| `deno task build` | ✅ 通过 | 一致 | 一致 | 一致 |
+| `deno task hub:scan` | ✅ 47/48（sl-table 超时） | 未直接运行 | 未直接运行 | 未提及 |
+| `deno task hub:validate` | ✅ 3/3 records valid | 一致 | 一致 | 一致 |
+| `deno task hub:check-index` | ✅ up to date | 一致 | 一致 | 一致 |
+
+### 1.3 构建输出
+
+- 35 pages, 1 API route, 15 islands
+- `dsd-report.json`：**72 totalErrors**，51 个页面有渲染错误
+- 错误分布：`this.host.querySelector is not a function`(51x)、`Cannot read properties of undefined`(9x)、`Failed to instantiate`(6x)等
+- **全部 72 个错误来自 Shoelace 组件在 SSG 构建中的 SSR 失败**
+
+### 1.4 Git 状态
+
+- 工作区 **77 个**未提交变更（脏工作区）
+- 无 v0.18.0、v0.17.5、v0.18.3 的 git tag（STATUS.md 列了 v0.18.0 tag `de78fdd` 等，**实际不存在**）
+- ADR-0033 文件存在但**未在 git 中跟踪**（untracked）
+- www/app/routes/engine/ 目录为 **untracked**（新增的页面结构）
+
+### 1.5 Hub 生态
+
+- hub-index 中 3 个包：@lessjs/ui, @shoelace-style/shoelace, media-chrome
+- @lessjs/hub 的 deno.json **未导出** `./cli/less-add`、`./cli/validate`、`./cli/check-index`
+- `hub:check-index` 在发现 drift 时**会写文件**（不是纯只读检查）
+
+---
+
+## 二、文件A审查：lessjs-audit-report(1).md
+
+### 概要判定
+- 整体准确度：🟡 **中**
+- 主要问题数：**4 个**
+- 次要问题数：**3 个**
+
+### 问题清单
+
+| # | 严重度 | 类别 | 位置 | 问题描述 | 当前内容 | 应改为 | 证据 |
+|---|--------|------|------|---------|---------|--------|------|
+| 1 | 🔴严重 | 事实遗漏 | 二、技术审计 | 未提及 dsd-report.json 中 72 条 SSR 渲染错误 | 未提及 | 应补充此关键事实 | 实际运行确认 72 errors，51 页面受影响 |
+| 2 | 🔴严重 | 事实遗漏 | 二、技术审计 | 未提及 @lessjs/hub 缺少 less-add 等 CLI 导出 | 未提及 | 应指出 less-add 未发布 | hub/deno.json exports 无 ./cli/less-add |
+| 3 | 🟡中等 | 事实偏差 | 五、生存审计 | "全栈框架自 v0.17 后基本没推进" | 此说法 | 不完全准确——Hono API Route、配置系统等在 v0.18 持续推进 | 见 ROADMAP Phase 4/5 |
+| 4 | 🟡中等 | 内部矛盾 | 六、WWW结构 | 建议 /docs/ 统一文档入口，但未检查当前 /guide/ 和 /engine/ 已是分离状态 | 建议 /docs/ | 应先评估现有页面迁移成本 | 当前 77 个未提交变更已包含新路由结构 |
+| 5 | 🟢轻微 | 遗漏 | 全文 | 未提及 git tag 缺失问题 | 未提及 | 应指出 STATUS.md 中引用的 tag 不存在 | v0.18.0 tag 实际不存在 |
+| 6 | 🟢轻微 | 遗漏 | 全文 | 未提及工作区脏状态 | 未提及 | 审计基于脏工作区，结论需附前提 | git status 显示 77 个未提交变更 |
+| 7 | 🟢轻微 | 语义 | 六、WWW结构 | "Astro/Next.js/SvelteKit 都是一个 /docs/ 入口" | 对标 | SvelteKit 实际是 /docs/，但 Astro 有 /guides/ + /reference/ 分区 | 应更精确 |
+
+### 语义精确性警告
+
+| 位置 | 当前表述 | 问题 | 建议改为 |
+|------|---------|------|---------|
+| 二、技术审计 | "全栈框架完成度 60% 高估了，实际约 35-40%" | 计算方法缺少明确定义 | 应列出 10 个子项逐个判定，附评分依据 |
+| 二、技术审计 | "renderDSD() 本质上是 HTML 模板引擎" | 模板引擎通常指 Mustache/Handlebars，renderDSD() 有组件实例化和递归渲染能力 | "renderDSD() 是声明式组件渲染器，输出纯字符串" |
+| 七、最终判定 | Hub "⚠️ 勉强成立" | 判定标准不透明——"勉强"和"不成立"的边界在哪 | 给出明确的二元判定：当前生态是否支撑价值主张 |
+
+### 审计深度评估
+
+文件A的强项是**战略层面分析**（定位审计、竞争审计、生存审计），弱项是**技术细节验证**。以下关键事实未验证：
+
+1. 未运行 `deno task build` 检查 dsd-report.json
+2. 未运行 `hub:scan` 验证快照渲染状态
+3. 未检查 @lessjs/hub 的 exports 完整性
+4. 未检查 git tag 是否真实存在
+5. 未检查工作区脏状态对审计结论的影响
+
+---
+
+## 三、文件B审查：LessJS-full-stack-framework-audit-2026-05-18.md
+
+### 概要判定
+- 整体准确度：🟢 **高**（两份报告中更严谨的一份）
+- 主要问题数：**3 个**
+- 次要问题数：**4 个**
+
+### 问题清单
+
+| # | 严重度 | 类别 | 位置 | 问题描述 | 当前内容 | 应改为 | 证据 |
+|---|--------|------|------|---------|---------|--------|------|
+| 1 | 🔴严重 | 事实偏差 | 9.1 | "`deno task fmt:check` Failed，8 个文件未格式化" | Failed | ❌ 当前实际通过（有 panic 但 exit code 0） | 本次实际运行 fmt:check 通过 |
+| 2 | 🔴严重 | 事实偏差 | 9.1 | "`deno task test:e2e` 88 passed, 4 failed" | 4 failed | ⚠️ 本次未重跑 e2e，但 e2e 的稳定性取决于运行环境 | 文件B运行时有 4 fail，可能已修复或仍存在 |
+| 3 | 🟡中等 | 时效性 | 2.1 | "当前工作区不是干净发布快照" | 77 个变更 | 仍然成立，但 77 比文件B时可能更多 | 本次确认 77 个未提交变更 |
+| 4 | 🟡中等 | 遗漏 | 8.2 | 未提及 ADR-0033 未被 git 跟踪 | 未提及 | ADR-0033 是 untracked，不应视为正式 ADR | git status 显示 ?? |
+| 5 | 🟢轻微 | 语义 | 6.2 | "护城河等级：早期技术楔子" | 说法 | 比文件A的"技术楔子不是护城河"更精确 | — |
+| 6 | 🟢轻微 | 遗漏 | 全文 | 未提及 STATUS.md 中 v0.18.0 tag 不存在 | 未提及 | STATUS.md 引用的 tag 应验证 | git tag -l 无 v0.18.0 |
+| 7 | 🟢轻微 | 语义 | 3.2 | 建议一句话定位用英文 | 英文建议 | 合理，但与项目实际中英双语状态有关 | — |
+
+### 文件B的突出贡献
+
+文件B比文件A更深入的地方：
+
+1. **实际运行了完整门禁** — 包括 fmt:check、test:e2e、build、hub:validate
+2. **分析了 dsd-report.json** — 发现 72 条错误，按 tag 汇总
+3. **检查了 hub/deno.json exports** — 发现 less-add 未导出
+4. **检查了 hub:check-index 会写文件** — 指出 check/update 应分离
+5. **检查了 CI 与 SOP 不一致** — test-hub job 不含 hub:scan
+6. **对比了外部标准** — WHATWG DSD、CEM、Hono、Fresh、Next.js 官方文档
+
+### 文件B的关键问题
+
+文件B最大的问题是 **fmt:check 结论可能已过时**。文件B在较早时间运行时 fmt:check 失败，但后续 `deno fmt` 可能已被执行（git log 显示有 `a9bdf90 style: deno fmt` commit），所以当前 fmt:check 通过。这说明文件B的审计时间点和当前仓库状态存在漂移。
+
+---
+
+## 四、两份文件的一致性对比
+
+| 维度 | 文件A | 文件B | 是否一致 | 备注 |
+|------|------|------|---------|------|
+| 项目定位 | "不是全栈框架" | "不能称为成熟 full-stack framework" | ✅ 基本一致 | A更激进，B更审慎 |
+| 渲染引擎评价 | ✅ 唯一成立板块 | 8/10 架构方向 | ✅ 一致 | |
+| Hub 价值 | ⚠️ 3 包不够 | "Local MVP, not ecosystem-grade" | ✅ 一致 | |
+| 全栈框架完成度 | 35-40% | ~65%（引用项目自评但标注"还要再谨慎一点"） | ❌ **不一致** | A自己算 35-40%，B引用项目 65% 但下调 |
+| Hydration 优先级 | P0 | P0 | ✅ 一致 | |
+| Vue adapter | 降级到 P2 | "不应在协议稳定前贸然加入" | ✅ 一致 | |
+| Supabase | 砍掉或 P3 | "不建议近期做" | ✅ 一致 | |
+| WWW 结构 | /docs/ + /hub/ + /blog/ | 未给出具体建议 | ⚠️ 无法对比 | B未做WWW结构建议 |
+| 测试数量 | 未提及 | 729 passed | — | A未验证 |
+| dsd-report 错误 | 未提及 | 72 errors | — | A遗漏 |
+| fmt:check | 未提及 | Failed（已过时） | — | A未检查，B结论过时 |
+
+### 关键分歧
+
+**全栈框架完成度**是两份报告的最大分歧：
+
+- 文件A：35-40%（自己算的，基于行业基准逐项扣分）
+- 文件B：~65%（引用项目自评，但标注"还要再谨慎一点"）
+- 项目自评（STATUS.md）：60%
+
+**我的判定**：文件A的 35-40% 更接近事实，但计算方法不够透明。文件B的 65% 直接引用了项目数字然后口头打折，缺乏独立计算。**真实完成度取决于"全栈框架"的定义边界**——如果只算"有这个能力"就是 55-60%，如果按"用户可生产使用"就是 35-40%。
+
+---
+
+## 五、STATUS.md 审查
+
+### 概要判定
+- 整体准确度：🟡 **中**
+- 主要问题数：**5 个**
+- 次要问题数：**3 个**
+
+### 问题清单
+
+| # | 严重度 | 类别 | 位置 | 问题描述 | 当前内容 | 应改为 | 证据 |
+|---|--------|------|------|---------|---------|--------|------|
+| 1 | 🔴严重 | 事实错误 | Verification | "715 passed, 0 failed" | 715 | **729 passed**（已过时，差 14 个测试） | 本次实际运行 729 |
+| 2 | 🔴严重 | 事实错误 | Tags | "v0.18.0 de78fdd 2026-05-17" 等 tag | 列出 v0.18.0 到 v0.15.3 的 tag 和 commit | **v0.18.0 及之后的 tag 不存在** | git tag -l 确认只有 v0.17.4 及更早 |
+| 3 | 🔴严重 | 语义误导 | Architecture Positioning | "renderDSD() is rendering-timing-agnostic — works at build-time (SSG), cache-expiry-time (ISR), or request-time (SSR)" | "渲染时机无关" | ❌ 当前只有 SSG 实现，ISR/SSR 未实现 | 源码中无 ISR/SSR 调用入口 |
+| 4 | 🟡中等 | 语义误导 | Completion by pillar | "Full-Stack Framework 60%" | 60% | 缺 SSR/ISR/Hydration/DB/Auth，按行业基准不足 60% | 对比 Next/Nuxt/SvelteKit |
+| 5 | 🟡中等 | 内部矛盾 | Branch Status | "v0.19.0 Phase 2 active" | Phase 2 active | Phase 1/2/3 已完成，不应说 "Phase 2 active" | 同文件标题写 "Phase 1/2/3 All Done" |
+| 6 | 🟢轻微 | 时效性 | Last Completed Release | "0.19.0 (2026-05-17)" 下列 DOM Simulation / Happy DOM 内容 | v0.18.3 的内容放在 v0.19.0 下 | 应归入 v0.18.x 或移除 | DOM Simulation 是 v0.18.3 的特性 |
+| 7 | 🟢轻微 | 遗漏 | Known Issues | 未提及 dsd-report.json 72 条错误 | 未提及 | 应列为已知问题 | 构建产出确认 |
+| 8 | 🟢轻微 | 遗漏 | Version Ladder | v0.19.0 出现两次且状态不同 | "Done" 和 "Done (Phase 1)" | 合并或区分清楚 | 重复行 |
+
+---
+
+## 六、ROADMAP.md 审查
+
+### 概要判定
+- 整体准确度：🟢 **高**
+- 主要问题数：**2 个**
+- 次要问题数：**2 个**
+
+### 问题清单
+
+| # | 严重度 | 类别 | 位置 | 问题描述 | 当前内容 | 应改为 | 证据 |
+|---|--------|------|------|---------|---------|--------|------|
+| 1 | 🟡中等 | 语义误导 | Phase 5 | "52/53 components render via Playwright" | 52/53 | 本次实际 47/48（hub:scan 结果可能因版本/环境不同） | 本次 hub:scan 确认 |
+| 2 | 🟡中等 | 语义误导 | Phase 6 | "`renderDSD()` is rendering-timing-agnostic" | 渲染时机无关 | 当前只有 SSG 实现，此声称对用户构成误导 | |
+| 3 | 🟢轻微 | 遗漏 | Phase 6 | 未提及 dsd-report.json 72 条错误对 Phase 6 的影响 | 未提及 | Phase 6 应包含 "SSR admission 强化" 以堵住 72 错误 | |
+| 4 | 🟢轻微 | 时效性 | Phase 5 | "Phase 2 (Completed 2026-05-18)" | 5/18 | 实际完成时间取决于 commit 时间 | |
+
+---
+
+## 七、交叉验证：两份审计报告 vs 项目自述 vs 代码现实
+
+### 7.1 关键事实三方对照
+
+| 事实 | 文件A | 文件B | STATUS/ROADMAP | 代码现实 | 最终判定 |
+|------|------|------|---------------|---------|---------|
+| 测试数量 | 未验证 | 729 | 715 | **729** | STATUS.md 过时 |
+| fmt:check 状态 | 未验证 | Failed | ✅ 通过 | ✅ 通过 | 文件B过时 |
+| Hub 包数量 | 3 | 3 | 3 | **3** | 一致 |
+| sl-table 快照 | 未提及 | 未提及 | 未提及 | ❌ 超时 | 两份报告和项目均遗漏 |
+| dsd-report 错误 | 未提及 | 72 条 | 未提及 | **72 条** | 文件B唯一发现 |
+| less-add 导出 | 未提及 | 未导出 | 未提及 | **未导出** | 文件B唯一发现 |
+| git tag v0.18.0 | 未提及 | 未检查 | 列出但不存在 | **不存在** | 全部遗漏 |
+| renderDSD() 渲染时机无关 | 标注为声称 | 未直接评判 | 声称为事实 | **只有 SSG** | 仅文件A指出 |
+| @lessjs/ui 用 Lit | 明确指出 | 提到但未深究 | 未提及 | **Lit** | 文件A更准确 |
+
+### 7.2 两份报告互补分析
+
+| 维度 | 文件A 更强 | 文件B 更强 |
+|------|----------|----------|
+| 战略定位分析 | ✅ 五板块审计、生存审计 | — |
+| 技术细节验证 | — | ✅ 门禁运行、dsd-report、exports |
+| 语义精确性 | ✅ "DSD-native 是误导" | — |
+| 外部标准对比 | — | ✅ WHATWG/CEM/Hono/Fresh 对标 |
+| 竞争分析 | ✅ 直面"没什么理由切换" | ✅ 更细分的三个目标市场 |
+| 优先级建议 | ✅ ISR 提到 P0 | ✅ 48h 行动计划更具体 |
+| WWW 结构 | ✅ 给出具体建议 | — |
+| 护城河分析 | — | ✅ 已有/尚未形成 双维度 |
+
+---
+
+## 八、综合发现：两份报告均未发现的问题
+
+| # | 问题 | 严重度 | 证据 |
+|---|------|--------|------|
+| 1 | **STATUS.md 引用的 git tag（v0.18.0, v0.17.5, v0.18.3）全部不存在** | 🔴 | `git tag -l` 确认最新 tag 为 v0.17.4 |
+| 2 | **工作区 77 个未提交变更**，包含删除旧路由（community.ts, guide/*）和新增路由（engine/），意味着当前代码处于结构迁移中间态 | 🔴 | `git status --short` |
+| 3 | **ADR-0033 未被 git 跟踪**，不应被视为正式合并的 ADR | 🟡 | `git status` 显示 ?? |
+| 4 | **hub:scan 结果不一致**：ROADMAP 写 52/53，本次实际 47/48。可能是 demo-config 或环境差异 | 🟡 | 需要固定 demo 配置确保可复现 |
+| 5 | **deno fmt --check 有 panic**（exit=0 但有 Rust panic），说明 deno fmt 自身有 bug | 🟢 | fmt:check 输出 |
+| 6 | **v0.19.0 没有对应的 git tag**，但 STATUS.md 声称 "Last Completed Release: 0.19.0" | 🟡 | git tag -l 确认 |
+
+---
+
+## 九、最终结论
+
+### 可信度评分
+
+| 文件 | 可信度 | 理由 |
+|------|--------|------|
+| 文件A（lessjs-audit-report） | **68/100** | 战略分析强，但技术验证不足，多处关键事实未检查 |
+| 文件B（full-stack-framework-audit） | **82/100** | 技术验证深入，门禁全跑，但 fmt 结论过时，缺少 WWW 结构建议 |
+| STATUS.md | **55/100** | 测试数过时、tag 不存在、渲染时机声称误导、完成度偏高 |
+| ROADMAP.md | **78/100** | 整体准确，但渲染时机无关的声称需标注为愿景而非事实 |
+
+### Top 5 优先修复问题
+
+| 优先级 | 问题 | 影响 | 建议操作 |
+|--------|------|------|---------|
+| **1** | STATUS.md 测试数 715 → 729 | 事实错误 | 更新为 729 |
+| **2** | STATUS.md 引用的 git tag 不存在 | 事实错误 | 要么打 tag，要么移除引用 |
+| **3** | "renderDSD() 渲染时机无关"是声称不是事实 | 语义误导 | 标注"当前仅 SSG，ISR/SSR 为计划中" |
+| **4** | dsd-report 72 条错误未在 Known Issues 中 | 遗漏 | 加入 Known Issues，标注为 Shoelace SSR admission 边界问题 |
+| **5** | @lessjs/hub 未导出 less-add CLI | 产品完整性 | 补齐 exports 或在文档降级 less-add 为实验性 |
+
+---
+
+*审查完毕。所有结论基于 2026-05-18 22:XX 的仓库实际状态，非已发布 tag 快照。*
