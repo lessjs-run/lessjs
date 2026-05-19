@@ -152,9 +152,9 @@ export default class DocsHome extends DsdLitElement {
       display:flex;flex-direction:column;
     }
 
-    /* ── I. Hero — dark immersive opening ── */
+    /* ── I. Hero — dark immersive opening with fluid wave ── */
     .hero {
-      background: linear-gradient(170deg, var(--less-brand-deep, #26215C) 0%, #111127 50%, var(--less-brand-deep, #26215C) 100%);
+      background: linear-gradient(170deg, var(--less-brand-deep, #26215C) 0%, #0d0d1f 40%, var(--less-brand-deep, #26215C) 100%);
       color: #fff;
       width: 100vw;
       margin-left: calc(-50vw + 50%);
@@ -163,30 +163,47 @@ export default class DocsHome extends DsdLitElement {
     }
     .hero::before {
       content: '';
-      position: absolute;
-      top: -50%;
-      left: -30%;
-      width: 80%;
-      height: 80%;
-      background:
-        radial-gradient(ellipse, var(--less-brand-glow, rgba(83,74,183,0.25)) 0%, transparent 70%),
-        radial-gradient(ellipse at 70% 30%, rgba(83,74,183,0.08) 0%, transparent 50%);
+      position: absolute; inset: 0;
       pointer-events: none;
-      animation: heroGlow 8s ease-in-out infinite;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 60%, rgba(83,74,183,0.2) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 65% 25%, rgba(109,92,232,0.15) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 45% at 80% 70%, rgba(83,74,183,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse 70% 60% at 10% 15%, rgba(131,124,246,0.1) 0%, transparent 65%);
+      animation: fluid1 12s ease-in-out infinite, fluid2 18s ease-in-out infinite;
     }
     .hero::after {
       content: '';
       position: absolute;
-      bottom: -20%;
-      right: -10%;
-      width: 50%;
-      height: 50%;
-      background: radial-gradient(ellipse, rgba(83,74,183,0.15) 0%, transparent 60%);
+      width: 200%; height: 120%;
+      top: -10%; left: -50%;
       pointer-events: none;
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(83,74,183,0.18) 0%, transparent 40%),
+        radial-gradient(ellipse at 30% 70%, rgba(109,92,232,0.1) 0%, transparent 35%),
+        radial-gradient(ellipse at 70% 30%, rgba(83,74,183,0.08) 0%, transparent 45%);
+      animation: fluidDrift 14s ease-in-out infinite alternate, fluidPulse 10s ease-in-out infinite;
+    }
+    @keyframes fluid1 {
+      0%,100% { transform: scale(1) translateX(0); opacity: 0.7; }
+      33%     { transform: scale(1.15) translateX(-3%); opacity: 0.9; }
+      66%     { transform: scale(0.9) translateX(2%); opacity: 0.5; }
+    }
+    @keyframes fluid2 {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      50%     { transform: translateY(-2%) rotate(1deg); }
+    }
+    @keyframes fluidDrift {
+      0%   { transform: translateX(-5%) scaleY(1); }
+      100% { transform: translateX(5%) scaleY(1.08); }
+    }
+    @keyframes fluidPulse {
+      0%,100% { opacity: 0.5; }
+      50%     { opacity: 0.85; }
     }
     @keyframes heroGlow {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 1; }
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 0.9; }
     }
     .hero-inner {
       max-width: 960px;
@@ -401,7 +418,7 @@ export default class DocsHome extends DsdLitElement {
       width: 100vw;
       margin-left: calc(-50vw + 50%);
       padding-bottom: 0;
-      background: linear-gradient(180deg, var(--less-bg-base, #ffffff) 0%, #F1EFE8 100%);
+      background: linear-gradient(180deg, rgba(83,74,183,0.05) 0%, rgba(83,74,183,0.02) 30%, #ffffff 100%);
     }
     .sec-qs-last .sec-lbl,
     .sec-qs-last .sec-title,
@@ -418,6 +435,8 @@ export default class DocsHome extends DsdLitElement {
     .turn-glow { width:100vw;margin-left:calc(-50vw+50%);height:1px;background:radial-gradient(ellipse at 50% 50%,var(--less-brand-glow,rgba(83,74,183,0.25)),transparent 70%);border:none }
     .card-dominant { grid-column:1/-1;background:linear-gradient(135deg,rgba(83,74,183,0.06),rgba(83,74,183,0.02));border-left:3px solid var(--less-brand,#534AB7);border-top:1px solid rgba(83,74,183,0.1);border-right:1px solid rgba(83,74,183,0.1);border-bottom:1px solid rgba(83,74,183,0.1) }
     .card-dominant:hover { border-left-color:var(--less-brand-light,#6D5CE8);box-shadow:0 0 20px var(--less-brand-glow,rgba(83,74,183,0.15)) inset,var(--less-shadow-brand-sm,0 2px 12px rgba(83,74,183,0.2)) }
+    .card-meta { display:flex;gap:6px;margin-top:10px;flex-wrap:wrap }
+    .card-meta span { display:inline-flex;padding:1px 8px;border-radius:4px;font-size:10px;font-weight:500;color:var(--less-text-muted);background:var(--less-bg-surface);border:0.5px solid var(--less-border);font-family:var(--font-mono,"SF Mono","JetBrains Mono",monospace) }
     .card-pills { display:flex;gap:6px;margin-top:12px }
     .card-pill { display:inline-flex;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:500;color:var(--less-brand,#534AB7);background:rgba(83,74,183,0.08);border:1px solid rgba(83,74,183,0.15) }
 
@@ -618,8 +637,8 @@ export default class DocsHome extends DsdLitElement {
 
     /* ── III. Site Footer — warm-gray quiet landing ── */
     .site-footer {
-      background: linear-gradient(180deg, #F1EFE8 0%, #EBE9E0 100%);
-      border-top: 2px solid var(--less-brand, #534AB7);
+      background: linear-gradient(180deg, var(--less-brand-deep,#26215C) 0%, rgba(83,74,183,0.3) 25%, rgba(83,74,183,0.05) 50%, #F1EFE8 100%);
+      border-top: none;
       padding: 3rem 2rem 1.5rem;
       width: 100vw;
       margin-left: calc(-50vw + 50%);
@@ -638,7 +657,7 @@ export default class DocsHome extends DsdLitElement {
       font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
       font-size: 1.125rem;
       font-weight: 500;
-      color: var(--less-brand-dark, #26215C);
+      color: #fff;
     }
     .footer-brand span {
       font-size: 0.8125rem;
@@ -666,13 +685,13 @@ export default class DocsHome extends DsdLitElement {
     .footer-col a {
       display: block;
       font-size: 0.75rem;
-      color: #888780;
+      color: rgba(255,255,255,0.55);
       text-decoration: none;
       padding: 0.2rem 0;
       transition: color var(--less-duration-micro, 150ms) var(--less-easing-default, ease-out);
     }
     .footer-col a:hover {
-      color: #444441;
+      color: #fff;
     }
     .footer-terminal {
       background: var(--less-brand-deep, #26215C);
@@ -691,7 +710,7 @@ export default class DocsHome extends DsdLitElement {
       color: #AFA9EC;
     }
     .footer-bottom {
-      border-top: 0.5px solid #D3D1C7;
+      border-top: 0.5px solid rgba(255,255,255,0.15);
       padding-top: 1rem;
       display: flex;
       justify-content: space-between;
@@ -699,11 +718,11 @@ export default class DocsHome extends DsdLitElement {
     }
     .footer-bottom span {
       font-size: 0.6875rem;
-      color: #B4B2A9;
+      color: rgba(255,255,255,0.45);
     }
     .footer-bottom a {
       font-size: 0.6875rem;
-      color: #B4B2A9;
+      color: rgba(255,255,255,0.45);
       text-decoration: none;
     }
     .footer-bottom a:hover {
@@ -724,7 +743,7 @@ export default class DocsHome extends DsdLitElement {
 
     /* ── Reduced motion ── */
     @media (prefers-reduced-motion: reduce) {
-      .hero::before { animation: none; }
+      .hero::before, .hero::after { animation: none; }
       .card { transition: none; }
       .site-footer a { transition: none; }
       .hero-actions a { transition: none; }
@@ -823,8 +842,8 @@ export default class DocsHome extends DsdLitElement {
             <h1>全栈框架 · <em>零 JS 首屏</em> · <em>多框架共存</em></h1>
             <p class="hero-desc">DSD 原生渲染，浏览器零 JS 看到完整页面</p>
             <div class="hero-actions">
-              <a class="hero-pri" href="/guide/getting-started">开始使用 →</a>
-              <a class="hero-sec" href="/guide/positioning">理解定位</a>
+              <a class="hero-pri" href="/guide/deployment">开始使用 →</a>
+              <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">GitHub</a>
             </div>
           </div>
         </section>
@@ -909,12 +928,22 @@ export default class DocsHome extends DsdLitElement {
           <p class="sec-title">任意框架，同一个 island</p>
           <div class="sec-bd">
             <less-showcase-panel .tabs="${SHOWCASE_TABS_ZH}" .activeTab="${0}">
-              <div style="text-align:center;padding:2rem;color:var(--less-text-muted);font-size:13px">
-                <div style="width:48px;height:48px;border-radius:12px;background:var(--less-brand-subtle,#EEEDFE);margin:0 auto 12px;display:flex;align-items:center;justify-content:center">
-                  <span style="font-size:20px;color:var(--less-brand,#534AB7)">◇</span>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:1rem;text-align:center">
+                <div style="background:var(--less-bg-surface);border-radius:10px;padding:1.5rem 0.75rem;border:1px solid var(--less-border)">
+                  <div style="font-size:24px;margin-bottom:6px;color:#185FA5">⚡</div>
+                  <div style="font-size:12px;font-weight:600;color:var(--less-text-primary)">Lit</div>
+                  <div style="font-size:10px;color:var(--less-text-muted);margin-top:2px">shoelace</div>
                 </div>
-                <p>Lit · React · Vanilla 组件交互展示</p>
-                <p style="font-size:11px;margin-top:4px">客户端 JavaScript 加载后自动渲染</p>
+                <div style="background:var(--less-bg-surface);border-radius:10px;padding:1.5rem 0.75rem;border:1px solid var(--less-border)">
+                  <div style="font-size:24px;margin-bottom:6px;color:#0D6EFD">⚛</div>
+                  <div style="font-size:12px;font-weight:600;color:var(--less-text-primary)">React 19</div>
+                  <div style="font-size:10px;color:var(--less-text-muted);margin-top:2px">RSC</div>
+                </div>
+                <div style="background:var(--less-bg-surface);border-radius:10px;padding:1.5rem 0.75rem;border:1px solid var(--less-border)">
+                  <div style="font-size:24px;margin-bottom:6px;color:#0F6E56">🎬</div>
+                  <div style="font-size:12px;font-weight:600;color:var(--less-text-primary)">Vanilla</div>
+                  <div style="font-size:10px;color:var(--less-text-muted);margin-top:2px">media chrome</div>
+                </div>
               </div>
             </less-showcase-panel>
           </div>
@@ -944,12 +973,14 @@ export default class DocsHome extends DsdLitElement {
               <div class="card">
                 <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">F</div>
                 <h3>全栈框架</h3>
-                <p>文件约定路由 + Hono API Route + Serverless 部署。</p>
+                <p>文件约定路由 + Hono API Route + Serverless 部署。SSG/ISR/SSR 同一引擎。</p>
+                <div class="card-meta"><span>file routing</span><span>hono</span><span>serverless</span></div>
               </div>
               <div class="card">
                 <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">I</div>
                 <h3>Registry Hub</h3>
                 <p>Web Component 发现、验证、一键安装。</p>
+                <div class="card-meta"><span>discovery</span><span>validation</span><span>less add</span></div>
               </div>
             </div>
           </div>
@@ -975,7 +1006,7 @@ export default class DocsHome extends DsdLitElement {
               </div>
             </div>
             <div class="qs-cta">
-              <a href="/guide/getting-started">阅读完整文档</a>
+              <a href="/guide/getting-started">部署项目</a>
             </div>
           </div>
         </div>
@@ -1043,7 +1074,7 @@ export default class DocsHome extends DsdLitElement {
             <p class="hero-desc">DSD 原生渲染，浏览器零 JS 看到完整页面</p>
             <div class="hero-actions">
               <a class="hero-pri" href="/guide/getting-started">get started →</a>
-              <a class="hero-sec" href="/guide/positioning">why lessjs</a>
+              <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">GitHub</a>
             </div>
           </div>
         </section>
@@ -1128,12 +1159,22 @@ export default class DocsHome extends DsdLitElement {
           <p class="sec-title">Any framework, same island</p>
           <div class="sec-bd">
             <less-showcase-panel .tabs="${SHOWCASE_TABS_EN}" .activeTab="${0}">
-              <div style="text-align:center;padding:2rem;color:var(--less-text-muted);font-size:13px">
-                <div style="width:48px;height:48px;border-radius:12px;background:var(--less-brand-subtle,#EEEDFE);margin:0 auto 12px;display:flex;align-items:center;justify-content:center">
-                  <span style="font-size:20px;color:var(--less-brand,#534AB7)">◇</span>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:1rem;text-align:center">
+                <div style="background:var(--less-bg-surface);border-radius:10px;padding:1.5rem 0.75rem;border:1px solid var(--less-border)">
+                  <div style="font-size:24px;margin-bottom:6px;color:#185FA5">⚡</div>
+                  <div style="font-size:12px;font-weight:600;color:var(--less-text-primary)">Lit</div>
+                  <div style="font-size:10px;color:var(--less-text-muted);margin-top:2px">shoelace</div>
                 </div>
-                <p>Lit · React · Vanilla interactive showcase</p>
-                <p style="font-size:11px;margin-top:4px">Renders after client-side JavaScript loads</p>
+                <div style="background:var(--less-bg-surface);border-radius:10px;padding:1.5rem 0.75rem;border:1px solid var(--less-border)">
+                  <div style="font-size:24px;margin-bottom:6px;color:#0D6EFD">⚛</div>
+                  <div style="font-size:12px;font-weight:600;color:var(--less-text-primary)">React 19</div>
+                  <div style="font-size:10px;color:var(--less-text-muted);margin-top:2px">RSC</div>
+                </div>
+                <div style="background:var(--less-bg-surface);border-radius:10px;padding:1.5rem 0.75rem;border:1px solid var(--less-border)">
+                  <div style="font-size:24px;margin-bottom:6px;color:#0F6E56">🎬</div>
+                  <div style="font-size:12px;font-weight:600;color:var(--less-text-primary)">Vanilla</div>
+                  <div style="font-size:10px;color:var(--less-text-muted);margin-top:2px">media chrome</div>
+                </div>
               </div>
             </less-showcase-panel>
           </div>
@@ -1163,12 +1204,14 @@ export default class DocsHome extends DsdLitElement {
               <div class="card">
                 <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">F</div>
                 <h3>full-stack framework</h3>
-                <p>File-convention routing + Hono API routes + serverless deploy.</p>
+                <p>File-convention routing + Hono API routes + serverless deploy. SSG/ISR/SSR — same engine.</p>
+                <div class="card-meta"><span>file routing</span><span>hono</span><span>serverless</span></div>
               </div>
               <div class="card">
                 <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">I</div>
                 <h3>registry hub</h3>
                 <p>Web Component discovery, validation, one-click install.</p>
+                <div class="card-meta"><span>discovery</span><span>validation</span><span>less add</span></div>
               </div>
             </div>
           </div>
@@ -1194,7 +1237,7 @@ export default class DocsHome extends DsdLitElement {
               </div>
             </div>
             <div class="qs-cta">
-              <a href="/guide/getting-started">Read the docs</a>
+              <a href="/guide/getting-started">Deploy now</a>
             </div>
           </div>
         </div>
