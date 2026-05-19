@@ -74,6 +74,41 @@ const SEARCH_SCRIPT = `<script>
 })();
 <\/script>`;
 
+const IFRAME_RESIZE_SCRIPT = `<script>
+// Registry Hub — iframe srcdoc + auto-resize (component detail pages, no Lit hydration)
+// Lit SSR cannot serialize .srcdoc or srcdoc= correctly for complex HTML content,
+// so we store the srcdoc as Base64 in data-srcdoc and decode it client-side.
+(function() {
+  function init() {
+    var el = document.querySelector('docs-registry-component-detail');
+    if (!el) return;
+    var sr = el.shadowRoot || el;
+    var iframes = sr.querySelectorAll('.preview-iframe[data-srcdoc]');
+    iframes.forEach(function(iframe) {
+      try {
+        iframe.srcdoc = atob(iframe.dataset.srcdoc);
+      } catch(e) {
+        iframe.srcdoc = iframe.dataset.srcdoc;
+      }
+      iframe.removeAttribute('data-srcdoc');
+      iframe.addEventListener('load', function() {
+        try {
+          var doc = iframe.contentDocument;
+          if (doc && doc.body) {
+            iframe.style.height = doc.body.scrollHeight + 32 + 'px';
+          }
+        } catch(e) {}
+      });
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+<\/script>`;
+
 const renderer: LessRenderer = {
   wrap(html: string, ctx: { req: { path: string } }) {
     const path = ctx.req.path || '';
@@ -89,13 +124,19 @@ const renderer: LessRenderer = {
       }
     }
 
-    // Only inject search script on the registry index page
+    // Inject search script on the registry index page
     if (
       path === '/registry' || path === '/registry/' || path === '/en/registry' ||
       path === '/en/registry/'
     ) {
       return html + SEARCH_SCRIPT;
     }
+
+    // Inject iframe resize script on component detail pages
+    if (path.indexOf('/registry/') !== -1 && path.split('/').length > 3) {
+      return html + IFRAME_RESIZE_SCRIPT;
+    }
+
     return html;
   },
 };

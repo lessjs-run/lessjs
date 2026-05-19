@@ -338,17 +338,6 @@ export default class DocsRegistryComponentDetail extends LitElement {
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${themeLink}<script type="module" src="${meta.importUrl}"></script><style>*,*::before,*::after{box-sizing:border-box}body{margin:0;padding:20px;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5;color:#1a1a2e;background:#fff;overflow:hidden}</style></head><body><${meta.tagName}${attrStr}>${meta.demoSlots}</${meta.tagName}></body></html>`;
   }
 
-  /** v0.19.1 Phase 6: Resize iframe to fit content after load (ADR-0035 A3) */
-  private _resizeIframe(e: Event) {
-    const iframe = e.target as HTMLIFrameElement;
-    try {
-      const doc = iframe.contentDocument;
-      if (doc?.body) {
-        iframe.style.height = doc.body.scrollHeight + 32 + 'px';
-      }
-    } catch { /* cross-origin — skip */ }
-  }
-
   override render() {
     const pkg = this._getRecord();
 
@@ -463,8 +452,7 @@ export default class DocsRegistryComponentDetail extends LitElement {
                 ? html`
                   <iframe
                     class="preview-iframe"
-                    .srcdoc=${this._buildSrcdoc(tag.snapshotMeta)}
-                    @load=${this._resizeIframe}
+                    data-srcdoc=${btoa(this._buildSrcdoc(tag.snapshotMeta))}
                   ></iframe>
                 `
                 : hasSnapshot
