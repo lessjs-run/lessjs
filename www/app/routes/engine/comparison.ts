@@ -58,6 +58,12 @@ export default class ComparisonPage extends LitElement {
         transition: background 0.12s;
       }
 
+      @media (prefers-reduced-motion: reduce) {
+        tbody tr {
+          transition: none;
+        }
+      }
+
       tbody tr:hover {
         background: var(--less-bg-surface, #f5f5f5);
       }
@@ -77,7 +83,12 @@ export default class ComparisonPage extends LitElement {
       }
 
       .tag-yes {
-        color: var(--less-text-primary);
+        color: var(--less-brand, #534AB7);
+        font-weight: 500;
+      }
+
+      .tag-yes::before {
+        content: '✓ ';
       }
 
       .tag-no {
@@ -87,6 +98,17 @@ export default class ComparisonPage extends LitElement {
       .tag-partial {
         color: var(--less-text-tertiary);
         font-style: italic;
+      }
+
+      /* LessJS column highlight */
+      th.lessjs-col {
+        color: var(--less-brand, #534AB7);
+        font-weight: 600;
+      }
+
+      td.lessjs-col {
+        background: var(--less-brand-subtle, rgba(83,74,183,0.04));
+        font-weight: 500;
       }
 
       /* Prose lists */
@@ -125,94 +147,94 @@ export default class ComparisonPage extends LitElement {
             <table>
               <thead>
                 <tr>
-                  <th>维度</th>
-                  <th>LessJS</th>
-                  <th>Astro</th>
-                  <th>Fresh (Deno)</th>
-                  <th>Next.js</th>
+                  <th scope="col">维度</th>
+                  <th scope="col" class="lessjs-col">LessJS</th>
+                  <th scope="col">Astro</th>
+                  <th scope="col">Fresh (Deno)</th>
+                  <th scope="col">Next.js</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>定位</td>
-                  <td>全栈 + WC引擎 + Hub</td>
+                  <td class="lessjs-col">全栈 + WC引擎 + Hub</td>
                   <td>全栈（多框架）</td>
                   <td>全栈（Preact）</td>
                   <td>全栈（React）</td>
                 </tr>
                 <tr>
                   <td>Runtime</td>
-                  <td>Deno</td>
+                  <td class="lessjs-col">Deno</td>
                   <td>Node.js</td>
                   <td>Deno</td>
                   <td>Node.js</td>
                 </tr>
                 <tr>
                   <td>首屏 JS</td>
-                  <td><span class="tag-yes">0 KB</span></td>
+                  <td class="lessjs-col"><span class="tag-yes">0 KB</span></td>
                   <td><span class="tag-yes">0 KB</span></td>
                   <td><span class="tag-no">~23 KB</span></td>
                   <td><span class="tag-no">~90 KB</span></td>
                 </tr>
                 <tr>
                   <td>WC 原生</td>
-                  <td><span class="tag-yes">DSD 一等公民</span></td>
+                  <td class="lessjs-col"><span class="tag-yes">DSD 一等公民</span></td>
                   <td><span class="tag-no">当普通元素</span></td>
                   <td><span class="tag-no">Preact-only</span></td>
                   <td><span class="tag-no">❌</span></td>
                 </tr>
                 <tr>
                   <td>跨框架</td>
-                  <td>Lit / React / Vanilla 共存</td>
+                  <td class="lessjs-col">Lit / React / Vanilla 共存</td>
                   <td>多框架共存</td>
                   <td>Preact</td>
                   <td>React</td>
                 </tr>
                 <tr>
                   <td>Rendering</td>
-                  <td>SSG + DSD + Islands (ISR planned)</td>
+                  <td class="lessjs-col">SSG + DSD + Islands (ISR planned)</td>
                   <td>SSG + SSR + Islands</td>
                   <td>SSR + Islands</td>
                   <td>SSR + RSC + SSG</td>
                 </tr>
                 <tr>
                   <td>Registry Hub</td>
-                  <td><span class="tag-yes">内建</span></td>
+                  <td class="lessjs-col"><span class="tag-yes">内建</span></td>
                   <td><span class="tag-no">❌</span></td>
                   <td><span class="tag-no">❌</span></td>
                   <td><span class="tag-no">❌</span></td>
                 </tr>
                 <tr>
                   <td>Server</td>
-                  <td>Hono + Serverless</td>
+                  <td class="lessjs-col">Hono + Serverless</td>
                   <td>Built-in + adapters</td>
                   <td>Oak (optional)</td>
                   <td>Next.js server</td>
                 </tr>
                 <tr>
                   <td>组件模型</td>
-                  <td>3-layer (DSD/Island) + 多适配器</td>
+                  <td class="lessjs-col">3-layer (DSD/Island) + 多适配器</td>
                   <td>Islands only</td>
                   <td>Islands only</td>
                   <td>Full hydration</td>
                 </tr>
                 <tr>
                   <td>渲染时机</td>
-                  <td>SSG ✅ / ISR 📋 / SSR 📋</td>
+                  <td class="lessjs-col">SSG ✅ / ISR 📋 / SSR 📋</td>
                   <td>SSG ✅ / SSR ✅</td>
                   <td>SSR ✅</td>
                   <td>SSR ✅ / SSG ✅</td>
                 </tr>
                 <tr>
                   <td>Ecosystem</td>
-                  <td><span class="tag-partial">Emerging</span></td>
+                  <td class="lessjs-col"><span class="tag-partial">Emerging</span></td>
                   <td>Mature</td>
                   <td><span class="tag-partial">Small</span></td>
                   <td>Massive</td>
                 </tr>
                 <tr>
                   <td>Package Registry</td>
-                  <td>JSR</td>
+                  <td class="lessjs-col">JSR</td>
                   <td>npm</td>
                   <td>JSR + npm</td>
                   <td>npm</td>

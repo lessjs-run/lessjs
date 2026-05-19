@@ -21,11 +21,16 @@ export class DsdGuidePage extends LitElement {
       }
       .comparison-item {
         padding: 1rem 1.25rem;
-        border: 0.5px solid var(--less-border);
-        border-radius: 4px;
+        border: 1px solid var(--less-border);
+        border-radius: 8px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .comparison-item:hover {
+        border-color: var(--less-border-hover);
       }
       .comparison-item.less {
         background: var(--less-bg-surface);
+        border-left: 3px solid var(--less-brand, #534AB7);
       }
       @media (max-width: 720px) {
         .comparison {

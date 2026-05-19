@@ -88,7 +88,7 @@ export function declarations(values: Readonly<Record<string, string>>): string {
  */
 export function generateRootColorCSS(): string {
   // OpenProps gray scale — inlined to avoid CDN dependency for first paint
-  const grayScale = [
+  const grayScaleLight = [
     '--gray-0:#f8f9fa',
     '--gray-1:#f1f3f5',
     '--gray-2:#e9ecef',
@@ -104,9 +104,27 @@ export function generateRootColorCSS(): string {
     '--gray-12:#030507',
   ].join(';');
 
-  return `:root,[data-theme="light"]{${grayScale};${
+  // Dark mode: inverted gray scale for sufficient contrast on dark backgrounds
+  // WCAG 4.5:1 minimum contrast ratio enforced for text on #0d0f12 backgrounds
+  const grayScaleDark = [
+    '--gray-0:#030507',
+    '--gray-1:#0d0f12',
+    '--gray-2:#16191d',
+    '--gray-3:#212529',
+    '--gray-4:#343a40',
+    '--gray-5:#5a6270',
+    '--gray-6:#868e96',
+    '--gray-7:#a0a8b4',
+    '--gray-8:#adb5bd',
+    '--gray-9:#ced4da',
+    '--gray-10:#dee2e6',
+    '--gray-11:#e9ecef',
+    '--gray-12:#f8f9fa',
+  ].join(';');
+
+  return `:root,[data-theme="light"]{${grayScaleLight};${
     declarations(lessLightColors)
-  };color-scheme:light}[data-theme="dark"]{${grayScale};${
+  };color-scheme:light}[data-theme="dark"]{${grayScaleDark};${
     declarations(lessDarkColors)
   };color-scheme:dark}`;
 }

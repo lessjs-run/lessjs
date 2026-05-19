@@ -70,3 +70,4 @@ deliverables/
 
 # Hub submission template (local tool output, timestamp drifts on validate)
 hub-submission.json
+lighthouse-result*.json

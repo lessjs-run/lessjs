@@ -128,7 +128,7 @@ export const pageStyles = css`
   }
 
   code {
-    font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+    font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
   }
 
   p code, li code {
@@ -288,6 +288,20 @@ export const pageStyles = css`
     }
     ul, ol {
       padding-left: 1rem;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--less-brand, #534ab7);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    a {
+      transition: none;
+    }
+    .nav-link {
+      transition: none;
     }
   }
 `;

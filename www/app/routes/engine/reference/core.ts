@@ -31,19 +31,19 @@ export default class ApiCorePage extends LitElement {
         margin: 2rem 0 0.5rem;
       }
       .pkg-import {
-        font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+        font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
         font-size: 0.75rem;
         color: var(--less-text-tertiary);
         margin-bottom: 1rem;
       }
       .fn-name {
-        font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+        font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
         font-size: 0.8125rem;
         color: var(--less-text-primary);
         margin: 1.25rem 0 0.25rem;
       }
       .fn-sig {
-        font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+        font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
         font-size: 0.75rem;
         color: var(--less-text-tertiary);
         margin-bottom: 0.5rem;
@@ -59,9 +59,249 @@ export default class ApiCorePage extends LitElement {
   ];
 
   override render() {
+    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+  }
+
+  private _renderZh() {
     return html`
       <less-layout
-        locale="${this.locale || 'zh'}"
+        locale="zh"
+        .locales="${['en', 'zh']}"
+        .navItems="${filterEngineNav(navSections)}"
+        .headerNav="${headerNav}"
+        current-path="/engine/reference/core"
+      >
+        <div class="container">
+          <h1>API 参考</h1>
+          <p class="subtitle">所有 LessJS 包的公开 API 接口 (v0.14.9)。</p>
+
+          <p>
+            当前 API 中包的 Island 支持故意保持精简：包导出一个
+            <code>islands</code> 数组，包含 <code>tagName</code>、<code>modulePath</code>
+            和可选的 <code>strategy</code>。一键安装、自动注册、自动渲染和自动
+            Hydration 是路线图特性，需要先完成与 Custom Elements Manifest 兼容的包协议。
+          </p>
+
+          <div class="api-section">
+            <!-- ─── @lessjs/core ───────────────────────────── -->
+            <div class="pkg-name">@lessjs/core</div>
+            <div class="pkg-import">import { ... } from '@lessjs/core';</div>
+            <p>纯运行时。零 Vite/Node 依赖。支持 Deno、Node、Bun、Edge。</p>
+
+            <div class="fn-name">renderDSD()</div>
+            <div class="fn-sig">
+              renderDSD(tagName, componentClass, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;
+            </div>
+            <div class="fn-desc">
+              服务端渲染 Custom Element 为 DSD HTML。支持三层：dsd-static、dsd-interactive、pure-island。
+            </div>
+
+            <div class="fn-name">renderDSDByName()</div>
+            <div class="fn-sig">
+              renderDSDByName(tagName, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;
+            </div>
+            <div class="fn-desc">
+              类似 renderDSD，但通过 tag name 从 customElements 注册表查找组件类。
+            </div>
+
+            <div class="fn-name">escapeHtml() / escapeAttr() / escapeAttrValue()</div>
+            <div class="fn-sig">
+              escapeHtml(str): string — escapeAttrValue(value): string — escapeAttr(attr): string
+            </div>
+            <div class="fn-desc">
+              HTML/属性转义，使用 SafeHtml/UnsafeHtml 品牌类型防止双重转义。
+            </div>
+
+            <div class="fn-name">island()</div>
+            <div class="fn-sig">island(componentClass, options?): CustomElementConstructor</div>
+            <div class="fn-desc">
+              为 CE 类包装 Island 升级逻辑。支持 4 种策略：eager、lazy、idle、visible。
+            </div>
+
+            <div class="fn-name">lessBind() / getSSRProps()</div>
+            <div class="fn-sig">
+              lessBind(element, props): void — getSSRProps(element): Record&lt;string, unknown&gt;
+            </div>
+            <div class="fn-desc">框架无关的 SSR 属性绑定和反序列化。</div>
+
+            <div class="fn-name">registerAdapter() / getAdapter()</div>
+            <div class="fn-sig">
+              registerAdapter(adapter: RenderAdapter): void — getAdapter(): RenderAdapter | undefined
+            </div>
+            <div class="fn-desc">
+              SSR 渲染器插件接口（如 Lit TemplateResult → DSD HTML 通过 @lessjs/adapter-lit）。
+              当前注册表存储一个活跃适配器。未来渲染器协议必须定义适配器身份、能力、错误、
+              Hydration 提示和 DSD 约束，然后多适配器行为才会被记录为稳定。
+            </div>
+
+            <div class="fn-name">createSsrContext() / extractParams() / parseQuery()</div>
+            <div class="fn-sig">
+              createSsrContext(opts): SsrContext — extractParams(ctx, keys): Record — parseQuery(ctx):
+              Record
+            </div>
+            <div class="fn-desc">
+              服务端渲染上下文，包含请求、参数和查询解析。
+            </div>
+
+            <div class="fn-name">LessError / SsrRenderError</div>
+            <div class="fn-sig">extends Error</div>
+            <div class="fn-desc">
+              结构化错误类，包含 code、statusCode、isOperational 和 toJSON()。
+            </div>
+
+            <div class="fn-name">renderSsrError() / wrapInDocument() / camelToKebab()</div>
+            <div class="fn-desc">
+              SSR 错误页面渲染、文档包装器和 Lit 兼容属性名转换。
+            </div>
+
+            <p class="fn-desc" style="margin-top:1rem">
+              <strong>子路径导出：</strong> <code>@lessjs/core/logger</code> (createLogger)、<code
+              >@lessjs/core/errors</code>、<code>@lessjs/core/context</code>、<code
+              >@lessjs/core/navigation</code> (navigate/onNavigate/matchRoute)、<code
+              >@lessjs/core/constants</code>。
+            </p>
+
+            <!-- ─── @lessjs/adapter-vite ─────────────────────── -->
+            <div class="pkg-name">@lessjs/adapter-vite</div>
+            <div class="pkg-import">import { less } from '@lessjs/adapter-vite';</div>
+            <p>
+              Vite 构建编排：路由、Island、SSG 三阶段管线。包含 <code>less()</code>（v0.11 从 core 迁移）。
+            </p>
+
+            <div class="fn-name">less()</div>
+            <div class="fn-sig">less(options?: FrameworkOptions, ctx?: LessBuildContext): Plugin[]</div>
+            <div class="fn-desc">
+              创建 LessJS Vite 插件数组。处理路由扫描、Hono 入口生成、Island 转换、SSR 和 SSG。返回 7+ 个插件。
+            </div>
+
+            <div class="fn-name">LessBuildContext</div>
+            <div class="fn-sig">class LessBuildContext(options)</div>
+            <div class="fn-desc">
+              跨阶段状态容器。阶段 1 写入路由/Island，阶段 2 写入客户端清单，阶段 3 读取所有内容进行 SSG 渲染。
+            </div>
+
+            <div class="fn-name">构建工具函数</div>
+            <div class="fn-desc">
+              <code>printBuildManifest()</code>、<code>scanClientBuild()</code>、<code
+              >scanSSGOutput()</code>、<code>buildIslandChunkMap()</code>、<code
+              >buildSpeculationRulesJson()</code>、<br>
+              <code>injectClientScript()</code>、<code>injectCspMeta()</code>、<code
+              >injectDsdPolyfill()</code>、<code>injectSpeculationRules()</code>、<code
+              >injectViewTransitionMeta()</code>、<br>
+              <code>extractCustomElementTags()</code>、<code>generateIslandManifests()</code>、<code
+              >writeIslandManifests()</code>
+            </div>
+
+            <div class="fn-name">包 Island 和未来清单</div>
+            <div class="fn-desc">
+              <code>packageIslands</code> 当前扫描导出 <code>islands</code>
+              元数据数组的包。未来 WC 包协议将添加 CEM 兼容字段，包括标签、模块、导出、属性、
+              事件、插槽、CSS 部件、CSS 自定义属性、自定义状态、<code>ssr</code>、<code>dsd</code>、
+              <code>hydrate</code> 和诊断。在该协议发布前，Registry Hub 和 <code>less add</code>
+              行为仍为路线图项目。
+            </div>
+
+            <p class="fn-desc" style="margin-top:1rem">
+              <strong>子路径导出：</strong> <code>@lessjs/adapter-vite/build-context</code>、<code
+              >@lessjs/adapter-vite/virtual-ids</code>
+            </p>
+
+            <!-- ─── @lessjs/app ─────────────────────────────── -->
+            <div class="pkg-name">@lessjs/app</div>
+            <div class="pkg-import">import { lessjs } from '@lessjs/app';</div>
+            <p>
+              统一入口。组合 less() + lessContent() + lessI18n()，共享 ctx。<strong
+              >推荐所有项目使用。</strong>
+            </p>
+
+            <div class="fn-name">lessjs()</div>
+            <div class="fn-sig">lessjs(options: LessjsOptions): Plugin[]</div>
+            <div class="fn-desc">
+              接受核心选项 + content + i18n 嵌套配置。创建共享 LessBuildContext 并传递给所有子插件。
+            </div>
+
+            <!-- ─── @lessjs/content ──────────────────────────── -->
+            <div class="pkg-name">@lessjs/content</div>
+            <div class="pkg-import">import { lessContent } from '@lessjs/content';</div>
+            <p>
+              构建时内容插件：博客 + 导航 + Sitemap。数据通过虚拟模块流转（ADR 0018）。
+            </p>
+
+            <div class="fn-name">lessContent()</div>
+            <div class="fn-sig">lessContent(options: LessContentOptions &amp; { ctx? }): Plugin[]</div>
+            <div class="fn-desc">
+              创建内容插件。模块：blog（md frontmatter）、nav（路由元数据扫描）、sitemap（SSG 输出扫描）。
+            </div>
+
+            <p class="fn-desc" style="margin-top:1rem">
+              <strong>子路径导出：</strong> <code>@lessjs/content/blog-data</code>、<code
+              >@lessjs/content/nav</code>、<code>@lessjs/content/sitemap</code>
+            </p>
+
+            <!-- ─── @lessjs/i18n ─────────────────────────────── -->
+            <div class="pkg-name">@lessjs/i18n</div>
+            <div class="pkg-import">import { lessI18n } from '@lessjs/i18n';</div>
+
+            <div class="fn-name">lessI18n()</div>
+            <div class="fn-sig">lessI18n(options: LessI18nOptions &amp; { ctx? }): Plugin</div>
+            <div class="fn-desc">
+              SSG 的语言环境扩展 + 路由级辅助函数（i18nStaticPaths、switchLocale）。
+            </div>
+
+            <!-- ─── @lessjs/adapter-lit ──────────────────────── -->
+            <div class="pkg-name">@lessjs/adapter-lit</div>
+            <div class="pkg-import">
+              import { installLitAdapter, WithDsdHydration, DsdLitElement } from '@lessjs/adapter-lit';
+            </div>
+
+            <div class="fn-name">installLitAdapter()</div>
+            <div class="fn-desc">
+              修补核心渲染管线以处理 Lit TemplateResult → DSD HTML 转换。在 SSR bundle 入口调用一次。
+            </div>
+
+            <div class="fn-name">WithDsdHydration / DsdLitElement</div>
+            <div class="fn-desc">
+              DSD Hydration 的混入/基类。当 shadow root 已存在时跳过重新渲染；声明式绑定 hydrateEvents。
+            </div>
+
+            <!-- ─── @lessjs/ui ───────────────────────────────── -->
+            <div class="pkg-name">@lessjs/ui</div>
+            <div class="pkg-import">import { ... } from '@lessjs/ui';</div>
+            <p>
+              8 个 Web Components：less-button、less-input、less-card、less-code-block、less-layout、
+              less-theme-toggle、less-hero-ping、less-dialog。
+            </p>
+
+            <!-- ─── @lessjs/signals ───────────────────────────── -->
+            <div class="pkg-name">@lessjs/signals</div>
+            <div class="pkg-import">import { signal, computed, effect } from '@lessjs/signals';</div>
+            <p>
+              TC39 Signals polyfill。还导出：batch、untracked、channel、islandEffect、themeSignal、isNativeSignal。
+            </p>
+
+            <!-- ─── @lessjs/rpc ──────────────────────────────── -->
+            <div class="pkg-name">@lessjs/rpc</div>
+            <div class="pkg-import">import { RpcController, RpcError } from '@lessjs/rpc';</div>
+            <p>
+              基于 fetch 的 RPC Lit ReactiveController，支持自动重试、中止和加载/错误状态管理。
+            </p>
+
+            <!-- ─── @lessjs/create ───────────────────────────── -->
+            <div class="pkg-name">@lessjs/create</div>
+            <div class="pkg-import">deno run -A jsr:@lessjs/create my-app</div>
+            <p>
+              CLI 脚手架。生成包含 Deno 配置、Vite 配置、路由、Island 和示例组件的新 LessJS 项目。
+            </p>
+          </div>
+        </div>
+      </less-layout>
+    `;
+  }
+
+  private _renderEn() {
+    return html`
+      <less-layout
+        locale="en"
         .locales="${['en', 'zh']}"
         .navItems="${filterEngineNav(navSections)}"
         .headerNav="${headerNav}"

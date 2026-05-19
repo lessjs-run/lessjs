@@ -45,6 +45,8 @@ const COUNTER_RAW =
   `<my-counter><template shadowrootmode="open"><button>−</button><span>0</span><button>+</button></template></my-counter>`;
 
 export default class DocsHome extends LitElement {
+  private _mfaTab = 0;
+
   static override styles = css`
     :host {
       display: block;
@@ -71,6 +73,11 @@ export default class DocsHome extends LitElement {
       height: 80%;
       background: radial-gradient(ellipse, rgba(83,74,183,0.12) 0%, transparent 70%);
       pointer-events: none;
+      animation: heroGlow 8s ease-in-out infinite;
+    }
+    @keyframes heroGlow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
     }
     .hero-inner {
       max-width: 960px;
@@ -105,13 +112,13 @@ export default class DocsHome extends LitElement {
     }
     .hero h1 em {
       font-style: normal;
-      background: linear-gradient(135deg, #8b7cf6, #a78bfa, #c084fc);
+      background: linear-gradient(135deg, #534AB7, #6d5ce8, #8b7cf6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .hero-desc {
-      color: #b4b4c0;
+      color: var(--less-text-secondary, rgba(255,255,255,0.55));
       font-size: 15px;
       line-height: 1.75;
       max-width: 520px;
@@ -171,14 +178,14 @@ export default class DocsHome extends LitElement {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1px;
-      background: #09090b;
-      border-radius: 12px;
+      background: #0d0d12;
+      border-radius: 16px;
       overflow: hidden;
-      border: 1px solid #27272a;
+      border: 1px solid rgba(255,255,255,0.06);
       box-shadow: 0 4px 24px rgba(0,0,0,0.3);
     }
     .code-pane {
-      background: #09090b;
+      background: #0d0d12;
       padding: 14px 16px;
     }
     .code-bar {
@@ -188,22 +195,22 @@ export default class DocsHome extends LitElement {
       margin-bottom: 10px;
     }
     .code-bar i {
-      width: 7px;
-      height: 7px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       display: inline-block;
     }
     .code-bar .r {
-      background: #ef4444;
+      background: #ff5f57;
     }
     .code-bar .y {
-      background: #eab308;
+      background: #febc2e;
     }
     .code-bar .g {
-      background: #22c55e;
+      background: #28c840;
     }
     .code-bar span {
-      color: #52525b;
+      color: var(--less-text-muted);
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -239,12 +246,12 @@ export default class DocsHome extends LitElement {
       flex-direction: column;
     }
     .stat strong {
-      color: #fff;
+      color: var(--less-brand, #534AB7);
       font-size: 18px;
       font-weight: 500;
     }
     .stat span {
-      color: #71717a;
+      color: var(--less-text-tertiary);
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -252,9 +259,12 @@ export default class DocsHome extends LitElement {
 
     /* ── Section titles ── */
     .sec {
-      padding: 2.5rem 0 0;
+      padding: 4rem 0 0;
       margin: 0 auto;
       max-width: 960px;
+    }
+    h2.sec-lbl {
+      margin: 0 1.5rem 14px;
     }
     .sec-lbl {
       font-size: 11px;
@@ -271,9 +281,12 @@ export default class DocsHome extends LitElement {
     /* ── Feature cards ── */
     .cards {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: 2fr 1fr;
       gap: 20px;
       margin-bottom: 2.5rem;
+    }
+    .card:first-child {
+      grid-row: 1/3;
     }
     .card {
       border: 1px solid var(--less-border);
@@ -374,16 +387,16 @@ export default class DocsHome extends LitElement {
       color: var(--less-text-primary);
     }
     .bench .win {
-      color: #256e16;
+      color: var(--less-brand, #534AB7);
       font-weight: 500;
     }
     .bench .lose {
-      color: #a33;
+      color: var(--less-text-muted);
       font-weight: 500;
     }
     .bench-foot {
       font-size: 11px;
-      color: #888780;
+      color: var(--less-text-muted);
       margin-top: 8px;
       line-height: 1.6;
     }
@@ -420,7 +433,7 @@ export default class DocsHome extends LitElement {
       margin: 0 0 12px;
       font-size: 12px;
       font-weight: 600;
-      color: #d4d4d8;
+      color: var(--less-text-primary);
       letter-spacing: 0.02em;
     }
     .demo-card pre {
@@ -443,7 +456,7 @@ export default class DocsHome extends LitElement {
     }
     .demo-card .note {
       font-size: 11px;
-      color: #71717a;
+      color: var(--less-text-muted);
       margin-top: 10px;
       line-height: 1.5;
     }
@@ -472,14 +485,14 @@ export default class DocsHome extends LitElement {
       width: 34px;
       height: 34px;
       border-radius: 6px;
-      border: 0.5px solid #3f3f46;
-      background: #27272a;
+      border: 0.5px solid var(--less-border, #3f3f46);
+      background: var(--less-bg-surface, #27272a);
       font-size: 16px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #f4f4f5;
+      color: var(--less-text-primary, #f4f4f5);
     }
     .counter button:hover {
       background: #3f3f46;
@@ -558,39 +571,55 @@ export default class DocsHome extends LitElement {
       margin-bottom: 2.5rem;
     }
 
-    /* ── Quick start ── */
+    /* ── Quick start (vertical timeline) ── */
     .qs {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr auto 1fr;
-      align-items: center;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding-left: 32px;
       margin-bottom: 2.5rem;
+    }
+    .qs::before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--less-brand, #534AB7);
     }
     .qs-card {
       border: 0.5px solid var(--less-border);
       border-radius: 10px;
       padding: 1.25rem;
       background: var(--less-bg-surface);
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .qs-card::before {
+      content: '';
+      position: absolute;
+      left: -26px;
+      top: 8px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--less-brand, #534AB7);
     }
     .qs-step {
       font-size: 11px;
       font-weight: 600;
-      color: #888780;
+      color: var(--less-text-muted);
       text-transform: uppercase;
       letter-spacing: 0.1em;
       margin-bottom: 8px;
     }
     .qs-card code {
-      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+      font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
       font-size: 12.5px;
       color: var(--less-text-primary);
       line-height: 1.6;
       white-space: nowrap;
-    }
-    .qs-arrow {
-      color: #d4d4d8;
-      font-size: 16px;
-      text-align: center;
-      user-select: none;
     }
 
     /* ── CTA ── */
@@ -599,8 +628,7 @@ export default class DocsHome extends LitElement {
       padding: 3.5rem 2.5rem;
       width: 100vw;
       margin-left: calc(-50vw + 50%);
-      border-top: 1px solid var(--less-border);
-      background: var(--less-bg-surface);
+      background: linear-gradient(135deg, #534AB7, #6d5ce8);
     }
     .cta-inner {
       max-width: 960px;
@@ -608,20 +636,50 @@ export default class DocsHome extends LitElement {
     }
     .cta code {
       display: inline-block;
-      background: var(--less-brand-subtle, #eeedfe);
-      border: 1px solid #cecbf6;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
       border-radius: 10px;
       padding: 12px 24px;
-      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+      font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
       font-size: 14px;
-      color: var(--less-brand, #534ab7);
+      color: #fff;
       font-weight: 600;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
     .cta p {
       margin: 0;
       font-size: 12px;
-      color: var(--less-text-secondary);
+      color: rgba(255,255,255,0.7);
+    }
+    .cta-btns {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      height: 40px;
+      padding: 0 22px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .cta-btn:hover {
+      transform: translateY(-1px);
+    }
+    .cta-btn--primary {
+      background: #fff;
+      color: #534AB7;
+      border: none;
+    }
+    .cta-btn--secondary {
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.5);
     }
 
     /* ── Counter web component ── */
@@ -634,14 +692,14 @@ export default class DocsHome extends LitElement {
       width: 34px;
       height: 34px;
       border-radius: 6px;
-      border: 0.5px solid #3f3f46;
-      background: #27272a;
+      border: 0.5px solid var(--less-border, #3f3f46);
+      background: var(--less-bg-surface, #27272a);
       font-size: 18px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #f4f4f5;
+      color: var(--less-text-primary, #f4f4f5);
     }
     .live-counter button:hover {
       background: #3f3f46;
@@ -654,15 +712,33 @@ export default class DocsHome extends LitElement {
       text-align: center;
     }
 
-    /* ── Multi-framework showcase ── */
+    /* ── Multi-framework tabs ── */
     .mfa {
       margin-bottom: 2.5rem;
     }
-    .mfa-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 16px;
+    .mfa-tabs {
+      display: flex;
+      gap: 8px;
       margin-bottom: 1rem;
+    }
+    .mfa-tab {
+      padding: 8px 16px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      color: var(--less-text-tertiary, #71717a);
+      font-size: 13px;
+      font-weight: 500;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .mfa-tab[active] {
+      border-bottom-color: var(--less-brand, #534AB7);
+      color: var(--less-brand, #534AB7);
+    }
+    .mfa-panel {
+      display: none;
+    }
+    .mfa-panel.active {
+      display: block;
     }
     .mfa-card {
       border: 1px solid var(--less-border);
@@ -721,7 +797,7 @@ export default class DocsHome extends LitElement {
       margin-top: 16px;
     }
     .mfa-live-card {
-      background: #18181b;
+      background: var(--less-bg-surface);
       border-radius: 10px;
       padding: 1.25rem;
       min-width: 0;
@@ -736,9 +812,25 @@ export default class DocsHome extends LitElement {
       margin: 0 0 10px;
       font-size: 11px;
       font-weight: 600;
-      color: #71717a;
+      color: var(--less-text-muted);
       text-transform: uppercase;
       letter-spacing: 0.08em;
+    }
+
+    /* ── Focus visible ── */
+    :focus-visible {
+      outline: 2px solid var(--less-brand);
+      outline-offset: 2px;
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      .hero::before { animation: none; }
+      .card { transition: none; }
+      .mfa-tab { transition: none; }
+      .mfa-panel { transition: none; }
+      .cta-btn { transition: none; }
+      .hero-actions a { transition: none; }
     }
 
     @media (max-width: 760px) {
@@ -757,6 +849,9 @@ export default class DocsHome extends LitElement {
       .cards {
         grid-template-columns: 1fr;
       }
+      .card:first-child {
+        grid-row: auto;
+      }
       .uses {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -767,10 +862,7 @@ export default class DocsHome extends LitElement {
         grid-template-columns: 1fr;
       }
       .qs {
-        grid-template-columns: 1fr;
-      }
-      .qs-arrow {
-        display: none;
+        padding-left: 28px;
       }
       .hero h1 {
         font-size: clamp(2rem, 8vw, 2.6rem);
@@ -791,6 +883,9 @@ export default class DocsHome extends LitElement {
       .sec {
         padding: 1.5rem 0 0;
       }
+      h2.sec-lbl {
+        margin: 0 1.25rem 10px;
+      }
       .sec-lbl {
         margin: 0 1.25rem 10px;
       }
@@ -800,11 +895,15 @@ export default class DocsHome extends LitElement {
       .doc-link {
         padding: 0.75rem;
       }
-      .mfa-grid {
-        grid-template-columns: 1fr;
+      .mfa-tabs {
+        flex-wrap: wrap;
       }
       .mfa-live {
         grid-template-columns: 1fr;
+      }
+      .cta-btns {
+        flex-direction: column;
+        align-items: center;
       }
     }
     @media (max-width: 480px) {
@@ -851,6 +950,11 @@ export default class DocsHome extends LitElement {
     const delta = parseInt(btn.dataset.delta || '0');
     const val = btn.parentElement!.querySelector('.val') as HTMLElement;
     if (val) val.textContent = String(Number(val.textContent) + delta);
+  }
+
+  private _onMfaClick(idx: number) {
+    this._mfaTab = idx;
+    this.requestUpdate();
   }
 
   private _renderZh() {
@@ -918,7 +1022,7 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">三支柱</div>
+          <h2 class="sec-lbl">三支柱</h2>
           <div class="sec-bd">
             <div class="cards">
               <div class="card">
@@ -941,7 +1045,7 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">适用场景</div>
+          <h2 class="sec-lbl">适用场景</h2>
           <div class="sec-bd">
             <div class="uses">
               <div class="use">
@@ -969,7 +1073,7 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">对比</div>
+          <h2 class="sec-lbl">对比</h2>
           <div class="sec-bd">
             <div class="bench">
               <table>
@@ -1028,7 +1132,7 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">包架构</div>
+          <h2 class="sec-lbl">包架构</h2>
           <div class="sec-bd">
             <div class="arch">
               <svg viewBox="0 0 600 74" fill="none">
@@ -1096,10 +1200,15 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">多框架共存</div>
+          <h2 class="sec-lbl">多框架共存</h2>
           <div class="sec-bd">
             <div class="mfa">
-              <div class="mfa-grid">
+              <div class="mfa-tabs" role="tablist">
+                <div class="mfa-tab" role="tab" ?active="${this._mfaTab === 0}" aria-selected="${this._mfaTab === 0}" @click="${() => this._onMfaClick(0)}">Shoelace · Lit</div>
+                <div class="mfa-tab" role="tab" ?active="${this._mfaTab === 1}" aria-selected="${this._mfaTab === 1}" @click="${() => this._onMfaClick(1)}">React 19</div>
+                <div class="mfa-tab" role="tab" ?active="${this._mfaTab === 2}" aria-selected="${this._mfaTab === 2}" @click="${() => this._onMfaClick(2)}">Media Chrome · Vanilla</div>
+              </div>
+              <div class="mfa-panel ${this._mfaTab === 0 ? 'active' : ''}" role="tabpanel">
                 <div class="mfa-card">
                   <span class="mfa-tag lit">Lit Adapter</span>
                   <h4>Shoelace</h4>
@@ -1107,6 +1216,8 @@ export default class DocsHome extends LitElement {
                     <span class="lib-name">Shoelace</span> — 80+ 精美 Lit 组件，企业级 Web Components 库
                   </p>
                 </div>
+              </div>
+              <div class="mfa-panel ${this._mfaTab === 1 ? 'active' : ''}" role="tabpanel">
                 <div class="mfa-card">
                   <span class="mfa-tag react">React Adapter</span>
                   <h4>React 19</h4>
@@ -1115,6 +1226,8 @@ export default class DocsHome extends LitElement {
                     SSR 渲染
                   </p>
                 </div>
+              </div>
+              <div class="mfa-panel ${this._mfaTab === 2 ? 'active' : ''}" role="tabpanel">
                 <div class="mfa-card">
                   <span class="mfa-tag vanilla">Vanilla Adapter</span>
                   <h4>Media Chrome</h4>
@@ -1140,7 +1253,7 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">实际效果</div>
+          <h2 class="sec-lbl">实际效果</h2>
           <div class="sec-bd">
             <div class="demo-card combined">
               <div class="demo-row">
@@ -1172,17 +1285,15 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">快速开始</div>
+          <h2 class="sec-lbl">快速开始</h2>
           <div class="sec-bd">
             <div class="qs">
               <div class="qs-card">
                 <div class="qs-step">1. 创建</div><code>deno run -A jsr:@lessjs/create my-app</code>
               </div>
-              <div class="qs-arrow">→</div>
               <div class="qs-card">
                 <div class="qs-step">2. 开发</div><code>cd my-app &amp;&amp; deno task dev</code>
               </div>
-              <div class="qs-arrow">→</div>
               <div class="qs-card">
                 <div class="qs-step">3. 构建</div><code>deno task build → dist/</code>
               </div>
@@ -1193,6 +1304,10 @@ export default class DocsHome extends LitElement {
         <div class="cta">
           <div class="cta-inner">
             <code>deno run -A jsr:@lessjs/create my-app</code>
+            <div class="cta-btns">
+              <a class="cta-btn cta-btn--primary" href="/guide/getting-started">开始使用</a>
+              <a class="cta-btn cta-btn--secondary" href="/guide/positioning">了解定位</a>
+            </div>
             <p>需要 Deno 2.7+ — macOS / Linux / Windows — MIT 许可</p>
           </div>
         </div>
@@ -1269,7 +1384,7 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">three pillars</div>
+          <h2 class="sec-lbl">three pillars</h2>
           <div class="sec-bd">
             <div class="cards">
               <div class="card">
@@ -1292,7 +1407,7 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">built for</div>
+          <h2 class="sec-lbl">built for</h2>
           <div class="sec-bd">
             <div class="uses">
               <div class="use">
@@ -1320,7 +1435,7 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">how it compares</div>
+          <h2 class="sec-lbl">how it compares</h2>
           <div class="sec-bd">
             <div class="bench">
               <table>
@@ -1380,7 +1495,7 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">package architecture</div>
+          <h2 class="sec-lbl">package architecture</h2>
           <div class="sec-bd">
             <div class="arch">
               <svg viewBox="0 0 600 74" fill="none">
@@ -1448,10 +1563,15 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">multi-framework coexistence</div>
+          <h2 class="sec-lbl">multi-framework coexistence</h2>
           <div class="sec-bd">
             <div class="mfa">
-              <div class="mfa-grid">
+              <div class="mfa-tabs" role="tablist">
+                <div class="mfa-tab" role="tab" ?active="${this._mfaTab === 0}" aria-selected="${this._mfaTab === 0}" @click="${() => this._onMfaClick(0)}">Shoelace · Lit</div>
+                <div class="mfa-tab" role="tab" ?active="${this._mfaTab === 1}" aria-selected="${this._mfaTab === 1}" @click="${() => this._onMfaClick(1)}">React 19</div>
+                <div class="mfa-tab" role="tab" ?active="${this._mfaTab === 2}" aria-selected="${this._mfaTab === 2}" @click="${() => this._onMfaClick(2)}">Media Chrome · Vanilla</div>
+              </div>
+              <div class="mfa-panel ${this._mfaTab === 0 ? 'active' : ''}" role="tabpanel">
                 <div class="mfa-card">
                   <span class="mfa-tag lit">Lit Adapter</span>
                   <h4>Shoelace</h4>
@@ -1460,6 +1580,8 @@ export default class DocsHome extends LitElement {
                     Web Components
                   </p>
                 </div>
+              </div>
+              <div class="mfa-panel ${this._mfaTab === 1 ? 'active' : ''}" role="tabpanel">
                 <div class="mfa-card">
                   <span class="mfa-tag react">React Adapter</span>
                   <h4>React 19</h4>
@@ -1468,6 +1590,8 @@ export default class DocsHome extends LitElement {
                     zero-config SSR rendering
                   </p>
                 </div>
+              </div>
+              <div class="mfa-panel ${this._mfaTab === 2 ? 'active' : ''}" role="tabpanel">
                 <div class="mfa-card">
                   <span class="mfa-tag vanilla">Vanilla Adapter</span>
                   <h4>Media Chrome</h4>
@@ -1496,7 +1620,7 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">live demo</div>
+          <h2 class="sec-lbl">live demo</h2>
           <div class="sec-bd">
             <div class="demo-card combined">
               <div class="demo-row">
@@ -1530,17 +1654,15 @@ export default class DocsHome extends LitElement {
         </div>
 
         <div class="sec">
-          <div class="sec-lbl">quick start</div>
+          <h2 class="sec-lbl">quick start</h2>
           <div class="sec-bd">
             <div class="qs">
               <div class="qs-card">
                 <div class="qs-step">1. scaffold</div><code>deno run -A jsr:@lessjs/create my-app</code>
               </div>
-              <div class="qs-arrow">→</div>
               <div class="qs-card">
                 <div class="qs-step">2. develop</div><code>cd my-app &amp;&amp; deno task dev</code>
               </div>
-              <div class="qs-arrow">→</div>
               <div class="qs-card">
                 <div class="qs-step">3. build</div><code>deno task build → dist/</code>
               </div>
@@ -1551,7 +1673,11 @@ export default class DocsHome extends LitElement {
         <div class="cta">
           <div class="cta-inner">
             <code>deno run -A jsr:@lessjs/create my-app</code>
-            <p>requires deno 2.7+ — macOS / linux / windows — mit license</p>
+            <div class="cta-btns">
+              <a class="cta-btn cta-btn--primary" href="/guide/getting-started">get started</a>
+              <a class="cta-btn cta-btn--secondary" href="/guide/positioning">learn positioning</a>
+            </div>
+            <p>requires deno 2.7+ — macos / linux / windows — mit license</p>
           </div>
         </div>
       </less-layout>
