@@ -39,7 +39,7 @@ export default class ScrollReveal extends LitElement {
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.2 },
     );
   }
 
@@ -57,7 +57,9 @@ export default class ScrollReveal extends LitElement {
   }
 
   override render() {
-    return html`<div class="reveal"><slot></slot></div>`;
+    return html`
+      <div class="reveal"><slot></slot></div>
+    `;
   }
 }
 

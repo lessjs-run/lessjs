@@ -49,9 +49,7 @@ export default class LessSearch extends DsdLitElement {
       font-weight: var(--less-font-weight-medium, 500);
       letter-spacing: var(--less-letter-spacing-wide, 0.02em);
       cursor: pointer;
-      transition:
-        color var(--less-transition-normal),
-        border-color var(--less-transition-normal);
+      transition: color var(--less-transition-normal), border-color var(--less-transition-normal);
     }
     .search-trigger:hover {
       color: var(--less-text-secondary);

@@ -456,7 +456,11 @@ export function buildEntryDescriptor(
   // Merge all islands
   const islands: IslandDecl[] = [...localIslands, ...packageIslandDecls];
   const cemClassifications = options.cemClassifications || [];
-  const ssrAdmissionPlan = buildSsrAdmissionPlan(islands, cemClassifications, options.hubClientOnlyTags || []);
+  const ssrAdmissionPlan = buildSsrAdmissionPlan(
+    islands,
+    cemClassifications,
+    options.hubClientOnlyTags || [],
+  );
 
   // --- Document ---
   const document: DocumentConfig = {

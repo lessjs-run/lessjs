@@ -123,8 +123,8 @@ export const pageStyles = css`
     font-size: 0.8125rem;
     line-height: 1.7;
     margin: 1rem 0;
-    border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 
   code {

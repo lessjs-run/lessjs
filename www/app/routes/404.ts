@@ -5,6 +5,7 @@ import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
 import '@lessjs/ui/less-layout';
+import '../islands/less-search.js';
 
 const POPULAR_LINKS = [
   { href: '/guide/getting-started', label: 'Getting Started' },
@@ -145,11 +146,13 @@ export class NotFoundPage extends LitElement {
   override render() {
     return html`
       <less-layout
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
+        locale="en"
+        .locales="${['en']}"
         .navItems="${navSections}"
         .headerNav="${headerNav}"
+        home
       >
+        <less-search slot="header-actions"></less-search>
         <div class="container">
           <div class="error-code">404</div>
           <p class="error-message">This page does not exist — or has moved to a different route.</p>

@@ -5,7 +5,8 @@
  * Mockup v5: dark hero, code comparison, feature cards, benchmark,
  * dark demo cards, quick start, footer CTA.
  */
-import { css, html, LitElement } from 'lit';
+import { css, html } from 'lit';
+import { DsdLitElement } from '@lessjs/adapter-lit';
 import { headerNav, navSections } from 'virtual:less-nav';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
@@ -44,7 +45,7 @@ const CODE_DSD = `<page-home>
 const COUNTER_RAW =
   `<my-counter><template shadowrootmode="open"><button>−</button><span>0</span><button>+</button></template></my-counter>`;
 
-export default class DocsHome extends LitElement {
+export default class DocsHome extends DsdLitElement {
   private _mfaTab = 0;
 
   static override styles = css`
@@ -622,64 +623,104 @@ export default class DocsHome extends LitElement {
       white-space: nowrap;
     }
 
-    /* ── CTA ── */
-    .cta {
-      text-align: center;
-      padding: 3.5rem 2.5rem;
+    /* ── Site Footer ── */
+    .site-footer {
+      background: #F1EFE8;
+      border-top: 2px solid #534AB7;
+      padding: 3rem 2rem 1.5rem;
       width: 100vw;
       margin-left: calc(-50vw + 50%);
-      background: linear-gradient(135deg, #534AB7, #6d5ce8);
     }
-    .cta-inner {
+    .site-footer-inner {
       max-width: 960px;
       margin: 0 auto;
     }
-    .cta code {
-      display: inline-block;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 10px;
-      padding: 12px 24px;
-      font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
-      font-size: 14px;
-      color: #fff;
-      font-weight: 600;
-      margin-bottom: 16px;
-    }
-    .cta p {
-      margin: 0;
-      font-size: 12px;
-      color: rgba(255,255,255,0.7);
-    }
-    .cta-btns {
+    .footer-brand {
       display: flex;
-      gap: 12px;
-      justify-content: center;
-      margin-bottom: 16px;
-    }
-    .cta-btn {
-      display: inline-flex;
       align-items: center;
-      height: 40px;
-      padding: 0 22px;
-      border-radius: 8px;
-      font-size: 13.5px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: transform 0.15s, box-shadow 0.15s;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
     }
-    .cta-btn:hover {
-      transform: translateY(-1px);
+    .footer-brand code {
+      font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: #26215C;
     }
-    .cta-btn--primary {
-      background: #fff;
-      color: #534AB7;
+    .footer-brand span {
+      font-size: 0.8125rem;
+      color: #888780;
+    }
+    .footer-sep {
       border: none;
+      border-top: 0.5px solid #D3D1C7;
+      margin: 0 0 1.5rem;
     }
-    .cta-btn--secondary {
-      background: transparent;
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.5);
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1.2fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .footer-col-title {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      color: #534AB7;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+    }
+    .footer-col a {
+      display: block;
+      font-size: 0.75rem;
+      color: #888780;
+      text-decoration: none;
+      padding: 0.2rem 0;
+      transition: color 0.15s;
+    }
+    .footer-col a:hover {
+      color: #444441;
+    }
+    .footer-terminal {
+      background: #26215C;
+      border: 0.5px solid #3C3489;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
+      font-size: 0.6875rem;
+      line-height: 1.7;
+      color: #AFA9EC;
+    }
+    .footer-terminal .prompt {
+      color: #7F77DD;
+    }
+    .footer-terminal .success {
+      color: #AFA9EC;
+    }
+    .footer-bottom {
+      border-top: 0.5px solid #D3D1C7;
+      padding-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-bottom span {
+      font-size: 0.6875rem;
+      color: #B4B2A9;
+    }
+    .footer-bottom a {
+      font-size: 0.6875rem;
+      color: #B4B2A9;
+      text-decoration: none;
+    }
+    .footer-bottom a:hover {
+      color: #534AB7;
+    }
+    @media (max-width: 640px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
     }
 
     /* ── Counter web component ── */
@@ -829,7 +870,7 @@ export default class DocsHome extends LitElement {
       .card { transition: none; }
       .mfa-tab { transition: none; }
       .mfa-panel { transition: none; }
-      .cta-btn { transition: none; }
+      .site-footer a { transition: none; }
       .hero-actions a { transition: none; }
     }
 
@@ -1301,16 +1342,44 @@ export default class DocsHome extends LitElement {
           </div>
         </div>
 
-        <div class="cta">
-          <div class="cta-inner">
-            <code>deno run -A jsr:@lessjs/create my-app</code>
-            <div class="cta-btns">
-              <a class="cta-btn cta-btn--primary" href="/guide/getting-started">开始使用</a>
-              <a class="cta-btn cta-btn--secondary" href="/guide/positioning">了解定位</a>
+        <footer class="site-footer">
+          <div class="site-footer-inner">
+            <div class="footer-brand">
+              <code>&lt;less/&gt;</code>
+              <span>— 重量更轻，能力更强的 Web</span>
             </div>
-            <p>需要 Deno 2.7+ — macOS / Linux / Windows — MIT 许可</p>
+            <hr class="footer-sep">
+            <div class="footer-grid">
+              <div class="footer-col">
+                <div class="footer-col-title">框架</div>
+                <a href="/guide/getting-started">快速开始</a>
+                <a href="/guide/routing">路由</a>
+                <a href="/guide/ssg">SSG 渲染</a>
+              </div>
+              <div class="footer-col">
+                <div class="footer-col-title">引擎</div>
+                <a href="/engine/architecture">架构</a>
+                <a href="/engine/dsd">DSD 渲染</a>
+                <a href="/engine/islands">岛屿升级</a>
+              </div>
+              <div class="footer-col">
+                <div class="footer-col-title">社区</div>
+                <a href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">GitHub</a>
+                <a href="/blog">博客</a>
+                <a href="/registry">组件库</a>
+              </div>
+              <div class="footer-terminal">
+                <span class="prompt">$</span> npx create-less<br>
+                <span class="success">  ✓ 已生成脚手架</span><br>
+                <span class="success">  → npm run dev</span>
+              </div>
+            </div>
+            <div class="footer-bottom">
+              <span>MIT License · Made with less</span>
+              <a href="/guide/getting-started">开始使用 →</a>
+            </div>
           </div>
-        </div>
+        </footer>
       </less-layout>
     `;
   }
@@ -1670,16 +1739,44 @@ export default class DocsHome extends LitElement {
           </div>
         </div>
 
-        <div class="cta">
-          <div class="cta-inner">
-            <code>deno run -A jsr:@lessjs/create my-app</code>
-            <div class="cta-btns">
-              <a class="cta-btn cta-btn--primary" href="/guide/getting-started">get started</a>
-              <a class="cta-btn cta-btn--secondary" href="/guide/positioning">learn positioning</a>
+        <footer class="site-footer">
+          <div class="site-footer-inner">
+            <div class="footer-brand">
+              <code>&lt;less/&gt;</code>
+              <span>— Web that weighs less, does more</span>
             </div>
-            <p>requires deno 2.7+ — macos / linux / windows — mit license</p>
+            <hr class="footer-sep">
+            <div class="footer-grid">
+              <div class="footer-col">
+                <div class="footer-col-title">Framework</div>
+                <a href="/en/guide/getting-started">Quick start</a>
+                <a href="/en/guide/routing">Routing</a>
+                <a href="/en/guide/ssg">SSG rendering</a>
+              </div>
+              <div class="footer-col">
+                <div class="footer-col-title">Engine</div>
+                <a href="/en/engine/architecture">Architecture</a>
+                <a href="/en/engine/dsd">DSD rendering</a>
+                <a href="/en/engine/islands">Island upgrade</a>
+              </div>
+              <div class="footer-col">
+                <div class="footer-col-title">Community</div>
+                <a href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">GitHub</a>
+                <a href="/en/blog">Blog</a>
+                <a href="/registry">Registry</a>
+              </div>
+              <div class="footer-terminal">
+                <span class="prompt">$</span> npx create-less<br>
+                <span class="success">  ✓ scaffolded</span><br>
+                <span class="success">  → npm run dev</span>
+              </div>
+            </div>
+            <div class="footer-bottom">
+              <span>MIT License · Made with less</span>
+              <a href="/en/guide/getting-started">Get started →</a>
+            </div>
           </div>
-        </div>
+        </footer>
       </less-layout>
     `;
   }

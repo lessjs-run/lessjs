@@ -12,13 +12,13 @@ significant problems:
 
 The DSD report shows 72 errors across 51 pages, all from Shoelace components:
 
-| Component    | Errors | Recoverable | Root Cause                              |
-| ------------ | ------ | ----------- | --------------------------------------- |
-| sl-menu-item | 27     | yes         | `this.host.querySelector` in SSR        |
-| sl-tab       | 9      | yes         | `this.host.querySelector` in SSR        |
+| Component    | Errors | Recoverable | Root Cause                                    |
+| ------------ | ------ | ----------- | --------------------------------------------- |
+| sl-menu-item | 27     | yes         | `this.host.querySelector` in SSR              |
+| sl-tab       | 9      | yes         | `this.host.querySelector` in SSR              |
 | sl-input     | 6      | NO          | Constructor failure (`Failed to instantiate`) |
-| sl-checkbox  | 3      | yes         | DOM access during SSR                   |
-| ... (9 more) | 27     | mostly yes  | Same pattern: DOM API in non-browser   |
+| sl-checkbox  | 3      | yes         | DOM access during SSR                         |
+| ... (9 more) | 27     | mostly yes  | Same pattern: DOM API in non-browser          |
 
 **Root cause**: `renderNestedCustomElements()` (in `packages/core/src/render-nested.ts`)
 already has `isClientOnlyTag()` + `__LESS_CLIENT_ONLY_TAGS__` infrastructure (added in
@@ -98,11 +98,11 @@ Snapshot data structure shifts from "serialized HTML dump" to "structured metada
 ```ts
 interface HubSnapshotMeta {
   tagName: string;
-  importSpec: string;        // e.g. '@shoelace-style/shoelace'
-  importUrl: string;         // e.g. 'https://esm.sh/@shoelace-style/shoelace@2.20.1'
+  importSpec: string; // e.g. '@shoelace-style/shoelace'
+  importUrl: string; // e.g. 'https://esm.sh/@shoelace-style/shoelace@2.20.1'
   demoAttrs: Record<string, string>;
   demoSlots: string;
-  themeCssUrl?: string;      // e.g. Shoelace light.css CDN
+  themeCssUrl?: string; // e.g. Shoelace light.css CDN
   compatibility: 'ssr-capable' | 'client-only';
 }
 ```
@@ -117,6 +117,7 @@ serialized shadow DOM to a few KB of structured metadata per component).
 Current: OpenProps gray scale, no brand color usage, small type, tight spacing.
 
 Changes:
+
 - Brand color activation: `--less-brand: #534AB7` → use as accent in headings, links, badges
 - Type scale upgrade: `h1` from 2rem → 2.5rem, `h2` from 1rem → 1.25rem
 - Spacing: introduce `--less-size-8` (2rem) and `--less-size-12` (3rem) gaps between sections

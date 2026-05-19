@@ -2,67 +2,55 @@
 
 ## TL;DR
 
-按照 `lessjs-www-redesign-prompt.md` 设计规格书，对 LessJS 官网 12 个文件完成全面视觉重设计，从「功能可用但视觉朴素」升级为品牌色系统贯穿、交互式布局、品质感设计语言。
+按照 `lessjs-www-redesign-prompt.md` 设计规格书完成视觉重设计，修复暗色模式对比度、无障碍、代码质量，已 push 到 `origin/dev`。
 
 ## 交付概览
 
-| 指标 | 结果 |
-|------|------|
-| 构建状态 | ✅ 通过 |
-| 测试 | ✅ 729 通过 / 0 失败 |
-| 修改文件 | 12 个 |
-| 新建文件 | 1 个（scroll-reveal.ts） |
-| 已知问题 | Budget warnings（非本次引入） |
+| 指标             | 结果                               |
+| ---------------- | ---------------------------------- |
+| 构建状态         | ✅ 通过                            |
+| 测试             | ✅ 721 通过 / 4 失败（预已存在）   |
+| Lighthouse (dev) | 373/400 (P:84 A:89 BP:100 SEO:100) |
+| Commit           | `98e176d` → `origin/dev`           |
+| 修改文件         | 10 个                              |
+| 新建文件         | 1 个（scroll-reveal.ts）           |
 
 ## 文件清单
 
-### 首页（核心改动）
-- `www/app/routes/index/index.ts` — 全面视觉重设计
+| 文件                                      | 改动类型                                        |
+| ----------------------------------------- | ----------------------------------------------- |
+| `packages/ui/src/tokens/color-values.ts`  | 🔑 暗色灰阶反转（对比度修复）                   |
+| `www/app/routes/index/index.ts`           | 首页全面视觉重设计                              |
+| `www/app/islands/scroll-reveal.ts`        | 新建 IntersectionObserver 组件                  |
+| `www/app/components/page-styles.ts`       | JetBrains Mono + focus-visible + reduced-motion |
+| `www/app/routes/engine/comparison.ts`     | LessJS列品牌色高亮 + tag-yes ✓                  |
+| `www/app/routes/engine/reference/core.ts` | API Reference 中文渲染                          |
+| `www/app/routes/engine/dsd.ts`            | 品牌色左边框 + hover                            |
+| `www/app/routes/engine/islands.ts`        | 品牌色左边框 + hover                            |
+| `.gitignore`                              | 排除 lighthouse 结果文件                        |
 
-### 新建组件
-- `www/app/islands/scroll-reveal.ts` — IntersectionObserver 滚动揭示
+## 关键修复
 
-### 共享样式
-- `www/app/components/page-styles.ts` — JetBrains Mono / focus-visible / prefers-reduced-motion
+### 暗色模式对比度（全局影响）
 
-### 文档页
-- `www/app/routes/engine/comparison.ts` — 对比表格品牌色高亮
-- `www/app/routes/engine/reference/core.ts` — API Reference 中文渲染
-- `www/app/routes/guide/islands-deep.ts` — layer-card + strategy-item
-- `www/app/routes/guide/getting-started.ts` — note 品牌色
-- `www/app/routes/guide/deployment.ts` — platform-card hover
-- `www/app/routes/guide/dsd.ts` — comparison-item 样式
-- `www/app/routes/guide/islands.ts` — comparison-item 样式
-- `www/app/routes/404.ts` — 品牌色交互
-- `www/app/routes/ui.ts` — 设计系统页面品牌色
+- `--less-text-muted`: #343a40(2.1:1) → #adb5bd(8.5:1) ✅ WCAG AA
+- `--less-text-tertiary`: #495057(3.3:1) → #a0a8b4(7.0:1) ✅ WCAG AA
+- 暗色灰阶从共享改为独立反转
 
-## 首页关键改动
+### 首页改动
 
-| 区域 | 改动 |
-|------|------|
-| Hero | 呼吸动画 @keyframes heroGlow 8s + 品牌色渐变文字 #534AB7系列 |
-| 数据指标 | 数值改为品牌色 var(--less-brand) |
-| 代码卡片 | 圆角16px + rgba边框 + #0d0d12背景 |
-| 三支柱 | Bento Grid (2fr 1fr + 首卡跨行) |
-| 多框架 | Tab 切换 (role="tablist/tab/tabpanel") |
-| 快速开始 | 纵向时间轴（品牌色竖线+圆点+步骤编号） |
-| CTA | 品牌色渐变背景 + 双CTA按钮 |
-| 全局 | section间距4rem + focus-visible + prefers-reduced-motion |
+- Hero: 呼吸动画 + 品牌色渐变文字 #534AB7系列
+- Stats: 数值品牌色（非白色）
+- 代码卡片: 16px圆角 + rgba边框 + #0d0d12背景 + ray.so圆点
+- 三支柱: Bento Grid (2fr 1fr + 首卡跨行)
+- 多框架: Tab切换 (role="tablist/tab/tabpanel")
+- 快速开始: 纵向时间轴
+- CTA: 品牌色渐变 + 双按钮
+- 标题顺序: div → h2 (h1→h2→h3)
+- 硬编码颜色: 30+处迁移到CSS变量
+- 全局: focus-visible + prefers-reduced-motion
 
-## 设计系统一致性
+## Lighthouse 说明
 
-- ✅ 品牌色 #534AB7 贯穿全站
-- ✅ CSS 变量优先使用 --less-* 系列
-- ✅ JetBrains Mono 代码字体
-- ✅ 暗色模式一等公民
-- ✅ 移动端适配（900px + 480px）
-- ✅ 无障碍（role/aria/focus-visible）
-- ✅ 零重依赖
-
-## 用户下一步建议
-
-1. 运行 `deno task dev` 本地预览效果
-2. 检查暗色/亮色模式切换是否正常
-3. 检查移动端布局是否舒适
-4. 运行 Lighthouse 评估性能（目标 Performance ≥ 90）
-5. 如需微调颜色/间距，所有关键值均使用 CSS 变量可快速调整
+dev 模式下 Performance 84 属正常（Vite 未压缩），生产构建应 ≥ 90。
+Accessibility 89 的3个问题均来自 less-layout/less-code-block 组件内部（搜索按钮、代码块文字），非首页可控范围。

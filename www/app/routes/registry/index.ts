@@ -12,6 +12,7 @@ export const meta = { section: 'Registry', label: 'Package Registry', order: 5 }
 
 import { css, html, LitElement } from 'lit';
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterRegistryNav } from '../../utils/nav-filter.js';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 
@@ -418,11 +419,11 @@ export default class DocsRegistryHome extends LitElement {
   override render() {
     return html`
       <less-layout
-        .navItems="${navSections}"
+        .navItems="${filterRegistryNav(navSections)}"
         .headerNav="${headerNav}"
         current-path="/registry"
         locale="en"
-        .locales="${['en', 'zh']}"
+        .locales="${['en']}"
       >
         <div class="container">
           <div class="registry-header">

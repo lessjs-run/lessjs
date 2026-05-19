@@ -639,7 +639,10 @@ export function less(
           islandMeta: ctx.phase1.islandMeta,
           packageManifests: ctx.phase1.packageManifests,
           cemClassifications: ctx.phase1.cemClassifications,
-          hubClientOnlyTags: await discoverHubClientOnlyTags(process.cwd(), resolvedOptions.routesDir || 'app/routes'),
+          hubClientOnlyTags: await discoverHubClientOnlyTags(
+            process.cwd(),
+            resolvedOptions.routesDir || 'app/routes',
+          ),
         }).ssrAdmissionPlan;
         const pageCount = routes.filter(
           (r) => r.type === 'page' && !r.special,

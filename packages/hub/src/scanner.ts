@@ -282,7 +282,9 @@ function extractCemApi(decl: CemDeclaration | undefined): {
 /** Helper: build HubSnapshotMeta from package info and tag name (ADR-0035 A3) */
 function buildSnapshotMeta(pkg: KnownWcPackage, tag: string): HubSnapshotMeta {
   const fullName = pkg.scope ? `${pkg.scope}/${pkg.name}` : pkg.name;
-  const versionedSpec = pkg.scope ? `${pkg.scope}/${pkg.name}@${pkg.version}` : `${pkg.name}@${pkg.version}`;
+  const versionedSpec = pkg.scope
+    ? `${pkg.scope}/${pkg.name}@${pkg.version}`
+    : `${pkg.name}@${pkg.version}`;
 
   // Determine import URL based on source
   // IMPORTANT: For local/JSR packages (like @lessjs/ui), use per-component
@@ -302,7 +304,8 @@ function buildSnapshotMeta(pkg: KnownWcPackage, tag: string): HubSnapshotMeta {
 
   // Special: Shoelace theme CSS
   if (fullName === '@shoelace-style/shoelace') {
-    themeCssUrl = `https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@${pkg.version}/cdn/themes/light.css`;
+    themeCssUrl =
+      `https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@${pkg.version}/cdn/themes/light.css`;
   }
 
   return {

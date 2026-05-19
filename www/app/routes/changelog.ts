@@ -109,6 +109,7 @@ export class ChangelogPage extends LitElement {
         .navItems="${navSections}"
         .headerNav="${headerNav}"
         current-path="/changelog"
+        home
       >
         <div class="container">
           <h1>更新日志</h1>

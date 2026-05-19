@@ -86,7 +86,8 @@ export const DEMO_SLOTS: Record<string, string> = {
   'sl-tree-item': 'Tree Item',
   // LessJS UI
   'less-button': 'Click Me',
-  'less-card': '<div slot="header">Card Title</div><div>This is a card with some body content to demonstrate the layout and styling of the less-card component.</div><div slot="footer">Card Footer</div>',
+  'less-card':
+    '<div slot="header">Card Title</div><div>This is a card with some body content to demonstrate the layout and styling of the less-card component.</div><div slot="footer">Card Footer</div>',
   'less-input': '',
   'less-dialog': '<div>Dialog body content</div>',
   'less-code-block': '<code>console.log("Hello LessJS!")</code>',

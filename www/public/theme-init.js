@@ -23,7 +23,7 @@
   requestAnimationFrame(function () {
     document.documentElement.style.setProperty(
       'transition',
-      'background-color 0.3s ease, color 0.3s ease'
+      'background-color 0.3s ease, color 0.3s ease',
     );
   });
   // Remove anti-flash cloak — done before first paint

@@ -13,6 +13,7 @@
 
 import { css, html, LitElement } from 'lit';
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterRegistryNav } from '../../utils/nav-filter.js';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
@@ -186,7 +187,7 @@ export default class DocsRegistryDetail extends LitElement {
 
     if (!pkg) {
       return html`
-        <less-layout .navItems="${navSections}" .headerNav="${headerNav}" current-path="/registry/${fullName}" locale="en" .locales="${['en', 'zh']}">
+        <less-layout .navItems="${filterRegistryNav(navSections)}" .headerNav="${headerNav}" current-path="/registry/${fullName}" locale="en" .locales="${['en']}">
           <div class="container">
             <div class="not-found"><h2>Package Not Found</h2><p>"${fullName}" is not in the registry.</p>
             <a href="/registry" style="color:var(--less-accent);font-size:0.875rem;">← Back to Registry</a></div>
@@ -198,7 +199,7 @@ export default class DocsRegistryDetail extends LitElement {
     const hasSnapshots = Object.keys(pkg.snapshotPaths).length > 0;
 
     return html`
-      <less-layout .navItems="${navSections}" .headerNav="${headerNav}" current-path="/registry/${fullName}" locale="en" .locales="${['en', 'zh']}">
+      <less-layout .navItems="${filterRegistryNav(navSections)}" .headerNav="${headerNav}" current-path="/registry/${fullName}" locale="en" .locales="${['en']}">
         <div class="container">
           <div class="breadcrumb"><a href="/registry">Registry</a> / <span>${fullName}</span></div>
 

@@ -28,3 +28,25 @@ export function filterFrameworkNav(navSections: { section: string }[]): { sectio
 export function filterEngineNav(navSections: { section: string }[]): { section: string }[] {
   return navSections.filter((s) => ENGINE_SECTIONS.includes(s.section));
 }
+
+/** Section titles shown in the registry sidebar. */
+const REGISTRY_SECTIONS = ['Registry'];
+
+/** Section titles shown in the blog sidebar. */
+const BLOG_SECTIONS = ['History'];
+
+/**
+ * Filter navSections to show only registry-related sections.
+ * Used by all /registry/ pages.
+ */
+export function filterRegistryNav(navSections: { section: string }[]): { section: string }[] {
+  return navSections.filter((s) => REGISTRY_SECTIONS.includes(s.section));
+}
+
+/**
+ * Filter navSections to show only blog-related sections.
+ * Used by all /blog/ pages.
+ */
+export function filterBlogNav(navSections: { section: string }[]): { section: string }[] {
+  return navSections.filter((s) => BLOG_SECTIONS.includes(s.section));
+}

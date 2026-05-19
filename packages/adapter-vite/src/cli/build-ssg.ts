@@ -212,13 +212,18 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
       let nearestDist = Infinity;
       for (const cp of compatPositions) {
         const dist = cp.pos - tp.pos;
-        if (dist > 0 && dist < nearestDist) { nearestDist = dist; nearestCompat = cp.compat; }
+        if (dist > 0 && dist < nearestDist) {
+          nearestDist = dist;
+          nearestCompat = cp.compat;
+        }
       }
       if (nearestCompat === 'client-only') hubClientOnlyTags.push(tp.tagName);
     }
     if (hubClientOnlyTags.length > 0) {
       const { createLogger: mkLog } = await import('@lessjs/core/logger');
-      mkLog('core').info(`Hub client-only tags: ${hubClientOnlyTags.length} tag(s) for SSG admission`);
+      mkLog('core').info(
+        `Hub client-only tags: ${hubClientOnlyTags.length} tag(s) for SSG admission`,
+      );
     }
   } catch { /* hub data not available — skip */ }
 

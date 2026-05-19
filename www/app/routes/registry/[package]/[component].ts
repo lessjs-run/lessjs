@@ -17,6 +17,7 @@ export const meta = { section: 'Registry', label: 'Component Detail', order: 6 }
 import { css, html, LitElement } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterRegistryNav } from '../../../utils/nav-filter.js';
 import { pageStyles } from '../../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import pkgRecords from '../_hub-data-full.ts';
@@ -357,11 +358,11 @@ export default class DocsRegistryComponentDetail extends LitElement {
     if (!pkg) {
       return html`
         <less-layout
-          .navItems="${navSections}"
+          .navItems="${filterRegistryNav(navSections)}"
           .headerNav="${headerNav}"
           current-path="/registry/${pkgRoute}"
           locale="en"
-          .locales="${['en', 'zh']}"
+          .locales="${['en']}"
         >
           <div class="container">
             <div class="not-found">
@@ -381,11 +382,11 @@ export default class DocsRegistryComponentDetail extends LitElement {
     if (!tag) {
       return html`
         <less-layout
-          .navItems="${navSections}"
+          .navItems="${filterRegistryNav(navSections)}"
           .headerNav="${headerNav}"
           current-path="/registry/${pkgRoute}"
           locale="en"
-          .locales="${['en', 'zh']}"
+          .locales="${['en']}"
         >
           <div class="container">
             <div class="not-found">
@@ -412,11 +413,11 @@ export default class DocsRegistryComponentDetail extends LitElement {
 
     return html`
       <less-layout
-        .navItems="${navSections}"
+        .navItems="${filterRegistryNav(navSections)}"
         .headerNav="${headerNav}"
         current-path="/registry/${pkgRoute}"
         locale="en"
-        .locales="${['en', 'zh']}"
+        .locales="${['en']}"
       >
         <div class="container">
           <a class="back-link" href="/registry/${this.package}">← Back to ${fullPkgName}</a>

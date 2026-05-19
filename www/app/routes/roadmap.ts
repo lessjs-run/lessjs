@@ -158,6 +158,7 @@ export class RoadmapPage extends LitElement {
         .navItems="${navSections}"
         .headerNav="${headerNav}"
         current-path="/roadmap"
+        home
       >
         <div class="container">
           <h1>Roadmap</h1>
@@ -370,6 +371,7 @@ export class RoadmapPage extends LitElement {
         .navItems="${navSections}"
         .headerNav="${headerNav}"
         current-path="/en/roadmap"
+        home
       >
         <div class="container">
           <h1>Roadmap</h1>

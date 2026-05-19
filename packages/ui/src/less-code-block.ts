@@ -47,7 +47,7 @@ export class LessCodeBlock extends DsdLitElement {
         margin: 0;
         padding: var(--less-size-5);
         background: #1a1a2e;
-        border: 0.5px solid rgba(255,255,255,0.08);
+        border: 0.5px solid rgba(255, 255, 255, 0.08);
         border-radius: 6px;
         overflow-x: auto;
         font-family: var(--less-font-mono);
@@ -55,7 +55,7 @@ export class LessCodeBlock extends DsdLitElement {
         line-height: 1.7;
         color: #e0e0e0;
         scrollbar-width: thin;
-        scrollbar-color: rgba(255,255,255,0.15) transparent;
+        scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
         white-space: pre-wrap;
         word-break: break-word;
       }
@@ -65,7 +65,7 @@ export class LessCodeBlock extends DsdLitElement {
         margin: 0;
         padding: var(--less-size-5);
         background: #1a1a2e;
-        border: 0.5px solid rgba(255,255,255,0.08);
+        border: 0.5px solid rgba(255, 255, 255, 0.08);
         border-radius: 6px;
         overflow-x: auto;
         font-family: var(--less-font-mono);
@@ -73,7 +73,7 @@ export class LessCodeBlock extends DsdLitElement {
         line-height: 1.7;
         color: #e0e0e0;
         scrollbar-width: thin;
-        scrollbar-color: rgba(255,255,255,0.15) transparent;
+        scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
       }
 
       /* Language badge (top-left) */
@@ -85,7 +85,7 @@ export class LessCodeBlock extends DsdLitElement {
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: rgba(255,255,255,0.35);
+        color: rgba(255, 255, 255, 0.35);
         pointer-events: none;
       }
 
@@ -93,9 +93,9 @@ export class LessCodeBlock extends DsdLitElement {
         position: absolute;
         top: var(--less-size-2);
         right: var(--less-size-2);
-        background: rgba(255,255,255,0.08);
-        color: rgba(255,255,255,0.5);
-        border: 0.5px solid rgba(255,255,255,0.12);
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.5);
+        border: 0.5px solid rgba(255, 255, 255, 0.12);
         padding: var(--less-size-1) var(--less-size-3);
         font-size: var(--less-font-size-xs);
         font-family: var(--less-font-sans);
@@ -106,13 +106,13 @@ export class LessCodeBlock extends DsdLitElement {
       }
 
       .copy-btn:hover {
-        color: rgba(255,255,255,0.8);
-        background: rgba(255,255,255,0.12);
+        color: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.12);
       }
 
       .copy-btn.copied {
         color: #4ade80;
-        border-color: rgba(74,222,128,0.3);
+        border-color: rgba(74, 222, 128, 0.3);
       }
 
       .copy-btn.failed {
