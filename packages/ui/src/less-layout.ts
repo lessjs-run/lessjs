@@ -170,6 +170,11 @@ export class LessLayout extends DsdLitElement {
         display: none;
       }
 
+      /* === Mobile Tab Bar (bottom navigation — hidden on desktop) === */
+      .mobile-tab-bar {
+        display: none;
+      }
+
       .mobile-menu-btn {
         display: flex;
         align-items: center;
@@ -539,6 +544,7 @@ export class LessLayout extends DsdLitElement {
 
           .app-footer {
             padding: var(--less-size-6) var(--less-size-4);
+            padding-bottom: calc(var(--less-size-6) + 56px); /* space for tab bar */
           }
 
           .app-footer .divider {
@@ -547,6 +553,63 @@ export class LessLayout extends DsdLitElement {
 
           .app-footer p {
             line-height: 1.8;
+          }
+
+          /* === Mobile Tab Bar (bottom navigation) === */
+          .mobile-tab-bar {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            z-index: var(--less-z-sticky);
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border-top: 0.5px solid var(--less-border);
+            padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
+            padding-bottom: env(safe-area-inset-bottom);
+          }
+
+          :host([data-theme="dark"]) .mobile-tab-bar {
+            background: rgba(18, 18, 26, 0.88);
+          }
+
+          .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            color: var(--less-text-muted);
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: var(--less-font-weight-medium);
+            letter-spacing: 0.02em;
+            transition: color var(--less-transition-normal);
+            -webkit-tap-highlight-color: transparent;
+            padding: 4px 0;
+          }
+
+          .tab-item svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+          }
+
+          .tab-item:hover,
+          .tab-item:focus-visible {
+            color: var(--less-text-primary);
+          }
+
+          .tab-item.active {
+            color: var(--less-text-primary);
+          }
+
+          .tab-item.active svg {
+            stroke-width: 2;
           }
         }
 
@@ -730,6 +793,7 @@ export class LessLayout extends DsdLitElement {
               LESS IS MORE
             </p>
           </footer>
+          ${this._renderMobileTabBar()}
         </div>
       `;
     }
@@ -973,6 +1037,70 @@ export class LessLayout extends DsdLitElement {
                   data-nav="${link.href.startsWith('http') ? '' : this._localizePath(link.href)}"
                 >${link.label}</a>
               `,
+          )}
+        </nav>
+      `;
+    }
+
+    /** Mobile bottom tab bar — shown only on small screens, replaces hidden header-nav */
+    private _renderMobileTabBar(): TemplateResult | typeof nothing {
+      const links = this.headerNav || [];
+      if (links.length === 0) return nothing;
+
+      const icons: Record<string, TemplateResult> = {
+        // Framework: abstract "F" monogram
+        Framework: html`<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10M5 3v6h7M12 9v3M5 17h7" /></svg>`,
+        // Engine: gear/cog
+        Engine: html`<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="3" /><path d="M10 1v2M10 17v2M3.5 3.5l1.4 1.4M15.1 15.1l1.4 1.4M1 10h2M17 10h2M3.5 16.5l1.4-1.4M15.1 4.9l1.4-1.4" /></svg>`,
+        // RegistryHub: box/cube
+        RegistryHub: html`<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2l7 4v8l-7 4-7-4V6z" /><path d="M10 10l7-4M10 10v8M10 10L3 6" /></svg>`,
+        // Blog: article
+        Blog: html`<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="14" height="16" rx="2" /><path d="M7 6h6M7 10h6M7 14h3" /></svg>`,
+      };
+
+      // Fallback: generic compass icon for unknown labels
+      const defaultIcon = html`<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8" /><path d="M6 6l3 5 5 3-3-5z" /></svg>`;
+
+      /** Derive section root from href for active matching.
+       *  /guide/positioning → /guide, /engine/architecture → /engine, /blog → /blog */
+      const sectionRoot = (href: string): string => {
+        const segs = href.split('/').filter(Boolean);
+        // Skip locale prefix if present
+        const start = this.locales.length > 1 && this.locales.includes(segs[0]) ? 1 : 0;
+        return segs.length > start + 1 ? '/' + segs[start] : href;
+      };
+
+      /** Strip locale prefix from currentPath for section matching */
+      const rawCurrentPath = (() => {
+        for (const loc of this.locales) {
+          if (this.currentPath === `/${loc}` || this.currentPath.startsWith(`/${loc}/`)) {
+            return this.currentPath.slice(loc.length + 1) || '/';
+          }
+        }
+        return this.currentPath;
+      })();
+
+      return html`
+        <nav class="mobile-tab-bar" aria-label="Quick navigation">
+          ${links.map(
+            (link) => {
+              const localized = this._localizePath(link.href);
+              const isExternal = link.href.startsWith('http');
+              const root = sectionRoot(link.href);
+              const isActive = !isExternal && (
+                rawCurrentPath === root ||
+                rawCurrentPath.startsWith(root + '/')
+              );
+              const icon = icons[link.label] || defaultIcon;
+              return html`
+                <a
+                  class="tab-item${isActive ? ' active' : ''}"
+                  href="${localized}"
+                  data-nav="${isExternal ? '' : localized}"
+                  aria-current="${isActive ? 'page' : nothing}"
+                >${icon}<span>${link.label}</span></a>
+              `;
+            },
           )}
         </nav>
       `;
