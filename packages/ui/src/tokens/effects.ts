@@ -15,6 +15,12 @@ export const lessEffectTokens: ReturnType<typeof css> = css`
     --less-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
     --less-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
     --less-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+
+    /* === Brand Shadow System (www-redesign) === */
+    --less-shadow-brand-sm: 0 2px 12px rgba(83, 74, 183, 0.2);
+    --less-shadow-brand-md: 0 4px 20px rgba(83, 74, 183, 0.3);
+    --less-shadow-brand-lg: 0 8px 32px rgba(83, 74, 183, 0.4);
+    --less-shadow-glow: 0 0 20px rgba(83, 74, 183, 0.15);
   }
 
   /* Dark mode: lighter shadows on dark surfaces */

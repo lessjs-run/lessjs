@@ -113,6 +113,15 @@ export const pageStyles = css`
     margin-bottom: 14px;
   }
 
+  /* Section divider — brand gradient */
+  .section-divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--less-brand, #534AB7) 20%, var(--less-brand-light, #6D5CE8) 80%, transparent);
+    opacity: 0.2;
+    margin: 2.5rem 0;
+  }
+
   /* Code — dark theme */
   pre {
     background: #1a1a2e;

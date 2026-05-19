@@ -1,0 +1,556 @@
+# LessJS www 全站重设计 PRD
+
+> 文档版本: 1.0 | 作者: 产品经理许清楚 (Xu) | 日期: 2025-05-19
+
+---
+
+## 1. 项目信息
+
+| 字段 | 值 |
+|------|-----|
+| Language | 中文（主）/ English（副） |
+| Programming Language | Lit + DsdLitElement（Web Components） |
+| Project Name | `lessjs-www-redesign` |
+| 原始需求 | LessJS 官网全站视觉重设计，对标 Vercel/Linear/Stripe/Notion，解决"视觉不震撼、多框架展示空洞、内页纯文本"三大核心问题 |
+
+### 原始需求复述
+
+LessJS 官网存在三个结构性问题：(1) 首页多框架共存展示只有代码 Tab 没有真实交互组件，用户无法感知核心卖点；(2) Guide/Engine/Registry/Blog 几十个内页全是纯白底+纯文本，缺乏视觉层次；(3) 全站视觉水准与 Vercel/Linear/Stripe/Notion 等顶级开发者产品官网差距大，缺乏统一视觉语言。
+
+---
+
+## 2. 产品定义
+
+### 2.1 产品目标
+
+| # | 目标 | 成功标准 |
+|---|------|----------|
+| G1 | **让访客 3 秒内理解 LessJS 核心价值** | 首屏 Hero + 多框架实时演示 → 用户无需滚动即可感知"多框架共存"卖点 |
+| G2 | **全站视觉一致性和冲击力** | 全站页面共享同一设计系统（色彩/排版/间距/动效），视觉水准达到 Vercel 级别 |
+| G3 | **技术文档可读性和愉悦感** | 内页阅读完成率提升、跳出率下降；Guide/Engine 页面不再"白纸黑字" |
+
+### 2.2 目标用户画像
+
+| 画像 | 描述 | 核心诉求 |
+|------|------|----------|
+| 前端架构师 | 技术选型决策者，关注性能/体积/多框架支持 | 首页 3 秒内看到 DSD 零 JS + 多框架共存证据 |
+| Web Component 开发者 | Lit/Stencil/Vanilla WC 作者 | Registry Hub 浏览体验，组件兼容性一眼可辨 |
+| 全栈开发者 | 寻找 Next.js/Astro 替代方案 | Guide 页面快速上手，代码可复制，架构直觉可理解 |
+| 开源贡献者 | LessJS 生态参与者 | Roadmap/Decisions/Contributing 页面清晰透明 |
+
+---
+
+## 3. 设计愿景
+
+### 3.1 对标分析
+
+| 对标站点 | 值得学习的点 | LessJS 适配策略 |
+|----------|-------------|-----------------|
+| **Vercel** | 暗色 Hero + 渐变光效 + 极简排版 + 代码即 UI | 首页 Hero 已有暗色基调，需加强渐变光效和微动效 |
+| **Linear** | 精密排版 + 紫色品牌色 + 几何装饰 + 流畅过渡 | 品牌色 #534AB7 天然适合 Linear 风格的精密感 |
+| **Stripe** | 渐变色块 + 数据可视化 + 功能卡片组 | Benchmark 区域和三支柱 Bento 可借鉴 Stripe 卡片风格 |
+| **Notion** | 文档级排版 + 提示框系统 + 阅读节奏 | Guide/Engine 内页需要 Notion 级别的文档阅读体验 |
+
+### 3.2 "震撼"定义
+
+震撼 = **视觉冲击力** × **信息传达效率** × **交互愉悦感**
+
+- **视觉冲击力**: 暗色 Hero 区域的大胆渐变、品牌色 #534AB7 的戏剧性使用、滚动揭示动画
+- **信息传达效率**: 每个区域一个核心信息、视觉层次引导阅读流向、代码与真实组件并置
+- **交互愉悦感**: 多框架 Tab 切换有真实交互组件、hover 微动效、滚动视差
+
+### 3.3 品牌灵魂色
+
+`#534AB7` 是全站灵魂色。它不仅是 UI 强调色，更是：
+- 暗色区域的渐变光源（radial-gradient 发光效果）
+- 亮色区域的视觉锚点（section label、品牌渐变文字）
+- 暗色模式的基调色（替代纯黑，用 #534AB7 的深色变体）
+
+---
+
+## 4. 全站页面设计规范
+
+### 4.1 首页（`/`）
+
+**设计原则**: 三幕式节奏保留（Dark Hero → Light Narrative → Warm-gray Footer），但每个幕次必须升级到震撼级别。
+
+#### 4.1.1 Hero 区域（暗色沉浸式开场）
+
+| 元素 | 现状 | 重设计要求 |
+|------|------|-----------|
+| 主标题 | `全栈框架 + WC 引擎 + Registry Hub` | 保留文案，加大字号到 clamp(3rem, 8vw, 4rem)，品牌色渐变应用到 `+` 符号 |
+| 副标题 | 纯文字描述 | 保留，增加字间距和行高，用 rgba(255,255,255,0.45) 降低到配角 |
+| CTA 按钮 | 两个文字链接 | 品牌色渐变按钮 + 玻璃态次按钮，增加 hover 发光效果 |
+| 背景光效 | 简单 radial-gradient + 8s pulse | 增加 2-3 层渐变叠加，品牌色 #534AB7 的 3 种透明度（0.08/0.15/0.25），微粒子/网格装饰 |
+| 终端演示 | `less-term-demo` 组件 | 保留，增加品牌色光晕边框 |
+
+**关键变更**: Hero 区域下方或内部，必须包含一个**交互式 DSD 演示**——渲染一个简单的 `<counter-island>` 并实时展示其 DSD HTML 输出，让用户亲眼看到"零 JS 首屏"。
+
+#### 4.1.2 Code Strip（代码对比区）
+
+保留"你的组件 → SSG 输出"对比，但升级为：
+- 双栏代码编辑器风格，macOS 窗口装饰（三色圆点）
+- 品牌色渐变边框或微光边框
+- 代码行高亮（高亮 DSD 关键行 `<template shadowrootmode="open">`）
+
+#### 4.1.3 Multi-framework 区域（核心修复）
+
+**这是本次重设计的最关键改动。**
+
+| 现状 | 重设计 |
+|------|--------|
+| 3 个 Tab 只有代码片段 | **每个 Tab = 真实交互组件 + 代码，左右并排** |
+| 用户看不到"多框架共存" | 用户可以直接点击 Shoelace 按钮、React 按钮、Media Chrome 播放器 |
+
+布局方案：
+```
+┌─────────────────────────────────────────┐
+│  [Lit/Shoelace] [React/React 19] [Vanilla/Media Chrome]  ← Tab 栏
+├────────────────────┬────────────────────┤
+│                    │                    │
+│  真实交互组件       │   源代码           │
+│  (showcase island) │   (code block)    │
+│                    │                    │
+├────────────────────┴────────────────────┤
+│  适配器说明 + 安装命令                     │
+└─────────────────────────────────────────┘
+```
+
+- Tab 切换时，左侧加载对应的 showcase island（`shoelace-showcase.ts`、`react-showcase.ts`、`media-chrome-showcase.ts`）
+- 右侧显示对应的源代码
+- 底部显示适配器说明和安装命令
+
+#### 4.1.4 Bento Grid（三支柱）
+
+- 卡片增加品牌色渐变边框（hover 时显现）
+- 每个卡片增加一个微型图标/插画（Framework → 路由图标，Engine → 齿轮图标，Hub → 盒子图标）
+- 卡片背景增加微妙的渐变（从 transparent 到 rgba(#534AB7, 0.03)）
+
+#### 4.1.5 Benchmark 区域
+
+- 水平条形图增加品牌色渐变填充
+- 增加"0 KB"数字的动画计数效果
+- 统计卡片增加品牌色左边框
+
+#### 4.1.6 Quick Start 区域
+
+- 时间轴节点增加品牌色光晕
+- 代码命令增加一键复制按钮
+- 步骤卡片增加品牌色渐变上边框
+
+### 4.2 Guide 页面（~12 页）
+
+**设计原则**: 文档级排版 + 视觉节奏 + 信息分层
+
+#### 4.2.1 页面结构
+
+```
+┌──────────────────────────────────────────────────┐
+│  侧边导航 │  页面标题区（品牌色 section label）    │
+│            │  副标题/描述                          │
+│            │  ─────────────────────────────        │
+│            │  正文内容区                            │
+│            │  · callout 提示框                     │
+│            │  · 代码块（暗色主题）                  │
+│            │  · 步骤卡片                            │
+│            │  · 表格                               │
+│            │  ─────────────────────────────        │
+│            │  上下页导航                            │
+└──────────────────────────────────────────────────┘
+```
+
+#### 4.2.2 视觉层次规范
+
+| 层级 | 元素 | 样式规范 |
+|------|------|----------|
+| L1 | H1 页面标题 | 2.5rem, weight 700, letter-spacing -0.025em |
+| L1.5 | Section Label | 11px, weight 600, 品牌色, uppercase, letter-spacing 0.14em |
+| L2 | H2 章节标题 | 1.25rem, weight 600, 上方 2.5rem 间距 |
+| L3 | H3 子章节 | 1rem, weight 600 |
+| L4 | 正文段落 | 0.9375rem, line-height 1.75, color: --less-text-secondary |
+| L5 | 代码/提示 | 独立区块，暗色背景，品牌色边框元素 |
+
+#### 4.2.3 组件规范
+
+- **Callout 提示框**: 品牌色左边框（信息）、黄色左边框（警告）、绿色左边框（成功）、红色左边框（危险）
+- **代码块**: 暗色主题（#1a1a2e），macOS 三色圆点装饰，可选行号，品牌色光标闪烁
+- **步骤导航**: 垂直时间轴，品牌色节点，步骤编号标签
+- **表格**: 斑马纹 + 品牌色表头底色 + 悬停行高亮
+
+#### 4.2.4 特色区域增强
+
+- **Getting Started**: 增加"项目结构"可视化图示（文件夹树 → 彩色标注）
+- **Configuration**: 增加配置项速查表（key-value 卡片布局）
+- **SSG**: 增加渲染管线流程图（3 Phase → 可视化步骤图）
+- **Routing**: 增加路由匹配可视化（URL → 匹配 → 组件）
+- **API**: 增加 API Route 代码沙盒
+
+### 4.3 Engine 页面（~7 页）
+
+**设计原则**: 技术深度内容不枯燥 = 可视化 + 节奏感 + 对比度
+
+#### 4.3.1 关键设计手法
+
+| 页面 | 可视化增强 |
+|------|-----------|
+| Architecture | 三支柱模型 → 3D 感 Bento 卡片 + 完成度进度条；Build Pipeline → 三阶段流程图 |
+| Comparison | 竞品对比表 → 水平特征对比条 + 绿/灰/红状态标记 |
+| Design System | 设计系统说明 → 实际组件预览（品牌色/灰阶/排版 live demo） |
+| DSD | DSD 原理 → 代码→渲染 的双栏动画演示 |
+| Islands | Island 架构 → 页面热力图（静态区域灰/交互区域品牌色高亮） |
+| Islands Deep | 深入分析 → 多层嵌套可视化图 |
+| Package Compatibility | 兼容性矩阵 → 彩色标签矩阵 |
+| Standards Registry | 标准注册 → CEM 流程可视化 |
+
+#### 4.3.2 公共增强
+
+- 每个页面顶部增加**品牌色 Section Label**（如 "PRINCIPLES", "COMPARISON"）
+- 长代码块增加**可折叠区域**
+- 复杂概念增加**图示**（ASCII art 或 SVG 图，不用外部依赖）
+
+### 4.4 Registry 页面（~4 页）
+
+**设计原则**: 组件库浏览体验 = 搜索效率 + 视觉预览 + 兼容性一目了然
+
+#### 4.4.1 Hub 首页
+
+| 现状 | 重设计 |
+|------|--------|
+| 基础卡片网格 | 升级为品牌色渐变边框卡片 + 组件缩略图预览 |
+| 简单搜索框 | 升级为品牌色聚焦发光的搜索框 |
+| 文字状态标签 | 升级为彩色圆点 + 渐变背景徽章 |
+
+#### 4.4.2 Package 详情页
+
+- 增加组件实时预览区域（`iframe` 或 shadow DOM 隔离渲染）
+- 增加"安装命令"一键复制
+- 增加兼容性矩阵可视化（组件 × 适配器 → 绿/黄/红）
+
+#### 4.4.3 Component 详情页
+
+- 增加属性/API 文档表（品牌色表头）
+- 增加 Events/Slots/Methods 分 Tab 展示
+- 增加 Live Demo 区域
+
+### 4.5 Blog 页面
+
+**设计原则**: 沉浸式阅读体验 + 内容呼吸感
+
+#### 4.5.1 Blog 首页
+
+- 文章卡片：品牌色渐变底边 + 发布日期 + 阅读时间
+- 置顶文章：大卡片布局，背景渐变
+- 文章分类标签（品牌色 pill）
+
+#### 4.5.2 文章详情页
+
+- 最大宽度 720px（阅读优化宽度）
+- 增加**阅读进度条**（品牌色渐变，固定顶部）
+- 代码块暗色主题 + 一键复制
+- 图片增加品牌色阴影
+- 文末增加"相关文章"推荐卡片
+- 侧边 TOC（目录）浮动导航
+
+### 4.6 工具页
+
+| 页面 | 设计要求 |
+|------|----------|
+| 404 | 品牌色插画 + 返回首页 CTA + 搜索框 |
+| Changelog | 时间轴布局，版本号用品牌色标签 |
+| Contributing | 步骤卡片 + 品牌色时间轴 |
+| Roadmap | 看板式布局（Now/Next/Later），品牌色进度条 |
+| Decisions | ADR 列表，状态标签（Proposed/Accepted/Deprecated） |
+
+---
+
+## 5. 视觉设计系统
+
+### 5.1 色彩体系
+
+#### 5.1.1 品牌色光谱
+
+```
+#534AB7  ← 主品牌色（灵魂色）
+│
+├── 变体：
+│   #6D5CE8  ← 品牌色亮（渐变终点、hover 状态）
+│   #8B7CF6  ← 品牌色淡（标签背景、微强调）
+│   #3D3599  ← 品牌色暗（暗色模式主色）
+│   #26215C  ← 品牌色极暗（暗色区域背景、footer 终端）
+│
+├── 功能衍生：
+│   rgba(83,74,183,0.03)  ← 超淡背景（卡片悬浮）
+│   rgba(83,74,183,0.08)  ← 淡背景（section 背景）
+│   rgba(83,74,183,0.12)  ← 渐变光效起始
+│   rgba(83,74,183,0.25)  ← 渐变光效核心
+│   rgba(83,74,183,0.35)  ← 按钮阴影
+│   rgba(83,74,183,0.50)  ← 按钮阴影（hover）
+```
+
+#### 5.1.2 功能色
+
+| 用途 | 亮色模式 | 暗色模式 |
+|------|----------|----------|
+| Success | #22C55E | #4ADE80 |
+| Warning | #F59E0B | #FBBF24 |
+| Error | #EF4444 | #F87171 |
+| Info | #534AB7 | #8B7CF6 |
+
+#### 5.1.3 灰阶
+
+| 用途 | 亮色模式 | 暗色模式 |
+|------|----------|----------|
+| Text Primary | #18181B | #F4F4F5 |
+| Text Secondary | #52525B | #A1A1AA |
+| Text Tertiary | #71717A | #71717A |
+| Text Muted | #A1A1AA | #52525B |
+| Border | rgba(0,0,0,0.08) | rgba(255,255,255,0.08) |
+| Border Hover | rgba(0,0,0,0.15) | rgba(255,255,255,0.15) |
+| Background | #FFFFFF | #09090B |
+| Surface | #F4F4F5 | #111118 |
+| Code BG | #F1F5F9 | #1A1A2E |
+
+#### 5.1.4 暗色模式策略
+
+- 暗色模式不是简单反转，而是基于品牌色暗色变体的"深紫夜空"
+- 背景基调: #09090B → #0D0D1A → #111127（三层渐变）
+- 表面层: #111118（微微偏紫）
+- 品牌色在暗色模式下自动提亮 1-2 级
+
+### 5.2 排版体系
+
+| 层级 | 字号 | 字重 | 行高 | 字间距 | 用途 |
+|------|------|------|------|--------|------|
+| Display | clamp(3rem, 8vw, 4rem) | 800 | 1.05 | -0.035em | 首页 Hero H1 |
+| H1 | 2.5rem | 700 | 1.15 | -0.025em | 内页标题 |
+| H2 | 1.25rem | 600 | 1.4 | -0.01em | 章节标题 |
+| H3 | 1rem | 600 | 1.5 | 0 | 子章节 |
+| Body | 0.9375rem | 400 | 1.75 | 0 | 正文段落 |
+| Small | 0.8125rem | 400 | 1.7 | 0 | 次要文本 |
+| Label | 11px | 600 | 1.4 | 0.14em | Section label, uppercase |
+| Code | 0.8125rem | 400 | 1.7 | 0 | 代码块 |
+| Code Inline | 0.75em | 400 | inherit | 0 | 行内代码 |
+
+**字体栈**:
+- 正文: `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`
+- 代码: `"JetBrains Mono", "SF Mono", "Fira Code", Consolas, monospace`
+
+### 5.3 间距体系
+
+基于 4px 基础单元，遵循 2^n 增长:
+
+| Token | 值 | 用途 |
+|-------|-----|------|
+| `--space-1` | 4px | 微间距（图标与文字间） |
+| `--space-2` | 8px | 紧凑间距（按钮内 padding） |
+| `--space-3` | 12px | 基础间距（表单元素间） |
+| `--space-4` | 16px | 标准间距（卡片内 padding） |
+| `--space-5` | 20px | 宽松间距（卡片间距） |
+| `--space-6` | 24px | 区块间距 |
+| `--space-8` | 32px | 大区块间距 |
+| `--space-10` | 40px | Section 间距 |
+| `--space-12` | 48px | 主要区域间距 |
+| `--space-16` | 64px | 页面级间距 |
+
+### 5.4 组件风格
+
+#### 5.4.1 卡片
+
+```css
+/* 基础卡片 */
+.card {
+  border: 1px solid var(--less-border);
+  border-radius: 12px;
+  padding: var(--space-6);
+  background: var(--less-bg-surface);
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.card:hover {
+  border-color: var(--less-border-hover);
+  box-shadow: 0 4px 16px rgba(83,74,183,0.08);
+  transform: translateY(-2px);
+}
+
+/* 品牌色渐变边框卡片 */
+.card-brand {
+  position: relative;
+  border: none;
+  background: var(--less-bg-surface);
+}
+.card-brand::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(83,74,183,0.3), transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+```
+
+#### 5.4.2 按钮
+
+| 类型 | 样式 |
+|------|------|
+| Primary | 品牌色渐变背景 + 白色文字 + 品牌色阴影 + hover 上浮 |
+| Secondary | 透明背景 + 品牌色边框 + 品牌色文字 + hover 填充 |
+| Ghost | 透明背景 + 品牌色文字 + hover 淡背景 |
+
+#### 5.4.3 标签
+
+| 类型 | 样式 |
+|------|------|
+| Pill | 圆角 10px + 功能色背景(0.15) + 功能色文字 |
+| Tag | 圆角 4px + 品牌色淡背景 + 品牌色暗文字 |
+| Badge | 圆角 6px + 小字号 + uppercase |
+
+#### 5.4.4 代码块
+
+- 暗色主题: #1A1A2E 背景
+- macOS 窗口装饰: 三色圆点 (#FF5F57, #FEBC2E, #28C840)
+- 可选: 文件名标签栏
+- 可选: 一键复制按钮（右上角）
+- 行号: 可选，rgba(255,255,255,0.2) 色
+
+#### 5.4.5 提示框 (Callout)
+
+| 类型 | 左边框色 | 图标 | 背景色 |
+|------|----------|------|--------|
+| Info | #534AB7 | ℹ️ | rgba(83,74,183,0.06) |
+| Success | #22C55E | ✓ | rgba(34,197,94,0.06) |
+| Warning | #F59E0B | ⚠ | rgba(245,158,11,0.06) |
+| Danger | #EF4444 | ✕ | rgba(239,68,68,0.06) |
+
+### 5.5 动效规范
+
+#### 5.5.1 微交互（hover/focus）
+
+| 元素 | 动效 | 时长 | 缓动 |
+|------|------|------|------|
+| 按钮 hover | translateY(-1px) + 阴影扩大 | 150ms | ease-out |
+| 卡片 hover | translateY(-2px) + 品牌色阴影 | 200ms | ease-out |
+| 链接 hover | opacity 变化 + 下划线色变化 | 150ms | ease-out |
+| Tab 切换 | 底边框滑入 | 200ms | ease-out |
+| 搜索框 focus | 品牌色发光边框 | 150ms | ease-out |
+
+#### 5.5.2 滚动动画
+
+使用已有的 `scroll-reveal.ts` Island 组件:
+- 元素进入视口时: opacity 0→1 + translateY(16px)→0
+- 时长: 400ms, ease-out
+- 阈值: 20% 可见时触发
+- 尊重 `prefers-reduced-motion`
+
+#### 5.5.3 页面过渡
+
+- 利用 View Transitions API（浏览器原生支持）
+- 品牌色渐变遮罩过渡
+- 文字淡入 + 轻微上滑
+
+#### 5.5.4 装饰动效
+
+- Hero 区域背景光效: 8s ease-in-out 无限脉冲
+- 品牌色渐变流动: 品牌色渐变背景位置缓慢移动
+- 数字计数动画: Benchmark 区域的数字从 0 增长到目标值
+
+### 5.6 图标/插画风格
+
+- **图标**: 线性风格，2px 描边，与品牌色同色系
+- **插画**: 几何抽象风格（参考 Linear），品牌色为主色
+- **装饰**: CSS 渐变 + 几何形状，零外部图片依赖
+- **Logo**: 现有 `<` 符号 + 圆点，保持不变
+
+---
+
+## 6. 用户故事
+
+### P0 — Must Have
+
+| ID | 用户故事 | 验收标准 |
+|----|----------|----------|
+| US-01 | As a 前端架构师, I want 首页多框架 Tab 展示真实交互组件 so that 我能亲眼确认 Lit/React/Vanilla 组件在同一页面共存运行 | 首页多框架区域每个 Tab 都有 showcase island 实时渲染，用户可点击/输入/操作 |
+| US-02 | As a 全栈开发者, I want 首页 Hero 让我 3 秒内理解 LessJS 核心价值 so that 我不需要滚动就能判断是否继续阅读 | Hero 区域包含：核心定位文案 + DSD 零 JS 证据 + 品牌色视觉锚点 |
+| US-03 | As a 任何访客, I want 全站有统一视觉语言 so that 我在任何页面都能感知这是 LessJS 的产品 | 全站共享 CSS custom properties 体系（品牌色/灰阶/间距/圆角/阴影） |
+| US-04 | As a 开发者, I want Guide 页面有清晰的视觉层次 so that 我能快速扫描和定位信息 | H1/H2/H3 层次分明，callout 有颜色区分，代码块暗色主题 |
+| US-05 | As a WC 开发者, I want Registry 页面组件预览和兼容性一目了然 so that 我能快速判断是否可用 | 每个包卡片有兼容性彩色徽章 + 安装安全性标记 |
+
+### P1 — Should Have
+
+| ID | 用户故事 | 验收标准 |
+|----|----------|----------|
+| US-06 | As a 技术选型者, I want Engine 页面有可视化图示 so that 复杂架构概念直觉可理解 | Architecture 页有三阶段流程图；Islands 页有页面热力图 |
+| US-07 | As a 博客读者, I want 阅读进度条和侧边目录 so that 我知道读到了哪里 | 文章详情页顶部有品牌色进度条，侧边有浮动 TOC |
+| US-08 | As a 访客, I want 页面切换有品牌色过渡动画 so that 浏览体验流畅连贯 | 页面导航时 View Transitions 品牌色遮罩过渡 |
+| US-09 | As a 开发者, I want 代码块有一键复制 so that 我能快速使用示例代码 | 所有代码块右上角有复制按钮，点击后显示"已复制"反馈 |
+| US-10 | As a 暗色模式用户, I want 全站暗色模式 so that 我在暗环境下的阅读体验也一流 | 全站支持暗色模式，所有页面（首页/Guide/Engine/Registry/Blog）暗色模式可用 |
+
+### P2 — Nice to Have
+
+| ID | 用户故事 | 验收标准 |
+|----|----------|----------|
+| US-11 | As a 首次访客, I want 首页有微粒子/网格装饰背景 so that 视觉冲击力更强 | Hero 区域有品牌色微粒子或几何网格动画背景 |
+| US-12 | As a 开发者, I want Guide 页面有可交互代码沙盒 so that 我能在线修改和预览代码 | Getting Started 页面代码块支持在线编辑（非必须，可后期迭代） |
+| US-13 | As a 生态参与者, I want Roadmap 页面是看板式布局 so that 我能看到产品方向和进展 | Roadmap 页面三列看板（Now/Next/Later），进度条可视化 |
+| US-14 | As a 访客, I want 404 页面有品牌色插画和搜索 so that 我不会迷失 | 404 页面有品牌色几何插画 + 搜索框 + 返回首页按钮 |
+
+---
+
+## 7. 需求池
+
+### P0 — Must Have（必须完成）
+
+1. **首页多框架真实交互展示**: 恢复 3 个 showcase island 组件到首页多框架 Tab，左右并排（组件 + 代码）
+2. **全站 CSS Custom Properties 设计系统**: 品牌色光谱、灰阶、间距 token、圆角 token、阴影 token
+3. **首页 Hero 视觉升级**: 渐变光效增强、品牌色戏剧性使用、字号放大
+4. **Guide/Engine 内页视觉层次**: section label、callout 系统、代码块暗色主题、步骤卡片
+5. **Registry 卡片视觉升级**: 品牌色渐变边框、兼容性徽章、搜索框发光
+
+### P1 — Should Have（应该完成）
+
+6. **Engine 页面可视化图示**: Architecture 流程图、Islands 热力图、Comparison 对比条
+7. **Blog 阅读体验优化**: 进度条、侧边 TOC、品牌色卡片
+8. **全站 View Transitions**: 品牌色页面过渡动画
+9. **代码块一键复制**: 全站统一复制按钮组件
+10. **暗色模式全站适配**: 所有页面暗色模式样式
+
+### P2 — Nice to Have（可以做）
+
+11. **首页微粒子/网格背景**: 品牌色装饰动画
+12. **交互式代码沙盒**: Guide 页面在线编辑
+13. **Roadmap 看板布局**: 三列看板 + 进度条
+14. **404 品牌色插画页**: 几何插画 + 搜索
+
+---
+
+## 8. 待确认问题
+
+| # | 问题 | 影响 | 建议 |
+|---|------|------|------|
+| Q1 | 首页多框架区域的 Media Chrome showcase 需要 CDN 加载视频，是否保留？ | 影响首屏加载性能 | 保留但 lazy-load，Tab 切换到 Vanilla 时才加载 |
+| Q2 | 暗色模式是否在 v1 交付？ | 工作量翻倍 | 建议暗色模式作为 P1，核心页面（首页+Guide）先做 |
+| Q3 | 可视化图示（流程图/热力图）用 SVG 手绘还是 ASCII art？ | 开发成本差异大 | 建议用 CSS+SVG 手绘，保持零重依赖原则 |
+| Q4 | Blog 侧边 TOC 需要额外 island 组件还是纯 CSS 实现？ | 技术方案选择 | 建议用 island 组件（`less-toc` 已存在），纯 CSS 方案在长文档体验差 |
+| Q5 | 品牌色 #534AB7 的暗色模式提亮到哪个变体？ | 色彩一致性 | 建议暗色模式品牌色用 #8B7CF6，按钮/渐变终点用 #6D5CE8 |
+| Q6 | Registry 组件实时预览是否用 iframe 隔离？ | 安全性/性能 | 建议用 Shadow DOM 隔离而非 iframe，保持与 LessJS 架构一致 |
+| Q7 | 页面过渡是否依赖 View Transitions API？旧浏览器不支持 | 兼容性 | 建议渐进增强：支持时用品牌色过渡，不支持时直接切换 |
+| Q8 | 首页 Benchmark 数据是否需要实时获取？还是保持硬编码？ | 数据维护 | 建议保持硬编码，但标注数据来源和测试日期 |
+| Q9 | i18n 策略：重设计是否同时覆盖中英文两个 locale？ | 工作量 | 建议先做中文，英文同步跟进但不阻塞 |
+| Q10 | 是否需要新增 `@lessjs/ui` 组件来支撑设计系统？ | 架构决策 | 建议将 callout、code-block、copy-button 等通用组件提取到 `@lessjs/ui` |
+
+---
+
+## 9. 技术约束
+
+| 约束 | 说明 |
+|------|------|
+| 技术栈 | Lit + DsdLitElement（Web Components） |
+| 零重依赖 | 纯 CSS 动画 + 原生 Web API，不引入动画库 |
+| SSG 静态生成 | 所有页面最终输出为静态 HTML |
+| 品牌色 | #534AB7 |
+| 必须使用已有 showcase island | `shoelace-showcase.ts`、`react-showcase.ts`、`media-chrome-showcase.ts` |
+| 必须使用已有 scroll-reveal | `scroll-reveal.ts` 用于滚动揭示动画 |
+| 尊重 prefers-reduced-motion | 所有动效必须有 `prefers-reduced-motion: reduce` 降级 |
+| WC 组件定义 | 所有页面组件通过 `customElements.define()` 注册 |
+| DSD 首屏 | 所有页面内容必须通过 Declarative Shadow DOM 零 JS 首屏 |

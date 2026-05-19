@@ -22,6 +22,10 @@ Examples:
 - `vite-module-graph-cycle.md` - circular import causing build hangs
 - `jsr-publish-token-expiry.md` - JSR publish failure due to expired token
 
+## Subdirectories
+
+- `www-redesign/` — 2026-05-19 www 全站重设计团队协作（PRD + 架构 + 技术债分析）
+
 **Avoid**: Date-prefixed names like `2026-05-16-showcase-ssr-fix.md`. The date
 is available via `git log`, and date prefixes make it hard to find past issues
 by symptom.

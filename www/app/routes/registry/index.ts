@@ -115,7 +115,8 @@ export default class DocsRegistryHome extends LitElement {
       }
 
       .search-box:focus {
-        border-color: var(--less-accent);
+        border-color: var(--less-brand, #534AB7);
+        box-shadow: 0 0 0 3px var(--less-brand-glow, rgba(83,74,183,0.35)), var(--less-shadow-glow, 0 0 20px rgba(83,74,183,0.15));
       }
 
       .search-box::placeholder {
@@ -156,8 +157,8 @@ export default class DocsRegistryHome extends LitElement {
       }
 
       .filter-btn.active {
-        background: var(--less-accent);
-        border-color: var(--less-accent);
+        background: var(--less-brand, #534AB7);
+        border-color: var(--less-brand, #534AB7);
         color: #fff;
       }
 
@@ -192,7 +193,7 @@ export default class DocsRegistryHome extends LitElement {
 
       .package-card:hover {
         border-color: var(--less-brand, #534ab7);
-        box-shadow: 0 8px 24px rgba(83,74,183,0.12);
+        box-shadow: var(--less-shadow-brand-md, 0 4px 20px rgba(83,74,183,0.3));
         transform: translateY(-3px);
       }
 

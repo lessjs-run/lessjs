@@ -30,6 +30,10 @@ export const lessTypographyTokens: ReturnType<typeof css> = css`
     --less-font-size-2xl: 1.25rem; /* 20px */
     --less-font-size-3xl: 1.5rem; /* 24px */
 
+    /* === Display Typography (www-redesign) === */
+    --less-font-size-display: clamp(3rem, 7vw, 5rem);
+    --less-font-size-h1: clamp(2rem, 4vw, 2.75rem);
+
     /* === Font Weights === */
     --less-font-weight-normal: 400;
     --less-font-weight-medium: 500;

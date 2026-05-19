@@ -4,6 +4,7 @@ import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
+import '@lessjs/ui/less-callout';
 
 export class PositioningPage extends LitElement {
   declare locale?: string;
@@ -209,13 +210,11 @@ export class PositioningPage extends LitElement {
             </tbody>
           </table>
 
-          <div class="callout">
-            <p>
-              <strong>为什么选 WC 不选 React？</strong> 三个答案：(1) 样式隔离 — Shadow DOM 是浏览器机制不是约定；
-              (2) 跨框架 — Shoelace/Material Web 写一次，React/Vue/Angular/Svelte 都能用；
-              (3) 零 JS 首屏 — DSD 是浏览器原生 HTML，不需要任何 runtime。
-            </p>
-          </div>
+          <less-callout type="info" label="为什么选 WC 不选 React？">
+            三个答案：(1) 样式隔离 — Shadow DOM 是浏览器机制不是约定；
+            (2) 跨框架 — Shoelace/Material Web 写一次，React/Vue/Angular/Svelte 都能用；
+            (3) 零 JS 首屏 — DSD 是浏览器原生 HTML，不需要任何 runtime。
+          </less-callout>
 
           <div class="nav-row">
             <a href="/guide/getting-started" class="nav-link">Getting Started &rarr;</a>
@@ -440,13 +439,11 @@ export class PositioningPage extends LitElement {
             </tbody>
           </table>
 
-          <div class="callout">
-            <p>
-              <strong>Why WC over React?</strong> Three answers: (1) Style isolation — Shadow DOM is a browser mechanism, not a convention;
-              (2) Cross-framework — Shoelace/Material Web write once, works with React/Vue/Angular/Svelte;
-              (3) Zero-JS first paint — DSD is native browser HTML, requires no runtime.
-            </p>
-          </div>
+          <less-callout type="info" label="Why WC over React?">
+            Three answers: (1) Style isolation — Shadow DOM is a browser mechanism, not a convention;
+            (2) Cross-framework — Shoelace/Material Web write once, works with React/Vue/Angular/Svelte;
+            (3) Zero-JS first paint — DSD is native browser HTML, requires no runtime.
+          </less-callout>
 
           <div class="nav-row">
             <a href="/guide/getting-started" class="nav-link">Getting Started &rarr;</a>

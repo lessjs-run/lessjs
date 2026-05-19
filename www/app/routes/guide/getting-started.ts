@@ -6,6 +6,7 @@ import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
+import '@lessjs/ui/less-callout';
 
 export class GettingStartedPage extends LitElement {
   static override styles = [
@@ -46,12 +47,10 @@ export class GettingStartedPage extends LitElement {
             从一个最小项目开始：创建应用、启动开发服务器、构建静态产物，再理解每个目录负责什么。
           </p>
 
-          <div class="callout">
-            <p>
-              推荐使用 Deno 2.7+。LessJS 是 Deno-first 项目，依赖通过
-              <span class="inline-code">deno.json</span> 管理，开发和构建命令都从 Deno task 进入。
-            </p>
-          </div>
+          <less-callout type="info" label="推荐">
+            推荐使用 Deno 2.7+。LessJS 是 Deno-first 项目，依赖通过
+            <span class="inline-code">deno.json</span> 管理，开发和构建命令都从 Deno task 进入。
+          </less-callout>
 
           <section class="step">
             <h2>1. 创建项目</h2>
@@ -152,13 +151,11 @@ export const tagName = 'page-home';</code></pre></less-code-block>
             and understand what each directory is responsible for.
           </p>
 
-          <div class="callout">
-            <p>
-              Deno 2.7+ recommended. LessJS is a Deno-first project — dependencies are managed
-              through <span class="inline-code">deno.json</span>, and all dev/build commands
-              use Deno tasks.
-            </p>
-          </div>
+          <less-callout type="info" label="Recommended">
+            Deno 2.7+ recommended. LessJS is a Deno-first project — dependencies are managed
+            through <span class="inline-code">deno.json</span>, and all dev/build commands
+            use Deno tasks.
+          </less-callout>
 
           <section class="step">
             <h2>1. Create a Project</h2>

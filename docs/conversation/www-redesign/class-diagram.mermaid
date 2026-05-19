@@ -1,0 +1,89 @@
+classDiagram
+    direction TB
+
+    class LessShowcasePanel {
+        +number activeTab
+        +ShowcaseTab[] tabs
+        -_onTabClick(idx: number) void
+        +render() TemplateResult
+    }
+
+    class ShowcaseTab {
+        +string label
+        +string tag
+        +string tagColor
+        +string islandTag
+        +string code
+        +string codeLabel
+    }
+
+    class LessCallout {
+        +string type
+        +string title
+        +render() TemplateResult
+    }
+
+    class LessStepCard {
+        +number step
+        +string label
+        +render() TemplateResult
+    }
+
+    class ScrollReveal {
+        -IntersectionObserver _observer
+        +connectedCallback() void
+        +disconnectedCallback() void
+        +render() TemplateResult
+    }
+
+    class DocsHome {
+        -number _mfaTab
+        +string locale
+        -_onMfaClick(idx: number) void
+        -_renderZh() TemplateResult
+        -_renderEn() TemplateResult
+        +render() TemplateResult
+    }
+
+    class DocsRegistryHome {
+        -HubIndexEntry[] _packages
+        -HubIndexEntry[] _filtered
+        -string _query
+        -string _tierFilter
+        -string _sortBy
+        -boolean _loading
+        -_onSearch(e: InputEvent) void
+        -_setFilter(tier: string) void
+        -_applyFilters() void
+        +render() TemplateResult
+    }
+
+    class DsdLitElement {
+        <<abstract>>
+        #boolean _dsdHydrated
+        #string locale
+        +render() TemplateResult
+    }
+
+    class HubIndexEntry {
+        +string name
+        +string scope
+        +string version
+        +string description
+        +string[] tags
+        +string compatibility
+        +boolean safeToInstall
+        +string submittedAt
+    }
+
+    DsdLitElement <|-- DocsHome
+    DsdLitElement <|-- LessShowcasePanel
+    LitElement <|-- LessCallout
+    LitElement <|-- LessStepCard
+    LitElement <|-- DocsRegistryHome
+
+    LessShowcasePanel --> ShowcaseTab : tabs property
+    LessShowcasePanel --> ScrollReveal : wraps content
+    DocsHome --> LessShowcasePanel : multi-framework section
+    DocsHome --> ScrollReveal : scroll animations
+    DocsRegistryHome --> HubIndexEntry : filters and renders

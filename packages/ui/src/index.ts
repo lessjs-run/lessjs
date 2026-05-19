@@ -31,6 +31,8 @@ export { lessSpacingTokens } from './tokens/spacing.js';
 export { lessTypographyTokens } from './tokens/typography.js';
 export { lessColorTokens } from './tokens/colors.js';
 export { lessEffectTokens } from './tokens/effects.js';
+export { lessRadiusTokens } from './tokens/radius.js';
+export { lessAnimationTokens } from './tokens/animation.js';
 
 // Components
 export { LessButton, tagName as lessButtonTagName } from './less-button.js';
@@ -42,6 +44,8 @@ export type { HeaderNavLink, NavItem, NavSection } from './less-layout.js';
 export { LessThemeToggle, tagName as lessThemeToggleTagName } from './less-theme-toggle.js';
 export { default as LessHeroPing, tagName as lessHeroPingTagName } from './less-hero-ping.js';
 export { LessDialog, tagName as lessDialogTagName } from './less-dialog.js';
+export { LessCallout, tagName as lessCalloutTagName } from './less-callout.js';
+export { LessStepCard, tagName as lessStepCardTagName } from './less-step-card.js';
 
 // Package manifest (WC Package Protocol)
 // Consumers (adapter-vite) read manifest.declarations to derive island metadata.

@@ -4,6 +4,7 @@ import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
 import '@lessjs/ui/less-layout';
+import '@lessjs/ui/less-callout';
 
 export class RoadmapPage extends LitElement {
   declare locale?: string;
@@ -11,17 +12,6 @@ export class RoadmapPage extends LitElement {
   static override styles = [
     pageStyles,
     css`
-      .callout {
-        padding: 1rem;
-        background: var(--less-bg-muted);
-        border-left: 4px solid var(--less-color-primary);
-        margin: 1.5rem 0;
-      }
-
-      .callout p {
-        margin: 0;
-      }
-
       .reset-table,
       .version-table {
         width: 100%;
@@ -167,13 +157,11 @@ export class RoadmapPage extends LitElement {
             >v0.18.0</code>，下一里程碑 <code>v0.18.1</code>。
           </p>
 
-          <div class="callout">
-            <p>
-              事实优先、标准优先、协议优先。已测试的能力进入文档；未冻结的留在 roadmap 和 ADR；registry
-              hub 只在 renderer kernel、package manifest 和 release parity 稳定之后才建设。版本纪律遵循
-              ADR 0006。
-            </p>
-          </div>
+          <less-callout type="info">
+            事实优先、标准优先、协议优先。已测试的能力进入文档；未冻结的留在 roadmap 和 ADR；registry
+            hub 只在 renderer kernel、package manifest 和 release parity 稳定之后才建设。版本纪律遵循
+            ADR 0006。
+          </less-callout>
 
           <h2>Six-Phase Vision</h2>
           <table class="version-table">
@@ -381,13 +369,11 @@ export class RoadmapPage extends LitElement {
             >v0.18.1</code>.
           </p>
 
-          <div class="callout">
-            <p>
-              Fact-first, standards-first, protocol-first. Tested capabilities move into docs; unfinished
-              boundaries stay in the roadmap and ADRs; the registry hub only follows renderer kernel,
-              package manifest, and release parity stability. Version discipline follows ADR 0006.
-            </p>
-          </div>
+          <less-callout type="info">
+            Fact-first, standards-first, protocol-first. Tested capabilities move into docs; unfinished
+            boundaries stay in the roadmap and ADRs; the registry hub only follows renderer kernel,
+            package manifest, and release parity stability. Version discipline follows ADR 0006.
+          </less-callout>
 
           <h2>Six-Phase Vision</h2>
           <table class="version-table">
