@@ -149,6 +149,7 @@ export default class DocsHome extends DsdLitElement {
     }
     less-layout {
       min-height: 100vh;
+      display:flex;flex-direction:column;
     }
 
     /* ── I. Hero — dark immersive opening ── */
@@ -420,6 +421,28 @@ export default class DocsHome extends DsdLitElement {
     .card-pills { display:flex;gap:6px;margin-top:12px }
     .card-pill { display:inline-flex;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:500;color:var(--less-brand,#534AB7);background:rgba(83,74,183,0.08);border:1px solid rgba(83,74,183,0.15) }
 
+    /* ── CSS Houdini @property — smooth brand-color transitions ── */
+    @supports (background: paint(something)) {
+      .card-dominant {
+        transition: border-left-color var(--less-duration-fast,200ms) var(--less-easing-default,ease-out),
+                    box-shadow var(--less-duration-fast,200ms) var(--less-easing-default,ease-out),
+                    transform var(--less-duration-fast,200ms) var(--less-easing-default,ease-out);
+      }
+    }
+
+    /* ── CSS Part exposure for theming ── */
+    .hero::part(header) { backdrop-filter: blur(12px) }
+    .card::part(body) { padding: 1.25rem }
+
+    /* ── Scroll-reveal animation (native CSS, no JS lib) ── */
+    @keyframes fadeUp {
+      from { opacity:0;transform:translateY(24px) }
+      to { opacity:1;transform:translateY(0) }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .sec { animation: fadeUp 0.6s var(--less-easing-default,ease-out) both;animation-timeline:view();animation-range:entry 10% entry 60% }
+    }
+
     /* ── Bento Grid (three pillars) ── */
     .cards {
       display: grid;
@@ -522,9 +545,14 @@ export default class DocsHome extends DsdLitElement {
       margin-top: 12px;
       line-height: 1.6;
     }
+    .bench-stats-row { display:flex;gap:12px;margin-bottom:16px }
+    .bench-stats-row .met { flex:1;text-align:center;padding:12px 8px;border-radius:8px;background:var(--less-bg-surface);border:0.5px solid var(--less-border);transition:border-color 0.2s,box-shadow 0.2s }
+    .bench-stats-row .met:hover { border-color:rgba(83,74,183,0.3);box-shadow:0 2px 8px rgba(83,74,183,0.08) }
+    .bench-stats-row .met strong { display:block;font-size:20px;font-weight:600;color:var(--less-brand,#534AB7);margin-bottom:2px }
+    .bench-stats-row .met span { display:block;font-size:11px;color:var(--less-text-muted);text-transform:uppercase;letter-spacing:0.06em }
     .bench-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: 1fr 1fr;
       gap: 16px;
       margin-top: 18px;
     }
@@ -590,7 +618,7 @@ export default class DocsHome extends DsdLitElement {
 
     /* ── III. Site Footer — warm-gray quiet landing ── */
     .site-footer {
-      background: #F1EFE8;
+      background: linear-gradient(180deg, #F1EFE8 0%, #EBE9E0 100%);
       border-top: 2px solid var(--less-brand, #534AB7);
       padding: 3rem 2rem 1.5rem;
       width: 100vw;
@@ -741,7 +769,12 @@ export default class DocsHome extends DsdLitElement {
       .sec-bd {
         padding: 0 1.25rem;
       }
-      .bench-grid {
+      .bench-stats-row { display:flex;gap:12px;margin-bottom:16px }
+    .bench-stats-row .met { flex:1;text-align:center;padding:12px 8px;border-radius:8px;background:var(--less-bg-surface);border:0.5px solid var(--less-border);transition:border-color 0.2s,box-shadow 0.2s }
+    .bench-stats-row .met:hover { border-color:rgba(83,74,183,0.3);box-shadow:0 2px 8px rgba(83,74,183,0.08) }
+    .bench-stats-row .met strong { display:block;font-size:20px;font-weight:600;color:var(--less-brand,#534AB7);margin-bottom:2px }
+    .bench-stats-row .met span { display:block;font-size:11px;color:var(--less-text-muted);text-transform:uppercase;letter-spacing:0.06em }
+    .bench-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -847,7 +880,14 @@ export default class DocsHome extends DsdLitElement {
                 <div class="bench-lbl">Next.js</div>
                 <div class="bench-track"><div class="bench-fill warn" style="width:100%;">~90 KB</div></div>
               </div>
-              <div class="bench-grid">
+              
+            <div class="bench-stats-row">
+              <div class="met"><strong>v0.19.0</strong><span>latest</span></div>
+              <div class="met"><strong>681</strong><span>tests</span></div>
+              <div class="met"><strong>13</strong><span>packages</span></div>
+              <div class="met"><strong>1</strong><span>runtime</span></div>
+            </div>
+<div class="bench-grid">
                 <div class="bench-stat">
                   <h4><span class="brand">DSD 一等公民</span> vs Preact-only</h4>
                   <p>浏览器原生解析 Shadow DOM，其他框架只能模拟</p>
@@ -868,7 +908,15 @@ export default class DocsHome extends DsdLitElement {
           <h2 class="sec-lbl">多框架</h2>
           <p class="sec-title">任意框架，同一个 island</p>
           <div class="sec-bd">
-            <less-showcase-panel .tabs="${SHOWCASE_TABS_ZH}" .activeTab="${0}"></less-showcase-panel>
+            <less-showcase-panel .tabs="${SHOWCASE_TABS_ZH}" .activeTab="${0}">
+              <div style="text-align:center;padding:2rem;color:var(--less-text-muted);font-size:13px">
+                <div style="width:48px;height:48px;border-radius:12px;background:var(--less-brand-subtle,#EEEDFE);margin:0 auto 12px;display:flex;align-items:center;justify-content:center">
+                  <span style="font-size:20px;color:var(--less-brand,#534AB7)">◇</span>
+                </div>
+                <p>Lit · React · Vanilla 组件交互展示</p>
+                <p style="font-size:11px;margin-top:4px">客户端 JavaScript 加载后自动渲染</p>
+              </div>
+            </less-showcase-panel>
           </div>
         </div>
 
@@ -886,7 +934,7 @@ export default class DocsHome extends DsdLitElement {
               <div class="card card-dominant">
                 <div class="card-icon" style="background:var(--less-brand-subtle, #EEEDFE);color:var(--less-brand, #534AB7);">D</div>
                 <h3>WC 渲染引擎</h3>
-                <p>DSD 零 JS 首屏，Lit/React/Vanilla 适配器共存。</p>
+                <p>DSD 零 JS 首屏，浏览器原生 Shadow DOM 解析。Lit/React/Vanilla 适配器共享同一渲染管线——同一页面，三种框架组件协同运行。</p>
                 <div class="card-pills">
                   <span class="card-pill">DSD</span>
                   <span class="card-pill">Island</span>
@@ -927,7 +975,7 @@ export default class DocsHome extends DsdLitElement {
               </div>
             </div>
             <div class="qs-cta">
-              <a href="/guide/getting-started">查看完整文档 →</a>
+              <a href="/guide/getting-started">阅读完整文档</a>
             </div>
           </div>
         </div>
@@ -1051,7 +1099,14 @@ export default class DocsHome extends DsdLitElement {
                 <div class="bench-lbl">Next.js</div>
                 <div class="bench-track"><div class="bench-fill warn" style="width:100%;">~90 KB</div></div>
               </div>
-              <div class="bench-grid">
+              
+            <div class="bench-stats-row">
+              <div class="met"><strong>v0.19.0</strong><span>latest</span></div>
+              <div class="met"><strong>681</strong><span>tests</span></div>
+              <div class="met"><strong>13</strong><span>packages</span></div>
+              <div class="met"><strong>1</strong><span>runtime</span></div>
+            </div>
+<div class="bench-grid">
                 <div class="bench-stat">
                   <h4><span class="brand">DSD first-class</span> vs Preact-only</h4>
                   <p>Browser-native Shadow DOM parsing — other frameworks can only simulate</p>
@@ -1072,7 +1127,15 @@ export default class DocsHome extends DsdLitElement {
           <h2 class="sec-lbl">multi-framework</h2>
           <p class="sec-title">Any framework, same island</p>
           <div class="sec-bd">
-            <less-showcase-panel .tabs="${SHOWCASE_TABS_EN}" .activeTab="${0}"></less-showcase-panel>
+            <less-showcase-panel .tabs="${SHOWCASE_TABS_EN}" .activeTab="${0}">
+              <div style="text-align:center;padding:2rem;color:var(--less-text-muted);font-size:13px">
+                <div style="width:48px;height:48px;border-radius:12px;background:var(--less-brand-subtle,#EEEDFE);margin:0 auto 12px;display:flex;align-items:center;justify-content:center">
+                  <span style="font-size:20px;color:var(--less-brand,#534AB7)">◇</span>
+                </div>
+                <p>Lit · React · Vanilla interactive showcase</p>
+                <p style="font-size:11px;margin-top:4px">Renders after client-side JavaScript loads</p>
+              </div>
+            </less-showcase-panel>
           </div>
         </div>
 
@@ -1090,7 +1153,7 @@ export default class DocsHome extends DsdLitElement {
               <div class="card card-dominant">
                 <div class="card-icon" style="background:var(--less-brand-subtle, #EEEDFE);color:var(--less-brand, #534AB7);">D</div>
                 <h3>wc rendering engine</h3>
-                <p>DSD zero-JS first paint. Lit/React/Vanilla adapters coexist.</p>
+                <p>DSD zero-JS first paint via browser-native Shadow DOM. Lit, React and Vanilla adapters share one rendering pipeline — three framework components coexist on the same page.</p>
                 <div class="card-pills">
                   <span class="card-pill">DSD</span>
                   <span class="card-pill">Island</span>
@@ -1131,7 +1194,7 @@ export default class DocsHome extends DsdLitElement {
               </div>
             </div>
             <div class="qs-cta">
-              <a href="/guide/getting-started">View full docs →</a>
+              <a href="/guide/getting-started">Read the docs</a>
             </div>
           </div>
         </div>
