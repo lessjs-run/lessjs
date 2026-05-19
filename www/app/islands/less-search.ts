@@ -35,31 +35,35 @@ export default class LessSearch extends DsdLitElement {
       align-items: center;
     }
 
-    /* Trigger button */
+    /* Trigger button — matches nav header style (github-link, lang-switch, theme-toggle) */
     .search-trigger {
       display: inline-flex;
       align-items: center;
-      gap: 0.375rem;
-      padding: 0.25rem 0.625rem;
+      gap: var(--less-size-2, 0.375rem);
+      padding: var(--less-size-2, 0.375rem) var(--less-size-3, 0.5rem);
       border: 0.5px solid var(--less-border);
-      border-radius: 4px;
+      border-radius: var(--less-radius-md, 6px);
       background: transparent;
-      color: var(--less-text-tertiary);
-      font-size: 0.75rem;
+      color: var(--less-text-muted);
+      font-size: var(--less-font-size-xs, 0.6875rem);
+      font-weight: var(--less-font-weight-medium, 500);
+      letter-spacing: var(--less-letter-spacing-wide, 0.02em);
       cursor: pointer;
-      transition: border-color 0.15s, color 0.15s;
+      transition:
+        color var(--less-transition-normal),
+        border-color var(--less-transition-normal);
     }
     .search-trigger:hover {
-      border-color: var(--less-border-hover);
       color: var(--less-text-secondary);
+      border-color: var(--less-border-hover);
     }
     .search-trigger kbd {
       font-family: inherit;
       padding: 0.0625rem 0.3125rem;
       border: 0.5px solid var(--less-border);
       border-radius: 3px;
-      font-size: 0.6875rem;
-      margin-left: 0.25rem;
+      font-size: 0.625rem;
+      margin-left: var(--less-size-1, 0.25rem);
     }
 
     /* Overlay */

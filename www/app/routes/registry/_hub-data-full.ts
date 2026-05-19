@@ -88,8 +88,10 @@ const _records: Record<string, HubPackageRecord> = {
           "tagName": "less-card",
           "importSpec": "@lessjs/ui",
           "importUrl": "https://esm.sh/jsr/@lessjs/ui@0.18.3/less-card",
-          "demoAttrs": {},
-          "demoSlots": "<div slot=\"header\">Card Title</div><div>Card content goes here.</div>",
+          "demoAttrs": {
+            "variant": "elevated"
+          },
+          "demoSlots": "<div slot=\"header\">Card Title</div><div>This is a card with some body content to demonstrate the layout and styling of the less-card component.</div><div slot=\"footer\">Card Footer</div>",
           "compatibility": "ssr-capable"
         }
       },
@@ -155,20 +157,6 @@ const _records: Record<string, HubPackageRecord> = {
         }
       },
       {
-        "tagName": "less-layout",
-        "compatibility": "ssr-capable",
-        "validationErrors": 0,
-        "validationWarnings": 0,
-        "snapshotMeta": {
-          "tagName": "less-layout",
-          "importSpec": "@lessjs/ui",
-          "importUrl": "https://esm.sh/jsr/@lessjs/ui@0.18.3/less-layout",
-          "demoAttrs": {},
-          "demoSlots": "",
-          "compatibility": "ssr-capable"
-        }
-      },
-      {
         "tagName": "less-theme-toggle",
         "compatibility": "ssr-capable",
         "validationErrors": 0,
@@ -184,7 +172,7 @@ const _records: Record<string, HubPackageRecord> = {
       }
     ],
     "reports": {
-      "validation": "{\"packageName\":\"@lessjs/ui\",\"version\":\"0.18.3\",\"valid\":true,\"compatibility\":\"ssr-capable\",\"tags\":8,\"errors\":[],\"warnings\":[]}"
+      "validation": "{\"packageName\":\"@lessjs/ui\",\"version\":\"0.18.3\",\"valid\":true,\"compatibility\":\"ssr-capable\",\"tags\":7,\"errors\":[],\"warnings\":[]}"
     },
     "snapshotPaths": {},
     "installGuidance": {

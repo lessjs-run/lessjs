@@ -74,7 +74,6 @@ const WC_PACKAGES: KnownWcPackage[] = [
       'less-dialog',
       'less-hero-ping',
       'less-input',
-      'less-layout',
       'less-theme-toggle',
     ],
     modulePaths: {
@@ -84,7 +83,6 @@ const WC_PACKAGES: KnownWcPackage[] = [
       'less-dialog': 'packages/ui/src/less-dialog.ts',
       'less-hero-ping': 'packages/ui/src/less-hero-ping.ts',
       'less-input': 'packages/ui/src/less-input.ts',
-      'less-layout': 'packages/ui/src/less-layout.ts',
       'less-theme-toggle': 'packages/ui/src/less-theme-toggle.ts',
     },
   },

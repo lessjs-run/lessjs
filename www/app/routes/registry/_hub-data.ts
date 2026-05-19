@@ -37,7 +37,6 @@ const _data: HubIndexData = {
       "less-dialog",
       "less-hero-ping",
       "less-input",
-      "less-layout",
       "less-theme-toggle"
     ],
     "source": "local",

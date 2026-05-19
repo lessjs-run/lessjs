@@ -53,11 +53,12 @@ export const DEMO_ATTRS: Record<string, Record<string, string>> = {
   'sl-menu-item': { checked: '' },
   // LessJS UI
   'less-button': { variant: 'primary' },
-  'less-card': {},
+  'less-card': { variant: 'elevated' },
   'less-input': { placeholder: 'Type here...' },
   'less-dialog': { open: '', label: 'Dialog' },
   'less-code-block': {},
   'less-hero-ping': {},
+  'less-theme-toggle': {},
 };
 
 /** Demo slot content so components show meaningful structure in previews */
@@ -85,7 +86,7 @@ export const DEMO_SLOTS: Record<string, string> = {
   'sl-tree-item': 'Tree Item',
   // LessJS UI
   'less-button': 'Click Me',
-  'less-card': '<div slot="header">Card Title</div><div>Card content goes here.</div>',
+  'less-card': '<div slot="header">Card Title</div><div>This is a card with some body content to demonstrate the layout and styling of the less-card component.</div><div slot="footer">Card Footer</div>',
   'less-input': '',
   'less-dialog': '<div>Dialog body content</div>',
   'less-code-block': '<code>console.log("Hello LessJS!")</code>',

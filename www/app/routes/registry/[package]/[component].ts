@@ -327,7 +327,7 @@ export default class DocsRegistryComponentDetail extends LitElement {
   }
 
   /** Build iframe srcdoc from HubSnapshotMeta (ADR-0035 A3) */
-  private _buildSrcdoc(meta: { tagName: string; importUrl: string; demoAttrs: Record<string, string>; demoSlots: string; themeCssUrl?: string }): string {
+  private _buildSrcdoc(meta: { tagName: string; importUrl: string; importSpec: string; demoAttrs: Record<string, string>; demoSlots: string; themeCssUrl?: string }): string {
     const attrs = Object.entries(meta.demoAttrs)
       .map(([k, v]) => v === '' ? k : `${k}="${v}"`)
       .join(' ');
@@ -335,7 +335,14 @@ export default class DocsRegistryComponentDetail extends LitElement {
     const themeLink = meta.themeCssUrl
       ? `<link rel="stylesheet" href="${meta.themeCssUrl}">`
       : '';
-    return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${themeLink}<script type="module" src="${meta.importUrl}"></script><style>*,*::before,*::after{box-sizing:border-box}body{margin:0;padding:20px;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5;color:#1a1a2e;background:#fff;overflow:hidden}</style></head><body><${meta.tagName}${attrStr}>${meta.demoSlots}</${meta.tagName}></body></html>`;
+    // LessJS UI components need design token CSS injected inline because their
+    // styles reference CSS custom properties (--less-bg-card, --less-border, etc.)
+    // that are normally declared on :root by lessRootColorCSS. In the iframe
+    // there is no LessJS runtime, so we inline the light-theme tokens directly.
+    const lessThemeCss = meta.importSpec === '@lessjs/ui'
+      ? `<style>:root{--gray-0:#f8f9fa;--gray-1:#f1f3f5;--gray-2:#e9ecef;--gray-3:#dee2e6;--gray-4:#ced4da;--gray-5:#adb5bd;--gray-6:#868e96;--gray-7:#495057;--gray-8:#343a40;--gray-9:#212529;--gray-10:#16191d;--gray-11:#0d0f12;--gray-12:#030507;--less-bg-base:var(--gray-0);--less-bg-surface:var(--gray-1);--less-bg-elevated:var(--gray-2);--less-bg-hover:var(--gray-2);--less-bg-card:var(--gray-0);--less-border:var(--gray-3);--less-border-hover:var(--gray-4);--less-text-primary:var(--gray-12);--less-text-secondary:var(--gray-8);--less-text-tertiary:var(--gray-7);--less-text-muted:var(--gray-6);--less-accent:var(--gray-12);--less-accent-dim:var(--gray-8);--less-accent-subtle:var(--gray-2);--less-brand:#534AB7;--less-brand-subtle:#EEEDFE;--less-code-bg:var(--gray-2);--less-code-border:var(--gray-3);--less-error:var(--red-7);--less-scrollbar-track:transparent;--less-scrollbar-thumb:var(--gray-4);color-scheme:light}</style>`
+      : '';
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${themeLink}${lessThemeCss}<script type="module" src="${meta.importUrl}"></script><style>*,*::before,*::after{box-sizing:border-box}body{margin:0;padding:20px;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5;color:#1a1a2e;background:#fff;overflow:hidden}</style></head><body><${meta.tagName}${attrStr}>${meta.demoSlots}</${meta.tagName}></body></html>`;
   }
 
   override render() {
