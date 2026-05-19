@@ -1,14 +1,14 @@
 /**
- * Homepage — v7 redesign
+ * Homepage — v8 redesign
  *
  * Three-act rhythm: Dark Hero → Light Narrative → Warm-gray Footer
- * 6 sections: Hero → Code Strip → Bento Grid → Benchmark → Multi-framework → Quick Start
+ * 6 sections: Hero → Code Strip → Benchmark → Multi-framework → Bento → Quick Start
  *
- * v7 Redesign key changes:
+ * v8 Redesign key changes:
  * - Hero: Display-level typography, enhanced gradient glow, brand-shadow buttons
  * - Multi-framework: Real interactive showcase panel (not just code tabs)
  * - Quick Start: less-step-card components
- * - All hardcoded colors replaced with token references
+ * - Bento hierarchy with WC Engine dominant card, sec-divider-free transitions
  */
 import { css, html } from 'lit';
 import { DsdLitElement } from '@lessjs/adapter-lit';
@@ -236,7 +236,6 @@ export default class DocsHome extends DsdLitElement {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 24px;
     }
     .hero-actions a {
       display: inline-flex;
@@ -270,33 +269,6 @@ export default class DocsHome extends DsdLitElement {
       border-color: rgba(255,255,255,0.25);
       background: rgba(255,255,255,0.08);
     }
-    less-term-demo {
-      display: block;
-      margin-bottom: 2rem;
-    }
-
-    /* ── Stats ── */
-    .stats {
-      display: flex;
-      gap: 28px;
-      flex-wrap: wrap;
-    }
-    .stat {
-      display: flex;
-      flex-direction: column;
-    }
-    .stat strong {
-      color: var(--less-brand, #534AB7);
-      font-size: 18px;
-      font-weight: 500;
-    }
-    .stat span {
-      color: var(--less-text-tertiary);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
     /* ── II. Code Strip — dark code comparison ── */
     .code-strip {
       background: linear-gradient(180deg, var(--less-brand-deep, #26215C) 0%, #0f0f1a 100%);
@@ -403,15 +375,7 @@ export default class DocsHome extends DsdLitElement {
       margin: 0 auto;
       max-width: 960px;
     }
-    .sec-divider {
-      width: 100vw;
-      margin-left: calc(-50vw + 50%);
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--less-brand, #534AB7) 20%, var(--less-brand-light, #6D5CE8) 80%, transparent);
-      opacity: 0.25;
-      border: none;
-    }
-    .sec-lbl {
+        .sec-lbl {
       font-size: 11px;
       font-weight: 600;
       color: var(--less-brand, #534ab7);
@@ -430,16 +394,40 @@ export default class DocsHome extends DsdLitElement {
       padding: 0 1.5rem;
     }
 
+    /* ── QS leading to Footer: full-width gradient bridge ── */
+    .sec-qs-last {
+      max-width: none;
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+      padding-bottom: 0;
+      background: linear-gradient(180deg, var(--less-bg-base, #ffffff) 0%, #F1EFE8 100%);
+    }
+    .sec-qs-last .sec-lbl,
+    .sec-qs-last .sec-title,
+    .sec-qs-last .sec-bd {
+      max-width: 960px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    /* ── Transition lines ── */
+    .turn-line { width:100vw;margin-left:calc(-50vw+50%);height:1px;background:linear-gradient(90deg,transparent,var(--less-brand,#534AB7) 50%,transparent);opacity:0.3;border:none }
+    .turn-glow { width:100vw;margin-left:calc(-50vw+50%);height:1px;background:radial-gradient(ellipse at 50% 50%,var(--less-brand-glow,rgba(83,74,183,0.25)),transparent 70%);border:none }
+    .card-dominant { grid-column:1/-1;background:linear-gradient(135deg,rgba(83,74,183,0.06),rgba(83,74,183,0.02));border-left:3px solid var(--less-brand,#534AB7);border-top:1px solid rgba(83,74,183,0.1);border-right:1px solid rgba(83,74,183,0.1);border-bottom:1px solid rgba(83,74,183,0.1) }
+    .card-dominant:hover { border-left-color:var(--less-brand-light,#6D5CE8);box-shadow:0 0 20px var(--less-brand-glow,rgba(83,74,183,0.15)) inset,var(--less-shadow-brand-sm,0 2px 12px rgba(83,74,183,0.2)) }
+    .card-pills { display:flex;gap:6px;margin-top:12px }
+    .card-pill { display:inline-flex;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:500;color:var(--less-brand,#534AB7);background:rgba(83,74,183,0.08);border:1px solid rgba(83,74,183,0.15) }
+
     /* ── Bento Grid (three pillars) ── */
     .cards {
       display: grid;
-      grid-template-columns: 2fr 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 20px;
       margin-bottom: 2rem;
     }
-    .card:first-child {
-      grid-row: 1/3;
-    }
+    
     .card {
       border: 1px solid var(--less-border);
       border-radius: var(--less-radius-lg, 12px);
@@ -536,7 +524,7 @@ export default class DocsHome extends DsdLitElement {
     }
     .bench-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(4, 1fr);
       gap: 16px;
       margin-top: 18px;
     }
@@ -595,6 +583,10 @@ export default class DocsHome extends DsdLitElement {
       background: var(--less-brand, #534AB7);
       box-shadow: 0 0 8px var(--less-brand-glow, rgba(83,74,183,0.35));
     }
+    .qs-desc { font-size:12px;color:var(--less-text-muted);margin:4px 0 0;line-height:1.5 }
+    .qs-cta { text-align:center;margin-top:12px }
+    .qs-cta a { display:inline-flex;align-items:center;height:40px;padding:0 24px;border-radius:var(--less-radius-md,8px);font-size:14px;font-weight:600;text-decoration:none;color:#fff;background:linear-gradient(135deg,var(--less-brand,#534AB7),var(--less-brand-light,#6D5CE8));box-shadow:var(--less-shadow-brand-md,0 4px 20px rgba(83,74,183,0.3));transition:transform var(--less-duration-micro,150ms) var(--less-easing-default,ease-out),box-shadow var(--less-duration-micro,150ms) var(--less-easing-default,ease-out) }
+    .qs-cta a:hover { transform:translateY(-1px);box-shadow:var(--less-shadow-brand-lg,0 8px 32px rgba(83,74,183,0.4)) }
 
     /* ── III. Site Footer — warm-gray quiet landing ── */
     .site-footer {
@@ -729,12 +721,8 @@ export default class DocsHome extends DsdLitElement {
       .code-compare {
         grid-template-columns: 1fr;
       }
-      .cards {
-        grid-template-columns: 1fr;
-      }
-      .card:first-child {
-        grid-row: auto;
-      }
+      .cards { grid-template-columns:1fr 1fr }
+      .card-dominant { grid-column:1/-1 }
       .qs {
         padding-left: 28px;
       }
@@ -770,6 +758,7 @@ export default class DocsHome extends DsdLitElement {
       .bench-row {
         gap: 8px;
       }
+      .cards { grid-template-columns:1fr }
       .bench-lbl {
         width: 70px;
         font-size: 11px;
@@ -798,20 +787,11 @@ export default class DocsHome extends DsdLitElement {
               </svg>
               <span>LessJS</span>
             </div>
-            <h1>全栈框架 <em>+</em> WC 引擎 <em>+</em> Registry Hub</h1>
-            <p class="hero-desc">
-              Declarative Shadow DOM 零 JS 首屏。Island 架构按需升级交互。Hono API Route 提供后端能力。Registry Hub 一键发现安装 WC 组件。
-            </p>
+            <h1>全栈框架 · <em>零 JS 首屏</em> · <em>多框架共存</em></h1>
+            <p class="hero-desc">DSD 原生渲染，浏览器零 JS 看到完整页面</p>
             <div class="hero-actions">
               <a class="hero-pri" href="/guide/getting-started">开始使用 →</a>
               <a class="hero-sec" href="/guide/positioning">理解定位</a>
-            </div>
-            <less-term-demo></less-term-demo>
-            <div class="stats">
-              <div class="stat"><strong>v0.19.0</strong><span>最新版本</span></div>
-              <div class="stat"><strong>681</strong><span>测试通过</span></div>
-              <div class="stat"><strong>13</strong><span>个包</span></div>
-              <div class="stat"><strong>1</strong><span>运行时依赖</span></div>
             </div>
           </div>
         </section>
@@ -842,36 +822,10 @@ export default class DocsHome extends DsdLitElement {
           </div>
         </div>
 
-        <hr class="sec-divider">
+        <hr class="turn-line">
 
-        <!-- ═══ III. Bento Grid — 三支柱 ═══ -->
-        <div class="sec">
-          <h2 class="sec-lbl">三支柱</h2>
-          <p class="sec-title">框架 · 引擎 · Hub——一个产品，三重能力</p>
-          <div class="sec-bd">
-            <div class="cards">
-              <div class="card">
-                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">F</div>
-                <h3>全栈框架</h3>
-                <p>文件约定路由 + Hono API Route + Serverless 部署。SSG/ISR/SSR 同一套渲染引擎。</p>
-              </div>
-              <div class="card">
-                <div class="card-icon" style="background:var(--less-brand-subtle, #EEEDFE);color:var(--less-brand, #534AB7);">D</div>
-                <h3>WC 渲染引擎</h3>
-                <p>DSD 零 JS 首屏，Lit/React/Vanilla 适配器共存。</p>
-              </div>
-              <div class="card">
-                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">I</div>
-                <h3>Registry Hub</h3>
-                <p>Web Component 发现、验证、一键安装。</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <hr class="sec-divider">
-
-        <!-- ═══ IV. Benchmark — 水平条形图 ═══ -->
+        <!-- ═══ III. Benchmark — 水平条形图 ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">性能</h2>
           <p class="sec-title">首屏 JS 体积——零就是零</p>
@@ -908,9 +862,8 @@ export default class DocsHome extends DsdLitElement {
           </div>
         </div>
 
-        <hr class="sec-divider">
 
-        <!-- ═══ V. Multi-framework — 交互展示 ═══ -->
+        <!-- ═══ IV. Multi-framework — 交互展示 ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">多框架</h2>
           <p class="sec-title">任意框架，同一个 island</p>
@@ -919,28 +872,66 @@ export default class DocsHome extends DsdLitElement {
           </div>
         </div>
 
-        <hr class="sec-divider">
+
+        
+        <hr class="turn-glow">
+
+
+        <!-- ═══ V. Bento Grid — 三支柱 ═══ -->
+        <div class="sec">
+          <h2 class="sec-lbl">三支柱</h2>
+          <p class="sec-title">框架 · 引擎 · Hub——一个产品，三重能力</p>
+          <div class="sec-bd">
+            <div class="cards">
+              <div class="card card-dominant">
+                <div class="card-icon" style="background:var(--less-brand-subtle, #EEEDFE);color:var(--less-brand, #534AB7);">D</div>
+                <h3>WC 渲染引擎</h3>
+                <p>DSD 零 JS 首屏，Lit/React/Vanilla 适配器共存。</p>
+                <div class="card-pills">
+                  <span class="card-pill">DSD</span>
+                  <span class="card-pill">Island</span>
+                  <span class="card-pill">Multi-adapter</span>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">F</div>
+                <h3>全栈框架</h3>
+                <p>文件约定路由 + Hono API Route + Serverless 部署。</p>
+              </div>
+              <div class="card">
+                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">I</div>
+                <h3>Registry Hub</h3>
+                <p>Web Component 发现、验证、一键安装。</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- ═══ VI. Quick Start — 纵向时间轴 ═══ -->
-        <div class="sec">
+        <div class="sec sec-qs-last">
           <h2 class="sec-lbl">快速开始</h2>
           <p class="sec-title">三步上手，零摩擦</p>
           <div class="sec-bd">
             <div class="qs">
               <div class="qs-step-card">
                 <less-step-card step="1" label="创建"><code>deno run -A jsr:@lessjs/create my-app</code></less-step-card>
+                <p class="qs-desc">脚手架包含：路由 + SSG + Island 示例</p>
               </div>
               <div class="qs-step-card">
                 <less-step-card step="2" label="开发"><code>cd my-app &amp;&amp; deno task dev</code></less-step-card>
+                <p class="qs-desc">热更新 + DSD 实时预览 → localhost:5173</p>
               </div>
               <div class="qs-step-card">
                 <less-step-card step="3" label="构建"><code>deno task build → dist/</code></less-step-card>
+                <p class="qs-desc">纯静态文件，部署到任何 Serverless 平台</p>
               </div>
+            </div>
+            <div class="qs-cta">
+              <a href="/guide/getting-started">查看完整文档 →</a>
             </div>
           </div>
         </div>
-
-        <!-- ═══ III. Footer — 暖灰安静谢幕 ═══ -->
+        <!-- ═══ Footer — 暖灰安静谢幕 ═══ -->
         <footer class="site-footer">
           <div class="site-footer-inner">
             <div class="footer-brand">
@@ -1000,21 +991,11 @@ export default class DocsHome extends DsdLitElement {
               </svg>
               <span>LessJS</span>
             </div>
-            <h1>full-stack <em>+</em> wc engine <em>+</em> registry hub</h1>
-            <p class="hero-desc">
-              Declarative Shadow DOM zero-JS first paint. Island architecture for on-demand interactivity.
-              Hono API routes for backend. Registry Hub for one-click WC discovery.
-            </p>
+            <h1>Full-stack · <em>Zero-JS First Paint</em> · <em>Multi-framework</em></h1>
+            <p class="hero-desc">DSD 原生渲染，浏览器零 JS 看到完整页面</p>
             <div class="hero-actions">
               <a class="hero-pri" href="/guide/getting-started">get started →</a>
               <a class="hero-sec" href="/guide/positioning">why lessjs</a>
-            </div>
-            <less-term-demo></less-term-demo>
-            <div class="stats">
-              <div class="stat"><strong>v0.19.0</strong><span>latest release</span></div>
-              <div class="stat"><strong>681</strong><span>tests passing</span></div>
-              <div class="stat"><strong>13</strong><span>packages</span></div>
-              <div class="stat"><strong>1</strong><span>runtime dep</span></div>
             </div>
           </div>
         </section>
@@ -1045,36 +1026,10 @@ export default class DocsHome extends DsdLitElement {
           </div>
         </div>
 
-        <hr class="sec-divider">
+        <hr class="turn-line">
 
-        <!-- ═══ III. Bento Grid — three pillars ═══ -->
-        <div class="sec">
-          <h2 class="sec-lbl">three pillars</h2>
-          <p class="sec-title">Framework · Engine · Hub — one product, three capabilities</p>
-          <div class="sec-bd">
-            <div class="cards">
-              <div class="card">
-                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">F</div>
-                <h3>full-stack framework</h3>
-                <p>File-convention routing + Hono API routes + serverless deploy. SSG/ISR/SSR — same engine.</p>
-              </div>
-              <div class="card">
-                <div class="card-icon" style="background:var(--less-brand-subtle, #EEEDFE);color:var(--less-brand, #534AB7);">D</div>
-                <h3>wc rendering engine</h3>
-                <p>DSD zero-JS first paint. Lit/React/Vanilla adapters coexist.</p>
-              </div>
-              <div class="card">
-                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">I</div>
-                <h3>registry hub</h3>
-                <p>Web Component discovery, validation, one-click install.</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <hr class="sec-divider">
-
-        <!-- ═══ IV. Benchmark — horizontal bars ═══ -->
+        <!-- ═══ III. Benchmark — horizontal bars ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">performance</h2>
           <p class="sec-title">JS at first paint — zero means zero</p>
@@ -1111,9 +1066,8 @@ export default class DocsHome extends DsdLitElement {
           </div>
         </div>
 
-        <hr class="sec-divider">
 
-        <!-- ═══ V. Multi-framework — interactive showcase ═══ -->
+        <!-- ═══ IV. Multi-framework — interactive showcase ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">multi-framework</h2>
           <p class="sec-title">Any framework, same island</p>
@@ -1122,28 +1076,66 @@ export default class DocsHome extends DsdLitElement {
           </div>
         </div>
 
-        <hr class="sec-divider">
+
+        
+        <hr class="turn-glow">
+
+
+        <!-- ═══ V. Bento Grid — three pillars ═══ -->
+        <div class="sec">
+          <h2 class="sec-lbl">three pillars</h2>
+          <p class="sec-title">Framework · Engine · Hub — one product, three capabilities</p>
+          <div class="sec-bd">
+            <div class="cards">
+              <div class="card card-dominant">
+                <div class="card-icon" style="background:var(--less-brand-subtle, #EEEDFE);color:var(--less-brand, #534AB7);">D</div>
+                <h3>wc rendering engine</h3>
+                <p>DSD zero-JS first paint. Lit/React/Vanilla adapters coexist.</p>
+                <div class="card-pills">
+                  <span class="card-pill">DSD</span>
+                  <span class="card-pill">Island</span>
+                  <span class="card-pill">Multi-adapter</span>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">F</div>
+                <h3>full-stack framework</h3>
+                <p>File-convention routing + Hono API routes + serverless deploy.</p>
+              </div>
+              <div class="card">
+                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">I</div>
+                <h3>registry hub</h3>
+                <p>Web Component discovery, validation, one-click install.</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- ═══ VI. Quick Start — vertical timeline ═══ -->
-        <div class="sec">
+        <div class="sec sec-qs-last">
           <h2 class="sec-lbl">quick start</h2>
           <p class="sec-title">Three steps, zero friction</p>
           <div class="sec-bd">
             <div class="qs">
               <div class="qs-step-card">
                 <less-step-card step="1" label="scaffold"><code>deno run -A jsr:@lessjs/create my-app</code></less-step-card>
+                <p class="qs-desc">Includes: routing + SSG + island example</p>
               </div>
               <div class="qs-step-card">
                 <less-step-card step="2" label="develop"><code>cd my-app &amp;&amp; deno task dev</code></less-step-card>
+                <p class="qs-desc">HMR + DSD live preview → localhost:5173</p>
               </div>
               <div class="qs-step-card">
                 <less-step-card step="3" label="build"><code>deno task build → dist/</code></less-step-card>
+                <p class="qs-desc">Pure static files, deploy to any serverless platform</p>
               </div>
+            </div>
+            <div class="qs-cta">
+              <a href="/guide/getting-started">View full docs →</a>
             </div>
           </div>
         </div>
-
-        <!-- ═══ III. Footer — warm-gray quiet landing ═══ -->
+<!-- ═══ Footer — warm-gray quiet landing ═══ -->
         <footer class="site-footer">
           <div class="site-footer-inner">
             <div class="footer-brand">
