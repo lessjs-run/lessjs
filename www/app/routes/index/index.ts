@@ -18,10 +18,10 @@ import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
 import '@lessjs/ui/less-step-card';
-import '../../islands/less-search.js';
 import '../../islands/less-term.js';
-import '../../islands/less-showcase-panel.js';
-import type { ShowcaseTab } from '../../islands/less-showcase-panel.js';
+import '../../islands/shoelace-showcase.js';
+import '../../islands/react-showcase.js';
+import '../../islands/media-chrome-showcase.js';
 
 export const tagName = 'docs-home';
 
@@ -70,73 +70,6 @@ class MediaPlayer extends WithDsdHydration(HTMLElement) {
   connectedCallback() { /* upgrade logic */ }
 }
 customElements.define('media-player', MediaPlayer);`;
-
-/** Showcase tab configuration for the multi-framework section */
-const SHOWCASE_TABS_ZH: ShowcaseTab[] = [
-  {
-    label: 'Shoelace',
-    tag: 'Lit',
-    tagColor: '#e6f1fb',
-    islandTag: 'shoelace-showcase',
-    code: CODE_LIT,
-    codeLabel: 'counter.ts — lit adapter',
-    adapterDesc: '@lessjs/adapter-lit — Lit 组件通过 DSD 管道原生渲染',
-    installCmd: 'npm i @lessjs/adapter-lit',
-  },
-  {
-    label: 'React 19',
-    tag: 'React',
-    tagColor: '#e1f0ff',
-    islandTag: 'react-showcase',
-    code: CODE_REACT,
-    codeLabel: 'hello.tsx — react adapter',
-    adapterDesc: '@lessjs/adapter-react — ReactDOMServer → Declarative Shadow DOM',
-    installCmd: 'npm i @lessjs/adapter-react',
-  },
-  {
-    label: 'Media Chrome',
-    tag: 'Vanilla',
-    tagColor: '#e1f5ee',
-    islandTag: 'media-chrome-showcase',
-    code: CODE_VANILLA,
-    codeLabel: 'player.ts — vanilla adapter',
-    adapterDesc: '@lessjs/adapter-vanilla — 原生 Web Components 客户端升级',
-    installCmd: 'npm i @lessjs/adapter-vanilla',
-  },
-];
-
-const SHOWCASE_TABS_EN: ShowcaseTab[] = [
-  {
-    label: 'Shoelace',
-    tag: 'Lit',
-    tagColor: '#e6f1fb',
-    islandTag: 'shoelace-showcase',
-    code: CODE_LIT,
-    codeLabel: 'counter.ts — lit adapter',
-    adapterDesc: '@lessjs/adapter-lit — Lit components render natively through DSD pipeline',
-    installCmd: 'npm i @lessjs/adapter-lit',
-  },
-  {
-    label: 'React 19',
-    tag: 'React',
-    tagColor: '#e1f0ff',
-    islandTag: 'react-showcase',
-    code: CODE_REACT,
-    codeLabel: 'hello.tsx — react adapter',
-    adapterDesc: '@lessjs/adapter-react — ReactDOMServer → Declarative Shadow DOM',
-    installCmd: 'npm i @lessjs/adapter-react',
-  },
-  {
-    label: 'Media Chrome',
-    tag: 'Vanilla',
-    tagColor: '#e1f5ee',
-    islandTag: 'media-chrome-showcase',
-    code: CODE_VANILLA,
-    codeLabel: 'player.ts — vanilla adapter',
-    adapterDesc: '@lessjs/adapter-vanilla — native Web Components client-side upgrade',
-    installCmd: 'npm i @lessjs/adapter-vanilla',
-  },
-];
 
 export default class DocsHome extends DsdLitElement {
   private _mfaTab = 0;
@@ -441,57 +374,74 @@ export default class DocsHome extends DsdLitElement {
     .card-pills { display:flex;gap:6px;margin-top:12px }
     .card-pill { display:inline-flex;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:500;color:var(--less-brand,#534AB7);background:rgba(83,74,183,0.08);border:1px solid rgba(83,74,183,0.15) }
 
-    /* ── MFA Fallback — pre-hydration framework cards ── */
-    .mfa-fallback {
+    /* ── Multi-Framework Grid — three independent showcase cards ── */
+    .multi-fw-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 14px;
-      padding: 0.5rem 0;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
     }
-    .mfa-fallback-card {
+    .mfw-card {
       background: var(--less-bg-surface);
       border: 1px solid var(--less-border);
       border-radius: var(--less-radius-lg, 12px);
-      padding: 1.25rem 1rem;
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .mfa-fallback-card:hover {
-      border-color: rgba(83,74,183,0.3);
-      box-shadow: 0 4px 16px rgba(83,74,183,0.08);
-      transform: translateY(-2px);
+    .mfw-card:hover {
+      border-color: rgba(83,74,183,0.25);
+      box-shadow: 0 4px 20px rgba(83,74,183,0.06);
     }
-    .mfa-fallback-icon {
-      width: 40px; height: 40px;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; margin-bottom: 10px;
+    .mfw-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--less-border);
     }
-    .mfa-fallback-title {
-      font-size: 14px; font-weight: 600;
-      color: var(--less-text-primary); margin-bottom: 3px;
+    .mfw-tag {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 2px 8px;
+      border-radius: 4px;
     }
-    .mfa-fallback-tag {
-      display: inline-block;
-      font-size: 10px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.06em;
-      padding: 1px 7px; border-radius: 4px;
-      background: rgba(83,74,183,0.08);
-      color: var(--less-brand, #534AB7);
-      margin-bottom: 8px;
+    .mfw-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--less-text-primary);
     }
-    .mfa-fallback-desc {
-      font-size: 11.5px; color: var(--less-text-secondary);
-      line-height: 1.55; margin-bottom: 8px;
+    .mfw-demo {
+      padding: 16px;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 10px;
     }
-    .mfa-fallback-code {
+    .mfw-code {
+      padding: 0 14px 12px;
+    }
+    .mfw-code less-code-block {
+      display: block;
+    }
+    .mfw-code code {
+      font-size: 11px !important;
+      padding: 4px 8px !important;
+    }
+    .mfw-footer {
+      padding: 10px 14px;
+      border-top: 1px solid var(--less-border);
+      font-size: 10px;
+      color: var(--less-text-tertiary);
       font-family: "JetBrains Mono", "SF Mono", Consolas, monospace;
-      font-size: 10.5px; color: var(--less-text-muted);
-      background: rgba(0,0,0,0.04); padding: 4px 8px;
-      border-radius: 4px; line-height: 1.5;
-      border: 0.5px solid var(--less-border);
+    }
+    @media (max-width: 900px) {
+      .multi-fw-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
-      .mfa-fallback { grid-template-columns: 1fr; }
+      .multi-fw-grid { grid-template-columns: 1fr; }
     }
 
     /* ── CSS Houdini @property — smooth brand-color transitions ── */
@@ -1061,36 +1011,64 @@ export default class DocsHome extends DsdLitElement {
         </div>
 
 
-        <!-- ═══ IV. Multi-framework — 交互展示 ═══ -->
+        <!-- ═══ IV. Multi-Framework — three independent showcases ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">多框架</h2>
           <p class="sec-title">任意框架，同一个 island</p>
           <div class="sec-bd">
-            <less-showcase-panel .tabs="${SHOWCASE_TABS_ZH}" .activeTab="${0}">
-              <div class="mfa-fallback">
-                <div class="mfa-fallback-card">
-                  <div class="mfa-fallback-icon" style="background:#E6F1FB;color:#185FA5">⚡</div>
-                  <div class="mfa-fallback-title">Shoelace</div>
-                  <div class="mfa-fallback-tag">Lit</div>
-                  <div class="mfa-fallback-desc">80+ Lit Web Components，通过 @lessjs/adapter-lit DSD 管道原生渲染</div>
-                  <div class="mfa-fallback-code">&lt;sl-button variant="primary"&gt;Click&lt;/sl-button&gt;</div>
+            <!-- Three independent showcase cards -->
+            <div class="multi-fw-grid">
+              <!-- Lit showcase: Shoelace -->
+              <div class="mfw-card">
+                <div class="mfw-header">
+                  <span class="mfw-tag" style="background:#e6f1fb;color:#185fa5">Lit</span>
+                  <span class="mfw-label">Shoelace</span>
                 </div>
-                <div class="mfa-fallback-card">
-                  <div class="mfa-fallback-icon" style="background:#E1F0FF;color:#0D6EFD">⚛</div>
-                  <div class="mfa-fallback-title">React 19</div>
-                  <div class="mfa-fallback-tag">React</div>
-                  <div class="mfa-fallback-desc">ReactDOMServer → Declarative Shadow DOM，零配置 SSR</div>
-                  <div class="mfa-fallback-code">&lt;Hello name="world" /&gt;</div>
+                <div class="mfw-demo">
+                  <shoelace-showcase></shoelace-showcase>
                 </div>
-                <div class="mfa-fallback-card">
-                  <div class="mfa-fallback-icon" style="background:#E1F5EE;color:#0F6E56">🎬</div>
-                  <div class="mfa-fallback-title">Media Chrome</div>
-                  <div class="mfa-fallback-tag">Vanilla</div>
-                  <div class="mfa-fallback-desc">纯 Vanilla Web Components，@lessjs/adapter-vanilla 客户端升级</div>
-                  <div class="mfa-fallback-code">&lt;media-controller&gt;...&lt;/media-controller&gt;</div>
+                <div class="mfw-code">
+                  <less-code-block><pre><code>&lt;sl-button variant="primary"&gt;Click&lt;/sl-button&gt;</code></pre></less-code-block>
+                </div>
+                <div class="mfw-footer">
+                  <span>@lessjs/adapter-lit</span>
                 </div>
               </div>
-            </less-showcase-panel>
+
+              <!-- React showcase -->
+              <div class="mfw-card">
+                <div class="mfw-header">
+                  <span class="mfw-tag" style="background:#e1f0ff;color:#0d6efd">React</span>
+                  <span class="mfw-label">React 19</span>
+                </div>
+                <div class="mfw-demo">
+                  <react-showcase></react-showcase>
+                </div>
+                <div class="mfw-code">
+                  <less-code-block><pre><code>&lt;Hello name="world" /&gt;</code></pre></less-code-block>
+                </div>
+                <div class="mfw-footer">
+                  <span>@lessjs/adapter-react</span>
+                </div>
+              </div>
+
+              <!-- Vanilla showcase: Media Chrome -->
+              <div class="mfw-card">
+                <div class="mfw-header">
+                  <span class="mfw-tag" style="background:#e1f5ee;color:#0f6e56">Vanilla</span>
+                  <span class="mfw-label">Media Chrome</span>
+                </div>
+                <div class="mfw-demo">
+                  <media-chrome-showcase></media-chrome-showcase>
+                </div>
+                <div class="mfw-code">
+                  <less-code-block><pre><code>&lt;media-controller&gt;...&lt;/media-controller&gt;</code></pre></less-code-block>
+                </div>
+                <div class="mfw-footer">
+                  <span>@lessjs/adapter-vanilla</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1305,36 +1283,64 @@ export default class DocsHome extends DsdLitElement {
         </div>
 
 
-        <!-- ═══ IV. Multi-framework — interactive showcase ═══ -->
+        <!-- ═══ IV. Multi-framework — three independent showcases ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">multi-framework</h2>
           <p class="sec-title">Any framework, same island</p>
           <div class="sec-bd">
-            <less-showcase-panel .tabs="${SHOWCASE_TABS_EN}" .activeTab="${0}">
-              <div class="mfa-fallback">
-                <div class="mfa-fallback-card">
-                  <div class="mfa-fallback-icon" style="background:#E6F1FB;color:#185FA5">⚡</div>
-                  <div class="mfa-fallback-title">Shoelace</div>
-                  <div class="mfa-fallback-tag">Lit</div>
-                  <div class="mfa-fallback-desc">80+ Lit Web Components rendered natively via @lessjs/adapter-lit DSD pipeline</div>
-                  <div class="mfa-fallback-code">&lt;sl-button variant="primary"&gt;Click&lt;/sl-button&gt;</div>
+            <!-- Three independent showcase cards -->
+            <div class="multi-fw-grid">
+              <!-- Lit showcase: Shoelace -->
+              <div class="mfw-card">
+                <div class="mfw-header">
+                  <span class="mfw-tag" style="background:#e6f1fb;color:#185fa5">Lit</span>
+                  <span class="mfw-label">Shoelace</span>
                 </div>
-                <div class="mfa-fallback-card">
-                  <div class="mfa-fallback-icon" style="background:#E1F0FF;color:#0D6EFD">⚛</div>
-                  <div class="mfa-fallback-title">React 19</div>
-                  <div class="mfa-fallback-tag">React</div>
-                  <div class="mfa-fallback-desc">ReactDOMServer → Declarative Shadow DOM, zero-config SSR</div>
-                  <div class="mfa-fallback-code">&lt;Hello name="world" /&gt;</div>
+                <div class="mfw-demo">
+                  <shoelace-showcase></shoelace-showcase>
                 </div>
-                <div class="mfa-fallback-card">
-                  <div class="mfa-fallback-icon" style="background:#E1F5EE;color:#0F6E56">🎬</div>
-                  <div class="mfa-fallback-title">Media Chrome</div>
-                  <div class="mfa-fallback-tag">Vanilla</div>
-                  <div class="mfa-fallback-desc">Pure vanilla Web Components, @lessjs/adapter-vanilla client-side upgrade</div>
-                  <div class="mfa-fallback-code">&lt;media-controller&gt;...&lt;/media-controller&gt;</div>
+                <div class="mfw-code">
+                  <less-code-block><pre><code>&lt;sl-button variant="primary"&gt;Click&lt;/sl-button&gt;</code></pre></less-code-block>
+                </div>
+                <div class="mfw-footer">
+                  <span>@lessjs/adapter-lit</span>
                 </div>
               </div>
-            </less-showcase-panel>
+
+              <!-- React showcase -->
+              <div class="mfw-card">
+                <div class="mfw-header">
+                  <span class="mfw-tag" style="background:#e1f0ff;color:#0d6efd">React</span>
+                  <span class="mfw-label">React 19</span>
+                </div>
+                <div class="mfw-demo">
+                  <react-showcase></react-showcase>
+                </div>
+                <div class="mfw-code">
+                  <less-code-block><pre><code>&lt;Hello name="world" /&gt;</code></pre></less-code-block>
+                </div>
+                <div class="mfw-footer">
+                  <span>@lessjs/adapter-react</span>
+                </div>
+              </div>
+
+              <!-- Vanilla showcase: Media Chrome -->
+              <div class="mfw-card">
+                <div class="mfw-header">
+                  <span class="mfw-tag" style="background:#e1f5ee;color:#0f6e56">Vanilla</span>
+                  <span class="mfw-label">Media Chrome</span>
+                </div>
+                <div class="mfw-demo">
+                  <media-chrome-showcase></media-chrome-showcase>
+                </div>
+                <div class="mfw-code">
+                  <less-code-block><pre><code>&lt;media-controller&gt;...&lt;/media-controller&gt;</code></pre></less-code-block>
+                </div>
+                <div class="mfw-footer">
+                  <span>@lessjs/adapter-vanilla</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
