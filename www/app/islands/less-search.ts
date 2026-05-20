@@ -257,6 +257,7 @@ export default class LessSearch extends DsdLitElement {
     input.addEventListener('input', (e) => this._onInput(e as InputEvent));
 
     const results = document.createElement('div');
+    results.className = 'ls-results';
     results.style.cssText = RESULTS_STYLE;
     results.innerHTML = this._resultsHtml();
 
@@ -291,7 +292,7 @@ export default class LessSearch extends DsdLitElement {
     }
 
     if (this._dsdHydrated && this._overlayEl) {
-      const resultsDiv = this._overlayEl.querySelector('div > div:last-child');
+      const resultsDiv = this._overlayEl.querySelector('.ls-results');
       if (resultsDiv) resultsDiv.innerHTML = this._resultsHtml();
     } else {
       this.requestUpdate();
@@ -301,17 +302,37 @@ export default class LessSearch extends DsdLitElement {
   /** Generate results HTML string for imperative overlay */
   private _resultsHtml() {
     if (this._results.length > 0) {
-      return this._results.map((r) =>
-        `<a href="${r.path}" style="${RESULT_ITEM_STYLE}">` +
-        `<div style="${RESULT_SECTION_STYLE}">${r.section}</div>` +
-        `<div style="${RESULT_TITLE_STYLE}">${r.title}</div>` +
-        `<div style="${RESULT_TEXT_STYLE}">${r.text}</div>` +
-        `</a>`
-      ).join('');
+      return this._results.map((r) => {
+        const section = document.createElement('div');
+        section.style.cssText = RESULT_SECTION_STYLE;
+        section.textContent = r.section;
+
+        const title = document.createElement('div');
+        title.style.cssText = RESULT_TITLE_STYLE;
+        title.textContent = r.title;
+
+        const text = document.createElement('div');
+        text.style.cssText = RESULT_TEXT_STYLE;
+        text.textContent = r.text;
+
+        const item = document.createElement('a');
+        item.href = r.path;
+        item.style.cssText = RESULT_ITEM_STYLE;
+        item.addEventListener('click', () => this._closeOverlay());
+        item.appendChild(section);
+        item.appendChild(title);
+        item.appendChild(text);
+
+        return item.outerHTML;
+      }).join('');
     }
     return this._query.length >= 2
-      ? `<div style="${NO_RESULTS_STYLE}">No results found for "${this._query}"</div>`
+      ? `<div style="${NO_RESULTS_STYLE}">No results found for "${this._escapeHtml(this._query)}"</div>`
       : `<div style="${NO_RESULTS_STYLE}">Type at least 2 characters to search</div>`;
+  }
+
+  private _escapeHtml(str: string) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
   private async _loadIndex() {
