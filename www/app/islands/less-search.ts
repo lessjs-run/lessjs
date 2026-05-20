@@ -5,13 +5,17 @@
  * Loads a pre-built search index JSON and performs client-side search.
  * Triggered by Cmd+K or clicking the search icon.
  *
- * Architecture:
- * - DSD contains only CSS styles (no button markup)
- * - Lit render() always outputs button + optional overlay
- * - Single source of truth — no duplicate rendering issues
+ * Architecture (v5 — DSD-safe, dual-mode rendering):
+ * - DSD mode: When shadow root already has content from SSR/DSD, detect it
+ *   and skip render() to avoid duplicate buttons. Bind events imperatively.
+ * - Fresh mode: When no DSD exists (e.g. _renderer.ts injects only CSS),
+ *   Lit render() provides the button + overlay as usual.
+ * - The key insight: we check if a <button class="search-trigger"> already
+ *   exists in the shadow root. If yes → DSD-hydrated (skip render).
+ *   If no → fresh mode (render everything).
  */
 
-import { css, html, nothing } from 'lit';
+import { css, html, LitElement, nothing } from 'lit';
 import { live } from 'lit-html/directives/live.js';
 import { repeat } from 'lit-html/directives/repeat.js';
 
@@ -32,6 +36,10 @@ export default class LessSearch extends LitElement {
   private _entries: SearchEntry[] = [];
   private _loaded = false;
   private _boundKeydown: (e: KeyboardEvent) => void;
+  /** Whether DSD has pre-rendered the button in shadow root */
+  private _hasDsdButton = false;
+  /** Overlay element reference (imperative DOM for DSD-hydrated mode) */
+  private _overlayEl: HTMLDivElement | null = null;
 
   constructor() {
     super();
@@ -40,7 +48,15 @@ export default class LessSearch extends LitElement {
 
   /** Reuse DSD-created shadow root if it exists. */
   override createRenderRoot() {
-    return this.shadowRoot ?? super.createRenderRoot();
+    if (this.shadowRoot && this.shadowRoot.childElementCount > 0) {
+      // Check if DSD contains a rendered button (full SSR output)
+      const existingButton = this.shadowRoot.querySelector('button.search-trigger');
+      if (existingButton) {
+        this._hasDsdButton = true;
+      }
+      return this.shadowRoot;
+    }
+    return this.attachShadow({ mode: 'open' });
   }
 
   static override styles = css`
@@ -175,7 +191,13 @@ export default class LessSearch extends LitElement {
   private _handleTriggerClick = () => {
     this._open = true;
     this._loadIndex();
-    this.requestUpdate();
+
+    if (this._hasDsdButton) {
+      this._showOverlayImperative();
+    } else {
+      this.requestUpdate();
+    }
+
     requestAnimationFrame(() => {
       this.shadowRoot?.querySelector<HTMLInputElement>('.search-input')?.focus();
     });
@@ -183,12 +205,83 @@ export default class LessSearch extends LitElement {
 
   private _closeOverlay = () => {
     this._open = false;
-    this.requestUpdate();
+    if (this._hasDsdButton) {
+      this._hideOverlayImperative();
+    } else {
+      this.requestUpdate();
+    }
   };
+
+  /** Imperatively create and append overlay to shadow root (DSD-hydrated mode) */
+  private _showOverlayImperative() {
+    if (this._overlayEl || !this.shadowRoot) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'overlay';
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) this._closeOverlay();
+    });
+
+    const panel = document.createElement('div');
+    panel.className = 'panel';
+
+    const input = document.createElement('input');
+    input.className = 'search-input';
+    input.type = 'text';
+    input.placeholder = 'Search documentation...';
+    input.addEventListener('input', (e) => this._onInput(e as InputEvent));
+
+    const results = document.createElement('div');
+    results.className = 'results';
+    results.innerHTML = '<div class="no-results">Type at least 2 characters to search</div>';
+
+    panel.appendChild(input);
+    panel.appendChild(results);
+    overlay.appendChild(panel);
+    this.shadowRoot.appendChild(overlay);
+
+    this._overlayEl = overlay;
+  }
+
+  /** Imperatively remove overlay from shadow root (DSD-hydrated mode) */
+  private _hideOverlayImperative() {
+    if (this._overlayEl) {
+      this._overlayEl.remove();
+      this._overlayEl = null;
+    }
+  }
+
+  /** Update search results in the imperative overlay */
+  private _updateOverlayResults() {
+    if (!this._overlayEl) return;
+    const resultsDiv = this._overlayEl.querySelector('.results');
+    if (!resultsDiv) return;
+
+    if (this._results.length > 0) {
+      resultsDiv.innerHTML = this._results.map((r) =>
+        `<a class="result-item" href="${r.path}"><div class="result-section">${r.section}</div><div class="result-title">${r.title}</div><div class="result-text">${r.text}</div></a>`
+      ).join('');
+      resultsDiv.querySelectorAll('.result-item').forEach((a) => {
+        a.addEventListener('click', () => this._closeOverlay());
+      });
+    } else if (this._query.length >= 2) {
+      resultsDiv.innerHTML = `<div class="no-results">No results found for "${this._query}"</div>`;
+    } else {
+      resultsDiv.innerHTML = '<div class="no-results">Type at least 2 characters to search</div>';
+    }
+  }
 
   override connectedCallback() {
     super.connectedCallback();
     document.addEventListener('keydown', this._boundKeydown);
+
+    // When DSD has a pre-rendered button, bind its click event imperatively
+    if (this._hasDsdButton && this.shadowRoot) {
+      const btn = this.shadowRoot.querySelector('button.search-trigger');
+      if (btn) {
+        btn.addEventListener('click', () => this._handleTriggerClick());
+      }
+    }
   }
 
   override disconnectedCallback() {
@@ -252,7 +345,12 @@ export default class LessSearch extends LitElement {
         .filter((e) => paths.has(e.path))
         .slice(0, 10);
     }
-    this.requestUpdate();
+
+    if (this._hasDsdButton) {
+      this._updateOverlayResults();
+    } else {
+      this.requestUpdate();
+    }
   };
 
   private _onOverlayClick = (e: MouseEvent) => {
@@ -266,6 +364,12 @@ export default class LessSearch extends LitElement {
   };
 
   override render() {
+    // When DSD has already rendered a button in the shadow DOM, return nothing
+    // to prevent Lit from clearing/replacing the DSD content.
+    // Overlay is managed via imperative DOM operations.
+    if (this._hasDsdButton) return nothing;
+
+    // Fresh mode: no DSD button, render everything via Lit
     const triggerButton = html`
       <button class="search-trigger" @click="${this._handleTriggerClick}">
         <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
