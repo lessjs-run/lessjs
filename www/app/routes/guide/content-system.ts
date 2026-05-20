@@ -1,8 +1,9 @@
 /**
  * Content System — @lessjs/content feature guide
  */
-export const meta = { section: 'Strategy', label: 'Content System', order: 40 };
+export const meta = { section: 'Core', label: 'Content System', order: 40 };
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -12,7 +13,7 @@ export class ContentSystemPage extends LitElement {
   static override styles = [pageStyles];
   override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/guide/content-system"><div class="container">
+  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/content-system"><div class="container">
     <h1>Content System</h1>
     <p class="subtitle">@lessjs/content 是 LessJS 的统一内容插件（博客 + 导航 + 站点地图）。把 .md 文件丢进内容目录，自动获得文章列表和详情页。纯 SSG 插件，不依赖 Lit，博客页面不加载页面级框架运行时。</p>
     <h2>快速开始</h2>
@@ -27,7 +28,7 @@ export class ContentSystemPage extends LitElement {
     <div class="nav-row"><a href="/guide/ssg" class="nav-link">&larr; Rendering & SSG</a><a href="/guide/rpc" class="nav-link">RPC 远程调用 &rarr;</a></div>
   </div></less-layout>`; }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/guide/content-system"><div class="container">
+  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/content-system"><div class="container">
     <h1>Content System</h1>
     <p class="subtitle"><span class="inline-code">@lessjs/content</span> is LessJS's unified content plugin (blog + nav + sitemap). Drop .md files into a content directory, get post lists and detail pages automatically. Pure SSG plugin with no Lit dependency — blog pages load zero page-level framework runtime.</p>
     <h2>Quick Start</h2>

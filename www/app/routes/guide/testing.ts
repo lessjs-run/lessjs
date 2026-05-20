@@ -1,5 +1,6 @@
 export const meta = { section: 'Production', label: 'Testing', order: 40 };
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -9,7 +10,7 @@ export class TestingPage extends LitElement {
   static override styles = [pageStyles];
   override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/guide/testing"><div class="container">
+  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/testing"><div class="container">
     <h1>测试</h1>
     <p class="subtitle">LessJS 测试应保护框架契约：路由扫描、DSD 输出、island 元数据、middleware 范围、SSG 后处理和包边界。</p>
     <h2>项目测试</h2>
@@ -21,7 +22,7 @@ export class TestingPage extends LitElement {
     <div class="nav-row"><a href="/guide/error-handling" class="nav-link">&larr; 错误处理</a><a href="/guide/deployment" class="nav-link">部署 &rarr;</a></div>
   </div></less-layout>`; }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/guide/testing"><div class="container">
+  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/testing"><div class="container">
     <h1>Testing</h1>
     <p class="subtitle">LessJS testing should protect framework contracts: route scanning, DSD output, island metadata, middleware scope, SSG post-processing, and package boundaries.</p>
     <h2>Project Testing</h2>

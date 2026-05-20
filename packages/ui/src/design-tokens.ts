@@ -40,6 +40,8 @@ import { lessSpacingTokens } from './tokens/spacing.js';
 import { lessTypographyTokens } from './tokens/typography.js';
 import { lessColorTokens } from './tokens/colors.js';
 import { lessEffectTokens } from './tokens/effects.js';
+import { lessRadiusTokens } from './tokens/radius.js';
+import { lessAnimationTokens } from './tokens/animation.js';
 
 /**
  * LessJS Design Tokens CSS (all tokens combined)
@@ -48,7 +50,7 @@ import { lessEffectTokens } from './tokens/effects.js';
  * They provide consistent spacing, colors, typography, and more.
  */
 export const lessDesignTokens: CSSResult = css`
-  ${lessSpacingTokens} ${lessTypographyTokens} ${lessColorTokens} ${lessEffectTokens};
+  ${lessSpacingTokens} ${lessTypographyTokens} ${lessColorTokens} ${lessEffectTokens} ${lessRadiusTokens} ${lessAnimationTokens};
 `;
 
 /**

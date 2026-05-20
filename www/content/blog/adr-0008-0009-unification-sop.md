@@ -4,6 +4,7 @@ date: '2026-05-10'
 type: 'adr'
 tags: ['architecture', 'decision']
 draft: false
+archived: true
 ---
 
 > **Branch**: `dev` | **Created**: 2026-05-10 | **Status**: ✅ FULLY IMPLEMENTED

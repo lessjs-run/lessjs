@@ -4,6 +4,7 @@ date: '2026-05-13'
 type: 'adr'
 tags: ['architecture', 'build', 'phases', 'bundler']
 draft: false
+hidden: true
 ---
 
 # ADR 0023: Phase Reordering — Client Bundle as Final Layer

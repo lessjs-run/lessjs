@@ -31,13 +31,20 @@ export class LessCard extends DsdLitElement {
         display: block;
         background: var(--less-bg-card);
         border: 0.5px solid var(--less-border);
-        border-radius: var(--less-radius-lg);
+        border-radius: 6px;
         overflow: hidden;
+        transition: box-shadow 0.2s ease, transform 0.2s ease;
       }
 
       :host([variant="elevated"]) {
-        box-shadow: var(--less-shadow-md);
+        box-shadow: var(--less-shadow-sm);
         border-color: transparent;
+      }
+
+      /* v0.19.1 Phase 6: Hover lift on elevated cards (ADR-0035 B2) */
+      :host([variant="elevated"]:hover) {
+        box-shadow: var(--less-shadow-md);
+        transform: translateY(-2px);
       }
 
       :host([variant="borderless"]) {

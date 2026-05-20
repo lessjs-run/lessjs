@@ -4,7 +4,7 @@
  * Tests for the render pipeline hooks: beforeRender, afterRender, onError.
  * Covers success, failure, and undefined hooks scenarios.
  */
-import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
+import { assertEquals, assertFalse, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
 import { renderDSD } from '../src/render-dsd.ts';
 import { registerAdapter } from '../src/adapter-registry.ts';
 import type { RenderError, RenderHooks, RenderInput, RenderOutput } from '../src/types.ts';
@@ -356,8 +356,10 @@ Deno.test('RenderOutput — structured output', async (t) => {
 
     const output = await renderDSD('output-test-2', asCtor(cls), {});
 
-    // html still contains error placeholder
-    assertStringIncludes(output.html, 'LessJS ERROR');
+    // v0.19.1: Bare-tag fallback — no error comments in HTML
+    assertStringIncludes(output.html, '<output-test-2>');
+    assertStringIncludes(output.html, '</output-test-2>');
+    assertFalse(output.html.includes('LessJS ERROR'));
 
     // errors array is populated
     assertEquals(output.errors.length > 0, true);

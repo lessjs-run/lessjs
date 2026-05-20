@@ -234,6 +234,9 @@ export interface EntryDescriptor {
   /** CEM-derived compatibility classifications (from compatibility classifier) */
   cemClassifications?: CompatibilityClassification[];
 
+  /** Hub registry client-only tag names (ADR-0035 A1) */
+  hubClientOnlyTags?: string[];
+
   /** Renderer declarations (from _renderer.ts files) — v0.3.0 */
   renderers: RendererDecl[];
 
@@ -279,6 +282,8 @@ export function buildEntryDescriptor(
     allowHeadExtrasScripts?: boolean;
     html?: { lang?: string; title?: string };
     upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';
+    /** Hub registry client-only tag names (ADR-0035 A1) */
+    hubClientOnlyTags?: string[];
   } = {},
 ): EntryDescriptor {
   const routesDir = options.routesDir || 'app/routes';
@@ -451,7 +456,11 @@ export function buildEntryDescriptor(
   // Merge all islands
   const islands: IslandDecl[] = [...localIslands, ...packageIslandDecls];
   const cemClassifications = options.cemClassifications || [];
-  const ssrAdmissionPlan = buildSsrAdmissionPlan(islands, cemClassifications);
+  const ssrAdmissionPlan = buildSsrAdmissionPlan(
+    islands,
+    cemClassifications,
+    options.hubClientOnlyTags || [],
+  );
 
   // --- Document ---
   const document: DocumentConfig = {
@@ -475,6 +484,7 @@ export function buildEntryDescriptor(
     islands,
     ssrAdmissionPlan,
     cemClassifications,
+    hubClientOnlyTags: options.hubClientOnlyTags,
     renderers,
     middlewareScopes,
     document,
@@ -486,6 +496,7 @@ export function buildEntryDescriptor(
 export function buildSsrAdmissionPlan(
   islands: IslandDecl[],
   cemClassifications: CompatibilityClassification[] = [],
+  hubClientOnlyTags: string[] = [],
 ): SsrAdmissionPlan {
   const renderableTags: string[] = [];
   const clientOnlyTags: string[] = [];
@@ -603,6 +614,27 @@ export function buildSsrAdmissionPlan(
       renderPath,
       reason,
     });
+  }
+
+  // v0.19.1 Phase 6: Hub client-only tags (ADR-0035 A1)
+  // Tags from Hub registry data (e.g. Shoelace, Media Chrome) that are
+  // not islands or CEM-classified — they come from static hub data.
+  // Without this, renderNestedCustomElements() would try to instantiate
+  // and render them during SSG, causing 72 DSD errors.
+  for (const tag of hubClientOnlyTags) {
+    if (!seen.has(tag) && !admittedTags.has(tag)) {
+      clientOnlyTags.push(tag);
+      admittedTags.add(tag);
+      seen.add(tag);
+      reasons[tag] = 'Hub registry client-only component (ADR-0035)';
+      decisions.push({
+        tagName: tag,
+        modulePath: '',
+        source: 'nested',
+        renderPath: 'client-only',
+        reason: 'Hub registry client-only component (ADR-0035)',
+      });
+    }
   }
 
   return {

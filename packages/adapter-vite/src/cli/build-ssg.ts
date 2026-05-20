@@ -189,6 +189,44 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     ? islandMeta
     : await scanIslandMeta(islandsRoot, ssgIslandFiles);
   const { buildEntryDescriptor } = await import('../entry-descriptor.js');
+
+  // v0.19.1 Phase 6: Discover Hub client-only tags for SSG admission (ADR-0035 A1)
+  const hubClientOnlyTags: string[] = [];
+  try {
+    const { readFileSync } = await import('node:fs');
+    const hubDataPath = join(root, routesDir, 'registry', '_hub-data-full.ts');
+    const content = readFileSync(hubDataPath, 'utf-8');
+    const tagRe = /"tagName":\s*"([^"]+)"/g;
+    const compatRe = /"compatibility":\s*"([^"]+)"/g;
+    const tagPositions: Array<{ pos: number; tagName: string }> = [];
+    let m: RegExpExecArray | null;
+    while ((m = tagRe.exec(content)) !== null) {
+      tagPositions.push({ pos: m.index, tagName: m[1] });
+    }
+    const compatPositions: Array<{ pos: number; compat: string }> = [];
+    while ((m = compatRe.exec(content)) !== null) {
+      compatPositions.push({ pos: m.index, compat: m[1] });
+    }
+    for (const tp of tagPositions) {
+      let nearestCompat = '';
+      let nearestDist = Infinity;
+      for (const cp of compatPositions) {
+        const dist = cp.pos - tp.pos;
+        if (dist > 0 && dist < nearestDist) {
+          nearestDist = dist;
+          nearestCompat = cp.compat;
+        }
+      }
+      if (nearestCompat === 'client-only') hubClientOnlyTags.push(tp.tagName);
+    }
+    if (hubClientOnlyTags.length > 0) {
+      const { createLogger: mkLog } = await import('@lessjs/core/logger');
+      mkLog('core').info(
+        `Hub client-only tags: ${hubClientOnlyTags.length} tag(s) for SSG admission`,
+      );
+    }
+  } catch { /* hub data not available — skip */ }
+
   ctx.phase1.ssrAdmissionPlan = buildEntryDescriptor(routes, {
     routesDir,
     islandsDir,
@@ -197,6 +235,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     islandFiles: ssgIslandFiles,
     islandMeta: ssgIslandMeta,
     packageManifests,
+    hubClientOnlyTags,
   }).ssrAdmissionPlan;
 
   const ssgEntryCode = generateHonoEntryCode(routes, {
@@ -212,6 +251,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     allowHeadExtrasScripts: options.allowHeadExtrasScripts,
     html: options.html,
     upgradeStrategy: options.upgradeStrategy || 'lazy',
+    hubClientOnlyTags,
   });
 
   try {

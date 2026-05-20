@@ -1,0 +1,66 @@
+# Hub Submission CI
+#
+# Validates incoming Hub submissions from GitHub Pull Requests.
+# Triggered when PRs modify hub-index/ content.
+#
+# @see ADR-0030
+# @see docs/sop/v0.19.0-platform-hub.md
+
+name: Hub Submission CI
+
+on:
+  pull_request:
+    paths:
+      - 'hub-index/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    name: Validate Hub Submission
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Run Hub record validator
+        run: |
+          deno run -A packages/hub/src/cli/validate.ts --strict
+
+      - name: Regenerate and check hub-index drift
+        run: |
+          deno run -A packages/hub/src/cli/check-index.ts
+
+      - name: Conditional auto-merge
+        if: success() && github.actor != 'dependabot[bot]'
+        run: |
+          FAILED=false
+          # Match both unscoped and scoped package paths
+          for file in $(git diff --name-only origin/${{ github.base_ref }}...HEAD -- 'hub-index/packages/**/*.json'); do
+            # Skip index.json itself
+            case "$file" in
+              hub-index/index.json) continue ;;
+            esac
+            TIER=$(jq -r '.compatibility // "unknown"' "$file")
+            case "$TIER" in
+              ssr-capable|client-only)
+                echo "  ✅ $file ($TIER): auto-merge eligible" ;;
+              rejected|experimental-dom)
+                echo "  👁️  $file ($TIER): requires manual review"; FAILED=true ;;
+              *)
+                echo "  ❓ $file ($TIER): unknown tier, manual review required"; FAILED=true ;;
+            esac
+          done
+          if [ "$FAILED" = "false" ]; then
+            gh pr merge --auto --squash "${{ github.event.pull_request.number }}"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}

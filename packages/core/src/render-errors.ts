@@ -51,22 +51,22 @@ export function classifyError(
 
 /**
  * Generate instantiation error HTML.
+ *
+ * v0.19.1 Phase 6 (ADR-0035 A2): Falls back to bare-tag output
+ * instead of wrapping in broken <template shadowrootmode="open">.
+ * The browser will upgrade the custom element when JS loads.
  */
 export function instantiationErrorHtml(
   tagName: string,
-  errMsg: string,
-  sourceStr: string,
-  route?: string,
-  source?: string,
+  _errMsg: string,
+  _sourceStr: string,
+  _route?: string,
+  _source?: string,
 ): string {
-  return (
-    `<${tagName}${sourceStr}><!-- LessJS ERROR: Failed to instantiate <${tagName}>: ${
-      escapeHtml(errMsg)
-    } -->` +
-    (route ? `\n<!-- Route: ${escapeHtml(route)} -->` : '') +
-    (source ? `\n<!-- Source: ${escapeHtml(source)} -->` : '') +
-    `</${tagName}>`
-  );
+  // Bare-tag fallback: output just the custom element tag.
+  // The component will be upgraded client-side when JS loads.
+  // No shadow DOM template — this is correct progressive enhancement.
+  return `<${tagName}></${tagName}>`;
 }
 
 /**

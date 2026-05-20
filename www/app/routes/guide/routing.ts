@@ -1,5 +1,6 @@
-export const meta = { section: 'Core Model', label: 'Routing', order: 10 };
+export const meta = { section: 'Core', label: 'Routing', order: 10 };
 import { navSections, headerNav } from 'virtual:less-nav';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -14,7 +15,7 @@ export class RoutingGuidePage extends LitElement {
 
   private _renderZh() {
     return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/guide/routing">
+      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/routing">
         <div class="container">
           <h1>路由</h1>
           <p class="subtitle">
@@ -82,7 +83,7 @@ export const tagName = 'page-about';</code></pre></less-code-block>
           <p>路由扫描已经可以稳定处理页面、动态片段、renderer、middleware 和 API routes。v0.5.3 已修复根级 <span class="inline-code">_middleware.ts</span> 的挂载范围——现在会正确生成 <span class="inline-code">app.use('/*', ...)</span> 覆盖整个路由树。</p>
 
           <div class="nav-row">
-            <a href="/guide/architecture" class="nav-link">&larr; 架构</a>
+            <a href="/engine/architecture" class="nav-link">&larr; 架构</a>
             <a href="/guide/ssg" class="nav-link">渲染与 SSG &rarr;</a>
           </div>
         </div>
@@ -92,7 +93,7 @@ export const tagName = 'page-about';</code></pre></less-code-block>
 
   private _renderEn() {
     return html`
-      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/guide/routing">
+      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/routing">
         <div class="container">
           <h1>Routing</h1>
           <p class="subtitle">
@@ -160,7 +161,7 @@ export const tagName = 'page-about';</code></pre></less-code-block>
           <p>Route scanning handles pages, dynamic segments, renderers, middleware, and API routes stably. v0.5.3 fixed root-level <span class="inline-code">_middleware.ts</span> mounting scope — it now correctly generates <span class="inline-code">app.use('/*', ...)</span> covering the entire route tree.</p>
 
           <div class="nav-row">
-            <a href="/guide/architecture" class="nav-link">&larr; Architecture</a>
+            <a href="/engine/architecture" class="nav-link">&larr; Architecture</a>
             <a href="/guide/ssg" class="nav-link">Rendering &amp; SSG &rarr;</a>
           </div>
         </div>

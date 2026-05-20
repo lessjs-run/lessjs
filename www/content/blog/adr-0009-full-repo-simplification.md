@@ -4,6 +4,7 @@ date: '2026-05-10'
 type: 'adr'
 tags: ['architecture', 'decision']
 draft: false
+archived: true
 ---
 
 > **基于**: ADR 0008 (消除 createServer + globalThis + .less/ IPC)

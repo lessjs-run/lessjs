@@ -42,21 +42,20 @@ export class LessCodeBlock extends DsdLitElement {
         position: relative;
       }
 
-      /* Shared pre/code styles (used by both SSR slot and client-rendered HTML) */
+      /* Shared pre/code styles — dark theme (v0.19.1 Phase 6, ADR-0035 B2) */
       pre {
         margin: 0;
         padding: var(--less-size-5);
-        background: var(--less-code-bg);
-        border: 0.5px solid var(--less-code-border);
-        border-radius: var(--less-radius-sm);
+        background: #1a1a2e;
+        border: 0.5px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
         overflow-x: auto;
         font-family: var(--less-font-mono);
         font-size: var(--less-font-size-sm);
-        line-height: var(--less-line-height-normal);
-        color: var(--less-text-secondary);
+        line-height: 1.7;
+        color: #e0e0e0;
         scrollbar-width: thin;
-        scrollbar-color: var(--less-border) transparent;
-        /* Allow long strings to wrap so they don't overflow */
+        scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
         white-space: pre-wrap;
         word-break: break-word;
       }
@@ -65,42 +64,55 @@ export class LessCodeBlock extends DsdLitElement {
       ::slotted(pre) {
         margin: 0;
         padding: var(--less-size-5);
-        background: var(--less-code-bg);
-        border: 0.5px solid var(--less-code-border);
-        border-radius: var(--less-radius-sm);
+        background: #1a1a2e;
+        border: 0.5px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
         overflow-x: auto;
         font-family: var(--less-font-mono);
         font-size: var(--less-font-size-sm);
-        line-height: var(--less-line-height-normal);
-        color: var(--less-text-secondary);
+        line-height: 1.7;
+        color: #e0e0e0;
         scrollbar-width: thin;
-        scrollbar-color: var(--less-border) transparent;
+        scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+      }
+
+      /* Language badge (top-left) */
+      .lang-badge {
+        position: absolute;
+        top: var(--less-size-2);
+        left: var(--less-size-3);
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(255, 255, 255, 0.35);
+        pointer-events: none;
       }
 
       .copy-btn {
         position: absolute;
         top: var(--less-size-2);
         right: var(--less-size-2);
-        background: var(--less-bg-elevated);
-        color: var(--less-text-muted);
-        border: 0.5px solid var(--less-border);
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.5);
+        border: 0.5px solid rgba(255, 255, 255, 0.12);
         padding: var(--less-size-1) var(--less-size-3);
         font-size: var(--less-font-size-xs);
         font-family: var(--less-font-sans);
         cursor: pointer;
-        border-radius: var(--less-radius-sm);
-        transition: color var(--less-transition-normal), border-color var(--less-transition-normal);
+        border-radius: 4px;
+        transition: color var(--less-transition-normal), background var(--less-transition-normal);
         z-index: 1;
       }
 
       .copy-btn:hover {
-        color: var(--less-text-secondary);
-        border-color: var(--less-border-hover);
+        color: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.12);
       }
 
       .copy-btn.copied {
-        color: var(--less-text-primary);
-        border-color: var(--less-border-hover);
+        color: #4ade80;
+        border-color: rgba(74, 222, 128, 0.3);
       }
 
       .copy-btn.failed {
@@ -108,18 +120,15 @@ export class LessCodeBlock extends DsdLitElement {
         border-color: var(--less-error, #e55);
       }
 
-      /* ── Prism.js token colors ──────────────────────────────────
-      * Inlined here because these rules need to be inside the
-      * component's shadow root to style the highlighted tokens.
-      */
+      /* ── Prism.js token colors (dark theme, v0.19.1 Phase 6) ─── */
       .token.cdata,
       .token.comment,
       .token.doctype,
       .token.prolog {
-        color: #708090;
+        color: #6a737d;
       }
       .token.punctuation {
-        color: #999;
+        color: #8b949e;
       }
       .token.namespace {
         opacity: 0.7;
@@ -131,7 +140,7 @@ export class LessCodeBlock extends DsdLitElement {
       .token.property,
       .token.symbol,
       .token.tag {
-        color: #905;
+        color: #79c0ff;
       }
       .token.attr-name,
       .token.builtin,
@@ -139,28 +148,28 @@ export class LessCodeBlock extends DsdLitElement {
       .token.inserted,
       .token.selector,
       .token.string {
-        color: #690;
+        color: #a5d6ff;
       }
       .token.entity,
       .token.operator,
       .token.url,
       .language-css .token.string,
       .style .token.string {
-        color: #9a6e3a;
+        color: #d2a8ff;
       }
       .token.atrule,
       .token.attr-value,
       .token.keyword {
-        color: #07a;
+        color: #ff7b72;
       }
       .token.class-name,
       .token.function {
-        color: #dd4a68;
+        color: #d2a8ff;
       }
       .token.important,
       .token.regex,
       .token.variable {
-        color: #e90;
+        color: #ffa657;
       }
       .token.bold,
       .token.important {

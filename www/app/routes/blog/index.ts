@@ -3,6 +3,7 @@
  */
 export const meta = { section: 'History', label: 'Blog', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterBlogNav } from '../../utils/nav-filter.js';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -87,7 +88,7 @@ export class BlogIndexPage extends LitElement {
       <less-layout
         locale="${this.locale || 'zh'}"
         .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
+        .navItems="${filterBlogNav(navSections)}"
         .headerNav="${headerNav}"
         current-path="/blog"
       >
@@ -133,7 +134,7 @@ export class BlogIndexPage extends LitElement {
       <less-layout
         locale="${this.locale || 'en'}"
         .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
+        .navItems="${filterBlogNav(navSections)}"
         .headerNav="${headerNav}"
         current-path="/en/blog"
       >

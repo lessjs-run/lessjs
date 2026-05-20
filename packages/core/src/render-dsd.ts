@@ -66,7 +66,7 @@ import { createLogger } from './logger.js';
 
 // ─── Extracted modules ─────────────────────────────────────────
 import { injectProps, instantiateComponent } from './render-instantiate.js';
-import { instantiationErrorHtml, renderErrorHtml, wrongTypeErrorHtml } from './render-errors.js';
+import { instantiationErrorHtml, wrongTypeErrorHtml } from './render-errors.js';
 import { classifyError } from './render-errors.js';
 import { serializeAttributes, wrapDsdOutput } from './render-serialize.js';
 
@@ -206,7 +206,29 @@ export async function renderDSD(
     collectedErrors.push(classifiedErr);
     hasError = true;
     hooks?.onError?.(classifiedErr);
-    content = renderErrorHtml(tagName, err);
+
+    // v0.19.1 Phase 6 (ADR-0035 A2): Bare-tag fallback on render failure.
+    // Instead of producing broken DSD output with error comments inside
+    // <template shadowrootmode="open">, return just the bare custom element
+    // tag. The browser will upgrade it when JS loads — correct progressive
+    // enhancement.
+    const attrs = serializeAttributes(props);
+    const renderEndFallback = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    const fallbackResult: RenderOutput = {
+      html: `<${tagName}${attrs}></${tagName}>`,
+      errors: collectedErrors,
+      metrics: {
+        tagName,
+        renderTimeMs: renderEndFallback - startTime,
+        templateSize: 0,
+        layer: 'dsd-static',
+        hasError: true,
+        nestingDepth,
+      },
+      hydrationHints: collectedHints,
+    };
+    hooks?.afterRender?.(fallbackResult);
+    return fallbackResult;
   }
 
   // v0.6: L2 Nested DSD — recursively render nested Custom Elements

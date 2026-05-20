@@ -1,10 +1,12 @@
 // deno-fmt-ignore-file
-export const meta = { section: 'Start Here', label: 'Getting Started', order: 20 };
+export const meta = { section: 'Quick Start', label: 'Getting Started', order: 20 };
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
+import '@lessjs/ui/less-callout';
 
 export class GettingStartedPage extends LitElement {
   static override styles = [
@@ -38,19 +40,17 @@ export class GettingStartedPage extends LitElement {
 
   private _renderZh() {
     return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/guide/getting-started">
+      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/getting-started">
         <div class="container">
           <h1>快速开始</h1>
           <p class="subtitle">
             从一个最小项目开始：创建应用、启动开发服务器、构建静态产物，再理解每个目录负责什么。
           </p>
 
-          <div class="callout">
-            <p>
-              推荐使用 Deno 2.7+。LessJS 是 Deno-first 项目，依赖通过
-              <span class="inline-code">deno.json</span> 管理，开发和构建命令都从 Deno task 进入。
-            </p>
-          </div>
+          <less-callout type="info" label="推荐">
+            推荐使用 Deno 2.7+。LessJS 是 Deno-first 项目，依赖通过
+            <span class="inline-code">deno.json</span> 管理，开发和构建命令都从 Deno task 进入。
+          </less-callout>
 
           <section class="step">
             <h2>1. 创建项目</h2>
@@ -127,14 +127,14 @@ export const tagName = 'page-home';</code></pre></less-code-block>
 
           <div class="note">
             <p>
-              下一步建议先读 <a href="/guide/architecture">架构</a>， 再读 <a href="/guide/routing">路由</a>、<a href="/guide/ssg">渲染与 SSG</a>
-              和 <a href="/guide/islands">Island Upgrade</a>。
+              下一步建议先读 <a href="/engine/architecture">架构</a>， 再读 <a href="/guide/routing">路由</a>、<a href="/guide/ssg">渲染与 SSG</a>
+              和 <a href="/engine/islands">Island Upgrade</a>。
             </p>
           </div>
 
           <div class="nav-row">
             <a href="/guide/positioning" class="nav-link">&larr; 框架定位</a>
-            <a href="/guide/architecture" class="nav-link">设计哲学 &rarr;</a>
+            <a href="/engine/architecture" class="nav-link">设计哲学 &rarr;</a>
           </div>
         </div>
       </less-layout>
@@ -143,7 +143,7 @@ export const tagName = 'page-home';</code></pre></less-code-block>
 
   private _renderEn() {
     return html`
-      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/guide/getting-started">
+      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/getting-started">
         <div class="container">
           <h1>Getting Started</h1>
           <p class="subtitle">
@@ -151,13 +151,11 @@ export const tagName = 'page-home';</code></pre></less-code-block>
             and understand what each directory is responsible for.
           </p>
 
-          <div class="callout">
-            <p>
-              Deno 2.7+ recommended. LessJS is a Deno-first project — dependencies are managed
-              through <span class="inline-code">deno.json</span>, and all dev/build commands
-              use Deno tasks.
-            </p>
-          </div>
+          <less-callout type="info" label="Recommended">
+            Deno 2.7+ recommended. LessJS is a Deno-first project — dependencies are managed
+            through <span class="inline-code">deno.json</span>, and all dev/build commands
+            use Deno tasks.
+          </less-callout>
 
           <section class="step">
             <h2>1. Create a Project</h2>
@@ -239,16 +237,16 @@ export const tagName = 'page-home';</code></pre></less-code-block>
 
           <div class="note">
             <p>
-              Next steps: <a href="/guide/architecture">Architecture</a>,
+              Next steps: <a href="/engine/architecture">Architecture</a>,
               <a href="/guide/routing">Routing</a>,
               <a href="/guide/ssg">Rendering &amp; SSG</a>, and
-              <a href="/guide/islands">Island Upgrade</a>.
+              <a href="/engine/islands">Island Upgrade</a>.
             </p>
           </div>
 
           <div class="nav-row">
             <a href="/guide/positioning" class="nav-link">&larr; Framework Positioning</a>
-            <a href="/guide/architecture" class="nav-link">Design Philosophy &rarr;</a>
+            <a href="/engine/architecture" class="nav-link">Design Philosophy &rarr;</a>
           </div>
         </div>
       </less-layout>

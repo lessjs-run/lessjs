@@ -75,3 +75,4 @@ jobs:
           publish_if_missing "@lessjs/ui" "packages/ui"
           publish_if_missing "@lessjs/app" "packages/app"
           publish_if_missing "@lessjs/create" "packages/create"
+          publish_if_missing "@lessjs/hub" "packages/hub"

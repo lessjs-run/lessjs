@@ -1,13 +1,23 @@
 /**
- * Homepage — v5 design
+ * Homepage — v8 redesign
  *
- * @lessjs/app + @lessjs/ui components. less-code-block for syntax.
- * Mockup v5: dark hero, code comparison, feature cards, benchmark,
- * dark demo cards, quick start, footer CTA.
+ * Three-act rhythm: Dark Hero → Light Narrative → Warm-gray Footer
+ * 6 sections: Hero → Code Strip → Benchmark → Multi-framework → Bento → Quick Start
+ *
+ * v8 Redesign key changes:
+ * - Hero: Display-level typography, enhanced gradient glow, brand-shadow buttons
+ * - Multi-framework: Real interactive showcase panel (not just code tabs)
+ * - Quick Start: less-step-card components
+ * - Bento hierarchy with WC Engine dominant card, sec-divider-free transitions
  */
-import { css, html, LitElement } from 'lit';
+import { css, html } from 'lit';
+import { DsdLitElement } from '@lessjs/adapter-lit';
+import { headerNav, navSections } from 'virtual:less-nav';
+import { lessDesignTokens } from '@lessjs/ui/design-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
+import '@lessjs/ui/less-callout';
+import '@lessjs/ui/less-step-card';
 import '../../islands/less-term.js';
 import '../../islands/shoelace-showcase.js';
 import '../../islands/react-showcase.js';
@@ -24,8 +34,7 @@ export class Home extends LitElement {
   <my-counter></my-counter>\`;
   }
 }
-customElements.define('page-home', Home);
-// ...just lit + custom elements`;
+customElements.define('page-home', Home);`;
 
 const CODE_DSD = `<page-home>
   <template shadowrootmode="open">
@@ -36,32 +45,104 @@ const CODE_DSD = `<page-home>
       </template>
     </my-counter>
   </template>
-</page-home>
-<!-- no js needed for first paint -->`;
+</page-home>`;
 
-const COUNTER_RAW =
-  `<my-counter><template shadowrootmode="open"><button>−</button><span>0</span><button>+</button></template></my-counter>`;
+const CODE_LIT = `// Lit island — app/islands/counter.ts
+import { LitElement, html } from 'lit';
+export class MyCounter extends LitElement {
+  @state() count = 0;
+  render() {
+    return html\`<button @click=\${() => this.count--}>−</button>
+      <span>\${this.count}</span>
+      <button @click=\${() => this.count++}>+</button>\`;
+  }
+}`;
 
-export default class DocsHome extends LitElement {
-  static override styles = css`
+const CODE_REACT = `// React island — app/islands/hello.tsx
+export default function Hello({ name }) {
+  return <h1>Hello, {name}!</h1>;
+}
+// ReactDOMServer → DSD, zero-config SSR`;
+
+const CODE_VANILLA = `// Vanilla island — app/islands/player.ts
+import { WithDsdHydration } from '@lessjs/adapter-vanilla';
+class MediaPlayer extends WithDsdHydration(HTMLElement) {
+  connectedCallback() { /* upgrade logic */ }
+}
+customElements.define('media-player', MediaPlayer);`;
+
+export default class DocsHome extends DsdLitElement {
+  private _mfaTab = 0;
+
+  static override styles = [
+    lessDesignTokens,
+    css`
     :host {
       display: block;
     }
     less-layout {
       min-height: 100vh;
+      display:flex;flex-direction:column;
     }
 
-    /* ── Hero ── */
+    /* ── I. Hero — dark immersive opening with fluid wave ── */
     .hero {
-      background: #09090b;
+      background: linear-gradient(170deg, var(--less-brand-deep, #26215C) 0%, #0d0d1f 40%, var(--less-brand-deep, #26215C) 100%);
       color: #fff;
       width: 100vw;
       margin-left: calc(-50vw + 50%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 60%, rgba(83,74,183,0.2) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 65% 25%, rgba(109,92,232,0.15) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 45% at 80% 70%, rgba(83,74,183,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse 70% 60% at 10% 15%, rgba(131,124,246,0.1) 0%, transparent 65%);
+      animation: fluid1 12s ease-in-out infinite, fluid2 18s ease-in-out infinite;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 200%; height: 120%;
+      top: -10%; left: -50%;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(83,74,183,0.18) 0%, transparent 40%),
+        radial-gradient(ellipse at 30% 70%, rgba(109,92,232,0.1) 0%, transparent 35%),
+        radial-gradient(ellipse at 70% 30%, rgba(83,74,183,0.08) 0%, transparent 45%);
+      animation: fluidDrift 14s ease-in-out infinite alternate, fluidPulse 10s ease-in-out infinite;
+    }
+    @keyframes fluid1 {
+      0%,100% { transform: scale(1) translateX(0); opacity: 0.7; }
+      33%     { transform: scale(1.15) translateX(-3%); opacity: 0.9; }
+      66%     { transform: scale(0.9) translateX(2%); opacity: 0.5; }
+    }
+    @keyframes fluid2 {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      50%     { transform: translateY(-2%) rotate(1deg); }
+    }
+    @keyframes fluidDrift {
+      0%   { transform: translateX(-5%) scaleY(1); }
+      100% { transform: translateX(5%) scaleY(1.08); }
+    }
+    @keyframes fluidPulse {
+      0%,100% { opacity: 0.5; }
+      50%     { opacity: 0.85; }
+    }
+    @keyframes heroGlow {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 0.9; }
     }
     .hero-inner {
       max-width: 960px;
       margin: 0 auto;
-      padding: 3rem 1.5rem 2.5rem;
+      padding: 4rem 1.5rem 3rem;
+      position: relative;
     }
     .hero-lockup {
       display: flex;
@@ -81,72 +162,124 @@ export default class DocsHome extends LitElement {
       letter-spacing: -0.01em;
     }
     .hero h1 {
-      font-size: clamp(2.6rem, 6vw, 2.875rem);
-      font-weight: 500;
+      font-size: var(--less-font-size-display, clamp(3rem, 7vw, 5rem));
+      font-weight: 800;
       color: #fff;
       line-height: 1.05;
-      letter-spacing: -0.03em;
-      margin: 0 0 10px;
+      letter-spacing: -0.035em;
+      margin: 0 0 12px;
     }
     .hero h1 em {
       font-style: normal;
-      color: #636363;
+      background: linear-gradient(135deg, var(--less-brand, #534AB7), var(--less-brand-light, #6D5CE8), var(--less-brand-pale, #8B7CF6));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
     .hero-desc {
-      color: #a1a1aa;
-      font-size: 14px;
-      line-height: 1.7;
-      max-width: 460px;
-      margin: 0 0 20px;
+      color: var(--less-text-secondary, rgba(255,255,255,0.55));
+      font-size: 15px;
+      line-height: 1.75;
+      max-width: 520px;
+      margin: 0 0 24px;
     }
     .hero-actions {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 24px;
     }
     .hero-actions a {
       display: inline-flex;
       align-items: center;
-      height: 38px;
-      padding: 0 18px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 500;
+      gap: 6px;
+      height: 40px;
+      padding: 0 22px;
+      border-radius: var(--less-radius-md, 8px);
+      font-size: 13.5px;
+      font-weight: 600;
       text-decoration: none;
+      transition: transform var(--less-duration-micro, 150ms) var(--less-easing-default, ease-out),
+                  box-shadow var(--less-duration-micro, 150ms) var(--less-easing-default, ease-out);
+    }
+    .hero-actions a:hover {
+      transform: translateY(-1px);
     }
     .hero-pri {
-      background: #fff;
-      color: #09090b;
+      background: linear-gradient(135deg, var(--less-brand, #534ab7), var(--less-brand-light, #6d5ce8));
+      color: #fff;
+      box-shadow: var(--less-shadow-brand-md, 0 4px 20px rgba(83,74,183,0.3));
+    }
+    .hero-pri:hover {
+      box-shadow: var(--less-shadow-brand-lg, 0 8px 32px rgba(83,74,183,0.4));
     }
     .hero-sec {
-      border: 0.5px solid #333;
+      border: 1px solid rgba(255,255,255,0.15);
       color: #d4d4d8;
+      background: rgba(255,255,255,0.04);
     }
-
-    /* ── Code comparison (full-width dark strip) ── */
+    .hero-sec:hover {
+      border-color: rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.08);
+    }
+    /* ── II. Code Strip — dark code comparison ── */
     .code-strip {
-      background: #09090b;
+      background: linear-gradient(180deg, var(--less-brand-deep, #26215C) 0%, #0f0f1a 100%);
       width: 100vw;
       margin-left: calc(-50vw + 50%);
-      padding: 2.5rem 0;
+      padding: 3rem 0;
     }
     .code-strip-inner {
       max-width: 960px;
       margin: 0 auto;
       padding: 0 1.5rem;
     }
+    .code-strip-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .code-strip-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--less-brand, #534AB7);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+    .code-strip-arrow {
+      font-size: 14px;
+      color: var(--less-brand, #534AB7);
+      animation: arrowPulse 2s ease-in-out infinite;
+    }
+    @keyframes arrowPulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+    .zero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 10px;
+      border-radius: 10px;
+      background: rgba(83,74,183,0.2);
+      border: 1px solid rgba(83,74,183,0.4);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--less-brand-pale, #8b7cf6);
+      letter-spacing: 0.02em;
+    }
     .code-compare {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1px;
-      background: #09090b;
-      border-radius: 8px;
+      background: #0d0d12;
+      border-radius: var(--less-radius-xl, 16px);
       overflow: hidden;
-      border: 0.5px solid #27272a;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: var(--less-shadow-brand-sm, 0 2px 12px rgba(83,74,183,0.2));
     }
     .code-pane {
-      background: #09090b;
+      background: #0d0d12;
       padding: 14px 16px;
     }
     .code-bar {
@@ -156,30 +289,22 @@ export default class DocsHome extends LitElement {
       margin-bottom: 10px;
     }
     .code-bar i {
-      width: 7px;
-      height: 7px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       display: inline-block;
     }
-    .code-bar .r {
-      background: #ef4444;
-    }
-    .code-bar .y {
-      background: #eab308;
-    }
-    .code-bar .g {
-      background: #22c55e;
-    }
+    .code-bar .r { background: #ff5f57; }
+    .code-bar .y { background: #febc2e; }
+    .code-bar .g { background: #28c840; }
     .code-bar span {
-      color: #52525b;
+      color: var(--less-text-muted);
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin-left: 5px;
     }
     .code-pane less-code-block {
-      --code-bg: transparent !important;
-      --code-border: none !important;
       background: transparent !important;
     }
     .code-pane pre {
@@ -196,666 +321,630 @@ export default class DocsHome extends LitElement {
       background: transparent !important;
     }
 
-    /* ── Stats ── */
-    .stats {
-      display: flex;
-      gap: 28px;
-      flex-wrap: wrap;
-    }
-    .stat {
-      display: flex;
-      flex-direction: column;
-    }
-    .stat strong {
-      color: #fff;
-      font-size: 18px;
-      font-weight: 500;
-    }
-    .stat span {
-      color: #71717a;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    /* ── Section titles ── */
+    /* ── Section shared (light narrative) ── */
     .sec {
-      padding: 2.5rem 0 0;
+      padding: 3.5rem 0 0;
       margin: 0 auto;
       max-width: 960px;
     }
-    .sec-lbl {
+        .sec-lbl {
       font-size: 11px;
       font-weight: 600;
       color: var(--less-brand, #534ab7);
       text-transform: uppercase;
       letter-spacing: 0.14em;
-      margin: 0 1.5rem 14px;
+      margin: 0 1.5rem 6px;
+    }
+    .sec-title {
+      font-size: 1.25rem;
+      font-weight: 650;
+      color: var(--less-text-primary);
+      margin: 0 1.5rem 18px;
+      line-height: 1.4;
     }
     .sec-bd {
       padding: 0 1.5rem;
     }
 
-    /* ── Feature cards ── */
-    .cards {
+    /* ── QS leading to Footer: gradient bridge to dark footer ── */
+    .sec-qs-last {
+      max-width: none;
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+      padding-bottom: 0;
+      background: linear-gradient(180deg, #ffffff 0%, rgba(83,74,183,0.04) 40%, rgba(83,74,183,0.12) 70%, #0d0d1f 100%);
+    }
+    .sec-qs-last .sec-lbl,
+    .sec-qs-last .sec-title,
+    .sec-qs-last .sec-bd {
+      max-width: 960px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    /* ── Transition lines ── */
+    .turn-line { width:100vw;margin-left:calc(-50vw+50%);height:1px;background:linear-gradient(90deg,transparent,var(--less-brand,#534AB7) 50%,transparent);opacity:0.3;border:none }
+    .turn-glow { width:100vw;margin-left:calc(-50vw+50%);height:1px;background:radial-gradient(ellipse at 50% 50%,var(--less-brand-glow,rgba(83,74,183,0.25)),transparent 70%);border:none }
+    .card-dominant { grid-column:1/-1;background:linear-gradient(135deg,rgba(83,74,183,0.06),rgba(83,74,183,0.02));border-left:3px solid var(--less-brand,#534AB7);border-top:1px solid rgba(83,74,183,0.1);border-right:1px solid rgba(83,74,183,0.1);border-bottom:1px solid rgba(83,74,183,0.1) }
+    .card-dominant:hover { border-left-color:var(--less-brand-light,#6D5CE8);box-shadow:0 0 20px var(--less-brand-glow,rgba(83,74,183,0.15)) inset,var(--less-shadow-brand-sm,0 2px 12px rgba(83,74,183,0.2)) }
+    .card-meta { display:flex;gap:6px;margin-top:10px;flex-wrap:wrap }
+    .card-meta span { display:inline-flex;padding:1px 8px;border-radius:4px;font-size:10px;font-weight:500;color:var(--less-text-muted);background:var(--less-bg-surface);border:0.5px solid var(--less-border);font-family:var(--font-mono,"SF Mono","JetBrains Mono",monospace) }
+    .card-pills { display:flex;gap:6px;margin-top:12px }
+    .card-pill { display:inline-flex;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:500;color:var(--less-brand,#534AB7);background:rgba(83,74,183,0.08);border:1px solid rgba(83,74,183,0.15) }
+
+    /* ── Multi-Framework Grid — three independent showcase cards ── */
+    .multi-fw-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
-      margin-bottom: 2.5rem;
     }
-    .card {
-      border: 0.5px solid var(--less-border);
-      border-radius: 10px;
-      padding: 1.25rem;
-    }
-    .card:hover {
-      border-color: var(--less-border-hover);
-    }
-    .card-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-    .card h3 {
-      margin: 0 0 5px;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--less-text-primary);
-    }
-    .card p {
-      margin: 0;
-      font-size: 12.5px;
-      color: var(--less-text-secondary);
-      line-height: 1.7;
-    }
-
-    /* ── Use cases (brand icons) ── */
-    .uses {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      border-top: 0.5px solid var(--less-border);
-      border-bottom: 0.5px solid var(--less-border);
-      margin-bottom: 2rem;
-    }
-    .use {
-      padding: 1.5rem 1rem;
-      border-right: 0.5px solid var(--less-border);
-      text-align: center;
-    }
-    .use:last-child {
-      border-right: 0;
-    }
-    .use .icon {
-      font-size: 22px;
-      margin-bottom: 6px;
-    }
-    .use h3 {
-      margin: 0 0 3px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--less-text-primary);
-    }
-    .use p {
-      margin: 0;
-      font-size: 12px;
-      color: var(--less-text-secondary);
-    }
-
-    /* ── Benchmark table ── */
-    .bench {
-      margin-bottom: 2.5rem;
-      overflow-x: auto;
-    }
-    .bench table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12.5px;
-    }
-    .bench th {
-      text-align: left;
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--less-border);
-      color: var(--less-text-secondary);
-      font-weight: 600;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    .bench td {
-      padding: 11px 14px;
-      border-bottom: 0.5px solid var(--less-bg-surface);
-      color: var(--less-text-secondary);
-    }
-    .bench td:first-child {
-      font-weight: 500;
-      color: var(--less-text-primary);
-    }
-    .bench .win {
-      color: #256e16;
-      font-weight: 500;
-    }
-    .bench .lose {
-      color: #a33;
-      font-weight: 500;
-    }
-    .bench-foot {
-      font-size: 11px;
-      color: #888780;
-      margin-top: 8px;
-      line-height: 1.6;
-    }
-
-    /* ── Architecture SVG ── */
-    .arch {
-      margin-bottom: 2.5rem;
-    }
-    .arch svg {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    .arch text {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 10px;
-    }
-
-    /* ── Dark demo cards ── */
-    .demo {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 2.5rem;
-    }
-    .demo-card {
-      background: #18181b;
-      border-radius: 10px;
-      padding: 1.25rem;
-    }
-    .demo-card h4 {
-      margin: 0 0 12px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #d4d4d8;
-      letter-spacing: 0.02em;
-    }
-    .demo-card pre {
-      background: #101012 !important;
-      border: 0.5px solid #27272a !important;
-      border-radius: 6px;
-      padding: 10px 12px !important;
-      margin: 0 !important;
-      font-size: 11px !important;
-      line-height: 1.7 !important;
-      color: #a1a1aa !important;
-      overflow-x: auto;
-      max-width: 100%;
-      box-sizing: border-box;
-    }
-    .demo-card pre code {
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-    }
-    .demo-card .note {
-      font-size: 11px;
-      color: #71717a;
-      margin-top: 10px;
-      line-height: 1.5;
-    }
-    .demo-card.combined {
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      border: none;
-    }
-    .demo-card.combined:hover {
-      border-color: transparent;
-    }
-    .demo-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    .demo-half {
-      min-width: 0;
-    }
-    .counter {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .counter button {
-      width: 34px;
-      height: 34px;
-      border-radius: 6px;
-      border: 0.5px solid #3f3f46;
-      background: #27272a;
-      font-size: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #f4f4f5;
-    }
-    .counter button:hover {
-      background: #3f3f46;
-    }
-    .counter span {
-      font-size: 20px;
-      font-weight: 500;
-      color: #f4f4f5;
-      min-width: 24px;
-      text-align: center;
-    }
-
-    /* ── Bundle size bars (inside demo card) ── */
-    .bundle {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 0.5px solid #27272a;
-    }
-    .bundle h4 {
-      font-size: 12px;
-      font-weight: 600;
-      color: #d4d4d8;
-      margin-bottom: 8px;
-    }
-    .bar-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 6px;
-    }
-    .bar-lbl {
-      width: 70px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #d4d4d8;
-      text-align: right;
-      flex-shrink: 0;
-    }
-    .bar-track {
-      flex: 1;
-      height: 26px;
-      border-radius: 5px;
-      background: #27272a;
+    .mfw-card {
+      background: var(--less-bg-surface);
+      border: 1px solid var(--less-border);
+      border-radius: var(--less-radius-lg, 12px);
       overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .bar-fill {
-      height: 100%;
-      border-radius: 5px;
+    .mfw-card:hover {
+      border-color: rgba(83,74,183,0.25);
+      box-shadow: 0 4px 20px rgba(83,74,183,0.06);
+    }
+    .mfw-header {
       display: flex;
       align-items: center;
-      padding-left: 10px;
-      font-size: 11px;
-      font-weight: 600;
+      gap: 8px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--less-border);
     }
-    .bar-fill.g {
-      background: #1d9e75;
-      color: #fff;
-      width: 2%;
-      min-width: 50px;
-    }
-    .bar-fill.r {
-      background: #d85a30;
-      color: #fff;
-      width: 100%;
-    }
-    .bundle-note {
-      font-size: 11px;
-      color: #71717a;
-      margin-top: 8px;
-      line-height: 1.5;
-    }
-
-    /* ── Terminal (less-term-demo island) ── */
-    less-term-demo {
-      display: block;
-      margin-bottom: 2.5rem;
-    }
-
-    /* ── Quick start ── */
-    .qs {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr auto 1fr;
-      align-items: center;
-      margin-bottom: 2.5rem;
-    }
-    .qs-card {
-      border: 0.5px solid var(--less-border);
-      border-radius: 10px;
-      padding: 1.25rem;
-      background: var(--less-bg-surface);
-    }
-    .qs-step {
-      font-size: 11px;
-      font-weight: 600;
-      color: #888780;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 8px;
-    }
-    .qs-card code {
-      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
-      font-size: 12.5px;
-      color: var(--less-text-primary);
-      line-height: 1.6;
-      white-space: nowrap;
-    }
-    .qs-arrow {
-      color: #d4d4d8;
-      font-size: 16px;
-      text-align: center;
-      user-select: none;
-    }
-
-    /* ── CTA ── */
-    .cta {
-      text-align: center;
-      padding: 2.5rem;
-      width: 100vw;
-      margin-left: calc(-50vw + 50%);
-      border-top: 0.5px solid var(--less-border);
-    }
-    .cta-inner {
-      max-width: 960px;
-      margin: 0 auto;
-    }
-    .cta code {
-      display: inline-block;
-      background: var(--less-brand-subtle, #eeedfe);
-      border: 0.5px solid #cecbf6;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
-      font-size: 13px;
-      color: var(--less-brand, #534ab7);
-      font-weight: 500;
-      margin-bottom: 10px;
-    }
-    .cta p {
-      margin: 0;
-      font-size: 12px;
-      color: var(--less-text-secondary);
-    }
-
-    /* ── Counter web component ── */
-    .live-counter {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .live-counter button {
-      width: 34px;
-      height: 34px;
-      border-radius: 6px;
-      border: 0.5px solid #3f3f46;
-      background: #27272a;
-      font-size: 18px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #f4f4f5;
-    }
-    .live-counter button:hover {
-      background: #3f3f46;
-    }
-    .live-counter .val {
-      font-size: 22px;
-      font-weight: 500;
-      color: #f4f4f5;
-      min-width: 30px;
-      text-align: center;
-    }
-
-    /* ── Multi-framework showcase ── */
-    .mfa {
-      margin-bottom: 2.5rem;
-    }
-    .mfa-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 1rem;
-    }
-    .mfa-card {
-      border: 0.5px solid var(--less-border);
-      border-radius: 10px;
-      padding: 1.25rem;
-      background: var(--less-bg-surface);
-    }
-    .mfa-card:hover {
-      border-color: var(--less-border-hover);
-    }
-    .mfa-tag {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 600;
+    .mfw-tag {
+      font-size: 9px;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       padding: 2px 8px;
       border-radius: 4px;
-      margin-bottom: 10px;
     }
-    .mfa-tag.lit {
-      background: #e6f1fb;
-      color: #185fa5;
-    }
-    .mfa-tag.react {
-      background: #e1f0ff;
-      color: #0d6efd;
-    }
-    .mfa-tag.vanilla {
-      background: #e1f5ee;
-      color: #0f6e56;
-    }
-    .mfa-card h4 {
-      margin: 0 0 8px;
+    .mfw-label {
       font-size: 13px;
       font-weight: 600;
       color: var(--less-text-primary);
     }
-    .mfa-card p {
+    .mfw-demo {
+      padding: 16px;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .mfw-code {
+      padding: 0 14px 12px;
+    }
+    .mfw-code less-code-block {
+      display: block;
+    }
+    .mfw-code code {
+      font-size: 11px !important;
+      padding: 4px 8px !important;
+    }
+    .mfw-footer {
+      padding: 10px 14px;
+      border-top: 1px solid var(--less-border);
+      font-size: 10px;
+      color: var(--less-text-tertiary);
+      font-family: "JetBrains Mono", "SF Mono", Consolas, monospace;
+    }
+    @media (max-width: 900px) {
+      .multi-fw-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .multi-fw-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── CSS Houdini @property — smooth brand-color transitions ── */
+    @supports (background: paint(something)) {
+      .card-dominant {
+        transition: border-left-color var(--less-duration-fast,200ms) var(--less-easing-default,ease-out),
+                    box-shadow var(--less-duration-fast,200ms) var(--less-easing-default,ease-out),
+                    transform var(--less-duration-fast,200ms) var(--less-easing-default,ease-out);
+      }
+    }
+
+    /* ── CSS Part exposure for theming ── */
+    .hero::part(header) { backdrop-filter: blur(12px) }
+    .card::part(body) { padding: 1.25rem }
+
+    /* ── Scroll-reveal animation (native CSS, no JS lib) ── */
+    @keyframes fadeUp {
+      from { opacity:0;transform:translateY(24px) }
+      to { opacity:1;transform:translateY(0) }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .sec { animation: fadeUp 0.6s var(--less-easing-default,ease-out) both;animation-timeline:view();animation-range:entry 10% entry 60% }
+    }
+
+    /* ── Bento Grid (three pillars) ── */
+    .cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 2rem;
+    }
+    
+    .card {
+      border: 1px solid var(--less-border);
+      border-radius: var(--less-radius-lg, 12px);
+      padding: 1.5rem;
+      background: var(--less-bg-surface);
+      transition: border-color var(--less-duration-fast, 200ms) var(--less-easing-default, ease-out),
+                  box-shadow var(--less-duration-fast, 200ms) var(--less-easing-default, ease-out),
+                  transform var(--less-duration-fast, 200ms) var(--less-easing-default, ease-out);
+    }
+    .card:hover {
+      border-color: var(--less-border-hover);
+      box-shadow: var(--less-shadow-brand-sm, 0 2px 12px rgba(83,74,183,0.2));
+      transform: translateY(-2px);
+    }
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .card-icon svg {
+      flex-shrink: 0;
+    }
+    .card h3 {
+      margin: 0 0 6px;
+      font-size: 15px;
+      font-weight: 650;
+      color: var(--less-text-primary);
+    }
+    .card p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--less-text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ── Benchmark — horizontal bar chart ── */
+    .bench {
+      margin-bottom: 2rem;
+    }
+    .bench-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+    .bench-lbl {
+      width: 90px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--less-text-primary);
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .bench-track {
+      flex: 1;
+      height: 32px;
+      border-radius: var(--less-radius-sm, 6px);
+      background: var(--less-bg-surface, #f1f1f3);
+      overflow: hidden;
+      position: relative;
+    }
+    .bench-fill {
+      height: 100%;
+      border-radius: var(--less-radius-sm, 6px);
+      display: flex;
+      align-items: center;
+      padding-left: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: width 0.6s var(--less-easing-default, ease-out);
+    }
+    .bench-fill.brand {
+      background: linear-gradient(135deg, var(--less-brand, #534AB7), var(--less-brand-light, #6D5CE8));
+      color: #fff;
+      width: 2%;
+      min-width: 56px;
+    }
+    .bench-fill.muted {
+      background: #d1d5db;
+      color: #4b5563;
+    }
+    .bench-fill.warn {
+      background: #9ca3af;
+      color: #374151;
+    }
+    .bench-note {
+      font-size: 12px;
+      color: var(--less-text-muted);
+      margin-top: 12px;
+      line-height: 1.6;
+    }
+    .bench-stats-row { display:flex;gap:12px;margin-bottom:16px }
+    .bench-stats-row .met { flex:1;text-align:center;padding:12px 8px;border-radius:8px;background:var(--less-bg-surface);border:0.5px solid var(--less-border);transition:border-color 0.2s,box-shadow 0.2s }
+    .bench-stats-row .met:hover { border-color:rgba(83,74,183,0.3);box-shadow:0 2px 8px rgba(83,74,183,0.08) }
+    .bench-stats-row .met strong { display:block;font-size:20px;font-weight:600;color:var(--less-brand,#534AB7);margin-bottom:2px }
+    .bench-stats-row .met span { display:block;font-size:11px;color:var(--less-text-muted);text-transform:uppercase;letter-spacing:0.06em }
+    .bench-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .bench-stat {
+      border: 1px solid var(--less-border);
+      border-radius: var(--less-radius-md, 10px);
+      padding: 1rem 1.25rem;
+      background: var(--less-bg-surface);
+    }
+    .bench-stat h4 {
+      margin: 0 0 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--less-text-primary);
+    }
+    .bench-stat p {
       margin: 0;
       font-size: 12px;
       color: var(--less-text-secondary);
       line-height: 1.5;
     }
-    .mfa-card .lib-name {
+    .bench-stat .brand {
+      color: var(--less-brand, #534AB7);
       font-weight: 600;
-      color: var(--less-text-primary);
-    }
-    .mfa-live {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 16px;
-      margin-top: 16px;
-    }
-    .mfa-live-card {
-      background: #18181b;
-      border-radius: 10px;
-      padding: 1.25rem;
-      min-width: 0;
-      min-height: 200px;
-      display: flex;
-      flex-direction: column;
-    }
-    .mfa-live-card > :last-child {
-      flex: 1;
-    }
-    .mfa-live-card h5 {
-      margin: 0 0 10px;
-      font-size: 11px;
-      font-weight: 600;
-      color: #71717a;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
     }
 
-    @media (max-width: 760px) {
+    /* ── Quick start (vertical timeline) ── */
+    .qs {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding-left: 32px;
+      margin-bottom: 2rem;
+    }
+    .qs::before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--less-brand, #534AB7);
+    }
+    .qs-step-card {
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .qs-step-card::before {
+      content: '';
+      position: absolute;
+      left: -26px;
+      top: 8px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--less-brand, #534AB7);
+      box-shadow: 0 0 8px var(--less-brand-glow, rgba(83,74,183,0.35));
+    }
+    .qs-desc { font-size:12px;color:var(--less-text-muted);margin:4px 0 0;line-height:1.5 }
+    .qs-cta { text-align:center;margin-top:12px;padding-bottom:2rem }
+    .qs-cta a { display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 24px;border-radius:var(--less-radius-md,8px);font-size:14px;font-weight:600;text-decoration:none;color:var(--less-brand,#534AB7);background:transparent;border:1.5px solid var(--less-brand,#534AB7);transition:transform var(--less-duration-micro,150ms) var(--less-easing-default,ease-out),background 0.2s,color 0.2s }
+    .qs-cta a:hover { transform:translateY(-1px);background:var(--less-brand,#534AB7);color:#fff }
+
+    /* ── III. Site Footer — deep still water ── */
+    .site-footer {
+      background: linear-gradient(180deg, #0d0d1f 0%, #080816 100%);
+      border-top: none;
+      padding: 3rem 1.5rem 1.5rem;
+      /* Full viewport width — extend beyond parent container */
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+    }
+    .site-footer::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--less-brand, #534AB7) 30%, var(--less-brand-light, #6D5CE8) 70%, transparent);
+      opacity: 0.5;
+    }
+    .site-footer::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 80px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(83,74,183,0.12), transparent 70%);
+      pointer-events: none;
+    }
+    .site-footer-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .footer-brand code {
+      font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: #fff;
+    }
+    .footer-brand span {
+      font-size: 0.8125rem;
+      color: rgba(255,255,255,0.35);
+    }
+    .footer-sep {
+      border: none;
+      border-top: 0.5px solid rgba(255,255,255,0.06);
+      margin: 0 0 1.5rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1.2fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .footer-col-title {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      color: var(--less-brand, #534AB7);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+    }
+    .footer-col a {
+      display: block;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      padding: 0.2rem 0;
+      transition: color var(--less-duration-micro, 150ms) var(--less-easing-default, ease-out);
+    }
+    .footer-col a:hover {
+      color: rgba(255,255,255,0.85);
+    }
+    .footer-terminal {
+      background: rgba(83,74,183,0.08);
+      border: 0.5px solid rgba(83,74,183,0.2);
+      border-radius: var(--less-radius-md, 8px);
+      padding: 0.75rem 1rem;
+      font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
+      font-size: 0.6875rem;
+      line-height: 1.7;
+      color: #AFA9EC;
+      backdrop-filter: blur(8px);
+    }
+    .footer-terminal .prompt {
+      color: #7F77DD;
+    }
+    .footer-terminal .success {
+      color: #AFA9EC;
+    }
+    .footer-bottom {
+      border-top: 0.5px solid rgba(255,255,255,0.06);
+      padding-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-bottom span {
+      font-size: 0.6875rem;
+      color: rgba(255,255,255,0.3);
+    }
+    .footer-bottom a {
+      font-size: 0.6875rem;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+    }
+    .footer-bottom a:hover {
+      color: var(--less-brand, #534AB7);
+    }
+    @media (max-width: 768px) {
+      .site-footer {
+        padding: 2.5rem 1.5rem 1.25rem;
+      }
+    }
+    @media (max-width: 640px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+    }
+    @media (max-width: 480px) {
+      .site-footer {
+        padding: 2rem 1rem 1rem;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .footer-brand {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+    }
+
+    /* ── Focus visible ── */
+    :focus-visible {
+      outline: 2px solid var(--less-brand);
+      outline-offset: 2px;
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      .hero::before, .hero::after { animation: none; }
+      .card { transition: none; }
+      .site-footer a { transition: none; }
+      .hero-actions a { transition: none; }
+      .code-strip-arrow { animation: none; }
+      .bench-fill { transition: none; }
+    }
+
+    /* ── Responsive: Tablet (≤768px) ── */
+    @media (max-width: 768px) {
       .hero-inner {
-        padding: 2rem 1.25rem 1.5rem;
+        padding: 3rem 1.25rem 2rem;
+      }
+      .hero h1 {
+        font-size: clamp(2rem, 7vw, 3.5rem);
       }
       .code-strip {
-        padding: 1.5rem 0;
-      }
-      .code-strip-inner {
-        padding: 0 1.25rem;
+        padding: 2rem 0;
       }
       .code-compare {
         grid-template-columns: 1fr;
       }
       .cards {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
       }
-      .uses {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .use:nth-child(2) {
-        border-right: 0;
-      }
-      .demo-row {
-        grid-template-columns: 1fr;
+      .card-dominant {
+        grid-column: 1 / -1;
       }
       .qs {
-        grid-template-columns: 1fr;
-      }
-      .qs-arrow {
-        display: none;
-      }
-      .hero h1 {
-        font-size: clamp(2rem, 8vw, 2.6rem);
-      }
-      .stats {
-        gap: 16px;
-      }
-      .bench {
-        overflow-x: auto;
-      }
-      .bench table {
-        font-size: 11px;
-        min-width: 480px;
-      }
-      .bench th, .bench td {
-        padding: 8px 10px;
+        padding-left: 28px;
       }
       .sec {
-        padding: 1.5rem 0 0;
+        padding: 3rem 0 0;
       }
-      .sec-lbl {
-        margin: 0 1.25rem 10px;
+      /* 统一使用 padding，不用 margin */
+      .sec-lbl,
+      .sec-title {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+        margin-left: 0;
+        margin-right: 0;
       }
       .sec-bd {
         padding: 0 1.25rem;
       }
-      .doc-link {
-        padding: 0.75rem;
+      .bench-stats-row {
+        flex-direction: row;
+        gap: 10px;
       }
-      .mfa-grid {
-        grid-template-columns: 1fr;
-      }
-      .mfa-live {
+      .bench-grid {
         grid-template-columns: 1fr;
       }
     }
+
+    /* ── Responsive: Mobile (≤480px) ── */
     @media (max-width: 480px) {
+      .hero-inner {
+        padding: 2rem 1rem 1.5rem;
+      }
       .hero h1 {
-        font-size: 1.75rem;
-      }
-      .uses {
-        grid-template-columns: 1fr;
-      }
-      .use {
-        border-right: 0;
-        border-bottom: 0.5px solid var(--less-border);
-      }
-      .use:last-child {
-        border-bottom: 0;
+        font-size: clamp(1.5rem, 8vw, 2.5rem);
+        letter-spacing: -0.02em;
       }
       .hero-desc {
         font-size: 13px;
+        line-height: 1.6;
       }
-      .stat strong {
-        font-size: 14px;
+      .hero-actions {
+        flex-direction: column;
+      }
+      .hero-actions a {
+        justify-content: center;
+      }
+      .code-strip-inner {
+        padding: 0 1rem;
+      }
+      .code-pane {
+        padding: 10px 12px;
+      }
+      .code-pane code {
+        font-size: 10px !important;
+      }
+      .cards {
+        grid-template-columns: 1fr;
+      }
+      .qs {
+        padding-left: 24px;
+      }
+      .qs-step-card::before {
+        left: -22px;
+        width: 10px;
+        height: 10px;
+      }
+      .sec-lbl,
+      .sec-title {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      .sec-bd {
+        padding: 0 1rem;
+      }
+      .bench-lbl {
+        width: 60px;
+        font-size: 11px;
+      }
+      .bench-row {
+        gap: 8px;
+      }
+      .bench-stats-row {
+        flex-direction: column;
       }
     }
-  `;
+  `];
 
   override render() {
     return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }
 
-  /* ── counterState helper: used in render to create interactive counter ── */
-  private _counter(initial = 0) {
-    return html`
-      <div class="live-counter" @click="${this._onCounterClick}">
-        <button data-delta="-1">−</button>
-        <span class="val">${initial}</span>
-        <button data-delta="1">+</button>
-      </div>
-    `;
-  }
-
-  private _onCounterClick(e: Event) {
-    const btn = (e.target as HTMLElement).closest('[data-delta]') as HTMLElement | null;
-    if (!btn) return;
-    const delta = parseInt(btn.dataset.delta || '0');
-    const val = btn.parentElement!.querySelector('.val') as HTMLElement;
-    if (val) val.textContent = String(Number(val.textContent) + delta);
-  }
-
   private _renderZh() {
     return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" current-path="/" home>
+      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/" home>
+        <!-- ═══ I. Hero — 暗色沉浸式开场 ═══ -->
         <section class="hero">
           <div class="hero-inner">
             <div class="hero-lockup">
               <svg viewBox="0 0 140 140" width="36" height="36">
                 <g transform="translate(20,17)">
-                  <path
-                    d="M5 106L95 53 5 0"
-                    fill="none"
-                    stroke="#fff"
-                    stroke-width="8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
+                  <path d="M5 106L95 53 5 0" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
                   <circle cx="107" cy="53" r="5" fill="#fff" />
                 </g>
               </svg>
               <span>LessJS</span>
             </div>
-            <h1>html <em>先于</em> javascript 存在。</h1>
-            <p class="hero-desc">
-              SSG 产出的 Declarative Shadow DOM。Island 架构只对交互组件下发 JS。默认交付物是静态文件。
-            </p>
+            <h1>全栈框架 · <em>零 JS 首屏</em> · <em>多框架共存</em></h1>
+            <p class="hero-desc">DSD 原生渲染，浏览器零 JS 看到完整页面</p>
             <div class="hero-actions">
               <a class="hero-pri" href="/guide/getting-started">开始使用 →</a>
-              <a class="hero-sec" href="/guide/positioning">理解定位</a>
-            </div>
-            <less-term-demo></less-term-demo>
-            <div class="stats">
-              <div class="stat"><strong>v0.18.3</strong><span>最新版本</span></div>
-              <div class="stat"><strong>681</strong><span>测试通过</span></div>
-              <div class="stat"><strong>12</strong><span>个包</span></div>
-              <div class="stat"><strong>1</strong><span>运行时依赖 (core)</span></div>
+              <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style="flex-shrink:0"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                GitHub
+              </a>
             </div>
           </div>
         </section>
 
+        <!-- ═══ II. Code Strip — 代码对比 ═══ -->
         <div class="code-strip">
           <div class="code-strip-inner">
-            <div
-              style="font-size:11px;font-weight:600;color:var(--less-brand,#534AB7);text-transform:uppercase;letter-spacing:0.14em;margin-bottom:12px;"
-            >
-              你的组件 → SSG 输出
+            <div class="code-strip-header">
+              <span class="code-strip-label">你的组件</span>
+              <span class="code-strip-arrow">→</span>
+              <span class="code-strip-label">SSG 输出</span>
+              <span class="zero-badge">0 KB JS</span>
             </div>
             <div class="code-compare">
               <div class="code-pane">
@@ -866,7 +955,7 @@ export default class DocsHome extends LitElement {
               </div>
               <div class="code-pane">
                 <div class="code-bar">
-                  <i class="r"></i><i class="y"></i><i class="g"></i><span>SSG 输出 (DSD HTML)</span>
+                  <i class="r"></i><i class="y"></i><i class="g"></i><span>SSG 输出 (DSD)</span>
                 </div>
                 <less-code-block><pre><code>${CODE_DSD}</code></pre></less-code-block>
               </div>
@@ -874,341 +963,260 @@ export default class DocsHome extends LitElement {
           </div>
         </div>
 
-        <div class="sec">
-          <div class="sec-lbl">核心模型</div>
-          <div class="sec-bd">
-            <div class="cards">
-              <div class="card">
-                <div class="card-icon" style="background:#EEEDFE;color:#534AB7;">D</div>
-                <h3>DSD 渲染</h3>
-                <p>Declarative Shadow DOM 是标准 HTML。浏览器原生解析，首屏无需 JS 框架参与。</p>
-              </div>
-              <div class="card">
-                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">I</div>
-                <h3>Island 升级</h3>
-                <p>只有交互组件下发 JS。四种加载策略。静态内容零 JS 开销。</p>
-              </div>
-              <div class="card">
-                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">S</div>
-                <h3>静态部署</h3>
-                <p>
-                  构建产物为纯 HTML。部署到任意 CDN、S3、Cloudflare Pages、GitHub Pages，无需运行服务器。
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <hr class="turn-line">
 
-        <div class="sec">
-          <div class="sec-lbl">适用场景</div>
-          <div class="sec-bd">
-            <div class="uses">
-              <div class="use">
-                <div class="icon">📄</div>
-                <h3>文档站点</h3>
-                <p>本网站由 LessJS 构建</p>
-              </div>
-              <div class="use">
-                <div class="icon">✍️</div>
-                <h3>博客 &amp; 内容</h3>
-                <p>Markdown + frontmatter，自动 Sitemap</p>
-              </div>
-              <div class="use">
-                <div class="icon">🏢</div>
-                <h3>营销页面</h3>
-                <p>多语言 + i18n，自动导航</p>
-              </div>
-              <div class="use">
-                <div class="icon">⚡</div>
-                <h3>轻量 API</h3>
-                <p>Hono 路由，Deno / Workers 部署</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
+        <!-- ═══ III. Benchmark — 水平条形图 ═══ -->
         <div class="sec">
-          <div class="sec-lbl">对比</div>
+          <h2 class="sec-lbl">性能</h2>
+          <p class="sec-title">首屏 JS 体积——零就是零</p>
           <div class="sec-bd">
             <div class="bench">
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width:140px;">指标</th>
-                    <th style="width:100px;">LessJS</th>
-                    <th>Next.js (App)</th>
-                    <th>Astro</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>默认输出</td>
-                    <td class="win">静态 HTML</td>
-                    <td class="lose">需服务器</td>
-                    <td class="win">静态 HTML</td>
-                  </tr>
-                  <tr>
-                    <td>首屏 JS</td>
-                    <td class="win">0 KB</td>
-                    <td class="lose">~90 KB React</td>
-                    <td class="win">0 KB</td>
-                  </tr>
-                  <tr>
-                    <td>组件模型</td>
-                    <td class="win">Web 标准</td>
-                    <td>React</td>
-                    <td>任意框架</td>
-                  </tr>
-                  <tr>
-                    <td>服务端运行时</td>
-                    <td class="win">Deno、Node、Edge</td>
-                    <td>仅 Node</td>
-                    <td>仅 Node</td>
-                  </tr>
-                  <tr>
-                    <td>SSG 渲染</td>
-                    <td class="win">Declarative Shadow DOM</td>
-                    <td>HTML + JSON (RSC)</td>
-                    <td>HTML (无 DSD)</td>
-                  </tr>
-                  <tr>
-                    <td>交互模型</td>
-                    <td class="win">Island 升级</td>
-                    <td class="lose">整页 Hydration</td>
-                    <td class="win">Island</td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="bench-foot">
-                LessJS 理念上最接近 Astro，但使用 Lit + DSD 作为组件模型而非元框架模式。关键差异是原生 DSD
-                —— 内容在 JS 运行前就是结构化 HTML。
+              <div class="bench-row">
+                <div class="bench-lbl">LessJS</div>
+                <div class="bench-track"><div class="bench-fill brand">0 KB</div></div>
               </div>
+              <div class="bench-row">
+                <div class="bench-lbl">Astro</div>
+                <div class="bench-track"><div class="bench-fill brand" style="min-width:56px;">0 KB</div></div>
+              </div>
+              <div class="bench-row">
+                <div class="bench-lbl">Fresh</div>
+                <div class="bench-track"><div class="bench-fill muted" style="width:25%;">~23 KB</div></div>
+              </div>
+              <div class="bench-row">
+                <div class="bench-lbl">Next.js</div>
+                <div class="bench-track"><div class="bench-fill warn" style="width:100%;">~90 KB</div></div>
+              </div>
+              
+            <div class="bench-stats-row">
+              <div class="met"><strong>v0.19.0</strong><span>latest</span></div>
+              <div class="met"><strong>681</strong><span>tests</span></div>
+              <div class="met"><strong>13</strong><span>packages</span></div>
+              <div class="met"><strong>1</strong><span>runtime</span></div>
+            </div>
+<div class="bench-grid">
+                <div class="bench-stat">
+                  <h4><span class="brand">DSD 一等公民</span> vs Preact-only</h4>
+                  <p>浏览器原生解析 Shadow DOM，其他框架只能模拟</p>
+                </div>
+                <div class="bench-stat">
+                  <h4><span class="brand">内建 Registry Hub</span></h4>
+                  <p>组件发现 + 兼容性验证 + 一键安装，竞品均无</p>
+                </div>
+              </div>
+              <p class="bench-note">Island-only JS：负载随组件复杂度增长，不随页面数量增长。零 JS 首屏是浏览器原生能力，无法通过工程优化追平。</p>
             </div>
           </div>
         </div>
 
-        <div class="sec">
-          <div class="sec-lbl">包架构</div>
-          <div class="sec-bd">
-            <div class="arch">
-              <svg viewBox="0 0 600 74" fill="none">
-                <rect
-                  x="230"
-                  y="2"
-                  width="140"
-                  height="22"
-                  rx="4"
-                  fill="#EEEDFE"
-                  stroke="#CECBF6"
-                  stroke-width="0.5"
-                />
-                <text x="300" y="17" text-anchor="middle" fill="#534AB7" font-size="11" font-weight="500">
-                  @lessjs/app (统一入口)
-                </text>
-                <path d="M300 24 L300 30 L150 30 L150 38" stroke="#bbb" stroke-width="0.5" />
-                <path d="M300 24 L300 30 L300 38" stroke="#bbb" stroke-width="0.5" />
-                <path d="M300 24 L300 30 L450 30 L450 38" stroke="#bbb" stroke-width="0.5" />
-                <rect
-                  x="90"
-                  y="39"
-                  width="120"
-                  height="22"
-                  rx="4"
-                  fill="#E6F1FB"
-                  stroke="#B5D4F4"
-                  stroke-width="0.5"
-                />
-                <text x="150" y="54" text-anchor="middle" fill="#185FA5" font-size="11" font-weight="500">
-                  adapter-vite
-                </text>
-                <rect
-                  x="230"
-                  y="39"
-                  width="140"
-                  height="22"
-                  rx="4"
-                  fill="#FAEEDA"
-                  stroke="#FAC775"
-                  stroke-width="0.5"
-                />
-                <text x="300" y="54" text-anchor="middle" fill="#854F0B" font-size="11" font-weight="500">
-                  content + i18n
-                </text>
-                <rect
-                  x="390"
-                  y="39"
-                  width="120"
-                  height="22"
-                  rx="4"
-                  fill="#FAECE7"
-                  stroke="#F5C4B3"
-                  stroke-width="0.5"
-                />
-                <text x="450" y="54" text-anchor="middle" fill="#993C1D" font-size="11" font-weight="500">
-                  adapter-lit / ui
-                </text>
-                <text x="300" y="70" text-anchor="middle" fill="#5F5E5A" font-size="10">
-                  @lessjs/core — 纯运行时，1 个依赖 (parse5)
-                </text>
-              </svg>
-            </div>
-          </div>
-        </div>
 
+        <!-- ═══ IV. Multi-Framework — three independent showcases ═══ -->
         <div class="sec">
-          <div class="sec-lbl">多框架共存</div>
+          <h2 class="sec-lbl">多框架</h2>
+          <p class="sec-title">任意框架，同一个 island</p>
           <div class="sec-bd">
-            <div class="mfa">
-              <div class="mfa-grid">
-                <div class="mfa-card">
-                  <span class="mfa-tag lit">Lit Adapter</span>
-                  <h4>Shoelace</h4>
-                  <p>
-                    <span class="lib-name">Shoelace</span> — 80+ 精美 Lit 组件，企业级 Web Components 库
-                  </p>
+            <!-- Three independent showcase cards -->
+            <div class="multi-fw-grid">
+              <!-- Lit showcase: Shoelace -->
+              <div class="mfw-card">
+                <div class="mfw-header">
+                  <span class="mfw-tag" style="background:#e6f1fb;color:#185fa5">Lit</span>
+                  <span class="mfw-label">Shoelace</span>
                 </div>
-                <div class="mfa-card">
-                  <span class="mfa-tag react">React Adapter</span>
-                  <h4>React 19</h4>
-                  <p>
-                    <span class="lib-name">React</span> — ReactDOMServer → Declarative Shadow DOM，零配置
-                    SSR 渲染
-                  </p>
-                </div>
-                <div class="mfa-card">
-                  <span class="mfa-tag vanilla">Vanilla Adapter</span>
-                  <h4>Media Chrome</h4>
-                  <p><span class="lib-name">Media Chrome</span> — 纯原生 Web Components 媒体播放器控件</p>
-                </div>
-              </div>
-              <div class="mfa-live">
-                <div class="mfa-live-card">
-                  <h5>Shoelace · Lit</h5>
+                <div class="mfw-demo">
                   <shoelace-showcase></shoelace-showcase>
                 </div>
-                <div class="mfa-live-card">
-                  <h5>React 19 · React Adapter</h5>
+                <div class="mfw-code">
+                  <less-code-block><pre><code>&lt;sl-button variant="primary"&gt;Click&lt;/sl-button&gt;</code></pre></less-code-block>
+                </div>
+                <div class="mfw-footer">
+                  <span>@lessjs/adapter-lit</span>
+                </div>
+              </div>
+
+              <!-- React showcase -->
+              <div class="mfw-card">
+                <div class="mfw-header">
+                  <span class="mfw-tag" style="background:#e1f0ff;color:#0d6efd">React</span>
+                  <span class="mfw-label">React 19</span>
+                </div>
+                <div class="mfw-demo">
                   <react-showcase></react-showcase>
                 </div>
-                <div class="mfa-live-card">
-                  <h5>Media Chrome · Vanilla</h5>
+                <div class="mfw-code">
+                  <less-code-block><pre><code>&lt;Hello name="world" /&gt;</code></pre></less-code-block>
+                </div>
+                <div class="mfw-footer">
+                  <span>@lessjs/adapter-react</span>
+                </div>
+              </div>
+
+              <!-- Vanilla showcase: Media Chrome -->
+              <div class="mfw-card">
+                <div class="mfw-header">
+                  <span class="mfw-tag" style="background:#e1f5ee;color:#0f6e56">Vanilla</span>
+                  <span class="mfw-label">Media Chrome</span>
+                </div>
+                <div class="mfw-demo">
                   <media-chrome-showcase></media-chrome-showcase>
                 </div>
+                <div class="mfw-code">
+                  <less-code-block><pre><code>&lt;media-controller&gt;...&lt;/media-controller&gt;</code></pre></less-code-block>
+                </div>
+                <div class="mfw-footer">
+                  <span>@lessjs/adapter-vanilla</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
+
+        
+        <hr class="turn-glow">
+
+
+        <!-- ═══ V. Bento Grid — 三支柱 ═══ -->
         <div class="sec">
-          <div class="sec-lbl">实际效果</div>
+          <h2 class="sec-lbl">三支柱</h2>
+          <p class="sec-title">框架 · 引擎 · Hub——一个产品，三重能力</p>
           <div class="sec-bd">
-            <div class="demo-card combined">
-              <div class="demo-row">
-                <div class="demo-half">
-                  <h4>交互式 Counter — 点击按钮</h4>
-                  ${this._counter(0)}
-                  <div class="note">以原生 Custom Element 运行。零框架 JS 加载。</div>
+            <div class="cards">
+              <div class="card card-dominant">
+                <div class="card-icon" style="background:var(--less-brand-subtle, #EEEDFE);color:var(--less-brand, #534AB7);">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
                 </div>
-                <div class="demo-half">
-                  <h4>浏览器解析的内容</h4>
-                  <pre><code>${COUNTER_RAW}</code></pre>
-                  <div class="note">DSD 模板由浏览器原生解析 — 无 hydration 开销。</div>
+                <h3>WC 渲染引擎</h3>
+                <p>DSD 零 JS 首屏——浏览器原生解析 Declarative Shadow DOM，无需任何运行时。Lit / React / Vanilla 三种适配器共享同一渲染管线，同一页面三种框架组件协同运行。</p>
+                <div class="card-pills">
+                  <span class="card-pill">DSD</span>
+                  <span class="card-pill">Island</span>
+                  <span class="card-pill">Multi-adapter</span>
                 </div>
               </div>
-              <div class="bundle">
-                <h4>首屏 JS 对比</h4>
-                <div class="bar-row">
-                  <div class="bar-lbl">LessJS</div>
-                  <div class="bar-track"><div class="bar-fill g">0 kb</div></div>
+              <div class="card">
+                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 3v14M13 3v14M3 10h14"/></svg>
                 </div>
-                <div class="bar-row">
-                  <div class="bar-lbl">Next.js</div>
-                  <div class="bar-track"><div class="bar-fill r">~90 kb react</div></div>
+                <h3>全栈框架</h3>
+                <p>文件约定路由 + Hono API Route + Serverless 一键部署。SSG / ISR / SSR 同一引擎，一套代码覆盖静态与动态场景。</p>
+                <div class="card-meta"><span>file routing</span><span>hono</span><span>serverless</span></div>
+              </div>
+              <div class="card">
+                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 14l4-4 3 3 5-7"/><rect x="2" y="2" width="16" height="16" rx="3"/></svg>
                 </div>
-                <div class="bundle-note">Island-only JS: 负载随组件复杂度增长，不随页面数量增长。</div>
+                <h3>Registry Hub</h3>
+                <p>Web Component 发现、兼容性验证、一键安装。CEM 自动检测 + 手动声明双通道，less add 零配置集成。</p>
+                <div class="card-meta"><span>discovery</span><span>validation</span><span>less add</span></div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="sec">
-          <div class="sec-lbl">快速开始</div>
+        <!-- ═══ VI. Quick Start — 纵向时间轴 ═══ -->
+        <div class="sec sec-qs-last">
+          <h2 class="sec-lbl">快速开始</h2>
+          <p class="sec-title">三步上手，零摩擦</p>
           <div class="sec-bd">
             <div class="qs">
-              <div class="qs-card">
-                <div class="qs-step">1. 创建</div><code>deno run -A jsr:@lessjs/create my-app</code>
+              <div class="qs-step-card">
+                <less-step-card step="1" label="创建"><code>deno run -A jsr:@lessjs/create my-app</code></less-step-card>
+                <p class="qs-desc">脚手架包含：路由 + SSG + Island 示例</p>
               </div>
-              <div class="qs-arrow">→</div>
-              <div class="qs-card">
-                <div class="qs-step">2. 开发</div><code>cd my-app &amp;&amp; deno task dev</code>
+              <div class="qs-step-card">
+                <less-step-card step="2" label="开发"><code>cd my-app &amp;&amp; deno task dev</code></less-step-card>
+                <p class="qs-desc">热更新 + DSD 实时预览 → localhost:5173</p>
               </div>
-              <div class="qs-arrow">→</div>
-              <div class="qs-card">
-                <div class="qs-step">3. 构建</div><code>deno task build → dist/</code>
+              <div class="qs-step-card">
+                <less-step-card step="3" label="构建"><code>deno task build → dist/</code></less-step-card>
+                <p class="qs-desc">纯静态文件，部署到任何 Serverless 平台</p>
               </div>
+            </div>
+            <div class="qs-cta">
+              <a href="/guide/deployment">部署项目 →</a>
             </div>
           </div>
         </div>
-
-        <div class="cta">
-          <div class="cta-inner">
-            <code>deno run -A jsr:@lessjs/create my-app</code>
-            <p>需要 Deno 2.7+ — macOS / Linux / Windows — MIT 许可</p>
+        <!-- ═══ Footer — 暖灰安静谢幕 ═══ -->
+        <footer class="site-footer">
+          <div class="site-footer-inner">
+            <div class="footer-brand">
+              <code>&lt;less/&gt;</code>
+              <span>— 重量更轻，能力更强的 Web</span>
+            </div>
+            <hr class="footer-sep">
+            <div class="footer-grid">
+              <div class="footer-col">
+                <div class="footer-col-title">框架</div>
+                <a href="/guide/getting-started">快速开始</a>
+                <a href="/guide/routing">路由</a>
+                <a href="/guide/ssg">SSG 渲染</a>
+              </div>
+              <div class="footer-col">
+                <div class="footer-col-title">引擎</div>
+                <a href="/engine/architecture">架构</a>
+                <a href="/engine/dsd">DSD 渲染</a>
+                <a href="/engine/islands">岛屿升级</a>
+              </div>
+              <div class="footer-col">
+                <div class="footer-col-title">社区</div>
+                <a href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">GitHub</a>
+                <a href="/blog">博客</a>
+                <a href="/registry">组件库</a>
+              </div>
+              <div class="footer-terminal">
+                <span class="prompt">$</span> npx create-less<br>
+                <span class="success">  ✓ 已生成脚手架</span><br>
+                <span class="success">  → npm run dev</span>
+              </div>
+            </div>
+            <div class="footer-bottom">
+              <span>MIT License · Made with less</span>
+              <a href="/guide/getting-started">探索文档 →</a>
+            </div>
           </div>
-        </div>
+        </footer>
       </less-layout>
     `;
   }
 
   private _renderEn() {
     return html`
-      <less-layout locale="${this.locale || 'en'}" .locales="${[
-        'en',
-        'zh',
-      ]}" current-path="/en/" home>
+      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/" home>
+        <!-- ═══ I. Hero — dark immersive opening ═══ -->
         <section class="hero">
           <div class="hero-inner">
             <div class="hero-lockup">
               <svg viewBox="0 0 140 140" width="36" height="36">
                 <g transform="translate(20,17)">
-                  <path
-                    d="M5 106L95 53 5 0"
-                    fill="none"
-                    stroke="#fff"
-                    stroke-width="8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
+                  <path d="M5 106L95 53 5 0" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
                   <circle cx="107" cy="53" r="5" fill="#fff" />
                 </g>
               </svg>
               <span>LessJS</span>
             </div>
-            <h1>html <em>before</em> javascript.</h1>
-            <p class="hero-desc">
-              SSG-rendered declarative shadow dom. Island-only js. Hono api routes. Everything compiles to
-              static html and ships to a cdn.
-            </p>
+            <h1>Full-stack · <em>Zero-JS First Paint</em> · <em>Multi-framework</em></h1>
+            <p class="hero-desc">DSD 原生渲染，浏览器零 JS 看到完整页面</p>
             <div class="hero-actions">
-              <a class="hero-pri" href="/guide/getting-started">get started →</a>
-              <a class="hero-sec" href="/guide/positioning">why lessjs</a>
-            </div>
-            <less-term-demo></less-term-demo>
-            <div class="stats">
-              <div class="stat"><strong>v0.18.3</strong><span>latest release</span></div>
-              <div class="stat"><strong>681</strong><span>tests passing</span></div>
-              <div class="stat"><strong>12</strong><span>packages</span></div>
-              <div class="stat"><strong>1</strong><span>runtime dep (core)</span></div>
+              <a class="hero-pri" href="/guide/getting-started">Get started →</a>
+              <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style="flex-shrink:0"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                GitHub
+              </a>
             </div>
           </div>
         </section>
 
+        <!-- ═══ II. Code Strip — code comparison ═══ -->
         <div class="code-strip">
           <div class="code-strip-inner">
-            <div
-              style="font-size:11px;font-weight:600;color:var(--less-brand,#534AB7);text-transform:uppercase;letter-spacing:0.14em;margin-bottom:12px;"
-            >
-              your component → ssg output
+            <div class="code-strip-header">
+              <span class="code-strip-label">your component</span>
+              <span class="code-strip-arrow">→</span>
+              <span class="code-strip-label">SSG output</span>
+              <span class="zero-badge">0 KB JS</span>
             </div>
             <div class="code-compare">
               <div class="code-pane">
@@ -1219,7 +1227,7 @@ export default class DocsHome extends LitElement {
               </div>
               <div class="code-pane">
                 <div class="code-bar">
-                  <i class="r"></i><i class="y"></i><i class="g"></i><span>ssg output (dsd html)</span>
+                  <i class="r"></i><i class="y"></i><i class="g"></i><span>SSG output (DSD)</span>
                 </div>
                 <less-code-block><pre><code>${CODE_DSD}</code></pre></less-code-block>
               </div>
@@ -1227,300 +1235,221 @@ export default class DocsHome extends LitElement {
           </div>
         </div>
 
-        <div class="sec">
-          <div class="sec-lbl">core model</div>
-          <div class="sec-bd">
-            <div class="cards">
-              <div class="card">
-                <div class="card-icon" style="background:#EEEDFE;color:#534AB7;">D</div>
-                <h3>dsd rendering</h3>
-                <p>
-                  Declarative shadow dom is standard html. Browsers parse it natively — no js framework
-                  needed for first paint.
-                </p>
-              </div>
-              <div class="card">
-                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">I</div>
-                <h3>island upgrade</h3>
-                <p>
-                  Only interactive components ship js. Four loading strategies. Static content is zero-js.
-                </p>
-              </div>
-              <div class="card">
-                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">S</div>
-                <h3>static deploy</h3>
-                <p>
-                  Build emits plain html. Deploy to any cdn, s3, cloudflare pages, github pages — no
-                  server to run.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <hr class="turn-line">
 
-        <div class="sec">
-          <div class="sec-lbl">built for</div>
-          <div class="sec-bd">
-            <div class="uses">
-              <div class="use">
-                <div class="icon">📄</div>
-                <h3>documentation sites</h3>
-                <p>this website runs on lessjs</p>
-              </div>
-              <div class="use">
-                <div class="icon">✍️</div>
-                <h3>blogs &amp; content</h3>
-                <p>markdown + frontmatter, auto sitemap</p>
-              </div>
-              <div class="use">
-                <div class="icon">🏢</div>
-                <h3>marketing pages</h3>
-                <p>multi-language with i18n, auto nav</p>
-              </div>
-              <div class="use">
-                <div class="icon">⚡</div>
-                <h3>lightweight apis</h3>
-                <p>hono routes on deno / workers</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
+        <!-- ═══ III. Benchmark — horizontal bars ═══ -->
         <div class="sec">
-          <div class="sec-lbl">how it compares</div>
+          <h2 class="sec-lbl">performance</h2>
+          <p class="sec-title">JS at first paint — zero means zero</p>
           <div class="sec-bd">
             <div class="bench">
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width:140px;">metric</th>
-                    <th style="width:100px;">lessjs</th>
-                    <th>next.js (app)</th>
-                    <th>astro</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>default output</td>
-                    <td class="win">static html</td>
-                    <td class="lose">server required</td>
-                    <td class="win">static html</td>
-                  </tr>
-                  <tr>
-                    <td>js at first paint</td>
-                    <td class="win">0 kb</td>
-                    <td class="lose">~90 kb react</td>
-                    <td class="win">0 kb</td>
-                  </tr>
-                  <tr>
-                    <td>component model</td>
-                    <td class="win">web standards</td>
-                    <td>react</td>
-                    <td>any framework</td>
-                  </tr>
-                  <tr>
-                    <td>server runtime</td>
-                    <td class="win">deno, node, edge</td>
-                    <td>node only</td>
-                    <td>node only</td>
-                  </tr>
-                  <tr>
-                    <td>ssg rendering</td>
-                    <td class="win">declarative shadow dom</td>
-                    <td>html + json (rsc)</td>
-                    <td>html (no dsd)</td>
-                  </tr>
-                  <tr>
-                    <td>interactive model</td>
-                    <td class="win">island upgrade</td>
-                    <td class="lose">page hydration</td>
-                    <td class="win">island</td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="bench-foot">
-                lessjs is closest to astro in philosophy but uses lit + dsd for components. the key
-                differentiator is native dsd — content is structured html before any js runs.
+              <div class="bench-row">
+                <div class="bench-lbl">LessJS</div>
+                <div class="bench-track"><div class="bench-fill brand">0 KB</div></div>
               </div>
+              <div class="bench-row">
+                <div class="bench-lbl">Astro</div>
+                <div class="bench-track"><div class="bench-fill brand" style="min-width:56px;">0 KB</div></div>
+              </div>
+              <div class="bench-row">
+                <div class="bench-lbl">Fresh</div>
+                <div class="bench-track"><div class="bench-fill muted" style="width:25%;">~23 KB</div></div>
+              </div>
+              <div class="bench-row">
+                <div class="bench-lbl">Next.js</div>
+                <div class="bench-track"><div class="bench-fill warn" style="width:100%;">~90 KB</div></div>
+              </div>
+              
+            <div class="bench-stats-row">
+              <div class="met"><strong>v0.19.0</strong><span>latest</span></div>
+              <div class="met"><strong>681</strong><span>tests</span></div>
+              <div class="met"><strong>13</strong><span>packages</span></div>
+              <div class="met"><strong>1</strong><span>runtime</span></div>
+            </div>
+<div class="bench-grid">
+                <div class="bench-stat">
+                  <h4><span class="brand">DSD first-class</span> vs Preact-only</h4>
+                  <p>Browser-native Shadow DOM parsing — other frameworks can only simulate</p>
+                </div>
+                <div class="bench-stat">
+                  <h4><span class="brand">Built-in Registry Hub</span></h4>
+                  <p>Component discovery + compat validation + one-click install — competitors have none</p>
+                </div>
+              </div>
+              <p class="bench-note">Island-only JS: payload scales with component complexity, not page count. Zero-JS first paint is a browser-native capability — no engineering optimization can match it.</p>
             </div>
           </div>
         </div>
 
-        <div class="sec">
-          <div class="sec-lbl">package architecture</div>
-          <div class="sec-bd">
-            <div class="arch">
-              <svg viewBox="0 0 600 74" fill="none">
-                <rect
-                  x="230"
-                  y="2"
-                  width="140"
-                  height="22"
-                  rx="4"
-                  fill="#EEEDFE"
-                  stroke="#CECBF6"
-                  stroke-width="0.5"
-                />
-                <text x="300" y="17" text-anchor="middle" fill="#534AB7" font-size="11" font-weight="500">
-                  @lessjs/app (umbrella)
-                </text>
-                <path d="M300 24 L300 30 L150 30 L150 38" stroke="#bbb" stroke-width="0.5" />
-                <path d="M300 24 L300 30 L300 38" stroke="#bbb" stroke-width="0.5" />
-                <path d="M300 24 L300 30 L450 30 L450 38" stroke="#bbb" stroke-width="0.5" />
-                <rect
-                  x="90"
-                  y="39"
-                  width="120"
-                  height="22"
-                  rx="4"
-                  fill="#E6F1FB"
-                  stroke="#B5D4F4"
-                  stroke-width="0.5"
-                />
-                <text x="150" y="54" text-anchor="middle" fill="#185FA5" font-size="11" font-weight="500">
-                  adapter-vite
-                </text>
-                <rect
-                  x="230"
-                  y="39"
-                  width="140"
-                  height="22"
-                  rx="4"
-                  fill="#FAEEDA"
-                  stroke="#FAC775"
-                  stroke-width="0.5"
-                />
-                <text x="300" y="54" text-anchor="middle" fill="#854F0B" font-size="11" font-weight="500">
-                  content + i18n
-                </text>
-                <rect
-                  x="390"
-                  y="39"
-                  width="120"
-                  height="22"
-                  rx="4"
-                  fill="#FAECE7"
-                  stroke="#F5C4B3"
-                  stroke-width="0.5"
-                />
-                <text x="450" y="54" text-anchor="middle" fill="#993C1D" font-size="11" font-weight="500">
-                  adapter-lit / ui
-                </text>
-                <text x="300" y="70" text-anchor="middle" fill="#5F5E5A" font-size="10">
-                  @lessjs/core — pure runtime, 1 dep (parse5)
-                </text>
-              </svg>
-            </div>
-          </div>
-        </div>
 
+        <!-- ═══ IV. Multi-framework — three independent showcases ═══ -->
         <div class="sec">
-          <div class="sec-lbl">multi-framework coexistence</div>
+          <h2 class="sec-lbl">multi-framework</h2>
+          <p class="sec-title">Any framework, same island</p>
           <div class="sec-bd">
-            <div class="mfa">
-              <div class="mfa-grid">
-                <div class="mfa-card">
-                  <span class="mfa-tag lit">Lit Adapter</span>
-                  <h4>Shoelace</h4>
-                  <p>
-                    <span class="lib-name">Shoelace</span> — 80+ polished Lit components, enterprise-grade
-                    Web Components
-                  </p>
+            <!-- Three independent showcase cards -->
+            <div class="multi-fw-grid">
+              <!-- Lit showcase: Shoelace -->
+              <div class="mfw-card">
+                <div class="mfw-header">
+                  <span class="mfw-tag" style="background:#e6f1fb;color:#185fa5">Lit</span>
+                  <span class="mfw-label">Shoelace</span>
                 </div>
-                <div class="mfa-card">
-                  <span class="mfa-tag react">React Adapter</span>
-                  <h4>React 19</h4>
-                  <p>
-                    <span class="lib-name">React</span> — ReactDOMServer → Declarative Shadow DOM,
-                    zero-config SSR rendering
-                  </p>
-                </div>
-                <div class="mfa-card">
-                  <span class="mfa-tag vanilla">Vanilla Adapter</span>
-                  <h4>Media Chrome</h4>
-                  <p>
-                    <span class="lib-name">Media Chrome</span> — pure vanilla Web Components for media
-                    player controls
-                  </p>
-                </div>
-              </div>
-              <div class="mfa-live">
-                <div class="mfa-live-card">
-                  <h5>Shoelace · Lit</h5>
+                <div class="mfw-demo">
                   <shoelace-showcase></shoelace-showcase>
                 </div>
-                <div class="mfa-live-card">
-                  <h5>React 19 · React Adapter</h5>
+                <div class="mfw-code">
+                  <less-code-block><pre><code>&lt;sl-button variant="primary"&gt;Click&lt;/sl-button&gt;</code></pre></less-code-block>
+                </div>
+                <div class="mfw-footer">
+                  <span>@lessjs/adapter-lit</span>
+                </div>
+              </div>
+
+              <!-- React showcase -->
+              <div class="mfw-card">
+                <div class="mfw-header">
+                  <span class="mfw-tag" style="background:#e1f0ff;color:#0d6efd">React</span>
+                  <span class="mfw-label">React 19</span>
+                </div>
+                <div class="mfw-demo">
                   <react-showcase></react-showcase>
                 </div>
-                <div class="mfa-live-card">
-                  <h5>Media Chrome · Vanilla</h5>
+                <div class="mfw-code">
+                  <less-code-block><pre><code>&lt;Hello name="world" /&gt;</code></pre></less-code-block>
+                </div>
+                <div class="mfw-footer">
+                  <span>@lessjs/adapter-react</span>
+                </div>
+              </div>
+
+              <!-- Vanilla showcase: Media Chrome -->
+              <div class="mfw-card">
+                <div class="mfw-header">
+                  <span class="mfw-tag" style="background:#e1f5ee;color:#0f6e56">Vanilla</span>
+                  <span class="mfw-label">Media Chrome</span>
+                </div>
+                <div class="mfw-demo">
                   <media-chrome-showcase></media-chrome-showcase>
                 </div>
+                <div class="mfw-code">
+                  <less-code-block><pre><code>&lt;media-controller&gt;...&lt;/media-controller&gt;</code></pre></less-code-block>
+                </div>
+                <div class="mfw-footer">
+                  <span>@lessjs/adapter-vanilla</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
+
+        
+        <hr class="turn-glow">
+
+
+        <!-- ═══ V. Bento Grid — three pillars ═══ -->
         <div class="sec">
-          <div class="sec-lbl">live demo</div>
+          <h2 class="sec-lbl">three pillars</h2>
+          <p class="sec-title">Framework · Engine · Hub — one product, three capabilities</p>
           <div class="sec-bd">
-            <div class="demo-card combined">
-              <div class="demo-row">
-                <div class="demo-half">
-                  <h4>interactive counter — click the buttons</h4>
-                  ${this._counter(0)}
-                  <div class="note">runs as native custom element. zero framework js loaded.</div>
+            <div class="cards">
+              <div class="card card-dominant">
+                <div class="card-icon" style="background:var(--less-brand-subtle, #EEEDFE);color:var(--less-brand, #534AB7);">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
                 </div>
-                <div class="demo-half">
-                  <h4>what the browser parses</h4>
-                  <pre><code>${COUNTER_RAW}</code></pre>
-                  <div class="note">dsd template parsed natively — no hydration cost.</div>
+                <h3>WC Rendering Engine</h3>
+                <p>DSD zero-JS first paint — browser-native Declarative Shadow DOM parsing with zero runtime. Lit, React and Vanilla adapters share one pipeline — three frameworks coexist on the same page.</p>
+                <div class="card-pills">
+                  <span class="card-pill">DSD</span>
+                  <span class="card-pill">Island</span>
+                  <span class="card-pill">Multi-adapter</span>
                 </div>
               </div>
-              <div class="bundle">
-                <h4>js at first paint</h4>
-                <div class="bar-row">
-                  <div class="bar-lbl">LessJS</div>
-                  <div class="bar-track"><div class="bar-fill g">0 kb</div></div>
+              <div class="card">
+                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 3v14M13 3v14M3 10h14"/></svg>
                 </div>
-                <div class="bar-row">
-                  <div class="bar-lbl">Next.js</div>
-                  <div class="bar-track"><div class="bar-fill r">~90 kb react</div></div>
+                <h3>Full-stack Framework</h3>
+                <p>File-convention routing + Hono API routes + serverless one-click deploy. SSG / ISR / SSR — same engine, one codebase for static and dynamic.</p>
+                <div class="card-meta"><span>file routing</span><span>hono</span><span>serverless</span></div>
+              </div>
+              <div class="card">
+                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 14l4-4 3 3 5-7"/><rect x="2" y="2" width="16" height="16" rx="3"/></svg>
                 </div>
-                <div class="bundle-note">
-                  island-only js: payload scales with component complexity, not page count.
-                </div>
+                <h3>Registry Hub</h3>
+                <p>Web Component discovery, compat validation, one-click install. CEM auto-detect + manual declare dual channel, zero-config less add integration.</p>
+                <div class="card-meta"><span>discovery</span><span>validation</span><span>less add</span></div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="sec">
-          <div class="sec-lbl">quick start</div>
+        <!-- ═══ VI. Quick Start — vertical timeline ═══ -->
+        <div class="sec sec-qs-last">
+          <h2 class="sec-lbl">quick start</h2>
+          <p class="sec-title">Three steps, zero friction</p>
           <div class="sec-bd">
             <div class="qs">
-              <div class="qs-card">
-                <div class="qs-step">1. scaffold</div><code>deno run -A jsr:@lessjs/create my-app</code>
+              <div class="qs-step-card">
+                <less-step-card step="1" label="scaffold"><code>deno run -A jsr:@lessjs/create my-app</code></less-step-card>
+                <p class="qs-desc">Includes: routing + SSG + island example</p>
               </div>
-              <div class="qs-arrow">→</div>
-              <div class="qs-card">
-                <div class="qs-step">2. develop</div><code>cd my-app &amp;&amp; deno task dev</code>
+              <div class="qs-step-card">
+                <less-step-card step="2" label="develop"><code>cd my-app &amp;&amp; deno task dev</code></less-step-card>
+                <p class="qs-desc">HMR + DSD live preview → localhost:5173</p>
               </div>
-              <div class="qs-arrow">→</div>
-              <div class="qs-card">
-                <div class="qs-step">3. build</div><code>deno task build → dist/</code>
+              <div class="qs-step-card">
+                <less-step-card step="3" label="build"><code>deno task build → dist/</code></less-step-card>
+                <p class="qs-desc">Pure static files, deploy to any serverless platform</p>
               </div>
+            </div>
+            <div class="qs-cta">
+              <a href="/guide/deployment">Deploy now →</a>
             </div>
           </div>
         </div>
-
-        <div class="cta">
-          <div class="cta-inner">
-            <code>deno run -A jsr:@lessjs/create my-app</code>
-            <p>requires deno 2.7+ — macOS / linux / windows — mit license</p>
+<!-- ═══ Footer — warm-gray quiet landing ═══ -->
+        <footer class="site-footer">
+          <div class="site-footer-inner">
+            <div class="footer-brand">
+              <code>&lt;less/&gt;</code>
+              <span>— Web that weighs less, does more</span>
+            </div>
+            <hr class="footer-sep">
+            <div class="footer-grid">
+              <div class="footer-col">
+                <div class="footer-col-title">Framework</div>
+                <a href="/en/guide/getting-started">Quick start</a>
+                <a href="/en/guide/routing">Routing</a>
+                <a href="/en/guide/ssg">SSG rendering</a>
+              </div>
+              <div class="footer-col">
+                <div class="footer-col-title">Engine</div>
+                <a href="/en/engine/architecture">Architecture</a>
+                <a href="/en/engine/dsd">DSD rendering</a>
+                <a href="/en/engine/islands">Island upgrade</a>
+              </div>
+              <div class="footer-col">
+                <div class="footer-col-title">Community</div>
+                <a href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">GitHub</a>
+                <a href="/en/blog">Blog</a>
+                <a href="/registry">Registry</a>
+              </div>
+              <div class="footer-terminal">
+                <span class="prompt">$</span> npx create-less<br>
+                <span class="success">  ✓ scaffolded</span><br>
+                <span class="success">  → npm run dev</span>
+              </div>
+            </div>
+            <div class="footer-bottom">
+              <span>MIT License · Made with less</span>
+              <a href="/en/guide/getting-started">Explore docs →</a>
+            </div>
           </div>
-        </div>
+        </footer>
       </less-layout>
     `;
   }

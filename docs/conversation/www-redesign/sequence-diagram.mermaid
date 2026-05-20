@@ -1,0 +1,30 @@
+sequenceDiagram
+    participant U as 用户
+    participant DH as DocsHome
+    participant SP as LessShowcasePanel
+    participant SC as Showcase Island
+    participant CB as LessCodeBlock
+
+    Note over DH: SSG 阶段 — 首页 HTML 已生成
+
+    U->>DH: 访问首页 /
+    DH->>DH: render() — 初始 _mfaTab=0
+    DH->>SP: 渲染 less-showcase-panel tabs=[...] activeTab=0
+    SP->>SC: 渲染 shoelace-showcase (Tab 0 的 island)
+    SP->>CB: 渲染 less-code-block (Tab 0 的源代码)
+    Note over SC: Shoelace 按钮可交互（client upgrade）
+    Note over CB: 代码块带 Copy 按钮 + Prism 高亮
+
+    U->>SP: 点击 Tab "React 19"
+    SP->>SP: _onTabClick(1) → activeTab = 1
+    SP->>SP: requestUpdate()
+    SP->>SC: 隐藏 shoelace-showcase，渲染 react-showcase
+    SP->>CB: 切换为 React 源代码
+    Note over SC: React 按钮可交互（client upgrade）
+
+    U->>SP: 点击 Tab "Media Chrome"
+    SP->>SP: _onTabClick(2) → activeTab = 2
+    SP->>SP: requestUpdate()
+    SP->>SC: 隐藏 react-showcase，渲染 media-chrome-showcase
+    SP->>CB: 切换为 Vanilla 源代码
+    Note over SC: 视频播放器可交互（client upgrade）

@@ -3,6 +3,7 @@
  */
 export const meta = { section: 'Production', label: 'PWA Support', order: 60 };
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -12,7 +13,7 @@ export class PwaPage extends LitElement {
   static override styles = [pageStyles];
   override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/guide/pwa"><div class="container">
+  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/pwa"><div class="container">
     <h1>PWA 支持</h1>
     <p class="subtitle">LessJS 生成纯静态 HTML + Declarative Shadow DOM，天然是 PWA 的理想基座：页面预渲染、资源版本化哈希、API routes 可独立部署到 serverless 平台。</p>
     <h2>快速启用</h2>
@@ -27,7 +28,7 @@ export class PwaPage extends LitElement {
     <div class="nav-row"><a href="/guide/deployment" class="nav-link">&larr; Deployment</a><a href="/guide/content-system" class="nav-link">Content System &rarr;</a></div>
   </div></less-layout>`; }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/guide/pwa"><div class="container">
+  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/pwa"><div class="container">
     <h1>PWA Support</h1>
     <p class="subtitle">LessJS generates static HTML + Declarative Shadow DOM, making it a natural PWA foundation: pages are pre-rendered, assets are version-hashed, and API routes deploy independently to serverless platforms.</p>
     <h2>Quick Setup</h2>

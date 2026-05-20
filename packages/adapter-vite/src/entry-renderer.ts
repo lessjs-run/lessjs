@@ -297,7 +297,11 @@ function renderPageRoute(
  */
 export function renderEntry(desc: EntryDescriptor): string {
   const lines: string[] = [];
-  const ssrAdmissionPlan = buildSsrAdmissionPlan(desc.islands, desc.cemClassifications);
+  const ssrAdmissionPlan = buildSsrAdmissionPlan(
+    desc.islands,
+    desc.cemClassifications,
+    desc.hubClientOnlyTags || [],
+  );
 
   // --- SSG: DSD renderer doesn't need DOM shim ---
   // v0.5.0: render-dsd.ts uses pure string concatenation — no DOM shim needed
@@ -731,6 +735,8 @@ export interface HonoEntryOptions {
   allowHeadExtrasScripts?: boolean;
   html?: { lang?: string; title?: string };
   upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';
+  /** Hub registry client-only tag names (ADR-0035 A1) */
+  hubClientOnlyTags?: string[];
 }
 
 /**

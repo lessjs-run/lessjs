@@ -11,9 +11,17 @@
     "./less-theme-toggle": "./src/less-theme-toggle.ts",
     "./less-hero-ping": "./src/less-hero-ping.ts",
     "./less-dialog": "./src/less-dialog.ts",
+    "./less-callout": "./src/less-callout.ts",
+    "./less-step-card": "./src/less-step-card.ts",
     "./design-tokens": "./src/design-tokens.ts",
+    "./design-tokens.js": "./src/design-tokens.ts",
     "./tokens/colors": "./src/tokens/colors.ts",
-    "./tokens/color-values": "./src/tokens/color-values.ts"
+    "./tokens/color-values": "./src/tokens/color-values.ts",
+    "./tokens/spacing": "./src/tokens/spacing.ts",
+    "./tokens/typography": "./src/tokens/typography.ts",
+    "./tokens/effects": "./src/tokens/effects.ts",
+    "./tokens/radius": "./src/tokens/radius.ts",
+    "./tokens/animation": "./src/tokens/animation.ts"
   },
   "imports": {
     "lit": "npm:lit@^3.2.0",

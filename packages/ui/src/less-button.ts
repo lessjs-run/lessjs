@@ -112,6 +112,22 @@ export class LessButton extends DsdLitElement {
         border-color: transparent;
       }
 
+      /* v0.19.1 Phase 6: Accent gradient variant (ADR-0035 B2) */
+      .btn--accent {
+        background: linear-gradient(135deg, var(--less-brand, #534ab7), #7c3aed);
+        color: white;
+        border-color: transparent;
+      }
+      .btn--accent:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--less-shadow-md);
+        filter: brightness(1.05);
+      }
+      .btn--accent:active {
+        transform: translateY(0);
+        box-shadow: var(--less-shadow-sm);
+      }
+
       /* States */
       .btn:disabled,
       .btn[aria-disabled="true"] {
@@ -143,8 +159,8 @@ export class LessButton extends DsdLitElement {
     type: { type: String },
   };
 
-  /** Button variant style: 'default' (outlined), 'primary' (filled), or 'ghost' (no border) */
-  declare variant: 'default' | 'primary' | 'ghost';
+  /** Button variant style: 'default' (outlined), 'primary' (filled), 'ghost' (no border), or 'accent' (gradient) */
+  declare variant: 'default' | 'primary' | 'ghost' | 'accent';
   /** Button size: 'sm', 'md' (default), or 'lg' */
   declare size: 'sm' | 'md' | 'lg';
   /** Whether the button is disabled */

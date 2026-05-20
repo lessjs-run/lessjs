@@ -297,6 +297,12 @@ export interface LocalIslandMeta {
   reason?: string;
 }
 
+// TODO(v0.21): Replace regex-based island metadata scanning in readBooleanMeta()
+// and readHydrateMeta() with AST parsing or manifest-first approach.
+// Current regex may miss edge cases like:
+// - `ssr: /* comment */ true`
+// - Computed properties: `{ ["ssr"]: false }`
+// - Destructured exports: `const { ssr } = opts; export { ssr as less }`
 function readBooleanMeta(source: string, key: 'ssr' | 'dsd'): boolean | undefined {
   const match = source.match(new RegExp(`${key}\\s*:\\s*(true|false)`));
   return match ? match[1] === 'true' : undefined;

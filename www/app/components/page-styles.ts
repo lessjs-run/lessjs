@@ -1,10 +1,20 @@
 import { css } from 'lit';
 
 /**
- * LessJS Docs — Shared Page Styles (Minimal)
+ * LessJS Docs — Shared Page Styles
  *
- * Clean, restrained, typography-driven.
- * Aligned with the new minimal design system.
+ * v0.19.1 Phase 6 (ADR-0035 B1): Visual overhaul.
+ * "精密·克制·有深度" — precise, restrained, with depth.
+ *
+ * Key changes from v0.19.0:
+ * - H1: 2rem → 2.5rem, weight 500 → 700
+ * - H2: 1rem → 1.25rem, weight 500 → 600
+ * - Container: 720px → 800px
+ * - Paragraph/H2 spacing increased
+ * - Links use brand color (--less-brand)
+ * - Code blocks: dark theme with better line-height
+ * - Tables: striped rows + cleaner borders
+ * - Cards/sections: border-radius 6px + shadow
  */
 export const pageStyles = css`
   :host {
@@ -12,9 +22,9 @@ export const pageStyles = css`
   }
 
   .container {
-    max-width: 720px;
+    max-width: 800px;
     margin: 0 auto;
-    padding: 2rem 1.5rem 4rem;
+    padding: 2.5rem 1.5rem 4rem;
     /* Prevent long strings (URLs, code references) from causing overflow */
     overflow-wrap: break-word;
     word-break: break-word;
@@ -34,60 +44,63 @@ export const pageStyles = css`
   }
 
   h1 {
-    font-size: 2rem;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    margin: 0 0 0.5rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin: 0 0 0.75rem;
     color: var(--less-text-primary);
-    line-height: 1.2;
+    line-height: 1.15;
   }
 
   .subtitle {
     color: var(--less-text-tertiary);
     margin-bottom: 3rem;
-    font-size: 0.875rem;
+    font-size: 1rem;
     line-height: 1.7;
   }
 
   h2 {
-    font-size: 1rem;
-    font-weight: 500;
-    margin: 2rem 0 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 2.5rem 0 1rem;
     color: var(--less-text-primary);
+    letter-spacing: -0.01em;
   }
 
   h3 {
-    font-size: 0.875rem;
-    font-weight: 500;
+    font-size: 1rem;
+    font-weight: 600;
     margin: 1.5rem 0 0.5rem;
     color: var(--less-text-primary);
   }
 
   p {
-    line-height: 1.7;
+    line-height: 1.75;
     margin: 0.5rem 0;
     color: var(--less-text-secondary);
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
   }
 
   strong {
     color: var(--less-text-primary);
-    font-weight: 500;
+    font-weight: 600;
   }
   em {
     font-style: italic;
   }
 
   a {
-    color: var(--less-brand, var(--less-text-primary));
+    color: var(--less-brand, #534ab7);
     text-decoration: underline;
     text-underline-offset: 3px;
-    text-decoration-color: var(--less-border-hover);
+    text-decoration-color: var(--less-brand, #534ab7);
     text-decoration-thickness: 0.5px;
-    transition: text-decoration-color 0.15s;
+    opacity: 0.9;
+    transition: opacity 0.15s, text-decoration-color 0.15s;
   }
   a:hover {
-    text-decoration-color: var(--less-brand, var(--less-text-primary));
+    opacity: 1;
+    text-decoration-color: var(--less-brand, #534ab7);
   }
 
   /* Brand section label (matches homepage) */
@@ -100,27 +113,37 @@ export const pageStyles = css`
     margin-bottom: 14px;
   }
 
-  /* Code */
+  /* Section divider — brand gradient */
+  .section-divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--less-brand, #534AB7) 20%, var(--less-brand-light, #6D5CE8) 80%, transparent);
+    opacity: 0.2;
+    margin: 2.5rem 0;
+  }
+
+  /* Code — dark theme */
   pre {
-    background: var(--less-code-bg);
-    color: var(--less-text-secondary);
-    padding: 1rem 1.25rem;
-    border-radius: 3px;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    padding: 1.25rem 1.5rem;
+    border-radius: 8px;
     overflow-x: auto;
     font-size: 0.8125rem;
-    line-height: 1.6;
-    margin: 0.75rem 0;
-    border: 0.5px solid var(--less-code-border);
+    line-height: 1.7;
+    margin: 1rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 
   code {
-    font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+    font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
   }
 
   p code, li code {
     background: var(--less-code-bg);
     padding: 0.125rem 0.375rem;
-    border-radius: 3px;
+    border-radius: 4px;
     font-size: 0.75rem;
     color: var(--less-text-secondary);
     border: 0.5px solid var(--less-code-border);
@@ -129,11 +152,11 @@ export const pageStyles = css`
   .inline-code {
     background: var(--less-code-bg);
     padding: 0.125rem 0.375rem;
-    border-radius: 3px;
+    border-radius: 4px;
     font-size: 0.875em;
   }
 
-  /* Tables */
+  /* Tables — striped + cleaner borders */
   table {
     width: 100%;
     border-collapse: collapse;
@@ -141,43 +164,47 @@ export const pageStyles = css`
     font-size: 0.8125rem;
   }
   th, td {
-    border: 0.5px solid var(--less-border);
-    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--less-border);
+    padding: 0.625rem 0.875rem;
     text-align: left;
   }
   th {
-    font-weight: 500;
+    font-weight: 600;
     color: var(--less-text-secondary);
+    background: var(--less-bg-surface);
   }
   td {
     color: var(--less-text-tertiary);
+  }
+  tr:nth-child(even) td {
+    background: var(--less-bg-surface);
   }
 
   /* Callouts */
   .callout {
     padding: 1rem 1.25rem;
     margin: 1rem 0;
-    border-left: 2px solid var(--less-border-hover);
+    border-left: 3px solid var(--less-brand, #534ab7);
     background: var(--less-bg-surface);
-    border-radius: 0 3px 3px 0;
+    border-radius: 0 8px 8px 0;
   }
   .callout.warn {
-    border-left-color: var(--less-text-tertiary);
+    border-left-color: #f59e0b;
   }
 
   .pillar {
     padding: 1.25rem 1.5rem;
     margin: 1rem 0;
-    border-left: 2px solid var(--less-border-hover);
+    border-left: 3px solid var(--less-brand, #534ab7);
     background: var(--less-bg-surface);
-    border-radius: 0 3px 3px 0;
+    border-radius: 0 8px 8px 0;
   }
   .pillar .num {
     font-size: 0.6875rem;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--less-text-muted);
+    color: var(--less-brand, #534ab7);
     margin-bottom: 0.25rem;
   }
   .pillar h3 {
@@ -189,7 +216,7 @@ export const pageStyles = css`
     background: var(--less-code-bg);
     border: 0.5px solid var(--less-border-hover);
     padding: 0.25rem 0.625rem;
-    border-radius: 3px;
+    border-radius: 4px;
     font-size: 0.75rem;
     margin: 0.125rem 0;
   }
@@ -219,7 +246,7 @@ export const pageStyles = css`
     color: var(--less-text-secondary);
     text-decoration: none;
     border: 0.5px solid var(--less-border);
-    border-radius: 3px;
+    border-radius: 6px;
     transition: color 0.15s, border-color 0.15s;
   }
   .nav-link:hover {
@@ -232,13 +259,13 @@ export const pageStyles = css`
       padding: 2rem 1.25rem 3rem;
     }
     h1 {
-      font-size: 1.5rem;
+      font-size: 2rem;
     }
     .subtitle {
       margin-bottom: 2rem;
     }
     pre {
-      padding: 0.875rem 1rem;
+      padding: 1rem 1.25rem;
       font-size: 0.75rem;
     }
     .nav-row {
@@ -252,24 +279,38 @@ export const pageStyles = css`
       padding: 1.5rem 1rem 2.5rem;
     }
     h1 {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
     }
     .subtitle {
       font-size: 0.8125rem;
       margin-bottom: 1.5rem;
     }
     h2 {
-      font-size: 0.9375rem;
+      font-size: 1.0625rem;
     }
     p {
       font-size: 0.8125rem;
     }
     pre {
-      padding: 0.75rem;
+      padding: 0.875rem 1rem;
       font-size: 0.6875rem;
     }
     ul, ol {
       padding-left: 1rem;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--less-brand, #534ab7);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    a {
+      transition: none;
+    }
+    .nav-link {
+      transition: none;
     }
   }
 `;

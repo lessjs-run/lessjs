@@ -1,8 +1,10 @@
-export const meta = { section: 'Start Here', label: 'Framework Positioning', order: 10 };
+export const meta = { section: 'Quick Start', label: 'Framework Positioning', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
+import '@lessjs/ui/less-callout';
 
 export class PositioningPage extends LitElement {
   declare locale?: string;
@@ -16,7 +18,7 @@ export class PositioningPage extends LitElement {
   private _renderZh() {
     return html`
       <less-layout
-        .navItems="${navSections}"
+        .navItems="${filterFrameworkNav(navSections)}"
         .headerNav="${headerNav}"
         current-path="/guide/positioning"
         locale="zh"
@@ -25,23 +27,36 @@ export class PositioningPage extends LitElement {
         <div class="container">
           <h1>框架定位</h1>
           <p class="subtitle">
-            LessJS 是一个 Deno-first、Web Standards-first、static-first 的 Web 框架。
-            它的目标不是成为所有场景的最大框架，而是把内容优先、渐进增强和 Serverless API
-            组织成一条可信的工程路径。
+            LessJS 是<strong>全栈框架 + 通用 WC 渲染引擎 + Registry Hub</strong>。
+            三个支柱各自独立有价值，组合形成独特定位。
           </p>
 
-          <h2>一句话定位</h2>
-          <p>
-            LessJS 用 <strong>DSD-rendered Web Components</strong> 输出首屏 HTML，用
-            <strong>Island Upgrade</strong> 接管少量交互，用 <strong>Hono + Fetch API</strong>
-            提供服务端能力，用 <strong>SSG</strong> 作为默认交付形态，用
-            <strong>Serverless/Edge</strong> 部署动态部分。
-          </p>
+          <h2>三支柱架构</h2>
 
-          <div class="callout">
+          <div class="pillar">
+            <div class="num">支柱 1</div>
+            <h3>全栈框架</h3>
             <p>
-              这不是"另一个 hydration 框架"。更准确地说，LessJS 是一个把 Web Components、 Declarative
-              Shadow DOM、ESM、Fetch API 和静态部署打通的应用骨架。
+              文件约定路由 + Hono API Route + Serverless 部署。SSG/ISR/SSR 同一套渲染引擎——<strong>不是 SSG 框架</strong>，
+              SSG 只是渲染引擎的当前使用模式。renderDSD() 是渲染时机无关的，build-time / ISR / request-time 都用同一套引擎。
+            </p>
+          </div>
+
+          <div class="pillar">
+            <div class="num">支柱 2</div>
+            <h3>通用 WC 渲染引擎</h3>
+            <p>
+              Declarative Shadow DOM 零 JS 首屏。Lit/React/Vanilla 多框架适配器在同一页面共存。
+              第三方 WC 4 级兼容性分类 + 验证。Hydration 策略（client:load/idle/visible/only）计划中。
+            </p>
+          </div>
+
+          <div class="pillar">
+            <div class="num">支柱 3</div>
+            <h3>Registry Hub</h3>
+            <p>
+              Web Component 发现、兼容性验证、一键安装。Playwright 渲染真实组件预览。
+              安装即渲染，验证即分层。less add 一键安装 + 兼容性报告。
             </p>
           </div>
 
@@ -58,10 +73,10 @@ export class PositioningPage extends LitElement {
 
           <div class="pillar">
             <div class="num">Principle 02</div>
-            <h3>Static First, Dynamic When Explicit</h3>
+            <h3>Rendering-Timing-Agnostic</h3>
             <p>
-              默认产物应该是静态 HTML、CSS 和必要的 island JavaScript。 需要 API、认证、数据写入或
-              revalidation 时再显式进入 serverless/edge 模式。
+              renderDSD() 不关心什么时候被调用——build-time (SSG)、cache-expiry-time (ISR)、
+              request-time (SSR) 用同一套引擎。SSG 是当前默认模式，不是框架身份。
             </p>
           </div>
 
@@ -78,8 +93,8 @@ export class PositioningPage extends LitElement {
             <div class="num">Principle 04</div>
             <h3>Adapters Extend, They Do Not Define</h3>
             <p>
-              Lit 是当前最现实的作者体验；未来的 <span class="inline-code">.less</span>
-              compiler 是优化路径，不是框架成立的前提。运行时、构建和文档都应该保持 adapter 边界清晰。
+              Lit / React / Vanilla 是可插拔适配器，不是框架绑定。同一页面多框架共存，
+              每个组件独立 hydration。未来的 Vue adapter 同样遵循这个边界。
             </p>
           </div>
 
@@ -107,7 +122,7 @@ export class PositioningPage extends LitElement {
               </tr>
               <tr>
                 <td>博客和内容站</td>
-                <td>内容优先、可爬取、可缓存，后续可以引入 PWA 和增量构建。</td>
+                <td>内容优先、可爬取、可缓存，后续可以引入 ISR 和增量构建。</td>
               </tr>
               <tr>
                 <td>轻量 Serverless 应用</td>
@@ -115,18 +130,23 @@ export class PositioningPage extends LitElement {
               </tr>
               <tr>
                 <td>组件化设计系统展示</td>
-                <td>Web Components 是平台能力，包级 island 可以跨项目复用。</td>
+                <td>Web Components 是平台能力，包级 island 可以跨项目复用。Registry Hub 提供发现和安装。</td>
+              </tr>
+              <tr>
+                <td>WC 重度用户</td>
+                <td>混用 Shoelace/Material Web/Media Chrome 等 WC 库，DSD 预渲染 + Island 升级。</td>
               </tr>
             </tbody>
           </table>
 
-          <h2>暂时不主打的场景</h2>
-          <p>LessJS 可以演进到更复杂的全栈应用，但当前文档不应把下列能力描述成成熟卖点：</p>
+          <h2>正在建设的能力</h2>
+          <p>以下能力已规划但尚未完成，不应视为成熟卖点：</p>
           <ul>
-            <li>高频数据后台、CRM、复杂权限系统。</li>
-            <li>生产级 ISR、分布式 cache lock、revalidate queue。</li>
-            <li>整页客户端状态框架和传统 SPA 路由。</li>
-            <li>完全消除 Lit 的生产级 compiler。</li>
+            <li>Hydration 策略（client:load/idle/visible/only）— 当前只有 ssr:true/false</li>
+            <li>ISR 缓存层 — stale-while-revalidate</li>
+            <li>Vue adapter — 当前支持 Lit/React/Vanilla</li>
+            <li>Supabase 集成 — Auth + DB + Realtime</li>
+            <li>公开 Hub 服务 — 当前为本地 MVP</li>
           </ul>
 
           <h2>工程取舍</h2>
@@ -140,19 +160,24 @@ export class PositioningPage extends LitElement {
             </thead>
             <tbody>
               <tr>
-                <td>Lit authoring</td>
-                <td>Web Components 生态成熟，SSR 可行，API 稳定。</td>
-                <td>需要管理安全渲染边界，compiler 优化仍是未来项。</td>
+                <td>DSD 渲染引擎</td>
+                <td>零 JS 首屏，浏览器原生能力。其他框架无法通过工程优化追平。</td>
+                <td>第三方 WC 的 shadow DOM 内部不可预测，Tier 1 预渲染需逐一验证。</td>
               </tr>
               <tr>
-                <td>Hono runtime</td>
+                <td>Hono 运行时</td>
                 <td>足够小，贴近 Fetch，跨运行时迁移成本低。</td>
                 <td>部署适配器和平台能力仍需要逐步补齐。</td>
               </tr>
               <tr>
-                <td>SSG default</td>
-                <td>部署简单，缓存友好，文档/内容站收益最大。</td>
-                <td>动态数据和 ISR 需要额外运行时约定。</td>
+                <td>多框架适配器</td>
+                <td>同一页面 Lit/React/Vanilla 共存，按需选择。</td>
+                <td>每个适配器有独立 hydration 语义，维护成本随适配器数量增长。</td>
+              </tr>
+              <tr>
+                <td>渲染时机无关</td>
+                <td>同一引擎支持 SSG/ISR/SSR，不锁定渲染模式。</td>
+                <td>ISR 和 request-time SSR 尚未实现。</td>
               </tr>
             </tbody>
           </table>
@@ -162,32 +187,38 @@ export class PositioningPage extends LitElement {
             <thead>
               <tr>
                 <th>框架</th>
-                <th>LessJS 不追随的部分</th>
+                <th>LessJS 的差异</th>
                 <th>LessJS 借鉴的部分</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>Astro</td>
-                <td>多 UI 框架整合不是近期目标。</td>
+                <td>WC 在 Astro 里是二等公民（当普通元素处理），没有 DSD 预渲染。LessJS WC 是一等公民。</td>
                 <td>内容优先、岛屿交互、静态交付。</td>
               </tr>
               <tr>
                 <td>Fresh</td>
-                <td>不绑定 Preact，也不把 JSX 当作核心 DSL。</td>
+                <td>Fresh 锁定 Preact。LessJS 全栈框架层同级，但多了 WC 引擎 + Hub 两个支柱。</td>
                 <td>Deno-first、Fetch-first、island-first。</td>
               </tr>
               <tr>
-                <td>Next / Nuxt</td>
-                <td>不以大型全栈平台为默认复杂度。</td>
+                <td>Next.js</td>
+                <td>Next 锁定 React，必须有 runtime。LessJS 零 runtime 首屏 + 跨框架 WC 引擎。</td>
                 <td>路由约定、构建产物、部署适配器的工程纪律。</td>
               </tr>
             </tbody>
           </table>
 
+          <less-callout type="info" label="为什么选 WC 不选 React？">
+            三个答案：(1) 样式隔离 — Shadow DOM 是浏览器机制不是约定；
+            (2) 跨框架 — Shoelace/Material Web 写一次，React/Vue/Angular/Svelte 都能用；
+            (3) 零 JS 首屏 — DSD 是浏览器原生 HTML，不需要任何 runtime。
+          </less-callout>
+
           <div class="nav-row">
             <a href="/guide/getting-started" class="nav-link">Getting Started &rarr;</a>
-            <a href="/guide/architecture" class="nav-link">Architecture &rarr;</a>
+            <a href="/engine/architecture" class="nav-link">Architecture &rarr;</a>
           </div>
         </div>
       </less-layout>
@@ -197,7 +228,7 @@ export class PositioningPage extends LitElement {
   private _renderEn() {
     return html`
       <less-layout
-        .navItems="${navSections}"
+        .navItems="${filterFrameworkNav(navSections)}"
         .headerNav="${headerNav}"
         current-path="/en/guide/positioning"
         locale="en"
@@ -206,34 +237,39 @@ export class PositioningPage extends LitElement {
         <div class="container">
           <h1>Framework Positioning</h1>
           <p class="subtitle">
-            LessJS is a Deno-first, Web Standards-first, static-first web framework. Its goal is not to be
-            the biggest framework for every scenario, but to organize content-first, progressive
-            enhancement, and Serverless API into a trustworthy engineering path.
+            LessJS is a <strong>full-stack framework + universal WC rendering engine + Registry Hub</strong>.
+            Three pillars, each independently valuable, combined into a unique positioning.
           </p>
 
-          <h2>One-Line Positioning</h2>
-          <p>
-            LessJS uses <strong>DSD-rendered Web Components</strong> for first-paint HTML,
-            <strong>Island Upgrade</strong> for targeted interactivity,
-            <strong>Hono + Fetch API</strong> for server-side capability,
-            <strong>SSG</strong> as the default delivery model, and
-            <strong>Serverless/Edge</strong> for dynamic deployment.
-          </p>
+          <h2>Three-Pillar Architecture</h2>
 
-          <div class="callout">
+          <div class="pillar">
+            <div class="num">Pillar 1</div>
+            <h3>Full-Stack Framework</h3>
             <p>
-              This is not "another hydration framework." More accurately, LessJS is an application
-              skeleton that wires together Web Components, Declarative Shadow DOM, ESM, Fetch API, and
-              static deployment.
+              File-convention routing + Hono API routes + serverless deployment. SSG/ISR/SSR — same rendering engine.
+              <strong>Not an SSG framework</strong> — SSG is one mode of the rendering engine, not the framework's identity.
+              renderDSD() is rendering-timing-agnostic: build-time, ISR, or request-time, same engine.
             </p>
           </div>
 
-          <p>
-            If LessJS grows into a WC registry hub, the same boundary still applies: renderer kernel and
-            package protocol first, then local indexing and <code>less add</code>, then a public hub.
-            Automatic registration, rendering, and hydration must be manifest-driven; they should not
-            guess arbitrary component behavior.
-          </p>
+          <div class="pillar">
+            <div class="num">Pillar 2</div>
+            <h3>Universal WC Rendering Engine</h3>
+            <p>
+              Declarative Shadow DOM zero-JS first paint. Lit/React/Vanilla multi-framework adapters coexist on the same page.
+              Third-party WC 4-tier compatibility classification + validation. Hydration strategies (client:load/idle/visible/only) planned.
+            </p>
+          </div>
+
+          <div class="pillar">
+            <div class="num">Pillar 3</div>
+            <h3>Registry Hub</h3>
+            <p>
+              Web Component discovery, compatibility validation, one-click install. Playwright-rendered real component previews.
+              Install-to-render, validate-to-tier. less add one-click install + compatibility reports.
+            </p>
+          </div>
 
           <h2>Design Principles</h2>
 
@@ -248,10 +284,10 @@ export class PositioningPage extends LitElement {
 
           <div class="pillar">
             <div class="num">Principle 02</div>
-            <h3>Static First, Dynamic When Explicit</h3>
+            <h3>Rendering-Timing-Agnostic</h3>
             <p>
-              The default output should be static HTML, CSS, and only necessary island JavaScript. Opt
-              into serverless/edge mode explicitly when API, auth, writes, or revalidation are needed.
+              renderDSD() doesn't care when it's called — build-time (SSG), cache-expiry-time (ISR),
+              request-time (SSR), same engine. SSG is the current default mode, not the framework's identity.
             </p>
           </div>
 
@@ -269,9 +305,9 @@ export class PositioningPage extends LitElement {
             <div class="num">Principle 04</div>
             <h3>Adapters Extend, They Do Not Define</h3>
             <p>
-              Lit is the most practical authoring experience today; a future
-              <span class="inline-code">.less</span> compiler is an optimization path, not a prerequisite
-              for the framework. Runtime, build, and docs should all keep adapter boundaries clear.
+              Lit / React / Vanilla are pluggable adapters, not framework bindings. Multi-framework
+              coexistence on the same page, each component with independent hydration. A future Vue
+              adapter will follow the same boundary.
             </p>
           </div>
 
@@ -304,7 +340,7 @@ export class PositioningPage extends LitElement {
               <tr>
                 <td>Blogs &amp; content sites</td>
                 <td>
-                  Content-first, crawlable, cacheable. PWA and incremental builds can be added later.
+                  Content-first, crawlable, cacheable. ISR and incremental builds can be added later.
                 </td>
               </tr>
               <tr>
@@ -318,22 +354,28 @@ export class PositioningPage extends LitElement {
                 <td>Componentized design system showcases</td>
                 <td>
                   Web Components are a platform capability. Package-level islands can be reused across
-                  projects.
+                  projects. Registry Hub provides discovery and installation.
+                </td>
+              </tr>
+              <tr>
+                <td>WC-heavy users</td>
+                <td>
+                  Mix Shoelace/Material Web/Media Chrome WC libraries. DSD pre-rendering + Island upgrade.
                 </td>
               </tr>
             </tbody>
           </table>
 
-          <h2>Not-Yet-Primary Scenarios</h2>
+          <h2>Capabilities Under Construction</h2>
           <p>
-            LessJS can evolve toward more complex full-stack apps, but current docs should not describe
-            these as mature selling points:
+            The following capabilities are planned but not yet complete. They should not be described as mature selling points:
           </p>
           <ul>
-            <li>High-frequency data dashboards, CRM, complex permission systems.</li>
-            <li>Production-grade ISR, distributed cache lock, revalidate queue.</li>
-            <li>Full-page client state frameworks and traditional SPA routing.</li>
-            <li>A production-grade compiler that fully eliminates Lit.</li>
+            <li>Hydration strategies (client:load/idle/visible/only) — currently only ssr:true/false</li>
+            <li>ISR cache layer — stale-while-revalidate</li>
+            <li>Vue adapter — currently supports Lit/React/Vanilla</li>
+            <li>Supabase integration — Auth + DB + Realtime</li>
+            <li>Public Hub service — currently a local MVP</li>
           </ul>
 
           <h2>Engineering Trade-Offs</h2>
@@ -347,9 +389,9 @@ export class PositioningPage extends LitElement {
             </thead>
             <tbody>
               <tr>
-                <td>Lit authoring</td>
-                <td>Web Components ecosystem is mature, SSR is viable, API is stable.</td>
-                <td>Must manage safe rendering boundaries; compiler optimization is future work.</td>
+                <td>DSD rendering engine</td>
+                <td>Zero-JS first paint, browser-native capability. Other frameworks cannot match this through optimization.</td>
+                <td>Third-party WC shadow DOM is unpredictable; Tier 1 pre-rendering requires per-library validation.</td>
               </tr>
               <tr>
                 <td>Hono runtime</td>
@@ -357,9 +399,14 @@ export class PositioningPage extends LitElement {
                 <td>Deploy adapters and platform capabilities still need incremental filling.</td>
               </tr>
               <tr>
-                <td>SSG default</td>
-                <td>Simple deployment, cache-friendly, maximal benefit for docs/content sites.</td>
-                <td>Dynamic data and ISR require additional runtime conventions.</td>
+                <td>Multi-framework adapters</td>
+                <td>Lit/React/Vanilla coexist on the same page, choose per component.</td>
+                <td>Each adapter has independent hydration semantics; maintenance cost grows with adapter count.</td>
+              </tr>
+              <tr>
+                <td>Rendering-timing-agnostic</td>
+                <td>Same engine supports SSG/ISR/SSR, no rendering mode lock-in.</td>
+                <td>ISR and request-time SSR are not yet implemented.</td>
               </tr>
             </tbody>
           </table>
@@ -369,33 +416,39 @@ export class PositioningPage extends LitElement {
             <thead>
               <tr>
                 <th>Framework</th>
-                <th>What LessJS Does Not Follow</th>
+                <th>What Differentiates LessJS</th>
                 <th>What LessJS Borrows</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>Astro</td>
-                <td>Multi-UI-framework integration is not a near-term goal.</td>
+                <td>WC is second-class in Astro (treated as plain elements), no DSD pre-rendering. LessJS has WC as first-class citizens.</td>
                 <td>Content-first, island interactivity, static delivery.</td>
               </tr>
               <tr>
                 <td>Fresh</td>
-                <td>Not bound to Preact, does not use JSX as the core DSL.</td>
+                <td>Fresh is locked to Preact. LessJS full-stack framework layer is a peer, but adds WC engine + Hub pillars.</td>
                 <td>Deno-first, Fetch-first, island-first.</td>
               </tr>
               <tr>
-                <td>Next / Nuxt</td>
-                <td>Does not default to large-scale full-stack complexity.</td>
+                <td>Next.js</td>
+                <td>Next is locked to React, requires runtime. LessJS has zero-runtime first paint + cross-framework WC engine.</td>
                 <td>Route conventions, build output, deployment adapter engineering discipline.</td>
               </tr>
             </tbody>
           </table>
 
+          <less-callout type="info" label="Why WC over React?">
+            Three answers: (1) Style isolation — Shadow DOM is a browser mechanism, not a convention;
+            (2) Cross-framework — Shoelace/Material Web write once, works with React/Vue/Angular/Svelte;
+            (3) Zero-JS first paint — DSD is native browser HTML, requires no runtime.
+          </less-callout>
+
           <div class="nav-row">
             <a href="/guide/getting-started" class="nav-link">Getting Started &rarr;</a>
-            <a href="/guide/architecture" class="nav-link">Architecture &rarr;</a>
-            <a href="/guide/standards-registry" class="nav-link">Standards &amp; Registry &rarr;</a>
+            <a href="/engine/architecture" class="nav-link">Architecture &rarr;</a>
+            <a href="/engine/standards-registry" class="nav-link">Standards &amp; Registry &rarr;</a>
           </div>
         </div>
       </less-layout>

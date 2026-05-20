@@ -1,0 +1,44 @@
+{
+  "name": "@lessjs/hub",
+  "version": "0.19.0",
+  "exports": {
+    ".": "./mod.ts",
+    "./schema": "./src/schema.ts",
+    "./builder": "./src/builder.ts",
+    "./indexer": "./src/indexer.ts",
+    "./submitter": "./src/submitter.ts",
+    "./snapshot": "./src/snapshot.ts",
+    "./cli/hub-submit": "./src/cli/hub-submit.ts",
+    "./cli/less-add": "./src/cli/less-add.ts",
+    "./cli/validate": "./src/cli/validate.ts",
+    "./cli/check-index": "./src/cli/check-index.ts"
+  },
+  "imports": {
+    "@lessjs/core": "../core/src/index.ts",
+    "@lessjs/core/compatibility": "../core/src/compatibility.ts",
+    "@lessjs/core/validate-manifest": "../core/src/validate-manifest.ts",
+    "typescript": "npm:typescript@^5.9.0"
+  },
+  "tasks": {
+    "build": "deno check mod.ts src/schema.ts src/builder.ts src/indexer.ts src/submitter.ts src/snapshot.ts",
+    "test": "deno test --allow-read --allow-write --allow-env --allow-net __tests__/"
+  },
+  "publish": {
+    "include": [
+      "src/**",
+      "deno.json",
+      "README.md",
+      "LICENSE"
+    ]
+  },
+  "compilerOptions": {
+    "skipLibCheck": true
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

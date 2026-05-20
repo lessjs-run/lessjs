@@ -1,5 +1,6 @@
-export const meta = { section: 'Core Model', label: 'Rendering & SSG', order: 20 };
+export const meta = { section: 'Core', label: 'SSG/ISR/SSR Rendering', order: 20 };
 import { navSections, headerNav } from 'virtual:less-nav';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -16,7 +17,7 @@ export class SSGGuidePage extends LitElement {
 
   private _renderZh() {
     return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/guide/ssg">
+      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/ssg">
         <div class="container">
           <h1>渲染与 SSG</h1>
           <p class="subtitle">LessJS 的默认生产产物是静态 HTML。构建阶段会把页面渲染成带 Declarative Shadow DOM 的文档，并注入必要的 client island entry。</p>
@@ -52,7 +53,7 @@ export class SSGGuidePage extends LitElement {
           <p>LessJS 当前稳定交付是 SSG。ISR 需要 route-level revalidate、cache lock、adapter contracts、failure fallback 和 CDN semantics。它属于 roadmap，而不是当前可依赖的生产能力。</p>
           <div class="nav-row">
             <a href="/guide/routing" class="nav-link">&larr; 路由</a>
-            <a href="/guide/dsd" class="nav-link">DSD 渲染架构 &rarr;</a>
+            <a href="/engine/dsd" class="nav-link">DSD 渲染架构 &rarr;</a>
           </div>
         </div>
       </less-layout>
@@ -61,7 +62,7 @@ export class SSGGuidePage extends LitElement {
 
   private _renderEn() {
     return html`
-      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/guide/ssg">
+      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/ssg">
         <div class="container">
           <h1>Rendering &amp; SSG</h1>
           <p class="subtitle">LessJS's default production output is static HTML. During the build phase, pages are rendered into documents with Declarative Shadow DOM, and the necessary client island entry is injected.</p>
@@ -103,7 +104,7 @@ export class SSGGuidePage extends LitElement {
           </p>
           <div class="nav-row">
             <a href="/guide/routing" class="nav-link">&larr; Routing</a>
-            <a href="/guide/dsd" class="nav-link">DSD Architecture &rarr;</a>
+            <a href="/engine/dsd" class="nav-link">DSD Architecture &rarr;</a>
           </div>
         </div>
       </less-layout>

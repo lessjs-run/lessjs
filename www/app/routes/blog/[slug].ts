@@ -7,6 +7,7 @@
  * ADR 0018: Data comes from virtual module, not @lessjs/content module state.
  */
 import { headerNav, navSections } from 'virtual:less-nav';
+import { filterBlogNav } from '../../utils/nav-filter.js';
 import { css, html, LitElement } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { pageStyles } from '../../components/page-styles.js';
@@ -55,11 +56,11 @@ export default class BlogPostPage extends LitElement {
   private _renderZh() {
     const post = getPostBySlug(this.slug);
     if (!post) {
-      return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/blog"><div class="container"><div class="not-found"><h1>404</h1><p>文章未找到: ${this.slug}</p><a href="/blog">← 返回博客</a></div></div></less-layout>`;
+      return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterBlogNav(navSections)}" .headerNav="${headerNav}" current-path="/blog"><div class="container"><div class="not-found"><h1>404</h1><p>文章未找到: ${this.slug}</p><a href="/blog">← 返回博客</a></div></div></less-layout>`;
     }
     const tags = post.frontmatter.tags ?? [];
     return html`
-      <less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/blog">
+      <less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterBlogNav(navSections)}" .headerNav="${headerNav}" current-path="/blog">
         <div class="container">
           <a href="/blog" class="blog-back">&larr; 博客</a>
           <h1>${post.frontmatter.title}</h1>
@@ -76,11 +77,11 @@ export default class BlogPostPage extends LitElement {
   private _renderEn() {
     const post = getPostBySlug(this.slug);
     if (!post) {
-      return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/blog"><div class="container"><div class="not-found"><h1>404</h1><p>Post not found: ${this.slug}</p><a href="/en/blog">← Back to Blog</a></div></div></less-layout>`;
+      return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterBlogNav(navSections)}" .headerNav="${headerNav}" current-path="/en/blog"><div class="container"><div class="not-found"><h1>404</h1><p>Post not found: ${this.slug}</p><a href="/en/blog">← Back to Blog</a></div></div></less-layout>`;
     }
     const tags = post.frontmatter.tags ?? [];
     return html`
-      <less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/blog">
+      <less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterBlogNav(navSections)}" .headerNav="${headerNav}" current-path="/en/blog">
         <div class="container">
           <a href="/blog" class="blog-back">&larr; Blog</a>
           <h1>${post.frontmatter.title}</h1>

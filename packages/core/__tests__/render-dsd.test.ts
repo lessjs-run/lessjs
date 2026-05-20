@@ -251,17 +251,25 @@ Deno.test('renderDSD — error handling', async (t) => {
   await t.step('handles component that throws on instantiation', async () => {
     const cls = createMockClass('', { throwOnConstruct: true });
     const output = await renderDSD('broken-el-1', asCtor(cls), {});
+    // v0.19.1: Bare-tag fallback — no shadow DOM, no error comments in HTML
     assertStringIncludes(output.html, '<broken-el-1>');
-    assertStringIncludes(output.html, 'LessJS ERROR');
     assertStringIncludes(output.html, '</broken-el-1>');
+    assertFalse(output.html.includes('LessJS ERROR'));
+    assertFalse(output.html.includes('<template shadowrootmode'));
+    assertEquals(output.errors.length, 1);
+    assertEquals(output.errors[0].phase, 'instantiate');
   });
 
   await t.step('handles render() that throws', async () => {
     const cls = createMockClass('', { throwOnRender: true });
     const output = await renderDSD('error-el-1', asCtor(cls), {});
+    // v0.19.1: Bare-tag fallback — no shadow DOM, no error comments in HTML
     assertStringIncludes(output.html, '<error-el-1>');
-    assertStringIncludes(output.html, 'LessJS ERROR');
     assertStringIncludes(output.html, '</error-el-1>');
+    assertFalse(output.html.includes('LessJS ERROR'));
+    assertFalse(output.html.includes('<template shadowrootmode'));
+    assertEquals(output.errors.length, 1);
+    assertEquals(output.errors[0].phase, 'render');
   });
 
   await t.step('handles render() that returns null', async () => {
@@ -392,28 +400,34 @@ Deno.test('renderDSD — pure-island layer', async (t) => {
 });
 
 // ─── renderDSD — Source info ─────────────────────────────────
+// v0.19.1: Instantiation errors now produce bare-tag fallback without
+// source info attributes. Source info is still recorded in the errors array.
 
 Deno.test('renderDSD — source info', async (t) => {
-  await t.step('includes route source info in error output', async () => {
+  await t.step('instantiation error is recorded with route info', async () => {
     const cls = createMockClass('', { throwOnConstruct: true });
     const output = await renderDSD('err-el-1', asCtor(cls), {}, { route: '/about' });
-    assertStringIncludes(output.html, 'route="/about"');
+    // Bare-tag output doesn't include route/source attrs
+    assertStringIncludes(output.html, '<err-el-1>');
+    // But error metadata is preserved
+    assertEquals(output.errors.length, 1);
   });
 
-  await t.step('includes source file info in error output', async () => {
+  await t.step('instantiation error is recorded with source file info', async () => {
     const cls = createMockClass('', { throwOnConstruct: true });
     const output = await renderDSD('err-el-2', asCtor(cls), {}, { source: 'app/routes/about.ts' });
-    assertStringIncludes(output.html, 'source="app/routes/about.ts"');
+    assertStringIncludes(output.html, '<err-el-2>');
+    assertEquals(output.errors.length, 1);
   });
 
-  await t.step('source info appears in element open tag', async () => {
+  await t.step('both route and source recorded in errors', async () => {
     const cls = createMockClass('', { throwOnConstruct: true });
     const output = await renderDSD('err-el-3', asCtor(cls), {}, {
       route: '/test',
       source: 'test.ts',
     });
-    assertStringIncludes(output.html, 'route="/test"');
-    assertStringIncludes(output.html, 'source="test.ts"');
+    assertStringIncludes(output.html, '<err-el-3>');
+    assertEquals(output.errors.length, 1);
   });
 });
 

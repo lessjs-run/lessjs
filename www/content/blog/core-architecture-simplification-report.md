@@ -4,6 +4,7 @@ date: '2026-05-11'
 type: 'adr'
 tags: ['architecture', 'decision']
 draft: false
+archived: true
 ---
 
 > 审查范围：`packages/core/src/` — 入口代码生成管线（entry-descriptor.ts、entry-renderer.ts、hono-entry.ts）

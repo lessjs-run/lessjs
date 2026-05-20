@@ -435,6 +435,60 @@ export function less(
   const VIRTUAL_ENTRY_ID = 'virtual:less-hono-entry';
   const RESOLVED_ENTRY_ID = '\0' + VIRTUAL_ENTRY_ID;
 
+  // v0.19.1 Phase 6: Discover client-only tags from Hub registry data (ADR-0035 A1)
+  // Reads _hub-data-full.ts at build time and extracts tagNames where
+  // compatibility is 'client-only'. This ensures Shoelace/Media Chrome
+  // tags are in __LESS_CLIENT_ONLY_TAGS__ without requiring CEM manifests.
+  let _cachedHubClientOnlyTags: string[] | null = null;
+  async function discoverHubClientOnlyTags(root: string, routesDir: string): Promise<string[]> {
+    if (_cachedHubClientOnlyTags !== null) return _cachedHubClientOnlyTags;
+    try {
+      const { readFileSync } = await import('node:fs');
+      const hubDataPath = join(root, routesDir, 'registry', '_hub-data-full.ts');
+      const content = readFileSync(hubDataPath, 'utf-8');
+      const tags: string[] = [];
+      // Simple regex extraction — look for pairs of:
+      //   "tagName": "sl-xxx" followed by "compatibility": "client-only"
+      // or entire packages with "compatibility": "client-only"
+      const tagRe = /"tagName":\s*"([^"]+)"/g;
+      const compatRe = /"compatibility":\s*"([^"]+)"/g;
+      let tagMatch: RegExpExecArray | null;
+      const tagPositions: Array<{ pos: number; tagName: string }> = [];
+      while ((tagMatch = tagRe.exec(content)) !== null) {
+        tagPositions.push({ pos: tagMatch.index, tagName: tagMatch[1] });
+      }
+      const compatPositions: Array<{ pos: number; compat: string }> = [];
+      let compatMatch: RegExpExecArray | null;
+      while ((compatMatch = compatRe.exec(content)) !== null) {
+        compatPositions.push({ pos: compatMatch.index, compat: compatMatch[1] });
+      }
+      // Associate each tagName with the nearest following compatibility
+      for (const tp of tagPositions) {
+        let nearestCompat = '';
+        let nearestDist = Infinity;
+        for (const cp of compatPositions) {
+          const dist = cp.pos - tp.pos;
+          if (dist > 0 && dist < nearestDist) {
+            nearestDist = dist;
+            nearestCompat = cp.compat;
+          }
+        }
+        if (nearestCompat === 'client-only') {
+          tags.push(tp.tagName);
+        }
+      }
+      _cachedHubClientOnlyTags = tags;
+      if (tags.length > 0) {
+        log.info(`Hub client-only tags: ${tags.length} tag(s) discovered from ${hubDataPath}`);
+      }
+      return tags;
+    } catch {
+      // Hub data not available — skip (non-fatal)
+      _cachedHubClientOnlyTags = [];
+      return [];
+    }
+  }
+
   function generateEntry(
     routes: RouteEntry[],
     islandTagNames: string[] = [],
@@ -454,6 +508,7 @@ export function less(
       allowHeadExtrasScripts,
       html: resolvedOptions.html,
       upgradeStrategy: resolvedOptions.island?.upgradeStrategy || 'lazy',
+      hubClientOnlyTags: _cachedHubClientOnlyTags || [],
     });
   }
 
@@ -584,6 +639,10 @@ export function less(
           islandMeta: ctx.phase1.islandMeta,
           packageManifests: ctx.phase1.packageManifests,
           cemClassifications: ctx.phase1.cemClassifications,
+          hubClientOnlyTags: await discoverHubClientOnlyTags(
+            process.cwd(),
+            resolvedOptions.routesDir || 'app/routes',
+          ),
         }).ssrAdmissionPlan;
         const pageCount = routes.filter(
           (r) => r.type === 'page' && !r.special,

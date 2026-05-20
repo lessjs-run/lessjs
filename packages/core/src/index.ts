@@ -118,8 +118,12 @@ export { generateAddPlan } from './less-add.js';
 export type { AddPlan, AddTagEntry, FileMutation, PackageSource } from './less-add.js';
 
 // DOM Simulation Experiment (v0.18.3)
-export { buildDomSimulationReport, renderWithDomSimulation } from './dom-simulation.js';
-export type { DomSimulationOptions, DomSimulationResult } from './dom-simulation.js';
+// DEPRECATED from barrel — import from '@lessjs/core/dom-simulation' instead.
+// This experimental API requires happy-dom at runtime, which violates
+// core's "zero npm/node/vite" constraint when imported via the barrel.
+// The subpath export is retained for backward compatibility.
+// export { buildDomSimulationReport, renderWithDomSimulation } from './dom-simulation.js';
+// export type { DomSimulationOptions, DomSimulationResult } from './dom-simulation.js';
 
 // G10 fix: Virtual module IDs — shared across adapter-vite, content, i18n
 export {

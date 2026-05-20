@@ -324,12 +324,37 @@ export function island<T extends CustomElementConstructor>(
   const strategy = options.strategy || 'lazy';
   const useDsd = options.dsd !== false; // default true
 
-  // Validate tag name
+  // Validate tag name per WHATWG Custom Element name rules
+  // https://html.spec.whatwg.org/multipage/custom-elements.html#valid-custom-element-name
   if (!tagName || !tagName.includes('-')) {
     throw new Error(
       `[LessJS] island() requires a hyphenated tag name, got "${tagName}". ` +
         'Custom Element names must contain a hyphen per the HTML spec.',
     );
+  }
+  // WHATWG: must start with lowercase letter, only lowercase/digits/hyphens,
+  // must not start with a reserved prefix, no uppercase
+  if (!/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(tagName)) {
+    throw new Error(
+      `[LessJS] island() tag name "${tagName}" is not a valid custom element name. ` +
+        'Must start with a lowercase ASCII letter, contain only lowercase ASCII ' +
+        'letters, digits, and hyphens, and not use reserved names.',
+    );
+  }
+  // Reserved names per WHATWG (partial list)
+  const reservedPrefixes = [
+    'annotation-',
+    'color-profile',
+    'font-face',
+    'font-face-',
+    'missing-glyph',
+  ];
+  for (const prefix of reservedPrefixes) {
+    if (tagName.startsWith(prefix)) {
+      throw new Error(
+        `[LessJS] island() tag name "${tagName}" uses a reserved prefix "${prefix}".`,
+      );
+    }
   }
 
   // Mark the class with metadata (used by island-transform plugin and SSR)

@@ -1,13 +1,10 @@
-export const meta = {
-  section: 'Roadmap & Decisions',
-  label: 'Roadmap',
-  order: 10,
-};
+export const meta = { section: '', label: 'Roadmap', order: 10 };
 
 import { headerNav, navSections } from 'virtual:less-nav';
 import { css, html, LitElement } from 'lit';
 import { pageStyles } from '../components/page-styles.js';
 import '@lessjs/ui/less-layout';
+import '@lessjs/ui/less-callout';
 
 export class RoadmapPage extends LitElement {
   declare locale?: string;
@@ -15,17 +12,6 @@ export class RoadmapPage extends LitElement {
   static override styles = [
     pageStyles,
     css`
-      .callout {
-        padding: 1rem;
-        background: var(--less-bg-muted);
-        border-left: 4px solid var(--less-color-primary);
-        margin: 1.5rem 0;
-      }
-
-      .callout p {
-        margin: 0;
-      }
-
       .reset-table,
       .version-table {
         width: 100%;
@@ -162,6 +148,7 @@ export class RoadmapPage extends LitElement {
         .navItems="${navSections}"
         .headerNav="${headerNav}"
         current-path="/roadmap"
+        home
       >
         <div class="container">
           <h1>Roadmap</h1>
@@ -170,13 +157,11 @@ export class RoadmapPage extends LitElement {
             >v0.18.0</code>，下一里程碑 <code>v0.18.1</code>。
           </p>
 
-          <div class="callout">
-            <p>
-              事实优先、标准优先、协议优先。已测试的能力进入文档；未冻结的留在 roadmap 和 ADR；registry
-              hub 只在 renderer kernel、package manifest 和 release parity 稳定之后才建设。版本纪律遵循
-              ADR 0006。
-            </p>
-          </div>
+          <less-callout type="info">
+            事实优先、标准优先、协议优先。已测试的能力进入文档；未冻结的留在 roadmap 和 ADR；registry
+            hub 只在 renderer kernel、package manifest 和 release parity 稳定之后才建设。版本纪律遵循
+            ADR 0006。
+          </less-callout>
 
           <h2>Six-Phase Vision</h2>
           <table class="version-table">
@@ -356,10 +341,10 @@ export class RoadmapPage extends LitElement {
             >20260515 ADR/SOP →</a>
             <a class="nav-link" href="/decisions/0024-standards-first-wc-renderer-roadmap"
             >Strategic Roadmap ADR →</a>
-            <a class="nav-link" href="/docs/decisions/adr-0006-version-roadmap">Version Roadmap ADR →</a>
-            <a class="nav-link" href="/docs/decisions/adr-0007-npm-publishing-strategy"
+            <a class="nav-link" href="/decisions/adr-0006-version-roadmap">Version Roadmap ADR →</a>
+            <a class="nav-link" href="/decisions/adr-0007-npm-publishing-strategy"
             >Publishing Strategy →</a>
-            <a class="nav-link" href="/docs/architecture">Architecture →</a>
+            <a class="nav-link" href="/engine/architecture">Architecture →</a>
           </nav>
         </div>
       </less-layout>
@@ -374,6 +359,7 @@ export class RoadmapPage extends LitElement {
         .navItems="${navSections}"
         .headerNav="${headerNav}"
         current-path="/en/roadmap"
+        home
       >
         <div class="container">
           <h1>Roadmap</h1>
@@ -383,13 +369,11 @@ export class RoadmapPage extends LitElement {
             >v0.18.1</code>.
           </p>
 
-          <div class="callout">
-            <p>
-              Fact-first, standards-first, protocol-first. Tested capabilities move into docs; unfinished
-              boundaries stay in the roadmap and ADRs; the registry hub only follows renderer kernel,
-              package manifest, and release parity stability. Version discipline follows ADR 0006.
-            </p>
-          </div>
+          <less-callout type="info">
+            Fact-first, standards-first, protocol-first. Tested capabilities move into docs; unfinished
+            boundaries stay in the roadmap and ADRs; the registry hub only follows renderer kernel,
+            package manifest, and release parity stability. Version discipline follows ADR 0006.
+          </less-callout>
 
           <h2>Six-Phase Vision</h2>
           <table class="version-table">
@@ -588,11 +572,11 @@ export class RoadmapPage extends LitElement {
             >20260515 ADR/SOP →</a>
             <a class="nav-link" href="/en/decisions/0024-standards-first-wc-renderer-roadmap"
             >Strategic Roadmap ADR →</a>
-            <a class="nav-link" href="/en/docs/decisions/adr-0006-version-roadmap"
+            <a class="nav-link" href="/en/decisions/adr-0006-version-roadmap"
             >Version Roadmap ADR →</a>
-            <a class="nav-link" href="/en/docs/decisions/adr-0007-npm-publishing-strategy"
+            <a class="nav-link" href="/en/decisions/adr-0007-npm-publishing-strategy"
             >Publishing Strategy →</a>
-            <a class="nav-link" href="/en/docs/architecture">Architecture →</a>
+            <a class="nav-link" href="/en/engine/architecture">Architecture →</a>
           </nav>
         </div>
       </less-layout>
