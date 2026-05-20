@@ -146,8 +146,6 @@ export default class DocsHome extends DsdLitElement {
     css`
     :host {
       display: block;
-      /* Prevent 100vw elements from causing horizontal scroll */
-      overflow-x: hidden;
     }
     less-layout {
       min-height: 100vh;
@@ -699,7 +697,8 @@ export default class DocsHome extends DsdLitElement {
       background: linear-gradient(180deg, #0d0d1f 0%, #080816 100%);
       border-top: none;
       padding: 3rem 1.5rem 1.5rem;
-      width: 100%;
+      /* Use max-width:100% instead of width:100% for proper responsive behavior */
+      max-width: 100%;
       box-sizing: border-box;
       position: relative;
       overflow: hidden;

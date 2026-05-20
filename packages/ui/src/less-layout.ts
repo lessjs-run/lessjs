@@ -131,6 +131,7 @@ export class LessLayout extends DsdLitElement {
       .layout-main {
         flex: 1;
         min-width: 0;
+        width: 100%;
       }
 
       .app-layout[home] .layout-body {

@@ -5,9 +5,10 @@
  * Loads a pre-built search index JSON and performs client-side search.
  * Triggered by Cmd+K or clicking the search icon.
  *
- * v0.19.0: Extends DsdLitElement to prevent duplicate rendering.
- * When DSD pre-populates the shadow root, render() returns nothing
- * until user interaction (opening the search panel) requires a re-render.
+ * v0.19.0: Uses DsdLitElement for DSD hydration.
+ * DSD string in _renderer.ts contains only CSS styles (no button).
+ * Lit's render() always outputs the button + optional overlay,
+ * avoiding duplicate rendering issues.
  */
 
 import { css, html, nothing } from 'lit';
@@ -274,26 +275,17 @@ export default class LessSearch extends DsdLitElement {
   }
 
   override render() {
-    // DSD hydration: when shadow root is pre-populated and search is closed,
-    // skip re-rendering the button (DSD already has it) — only render the overlay.
-    if (this._dsdHydrated && !this._open) return nothing;
-
-    // When open: if DSD-hydrated, only inject the overlay (keep the DSD button intact).
-    // When not DSD-hydrated (non-SSR path): render full button + overlay.
-    const triggerButton = this._dsdHydrated
-      ? nothing
-      : html`
-        <button class="search-trigger" @click="${() => {
-          this._open = true;
-          this._loadIndex();
-          this.requestUpdate();
-        }}">
-          <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-            <circle cx="7" cy="7" r="4.5"/>
-            <path d="M10.5 10.5L14 14"/>
-          </svg>
-          <span>Search</span><kbd>⌘K</kbd>
-        </button>`;
+    // Always render the button. When DSD-hydrated, the DSD only contains
+    // styles (see SEARCH_DSD in _renderer.ts) — Lit renders the full button.
+    // This avoids duplicate button issues when render() clears shadow DOM.
+    const triggerButton = html`
+      <button class="search-trigger" @click="${this._handleTriggerClick}">
+        <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="7" cy="7" r="4.5"/>
+          <path d="M10.5 10.5L14 14"/>
+        </svg>
+        <span>Search</span><kbd>⌘K</kbd>
+      </button>`;
 
     const overlay = this._open
       ? html`
