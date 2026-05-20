@@ -146,6 +146,8 @@ export default class DocsHome extends DsdLitElement {
     css`
     :host {
       display: block;
+      /* Prevent 100vw elements from causing horizontal scroll */
+      overflow-x: hidden;
     }
     less-layout {
       min-height: 100vh;
@@ -829,69 +831,108 @@ export default class DocsHome extends DsdLitElement {
       .bench-fill { transition: none; }
     }
 
-    /* ── Responsive ── */
-    @media (max-width: 760px) {
+    /* ── Responsive: Tablet (≤768px) ── */
+    @media (max-width: 768px) {
       .hero-inner {
-        padding: 2rem 1.25rem 1.5rem;
+        padding: 3rem 1.25rem 2rem;
       }
       .hero h1 {
-        font-size: clamp(2rem, 8vw, 3rem);
+        font-size: clamp(2rem, 7vw, 3.5rem);
       }
       .code-strip {
-        padding: 1.5rem 0;
-      }
-      .code-strip-inner {
-        padding: 0 1.25rem;
+        padding: 2rem 0;
       }
       .code-compare {
         grid-template-columns: 1fr;
       }
-      .cards { grid-template-columns:1fr 1fr }
-      .card-dominant { grid-column:1/-1 }
+      .cards {
+        grid-template-columns: 1fr 1fr;
+      }
+      .card-dominant {
+        grid-column: 1 / -1;
+      }
       .qs {
         padding-left: 28px;
       }
-      .stats {
-        gap: 16px;
-      }
       .sec {
-        padding: 2.5rem 0 0;
+        padding: 3rem 0 0;
       }
-      .sec-lbl {
-        margin: 0 1.25rem 6px;
-      }
+      /* 统一使用 padding，不用 margin */
+      .sec-lbl,
       .sec-title {
-        margin: 0 1.25rem 14px;
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+        margin-left: 0;
+        margin-right: 0;
       }
       .sec-bd {
         padding: 0 1.25rem;
       }
-      .bench-stats-row { display:flex;gap:12px;margin-bottom:16px }
-    .bench-stats-row .met { flex:1;text-align:center;padding:12px 8px;border-radius:8px;background:var(--less-bg-surface);border:0.5px solid var(--less-border);transition:border-color 0.2s,box-shadow 0.2s }
-    .bench-stats-row .met:hover { border-color:rgba(83,74,183,0.3);box-shadow:0 2px 8px rgba(83,74,183,0.08) }
-    .bench-stats-row .met strong { display:block;font-size:20px;font-weight:600;color:var(--less-brand,#534AB7);margin-bottom:2px }
-    .bench-stats-row .met span { display:block;font-size:11px;color:var(--less-text-muted);text-transform:uppercase;letter-spacing:0.06em }
-    .bench-grid {
+      .bench-stats-row {
+        flex-direction: row;
+        gap: 10px;
+      }
+      .bench-grid {
         grid-template-columns: 1fr;
       }
     }
+
+    /* ── Responsive: Mobile (≤480px) ── */
     @media (max-width: 480px) {
+      .hero-inner {
+        padding: 2rem 1rem 1.5rem;
+      }
       .hero h1 {
-        font-size: 1.75rem;
+        font-size: clamp(1.5rem, 8vw, 2.5rem);
+        letter-spacing: -0.02em;
       }
       .hero-desc {
         font-size: 13px;
+        line-height: 1.6;
       }
-      .stat strong {
-        font-size: 14px;
+      .hero-actions {
+        flex-direction: column;
+      }
+      .hero-actions a {
+        justify-content: center;
+      }
+      .code-strip-inner {
+        padding: 0 1rem;
+      }
+      .code-pane {
+        padding: 10px 12px;
+      }
+      .code-pane code {
+        font-size: 10px !important;
+      }
+      .cards {
+        grid-template-columns: 1fr;
+      }
+      .qs {
+        padding-left: 24px;
+      }
+      .qs-step-card::before {
+        left: -22px;
+        width: 10px;
+        height: 10px;
+      }
+      .sec-lbl,
+      .sec-title {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      .sec-bd {
+        padding: 0 1rem;
+      }
+      .bench-lbl {
+        width: 60px;
+        font-size: 11px;
       }
       .bench-row {
         gap: 8px;
       }
-      .cards { grid-template-columns:1fr }
-      .bench-lbl {
-        width: 70px;
-        font-size: 11px;
+      .bench-stats-row {
+        flex-direction: column;
       }
     }
   `];

@@ -113,13 +113,14 @@ const renderer: LessRenderer = {
   wrap(html: string, ctx: { req: { path: string } }) {
     const path = ctx.req.path || '';
 
-    // Inject search button into header slot (like guide/engine renderers)
+    // Inject search button into header slot with DSD fallback
+    const SEARCH_DSD = '<less-search slot="header-actions"><template shadowrootmode="open"><style>:host{display:inline-flex;align-items:center}.search-trigger{display:inline-flex;align-items:center;gap:0.375rem;padding:0.375rem 0.5rem;border:0.5px solid var(--less-border);border-radius:6px;background:transparent;color:var(--less-text-muted);font-size:0.6875rem;font-weight:500;letter-spacing:0.02em;cursor:pointer}.search-trigger kbd{font-family:inherit;padding:0.0625rem 0.3125rem;border:0.5px solid var(--less-border);border-radius:3px;font-size:0.625rem;margin-left:0.25rem}</style><button class="search-trigger">Search<kbd>⌘K</kbd></button></template></less-search>';
     const layoutOpen = html.indexOf('<less-layout');
     if (layoutOpen >= 0) {
       const closeGt = html.indexOf('>', layoutOpen);
       if (closeGt > 0) {
         html = html.slice(0, closeGt + 1) +
-          '<less-search slot="header-actions"></less-search>' +
+          SEARCH_DSD +
           html.slice(closeGt + 1);
       }
     }
