@@ -13,7 +13,7 @@
  *
  * @lessjs/app island — client-side only (showcase islands are ssr: false)
  */
-import { css, html } from 'lit';
+import { css, html, nothing } from 'lit';
 import { DsdLitElement } from '@lessjs/adapter-lit';
 import { lessDesignTokens } from '@lessjs/ui/design-tokens';
 import '@lessjs/ui/less-code-block';
@@ -236,6 +236,10 @@ export default class LessShowcasePanel extends DsdLitElement {
   }
 
   override render() {
+    // When DSD-hydrated, the shadow DOM already has styles from DSD.
+    // Return nothing to let Lit preserve the hydrated content.
+    if (this._dsdHydrated) return nothing;
+
     const activeTab = this._tabs[this._activeTab];
     return html`
       <div class="tab-bar" role="tablist">
