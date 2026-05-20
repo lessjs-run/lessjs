@@ -6,12 +6,12 @@
  * Triggered by Cmd+K or clicking the search icon.
  *
  * Architecture:
- * - DSD provides the button HTML with native onclick handler calling open()
- * - Lit provides the overlay panel
- * - Lit render() returns nothing when closed — DSD handles the button
+ * - DSD contains only CSS styles (no button markup)
+ * - Lit render() always outputs button + optional overlay
+ * - Single source of truth — no duplicate rendering issues
  */
 
-import { LitElement, html, nothing } from 'lit';
+import { css, html, nothing } from 'lit';
 import { live } from 'lit-html/directives/live.js';
 import { repeat } from 'lit-html/directives/repeat.js';
 
@@ -38,10 +38,57 @@ export default class LessSearch extends LitElement {
     this._boundKeydown = this._onKeydown.bind(this);
   }
 
-  static styles = `
+  /** Reuse DSD-created shadow root if it exists. */
+  override createRenderRoot() {
+    return this.shadowRoot ?? super.createRenderRoot();
+  }
+
+  static override styles = css`
     :host {
       display: inline-flex;
       align-items: center;
+    }
+
+    /* Trigger button */
+    .search-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--less-size-2, 0.375rem);
+      padding: var(--less-size-2, 0.375rem) var(--less-size-3, 0.5rem);
+      border: 0.5px solid var(--less-border);
+      border-radius: var(--less-radius-md, 6px);
+      background: transparent;
+      color: var(--less-text-muted);
+      font-size: var(--less-font-size-xs, 0.6875rem);
+      font-weight: var(--less-font-weight-medium, 500);
+      letter-spacing: var(--less-letter-spacing-wide, 0.02em);
+      cursor: pointer;
+      transition: color var(--less-transition-normal), border-color var(--less-transition-normal);
+    }
+    .search-trigger:hover {
+      color: var(--less-text-secondary);
+      border-color: var(--less-border-hover);
+    }
+    .search-trigger kbd {
+      font-family: inherit;
+      padding: 0.0625rem 0.3125rem;
+      border: 0.5px solid var(--less-border);
+      border-radius: 3px;
+      font-size: 0.625rem;
+      margin-left: var(--less-size-1, 0.25rem);
+    }
+
+    .search-icon {
+      display: none;
+      width: 16px;
+      height: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .search-trigger span { display: none; }
+      .search-trigger kbd { display: none; }
+      .search-icon { display: inline-block; }
+      .search-trigger { padding: var(--less-size-2, 0.375rem); }
     }
 
     /* Overlay */
@@ -125,15 +172,19 @@ export default class LessSearch extends LitElement {
     }
   `;
 
-  /** Public API: open the search overlay */
-  open() {
+  private _handleTriggerClick = () => {
     this._open = true;
     this._loadIndex();
     this.requestUpdate();
     requestAnimationFrame(() => {
       this.shadowRoot?.querySelector<HTMLInputElement>('.search-input')?.focus();
     });
-  }
+  };
+
+  private _closeOverlay = () => {
+    this._open = false;
+    this.requestUpdate();
+  };
 
   override connectedCallback() {
     super.connectedCallback();
@@ -148,16 +199,11 @@ export default class LessSearch extends LitElement {
   private _onKeydown = (e: KeyboardEvent) => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
       e.preventDefault();
-      if (this._open) {
-        this._open = false;
-      } else {
-        this.open();
-      }
-      this.requestUpdate();
+      if (this._open) this._closeOverlay();
+      else this._handleTriggerClick();
     }
     if (e.key === 'Escape' && this._open) {
-      this._open = false;
-      this.requestUpdate();
+      this._closeOverlay();
     }
   };
 
@@ -211,50 +257,57 @@ export default class LessSearch extends LitElement {
 
   private _onOverlayClick = (e: MouseEvent) => {
     if (e.target === e.currentTarget) {
-      this._open = false;
-      this.requestUpdate();
+      this._closeOverlay();
     }
   };
 
   private _onResultClick = () => {
-    this._open = false;
-    this.requestUpdate();
+    this._closeOverlay();
   };
 
-  /** Lit render: only renders the overlay. Button is provided by DSD. */
   override render() {
-    if (!this._open) return nothing;
+    const triggerButton = html`
+      <button class="search-trigger" @click="${this._handleTriggerClick}">
+        <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="7" cy="7" r="4.5"/>
+          <path d="M10.5 10.5L14 14"/>
+        </svg>
+        <span>Search</span><kbd>⌘K</kbd>
+      </button>`;
 
-    return html`
-      <div class="overlay" @click="${this._onOverlayClick}">
-        <div class="panel">
-          <input
-            class="search-input"
-            type="text"
-            placeholder="Search documentation..."
-            .value="${live(this._query)}"
-            @input="${this._onInput}"
-          >
-          <div class="results">
-            ${this._results.length > 0
-              ? repeat(
-                  this._results,
-                  (r) => r.path,
-                  (r) => html`
-                    <a class="result-item" href="${r.path}" @click="${this._onResultClick}">
-                      <div class="result-section">${r.section}</div>
-                      <div class="result-title">${r.title}</div>
-                      <div class="result-text">${r.text}</div>
-                    </a>
-                  `,
-                )
-              : this._query.length >= 2
-              ? html`<div class="no-results">No results found for "${this._query}"</div>`
-              : html`<div class="no-results">Type at least 2 characters to search</div>`}
+    const overlay = this._open
+      ? html`
+        <div class="overlay" @click="${this._onOverlayClick}">
+          <div class="panel">
+            <input
+              class="search-input"
+              type="text"
+              placeholder="Search documentation..."
+              .value="${live(this._query)}"
+              @input="${this._onInput}"
+            >
+            <div class="results">
+              ${this._results.length > 0
+                ? repeat(
+                    this._results,
+                    (r) => r.path,
+                    (r) => html`
+                      <a class="result-item" href="${r.path}" @click="${this._onResultClick}">
+                        <div class="result-section">${r.section}</div>
+                        <div class="result-title">${r.title}</div>
+                        <div class="result-text">${r.text}</div>
+                      </a>
+                    `,
+                  )
+                : this._query.length >= 2
+                ? html`<div class="no-results">No results found for "${this._query}"</div>`
+                : html`<div class="no-results">Type at least 2 characters to search</div>`}
+            </div>
           </div>
-        </div>
-      </div>
-    `;
+        </div>`
+      : nothing;
+
+    return html`${triggerButton}${overlay}`;
   }
 }
 
