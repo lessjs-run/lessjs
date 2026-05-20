@@ -45,24 +45,16 @@ for (const name of COMPONENT_FILES) {
 
 // ─── Design Tokens ─────────────────────────────────────────
 
-Deno.test('design-tokens: openPropsTokenSheet is CSSResult', async () => {
-  const { openPropsTokenSheet } = await import('../src/design-tokens.ts');
+Deno.test('design-tokens: openPropsTokenSheet is CSSStyleSheet', async () => {
+  const { openPropsTokenSheet } = await import('../src/open-props-tokens.ts');
   assertExists(openPropsTokenSheet);
-  // CSSResult has a cssText property or styles property
-  assertEquals(
-    typeof openPropsTokenSheet.cssText === 'string' ||
-      typeof openPropsTokenSheet === 'string' ||
-      Symbol.for('css') in (openPropsTokenSheet as object),
-    true,
-    'openPropsTokenSheet should be a CSSResult',
-  );
+  assertEquals(openPropsTokenSheet instanceof CSSStyleSheet, true, 'openPropsTokenSheet should be a CSSStyleSheet');
 });
 
 Deno.test('design-tokens: individual token modules export CSS', async () => {
   const tokenModules = [
     ['tokens/spacing', 'lessSpacingTokens'],
     ['tokens/typography', 'lessTypographyTokens'],
-    ['tokens/colors', 'openPropsTokenSheet'],
     ['tokens/effects', 'lessEffectTokens'],
   ];
 
@@ -72,15 +64,6 @@ Deno.test('design-tokens: individual token modules export CSS', async () => {
   }
 });
 
-Deno.test('design-tokens: colors include dark/light theme variables', async () => {
-  const { openPropsTokenSheet } = await import('../src/tokens/colors.ts');
-  const tokenStr = String(openPropsTokenSheet);
-  // Should contain CSS custom properties for theming
-  assertExists(
-    tokenStr.includes('--') || tokenStr.includes('css'),
-    'Color tokens should be valid CSS',
-  );
-});
 
 // ─── Index Re-exports ──────────────────────────────────────
 
@@ -107,7 +90,6 @@ Deno.test('index: re-exports all components', async () => {
   assertExists(mod.openPropsTokenSheet);
   assertExists(mod.lessSpacingTokens);
   assertExists(mod.lessTypographyTokens);
-  assertExists(mod.openPropsTokenSheet);
   assertExists(mod.lessEffectTokens);
 
   // Plugin removed �?lessUI() was dead code (zero consumers)
@@ -413,7 +395,7 @@ Deno.test('less-input: _handleInput dispatches custom event', async () => {
 
   (instance as any)._handleInput(mockEvent);
 
-  assertEquals(instance.value, 'test input value');
+  assertEquals(instance.getAttribute('value'), 'test input value');
   assertExists(dispatchedEvent);
   assertEquals((dispatchedEvent as CustomEvent).detail.value, 'test input value');
 });
@@ -432,7 +414,7 @@ Deno.test('less-input: render without label', async () => {
   const { LessInput } = await import('../src/less-input.ts');
   const instance = new LessInput();
   instance.setAttribute('placeholder', 'Enter text');
-  instance.label = undefined;
+  instance.removeAttribute('label');
   const result = instance.render();
   assertExists(result);
 });
@@ -450,7 +432,7 @@ Deno.test('less-input: connectedCallback sets internals', async () => {
       assertEquals(val, '');
     },
   });
-  instance.value = undefined;
+  instance.removeAttribute('value');
   // Skip super.connectedCallback() �?just test our own logic
   (instance as any)._internals = {
     setFormValue: (val: string) => {
@@ -459,7 +441,7 @@ Deno.test('less-input: connectedCallback sets internals', async () => {
     },
   };
   // Directly call the form value sync logic
-  (instance as any)._internals.setFormValue(instance.value ?? '');
+  (instance as any)._internals.setFormValue(instance.getAttribute('value') ?? '');
   assertEquals(setFormValueCalled, true);
 });
 
@@ -473,7 +455,7 @@ Deno.test('less-input: connectedCallback with existing value', async () => {
     },
   };
   instance.setAttribute('value', 'hello');
-  (instance as any)._internals.setFormValue(instance.value ?? '');
+  (instance as any)._internals.setFormValue(instance.getAttribute('value') ?? '');
   assertEquals(capturedValue, 'hello');
 });
 
@@ -490,8 +472,8 @@ Deno.test('less-input: formResetCallback resets state', async () => {
   instance.setAttribute('value', 'some value');
   instance.setAttribute('error', 'some error');
   instance.formResetCallback();
-  assertEquals(instance.value, '');
-  assertEquals(instance.error, undefined);
+  assertEquals(instance.getAttribute('value'), '');
+  assertEquals(instance.getAttribute('error'), null);
   assertEquals(setFormValueCalled, true);
 });
 
@@ -503,18 +485,18 @@ Deno.test('less-input: formResetCallback handles missing internals', async () =>
   instance.setAttribute('error', 'some error');
   // Should not throw even without internals
   instance.formResetCallback();
-  assertEquals(instance.value, '');
-  assertEquals(instance.error, undefined);
+  assertEquals(instance.getAttribute('value'), '');
+  assertEquals(instance.getAttribute('error'), null);
 });
 
 Deno.test('less-input: formDisabledCallback sets disabled', async () => {
   const { LessInput } = await import('../src/less-input.ts');
   const instance = new LessInput();
-  assertEquals(instance.disabled, false);
+  assertEquals(instance.hasAttribute('disabled'), false);
   instance.formDisabledCallback(true);
-  assertEquals(instance.disabled, true);
+  assertEquals(instance.hasAttribute('disabled'), true);
   instance.formDisabledCallback(false);
-  assertEquals(instance.disabled, false);
+  assertEquals(instance.hasAttribute('disabled'), false);
 });
 
 Deno.test('less-input: _handleInput event composed:false (I-constraint)', async () => {
@@ -1030,7 +1012,7 @@ Deno.test('less-input: _handleInput syncs form value via internals', async () =>
   const mockEvent = { target: { value: 'typed text' } } as any;
   (instance as any)._handleInput(mockEvent);
 
-  assertEquals(instance.value, 'typed text');
+  assertEquals(instance.getAttribute('value'), 'typed text');
   assertEquals(lastFormValue, 'typed text');
 });
 
@@ -1076,7 +1058,7 @@ Deno.test('less-layout: no hardcoded DEFAULT_NAV �?nav is data-driven via navIt
   const instance = new LessLayout();
   // Without navItems, sidebar should render empty
   assertExists(instance);
-  assertEquals(instance.navItems, undefined);
+  assertEquals(instance.getAttribute('nav-items'), null);
 });
 
 Deno.test('less-layout: custom headerNav renders custom links', async () => {

@@ -101,11 +101,7 @@ Deno.test('create-less: deno.json maps Lit and package imports explicitly', () =
   assertEquals(denoJson.imports['@lessjs/ui'], 'jsr:@lessjs/ui@^${v.ui}');
   assertEquals(
     denoJson.imports['@lessjs/ui/open-props-tokens'],
-    'jsr:@lessjs/ui@^${v.ui}/tokens/colors',
-  );
-  assertEquals(
-    denoJson.imports['@lessjs/ui/open-props-tokens'],
-    'jsr:@lessjs/ui@^${v.ui}/tokens/color-values',
+    'jsr:@lessjs/ui@^${v.ui}/open-props-tokens',
   );
   assertEquals(denoJson.imports['@lessjs/ui/'], 'jsr:@lessjs/ui@^${v.ui}/');
   assertEquals(denoJson.nodeModulesDir, 'auto');
@@ -261,11 +257,7 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       },
       {
         find: '@lessjs/ui/open-props-tokens',
-        replacement: vitePath(join(uiSrc, 'tokens', 'colors.ts')),
-      },
-      {
-        find: '@lessjs/ui/open-props-tokens',
-        replacement: vitePath(join(uiSrc, 'tokens', 'color-values.ts')),
+        replacement: vitePath(join(uiSrc, 'open-props-tokens.ts')),
       },
       {
         find: '@lessjs/ui/less-button',
@@ -330,7 +322,7 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       "import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';",
       `import { openPropsTokenSheet } from ${
         JSON.stringify(
-          pathToFileURL(join(uiSrc, 'tokens', 'colors.ts')).href,
+          pathToFileURL(join(uiSrc, 'open-props-tokens.ts')).href,
         )
       };`,
     );

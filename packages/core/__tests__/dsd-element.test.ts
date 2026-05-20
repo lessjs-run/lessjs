@@ -136,7 +136,7 @@ Deno.test('DsdElement: hydrateEvents bind events to shadow DOM elements', () => 
 
   // Click the button inside the shadow root
   const button = el.shadowRoot!.querySelector('button.action')!;
-  (button as HTMLElement).click();
+  (button as HTMLButtonElement).click();
 
   assertEquals(el.clickCount, 1);
 
@@ -175,7 +175,7 @@ Deno.test('DsdElement: disconnectedCallback aborts event listeners', () => {
 
   // Click once to verify it works
   const button = el.shadowRoot!.querySelector('button')!;
-  (button as HTMLElement).click();
+  (button as HTMLButtonElement).click();
   assertEquals(callCount, 1);
 
   // Disconnect should abort listeners
@@ -224,8 +224,8 @@ Deno.test('DsdElement: M-17 guard skips methods starting with __', () => {
   // Click both buttons
   const normalBtn = el.shadowRoot!.querySelector('button.normal')!;
   const dunderBtn = el.shadowRoot!.querySelector('button.dunder')!;
-  (normalBtn as HTMLElement).click();
-  (dunderBtn as HTMLElement).click();
+  (normalBtn as HTMLButtonElement).click();
+  (dunderBtn as HTMLButtonElement).click();
 
   assertEquals(normalCount, 1);
   // M-17 guard: __ method should NOT have been bound
