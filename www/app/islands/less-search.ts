@@ -275,9 +275,11 @@ export default class LessSearch extends DsdLitElement {
   }
 
   override render() {
-    // Always render the button. When DSD-hydrated, the DSD only contains
-    // styles (see SEARCH_DSD in _renderer.ts) — Lit renders the full button.
-    // This avoids duplicate button issues when render() clears shadow DOM.
+    // CRITICAL: When DSD-hydrated, the shadow DOM already has the button
+    // (injected by SSR with full HTML + onclick). Lit MUST NOT re-render
+    // or it will clear the shadow DOM and destroy the event binding.
+    if (this._dsdHydrated) return nothing;
+
     const triggerButton = html`
       <button class="search-trigger" @click="${this._handleTriggerClick}">
         <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">

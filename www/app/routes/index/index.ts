@@ -697,8 +697,9 @@ export default class DocsHome extends DsdLitElement {
       background: linear-gradient(180deg, #0d0d1f 0%, #080816 100%);
       border-top: none;
       padding: 3rem 1.5rem 1.5rem;
-      /* Use max-width:100% instead of width:100% for proper responsive behavior */
-      max-width: 100%;
+      /* Full viewport width — extend beyond parent container */
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
       box-sizing: border-box;
       position: relative;
       overflow: hidden;
