@@ -56,8 +56,8 @@ export class LessCallout extends DsdLitElement {
       .callout {
         padding: 1rem 1.25rem;
         margin: 1rem 0;
-        border-left: 3px solid var(--less-brand, #534AB7);
-        background: var(--less-brand-subtle, rgba(83,74,183,0.06));
+        border-left: 3px solid var(--less-brand, #534ab7);
+        background: var(--less-brand-subtle, rgba(83, 74, 183, 0.06));
         border-radius: 0 var(--less-radius-md, 8px) var(--less-radius-md, 8px) 0;
       }
       .callout-header {

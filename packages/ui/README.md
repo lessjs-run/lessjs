@@ -2,8 +2,20 @@
 
 LessJS Web Components package.
 
-The components are authored with Lit and designed to work with LessJS
-Declarative Shadow DOM output and island upgrade.
+**Current**: authored with Lit + DsdLitElement.
+**Target (v0.20)**: migrate to native `DsdElement` — zero Lit dependency for DSD components, Lit retained only for Pure Islands (e.g., `less-hero-ping`).
+
+All components leverage Declarative Shadow DOM for zero-JS-first rendering and island upgrade for interactive behavior.
+
+## CSS Stack (v0.20 target)
+
+```
+@property               — typed CSS custom properties (Houdini)
+CSS Custom Properties   — design token system
+CSSStyleSheet           — adoptedStyleSheets (shared across instances)
+CSS Parts ::part()      — external customization API
+:state() pseudo-class   — custom element state
+```
 
 ## Install
 
@@ -13,16 +25,23 @@ deno add jsr:@lessjs/ui
 
 ## Components
 
-| Component         | Tag                 | Notes                          |
-| ----------------- | ------------------- | ------------------------------ |
-| `LessButton`      | `less-button`       | Button component.              |
-| `LessInput`       | `less-input`        | Input component.               |
-| `LessCard`        | `less-card`         | Content card.                  |
-| `LessCodeBlock`   | `less-code-block`   | Code block with copy behavior. |
-| `LessLayout`      | `less-layout`       | Docs/layout shell.             |
-| `LessThemeToggle` | `less-theme-toggle` | Theme switch island.           |
-| `LessHeroPing`    | `less-hero-ping`    | Status indicator.              |
-| `LessDialog`      | `less-dialog`       | Dialog component.              |
+| Component         | Tag                 | Type        | Notes                                |
+| ----------------- | ------------------- | ----------- | ------------------------------------ |
+| `LessButton`      | `less-button`       | DSD (Ocean) | Button component.                    |
+| `LessInput`       | `less-input`        | DSD (Ocean) | Input component.                     |
+| `LessCard`        | `less-card`         | DSD (Ocean) | Content card.                        |
+| `LessCodeBlock`   | `less-code-block`   | DSD (Ocean) | Code block with copy behavior.       |
+| `LessLayout`      | `less-layout`       | DSD (Ocean) | Docs/layout shell.                   |
+| `LessStepCard`    | `less-step-card`    | DSD (Ocean) | Step card component.                 |
+| `LessCallout`     | `less-callout`      | DSD (Ocean) | Callout/admonition.                  |
+| `LessThemeToggle` | `less-theme-toggle` | DSD (Ocean) | Theme switch island.                 |
+| `LessDialog`      | `less-dialog`       | DSD (Ocean) | Dialog component.                    |
+| `LessHeroPing`    | `less-hero-ping`    | Pure Island | Status indicator (needs reactivity). |
+
+**Ocean / Island classification**:
+
+- **DSD (Ocean)**: SSR renders full Shadow DOM. Client only binds events. Zero framework reactivity needed.
+- **Pure Island**: Client-rendered. Needs framework reactivity (Lit / FAST / Preact).
 
 ## Package Islands
 
@@ -54,6 +73,8 @@ and diagnostics.
 @lessjs/ui/less-card
 @lessjs/ui/less-code-block
 @lessjs/ui/less-layout
+@lessjs/ui/less-step-card
+@lessjs/ui/less-callout
 @lessjs/ui/less-theme-toggle
 @lessjs/ui/less-hero-ping
 @lessjs/ui/less-dialog

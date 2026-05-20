@@ -17,15 +17,15 @@
 
 ### 1.2 块级变更总览
 
-| 区块 | v7 现状 | v8 改动 | 涉及行号 |
-|------|---------|---------|----------|
-| Hero | Logo + h1 三支柱标题 + 长描述 + term-demo + 4 stats | Logo + 一行定位语 + 副标题 + CTA（移除 term-demo 和 stats） | CSS 213-298, HTML 790-817 |
-| Code Strip | 暗色代码对比 | 不变（仅去掉下方的 sec-divider） | HTML 845 删除 |
-| Benchmark | 条形图 + 2 bench-stat + bench-note | +4 stat 卡片（从 Hero 移来）+ Astro 对比 callout | CSS 536-564 增强, HTML 875-909 |
-| Multi-framework | sec-lbl + sec-title + showcase | 去掉 sec-lbl，保留标题 + showcase | HTML 914-920 |
-| Bento Grid | 1 大卡(全栈) + 2 小卡(WC引擎/Registry) | 1 主导宽卡(WC引擎) + 2 小卡(全栈/Registry) | CSS 434-479 重写, HTML 848-870 |
-| Quick Start | 3 step-card 无说明 | +每步说明文字 + 底部 CTA | CSS 566-597 增强, HTML 925-941 |
-| Footer | 暖灰完整 Footer | 不变（仅 html 注释号修正） | HTML 944 |
+| 区块            | v7 现状                                             | v8 改动                                                     | 涉及行号                       |
+| --------------- | --------------------------------------------------- | ----------------------------------------------------------- | ------------------------------ |
+| Hero            | Logo + h1 三支柱标题 + 长描述 + term-demo + 4 stats | Logo + 一行定位语 + 副标题 + CTA（移除 term-demo 和 stats） | CSS 213-298, HTML 790-817      |
+| Code Strip      | 暗色代码对比                                        | 不变（仅去掉下方的 sec-divider）                            | HTML 845 删除                  |
+| Benchmark       | 条形图 + 2 bench-stat + bench-note                  | +4 stat 卡片（从 Hero 移来）+ Astro 对比 callout            | CSS 536-564 增强, HTML 875-909 |
+| Multi-framework | sec-lbl + sec-title + showcase                      | 去掉 sec-lbl，保留标题 + showcase                           | HTML 914-920                   |
+| Bento Grid      | 1 大卡(全栈) + 2 小卡(WC引擎/Registry)              | 1 主导宽卡(WC引擎) + 2 小卡(全栈/Registry)                  | CSS 434-479 重写, HTML 848-870 |
+| Quick Start     | 3 step-card 无说明                                  | +每步说明文字 + 底部 CTA                                    | CSS 566-597 增强, HTML 925-941 |
+| Footer          | 暖灰完整 Footer                                     | 不变（仅 html 注释号修正）                                  | HTML 944                       |
 
 ---
 
@@ -48,42 +48,42 @@ v8 顺序:  Hero → CodeStrip → BundleLine → Benchmark → MultiFw → Glow
 
 #### 1.4.1 删除的 CSS 类
 
-| 类名 | 当前行号 | 说明 |
-|------|----------|------|
-| `.sec-divider` | 406-413 | 通用分割线，v8 替代为区块专有过渡 |
-| `.stats`, `.stat`, `.stat strong`, `.stat span` | 279-298 | Hero 统计数据样式，移到 Benchmark 使用 `.bench-stat` |
-| `less-term-demo` | 273-276 | CSS 块级样式，`less-term-demo` 元素从 Hero 移除 |
+| 类名                                            | 当前行号 | 说明                                                 |
+| ----------------------------------------------- | -------- | ---------------------------------------------------- |
+| `.sec-divider`                                  | 406-413  | 通用分割线，v8 替代为区块专有过渡                    |
+| `.stats`, `.stat`, `.stat strong`, `.stat span` | 279-298  | Hero 统计数据样式，移到 Benchmark 使用 `.bench-stat` |
+| `less-term-demo`                                | 273-276  | CSS 块级样式，`less-term-demo` 元素从 Hero 移除      |
 
 同步删除 `.sec-divider` 在响应式和 reduced-motion 中的引用（不涉及，`sec-divider` 无动画/响应式覆盖）。
 
 #### 1.4.2 修改的 CSS 类
 
-| 类名 | 当前行号 | 变更内容 |
-|------|----------|----------|
-| `.hero-desc` | 228-234 | 从"长描述"改为"副标题"，保留基础样式但 font-size 可能调整 |
-| `.hero h1` | 213-220 | Hero h1 改为更短文本，可保留品牌色 `<em>` 高亮 |
-| `.hero h1 em` | 221-226 | 品牌色渐变高亮保留，用于"零 JS 首屏"和"多框架共存" |
-| `.cards` | 434-438 | 从 `2fr 1fr` + `:first-child grid-row: 1/3` 改为 `1fr 1fr`（两行布局）+ 第一行全宽的 WC Engine 主导卡 |
-| `.card` | 443-456 | 基础 `.card` 保留，新增 `.card-dominant` 变体 |
-| `.qs` | 567-572 | 保留基础结构，增强 `.qs-step-card` 内新增描述行样式 |
-| `.sec-title` | 422-428 | 保留不变（Benchmark/Bento/QuickStart 仍使用） |
-| `.bench-note` | 531-536 | 内容更新为 Astro 对比 + 技术注脚 |
+| 类名          | 当前行号 | 变更内容                                                                                              |
+| ------------- | -------- | ----------------------------------------------------------------------------------------------------- |
+| `.hero-desc`  | 228-234  | 从"长描述"改为"副标题"，保留基础样式但 font-size 可能调整                                             |
+| `.hero h1`    | 213-220  | Hero h1 改为更短文本，可保留品牌色 `<em>` 高亮                                                        |
+| `.hero h1 em` | 221-226  | 品牌色渐变高亮保留，用于"零 JS 首屏"和"多框架共存"                                                    |
+| `.cards`      | 434-438  | 从 `2fr 1fr` + `:first-child grid-row: 1/3` 改为 `1fr 1fr`（两行布局）+ 第一行全宽的 WC Engine 主导卡 |
+| `.card`       | 443-456  | 基础 `.card` 保留，新增 `.card-dominant` 变体                                                         |
+| `.qs`         | 567-572  | 保留基础结构，增强 `.qs-step-card` 内新增描述行样式                                                   |
+| `.sec-title`  | 422-428  | 保留不变（Benchmark/Bento/QuickStart 仍使用）                                                         |
+| `.bench-note` | 531-536  | 内容更新为 Astro 对比 + 技术注脚                                                                      |
 
 #### 1.4.3 新增的 CSS 类
 
-| 类名 | 说明 | 区块间位置 |
-|------|------|-----------|
-| `.turn-line` | 品牌色渐变细线 (`#534AB7 → transparent`)，暗→浅翻转 | Code Strip → Benchmark |
-| `.turn-glow` | 品牌色光晕分割 (`radial-gradient`)，浅→浅微变化 | Multi-framework → Bento |
-| `.card-dominant` | WC Engine 主导卡：全宽、品牌色淡背景 `rgba(83,74,183,0.04)`、左侧 2px 品牌色竖线 | Bento 第一行 |
-| `.card-dominant .card-accent` | 左侧 2px 品牌色竖线伪元素，hover 时发光 | Bento |
-| `.card-pills` | Pill 标签容器 flex | Bento WC Engine 卡内 |
-| `.card-pill` | 单个 pill: `DSD` / `Island` / `Multi-adapter`，品牌色淡底 + 圆角 | Bento |
-| `.bench-astro` | Astro 对比说明小字 callout，hover 展开样式 | Benchmark 底部 |
-| `.qs-desc` | Quick Start 每个步骤的描述文字 | Quick Start |
-| `.qs-cta` | Quick Start 底部 CTA 按钮 | Quick Start |
-| `.qs-cta a` | CTA 按钮样式，复刻 `.hero-pri` 逻辑但浅色背景下 | Quick Start |
-| `.sec-no-label` | 新节样式（Multi-framework 专用）：去掉 label 区域但保留标题 + 内容 | 全局 |
+| 类名                          | 说明                                                                             | 区块间位置              |
+| ----------------------------- | -------------------------------------------------------------------------------- | ----------------------- |
+| `.turn-line`                  | 品牌色渐变细线 (`#534AB7 → transparent`)，暗→浅翻转                              | Code Strip → Benchmark  |
+| `.turn-glow`                  | 品牌色光晕分割 (`radial-gradient`)，浅→浅微变化                                  | Multi-framework → Bento |
+| `.card-dominant`              | WC Engine 主导卡：全宽、品牌色淡背景 `rgba(83,74,183,0.04)`、左侧 2px 品牌色竖线 | Bento 第一行            |
+| `.card-dominant .card-accent` | 左侧 2px 品牌色竖线伪元素，hover 时发光                                          | Bento                   |
+| `.card-pills`                 | Pill 标签容器 flex                                                               | Bento WC Engine 卡内    |
+| `.card-pill`                  | 单个 pill: `DSD` / `Island` / `Multi-adapter`，品牌色淡底 + 圆角                 | Bento                   |
+| `.bench-astro`                | Astro 对比说明小字 callout，hover 展开样式                                       | Benchmark 底部          |
+| `.qs-desc`                    | Quick Start 每个步骤的描述文字                                                   | Quick Start             |
+| `.qs-cta`                     | Quick Start 底部 CTA 按钮                                                        | Quick Start             |
+| `.qs-cta a`                   | CTA 按钮样式，复刻 `.hero-pri` 逻辑但浅色背景下                                  | Quick Start             |
+| `.sec-no-label`               | 新节样式（Multi-framework 专用）：去掉 label 区域但保留标题 + 内容               | 全局                    |
 
 ---
 
@@ -141,7 +141,10 @@ Astro 对比说明（放在 `.bench-note` 中或作为单独的 `.bench-astro` c
 
 ```html
 <less-callout>
-  <p>Unlike Astro, LessJS achieves zero-JS without a "no-JS-by-default" policy — DSD is a browser primitive, not a convention.</p>
+  <p>
+    Unlike Astro, LessJS achieves zero-JS without a "no-JS-by-default" policy — DSD is a browser
+    primitive, not a convention.
+  </p>
 </less-callout>
 ```
 
@@ -257,7 +260,7 @@ Footer ──────────── 暖灰 (#F1EFE8)
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--less-brand, #534AB7) 50%, transparent);
+  background: linear-gradient(90deg, transparent, var(--less-brand, #534ab7) 50%, transparent);
   opacity: 0.3;
   border: none;
   margin-top: 0;
@@ -269,20 +272,24 @@ Footer ──────────── 暖灰 (#F1EFE8)
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   height: 1px;
-  background: radial-gradient(ellipse at 50% 50%, var(--less-brand-glow, rgba(83,74,183,0.25)), transparent 70%);
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    var(--less-brand-glow, rgba(83, 74, 183, 0.25)),
+    transparent 70%
+  );
   border: none;
 }
 
 /* ── Bento: WC Engine dominant card ── */
 .card-dominant {
   grid-column: 1 / -1;
-  background: rgba(83,74,183,0.04);
-  border-left: 2px solid var(--less-brand, #534AB7);
+  background: rgba(83, 74, 183, 0.04);
+  border-left: 2px solid var(--less-brand, #534ab7);
   position: relative;
 }
 .card-dominant:hover {
-  border-left-color: var(--less-brand-light, #6D5CE8);
-  box-shadow: 0 0 16px var(--less-brand-glow, rgba(83,74,183,0.15)) inset;
+  border-left-color: var(--less-brand-light, #6d5ce8);
+  box-shadow: 0 0 16px var(--less-brand-glow, rgba(83, 74, 183, 0.15)) inset;
 }
 
 /* ── Bento: pill labels ── */
@@ -297,9 +304,9 @@ Footer ──────────── 暖灰 (#F1EFE8)
   border-radius: 10px;
   font-size: 11px;
   font-weight: 500;
-  color: var(--less-brand, #534AB7);
-  background: rgba(83,74,183,0.08);
-  border: 1px solid rgba(83,74,183,0.15);
+  color: var(--less-brand, #534ab7);
+  background: rgba(83, 74, 183, 0.08);
+  border: 1px solid rgba(83, 74, 183, 0.15);
 }
 
 /* ── Quick Start: step description ── */
@@ -325,14 +332,15 @@ Footer ──────────── 暖灰 (#F1EFE8)
   font-weight: 600;
   text-decoration: none;
   color: #fff;
-  background: linear-gradient(135deg, var(--less-brand, #534AB7), var(--less-brand-light, #6D5CE8));
-  box-shadow: var(--less-shadow-brand-md, 0 4px 20px rgba(83,74,183,0.3));
-  transition: transform var(--less-duration-micro, 150ms) var(--less-easing-default, ease-out),
-              box-shadow var(--less-duration-micro, 150ms) var(--less-easing-default, ease-out);
+  background: linear-gradient(135deg, var(--less-brand, #534ab7), var(--less-brand-light, #6d5ce8));
+  box-shadow: var(--less-shadow-brand-md, 0 4px 20px rgba(83, 74, 183, 0.3));
+  transition:
+    transform var(--less-duration-micro, 150ms) var(--less-easing-default, ease-out),
+    box-shadow var(--less-duration-micro, 150ms) var(--less-easing-default, ease-out);
 }
 .qs-cta a:hover {
   transform: translateY(-1px);
-  box-shadow: var(--less-shadow-brand-lg, 0 8px 32px rgba(83,74,183,0.4));
+  box-shadow: var(--less-shadow-brand-lg, 0 8px 32px rgba(83, 74, 183, 0.4));
 }
 
 /* ── Benchmark: Astro comparison callout ── */
@@ -356,26 +364,37 @@ Footer ──────────── 暖灰 (#F1EFE8)
 
 ```css
 /* 修改前 (v7) */
-.cards { grid-template-columns: 1fr; }
-.card:first-child { grid-row: auto; }
+.cards {
+  grid-template-columns: 1fr;
+}
+.card:first-child {
+  grid-row: auto;
+}
 
 /* 修改后 (v8) — WC Engine 主导卡在移动端也独占一行，两张小卡并排 */
-.cards { grid-template-columns: 1fr 1fr; }
-.card-dominant { grid-column: 1 / -1; }
+.cards {
+  grid-template-columns: 1fr 1fr;
+}
+.card-dominant {
+  grid-column: 1 / -1;
+}
 ```
 
 480px 以下：全部单列：
+
 ```css
-.cards { grid-template-columns: 1fr; }
+.cards {
+  grid-template-columns: 1fr;
+}
 ```
 
 ---
 
 ## 2. 文件列表
 
-| 文件 | 改动类型 | 说明 |
-|------|----------|------|
-| `www/app/routes/index/index.ts` | 修改 | CSS styles + _renderZh() + _renderEn() |
+| 文件                            | 改动类型 | 说明                                   |
+| ------------------------------- | -------- | -------------------------------------- |
+| `www/app/routes/index/index.ts` | 修改     | CSS styles + _renderZh() + _renderEn() |
 
 仅此一个文件。`less-term-demo` island 保留（不删除组件，仅从 Hero 移除引用）。
 
@@ -384,11 +403,13 @@ Footer ──────────── 暖灰 (#F1EFE8)
 ## 3. CSS 类完整变更表
 
 ### 删除
+
 - `.sec-divider`
 - `.stats`, `.stat`, `.stat strong`, `.stat span`
 - `less-term-demo { ... }`
 
 ### 新增
+
 - `.turn-line`
 - `.turn-glow`
 - `.card-dominant`
@@ -399,6 +420,7 @@ Footer ──────────── 暖灰 (#F1EFE8)
 - `.qs-cta`, `.qs-cta a`
 
 ### 修改
+
 - `.hero h1` — 文本变短，保持 CSS 不变
 - `.hero-desc` — 从长描述变为副标题，可能调整 font-size
 - `.cards` — grid-template 从 `2fr 1fr` 改为 `1fr 1fr`
@@ -409,6 +431,7 @@ Footer ──────────── 暖灰 (#F1EFE8)
 - `.bench-grid` — 扩展为 4 列（移动端 2 列）
 
 ### 保留不变
+
 - `.hero`, `.hero-inner`, `.hero-lockup`, `.hero-actions`, `.hero-pri`, `.hero-sec`
 - `.code-strip`, `.code-strip-inner`, `.code-strip-header`, `.code-strip-label`, `.code-strip-arrow`, `.zero-badge`, `.code-compare`, `.code-pane`, `.code-bar`
 - `.bench`, `.bench-row`, `.bench-lbl`, `.bench-track`, `.bench-fill`, `.bench-stat`
@@ -420,11 +443,13 @@ Footer ──────────── 暖灰 (#F1EFE8)
 ## 4. 任务列表
 
 ### 任务 1: Hero 精简化
+
 **依赖**: 无
 **文件**: `index.ts`
 **改动范围**: CSS 213-276, 279-298; HTML Zh 801-815, En 1003-1018
 
 **具体操作**:
+
 1. 修改 `_renderZh` 行 801: h1 内容改为 `全栈框架 · <em>零 JS 首屏</em> · <em>多框架共存</em>`
 2. 修改行 802-804: `.hero-desc` 改为 `DSD 原生渲染，浏览器零 JS 看到完整页面`
 3. 删除行 809: `<less-term-demo></less-term-demo>`
@@ -433,7 +458,8 @@ Footer ──────────── 暖灰 (#F1EFE8)
 6. 删除 CSS 行 279-298: `.stats`, `.stat`, `.stat strong`, `.stat span`
 7. 对称修改 `_renderEn` 行 1003-1018
 
-**验收标准**: 
+**验收标准**:
+
 - Hero 区域只有 Logo + h1 + 副标题 + CTA 按钮
 - `less-term-demo` 和 stats 不再渲染
 - TypeScript 编译无错误
@@ -441,11 +467,13 @@ Footer ──────────── 暖灰 (#F1EFE8)
 ---
 
 ### 任务 2: 区块重新排序 + 移除 sec-divider
+
 **依赖**: 任务 1 完成（避免行号冲突）
 **文件**: `index.ts`
 **改动范围**: CSS 401-431, HTML 845-941 (Zh), 1047-1143 (En)
 
 **具体操作**:
+
 1. 删除 HTML 行 845: 第一个 `<hr class="sec-divider">`（Zh）
 2. 删除 HTML 行 872: 第二个 `<hr class="sec-divider">`（Zh）
 3. 删除 HTML 行 911: 第三个 `<hr class="sec-divider">`（Zh）
@@ -459,6 +487,7 @@ Footer ──────────── 暖灰 (#F1EFE8)
 11. 对称修改 `_renderEn`
 
 **验收标准**:
+
 - 区块顺序: Hero → Code Strip → Benchmark → Multi-framework → Bento → Quick Start
 - 无 `<hr class="sec-divider">` 残留
 - `.turn-line` 和 `.turn-glow` 渲染正确
@@ -467,11 +496,13 @@ Footer ──────────── 暖灰 (#F1EFE8)
 ---
 
 ### 任务 3: Benchmark 增强（stats 迁移 + Astro 对比）
+
 **依赖**: 任务 2 完成（Benchmark 已移到正确位置）
 **文件**: `index.ts`
 **改动范围**: CSS 536-564, HTML Benchmark 区块
 
 **具体操作**:
+
 1. 在 Benchmark `.bench-grid` 中添加 4 个 stat 卡片（从 Hero 移来的数据）
 2. 更新 `.bench-grid` CSS: `grid-template-columns` 从 `1fr 1fr` 改为 `repeat(4, 1fr)`（桌面端 4 列），移动端可改为 `1fr 1fr`
 3. 新增 `<less-callout>` Astro 对比说明（放在 bench-note 之后）
@@ -480,6 +511,7 @@ Footer ──────────── 暖灰 (#F1EFE8)
 6. 对称修改 `_renderEn`
 
 **验收标准**:
+
 - Benchmark 区域显示 4 个 stat 卡片（版本号、测试数、包数、依赖数）
 - Astro 对比 callout 渲染
 - 响应式: 桌面 4 列 stat，移动端 2 列
@@ -488,11 +520,13 @@ Footer ──────────── 暖灰 (#F1EFE8)
 ---
 
 ### 任务 4: Bento Grid 视觉层级重构
+
 **依赖**: 任务 2 完成（Bento 已移到正确位置）
 **文件**: `index.ts`
 **改动范围**: CSS 434-479, HTML Bento 区块（新位置为 Multi-framework 之后）
 
 **具体操作**:
+
 1. 修改 `.cards` CSS 行 434-438: `grid-template-columns` 从 `2fr 1fr` 改为 `1fr 1fr`
 2. 删除 CSS 行 440-442: `.card:first-child { grid-row: 1/3; }`
 3. 新增 CSS `.card-dominant` 样式（见 1.7 节）
@@ -503,6 +537,7 @@ Footer ──────────── 暖灰 (#F1EFE8)
 8. 对称修改 `_renderEn`
 
 **验收标准**:
+
 - WC Engine 卡独占第一行，品牌色淡背景 + 左侧竖线
 - 两张小卡在第二行并排
 - 3 个 pill 标签 (DSD/Island/Multi-adapter) 渲染在 WC Engine 卡内
@@ -513,11 +548,13 @@ Footer ──────────── 暖灰 (#F1EFE8)
 ---
 
 ### 任务 5: Quick Start 增强 + Footer 衔接
+
 **依赖**: 任务 2 完成
 **文件**: `index.ts`
 **改动范围**: CSS 566-597, HTML Quick Start 区块, HTML Footer
 
 **具体操作**:
+
 1. 在 `_renderZh` 和 `_renderEn` 的每个 `.qs-step-card` 内 `<less-step-card>` 之后添加 `<p class="qs-desc">`
    - Step 1: 脚手架包含：路由 + SSG + Island 示例
    - Step 2: 热更新 + DSD 实时预览 → localhost:5173
@@ -529,6 +566,7 @@ Footer ──────────── 暖灰 (#F1EFE8)
 6. Quick Start 区域添加暖灰渐变背景过渡: `.sec` 的最后一个区块添加 `background: linear-gradient(180deg, #ffffff 0%, #F1EFE8 100%); padding-bottom: 2rem;`
 
 **验收标准**:
+
 - 每个 Quick Start 步骤显示说明文字
 - 底部品牌色 CTA 按钮渲染
 - 渐变过渡到 Footer 暖灰
@@ -555,16 +593,16 @@ Footer ──────────── 暖灰 (#F1EFE8)
 
 以下问题在 PRD 中标注为"待确认"或架构设计过程中发现的设计歧义：
 
-| # | 问题 | PRD 建议 | 架构判断 |
-|---|------|----------|----------|
-| **Q1** | Astro 对比措辞："无法追平"是否太 aggressive？ | 改为"工程优化无法替代浏览器原生能力" | **采纳 PRD 建议**。使用 `less-callout` 组件 + 解释性文字 |
-| **Q2** | Benchmark 是否保留 Fresh 和 Next.js 数据？ | 保留，标注测试条件 | **保留**。条形图数据不变，在 `.bench-note` 中标注测试条件 |
-| **Q3** | WC Engine 卡片的 DSD/Island/Multi-adapter 子内容是否与 Code Strip/Multi-framework 重复？ | 不重复，Code Strip 是演示，Bento 是解释系统架构 | **采纳 PRD 判断**。Pill 标签仅作为快速标签，不展开内容 |
-| **Q4** | Quick Start 底部 CTA 是否与 Hero CTA 重复？ | 不重复，Hero CTA 是"了解"，Quick Start CTA 是"行动" | **采纳 PRD 判断**。两个 CTA 同样指向 `/guide/getting-started`，但位于不同心理阶段 |
-| **Q5** | `less-term-demo` 完全移除还是保留组件仅移除引用？ | PRD 说移到 Code Strip 下方 | **架构判断**: 移除 Hero 中的引用即可，组件文件保留不删。如需在 P2 阶段恢复到其他位置，组件已就绪 |
-| **Q6** | Bento Grid 的 `.cards` 桌面端是否应该 `1fr 1fr` 还是允许第一个卡全宽？ | PRD 说 WC Engine 全宽或 2fr | **采用 `1fr 1fr` + `.card-dominant { grid-column: 1 / -1 }`**。WC Engine 卡使用 `grid-column: 1 / -1` 独占第一行，两张小卡在第二行 `1fr 1fr` 并排 |
-| **Q7** | Quick Start 渐变过渡到 Footer：是 Quick Start 的 `.sec` 加渐变还是 Footer 顶部加渐变？ | PRD 说"Quick Start 白色 → 渐变过渡到 Footer 暖灰" | **在 `.sec` 最后一个区块（Quick Start）添加渐变背景**。Footer 本身保持纯暖灰，渐变在 Quick Start 区块底部完成 |
-| **Q8** | Code Strip 的 DSD 行高亮动画（1.5s 品牌色脉冲）是否需要 JS 实现？ | P1 建议 | **P1 优先级，任务分解中未包含**。如需实现，建议用 IntersectionObserver + CSS 动画，不需要新依赖。P0 任务中不实现 |
+| #      | 问题                                                                                     | PRD 建议                                            | 架构判断                                                                                                                                          |
+| ------ | ---------------------------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Q1** | Astro 对比措辞："无法追平"是否太 aggressive？                                            | 改为"工程优化无法替代浏览器原生能力"                | **采纳 PRD 建议**。使用 `less-callout` 组件 + 解释性文字                                                                                          |
+| **Q2** | Benchmark 是否保留 Fresh 和 Next.js 数据？                                               | 保留，标注测试条件                                  | **保留**。条形图数据不变，在 `.bench-note` 中标注测试条件                                                                                         |
+| **Q3** | WC Engine 卡片的 DSD/Island/Multi-adapter 子内容是否与 Code Strip/Multi-framework 重复？ | 不重复，Code Strip 是演示，Bento 是解释系统架构     | **采纳 PRD 判断**。Pill 标签仅作为快速标签，不展开内容                                                                                            |
+| **Q4** | Quick Start 底部 CTA 是否与 Hero CTA 重复？                                              | 不重复，Hero CTA 是"了解"，Quick Start CTA 是"行动" | **采纳 PRD 判断**。两个 CTA 同样指向 `/guide/getting-started`，但位于不同心理阶段                                                                 |
+| **Q5** | `less-term-demo` 完全移除还是保留组件仅移除引用？                                        | PRD 说移到 Code Strip 下方                          | **架构判断**: 移除 Hero 中的引用即可，组件文件保留不删。如需在 P2 阶段恢复到其他位置，组件已就绪                                                  |
+| **Q6** | Bento Grid 的 `.cards` 桌面端是否应该 `1fr 1fr` 还是允许第一个卡全宽？                   | PRD 说 WC Engine 全宽或 2fr                         | **采用 `1fr 1fr` + `.card-dominant { grid-column: 1 / -1 }`**。WC Engine 卡使用 `grid-column: 1 / -1` 独占第一行，两张小卡在第二行 `1fr 1fr` 并排 |
+| **Q7** | Quick Start 渐变过渡到 Footer：是 Quick Start 的 `.sec` 加渐变还是 Footer 顶部加渐变？   | PRD 说"Quick Start 白色 → 渐变过渡到 Footer 暖灰"   | **在 `.sec` 最后一个区块（Quick Start）添加渐变背景**。Footer 本身保持纯暖灰，渐变在 Quick Start 区块底部完成                                     |
+| **Q8** | Code Strip 的 DSD 行高亮动画（1.5s 品牌色脉冲）是否需要 JS 实现？                        | P1 建议                                             | **P1 优先级，任务分解中未包含**。如需实现，建议用 IntersectionObserver + CSS 动画，不需要新依赖。P0 任务中不实现                                  |
 
 ---
 
@@ -572,36 +610,36 @@ Footer ──────────── 暖灰 (#F1EFE8)
 
 以下内容在 v8 中**不改**，对齐 PRD 第 8 节"不改组件、不改技术栈、不改数据"：
 
-| 约束 | 说明 |
-|------|------|
-| 不引入新 npm/JSR 依赖 | 已有依赖: `lit`, `@lessjs/adapter-lit`, `@lessjs/ui` |
-| 不创建新 Web Component | 已有组件不变: `less-showcase-panel`, `less-callout`, `less-step-card`, `less-code-block`, `less-term-demo`, `less-search`, `less-layout` |
-| 不修改设计 tokens | `--less-brand-*`, `--less-space-*`, `--less-radius-*`, `--less-duration-*`, `--less-easing-*`, `--less-shadow-*`, `--less-font-size-*` 全部保持不变 |
-| 不修改 less-showcase-panel | 三 Tab 交互逻辑（Lit/React/Vanilla）完整保留 |
-| 不修改 less-step-card | 步骤卡片组件 API 不变 |
-| 不修改 less-layout / less-search | 全局布局和搜索功能不变 |
-| 仅修改一个文件 | `www/app/routes/index/index.ts` |
+| 约束                             | 说明                                                                                                                                                |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 不引入新 npm/JSR 依赖            | 已有依赖: `lit`, `@lessjs/adapter-lit`, `@lessjs/ui`                                                                                                |
+| 不创建新 Web Component           | 已有组件不变: `less-showcase-panel`, `less-callout`, `less-step-card`, `less-code-block`, `less-term-demo`, `less-search`, `less-layout`            |
+| 不修改设计 tokens                | `--less-brand-*`, `--less-space-*`, `--less-radius-*`, `--less-duration-*`, `--less-easing-*`, `--less-shadow-*`, `--less-font-size-*` 全部保持不变 |
+| 不修改 less-showcase-panel       | 三 Tab 交互逻辑（Lit/React/Vanilla）完整保留                                                                                                        |
+| 不修改 less-step-card            | 步骤卡片组件 API 不变                                                                                                                               |
+| 不修改 less-layout / less-search | 全局布局和搜索功能不变                                                                                                                              |
+| 仅修改一个文件                   | `www/app/routes/index/index.ts`                                                                                                                     |
 
 ---
 
 ## 附录 A: 与 PRD 优先级对齐
 
-| PRD 优先级 | 改动 | 架构任务 |
-|-----------|------|----------|
-| P0 | 区块重排序 | 任务 2 |
-| P0 | Hero 精简（移除 stats + term-demo） | 任务 1 |
-| P0 | Bento Grid 视觉层级 | 任务 4 |
-| P0 | 打破统一节奏（禁用 sec-divider） | 任务 2 |
-| P0 | Quick Start 增强 | 任务 5 |
-| P1 | Benchmark Astro 对比 | 任务 3 |
-| P1 | Stat 数字计数动画 | 不含（JS 逻辑，超出范围） |
-| P1 | Code Strip DSD 行高亮动画 | 不含（JS 逻辑，超出范围） |
-| P1 | Multi-framework 去掉 section label | 任务 2（合并到排序任务） |
-| P1 | Hero 定位语改为一行 | 任务 1 |
-| P2 | Hero 背景微粒子动画 | 不含 |
-| P2 | Bento 卡片网格线背景 | 不含 |
-| P2 | Quick Start 一键复制按钮 | 不含 |
-| P2 | 全页滚动进度条 | 不含 |
+| PRD 优先级 | 改动                                | 架构任务                  |
+| ---------- | ----------------------------------- | ------------------------- |
+| P0         | 区块重排序                          | 任务 2                    |
+| P0         | Hero 精简（移除 stats + term-demo） | 任务 1                    |
+| P0         | Bento Grid 视觉层级                 | 任务 4                    |
+| P0         | 打破统一节奏（禁用 sec-divider）    | 任务 2                    |
+| P0         | Quick Start 增强                    | 任务 5                    |
+| P1         | Benchmark Astro 对比                | 任务 3                    |
+| P1         | Stat 数字计数动画                   | 不含（JS 逻辑，超出范围） |
+| P1         | Code Strip DSD 行高亮动画           | 不含（JS 逻辑，超出范围） |
+| P1         | Multi-framework 去掉 section label  | 任务 2（合并到排序任务）  |
+| P1         | Hero 定位语改为一行                 | 任务 1                    |
+| P2         | Hero 背景微粒子动画                 | 不含                      |
+| P2         | Bento 卡片网格线背景                | 不含                      |
+| P2         | Quick Start 一键复制按钮            | 不含                      |
+| P2         | 全页滚动进度条                      | 不含                      |
 
 ---
 

@@ -2,10 +2,16 @@
 
 Pure LessJS runtime package.
 
-`@lessjs/core` owns the platform-facing runtime primitives: Declarative Shadow
-DOM rendering, island metadata types, navigation helpers, SSR context, escaping,
-structured errors, and the render adapter registry. It does not contain Vite,
-CLI, or build orchestration logic.
+`@lessjs/core` owns the platform-facing runtime primitives:
+
+- **DSD rendering** — `renderDSD()`, `renderDSDByName()`
+- **DsdElement** — zero-framework base class for DSD components
+- **Island metadata** — island detection, strategy, hydration
+- **Navigation** — SPA helpers
+- **SSR context** — per-request context, escaping, structured errors
+- **Renderer Protocol** — adapter registry, error classification
+
+It does not contain Vite, CLI, or build orchestration logic.
 
 ## Install
 
@@ -17,19 +23,27 @@ deno add jsr:@lessjs/core
 
 ```ts
 import {
+  // Utilities
   camelToKebab,
+  // SSR context
   createSsrContext,
+  // DsdElement base class
+  DsdElement,
   escapeAttr,
   escapeAttrValue,
   escapeHtml,
   extractParams,
+  // Adapters
   getAdapter,
   getSSRProps,
+  // Islands
   island,
   lessBind,
+  // Errors
   LessError,
   parseQuery,
   registerAdapter,
+  // DSD rendering
   renderDSD,
   renderDSDByName,
   renderSsrError,
@@ -49,19 +63,57 @@ import type {
 } from '@lessjs/core';
 ```
 
-## Rendering Model
+## Ocean-Island Rendering Model
 
 ```text
-component render()
-  -> string or adapter-supported template
-  -> renderDSD()
-  -> nested custom elements
-  -> <template shadowrootmode="open">
-  -> browser custom element upgrade
+Ocean (DSD Components):
+  DsdElement.render(): string
+    → renderDSD()
+    → <template shadowrootmode="open">
+    → browser native Shadow DOM parsing (zero JS)
+    → DsdElement.hydrateEvents()
+    → interactive ✅
+
+Island (Pure Island):
+  LitElement.render() / FASTElement.template / Preact h()
+    → Adapter
+    → renderDSD()
+    → empty custom element shell
+    → client framework upgrade
+    → interactive ✅
 ```
 
-`renderDSD()` is framework-agnostic. Lit support is installed through
-`@lessjs/adapter-lit`, which registers a `RendererProtocol`.
+**Key insight**: Ocean components don't need framework reactivity — DOM is
+already complete from SSR. Only Islands (client-rendered) need a reactive
+framework.
+
+`renderDSD()` is framework-agnostic. Adapter support (Lit, React, etc.) is
+installed through per-framework adapter packages that register a
+`RendererProtocol`.
+
+## DsdElement
+
+```ts
+import { DsdElement, type HydrateEventDescriptor } from '@lessjs/core';
+
+class MyComponent extends DsdElement {
+  static hydrateEvents: HydrateEventDescriptor[] = [
+    { selector: 'button', event: 'click', method: '_handleClick' },
+  ];
+
+  // SSR contract: return Shadow DOM HTML string
+  render(): string {
+    return `<button class="btn" part="control">
+      <slot></slot>
+    </button>`;
+  }
+
+  _handleClick() {/* ... */}
+}
+```
+
+Zero framework dependency. No Lit, no `html`, no `css` tagged template.
+`render()` returns a plain string — the native contract for DSD SSR.
 
 ## Current Protocol Boundary
 
@@ -92,6 +144,7 @@ for arbitrary Web Components.
 @lessjs/core/logger
 @lessjs/core/navigation
 @lessjs/core/constants
+@lessjs/core/dsd-element
 ```
 
 ## License

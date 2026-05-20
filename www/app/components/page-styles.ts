@@ -117,7 +117,13 @@ export const pageStyles = css`
   .section-divider {
     border: none;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--less-brand, #534AB7) 20%, var(--less-brand-light, #6D5CE8) 80%, transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--less-brand, #534ab7) 20%,
+      var(--less-brand-light, #6d5ce8) 80%,
+      transparent
+    );
     opacity: 0.2;
     margin: 2.5rem 0;
   }

@@ -25,6 +25,7 @@
   },
   "publish": {
     "include": [
+      "mod.ts",
       "src/**",
       "deno.json",
       "README.md",

@@ -14,10 +14,10 @@ import { css } from 'lit';
 export const lessAnimationTokens: ReturnType<typeof css> = css`
   :host {
     /* === Duration Scale === */
-    --less-duration-micro: 150ms;      /* button hover, color switch */
-    --less-duration-fast: 200ms;       /* tab switch, expand/collapse */
-    --less-duration-reveal: 400ms;     /* scroll reveal animation */
-    --less-duration-transition: 300ms;  /* page transition */
+    --less-duration-micro: 150ms; /* button hover, color switch */
+    --less-duration-fast: 200ms; /* tab switch, expand/collapse */
+    --less-duration-reveal: 400ms; /* scroll reveal animation */
+    --less-duration-transition: 300ms; /* page transition */
 
     /* === Easing Functions === */
     --less-easing-default: ease-out;

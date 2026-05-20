@@ -111,7 +111,10 @@ export default class LessSearch extends DsdLitElement {
   ];
 
   static override styles = css`
-    :host { display: inline-flex; align-items: center; }
+    :host {
+      display: inline-flex;
+      align-items: center;
+    }
 
     .search-trigger {
       display: inline-flex;
@@ -128,7 +131,10 @@ export default class LessSearch extends DsdLitElement {
       cursor: pointer;
       transition: color var(--less-transition-normal), border-color var(--less-transition-normal);
     }
-    .search-trigger:hover { color: var(--less-text-secondary); border-color: var(--less-border-hover); }
+    .search-trigger:hover {
+      color: var(--less-text-secondary);
+      border-color: var(--less-border-hover);
+    }
     .search-trigger kbd {
       font-family: inherit;
       padding: 0.0625rem 0.3125rem;
@@ -137,10 +143,18 @@ export default class LessSearch extends DsdLitElement {
       font-size: 0.625rem;
       margin-left: var(--less-size-1, 0.25rem);
     }
-    .search-icon { display: none; width: 16px; height: 16px; }
+    .search-icon {
+      display: none;
+      width: 16px;
+      height: 16px;
+    }
     @media (max-width: 640px) {
-      .search-trigger span, .search-trigger kbd { display: none; }
-      .search-icon { display: inline-block; }
+      .search-trigger span, .search-trigger kbd {
+        display: none;
+      }
+      .search-icon {
+        display: inline-block;
+      }
     }
   `;
 
@@ -276,7 +290,9 @@ export default class LessSearch extends DsdLitElement {
   private _getResultsHtml() {
     if (this._results.length > 0) {
       return this._results.map((r) =>
-        `<a href="${this._escapeAttr(r.path)}" style="${RESULT_ITEM_STYLES}" data-path="${this._escapeAttr(r.path)}">` +
+        `<a href="${this._escapeAttr(r.path)}" style="${RESULT_ITEM_STYLES}" data-path="${
+          this._escapeAttr(r.path)
+        }">` +
         `<div style="${RESULT_SECTION_STYLES}">${this._escapeHtml(r.section)}</div>` +
         `<div style="${RESULT_TITLE_STYLES}">${this._escapeHtml(r.title)}</div>` +
         `<div style="${RESULT_TEXT_STYLES}">${this._escapeHtml(r.text)}</div>` +
@@ -284,7 +300,9 @@ export default class LessSearch extends DsdLitElement {
       ).join('');
     }
     if (this._query.length >= 2) {
-      return `<div style="${NO_RESULTS_STYLES}">No results found for "${this._escapeHtml(this._query)}"</div>`;
+      return `<div style="${NO_RESULTS_STYLES}">No results found for "${
+        this._escapeHtml(this._query)
+      }"</div>`;
     }
     return `<div style="${NO_RESULTS_STYLES}">Type at least 2 characters to search</div>`;
   }
@@ -328,8 +346,16 @@ export default class LessSearch extends DsdLitElement {
     // Fresh mode: render trigger button only
     return html`
       <button class="search-trigger">
-        <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-          <circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/>
+        <svg
+          class="search-icon"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        >
+          <circle cx="7" cy="7" r="4.5" />
+          <path d="M10.5 10.5L14 14" />
         </svg>
         <span>Search</span><kbd>⌘K</kbd>
       </button>

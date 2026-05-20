@@ -1,3 +1,4 @@
+// deno-fmt-ignore-file (html`` with dynamic tag names: <${tag}> not parsable by dprint)
 /**
  * LessShowcasePanel — Multi-framework Tab Container Island
  *

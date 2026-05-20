@@ -2,12 +2,34 @@
 
 [English](./README.en.md) | 简体中文
 
-**全栈框架 + 通用 WC 渲染引擎 + Registry Hub** — 以 Web Components 为一等公民的全栈开发平台。基于 Declarative Shadow DOM 的零 JS 首屏渲染，Island 架构按需升级交互，Hono + Serverless API 提供后端能力，Registry Hub 一键发现和安装 WC 组件。
+**Web Components 全栈框架** — 以 Declarative Shadow DOM 为一等渲染原语，将 Web 标准作为框架本身。海洋（DSD 组件）SSR 直出、零框架开销；岛屿（Pure Island）按需接入 Lit / Preact / FAST / React，借用框架的 reactivity。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
 [![JSR](https://img.shields.io/badge/JSR-published-blue)](https://jsr.io/@lessjs/core)
-[![@lessjs/core](https://img.shields.io/jsr/v/@lessjs/core?label=@lessjs/core)](https://jsr.io/@lessjs/core)
+[![@lessjs/core](https://img.shields.io/badge/jsr-v0.19.0-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
+
+## 海洋-岛屿架构
+
+```
+┌──────────────────────────────────────────┐
+│               海洋（~80%）                 │
+│   DSD 组件 → SSR 渲染 Shadow DOM          │
+│   → 浏览器原生解析，零 JS 可见            │
+│   → DsdElement 水合：只绑事件，不动 DOM  │
+│   → 框架无关，纯原生 HTMLElement           │
+│                                            │
+│   ┌──────────────────────────────────┐    │
+│   │         岛屿（~20%）              │    │
+│   │  Pure Island → 客户端渲染         │    │
+│   │  → 需要 reactivity                │    │
+│   │  → 按需选框架: Lit/FAST/Preact   │    │
+│   │  → 策略: eager/lazy/visible/idle │    │
+│   └──────────────────────────────────┘    │
+└──────────────────────────────────────────┘
+```
+
+**核心理念**：海洋不需要 reactivity（DOM 已在 SSR 中渲染完毕），岛屿才需要。别的框架海洋是"裸 HTML"，LessJS 的海洋是"封装好的 Web Components"。
 
 ## 三支柱架构
 
@@ -21,8 +43,9 @@ LessJS
 │   └── Serverless 部署（CF Pages / Deno Deploy）
 │
 ├── 2. 通用 WC 渲染引擎
-│   ├── DSD 字符串渲染（renderDSD — 纯字符串拼接）
-│   ├── 多框架适配器（Lit / React / Vanilla → Vue）
+│   ├── DSD 字符串渲染（renderDSD — 浏览器原生解析）
+│   ├── DsdElement 基类 — 零框架依赖的 DSD 组件
+│   ├── 多框架适配器 — 仅服务 Pure Island SSR
 │   ├── 渲染时机无关（build-time / ISR / request-time）
 │   └── 兼容性分类 + 验证
 │
@@ -33,6 +56,38 @@ LessJS
 ```
 
 **不是 SSG 框架** — SSG 只是渲染引擎的当前使用模式。`renderDSD()` **架构上**是渲染时机无关的：build-time (SSG)、cache-expiry-time (ISR)、request-time (SSR) 用的是同一套引擎。**当前实现**: SSG only, ISR/SSR 计划中。
+
+## 渲染管线
+
+```
+海洋（DSD 组件）:
+  render(): string → renderDSD() → <template shadowrootmode="open">
+                                          ↓
+                                  浏览器原生解析 Shadow DOM
+                                          ↓
+                                  DsdElement.hydrateEvents()
+                                          ↓
+                                  可交互 ✅（零框架开销）
+
+岛屿（Pure Island）:
+  框架 render() → Adapter → renderDSD() → 空壳 custom element
+                                              ↓
+                                  客户端框架接管 (Lit/FAST/Preact...)
+                                              ↓
+                                  岛屿可交互 ✅
+```
+
+**关键差异**：海洋的 `render()` 直接返回 string，不需要任何框架模板引擎。事件绑定通过声明式 `hydrateEvents` 完成，DOM 无需重建。
+
+## 原生 CSS 栈
+
+```
+Open Props            — 设计 token（间距/颜色/阴影/动效），零维护成本
+CSSStyleSheet         — 组件样式（adoptedStyleSheets，一次解析全局共享）
+CSS Parts ::part()    — 组件外部定制 API
+```
+
+三层极简栈，纯 W3C 标准，与 Shadow DOM + DSD 天然配合。
 
 ## 特性
 
@@ -47,8 +102,9 @@ LessJS
 
 ### 支柱 2：通用 WC 渲染引擎
 
-- **Declarative Shadow DOM** — WHATWG 标准，零 JS 首屏
-- **Island 升级** — 仅交互组件加载客户端 JS（`client:load/idle/visible/only` — 计划中）
+- **Declarative Shadow DOM** — WHATWG 标准，零 JS 首屏可见
+- **DsdElement 基类** — 原生 HTMLElement，零框架依赖，声明式事件绑定
+- **Island 升级** — 仅交互组件加载客户端 JS（`eager/lazy/idle/visible`）
 - **多适配器** — Lit / React / Vanilla 适配器，同一页面多框架共存
 - **Universal WC Engine** — 自动检测第三方 Web Component，4 级兼容性分类
 - **Renderer Protocol** — 结构化渲染输出 + 错误分类 + DSD 指标
@@ -79,33 +135,25 @@ deno task build    # SSG 构建
 
 ## 包
 
-| 包                        | 职责                                                                   |
-| ------------------------- | ---------------------------------------------------------------------- |
-| `@lessjs/core`            | DSD 渲染器、Renderer Protocol、CEM 解析器、兼容性分类器、manifest 验证 |
-| `@lessjs/adapter-vite`    | Vite 编排、路由扫描、SSG 管线、CEM 自动检测                            |
-| `@lessjs/adapter-lit`     | Lit TemplateResult → DSD HTML                                          |
-| `@lessjs/adapter-react`   | React 适配器                                                           |
-| `@lessjs/adapter-vanilla` | Vanilla JS 适配器                                                      |
-| `@lessjs/app`             | 统一入口 `lessjs()`                                                    |
-| `@lessjs/content`         | Blog、Nav、Sitemap 插件                                                |
-| `@lessjs/i18n`            | 国际化路由                                                             |
-| `@lessjs/ui`              | Web Components 组件库                                                  |
-| `@lessjs/signals`         | Signals 辅助                                                           |
-| `@lessjs/rpc`             | Fetch RPC                                                              |
-| `@lessjs/hub`             | Registry Hub — schema、indexer、scanner、snapshot-renderer             |
-| `@lessjs/create`          | 项目脚手架 CLI                                                         |
+| 包                        | 职责                                                                      |
+| ------------------------- | ------------------------------------------------------------------------- |
+| `@lessjs/core`            | DSD 渲染器、DsdElement 基类、Renderer Protocol、CEM 解析器、manifest 验证 |
+| `@lessjs/adapter-vite`    | Vite 编排、路由扫描、SSG 管线、CEM 自动检测                               |
+| `@lessjs/adapter-lit`     | Lit 适配器（Pure Island SSR）                                             |
+| `@lessjs/adapter-react`   | React 适配器（Pure Island SSR）                                           |
+| `@lessjs/adapter-vanilla` | Vanilla JS 适配器                                                         |
+| `@lessjs/app`             | 统一入口 `lessjs()`                                                       |
+| `@lessjs/content`         | Blog、Nav、Sitemap 插件                                                   |
+| `@lessjs/i18n`            | 国际化路由                                                                |
+| `@lessjs/ui`              | Web Components 组件库（原生 DSD 组件，目标零 Lit 依赖）                   |
+| `@lessjs/signals`         | Signals 辅助                                                              |
+| `@lessjs/rpc`             | Fetch RPC                                                                 |
+| `@lessjs/hub`             | Registry Hub — schema、indexer、scanner、snapshot-renderer                |
+| `@lessjs/create`          | 项目脚手架 CLI                                                            |
 
-## 渲染管线
+## 渲染时机无关
 
-```
-render() → RenderAdapter → renderDSD() → DSD HTML → 浏览器解析
-                                                       ↓
-                                            customElements.upgrade()
-                                                       ↓
-                                            dsd-interactive → 绑定 hydrateEvents
-```
-
-**渲染时机无关**：同一套 `renderDSD()` 引擎在不同时机调用：
+同一套 `renderDSD()` 引擎在不同时机调用：
 
 | 模式          | 何时调用 renderDSD() | 数据新鲜度        | 需要服务器   |
 | ------------- | -------------------- | ----------------- | ------------ |
@@ -127,27 +175,29 @@ node_modules/*/custom-elements.json → CEM Parser → 4级分类器 → SSR adm
 
 | 维度         | LessJS                 | Astro          | Fresh          | Next.js       |
 | ------------ | ---------------------- | -------------- | -------------- | ------------- |
-| **定位**     | 全栈 + WC引擎 + Hub    | 全栈（多框架） | 全栈（Preact） | 全栈（React） |
+| **定位**     | WC 全栈 + DSD 原生     | 全栈（多框架） | 全栈（Preact） | 全栈（React） |
 | **WC 原生**  | ✅ DSD 一等公民        | ❌ 当普通元素  | ❌ Preact-only | ❌            |
 | **首屏 JS**  | 0 KB                   | 0 KB           | ~23 KB         | ~90 KB        |
-| **跨框架**   | Lit/React/Vanilla 共存 | 多框架共存     | Preact only    | React only    |
+| **海洋组件** | ✅ Shadow DOM 封装     | ❌ 裸 HTML     | ❌ 裸 HTML     | ❌ 裸 HTML    |
+| **跨框架**   | 海洋零框架，岛屿自由选 | 多框架共存     | Preact only    | React only    |
+| **CSS 方案** | 纯 W3C 标准栈          | Scoped CSS     | Tailwind       | CSS Modules   |
 | **Registry** | ✅ Hub 内建            | ❌             | ❌             | ❌            |
 | **后端**     | Hono + Serverless      | 内置           | Oak            | 内置          |
 
-**核心差异化**：LessJS 以 DSD 和 Web Components 作为首要渲染契约，而非在框架特定组件模型之上叠加优化。
+**核心差异化**：LessJS 是唯一把 Shadow DOM 封装带到服务端的框架——海洋即组件，而其他框架的静态 HTML 仅仅是 HTML。
 
 ## 路线图
 
-| 版本  | 目标                                 | 状态      |
-| ----- | ------------------------------------ | --------- |
-| v0.15 | Renderer Kernel Protocol             | ✅ 完成   |
-| v0.16 | WC Package Protocol                  | ✅ 完成   |
-| v0.17 | Ecosystem Entry + SSR 边界           | ✅ 完成   |
-| v0.18 | Universal WC Engine                  | ✅ 完成   |
-| v0.19 | **Registry Hub + Component Browser** | **当前**  |
-| v0.20 | Islands 策略 + 全栈地基              | 📋 计划中 |
-| v0.21 | 全栈框架成型（ISR + Vue + Supabase） | 📋 计划中 |
-| v1.0  | API Freeze                           | 🚀 远期   |
+| 版本  | 目标                                            | 状态      |
+| ----- | ----------------------------------------------- | --------- |
+| v0.15 | Renderer Kernel Protocol                        | ✅ 完成   |
+| v0.16 | WC Package Protocol                             | ✅ 完成   |
+| v0.17 | Ecosystem Entry + SSR 边界                      | ✅ 完成   |
+| v0.18 | Universal WC Engine                             | ✅ 完成   |
+| v0.19 | **Registry Hub + Component Browser**            | **当前**  |
+| v0.20 | DsdElement 原生基类 + Islands 策略 + CSS 原生栈 | 📋 计划中 |
+| v0.21 | 全栈框架成型（ISR + SSR + Supabase）            | 📋 计划中 |
+| v1.0  | API Freeze                                      | 🚀 远期   |
 
 详见 [ADR 文档](docs/adr/) 和 [官方文档](https://lessjs.org)。
 

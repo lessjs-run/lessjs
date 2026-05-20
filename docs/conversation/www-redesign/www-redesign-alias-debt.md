@@ -52,7 +52,7 @@ export function generateWorkspaceAliases(workspaceRoot: string): AliasEntry[] {
 ```ts
 // 伪代码
 function generateOnDemandAliases(workspaceRoot: string, targetDir: string): AliasEntry[] {
-  const imports = scanImports(targetDir, '@lessjs/');  // 正则扫描
+  const imports = scanImports(targetDir, '@lessjs/'); // 正则扫描
   const needed = new Set(imports.map(normalize));
   // 只对 needed 包生成 alias
 }

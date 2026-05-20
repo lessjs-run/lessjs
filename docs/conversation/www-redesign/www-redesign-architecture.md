@@ -26,23 +26,23 @@
 
 #### 核心技术挑战
 
-| # | 挑战 | 难度 | 方案 |
-|---|------|------|------|
-| C1 | **首页多框架交互展示**：3 个 showcase island（shoelace/react/media-chrome）需与源代码左右并排，且 Tab 切换需即时响应 | L | 新建 `less-showcase-panel` 容器组件，内部管理 Tab 状态和双栏布局。左侧 slot 放 showcase island，右侧放 `less-code-block`。利用 Lit reactive property 驱动 Tab 切换 |
-| C2 | **全站设计令牌体系**：品牌色光谱/灰阶/间距/圆角/阴影需在 `@lessjs/ui` tokens 层统一定义，且支持亮/暗色模式 | M | 扩展现有 `packages/ui/src/tokens/` 体系。在 `color-values.ts` 增加 `--less-brand-*` 光谱变量，在 `spacing.ts` 增加 `--space-*` 10 级间距 token，新增 `tokens/radius.ts` 和 `tokens/animation.ts` |
-| C3 | **Hero 视觉冲击力**：渐变光效增强、品牌色戏剧性使用、字号放大至 Display 级 | M | 利用新增的 `--less-brand-*` 光谱 token 重写 Hero CSS。新增 `--less-font-size-display` (clamp 3-5rem) token。品牌色渐变从硬编码改为 token 引用 |
-| C4 | **Guide/Engine 内页视觉层次**：section label / callout 系统 / 代码块暗色主题 / 步骤卡片 | M | 新建 `less-callout` island 组件，新建 `less-step-card` island 组件。升级 `page-styles.ts` 引入新 token。callout 组件支持 info/warning/danger/tip 四种类型 |
-| C5 | **Registry 卡片视觉升级**：品牌色渐变边框 / 兼容性徽章 / 搜索框发光 | S | 纯 CSS 升级，利用新品牌色 token 实现渐变边框和发光效果，无需新建组件 |
+| #  | 挑战                                                                                                                 | 难度 | 方案                                                                                                                                                                                             |
+| -- | -------------------------------------------------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| C1 | **首页多框架交互展示**：3 个 showcase island（shoelace/react/media-chrome）需与源代码左右并排，且 Tab 切换需即时响应 | L    | 新建 `less-showcase-panel` 容器组件，内部管理 Tab 状态和双栏布局。左侧 slot 放 showcase island，右侧放 `less-code-block`。利用 Lit reactive property 驱动 Tab 切换                               |
+| C2 | **全站设计令牌体系**：品牌色光谱/灰阶/间距/圆角/阴影需在 `@lessjs/ui` tokens 层统一定义，且支持亮/暗色模式           | M    | 扩展现有 `packages/ui/src/tokens/` 体系。在 `color-values.ts` 增加 `--less-brand-*` 光谱变量，在 `spacing.ts` 增加 `--space-*` 10 级间距 token，新增 `tokens/radius.ts` 和 `tokens/animation.ts` |
+| C3 | **Hero 视觉冲击力**：渐变光效增强、品牌色戏剧性使用、字号放大至 Display 级                                           | M    | 利用新增的 `--less-brand-*` 光谱 token 重写 Hero CSS。新增 `--less-font-size-display` (clamp 3-5rem) token。品牌色渐变从硬编码改为 token 引用                                                    |
+| C4 | **Guide/Engine 内页视觉层次**：section label / callout 系统 / 代码块暗色主题 / 步骤卡片                              | M    | 新建 `less-callout` island 组件，新建 `less-step-card` island 组件。升级 `page-styles.ts` 引入新 token。callout 组件支持 info/warning/danger/tip 四种类型                                        |
+| C5 | **Registry 卡片视觉升级**：品牌色渐变边框 / 兼容性徽章 / 搜索框发光                                                  | S    | 纯 CSS 升级，利用新品牌色 token 实现渐变边框和发光效果，无需新建组件                                                                                                                             |
 
 #### 框架与库选型
 
-| 用途 | 选型 | 理由 |
-|------|------|------|
-| Web Components | Lit + DsdLitElement | 项目已有，零新增依赖 |
-| CSS 架构 | CSS Custom Properties (Design Tokens) | 已有 `@lessjs/ui/tokens` 体系，扩展即可 |
-| 动效 | 纯 CSS animation/transition + scroll-reveal island | 零重依赖，PRD 约束 |
-| 代码高亮 | Prism.js (已有) | 已集成在 less-code-block 中 |
-| 图标 | 内联 SVG | 零依赖，现有模式 |
+| 用途           | 选型                                               | 理由                                    |
+| -------------- | -------------------------------------------------- | --------------------------------------- |
+| Web Components | Lit + DsdLitElement                                | 项目已有，零新增依赖                    |
+| CSS 架构       | CSS Custom Properties (Design Tokens)              | 已有 `@lessjs/ui/tokens` 体系，扩展即可 |
+| 动效           | 纯 CSS animation/transition + scroll-reveal island | 零重依赖，PRD 约束                      |
+| 代码高亮       | Prism.js (已有)                                    | 已集成在 less-code-block 中             |
+| 图标           | 内联 SVG                                           | 零依赖，现有模式                        |
 
 #### 架构模式
 
@@ -348,14 +348,14 @@ sequenceDiagram
 
 ### 5. 待明确事项
 
-| # | 事项 | 假设 | 影响范围 |
-|---|------|------|----------|
-| 1 | `less-showcase-panel` 是否作为 Island (SSR) 还是纯客户端组件？ | 假设为 **Island**（SSR 渲染 Tab 标签和代码，client upgrade 交互）。showcase island 本身已有 `less.ssr: false` 配置 | 首页 |
-| 2 | `less-callout` 和 `less-step-card` 是否需要 SSR？ | 假设为 **UI 组件**（非 Island），放在 `@lessjs/ui` 中，走 DSD 渲染管道 | 全站内页 |
-| 3 | `less-toc` island 是否需要视觉升级？ | PRD 未明确提及，假设保持现状 | — |
-| 4 | 博客/404/changelog/roadmap/decisions 页面是否在本次重设计范围内？ | PRD 仅提及 Guide/Engine/Registry + 首页，假设博客等页面仅继承全局 token 升级，不做专门修改 | — |
-| 5 | View Transitions API 的具体使用场景？ | 已在 `vite.config.ts` 启用 `viewTransition: true`，假设只需确保页面间导航时 token 一致即可 | — |
-| 6 | 暗色模式下 Hero 区域的渐变方案？ | 假设暗色模式 Hero 使用 `--less-brand-dark` (#3D3599) 作为渐变终点 | 首页 |
+| # | 事项                                                              | 假设                                                                                                               | 影响范围 |
+| - | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | -------- |
+| 1 | `less-showcase-panel` 是否作为 Island (SSR) 还是纯客户端组件？    | 假设为 **Island**（SSR 渲染 Tab 标签和代码，client upgrade 交互）。showcase island 本身已有 `less.ssr: false` 配置 | 首页     |
+| 2 | `less-callout` 和 `less-step-card` 是否需要 SSR？                 | 假设为 **UI 组件**（非 Island），放在 `@lessjs/ui` 中，走 DSD 渲染管道                                             | 全站内页 |
+| 3 | `less-toc` island 是否需要视觉升级？                              | PRD 未明确提及，假设保持现状                                                                                       | —        |
+| 4 | 博客/404/changelog/roadmap/decisions 页面是否在本次重设计范围内？ | PRD 仅提及 Guide/Engine/Registry + 首页，假设博客等页面仅继承全局 token 升级，不做专门修改                         | —        |
+| 5 | View Transitions API 的具体使用场景？                             | 已在 `vite.config.ts` 启用 `viewTransition: true`，假设只需确保页面间导航时 token 一致即可                         | —        |
+| 6 | 暗色模式下 Hero 区域的渐变方案？                                  | 假设暗色模式 Hero 使用 `--less-brand-dark` (#3D3599) 作为渐变终点                                                  | 首页     |
 
 ---
 
@@ -366,6 +366,7 @@ sequenceDiagram
 **无需新增任何 npm/deno 依赖。**
 
 所有实现基于项目已有依赖：
+
 - `lit` — 已有
 - `@lessjs/adapter-lit` (DsdLitElement) — 已有
 - `@lessjs/ui` (lessDesignTokens, less-layout, less-code-block) — 已有
@@ -381,6 +382,7 @@ sequenceDiagram
 #### T01: 项目基础设施 — 设计令牌体系扩展 + 新组件注册
 
 **涉及文件**（7 个）：
+
 - `packages/ui/src/tokens/color-values.ts` — 增加 `--less-brand-*` 光谱变量
 - `packages/ui/src/tokens/spacing.ts` — 增加 `--less-space-*` 10 级间距 token
 - `packages/ui/src/tokens/typography.ts` — 增加 Display 级字号 token
@@ -401,35 +403,45 @@ sequenceDiagram
 
 1. **品牌色光谱**（`color-values.ts`）— 在 `lessLightColors` 和 `lessDarkColors` 中增加：
    ```css
-   --less-brand: #534AB7;            /* 已有，保持 */
-   --less-brand-light: #6D5CE8;      /* 新增：渐变终点、hover */
-   --less-brand-pale: #8B7CF6;       /* 新增：标签背景 */
-   --less-brand-dark: #3D3599;       /* 新增：暗色模式主色 */
-   --less-brand-deep: #26215C;       /* 新增：暗色区域背景 */
-   --less-brand-subtle: #EEEDFE;     /* 已有，保持 */
-   --less-brand-glow: rgba(83,74,183,0.35);  /* 新增：品牌色发光 */
+   --less-brand: #534ab7; /* 已有，保持 */
+   --less-brand-light: #6d5ce8; /* 新增：渐变终点、hover */
+   --less-brand-pale: #8b7cf6; /* 新增：标签背景 */
+   --less-brand-dark: #3d3599; /* 新增：暗色模式主色 */
+   --less-brand-deep: #26215c; /* 新增：暗色区域背景 */
+   --less-brand-subtle: #eeedfe; /* 已有，保持 */
+   --less-brand-glow: rgba(83, 74, 183, 0.35); /* 新增：品牌色发光 */
    ```
 
 2. **间距 10 token**（`spacing.ts`）— 增加 `--less-space-*` 系列：
    ```css
-   --less-space-1: 4px;    --less-space-2: 8px;
-   --less-space-3: 12px;   --less-space-4: 16px;
-   --less-space-5: 24px;   --less-space-6: 32px;
-   --less-space-7: 40px;   --less-space-8: 48px;
-   --less-space-9: 56px;   --less-space-16: 64px;
+   --less-space-1: 4px;
+   --less-space-2: 8px;
+   --less-space-3: 12px;
+   --less-space-4: 16px;
+   --less-space-5: 24px;
+   --less-space-6: 32px;
+   --less-space-7: 40px;
+   --less-space-8: 48px;
+   --less-space-9: 56px;
+   --less-space-16: 64px;
    ```
 
 3. **圆角 6 级**（新增 `radius.ts`）：
    ```css
-   --less-radius-xs: 2px;  --less-radius-sm: 4px;
-   --less-radius-md: 8px;  --less-radius-lg: 12px;
-   --less-radius-xl: 16px; --less-radius-full: 9999px;
+   --less-radius-xs: 2px;
+   --less-radius-sm: 4px;
+   --less-radius-md: 8px;
+   --less-radius-lg: 12px;
+   --less-radius-xl: 16px;
+   --less-radius-full: 9999px;
    ```
 
 4. **动效时长**（新增 `animation.ts`）：
    ```css
-   --less-duration-micro: 150ms;  --less-duration-fast: 200ms;
-   --less-duration-reveal: 400ms; --less-duration-transition: 300ms;
+   --less-duration-micro: 150ms;
+   --less-duration-fast: 200ms;
+   --less-duration-reveal: 400ms;
+   --less-duration-transition: 300ms;
    --less-easing-default: ease-out;
    --less-easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
    ```
@@ -442,10 +454,10 @@ sequenceDiagram
 
 6. **品牌色阴影**（`effects.ts`）— 增加：
    ```css
-   --less-shadow-brand-sm: 0 2px 12px rgba(83,74,183,0.2);
-   --less-shadow-brand-md: 0 4px 20px rgba(83,74,183,0.3);
-   --less-shadow-brand-lg: 0 8px 32px rgba(83,74,183,0.4);
-   --less-shadow-glow: 0 0 20px rgba(83,74,183,0.15);
+   --less-shadow-brand-sm: 0 2px 12px rgba(83, 74, 183, 0.2);
+   --less-shadow-brand-md: 0 4px 20px rgba(83, 74, 183, 0.3);
+   --less-shadow-brand-lg: 0 8px 32px rgba(83, 74, 183, 0.4);
+   --less-shadow-glow: 0 0 20px rgba(83, 74, 183, 0.15);
    ```
 
 ---
@@ -453,6 +465,7 @@ sequenceDiagram
 #### T02: 新增交互组件 — showcase-panel / callout / step-card
 
 **涉及文件**（3 个）：
+
 - `www/app/islands/less-showcase-panel.ts` — **新增**：多框架 Tab 切换容器 Island
 - `packages/ui/src/less-callout.ts` — **新增**：callout 提示框组件
 - `packages/ui/src/less-step-card.ts` — **新增**：步骤卡片组件
@@ -492,6 +505,7 @@ sequenceDiagram
 #### T03: 首页重写 — Hero 升级 + 多框架交互展示
 
 **涉及文件**（1 个）：
+
 - `www/app/routes/index/index.ts` — 全面重写
 
 **依赖**：T01, T02
@@ -529,6 +543,7 @@ sequenceDiagram
 #### T04: 内页视觉升级 — Guide/Engine + Registry
 
 **涉及文件**（22 个）：
+
 - `www/app/components/page-styles.ts` — 升级引用新 token
 - `www/app/routes/guide/getting-started.ts` — 使用 less-callout + less-step-card
 - `www/app/routes/guide/routing.ts` — 使用 less-callout
@@ -586,6 +601,7 @@ sequenceDiagram
 #### T05: 全局集成 + 视觉打磨
 
 **涉及文件**（6 个）：
+
 - `www/app/routes/registry/_renderer.ts` — 确保注入新组件
 - `www/app/routes/blog/_renderer.ts` — 确保注入新组件
 - `www/app/routes/404.ts` — 继承全局 token 升级
@@ -702,61 +718,61 @@ graph TD
 
 ### 品牌色光谱
 
-| Token | Light 值 | Dark 值 | 用途 |
-|-------|----------|---------|------|
-| `--less-brand` | #534AB7 | #534AB7 | 主品牌色 |
-| `--less-brand-light` | #6D5CE8 | #6D5CE8 | 渐变终点、hover |
-| `--less-brand-pale` | #8B7CF6 | #8B7CF6 | 标签背景、淡色调 |
-| `--less-brand-dark` | #3D3599 | #3D3599 | 暗色模式主色 |
-| `--less-brand-deep` | #26215C | #26215C | 暗色区域背景 |
-| `--less-brand-subtle` | #EEEDFE | rgba(83,74,183,0.1) | 浅色背景 |
-| `--less-brand-glow` | rgba(83,74,183,0.35) | rgba(83,74,183,0.25) | 发光效果 |
+| Token                 | Light 值             | Dark 值              | 用途             |
+| --------------------- | -------------------- | -------------------- | ---------------- |
+| `--less-brand`        | #534AB7              | #534AB7              | 主品牌色         |
+| `--less-brand-light`  | #6D5CE8              | #6D5CE8              | 渐变终点、hover  |
+| `--less-brand-pale`   | #8B7CF6              | #8B7CF6              | 标签背景、淡色调 |
+| `--less-brand-dark`   | #3D3599              | #3D3599              | 暗色模式主色     |
+| `--less-brand-deep`   | #26215C              | #26215C              | 暗色区域背景     |
+| `--less-brand-subtle` | #EEEDFE              | rgba(83,74,183,0.1)  | 浅色背景         |
+| `--less-brand-glow`   | rgba(83,74,183,0.35) | rgba(83,74,183,0.25) | 发光效果         |
 
 ### 间距 Token（4px 基础）
 
-| Token | 值 | 用途 |
-|-------|----|------|
-| `--less-space-1` | 4px | 最小间距 |
-| `--less-space-2` | 8px | 紧凑间距 |
-| `--less-space-3` | 12px | 内边距 |
-| `--less-space-4` | 16px | 标准间距 |
-| `--less-space-5` | 24px | 元素间距 |
-| `--less-space-6` | 32px | 区块间距 |
-| `--less-space-7` | 40px | 大区块间距 |
-| `--less-space-8` | 48px | Section 间距 |
-| `--less-space-9` | 56px | 大 Section 间距 |
-| `--less-space-16` | 64px | 页面级间距 |
+| Token             | 值   | 用途            |
+| ----------------- | ---- | --------------- |
+| `--less-space-1`  | 4px  | 最小间距        |
+| `--less-space-2`  | 8px  | 紧凑间距        |
+| `--less-space-3`  | 12px | 内边距          |
+| `--less-space-4`  | 16px | 标准间距        |
+| `--less-space-5`  | 24px | 元素间距        |
+| `--less-space-6`  | 32px | 区块间距        |
+| `--less-space-7`  | 40px | 大区块间距      |
+| `--less-space-8`  | 48px | Section 间距    |
+| `--less-space-9`  | 56px | 大 Section 间距 |
+| `--less-space-16` | 64px | 页面级间距      |
 
 ### 圆角 Token
 
-| Token | 值 | 用途 |
-|-------|----|------|
-| `--less-radius-xs` | 2px | 徽章、标签 |
-| `--less-radius-sm` | 4px | 按钮、输入框 |
-| `--less-radius-md` | 8px | 卡片、面板 |
-| `--less-radius-lg` | 12px | 大卡片、弹窗 |
-| `--less-radius-xl` | 16px | 代码面板 |
+| Token                | 值     | 用途           |
+| -------------------- | ------ | -------------- |
+| `--less-radius-xs`   | 2px    | 徽章、标签     |
+| `--less-radius-sm`   | 4px    | 按钮、输入框   |
+| `--less-radius-md`   | 8px    | 卡片、面板     |
+| `--less-radius-lg`   | 12px   | 大卡片、弹窗   |
+| `--less-radius-xl`   | 16px   | 代码面板       |
 | `--less-radius-full` | 9999px | 圆形头像、药丸 |
 
 ### 动效 Token
 
-| Token | 值 | 用途 |
-|-------|----|------|
-| `--less-duration-micro` | 150ms | 按钮 hover、颜色切换 |
-| `--less-duration-fast` | 200ms | Tab 切换、展开折叠 |
-| `--less-duration-reveal` | 400ms | 滚动揭示动画 |
-| `--less-duration-transition` | 300ms | 页面过渡 |
-| `--less-easing-default` | ease-out | 默认缓动 |
-| `--less-easing-spring` | cubic-bezier(0.34,1.56,0.64,1) | 弹性动效 |
+| Token                        | 值                             | 用途                 |
+| ---------------------------- | ------------------------------ | -------------------- |
+| `--less-duration-micro`      | 150ms                          | 按钮 hover、颜色切换 |
+| `--less-duration-fast`       | 200ms                          | Tab 切换、展开折叠   |
+| `--less-duration-reveal`     | 400ms                          | 滚动揭示动画         |
+| `--less-duration-transition` | 300ms                          | 页面过渡             |
+| `--less-easing-default`      | ease-out                       | 默认缓动             |
+| `--less-easing-spring`       | cubic-bezier(0.34,1.56,0.64,1) | 弹性动效             |
 
 ### 阴影 Token
 
-| Token | 值 | 用途 |
-|-------|----|------|
-| `--less-shadow-sm` | 0 1px 2px rgba(0,0,0,0.04) | 微阴影 |
-| `--less-shadow-md` | 0 2px 8px rgba(0,0,0,0.08) | 卡片默认 |
-| `--less-shadow-lg` | 0 4px 16px rgba(0,0,0,0.12) | 卡片 hover |
+| Token                    | 值                             | 用途         |
+| ------------------------ | ------------------------------ | ------------ |
+| `--less-shadow-sm`       | 0 1px 2px rgba(0,0,0,0.04)     | 微阴影       |
+| `--less-shadow-md`       | 0 2px 8px rgba(0,0,0,0.08)     | 卡片默认     |
+| `--less-shadow-lg`       | 0 4px 16px rgba(0,0,0,0.12)    | 卡片 hover   |
 | `--less-shadow-brand-sm` | 0 2px 12px rgba(83,74,183,0.2) | 品牌色微阴影 |
 | `--less-shadow-brand-md` | 0 4px 20px rgba(83,74,183,0.3) | 品牌色中阴影 |
 | `--less-shadow-brand-lg` | 0 8px 32px rgba(83,74,183,0.4) | 品牌色大阴影 |
-| `--less-shadow-glow` | 0 0 20px rgba(83,74,183,0.15) | 发光效果 |
+| `--less-shadow-glow`     | 0 0 20px rgba(83,74,183,0.15)  | 发光效果     |

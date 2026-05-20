@@ -36,7 +36,7 @@ export class LessStepCard extends DsdLitElement {
         padding: 1.25rem;
         background: var(--less-bg-surface);
         position: relative;
-        border-top: 2px solid var(--less-brand, #534AB7);
+        border-top: 2px solid var(--less-brand, #534ab7);
       }
       .step-header {
         display: flex;
@@ -48,7 +48,7 @@ export class LessStepCard extends DsdLitElement {
         width: 28px;
         height: 28px;
         border-radius: var(--less-radius-full, 9999px);
-        background: var(--less-brand, #534AB7);
+        background: var(--less-brand, #534ab7);
         color: #fff;
         font-size: 12px;
         font-weight: 700;
