@@ -963,8 +963,6 @@ export default class DocsHome extends DsdLitElement {
   private _renderZh() {
     return html`
       <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/" home>
-        <less-search slot="header-actions"></less-search>
-
         <!-- ═══ I. Hero — 暗色沉浸式开场 ═══ -->
         <section class="hero">
           <div class="hero-inner">
@@ -1209,8 +1207,6 @@ export default class DocsHome extends DsdLitElement {
   private _renderEn() {
     return html`
       <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/" home>
-        <less-search slot="header-actions"></less-search>
-
         <!-- ═══ I. Hero — dark immersive opening ═══ -->
         <section class="hero">
           <div class="hero-inner">
