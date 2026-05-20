@@ -700,8 +700,7 @@ export default class DocsHome extends DsdLitElement {
       border-top: none;
       padding: 3rem 2rem 1.5rem;
       width: 100%;
-      max-width: 100vw;
-      margin-left: calc(-1 * (100vw - 100%) / 2);
+      box-sizing: border-box;
       position: relative;
       overflow: hidden;
     }
