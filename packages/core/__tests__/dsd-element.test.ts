@@ -37,7 +37,7 @@ function defineTestElement(options?: {
     static override formAssociated = options?.formAssociated;
     static override observedAttributes = options?.observedAttributes;
 
-    render(): string {
+    override render(): string {
       return options?.renderContent ?? '<div class="test-inner">rendered</div>';
     }
   }
@@ -46,7 +46,7 @@ function defineTestElement(options?: {
   return { tagName, ctor: TestElement, sheet };
 }
 
-// ─── Test 1: render() returns string — SSR-usable ────────────
+// ─── Test 1: render() returns string �?SSR-usable ────────────
 
 Deno.test('DsdElement: render() returns string for SSR compatibility', () => {
   const { tagName } = defineTestElement({ renderContent: '<span>hello</span>' });
@@ -56,7 +56,7 @@ Deno.test('DsdElement: render() returns string for SSR compatibility', () => {
   assertEquals(result, '<span>hello</span>');
 });
 
-// ─── Test 2: DSD detection — pre-populated shadow root ────────
+// ─── Test 2: DSD detection �?pre-populated shadow root ────────
 
 Deno.test('DsdElement: DSD detection sets _dsdHydrated when shadowRoot has children', () => {
   const { tagName } = defineTestElement();
@@ -66,19 +66,19 @@ Deno.test('DsdElement: DSD detection sets _dsdHydrated when shadowRoot has child
   const shadow = el.attachShadow({ mode: 'open' });
   shadow.innerHTML = '<div class="dsd-content">pre-populated</div>';
 
-  // Now call createRenderRoot — should detect DSD
+  // Now call createRenderRoot �?should detect DSD
   const root = el.createRenderRoot();
   assertStrictEquals(root, shadow);
   assertEquals(el['_dsdHydrated'], true);
 });
 
-// ─── Test 3: CSR fallback — no shadow root → create + populate ──
+// ─── Test 3: CSR fallback �?no shadow root �?create + populate ──
 
 Deno.test('DsdElement: CSR fallback creates shadow root and populates from render()', () => {
   const { tagName } = defineTestElement({ renderContent: '<p>csr content</p>' });
   const el = document.createElement(tagName) as DsdElement;
 
-  // No DSD — shadowRoot should be null initially
+  // No DSD �?shadowRoot should be null initially
   assertEquals(el.shadowRoot, null);
 
   // connect to DOM to trigger connectedCallback
@@ -94,7 +94,7 @@ Deno.test('DsdElement: CSR fallback creates shadow root and populates from rende
   document.body.removeChild(el);
 });
 
-// ─── Test 4: hydrateEvents binding — events trigger correctly ──
+// ─── Test 4: hydrateEvents binding �?events trigger correctly ──
 
 Deno.test('DsdElement: hydrateEvents bind events to shadow DOM elements', () => {
   let clickCount = 0;
@@ -119,7 +119,7 @@ Deno.test('DsdElement: hydrateEvents bind events to shadow DOM elements', () => 
       this.clickCount++;
     }
 
-    render(): string {
+    override render(): string {
       return '<button class="action">Click me</button>';
     }
   }
@@ -136,7 +136,7 @@ Deno.test('DsdElement: hydrateEvents bind events to shadow DOM elements', () => 
 
   // Click the button inside the shadow root
   const button = el.shadowRoot!.querySelector('button.action')!;
-  button.click();
+  (button as HTMLElement).click();
 
   assertEquals(el.clickCount, 1);
 
@@ -159,7 +159,7 @@ Deno.test('DsdElement: disconnectedCallback aborts event listeners', () => {
       callCount++;
     }
 
-    render(): string {
+    override render(): string {
       return '<button>Test</button>';
     }
   }
@@ -175,7 +175,7 @@ Deno.test('DsdElement: disconnectedCallback aborts event listeners', () => {
 
   // Click once to verify it works
   const button = el.shadowRoot!.querySelector('button')!;
-  button.click();
+  (button as HTMLElement).click();
   assertEquals(callCount, 1);
 
   // Disconnect should abort listeners
@@ -186,7 +186,7 @@ Deno.test('DsdElement: disconnectedCallback aborts event listeners', () => {
   assertFalse(!!el['_hydrateAbortController']);
 });
 
-// ─── Test 6: M-17 guard — __ methods skipped ──────────────────
+// ─── Test 6: M-17 guard �?__ methods skipped ──────────────────
 
 Deno.test('DsdElement: M-17 guard skips methods starting with __', () => {
   let normalCount = 0;
@@ -207,7 +207,7 @@ Deno.test('DsdElement: M-17 guard skips methods starting with __', () => {
       dunderCount++;
     }
 
-    render(): string {
+    override render(): string {
       return `<button class="normal">Normal</button><button class="dunder">Dunder</button>`;
     }
   }
@@ -224,8 +224,8 @@ Deno.test('DsdElement: M-17 guard skips methods starting with __', () => {
   // Click both buttons
   const normalBtn = el.shadowRoot!.querySelector('button.normal')!;
   const dunderBtn = el.shadowRoot!.querySelector('button.dunder')!;
-  normalBtn.click();
-  dunderBtn.click();
+  (normalBtn as HTMLElement).click();
+  (dunderBtn as HTMLElement).click();
 
   assertEquals(normalCount, 1);
   // M-17 guard: __ method should NOT have been bound
@@ -284,7 +284,7 @@ Deno.test('DsdElement: delegatesFocus is passed to attachShadow', () => {
   class FocusElement extends DsdElement {
     static override delegatesFocus = true;
 
-    render(): string {
+    override render(): string {
       return '<input type="text">';
     }
   }
@@ -323,7 +323,7 @@ Deno.test('DsdElement: DSD path does not overwrite existing shadow DOM', () => {
   const shadow = el.attachShadow({ mode: 'open' });
   shadow.innerHTML = '<div class="dsd-content">dsd original</div>';
 
-  // Connect — should detect DSD and NOT overwrite
+  // Connect �?should detect DSD and NOT overwrite
   document.body.appendChild(el);
 
   assertEquals(el['_dsdHydrated'], true);

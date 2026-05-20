@@ -146,8 +146,6 @@ export class DsdElement extends HTMLElement {
    * If formAssociated is true, ElementInternals are attached.
    */
   connectedCallback(): void {
-    super.connectedCallback();
-
     const ctor = this.constructor as typeof DsdElement;
 
     // Ensure shadow root exists (CSR path may not have called createRenderRoot yet)
@@ -174,7 +172,6 @@ export class DsdElement extends HTMLElement {
    * Aborts all hydration event listeners for cleanup.
    */
   disconnectedCallback(): void {
-    super.disconnectedCallback();
     if (this._hydrateAbortController) {
       this._hydrateAbortController.abort();
       this._hydrateAbortController = undefined;

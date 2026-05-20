@@ -6,12 +6,12 @@
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *
- * @csspart overlay â€” The dialog backdrop/element
- * @csspart dialog â€” The dialog container
- * @csspart header â€” The header bar
- * @csspart close â€” The close button
- * @csspart body â€” The content area (<slot>)
- * @csspart footer â€” The optional footer slot
+ * @csspart overlay â€?The dialog backdrop/element
+ * @csspart dialog â€?The dialog container
+ * @csspart header â€?The header bar
+ * @csspart close â€?The close button
+ * @csspart body â€?The content area (<slot>)
+ * @csspart footer â€?The optional footer slot
  *
  * Usage:
  * ```html
@@ -111,12 +111,12 @@ sheet.replaceSync(`
 `);
 
 export class LessDialog extends DsdElement {
-  static styles = sheet;
-  static delegatesFocus = true;
-  static formAssociated = true;
-  static observedAttributes = ['open', 'label'];
+  static override styles = sheet;
+  static override delegatesFocus = true;
+  static override formAssociated = true;
+  static override observedAttributes = ['open', 'label'];
 
-  static hydrateEvents: HydrateEventDescriptor[] = [
+  static override hydrateEvents: HydrateEventDescriptor[] = [
     { selector: 'slot[name="trigger"]', event: 'click', method: '_handleTrigger' },
     { selector: 'dialog', event: 'cancel', method: '_handleCancel' },
     { selector: 'dialog', event: 'close', method: '_handleClose' },
@@ -124,9 +124,8 @@ export class LessDialog extends DsdElement {
   ];
 
   private static _originalInertStates = new WeakMap<Element, boolean>();
-  protected _internals?: ElementInternals;
 
-  render(): string {
+  override render(): string {
     const label = this._esc(this.getAttribute('label') || '');
     return `<slot name="trigger"></slot>
       <dialog aria-label="${this._escAttr(this.getAttribute('label') || '')}" part="overlay">
@@ -143,7 +142,7 @@ export class LessDialog extends DsdElement {
       </dialog>`;
   }
 
-  attributeChangedCallback(name: string, old: string | null, val: string | null): void {
+  override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
     if (old === val) return;
     if (name === 'open') {
       this._updateStates();
@@ -217,7 +216,7 @@ export class LessDialog extends DsdElement {
     }
   }
 
-  disconnectedCallback(): void {
+  override disconnectedCallback(): void {
     super.disconnectedCallback();
     if (this.hasAttribute('open')) this._syncInert();
   }

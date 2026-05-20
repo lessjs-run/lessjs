@@ -6,10 +6,10 @@
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *
- * @csspart container â€” The article wrapper
- * @csspart header â€” The header slot wrapper (visible when header slot is used)
- * @csspart body â€” The card content area
- * @csspart footer â€” The footer slot wrapper (visible when footer slot is used)
+ * @csspart container â€?The article wrapper
+ * @csspart header â€?The header slot wrapper (visible when header slot is used)
+ * @csspart body â€?The card content area
+ * @csspart footer â€?The footer slot wrapper (visible when footer slot is used)
  *
  * Usage:
  * ```html
@@ -76,9 +76,9 @@ sheet.replaceSync(`
 `);
 
 export class LessCard extends DsdElement {
-  static styles = sheet;
+  static override styles = sheet;
 
-  render(): string {
+  override render(): string {
     return `
       <article part="container">
         <slot name="header"></slot>

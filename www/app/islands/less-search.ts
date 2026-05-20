@@ -11,10 +11,10 @@
  *   - Overlay is always appended to document.body
  *   - SPA-safe: state reset on connectedCallback, Cmd+K keyboard binding
  *
- * @csspart trigger â€” The search trigger button
- * @csspart icon â€” The search SVG icon
- * @csspart label â€” The "Search" text span
- * @csspart shortcut â€” The keyboard shortcut kbd
+ * @csspart trigger â€?The search trigger button
+ * @csspart icon â€?The search SVG icon
+ * @csspart label â€?The "Search" text span
+ * @csspart shortcut â€?The keyboard shortcut kbd
  *
  * Architecture (DsdElement, SPA-safe):
  * - DSD renders only the trigger button via render()
@@ -154,9 +154,9 @@ overlaySheet.replaceSync(`
 `);
 
 export default class LessSearch extends DsdElement {
-  static styles = sheet;
+  static override styles = sheet;
 
-  static hydrateEvents: HydrateEventDescriptor[] = [
+  static override hydrateEvents: HydrateEventDescriptor[] = [
     { selector: 'button.search-trigger', event: 'click', method: '_handleTriggerClick' },
   ];
 
@@ -170,7 +170,7 @@ export default class LessSearch extends DsdElement {
   private _overlayEl: HTMLDivElement | null = null;
   private _inputEl: HTMLInputElement | null = null;
 
-  render(): string {
+  override render(): string {
     return `<button class="search-trigger" part="trigger" aria-label="Search">
       <svg class="search-icon" part="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
         <circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/>
@@ -189,7 +189,7 @@ export default class LessSearch extends DsdElement {
     }
   };
 
-  connectedCallback(): void {
+  override connectedCallback(): void {
     // Clean up orphaned overlays from previous SPA pages
     document.querySelectorAll('.less-search-overlay').forEach(el => el.remove());
     this._resetState();
@@ -201,7 +201,7 @@ export default class LessSearch extends DsdElement {
     document.addEventListener('keydown', this._onKeydown);
   }
 
-  disconnectedCallback(): void {
+  override disconnectedCallback(): void {
     document.removeEventListener('keydown', this._onKeydown);
     this._destroyOverlay();
     super.disconnectedCallback();

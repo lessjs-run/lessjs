@@ -9,7 +9,7 @@
  * Variants: default (outlined), primary (filled), ghost (no border), accent (gradient)
  * Sizes: sm, md (default), lg
  *
- * @csspart control â€” The button or anchor element
+ * @csspart control â€?The button or anchor element
  *
  * Usage:
  * ```html
@@ -129,18 +129,17 @@ sheet.replaceSync(`
 `);
 
 export class LessButton extends DsdElement {
-  static styles = sheet;
-  static delegatesFocus = true;
-  static formAssociated = true;
-  static observedAttributes = ['variant', 'size', 'disabled', 'href', 'target', 'type'];
+  static override styles = sheet;
+  static override delegatesFocus = true;
+  static override formAssociated = true;
+  static override observedAttributes = ['variant', 'size', 'disabled', 'href', 'target', 'type'];
 
-  static hydrateEvents: HydrateEventDescriptor[] = [
+  static override hydrateEvents: HydrateEventDescriptor[] = [
     { selector: '.btn', event: 'click', method: '_handleClick' },
   ];
 
-  protected _internals?: ElementInternals;
 
-  render(): string {
+  override render(): string {
     const v = this.getAttribute('variant') || 'default';
     const s = this.getAttribute('size') || 'md';
     const d = this.hasAttribute('disabled');
@@ -162,9 +161,9 @@ export class LessButton extends DsdElement {
       <slot></slot></button>`;
   }
 
-  attributeChangedCallback(name: string, old: string | null, val: string | null): void {
+  override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
     if (old === val) return;
-    // href change may switch element type (a vs button) â€” full re-render
+    // href change may switch element type (a vs button) â€?full re-render
     if (name === 'href') {
       this._reRender();
     } else if (name === 'disabled') {

@@ -9,9 +9,9 @@
  *   - hydrateEvents preserved for DSD event binding
  *   - Direct DOM manipulation for class toggling
  *
- * @csspart toggle â€” The button element
- * @csspart icon-sun â€” The sun SVG icon
- * @csspart icon-moon â€” The moon SVG icon
+ * @csspart toggle â€?The button element
+ * @csspart icon-sun â€?The sun SVG icon
+ * @csspart icon-moon â€?The moon SVG icon
  *
  * Usage:
  * ```html
@@ -75,17 +75,17 @@ sheet.replaceSync(`
 `);
 
 export class LessThemeToggle extends DsdElement {
-  static styles = sheet;
-  static delegatesFocus = true;
-  static observedAttributes = ['theme'];
+  static override styles = sheet;
+  static override delegatesFocus = true;
+  static override observedAttributes = ['theme'];
 
-  static hydrateEvents: HydrateEventDescriptor[] = [
+  static override hydrateEvents: HydrateEventDescriptor[] = [
     { selector: 'button.theme-toggle', event: 'click', method: '_handleToggle' },
   ];
 
   private _isLight = false;
 
-  connectedCallback(): void {
+  override connectedCallback(): void {
     super.connectedCallback();
 
     // Priority: theme attribute > document.documentElement > localStorage > prefers-color-scheme > default
@@ -111,7 +111,7 @@ export class LessThemeToggle extends DsdElement {
     this.setAttribute('data-theme', this._isLight ? 'light' : 'dark');
   }
 
-  render(): string {
+  override render(): string {
     const lightClass = this._isLight ? ' is-light' : '';
     const title = this._isLight ? 'Switch to dark theme' : 'Switch to light theme';
 
@@ -158,7 +158,7 @@ export class LessThemeToggle extends DsdElement {
     }
   }
 
-  attributeChangedCallback(name: string, old: string | null, val: string | null): void {
+  override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
     if (old === val) return;
     if (name === 'theme' && val) {
       this._isLight = val === 'light';

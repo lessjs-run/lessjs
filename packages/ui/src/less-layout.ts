@@ -11,13 +11,13 @@
  *   - SPA navigation via Navigation API (navigate/fetch/swap) preserved
  *   - Event delegation at shadow root level for nav clicks
  *
- * @csspart container â€” The app-layout root div
- * @csspart header â€” The sticky header element
- * @csspart sidebar â€” The docs-sidebar nav
- * @csspart main â€” The layout-main element
- * @csspart footer â€” The app-footer element
- * @csspart nav â€” The header-nav element
- * @csspart nav-toggle â€” The mobile menu toggle button
+ * @csspart container â€?The app-layout root div
+ * @csspart header â€?The sticky header element
+ * @csspart sidebar â€?The docs-sidebar nav
+ * @csspart main â€?The layout-main element
+ * @csspart footer â€?The app-footer element
+ * @csspart nav â€?The header-nav element
+ * @csspart nav-toggle â€?The mobile menu toggle button
  *
  * Usage:
  * ```html
@@ -292,7 +292,7 @@ sheet.replaceSync(`
   .nav-section summary::marker { content: ""; }
 
   .nav-section summary::before {
-    content: "â–¾";
+    content: "â–?;
     font-size: 0.5rem;
     transition: transform 0.2s ease;
     display: inline-block;
@@ -476,17 +476,17 @@ sheet.replaceSync(`
 `);
 
 export class LessLayout extends DsdElement {
-  static styles = sheet;
-  static observedAttributes = ['current-path', 'nav-items', 'header-nav', 'logo-text', 'logo-sub', 'github-url', 'edit-url', 'locale', 'locales'];
+  static override styles = sheet;
+  static override observedAttributes = ['current-path', 'nav-items', 'header-nav', 'logo-text', 'logo-sub', 'github-url', 'edit-url', 'locale', 'locales'];
 
-  static hydrateEvents: HydrateEventDescriptor[] = [
+  static override hydrateEvents: HydrateEventDescriptor[] = [
     { selector: 'summary.mobile-menu-btn', event: 'click', method: '_toggleMenu' },
   ];
 
   private _navCleanup?: () => void;
   private _navUnlisten?: () => void;
 
-  render(): string {
+  override render(): string {
     return this._renderLayout();
   }
 
@@ -713,7 +713,7 @@ export class LessLayout extends DsdElement {
 
   // â”€â”€â”€ Lifecycle â”€â”€â”€
 
-  connectedCallback(): void {
+  override connectedCallback(): void {
     super.connectedCallback();
 
     const locales = this._locales();
@@ -741,13 +741,13 @@ export class LessLayout extends DsdElement {
     });
   }
 
-  disconnectedCallback(): void {
+  override disconnectedCallback(): void {
     super.disconnectedCallback();
     this._navCleanup?.();
     this._navUnlisten?.();
   }
 
-  attributeChangedCallback(name: string, old: string | null, val: string | null): void {
+  override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
     if (old === val) return;
     if (name === 'current-path') {
       this._updateActiveNav();

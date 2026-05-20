@@ -6,11 +6,11 @@
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *
- * @csspart container â€” The step card wrapper
- * @csspart indicator â€” The step number circle
- * @csspart title â€” The step label heading
- * @csspart description â€” The step description paragraph
- * @csspart content â€” The slot content area
+ * @csspart container â€?The step card wrapper
+ * @csspart indicator â€?The step number circle
+ * @csspart title â€?The step label heading
+ * @csspart description â€?The step description paragraph
+ * @csspart content â€?The slot content area
  *
  * Usage:
  * ```html
@@ -76,10 +76,10 @@ sheet.replaceSync(`
 `);
 
 export class LessStepCard extends DsdElement {
-  static styles = sheet;
-  static observedAttributes = ['step', 'label', 'description', 'status'];
+  static override styles = sheet;
+  static override observedAttributes = ['step', 'label', 'description', 'status'];
 
-  render(): string {
+  override render(): string {
     const step = parseInt(this.getAttribute('step') || '1', 10);
     const label = this.getAttribute('label') || '';
     const description = this.getAttribute('description') || '';
@@ -96,7 +96,7 @@ export class LessStepCard extends DsdElement {
     </div>`;
   }
 
-  attributeChangedCallback(name: string, old: string | null, val: string | null): void {
+  override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
     if (old === val) return;
     this._syncDOM();
   }

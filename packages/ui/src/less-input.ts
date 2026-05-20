@@ -11,10 +11,10 @@
  * - Supports label, placeholder, error, disabled, required
  * - Dispatches 'less-input' custom event on value change
  *
- * @csspart wrapper â€” The outer input-wrapper div
- * @csspart label â€” The label element
- * @csspart control â€” The input/textarea/select element
- * @csspart error â€” The error message small element
+ * @csspart wrapper â€?The outer input-wrapper div
+ * @csspart label â€?The label element
+ * @csspart control â€?The input/textarea/select element
+ * @csspart error â€?The error message small element
  *
  * Usage:
  * ```html
@@ -103,21 +103,20 @@ sheet.replaceSync(`
 `);
 
 export class LessInput extends DsdElement {
-  static styles = sheet;
-  static formAssociated = true;
-  static delegatesFocus = true;
-  static observedAttributes = ['type', 'placeholder', 'label', 'value', 'name', 'disabled', 'required', 'error'];
+  static override styles = sheet;
+  static override formAssociated = true;
+  static override delegatesFocus = true;
+  static override observedAttributes = ['type', 'placeholder', 'label', 'value', 'name', 'disabled', 'required', 'error'];
 
-  static hydrateEvents: HydrateEventDescriptor[] = [
+  static override hydrateEvents: HydrateEventDescriptor[] = [
     { selector: 'input, textarea, select', event: 'input', method: '_handleInput' },
     { selector: 'input, textarea, select', event: 'change', method: '_handleChange' },
     { selector: 'input, textarea, select', event: 'focus', method: '_handleFocus' },
     { selector: 'input, textarea, select', event: 'blur', method: '_handleBlur' },
   ];
 
-  protected _internals?: ElementInternals;
 
-  render(): string {
+  override render(): string {
     const type = this.getAttribute('type') || 'text';
     const placeholder = this._escAttr(this.getAttribute('placeholder') || '');
     const label = this.getAttribute('label') || '';
@@ -158,7 +157,7 @@ export class LessInput extends DsdElement {
     </div>`;
   }
 
-  attributeChangedCallback(name: string, old: string | null, val: string | null): void {
+  override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
     if (old === val) return;
     if (name === 'disabled' || name === 'error') {
       this._syncDOM();

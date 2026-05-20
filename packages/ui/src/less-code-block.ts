@@ -8,11 +8,11 @@
  *   - Copy button uses ElementInternals :state(copied) for CSS feedback
  *   - DSD renders <slot> for SSR (no JS content fallback)
  *
- * @csspart container â€” The code-block wrapper
- * @csspart header â€” The header bar with lang badge and copy button
- * @csspart lang â€” The language badge
- * @csspart copy â€” The copy button
- * @csspart body â€” The pre/code area
+ * @csspart container â€?The code-block wrapper
+ * @csspart header â€?The header bar with lang badge and copy button
+ * @csspart lang â€?The language badge
+ * @csspart copy â€?The copy button
+ * @csspart body â€?The pre/code area
  *
  * Usage:
  * ```html
@@ -124,10 +124,10 @@ sheet.replaceSync(`
 `);
 
 export class LessCodeBlock extends DsdElement {
-  static styles = sheet;
-  static formAssociated = true;
+  static override styles = sheet;
+  static override formAssociated = true;
 
-  static hydrateEvents: HydrateEventDescriptor[] = [
+  static override hydrateEvents: HydrateEventDescriptor[] = [
     { selector: 'button.copy-btn', event: 'click', method: '_copy' },
   ];
 
@@ -137,21 +137,20 @@ export class LessCodeBlock extends DsdElement {
   private _highlightedInShadow = false;
   private _highlightRetries = 0;
   private static MAX_HIGHLIGHT_RETRIES = 20;
-  protected _internals?: ElementInternals;
 
-  render(): string {
+  override render(): string {
     return `<slot></slot>
       <button class="copy-btn" part="copy">Copy</button>`;
   }
 
-  connectedCallback(): void {
+  override connectedCallback(): void {
     super.connectedCallback();
     if (this._dsdHydrated) {
       this._tryHighlight();
     }
   }
 
-  disconnectedCallback(): void {
+  override disconnectedCallback(): void {
     super.disconnectedCallback();
     if (this._copyTimer !== undefined) { clearTimeout(this._copyTimer); this._copyTimer = undefined; }
     if (this._highlightTimer !== undefined) { clearTimeout(this._highlightTimer); this._highlightTimer = undefined; }

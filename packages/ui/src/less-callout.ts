@@ -6,9 +6,9 @@
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *
- * @csspart container â€” The callout wrapper
- * @csspart icon â€” The type icon span
- * @csspart content â€” The body content area
+ * @csspart container â€?The callout wrapper
+ * @csspart icon â€?The type icon span
+ * @csspart content â€?The body content area
  *
  * Usage:
  * ```html
@@ -84,10 +84,10 @@ sheet.replaceSync(`
 `);
 
 export class LessCallout extends DsdElement {
-  static styles = sheet;
-  static observedAttributes = ['type', 'label'];
+  static override styles = sheet;
+  static override observedAttributes = ['type', 'label'];
 
-  render(): string {
+  override render(): string {
     const type = this.getAttribute('type') || 'info';
     const label = this.getAttribute('label') || '';
     const config = TYPE_CONFIG[type] || TYPE_CONFIG.info;
@@ -108,7 +108,7 @@ export class LessCallout extends DsdElement {
     </div>`;
   }
 
-  attributeChangedCallback(name: string, old: string | null, val: string | null): void {
+  override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
     if (old === val) return;
     this._syncDOM();
   }
