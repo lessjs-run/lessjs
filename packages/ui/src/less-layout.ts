@@ -615,6 +615,19 @@ export class LessLayout extends DsdLitElement {
           }
         }
 
+        @media (max-width: 640px) {
+          .header-right {
+            gap: var(--less-size-1);
+          }
+          .lang-switch {
+            display: none;
+          }
+          ::slotted([slot="header-actions"]) .search-trigger span,
+          ::slotted([slot="header-actions"]) .search-trigger kbd {
+            display: none;
+          }
+        }
+
         @media (max-width: 480px) {
           .logo-sub {
             display: none;
@@ -625,8 +638,22 @@ export class LessLayout extends DsdLitElement {
             border: none;
           }
 
+          .github-link .github-text {
+            display: none;
+          }
+
           .header-inner {
             padding: 0 var(--less-size-3);
+            gap: var(--less-size-2);
+          }
+
+          .header-right {
+            gap: 2px;
+          }
+
+          .mobile-menu-btn {
+            width: 28px;
+            height: 28px;
           }
         }
 
