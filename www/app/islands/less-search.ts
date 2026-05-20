@@ -64,6 +64,28 @@ export default class LessSearch extends DsdLitElement {
       margin-left: var(--less-size-1, 0.25rem);
     }
 
+    /* Search icon for mobile */
+    .search-icon {
+      display: none;
+      width: 16px;
+      height: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .search-trigger span {
+        display: none;
+      }
+      .search-trigger kbd {
+        display: none;
+      }
+      .search-icon {
+        display: inline-block;
+      }
+      .search-trigger {
+        padding: var(--less-size-2, 0.375rem);
+      }
+    }
+
     /* Overlay */
     .overlay {
       position: fixed;
@@ -262,7 +284,11 @@ export default class LessSearch extends DsdLitElement {
         this._loadIndex();
         this.requestUpdate();
       }}">
-        Search<kbd>⌘K</kbd>
+        <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="7" cy="7" r="4.5"/>
+          <path d="M10.5 10.5L14 14"/>
+        </svg>
+        <span>Search</span><kbd>⌘K</kbd>
       </button>
 
       ${this._open

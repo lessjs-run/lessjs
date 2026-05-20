@@ -699,8 +699,9 @@ export default class DocsHome extends DsdLitElement {
       background: linear-gradient(180deg, #0d0d1f 0%, #080816 100%);
       border-top: none;
       padding: 3rem 2rem 1.5rem;
-      width: 100vw;
-      margin-left: calc(-50vw + 50%);
+      width: 100%;
+      max-width: 100vw;
+      margin-left: calc(-1 * (100vw - 100%) / 2);
       position: relative;
       overflow: hidden;
     }
@@ -808,10 +809,29 @@ export default class DocsHome extends DsdLitElement {
     .footer-bottom a:hover {
       color: var(--less-brand, #534AB7);
     }
+    @media (max-width: 768px) {
+      .site-footer {
+        padding: 2.5rem 1.5rem 1.25rem;
+      }
+    }
     @media (max-width: 640px) {
       .footer-grid {
         grid-template-columns: 1fr 1fr;
         gap: 1rem;
+      }
+    }
+    @media (max-width: 480px) {
+      .site-footer {
+        padding: 2rem 1rem 1rem;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .footer-brand {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
       }
     }
 
