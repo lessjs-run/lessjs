@@ -274,62 +274,63 @@ export default class LessSearch extends DsdLitElement {
   }
 
   override render() {
-    // DSD hydration: skip rendering when shadow root is pre-populated
-    // and no interactive state requires a re-render.
+    // DSD hydration: when shadow root is pre-populated and search is closed,
+    // skip re-rendering the button (DSD already has it) — only render the overlay.
     if (this._dsdHydrated && !this._open) return nothing;
 
-    return html`
-      <button class="search-trigger" @click="${() => {
-        this._open = true;
-        this._loadIndex();
-        this.requestUpdate();
-      }}">
-        <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-          <circle cx="7" cy="7" r="4.5"/>
-          <path d="M10.5 10.5L14 14"/>
-        </svg>
-        <span>Search</span><kbd>⌘K</kbd>
-      </button>
+    // When open: if DSD-hydrated, only inject the overlay (keep the DSD button intact).
+    // When not DSD-hydrated (non-SSR path): render full button + overlay.
+    const triggerButton = this._dsdHydrated
+      ? nothing
+      : html`
+        <button class="search-trigger" @click="${() => {
+          this._open = true;
+          this._loadIndex();
+          this.requestUpdate();
+        }}">
+          <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <circle cx="7" cy="7" r="4.5"/>
+            <path d="M10.5 10.5L14 14"/>
+          </svg>
+          <span>Search</span><kbd>⌘K</kbd>
+        </button>`;
 
-      ${this._open
-        ? html`
-          <div class="overlay" @click="${this._onOverlayClick}">
-            <div class="panel">
-              <input
-                class="search-input"
-                type="text"
-                placeholder="Search documentation..."
-                .value="${live(this._query)}"
-                @input="${this._onInput}"
-                autofocus
-              >
-              <div class="results">
-                ${this._results.length > 0
-                  ? this._results.map(
-                    (r) =>
-                      html`
-                        <a class="result-item" href="${r.path}" @click="${() => {
-                          this._open = false;
-                        }}">
-                          <div class="result-section">${r.section}</div>
-                          <div class="result-title">${r.title}</div>
-                          <div class="result-text">${r.text}</div>
-                        </a>
-                      `,
-                  )
-                  : this._query.length >= 2
-                  ? html`
-                    <div class="no-results">No results found for "${this._query}"</div>
-                  `
-                  : html`
-                    <div class="no-results">Type at least 2 characters to search</div>
-                  `}
-              </div>
+    const overlay = this._open
+      ? html`
+        <div class="overlay" @click="${this._onOverlayClick}">
+          <div class="panel">
+            <input
+              class="search-input"
+              type="text"
+              placeholder="Search documentation..."
+              .value="${live(this._query)}"
+              @input="${this._onInput}"
+              autofocus
+            >
+            <div class="results">
+              ${this._results.length > 0
+                ? this._results.map(
+                  (r) =>
+                    html`
+                      <a class="result-item" href="${r.path}" @click="${() => {
+                        this._open = false;
+                        this.requestUpdate();
+                      }}">
+                        <div class="result-section">${r.section}</div>
+                        <div class="result-title">${r.title}</div>
+                        <div class="result-text">${r.text}</div>
+                      </a>
+                    `,
+                )
+                : this._query.length >= 2
+                ? html`<div class="no-results">No results found for "${this._query}"</div>`
+                : html`<div class="no-results">Type at least 2 characters to search</div>`}
             </div>
           </div>
-        `
-        : ''}
-    `;
+        </div>`
+      : nothing;
+
+    return html`${triggerButton}${overlay}`;
   }
 }
 

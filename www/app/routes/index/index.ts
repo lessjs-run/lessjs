@@ -698,7 +698,7 @@ export default class DocsHome extends DsdLitElement {
     .site-footer {
       background: linear-gradient(180deg, #0d0d1f 0%, #080816 100%);
       border-top: none;
-      padding: 3rem 2rem 1.5rem;
+      padding: 3rem 1.5rem 1.5rem;
       width: 100%;
       box-sizing: border-box;
       position: relative;
