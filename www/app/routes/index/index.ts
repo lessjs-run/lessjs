@@ -47,7 +47,7 @@ const CODE_DSD = `<page-home>
   </template>
 </page-home>`;
 
-const CODE_LIT = `// Lit island — app/islands/counter.ts
+const _CODE_LIT = `// Lit island — app/islands/counter.ts
 import { LitElement, html } from 'lit';
 export class MyCounter extends LitElement {
   @state() count = 0;
@@ -58,13 +58,13 @@ export class MyCounter extends LitElement {
   }
 }`;
 
-const CODE_REACT = `// React island — app/islands/hello.tsx
+const _CODE_REACT = `// React island — app/islands/hello.tsx
 export default function Hello({ name }) {
   return <h1>Hello, {name}!</h1>;
 }
 // ReactDOMServer → DSD, zero-config SSR`;
 
-const CODE_VANILLA = `// Vanilla island — app/islands/player.ts
+const _CODE_VANILLA = `// Vanilla island — app/islands/player.ts
 import { WithDsdHydration } from '@lessjs/adapter-vanilla';
 class MediaPlayer extends WithDsdHydration(HTMLElement) {
   connectedCallback() { /* upgrade logic */ }
