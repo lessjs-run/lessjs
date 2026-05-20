@@ -258,6 +258,7 @@ export default class DocsHome extends DsdLitElement {
     .hero-actions a {
       display: inline-flex;
       align-items: center;
+      gap: 6px;
       height: 40px;
       padding: 0 22px;
       border-radius: var(--less-radius-md, 8px);
@@ -412,13 +413,13 @@ export default class DocsHome extends DsdLitElement {
       padding: 0 1.5rem;
     }
 
-    /* ── QS leading to Footer: full-width gradient bridge ── */
+    /* ── QS leading to Footer: gradient bridge to dark footer ── */
     .sec-qs-last {
       max-width: none;
       width: 100vw;
       margin-left: calc(-50vw + 50%);
       padding-bottom: 0;
-      background: linear-gradient(180deg, rgba(83,74,183,0.05) 0%, rgba(83,74,183,0.02) 30%, #ffffff 100%);
+      background: linear-gradient(180deg, #ffffff 0%, rgba(83,74,183,0.04) 40%, rgba(83,74,183,0.12) 70%, #0d0d1f 100%);
     }
     .sec-qs-last .sec-lbl,
     .sec-qs-last .sec-title,
@@ -439,6 +440,59 @@ export default class DocsHome extends DsdLitElement {
     .card-meta span { display:inline-flex;padding:1px 8px;border-radius:4px;font-size:10px;font-weight:500;color:var(--less-text-muted);background:var(--less-bg-surface);border:0.5px solid var(--less-border);font-family:var(--font-mono,"SF Mono","JetBrains Mono",monospace) }
     .card-pills { display:flex;gap:6px;margin-top:12px }
     .card-pill { display:inline-flex;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:500;color:var(--less-brand,#534AB7);background:rgba(83,74,183,0.08);border:1px solid rgba(83,74,183,0.15) }
+
+    /* ── MFA Fallback — pre-hydration framework cards ── */
+    .mfa-fallback {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      padding: 0.5rem 0;
+    }
+    .mfa-fallback-card {
+      background: var(--less-bg-surface);
+      border: 1px solid var(--less-border);
+      border-radius: var(--less-radius-lg, 12px);
+      padding: 1.25rem 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    .mfa-fallback-card:hover {
+      border-color: rgba(83,74,183,0.3);
+      box-shadow: 0 4px 16px rgba(83,74,183,0.08);
+      transform: translateY(-2px);
+    }
+    .mfa-fallback-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; margin-bottom: 10px;
+    }
+    .mfa-fallback-title {
+      font-size: 14px; font-weight: 600;
+      color: var(--less-text-primary); margin-bottom: 3px;
+    }
+    .mfa-fallback-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 1px 7px; border-radius: 4px;
+      background: rgba(83,74,183,0.08);
+      color: var(--less-brand, #534AB7);
+      margin-bottom: 8px;
+    }
+    .mfa-fallback-desc {
+      font-size: 11.5px; color: var(--less-text-secondary);
+      line-height: 1.55; margin-bottom: 8px;
+    }
+    .mfa-fallback-code {
+      font-family: "JetBrains Mono", "SF Mono", Consolas, monospace;
+      font-size: 10.5px; color: var(--less-text-muted);
+      background: rgba(0,0,0,0.04); padding: 4px 8px;
+      border-radius: 4px; line-height: 1.5;
+      border: 0.5px solid var(--less-border);
+    }
+    @media (max-width: 640px) {
+      .mfa-fallback { grid-template-columns: 1fr; }
+    }
 
     /* ── CSS Houdini @property — smooth brand-color transitions ── */
     @supports (background: paint(something)) {
@@ -494,6 +548,9 @@ export default class DocsHome extends DsdLitElement {
       font-size: 16px;
       font-weight: 700;
       margin-bottom: 14px;
+    }
+    .card-icon svg {
+      flex-shrink: 0;
     }
     .card h3 {
       margin: 0 0 6px;
@@ -631,21 +688,41 @@ export default class DocsHome extends DsdLitElement {
       box-shadow: 0 0 8px var(--less-brand-glow, rgba(83,74,183,0.35));
     }
     .qs-desc { font-size:12px;color:var(--less-text-muted);margin:4px 0 0;line-height:1.5 }
-    .qs-cta { text-align:center;margin-top:12px }
-    .qs-cta a { display:inline-flex;align-items:center;height:40px;padding:0 24px;border-radius:var(--less-radius-md,8px);font-size:14px;font-weight:600;text-decoration:none;color:#fff;background:linear-gradient(135deg,var(--less-brand,#534AB7),var(--less-brand-light,#6D5CE8));box-shadow:var(--less-shadow-brand-md,0 4px 20px rgba(83,74,183,0.3));transition:transform var(--less-duration-micro,150ms) var(--less-easing-default,ease-out),box-shadow var(--less-duration-micro,150ms) var(--less-easing-default,ease-out) }
-    .qs-cta a:hover { transform:translateY(-1px);box-shadow:var(--less-shadow-brand-lg,0 8px 32px rgba(83,74,183,0.4)) }
+    .qs-cta { text-align:center;margin-top:12px;padding-bottom:2rem }
+    .qs-cta a { display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 24px;border-radius:var(--less-radius-md,8px);font-size:14px;font-weight:600;text-decoration:none;color:var(--less-brand,#534AB7);background:transparent;border:1.5px solid var(--less-brand,#534AB7);transition:transform var(--less-duration-micro,150ms) var(--less-easing-default,ease-out),background 0.2s,color 0.2s }
+    .qs-cta a:hover { transform:translateY(-1px);background:var(--less-brand,#534AB7);color:#fff }
 
-    /* ── III. Site Footer — warm-gray quiet landing ── */
+    /* ── III. Site Footer — deep still water ── */
     .site-footer {
-      background: linear-gradient(180deg, var(--less-brand-deep,#26215C) 0%, rgba(83,74,183,0.3) 25%, rgba(83,74,183,0.05) 50%, #F1EFE8 100%);
+      background: linear-gradient(180deg, #0d0d1f 0%, #080816 100%);
       border-top: none;
       padding: 3rem 2rem 1.5rem;
       width: 100vw;
       margin-left: calc(-50vw + 50%);
+      position: relative;
+      overflow: hidden;
+    }
+    .site-footer::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--less-brand, #534AB7) 30%, var(--less-brand-light, #6D5CE8) 70%, transparent);
+      opacity: 0.5;
+    }
+    .site-footer::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 80px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(83,74,183,0.12), transparent 70%);
+      pointer-events: none;
     }
     .site-footer-inner {
       max-width: 960px;
       margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
     .footer-brand {
       display: flex;
@@ -661,11 +738,11 @@ export default class DocsHome extends DsdLitElement {
     }
     .footer-brand span {
       font-size: 0.8125rem;
-      color: #888780;
+      color: rgba(255,255,255,0.35);
     }
     .footer-sep {
       border: none;
-      border-top: 0.5px solid #D3D1C7;
+      border-top: 0.5px solid rgba(255,255,255,0.06);
       margin: 0 0 1.5rem;
     }
     .footer-grid {
@@ -685,23 +762,24 @@ export default class DocsHome extends DsdLitElement {
     .footer-col a {
       display: block;
       font-size: 0.75rem;
-      color: rgba(255,255,255,0.55);
+      color: rgba(255,255,255,0.45);
       text-decoration: none;
       padding: 0.2rem 0;
       transition: color var(--less-duration-micro, 150ms) var(--less-easing-default, ease-out);
     }
     .footer-col a:hover {
-      color: #fff;
+      color: rgba(255,255,255,0.85);
     }
     .footer-terminal {
-      background: var(--less-brand-deep, #26215C);
-      border: 0.5px solid #3C3489;
+      background: rgba(83,74,183,0.08);
+      border: 0.5px solid rgba(83,74,183,0.2);
       border-radius: var(--less-radius-md, 8px);
       padding: 0.75rem 1rem;
       font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
       font-size: 0.6875rem;
       line-height: 1.7;
       color: #AFA9EC;
+      backdrop-filter: blur(8px);
     }
     .footer-terminal .prompt {
       color: #7F77DD;
@@ -710,7 +788,7 @@ export default class DocsHome extends DsdLitElement {
       color: #AFA9EC;
     }
     .footer-bottom {
-      border-top: 0.5px solid rgba(255,255,255,0.15);
+      border-top: 0.5px solid rgba(255,255,255,0.06);
       padding-top: 1rem;
       display: flex;
       justify-content: space-between;
@@ -718,11 +796,11 @@ export default class DocsHome extends DsdLitElement {
     }
     .footer-bottom span {
       font-size: 0.6875rem;
-      color: rgba(255,255,255,0.45);
+      color: rgba(255,255,255,0.3);
     }
     .footer-bottom a {
       font-size: 0.6875rem;
-      color: rgba(255,255,255,0.45);
+      color: rgba(255,255,255,0.3);
       text-decoration: none;
     }
     .footer-bottom a:hover {
@@ -842,8 +920,11 @@ export default class DocsHome extends DsdLitElement {
             <h1>全栈框架 · <em>零 JS 首屏</em> · <em>多框架共存</em></h1>
             <p class="hero-desc">DSD 原生渲染，浏览器零 JS 看到完整页面</p>
             <div class="hero-actions">
-              <a class="hero-pri" href="/guide/deployment">开始使用 →</a>
-              <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">GitHub</a>
+              <a class="hero-pri" href="/guide/getting-started">开始使用 →</a>
+              <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style="flex-shrink:0"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                GitHub
+              </a>
             </div>
           </div>
         </section>
@@ -928,21 +1009,27 @@ export default class DocsHome extends DsdLitElement {
           <p class="sec-title">任意框架，同一个 island</p>
           <div class="sec-bd">
             <less-showcase-panel .tabs="${SHOWCASE_TABS_ZH}" .activeTab="${0}">
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:1rem;text-align:center">
-                <div style="background:var(--less-bg-surface);border-radius:10px;padding:1.5rem 0.75rem;border:1px solid var(--less-border)">
-                  <div style="font-size:24px;margin-bottom:6px;color:#185FA5">⚡</div>
-                  <div style="font-size:12px;font-weight:600;color:var(--less-text-primary)">Lit</div>
-                  <div style="font-size:10px;color:var(--less-text-muted);margin-top:2px">shoelace</div>
+              <div class="mfa-fallback">
+                <div class="mfa-fallback-card">
+                  <div class="mfa-fallback-icon" style="background:#E6F1FB;color:#185FA5">⚡</div>
+                  <div class="mfa-fallback-title">Shoelace</div>
+                  <div class="mfa-fallback-tag">Lit</div>
+                  <div class="mfa-fallback-desc">80+ Lit Web Components，通过 @lessjs/adapter-lit DSD 管道原生渲染</div>
+                  <div class="mfa-fallback-code">&lt;sl-button variant="primary"&gt;Click&lt;/sl-button&gt;</div>
                 </div>
-                <div style="background:var(--less-bg-surface);border-radius:10px;padding:1.5rem 0.75rem;border:1px solid var(--less-border)">
-                  <div style="font-size:24px;margin-bottom:6px;color:#0D6EFD">⚛</div>
-                  <div style="font-size:12px;font-weight:600;color:var(--less-text-primary)">React 19</div>
-                  <div style="font-size:10px;color:var(--less-text-muted);margin-top:2px">RSC</div>
+                <div class="mfa-fallback-card">
+                  <div class="mfa-fallback-icon" style="background:#E1F0FF;color:#0D6EFD">⚛</div>
+                  <div class="mfa-fallback-title">React 19</div>
+                  <div class="mfa-fallback-tag">React</div>
+                  <div class="mfa-fallback-desc">ReactDOMServer → Declarative Shadow DOM，零配置 SSR</div>
+                  <div class="mfa-fallback-code">&lt;Hello name="world" /&gt;</div>
                 </div>
-                <div style="background:var(--less-bg-surface);border-radius:10px;padding:1.5rem 0.75rem;border:1px solid var(--less-border)">
-                  <div style="font-size:24px;margin-bottom:6px;color:#0F6E56">🎬</div>
-                  <div style="font-size:12px;font-weight:600;color:var(--less-text-primary)">Vanilla</div>
-                  <div style="font-size:10px;color:var(--less-text-muted);margin-top:2px">media chrome</div>
+                <div class="mfa-fallback-card">
+                  <div class="mfa-fallback-icon" style="background:#E1F5EE;color:#0F6E56">🎬</div>
+                  <div class="mfa-fallback-title">Media Chrome</div>
+                  <div class="mfa-fallback-tag">Vanilla</div>
+                  <div class="mfa-fallback-desc">纯 Vanilla Web Components，@lessjs/adapter-vanilla 客户端升级</div>
+                  <div class="mfa-fallback-code">&lt;media-controller&gt;...&lt;/media-controller&gt;</div>
                 </div>
               </div>
             </less-showcase-panel>
@@ -961,9 +1048,11 @@ export default class DocsHome extends DsdLitElement {
           <div class="sec-bd">
             <div class="cards">
               <div class="card card-dominant">
-                <div class="card-icon" style="background:var(--less-brand-subtle, #EEEDFE);color:var(--less-brand, #534AB7);">D</div>
+                <div class="card-icon" style="background:var(--less-brand-subtle, #EEEDFE);color:var(--less-brand, #534AB7);">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
+                </div>
                 <h3>WC 渲染引擎</h3>
-                <p>DSD 零 JS 首屏，浏览器原生 Shadow DOM 解析。Lit/React/Vanilla 适配器共享同一渲染管线——同一页面，三种框架组件协同运行。</p>
+                <p>DSD 零 JS 首屏——浏览器原生解析 Declarative Shadow DOM，无需任何运行时。Lit / React / Vanilla 三种适配器共享同一渲染管线，同一页面三种框架组件协同运行。</p>
                 <div class="card-pills">
                   <span class="card-pill">DSD</span>
                   <span class="card-pill">Island</span>
@@ -971,15 +1060,19 @@ export default class DocsHome extends DsdLitElement {
                 </div>
               </div>
               <div class="card">
-                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">F</div>
+                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 3v14M13 3v14M3 10h14"/></svg>
+                </div>
                 <h3>全栈框架</h3>
-                <p>文件约定路由 + Hono API Route + Serverless 部署。SSG/ISR/SSR 同一引擎。</p>
+                <p>文件约定路由 + Hono API Route + Serverless 一键部署。SSG / ISR / SSR 同一引擎，一套代码覆盖静态与动态场景。</p>
                 <div class="card-meta"><span>file routing</span><span>hono</span><span>serverless</span></div>
               </div>
               <div class="card">
-                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">I</div>
+                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 14l4-4 3 3 5-7"/><rect x="2" y="2" width="16" height="16" rx="3"/></svg>
+                </div>
                 <h3>Registry Hub</h3>
-                <p>Web Component 发现、验证、一键安装。</p>
+                <p>Web Component 发现、兼容性验证、一键安装。CEM 自动检测 + 手动声明双通道，less add 零配置集成。</p>
                 <div class="card-meta"><span>discovery</span><span>validation</span><span>less add</span></div>
               </div>
             </div>
@@ -1006,7 +1099,7 @@ export default class DocsHome extends DsdLitElement {
               </div>
             </div>
             <div class="qs-cta">
-              <a href="/guide/getting-started">部署项目</a>
+              <a href="/guide/deployment">部署项目 →</a>
             </div>
           </div>
         </div>
@@ -1045,7 +1138,7 @@ export default class DocsHome extends DsdLitElement {
             </div>
             <div class="footer-bottom">
               <span>MIT License · Made with less</span>
-              <a href="/guide/getting-started">开始使用 →</a>
+              <a href="/guide/getting-started">探索文档 →</a>
             </div>
           </div>
         </footer>
@@ -1073,8 +1166,11 @@ export default class DocsHome extends DsdLitElement {
             <h1>Full-stack · <em>Zero-JS First Paint</em> · <em>Multi-framework</em></h1>
             <p class="hero-desc">DSD 原生渲染，浏览器零 JS 看到完整页面</p>
             <div class="hero-actions">
-              <a class="hero-pri" href="/guide/getting-started">get started →</a>
-              <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">GitHub</a>
+              <a class="hero-pri" href="/guide/getting-started">Get started →</a>
+              <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style="flex-shrink:0"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                GitHub
+              </a>
             </div>
           </div>
         </section>
@@ -1159,21 +1255,27 @@ export default class DocsHome extends DsdLitElement {
           <p class="sec-title">Any framework, same island</p>
           <div class="sec-bd">
             <less-showcase-panel .tabs="${SHOWCASE_TABS_EN}" .activeTab="${0}">
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:1rem;text-align:center">
-                <div style="background:var(--less-bg-surface);border-radius:10px;padding:1.5rem 0.75rem;border:1px solid var(--less-border)">
-                  <div style="font-size:24px;margin-bottom:6px;color:#185FA5">⚡</div>
-                  <div style="font-size:12px;font-weight:600;color:var(--less-text-primary)">Lit</div>
-                  <div style="font-size:10px;color:var(--less-text-muted);margin-top:2px">shoelace</div>
+              <div class="mfa-fallback">
+                <div class="mfa-fallback-card">
+                  <div class="mfa-fallback-icon" style="background:#E6F1FB;color:#185FA5">⚡</div>
+                  <div class="mfa-fallback-title">Shoelace</div>
+                  <div class="mfa-fallback-tag">Lit</div>
+                  <div class="mfa-fallback-desc">80+ Lit Web Components rendered natively via @lessjs/adapter-lit DSD pipeline</div>
+                  <div class="mfa-fallback-code">&lt;sl-button variant="primary"&gt;Click&lt;/sl-button&gt;</div>
                 </div>
-                <div style="background:var(--less-bg-surface);border-radius:10px;padding:1.5rem 0.75rem;border:1px solid var(--less-border)">
-                  <div style="font-size:24px;margin-bottom:6px;color:#0D6EFD">⚛</div>
-                  <div style="font-size:12px;font-weight:600;color:var(--less-text-primary)">React 19</div>
-                  <div style="font-size:10px;color:var(--less-text-muted);margin-top:2px">RSC</div>
+                <div class="mfa-fallback-card">
+                  <div class="mfa-fallback-icon" style="background:#E1F0FF;color:#0D6EFD">⚛</div>
+                  <div class="mfa-fallback-title">React 19</div>
+                  <div class="mfa-fallback-tag">React</div>
+                  <div class="mfa-fallback-desc">ReactDOMServer → Declarative Shadow DOM, zero-config SSR</div>
+                  <div class="mfa-fallback-code">&lt;Hello name="world" /&gt;</div>
                 </div>
-                <div style="background:var(--less-bg-surface);border-radius:10px;padding:1.5rem 0.75rem;border:1px solid var(--less-border)">
-                  <div style="font-size:24px;margin-bottom:6px;color:#0F6E56">🎬</div>
-                  <div style="font-size:12px;font-weight:600;color:var(--less-text-primary)">Vanilla</div>
-                  <div style="font-size:10px;color:var(--less-text-muted);margin-top:2px">media chrome</div>
+                <div class="mfa-fallback-card">
+                  <div class="mfa-fallback-icon" style="background:#E1F5EE;color:#0F6E56">🎬</div>
+                  <div class="mfa-fallback-title">Media Chrome</div>
+                  <div class="mfa-fallback-tag">Vanilla</div>
+                  <div class="mfa-fallback-desc">Pure vanilla Web Components, @lessjs/adapter-vanilla client-side upgrade</div>
+                  <div class="mfa-fallback-code">&lt;media-controller&gt;...&lt;/media-controller&gt;</div>
                 </div>
               </div>
             </less-showcase-panel>
@@ -1192,9 +1294,11 @@ export default class DocsHome extends DsdLitElement {
           <div class="sec-bd">
             <div class="cards">
               <div class="card card-dominant">
-                <div class="card-icon" style="background:var(--less-brand-subtle, #EEEDFE);color:var(--less-brand, #534AB7);">D</div>
-                <h3>wc rendering engine</h3>
-                <p>DSD zero-JS first paint via browser-native Shadow DOM. Lit, React and Vanilla adapters share one rendering pipeline — three framework components coexist on the same page.</p>
+                <div class="card-icon" style="background:var(--less-brand-subtle, #EEEDFE);color:var(--less-brand, #534AB7);">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
+                </div>
+                <h3>WC Rendering Engine</h3>
+                <p>DSD zero-JS first paint — browser-native Declarative Shadow DOM parsing with zero runtime. Lit, React and Vanilla adapters share one pipeline — three frameworks coexist on the same page.</p>
                 <div class="card-pills">
                   <span class="card-pill">DSD</span>
                   <span class="card-pill">Island</span>
@@ -1202,15 +1306,19 @@ export default class DocsHome extends DsdLitElement {
                 </div>
               </div>
               <div class="card">
-                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">F</div>
-                <h3>full-stack framework</h3>
-                <p>File-convention routing + Hono API routes + serverless deploy. SSG/ISR/SSR — same engine.</p>
+                <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 3v14M13 3v14M3 10h14"/></svg>
+                </div>
+                <h3>Full-stack Framework</h3>
+                <p>File-convention routing + Hono API routes + serverless one-click deploy. SSG / ISR / SSR — same engine, one codebase for static and dynamic.</p>
                 <div class="card-meta"><span>file routing</span><span>hono</span><span>serverless</span></div>
               </div>
               <div class="card">
-                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">I</div>
-                <h3>registry hub</h3>
-                <p>Web Component discovery, validation, one-click install.</p>
+                <div class="card-icon" style="background:#E1F5EE;color:#0F6E56;">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 14l4-4 3 3 5-7"/><rect x="2" y="2" width="16" height="16" rx="3"/></svg>
+                </div>
+                <h3>Registry Hub</h3>
+                <p>Web Component discovery, compat validation, one-click install. CEM auto-detect + manual declare dual channel, zero-config less add integration.</p>
                 <div class="card-meta"><span>discovery</span><span>validation</span><span>less add</span></div>
               </div>
             </div>
@@ -1237,7 +1345,7 @@ export default class DocsHome extends DsdLitElement {
               </div>
             </div>
             <div class="qs-cta">
-              <a href="/guide/getting-started">Deploy now</a>
+              <a href="/guide/deployment">Deploy now →</a>
             </div>
           </div>
         </div>
@@ -1276,7 +1384,7 @@ export default class DocsHome extends DsdLitElement {
             </div>
             <div class="footer-bottom">
               <span>MIT License · Made with less</span>
-              <a href="/en/guide/getting-started">Get started →</a>
+              <a href="/en/guide/getting-started">Explore docs →</a>
             </div>
           </div>
         </footer>
