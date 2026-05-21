@@ -19,6 +19,7 @@
  */
 
 import { DsdElement, StyleSheet } from '@lessjs/core';
+import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-callout';
 
@@ -84,7 +85,7 @@ sheet.replaceSync(`
 `);
 
 export class LessCallout extends DsdElement {
-  static override styles = sheet;
+  static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['type', 'label'];
 
   override render(): string {

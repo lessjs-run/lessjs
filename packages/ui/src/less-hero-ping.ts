@@ -9,6 +9,7 @@
  * @csspart dot-animated — The animated ping button
  */
 import { DsdElement } from '@lessjs/core';
+import { openPropsTokenSheet } from './open-props-tokens.js';
 import { StyleSheet } from '@lessjs/core';
 import type { HydrateEventDescriptor } from '@lessjs/core';
 
@@ -73,7 +74,7 @@ styles.replaceSync(`
 `);
 
 export default class HeroPing extends DsdElement {
-  static override styles = styles;
+  static override styles = [openPropsTokenSheet, styles];
 
   static override hydrateEvents: HydrateEventDescriptor[] = [
     { selector: 'button.ping', event: 'click', method: '_fetch' },

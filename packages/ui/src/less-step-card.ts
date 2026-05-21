@@ -21,6 +21,7 @@
  */
 
 import { DsdElement, StyleSheet } from '@lessjs/core';
+import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-step-card';
 
@@ -76,7 +77,7 @@ sheet.replaceSync(`
 `);
 
 export class LessStepCard extends DsdElement {
-  static override styles = sheet;
+  static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['step', 'label', 'description', 'status'];
 
   override render(): string {

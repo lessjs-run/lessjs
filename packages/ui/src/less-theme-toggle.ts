@@ -20,6 +20,7 @@
  */
 
 import { DsdElement, type HydrateEventDescriptor, StyleSheet } from '@lessjs/core';
+import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-theme-toggle';
 
@@ -75,7 +76,7 @@ sheet.replaceSync(`
 `);
 
 export class LessThemeToggle extends DsdElement {
-  static override styles = sheet;
+  static override styles = [openPropsTokenSheet, sheet];
   static override delegatesFocus = true;
   static override observedAttributes = ['theme'];
 

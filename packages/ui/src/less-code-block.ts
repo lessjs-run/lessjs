@@ -23,6 +23,7 @@
  */
 
 import { DsdElement, type HydrateEventDescriptor, StyleSheet } from '@lessjs/core';
+import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-code-block';
 
@@ -124,7 +125,7 @@ sheet.replaceSync(`
 `);
 
 export class LessCodeBlock extends DsdElement {
-  static override styles = sheet;
+  static override styles = [openPropsTokenSheet, sheet];
   static override formAssociated = true;
 
   static override hydrateEvents: HydrateEventDescriptor[] = [

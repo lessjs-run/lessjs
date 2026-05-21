@@ -40,6 +40,12 @@ function parseRules(css: string): StyleSheetRule[] {
   while ((m = RULE_RE.exec(css)) !== null) {
     rules.push({ cssText: m[0].trim() });
   }
+  // Fallback: if no selector-block rules were found, treat the entire CSS
+  // as a single rule. This handles bare declarations (e.g. Open Props
+  // custom properties like `--gray-0: #f8f9fa;`) that don't use selectors.
+  if (rules.length === 0 && css.trim()) {
+    rules.push({ cssText: css.trim() });
+  }
   return rules;
 }
 
@@ -70,8 +76,8 @@ function resolveStyleSheetCtor(): new () => StyleSheetLike {
   return ShimStyleSheet;
 }
 
-export const StyleSheet: new () => StyleSheetLike =
-  resolveStyleSheetCtor() as unknown as new () => StyleSheetLike;
+export const StyleSheet: new () => StyleSheetLike = resolveStyleSheetCtor() as unknown as new () =>
+StyleSheetLike;
 
 // Polyfill global CSSStyleSheet for SSR environments so that code
 // that references CSSStyleSheet directly (e.g. Lit internals in the

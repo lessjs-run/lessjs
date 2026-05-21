@@ -29,6 +29,7 @@
 
 import { DsdElement, type HydrateEventDescriptor, StyleSheet } from '@lessjs/core';
 import { navigate, onNavigate } from '@lessjs/core/navigation';
+import { openPropsTokenSheet } from './open-props-tokens.js';
 import './less-theme-toggle.js';
 
 export const tagName = 'less-layout';
@@ -476,7 +477,7 @@ sheet.replaceSync(`
 `);
 
 export class LessLayout extends DsdElement {
-  static override styles = sheet;
+  static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = [
     'current-path',
     'nav-items',
