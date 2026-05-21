@@ -414,6 +414,24 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
             }
           },
         },
+        // ADR 0036: Resolve @lessjs/ui subpath exports to actual files.
+        // The base alias @lessjs/ui → index.ts causes subpath imports
+        // (e.g. @lessjs/ui/less-callout) to resolve as index.ts/callout
+        // which is a file-not-directory error. This plugin intercepts
+        // subpath resolution before alias processing.
+        {
+          name: 'less:ssg-ui-subpath-resolve',
+          enforce: 'pre',
+          resolveId(id) {
+            const match = /^@lessjs\/ui\/(.+)$/.exec(id);
+            if (match) {
+              const sub = match[1];
+              // Strip extensions and path separators for safety
+              const clean = sub.replace(/\.\.\/|\.\.\\/g, '').replace(/\.(j|t)sx?$/, '');
+              return resolve(root, `../packages/ui/src/${clean}.ts`);
+            }
+          },
+        },
         // ADR 0008 Phase C: Provide stubs for optional packages.
         // The generated entry code statically imports @lessjs/adapter-lit,
         // @lessjs/content, @lessjs/i18n — but these may not be installed.
