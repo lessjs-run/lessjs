@@ -217,6 +217,12 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     denoJson.tasks.build = `deno run -A ${
       join(repoRoot, 'packages', 'adapter-vite', 'src', 'cli', 'build.ts')
     }`;
+    // Remove sub-tasks that Vite 8 configLoader:'native' may trigger independently.
+    // These would run without our import map plugin + alias filtering, causing
+    // the original @lessjs/ui/<subpath> ENOTDIR error.
+    delete denoJson.tasks['build:ssr'];
+    delete denoJson.tasks['build:client'];
+    delete denoJson.tasks['build:ssg'];
     writeFileSync(denoJsonPath, JSON.stringify(denoJson, null, 2));
 
     const uiSrc = join(repoRoot, 'packages', 'ui', 'src');
@@ -291,12 +297,12 @@ Deno.test('create-less: generated project builds through the one-command pipelin
         find: '@lessjs/ui/less-dialog',
         replacement: vitePath(join(uiSrc, 'less-dialog.ts')),
       },
-      // Parent @lessjs/ui alias MUST come after all @lessjs/ui/* subpath aliases
-      // (Vite matches first-hit for string aliases â€?parent before subpath causes
-      // "Not a directory (os error 20)" for subpath imports like @lessjs/ui/less-dialog)
+      // Parent @lessjs/ui alias MUST come after all @lessjs/ui/* subpath aliases.
+      // Point to the source directory (not index.ts) so Rolldown can resolve
+      // subpath imports like @lessjs/ui/less-callout without ENOTDIR.
       {
         find: '@lessjs/ui',
-        replacement: vitePath(join(uiSrc, 'index.ts')),
+        replacement: vitePath(uiSrc),
       },
       // @lessjs/app must resolve to local source
       {

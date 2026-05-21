@@ -263,24 +263,9 @@ if (typeof globalThis.CSSStyleSheet === 'undefined') {
     upgradeStrategy: options.upgradeStrategy || 'lazy',
     hubClientOnlyTags,
   });
-  // Resolve @lessjs/ui/<subpath> imports to absolute file paths before
-  // passing to viteBuild(). Vite alias prefix-matching cannot handle
-  // subpath exports when the base alias (@lessjs/ui) points to a file
-  // (index.ts), causing ENOTDIR errors.
-  // Uses existsSync guard so create-less test scaffolding (where these
-  // files don't physically exist) falls through to normal resolution.
-  const ssgEntryCode = rawSsgEntryCode.replace(
-    /from\s+['"]@lessjs\/ui\/([\w-]+)['"]/g,
-    (_m: string, sub: string) => {
-      const resolved = resolve(root, `../packages/ui/src/${sub}.ts`);
-      try {
-        Deno.statSync(resolved);
-        return `from '${resolved}'`;
-      } catch {
-        return _m;
-      }
-    },
-  );
+  // Deno import map resolution handles bare specifiers (e.g. @lessjs/ui/less-callout)
+  // via the createDenoImportMapPlugin added to the Phase 3 viteBuild plugins below.
+  const ssgEntryCode = rawSsgEntryCode;
 
   try {
     const { build: viteBuild } = await import('vite');
