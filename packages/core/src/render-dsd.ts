@@ -245,46 +245,25 @@ export async function renderDSD(
   }
 
   // 5. Extract static styles from component class
-  // v0.20.0: Try native DsdElement CSSStyleSheet first — no adapter needed.
-  // v0.17.3: Fallback to registered adapters for framework-specific extraction.
+  // v0.17.3: Try all registered adapters for style extraction.
+  // Each adapter knows how to extract styles from its framework's components.
   let styleCss = '';
-
-  // Phase 1: Native DsdElement styles (CSSStyleSheet) — zero-dependency path
-  const ctor = componentClass as unknown as {
-    styles?: CSSStyleSheet | CSSStyleSheet[];
-  };
-  if (ctor.styles) {
-    const sheets = Array.isArray(ctor.styles) ? ctor.styles : [ctor.styles];
-    for (const sheet of sheets) {
+  for (const adapter of getRegisteredAdapters()) {
+    if (adapter.extractStyles) {
       try {
-        for (const rule of [...sheet.cssRules]) {
-          styleCss += rule.cssText + '\n';
+        const extracted = adapter.extractStyles(componentClass);
+        if (extracted) {
+          styleCss += extracted;
         }
-      } catch {
-        // Cross-origin stylesheet or empty sheet — skip silently
-      }
-    }
-  }
-
-  // Phase 2: Registered adapters (Lit, etc.) — only if no native styles found
-  if (!styleCss) {
-    for (const adapter of getRegisteredAdapters()) {
-      if (adapter.extractStyles) {
-        try {
-          const extracted = adapter.extractStyles(componentClass);
-          if (extracted) {
-            styleCss += extracted;
-          }
-        } catch (e) {
-          const styleErr = classifyError('style', tagName, e, true);
-          collectedErrors.push(styleErr);
-          hooks?.onError?.(styleErr);
-          log.debug(
-            `extractStyles failed for <${tagName}> via '${adapter.name}' adapter: ${
-              e instanceof Error ? e.message : String(e)
-            }`,
-          );
-        }
+      } catch (e) {
+        const styleErr = classifyError('style', tagName, e, true);
+        collectedErrors.push(styleErr);
+        hooks?.onError?.(styleErr);
+        log.debug(
+          `extractStyles failed for <${tagName}> via '${adapter.name}' adapter: ${
+            e instanceof Error ? e.message : String(e)
+          }`,
+        );
       }
     }
   }

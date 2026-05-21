@@ -15,7 +15,8 @@
     "./less-step-card": "./src/less-step-card.ts",
     "./design-tokens": "./src/design-tokens.ts",
     "./design-tokens.js": "./src/design-tokens.ts",
-    "./open-props-tokens": "./src/open-props-tokens.ts",
+    "./tokens/colors": "./src/tokens/colors.ts",
+    "./tokens/color-values": "./src/tokens/color-values.ts",
     "./tokens/spacing": "./src/tokens/spacing.ts",
     "./tokens/typography": "./src/tokens/typography.ts",
     "./tokens/effects": "./src/tokens/effects.ts",
@@ -23,8 +24,10 @@
     "./tokens/animation": "./src/tokens/animation.ts"
   },
   "imports": {
+    "lit": "npm:lit@^3.2.0",
     "@lessjs/core": "jsr:@lessjs/core@^0.18.0",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.18.0/navigation"
+    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.18.0/navigation",
+    "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^0.18.0"
   },
   "publish": {
     "include": [

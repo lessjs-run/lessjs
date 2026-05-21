@@ -1,15 +1,13 @@
 import { lessjs } from '@lessjs/app';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { lessRootColorCSS } from '@lessjs/ui/tokens/colors';
 import { defineConfig } from 'vite';
 
 // www/ is a pure JSR consumer — no resolve.alias needed.
 // The root deno.json workspace mapping resolves jsr:@lessjs/* → local
 // packages/ during dev, and JSR tarballs in production.
 
-// v0.20.0: migrated from lessRootColorCSS (deleted) to openPropsTokenSheet
-const rootCSS = [...openPropsTokenSheet.cssRules].map((r) => r.cssText).join('\n');
 const colorTokensStyle =
-  `<style>${rootCSS}body{margin:0;background:var(--gray-1);color:var(--gray-9);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>`;
+  `<style>${lessRootColorCSS}body{margin:0;background:var(--less-bg-base);color:var(--less-text-primary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>`;
 
 export default defineConfig({
   base: '/',

@@ -26,11 +26,10 @@
 
 // Design tokens (CSS custom properties)
 export { lessDesignTokens } from './design-tokens.js';
-// Open Props tokens (CSSStyleSheet, zero Lit dependency)
-export { openPropsTokenSheet } from './open-props-tokens.js';
 // Individual token sub-modules (for partial imports)
 export { lessSpacingTokens } from './tokens/spacing.js';
 export { lessTypographyTokens } from './tokens/typography.js';
+export { lessColorTokens } from './tokens/colors.js';
 export { lessEffectTokens } from './tokens/effects.js';
 export { lessRadiusTokens } from './tokens/radius.js';
 export { lessAnimationTokens } from './tokens/animation.js';

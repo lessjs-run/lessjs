@@ -38,21 +38,26 @@
 import { css, type CSSResult } from 'lit';
 import { lessSpacingTokens } from './tokens/spacing.js';
 import { lessTypographyTokens } from './tokens/typography.js';
+import { lessColorTokens } from './tokens/colors.js';
 import { lessEffectTokens } from './tokens/effects.js';
 import { lessRadiusTokens } from './tokens/radius.js';
 import { lessAnimationTokens } from './tokens/animation.js';
 
 /**
- * LessJS Design Tokens CSS (all tokens combined).
- *
- * v0.20.0: Color tokens have moved to `open-props-tokens.ts` (CSSStyleSheet).
- * This combined export remains for backward compatibility with Lit components.
+ * LessJS Design Tokens CSS (all tokens combined)
  *
  * These tokens are injected into every LessJS UI component.
  * They provide consistent spacing, colors, typography, and more.
  */
 export const lessDesignTokens: CSSResult = css`
-  ${lessSpacingTokens} ${lessTypographyTokens} ${lessEffectTokens} ${lessRadiusTokens} ${lessAnimationTokens};
+  ${lessSpacingTokens} ${lessTypographyTokens} ${lessColorTokens} ${lessEffectTokens} ${lessRadiusTokens} ${lessAnimationTokens};
 `;
+
+/**
+ * Page-level color CSS for :root injection.
+ * Use this in vite.config.ts headFragments instead of hand-writing values.
+ * Generated from lessDarkColors/lessLightColors — SINGLE SOURCE OF TRUTH.
+ */
+export { lessRootColorCSS } from './tokens/colors.js';
 
 export default lessDesignTokens;

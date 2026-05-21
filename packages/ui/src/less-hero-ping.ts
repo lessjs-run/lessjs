@@ -5,12 +5,6 @@
  * Uses Lit's full reactivity cycle (requestUpdate) for state changes,
  * which requires framework ownership of the shadow root.
  * SSR emits just <less-hero-ping></less-hero-ping>, client creates shadow DOM.
- *
- * v0.20.0: Island component — retains Lit. CSS Parts added for external styling.
- *
- * @csspart wrapper — The ping wrapper span
- * @csspart dot-static — The static status dot
- * @csspart dot-animated — The animated ping dot
  */
 import { css, type CSSResult, html, LitElement } from 'lit';
 
@@ -22,10 +16,12 @@ export default class HeroPing extends LitElement {
 
   static override properties = {
     apiUrl: { type: String, attribute: 'api-url' },
+    // P-03 fix: Declare as reactive state for proper re-rendering
     _state: { state: true },
     _msg: { state: true },
   };
 
+  // H-06 fix: Initialize apiUrl as a declared property
   apiUrl = '';
 
   static override styles: CSSResult = css`
@@ -65,13 +61,19 @@ export default class HeroPing extends LitElement {
       display: inline-block;
       flex-shrink: 0;
     }
-    .dot.idle { background: #444; }
+    .dot.idle {
+      background: #444;
+    }
     .dot.loading {
       background: #888;
       animation: pulse 0.8s ease-in-out infinite alternate;
     }
-    .dot.ok { background: #2ecc40; }
-    .dot.err { background: #e74c3c; }
+    .dot.ok {
+      background: #2ecc40;
+    }
+    .dot.err {
+      background: #e74c3c;
+    }
 
     .info {
       font-family: "SF Mono", "Fira Code", "Consolas", monospace;
@@ -79,17 +81,27 @@ export default class HeroPing extends LitElement {
       color: #666;
       white-space: nowrap;
     }
-    .info .ok { color: #2ecc40; }
-    .info .err { color: #e74c3c; }
+    .info .ok {
+      color: #2ecc40;
+    }
+    .info .err {
+      color: #e74c3c;
+    }
 
     @keyframes pulse {
-      from { opacity: 0.4; }
-      to { opacity: 1; }
+      from {
+        opacity: 0.4;
+      }
+      to {
+        opacity: 1;
+      }
     }
   `;
 
+  // P-03 fix: _state and _msg declared as reactive state via static properties above
   _state: 'idle' | 'loading' | 'ok' | 'err' = 'idle';
   _msg = '';
+  // H-07 fix: Add AbortController to cancel in-flight requests on navigation/disconnect
   private _abortController?: AbortController;
 
   override connectedCallback() {
@@ -97,18 +109,22 @@ export default class HeroPing extends LitElement {
     this._fetch();
   }
 
+  // H-07 fix: Abort in-flight request when component is disconnected (e.g., SPA navigation)
   override disconnectedCallback() {
     super.disconnectedCallback();
     this._abortController?.abort();
   }
 
   _fetch = async (): Promise<void> => {
+    // H-07 fix: Cancel any previous in-flight request
     this._abortController?.abort();
     this._abortController = new AbortController();
+
     this._state = 'loading';
     this._msg = '';
     this.requestUpdate();
     try {
+      // H-06 fix: Use apiUrl property if provided, fallback to default
       const url = this.apiUrl || 'https://less-demo-api.sisyphuszheng.deno.net/api';
       const r = await fetch(url, { signal: this._abortController.signal });
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
@@ -116,6 +132,7 @@ export default class HeroPing extends LitElement {
       this._state = 'ok';
       this._msg = `${d.framework} v${d.version}  ${d.timestamp.slice(11, 19)}`;
     } catch (e: unknown) {
+      // Ignore AbortError (cancelled requests are expected behavior)
       if (e instanceof DOMException && e.name === 'AbortError') return;
       const err = e as Error;
       this._state = 'err';
@@ -128,17 +145,18 @@ export default class HeroPing extends LitElement {
   override render(): unknown {
     const dotClass = `dot ${this._state}`;
     return html`
-      <span class="${dotClass}" part="dot-static"></span>
+      <span class="${dotClass}"></span>
       <button
         class="ping"
-        part="dot-animated"
         @click="${this._fetch}"
         ?disabled="${this._state === 'loading'}"
       >
         ${this._state === 'loading' ? 'pinging...' : 'ping server'}
       </button>
       ${this._msg
-        ? html`<span class="info"><span class="${this._state}">${this._msg}</span></span>`
+        ? html`
+          <span class="info"><span class="${this._state}">${this._msg}</span></span>
+        `
         : ''}
     `;
   }

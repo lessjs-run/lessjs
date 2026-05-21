@@ -4,251 +4,249 @@
  * Minimal input field following Swiss International Style.
  * Clean borders, subtle focus states.
  *
- * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
- *
  * Features:
  * - Form-associated: participates in native <form> submission
  * - Supports label, placeholder, error, disabled, required
  * - Dispatches 'less-input' custom event on value change
  *
- * @csspart wrapper â€?The outer input-wrapper div
- * @csspart label â€?The label element
- * @csspart control â€?The input/textarea/select element
- * @csspart error â€?The error message small element
- *
  * Usage:
  * ```html
  * <less-input placeholder="Enter text"></less-input>
  * <less-input type="email" label="Email"></less-input>
+ * <less-input type="password" label="Password" required></less-input>
  * <form onsubmit="console.log(new FormData(this))">
  *   <less-input name="username" label="Username"></less-input>
  *   <button type="submit">Submit</button>
  * </form>
  * ```
+ *
+ * LessJS Architecture (S â€” Semantic):
+ * Form-associated custom elements integrate with native <form>,
+ * maintaining progressive enhancement and semantic correctness.
  */
 
-import { DsdElement, type HydrateEventDescriptor } from '@lessjs/core';
+import { css, type CSSResult, html, nothing, type TemplateResult } from 'lit';
+import { DsdLitElement } from '@lessjs/adapter-lit';
+import { lessDesignTokens } from './design-tokens.js';
 
 export const tagName = 'less-input';
 
-const sheet = new CSSStyleSheet();
-sheet.replaceSync(`
-  :host {
-    display: block;
-  }
+export class LessInput extends DsdLitElement {
+  /** Enable form association for native <form> participation */
+  static formAssociated = true;
 
-  .input-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: var(--size-2);
-  }
+  /** DSD: delegates focus to the input element inside shadow DOM */
+  static delegatesFocus = true;
 
-  label {
-    font-size: var(--font-size-0);
-    font-weight: var(--font-weight-5);
-    color: var(--gray-6);
-    letter-spacing: 0.02em;
-  }
+  /** Element internals for form participation */
+  private _internals?: ElementInternals;
 
-  .input {
-    width: 100%;
-    padding: var(--size-2) var(--size-3);
-    font-family: var(--font-sans);
-    font-size: var(--font-size-1);
-    color: var(--gray-9);
-    background: var(--gray-0);
-    border: var(--border-size-1) solid var(--gray-3);
-    border-radius: var(--radius-2);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    outline: none;
-  }
+  static override styles: CSSResult[] = [
+    lessDesignTokens,
+    css`
+      :host {
+        display: block;
+      }
 
-  .input::placeholder {
-    color: var(--gray-5);
-  }
+      .input-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: var(--less-size-2);
+      }
 
-  .input:hover {
-    border-color: var(--gray-5);
-  }
+      label {
+        font-size: var(--less-font-size-sm);
+        font-weight: var(--less-font-weight-medium);
+        color: var(--less-text-tertiary);
+        letter-spacing: var(--less-letter-spacing-wide);
+      }
 
-  .input:focus {
-    border-color: var(--brand, var(--indigo-6));
-    box-shadow: 0 0 0 1px var(--brand, var(--indigo-6));
-  }
+      .input {
+        width: 100%;
+        padding: var(--less-size-2) var(--less-size-3);
+        font-family: var(--less-font-sans);
+        font-size: var(--less-font-size-md);
+        color: var(--less-text-primary);
+        background: var(--less-bg-base);
+        border: 0.5px solid var(--less-border);
+        border-radius: var(--less-radius-md);
+        transition:
+          border-color var(--less-transition-normal),
+          box-shadow var(--less-transition-normal);
+        outline: none;
+      }
 
-  .input:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background: var(--gray-1);
-  }
+      .input::placeholder {
+        color: var(--less-text-muted);
+      }
 
-  .input--error {
-    border-color: #e55;
-  }
+      .input:hover {
+        border-color: var(--less-border-hover);
+      }
 
-  :host(:state(disabled)) .input {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background: var(--gray-1);
-  }
+      .input:focus {
+        border-color: var(--less-accent);
+        box-shadow: 0 0 0 1px var(--less-accent);
+      }
 
-  :host(:state(invalid)) .input {
-    border-color: #e55;
-  }
+      .input:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: var(--less-bg-surface);
+      }
 
-  .error-message {
-    font-size: var(--font-size-00);
-    color: #e55;
-  }
-`);
+      .input--error {
+        border-color: var(--less-error, #e55);
+      }
 
-export class LessInput extends DsdElement {
-  static override styles = sheet;
-  static override formAssociated = true;
-  static override delegatesFocus = true;
-  static override observedAttributes = ['type', 'placeholder', 'label', 'value', 'name', 'disabled', 'required', 'error'];
+      /* :state() pseudo-class support â€” CSS custom states via ElementInternals */
+      :host(:state(disabled)) .input {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: var(--less-bg-surface);
+      }
 
-  static override hydrateEvents: HydrateEventDescriptor[] = [
-    { selector: 'input, textarea, select', event: 'input', method: '_handleInput' },
-    { selector: 'input, textarea, select', event: 'change', method: '_handleChange' },
-    { selector: 'input, textarea, select', event: 'focus', method: '_handleFocus' },
-    { selector: 'input, textarea, select', event: 'blur', method: '_handleBlur' },
+      :host(:state(invalid)) .input {
+        border-color: var(--less-error, #e55);
+      }
+
+      .error-message {
+        font-size: var(--less-font-size-xs);
+        color: var(--less-error, #e55);
+      }
+    `,
   ];
 
+  static override properties = {
+    type: { type: String },
+    placeholder: { type: String },
+    label: { type: String },
+    value: { type: String },
+    name: { type: String },
+    disabled: { type: Boolean, reflect: true },
+    required: { type: Boolean },
+    error: { type: String },
+  };
 
-  override render(): string {
-    const type = this.getAttribute('type') || 'text';
-    const placeholder = this._escAttr(this.getAttribute('placeholder') || '');
-    const label = this.getAttribute('label') || '';
-    const value = this._escAttr(this.getAttribute('value') || '');
-    const name = this._escAttr(this.getAttribute('name') || '');
-    const d = this.hasAttribute('disabled');
-    const r = this.hasAttribute('required');
-    const error = this.getAttribute('error') || '';
-    const errorClass = error ? ' input--error' : '';
+  /** Input type: 'text', 'email', 'password', 'number', or 'url' (default: 'text') */
+  declare type: 'text' | 'email' | 'password' | 'number' | 'url';
+  /** Placeholder text shown when input is empty */
+  declare placeholder: string | undefined;
+  /** Label text displayed above the input */
+  declare label: string | undefined;
+  /** Current value of the input */
+  declare value: string | undefined;
+  /** Name attribute for form submission */
+  declare name: string | undefined;
+  /** Whether the input is disabled */
+  declare disabled: boolean;
+  /** Whether the input is required (shows * after label) */
+  declare required: boolean;
+  /** Error message displayed below the input (also applies error styling) */
+  declare error: string | undefined;
 
-    const labelHtml = label
-      ? `<label for="input" part="label">${this._esc(label)}${r ? ' *' : ''}</label>`
-      : '';
-
-    const errorHtml = error
-      ? `<small id="input-error" role="alert" class="error-message" part="error">${this._esc(error)}</small>`
-      : '';
-
-    const ariaAttrs = error
-      ? 'aria-invalid="true" aria-describedby="input-error" aria-errormessage="input-error"'
-      : '';
-
-    return `<div class="input-wrapper" part="wrapper">
-      ${labelHtml}
-      <input
-        id="input"
-        class="input${errorClass}"
-        part="control"
-        type="${type}"
-        placeholder="${placeholder}"
-        value="${value}"
-        name="${name}"
-        ${d ? 'disabled' : ''}
-        ${r ? 'required' : ''}
-        ${ariaAttrs}
-      />
-      ${errorHtml}
-    </div>`;
+  constructor() {
+    super();
+    this.type = 'text';
+    this.placeholder = undefined;
+    this.label = undefined;
+    this.value = undefined;
+    this.name = undefined;
+    this.disabled = false;
+    this.required = false;
+    this.error = undefined;
   }
 
-  override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
-    if (old === val) return;
-    if (name === 'disabled' || name === 'error') {
-      this._syncDOM();
-      this._updateStates();
-    } else if (name === 'value') {
-      this._syncDOM();
-      if (this._internals) {
-        this._internals.setFormValue(val || '');
-      }
-    } else {
-      this._syncDOM();
-    }
+  override connectedCallback() {
+    super.connectedCallback();
+    // Initialize ElementInternals for form participation
+    this._internals = this.attachInternals();
+    this._internals.setFormValue(this.value ?? '');
+    this._updateStates();
   }
 
-  private _syncDOM(): void {
-    const input = this.shadowRoot?.querySelector('input, textarea, select') as HTMLInputElement | null;
-    if (!input) return;
-    input.disabled = this.hasAttribute('disabled');
-    const val = this.getAttribute('value');
-    if (val !== null && input.value !== val) {
-      input.value = val;
-    }
-  }
-
+  /** Update :state() pseudo-classes via ElementInternals */
   private _updateStates(): void {
     if (!this._internals?.states) return;
-    if (this.hasAttribute('disabled')) {
+    if (this.disabled) {
       this._internals.states.add('disabled');
       this._internals.states.delete('enabled');
     } else {
       this._internals.states.delete('disabled');
       this._internals.states.add('enabled');
     }
-    if (this.getAttribute('error')) {
-      this._internals.states.add('invalid');
-    } else {
-      this._internals.states.delete('invalid');
+  }
+
+  override updated(changed: Map<string, unknown>): void {
+    super.updated(changed);
+    if (changed.has('disabled') || changed.has('error')) {
+      this._updateStates();
     }
   }
 
-  private _handleInput(e: Event): void {
-    const input = e.target as HTMLInputElement;
-    this.setAttribute('value', input.value);
-    this._internals?.setFormValue(input.value);
-    this.dispatchEvent(new CustomEvent('less-input', {
-      detail: { value: input.value },
-      bubbles: true,
-      composed: false,
-    }));
-  }
-
-  private _handleChange(e: Event): void {
-    const input = e.target as HTMLInputElement;
-    this.dispatchEvent(new CustomEvent('less-change', {
-      detail: { value: input.value },
-      bubbles: true,
-      composed: false,
-    }));
-  }
-
-  private _handleFocus(): void {
-    this.dispatchEvent(new CustomEvent('less-focus', { bubbles: true, composed: false }));
-  }
-
-  private _handleBlur(): void {
-    this.dispatchEvent(new CustomEvent('less-blur', { bubbles: true, composed: false }));
-  }
-
-  formResetCallback(): void {
-    this.setAttribute('value', '');
-    this.removeAttribute('error');
+  /** Called by the browser when the form is reset */
+  formResetCallback() {
+    this.value = '';
+    this.error = undefined;
     this._internals?.setFormValue('');
-    this._syncDOM();
   }
 
-  formDisabledCallback(disabled: boolean): void {
-    if (disabled) {
-      this.setAttribute('disabled', '');
-    } else {
-      this.removeAttribute('disabled');
-    }
+  /** Called by the browser when the form's disabled state changes */
+  formDisabledCallback(disabled: boolean) {
+    this.disabled = disabled;
   }
 
-  private _esc(s: string): string {
-    const div = document.createElement('div');
-    div.textContent = s;
-    return div.innerHTML;
+  /** When DSD hydrated, return nothing â€” the shadow DOM already has content. */
+  override render(): TemplateResult | typeof nothing {
+    if (this._dsdHydrated) return nothing;
+    // LessJS S-constraint: use aria-describedby + aria-errormessage for
+    // accessible error association; <small role="alert"> is semantic.
+    const errorId = this.error ? 'input-error' : undefined;
+    return html`
+      <div class="input-wrapper">
+        ${this.label
+          ? html`
+            <label for="input">${this.label}${this.required ? ' *' : ''}</label>
+          `
+          : ''}
+        <input
+          id="input"
+          class="input ${this.error ? 'input--error' : ''}"
+          type="${this.type}"
+          placeholder="${this.placeholder}"
+          .value="${this.value ?? ''}"
+          name="${this.name}"
+          ?disabled="${this.disabled}"
+          ?required="${this.required}"
+          aria-invalid="${this.error ? 'true' : nothing}"
+          aria-describedby="${errorId || nothing}"
+          aria-errormessage="${errorId || nothing}"
+          @input="${(e: Event) => this._handleInput(e)}"
+        />
+        ${this.error
+          ? html`
+            <small id="input-error" role="alert" class="error-message">${this.error}</small>
+          `
+          : ''}
+      </div>
+    `;
   }
 
-  private _escAttr(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  private _handleInput(e: Event) {
+    const input = e.target as HTMLInputElement;
+    this.value = input.value;
+    // Sync form value for native <form> submission
+    this._internals?.setFormValue(input.value);
+    // LessJS I-constraint: composed:false keeps events within Shadow DOM.
+    // Parent islands must listen via `addEventListener('less-input', ...)` on
+    // the <less-input> host element â€” NOT by capturing from the light DOM.
+    this.dispatchEvent(
+      new CustomEvent('less-input', {
+        detail: { value: input.value },
+        bubbles: true,
+        composed: false,
+      }),
+    );
   }
 }
 

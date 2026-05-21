@@ -4,847 +4,1199 @@
  * App layout component with header, sidebar, and footer.
  * Swiss International Style: Pure B&W, minimal.
  *
- * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
- *   - CSSStyleSheet replaces Lit css\`\`
- *   - render() returns string
- *   - hydrateEvents for mobile menu toggle
- *   - SPA navigation via Navigation API (navigate/fetch/swap) preserved
- *   - Event delegation at shadow root level for nav clicks
+ * Features:
+ * - Sticky header with configurable navigation
+ * - Collapsible sidebar with data-driven sections
+ * - Mobile hamburger menu (L0 details/summary)
+ * - Theme toggle via less-theme-toggle Island
+ * - Footer with links
+ * - SPA navigation via Navigation API (navigate/fetch/swap)
+ *   Intercepts internal link clicks, uses navigate() for URL
+ *   update, fetches new page HTML, and swaps slot content.
+ *   Falls back to History API when Navigation API unavailable.
  *
- * @csspart container �?The app-layout root div
- * @csspart header �?The sticky header element
- * @csspart sidebar �?The docs-sidebar nav
- * @csspart main �?The layout-main element
- * @csspart footer �?The app-footer element
- * @csspart nav �?The header-nav element
- * @csspart nav-toggle �?The mobile menu toggle button
+ * LessJS Architecture:
+ * - This is a Layer 2 (DSD Interactive) component
+ * - v0.6.2: Uses WithDsdHydration Mixin for DSD hydration
+ *   with declarative event binding and direct DOM manipulation
+ * - Theme toggle is handled by less-theme-toggle Island
+ * - Navigation is data-driven via navItems property (no hardcoded links)
+ * - v0.9.0: Uses @lessjs/core/navigation for SPA navigation
  *
- * Usage:
+ * Usage (data-driven navigation):
  * ```html
  * <less-layout current-path="/guide/getting-started"
  *   nav-items='[{"section":"Guide","items":[{"path":"/guide/getting-started","label":"Getting Started"}]}]'>
  * </less-layout>
  * ```
+ *
+ * Usage (default LessJS docs navigation, no nav-items attribute):
+ * ```html
+ * <less-layout current-path="/guide/getting-started">
+ *   <main>Content here</main>
+ * </less-layout>
+ * ```
+ *
+ * NavItems schema:
+ * ```ts
+ * interface NavItem { path: string; label: string }
+ * interface NavSection { section: string; items: NavItem[] }
+ * ```
  */
 
-import { DsdElement, type HydrateEventDescriptor } from '@lessjs/core';
+import { css, type CSSResult, html, nothing, type TemplateResult } from 'lit';
+import { lessDesignTokens } from './design-tokens.js';
+import { DsdLitElement } from '@lessjs/adapter-lit';
 import { navigate, onNavigate } from '@lessjs/core/navigation';
+
+// CRITICAL: less-layout's template uses <less-theme-toggle>, so we MUST import it
+// so that the SSR renderer can recursively render its DSD shadow root.
+// Without this import, SSR outputs <less-theme-toggle></less-theme-toggle> without
+// DSD, which means the theme toggle button is never rendered server-side and
+// cannot be upgraded into a working client element.
 import './less-theme-toggle.js';
 
 export const tagName = 'less-layout';
 
+/** A single navigation link */
 export interface NavItem {
+  /** URL path for internal links */
   path?: string;
+  /** External URL (takes precedence over path) */
   href?: string;
+  /** Display label */
   label: string;
 }
 
+/** A navigation section with a title and links */
 export interface NavSection {
+  /** Section title (shown as collapsible header) */
   section: string;
+  /** Links in this section */
   items: NavItem[];
 }
 
+/** Header navigation link */
 export interface HeaderNavLink {
+  /** URL path or external URL */
   href: string;
+  /** Display label */
   label: string;
 }
 
-const sheet = new CSSStyleSheet();
-sheet.replaceSync(`
-  :host {
-    display: block;
-  }
-
-  .app-layout {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background: var(--gray-0);
-    color: var(--gray-9);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  .layout-body {
-    display: flex;
-    flex: 1;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-
-  .layout-main {
-    flex: 1;
-    min-width: 0;
-    width: 100%;
-  }
-
-  .app-layout[home] .layout-body {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .app-layout[home] .layout-main {
-    flex: 1;
-  }
-
-  .app-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(255, 255, 255, 0.82);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border-bottom: var(--border-size-1) solid var(--gray-3);
-  }
-
-  :host([data-theme="dark"]) .app-header {
-    background: rgba(18, 18, 26, 0.82);
-  }
-
-  .header-inner {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 64px;
-    display: flex;
-    align-items: center;
-    height: 56px;
-    gap: 24px;
-  }
-
-  .mobile-menu {
-    display: none;
-  }
-
-  .mobile-tab-bar {
-    display: none;
-  }
-
-  .mobile-menu-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border: var(--border-size-1) solid var(--gray-3);
-    border-radius: var(--radius-2);
-    background: transparent;
-    color: var(--gray-6);
-    cursor: pointer;
-    padding: 0;
-    list-style: none;
-    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-  }
-
-  .mobile-menu-btn::-webkit-details-marker { display: none; }
-  .mobile-menu-btn::marker { content: ""; }
-
-  .mobile-menu-btn:hover, .mobile-menu-btn:focus-visible {
-    color: var(--gray-9);
-    border-color: var(--gray-5);
-    background: rgba(83,74,183,0.06);
-  }
-
-  .mobile-menu[open] .mobile-menu-btn {
-    color: var(--gray-9);
-    background: rgba(83,74,183,0.06);
-    border-color: var(--gray-5);
-  }
-
-  .logo {
-    font-size: var(--font-size-0);
-    font-weight: var(--font-weight-7);
-    color: var(--gray-9);
-    text-decoration: none;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    transition: opacity 0.2s ease;
-    white-space: nowrap;
-  }
-
-  .logo:hover { opacity: 0.6; }
-
-  .logo-sub {
-    font-size: var(--font-size-00);
-    font-weight: var(--font-weight-4);
-    color: var(--gray-5);
-    margin-left: var(--size-2);
-    letter-spacing: 0.02em;
-    text-transform: none;
-  }
-
-  .header-nav {
-    display: flex;
-    gap: 0.125rem;
-    flex: 1;
-  }
-
-  .header-nav a {
-    color: var(--gray-6);
-    text-decoration: none;
-    font-size: var(--font-size-0);
-    font-weight: var(--font-weight-5);
-    padding: var(--size-2) var(--size-3);
-    letter-spacing: 0.02em;
-    transition: color 0.2s ease;
-    border-radius: var(--radius-2);
-  }
-
-  .header-nav a:hover {
-    color: var(--gray-9);
-    text-decoration: underline;
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: var(--size-2);
-    margin-left: auto;
-  }
-
-  .github-link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--size-2);
-    color: var(--gray-5);
-    text-decoration: none;
-    font-size: var(--font-size-00);
-    font-weight: var(--font-weight-5);
-    letter-spacing: 0.02em;
-    padding: var(--size-2) var(--size-3);
-    border: var(--border-size-1) solid var(--gray-3);
-    border-radius: var(--radius-2);
-    transition: color 0.2s ease, border-color 0.2s ease;
-  }
-
-  .github-link:hover {
-    color: var(--gray-7);
-    border-color: var(--gray-5);
-  }
-
-  .github-link svg { flex-shrink: 0; }
-
-  .lang-switch {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 32px;
-    height: 24px;
-    padding: 0 var(--size-2);
-    font-size: var(--font-size-00);
-    font-weight: var(--font-weight-5);
-    color: var(--gray-5);
-    border: var(--border-size-1) solid var(--gray-3);
-    border-radius: var(--radius-2);
-    background: transparent;
-    cursor: pointer;
-    text-decoration: none;
-    letter-spacing: 0.02em;
-    transition: color 0.2s ease, border-color 0.2s ease;
-  }
-
-  .lang-switch:hover {
-    color: var(--gray-7);
-    border-color: var(--gray-5);
-  }
-
-  .docs-sidebar {
-    width: clamp(200px, 20vw, 280px);
-    flex-shrink: 0;
-    border-right: var(--border-size-1) solid var(--gray-3);
-    padding: var(--size-6) 0;
-    overflow-y: auto;
-    height: calc(100vh - 56px);
-    position: sticky;
-    top: 56px;
-    scrollbar-width: thin;
-  }
-
-  :host([home]) .docs-sidebar {
-    width: 0;
-    min-width: 0;
-    padding: 0;
-    overflow: hidden;
-    border-right: none;
-  }
-
-  .nav-section {
-    margin-bottom: var(--size-5);
-  }
-
-  .nav-section summary {
-    font-size: var(--font-size-00);
-    font-weight: var(--font-weight-7);
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--gray-5);
-    padding: 0 var(--size-5);
-    margin-bottom: var(--size-2);
-    cursor: pointer;
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: var(--size-2);
-    user-select: none;
-  }
-
-  .nav-section summary::-webkit-details-marker { display: none; }
-  .nav-section summary::marker { content: ""; }
-
-  .nav-section summary::before {
-    content: "�?;
-    font-size: 0.5rem;
-    transition: transform 0.2s ease;
-    display: inline-block;
-  }
-
-  .nav-section[open] summary::before { transform: rotate(0deg); }
-  .nav-section:not([open]) summary::before { transform: rotate(-90deg); }
-  .nav-section summary:hover { color: var(--gray-6); }
-
-  .docs-sidebar a {
-    display: block;
-    color: var(--gray-6);
-    text-decoration: none;
-    font-size: var(--font-size-0);
-    padding: 0.3rem var(--size-5);
-    transition: color 0.2s ease, background 0.2s ease;
-    border-left: 1px solid transparent;
-  }
-
-  .docs-sidebar a:hover {
-    color: var(--gray-9);
-    background: rgba(83,74,183,0.06);
-  }
-
-  .docs-sidebar a.active,
-  .docs-sidebar a[aria-current="page"] {
-    color: var(--gray-9);
-    border-left-color: var(--gray-9);
-    background: rgba(83,74,183,0.06);
-    font-weight: var(--font-weight-5);
-  }
-
-  .mobile-backdrop {
-    position: fixed;
-    inset: 0;
-    top: 56px;
-    background: linear-gradient(to right, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.25) 100%);
-    z-index: 80;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-
-  @media (max-width: 900px) {
-    .mobile-menu { display: block; }
-    .header-inner { padding: 0 var(--size-4); gap: var(--size-3); }
-    .header-nav { display: none; }
-    .github-text { display: none; }
-    .header-right { gap: var(--size-2); }
-
-    .docs-sidebar {
-      position: fixed;
-      top: 56px;
-      left: 0;
-      width: min(300px, 80vw);
-      height: calc(100vh - 56px);
-      z-index: 90;
-      background: var(--gray-0);
-      border-right: var(--border-size-1) solid var(--gray-3);
-      border-bottom: none;
-      padding: var(--size-4) 0;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      transform: translateX(-101%);
-      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      will-change: transform;
-      box-shadow: none;
-    }
-
-    :host([home]) .docs-sidebar {
-      width: min(300px, 80vw);
-      min-width: auto;
-      padding: var(--size-4) 0;
-      border-right: var(--border-size-1) solid var(--gray-3);
-      transform: translateX(-101%);
-      pointer-events: none;
-      visibility: hidden;
-    }
-
-    :host([menu-open]) .docs-sidebar {
-      transform: translateX(0);
-      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
-    }
-
-    :host([home][menu-open]) .docs-sidebar { transform: translateX(-101%); }
-    :host([home]) .mobile-menu { display: none; }
-    :host([home]) .mobile-backdrop { display: none; }
-
-    :host([menu-open]) .mobile-backdrop { opacity: 1; pointer-events: auto; }
-
-    .nav-section { margin-bottom: var(--size-2); }
-    .nav-section summary { padding: var(--size-2) var(--size-4); font-size: var(--font-size-00); }
-    .docs-sidebar a { padding: var(--size-2) var(--size-4) var(--size-2) var(--size-7); font-size: var(--font-size-0); }
-    .layout-main { width: 100%; }
-
-    .app-footer { padding: var(--size-6) var(--size-4); padding-bottom: calc(var(--size-6) + 56px); }
-    .app-footer .divider { display: none; }
-    .app-footer p { line-height: 1.8; }
-
-    .mobile-tab-bar {
-      display: flex;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 56px;
-      z-index: 100;
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(16px) saturate(180%);
-      -webkit-backdrop-filter: blur(16px) saturate(180%);
-      border-top: var(--border-size-1) solid var(--gray-3);
-      padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
-      padding-bottom: env(safe-area-inset-bottom);
-    }
-
-    :host([data-theme="dark"]) .mobile-tab-bar {
-      background: rgba(18, 18, 26, 0.88);
-    }
-
-    .tab-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      color: var(--gray-5);
-      text-decoration: none;
-      font-size: 10px;
-      font-weight: var(--font-weight-5);
-      letter-spacing: 0.02em;
-      transition: color 0.2s ease;
-      -webkit-tap-highlight-color: transparent;
-      padding: 4px 0;
-    }
-
-    .tab-item svg { width: 20px; height: 20px; flex-shrink: 0; }
-    .tab-item:hover, .tab-item:focus-visible { color: var(--gray-9); }
-    .tab-item.active { color: var(--gray-9); }
-    .tab-item.active svg { stroke-width: 2; }
-  }
-
-  @media (max-width: 640px) {
-    .header-right { gap: var(--size-1); }
-    .lang-switch { display: none; }
-    ::slotted([slot="header-actions"]) .search-trigger span,
-    ::slotted([slot="header-actions"]) .search-trigger kbd { display: none; }
-  }
-
-  @media (max-width: 480px) {
-    .logo-sub { display: none; }
-    .github-link { padding: var(--size-2); border: none; }
-    .github-link .github-text { display: none; }
-    .header-inner { padding: 0 var(--size-3); gap: var(--size-2); }
-    .header-right { gap: 2px; }
-    .mobile-menu-btn { width: 28px; height: 28px; }
-  }
-
-  .app-footer {
-    padding: 64px;
-    border-top: var(--border-size-1) solid var(--gray-3);
-    text-align: center;
-    color: var(--gray-5);
-    font-size: var(--font-size-00);
-    letter-spacing: 0.02em;
-    background: var(--gray-0);
-  }
-
-  .app-footer p { margin: 0.25rem 0; }
-  .app-footer a { color: var(--gray-6); transition: color 0.2s ease; }
-  .app-footer a:hover { color: var(--gray-9); text-decoration: underline; }
-
-  .app-footer .divider {
-    display: inline-block;
-    width: 1px;
-    height: 8px;
-    background: var(--gray-5);
-    vertical-align: middle;
-    margin: 0 var(--size-3);
-  }
-`);
-
-export class LessLayout extends DsdElement {
-  static override styles = sheet;
-  static override observedAttributes = ['current-path', 'nav-items', 'header-nav', 'logo-text', 'logo-sub', 'github-url', 'edit-url', 'locale', 'locales'];
-
-  static override hydrateEvents: HydrateEventDescriptor[] = [
+/**
+ * App layout with DSD hydration and SPA navigation.
+ *
+ * Uses WithDsdHydration Mixin for the common DSD pattern:
+ *   - Detects pre-populated shadow root from DSD
+ *   - Binds events declared in `static hydrateEvents`
+ *   - Cleans up listeners on disconnect
+ *
+ * v0.9.0: SPA navigation via Navigation API + fetch-and-swap.
+ * Internal links use data-nav attribute; click handling is delegated
+ * from the shadow root, working with both DSD and non-DSD modes.
+ */
+export class LessLayout extends DsdLitElement {
+  /** Declarative event bindings for DSD hydration */
+  static hydrateEvents = [
     { selector: 'summary.mobile-menu-btn', event: 'click', method: '_toggleMenu' },
   ];
 
-  private _navCleanup?: () => void;
-  private _navUnlisten?: () => void;
-
-  override render(): string {
-    return this._renderLayout();
-  }
-
-  private _getStr(attr: string, def: string): string {
-    return this.getAttribute(attr) || def;
-  }
-
-  private _getBool(attr: string): boolean {
-    return this.hasAttribute(attr);
-  }
-
-  private _currentPath(): string {
-    let cp = this.getAttribute('current-path') || this.getAttribute('currentpath') || '';
-    return cp;
-  }
-
-  private _navItems(): NavSection[] {
-    try {
-      const raw = this.getAttribute('nav-items');
-      return raw ? JSON.parse(raw) : [];
-    } catch { return []; }
-  }
-
-  private _headerNav(): HeaderNavLink[] {
-    try {
-      const raw = this.getAttribute('header-nav');
-      return raw ? JSON.parse(raw) : [];
-    } catch { return []; }
-  }
-
-  private _locales(): string[] {
-    try {
-      const raw = this.getAttribute('locales');
-      return raw ? JSON.parse(raw) : ['en'];
-    } catch { return ['en']; }
-  }
-
-  private _locale(): string {
-    return this.getAttribute('locale') || 'en';
-  }
-
-  // ─── i18n helpers ───
-
-  private _otherLocalePath(): string {
-    const locales = this._locales();
-    const locale = this._locale();
-    const others = locales.filter(l => l !== locale);
-    const target = others[0] || locales[0];
-    const path = this._currentPath();
-    for (const loc of locales) {
-      if (path === `/${loc}` || path.startsWith(`/${loc}/`)) {
-        return `/${target}${path.slice(loc.length + 1) || '/'}`;
+  static override styles: CSSResult[] = [
+    lessDesignTokens,
+    css`
+      :host {
+        display: block;
       }
-    }
-    return `/${target}${path}`;
-  }
 
-  private _otherLocaleLabel(): string {
-    const others = this._locales().filter(l => l !== this._locale());
-    const target = others[0] || this._locales()[0];
-    return target === 'zh' ? '\u4E2D\u6587' : 'EN';
-  }
+      /* === Layout Shell === */
+      .app-layout {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background: var(--less-bg-base);
+        color: var(--less-text-primary);
+        font-family: var(--less-font-sans);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
 
-  private _localizePath(path: string): string {
-    const locales = this._locales();
-    if (locales.length <= 1) return path;
-    if (path.startsWith('http')) return path;
-    for (const loc of locales) {
-      if (path === `/${loc}` || path.startsWith(`/${loc}/`)) return path;
-    }
-    return `/${this._locale()}${path}`;
-  }
+      .layout-body {
+        display: flex;
+        flex: 1;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
 
-  // ─── Icons ───
+      .layout-main {
+        flex: 1;
+        min-width: 0;
+        width: 100%;
+      }
 
-  private _icon(label: string): string {
-    const icons: Record<string, string> = {
-      Framework: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10M5 3v6h7M12 9v3M5 17h7"/></svg>`,
-      Engine: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="3"/><path d="M10 1v2M10 17v2M3.5 3.5l1.4 1.4M15.1 15.1l1.4 1.4M1 10h2M17 10h2M3.5 16.5l1.4-1.4M15.1 4.9l1.4-1.4"/></svg>`,
-      RegistryHub: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2l7 4v8l-7 4-7-4V6z"/><path d="M10 10l7-4M10 10v8M10 10L3 6"/></svg>`,
-      Blog: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="14" height="16" rx="2"/><path d="M7 6h6M7 10h6M7 14h3"/></svg>`,
+      .app-layout[home] .layout-body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .app-layout[home] .layout-main {
+        flex: 1;
+      }
+
+      /* === Header (v0.19.1: frosted glass) === */
+      .app-header {
+        position: sticky;
+        top: 0;
+        z-index: var(--less-z-sticky);
+        background: rgba(255, 255, 255, 0.82);
+        backdrop-filter: blur(16px) saturate(180%);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        border-bottom: 1px solid var(--less-border);
+      }
+
+      :host([data-theme="dark"]) .app-header {
+        background: rgba(18, 18, 26, 0.82);
+      }
+
+      .header-inner {
+        max-width: var(--less-layout-max-width, 1400px);
+        margin: 0 auto;
+        padding: 0 var(--less-size-8);
+        display: flex;
+        align-items: center;
+        height: var(--less-layout-header-height, 56px);
+        gap: var(--less-size-6);
+      }
+
+      /* === Mobile Menu (L0: details/summary) === */
+      .mobile-menu {
+        display: none;
+      }
+
+      /* === Mobile Tab Bar (bottom navigation — hidden on desktop) === */
+      .mobile-tab-bar {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border: 0.5px solid var(--less-border);
+        border-radius: var(--less-radius-md);
+        background: transparent;
+        color: var(--less-text-tertiary);
+        cursor: pointer;
+        padding: 0;
+        list-style: none;
+        transition:
+          color var(--less-transition-normal),
+          border-color var(--less-transition-normal),
+          background var(--less-transition-normal);
+        }
+
+        .mobile-menu-btn::-webkit-details-marker {
+          display: none;
+        }
+
+        .mobile-menu-btn::marker {
+          content: "";
+        }
+
+        .mobile-menu-btn:hover,
+        .mobile-menu-btn:focus-visible {
+          color: var(--less-text-primary);
+          border-color: var(--less-border-hover);
+          background: var(--less-accent-subtle);
+        }
+
+        .mobile-menu[open] .mobile-menu-btn {
+          color: var(--less-text-primary);
+          background: var(--less-accent-subtle);
+          border-color: var(--less-border-hover);
+        }
+
+        /* === Logo === */
+        .logo {
+          font-size: var(--less-font-size-sm);
+          font-weight: var(--less-font-weight-extrabold);
+          color: var(--less-text-primary);
+          text-decoration: none;
+          letter-spacing: var(--less-letter-spacing-widest);
+          text-transform: uppercase;
+          transition: opacity var(--less-transition-normal);
+          white-space: nowrap;
+        }
+
+        .logo:hover {
+          opacity: 0.6;
+        }
+
+        .logo-sub {
+          font-size: var(--less-font-size-xs);
+          font-weight: var(--less-font-weight-normal);
+          color: var(--less-text-muted);
+          margin-left: var(--less-size-2);
+          letter-spacing: var(--less-letter-spacing-wide);
+          text-transform: none;
+        }
+
+        /* === Header Nav === */
+        .header-nav {
+          display: flex;
+          gap: 0.125rem;
+          flex: 1;
+        }
+
+        .header-nav a {
+          color: var(--less-text-tertiary);
+          text-decoration: none;
+          font-size: var(--less-font-size-sm);
+          font-weight: var(--less-font-weight-medium);
+          padding: var(--less-size-2) var(--less-size-3);
+          letter-spacing: var(--less-letter-spacing-wide);
+          transition: color var(--less-transition-normal);
+          border-radius: var(--less-radius-md);
+        }
+
+        .header-nav a:hover {
+          color: var(--less-text-primary);
+          text-decoration: underline;
+        }
+
+        /* === Header Right === */
+        .header-right {
+          display: flex;
+          align-items: center;
+          gap: var(--less-size-2);
+          margin-left: auto;
+        }
+
+        /* === GitHub Link === */
+        .github-link {
+          display: inline-flex;
+          align-items: center;
+          gap: var(--less-size-2);
+          color: var(--less-text-muted);
+          text-decoration: none;
+          font-size: var(--less-font-size-xs);
+          font-weight: var(--less-font-weight-medium);
+          letter-spacing: var(--less-letter-spacing-wide);
+          padding: var(--less-size-2) var(--less-size-3);
+          border: 0.5px solid var(--less-border);
+          border-radius: var(--less-radius-md);
+          transition: color var(--less-transition-normal), border-color var(--less-transition-normal);
+        }
+
+        .github-link:hover {
+          color: var(--less-text-secondary);
+          border-color: var(--less-border-hover);
+        }
+
+        .github-link svg {
+          flex-shrink: 0;
+        }
+
+        /* === Language Switcher === */
+        .lang-switch {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 32px;
+          height: 24px;
+          padding: 0 var(--less-size-2);
+          font-size: var(--less-font-size-xs);
+          font-weight: var(--less-font-weight-medium);
+          color: var(--less-text-muted);
+          border: 0.5px solid var(--less-border);
+          border-radius: var(--less-radius-md);
+          background: transparent;
+          cursor: pointer;
+          text-decoration: none;
+          letter-spacing: var(--less-letter-spacing-wide);
+          transition: color var(--less-transition-normal), border-color var(--less-transition-normal);
+        }
+
+        .lang-switch:hover {
+          color: var(--less-text-secondary);
+          border-color: var(--less-border-hover);
+        }
+
+        /* === Sidebar: unified desktop/mobile (v0.6) ===
+        *
+        * v0.6: SINGLE .docs-sidebar for both desktop and mobile.
+        * - Desktop: position:sticky, border-right, always visible
+        * - Mobile: position:fixed, slides in from left via transform
+        * - Home page: hidden via width:0 (not display:none — preserves transform)
+        *
+        * This replaces the old dual-sidebar approach (.docs-sidebar for desktop
+        * + .mobile-sidebar-overlay for mobile) which caused duplicate content
+        * and inconsistent styling between breakpoints.
+        */
+        .docs-sidebar {
+          width: clamp(200px, 20vw, 280px);
+          flex-shrink: 0;
+          border-right: 0.5px solid var(--less-border);
+          padding: var(--less-size-6) 0;
+          overflow-y: auto;
+          height: calc(100vh - var(--less-layout-header-height, 56px));
+          position: sticky;
+          top: var(--less-layout-header-height, 56px);
+          scrollbar-width: thin;
+        }
+
+        /* Home page: hide sidebar while keeping box model alive for transitions.
+        * NOT display:none — that kills the box model and makes transform unusable. */
+        :host([home]) .docs-sidebar {
+          width: 0;
+          min-width: 0;
+          padding: 0;
+          overflow: hidden;
+          border-right: none;
+        }
+
+        .nav-section {
+          margin-bottom: var(--less-size-5);
+        }
+
+        .nav-section summary {
+          font-size: var(--less-font-size-xs);
+          font-weight: var(--less-font-weight-bold);
+          text-transform: uppercase;
+          letter-spacing: 0.14em;
+          color: var(--less-text-muted);
+          padding: 0 var(--less-size-5);
+          margin-bottom: var(--less-size-2);
+          cursor: pointer;
+          list-style: none;
+          display: flex;
+          align-items: center;
+          gap: var(--less-size-2);
+          user-select: none;
+        }
+
+        .nav-section summary::-webkit-details-marker {
+          display: none;
+        }
+
+        .nav-section summary::marker {
+          content: "";
+        }
+
+        .nav-section summary::before {
+          content: "▾";
+          font-size: 0.5rem;
+          transition: transform var(--less-transition-normal);
+          display: inline-block;
+        }
+
+        .nav-section[open] summary::before {
+          transform: rotate(0deg);
+        }
+
+        .nav-section:not([open]) summary::before {
+          transform: rotate(-90deg);
+        }
+
+        .nav-section summary:hover {
+          color: var(--less-text-tertiary);
+        }
+
+        .docs-sidebar a {
+          display: block;
+          color: var(--less-text-tertiary);
+          text-decoration: none;
+          font-size: var(--less-font-size-sm);
+          padding: 0.3rem var(--less-size-5);
+          transition: color var(--less-transition-normal), background var(--less-transition-normal);
+          border-left: 1px solid transparent;
+        }
+
+        .docs-sidebar a:hover {
+          color: var(--less-text-primary);
+          background: var(--less-accent-subtle);
+        }
+
+        .docs-sidebar a.active,
+        .docs-sidebar a[aria-current="page"] {
+          color: var(--less-text-primary);
+          border-left-color: var(--less-text-primary);
+          background: var(--less-accent-subtle);
+          font-weight: var(--less-font-weight-medium);
+        }
+
+        /* === Mobile Backdrop === */
+        .mobile-backdrop {
+          position: fixed;
+          inset: 0;
+          top: var(--less-layout-header-height, 56px);
+          background: linear-gradient(
+            to right,
+            rgba(0, 0, 0, 0.5) 0%,
+            rgba(0, 0, 0, 0.35) 40%,
+            rgba(0, 0, 0, 0.25) 100%
+          );
+          z-index: 80;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity var(--less-transition-slow);
+        }
+
+        /* === Mobile Responsive ===
+        *
+        * v0.6: Unified sidebar. On mobile, .docs-sidebar becomes a fixed overlay
+        * that slides in from the left via transform. No separate mobile sidebar
+        * overlay element — eliminates content duplication and style inconsistency.
+        */
+        @media (max-width: 900px) {
+          .mobile-menu {
+            display: block;
+          }
+
+          .header-inner {
+            padding: 0 var(--less-size-4);
+            gap: var(--less-size-3);
+          }
+
+          .header-nav {
+            display: none;
+          }
+
+          .github-text {
+            display: none;
+          }
+
+          .header-right {
+            gap: var(--less-size-2);
+          }
+
+          .docs-sidebar {
+            position: fixed;
+            top: var(--less-layout-header-height, 56px);
+            left: 0;
+            width: min(300px, 80vw);
+            height: calc(100vh - var(--less-layout-header-height, 56px));
+            z-index: 90;
+            background: var(--less-bg-base);
+            border-right: 0.5px solid var(--less-border);
+            border-bottom: none;
+            padding: var(--less-size-4) 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            transform: translateX(-101%);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+            box-shadow: none;
+            /* Desktop sticky properties are overridden by fixed */
+          }
+
+          /* Home page on mobile: always hidden via transform + invisible */
+          :host([home]) .docs-sidebar {
+            width: min(300px, 80vw);
+            min-width: auto;
+            padding: var(--less-size-4) 0;
+            border-right: 0.5px solid var(--less-border);
+            transform: translateX(-101%);
+            pointer-events: none;
+            visibility: hidden;
+          }
+
+          :host([menu-open]) .docs-sidebar {
+            transform: translateX(0);
+            box-shadow: var(--less-shadow-sidebar, 4px 0 24px rgba(0, 0, 0, 0.3));
+          }
+
+          :host([home][menu-open]) .docs-sidebar {
+            transform: translateX(-101%);
+          }
+
+          /* Home page on mobile: hide hamburger menu (no sidebar to show)
+            and prevent backdrop from appearing */
+          :host([home]) .mobile-menu {
+            display: none;
+          }
+
+          :host([home]) .mobile-backdrop {
+            display: none;
+          }
+
+          :host([menu-open]) .mobile-backdrop {
+            opacity: 1;
+            pointer-events: auto;
+          }
+
+          .nav-section {
+            margin-bottom: var(--less-size-2);
+          }
+
+          .nav-section summary {
+            padding: var(--less-size-2) var(--less-size-4);
+            font-size: var(--less-font-size-xs);
+          }
+
+          .docs-sidebar a {
+            padding: var(--less-size-2) var(--less-size-4) var(--less-size-2) var(--less-size-7);
+            font-size: var(--less-font-size-sm);
+          }
+
+          .layout-main {
+            width: 100%;
+          }
+
+          .app-footer {
+            padding: var(--less-size-6) var(--less-size-4);
+            padding-bottom: calc(var(--less-size-6) + 56px); /* space for tab bar */
+          }
+
+          .app-footer .divider {
+            display: none;
+          }
+
+          .app-footer p {
+            line-height: 1.8;
+          }
+
+          /* === Mobile Tab Bar (bottom navigation) === */
+          .mobile-tab-bar {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            z-index: var(--less-z-sticky);
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border-top: 0.5px solid var(--less-border);
+            padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
+            padding-bottom: env(safe-area-inset-bottom);
+          }
+
+          :host([data-theme="dark"]) .mobile-tab-bar {
+            background: rgba(18, 18, 26, 0.88);
+          }
+
+          .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            color: var(--less-text-muted);
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: var(--less-font-weight-medium);
+            letter-spacing: 0.02em;
+            transition: color var(--less-transition-normal);
+            -webkit-tap-highlight-color: transparent;
+            padding: 4px 0;
+          }
+
+          .tab-item svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+          }
+
+          .tab-item:hover,
+          .tab-item:focus-visible {
+            color: var(--less-text-primary);
+          }
+
+          .tab-item.active {
+            color: var(--less-text-primary);
+          }
+
+          .tab-item.active svg {
+            stroke-width: 2;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .header-right {
+            gap: var(--less-size-1);
+          }
+          .lang-switch {
+            display: none;
+          }
+          ::slotted([slot="header-actions"]) .search-trigger span,
+          ::slotted([slot="header-actions"]) .search-trigger kbd {
+            display: none;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .logo-sub {
+            display: none;
+          }
+
+          .github-link {
+            padding: var(--less-size-2);
+            border: none;
+          }
+
+          .github-link .github-text {
+            display: none;
+          }
+
+          .header-inner {
+            padding: 0 var(--less-size-3);
+            gap: var(--less-size-2);
+          }
+
+          .header-right {
+            gap: 2px;
+          }
+
+          .mobile-menu-btn {
+            width: 28px;
+            height: 28px;
+          }
+        }
+
+        /* === Footer === */
+        .app-footer {
+          padding: var(--less-size-8);
+          border-top: 0.5px solid var(--less-border);
+          text-align: center;
+          color: var(--less-text-muted);
+          font-size: var(--less-font-size-xs);
+          letter-spacing: var(--less-letter-spacing-wide);
+          background: var(--less-bg-base);
+        }
+
+        .app-footer p {
+          margin: 0.25rem 0;
+        }
+
+        .app-footer a {
+          color: var(--less-text-tertiary);
+          transition: color var(--less-transition-normal);
+        }
+
+        .app-footer a:hover {
+          color: var(--less-text-primary);
+          text-decoration: underline;
+        }
+
+        .app-footer .divider {
+          display: inline-block;
+          width: 1px;
+          height: 8px;
+          background: var(--less-border-hover);
+          vertical-align: middle;
+          margin: 0 var(--less-size-3);
+        }
+      `,
+    ];
+
+    static override properties = {
+      home: { type: Boolean, reflect: true },
+      currentPath: { type: String, attribute: 'current-path' },
+      navItems: { type: Array, attribute: 'nav-items' },
+      headerNav: { type: Array, attribute: 'header-nav' },
+      logoText: { type: String, attribute: 'logo-text' },
+      logoSub: { type: String, attribute: 'logo-sub' },
+      githubUrl: { type: String, attribute: 'github-url' },
+      editUrl: { type: String, attribute: 'edit-url' },
+      locale: { type: String },
+      locales: { type: Array },
     };
-    return icons[label] || `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="M6 6l3 5 5 3-3-5z"/></svg>`;
-  }
 
-  // ─── Main render ───
+    /** Whether to show the home layout (no sidebar, full-width) */
+    declare home: boolean;
+    /** Current URL path, used to highlight the active navigation link */
+    declare currentPath: string;
+    /** Sidebar navigation sections (data-driven; falls back to default LessJS docs nav) */
+    declare navItems: NavSection[] | undefined;
+    /** Header navigation links (data-driven; falls back to default) */
+    declare headerNav: HeaderNavLink[] | undefined;
+    /** Logo text (default: "LessJS") */
+    declare logoText: string;
+    /** Logo subtitle (default: "framework") */
+    declare logoSub: string;
+    /** GitHub repository URL (default: LessJS repo) */
+    declare githubUrl: string;
+    /** "Edit this page" URL (shown in footer when set) */
+    declare editUrl: string | undefined;
+    /** Current locale code (e.g. 'en', 'zh') */
+    declare locale: string;
+    /** Available locales (e.g. ['en', 'zh']) */
+    declare locales: string[];
 
-  private _renderLayout(): string {
-    const home = this._getBool('home');
-    const logoText = this._esc(this._getStr('logo-text', 'LessJS'));
-    const logoSub = this._esc(this._getStr('logo-sub', ''));
-    const githubUrl = this._escAttr(this._getStr('github-url', 'https://github.com/lessjs-run/LessJS'));
-    const editUrl = this._escAttr(this.getAttribute('edit-url') || '');
-    const locales = this._locales();
-    const otherLocaleLabel = locales.length > 1 ? this._esc(this._otherLocaleLabel()) : '';
-    const otherLocalePath = locales.length > 1 ? this._escAttr(this._otherLocalePath()) : '';
+    constructor() {
+      super();
+      this.home = false;
+      this.currentPath = '';
+      this.navItems = undefined;
+      this.headerNav = undefined;
+      this.logoText = 'LessJS';
+      this.logoSub = '';
+      this.githubUrl = 'https://github.com/lessjs-run/LessJS';
+      this.locale = 'en';
+      this.locales = ['en'];
+    }
 
-    const headerNavHtml = this._renderHeaderNavHtml();
-    const sidebarHtml = !home ? this._renderSidebarNavHtml() : '';
-    const mobileTabHtml = this._renderMobileTabBarHtml();
-    const langSwitchHtml = locales.length > 1
-      ? `<a class="lang-switch" href="${otherLocalePath}">${otherLocaleLabel}</a>`
-      : '';
+    /** When DSD hydrated, return nothing — the shadow DOM already has content. */
+    override render(): TemplateResult | typeof nothing {
+      if (this._dsdHydrated) return nothing;
+      return this._renderLayout();
+    }
 
-    const footerHtml = `<footer class="app-footer" part="footer">
-      <p>
-        ${editUrl ? `<a href="${editUrl}" target="_blank" rel="noopener" style="margin-right:0.75rem;">Edit this page</a>` : ''}
-        Built with <a href="${githubUrl}" target="_blank" rel="noopener noreferrer">LessJS Framework</a>
-        <span class="divider"></span>
-        Self-bootstrapped from JSR
-        <span class="divider"></span>
-        LESS IS MORE
-      </p>
-    </footer>`;
-
-    return `<div class="app-layout"${home ? ' home' : ''} part="container">
-      <header class="app-header" part="header">
-        <nav class="header-inner" aria-label="Primary navigation">
-          <a class="logo" href="/">${logoText}<span class="logo-sub">${logoSub}</span></a>
-          ${headerNavHtml}
-          <div class="header-right">
-            <slot name="header-actions"></slot>
-            <details class="mobile-menu">
-              <summary class="mobile-menu-btn" part="nav-toggle" aria-label="Toggle navigation">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                  <line x1="3" y1="4.5" x2="15" y2="4.5"/>
-                  <line x1="3" y1="9" x2="15" y2="9"/>
-                  <line x1="3" y1="13.5" x2="15" y2="13.5"/>
-                </svg>
-              </summary>
-            </details>
-            <less-theme-toggle></less-theme-toggle>
-            ${langSwitchHtml}
-            <a class="github-link" href="${githubUrl}" aria-label="GitHub repository">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-              </svg>
-              <span class="github-text">GitHub</span>
-            </a>
+    /** Extract the full layout template so render() can skip it for DSD. */
+    private _renderLayout(): TemplateResult {
+      // SSR fallback: read currentPath from attribute if Lit property reflection
+      // didn't fire (HTML attribute `currentpath` vs camelCase `currentPath`).
+      if (!this.currentPath && this.hasAttribute?.('currentpath')) {
+        this.currentPath = this.getAttribute('currentpath') || '';
+      }
+      return html`
+        <div class="app-layout" ?home="${this.home}">
+          <header class="app-header">
+            <nav class="header-inner" aria-label="Primary navigation">
+              <a class="logo" href="/">${this.logoText}<span class="logo-sub">${this
+                .logoSub}</span></a>
+              ${this._renderHeaderNav()}
+              <div class="header-right">
+                <slot name="header-actions"></slot>
+                <details class="mobile-menu">
+                  <summary class="mobile-menu-btn" aria-label="Toggle navigation" @click="${this
+                    ._toggleMenu}">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 18 18"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                    >
+                      <line x1="3" y1="4.5" x2="15" y2="4.5" />
+                      <line x1="3" y1="9" x2="15" y2="9" />
+                      <line x1="3" y1="13.5" x2="15" y2="13.5" />
+                    </svg>
+                  </summary>
+                </details>
+                <less-theme-toggle></less-theme-toggle>
+                ${this.locales.length > 1
+                  ? html`
+                    <a class="lang-switch" href="${this._otherLocalePath()}">${this
+                      ._otherLocaleLabel()}</a>
+                  `
+                  : nothing}
+                <a class="github-link" href="${this.githubUrl}" aria-label="GitHub repository">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path
+                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+                    />
+                  </svg>
+                  <span class="github-text">GitHub</span>
+                </a>
+              </div>
+            </nav>
+          </header>
+          <div class="mobile-backdrop"></div>
+          <div class="layout-body">
+            ${!this.home ? this._renderSidebarNav() : nothing}
+            <main class="layout-main">
+              <slot></slot>
+            </main>
           </div>
-        </nav>
-      </header>
-      <div class="mobile-backdrop"></div>
-      <div class="layout-body">
-        ${sidebarHtml}
-        <main class="layout-main" part="main">
-          <slot></slot>
-        </main>
-      </div>
-      ${footerHtml}
-      ${mobileTabHtml}
-    </div>`;
-  }
+          <footer class="app-footer">
+            <p>
+              ${this.editUrl
+                ? html`
+                  <a href="${this
+                    .editUrl}" target="_blank" rel="noopener" style="margin-right:0.75rem;"
+                  >Edit this page</a>
+                `
+                : nothing} Built with <a href="${this
+                .githubUrl}" target="_blank" rel="noopener noreferrer"
+              >LessJS Framework</a>
+              <span class="divider"></span>
+              Self-bootstrapped from JSR
+              <span class="divider"></span>
+              LESS IS MORE
+            </p>
+          </footer>
+          ${this._renderMobileTabBar()}
+        </div>
+      `;
+    }
 
-  private _renderHeaderNavHtml(): string {
-    const links = this._headerNav();
-    if (links.length === 0) return '';
-    const items = links.map(link => {
-      const localized = this._localizePath(link.href);
-      const isExternal = link.href.startsWith('http');
-      return `<a href="${this._escAttr(localized)}" data-nav="${isExternal ? '' : localized}">${this._esc(link.label)}</a>`;
-    }).join('');
-    return `<nav class="header-nav" part="nav">${items}</nav>`;
-  }
+    override connectedCallback() {
+      super.connectedCallback(); // Mixin handles _hydrateEvents()
 
-  private _renderSidebarNavHtml(): string {
-    const nav = this._navItems();
-    if (nav.length === 0) return '';
-    const sections = nav.map(section => {
-      const items = section.items.map(item => {
-        const href = item.href || item.path || '#';
-        const localized = this._localizePath(href);
-        const isExternal = href.startsWith('http');
-        const cp = this._currentPath();
-        const isActive = !isExternal && cp === localized;
-        return `<a href="${this._escAttr(localized)}"
-          class="${isActive ? 'active' : ''}"
-          aria-current="${isActive ? 'page' : ''}"
-          data-nav="${isExternal ? '' : localized}"
-        >${this._esc(item.label)}</a>`;
-      }).join('');
-      return `<details class="nav-section" open>
-        <summary class="nav-section-title">${this._esc(section.section)}</summary>
-        ${items}
-      </details>`;
-    }).join('');
-    return `<nav class="docs-sidebar" part="sidebar" aria-label="Documentation navigation">${sections}</nav>`;
-  }
+      // Auto-detect locale from currentPath if locale prefix is present
+      if (this.locales.length > 1 && this.currentPath) {
+        for (const loc of this.locales) {
+          if (this.currentPath === `/${loc}` || this.currentPath.startsWith(`/${loc}/`)) {
+            this.locale = loc;
+            break;
+          }
+        }
+      }
 
-  private _renderMobileTabBarHtml(): string {
-    const links = this._headerNav();
-    if (links.length === 0) return '';
+      // Layout-specific: set up native <details> toggle for mobile menu
+      if (this._dsdHydrated) {
+        this._setupDetailsToggle();
+      }
 
-    const sectionRoot = (href: string): string => {
-      const segs = href.split('/').filter(Boolean);
-      const start = this._locales().length > 1 && this._locales().includes(segs[0]) ? 1 : 0;
-      return segs.length > start + 1 ? '/' + segs[start] : href;
-    };
+      // ── SPA navigation: event delegation for all internal nav links ──
+      // Uses data-nav attribute instead of @click on each <a> tag.
+      // This works with both DSD (pre-rendered HTML) and non-DSD (Lit render)
+      // because event delegation at the shadow root level catches all clicks.
+      this._navCleanup = this._setupNavDelegation();
 
-    const cp = this._currentPath();
-    let rawPath = cp;
-    for (const loc of this._locales()) {
-      if (cp === `/${loc}` || cp.startsWith(`/${loc}/`)) {
-        rawPath = cp.slice(loc.length + 1) || '/';
-        break;
+      // ── Listen for navigation events ──
+      // After navigate() updates the URL, swap in the new page content
+      // via fetch-and-swap so the user gets a SPA-like experience.
+      this._navUnlisten = onNavigate((url, navType) => {
+        if (navType === 'push') {
+          this.currentPath = url.pathname;
+          this._loadContent(url.pathname);
+        }
+      });
+    }
+
+    override disconnectedCallback() {
+      super.disconnectedCallback();
+      this._navCleanup?.();
+      this._navUnlisten?.();
+    }
+
+    /**
+     * Set up native <details> toggle event listener.
+     * This uses the platform's native toggle event, not Lit's @click,
+     * so it works with both DSD and non-DSD rendering.
+     */
+    private _setupDetailsToggle(): void {
+      if (!this.shadowRoot) return;
+      const details = this.shadowRoot.querySelector('details.mobile-menu');
+      if (details) {
+        details.addEventListener('toggle', () => {
+          const isOpen = (details as HTMLDetailsElement).open;
+          this.toggleAttribute('menu-open', isOpen);
+          this._syncInert(isOpen);
+        });
+        this.toggleAttribute('menu-open', (details as HTMLDetailsElement).open);
       }
     }
 
-    const items = links.map(link => {
-      const localized = this._localizePath(link.href);
-      const isExternal = link.href.startsWith('http');
-      const root = sectionRoot(link.href);
-      const isActive = !isExternal && (rawPath === root || rawPath.startsWith(root + '/'));
-      const icon = this._icon(link.label);
-      return `<a class="tab-item${isActive ? ' active' : ''}"
-        href="${this._escAttr(localized)}"
-        data-nav="${isExternal ? '' : localized}"
-        aria-current="${isActive ? 'page' : ''}"
-      >${icon}<span>${this._esc(link.label)}</span></a>`;
-    }).join('');
+    /** Explicit toggle: directly sets open + menu-open (no native <details> reliance) */
+    private _toggleMenu(e: Event) {
+      e.preventDefault();
+      const details = this.shadowRoot?.querySelector('details.mobile-menu');
+      if (!details) return;
+      const willOpen = !details.hasAttribute('open');
+      details.toggleAttribute('open', willOpen);
+      this.toggleAttribute('menu-open', willOpen);
+      // Accessibility: set inert on main content when menu is open
+      this._syncInert(willOpen);
+    }
 
-    return `<nav class="mobile-tab-bar" aria-label="Quick navigation">${items}</nav>`;
-  }
-
-  // ─── Lifecycle ───
-
-  override connectedCallback(): void {
-    super.connectedCallback();
-
-    const locales = this._locales();
-    const locale = this._locale();
-    if (locales.length > 1) {
-      const cp = this._currentPath();
-      for (const loc of locales) {
-        if (cp === `/${loc}` || cp.startsWith(`/${loc}/`)) {
-          this.setAttribute('locale', loc);
-          break;
+    /** Accessibility: mark main content as inert when mobile menu is open */
+    private _syncInert(menuOpen: boolean) {
+      const main = this.shadowRoot?.querySelector('.layout-main');
+      if (main) {
+        if (menuOpen) {
+          main.setAttribute('inert', '');
+        } else {
+          main.removeAttribute('inert');
         }
       }
     }
 
-    if (this._dsdHydrated) {
-      this._setupDetailsToggle();
-    }
+    // ─── Private fields ───────────────────────────────────────────
+    /** Cleanup for nav click delegation */
+    private _navCleanup?: () => void;
+    /** Cleanup for onNavigate listener */
+    private _navUnlisten?: () => void;
 
-    this._navCleanup = this._setupNavDelegation();
-    this._navUnlisten = onNavigate((url, navType) => {
-      if (navType === 'push') {
-        this.setAttribute('current-path', url.pathname);
-        this._loadContent(url.pathname);
+    // ─── i18n helpers ─────────────────────────────────────────────
+
+    /** Return the URL for the other locale (language switcher link) */
+    private _otherLocalePath(): string {
+      const others = this.locales.filter((l) => l !== this.locale);
+      const target = others[0] || this.locales[0];
+      // Replace current locale prefix in path, or prepend if at root
+      const path = this.currentPath;
+      for (const loc of this.locales) {
+        if (path === `/${loc}` || path.startsWith(`/${loc}/`)) {
+          return `/${target}${path.slice(loc.length + 1) || '/'}`;
+        }
       }
-    });
-  }
+      return `/${target}${path}`;
+    }
 
-  override disconnectedCallback(): void {
-    super.disconnectedCallback();
-    this._navCleanup?.();
-    this._navUnlisten?.();
-  }
+    /** Return display label for the other locale */
+    private _otherLocaleLabel(): string {
+      const others = this.locales.filter((l) => l !== this.locale);
+      const target = others[0] || this.locales[0];
+      return target === 'zh' ? '中文' : 'EN';
+    }
 
-  override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
-    if (old === val) return;
-    if (name === 'current-path') {
-      this._updateActiveNav();
+    /** Prepend current locale to an internal path (if i18n is active) */
+    private _localizePath(path: string): string {
+      if (this.locales.length <= 1) return path;
+      if (path.startsWith('http')) return path;
+      // Already has locale prefix? Skip.
+      for (const loc of this.locales) {
+        if (path === `/${loc}` || path.startsWith(`/${loc}/`)) return path;
+      }
+      return `/${this.locale}${path}`;
+    }
+
+    // ─── SPA Navigation ───────────────────────────────────────────
+
+    /**
+     * Set up event delegation for all nav links on the shadow root.
+     * Intercepts clicks on <a data-nav="..."> elements and routes them
+     * through the Navigation API for SPA-like page transitions.
+     */
+    private _setupNavDelegation(): () => void {
+      if (!this.shadowRoot) return () => {};
+      const handler = (e: Event) => {
+        const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('[data-nav]');
+        if (!link) return;
+        const path = link.getAttribute('data-nav');
+        if (!path || path.startsWith('http')) return;
+        e.preventDefault();
+        navigate(path);
+      };
+      this.shadowRoot.addEventListener('click', handler);
+      return () => this.shadowRoot?.removeEventListener('click', handler);
+    }
+
+    /**
+     * Fetch a new page and swap its content into the layout's slot.
+     *
+     * Strategy (SSG-optimized):
+     *   1. Fetch the full HTML of the target page
+     *   2. Parse and find the <less-layout> element
+     *   3. Replace this element's children with the new page's
+     *      light DOM content (projected via <slot>)
+     *   4. Update currentPath for sidebar highlighting
+     *   5. Scroll to top
+     *
+     * If anything fails (network, parsing), falls back to full reload.
+     */
+    private async _loadContent(path: string): Promise<void> {
+      try {
+        const resp = await fetch(path);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const html = await resp.text();
+
+        const tmp = new DOMParser().parseFromString(html, 'text/html').body;
+
+        const newLayout = tmp.querySelector<HTMLElement>('less-layout');
+        if (!newLayout) throw new Error('No less-layout found in response');
+
+        // Replace this layout's light DOM children with the new page's
+        // (they are projected through <slot></slot> in the template)
+        while (this.firstChild) this.removeChild(this.firstChild);
+        while (newLayout.firstChild) this.appendChild(newLayout.firstChild);
+
+        // Update sidebar active state
+        this.currentPath = path;
+
+        // Scroll to top for a fresh viewport
+        globalThis.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch {
+        // Fallback: full reload — Navigation API already updated the URL,
+        // so this acts as a normal page load from the new URL
+        globalThis.location.reload();
+      }
+    }
+
+    private _navLink(path: string, text: string) {
+      const localized = this._localizePath(path);
+      const isExternal = path.startsWith('http');
+      const isActive = !isExternal && this.currentPath === localized;
+      return html`
+        <a
+          href="${localized}"
+          class="${isActive ? 'active' : ''}"
+          aria-current="${isActive ? 'page' : undefined}"
+          target="${isExternal ? '_blank' : nothing}"
+          rel="${isExternal ? 'noopener noreferrer' : nothing}"
+          data-nav="${isExternal ? '' : localized}"
+        >${text}</a>
+      `;
+    }
+
+    private _renderSidebarNav(): TemplateResult | typeof nothing {
+      return html`
+        <nav class="docs-sidebar" aria-label="Documentation navigation">
+          ${this._renderSidebarItems()}
+        </nav>
+      `;
+    }
+
+    /** Shared nav items for both desktop and mobile sidebar */
+    private _renderSidebarItems(): TemplateResult {
+      const nav = this.navItems || [];
+      return html`
+        ${nav.map(
+          (section) =>
+            html`
+              <details class="nav-section" open>
+                <summary class="nav-section-title">${section.section}</summary>
+                ${section.items.map(
+                  (item) => this._navLink(item.href || item.path || '#', item.label),
+                )}
+              </details>
+            `,
+        )}
+      `;
+    }
+
+    private _renderHeaderNav(): TemplateResult | typeof nothing {
+      const links = this.headerNav || [];
+      return html`
+        <nav class="header-nav">
+          ${links.map(
+            (link) =>
+              html`
+                <a
+                  href="${this._localizePath(link.href)}"
+                  data-nav="${link.href.startsWith('http') ? '' : this._localizePath(link.href)}"
+                >${link.label}</a>
+              `,
+          )}
+        </nav>
+      `;
+    }
+
+    /** Mobile bottom tab bar — shown only on small screens, replaces hidden header-nav */
+    private _renderMobileTabBar(): TemplateResult | typeof nothing {
+      const links = this.headerNav || [];
+      if (links.length === 0) return nothing;
+
+      const icons: Record<string, TemplateResult> = {
+        // Framework: abstract "F" monogram
+        Framework: html`
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 3h10M5 3v6h7M12 9v3M5 17h7" />
+          </svg>
+        `,
+        // Engine: gear/cog
+        Engine: html`
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="10" cy="10" r="3" />
+            <path
+              d="M10 1v2M10 17v2M3.5 3.5l1.4 1.4M15.1 15.1l1.4 1.4M1 10h2M17 10h2M3.5 16.5l1.4-1.4M15.1 4.9l1.4-1.4"
+            />
+          </svg>
+        `,
+        // RegistryHub: box/cube
+        RegistryHub: html`
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M10 2l7 4v8l-7 4-7-4V6z" />
+            <path d="M10 10l7-4M10 10v8M10 10L3 6" />
+          </svg>
+        `,
+        // Blog: article
+        Blog: html`
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="3" y="2" width="14" height="16" rx="2" />
+            <path d="M7 6h6M7 10h6M7 14h3" />
+          </svg>
+        `,
+      };
+
+      // Fallback: generic compass icon for unknown labels
+      const defaultIcon = html`
+        <svg
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="10" cy="10" r="8" />
+          <path d="M6 6l3 5 5 3-3-5z" />
+        </svg>
+      `;
+
+      /** Derive section root from href for active matching.
+       *  /guide/positioning → /guide, /engine/architecture → /engine, /blog → /blog */
+      const sectionRoot = (href: string): string => {
+        const segs = href.split('/').filter(Boolean);
+        // Skip locale prefix if present
+        const start = this.locales.length > 1 && this.locales.includes(segs[0]) ? 1 : 0;
+        return segs.length > start + 1 ? '/' + segs[start] : href;
+      };
+
+      /** Strip locale prefix from currentPath for section matching */
+      const rawCurrentPath = (() => {
+        for (const loc of this.locales) {
+          if (this.currentPath === `/${loc}` || this.currentPath.startsWith(`/${loc}/`)) {
+            return this.currentPath.slice(loc.length + 1) || '/';
+          }
+        }
+        return this.currentPath;
+      })();
+
+      return html`
+        <nav class="mobile-tab-bar" aria-label="Quick navigation">
+          ${links.map(
+            (link) => {
+              const localized = this._localizePath(link.href);
+              const isExternal = link.href.startsWith('http');
+              const root = sectionRoot(link.href);
+              const isActive = !isExternal && (
+                rawCurrentPath === root ||
+                rawCurrentPath.startsWith(root + '/')
+              );
+              const icon = icons[link.label] || defaultIcon;
+              return html`
+                <a
+                  class="tab-item${isActive ? ' active' : ''}"
+                  href="${localized}"
+                  data-nav="${isExternal ? '' : localized}"
+                  aria-current="${isActive ? 'page' : nothing}"
+                >${icon}<span>${link.label}</span></a>
+              `;
+            },
+          )}
+        </nav>
+      `;
     }
   }
 
-  // ─── Mobile menu ───
-
-  private _setupDetailsToggle(): void {
-    if (!this.shadowRoot) return;
-    const details = this.shadowRoot.querySelector('details.mobile-menu');
-    if (details) {
-      details.addEventListener('toggle', () => {
-        const isOpen = (details as HTMLDetailsElement).open;
-        this.toggleAttribute('menu-open', isOpen);
-        this._syncInert(isOpen);
-      });
-      this.toggleAttribute('menu-open', (details as HTMLDetailsElement).open);
-    }
-  }
-
-  private _toggleMenu(e: Event): void {
-    e.preventDefault();
-    const details = this.shadowRoot?.querySelector('details.mobile-menu');
-    if (!details) return;
-    const willOpen = !details.hasAttribute('open');
-    details.toggleAttribute('open', willOpen);
-    this.toggleAttribute('menu-open', willOpen);
-    this._syncInert(willOpen);
-  }
-
-  private _syncInert(menuOpen: boolean): void {
-    const main = this.shadowRoot?.querySelector('.layout-main');
-    if (main) {
-      if (menuOpen) main.setAttribute('inert', '');
-      else main.removeAttribute('inert');
-    }
-  }
-
-  // ─── SPA Navigation ───
-
-  private _setupNavDelegation(): () => void {
-    if (!this.shadowRoot) return () => {};
-    const handler = (e: Event) => {
-      const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('[data-nav]');
-      if (!link) return;
-      const path = link.getAttribute('data-nav');
-      if (!path || path.startsWith('http')) return;
-      e.preventDefault();
-      navigate(path);
-    };
-    this.shadowRoot.addEventListener('click', handler);
-    return () => this.shadowRoot?.removeEventListener('click', handler);
-  }
-
-  private async _loadContent(path: string): Promise<void> {
-    try {
-      const resp = await fetch(path);
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const html = await resp.text();
-      const tmp = new DOMParser().parseFromString(html, 'text/html').body;
-      const newLayout = tmp.querySelector<HTMLElement>('less-layout');
-      if (!newLayout) throw new Error('No less-layout found');
-      while (this.firstChild) this.removeChild(this.firstChild);
-      while (newLayout.firstChild) this.appendChild(newLayout.firstChild);
-      this.setAttribute('current-path', path);
-      globalThis.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch {
-      globalThis.location.reload();
-    }
-  }
-
-  private _updateActiveNav(): void {
-    if (!this.shadowRoot || !this._dsdHydrated) return;
-    const cp = this._currentPath();
-    const links = this.shadowRoot.querySelectorAll('.docs-sidebar a[data-nav], .header-nav a[data-nav]');
-    links.forEach(a => {
-      const nav = a.getAttribute('data-nav');
-      const isActive = nav === cp;
-      a.classList.toggle('active', isActive);
-      if (isActive) a.setAttribute('aria-current', 'page');
-      else a.removeAttribute('aria-current');
-    });
-  }
-
-  // ─── Utilities ───
-
-  private _esc(s: string): string {
-    const div = document.createElement('div');
-    div.textContent = s;
-    return div.innerHTML;
-  }
-
-  private _escAttr(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-}
-
-// Guard: idempotent across SSR paths
-if (!customElements.get(tagName)) customElements.define(tagName, LessLayout);
+  // Guard: idempotent across SSR paths
+  if (!customElements.get(tagName)) customElements.define(tagName, LessLayout);

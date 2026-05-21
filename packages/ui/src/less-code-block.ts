@@ -3,16 +3,16 @@
  *
  * Code block with copy button AND syntax highlighting via Prism.
  *
- * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
- *   - Self-contained Prism highlighting injected into shadow root
- *   - Copy button uses ElementInternals :state(copied) for CSS feedback
- *   - DSD renders <slot> for SSR (no JS content fallback)
+ * v0.9.0+: Self-contained Prism highlighting. On upgrade, the component
+ * reads raw code from light DOM, tokenizes with Prism, and MOVES the
+ * highlighted HTML into its own shadow root. This way the component's
+ * CSS (including `.token.*` rules) can style the tokens — no reliance
+ * on external CSS penetrating Shadow DOM.
  *
- * @csspart container �?The code-block wrapper
- * @csspart header �?The header bar with lang badge and copy button
- * @csspart lang �?The language badge
- * @csspart copy �?The copy button
- * @csspart body �?The pre/code area
+ * SSR (no JS): raw <pre><code> visible via <slot>
+ * Client JS:  highlighted code rendered inside shadow root
+ *
+ * DSD makes content visible without JavaScript.
  *
  * Usage:
  * ```html
@@ -22,142 +22,218 @@
  * ```
  */
 
-import { DsdElement, type HydrateEventDescriptor } from '@lessjs/core';
+import { css, type CSSResult, html, nothing, type TemplateResult } from 'lit';
+import { lessDesignTokens } from './design-tokens.js';
+import { DsdLitElement } from '@lessjs/adapter-lit';
 
 export const tagName = 'less-code-block';
 
-const sheet = new CSSStyleSheet();
-sheet.replaceSync(`
-  :host {
-    display: block;
-    position: relative;
-  }
-
-  pre {
-    margin: 0;
-    padding: var(--size-5);
-    background: #1a1a2e;
-    border: var(--border-size-1) solid rgba(255, 255, 255, 0.08);
-    border-radius: 6px;
-    overflow-x: auto;
-    font-family: var(--font-mono);
-    font-size: var(--font-size-0);
-    line-height: 1.7;
-    color: #e0e0e0;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-
-  ::slotted(pre) {
-    margin: 0;
-    padding: var(--size-5);
-    background: #1a1a2e;
-    border: var(--border-size-1) solid rgba(255, 255, 255, 0.08);
-    border-radius: 6px;
-    overflow-x: auto;
-    font-family: var(--font-mono);
-    font-size: var(--font-size-0);
-    line-height: 1.7;
-    color: #e0e0e0;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
-  }
-
-  .lang-badge {
-    position: absolute;
-    top: var(--size-2);
-    left: var(--size-3);
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.35);
-    pointer-events: none;
-  }
-
-  .copy-btn {
-    position: absolute;
-    top: var(--size-2);
-    right: var(--size-2);
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.5);
-    border: var(--border-size-1) solid rgba(255, 255, 255, 0.12);
-    padding: var(--size-1) var(--size-3);
-    font-size: var(--font-size-00);
-    font-family: var(--font-sans);
-    cursor: pointer;
-    border-radius: 4px;
-    transition: color 0.2s ease, background 0.2s ease;
-    z-index: 1;
-  }
-
-  .copy-btn:hover {
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(255, 255, 255, 0.12);
-  }
-
-  :host(:state(copied)) .copy-btn {
-    color: #4ade80;
-    border-color: rgba(74, 222, 128, 0.3);
-  }
-
-  :host(:state(failed)) .copy-btn {
-    color: #e55;
-    border-color: #e55;
-  }
-
-  /* Prism token colors (dark theme) */
-  .token.cdata, .token.comment, .token.doctype, .token.prolog { color: #6a737d; }
-  .token.punctuation { color: #8b949e; }
-  .token.namespace { opacity: 0.7; }
-  .token.boolean, .token.constant, .token.deleted, .token.number, .token.property, .token.symbol, .token.tag { color: #79c0ff; }
-  .token.attr-name, .token.builtin, .token.char, .token.inserted, .token.selector, .token.string { color: #a5d6ff; }
-  .token.entity, .token.operator, .token.url, .language-css .token.string, .style .token.string { color: #d2a8ff; }
-  .token.atrule, .token.attr-value, .token.keyword { color: #ff7b72; }
-  .token.class-name, .token.function { color: #d2a8ff; }
-  .token.important, .token.regex, .token.variable { color: #ffa657; }
-  .token.bold, .token.important { font-weight: 700; }
-  .token.italic { font-style: italic; }
-  .token.entity { cursor: help; }
-`);
-
-export class LessCodeBlock extends DsdElement {
-  static override styles = sheet;
-  static override formAssociated = true;
-
-  static override hydrateEvents: HydrateEventDescriptor[] = [
+export class LessCodeBlock extends DsdLitElement {
+  /** Declarative event bindings for DSD hydration */
+  static hydrateEvents = [
     { selector: 'button.copy-btn', event: 'click', method: '_copy' },
   ];
 
-  private _copyState: 'idle' | 'copied' | 'failed' = 'idle';
-  private _copyTimer: ReturnType<typeof setTimeout> | undefined;
-  private _highlightTimer: ReturnType<typeof setTimeout> | undefined;
-  private _highlightedInShadow = false;
-  private _highlightRetries = 0;
-  private static MAX_HIGHLIGHT_RETRIES = 20;
+  static override styles: CSSResult[] = [
+    lessDesignTokens,
+    css`
+      :host {
+        display: block;
+        position: relative;
+      }
 
-  override render(): string {
-    return `<slot></slot>
-      <button class="copy-btn" part="copy">Copy</button>`;
+      /* Shared pre/code styles — dark theme (v0.19.1 Phase 6, ADR-0035 B2) */
+      pre {
+        margin: 0;
+        padding: var(--less-size-5);
+        background: #1a1a2e;
+        border: 0.5px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
+        overflow-x: auto;
+        font-family: var(--less-font-mono);
+        font-size: var(--less-font-size-sm);
+        line-height: 1.7;
+        color: #e0e0e0;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      /* SSR slot-only: style slotted <pre> */
+      ::slotted(pre) {
+        margin: 0;
+        padding: var(--less-size-5);
+        background: #1a1a2e;
+        border: 0.5px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
+        overflow-x: auto;
+        font-family: var(--less-font-mono);
+        font-size: var(--less-font-size-sm);
+        line-height: 1.7;
+        color: #e0e0e0;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+      }
+
+      /* Language badge (top-left) */
+      .lang-badge {
+        position: absolute;
+        top: var(--less-size-2);
+        left: var(--less-size-3);
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(255, 255, 255, 0.35);
+        pointer-events: none;
+      }
+
+      .copy-btn {
+        position: absolute;
+        top: var(--less-size-2);
+        right: var(--less-size-2);
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.5);
+        border: 0.5px solid rgba(255, 255, 255, 0.12);
+        padding: var(--less-size-1) var(--less-size-3);
+        font-size: var(--less-font-size-xs);
+        font-family: var(--less-font-sans);
+        cursor: pointer;
+        border-radius: 4px;
+        transition: color var(--less-transition-normal), background var(--less-transition-normal);
+        z-index: 1;
+      }
+
+      .copy-btn:hover {
+        color: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .copy-btn.copied {
+        color: #4ade80;
+        border-color: rgba(74, 222, 128, 0.3);
+      }
+
+      .copy-btn.failed {
+        color: var(--less-error, #e55);
+        border-color: var(--less-error, #e55);
+      }
+
+      /* ── Prism.js token colors (dark theme, v0.19.1 Phase 6) ─── */
+      .token.cdata,
+      .token.comment,
+      .token.doctype,
+      .token.prolog {
+        color: #6a737d;
+      }
+      .token.punctuation {
+        color: #8b949e;
+      }
+      .token.namespace {
+        opacity: 0.7;
+      }
+      .token.boolean,
+      .token.constant,
+      .token.deleted,
+      .token.number,
+      .token.property,
+      .token.symbol,
+      .token.tag {
+        color: #79c0ff;
+      }
+      .token.attr-name,
+      .token.builtin,
+      .token.char,
+      .token.inserted,
+      .token.selector,
+      .token.string {
+        color: #a5d6ff;
+      }
+      .token.entity,
+      .token.operator,
+      .token.url,
+      .language-css .token.string,
+      .style .token.string {
+        color: #d2a8ff;
+      }
+      .token.atrule,
+      .token.attr-value,
+      .token.keyword {
+        color: #ff7b72;
+      }
+      .token.class-name,
+      .token.function {
+        color: #d2a8ff;
+      }
+      .token.important,
+      .token.regex,
+      .token.variable {
+        color: #ffa657;
+      }
+      .token.bold,
+      .token.important {
+        font-weight: 700;
+      }
+      .token.italic {
+        font-style: italic;
+      }
+      .token.entity {
+        cursor: help;
+      }
+    `,
+  ];
+
+  static override properties = {
+    _copyState: { state: true },
+    _langClass: { state: true },
+  };
+
+  declare private _copyState: 'idle' | 'copied' | 'failed';
+  /** Language class detected from the light DOM <code> (e.g. 'language-typescript') */
+  declare private _langClass: string;
+  private _copyTimer: ReturnType<typeof globalThis.setTimeout> | undefined;
+  private _highlightTimer: ReturnType<typeof globalThis.setTimeout> | undefined;
+  /** Whether we have already injected highlighted HTML into the shadow root */
+  private _highlightedInShadow = false;
+
+  constructor() {
+    super();
+    this._copyState = 'idle';
+    this._langClass = '';
   }
 
-  override connectedCallback(): void {
+  override connectedCallback() {
     super.connectedCallback();
-    if (this._dsdHydrated) {
-      this._tryHighlight();
+    // Trigger Prism highlighting after CE upgrade.
+    this._tryHighlight();
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this._copyTimer !== undefined) {
+      clearTimeout(this._copyTimer);
+      this._copyTimer = undefined;
+    }
+    if (this._highlightTimer !== undefined) {
+      clearTimeout(this._highlightTimer);
+      this._highlightTimer = undefined;
     }
   }
 
-  override disconnectedCallback(): void {
-    super.disconnectedCallback();
-    if (this._copyTimer !== undefined) { clearTimeout(this._copyTimer); this._copyTimer = undefined; }
-    if (this._highlightTimer !== undefined) { clearTimeout(this._highlightTimer); this._highlightTimer = undefined; }
-  }
+  // M-25 fix: Max retries for Prism highlight attempts
+  private static MAX_HIGHLIGHT_RETRIES = 20;
+  private _highlightRetries = 0;
 
+  /**
+   * Read raw code from light DOM, tokenize with Prism, then inject the
+   * highlighted HTML directly into the shadow root (replacing the <slot>).
+   *
+   * Retries if Prism hasn't loaded yet (capped at MAX_HIGHLIGHT_RETRIES).
+   */
   private _tryHighlight(): void {
-    const p = (globalThis as unknown as Record<string, unknown>).Prism;
+    // deno-lint-ignore no-explicit-any
+    const p = (globalThis as any).Prism;
     if (typeof p === 'undefined') {
       if (this._highlightRetries++ < LessCodeBlock.MAX_HIGHLIGHT_RETRIES) {
         this._highlightTimer = globalThis.setTimeout(() => this._tryHighlight(), 50);
@@ -165,30 +241,54 @@ export class LessCodeBlock extends DsdElement {
       return;
     }
 
-    const pre = this.querySelector(':scope > pre') || Array.from(this.children).find(c => (c as Element).tagName === 'PRE');
+    // Find <pre><code> in this component's light DOM
+    const pre = this.querySelector(':scope > pre') || Array.from(this.children).find(function (c) {
+      return (c as Element).tagName === 'PRE';
+    });
     if (!pre) return;
     const codeEl = pre.querySelector('code');
     if (!codeEl) return;
 
+    // Detect language class
     let lang = 'typescript';
     const classes = codeEl.classList;
     for (let i = 0; i < classes.length; i++) {
-      if (classes[i].startsWith('language-')) { lang = classes[i].slice(9); break; }
+      if (classes[i].startsWith('language-')) {
+        lang = classes[i].slice(9); // e.g. 'language-typescript' → 'typescript'
+        break;
+      }
     }
+    if (!lang) lang = 'typescript';
+    this._langClass = 'language-' + lang;
 
+    // Read raw code
     const raw = codeEl.textContent || '';
-    const grammar = (p as Record<string, Record<string, unknown>>).languages?.[lang] as Record<string, unknown> | undefined;
+
+    // Tokenize
+    const grammar = p.languages[lang];
     if (!grammar) {
+      // Grammar not loaded — try again (capped)
       if (this._highlightRetries++ < LessCodeBlock.MAX_HIGHLIGHT_RETRIES) {
         this._highlightTimer = globalThis.setTimeout(() => this._tryHighlight(), 100);
       }
       return;
     }
+    // Reset retry counter on success
     this._highlightRetries = 0;
-    const highlightedHtml = (p as { highlight: (code: string, grammar: unknown, lang: string) => string }).highlight(raw, grammar, lang);
+    const highlightedHtml = p.highlight(raw, grammar, lang);
+
+    // Inject highlighted HTML into shadow root (replaces <slot>)
     this._injectHighlighted(highlightedHtml);
   }
 
+  /**
+   * Replace the <slot> element in the shadow root with a <pre><code>
+   * containing the Prism-highlighted HTML, plus keep the copy button.
+   *
+   * After this, the highlighted <span class="token ..."> elements are
+   * INSIDE the shadow root, so the component's CSS (with inline token
+   * colors) can style them.
+   */
   private _injectHighlighted(html: string): void {
     if (!this.shadowRoot || this._highlightedInShadow) return;
     this._highlightedInShadow = true;
@@ -196,17 +296,46 @@ export class LessCodeBlock extends DsdElement {
     const slot = this.shadowRoot.querySelector('slot');
     if (!slot) return;
 
+    // Build the highlighted <pre><code>
     const highlightedPre = document.createElement('pre');
     const highlightedCode = document.createElement('code');
-    highlightedCode.className = 'language-typescript';
+    highlightedCode.className = this._langClass || 'language-typescript';
+    // SECURITY: innerHTML is safe here — `html` comes from Prism.highlight()
+    // which only produces styled <span> elements from tokenized code.
+    // Raw user code is tokenized before highlighting, not rendered as-is.
+    // Do NOT pass untrusted HTML to this path.
     highlightedCode.innerHTML = html;
     highlightedPre.appendChild(highlightedCode);
+
+    // Replace <slot> with the highlighted pre
     slot.replaceWith(highlightedPre);
 
+    // Hide the light DOM <pre><code> so it doesn't show through
     const lightPre = this.querySelector('pre');
-    if (lightPre) (lightPre as HTMLElement).style.display = 'none';
+    if (lightPre) lightPre.style.display = 'none';
   }
 
+  /** When DSD hydrated, return nothing — the shadow DOM already has content. */
+  override render(): TemplateResult | typeof nothing {
+    if (this._dsdHydrated) return nothing;
+    return html`
+      <slot></slot>
+      <button
+        class="copy-btn ${this._copyState === 'copied'
+          ? 'copied'
+          : ''} ${this._copyState === 'failed' ? 'failed' : ''}"
+        @click="${() => this._copy()}"
+      >
+        ${this._copyState === 'copied'
+          ? 'Copied!'
+          : this._copyState === 'failed'
+          ? 'Failed'
+          : 'Copy'}
+      </button>
+    `;
+  }
+
+  /** Read highlighted code from either shadow root (client) or light DOM (SSR) */
   private _getCodeText(): string {
     if (this.shadowRoot) {
       const shadowCode = this.shadowRoot.querySelector('pre code');
@@ -215,43 +344,49 @@ export class LessCodeBlock extends DsdElement {
     return this.textContent || '';
   }
 
-  private async _copy(): Promise<void> {
+  private async _copy() {
     try {
       const text = this._getCodeText();
       await navigator.clipboard.writeText(text);
       this._copyState = 'copied';
-      this._internals?.states.add('copied');
-      this._internals?.states.delete('failed');
       this._updateCopyButtonDOM();
       this._copyTimer = globalThis.setTimeout(() => {
         this._copyState = 'idle';
-        this._internals?.states.delete('copied');
         this._updateCopyButtonDOM();
         this._copyTimer = undefined;
       }, 2000);
     } catch {
       this._copyState = 'failed';
-      this._internals?.states.add('failed');
-      this._internals?.states.delete('copied');
       this._updateCopyButtonDOM();
       this._copyTimer = globalThis.setTimeout(() => {
         this._copyState = 'idle';
-        this._internals?.states.delete('failed');
         this._updateCopyButtonDOM();
         this._copyTimer = undefined;
       }, 2000);
     }
   }
 
+  /**
+   * Update copy button DOM directly after DSD hydration.
+   * Since render() returns nothing when _dsdHydrated is true,
+   * Lit's reactive update cycle is bypassed. We must update
+   * the DOM manually to reflect the copy state.
+   */
   private _updateCopyButtonDOM(): void {
     if (!this.shadowRoot) return;
     const btn = this.shadowRoot.querySelector('button.copy-btn');
     if (!btn) return;
+
     btn.classList.toggle('copied', this._copyState === 'copied');
     btn.classList.toggle('failed', this._copyState === 'failed');
-    if (this._copyState === 'copied') btn.textContent = 'Copied!';
-    else if (this._copyState === 'failed') btn.textContent = 'Failed';
-    else btn.textContent = 'Copy';
+
+    if (this._copyState === 'copied') {
+      btn.textContent = 'Copied!';
+    } else if (this._copyState === 'failed') {
+      btn.textContent = 'Failed';
+    } else {
+      btn.textContent = 'Copy';
+    }
   }
 }
 
