@@ -82,15 +82,9 @@ Deno.test('create-less: deno.json build:ssg uses @lessjs/adapter-vite', () => {
   assert(denoJson.tasks['build:ssg'].includes('@lessjs/adapter-vite'));
 });
 
-Deno.test('create-less: deno.json maps Lit and package imports explicitly', () => {
+Deno.test('create-less: deno.json maps LessJS package imports (v0.20 Ocean-Island)', () => {
   const denoJson = JSON.parse(extractTemplate('deno.json'));
-  assertEquals(denoJson.imports.lit, 'npm:lit@^3.2.0');
-  assertEquals(denoJson.imports['@lit/reactive-element'], 'npm:@lit/reactive-element@^2');
-  assertEquals(denoJson.imports['lit-element'], 'npm:lit-element@^4');
-  assertEquals(denoJson.imports['lit-html'], 'npm:lit-html@^3');
   assertEquals(denoJson.imports.vite, 'npm:vite@8.0.10');
-  // @lit-labs/ssr-dom-shim required by @lit/reactive-element in Vite SSR
-  assertEquals(denoJson.imports['@lit-labs/ssr-dom-shim'], 'npm:@lit-labs/ssr-dom-shim@^1.5.0');
   assertEquals(denoJson.imports['@lessjs/app'], 'jsr:@lessjs/app@^${v.app}');
   assertEquals(denoJson.imports['@lessjs/adapter-lit'], 'jsr:@lessjs/adapter-lit@^${v.adapterLit}');
   assertEquals(denoJson.imports['@lessjs/core'], 'jsr:@lessjs/core@^${v.core}');
@@ -138,24 +132,29 @@ Deno.test('create-less: vite.config.ts includes packageIslands config', () => {
   assert(viteConfig.includes('https://jsr.io/@lessjs/ui/${v.ui}'));
 });
 
-Deno.test('create-less: route index imports Lit directly', () => {
+Deno.test('create-less: route index imports DsdElement (v0.20 Ocean-Island)', () => {
   const routeIndex = extractTemplate('app/routes/index.ts');
-  assert(routeIndex.includes("from 'lit'"));
-  assertEquals(routeIndex.includes('@lessjs/core'), false);
-  assert(routeIndex.includes('LitElement'));
+  assert(routeIndex.includes('DsdElement'));
+  assert(routeIndex.includes("from '@lessjs/core'"));
+  assert(routeIndex.includes('StyleSheet'));
   assert(routeIndex.includes('static override styles'));
   assert(routeIndex.includes('override render()'));
   assert(routeIndex.includes('tagName'));
+  // Verify no Lit dependency in Ocean template
+  assertEquals(routeIndex.includes("from 'lit'"), false);
+  assertEquals(routeIndex.includes('LitElement'), false);
 });
 
-Deno.test('create-less: island counter imports Lit directly and self-registers', () => {
+Deno.test('create-less: island counter imports DsdElement and self-registers (v0.20)', () => {
   const islandCounter = extractTemplate('app/islands/my-counter.ts');
-  assert(islandCounter.includes("from 'lit'"));
-  assertEquals(islandCounter.includes('@lessjs/core'), false);
-  assert(islandCounter.includes('LitElement'));
+  assert(islandCounter.includes('DsdElement'));
+  assert(islandCounter.includes("from '@lessjs/core'"));
   assert(islandCounter.includes("tagName = 'my-counter'"));
-  assert(islandCounter.includes('declare count: number'));
-  assert(islandCounter.includes('customElements.define(tagName, MyCounter)'));
+  assert(islandCounter.includes('hydrateEvents'));
+  assert(islandCounter.includes('customElements.define'));
+  // Verify no Lit dependency in Ocean template
+  assertEquals(islandCounter.includes("from 'lit'"), false);
+  assertEquals(islandCounter.includes('LitElement'), false);
 });
 
 Deno.test('create-less: generated project builds through the one-command pipeline', async () => {
@@ -192,6 +191,9 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     ).href;
     denoJson.imports['@lessjs/adapter-vite'] = pathToFileURL(
       join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts'),
+    ).href;
+    denoJson.imports['@lessjs/core'] = pathToFileURL(
+      join(repoRoot, 'packages', 'core', 'src', 'index.ts'),
     ).href;
     denoJson.imports['@lessjs/content'] = pathToFileURL(
       join(repoRoot, 'packages', 'content', 'src', 'index.ts'),

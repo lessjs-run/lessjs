@@ -114,11 +114,6 @@ node_modules/
 `,
     'deno.json': `{
   "imports": {
-    "lit": "npm:lit@^3.2.0",
-    "@lit/reactive-element": "npm:@lit/reactive-element@^2",
-    "lit-element": "npm:lit-element@^4",
-    "lit-html": "npm:lit-html@^3",
-    "@lit-labs/ssr-dom-shim": "npm:@lit-labs/ssr-dom-shim@^1.5.0",
     "vite": "npm:vite@8.0.10",
     "@lessjs/app": "jsr:@lessjs/app@^${v.app}",
     "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^${v.adapterLit}",
@@ -157,17 +152,18 @@ const colorTokensStyle =
   'body{margin:0;background:var(--gray-1);color:var(--gray-9);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>';
 
 const lessUiAliases = {
-  '@lessjs/ui': 'https://jsr.io/@lessjs/ui/${v.ui}/src/index.ts',
-  '@lessjs/ui/design-tokens': 'https://jsr.io/@lessjs/ui/${v.ui}/src/design-tokens.ts',
-  '@lessjs/ui/less-button': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-button.ts',
-  '@lessjs/ui/less-card': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-card.ts',
-  '@lessjs/ui/less-code-block': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-code-block.ts',
-  '@lessjs/ui/less-dialog': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-dialog.ts',
   '@lessjs/ui/less-hero-ping': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-hero-ping.ts',
   '@lessjs/ui/less-input': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-input.ts',
   '@lessjs/ui/less-layout': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-layout.ts',
   '@lessjs/ui/less-theme-toggle': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-theme-toggle.ts',
   '@lessjs/ui/open-props-tokens': 'https://jsr.io/@lessjs/ui/${v.ui}/src/open-props-tokens.ts',
+  '@lessjs/ui/design-tokens': 'https://jsr.io/@lessjs/ui/${v.ui}/src/design-tokens.ts',
+  '@lessjs/ui/less-button': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-button.ts',
+  '@lessjs/ui/less-card': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-card.ts',
+  '@lessjs/ui/less-code-block': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-code-block.ts',
+  '@lessjs/ui/less-dialog': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-dialog.ts',
+  // Parent alias LAST ¡ª must come after all subpath aliases
+  '@lessjs/ui': 'https://jsr.io/@lessjs/ui/${v.ui}/src/index.ts',
 };
 
 export default defineConfig({
@@ -205,54 +201,67 @@ export default defineConfig({
   })],
 });
 `,
-    'app/routes/index.ts': `import { css, html, LitElement } from 'lit';
+    'app/routes/index.ts': `import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/core';
 
 export const tagName = 'home-page';
-export default class HomePage extends LitElement {
-  static override styles = css\`
-    :host { display: block; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
-    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
-    p { color: var(--less-text-secondary, #666); }
-    \`;
+
+const styles = new StyleSheet();
+styles.replaceSync(\`
+  :host { display: block; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+  h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+  p { color: var(--less-text-secondary, #666); }
+\`);
+
+export default class HomePage extends DsdElement {
+  static override styles = styles;
 
   override render() {
-    return html\`
-      <h1>Hello from LessJS!</h1>
-      <p>Your LessJS app is running. Edit <code>app/routes/index.ts</code> to get started.</p>
-      <my-counter></my-counter>
-    \`;
+    return \`<h1>Hello from LessJS!</h1>
+<p>Your LessJS app is running. Edit <code>app/routes/index.ts</code> to get started.</p>
+<my-counter></my-counter>\`;
   }
 }
 `,
-    'app/islands/my-counter.ts': `import { css, html, LitElement } from 'lit';
+    'app/islands/my-counter.ts': `import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/core';
+import type { HydrateEventDescriptor } from '@lessjs/core';
 
 export const tagName = 'my-counter';
 
-export default class MyCounter extends LitElement {
-  static override styles = css\`
-    :host { display: inline-flex; gap: 0.5rem; align-items: center; margin-top: 1rem; }
-    button { padding: 0.25rem 0.75rem; cursor: pointer; }
-  \`;
+const styles = new StyleSheet();
+styles.replaceSync(\`
+  :host { display: inline-flex; gap: 0.5rem; align-items: center; margin-top: 1rem; }
+  button { padding: 0.25rem 0.75rem; cursor: pointer; }
+\`);
 
-  static override properties = { count: { type: Number } };
+export default class MyCounter extends DsdElement {
+  static override styles = styles;
 
-  declare count: number;
+  static override hydrateEvents: HydrateEventDescriptor[] = [
+    { selector: 'button.dec', event: 'click', method: '_dec' },
+    { selector: 'button.inc', event: 'click', method: '_inc' },
+  ];
 
-  constructor() {
-    super();
-    this.count = 0;
-  }
+  count = 0;
 
   override render() {
-    return html\`
-      <button @click=\${() => this.count--}>-</button>
-      <span>\${this.count}</span>
-      <button @click=\${() => this.count++}>+</button>
-    \`;
+    return \`<button class="dec">-</button>
+<span>\${this.count}</span>
+<button class="inc">+</button>\`;
+  }
+
+  private _dec() { this.count--; this._update(); }
+  private _inc() { this.count++; this._update(); }
+
+  private _update() {
+    if (!this.shadowRoot) return;
+    this.shadowRoot.innerHTML = this.render();
+    this._hydrateEvents();
   }
 }
 
-if (!customElements.get(tagName)) {
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
   customElements.define(tagName, MyCounter);
 }
   `,

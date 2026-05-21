@@ -5,10 +5,8 @@
  * Line heights follow the golden ratio for optimal readability.
  */
 
-import { css } from 'lit';
-
-/** Typography CSS custom properties */
-export const lessTypographyTokens: ReturnType<typeof css> = css`
+/** Typography CSS custom properties (pure CSS string — v0.20 Ocean-Island) */
+export const lessTypographyTokens = `
   :host {
     /* === Font Families === */
     --less-font-sans:

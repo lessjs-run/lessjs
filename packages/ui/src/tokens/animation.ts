@@ -8,10 +8,8 @@
  * All animations must respect prefers-reduced-motion: reduce.
  */
 
-import { css } from 'lit';
-
-/** Animation/motion CSS custom properties */
-export const lessAnimationTokens: ReturnType<typeof css> = css`
+/** Animation/motion CSS custom properties (pure CSS string — v0.20 Ocean-Island) */
+export const lessAnimationTokens = `
   :host {
     /* === Duration Scale === */
     --less-duration-micro: 150ms;      /* button hover, color switch */

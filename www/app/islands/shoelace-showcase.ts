@@ -1,23 +1,14 @@
 /**
- * Shoelace Showcase — Lit adapter demo (client-only)
+ * Shoelace Showcase — Ocean component (v0.20.0 Ocean-Island).
  *
- * Renders Shoelace Web Components (Lit-based) through
- * @lessjs/adapter-lit's DSD pipeline.
+ * Renders Shoelace Web Components (Lit-based) as a static showcase.
+ * Pure DsdElement — zero framework dependency at the wrapper level.
+ * Shoelace itself uses Lit internally, but that's the library's choice.
  *
- * Shoelace is a popular Lit-based Web Component library with
- * 80+ components. It uses Lit internally, so it renders through
- * our Lit adapter natively.
- *
- * CEM note (v0.18.0): Shoelace does NOT ship a custom-elements.json
- * in its package, so LessJS's CEM auto-detection returns no results
- * for it. It relies on the explicit `packageIslands` declaration in
- * vite.config.ts. This is a real-world example showing why CEM
- * adoption across the ecosystem is still low — most packages need
- * explicit configuration until they publish CEM manifests.
- *
- * @lessjs/app island — auto-detected and SSR'd by adapter-vite.
+ * @lessjs/app island — client-only (ssr: false), Shoelace needs real DOM.
  */
-import { css, html, LitElement } from 'lit';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/core';
 import '@shoelace-style/shoelace/dist/themes/light.css';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/badge/badge.js';
@@ -25,41 +16,40 @@ import '@shoelace-style/shoelace/dist/components/input/input.js';
 import '@shoelace-style/shoelace/dist/components/alert/alert.js';
 import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities/icon-library.js';
 
-// Register the default Shoelace icon library (CDN)
 registerIconLibrary('default', {
-  resolver: (name) =>
+  resolver: (name: string) =>
     `https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/dist/assets/icons/${name}.svg`,
 });
 
 export const tagName = 'shoelace-showcase';
 
-// less.ssr: false — Shoelace's HasSlotController accesses this.host.childNodes
-// and this.host.querySelector(), which are not available in ssr-dom-shim's
-// HTMLElement. Client-only rendering is required until ADR-0028 DOM simulation.
 export const less = { ssr: false };
 
-export default class ShoelaceShowcase extends LitElement {
-  static override styles = css`
-    :host {
-      display: block;
-    }
-    .sl-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-    .sl-note {
-      color: #a1a1aa;
-      font-size: 11px;
-      margin-top: 6px;
-      line-height: 1.5;
-    }
-  `;
+const styles = new StyleSheet();
+styles.replaceSync(`
+  :host {
+    display: block;
+  }
+  .sl-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .sl-note {
+    color: #a1a1aa;
+    font-size: 11px;
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+`);
 
-  override render() {
-    return html`
+export default class ShoelaceShowcase extends DsdElement {
+  static override styles = styles;
+
+  override render(): string {
+    return `
       <div class="sl-row">
         <sl-button variant="primary" size="small">Primary</sl-button>
         <sl-button variant="success" size="small">Success</sl-button>
@@ -78,7 +68,6 @@ export default class ShoelaceShowcase extends LitElement {
   }
 }
 
-// Guard: idempotent across SSR paths
 try {
   customElements.define(tagName, ShoelaceShowcase);
 } catch { /* already defined */ }

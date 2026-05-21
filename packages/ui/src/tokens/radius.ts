@@ -5,10 +5,8 @@
  * www-redesign: expanded from 3-level to 6-level for finer control.
  */
 
-import { css } from 'lit';
-
-/** Border radius CSS custom properties */
-export const lessRadiusTokens: ReturnType<typeof css> = css`
+/** Border radius CSS custom properties (pure CSS string — v0.20 Ocean-Island) */
+export const lessRadiusTokens = `
   :host {
     /* === Border Radius Scale (6 levels) === */
     --less-radius-xs: 2px;     /* badges, tags */

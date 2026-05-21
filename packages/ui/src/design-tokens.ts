@@ -35,7 +35,8 @@
  * ```
  */
 
-import { css, type CSSResult } from 'lit';
+import { StyleSheet } from '@lessjs/core';
+import type { StyleSheetLike } from '@lessjs/core';
 import { lessSpacingTokens } from './tokens/spacing.js';
 import { lessTypographyTokens } from './tokens/typography.js';
 import { lessEffectTokens } from './tokens/effects.js';
@@ -45,14 +46,18 @@ import { lessAnimationTokens } from './tokens/animation.js';
 /**
  * LessJS Design Tokens CSS (all tokens combined).
  *
- * v0.20.0: Color tokens have moved to `open-props-tokens.ts` (CSSStyleSheet).
- * This combined export remains for backward compatibility with Lit components.
+ * v0.20.0 Ocean-Island: Tokens are pure CSS strings, composed into a
+ * StyleSheet. Zero Lit dependency — StyleSheet delegates to native
+ * CSSStyleSheet in browser, ShimStyleSheet in Deno/Node.
  *
- * These tokens are injected into every LessJS UI component.
+ * These tokens are injected into every LessJS UI component via
+ * `static styles` or `adoptedStyleSheets`.
  * They provide consistent spacing, colors, typography, and more.
  */
-export const lessDesignTokens: CSSResult = css`
-  ${lessSpacingTokens} ${lessTypographyTokens} ${lessEffectTokens} ${lessRadiusTokens} ${lessAnimationTokens};
-`;
+const combinedCSS = lessSpacingTokens + lessTypographyTokens + lessEffectTokens +
+  lessRadiusTokens + lessAnimationTokens;
+
+export const lessDesignTokens: StyleSheetLike = new StyleSheet();
+lessDesignTokens.replaceSync(combinedCSS);
 
 export default lessDesignTokens;

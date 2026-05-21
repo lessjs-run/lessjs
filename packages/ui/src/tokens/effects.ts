@@ -6,10 +6,8 @@
  * replacing OpenProps variable references with direct values.
  */
 
-import { css } from 'lit';
-
-/** Shadow/effect CSS custom properties */
-export const lessEffectTokens: ReturnType<typeof css> = css`
+/** Shadow/effect CSS custom properties (pure CSS string — v0.20 Ocean-Island) */
+export const lessEffectTokens = `
   :host {
     /* === Shadow System (3-tier) === */
     --less-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);

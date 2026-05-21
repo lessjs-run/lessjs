@@ -5,10 +5,8 @@
  * Consistent rhythm across all components.
  */
 
-import { css } from 'lit';
-
-/** Spacing & layout CSS custom properties */
-export const lessSpacingTokens: ReturnType<typeof css> = css`
+/** Spacing & layout CSS custom properties (pure CSS string — v0.20 Ocean-Island) */
+export const lessSpacingTokens = `
   :host {
     /* === Spacing Scale (4px base unit) === */
     --less-size-1: 0.25rem; /* 4px */

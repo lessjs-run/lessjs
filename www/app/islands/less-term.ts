@@ -1,116 +1,98 @@
 /**
- * less-term-demo — Interactive terminal for the homepage.
+ * less-term-demo — Ocean component (v0.20.0 Ocean-Island).
  *
- * Proper LessJS Web Component: DsdLitElement + hydrateEvents.
- * - SSR renders DSD HTML (no JS needed for first paint)
- * - Client upgrades via WithDsdHydration mixin
- * - Event handlers bound declaratively via static hydrateEvents
- * - Dynamic output via direct DOM manipulation (no re-render)
+ * Interactive terminal for the homepage. Features:
+ * - DSD SSR for first paint (no JS needed)
+ * - Client upgrade via DsdElement + hydrateEvents
+ * - Command history, local commands, API fallback
+ * - Direct DOM manipulation for output (no full re-render)
+ *
+ * Pure DsdElement — zero Lit dependency.
  */
-import { css, html, nothing } from 'lit';
-import { DsdLitElement } from '@lessjs/adapter-lit';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/core';
+import type { HydrateEventDescriptor } from '@lessjs/core';
 
-export class LessTermDemo extends DsdLitElement {
+const styles = new StyleSheet();
+styles.replaceSync(`
+  :host {
+    display: block;
+  }
+  .term {
+    background: #09090b;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 0.5px solid #27272a;
+  }
+  .term-bar {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 14px;
+    background: #18181b;
+    border-bottom: 0.5px solid #27272a;
+  }
+  .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .dot.r { background: #ef4444; }
+  .dot.y { background: #eab308; }
+  .dot.g { background: #22c55e; }
+  .term-body {
+    padding: 16px;
+    font-family: "JetBrains Mono", "Fira Code", "SF Mono", Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.9;
+    color: #a1a1aa;
+    max-height: 280px;
+    overflow-y: auto;
+    cursor: text;
+    scrollbar-width: thin;
+    scrollbar-color: #3f3f46 transparent;
+  }
+  .term-body::-webkit-scrollbar { width: 4px; }
+  .term-body::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 2px; }
+  .term-body::-webkit-scrollbar-track { background: transparent; }
+  .term-body .prompt { color: #fbbf24; }
+  .term-body .hl { color: #7dd3fc; }
+  .term-body .err { color: #ef4444; }
+  .input-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .input-line input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #f4f4f5;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+    caret-color: #f4f4f5;
+  }
+`);
+
+export class LessTermDemo extends DsdElement {
+  static override styles = styles;
+
+  static override hydrateEvents: HydrateEventDescriptor[] = [
+    { selector: '.term-body', event: 'click', method: '_focusInput' },
+    { selector: 'input', event: 'keydown', method: '_onKey' },
+  ];
+
   private _abortController = new AbortController();
-  /** Escape HTML entities for safe text insertion */
+  private _cmdHistory: string[] = [];
+  private _historyIdx = -1;
+
   private static _escapeHtml(s: string): string {
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  static override styles = css`
-    :host {
-      display: block;
-    }
-    .term {
-      background: #09090b;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 0.5px solid #27272a;
-    }
-    .term-bar {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 10px 14px;
-      background: #18181b;
-      border-bottom: 0.5px solid #27272a;
-    }
-    .dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-    }
-    .dot.r {
-      background: #ef4444;
-    }
-    .dot.y {
-      background: #eab308;
-    }
-    .dot.g {
-      background: #22c55e;
-    }
-    .term-body {
-      padding: 16px;
-      font-family: "JetBrains Mono", "Fira Code", "SF Mono", Consolas, monospace;
-      font-size: 12px;
-      line-height: 1.9;
-      color: #a1a1aa;
-      max-height: 280px;
-      overflow-y: auto;
-      cursor: text;
-      scrollbar-width: thin;
-      scrollbar-color: #3f3f46 transparent;
-    }
-    .term-body::-webkit-scrollbar {
-      width: 4px;
-    }
-    .term-body::-webkit-scrollbar-thumb {
-      background: #3f3f46;
-      border-radius: 2px;
-    }
-    .term-body::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .term-body .prompt {
-      color: #fbbf24;
-    }
-    .term-body .hl {
-      color: #7dd3fc;
-    }
-    .term-body .err {
-      color: #ef4444;
-    }
-    .input-line {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 6px;
-    }
-    .input-line input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: #f4f4f5;
-      font-family: inherit;
-      font-size: inherit;
-      padding: 0;
-      caret-color: #f4f4f5;
-    }
-  `;
-
-  static hydrateEvents = [
-    { selector: '.term-body', event: 'click', method: '_focusInput' },
-    { selector: 'input', event: 'keydown', method: '_onKey' },
-  ];
-
-  private _cmdHistory: string[] = [];
-  private _historyIdx = -1;
-
-  override render() {
-    if (this._dsdHydrated) return nothing;
-    return html`
+  override render(): string {
+    if (this._dsdHydrated) return '';
+    return `
       <div class="term">
         <div class="term-bar">
           <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
@@ -128,34 +110,26 @@ export class LessTermDemo extends DsdLitElement {
     `;
   }
 
-  private _focusInput() {
+  private _focusInput(): void {
     this.shadowRoot?.querySelector<HTMLInputElement>('input')?.focus();
   }
 
-  private _addLine(htmlStr: string) {
+  private _addLine(htmlStr: string): void {
     const out = this.shadowRoot?.querySelector('.output');
     if (!out) return;
     const div = document.createElement('div');
-    // v0.14.7: Sanitize before innerHTML assignment to prevent XSS (C-06 fix).
-    // Only allow safe inline styling tags used by terminal output.
     div.innerHTML = this._sanitizeTermHtml(htmlStr);
     out.appendChild(div);
     const body = this.shadowRoot?.querySelector('.term-body');
     if (body) body.scrollTop = body.scrollHeight;
   }
 
-  /**
-   * Sanitize terminal HTML output — only allow <span> with style/class attributes.
-   * This prevents XSS from compromised API responses while preserving terminal formatting.
-   */
   private _sanitizeTermHtml(html: string): string {
     const temp = document.createElement('div');
     temp.innerHTML = html;
-    // Remove any non-span elements (script, iframe, img, etc.)
     const allowed = temp.querySelectorAll('span');
     const result = document.createElement('div');
     for (const span of allowed) {
-      // Only keep style and class attributes
       const clone = document.createElement('span');
       if (span.className) clone.className = span.className;
       const style = span.getAttribute('style');
@@ -163,7 +137,6 @@ export class LessTermDemo extends DsdLitElement {
       clone.textContent = span.textContent;
       result.appendChild(clone);
     }
-    // If no spans found, treat as plain text
     return result.innerHTML || LessTermDemo._escapeHtml(html);
   }
 
@@ -193,7 +166,7 @@ export class LessTermDemo extends DsdLitElement {
     ],
   };
 
-  private async _onKey(e: Event) {
+  private async _onKey(e: Event): Promise<void> {
     const ke = e as KeyboardEvent;
     const input = ke.target as HTMLInputElement;
 
@@ -227,7 +200,6 @@ export class LessTermDemo extends DsdLitElement {
       return;
     }
 
-    // Try local first, fall back to API
     const local = this._localCommands[cmd.toLowerCase()];
     if (local) {
       for (const line of local) this._addLine(line);
@@ -251,8 +223,8 @@ export class LessTermDemo extends DsdLitElement {
     }
   }
 
-  override disconnectedCallback() {
-    super.disconnectedCallback?.();
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
     this._abortController.abort();
   }
 }

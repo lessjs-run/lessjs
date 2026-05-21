@@ -1,9 +1,9 @@
-import { css } from 'lit';
-
 /**
  * LessJS Docs — Shared Page Styles
  *
  * v0.19.1 Phase 6 (ADR-0035 B1): Visual overhaul.
+ * v0.20.0 Ocean-Island: Pure CSS string — zero Lit dependency.
+ *
  * "精密·克制·有深度" — precise, restrained, with depth.
  *
  * Key changes from v0.19.0:
@@ -16,7 +16,7 @@ import { css } from 'lit';
  * - Tables: striped rows + cleaner borders
  * - Cards/sections: border-radius 6px + shadow
  */
-export const pageStyles = css`
+export const pageStyles = `
   :host {
     display: block;
   }
