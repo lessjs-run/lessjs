@@ -32,17 +32,56 @@ export interface StyleSheetLike {
 
 // â”€â”€ CSS Rule parser (lightweight, no DOM needed) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-const RULE_RE = /\s*([^{]+)\s*\{\s*([^}]*)\s*\}/g;
-
+/**
+ * Parse CSS into rule blocks, correctly handling nested {} in @media / @keyframes.
+ *
+ * Uses bracket-counting to extract top-level rules. This ensures that
+ * `.header-nav { display: none; }` inside `@media (max-width: 900px) { ... }`
+ * stays within the @media block and doesn't leak out as a standalone rule
+ * that overrides the desktop declaration.
+ */
 function parseRules(css: string): StyleSheetRule[] {
   const rules: StyleSheetRule[] = [];
-  let m: RegExpExecArray | null;
-  while ((m = RULE_RE.exec(css)) !== null) {
-    rules.push({ cssText: m[0].trim() });
+  let i = 0;
+  const len = css.length;
+
+  while (i < len) {
+    // Skip whitespace and comments
+    while (i < len && /\s/.test(css[i])) i++;
+    if (i >= len) break;
+
+    // Skip CSS comments
+    if (css[i] === '/' && css[i + 1] === '*') {
+      const end = css.indexOf('*/', i + 2);
+      if (end === -1) break;
+      i = end + 2;
+      continue;
+    }
+
+    // Find the opening brace for a selector or at-rule
+    const openBrace = css.indexOf('{', i);
+    if (openBrace === -1) break;
+
+    // Bracket-count to find matching closing brace
+    let depth = 0;
+    let j = openBrace;
+    while (j < len) {
+      if (css[j] === '{') depth++;
+      else if (css[j] === '}') {
+        depth--;
+        if (depth === 0) break;
+      }
+      j++;
+    }
+    if (depth !== 0) break; // Unmatched braces — stop
+
+    const ruleText = css.substring(i, j + 1).trim();
+    if (ruleText) rules.push({ cssText: ruleText });
+    i = j + 1;
   }
-  // Fallback: if no selector-block rules were found, treat the entire CSS
-  // as a single rule. This handles bare declarations (e.g. Open Props
-  // custom properties like `--gray-0: #f8f9fa;`) that don't use selectors.
+
+  // Fallback: if no rules found, treat entire CSS as a single rule
+  // (handles bare declarations like `--gray-0: #f8f9fa;`)
   if (rules.length === 0 && css.trim()) {
     rules.push({ cssText: css.trim() });
   }
