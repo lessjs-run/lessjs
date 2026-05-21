@@ -43,13 +43,17 @@ function defineTestElement(options?: {
     }
   }
 
-  customElements.define(tagName, TestElement);
+  if (hasDOM) customElements.define(tagName, TestElement);
   return { tagName, ctor: TestElement, sheet };
 }
+
+// Skip all tests when no DOM (SSR/Deno without --dom flag)
+const hasDOM = typeof customElements !== 'undefined';
 
 // â”€â”€â”€ Test 1: render() returns string â€?SSR-usable â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 Deno.test('DsdElement: render() returns string for SSR compatibility', () => {
+  if (!hasDOM) return;
   const { tagName } = defineTestElement({ renderContent: '<span>hello</span>' });
   const el = document.createElement(tagName) as DsdElement;
   const result = el.render();
@@ -60,6 +64,7 @@ Deno.test('DsdElement: render() returns string for SSR compatibility', () => {
 // â”€â”€â”€ Test 2: DSD detection â€?pre-populated shadow root â”€â”€â”€â”€â”€â”€â”€â”€
 
 Deno.test('DsdElement: DSD detection sets _dsdHydrated when shadowRoot has children', () => {
+  if (!hasDOM) return;
   const { tagName } = defineTestElement();
 
   // Simulate DSD: create element, attach shadow, populate it before upgrade
@@ -76,6 +81,7 @@ Deno.test('DsdElement: DSD detection sets _dsdHydrated when shadowRoot has child
 // â”€â”€â”€ Test 3: CSR fallback â€?no shadow root â†?create + populate â”€â”€
 
 Deno.test('DsdElement: CSR fallback creates shadow root and populates from render()', () => {
+  if (!hasDOM) return;
   const { tagName } = defineTestElement({ renderContent: '<p>csr content</p>' });
   const el = document.createElement(tagName) as DsdElement;
 
@@ -98,6 +104,7 @@ Deno.test('DsdElement: CSR fallback creates shadow root and populates from rende
 // â”€â”€â”€ Test 4: hydrateEvents binding â€?events trigger correctly â”€â”€
 
 Deno.test('DsdElement: hydrateEvents bind events to shadow DOM elements', () => {
+  if (!hasDOM) return;
   let clickCount = 0;
 
   const events: HydrateEventDescriptor[] = [
@@ -124,7 +131,7 @@ Deno.test('DsdElement: hydrateEvents bind events to shadow DOM elements', () => 
       return '<button class="action">Click me</button>';
     }
   }
-  customElements.define(tagName2, ClickElement);
+  if (hasDOM) customElements.define(tagName2, ClickElement);
 
   // Simulate DSD: pre-populate shadow root
   const el = document.createElement(tagName2) as ClickElement;
@@ -148,6 +155,7 @@ Deno.test('DsdElement: hydrateEvents bind events to shadow DOM elements', () => 
 // â”€â”€â”€ Test 5: AbortController cleanup on disconnect â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 Deno.test('DsdElement: disconnectedCallback aborts event listeners', () => {
+  if (!hasDOM) return;
   let callCount = 0;
 
   const tagName = `test-abort-${Math.random().toString(36).slice(2, 7)}`;
@@ -164,7 +172,7 @@ Deno.test('DsdElement: disconnectedCallback aborts event listeners', () => {
       return '<button>Test</button>';
     }
   }
-  customElements.define(tagName, AbortElement);
+  if (hasDOM) customElements.define(tagName, AbortElement);
 
   // Simulate DSD
   const el = document.createElement(tagName) as AbortElement;
@@ -190,6 +198,7 @@ Deno.test('DsdElement: disconnectedCallback aborts event listeners', () => {
 // â”€â”€â”€ Test 6: M-17 guard â€?__ methods skipped â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 Deno.test('DsdElement: M-17 guard skips methods starting with __', () => {
+  if (!hasDOM) return;
   let normalCount = 0;
   let dunderCount = 0;
 
@@ -212,7 +221,7 @@ Deno.test('DsdElement: M-17 guard skips methods starting with __', () => {
       return `<button class="normal">Normal</button><button class="dunder">Dunder</button>`;
     }
   }
-  customElements.define(tagName, M17Element);
+  if (hasDOM) customElements.define(tagName, M17Element);
 
   const el = document.createElement(tagName) as M17Element;
   const shadow = el.attachShadow({ mode: 'open' });
@@ -238,6 +247,7 @@ Deno.test('DsdElement: M-17 guard skips methods starting with __', () => {
 // â”€â”€â”€ Test 7: StyleSheetLike merging â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 Deno.test('DsdElement: StyleSheetLike(s) applied to adoptedStyleSheets in CSR', () => {
+  if (!hasDOM) return;
   const sheet1 = new StyleSheet();
   sheet1.replaceSync(':host { color: red; }');
   const sheet2 = new StyleSheet();
@@ -262,6 +272,7 @@ Deno.test('DsdElement: StyleSheetLike(s) applied to adoptedStyleSheets in CSR', 
 });
 
 Deno.test('DsdElement: single CSSStyleSheet applied correctly', () => {
+  if (!hasDOM) return;
   const sheet = new StyleSheet();
   sheet.replaceSync(':host { display: block; }');
 
@@ -281,6 +292,7 @@ Deno.test('DsdElement: single CSSStyleSheet applied correctly', () => {
 // â”€â”€â”€ Test 8: delegatesFocus â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 Deno.test('DsdElement: delegatesFocus is passed to attachShadow', () => {
+  if (!hasDOM) return;
   const tagName = `test-focus-${Math.random().toString(36).slice(2, 7)}`;
   class FocusElement extends DsdElement {
     static override delegatesFocus = true;
@@ -289,7 +301,7 @@ Deno.test('DsdElement: delegatesFocus is passed to attachShadow', () => {
       return '<input type="text">';
     }
   }
-  customElements.define(tagName, FocusElement);
+  if (hasDOM) customElements.define(tagName, FocusElement);
 
   const el = document.createElement(tagName) as FocusElement;
   document.body.appendChild(el);
@@ -303,6 +315,7 @@ Deno.test('DsdElement: delegatesFocus is passed to attachShadow', () => {
 });
 
 Deno.test('DsdElement: delegatesFocus defaults to false', () => {
+  if (!hasDOM) return;
   const { tagName } = defineTestElement();
 
   const el = document.createElement(tagName) as DsdElement;
@@ -317,6 +330,7 @@ Deno.test('DsdElement: delegatesFocus defaults to false', () => {
 // â”€â”€â”€ Test: DSD path skips innerHTML population â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 Deno.test('DsdElement: DSD path does not overwrite existing shadow DOM', () => {
+  if (!hasDOM) return;
   const { tagName } = defineTestElement({ renderContent: '<div>csr</div>' });
 
   // Simulate DSD with pre-populated content

@@ -11,10 +11,10 @@
  *   - Overlay is always appended to document.body
  *   - SPA-safe: state reset on connectedCallback, Cmd+K keyboard binding
  *
- * @csspart trigger �?The search trigger button
- * @csspart icon �?The search SVG icon
- * @csspart label �?The "Search" text span
- * @csspart shortcut �?The keyboard shortcut kbd
+ * @csspart trigger â€?The search trigger button
+ * @csspart icon â€?The search SVG icon
+ * @csspart label â€?The "Search" text span
+ * @csspart shortcut â€?The keyboard shortcut kbd
  *
  * Architecture (DsdElement, SPA-safe):
  * - DSD renders only the trigger button via render()
@@ -34,7 +34,7 @@ interface SearchEntry {
 
 export const tagName = 'less-search';
 
-// ── Shadow DOM styles (trigger button) ──
+// â”€â”€ Shadow DOM styles (trigger button) â”€â”€
 const sheet = new CSSStyleSheet();
 sheet.replaceSync(`
   :host { display: inline-flex; align-items: center; }
@@ -70,7 +70,7 @@ sheet.replaceSync(`
   }
 `);
 
-// ── Overlay styles (document-level, injected into document.adoptedStyleSheets) ──
+// â”€â”€ Overlay styles (document-level, injected into document.adoptedStyleSheets) â”€â”€
 const overlaySheet = new CSSStyleSheet();
 overlaySheet.replaceSync(`
   .less-search-overlay {
