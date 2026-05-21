@@ -1067,7 +1067,7 @@ Deno.test('less-layout: custom headerNav renders custom links', async () => {
   instance.setAttribute('header-nav', JSON.stringify([
     { href: '/custom', label: 'Custom Link' },
     { href: 'https://example.com', label: 'External' },
-  ];
+  ]));
   const result = instance.render();
   assertExists(result);
 });
@@ -1077,7 +1077,7 @@ Deno.test('less-layout: custom navItems override default nav', async () => {
   const instance = new LessLayout();
   instance.setAttribute('nav-items', JSON.stringify([
     { section: 'Custom', items: [{ path: '/custom', label: 'Custom Page' }] },
-  ];
+  ]));
   const result = instance.render();
   assertExists(result);
 });

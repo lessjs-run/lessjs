@@ -47,6 +47,20 @@
 import type { HydrateEventDescriptor } from './types.js';
 
 /**
+ * Server-safe base class fallback when HTMLElement is unavailable
+ * (Node.js / Deno server environments without DOM globals).
+ *
+ * In SSR/build contexts, DsdElement is only used for its render(): string
+ * method and static property access — the class is never instantiated as
+ * a live Custom Element. This stub ensures the class declaration itself
+ * does not throw at module evaluation time.
+ */
+const _HTMLElement: typeof HTMLElement =
+  typeof HTMLElement !== 'undefined'
+    ? HTMLElement
+    : (class {} as unknown as typeof HTMLElement);
+
+/**
  * Zero-dependency Custom Element base class for DSD rendering.
  *
  * Provides DSD detection, CSR fallback, event hydration, and style management
@@ -54,7 +68,7 @@ import type { HydrateEventDescriptor } from './types.js';
  *
  * Subclasses MUST override `render(): string`.
  */
-export class DsdElement extends HTMLElement {
+export class DsdElement extends _HTMLElement {
   /**
    * Component stylesheets applied via adoptedStyleSheets.
    * Supports single CSSStyleSheet or an array of them.

@@ -145,13 +145,16 @@ node_modules/
 }
 `,
     'vite.config.ts': `import { lessjs } from '@lessjs/app';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { defineConfig } from 'vite';
 
-// DRY: All color token values come from @lessjs/ui/open-props-tokens.ts
-// (single source of truth). Do NOT hand-write color values here.
-let rootCSS = ''; try { for (const r of openPropsTokenSheet.cssRules) { rootCSS += r.cssText + '\n'; } } catch {}
-const colorTokensStyle = '<style>' + rootCSS + 'body{margin:0;background:var(--gray-1);color:var(--gray-9);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>';
+// Design tokens (from Open Props)
+const colorTokensStyle =
+  '<style>' +
+  '--gray-0:#f8f9fa;--gray-1:#f1f3f5;--gray-3:#dee2e6;--gray-5:#adb5bd;--gray-7:#495057;--gray-9:#212529;' +
+  '--brand:#534ab7;--size-1:4px;--size-2:8px;--size-3:12px;--size-4:16px;--border-size-1:1px;--radius-2:8px;' +
+  '--font-sans:system-ui,-apple-system,sans-serif;--font-size-0:0.875rem;--font-weight-5:500;' +
+  '--shadow-1:0 1px 3px 0 rgb(0 0 0 / 0.1);' +
+  'body{margin:0;background:var(--gray-1);color:var(--gray-9);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>';
 
 const lessUiAliases = {
   '@lessjs/ui': 'https://jsr.io/@lessjs/ui/${v.ui}/src/index.ts',
