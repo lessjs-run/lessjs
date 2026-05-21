@@ -129,5 +129,5 @@ export class LessCallout extends DsdElement {
 
 // Guard: idempotent across SSR paths
 if (!customElements.get(tagName)) {
-  customElements.define(tagName, LessCallout);
+  if (typeof customElements !== "undefined") customElements.define(tagName, LessCallout);
 }

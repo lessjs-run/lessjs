@@ -116,5 +116,5 @@ export class LessStepCard extends DsdElement {
 
 // Guard: idempotent across SSR paths
 if (!customElements.get(tagName)) {
-  customElements.define(tagName, LessStepCard);
+  if (typeof customElements !== "undefined") customElements.define(tagName, LessStepCard);
 }

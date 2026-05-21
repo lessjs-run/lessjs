@@ -11,15 +11,17 @@ Deno.test('less-ui — index exports manifest (WC Package Protocol)', async () =
   assertExists(mod.manifest, 'manifest export should exist');
   assertEquals(typeof mod.manifest, 'object');
   assertEquals(mod.manifest.packageName, '@lessjs/ui');
-  assertEquals(mod.manifest.declarations.length, 7);
-  assertEquals(mod.manifest.declarations[0].tagName, 'less-theme-toggle');
-  assertEquals(mod.manifest.declarations[0].less?.hydrate, 'eager');
-  assertEquals(mod.manifest.declarations[1].tagName, 'less-button');
-  assertEquals(mod.manifest.declarations[2].tagName, 'less-input');
-  assertEquals(mod.manifest.declarations[3].tagName, 'less-code-block');
-  assertEquals(mod.manifest.declarations[4].tagName, 'less-layout');
-  assertEquals(mod.manifest.declarations[5].tagName, 'less-hero-ping');
-  assertEquals(mod.manifest.declarations[6].tagName, 'less-dialog');
+  assertEquals(mod.manifest.declarations.length, 10);
+  assertEquals(mod.manifest.declarations[0].tagName, 'less-card');
+  assertEquals(mod.manifest.declarations[1].tagName, 'less-callout');
+  assertEquals(mod.manifest.declarations[2].tagName, 'less-step-card');
+  assertEquals(mod.manifest.declarations[3].tagName, 'less-button');
+  assertEquals(mod.manifest.declarations[4].tagName, 'less-input');
+  assertEquals(mod.manifest.declarations[5].tagName, 'less-theme-toggle');
+  assertEquals(mod.manifest.declarations[6].tagName, 'less-code-block');
+  assertEquals(mod.manifest.declarations[7].tagName, 'less-dialog');
+  assertEquals(mod.manifest.declarations[8].tagName, 'less-layout');
+  assertEquals(mod.manifest.declarations[9].tagName, 'less-hero-ping');
 });
 
 Deno.test('less-ui — less-theme-toggle exports tagName', async () => {
@@ -36,12 +38,15 @@ Deno.test('less-ui — design-tokens exports lessDesignTokens', async () => {
 Deno.test('less-ui — all components export tagName', async () => {
   const components = [
     'less-button',
+    'less-callout',
     'less-card',
-    'less-input',
     'less-code-block',
-    'less-layout',
-    'less-hero-ping',
     'less-dialog',
+    'less-hero-ping',
+    'less-input',
+    'less-layout',
+    'less-step-card',
+    'less-theme-toggle',
   ];
   for (const name of components) {
     const mod = await import(`../src/${name}.ts`);

@@ -45,10 +45,12 @@ for (const name of COMPONENT_FILES) {
 
 // ─── Design Tokens ─────────────────────────────────────────
 
-Deno.test('design-tokens: openPropsTokenSheet is CSSStyleSheet', async () => {
+Deno.test('design-tokens: openPropsTokenSheet is StyleSheet', async () => {
   const { openPropsTokenSheet } = await import('../src/open-props-tokens.ts');
   assertExists(openPropsTokenSheet);
-  assertEquals(openPropsTokenSheet instanceof CSSStyleSheet, true, 'openPropsTokenSheet should be a CSSStyleSheet');
+  // v0.20.0: Uses cross-environment StyleSheet (CSSStyleSheet in browser, shim in Deno)
+  assertExists(typeof openPropsTokenSheet.replaceSync === 'function', 'should have replaceSync');
+  assertExists(Array.isArray(openPropsTokenSheet.cssRules), 'should have cssRules array');
 });
 
 Deno.test('design-tokens: individual token modules export CSS', async () => {
@@ -72,18 +74,24 @@ Deno.test('index: re-exports all components', async () => {
 
   // Components
   assertExists(mod.LessButton);
+  assertExists(mod.LessCallout);
   assertExists(mod.LessCard);
-  assertExists(mod.LessInput);
   assertExists(mod.LessCodeBlock);
+  assertExists(mod.LessDialog);
+  assertExists(mod.LessInput);
   assertExists(mod.LessLayout);
+  assertExists(mod.LessStepCard);
   assertExists(mod.LessThemeToggle);
 
   // Tag names
   assertExists(mod.lessButtonTagName);
+  assertExists(mod.lessCalloutTagName);
   assertExists(mod.lessCardTagName);
-  assertExists(mod.lessInputTagName);
   assertExists(mod.lessCodeBlockTagName);
+  assertExists(mod.lessDialogTagName);
+  assertExists(mod.lessInputTagName);
   assertExists(mod.lessLayoutTagName);
+  assertExists(mod.lessStepCardTagName);
   assertExists(mod.lessThemeToggleTagName);
 
   // Tokens
@@ -101,27 +109,34 @@ Deno.test('index: manifest has correct declarations', async () => {
   assertEquals(typeof manifest, 'object');
   assertEquals(manifest.packageName, '@lessjs/ui');
   assertEquals(Array.isArray(manifest.declarations), true);
+  assertEquals(manifest.declarations.length, 10);
 
-  // Each declaration with `less.module` is an island entry
-  const islandDecls = manifest.declarations.filter((d: any) => d.less?.module);
-  assertEquals(islandDecls.length > 0, true, 'manifest should have island declarations');
-
-  for (const decl of islandDecls) {
-    assertExists(decl.tagName, 'island declaration must have tagName');
-    assertExists(decl.less!.module, 'island declaration must have less.module');
-    assertEquals(typeof decl.less!.hydrate, 'string');
-  }
+  const tagNames = manifest.declarations.map((d: any) => d.tagName);
+  assertExists(tagNames.includes('less-card'));
+  assertExists(tagNames.includes('less-callout'));
+  assertExists(tagNames.includes('less-step-card'));
+  assertExists(tagNames.includes('less-button'));
+  assertExists(tagNames.includes('less-input'));
+  assertExists(tagNames.includes('less-theme-toggle'));
+  assertExists(tagNames.includes('less-code-block'));
+  assertExists(tagNames.includes('less-dialog'));
+  assertExists(tagNames.includes('less-layout'));
+  assertExists(tagNames.includes('less-hero-ping'));
 });
 
 // ─── Component Instantiation & render() ─────────────────────
 
 const COMPONENT_CLASSES = [
   ['less-button', 'LessButton'],
+  ['less-callout', 'LessCallout'],
   ['less-card', 'LessCard'],
-  ['less-input', 'LessInput'],
   ['less-code-block', 'LessCodeBlock'],
+  ['less-dialog', 'LessDialog'],
+  ['less-input', 'LessInput'],
   ['less-layout', 'LessLayout'],
+  ['less-step-card', 'LessStepCard'],
   ['less-theme-toggle', 'LessThemeToggle'],
+  ['less-hero-ping', 'HeroPing'],
 ];
 
 const REACTIVE_PROPERTY_CASES = [

@@ -253,4 +253,4 @@ export class LessInput extends DsdElement {
 }
 
 // Guard: idempotent across SSR paths
-if (!customElements.get(tagName)) customElements.define(tagName, LessInput);
+if (typeof customElements !== "undefined" && !customElements.get(tagName)) customElements.define(tagName, LessInput);
