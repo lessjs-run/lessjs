@@ -27,7 +27,7 @@
  * ```
  */
 
-import { DsdElement, StyleSheet, type HydrateEventDescriptor } from '@lessjs/core';
+import { DsdElement, type HydrateEventDescriptor, StyleSheet } from '@lessjs/core';
 
 export const tagName = 'less-input';
 
@@ -106,7 +106,16 @@ export class LessInput extends DsdElement {
   static override styles = sheet;
   static override formAssociated = true;
   static override delegatesFocus = true;
-  static override observedAttributes = ['type', 'placeholder', 'label', 'value', 'name', 'disabled', 'required', 'error'];
+  static override observedAttributes = [
+    'type',
+    'placeholder',
+    'label',
+    'value',
+    'name',
+    'disabled',
+    'required',
+    'error',
+  ];
 
   static override hydrateEvents: HydrateEventDescriptor[] = [
     { selector: 'input, textarea, select', event: 'input', method: '_handleInput' },
@@ -114,7 +123,6 @@ export class LessInput extends DsdElement {
     { selector: 'input, textarea, select', event: 'focus', method: '_handleFocus' },
     { selector: 'input, textarea, select', event: 'blur', method: '_handleBlur' },
   ];
-
 
   override render(): string {
     const type = this.getAttribute('type') || 'text';
@@ -132,7 +140,9 @@ export class LessInput extends DsdElement {
       : '';
 
     const errorHtml = error
-      ? `<small id="input-error" role="alert" class="error-message" part="error">${this._esc(error)}</small>`
+      ? `<small id="input-error" role="alert" class="error-message" part="error">${
+        this._esc(error)
+      }</small>`
       : '';
 
     const ariaAttrs = error
@@ -173,7 +183,9 @@ export class LessInput extends DsdElement {
   }
 
   private _syncDOM(): void {
-    const input = this.shadowRoot?.querySelector('input, textarea, select') as HTMLInputElement | null;
+    const input = this.shadowRoot?.querySelector('input, textarea, select') as
+      | HTMLInputElement
+      | null;
     if (!input) return;
     input.disabled = this.hasAttribute('disabled');
     const val = this.getAttribute('value');
@@ -202,20 +214,24 @@ export class LessInput extends DsdElement {
     const input = e.target as HTMLInputElement;
     this.setAttribute('value', input.value);
     this._internals?.setFormValue(input.value);
-    this.dispatchEvent(new CustomEvent('less-input', {
-      detail: { value: input.value },
-      bubbles: true,
-      composed: false,
-    }));
+    this.dispatchEvent(
+      new CustomEvent('less-input', {
+        detail: { value: input.value },
+        bubbles: true,
+        composed: false,
+      }),
+    );
   }
 
   private _handleChange(e: Event): void {
     const input = e.target as HTMLInputElement;
-    this.dispatchEvent(new CustomEvent('less-change', {
-      detail: { value: input.value },
-      bubbles: true,
-      composed: false,
-    }));
+    this.dispatchEvent(
+      new CustomEvent('less-change', {
+        detail: { value: input.value },
+        bubbles: true,
+        composed: false,
+      }),
+    );
   }
 
   private _handleFocus(): void {
@@ -248,9 +264,16 @@ export class LessInput extends DsdElement {
   }
 
   private _escAttr(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(
+      />/g,
+      '&gt;',
+    );
   }
 }
 
+export default LessInput;
+
 // Guard: idempotent across SSR paths
-if (typeof customElements !== 'undefined' && !customElements.get(tagName)) { customElements.define(tagName, LessInput); }
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
+  customElements.define(tagName, LessInput);
+}

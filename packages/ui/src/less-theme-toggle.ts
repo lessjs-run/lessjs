@@ -19,7 +19,7 @@
  * ```
  */
 
-import { DsdElement, StyleSheet, type HydrateEventDescriptor } from '@lessjs/core';
+import { DsdElement, type HydrateEventDescriptor, StyleSheet } from '@lessjs/core';
 
 export const tagName = 'less-theme-toggle';
 
@@ -100,8 +100,13 @@ export class LessThemeToggle extends DsdElement {
       let resolved = false;
       try {
         const saved = localStorage.getItem('less-theme');
-        if (saved === 'light') { this._isLight = true; resolved = true; }
-        else if (saved === 'dark') { this._isLight = false; resolved = true; }
+        if (saved === 'light') {
+          this._isLight = true;
+          resolved = true;
+        } else if (saved === 'dark') {
+          this._isLight = false;
+          resolved = true;
+        }
       } catch { /* silent */ }
       if (!resolved && typeof globalThis !== 'undefined' && globalThis.matchMedia) {
         this._isLight = globalThis.matchMedia('(prefers-color-scheme: light)').matches;
@@ -168,5 +173,9 @@ export class LessThemeToggle extends DsdElement {
   }
 }
 
+export default LessThemeToggle;
+
 // Guard: idempotent across SSR paths
-if (typeof customElements !== 'undefined' && !customElements.get(tagName)) { customElements.define(tagName, LessThemeToggle); }
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
+  customElements.define(tagName, LessThemeToggle);
+}

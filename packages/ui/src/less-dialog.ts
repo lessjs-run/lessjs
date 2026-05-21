@@ -22,7 +22,7 @@
  * ```
  */
 
-import { DsdElement, StyleSheet, type HydrateEventDescriptor } from '@lessjs/core';
+import { DsdElement, type HydrateEventDescriptor, StyleSheet } from '@lessjs/core';
 
 export const tagName = 'less-dialog';
 
@@ -245,9 +245,16 @@ export class LessDialog extends DsdElement {
   }
 
   private _escAttr(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(
+      />/g,
+      '&gt;',
+    );
   }
 }
 
+export default LessDialog;
+
 // Guard: idempotent across SSR paths
-if (typeof customElements !== 'undefined' && !customElements.get(tagName)) { customElements.define(tagName, LessDialog); }
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
+  customElements.define(tagName, LessDialog);
+}

@@ -22,7 +22,7 @@
  * ```
  */
 
-import { DsdElement, StyleSheet, type HydrateEventDescriptor } from '@lessjs/core';
+import { DsdElement, type HydrateEventDescriptor, StyleSheet } from '@lessjs/core';
 
 export const tagName = 'less-code-block';
 
@@ -152,8 +152,14 @@ export class LessCodeBlock extends DsdElement {
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    if (this._copyTimer !== undefined) { clearTimeout(this._copyTimer); this._copyTimer = undefined; }
-    if (this._highlightTimer !== undefined) { clearTimeout(this._highlightTimer); this._highlightTimer = undefined; }
+    if (this._copyTimer !== undefined) {
+      clearTimeout(this._copyTimer);
+      this._copyTimer = undefined;
+    }
+    if (this._highlightTimer !== undefined) {
+      clearTimeout(this._highlightTimer);
+      this._highlightTimer = undefined;
+    }
   }
 
   private _tryHighlight(): void {
@@ -165,7 +171,8 @@ export class LessCodeBlock extends DsdElement {
       return;
     }
 
-    const pre = this.querySelector(':scope > pre') || Array.from(this.children).find(c => (c as Element).tagName === 'PRE');
+    const pre = this.querySelector(':scope > pre') ||
+      Array.from(this.children).find((c) => (c as Element).tagName === 'PRE');
     if (!pre) return;
     const codeEl = pre.querySelector('code');
     if (!codeEl) return;
@@ -173,11 +180,16 @@ export class LessCodeBlock extends DsdElement {
     let lang = 'typescript';
     const classes = codeEl.classList;
     for (let i = 0; i < classes.length; i++) {
-      if (classes[i].startsWith('language-')) { lang = classes[i].slice(9); break; }
+      if (classes[i].startsWith('language-')) {
+        lang = classes[i].slice(9);
+        break;
+      }
     }
 
     const raw = codeEl.textContent || '';
-    const grammar = (p as Record<string, Record<string, unknown>>).languages?.[lang] as Record<string, unknown> | undefined;
+    const grammar = (p as Record<string, Record<string, unknown>>).languages?.[lang] as
+      | Record<string, unknown>
+      | undefined;
     if (!grammar) {
       if (this._highlightRetries++ < LessCodeBlock.MAX_HIGHLIGHT_RETRIES) {
         this._highlightTimer = globalThis.setTimeout(() => this._tryHighlight(), 100);
@@ -185,7 +197,12 @@ export class LessCodeBlock extends DsdElement {
       return;
     }
     this._highlightRetries = 0;
-    const highlightedHtml = (p as { highlight: (code: string, grammar: unknown, lang: string) => string }).highlight(raw, grammar, lang);
+    const highlightedHtml =
+      (p as { highlight: (code: string, grammar: unknown, lang: string) => string }).highlight(
+        raw,
+        grammar,
+        lang,
+      );
     this._injectHighlighted(highlightedHtml);
   }
 
@@ -255,5 +272,9 @@ export class LessCodeBlock extends DsdElement {
   }
 }
 
+export default LessCodeBlock;
+
 // Guard: idempotent across SSR paths
-if (typeof customElements !== 'undefined' && !customElements.get(tagName)) { customElements.define(tagName, LessCodeBlock); }
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
+  customElements.define(tagName, LessCodeBlock);
+}

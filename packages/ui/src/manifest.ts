@@ -33,7 +33,12 @@ export const manifest: LessPackageManifest = {
       superclassName: 'DsdElement',
       description: 'Card container with header and footer slots',
       attributes: [
-        { name: 'variant', type: 'string', default: '"default"', description: 'Card variant (default, elevated, borderless)' },
+        {
+          name: 'variant',
+          type: 'string',
+          default: '"default"',
+          description: 'Card variant (default, elevated, borderless)',
+        },
       ],
       slots: [
         { name: '', description: 'Default slot for card content' },
@@ -142,7 +147,11 @@ export const manifest: LessPackageManifest = {
         { name: 'disabled', type: 'boolean', description: 'Disabled state' },
       ],
       events: [
-        { name: 'less-input', type: 'CustomEvent<{ value: string }>', description: 'Fired on input change' },
+        {
+          name: 'less-input',
+          type: 'CustomEvent<{ value: string }>',
+          description: 'Fired on input change',
+        },
       ],
       cssParts: [
         { name: 'wrapper', description: 'The outer wrapper div' },
@@ -206,7 +215,12 @@ export const manifest: LessPackageManifest = {
       superclassName: 'DsdElement',
       description: 'Modal dialog component using native <dialog>',
       attributes: [
-        { name: 'open', type: 'boolean', default: 'false', description: 'Whether the dialog is open' },
+        {
+          name: 'open',
+          type: 'boolean',
+          default: 'false',
+          description: 'Whether the dialog is open',
+        },
         { name: 'label', type: 'string', description: 'Dialog heading' },
       ],
       events: [
@@ -289,15 +303,55 @@ export const manifest: LessPackageManifest = {
     },
   ],
   modules: [
-    { path: './less-button.js', exports: [{ name: 'LessButton', path: './less-button.js' }], declarations: ['less-button'] },
-    { path: './less-card.js', exports: [{ name: 'LessCard', path: './less-card.js' }], declarations: ['less-card'] },
-    { path: './less-callout.js', exports: [{ name: 'LessCallout', path: './less-callout.js' }], declarations: ['less-callout'] },
-    { path: './less-step-card.js', exports: [{ name: 'LessStepCard', path: './less-step-card.js' }], declarations: ['less-step-card'] },
-    { path: './less-code-block.js', exports: [{ name: 'LessCodeBlock', path: './less-code-block.js' }], declarations: ['less-code-block'] },
-    { path: './less-dialog.js', exports: [{ name: 'LessDialog', path: './less-dialog.js' }], declarations: ['less-dialog'] },
-    { path: './less-hero-ping.js', exports: [{ name: 'LessHeroPing', path: './less-hero-ping.js' }], declarations: ['less-hero-ping'] },
-    { path: './less-input.js', exports: [{ name: 'LessInput', path: './less-input.js' }], declarations: ['less-input'] },
-    { path: './less-layout.js', exports: [{ name: 'LessLayout', path: './less-layout.js' }], declarations: ['less-layout'] },
-    { path: './less-theme-toggle.js', exports: [{ name: 'LessThemeToggle', path: './less-theme-toggle.js' }], declarations: ['less-theme-toggle'] },
+    {
+      path: './less-button.js',
+      exports: [{ name: 'LessButton', path: './less-button.js' }],
+      declarations: ['less-button'],
+    },
+    {
+      path: './less-card.js',
+      exports: [{ name: 'LessCard', path: './less-card.js' }],
+      declarations: ['less-card'],
+    },
+    {
+      path: './less-callout.js',
+      exports: [{ name: 'LessCallout', path: './less-callout.js' }],
+      declarations: ['less-callout'],
+    },
+    {
+      path: './less-step-card.js',
+      exports: [{ name: 'LessStepCard', path: './less-step-card.js' }],
+      declarations: ['less-step-card'],
+    },
+    {
+      path: './less-code-block.js',
+      exports: [{ name: 'LessCodeBlock', path: './less-code-block.js' }],
+      declarations: ['less-code-block'],
+    },
+    {
+      path: './less-dialog.js',
+      exports: [{ name: 'LessDialog', path: './less-dialog.js' }],
+      declarations: ['less-dialog'],
+    },
+    {
+      path: './less-hero-ping.js',
+      exports: [{ name: 'LessHeroPing', path: './less-hero-ping.js' }],
+      declarations: ['less-hero-ping'],
+    },
+    {
+      path: './less-input.js',
+      exports: [{ name: 'LessInput', path: './less-input.js' }],
+      declarations: ['less-input'],
+    },
+    {
+      path: './less-layout.js',
+      exports: [{ name: 'LessLayout', path: './less-layout.js' }],
+      declarations: ['less-layout'],
+    },
+    {
+      path: './less-theme-toggle.js',
+      exports: [{ name: 'LessThemeToggle', path: './less-theme-toggle.js' }],
+      declarations: ['less-theme-toggle'],
+    },
   ],
 };

@@ -19,7 +19,7 @@
  * ```
  */
 
-import { DsdElement, StyleSheet, type HydrateEventDescriptor } from '@lessjs/core';
+import { DsdElement, type HydrateEventDescriptor, StyleSheet } from '@lessjs/core';
 
 export const tagName = 'less-button';
 
@@ -138,7 +138,6 @@ export class LessButton extends DsdElement {
     { selector: '.btn', event: 'click', method: '_handleClick' },
   ];
 
-
   override render(): string {
     const v = this.getAttribute('variant') || 'default';
     const s = this.getAttribute('size') || 'md';
@@ -190,7 +189,8 @@ export class LessButton extends DsdElement {
 
   private _reRender(): void {
     if (!this.shadowRoot) return;
-    const slotContent = this.shadowRoot.querySelector('slot')?.assignedNodes({ flatten: true }) || [];
+    const slotContent = this.shadowRoot.querySelector('slot')?.assignedNodes({ flatten: true }) ||
+      [];
     this.shadowRoot.innerHTML = this.render();
     this._hydrateEvents();
     const newSlot = this.shadowRoot.querySelector('slot');
@@ -215,9 +215,16 @@ export class LessButton extends DsdElement {
   }
 
   private _escAttr(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(
+      />/g,
+      '&gt;',
+    );
   }
 }
 
+export default LessButton;
+
 // Guard: idempotent across SSR paths
-if (typeof customElements !== 'undefined' && !customElements.get(tagName)) customElements.define(tagName, LessButton);
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
+  customElements.define(tagName, LessButton);
+}

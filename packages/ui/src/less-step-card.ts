@@ -89,7 +89,13 @@ export class LessStepCard extends DsdElement {
         <span class="step-number" part="indicator">${step}</span>
         <span class="step-label" part="title">${this._esc(label)}</span>
       </div>
-      ${description ? `<p part="description" style="margin:0 0 10px;color:var(--gray-7);font-size:0.875rem;">${this._esc(description)}</p>` : ''}
+      ${
+      description
+        ? `<p part="description" style="margin:0 0 10px;color:var(--gray-7);font-size:0.875rem;">${
+          this._esc(description)
+        }</p>`
+        : ''
+    }
       <div class="step-body" part="content">
         <slot></slot>
       </div>
@@ -113,6 +119,8 @@ export class LessStepCard extends DsdElement {
     return div.innerHTML;
   }
 }
+
+export default LessStepCard;
 
 // Guard: idempotent across SSR paths
 if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {

@@ -27,7 +27,7 @@
  * ```
  */
 
-import { DsdElement, StyleSheet, type HydrateEventDescriptor } from '@lessjs/core';
+import { DsdElement, type HydrateEventDescriptor, StyleSheet } from '@lessjs/core';
 import { navigate, onNavigate } from '@lessjs/core/navigation';
 import './less-theme-toggle.js';
 
@@ -477,7 +477,17 @@ sheet.replaceSync(`
 
 export class LessLayout extends DsdElement {
   static override styles = sheet;
-  static override observedAttributes = ['current-path', 'nav-items', 'header-nav', 'logo-text', 'logo-sub', 'github-url', 'edit-url', 'locale', 'locales'];
+  static override observedAttributes = [
+    'current-path',
+    'nav-items',
+    'header-nav',
+    'logo-text',
+    'logo-sub',
+    'github-url',
+    'edit-url',
+    'locale',
+    'locales',
+  ];
 
   static override hydrateEvents: HydrateEventDescriptor[] = [
     { selector: 'summary.mobile-menu-btn', event: 'click', method: '_toggleMenu' },
@@ -507,21 +517,27 @@ export class LessLayout extends DsdElement {
     try {
       const raw = this.getAttribute('nav-items');
       return raw ? JSON.parse(raw) : [];
-    } catch { return []; }
+    } catch {
+      return [];
+    }
   }
 
   private _headerNav(): HeaderNavLink[] {
     try {
       const raw = this.getAttribute('header-nav');
       return raw ? JSON.parse(raw) : [];
-    } catch { return []; }
+    } catch {
+      return [];
+    }
   }
 
   private _locales(): string[] {
     try {
       const raw = this.getAttribute('locales');
       return raw ? JSON.parse(raw) : ['en'];
-    } catch { return ['en']; }
+    } catch {
+      return ['en'];
+    }
   }
 
   private _locale(): string {
@@ -533,7 +549,7 @@ export class LessLayout extends DsdElement {
   private _otherLocalePath(): string {
     const locales = this._locales();
     const locale = this._locale();
-    const others = locales.filter(l => l !== locale);
+    const others = locales.filter((l) => l !== locale);
     const target = others[0] || locales[0];
     const path = this._currentPath();
     for (const loc of locales) {
@@ -545,7 +561,7 @@ export class LessLayout extends DsdElement {
   }
 
   private _otherLocaleLabel(): string {
-    const others = this._locales().filter(l => l !== this._locale());
+    const others = this._locales().filter((l) => l !== this._locale());
     const target = others[0] || this._locales()[0];
     return target === 'zh' ? '\u4E2D\u6587' : 'EN';
   }
@@ -564,12 +580,17 @@ export class LessLayout extends DsdElement {
 
   private _icon(label: string): string {
     const icons: Record<string, string> = {
-      Framework: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10M5 3v6h7M12 9v3M5 17h7"/></svg>`,
-      Engine: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="3"/><path d="M10 1v2M10 17v2M3.5 3.5l1.4 1.4M15.1 15.1l1.4 1.4M1 10h2M17 10h2M3.5 16.5l1.4-1.4M15.1 4.9l1.4-1.4"/></svg>`,
-      RegistryHub: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2l7 4v8l-7 4-7-4V6z"/><path d="M10 10l7-4M10 10v8M10 10L3 6"/></svg>`,
-      Blog: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="14" height="16" rx="2"/><path d="M7 6h6M7 10h6M7 14h3"/></svg>`,
+      Framework:
+        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10M5 3v6h7M12 9v3M5 17h7"/></svg>`,
+      Engine:
+        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="3"/><path d="M10 1v2M10 17v2M3.5 3.5l1.4 1.4M15.1 15.1l1.4 1.4M1 10h2M17 10h2M3.5 16.5l1.4-1.4M15.1 4.9l1.4-1.4"/></svg>`,
+      RegistryHub:
+        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2l7 4v8l-7 4-7-4V6z"/><path d="M10 10l7-4M10 10v8M10 10L3 6"/></svg>`,
+      Blog:
+        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="14" height="16" rx="2"/><path d="M7 6h6M7 10h6M7 14h3"/></svg>`,
     };
-    return icons[label] || `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="M6 6l3 5 5 3-3-5z"/></svg>`;
+    return icons[label] ||
+      `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="M6 6l3 5 5 3-3-5z"/></svg>`;
   }
 
   // â”€â”€â”€ Main render â”€â”€â”€
@@ -578,7 +599,9 @@ export class LessLayout extends DsdElement {
     const home = this._getBool('home');
     const logoText = this._esc(this._getStr('logo-text', 'LessJS'));
     const logoSub = this._esc(this._getStr('logo-sub', ''));
-    const githubUrl = this._escAttr(this._getStr('github-url', 'https://github.com/lessjs-run/LessJS'));
+    const githubUrl = this._escAttr(
+      this._getStr('github-url', 'https://github.com/lessjs-run/LessJS'),
+    );
     const editUrl = this._escAttr(this.getAttribute('edit-url') || '');
     const locales = this._locales();
     const otherLocaleLabel = locales.length > 1 ? this._esc(this._otherLocaleLabel()) : '';
@@ -593,7 +616,11 @@ export class LessLayout extends DsdElement {
 
     const footerHtml = `<footer class="app-footer" part="footer">
       <p>
-        ${editUrl ? `<a href="${editUrl}" target="_blank" rel="noopener" style="margin-right:0.75rem;">Edit this page</a>` : ''}
+        ${
+      editUrl
+        ? `<a href="${editUrl}" target="_blank" rel="noopener" style="margin-right:0.75rem;">Edit this page</a>`
+        : ''
+    }
         Built with <a href="${githubUrl}" target="_blank" rel="noopener noreferrer">LessJS Framework</a>
         <span class="divider"></span>
         Self-bootstrapped from JSR
@@ -644,10 +671,12 @@ export class LessLayout extends DsdElement {
   private _renderHeaderNavHtml(): string {
     const links = this._headerNav();
     if (links.length === 0) return '';
-    const items = links.map(link => {
+    const items = links.map((link) => {
       const localized = this._localizePath(link.href);
       const isExternal = link.href.startsWith('http');
-      return `<a href="${this._escAttr(localized)}" data-nav="${isExternal ? '' : localized}">${this._esc(link.label)}</a>`;
+      return `<a href="${this._escAttr(localized)}" data-nav="${isExternal ? '' : localized}">${
+        this._esc(link.label)
+      }</a>`;
     }).join('');
     return `<nav class="header-nav" part="nav">${items}</nav>`;
   }
@@ -655,8 +684,8 @@ export class LessLayout extends DsdElement {
   private _renderSidebarNavHtml(): string {
     const nav = this._navItems();
     if (nav.length === 0) return '';
-    const sections = nav.map(section => {
-      const items = section.items.map(item => {
+    const sections = nav.map((section) => {
+      const items = section.items.map((item) => {
         const href = item.href || item.path || '#';
         const localized = this._localizePath(href);
         const isExternal = href.startsWith('http');
@@ -695,7 +724,7 @@ export class LessLayout extends DsdElement {
       }
     }
 
-    const items = links.map(link => {
+    const items = links.map((link) => {
       const localized = this._localizePath(link.href);
       const isExternal = link.href.startsWith('http');
       const root = sectionRoot(link.href);
@@ -823,8 +852,10 @@ export class LessLayout extends DsdElement {
   private _updateActiveNav(): void {
     if (!this.shadowRoot || !this._dsdHydrated) return;
     const cp = this._currentPath();
-    const links = this.shadowRoot.querySelectorAll('.docs-sidebar a[data-nav], .header-nav a[data-nav]');
-    links.forEach(a => {
+    const links = this.shadowRoot.querySelectorAll(
+      '.docs-sidebar a[data-nav], .header-nav a[data-nav]',
+    );
+    links.forEach((a) => {
       const nav = a.getAttribute('data-nav');
       const isActive = nav === cp;
       a.classList.toggle('active', isActive);
@@ -842,9 +873,16 @@ export class LessLayout extends DsdElement {
   }
 
   private _escAttr(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(
+      />/g,
+      '&gt;',
+    );
   }
 }
 
+export default LessLayout;
+
 // Guard: idempotent across SSR paths
-if (typeof customElements !== 'undefined' && !customElements.get(tagName)) { customElements.define(tagName, LessLayout); }
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
+  customElements.define(tagName, LessLayout);
+}
