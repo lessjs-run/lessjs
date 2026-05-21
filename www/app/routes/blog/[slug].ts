@@ -20,10 +20,9 @@ export function getStaticPaths(): Array<Record<string, string>> {
   return posts.map((post) => ({ slug: post.slug }));
 }
 
-export default class BlogPostPage extends DsdElement {
-  slug = '';
+const routeSheet = new StyleSheet();
+routeSheet.replaceSync(pageStyles + `
 
-  static override styles = [pageStyles, css`
     .blog-back { font-size: 0.75rem; color: var(--less-text-muted); margin-bottom: 0.5rem; display: inline-block; }
     .blog-date { font-size: 0.75rem; color: var(--less-text-muted); margin-bottom: 2rem; }
     .blog-tags { display: flex; gap: 0.375rem; flex-wrap: wrap; margin-bottom: 1rem; }
@@ -47,7 +46,12 @@ export default class BlogPostPage extends DsdElement {
     .blog-content blockquote { border-left: 2px solid var(--less-accent); padding-left: 1rem; margin: 1rem 0; color: var(--less-text-muted); }
     .not-found { text-align: center; padding: 4rem 1rem; color: var(--less-text-muted); }
     .nav-row { margin-top: 3rem; }
-  `];
+  `);
+
+export default class BlogPostPage extends DsdElement {
+  slug = '';
+
+  static override styles = [routeSheet];
 
   override render() {
     return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
