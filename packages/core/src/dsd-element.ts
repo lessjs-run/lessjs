@@ -56,10 +56,9 @@ import type { StyleSheetLike } from './style-sheet.js';
  * a live Custom Element. This stub ensures the class declaration itself
  * does not throw at module evaluation time.
  */
-const _HTMLElement: typeof HTMLElement =
-  typeof HTMLElement !== 'undefined'
-    ? HTMLElement
-    : (class {} as unknown as typeof HTMLElement);
+const _HTMLElement: typeof HTMLElement = typeof HTMLElement !== 'undefined'
+  ? HTMLElement
+  : (class {} as unknown as typeof HTMLElement);
 
 /**
  * Zero-dependency Custom Element base class for DSD rendering.
@@ -162,9 +161,13 @@ export class DsdElement extends _HTMLElement {
   connectedCallback(): void {
     const ctor = this.constructor as typeof DsdElement;
 
-    // Ensure shadow root exists (CSR path may not have called createRenderRoot yet)
+    // Ensure shadow root exists
     if (!this.shadowRoot) {
       this.createRenderRoot();
+    } else if (this.shadowRoot.childElementCount > 0 && !this._dsdHydrated) {
+      // DSD pre-populated — shadow root created by browser from <template>,
+      // createRenderRoot() was skipped but we still need to mark as hydrated
+      this._dsdHydrated = true;
     }
 
     if (this._dsdHydrated) {
