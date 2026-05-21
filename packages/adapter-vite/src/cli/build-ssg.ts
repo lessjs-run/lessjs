@@ -267,10 +267,19 @@ if (typeof globalThis.CSSStyleSheet === 'undefined') {
   // passing to viteBuild(). Vite alias prefix-matching cannot handle
   // subpath exports when the base alias (@lessjs/ui) points to a file
   // (index.ts), causing ENOTDIR errors.
+  // Uses existsSync guard so create-less test scaffolding (where these
+  // files don't physically exist) falls through to normal resolution.
   const ssgEntryCode = rawSsgEntryCode.replace(
     /from\s+['"]@lessjs\/ui\/([\w-]+)['"]/g,
-    (_m: string, sub: string) =>
-      `from '${resolve(root, `../packages/ui/src/${sub}.ts`)}'`,
+    (_m: string, sub: string) => {
+      const resolved = resolve(root, `../packages/ui/src/${sub}.ts`);
+      try {
+        Deno.statSync(resolved);
+        return `from '${resolved}'`;
+      } catch {
+        return _m;
+      }
+    },
   );
 
   try {
@@ -471,20 +480,12 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
                 ? a.replacement
                 : resolve(root, a.replacement),
             }))
-            : (() => {
-              const keys = Object.keys(alias);
-              const prefixKeys = new Set(
-                keys.filter((k) => keys.some((other) => other !== k && other.startsWith(k + '/'))),
-              );
-              // Must output Array (not Record) — Record stringifies RegExp
-              // keys via .toString(), breaking exact-match semantics.
-              return Object.entries(alias).map(([k, v]) => ({
-                find: prefixKeys.has(k)
-                  ? new RegExp(`^${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`)
-                  : k,
-                replacement: v.startsWith('/') || /^[A-Za-z]:/.test(v) ? v : resolve(root, v),
-              }));
-            })())
+            : Object.fromEntries(
+              Object.entries(alias).map(([k, v]) => [
+                k,
+                v.startsWith('/') || /^[A-Za-z]:/.test(v) ? v : resolve(root, v),
+              ]),
+            )))
           : undefined,
       },
     });

@@ -25,9 +25,8 @@
     "@lessjs/rpc": "./packages/rpc/src/index.ts",
     "@lessjs/signals": "./packages/signals/src/index.ts",
     "@lessjs/ui": "./packages/ui/src/index.ts",
-    "@lessjs/ui/": "./packages/ui/src/",
-    // Trailing-slash prefix mapping handles @lessjs/ui/<subpath> natively.
-    // Explicit entries below remain as belt-and-suspenders overrides.
+    // Explicit subpath entries required — Vite alias prefix-matching
+    // cannot handle subpath exports from a file-based alias (ENOTDIR).
     "@lessjs/ui/design-tokens": "./packages/ui/src/design-tokens.ts",
     "@lessjs/ui/less-button": "./packages/ui/src/less-button.ts",
     "@lessjs/ui/less-card": "./packages/ui/src/less-card.ts",
