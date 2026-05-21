@@ -238,7 +238,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     hubClientOnlyTags,
   }).ssrAdmissionPlan;
 
-  const rawSsgEntryCode = `\
+  const ssgEntryCode = `\
 // SSR polyfill: Lit references CSSStyleSheet in its internals.
 // This must load before any Lit module is evaluated.
 import { StyleSheet } from '@lessjs/core';
@@ -263,16 +263,6 @@ if (typeof globalThis.CSSStyleSheet === 'undefined') {
     upgradeStrategy: options.upgradeStrategy || 'lazy',
     hubClientOnlyTags,
   });
-  // Post-process: rewrite @lessjs/ui subpath imports to direct file
-  // paths. Rolldown with configFile:false mishandles subpath exports
-  // when the base alias maps to a file (index.ts → ENOTDIR).
-  const ssgEntryCode = rawSsgEntryCode.replace(
-    /from\s+['"]@lessjs\/ui\/(less-[\w-]+)['"]/g,
-    (_m: string, sub: string) => {
-      const resolved = resolve(root, `../packages/ui/src/${sub}.ts`);
-      return `from '${resolved}'`;
-    },
-  );
 
   try {
     const { build: viteBuild } = await import('vite');
@@ -424,24 +414,6 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
             }
           },
         },
-        // ADR 0036: Resolve @lessjs/ui subpath exports to actual files.
-        // The base alias @lessjs/ui → index.ts causes subpath imports
-        // (e.g. @lessjs/ui/less-callout) to resolve as index.ts/callout
-        // which is a file-not-directory error. This plugin intercepts
-        // subpath resolution before alias processing.
-        {
-          name: 'less:ssg-ui-subpath-resolve',
-          enforce: 'pre',
-          resolveId(id) {
-            const match = /^@lessjs\/ui\/(.+)$/.exec(id);
-            if (match) {
-              const sub = match[1];
-              // Strip extensions and path separators for safety
-              const clean = sub.replace(/\.\.\/|\.\.\\/g, '').replace(/\.(j|t)sx?$/, '');
-              return resolve(root, `../packages/ui/src/${clean}.ts`);
-            }
-          },
-        },
         // ADR 0008 Phase C: Provide stubs for optional packages.
         // The generated entry code statically imports @lessjs/adapter-lit,
         // @lessjs/content, @lessjs/i18n — but these may not be installed.
@@ -490,15 +462,12 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
                 ? a.replacement
                 : resolve(root, a.replacement),
             }))
-            // Convert Record to Array so Vite resolves longest match first.
-            // Prevents base @lessjs/ui → index.ts from shadowing subpath
-            // aliases like @lessjs/ui/less-callout → less-callout.ts.
-            : Object.entries(alias)
-              .map(([k, v]) => ({
-                find: k,
-                replacement: v.startsWith('/') || /^[A-Za-z]:/.test(v) ? v : resolve(root, v),
-              }))
-              .sort((a, b) => b.find.length - a.find.length))
+            : Object.fromEntries(
+              Object.entries(alias).map(([k, v]) => [
+                k,
+                v.startsWith('/') || /^[A-Za-z]:/.test(v) ? v : resolve(root, v),
+              ]),
+            ))
           : undefined,
       },
     });
