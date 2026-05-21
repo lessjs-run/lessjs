@@ -238,7 +238,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     hubClientOnlyTags,
   }).ssrAdmissionPlan;
 
-  const ssgEntryCode = `\
+  const rawSsgEntryCode = `\
 // SSR polyfill: Lit references CSSStyleSheet in its internals.
 // This must load before any Lit module is evaluated.
 import { StyleSheet } from '@lessjs/core';
@@ -263,6 +263,15 @@ if (typeof globalThis.CSSStyleSheet === 'undefined') {
     upgradeStrategy: options.upgradeStrategy || 'lazy',
     hubClientOnlyTags,
   });
+  // Resolve @lessjs/ui/<subpath> imports to absolute file paths before
+  // passing to viteBuild(). Vite alias prefix-matching cannot handle
+  // subpath exports when the base alias (@lessjs/ui) points to a file
+  // (index.ts), causing ENOTDIR errors.
+  const ssgEntryCode = rawSsgEntryCode.replace(
+    /from\s+['"]@lessjs\/ui\/([\w-]+)['"]/g,
+    (_m: string, sub: string) =>
+      `from '${resolve(root, `../packages/ui/src/${sub}.ts`)}'`,
+  );
 
   try {
     const { build: viteBuild } = await import('vite');
