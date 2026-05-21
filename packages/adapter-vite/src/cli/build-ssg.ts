@@ -467,16 +467,14 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
               const prefixKeys = new Set(
                 keys.filter((k) => keys.some((other) => other !== k && other.startsWith(k + '/'))),
               );
-              return Object.fromEntries(
-                Object.entries(alias).map(([k, v]) => [
-                  // If this key is a prefix of other subpath keys, use regex
-                  // exact match to prevent Vite alias prefix-matching from
-                  // shadowing subpath entries (e.g. @lessjs/ui would match
-                  // @lessjs/ui/less-callout and append /less-callout to index.ts).
-                  prefixKeys.has(k) ? new RegExp(`^${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`) : k,
-                  v.startsWith('/') || /^[A-Za-z]:/.test(v) ? v : resolve(root, v),
-                ]),
-              );
+              // Must output Array (not Record) — Record stringifies RegExp
+              // keys via .toString(), breaking exact-match semantics.
+              return Object.entries(alias).map(([k, v]) => ({
+                find: prefixKeys.has(k)
+                  ? new RegExp(`^${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`)
+                  : k,
+                replacement: v.startsWith('/') || /^[A-Za-z]:/.test(v) ? v : resolve(root, v),
+              }));
             })())
           : undefined,
       },
