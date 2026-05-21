@@ -131,6 +131,32 @@ export class ChangelogPage extends DsdElement {
 
           <div class="version-section">
             <div class="version-header">
+              <span class="version-number">0.20.0</span>
+              <span class="version-date">2026-05-21</span>
+            </div>
+            <div class="change-category breaking">
+              <h4>Ocean-Island 架构 — Lit 全面移除</h4>
+              <ul class="change-list">
+                <li>所有路由组件从 LitElement 迁移到 DsdElement：render() 返回 string，StyleSheet.replaceSync() 替代 css\`\`</li>
+                <li>Open Props tokens 通过 StyleSheet.cssRules 提取 + 注入 shadow DOM，替代 Lit 的全局 CSS 注入</li>
+                <li>parseRules 从正则改为括号计数解析器，正确处理 @media/@keyframes 嵌套块</li>
+              </ul>
+            </div>
+            <div class="change-category fixed">
+              <h4>修复</h4>
+              <ul class="change-list">
+                <li><strong>导航栏样式丢失</strong>：parseRules 扁平化 @media 导致移动端 display:none 覆盖桌面端 display:flex</li>
+                <li><strong>主题切换/语言切换按钮消失</strong>：less-layout._esc() 用 document.createElement 在 SSR 抛异常 → 空 DSD 回退；injectProps 设 JS 属性但 _locale()/_locales() 只读 getAttribute → lang-switch 始终为空</li>
+                <li><strong>CSS 变量全部未定义</strong>：openPropsTokenSheet 裸声明 --gray-0: #f8f9fa 无选择器，旧 parseRules 跳过整块 token sheet；10 个 UI 组件 static styles 未包含 openPropsTokenSheet</li>
+                <li><strong>布局过一会全炸（DSD 水合 bug）</strong>：connectedCallback 中 shadowRoot 已存在时跳过 createRenderRoot()，_dsdHydrated 未标记 → CSR 路径执行 innerHTML = render() 清空 DSD 内容</li>
+                <li><strong>嵌套 CE 不渲染</strong>：renderNestedCustomElements 单次扫描，less-layout DSD 输出中的 less-theme-toggle 未被发现；增加 DSD 子节点递归渲染</li>
+                <li><strong>index/index.ts 未使用 import</strong>：移除无效的 DsdLitElement 导入</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="version-section">
+            <div class="version-header">
               <span class="version-number">0.11.0</span>
               <span class="version-date">2026-05-11</span>
             </div>

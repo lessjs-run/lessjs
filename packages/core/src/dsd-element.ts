@@ -164,9 +164,11 @@ export class DsdElement extends _HTMLElement {
     // Ensure shadow root exists
     if (!this.shadowRoot) {
       this.createRenderRoot();
-    } else if (this.shadowRoot.childElementCount > 0 && !this._dsdHydrated) {
-      // DSD pre-populated — shadow root created by browser from <template>,
-      // createRenderRoot() was skipped but we still need to mark as hydrated
+    } else if (!this._dsdHydrated) {
+      // Shadow root already exists without createRenderRoot() call —
+      // it was created by the browser from a DSD <template>. Mark as
+      // hydrated so the CSR path (innerHTML = render()) does not
+      // destroy the pre-populated shadow DOM content.
       this._dsdHydrated = true;
     }
 
