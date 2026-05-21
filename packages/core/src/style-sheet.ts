@@ -59,23 +59,15 @@ class ShimStyleSheet implements StyleSheetLike {
   }
 }
 
-// â”€â”€ Constructor: auto-detect environment â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// -- Constructor: auto-detect environment (bundler-safe) -----------
 
-/**
- * Cross-environment StyleSheet constructor.
- *
- * Browser:  returns `new CSSStyleSheet()` (native, zero cost).
- * Deno/Node/Bun: returns a `ShimStyleSheet` with the same `replaceSync`
- * and `cssRules` surface.
- *
- * Usage:
- * ```ts
- * const sheet = new StyleSheet();
- * sheet.replaceSync(`.foo { color: red; }`);
- * for (const rule of sheet.cssRules) console.log(rule.cssText);
- * ```
- */
+function resolveStyleSheetCtor(): new () => StyleSheetLike {
+  // typeof on undeclared variable returns 'undefined' without throwing.
+  // Function wrapper prevents bundlers from inlining the CSSStyleSheet
+  // reference into a position where it would throw ReferenceError in SSR.
+  if (typeof CSSStyleSheet !== 'undefined') return CSSStyleSheet;
+  return ShimStyleSheet;
+}
+
 export const StyleSheet: new () => StyleSheetLike =
-  (typeof CSSStyleSheet !== 'undefined'
-    ? CSSStyleSheet
-    : ShimStyleSheet) as unknown as new () => StyleSheetLike;
+  resolveStyleSheetCtor() as unknown as new () => StyleSheetLike;
