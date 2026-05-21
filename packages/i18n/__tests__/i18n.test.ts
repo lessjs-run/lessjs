@@ -23,7 +23,7 @@ Deno.test('loadI18nData: returns independent copy', () => {
   assertEquals(opts.locales, ['en', 'zh']);
 });
 
-// ─── routes.ts — i18nStaticPaths ─────────────────────────────────
+// ─── routes.ts - i18nStaticPaths ─────────────────────────────────
 
 Deno.test('i18nStaticPaths: generates paths from locale list', () => {
   const paths = i18nStaticPaths(['en', 'zh']);
@@ -40,7 +40,7 @@ Deno.test('i18nStaticPaths: returns empty array for empty locales', () => {
   assertEquals(paths, []);
 });
 
-// ─── routes.ts — switchLocale ────────────────────────────────────
+// ─── routes.ts - switchLocale ────────────────────────────────────
 
 Deno.test('switchLocale: switches from en to zh', () => {
   const result = switchLocale('/en/guide/architecture', 'zh', ['en', 'zh']);

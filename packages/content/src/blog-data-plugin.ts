@@ -5,8 +5,8 @@
  * blog post data to route components during SSR.
  *
  * Lives in @lessjs/content (not adapter-vite) because it depends on
- * @lessjs/content's loadBlogData() — avoids circular dependency between
- * adapter-vite ↔ content.
+ * @lessjs/content's loadBlogData() - avoids circular dependency between
+ * adapter-vite <-> content.
  */
 
 import type { Plugin } from 'vite';

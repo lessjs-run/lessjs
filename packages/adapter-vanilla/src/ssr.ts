@@ -2,13 +2,13 @@
  * @lessjs/adapter-vanilla - SSR Adapter
  *
  * Registers the 'vanilla' adapter for plain Web Components.
- * Vanilla components return strings from render() — the adapter
+ * Vanilla components return strings from render() - the adapter
  * handles style extraction and provides the RendererProtocol interface.
  *
  * How it works:
  *   - isTemplate(): vanilla components always return strings, so we
- *     return false — core's renderDSD() handles string output directly.
- *   - render(): passthrough — called only if isTemplate returns true.
+ *     return false - core's renderDSD() handles string output directly.
+ *   - render(): passthrough - called only if isTemplate returns true.
  *   - extractStyles(): reads the static `styles` property (string or
  *     string array) from the component class.
  *
@@ -67,14 +67,14 @@ let _installed = false;
  * returns a string directly. It provides style extraction from the
  * static `styles` property.
  *
- * Idempotent — safe to call multiple times.
+ * Idempotent - safe to call multiple times.
  */
 export function installVanillaAdapter(): void {
   if (_installed) return;
 
   registerAdapter({
     name: 'vanilla',
-    // Vanilla components always return strings — no template detection needed.
+    // Vanilla components always return strings - no template detection needed.
     // core's renderDSD handles string output directly.
     isTemplate: (_value: unknown): boolean => false,
     render: (value: unknown, _tagName: string): Promise<string> => {

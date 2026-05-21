@@ -2,7 +2,7 @@
  * @lessjs/content/nav - Navigation scanner
  *
  * Scans route files, extracts `meta` exports, and aggregates NavSection[].
- * Build-time only — data stored in ctx.navSections (ADR 0010: no .less/ temp files).
+ * Build-time only - data stored in ctx.navSections (ADR 0010: no .less/ temp files).
  */
 
 import { join, resolve } from 'node:path';
@@ -13,7 +13,7 @@ import { createLogger } from '@lessjs/core/logger';
 const log = createLogger('content:nav');
 
 /**
- * G5 fix: Replace fragile regex-based JS→JSON conversion with a simple
+ * G5 fix: Replace fragile regex-based JS->JSON conversion with a simple
  * key-value parser that handles JS object literals like:
  *   { section: "...", label: "...", order: 1 }
  *
@@ -28,7 +28,7 @@ export function extractMeta(source: string): RouteMeta | null {
   );
   if (!exportMatch) return null;
 
-  // Extract the object body — find the matching closing brace
+  // Extract the object body - find the matching closing brace
   const startIdx = exportMatch.index! + exportMatch[0].length;
   let depth = 1;
   let endIdx = startIdx;
@@ -155,14 +155,14 @@ function parseValue(raw: string): unknown {
 
 /**
  * Convert a relative file path to a URL route path.
- * e.g. 'guide/getting-started.ts' → '/guide/getting-started'
- *      'index/index.ts' → '/'
- *      'blog/[slug].ts' → '/blog/:slug'
+ * e.g. 'guide/getting-started.ts' -> '/guide/getting-started'
+ *      'index/index.ts' -> '/'
+ *      'blog/[slug].ts' -> '/blog/:slug'
  */
 function filePathToNavPath(filePath: string): string {
   let p = filePath.replace(/\\/g, '/'); // normalize separators
   p = p.replace(/\.[^.]+$/, ''); // remove extension
-  p = p.replace(/\[([^\]]+)\]/g, ':$1'); // [slug] → :slug
+  p = p.replace(/\[([^\]]+)\]/g, ':$1'); // [slug] -> :slug
 
   // Handle index
   if (p === 'index') return '/';
@@ -234,7 +234,7 @@ export function scanNavData(options: NavOptions): NavSection[] {
     });
   }
 
-  // Build NavSection[] — sort items within each section by order
+  // Build NavSection[] - sort items within each section by order
   const sections: NavSection[] = sectionOrder.map((section) => ({
     section,
     items: (sectionItems.get(section) || []).sort(

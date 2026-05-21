@@ -10,24 +10,24 @@
 
 ### 1.1 核心技术挑战
 
-| # | 挑战 | 风险等级 | 应对策略 |
-|---|------|---------|---------|
-| 1 | **引擎页面物理迁移** — 7 个页面从 `/guide/` 移至 `/engine/`，涉及文件移动 + 所有内部链接更新 | 高 | 批量移动 + 全局搜索替换 + 重定向映射表 |
-| 2 | **meta.section 重分组** — 当前 7 个 section 需精简为 6 个（3 框架 + 3 引擎），所有页面 meta 需同步更新 | 中 | 按映射表逐文件修改，编译验证 |
-| 3 | **旧 URL 重定向** — 迁移后旧 URL 需 301 跳转，防止搜索引擎和外链 404 | 高 | 在 `_redirects` 或 `404.ts` 中配置重定向规则 |
-| 4 | **Blog ADR 去重** — 24 篇博客 ADR 与 `/decisions` 内容重复 | 中 | 博客 ADR 文件添加 frontmatter `redirect: /decisions/xxx`，构建时自动生成 meta refresh |
-| 5 | **导航配置联动** — headerNav 修改后，所有页面的 `headerNav` 引用自动更新（通过 `virtual:less-nav`） | 低 | 修改 `vite.config.ts` 一处即可，虚拟模块自动分发 |
+| # | 挑战                                                                                                   | 风险等级 | 应对策略                                                                              |
+| - | ------------------------------------------------------------------------------------------------------ | -------- | ------------------------------------------------------------------------------------- |
+| 1 | **引擎页面物理迁移** — 7 个页面从 `/guide/` 移至 `/engine/`，涉及文件移动 + 所有内部链接更新           | 高       | 批量移动 + 全局搜索替换 + 重定向映射表                                                |
+| 2 | **meta.section 重分组** — 当前 7 个 section 需精简为 6 个（3 框架 + 3 引擎），所有页面 meta 需同步更新 | 中       | 按映射表逐文件修改，编译验证                                                          |
+| 3 | **旧 URL 重定向** — 迁移后旧 URL 需 301 跳转，防止搜索引擎和外链 404                                   | 高       | 在 `_redirects` 或 `404.ts` 中配置重定向规则                                          |
+| 4 | **Blog ADR 去重** — 24 篇博客 ADR 与 `/decisions` 内容重复                                             | 中       | 博客 ADR 文件添加 frontmatter `redirect: /decisions/xxx`，构建时自动生成 meta refresh |
+| 5 | **导航配置联动** — headerNav 修改后，所有页面的 `headerNav` 引用自动更新（通过 `virtual:less-nav`）    | 低       | 修改 `vite.config.ts` 一处即可，虚拟模块自动分发                                      |
 
 ### 1.2 框架选型
 
 **沿用现有技术栈，不引入新框架/库。**
 
-| 技术 | 用途 | 理由 |
-|------|------|------|
-| Vite SSG | 静态站点生成 | 已有，无需更换 |
-| Lit | Web Component 渲染 | 已有，所有页面基于 LitElement |
-| `virtual:less-nav` | 导航数据注入 | 已有机制，修改 `vite.config.ts` 即可全局生效 |
-| `@lessjs/ui/less-layout` | 页面布局组件 | 已有，支持 `navItems` + `headerNav` 属性 |
+| 技术                     | 用途               | 理由                                         |
+| ------------------------ | ------------------ | -------------------------------------------- |
+| Vite SSG                 | 静态站点生成       | 已有，无需更换                               |
+| Lit                      | Web Component 渲染 | 已有，所有页面基于 LitElement                |
+| `virtual:less-nav`       | 导航数据注入       | 已有机制，修改 `vite.config.ts` 即可全局生效 |
+| `@lessjs/ui/less-layout` | 页面布局组件       | 已有，支持 `navItems` + `headerNav` 属性     |
 
 ### 1.3 架构模式
 
@@ -43,66 +43,66 @@
 
 ### 2.1 新建文件
 
-| 相对路径 | 说明 |
-|----------|------|
-| `app/routes/engine/_renderer.ts` | 引擎分区布局渲染器（复制 guide 的，修改编辑链接基准路径） |
-| `app/routes/engine/architecture.ts` | 从 `guide/architecture.ts` 迁移 |
-| `app/routes/engine/dsd.ts` | 从 `guide/dsd.ts` 迁移 |
-| `app/routes/engine/islands.ts` | 从 `guide/islands.ts` 迁移 |
-| `app/routes/engine/islands-deep.ts` | 从 `guide/islands-deep.ts` 迁移 |
-| `app/routes/engine/package-compatibility.ts` | 从 `guide/package-compatibility.ts` 迁移 |
-| `app/routes/engine/standards-registry.ts` | 从 `guide/standards-registry.ts` 迁移 |
-| `app/routes/engine/comparison.ts` | 从 `guide/comparison.ts` 迁移 |
-| `app/routes/engine/reference/core.ts` | 从 `reference/core.ts` 迁移 |
-| `app/routes/engine/design-system.ts` | 从 `ui.ts` 迁移 + 重构 |
-| `app/routes/engine/_redirects.ts` | 旧 URL → 新 URL 重定向映射（可选，也可在 404.ts 处理） |
+| 相对路径                                     | 说明                                                      |
+| -------------------------------------------- | --------------------------------------------------------- |
+| `app/routes/engine/_renderer.ts`             | 引擎分区布局渲染器（复制 guide 的，修改编辑链接基准路径） |
+| `app/routes/engine/architecture.ts`          | 从 `guide/architecture.ts` 迁移                           |
+| `app/routes/engine/dsd.ts`                   | 从 `guide/dsd.ts` 迁移                                    |
+| `app/routes/engine/islands.ts`               | 从 `guide/islands.ts` 迁移                                |
+| `app/routes/engine/islands-deep.ts`          | 从 `guide/islands-deep.ts` 迁移                           |
+| `app/routes/engine/package-compatibility.ts` | 从 `guide/package-compatibility.ts` 迁移                  |
+| `app/routes/engine/standards-registry.ts`    | 从 `guide/standards-registry.ts` 迁移                     |
+| `app/routes/engine/comparison.ts`            | 从 `guide/comparison.ts` 迁移                             |
+| `app/routes/engine/reference/core.ts`        | 从 `reference/core.ts` 迁移                               |
+| `app/routes/engine/design-system.ts`         | 从 `ui.ts` 迁移 + 重构                                    |
+| `app/routes/engine/_redirects.ts`            | 旧 URL → 新 URL 重定向映射（可选，也可在 404.ts 处理）    |
 
 ### 2.2 修改文件
 
-| 相对路径 | 变更说明 |
-|----------|---------|
-| `vite.config.ts` | headerNav 从 8 项精简为 4 项；可选添加 redirects 配置 |
-| `app/routes/guide/positioning.ts` | meta.section: `'Start Here'` → `'Quick Start'` |
-| `app/routes/guide/getting-started.ts` | meta.section: `'Start Here'` → `'Quick Start'` |
-| `app/routes/guide/routing.ts` | meta.section: `'Core Model'` → `'Core'` |
-| `app/routes/guide/ssg.ts` | meta.section: `'Core Model'` → `'Core'`；label 改为 `'SSG/ISR/SSR Rendering'` |
-| `app/routes/guide/api.ts` | meta.section: `'Core Model'` → `'Core'` |
-| `app/routes/guide/content-system.ts` | meta.section: `'Strategy'` → `'Core'` |
-| `app/routes/guide/rpc.ts` | meta.section: `'Core Model'` → `'Core'` |
-| `app/routes/guide/configuration.ts` | meta.section 不变（`'Production'` 保持） |
-| `app/routes/guide/deployment.ts` | meta.section 不变 |
-| `app/routes/guide/security-middleware.ts` | meta.section 不变 |
-| `app/routes/guide/error-handling.ts` | meta.section 不变 |
-| `app/routes/guide/testing.ts` | meta.section 不变 |
-| `app/routes/guide/pwa.ts` | meta.section 不变 |
-| `app/routes/guide/_renderer.ts` | 无需修改（guide renderer 保持不变，继续服务于框架页面） |
-| `app/routes/index/_renderer.ts` | 注入 `<less-search>` 组件（P2 优化） |
-| `app/routes/404.ts` | 更新 POPULAR_LINKS 中的旧链接（`/guide/architecture` → `/engine/architecture` 等） |
-| `app/routes/roadmap.ts` | 修复 3 个死链接（`/docs/` 前缀问题） |
-| `app/routes/changelog.ts` | meta.section: `'History'` → 保留但从侧边栏降级（移除 meta 或 section 改为 `'Footer'`） |
-| `app/routes/contributing.ts` | meta.section: `'History'` → 移除 meta 或 section 改为 `'Footer'` |
-| `app/routes/community.ts` | 删除独立页面，内容合并到页脚 |
-| `app/routes/decisions/index.ts` | meta.section: `'Roadmap & Decisions'` → 保留但降级 |
-| `content/blog/0001-*.md` ~ `content/blog/0024-*.md` | 24 篇 ADR 博客：添加 frontmatter `redirect` 字段或 `hidden: true` |
-| `content/blog/0008-implementation-plan.md` | 删除（编号冲突的废弃文档） |
+| 相对路径                                            | 变更说明                                                                               |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `vite.config.ts`                                    | headerNav 从 8 项精简为 4 项；可选添加 redirects 配置                                  |
+| `app/routes/guide/positioning.ts`                   | meta.section: `'Start Here'` → `'Quick Start'`                                         |
+| `app/routes/guide/getting-started.ts`               | meta.section: `'Start Here'` → `'Quick Start'`                                         |
+| `app/routes/guide/routing.ts`                       | meta.section: `'Core Model'` → `'Core'`                                                |
+| `app/routes/guide/ssg.ts`                           | meta.section: `'Core Model'` → `'Core'`；label 改为 `'SSG/ISR/SSR Rendering'`          |
+| `app/routes/guide/api.ts`                           | meta.section: `'Core Model'` → `'Core'`                                                |
+| `app/routes/guide/content-system.ts`                | meta.section: `'Strategy'` → `'Core'`                                                  |
+| `app/routes/guide/rpc.ts`                           | meta.section: `'Core Model'` → `'Core'`                                                |
+| `app/routes/guide/configuration.ts`                 | meta.section 不变（`'Production'` 保持）                                               |
+| `app/routes/guide/deployment.ts`                    | meta.section 不变                                                                      |
+| `app/routes/guide/security-middleware.ts`           | meta.section 不变                                                                      |
+| `app/routes/guide/error-handling.ts`                | meta.section 不变                                                                      |
+| `app/routes/guide/testing.ts`                       | meta.section 不变                                                                      |
+| `app/routes/guide/pwa.ts`                           | meta.section 不变                                                                      |
+| `app/routes/guide/_renderer.ts`                     | 无需修改（guide renderer 保持不变，继续服务于框架页面）                                |
+| `app/routes/index/_renderer.ts`                     | 注入 `<less-search>` 组件（P2 优化）                                                   |
+| `app/routes/404.ts`                                 | 更新 POPULAR_LINKS 中的旧链接（`/guide/architecture` → `/engine/architecture` 等）     |
+| `app/routes/roadmap.ts`                             | 修复 3 个死链接（`/docs/` 前缀问题）                                                   |
+| `app/routes/changelog.ts`                           | meta.section: `'History'` → 保留但从侧边栏降级（移除 meta 或 section 改为 `'Footer'`） |
+| `app/routes/contributing.ts`                        | meta.section: `'History'` → 移除 meta 或 section 改为 `'Footer'`                       |
+| `app/routes/community.ts`                           | 删除独立页面，内容合并到页脚                                                           |
+| `app/routes/decisions/index.ts`                     | meta.section: `'Roadmap & Decisions'` → 保留但降级                                     |
+| `content/blog/0001-*.md` ~ `content/blog/0024-*.md` | 24 篇 ADR 博客：添加 frontmatter `redirect` 字段或 `hidden: true`                      |
+| `content/blog/0008-implementation-plan.md`          | 删除（编号冲突的废弃文档）                                                             |
 
 ### 2.3 删除文件
 
-| 相对路径 | 原因 |
-|----------|------|
-| `app/routes/guide/architecture.ts` | 迁移到 `engine/` |
-| `app/routes/guide/dsd.ts` | 迁移到 `engine/` |
-| `app/routes/guide/islands.ts` | 迁移到 `engine/` |
-| `app/routes/guide/islands-deep.ts` | 迁移到 `engine/` |
-| `app/routes/guide/package-compatibility.ts` | 迁移到 `engine/` |
-| `app/routes/guide/standards-registry.ts` | 迁移到 `engine/` |
-| `app/routes/guide/comparison.ts` | 迁移到 `engine/` |
-| `app/routes/reference/core.ts` | 迁移到 `engine/reference/` |
-| `app/routes/ui.ts` | 迁移到 `engine/design-system.ts` |
-| `app/routes/styling/web-awesome.ts` | 删除（内容极薄，无实际价值） |
-| `app/routes/community.ts` | 删除（内容合并到页脚） |
-| `app/routes/styling/` 目录 | 清空后删除目录 |
-| `content/blog/0008-implementation-plan.md` | 编号冲突，废弃 |
+| 相对路径                                    | 原因                             |
+| ------------------------------------------- | -------------------------------- |
+| `app/routes/guide/architecture.ts`          | 迁移到 `engine/`                 |
+| `app/routes/guide/dsd.ts`                   | 迁移到 `engine/`                 |
+| `app/routes/guide/islands.ts`               | 迁移到 `engine/`                 |
+| `app/routes/guide/islands-deep.ts`          | 迁移到 `engine/`                 |
+| `app/routes/guide/package-compatibility.ts` | 迁移到 `engine/`                 |
+| `app/routes/guide/standards-registry.ts`    | 迁移到 `engine/`                 |
+| `app/routes/guide/comparison.ts`            | 迁移到 `engine/`                 |
+| `app/routes/reference/core.ts`              | 迁移到 `engine/reference/`       |
+| `app/routes/ui.ts`                          | 迁移到 `engine/design-system.ts` |
+| `app/routes/styling/web-awesome.ts`         | 删除（内容极薄，无实际价值）     |
+| `app/routes/community.ts`                   | 删除（内容合并到页脚）           |
+| `app/routes/styling/` 目录                  | 清空后删除目录                   |
+| `content/blog/0008-implementation-plan.md`  | 编号冲突，废弃                   |
 
 ### 2.4 迁移文件内部修改清单
 
@@ -143,21 +143,21 @@ classDiagram
 
 ### 3.2 meta.section 值映射（旧 → 新）
 
-| 旧 section | 新 section | 所属导航 | 页面 |
-|-----------|-----------|---------|------|
-| `Start Here` | `Quick Start` | 框架 | positioning, getting-started |
-| `Core Model` | `Core` | 框架 | routing, ssg, api, content-system, rpc |
-| `Production` | `Production` | 框架 | configuration, deployment, security-middleware, error-handling, testing, pwa |
-| `Start Here` | `Principles` | 引擎 | architecture, comparison |
-| `Core Model` | `Principles` | 引擎 | dsd, islands, islands-deep |
-| `Core Model` | `Compatibility` | 引擎 | package-compatibility |
-| `Start Here` | `Compatibility` | 引擎 | standards-registry |
-| `Packages` | `Reference` | 引擎 | reference/core, design-system |
-| `Strategy` | `Core` | 框架 | content-system |
-| `Strategy` | `Principles` | 引擎 | comparison |
-| `Roadmap & Decisions` | (降级) | — | roadmap, community, decisions |
-| `History` | (降级) | — | changelog, contributing, blog |
-| `Packages` | (删除) | — | web-awesome |
+| 旧 section            | 新 section      | 所属导航 | 页面                                                                         |
+| --------------------- | --------------- | -------- | ---------------------------------------------------------------------------- |
+| `Start Here`          | `Quick Start`   | 框架     | positioning, getting-started                                                 |
+| `Core Model`          | `Core`          | 框架     | routing, ssg, api, content-system, rpc                                       |
+| `Production`          | `Production`    | 框架     | configuration, deployment, security-middleware, error-handling, testing, pwa |
+| `Start Here`          | `Principles`    | 引擎     | architecture, comparison                                                     |
+| `Core Model`          | `Principles`    | 引擎     | dsd, islands, islands-deep                                                   |
+| `Core Model`          | `Compatibility` | 引擎     | package-compatibility                                                        |
+| `Start Here`          | `Compatibility` | 引擎     | standards-registry                                                           |
+| `Packages`            | `Reference`     | 引擎     | reference/core, design-system                                                |
+| `Strategy`            | `Core`          | 框架     | content-system                                                               |
+| `Strategy`            | `Principles`    | 引擎     | comparison                                                                   |
+| `Roadmap & Decisions` | (降级)          | —        | roadmap, community, decisions                                                |
+| `History`             | (降级)          | —        | changelog, contributing, blog                                                |
+| `Packages`            | (删除)          | —        | web-awesome                                                                  |
 
 ### 3.3 headerNav 新配置
 
@@ -167,24 +167,24 @@ headerNav: [
   { href: '/engine/architecture', label: 'Engine' },
   { href: '/registry', label: 'RegistryHub' },
   { href: '/blog', label: 'Blog' },
-]
+];
 ```
 
 ### 3.4 重定向映射表
 
-| 旧 URL | 新 URL | 状态码 |
-|--------|--------|--------|
-| `/guide/architecture` | `/engine/architecture` | 301 |
-| `/guide/dsd` | `/engine/dsd` | 301 |
-| `/guide/islands` | `/engine/islands` | 301 |
-| `/guide/islands-deep` | `/engine/islands-deep` | 301 |
-| `/guide/package-compatibility` | `/engine/package-compatibility` | 301 |
-| `/guide/standards-registry` | `/engine/standards-registry` | 301 |
-| `/guide/comparison` | `/engine/comparison` | 301 |
-| `/reference/core` | `/engine/reference/core` | 301 |
-| `/ui` | `/engine/design-system` | 301 |
-| `/styling/web-awesome` | `/engine/design-system` | 301 |
-| `/community` | `/` (首页，社区链接在页脚) | 301 |
+| 旧 URL                         | 新 URL                          | 状态码 |
+| ------------------------------ | ------------------------------- | ------ |
+| `/guide/architecture`          | `/engine/architecture`          | 301    |
+| `/guide/dsd`                   | `/engine/dsd`                   | 301    |
+| `/guide/islands`               | `/engine/islands`               | 301    |
+| `/guide/islands-deep`          | `/engine/islands-deep`          | 301    |
+| `/guide/package-compatibility` | `/engine/package-compatibility` | 301    |
+| `/guide/standards-registry`    | `/engine/standards-registry`    | 301    |
+| `/guide/comparison`            | `/engine/comparison`            | 301    |
+| `/reference/core`              | `/engine/reference/core`        | 301    |
+| `/ui`                          | `/engine/design-system`         | 301    |
+| `/styling/web-awesome`         | `/engine/design-system`         | 301    |
+| `/community`                   | `/` (首页，社区链接在页脚)      | 301    |
 
 ### 3.5 引擎页面 renderer
 
@@ -264,14 +264,14 @@ sequenceDiagram
 
 ## 五、待明确事项
 
-| # | 问题 | 当前假设 | 影响范围 |
-|---|------|---------|---------|
+| # | 问题                                                                                                                                                                                                                  | 当前假设                                                                                                                      | 影响范围                                                                |
+| - | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | 1 | **侧边栏如何区分框架/引擎 section？** 当前 `navSections` 是全站统一的一维数组，所有 section 都会出现在侧边栏。迁移后，框架的 `Quick Start/Core/Production` 和引擎的 `Principles/Compatibility/Reference` 会混合在一起 | 假设 `less-layout` 组件会根据 `current-path` 自动高亮当前 section 所在的导航标签，同一页面只显示与当前路径匹配的 section 分组 | 如果 `less-layout` 不支持按路径过滤 section，需要在 renderer 中自行过滤 |
-| 2 | **重定向实现方式？** SSG 产物是纯静态 HTML，没有服务端重定向能力 | 在 `404.ts` 中增加客户端重定向逻辑，或使用 Netlify/Vercel 的 `_redirects` 文件 | 如果部署平台不支持 `_redirects`，需要在 404.ts 中处理 |
-| 3 | **`/guide/` 保持不变但导航标签叫 Framework** — 用户点击 "Framework" 导航到 `/guide/positioning`，URL 前缀是 `/guide/` 不是 `/framework/` | PRD Open Question 1 结论：保持 `/guide/` 避免大规模路由变更，通过 headerNav label 建立用户心智 | 可能造成用户困惑——导航标签和 URL 不一致 |
-| 4 | **Blog ADR 重定向机制？** 博客系统使用 markdown frontmatter 渲染，添加 `redirect` 字段需要修改 `@lessjs/content` 的博客渲染逻辑 | 简化方案：在 24 篇 ADR 博客的 frontmatter 中添加 `hidden: true`，使其不出现在博客列表中，不修改渲染器 | 如果需要保留旧 URL 的重定向，仍需额外处理 |
-| 5 | **Community 页面合并到页脚的具体方式？** 页脚模板可能在 `less-layout` Web Component 内部 | 在 `less-layout` 的 footer slot 中注入社区链接（GitHub / Discord / JSR），删除 Community 独立页面 | 需要确认 `less-layout` 是否支持 footer slot 注入 |
-| 6 | **`_hub-data-full.ts` vs `_hub-data.ts` 是否需要合并？** | PRD P2 优先级，本次不处理 | 不影响本次重构 |
+| 2 | **重定向实现方式？** SSG 产物是纯静态 HTML，没有服务端重定向能力                                                                                                                                                      | 在 `404.ts` 中增加客户端重定向逻辑，或使用 Netlify/Vercel 的 `_redirects` 文件                                                | 如果部署平台不支持 `_redirects`，需要在 404.ts 中处理                   |
+| 3 | **`/guide/` 保持不变但导航标签叫 Framework** — 用户点击 "Framework" 导航到 `/guide/positioning`，URL 前缀是 `/guide/` 不是 `/framework/`                                                                              | PRD Open Question 1 结论：保持 `/guide/` 避免大规模路由变更，通过 headerNav label 建立用户心智                                | 可能造成用户困惑——导航标签和 URL 不一致                                 |
+| 4 | **Blog ADR 重定向机制？** 博客系统使用 markdown frontmatter 渲染，添加 `redirect` 字段需要修改 `@lessjs/content` 的博客渲染逻辑                                                                                       | 简化方案：在 24 篇 ADR 博客的 frontmatter 中添加 `hidden: true`，使其不出现在博客列表中，不修改渲染器                         | 如果需要保留旧 URL 的重定向，仍需额外处理                               |
+| 5 | **Community 页面合并到页脚的具体方式？** 页脚模板可能在 `less-layout` Web Component 内部                                                                                                                              | 在 `less-layout` 的 footer slot 中注入社区链接（GitHub / Discord / JSR），删除 Community 独立页面                             | 需要确认 `less-layout` 是否支持 footer slot 注入                        |
+| 6 | **`_hub-data-full.ts` vs `_hub-data.ts` 是否需要合并？**                                                                                                                                                              | PRD P2 优先级，本次不处理                                                                                                     | 不影响本次重构                                                          |
 
 ---
 
@@ -293,6 +293,7 @@ sequenceDiagram
 ### T01: 项目基础设施 — 导航配置 + 重定向映射 + engine 目录骨架
 
 **源文件：**
+
 - `www/vite.config.ts` — 修改 headerNav 为 4 项
 - `www/app/routes/engine/_renderer.ts` — 新建，复制 guide 的 renderer，修改编辑链接基准
 - `www/app/routes/404.ts` — 更新 POPULAR_LINKS + 添加旧 URL 客户端重定向逻辑
@@ -302,6 +303,7 @@ sequenceDiagram
 **优先级：** P0
 
 **详细说明：**
+
 1. 修改 `vite.config.ts` 中 `content.nav.headerNav` 为：
    ```typescript
    headerNav: [
@@ -318,6 +320,7 @@ sequenceDiagram
 ### T02: 引擎页面迁移 — 物理移动 + meta 更新 + 内部链接修复
 
 **源文件：**
+
 - `www/app/routes/engine/architecture.ts` — 从 guide/ 迁移，更新 meta/current-path/链接
 - `www/app/routes/engine/dsd.ts` — 同上
 - `www/app/routes/engine/islands.ts` — 同上
@@ -333,6 +336,7 @@ sequenceDiagram
 **优先级：** P0
 
 **详细说明：**
+
 1. 将 7 个引擎相关页面从 `guide/` 移至 `engine/`：
    - architecture, dsd, islands, islands-deep, package-compatibility, standards-registry, comparison
 2. 将 `reference/core.ts` 移至 `engine/reference/core.ts`
@@ -349,6 +353,7 @@ sequenceDiagram
 ### T03: 框架页面 meta 更新 + 降级页面处理
 
 **源文件：**
+
 - `www/app/routes/guide/positioning.ts` — meta.section: Start Here → Quick Start
 - `www/app/routes/guide/getting-started.ts` — 同上
 - `www/app/routes/guide/routing.ts` — meta.section: Core Model → Core
@@ -367,6 +372,7 @@ sequenceDiagram
 **优先级：** P1
 
 **详细说明：**
+
 1. 修改框架页面的 meta.section 值（Start Here → Quick Start, Core Model → Core, Strategy → Core）
 2. Roadmap 死链接修复：
    - `/docs/decisions/adr-0006-version-roadmap` → `/decisions/adr-0006-version-roadmap`
@@ -378,6 +384,7 @@ sequenceDiagram
 ### T04: Blog ADR 去重 + 内容清理
 
 **源文件：**
+
 - `www/content/blog/0001-keep-hono-vite-dev-server.md` ~ `0024-standards-first-wc-renderer-roadmap.md` — 24 篇 ADR 博客添加 `hidden: true` 或 `redirect` frontmatter
 - `www/content/blog/0008-implementation-plan.md` — 删除
 - `www/content/blog/adr-0008-0009-*.md` — 归档（添加 `archived: true`）
@@ -388,14 +395,16 @@ sequenceDiagram
 **优先级：** P1
 
 **详细说明：**
+
 1. 24 篇 ADR 编号博客（0001-0024）：在 frontmatter 中添加 `hidden: true`，使其不出现在博客列表
 2. 删除 `0008-implementation-plan.md`（与 `0008-eliminate-createserver-globalthis-bridges.md` 编号冲突）
-3. 3 篇过程文档（adr-0008-0009-*.md, adr-0009-*.md, core-architecture-simplification-report.md）：添加 `archived: true` frontmatter
+3. 3 篇过程文档（adr-0008-0009-_.md, adr-0009-_.md, core-architecture-simplification-report.md）：添加 `archived: true` frontmatter
 4. 保留所有版本发布日志、部署指南、设计文档
 
 ### T05: 全站链接验证 + 构建测试
 
 **源文件：**
+
 - `www/app/routes/guide/_renderer.ts` — 确认 guide renderer 继续正常工作
 - `www/app/routes/engine/_renderer.ts` — 确认 engine renderer 正常工作
 - `www/app/routes/registry/_renderer.ts` — 确认不受影响
@@ -408,6 +417,7 @@ sequenceDiagram
 **优先级：** P0
 
 **详细说明：**
+
 1. 运行 `deno task build`，确认构建无错误
 2. 检查 `dist/` 目录：确认 `/engine/` 页面已正确生成
 3. 检查旧 URL 是否触发重定向（`/guide/architecture` → `/engine/architecture`）
@@ -477,6 +487,7 @@ graph TD
 ```
 
 **说明：**
+
 - T01 是基础任务，必须先完成（导航配置和 engine 目录骨架）
 - T02/T03/T04 可并行执行，但都依赖 T01
 - T05 是最终验证任务，依赖所有实施任务完成

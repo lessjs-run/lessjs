@@ -6,11 +6,11 @@
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *
- * @csspart container —The step card wrapper
- * @csspart indicator —The step number circle
- * @csspart title —The step label heading
- * @csspart description —The step description paragraph
- * @csspart content —The slot content area
+ * @csspart container -The step card wrapper
+ * @csspart indicator -The step number circle
+ * @csspart title -The step label heading
+ * @csspart description -The step description paragraph
+ * @csspart content -The slot content area
  *
  * Usage:
  * ```html
@@ -103,7 +103,7 @@ export class LessStepCard extends DsdElement {
     </div>`;
   }
 
-  override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
+  override attributeChangedCallback(_name: string, old: string | null, val: string | null): void {
     if (old === val) return;
     this._syncDOM();
   }

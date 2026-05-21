@@ -8,9 +8,9 @@
  * When browser natively supports Signal, engine auto-switches to native.
  *
  * Architecture (3 layers):
- *   Engine layer    → TC39 Signal primitives (polyfill or native)
- *   Framework layer → User-friendly API (.value syntax, subscribe)
- *   Sugar layer     → islandEffect(), channel(), themeSignal
+ *   Engine layer    -> TC39 Signal primitives (polyfill or native)
+ *   Framework layer -> User-friendly API (.value syntax, subscribe)
+ *   Sugar layer     -> islandEffect(), channel(), themeSignal
  *
  * LessJS L2 Island Communication Rules:
  *   1. Islands must not reference each other's shadow DOM directly.
@@ -34,7 +34,7 @@ export type {
 export { computed, effect, signal } from './framework.ts';
 export { batch, channel, islandEffect, isNativeSignal, themeSignal, untracked } from './sugar.ts';
 
-// Default export for convenient import — tree-shakable since bundlers
+// Default export for convenient import - tree-shakable since bundlers
 // eliminate the default object when only named imports are used.
 import { computed, effect, signal } from './framework.ts';
 import { batch, channel, islandEffect, isNativeSignal, themeSignal, untracked } from './sugar.ts';

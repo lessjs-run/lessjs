@@ -9,7 +9,7 @@
 export type Unsubscribe = () => void;
 
 /**
- * LessJS WritableSignal — user-friendly wrapper around Signal.State
+ * LessJS WritableSignal - user-friendly wrapper around Signal.State
  * Uses .value syntax (like Preact/Solid) instead of .get()/.set() (TC39)
  */
 export interface WritableSignal<T> {
@@ -22,7 +22,7 @@ export interface WritableSignal<T> {
 }
 
 /**
- * LessJS ReadonlySignal — derived from computed or manually created read-only
+ * LessJS ReadonlySignal - derived from computed or manually created read-only
  */
 export interface ReadonlySignal<T> {
   /** Read the current value */
@@ -39,7 +39,7 @@ export type ChannelHandler<T = unknown> = (data: T) => void;
 
 /**
  * A named event bus for cross-island communication.
- * Uses CustomEvent on document.body — platform API, L2 exempt.
+ * Uses CustomEvent on document.body - platform API, L2 exempt.
  */
 export interface Channel<T = unknown> {
   readonly name: string;

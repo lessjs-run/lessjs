@@ -1,11 +1,11 @@
 /**
- * Registry Hub — Package Detail Page
+ * Registry Hub - Package Detail Page
  *
  * v0.19.0: Detailed view of a Hub package with compatibility evidence,
  * tags, install guidance, and snapshot previews.
  *
  * Data is embedded during SSG via hub-data-full.ts import.
- * No client-side fetch needed — works on static deployments.
+ * No client-side fetch needed - works on static deployments.
  *
  * @see docs/sop/v0.19.0-platform-hub.md
  * @see ADR-0030
@@ -14,7 +14,6 @@
 import { DsdElement, StyleSheet } from '@lessjs/core';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterRegistryNav } from '../../utils/nav-filter.js';
-import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import pkgRecords from './_hub-data-full.ts';
@@ -58,7 +57,7 @@ interface HubPackageRecord {
 
 export const tagName = 'docs-registry-detail';
 
-/** Static paths for SSG — pre-renders all package detail pages */
+/** Static paths for SSG - pre-renders all package detail pages */
 export function getStaticPaths(): Array<Record<string, string>> {
   try {
     const cwd = Deno.cwd();
@@ -136,7 +135,7 @@ routeSheet.replaceSync(`
     `);
 
 export default class DocsRegistryDetail extends DsdElement {
-  /** Route parameter: "package" — set by the framework from `[package].ts` */
+  /** Route parameter: "package" - set by the framework from `[package].ts` */
   package = '';
 
   private _record: HubPackageRecord | null = null;
@@ -152,7 +151,7 @@ export default class DocsRegistryDetail extends DsdElement {
     super();
   }
 
-  /** Lazy-load record data — works in SSR (after properties are set) and client */
+  /** Lazy-load record data - works in SSR (after properties are set) and client */
   private _getRecord(): HubPackageRecord | null {
     if (this._record !== null) return this._record;
     if (!this.package) return null;
@@ -227,9 +226,9 @@ export default class DocsRegistryDetail extends DsdElement {
             ${pkg.description ? `<p class="pkg-desc">${pkg.description}</p>` : ''}
             <div class="pkg-links">
               ${
-      pkg.repository ? `<a href="${pkg.repository}" target="_blank">Repository →</a>` : ''
+      pkg.repository ? `<a href="${pkg.repository}" target="_blank">Repository -></a>` : ''
     }
-              ${pkg.homepage ? `<a href="${pkg.homepage}" target="_blank">Homepage →</a>` : ''}
+              ${pkg.homepage ? `<a href="${pkg.homepage}" target="_blank">Homepage -></a>` : ''}
               <span>Source: ${pkg.source}</span>
               <span>Validated: ${new Date(pkg.submittedAt).toLocaleDateString()}</span>
             </div>
@@ -286,7 +285,7 @@ export default class DocsRegistryDetail extends DsdElement {
             <table class="meta-table">
               <tr><th>Validator</th><td>@lessjs/core v${pkg.validatorVersion}</td></tr>
               <tr><th>Manifest hash</th><td style="font-family:monospace;font-size:0.75rem;">${pkg.manifestHash}</td></tr>
-              <tr><th>Submitted by</th><td>${pkg.submittedBy || '—'}</td></tr>
+              <tr><th>Submitted by</th><td>${pkg.submittedBy || '-'}</td></tr>
             </table>
           </div>
 
@@ -335,7 +334,7 @@ export default class DocsRegistryDetail extends DsdElement {
             ? `<span style="color:#f59e0b;font-size:0.6875rem;">(${tag.validationWarnings} warn)</span>`
             : ''
         }
-                    <span style="font-size:0.625rem;color:var(--text-muted);margin-left:0.25rem;">→</span>
+                    <span style="font-size:0.625rem;color:var(--text-muted);margin-left:0.25rem;">-></span>
                   </a>
                 `;
       })

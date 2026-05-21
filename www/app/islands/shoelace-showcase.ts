@@ -1,11 +1,11 @@
 /**
- * Shoelace Showcase — Ocean component (v0.20.0 Ocean-Island).
+ * Shoelace Showcase - Ocean component (v0.20.0 Ocean-Island).
  *
  * Renders Shoelace Web Components (Lit-based) as a static showcase.
- * Pure DsdElement — zero framework dependency at the wrapper level.
+ * Pure DsdElement - zero framework dependency at the wrapper level.
  * Shoelace itself uses Lit internally, but that's the library's choice.
  *
- * @lessjs/app island — client-only (ssr: false), Shoelace needs real DOM.
+ * @lessjs/app island - client-only (ssr: false), Shoelace needs real DOM.
  */
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/core';
@@ -61,7 +61,7 @@ export default class ShoelaceShowcase extends DsdElement {
       </div>
       <sl-alert variant="warning" open>
         <sl-icon name="info-circle" slot="icon"></sl-icon>
-        <strong>Shoelace</strong> — Lit Web Components via @lessjs/adapter-lit DSD pipeline
+        <strong>Shoelace</strong> - Lit Web Components via @lessjs/adapter-lit DSD pipeline
       </sl-alert>
       <div class="sl-note">Shoelace (80+ components) renders natively through our Lit adapter</div>
     `;

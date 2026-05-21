@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub — Playwright-based Snapshot Renderer
+ * @lessjs/hub - Playwright-based Snapshot Renderer
  *
  * v0.19.0 Phase 3: Renders Web Components to static HTML using a real
  * Chromium browser via Playwright. Replaces the fragile happy-dom simulation
@@ -57,10 +57,10 @@ export interface PlaywrightRenderResult {
  *
  * Examples:
  *   '@shoelace-style/shoelace/dist/components/alert/alert.js'
- *   → 'https://esm.sh/@shoelace-style/shoelace@2.20.1'
+ *   -> 'https://esm.sh/@shoelace-style/shoelace@2.20.1'
  *
  *   'media-chrome/dist/media-controller.js'
- *   → 'https://esm.sh/media-chrome@4.19.0'
+ *   -> 'https://esm.sh/media-chrome@4.19.0'
  */
 function toEsmUrl(importSpec: string): string {
   // Known package versions for consistent CDN resolution
@@ -88,7 +88,7 @@ function toEsmUrl(importSpec: string): string {
 
 /**
  * Generate an inline HTML page that imports and renders a single component.
- * No file I/O — served from memory via temp HTTP server.
+ * No file I/O - served from memory via temp HTTP server.
  *
  * Uses esm.sh CDN for module resolution in the browser.
  */
@@ -122,7 +122,7 @@ function generateFixtureHtml(options: PlaywrightRenderOptions): string {
       const cssPath =
         'node_modules/.deno/@shoelace-style+shoelace@2.20.1/node_modules/@shoelace-style/shoelace/dist/themes/light.css';
       themeStyle = Deno.readTextFileSync(cssPath);
-    } catch { /* theme CSS not available — skip */ }
+    } catch { /* theme CSS not available - skip */ }
   }
 
   const themeBlock = themeStyle ? `<style>${themeStyle}</style>` : '';
@@ -247,14 +247,14 @@ async function renderSingleComponent(
       if (!el) return { error: `Element <${tag}> not found in DOM` };
       if (!el.shadowRoot) return { error: `Element <${tag}> has no shadowRoot` };
 
-      // 1. Serialize adoptedStyleSheets → <style> tags
+      // 1. Serialize adoptedStyleSheets -> <style> tags
       const styleSheets: string[] = [];
       try {
         for (const sheet of el.shadowRoot.adoptedStyleSheets) {
           const rules = Array.from(sheet.cssRules).map((r) => r.cssText).join('\n');
           if (rules) styleSheets.push(rules);
         }
-      } catch { /* ignore — some sheets may not be readable */ }
+      } catch { /* ignore - some sheets may not be readable */ }
 
       // 2. Get shadow DOM inner HTML
       const shadowHtml = el.shadowRoot.innerHTML;
@@ -263,7 +263,7 @@ async function renderSingleComponent(
       const slotMap: Record<string, string> = {};
       for (const child of el.childNodes) {
         if (child.nodeType === 1) {
-          // Element node — append to its assigned slot.
+          // Element node - append to its assigned slot.
           // Insert a space between consecutive elements in the same slot
           // so inline siblings (e.g. <sl-tab>) don't render squished together.
           const slotName = (child as Element).getAttribute('slot') || 'default';
@@ -271,7 +271,7 @@ async function renderSingleComponent(
           const separator = existing ? ' ' : '';
           slotMap[slotName] = existing + separator + (child as Element).outerHTML;
         } else if (child.nodeType === 3) {
-          // Text node — only non-empty text goes to the default slot.
+          // Text node - only non-empty text goes to the default slot.
           // Whitespace-only nodes are intentionally dropped to avoid polluting
           // named-slot content (they belong to the default slot per spec).
           const text = child.textContent?.trim();
@@ -301,7 +301,7 @@ async function renderSingleComponent(
 
     // Replace <slot> with fallback content from light DOM
     const slotMap = captured.slotMap as Record<string, string>;
-    // 1. Named slots first — match <slot name="..."> regardless of other attrs
+    // 1. Named slots first - match <slot name="..."> regardless of other attrs
     shadowHtml = shadowHtml.replace(
       /<slot\b[^>]*?\sname\s*=\s*"([^"]*)"[^>]*><\/slot>/gi,
       (_m: string, name: string) => {
@@ -309,7 +309,7 @@ async function renderSingleComponent(
         return `<SLOT-FALLBACK name="${name}">${content}</SLOT-FALLBACK>`;
       },
     );
-    // 2. Default slots — any remaining <slot> without name= attribute
+    // 2. Default slots - any remaining <slot> without name= attribute
     shadowHtml = shadowHtml.replace(
       /<slot\b[^>]*><\/slot>/gi,
       (_m: string) => {
@@ -341,7 +341,7 @@ async function renderSingleComponent(
         const cssPath =
           'node_modules/.deno/@shoelace-style+shoelace@2.20.1/node_modules/@shoelace-style/shoelace/dist/themes/light.css';
         themeCss = Deno.readTextFileSync(cssPath);
-      } catch { /* theme CSS not available — skip */ }
+      } catch { /* theme CSS not available - skip */ }
     }
     const themeBlock = themeCss ? `<style>${themeCss}</style>` : '';
 
@@ -387,12 +387,12 @@ export async function renderBatchWithPlaywright(
   try {
     playwright = await import('npm:playwright@^1.59.0');
   } catch {
-    // Playwright not available — return placeholders for all items
+    // Playwright not available - return placeholders for all items
     for (const item of items) {
       results.set(item.tagName, {
         html: renderPlaceholder(item.tagName, 'Playwright not available'),
         success: false,
-        error: 'Playwright not available — snapshot is placeholder, not real render',
+        error: 'Playwright not available - snapshot is placeholder, not real render',
       });
     }
     return results;
@@ -424,7 +424,7 @@ export async function renderBatchWithPlaywright(
           success: false,
           error: result.error
             ? `Snapshot failed: ${result.error}`
-            : 'Snapshot failed — placeholder, not real render',
+            : 'Snapshot failed - placeholder, not real render',
         });
         if (verbose) {
           console.log(`  ⚠️  <${item.tagName}> snapshot failed: ${result.error}`);

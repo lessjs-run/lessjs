@@ -2,7 +2,7 @@
  * @lessjs/content - Type definitions
  *
  * Unified content plugin for LessJS.
- * Blog + Nav + Sitemap — build-time only, zero runtime.
+ * Blog + Nav + Sitemap - build-time only, zero runtime.
  */
 
 import type { BlogPost, BlogPostFrontmatter, LessBlogOptions } from './blog/types.ts';
@@ -53,7 +53,7 @@ export interface RouteMeta {
 export interface NavOptions {
   /** Directory containing route files to scan */
   routesDir: string;
-  /** Header navigation links (manually configured — changes rarely) */
+  /** Header navigation links (manually configured - changes rarely) */
   headerNav?: HeaderNavLink[];
   /** File patterns to exclude from nav scanning */
   exclude?: string[];

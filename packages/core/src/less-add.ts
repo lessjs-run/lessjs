@@ -2,7 +2,7 @@
  * @lessjs/core - `less add` Safe Install Flow
  *
  * Produces a deterministic install plan for adding a third-party Web Component
- * package to a LessJS project. Every plan is validated first — invalid packages
+ * package to a LessJS project. Every plan is validated first - invalid packages
  * are rejected before any files are touched.
  *
  * v0.18.2: Entry point for `less add` CLI.
@@ -130,10 +130,10 @@ export function generateAddPlan(options: AddOptions): AddPlan {
 
   // Copy validation diagnostics
   for (const err of report.errors) {
-    plan.errors.push(`[${err.code}] ${err.message}${err.fix ? ` — ${err.fix}` : ''}`);
+    plan.errors.push(`[${err.code}] ${err.message}${err.fix ? ` - ${err.fix}` : ''}`);
   }
   for (const warn of report.warnings) {
-    plan.warnings.push(`[${warn.code}] ${warn.message}${warn.fix ? ` — ${warn.fix}` : ''}`);
+    plan.warnings.push(`[${warn.code}] ${warn.message}${warn.fix ? ` - ${warn.fix}` : ''}`);
   }
 
   if (!report.valid) {
@@ -158,7 +158,7 @@ export function generateAddPlan(options: AddOptions): AddPlan {
   }
 
   plan.statusUpdates.push(
-    `✅ Validation passed — ${report.tags.length} tag(s) in "${plan.packageName}"`,
+    `✅ Validation passed - ${report.tags.length} tag(s) in "${plan.packageName}"`,
   );
   plan.statusUpdates.push(`   Compatibility: ${report.compatibility}`);
 
@@ -209,7 +209,7 @@ export function generateAddPlan(options: AddOptions): AddPlan {
 
   // Step 6: Summary
   if (dryRun) {
-    plan.statusUpdates.push(`\n📋 Dry run — no files changed. Review the plan above.`);
+    plan.statusUpdates.push(`\n📋 Dry run - no files changed. Review the plan above.`);
     plan.statusUpdates.push(
       `   Run without --dry-run to apply ${plan.fileMutations.length} mutation(s).`,
     );

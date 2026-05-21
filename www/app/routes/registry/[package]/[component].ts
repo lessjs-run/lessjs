@@ -1,12 +1,12 @@
 /**
- * Registry Hub — Component Detail Page
+ * Registry Hub - Component Detail Page
  *
  * v0.19.0 Phase 2: Per-component detail view with rendered preview,
  * usage example, and compatibility details.
  *
  * Route: /registry/:package/:component
  *
- * Data from hub-data-full.ts at build time — static SSG, no client fetch.
+ * Data from hub-data-full.ts at build time - static SSG, no client fetch.
  *
  * @see ADR-0031
  * @see docs/sop/v0.19.0-component-browser.md
@@ -17,7 +17,6 @@ export const meta = { section: 'Registry', label: 'Component Detail', order: 6 }
 import { DsdElement, StyleSheet } from '@lessjs/core';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterRegistryNav } from '../../../utils/nav-filter.js';
-import { pageStyles } from '../../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import pkgRecords from '../_hub-data-full.ts';
 import type { HubPackageRecord } from '../_hub-data-full.ts';
@@ -25,7 +24,7 @@ import type { HubPackageRecord } from '../_hub-data-full.ts';
 // ─── Snapshot Sanitizer ──────────────────────────────────────────────────
 // Strip dangerous elements and attributes from snapshot HTML before
 // rendering with unsafeHTML. This is the trust boundary for external
-// Hub submissions — never render raw third-party HTML without sanitization.
+// Hub submissions - never render raw third-party HTML without sanitization.
 
 const DANGEROUS_TAGS = new Set([
   'script',
@@ -87,7 +86,7 @@ interface ComponentPageParams {
 
 export const tagName = 'docs-registry-component-detail';
 
-/** Static paths for SSG — pre-renders all (package, component) pairs */
+/** Static paths for SSG - pre-renders all (package, component) pairs */
 export function getStaticPaths(): ComponentPageParams[] {
   const paths: ComponentPageParams[] = [];
   const records = pkgRecords as Record<string, HubPackageRecord>;
@@ -568,7 +567,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
                 <div class="section-title">Preview Details</div>
                 <div style="font-size:0.8125rem;color:var(--text-secondary);line-height:1.6;">
                   This preview was generated during package validation and stored as a static HTML snapshot. The
-                  snapshot is pre-rendered at build time — no client-side rendering needed.
+                  snapshot is pre-rendered at build time - no client-side rendering needed.
                 </div>
               </div>
             `
@@ -594,11 +593,11 @@ export default class DocsRegistryComponentDetail extends DsdElement {
                         <td style="font-family:monospace;font-size:0.8125rem;">${a.name}</td>
                         <td style="font-size:0.75rem;color:var(--text-muted);">${
             a.type ||
-            '—'
+            '-'
           }</td>
                         <td style="font-size:0.75rem;color:var(--text-muted);">${
             a
-              .default || '—'
+              .default || '-'
           }</td>
                         <td style="font-size:0.8125rem;">${a.description || ''}</td>
                       </tr>
@@ -625,7 +624,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
                         <td style="font-family:monospace;font-size:0.8125rem;">${e.name}</td>
                         <td style="font-size:0.75rem;color:var(--text-muted);">${
             e.type ||
-            '—'
+            '-'
           }</td>
                         <td style="font-size:0.8125rem;">${e.description || ''}</td>
                       </tr>

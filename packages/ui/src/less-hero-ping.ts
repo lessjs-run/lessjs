@@ -1,12 +1,12 @@
 /**
- * Hero Ping — Ocean component (v0.20.0 Ocean-Island).
+ * Hero Ping - Ocean component (v0.20.0 Ocean-Island).
  *
  * Calls a real API endpoint and shows a status dot with response info.
- * Pure DsdElement — zero Lit dependency. State changes are reflected
+ * Pure DsdElement - zero Lit dependency. State changes are reflected
  * by re-rendering the shadow DOM and re-hydrating events.
  *
- * @csspart dot-static  — The static status dot
- * @csspart dot-animated — The animated ping button
+ * @csspart dot-static  - The static status dot
+ * @csspart dot-animated - The animated ping button
  */
 import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';

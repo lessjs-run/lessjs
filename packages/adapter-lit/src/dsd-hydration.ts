@@ -5,7 +5,7 @@
  * Provides the common DSD detection, event binding, and cleanup pattern
  * shared by all DSD Interactive components.
  *
- * Usage (recommended — extend pre-composed base class):
+ * Usage (recommended - extend pre-composed base class):
  * ```ts
  * import { DsdLitElement } from '@lessjs/adapter-lit';
  *
@@ -21,7 +21,7 @@
  * }
  * ```
  *
- * Usage (advanced — Mixin with custom base class):
+ * Usage (advanced - Mixin with custom base class):
  * ```ts
  * import { WithDsdHydration } from '@lessjs/adapter-lit';
  *
@@ -45,7 +45,7 @@
 import { LitElement } from 'lit';
 import type { HydrateEventDescriptor } from '@lessjs/core';
 
-/** Constructor type for Mixin pattern — `any[]` is standard TS Mixin signature */
+/** Constructor type for Mixin pattern - `any[]` is standard TS Mixin signature */
 // deno-lint-ignore no-explicit-any
 type Constructor<T = LitElement> = new (...args: any[]) => T;
 
@@ -173,7 +173,7 @@ export function WithDsdHydration<T extends Constructor<LitElement>>(
       const { signal } = this._hydrateAbortController;
 
       for (const desc of events) {
-        // M-17 fix: Guard against prototype pollution — skip methods starting with __
+        // M-17 fix: Guard against prototype pollution - skip methods starting with __
         if (desc.method.startsWith('__')) continue;
         const elements = this.shadowRoot.querySelectorAll(desc.selector);
         for (const el of elements) {
@@ -194,7 +194,7 @@ export function WithDsdHydration<T extends Constructor<LitElement>>(
  *
  * Use this instead of `WithDsdHydration(LitElement)` in your component
  * `extends` clause. JSR's fast type checker requires extracted super
- * class expressions — this pre-composed class satisfies that requirement.
+ * class expressions - this pre-composed class satisfies that requirement.
  *
  * @example
  * ```ts

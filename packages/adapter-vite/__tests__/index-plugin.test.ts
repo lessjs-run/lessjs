@@ -106,7 +106,7 @@ Deno.test('less() core plugin has buildStart hook defined', () => {
 
 // ─── less() inject / headExtras branches ─────────────────────
 
-Deno.test('less() inject.stylesheets �?headExtras', () => {
+Deno.test('less() inject.stylesheets -> headExtras', () => {
   const plugins = less({
     inject: { stylesheets: ['https://cdn.example.com/app.css'] },
   });
@@ -115,14 +115,14 @@ Deno.test('less() inject.stylesheets �?headExtras', () => {
   // Verification: plugin construction succeeds for inject-only config
 });
 
-Deno.test('less() inject.scripts �?headExtras', () => {
+Deno.test('less() inject.scripts -> headExtras', () => {
   const plugins = less({
     inject: { scripts: ['https://cdn.example.com/app.js'] },
   });
   assertLessPluginArray(plugins);
 });
 
-Deno.test('less() inject.headFragments �?headExtras', () => {
+Deno.test('less() inject.headFragments -> headExtras', () => {
   const plugins = less({
     inject: { headFragments: ['<meta name="theme-color" content="#000">'] },
   });
@@ -217,7 +217,7 @@ Deno.test('less() virtualEntryPlugin.resolveId matches VIRTUAL_ENTRY_ID', () => 
   const plugins = less();
   const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
   assertExists(virtualPlugin.resolveId);
-  // The resolved ID includes '\0' prefix �?we just verify it returns non-null for the ID
+  // The resolved ID includes '\0' prefix; verify it returns non-null for the ID.
   const result = (virtualPlugin.resolveId as Function)(
     'virtual:less-hono-entry',
     undefined as never,
@@ -240,7 +240,7 @@ Deno.test('less() virtualEntryPlugin.load returns code for resolved ID', () => {
 
 Deno.test('less() with packageIslands option (empty array)', () => {
   const plugins = less({ packageIslands: [] });
-  // v0.3.1: 5 plugins (html-template removed �?was a no-op)
+  // v0.3.1: 5 plugins (html-template removed; it was a no-op)
   assertLessPluginArray(plugins);
 });
 
@@ -258,7 +258,7 @@ Deno.test('less() corePlugin.buildStart is callable', () => {
   const plugins = less();
   const corePlugin = plugins.find((p) => p.name === 'less:core')!;
   assertExists(corePlugin.buildStart, 'core plugin must have buildStart');
-  // buildStart is async and requires filesystem �?just verify it's callable
+  // buildStart is async and requires filesystem; just verify it's callable.
   assertEquals(typeof corePlugin.buildStart, 'function');
 });
 
@@ -336,7 +336,7 @@ Deno.test('less() corePlugin.buildStart scans routes and islands', async () => {
     const corePlugin = plugins.find((p) => p.name === 'less:core')!;
     assertExists(corePlugin.buildStart);
 
-    // Call buildStart �?it should succeed with valid directory structure
+    // Call buildStart; it should succeed with valid directory structure.
     await (corePlugin.buildStart as Function)();
 
     Deno.chdir(origCwd);
@@ -362,7 +362,7 @@ Deno.test('less() corePlugin.buildStart handles empty directories gracefully', a
     });
     const corePlugin = plugins.find((p) => p.name === 'less:core')!;
 
-    // buildStart should NOT throw �?scanRoutes returns empty array for missing dirs
+    // buildStart should NOT throw; scanRoutes returns empty array for missing dirs.
     await (corePlugin.buildStart as Function)();
 
     Deno.chdir(origCwd);
@@ -385,7 +385,7 @@ Deno.test('less() corePlugin.buildStart with packageIslands config', async () =>
     const origCwd = Deno.cwd();
     Deno.chdir(tmp);
 
-    // packageIslands with non-existent package �?should still not crash buildStart
+    // packageIslands with non-existent package should still not crash buildStart.
     const plugins = less({
       routesDir: 'app/routes',
       islandsDir: 'app/islands',
@@ -397,7 +397,7 @@ Deno.test('less() corePlugin.buildStart with packageIslands config', async () =>
     try {
       await (corePlugin.buildStart as Function)();
     } catch {
-      // Expected �?@nonexistent/package import will fail, but route scan should succeed first
+      // Expected: @nonexistent/package import will fail, but route scan should succeed first.
     }
 
     Deno.chdir(origCwd);

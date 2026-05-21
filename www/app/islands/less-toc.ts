@@ -1,9 +1,9 @@
 /**
- * Table of Contents — Ocean component (v0.20.0 Ocean-Island).
+ * Table of Contents - Ocean component (v0.20.0 Ocean-Island).
  *
  * Client-side TOC: reads h2/h3 from the page content and renders
  * a right sidebar with IntersectionObserver for active tracking.
- * Pure DsdElement — zero Lit dependency.
+ * Pure DsdElement - zero Lit dependency.
  */
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/core';

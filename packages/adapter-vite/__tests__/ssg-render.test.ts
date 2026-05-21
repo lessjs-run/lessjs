@@ -57,7 +57,7 @@ Deno.test('resolveDynamicRoutePath rejects missing params', () => {
   );
 });
 
-Deno.test('ssgRender — rejects when module has no default export', async () => {
+Deno.test('ssgRender - rejects when module has no default export', async () => {
   const bundle = createMockBundle({ default: undefined });
   await assertRejects(
     () => ssgRender(bundle as SsrBundle, defaultOptions),
@@ -66,12 +66,12 @@ Deno.test('ssgRender — rejects when module has no default export', async () =>
   );
 });
 
-Deno.test('ssgRender — handles empty routeInfo gracefully', async () => {
+Deno.test('ssgRender - handles empty routeInfo gracefully', async () => {
   const bundle = createMockBundle({ routeInfo: [] });
   await ssgRender(bundle, defaultOptions);
 });
 
-Deno.test('ssgRender — handles dynamic routes with no getStaticPaths', async () => {
+Deno.test('ssgRender - handles dynamic routes with no getStaticPaths', async () => {
   const bundle = createMockBundle({
     routeInfo: [
       { path: '/blog/:slug', tagName: 'blog-page', isDynamic: true, paramNames: ['slug'] },
@@ -82,7 +82,7 @@ Deno.test('ssgRender — handles dynamic routes with no getStaticPaths', async (
   await ssgRender(bundle, defaultOptions);
 });
 
-Deno.test('ssgRender — handles getStaticPaths failure gracefully', async () => {
+Deno.test('ssgRender - handles getStaticPaths failure gracefully', async () => {
   const bundle = createMockBundle({
     routeInfo: [
       { path: '/blog/:slug', tagName: 'blog-page', isDynamic: true, paramNames: ['slug'] },
@@ -102,7 +102,7 @@ Deno.test('ssgRender — handles getStaticPaths failure gracefully', async () =>
   await ssgRender(bundle, defaultOptions);
 });
 
-Deno.test('ssgRender — handles empty getStaticPaths gracefully', async () => {
+Deno.test('ssgRender - handles empty getStaticPaths gracefully', async () => {
   const bundle = createMockBundle({
     routeInfo: [
       { path: '/blog/:slug', tagName: 'blog-page', isDynamic: true, paramNames: ['slug'] },
@@ -122,12 +122,12 @@ Deno.test('ssgRender — handles empty getStaticPaths gracefully', async () => {
   await ssgRender(bundle, defaultOptions);
 });
 
-Deno.test('ssgRender — handles options with viewTransition disabled', async () => {
+Deno.test('ssgRender - handles options with viewTransition disabled', async () => {
   const bundle = createMockBundle();
   await ssgRender(bundle, { ...defaultOptions, viewTransition: false });
 });
 
-Deno.test('ssgRender — handles options with speculation enabled', async () => {
+Deno.test('ssgRender - handles options with speculation enabled', async () => {
   const bundle = createMockBundle();
   await ssgRender(bundle, { ...defaultOptions, speculation: true });
 });

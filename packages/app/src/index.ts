@@ -2,7 +2,7 @@
  * @lessjs/app - Unified LessJS Vite plugin entry.
  *
  * Single entry point that combines less() + lessContent() + lessI18n()
- * with a shared LessBuildContext. Explicit ctx passing — no globalThis needed.
+ * with a shared LessBuildContext. Explicit ctx passing - no globalThis needed.
  *
  * Usage:
  * ```ts
@@ -41,7 +41,7 @@ export interface LessjsOptions extends FrameworkOptions {
 }
 
 /**
- * Unified LessJS Vite plugin — single entry point for all LessJS features.
+ * Unified LessJS Vite plugin - single entry point for all LessJS features.
  *
  * Combines less() + lessContent() + lessI18n() under one call with a
  * shared LessBuildContext. ctx is explicitly passed to sub-plugins,

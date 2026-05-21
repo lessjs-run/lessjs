@@ -1,8 +1,8 @@
 /**
- * ScrollReveal — Ocean component (v0.20.0 Ocean-Island).
+ * ScrollReveal - Ocean component (v0.20.0 Ocean-Island).
  *
  * Wraps slotted content with a reveal animation triggered by
- * IntersectionObserver. Pure DsdElement — zero Lit dependency.
+ * IntersectionObserver. Pure DsdElement - zero Lit dependency.
  */
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/core';

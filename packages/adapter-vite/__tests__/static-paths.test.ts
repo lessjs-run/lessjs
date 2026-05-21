@@ -106,14 +106,14 @@ Deno.test('buildEntryDescriptor: param between segments /user/:id/profile', () =
 
 // ─── Test: route path resolution ────────────────────────────────
 
-Deno.test('route path resolution: /blog/:slug + { slug: "v0-8-0" } → /blog/v0-8-0', () => {
+Deno.test('route path resolution: /blog/:slug + { slug: "v0-8-0" } -> /blog/v0-8-0', () => {
   const template = '/blog/:slug';
   const params: Record<string, string> = { slug: 'v0-8-0' };
   const resolved = template.replace(/:([^/]+)/g, (_, name: string) => params[name] || name);
   assertEquals(resolved, '/blog/v0-8-0');
 });
 
-Deno.test('route path resolution: /posts/:category/:id → /posts/guide/architecture', () => {
+Deno.test('route path resolution: /posts/:category/:id -> /posts/guide/architecture', () => {
   const template = '/posts/:category/:id';
   const params: Record<string, string> = { category: 'guide', id: 'architecture' };
   const resolved = template.replace(/:([^/]+)/g, (_, name: string) => params[name] || name);

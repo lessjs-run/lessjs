@@ -6,9 +6,9 @@
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *
- * @csspart container —The callout wrapper
- * @csspart icon —The type icon span
- * @csspart content —The body content area
+ * @csspart container -The callout wrapper
+ * @csspart icon -The type icon span
+ * @csspart content -The body content area
  *
  * Usage:
  * ```html
@@ -109,7 +109,7 @@ export class LessCallout extends DsdElement {
     </div>`;
   }
 
-  override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
+  override attributeChangedCallback(_name: string, old: string | null, val: string | null): void {
     if (old === val) return;
     this._syncDOM();
   }

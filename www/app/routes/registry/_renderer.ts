@@ -1,5 +1,5 @@
 /**
- * _renderer.ts — Layout renderer for the Registry section.
+ * _renderer.ts - Layout renderer for the Registry section.
  *
  * v0.19.0: Injects vanilla JS search for the registry index page.
  * docs-registry-home is NOT an island, so Lit event handlers never
@@ -9,7 +9,7 @@
 import type { LessRenderer } from '@lessjs/core';
 
 const SEARCH_SCRIPT = `<script>
-// Registry Hub — vanilla JS search (Lit component never hydrates on SSG pages)
+// Registry Hub - vanilla JS search (Lit component never hydrates on SSG pages)
 (function() {
   var DEBOUNCE, ROOT;
 
@@ -75,7 +75,7 @@ const SEARCH_SCRIPT = `<script>
 <\/script>`;
 
 const IFRAME_RESIZE_SCRIPT = `<script>
-// Registry Hub — iframe srcdoc + auto-resize (component detail pages, no Lit hydration)
+// Registry Hub - iframe srcdoc + auto-resize (component detail pages, no Lit hydration)
 // Lit SSR cannot serialize .srcdoc or srcdoc= correctly for complex HTML content,
 // so we store the srcdoc as Base64 in data-srcdoc and decode it client-side.
 (function() {

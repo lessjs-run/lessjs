@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run --allow-read
 /**
- * @lessjs/core/cli/less-add — CLI for adding Web Component packages.
+ * @lessjs/core/cli/less-add - CLI for adding Web Component packages.
  *
  * Usage:
  *   deno run -A jsr:@lessjs/core/cli/less-add @scope/package --dry-run
@@ -8,8 +8,8 @@
  *   deno run -A jsr:@lessjs/core/cli/less-add @scope/package --json
  *
  * Exit codes:
- *   0 — plan generated (valid)
- *   1 — plan failed (invalid package or error)
+ *   0 - plan generated (valid)
+ *   1 - plan failed (invalid package or error)
  */
 
 import { readFile } from 'node:fs/promises';
@@ -29,8 +29,8 @@ async function main() {
   if (!spec) {
     console.error('Usage: less-add <package-spec> [--dry-run] [--json]');
     console.error('  <package-spec> can be:');
-    console.error('    @scope/package     — JSR/npm package');
-    console.error('    ./custom-elements.json — local CEM file');
+    console.error('    @scope/package     - JSR/npm package');
+    console.error('    ./custom-elements.json - local CEM file');
     Deno.exit(1);
   }
 
@@ -97,7 +97,7 @@ async function main() {
       console.log(`\n  📦 Tags (${plan.tags.length}):`);
       for (const tag of plan.tags) {
         const status = tag.valid ? '✅' : '❌';
-        console.log(`    ${status} <${tag.tagName}> — ${tag.compatibility}`);
+        console.log(`    ${status} <${tag.tagName}> - ${tag.compatibility}`);
       }
     }
 

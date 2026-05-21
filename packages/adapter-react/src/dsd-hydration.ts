@@ -100,7 +100,7 @@ export function WithDsdHydration<T extends Constructor<HTMLElement>>(
      */
     connectedCallback(): void {
       // Call the actual parent class (captured in mixin closure),
-      // NOT Object.getPrototypeOf which can find our own method → infinite recursion.
+      // NOT Object.getPrototypeOf which can find our own method -> infinite recursion.
       if (typeof superClass.prototype.connectedCallback === 'function') {
         superClass.prototype.connectedCallback.call(this);
       }

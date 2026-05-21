@@ -2,7 +2,7 @@
 
 简体中文 | [English](./README.en.md)
 
-**Full-Stack Framework + Universal WC Rendering Engine + Registry Hub** — a full-stack development platform where Web Components are first-class citizens. Zero-JS first paint via Declarative Shadow DOM, Island architecture for on-demand interactivity, Hono + Serverless API for backend, and Registry Hub for one-click WC component discovery and installation.
+**Full-Stack Framework + Universal WC Rendering Engine + Registry Hub** - a full-stack development platform where Web Components are first-class citizens. Zero-JS first paint via Declarative Shadow DOM, Island architecture for on-demand interactivity, Hono + Serverless API for backend, and Registry Hub for one-click WC component discovery and installation.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
@@ -17,12 +17,12 @@ LessJS
 ├── 1. Full-Stack Framework
 │   ├── File-convention routing + Hono API Routes
 │   ├── Dev server (Vite HMR + Hono)
-│   ├── Build pipeline (SSG / ISR / SSR — same rendering engine)
+│   ├── Build pipeline (SSG / ISR / SSR - same rendering engine)
 │   └── Serverless deployment (CF Pages / Deno Deploy)
 │
 ├── 2. Universal WC Rendering Engine
-│   ├── DSD string rendering (renderDSD — pure string concatenation)
-│   ├── Multi-framework adapters (Lit / React / Vanilla → Vue)
+│   ├── DSD string rendering (renderDSD - pure string concatenation)
+│   ├── Multi-framework adapters (Lit / React / Vanilla -> Vue)
 │   ├── Rendering-timing-agnostic (build-time / ISR / request-time)
 │   └── Compatibility classification + validation
 │
@@ -32,7 +32,7 @@ LessJS
     └── One-click install (less add)
 ```
 
-**Not an SSG framework** — SSG is one mode of the rendering engine. `renderDSD()` is **architecturally** rendering-timing-agnostic: the same engine works at build-time (SSG), cache-expiry-time (ISR), or request-time (SSR). **Current implementation**: SSG only, ISR/SSR planned.
+**Not an SSG framework** - SSG is one mode of the rendering engine. `renderDSD()` is **architecturally** rendering-timing-agnostic: the same engine works at build-time (SSG), cache-expiry-time (ISR), or request-time (SSR). **Current implementation**: SSG only, ISR/SSR planned.
 
 ## Features
 
@@ -40,31 +40,31 @@ LessJS
 
 > ⚠️ Early stage: routing, dev server, and API Routes are production-ready. Hydration strategies, ISR, and SSR are planned for v0.20.
 
-- **File-convention routing** — `app/routes/` auto-scan + Hono mounting
-- **API Routes** — `app/routes/api/*.ts` → Hono sub-app, serverless deployment
-- **Hono runtime** — Fetch API aligned, Deno / Node / Edge multi-runtime
-- **ISR (planned)** — stale-while-revalidate cache layer, `renderDSD()` ~1-5ms natural fit
+- **File-convention routing** - `app/routes/` auto-scan + Hono mounting
+- **API Routes** - `app/routes/api/*.ts` -> Hono sub-app, serverless deployment
+- **Hono runtime** - Fetch API aligned, Deno / Node / Edge multi-runtime
+- **ISR (planned)** - stale-while-revalidate cache layer, `renderDSD()` ~1-5ms natural fit
 
 ### Pillar 2: Universal WC Rendering Engine
 
-- **Declarative Shadow DOM** — WHATWG standard, zero-JS first paint
-- **Island upgrade** — client JS loaded only for interactive components (`client:load/idle/visible/only` — planned)
-- **Multi-adapter** — Lit / React / Vanilla adapters, multi-framework coexistence on same page
-- **Universal WC Engine** — auto-detect third-party WC packages, 4-tier compatibility classification
-- **Renderer Protocol** — structured render output, error taxonomy, DSD metrics
+- **Declarative Shadow DOM** - WHATWG standard, zero-JS first paint
+- **Island upgrade** - client JS loaded only for interactive components (`client:load/idle/visible/only` - planned)
+- **Multi-adapter** - Lit / React / Vanilla adapters, multi-framework coexistence on same page
+- **Universal WC Engine** - auto-detect third-party WC packages, 4-tier compatibility classification
+- **Renderer Protocol** - structured render output, error taxonomy, DSD metrics
 
 ### Pillar 3: Registry Hub (Early Access)
 
-- **Package search + filtering** — discover compatible Web Component libraries
-- **Compatibility validation + reporting** — check SSR capability before installing
-- **Component previews** — Playwright-rendered real component snapshots
-- **One-click install** — `less add @scope/pkg` auto-configuration
+- **Package search + filtering** - discover compatible Web Component libraries
+- **Compatibility validation + reporting** - check SSR capability before installing
+- **Component previews** - Playwright-rendered real component snapshots
+- **One-click install** - `less add @scope/pkg` auto-configuration
 
 ### General
 
-- **Deno workspace** — pure ESM, no `package.json`
-- **validate-manifest CLI** — validate CEM manifest compatibility before install
-- **less add safe install** — dry-run + validation gate + plan generation
+- **Deno workspace** - pure ESM, no `package.json`
+- **validate-manifest CLI** - validate CEM manifest compatibility before install
+- **less add safe install** - dry-run + validation gate + plan generation
 
 ## Quick Start
 
@@ -83,7 +83,7 @@ Requirements: Deno 2.7+ / modern browser with Declarative Shadow DOM support
 | ------------------------- | ------------------------------------------------------------------------------------------ |
 | `@lessjs/core`            | DSD renderer, Renderer Protocol, CEM parser, compatibility classifier, manifest validation |
 | `@lessjs/adapter-vite`    | Vite orchestration, route scanning, SSG pipeline, CEM auto-detection                       |
-| `@lessjs/adapter-lit`     | Lit TemplateResult → DSD HTML bridge                                                       |
+| `@lessjs/adapter-lit`     | Lit TemplateResult -> DSD HTML bridge                                                      |
 | `@lessjs/adapter-react`   | React adapter                                                                              |
 | `@lessjs/adapter-vanilla` | Vanilla JS adapter                                                                         |
 | `@lessjs/app`             | Unified `lessjs()` entry                                                                   |
@@ -92,17 +92,17 @@ Requirements: Deno 2.7+ / modern browser with Declarative Shadow DOM support
 | `@lessjs/ui`              | Web Components library and package islands                                                 |
 | `@lessjs/signals`         | Signals helpers and island effects                                                         |
 | `@lessjs/rpc`             | Fetch-based RPC controller                                                                 |
-| `@lessjs/hub`             | Registry Hub — schema, indexer, scanner, snapshot-renderer                                 |
+| `@lessjs/hub`             | Registry Hub - schema, indexer, scanner, snapshot-renderer                                 |
 | `@lessjs/create`          | Project scaffold CLI                                                                       |
 
 ## Rendering Pipeline
 
 ```
-render() → RenderAdapter → renderDSD() → DSD HTML → browser parses
+render() -> RenderAdapter -> renderDSD() -> DSD HTML -> browser parses
                                                        ↓
                                             customElements.upgrade()
                                                        ↓
-                                            dsd-interactive → bind hydrateEvents
+                                            dsd-interactive -> bind hydrateEvents
 ```
 
 **Rendering-timing-agnostic**: the same `renderDSD()` engine invoked at different times:
@@ -116,7 +116,7 @@ render() → RenderAdapter → renderDSD() → DSD HTML → browser parses
 ## Third-Party Compatibility Pipeline (v0.18.x)
 
 ```
-node_modules/*/custom-elements.json → CEM Parser → 4-tier classifier → SSR admission
+node_modules/*/custom-elements.json -> CEM Parser -> 4-tier classifier -> SSR admission
                                                           ↓
                                               less validate-manifest (CLI)
                                                           ↓

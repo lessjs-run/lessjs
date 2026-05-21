@@ -61,7 +61,7 @@ export function lessI18n(
     name: 'less:i18n',
 
     async buildStart() {
-      // ADR 0018: Use loadI18nData() pure function — zero module state
+      // ADR 0018: Use loadI18nData() pure function - zero module state
       const i18nData = loadI18nData(options);
 
       // Write i18n options to ctx (shared build context)

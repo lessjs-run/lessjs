@@ -1,9 +1,9 @@
 export const meta = { section: 'Compatibility', label: 'Standards & Registry', order: 20 };
 
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
+import { filterEngineNav } from '../../utils/nav-filter.ts';
+import { DsdElement } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 
 export class StandardsRegistryGuidePage extends DsdElement {

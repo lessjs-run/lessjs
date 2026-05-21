@@ -5,7 +5,7 @@
  *
  * Web Standards alignment:
  * - Built on standard Request/URL APIs
- * - Minimal framework overhead — only what's needed for SSR + Islands
+ * - Minimal framework overhead - only what's needed for SSR + Islands
  */
 
 import type { RouteEntry } from './types.js';
@@ -42,7 +42,7 @@ export interface SsrContext {
   islands: IslandDescriptor[];
   /** HTTP status code (default: 200) */
   status: number;
-  /** Custom data bag — for loaders, middleware, etc. */
+  /** Custom data bag - for loaders, middleware, etc. */
   data: Record<string, unknown>;
   /** Request ID for tracing */
   requestId?: string;
@@ -50,9 +50,9 @@ export interface SsrContext {
 
 /**
  * Extract route params from a pathname using a route pattern.
- * e.g., pattern '/posts/:id' + pathname '/posts/123' → { id: '123' }
+ * e.g., pattern '/posts/:id' + pathname '/posts/123' -> { id: '123' }
  *
- * Uses WHATWG URLPattern API — available in:
+ * Uses WHATWG URLPattern API - available in:
  *   ✅ Deno 1.33+ (native, no flags)
  *   ✅ Node.js 19+ (--experimental-url-pattern)
  *   ✅ Bun (native)
@@ -82,12 +82,12 @@ export function extractParams(
 
 /**
  * Parse URL search params into a plain object.
- * Uses standard URLSearchParams — zero framework magic.
- * Supports multi-value keys (e.g., ?tag=a&tag=b → { tag: ['a', 'b'] }).
+ * Uses standard URLSearchParams - zero framework magic.
+ * Supports multi-value keys (e.g., ?tag=a&tag=b -> { tag: ['a', 'b'] }).
  */
 export function parseQuery(url: URL): Record<string, string | string[]> {
   const query: Record<string, string | string[]> = {};
-  // v0.14.3: Simplified — use `key in query` instead of separate `seen` Set
+  // v0.14.3: Simplified - use `key in query` instead of separate `seen` Set
   url.searchParams.forEach((value, key) => {
     if (key in query) {
       const existing = query[key];

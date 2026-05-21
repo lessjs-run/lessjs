@@ -18,7 +18,7 @@
  * import { locales } from 'virtual:less-i18n-data';
  *
  * export function getStaticPaths() {
- *   return i18nStaticPaths(locales); // → [{ locale: 'en' }, { locale: 'zh' }]
+ *   return i18nStaticPaths(locales); // -> [{ locale: 'en' }, { locale: 'zh' }]
  * }
  * ```
  */
@@ -30,8 +30,8 @@ export function i18nStaticPaths(
 
 /**
  * Switch a URL path to a different locale.
- * e.g. switchLocale('/en/guide/overview', 'zh') → '/zh/guide/overview'
- *      switchLocale('/guide/overview', 'zh', ['en', 'zh']) → '/zh/guide/overview'
+ * e.g. switchLocale('/en/guide/overview', 'zh') -> '/zh/guide/overview'
+ *      switchLocale('/guide/overview', 'zh', ['en', 'zh']) -> '/zh/guide/overview'
  */
 export function switchLocale(
   currentPath: string,

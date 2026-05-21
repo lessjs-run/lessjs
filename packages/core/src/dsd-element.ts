@@ -9,13 +9,13 @@
  *   - AbortController cleanup on disconnect
  *   - formAssociated + delegatesFocus support
  *
- * DsdElement extends HTMLElement directly â€” ZERO Lit dependency.
+ * DsdElement extends HTMLElement directly - ZERO Lit dependency.
  * Components return `render(): string` (plain HTML), not TemplateResult.
  *
  * Lifecycle:
- *   SSR: instantiate â†’ set props â†’ render() â†’ wrap in DSD template
- *   Client (DSD): browser attaches shadow root from DSD â†’ upgrade â†’ _hydrateEvents()
- *   Client (CSR): connectedCallback â†’ createRenderRoot â†’ shadowRoot.innerHTML = render()
+ *   SSR: instantiate -> set props -> render() -> wrap in DSD template
+ *   Client (DSD): browser attaches shadow root from DSD -> upgrade -> _hydrateEvents()
+ *   Client (CSR): connectedCallback -> createRenderRoot -> shadowRoot.innerHTML = render()
  *
  * Usage (static DSD component):
  * ```ts
@@ -52,7 +52,7 @@ import type { StyleSheetLike } from './style-sheet.js';
  * (Node.js / Deno server environments without DOM globals).
  *
  * In SSR/build contexts, DsdElement is only used for its render(): string
- * method and static property access â€” the class is never instantiated as
+ * method and static property access - the class is never instantiated as
  * a live Custom Element. This stub ensures the class declaration itself
  * does not throw at module evaluation time.
  */
@@ -69,7 +69,7 @@ const _HTMLElement: typeof HTMLElement = typeof HTMLElement !== 'undefined'
  * Subclasses MUST override `render(): string`.
  */
 export class DsdElement extends _HTMLElement {
-  /** Component stylesheets (SSR-safe â€” StyleSheet delegates to native CSSStyleSheet in browser). */
+  /** Component stylesheets (SSR-safe - StyleSheet delegates to native CSSStyleSheet in browser). */
   static styles?: StyleSheetLike | StyleSheetLike[];
 
   /**
@@ -112,19 +112,23 @@ export class DsdElement extends _HTMLElement {
   /**
    * Create or reuse the shadow root.
    *
-   * DSD detection: if `this.shadowRoot` already exists and has children,
+   * DSD detection: if `this.shadowRoot` already exists and has nodes,
    * the browser pre-populated it from a <template shadowrootmode> tag.
    * In that case we mark `_dsdHydrated = true` and return the existing root.
    *
-   * CSR fallback: if no shadow root exists or it is empty, we call
-   * `attachShadow()` and apply `static styles` via `adoptedStyleSheets`.
+   * CSR fallback: if no shadow root exists, we call `attachShadow()`. If an
+   * empty shadow root already exists, we reuse it and let connectedCallback()
+   * populate it from render().
    *
    * @returns The existing or newly created ShadowRoot.
    */
   createRenderRoot(): ShadowRoot {
     // DSD pre-populated shadow root detection
-    if (this.shadowRoot && this.shadowRoot.childElementCount > 0) {
-      this._dsdHydrated = true;
+    if (this.shadowRoot) {
+      if (this.shadowRoot.childNodes.length > 0) {
+        this._dsdHydrated = true;
+      }
+      this._applyStyles(this.constructor as typeof DsdElement, this.shadowRoot);
       return this.shadowRoot;
     }
 
@@ -162,7 +166,7 @@ export class DsdElement extends _HTMLElement {
    *
    * CSR path (_dsdHydrated = false):
    *   - Calls createRenderRoot() if no shadow root exists.
-   *   - Populates shadowRoot.innerHTML with this.render().
+   *   - Populates shadowRoot.innerHTML with this.render(), then binds events.
    *
    * If formAssociated is true, ElementInternals are attached.
    */
@@ -172,16 +176,14 @@ export class DsdElement extends _HTMLElement {
     // Ensure shadow root exists
     if (!this.shadowRoot) {
       this.createRenderRoot();
-    } else if (!this._dsdHydrated) {
-      // Shadow root already exists without createRenderRoot() call —
-      // it was created by the browser from a DSD <template>. Mark as
-      // hydrated so the CSR path (innerHTML = render()) does not
-      // destroy the pre-populated shadow DOM content.
-      this._dsdHydrated = true;
+    } else {
+      // Existing roots with content are DSD upgrades. Empty roots are CSR-owned
+      // and still need render() output.
+      if (this.shadowRoot.childNodes.length > 0) {
+        this._dsdHydrated = true;
+      }
 
-      // Apply adoptedStyleSheets on DSD path too — this ensures styles
-      // survive if a component later re-renders via innerHTML (which
-      // destroys <style> tags injected by SSR but not adoptedStyleSheets).
+      // Apply adoptedStyleSheets on existing-root paths too.
       this._applyStyles(ctor);
     }
 
@@ -193,11 +195,12 @@ export class DsdElement extends _HTMLElement {
     }
 
     if (this._dsdHydrated) {
-      // DSD path: only bind events â€” DOM is already present
+      // DSD path: only bind events - DOM is already present
       this._hydrateEvents();
     } else if (this.shadowRoot) {
       // CSR path: populate shadow DOM from render()
       this.shadowRoot.innerHTML = this.render();
+      this._hydrateEvents();
     }
 
     // Attach ElementInternals for form-associated custom elements
@@ -233,7 +236,7 @@ export class DsdElement extends _HTMLElement {
     _oldValue: string | null,
     _newValue: string | null,
   ): void {
-    // Subclass override point â€” base implementation is intentionally empty.
+    // Subclass override point - base implementation is intentionally empty.
   }
 
   /**

@@ -25,9 +25,8 @@
     "@lessjs/rpc": "./packages/rpc/src/index.ts",
     "@lessjs/signals": "./packages/signals/src/index.ts",
     "@lessjs/ui": "./packages/ui/src/index.ts",
-    // Explicit subpath entries required — Vite alias prefix-matching
+    // Explicit subpath entries required - Vite alias prefix-matching
     // cannot handle subpath exports from a file-based alias (ENOTDIR).
-    "@lessjs/ui/design-tokens": "./packages/ui/src/design-tokens.ts",
     "@lessjs/ui/less-button": "./packages/ui/src/less-button.ts",
     "@lessjs/ui/less-card": "./packages/ui/src/less-card.ts",
     "@lessjs/ui/less-code-block": "./packages/ui/src/less-code-block.ts",
@@ -38,13 +37,7 @@
     "@lessjs/ui/less-theme-toggle": "./packages/ui/src/less-theme-toggle.ts",
     "@lessjs/ui/less-callout": "./packages/ui/src/less-callout.ts",
     "@lessjs/ui/less-step-card": "./packages/ui/src/less-step-card.ts",
-    "@lessjs/ui/design-tokens.js": "./packages/ui/src/design-tokens.ts",
     "@lessjs/ui/open-props-tokens": "./packages/ui/src/open-props-tokens.ts",
-    "@lessjs/ui/tokens/spacing": "./packages/ui/src/tokens/spacing.ts",
-    "@lessjs/ui/tokens/typography": "./packages/ui/src/tokens/typography.ts",
-    "@lessjs/ui/tokens/effects": "./packages/ui/src/tokens/effects.ts",
-    "@lessjs/ui/tokens/radius": "./packages/ui/src/tokens/radius.ts",
-    "@lessjs/ui/tokens/animation": "./packages/ui/src/tokens/animation.ts",
     "@lessjs/adapter-lit": "./packages/adapter-lit/src/index.ts",
     "@lessjs/adapter-vanilla": "./packages/adapter-vanilla/src/index.ts",
     "@lessjs/adapter-react": "./packages/adapter-react/src/index.ts",

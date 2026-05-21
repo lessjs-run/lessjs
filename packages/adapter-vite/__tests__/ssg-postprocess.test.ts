@@ -521,7 +521,7 @@ Deno.test('buildSpeculationRulesJson generates heuristic prerender rules from ro
       r.where && !r.where.href_matches
     ),
   );
-  // Top-level page with wildcard (document rule — has where.href_matches)
+  // Top-level page with wildcard (document rule - has where.href_matches)
   assertExists(
     parsed.prerender.some((r: { where?: { href_matches: string } }) =>
       r.where?.href_matches === '/about/*'
@@ -596,7 +596,7 @@ Deno.test('buildSpeculationRulesJson excludes API routes in heuristic mode', () 
   const parsed = JSON.parse(result);
   // Heuristic mode generates prerender, not prefetch
   assertExists(parsed.prerender);
-  // Only one static page (/) → no exclusions needed
+  // Only one static page (/) -> no exclusions needed
   assertEquals(parsed.prerender.length, 1);
 });
 

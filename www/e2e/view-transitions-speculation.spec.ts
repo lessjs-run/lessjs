@@ -5,7 +5,7 @@
  * View Transitions meta tag and Speculation Rules script tag into
  * all built HTML pages.
  *
- * These are v0.9.2 features — critical to validate in e2e.
+ * These are v0.9.2 features - critical to validate in e2e.
  */
 
 import { expect, test } from '@playwright/test';

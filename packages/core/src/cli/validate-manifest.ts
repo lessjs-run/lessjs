@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run --allow-read
 /**
- * @lessjs/validate-manifest — CLI for validating CEM manifests.
+ * @lessjs/validate-manifest - CLI for validating CEM manifests.
  *
  * Usage:
  *   deno run -A jsr:@lessjs/core/validate-manifest ./custom-elements.json
@@ -8,8 +8,8 @@
  *   deno run -A jsr:@lessjs/core/validate-manifest ./custom-elements.json --strict
  *
  * Exit codes:
- *   0 — manifest is valid
- *   1 — manifest has errors
+ *   0 - manifest is valid
+ *   1 - manifest has errors
  */
 
 import { readFile } from 'node:fs/promises';
@@ -85,7 +85,7 @@ async function main() {
         const status = tag.valid ? '✅' : '❌';
         const ssr = tag.ssr !== undefined ? ` ssr=${tag.ssr}` : '';
         const dsd = tag.dsd !== undefined ? ` dsd=${tag.dsd}` : '';
-        console.log(`    ${status} <${tag.tagName}> — ${tag.compatibility}${ssr}${dsd}`);
+        console.log(`    ${status} <${tag.tagName}> - ${tag.compatibility}${ssr}${dsd}`);
       }
     }
 

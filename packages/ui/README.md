@@ -2,8 +2,8 @@
 
 LessJS Web Components package.
 
-The components are authored with Lit and designed to work with LessJS
-Declarative Shadow DOM output and island upgrade.
+The components are authored as native `DsdElement` custom elements and designed
+to work with LessJS Declarative Shadow DOM output and island upgrade.
 
 ## Install
 
@@ -23,11 +23,13 @@ deno add jsr:@lessjs/ui
 | `LessThemeToggle` | `less-theme-toggle` | Theme switch island.           |
 | `LessHeroPing`    | `less-hero-ping`    | Status indicator.              |
 | `LessDialog`      | `less-dialog`       | Dialog component.              |
+| `LessCallout`     | `less-callout`      | Callout/notice box.            |
+| `LessStepCard`    | `less-step-card`    | Step card.                     |
 
-## Package Islands
+## Package Manifest
 
-`@lessjs/ui` exports an `islands` metadata array so LessJS can include these
-components in package island scanning:
+`@lessjs/ui` exports a CEM-compatible `manifest` so LessJS can include these
+components in package manifest scanning:
 
 ```ts
 import { lessjs } from '@lessjs/app';
@@ -41,10 +43,8 @@ export default {
 };
 ```
 
-This metadata is a current bridge, not the final WC registry protocol. Future
-manifests should add CEM-compatible fields for attributes, properties, events,
-slots, CSS parts, tokens, SSR renderability, DSD behavior, hydration strategy,
-and diagnostics.
+The manifest includes attributes, events, slots, CSS parts, SSR renderability,
+DSD behavior, and hydration strategy metadata.
 
 ## Subpath Exports
 
@@ -57,7 +57,9 @@ and diagnostics.
 @lessjs/ui/less-theme-toggle
 @lessjs/ui/less-hero-ping
 @lessjs/ui/less-dialog
-@lessjs/ui/design-tokens
+@lessjs/ui/less-callout
+@lessjs/ui/less-step-card
+@lessjs/ui/open-props-tokens
 ```
 
 ## License

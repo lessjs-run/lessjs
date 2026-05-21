@@ -1,6 +1,6 @@
 // deno-fmt-ignore-file
 /**
- * Blog Post Page — Dynamic Route
+ * Blog Post Page - Dynamic Route
  *
  * Renders individual blog posts from virtual:less-blog-data.
  * The `slug` param is set by LessJS dynamic routing: /blog/:slug

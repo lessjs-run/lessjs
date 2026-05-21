@@ -1,5 +1,5 @@
 /**
- * less-term-demo — Ocean component (v0.20.0 Ocean-Island).
+ * less-term-demo - Ocean component (v0.20.0 Ocean-Island).
  *
  * Interactive terminal for the homepage. Features:
  * - DSD SSR for first paint (no JS needed)
@@ -7,7 +7,7 @@
  * - Command history, local commands, API fallback
  * - Direct DOM manipulation for output (no full re-render)
  *
- * Pure DsdElement — zero Lit dependency.
+ * Pure DsdElement - zero Lit dependency.
  */
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/core';
@@ -153,7 +153,7 @@ export class LessTermDemo extends DsdElement {
       '  <span style="color:#fbbf24;">dsd</span>       what is dsd?',
       '  <span style="color:#fbbf24;">clear</span>     clear terminal',
     ],
-    version: ['<span class="hl">v0.14.7</span> — security hardening patch'],
+    version: ['<span class="hl">v0.14.7</span> - security hardening patch'],
     whoami: ['<span style="color:#a1a1aa;">you are a lessjs developer. welcome.</span>'],
     uname: [
       '<span class="hl">lessjs</span> <span style="color:#52525b;">deno 2.7+ node 18+ edge</span>',
@@ -161,7 +161,7 @@ export class LessTermDemo extends DsdElement {
     dsd: [
       '<span class="hl">declarative shadow dom:</span>',
       'ssg renders your lit components into <span style="color:#fbbf24;">&lt;template shadowrootmode&gt;</span>',
-      'browsers parse it natively — no js framework needed.',
+      'browsers parse it natively - no js framework needed.',
       'content is visible <span style="color:#86efac;">before</span> javascript downloads.',
     ],
   };

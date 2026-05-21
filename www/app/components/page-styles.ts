@@ -1,15 +1,15 @@
 /**
- * LessJS Docs — Shared Page Styles
+ * LessJS Docs - Shared Page Styles
  *
  * v0.19.1 Phase 6 (ADR-0035 B1): Visual overhaul.
- * v0.20.0 Ocean-Island: Pure CSS string — zero Lit dependency.
+ * v0.20.0 Ocean-Island: Pure CSS string - zero Lit dependency.
  *
- * "精密·克制·有深度" — precise, restrained, with depth.
+ * "精密·克制·有深度" - precise, restrained, with depth.
  *
  * Key changes from v0.19.0:
- * - H1: 2rem → 2.5rem, weight 500 → 700
- * - H2: 1rem → 1.25rem, weight 500 → 600
- * - Container: 720px → 800px
+ * - H1: 2rem -> 2.5rem, weight 500 -> 700
+ * - H2: 1rem -> 1.25rem, weight 500 -> 600
+ * - Container: 720px -> 800px
  * - Paragraph/H2 spacing increased
  * - Links use brand color (--brand)
  * - Code blocks: dark theme with better line-height
@@ -36,7 +36,7 @@ export const pageStyles = `
     height: auto;
   }
 
-  /* Table scroll wrapper — wrap any <table> in <div class="table-wrap"> */
+  /* Table scroll wrapper - wrap any <table> in <div class="table-wrap"> */
   .table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -113,7 +113,7 @@ export const pageStyles = `
     margin-bottom: 14px;
   }
 
-  /* Section divider — brand gradient */
+  /* Section divider - brand gradient */
   .section-divider {
     border: none;
     height: 1px;
@@ -122,7 +122,7 @@ export const pageStyles = `
     margin: 2.5rem 0;
   }
 
-  /* Code — dark theme */
+  /* Code - dark theme */
   pre {
     background: #1a1a2e;
     color: #e0e0e0;
@@ -156,7 +156,7 @@ export const pageStyles = `
     font-size: 0.875em;
   }
 
-  /* Tables — striped + cleaner borders */
+  /* Tables - striped + cleaner borders */
   table {
     width: 100%;
     border-collapse: collapse;

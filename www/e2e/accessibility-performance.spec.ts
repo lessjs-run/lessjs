@@ -45,7 +45,7 @@ test.describe('Accessibility', () => {
       }
       return count;
     });
-    // Allow some tolerance — not all buttons may need labels
+    // Allow some tolerance - not all buttons may need labels
     expect(unlabeledButtons).toBeLessThanOrEqual(2);
   });
 
@@ -86,7 +86,7 @@ test.describe('Accessibility', () => {
         return !text && !ariaLabel && !title && !imgAlt;
       }).length;
     });
-    // Allow small number — some icon links may not have text
+    // Allow small number - some icon links may not have text
     expect(emptyLinks).toBeLessThanOrEqual(3);
   });
 });
@@ -130,7 +130,7 @@ test.describe('Performance', () => {
         !e.includes('net::ERR') &&
         !e.includes('favicon') &&
         !e.includes('Manifest') &&
-        // CDN integrity hash mismatches — external CDN resources change
+        // CDN integrity hash mismatches - external CDN resources change
         // independently of the app; these are infrastructure noise, not bugs.
         !e.includes('cdnjs.cloudflare.com') &&
         !e.includes('cdn.jsdelivr.net') &&

@@ -3,7 +3,7 @@
  *
  * v0.5.0: requestIdleCallback-based lazy loading.
  * Eager islands (theme) load immediately, rest deferred to browser idle.
- * Zero DOM interaction — cannot interfere with DSD rendering.
+ * Zero DOM interaction - cannot interfere with DSD rendering.
  *
  * v0.6: Added 'visible' strategy (IntersectionObserver-based).
  * Visible islands are loaded when their DOM element enters the viewport.
@@ -47,7 +47,7 @@ export function generateClientEntry(
   islands.forEach(validateClientIslandEntry);
 
   if (islands.length === 0) {
-    return '// LessJS Client Entry — No islands detected, zero client JS needed\n';
+    return '// LessJS Client Entry - No islands detected, zero client JS needed\n';
   }
 
   const islandMap = islands
@@ -68,11 +68,11 @@ export function generateClientEntry(
     .map((i) => JSON.stringify(i.tagName))
     .join(', ');
 
-  return `// LessJS Client Entry (v0.6 — eager/lazy/visible)
+  return `// LessJS Client Entry (v0.6 - eager/lazy/visible)
 // Eager islands load immediately.
 // Visible islands load when their element enters the viewport (IntersectionObserver).
 // Lazy islands deferred to browser idle.
-// Zero DOM interaction — safe with DSD rendering.
+// Zero DOM interaction - safe with DSD rendering.
 
 var log = {
   warn: function() { var a = ['[LessJS]']; a.push.apply(a, arguments); console.warn.apply(console, a); },
@@ -91,10 +91,10 @@ function __load(tag) {
   }
 }
 
-// Eager islands — load immediately (theme toggle, above-fold)
+// Eager islands - load immediately (theme toggle, above-fold)
 [${eagerTags || ''}].filter(Boolean).forEach(__load);
 
-// Visible islands — load when their element enters viewport
+// Visible islands - load when their element enters viewport
 ${
     visibleTags
       ? `var __visibleTags = [${visibleTags || ''}];

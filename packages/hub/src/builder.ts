@@ -1,10 +1,10 @@
 /**
- * @lessjs/hub — Hub Package Record Builder
+ * @lessjs/hub - Hub Package Record Builder
  *
  * v0.19.0: Construct HubPackageRecord instances from validation/build artifacts.
  *
  * The builder is the bridge between LessJS engine artifacts and the Hub.
- * It never executes package code — it reads pre-generated evidence.
+ * It never executes package code - it reads pre-generated evidence.
  *
  * @see ADR-0030
  */
@@ -26,7 +26,7 @@ import { computeManifestHash } from './schema.ts';
  * If `manifestContent` is provided in opts, computes the SHA-256 hash
  * automatically.
  *
- * @param opts — All required fields assembled from engine artifacts
+ * @param opts - All required fields assembled from engine artifacts
  * @returns A fully populated HubPackageRecord
  */
 export async function buildPackageRecord(
@@ -104,7 +104,7 @@ export function buildInstallGuidance(
   switch (compatibility) {
     case 'ssr-capable': {
       ssrCapable = true;
-      configChanges.push(`packages["${packageFullName}"] — SSR enabled`);
+      configChanges.push(`packages["${packageFullName}"] - SSR enabled`);
       const errorTags = tags.filter((t) => t.validationErrors > 0);
       if (errorTags.length > 0) {
         warnings.push(
@@ -119,7 +119,7 @@ export function buildInstallGuidance(
         'This package has no SSR metadata. It will render on the client only.',
       );
       configChanges.push(
-        `packages["${packageFullName}"] — client-only (no SSR)`,
+        `packages["${packageFullName}"] - client-only (no SSR)`,
       );
       break;
     }

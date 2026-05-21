@@ -40,7 +40,7 @@ export function scanHtmlFiles(dir: string, baseDir: string = ''): string[] {
       if (stat.isDirectory()) {
         paths.push(...scanHtmlFiles(fullPath, relativePath));
       } else if (entry === 'index.html') {
-        // Convert 'guide/getting-started/index.html' → '/guide/getting-started'
+        // Convert 'guide/getting-started/index.html' -> '/guide/getting-started'
         const urlPath = '/' + baseDir.replace(/\\/g, '/');
         paths.push(urlPath);
       }

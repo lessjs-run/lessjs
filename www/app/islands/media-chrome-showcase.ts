@@ -1,5 +1,5 @@
 /**
- * Media Chrome Showcase — Vanilla adapter demo (ssr: false)
+ * Media Chrome Showcase - Vanilla adapter demo (ssr: false)
  *
  * Renders Media Chrome's native Web Components (video player controls)
  * as a client-only island. Media Chrome is a set of vanilla Web Components
@@ -19,7 +19,7 @@
  * - We use a safe base class pattern (fallback to plain class in SSR)
  * - We load media-chrome dynamically on the client only (it accesses DOM APIs)
  *
- * @lessjs/app island — auto-detected by adapter-vite.
+ * @lessjs/app island - auto-detected by adapter-vite.
  */
 import { WithDsdHydration } from '@lessjs/adapter-vanilla';
 
@@ -31,7 +31,7 @@ const MediaChromeBase = typeof globalThis.HTMLElement !== 'undefined'
 
 export const tagName = 'media-chrome-showcase';
 
-// less.ssr: false — skip SSR rendering, client-only upgrade.
+// less.ssr: false - skip SSR rendering, client-only upgrade.
 // Media Chrome manipulates real DOM in connectedCallback() and has no
 // render(): string method. See ADR-0028 for the DOM simulation path.
 export const less = { ssr: false };
@@ -63,7 +63,7 @@ export default class MediaChromeShowcase extends MediaChromeBase {
   render(): string {
     const label = this._mcError
       ? '⚠️ Media Chrome components failed to load. Try a Chromium-based browser.'
-      : 'Media Chrome — pure vanilla Web Components via @lessjs/adapter-vanilla';
+      : 'Media Chrome - pure vanilla Web Components via @lessjs/adapter-vanilla';
 
     return `
       <style>
@@ -105,7 +105,7 @@ export default class MediaChromeShowcase extends MediaChromeBase {
             preload="metadata"
             playsinline
             controlsList="nodownload"
-            ${/* AnimeThemes.moe — Date A Live OP1, 1080p Blu-ray */ ''}
+            ${/* AnimeThemes.moe - Date A Live OP1, 1080p Blu-ray */ ''}
           >
             <source
               src="https://v.animethemes.moe/DateALive-OP1.webm"
@@ -123,7 +123,7 @@ export default class MediaChromeShowcase extends MediaChromeBase {
         </media-controller>
       </div>
       <div class="mc-label${this._mcError ? ' warn' : ''}">${label}</div>
-      <div class="mc-source">🎬 Date A Live OP1 — 1080p (AnimeThemes.moe)</div>
+      <div class="mc-source">🎬 Date A Live OP1 - 1080p (AnimeThemes.moe)</div>
     `;
   }
 }

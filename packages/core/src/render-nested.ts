@@ -35,7 +35,7 @@ type P5TextNode = DefaultTreeAdapterMap['textNode'];
 
 /**
  * Convert kebab-case attribute name to camelCase property name.
- * e.g. current-path → currentPath, aria-label → ariaLabel
+ * e.g. current-path -> currentPath, aria-label -> ariaLabel
  */
 function kebabToCamel(str: string): string {
   return str.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
@@ -61,7 +61,7 @@ function parseAttrsToProps(attrs: Array<{ name: string; value: string }>): Recor
     } else {
       const camelKey = kebabToCamel(key);
       // Try to parse as JSON for array/object values from SSR property bindings.
-      // The Lit SSR adapter converts .navItems="${arr}" → nav-items="[{...}]"
+      // The Lit SSR adapter converts .navItems="${arr}" -> nav-items="[{...}]"
       // so we need to parse the JSON back to a JS value for renderDSD().
       // v0.14.5: Quick structural checks to avoid unnecessary JSON.parse exceptions
       if (value.startsWith('[') || value.startsWith('{')) {
@@ -78,7 +78,7 @@ function parseAttrsToProps(attrs: Array<{ name: string; value: string }>): Recor
               continue;
             }
           } catch {
-            // Not valid JSON — treat as string
+            // Not valid JSON - treat as string
           }
         }
       }
@@ -107,7 +107,7 @@ function elementAlreadyHasDSD(node: P5Element): boolean {
       );
       if (shadowAttr) return true;
     }
-    // Skip text nodes (whitespace) — only check the first element child
+    // Skip text nodes (whitespace) - only check the first element child
     if (child.nodeName !== '#text') break;
   }
   return false;
@@ -130,10 +130,10 @@ function isClientOnlyTag(tagName: string): boolean {
 /**
  * Infer DSD options from the component class.
  * Checks for static properties that declare DSD behavior:
- *   - static delegatesFocus = true → shadowrootdelegatesfocus
- *   - static serializable = true → shadowrootserializable
- *   - static slotAssignment = 'manual' → shadowrootslotassignment="manual"
- *   - static customElementRegistry → shadowrootcustomelementregistry
+ *   - static delegatesFocus = true -> shadowrootdelegatesfocus
+ *   - static serializable = true -> shadowrootserializable
+ *   - static slotAssignment = 'manual' -> shadowrootslotassignment="manual"
+ *   - static customElementRegistry -> shadowrootcustomelementregistry
  */
 function inferDsdOptions(_tagName: string, cls: CustomElementConstructor): DsdOptions {
   const opts: DsdOptions = {};
@@ -150,17 +150,17 @@ function inferDsdOptions(_tagName: string, cls: CustomElementConstructor): DsdOp
 /**
  * Check if a node is inside a DSD template (shadow DOM content).
  *
- * v0.17.4: REMOVED — we now allow nested DSD rendering inside shadow DOM.
+ * v0.17.4: REMOVED - we now allow nested DSD rendering inside shadow DOM.
  * Previously, all CEs inside a DSD template were skipped because they were
  * assumed to be "already rendered output". But nested DSD is valid and
- * necessary — a parent's shadow DOM can contain child CEs that need their
+ * necessary - a parent's shadow DOM can contain child CEs that need their
  * own DSD templates (e.g. <less-layout> inside <docs-home>'s shadow DOM).
  *
  * The correct guard is elementAlreadyHasDSD(), which skips CEs that already
- * have their own <template shadowrootmode="open"> child — meaning they were
+ * have their own <template shadowrootmode="open"> child - meaning they were
  * already rendered by their parent's render() method.
  */
-// isInsideDsdTemplate removed — see ADR 0015
+// isInsideDsdTemplate removed - see ADR 0015
 
 /**
  * Recursively render nested Custom Elements with DSD using parse5 AST.
@@ -175,10 +175,10 @@ function inferDsdOptions(_tagName: string, cls: CustomElementConstructor): DsdOp
  * v0.12.0: Added maxDepth parameter to prevent stack overflow on deeply nested components.
  *
  * Strategy:
- *   - Parse HTML → AST with parse5.parseFragment() (NOT parse() — avoids doc wrapping)
+ *   - Parse HTML -> AST with parse5.parseFragment() (NOT parse() - avoids doc wrapping)
  *   - Collect custom element nodes in bottom-up order with depth tracking
  *   - For each un-rendered CE: render DSD, extract template + attrs, merge into CE
- *   - Serialize AST → HTML with parse5.serialize()
+ *   - Serialize AST -> HTML with parse5.serialize()
  *
  * Complexity: O(n·d) where n = total nodes, d = max nesting depth
  * (vs O(n²) for the regex approach which re-scanned after each replacement)
@@ -214,7 +214,7 @@ export async function renderNestedCustomElements(
     };
   }
 
-  // Use parseFragment() — NOT parse(). parse5.parse() wraps fragments in
+  // Use parseFragment() - NOT parse(). parse5.parse() wraps fragments in
   // <html><head><body>, which would appear inside shadow DOM when this
   // function processes render() output (which is a fragment, not a document).
   const ast = parse5.parseFragment(html);
@@ -245,7 +245,7 @@ export async function renderNestedCustomElements(
     // They must not be instantiated by nested DSD rendering.
     if (isClientOnlyTag(tagName)) return;
 
-    // v0.17.4: isInsideDsdTemplate removed — nested DSD is valid.
+    // v0.17.4: isInsideDsdTemplate removed - nested DSD is valid.
     // elementAlreadyHasDSD() below prevents double-rendering.
 
     // Check if registered
@@ -277,7 +277,7 @@ export async function renderNestedCustomElements(
     const props = parseAttrsToProps(ceNode.attrs);
     const dsdOpts = inferDsdOptions(tagName, Cls);
 
-    // Render DSD for this component — now returns RenderOutput
+    // Render DSD for this component - now returns RenderOutput
     const dsdResult = await renderDSD(
       tagName,
       Cls,
@@ -302,7 +302,7 @@ export async function renderNestedCustomElements(
     const dsdFragment = parse5.parseFragment(dsdHtml);
 
     // The DSD fragment contains a top-level CE element (e.g. <less-layout>).
-    // We must NOT insert this entire element — that would create double nesting
+    // We must NOT insert this entire element - that would create double nesting
     // (<existing-ce><new-ce-from-dsd>...</new-ce></existing-ce>).
     // Instead, extract the inner children (the <template> and any light DOM)
     // and merge new attributes (like data-ssr-props) onto the existing CE node.
@@ -325,7 +325,7 @@ export async function renderNestedCustomElements(
       }
     }
 
-    // Collect light DOM children (slot content) — everything currently inside the CE
+    // Collect light DOM children (slot content) - everything currently inside the CE
     const lightDomChildren = [...ceNode.childNodes];
 
     // Clear the CE node and repopulate with DSD content + light DOM
@@ -334,7 +334,7 @@ export async function renderNestedCustomElements(
     // v0.14.5: Graceful degradation when renderDSD returns unexpected content
     if (!dsdCeElement) {
       log.warn(
-        `renderDSD() for <${tagName}> returned unexpected content — ` +
+        `renderDSD() for <${tagName}> returned unexpected content - ` +
           'DSD element not found in rendered output. Falling back to raw fragment.',
       );
     }

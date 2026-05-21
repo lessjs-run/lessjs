@@ -41,7 +41,7 @@ export class ErrorHandlingPage extends DsdElement {
     <h2>Error Hierarchy</h2>
     <div class="error-hierarchy">LessError |-- NotFoundError 404 |-- UnauthorizedError 401 |-- ForbiddenError 403 |-- ValidationError 422 |-- ConflictError 409 |-- RateLimitError 429 |-- SsrRenderError 500 |-- IslandUpgradeError 500</div>
     <h2>Operational vs Programming</h2>
-    <p>LessJS 区分操作错误（not found, validation, rate limit — 返回结构化状态）和编程错误（render failure, broken import — 构建时失败或开发诊断）。</p>
+    <p>LessJS 区分操作错误（not found, validation, rate limit - 返回结构化状态）和编程错误（render failure, broken import - 构建时失败或开发诊断）。</p>
     <h2>Structured Logging</h2>
     <p>LessJS 使用 createLogger(scope) 提供带 scope 的分级日志，包括 DEBUG、INFO、WARN、ERROR 级别。</p>
     <div class="nav-row"><a href="/guide/security-middleware" class="nav-link">&larr; 安全与 Middleware</a><a href="/guide/testing" class="nav-link">Testing &rarr;</a></div>
@@ -59,9 +59,9 @@ export class ErrorHandlingPage extends DsdElement {
     <h2>Error Hierarchy</h2>
     <div class="error-hierarchy">LessError |-- NotFoundError 404 |-- UnauthorizedError 401 |-- ForbiddenError 403 |-- ValidationError 422 |-- ConflictError 409 |-- RateLimitError 429 |-- SsrRenderError 500 |-- IslandUpgradeError 500</div>
     <h2>Operational vs Programming</h2>
-    <p>LessJS distinguishes operational errors (not found, validation, rate limit — return structured status) from programming errors (render failure, broken import — fail build or show dev diagnostics).</p>
+    <p>LessJS distinguishes operational errors (not found, validation, rate limit - return structured status) from programming errors (render failure, broken import - fail build or show dev diagnostics).</p>
     <h2>Structured Logging</h2>
-    <p>LessJS uses <span class="inline-code">createLogger(scope)</span> for scoped log levels (DEBUG, INFO, WARN, ERROR). Each message carries a prefix identifying its source — e.g. <span class="inline-code">[LessJS/SSG]</span>.</p>
+    <p>LessJS uses <span class="inline-code">createLogger(scope)</span> for scoped log levels (DEBUG, INFO, WARN, ERROR). Each message carries a prefix identifying its source - e.g. <span class="inline-code">[LessJS/SSG]</span>.</p>
     <div class="nav-row"><a href="/guide/security-middleware" class="nav-link">&larr; Security &amp; Middleware</a><a href="/guide/testing" class="nav-link">Testing &rarr;</a></div>
   </div></less-layout>`;
   }

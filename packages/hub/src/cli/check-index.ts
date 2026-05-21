@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run --allow-read
 /**
- * Hub Index Checker — read-only check for index drift.
+ * Hub Index Checker - read-only check for index drift.
  *
  * Usage:
  *   deno task hub:check-index
@@ -9,7 +9,7 @@
  * index, and compares it against the existing hub-index/index.json.
  * Exits with 1 if drift is detected, so CI can fail.
  *
- * This command is read-only — it does NOT write files.
+ * This command is read-only - it does NOT write files.
  * Use `deno task hub:index:update` to write.
  */
 
@@ -66,7 +66,7 @@ function main() {
   const newIndex = buildIndex(records);
   const newIndexJson = JSON.stringify(newIndex, null, 2);
 
-  // Compare with existing — ignore updatedAt since it changes on every run
+  // Compare with existing - ignore updatedAt since it changes on every run
   let needsUpdate = true;
   try {
     const existingIndex = Deno.readTextFileSync(indexPath);
@@ -79,7 +79,7 @@ function main() {
       needsUpdate = false;
     }
   } catch {
-    // File doesn't exist — needs update
+    // File doesn't exist - needs update
   }
 
   if (needsUpdate) {

@@ -37,7 +37,7 @@ export interface LessBlogOptions {
   /**
    * Skip HTML sanitization for custom markdown renderer output.
    * Only use when you fully trust the content source (e.g. hand-authored ADRs).
-   * Default: false — all HTML is sanitized via allow-list.
+   * Default: false - all HTML is sanitized via allow-list.
    */
   trustedHtml?: boolean;
   /**

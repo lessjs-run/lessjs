@@ -280,7 +280,7 @@ export interface FrameworkOptions {
    *
    * @dangerous This value is injected as-is without sanitization. Only use
    * with content you fully control (e.g. hardcoded CDN links). Never pass
-   * user-supplied strings here — that would create an XSS vector. For
+   * user-supplied strings here - that would create an XSS vector. For
    * user-controllable URLs, use `inject.stylesheets` or `inject.scripts`
    * instead, which validate and escape URLs.
    */
@@ -563,7 +563,7 @@ export interface HydrateEventDescriptor {
 }
 
 /**
- * Renderer Protocol — the adapter interface for framework-specific rendering.
+ * Renderer Protocol - the adapter interface for framework-specific rendering.
  *
  * Every adapter MUST provide a `name` for diagnostics and multi-adapter support.
  * The last registered adapter is the default (returned by `getAdapter()`).
@@ -634,7 +634,7 @@ export interface HydrationHint {
 /**
  * Hooks for observing and intercepting the render pipeline.
  *
- * All hooks are optional — when omitted, the pipeline behaves exactly
+ * All hooks are optional - when omitted, the pipeline behaves exactly
  * as before (zero overhead).
  */
 export interface RenderHooks {
@@ -705,13 +705,13 @@ export interface DsdComponent {
 
 /** DSD template options per WHATWG HTML Living Standard */
 export interface DsdOptions {
-  /** Add shadowrootdelegatesfocus — improves focus management for interactive components */
+  /** Add shadowrootdelegatesfocus - improves focus management for interactive components */
   delegatesFocus?: boolean;
-  /** Add shadowrootclonable — allows cloneNode()/importNode() to include the shadow root */
+  /** Add shadowrootclonable - allows cloneNode()/importNode() to include the shadow root */
   clonable?: boolean;
-  /** Add shadowrootserializable — enables getInnerHTML() serialization */
+  /** Add shadowrootserializable - enables getInnerHTML() serialization */
   serializable?: boolean;
-  /** Set shadowrootslotassignment="manual" — for precise slot control */
+  /** Set shadowrootslotassignment="manual" - for precise slot control */
   slotAssignment?: 'named' | 'manual';
   /**
    * Add shadowrootcustomelementregistry.
@@ -720,9 +720,9 @@ export interface DsdOptions {
    */
   customElementRegistry?: boolean;
   /**
-   * Component layer — controls whether DSD template is emitted.
-   * 'pure-island' → no DSD template, framework owns shadow root entirely.
-   * 'dsd-static' | 'dsd-interactive' → DSD template emitted.
+   * Component layer - controls whether DSD template is emitted.
+   * 'pure-island' -> no DSD template, framework owns shadow root entirely.
+   * 'dsd-static' | 'dsd-interactive' -> DSD template emitted.
    * @default 'dsd-static'
    */
   layer?: ComponentLayer;
@@ -840,7 +840,7 @@ export interface SsrAdmissionDecision {
  * SSG output observable.
  */
 export interface DsdBuildReport {
-  /** Report schema version (semver) — bump when fields change */
+  /** Report schema version (semver) - bump when fields change */
   reportVersion: string;
   /** ISO 8601 timestamp of when the report was generated */
   timestamp: string;
@@ -933,7 +933,7 @@ export class DsdRenderCollector {
     const dsdComponents = this._metrics.filter((m) => m.layer !== 'pure-island');
     const pureIslands = this._metrics.filter((m) => m.layer === 'pure-island');
     // v0.14.3: Only dsd-interactive components need hydration.
-    // dsd-static components have no event bindings — they don't need hydration.
+    // dsd-static components have no event bindings - they don't need hydration.
     const hydrated = this._metrics.filter(
       (m) => !m.hasError && m.layer === 'dsd-interactive',
     );
@@ -1316,7 +1316,7 @@ export interface CompatibilityClassification {
 // ─── CEM Validation Types (v0.18.1) ───────────────────────────
 
 /**
- * A single validation diagnostic — either an error or warning.
+ * A single validation diagnostic - either an error or warning.
  *
  * Used in ManifestValidationReport to communicate actionable
  * feedback about a CEM manifest. Every diagnostic includes

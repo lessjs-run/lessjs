@@ -1,5 +1,5 @@
 /**
- * _renderer.ts — Layout renderer for the guide section.
+ * _renderer.ts - Layout renderer for the guide section.
  *
  * Injects search button and "Edit this page" in the layout footer.
  *
@@ -43,7 +43,7 @@ const renderer: LessRenderer = {
       'LESS IS MORE',
       `LESS IS MORE</p><p style="font-size:0.75rem;margin-top:0.5rem;opacity:0.6"><a href="${
         editUrl.replace(/"/g, '&quot;')
-      }" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">Edit this page on GitHub →</a></p>`,
+      }" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">Edit this page on GitHub -></a></p>`,
     );
 
     return html;

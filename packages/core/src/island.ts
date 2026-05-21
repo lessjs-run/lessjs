@@ -26,7 +26,7 @@
  * // Register with eager strategy (DSD enabled by default)
  * export default island('my-counter', MyCounter, { strategy: 'eager' });
  *
- * // Pure Island — no DSD, full framework reactivity
+ * // Pure Island - no DSD, full framework reactivity
  * export default island('my-counter', MyCounter, { strategy: 'eager', dsd: false });
  * ```
  *
@@ -34,7 +34,7 @@
  *   - Uses standard customElements.define() API
  *   - IntersectionObserver for visible strategy
  *   - requestIdleCallback for lazy strategy
- *   - Zero framework runtime — just native platform APIs
+ *   - Zero framework runtime - just native platform APIs
  *
  * @module @lessjs/core/island
  */
@@ -45,7 +45,7 @@ import { createLogger } from './logger.js';
 const log = createLogger('core');
 
 // Module-level store of active visibility strategy timeout IDs.
-// Used for test cleanup — tests can call _clearAllVisibilityTimeouts()
+// Used for test cleanup - tests can call _clearAllVisibilityTimeouts()
 // to prevent timer leaks.
 const _visibilityTimeouts: Set<number> = new Set();
 
@@ -112,7 +112,7 @@ export function getSSRProps(el: HTMLElement): Record<string, unknown> | null {
 
 /**
  * Apply SSR props from data-ssr-props to a component instance.
- * This is less:bind — binds server-rendered property values to the
+ * This is less:bind - binds server-rendered property values to the
  * client-side component on upgrade, ensuring consistency between
  * SSR and client state.
  *
@@ -121,7 +121,7 @@ export function getSSRProps(el: HTMLElement): Record<string, unknown> | null {
  * state sync) is handled at the component level via WithDsdHydration
  * Mixin and declarative hydrateEvents.
  *
- * v0.14.3: Prototype pollution fix — filters dangerous keys
+ * v0.14.3: Prototype pollution fix - filters dangerous keys
  * (__proto__, constructor, prototype) from parsed SSR props.
  *
  * @param el - The upgraded custom element
@@ -155,7 +155,7 @@ export function lessBind(el: HTMLElement): void {
   if (!props) return;
 
   for (const [key, value] of Object.entries(props)) {
-    // v0.14.3: Prevent prototype pollution — skip dangerous keys
+    // v0.14.3: Prevent prototype pollution - skip dangerous keys
     if (DANGEROUS_KEYS.has(key)) {
       log.warn(
         `Skipping dangerous key "${key}" in data-ssr-props on <${el.tagName.toLowerCase()}>`,
@@ -165,7 +165,7 @@ export function lessBind(el: HTMLElement): void {
     try {
       (el as unknown as Record<string, unknown>)[key] = value;
     } catch (e) {
-      // Some properties may be read-only — safe to skip, but log for debuggability
+      // Some properties may be read-only - safe to skip, but log for debuggability
       log.debug(
         `Cannot set read-only property "${key}" on <${el.tagName.toLowerCase()}>: ${
           e instanceof Error ? e.message : String(e)
@@ -230,7 +230,7 @@ function createVisibleStrategy(
     }
   });
 
-  // v0.14.3: Timeout guard — if the target element never appears
+  // v0.14.3: Timeout guard - if the target element never appears
   // (e.g., route changed after island was registered), disconnect
   // both observers after 30 seconds to prevent memory/perf leaks.
   const VISIBILITY_TIMEOUT = 30_000; // 30s
@@ -294,7 +294,7 @@ function createLazyStrategy(registerFn: () => void): void {
  *   - Idempotent registration (safe for SSR with multiple routes)
  *
  * v0.6.2: Added `dsd` option. When false, the island is a Pure Island
- * (Layer 3) — no DSD template is emitted, framework fully owns shadow root.
+ * (Layer 3) - no DSD template is emitted, framework fully owns shadow root.
  *
  * @param tagName - Custom element tag name (must contain hyphen)
  * @param componentClass - Custom Element constructor (framework-agnostic)
@@ -306,7 +306,7 @@ function createLazyStrategy(registerFn: () => void): void {
  * // Basic usage (DSD enabled by default)
  * export default island('my-counter', MyCounter);
  *
- * // Pure Island — no DSD, full framework reactivity
+ * // Pure Island - no DSD, full framework reactivity
  * export default island('my-counter', MyCounter, { dsd: false });
  *
  * // With visible strategy (IntersectionObserver)
@@ -360,12 +360,12 @@ export function island<T extends CustomElementConstructor>(
   // Mark the class with metadata (used by island-transform plugin and SSR)
   (componentClass as unknown as Record<string, unknown>).__island = true;
   (componentClass as unknown as Record<string, unknown>).__tagName = tagName;
-  // v0.6.2: Layer metadata — SSR pipeline uses this to decide DSD rendering
+  // v0.6.2: Layer metadata - SSR pipeline uses this to decide DSD rendering
   (componentClass as unknown as Record<string, unknown>).__layer = useDsd
     ? 'dsd-interactive'
     : 'pure-island';
 
-  // v0.6': Mixin pattern for connectedCallback — replaces monkey-patch.
+  // v0.6': Mixin pattern for connectedCallback - replaces monkey-patch.
   // Instead of modifying the prototype directly, we create a wrapper
   // that calls the original callback + auto-binds SSR props.
   // This is safer than monkey-patching because it doesn't interfere
@@ -384,7 +384,7 @@ export function island<T extends CustomElementConstructor>(
       if (typeof origConnected === 'function') {
         origConnected.call(this);
       }
-      // Auto-bind SSR props on upgrade (idempotent — only once per element)
+      // Auto-bind SSR props on upgrade (idempotent - only once per element)
       // deno-lint-ignore no-explicit-any
       if (this.hasAttribute('data-ssr-props') && !(this as any).__lessBindDone) {
         // deno-lint-ignore no-explicit-any
@@ -400,7 +400,7 @@ export function island<T extends CustomElementConstructor>(
       try {
         globalThis.customElements.define(tagName, componentClass);
       } catch (e) {
-        // Already defined — safe to ignore in SSR contexts
+        // Already defined - safe to ignore in SSR contexts
         log.debug(
           `customElements.define("${tagName}") skipped: ${
             e instanceof Error ? e.message : String(e)

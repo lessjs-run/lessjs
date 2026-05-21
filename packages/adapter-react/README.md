@@ -10,10 +10,10 @@ HTML output without React hydration markers.
 
 Provides:
 
-- **installReactAdapter()** — registers `'react'` adapter for DSD rendering
-- **isReactElement()** — detects React elements via `$$typeof` symbol
-- **renderReactToString()** — converts React elements to HTML strings
-- **DsdReactElement** — base class wrapping React components as Web Components
+- **installReactAdapter()** - registers `'react'` adapter for DSD rendering
+- **isReactElement()** - detects React elements via `$$typeof` symbol
+- **renderReactToString()** - converts React elements to HTML strings
+- **DsdReactElement** - base class wrapping React components as Web Components
 
 ## Installation
 
@@ -55,7 +55,7 @@ customElements.define('greeting-element', GreetingElement);
 
 `renderToString()` adds `data-reactroot` attributes for client hydration.
 Since LessJS uses DSD (Declarative Shadow DOM) for SSR, we don't need
-React's hydration markers — the browser handles DOM from the template.
+React's hydration markers - the browser handles DOM from the template.
 `renderToStaticMarkup()` produces clean HTML without extra attributes.
 
 ## API
@@ -63,7 +63,7 @@ React's hydration markers — the browser handles DOM from the template.
 ### `installReactAdapter()`
 
 Registers the `'react'` adapter with `@lessjs/core`'s render pipeline.
-Idempotent — safe to call multiple times.
+Idempotent - safe to call multiple times.
 
 ### `uninstallReactAdapter()`
 

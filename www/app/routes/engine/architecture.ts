@@ -1,8 +1,8 @@
 export const meta = { section: 'Principles', label: 'Architecture', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
+import { filterEngineNav } from '../../utils/nav-filter.ts';
+import { DsdElement } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
@@ -32,7 +32,7 @@ export class ArchitecturePage extends DsdElement {
           <h2>三支柱模型</h2>
           <p>
             LessJS <strong>不是 SSG 框架</strong>。SSG 只是渲染引擎的当前使用模式。
-            <span class="inline-code">renderDSD()</span> 是渲染时机无关的——build-time (SSG)、
+            <span class="inline-code">renderDSD()</span> 是渲染时机无关的--build-time (SSG)、
             cache-expiry-time (ISR)、request-time (SSR) 用同一套引擎。
           </p>
 
@@ -48,17 +48,17 @@ export class ArchitecturePage extends DsdElement {
               <tr>
                 <td>1. 全栈框架</td>
                 <td>路由 + API Route + Serverless 部署 + Hono 运行时</td>
-                <td>60% — 缺 ISR/auth/DB/context</td>
+                <td>60% - 缺 ISR/auth/DB/context</td>
               </tr>
               <tr>
                 <td>2. WC 渲染引擎</td>
                 <td>DSD 渲染 + 多框架适配器 + 兼容性分类</td>
-                <td>75% — 缺 Vue/hydration策略/streaming</td>
+                <td>75% - 缺 Vue/hydration策略/streaming</td>
               </tr>
               <tr>
                 <td>3. Registry Hub</td>
                 <td>包发现 + 验证 + 预览 + 一键安装</td>
-                <td>65% — 缺公开服务</td>
+                <td>65% - 缺公开服务</td>
               </tr>
             </tbody>
           </table>
@@ -257,7 +257,7 @@ Phase 3: SSG
           <h2>Three-Pillar Model</h2>
           <p>
             LessJS is <strong>not an SSG framework</strong>. SSG is one mode of the rendering engine.
-            <span class="inline-code">renderDSD()</span> is rendering-timing-agnostic — build-time (SSG),
+            <span class="inline-code">renderDSD()</span> is rendering-timing-agnostic - build-time (SSG),
             cache-expiry-time (ISR), request-time (SSR), same engine.
           </p>
 
@@ -273,17 +273,17 @@ Phase 3: SSG
               <tr>
                 <td>1. Full-Stack Framework</td>
                 <td>Routing + API Routes + Serverless deployment + Hono runtime</td>
-                <td>60% — missing ISR/auth/DB/context</td>
+                <td>60% - missing ISR/auth/DB/context</td>
               </tr>
               <tr>
                 <td>2. WC Rendering Engine</td>
                 <td>DSD rendering + multi-framework adapters + compatibility classification</td>
-                <td>75% — missing Vue/hydration strategies/streaming</td>
+                <td>75% - missing Vue/hydration strategies/streaming</td>
               </tr>
               <tr>
                 <td>3. Registry Hub</td>
                 <td>Package discovery + validation + preview + one-click install</td>
-                <td>65% — missing public service</td>
+                <td>65% - missing public service</td>
               </tr>
             </tbody>
           </table>

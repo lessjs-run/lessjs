@@ -64,7 +64,7 @@ Deno.test('build - generateClientEntry', async (t) => {
   await t.step('islands self-register via dynamic import side effects', () => {
     const islands = [{ tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' }];
     const code = generateClientEntry(islands);
-    // No explicit customElements.define() — islands self-register via dynamic import
+    // No explicit customElements.define() - islands self-register via dynamic import
     assertFalse(code.includes("customElements.define('my-counter'"));
     assertFalse(code.includes("customElements.get('my-counter')"));
   });
@@ -72,7 +72,7 @@ Deno.test('build - generateClientEntry', async (t) => {
   await t.step('no duplicate registration guards needed', () => {
     const islands = [{ tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' }];
     const code = generateClientEntry(islands);
-    // No explicit customElements.define() — no duplicate guard needed
+    // No explicit customElements.define() - no duplicate guard needed
     assertFalse(code.includes("if (!customElements.get('my-counter'))"));
   });
 
@@ -104,7 +104,7 @@ Deno.test('build - generateClientEntry', async (t) => {
 // ADR 0011: closeBundle writes metadata to ctx fields, not .less/build-metadata.json.
 // Tests create a real LessBuildContext and verify fields after closeBundle().
 // NOTE: Phase 2/3 (buildClient, buildSSG) require a real Vite project with
-// routes/islands — they are tested in ssg-smoke.test.ts instead.
+// routes/islands - they are tested in ssg-smoke.test.ts instead.
 
 Deno.test('buildPlugin - configResolved', () => {
   const plugin = buildPlugin();
@@ -129,11 +129,11 @@ Deno.test({
     const config = makeConfig('build');
     callHook(plugin.configResolved, config);
 
-    // closeBundle will try Phase 2/3 which need a real project — catch and ignore
+    // closeBundle will try Phase 2/3 which need a real project - catch and ignore
     try {
       await callAsyncHook(plugin.closeBundle);
     } catch {
-      // Phase 2/3 may fail without a real project — that's OK, we only test Phase 1
+      // Phase 2/3 may fail without a real project - that's OK, we only test Phase 1
     }
 
     await t.step('ctx fields are populated by Phase 1', () => {
@@ -164,7 +164,7 @@ Deno.test({
     await callAsyncHook(plugin.closeBundle);
 
     await t.step('does NOT write ctx fields in dev mode', () => {
-      // In dev mode, closeBundle returns early — ctx fields should remain default
+      // In dev mode, closeBundle returns early - ctx fields should remain default
       assertEquals(ctx.phase3.root, '');
       assertEquals(ctx.phase3.outDir, 'dist'); // default value
     });

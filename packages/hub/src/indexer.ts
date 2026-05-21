@@ -1,10 +1,10 @@
 /**
- * @lessjs/hub — Hub Search Index Builder
+ * @lessjs/hub - Hub Search Index Builder
  *
  * v0.19.0: Build lightweight search indices from HubPackageRecord arrays.
  * Produces HubIndex instances that can be consumed by client-side search UIs.
  *
- * Search index is intentionally minimal — just enough metadata for
+ * Search index is intentionally minimal - just enough metadata for
  * filtering and ranking without sending full package records to the client.
  */
 
@@ -15,7 +15,7 @@ import type { HubIndex, HubIndexEntry, HubPackageRecord } from './schema.ts';
 /**
  * Build a HubIndex from an array of HubPackageRecords.
  *
- * @param records — Array of full package records
+ * @param records - Array of full package records
  * @returns A lightweight search index
  */
 export function buildIndex(records: HubPackageRecord[]): HubIndex {
@@ -54,7 +54,7 @@ export function filterByCompatibility(
 
 /**
  * Filter index entries by search query (name, scope, tags).
- * Simple substring matching — suitable for client-side use.
+ * Simple substring matching - suitable for client-side use.
  */
 export function searchPackages(
   entries: HubIndexEntry[],

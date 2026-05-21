@@ -16,9 +16,9 @@ deno task test     # Run all tests
 
 ```
 packages/
-  core/           # Pure runtime — DSD rendering, Islands, Navigation
+  core/           # Pure runtime - DSD rendering, Islands, Navigation
   adapter-vite/   # Vite plugin + SSG build pipeline
-  adapter-lit/    # Lit → DSD adapter
+  adapter-lit/    # Lit -> DSD adapter
   app/            # Umbrella package: lessjs() = less() + content + i18n
   content/        # Blog + Navigation + Sitemap
   i18n/           # Internationalization
@@ -31,9 +31,9 @@ www/              # lessjs.run website
 
 ## Before Submitting a PR
 
-1. Run `deno task fmt` — format all code
-2. Run `deno task lint` — check for lint errors
-3. Run `deno task test` — ensure all tests pass
+1. Run `deno task fmt` - format all code
+2. Run `deno task lint` - check for lint errors
+3. Run `deno task test` - ensure all tests pass
 4. Write tests for new functionality (we aim for ≥60% coverage per package)
 5. Update relevant README if changing public API
 

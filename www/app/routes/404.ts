@@ -1,5 +1,5 @@
 /**
- * 404 Not Found Page — with search, helpful links, and old URL redirects
+ * 404 Not Found Page - with search, helpful links, and old URL redirects
  */
 import { headerNav, navSections } from 'virtual:less-nav';
 import { DsdElement, StyleSheet } from '@lessjs/core';
@@ -158,7 +158,7 @@ export class NotFoundPage extends DsdElement {
         <less-search slot="header-actions"></less-search>
         <div class="container">
           <div class="error-code">404</div>
-          <p class="error-message">This page does not exist — or has moved to a different route.</p>
+          <p class="error-message">This page does not exist - or has moved to a different route.</p>
 
           <input
             class="search-box"

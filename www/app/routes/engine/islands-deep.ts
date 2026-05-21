@@ -2,7 +2,6 @@ export const meta = { section: 'Principles', label: 'Island Deep Dive', order: 5
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/core';
-import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
@@ -34,11 +33,11 @@ export class IslandsDeepGuidePage extends DsdElement {
     <h1>Island 深度指南</h1>
     <p class="subtitle">Island 是 LessJS 中唯一允许的客户端 JavaScript 单元。本页深入讲解 Island 的三层架构、升级策略、声明式事件绑定和数据传递机制。</p>
     <h2>Island 架构原理</h2>
-    <p>LessJS 的 Island 是对 Custom Element Upgrade 机制的诚实利用。浏览器解析 HTML 时看到 <span class="inline-code">&lt;my-counter&gt;</span>，稍后加载模块调用 <span class="inline-code">customElements.define()</span>，已有元素被升级——这就是 Island 的全部原理。关于 DSD 渲染模型和为什么选择 DSD-first，参见 <a href="/engine/dsd">DSD 渲染架构</a>。</p>
+    <p>LessJS 的 Island 是对 Custom Element Upgrade 机制的诚实利用。浏览器解析 HTML 时看到 <span class="inline-code">&lt;my-counter&gt;</span>，稍后加载模块调用 <span class="inline-code">customElements.define()</span>，已有元素被升级--这就是 Island 的全部原理。关于 DSD 渲染模型和为什么选择 DSD-first，参见 <a href="/engine/dsd">DSD 渲染架构</a>。</p>
     <h2>三层 Island 架构</h2>
-    <div class="layer-card"><div class="layer-tag">Layer 1 — dsd-static</div><h3>无 JS，纯 DSD</h3><p>导航栏、文章内容、页脚等纯展示组件。SSG 输出完整 DSD HTML，客户端不加载任何 JavaScript。组件即使永远不会被 customElements.define() 升级，内容也始终可见且样式完整。</p></div>
-    <div class="layer-card"><div class="layer-tag">Layer 2 — dsd-interactive</div><h3>DSD + 事件绑定</h3><p>需要交互但状态简单的组件。SSR 输出完整 DSD（首屏可见），客户端加载模块后检测已有 shadow root，跳过 render()，只绑定声明的事件处理器。</p></div>
-    <div class="layer-card"><div class="layer-tag">Layer 3 — pure-island</div><h3>框架完全拥有 Shadow Root</h3><p>需要完整框架响应性的组件：本地状态、定时器、轮询、WebSocket。SSR 只输出标签和 data-ssr-props，不输出 DSD 模板。客户端框架创建 shadow root 并完全控制渲染。</p></div>
+    <div class="layer-card"><div class="layer-tag">Layer 1 - dsd-static</div><h3>无 JS，纯 DSD</h3><p>导航栏、文章内容、页脚等纯展示组件。SSG 输出完整 DSD HTML，客户端不加载任何 JavaScript。组件即使永远不会被 customElements.define() 升级，内容也始终可见且样式完整。</p></div>
+    <div class="layer-card"><div class="layer-tag">Layer 2 - dsd-interactive</div><h3>DSD + 事件绑定</h3><p>需要交互但状态简单的组件。SSR 输出完整 DSD（首屏可见），客户端加载模块后检测已有 shadow root，跳过 render()，只绑定声明的事件处理器。</p></div>
+    <div class="layer-card"><div class="layer-tag">Layer 3 - pure-island</div><h3>框架完全拥有 Shadow Root</h3><p>需要完整框架响应性的组件：本地状态、定时器、轮询、WebSocket。SSR 只输出标签和 data-ssr-props，不输出 DSD 模板。客户端框架创建 shadow root 并完全控制渲染。</p></div>
     <h2>升级策略</h2>
     <p>Island 的 strategy 控制客户端模块何时加载并注册。策略在 island() 调用时声明，构建器通过 island manifest 传递到客户端 entry。</p>
     <div class="strategy-grid">
@@ -69,9 +68,9 @@ export class IslandsDeepGuidePage extends DsdElement {
     <h2>Island Architecture</h2>
     <p>LessJS islands are a straightforward exploitation of the Custom Element Upgrade mechanism. The browser sees <span class="inline-code">&lt;my-counter&gt;</span> during HTML parsing; later the module loads and calls <span class="inline-code">customElements.define()</span>, upgrading the existing element. See <a href="/engine/dsd">DSD Architecture</a> for the rendering model.</p>
     <h2>Three-Layer Island Architecture</h2>
-    <div class="layer-card"><div class="layer-tag">Layer 1 — dsd-static</div><h3>No JS, Pure DSD</h3><p>Purely presentational components: nav, article content, footer. SSG outputs full DSD HTML; the client loads zero JavaScript. Content remains visible and styled even if customElements.define() is never called.</p></div>
-    <div class="layer-card"><div class="layer-tag">Layer 2 — dsd-interactive</div><h3>DSD + Event Binding</h3><p>Components needing simple interactivity. SSR outputs full DSD (visible on first paint); after the client module loads, it detects the existing shadow root, skips render(), and binds only the declared event handlers.</p></div>
-    <div class="layer-card"><div class="layer-tag">Layer 3 — pure-island</div><h3>Framework Owns Shadow Root</h3><p>Components needing full framework reactivity: local state, timers, polling, WebSocket. SSR outputs only the tag and data-ssr-props — no DSD template. The client framework creates the shadow root and controls rendering entirely.</p></div>
+    <div class="layer-card"><div class="layer-tag">Layer 1 - dsd-static</div><h3>No JS, Pure DSD</h3><p>Purely presentational components: nav, article content, footer. SSG outputs full DSD HTML; the client loads zero JavaScript. Content remains visible and styled even if customElements.define() is never called.</p></div>
+    <div class="layer-card"><div class="layer-tag">Layer 2 - dsd-interactive</div><h3>DSD + Event Binding</h3><p>Components needing simple interactivity. SSR outputs full DSD (visible on first paint); after the client module loads, it detects the existing shadow root, skips render(), and binds only the declared event handlers.</p></div>
+    <div class="layer-card"><div class="layer-tag">Layer 3 - pure-island</div><h3>Framework Owns Shadow Root</h3><p>Components needing full framework reactivity: local state, timers, polling, WebSocket. SSR outputs only the tag and data-ssr-props - no DSD template. The client framework creates the shadow root and controls rendering entirely.</p></div>
     <h2>Upgrade Strategies</h2>
     <div class="strategy-grid">
       <div class="strategy-item"><div class="strat-name"><code>eager</code></div><p>Registers immediately after module load. For first-paint interactive components (nav, theme toggle).</p></div>

@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub — Schema Validation Tests
+ * @lessjs/hub - Schema Validation Tests
  *
  * v0.19.0: Test all schema types and validators.
  */

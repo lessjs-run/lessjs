@@ -1,5 +1,5 @@
 /**
- * API Consumer Island — JAM Pattern Interactive Demo
+ * API Consumer Island - JAM Pattern Interactive Demo
  *
  * A lightweight island component that calls the LessJS serverless API.
  * Rendered initially as DSD, then upgraded on the client.
@@ -356,7 +356,7 @@ export default class ApiConsumer extends LitElement {
             @click="${this._sayHello}"
             ?disabled="${this.helloLoading || !this.name.trim()}"
           >
-            ${this.helloLoading ? 'Sending...' : 'Say Hello →'}
+            ${this.helloLoading ? 'Sending...' : 'Say Hello ->'}
           </button>
         </div>
         ${this.helloMsg

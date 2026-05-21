@@ -13,7 +13,7 @@ import { channel } from '../src/index.ts';
 
 // ─── Channel API contract (no-op in Deno) ─────────────────────
 
-Deno.test('channel() — API contract', async (t) => {
+Deno.test('channel() - API contract', async (t) => {
   await t.step('channel has correct name', () => {
     const ch = channel('test-channel');
     assertEquals(ch.name, 'test-channel');
@@ -88,7 +88,7 @@ function createMockChannel(name: string): MockChannel {
   };
 }
 
-Deno.test('channel() — event bus logic (mock)', async (t) => {
+Deno.test('channel() - event bus logic (mock)', async (t) => {
   await t.step('emit and on receive events', () => {
     const ch = createMockChannel('bus1');
     const received: unknown[] = [];

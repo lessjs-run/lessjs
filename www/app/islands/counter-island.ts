@@ -1,5 +1,5 @@
 /**
- * Counter Island — Interactive Component
+ * Counter Island - Interactive Component
  *
  * I 约束演示：
  * - Shadow DOM 封装

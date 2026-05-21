@@ -62,13 +62,13 @@ Deno.test('island-transform - islandTransformPlugin', async (t) => {
     const mockContext = {
       error: (msg: string) => {
         errorThrown = true;
-        // In Vite, this.error() throws — simulate by throwing
+        // In Vite, this.error() throws - simulate by throwing
         throw new Error(msg);
       },
       warn: () => {},
     };
     try {
-      // "my-mod!.ts" → fileToTagName strips .ts → "my-mod!" — has hyphen AND
+      // "my-mod!.ts" -> fileToTagName strips .ts -> "my-mod!" - has hyphen AND
       // exclamation mark, triggers error() for unsafe characters
       transform.call(
         mockContext,
@@ -110,7 +110,7 @@ Deno.test('entry-generators - generateClientEntry (v0.5.0 CE upgrade)', async (t
       { tagName: 'theme-toggle', modulePath: '@lessjs/ui/less-theme-toggle', isPackage: true },
     ];
     const code = generateClientEntry(islands);
-    // All islands (local + package) use dynamic import() — they self-register
+    // All islands (local + package) use dynamic import() - they self-register
     assertEquals(code.includes('import("/app/islands/my-counter.ts")'), true);
     assertEquals(code.includes('import("@lessjs/ui/less-theme-toggle")'), true);
     // No explicit customElements.define() in generated entry

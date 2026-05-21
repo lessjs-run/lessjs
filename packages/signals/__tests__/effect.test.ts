@@ -9,7 +9,7 @@ function waitForEffects(ms = 50): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-Deno.test('effect() — initial execution', async (t) => {
+Deno.test('effect() - initial execution', async (t) => {
   await t.step('runs callback immediately', () => {
     let count = 0;
     const s = signal(1);
@@ -30,7 +30,7 @@ Deno.test('effect() — initial execution', async (t) => {
   });
 });
 
-Deno.test('effect() — re-execution on signal change', async (t) => {
+Deno.test('effect() - re-execution on signal change', async (t) => {
   await t.step('re-runs when tracked signal changes', async () => {
     const s = signal(0);
     let count = 0;
@@ -70,7 +70,7 @@ Deno.test('effect() — re-execution on signal change', async (t) => {
   });
 });
 
-Deno.test('effect() — cleanup function', async (t) => {
+Deno.test('effect() - cleanup function', async (t) => {
   await t.step('cleanup function is called before re-run', async () => {
     const s = signal(1);
     const cleanups: number[] = [];
@@ -97,7 +97,7 @@ Deno.test('effect() — cleanup function', async (t) => {
   });
 });
 
-Deno.test('effect() — dispose', async (t) => {
+Deno.test('effect() - dispose', async (t) => {
   await t.step('dispose stops future re-runs', async () => {
     const s = signal(0);
     let count = 0;
@@ -125,7 +125,7 @@ Deno.test('effect() — dispose', async (t) => {
   });
 });
 
-Deno.test('effect() — multiple signals', async (t) => {
+Deno.test('effect() - multiple signals', async (t) => {
   await t.step('tracks multiple signals', async () => {
     const a = signal(1);
     const b = signal(2);

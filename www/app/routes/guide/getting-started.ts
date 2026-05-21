@@ -3,7 +3,6 @@ export const meta = { section: 'Quick Start', label: 'Getting Started', order: 2
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/core';
-import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
@@ -153,7 +152,7 @@ export const tagName = 'page-home';</code></pre></less-code-block>
           </p>
 
           <less-callout type="info" label="Recommended">
-            Deno 2.7+ recommended. LessJS is a Deno-first project — dependencies are managed
+            Deno 2.7+ recommended. LessJS is a Deno-first project - dependencies are managed
             through <span class="inline-code">deno.json</span>, and all dev/build commands
             use Deno tasks.
           </less-callout>

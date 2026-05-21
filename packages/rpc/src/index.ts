@@ -27,7 +27,7 @@
  * @module
  */
 
-// Local type declarations — no framework dependency.
+// Local type declarations - no framework dependency.
 // These minimal interfaces match common lifecycle patterns.
 //
 // RpcController uses addController/removeController/requestUpdate
@@ -53,7 +53,7 @@ interface ReactiveElement {
 }
 
 /**
- * RPC Error — thrown when an API call fails.
+ * RPC Error - thrown when an API call fails.
  *
  * Aligned with @lessjs/core LessError structure:
  * provides status, code, and message for structured error handling.
@@ -135,7 +135,7 @@ export class RpcController implements ReactiveController {
     private host: ReactiveElement,
     options?: RpcControllerOptions,
   ) {
-    // v0.14.3: addController is optional — plain HTMLElement hosts don't have it
+    // v0.14.3: addController is optional - plain HTMLElement hosts don't have it
     host.addController?.(this);
     this._options = {
       maxRetries: options?.maxRetries ?? 0,
@@ -252,7 +252,7 @@ export class RpcController implements ReactiveController {
           break;
         }
 
-        // Wait before retry — race against abort so ctrl.abort()
+        // Wait before retry - race against abort so ctrl.abort()
         // cancels immediately instead of waiting for the full delay
         const delay = typeof this._options.retryDelay === 'function'
           ? this._options.retryDelay(attempt)

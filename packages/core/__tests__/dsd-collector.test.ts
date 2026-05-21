@@ -2,12 +2,12 @@
  * @lessjs/core - DsdRenderCollector unit tests (Deno)
  *
  * Tests for the DSD render metrics collector used for build-time reporting.
- * No parse5 dependency — purely tests the collector data structure.
+ * No parse5 dependency - purely tests the collector data structure.
  */
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { DsdRenderCollector } from '../src/types.ts';
 
-Deno.test('DsdRenderCollector — empty collector', () => {
+Deno.test('DsdRenderCollector - empty collector', () => {
   const collector = new DsdRenderCollector();
   const report = collector.getReport();
   assertEquals(report.totalComponents, 0);
@@ -18,7 +18,7 @@ Deno.test('DsdRenderCollector — empty collector', () => {
   assertEquals(report.maxNestingDepth, 0);
 });
 
-Deno.test('DsdRenderCollector — aggregates DSD component metrics', () => {
+Deno.test('DsdRenderCollector - aggregates DSD component metrics', () => {
   const collector = new DsdRenderCollector();
   collector.add({
     tagName: 'less-button',
@@ -44,7 +44,7 @@ Deno.test('DsdRenderCollector — aggregates DSD component metrics', () => {
   assertEquals(report.pureIslands, 0);
 });
 
-Deno.test('DsdRenderCollector — distinguishes pure islands', () => {
+Deno.test('DsdRenderCollector - distinguishes pure islands', () => {
   const collector = new DsdRenderCollector();
   collector.add({
     tagName: 'home-page',
@@ -68,7 +68,7 @@ Deno.test('DsdRenderCollector — distinguishes pure islands', () => {
   assertEquals(report.dsdComponents, 1);
 });
 
-Deno.test('DsdRenderCollector — metrics are readonly snapshot', () => {
+Deno.test('DsdRenderCollector - metrics are readonly snapshot', () => {
   const collector = new DsdRenderCollector();
   collector.add({
     tagName: 'less-button',

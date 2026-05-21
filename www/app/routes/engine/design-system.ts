@@ -1,5 +1,5 @@
 /**
- * @lessjs/ui — Design System
+ * @lessjs/ui - Design System
  * Two plates. Zero noise.
  *
  * Dogfooding: uses real less-button, less-card, less-input components.

@@ -86,7 +86,7 @@ export interface ComputedNode<T> extends ReactiveNode {
 }
 
 // ─── Engine singleton ───────────────────────────────────────────
-// Import _createPolyfill after all exports — ensures polyfill.ts
+// Import _createPolyfill after all exports - ensures polyfill.ts
 // gets NODE and types before engine.ts needs _createPolyfill.
 import { _createPolyfill } from './polyfill.ts';
 

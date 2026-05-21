@@ -218,7 +218,7 @@ export class RoadmapPage extends DsdElement {
                 <td>6</td>
                 <td>v1.0.x</td>
                 <td>General-Purpose Engine</td>
-                <td>任意 CEM manifest WC 包 → 自动 SSR/SSG，API freeze</td>
+                <td>任意 CEM manifest WC 包 -> 自动 SSR/SSG，API freeze</td>
                 <td><span class="status deferred">Vision</span></td>
               </tr>
             </tbody>
@@ -228,7 +228,7 @@ export class RoadmapPage extends DsdElement {
 
           <div class="phase">
             <span class="status done">Done</span>
-            <h3>Phase 1: v0.15.x — Renderer Kernel</h3>
+            <h3>Phase 1: v0.15.x - Renderer Kernel</h3>
             <p>
               v0.15.1 审计门禁、v0.15.2 RenderOutput + RenderHooks、v0.15.3 dsd-report + Release Gate。
               渲染内核产品化完成。
@@ -246,7 +246,7 @@ export class RoadmapPage extends DsdElement {
 
           <div class="phase">
             <span class="status done">Done</span>
-            <h3>Phase 2: v0.16.x — WC Package Protocol</h3>
+            <h3>Phase 2: v0.16.x - WC Package Protocol</h3>
             <p>
               从 3 字段 <code>PackageIslandMeta</code> 升级为 20+ 字段 CEM 兼容
               <code>LessPackageManifest</code>。LessJS 第一次能以数据描述 WC 包。
@@ -258,11 +258,11 @@ export class RoadmapPage extends DsdElement {
 
           <div class="phase">
             <span class="status done">Done</span>
-            <h3>Phase 3: v0.17.x — Ecosystem Entry</h3>
+            <h3>Phase 3: v0.17.x - Ecosystem Entry</h3>
             <p>消除向后兼容层，管道 manifest-native 化，跨运行时支持，SSR admission 边界硬化。</p>
             <ul class="compact-list">
               <li>v0.17.0: 删除 PackageIslandMeta + manifest-native pipeline</li>
-              <li>v0.17.1: 跨运行时 adapter-vite（Deno API → Node.js compat）</li>
+              <li>v0.17.1: 跨运行时 adapter-vite（Deno API -> Node.js compat）</li>
               <li>v0.17.2: SSR filtering + dsd-report manifest 决策</li>
               <li>v0.17.3: 多框架适配器探索（adapter-vanilla 增强、adapter-react）</li>
               <li>v0.17.4: 兼容性边界硬化 + SSR admission planner</li>
@@ -272,7 +272,7 @@ export class RoadmapPage extends DsdElement {
 
           <div class="phase">
             <span class="status done">Done</span>
-            <h3>Phase 4: v0.18.x — Universal WC Engine</h3>
+            <h3>Phase 4: v0.18.x - Universal WC Engine</h3>
             <p>
               CEM 解析器 + 4 级兼容分类 + 构建时自动检测 + dsd-report 报告扩展。第三方 WC 包默认
               client-only，安全接入 LessJS 生态。
@@ -283,7 +283,7 @@ export class RoadmapPage extends DsdElement {
                 experimental-dom）、SSR admission 集成、dsd-report cemCompatibility 报告、构建时自动扫描
                 node_modules
               </li>
-              <li>v0.18.1: <code>less validate-manifest</code> CLI — 安装前验证包兼容性</li>
+              <li>v0.18.1: <code>less validate-manifest</code> CLI - 安装前验证包兼容性</li>
               <li>v0.18.2: <code>less add</code> 一键安装流程</li>
               <li>v0.18.3（实验）: DOM 模拟渲染 client-only 组件 (Happy DOM)</li>
             </ul>
@@ -291,7 +291,7 @@ export class RoadmapPage extends DsdElement {
 
           <div class="phase deferred">
             <span class="status deferred">Far</span>
-            <h3>Phase 5: v0.19.x — Platform + Hub</h3>
+            <h3>Phase 5: v0.19.x - Platform + Hub</h3>
             <p>从本地 registry 到公共 registry。Hub 放在主仓库 monorepo，直到规模需要分离。</p>
             <ul class="compact-list">
               <li>Hub API + 包搜索 + 浏览界面</li>
@@ -303,8 +303,8 @@ export class RoadmapPage extends DsdElement {
 
           <div class="phase deferred">
             <span class="status deferred">Vision</span>
-            <h3>Phase 6: v1.0.x — General-Purpose Engine</h3>
-            <p>任意 CEM manifest WC 包 → 自动 SSR/SSG，零配置。API freeze。从"工具"走向"标准"。</p>
+            <h3>Phase 6: v1.0.x - General-Purpose Engine</h3>
+            <p>任意 CEM manifest WC 包 -> 自动 SSR/SSG，零配置。API freeze。从"工具"走向"标准"。</p>
           </div>
 
           <h2>Rejected / Deferred</h2>
@@ -342,13 +342,13 @@ export class RoadmapPage extends DsdElement {
 
           <nav class="nav-row">
             <a class="nav-link" href="/zh/decisions/20260515-1-renderer-kernel-registry-sop"
-            >20260515 ADR/SOP →</a>
+            >20260515 ADR/SOP -></a>
             <a class="nav-link" href="/decisions/0024-standards-first-wc-renderer-roadmap"
-            >Strategic Roadmap ADR →</a>
-            <a class="nav-link" href="/decisions/adr-0006-version-roadmap">Version Roadmap ADR →</a>
+            >Strategic Roadmap ADR -></a>
+            <a class="nav-link" href="/decisions/adr-0006-version-roadmap">Version Roadmap ADR -></a>
             <a class="nav-link" href="/decisions/adr-0007-npm-publishing-strategy"
-            >Publishing Strategy →</a>
-            <a class="nav-link" href="/engine/architecture">Architecture →</a>
+            >Publishing Strategy -></a>
+            <a class="nav-link" href="/engine/architecture">Architecture -></a>
           </nav>
         </div>
       </less-layout>
@@ -433,7 +433,7 @@ export class RoadmapPage extends DsdElement {
                 <td>6</td>
                 <td>v1.0.x</td>
                 <td>General-Purpose Engine</td>
-                <td>Any CEM manifest WC package → automatic SSR/SSG, API freeze</td>
+                <td>Any CEM manifest WC package -> automatic SSR/SSG, API freeze</td>
                 <td><span class="status deferred">Vision</span></td>
               </tr>
             </tbody>
@@ -443,7 +443,7 @@ export class RoadmapPage extends DsdElement {
 
           <div class="phase">
             <span class="status done">Done</span>
-            <h3>Phase 1: v0.15.x — Renderer Kernel</h3>
+            <h3>Phase 1: v0.15.x - Renderer Kernel</h3>
             <p>
               v0.15.1 audit gates, v0.15.2 RenderOutput + RenderHooks, v0.15.3 dsd-report + Release Gate.
               The rendering kernel is productized.
@@ -461,7 +461,7 @@ export class RoadmapPage extends DsdElement {
 
           <div class="phase">
             <span class="status done">Done</span>
-            <h3>Phase 2: v0.16.x — WC Package Protocol</h3>
+            <h3>Phase 2: v0.16.x - WC Package Protocol</h3>
             <p>
               Upgrade from 3-field <code>PackageIslandMeta</code> to 20+ field CEM-compatible
               <code>LessPackageManifest</code>. LessJS can describe WC packages as data for the first
@@ -474,14 +474,14 @@ export class RoadmapPage extends DsdElement {
 
           <div class="phase">
             <span class="status done">Done</span>
-            <h3>Phase 3: v0.17.x — Ecosystem Entry</h3>
+            <h3>Phase 3: v0.17.x - Ecosystem Entry</h3>
             <p>
               Eliminate backward compat layer, manifest-native pipeline, cross-runtime support, SSR
               admission boundary hardening.
             </p>
             <ul class="compact-list">
               <li>v0.17.0: Delete PackageIslandMeta + manifest-native pipeline</li>
-              <li>v0.17.1: Cross-runtime adapter-vite (Deno API → Node.js compat)</li>
+              <li>v0.17.1: Cross-runtime adapter-vite (Deno API -> Node.js compat)</li>
               <li>v0.17.2: SSR filtering + dsd-report manifest decisions</li>
               <li>
                 v0.17.3: Multi-framework adapter exploration (adapter-vanilla enhanced, adapter-react)
@@ -493,7 +493,7 @@ export class RoadmapPage extends DsdElement {
 
           <div class="phase">
             <span class="status done">Done</span>
-            <h3>Phase 4: v0.18.x — Universal WC Engine</h3>
+            <h3>Phase 4: v0.18.x - Universal WC Engine</h3>
             <p>
               CEM parser + 4-tier compatibility classifier + build-time auto-detection + dsd-report schema
               extensions. Third-party WC packages default to client-only, safely integrated into LessJS
@@ -506,7 +506,7 @@ export class RoadmapPage extends DsdElement {
                 build-time node_modules auto-scan
               </li>
               <li>
-                v0.18.1: <code>less validate-manifest</code> CLI — pre-install package compatibility
+                v0.18.1: <code>less validate-manifest</code> CLI - pre-install package compatibility
                 validation
               </li>
               <li>v0.18.2: <code>less add</code> one-click install flow</li>
@@ -516,7 +516,7 @@ export class RoadmapPage extends DsdElement {
 
           <div class="phase deferred">
             <span class="status deferred">Far</span>
-            <h3>Phase 5: v0.19.x — Platform + Hub</h3>
+            <h3>Phase 5: v0.19.x - Platform + Hub</h3>
             <p>
               From local registry to public registry. Hub lives in main repo monorepo until scale demands
               separation.
@@ -531,9 +531,9 @@ export class RoadmapPage extends DsdElement {
 
           <div class="phase deferred">
             <span class="status deferred">Vision</span>
-            <h3>Phase 6: v1.0.x — General-Purpose Engine</h3>
+            <h3>Phase 6: v1.0.x - General-Purpose Engine</h3>
             <p>
-              Any CEM manifest WC package → automatic SSR/SSG, zero config. API freeze. From "tool" to
+              Any CEM manifest WC package -> automatic SSR/SSG, zero config. API freeze. From "tool" to
               "standard".
             </p>
           </div>
@@ -573,14 +573,14 @@ export class RoadmapPage extends DsdElement {
 
           <nav class="nav-row">
             <a class="nav-link" href="/zh/decisions/20260515-1-renderer-kernel-registry-sop"
-            >20260515 ADR/SOP →</a>
+            >20260515 ADR/SOP -></a>
             <a class="nav-link" href="/en/decisions/0024-standards-first-wc-renderer-roadmap"
-            >Strategic Roadmap ADR →</a>
+            >Strategic Roadmap ADR -></a>
             <a class="nav-link" href="/en/decisions/adr-0006-version-roadmap"
-            >Version Roadmap ADR →</a>
+            >Version Roadmap ADR -></a>
             <a class="nav-link" href="/en/decisions/adr-0007-npm-publishing-strategy"
-            >Publishing Strategy →</a>
-            <a class="nav-link" href="/en/engine/architecture">Architecture →</a>
+            >Publishing Strategy -></a>
+            <a class="nav-link" href="/en/engine/architecture">Architecture -></a>
           </nav>
         </div>
       </less-layout>

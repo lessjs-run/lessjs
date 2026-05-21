@@ -2,8 +2,8 @@ import { lessjs } from '@lessjs/app';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { defineConfig } from 'vite';
 
-// www/ is a pure JSR consumer — no resolve.alias needed.
-// The root deno.json workspace mapping resolves jsr:@lessjs/* → local
+// www/ is a pure JSR consumer - no resolve.alias needed.
+// The root deno.json workspace mapping resolves jsr:@lessjs/* -> local
 // packages/ during dev, and JSR tarballs in production.
 
 // v0.20.0: migrated from lessRootColorCSS (deleted) to openPropsTokenSheet
@@ -46,7 +46,7 @@ export default defineConfig({
         ],
       },
       pwa: {
-        name: 'LessJS Framework — Less is More',
+        name: 'LessJS Framework - Less is More',
         shortName: 'LessJS',
         themeColor: '#000000',
         backgroundColor: '#ffffff',
@@ -120,12 +120,12 @@ export default defineConfig({
         headFragments: [
           '<meta property="og:site_name" content="LessJS">',
           '<meta property="og:type" content="website">',
-          '<meta property="og:title" content="LessJS — Less is More">',
+          '<meta property="og:title" content="LessJS - Less is More">',
           '<meta property="og:description" content="DSD-first Web Standards framework. Zero-runtime core, SSG + Island architecture, Lit Web Components, Hono API routes.">',
           '<meta property="og:url" content="https://lessjs.org">',
           '<meta property="og:image" content="https://lessjs.org/assets/og-image.svg">',
           '<meta name="twitter:card" content="summary_large_image">',
-          '<meta name="description" content="LessJS — Less is More. Web Standards-first Jamstack SSG with Island architecture. Zero-runtime core, DSD rendering, Lit Web Components, Hono API routes.">',
+          '<meta name="description" content="LessJS - Less is More. Web Standards-first Jamstack SSG with Island architecture. Zero-runtime core, DSD rendering, Lit Web Components, Hono API routes.">',
           '<style id="less-anti-flash">html{visibility:hidden}</style>',
           '<link rel="icon" type="image/svg+xml" href="/assets/less-logo.svg" />',
           '<link rel="apple-touch-icon" href="/assets/less-logo.svg" />',

@@ -1,9 +1,9 @@
 /**
- * @lessjs/core â€” StyleSheet (cross-environment CSSStyleSheet abstraction).
+ * @lessjs/core - StyleSheet (cross-environment CSSStyleSheet abstraction).
  *
  * In the browser this delegates to the native CSSStyleSheet API at zero
  * cost.  In Deno / Node / Bun (where the CSSOM is not available) it falls
- * back to a minimal inâ€‘memory implementation that satisfies the same
+ * back to a minimal in-memory implementation that satisfies the same
  * contract needed by `renderDSD()` and `DsdElement`.
  *
  * Public contract (subset of `CSSStyleSheet`):
@@ -13,13 +13,13 @@
  *
  * Where `CSSRuleLike` has exactly one property: `cssText: string`.
  *
- * The shim is intentionally NOT a full CSSOM polyfill â€” it only implements
+ * The shim is intentionally NOT a full CSSOM polyfill - it only implements
  * the surface that LessJS touches.
  */
 
-// â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// -- Types -------------------------------------------------------
 
-/** Minimal rule interface â€” only the field LessJS reads. */
+/** Minimal rule interface - only the field LessJS reads. */
 export interface StyleSheetRule {
   cssText: string;
 }
@@ -30,7 +30,7 @@ export interface StyleSheetLike {
   readonly cssRules: StyleSheetRule[];
 }
 
-// â”€â”€ CSS Rule parser (lightweight, no DOM needed) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// -- CSS Rule parser (lightweight, no DOM needed) ----------------
 
 /**
  * Parse CSS into rule blocks, correctly handling nested {} in @media / @keyframes.
@@ -73,7 +73,7 @@ function parseRules(css: string): StyleSheetRule[] {
       }
       j++;
     }
-    if (depth !== 0) break; // Unmatched braces — stop
+    if (depth !== 0) break; // Unmatched braces - stop
 
     const ruleText = css.substring(i, j + 1).trim();
     if (ruleText) rules.push({ cssText: ruleText });
@@ -88,7 +88,7 @@ function parseRules(css: string): StyleSheetRule[] {
   return rules;
 }
 
-// â”€â”€ Shim (Deno / Node) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// -- Shim (Deno / Node) ------------------------------------------
 
 class ShimStyleSheet implements StyleSheetLike {
   #raw = '';

@@ -1,5 +1,5 @@
 /**
- * React Showcase — React adapter demo
+ * React Showcase - React adapter demo
  *
  * Renders React components through @lessjs/adapter-react's DSD pipeline.
  * Uses React createElement with professional inline styles to demonstrate
@@ -13,12 +13,12 @@
  *
  * SSR Safety: This module is imported by route components, so it evaluates
  * in the SSR module runner where globalThis.HTMLElement may be undefined.
- * We use a safe base class pattern — if HTMLElement is unavailable, we fall
+ * We use a safe base class pattern - if HTMLElement is unavailable, we fall
  * back to a plain class that won't crash at module evaluation time. The SSR
  * admission plan marks this island as renderable (ssr: true by default), so
  * the SSR bundle will have the Lit SSR dom-shim providing HTMLElement.
  *
- * @lessjs/app island — auto-detected and SSR'd by adapter-vite.
+ * @lessjs/app island - auto-detected and SSR'd by adapter-vite.
  */
 import { createElement, type ReactNode } from 'react';
 import { WithDsdHydration } from '@lessjs/adapter-react';
@@ -154,7 +154,7 @@ export default class ReactShowcase extends ReactShowcaseBase {
         createElement(
           Alert,
           { type: 'info' },
-          'React — rendered via @lessjs/adapter-react DSD pipeline (ReactDOMServer → Declarative Shadow DOM)',
+          'React - rendered via @lessjs/adapter-react DSD pipeline (ReactDOMServer -> Declarative Shadow DOM)',
         ),
       ),
     );

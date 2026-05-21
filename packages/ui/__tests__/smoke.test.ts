@@ -1,12 +1,12 @@
 /**
- * @lessjs/ui — Smoke tests
+ * @lessjs/ui - Smoke tests
  *
  * Minimal tests to verify components can be imported and registered.
- * CI should never use continue-on-error — if tests fail, the build fails.
+ * CI should never use continue-on-error - if tests fail, the build fails.
  */
 import { assertEquals, assertExists } from 'jsr:@std/assert@^1.0.0';
 
-Deno.test('less-ui — index exports manifest (WC Package Protocol)', async () => {
+Deno.test('less-ui - index exports manifest (WC Package Protocol)', async () => {
   const mod = await import('../src/index.ts');
   assertExists(mod.manifest, 'manifest export should exist');
   assertEquals(typeof mod.manifest, 'object');
@@ -24,18 +24,18 @@ Deno.test('less-ui — index exports manifest (WC Package Protocol)', async () =
   assertEquals(mod.manifest.declarations[9].tagName, 'less-hero-ping');
 });
 
-Deno.test('less-ui — less-theme-toggle exports tagName', async () => {
+Deno.test('less-ui - less-theme-toggle exports tagName', async () => {
   const mod = await import('../src/less-theme-toggle.ts');
   assertEquals(mod.tagName, 'less-theme-toggle');
   assertExists(mod.LessThemeToggle, 'LessThemeToggle class should be exported');
 });
 
-Deno.test('less-ui — open-props-tokens exports openPropsTokenSheet', async () => {
+Deno.test('less-ui - open-props-tokens exports openPropsTokenSheet', async () => {
   const mod = await import('../src/open-props-tokens.ts');
   assertExists(mod.openPropsTokenSheet, 'openPropsTokenSheet should be exported');
 });
 
-Deno.test('less-ui — all components export tagName', async () => {
+Deno.test('less-ui - all components export tagName', async () => {
   const components = [
     'less-button',
     'less-callout',

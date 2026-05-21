@@ -1,12 +1,11 @@
 /**
- * ADR Detail Page — Dynamic route from virtual:less-blog-data
+ * ADR Detail Page - Dynamic route from virtual:less-blog-data
  *
  * Renders individual ADR pages (posts with type === 'adr').
  * The slug is derived from the ADR filename (e.g. 0001-keep-hono-vite-dev-server).
  */
 import { headerNav, navSections } from 'virtual:less-nav';
 import { DsdElement, StyleSheet } from '@lessjs/core';
-import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import { posts } from 'virtual:less-blog-data';
 

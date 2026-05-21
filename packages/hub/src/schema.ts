@@ -1,11 +1,11 @@
 /**
- * @lessjs/hub — Registry Hub Data Schema
+ * @lessjs/hub - Registry Hub Data Schema
  *
  * v0.19.0: Hub package records, search index, submission bundles.
  *
  * All types are plain data. No runtime dependencies beyond TypeScript.
  *
- * @see ADR-0030 (Hub Architecture — Static Index + CLI Submission Pipeline)
+ * @see ADR-0030 (Hub Architecture - Static Index + CLI Submission Pipeline)
  * @see docs/sop/v0.19.0-platform-hub.md
  */
 
@@ -26,7 +26,7 @@ export interface HubTagRecord {
   compatibility: CompatibilityTier;
   validationErrors: number;
   validationWarnings: number;
-  ssrSnapshot?: string; // relative path to SSR snapshot (HTML) — legacy, being replaced by snapshotMeta
+  ssrSnapshot?: string; // relative path to SSR snapshot (HTML) - legacy, being replaced by snapshotMeta
   /** v0.19.1 Phase 6: Structured snapshot metadata (ADR-0035 A3) */
   snapshotMeta?: HubSnapshotMeta;
 
@@ -154,7 +154,7 @@ export interface HubPackageRecord {
     security?: string;
   };
 
-  /** SSR snapshot paths: tagName → relative path to HTML file */
+  /** SSR snapshot paths: tagName -> relative path to HTML file */
   snapshotPaths: Record<string, string>;
 
   /** Install guidance generated from compatibility data */
@@ -168,7 +168,7 @@ export interface HubPackageRecord {
 
 // ─── Search Index ───────────────────────────────────────────────────────
 
-/** Lightweight search index entry — one per package version */
+/** Lightweight search index entry - one per package version */
 export interface HubIndexEntry {
   name: string;
   scope: string;
@@ -179,7 +179,7 @@ export interface HubIndexEntry {
   source: 'jsr' | 'npm' | 'local';
   safeToInstall: boolean;
   ssrCapable: boolean;
-  submittedAt: string; // ISO 8601 — for "New" badge (< 7 days)
+  submittedAt: string; // ISO 8601 - for "New" badge (< 7 days)
 }
 
 /** Full search index, regenerated on each merge */

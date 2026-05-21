@@ -8,7 +8,7 @@
  *   - Copy button uses ElementInternals :state(copied) for CSS feedback
  *   - DSD renders <slot> for SSR (no JS content fallback)
  *
- * @csspart copy — The copy button
+ * @csspart copy - The copy button
  *
  * Usage:
  * ```html

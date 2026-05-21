@@ -42,17 +42,17 @@ export function injectProps(
   props: Record<string, unknown>,
 ): void {
   for (const [key, value] of Object.entries(props)) {
-    // v0.14.7: Prevent prototype pollution — skip dangerous keys (C-04 fix).
+    // v0.14.7: Prevent prototype pollution - skip dangerous keys (C-04 fix).
     if (DANGEROUS_KEYS.has(key)) {
       log.warn(
-        `Skipping dangerous prop key "${key}" on <${tagName}> — potential prototype pollution`,
+        `Skipping dangerous prop key "${key}" on <${tagName}> - potential prototype pollution`,
       );
       continue;
     }
     try {
       (instance as Record<string, unknown>)[key] = value;
     } catch (e) {
-      // Some properties may be read-only — safe to skip, but log for debuggability
+      // Some properties may be read-only - safe to skip, but log for debuggability
       log.debug(
         `Cannot set read-only property "${key}" on <${tagName}>: ${
           e instanceof Error ? e.message : String(e)

@@ -2,7 +2,7 @@
  * @lessjs/ui - LessJS UI Component Library
  *
  * Swiss International Style: Pure B&W, minimal, typography-driven.
- * Zero Lit dependency — built on DsdElement (native HTMLElement).
+ * Zero Lit dependency - built on DsdElement (native HTMLElement).
  *
  * Components:
  * - less-button: Button with variants (default, primary, ghost, accent)

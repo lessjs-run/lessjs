@@ -1,4 +1,4 @@
-# @lessjs/hub — Registry Hub SDK
+# @lessjs/hub - Registry Hub SDK
 
 Schema, builder, indexer, and submission pipeline for the LessJS Registry Hub.
 

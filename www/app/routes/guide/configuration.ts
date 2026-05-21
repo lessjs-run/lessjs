@@ -1,8 +1,8 @@
 export const meta = { section: 'Production', label: 'Configuration', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
+import { DsdElement } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
@@ -26,7 +26,7 @@ export class ConfigurationPage extends DsdElement {
     <less-code-block><pre><code>import { defineConfig } from 'vite';
 import { lessjs } from '@lessjs/app';
 export default defineConfig({ plugins: [lessjs()] });</code></pre></less-code-block>
-    <p>使用 <span class="inline-code">lessjs()</span> 是推荐方式——它组合了核心插件、内容管线和 i18n，一个调用包含所有功能。如果你只需要核心路由和 island 功能，也可以单独使用 <span class="inline-code">less()</span> from <span class="inline-code">@lessjs/adapter-vite</span>。</p>
+    <p>使用 <span class="inline-code">lessjs()</span> 是推荐方式--它组合了核心插件、内容管线和 i18n，一个调用包含所有功能。如果你只需要核心路由和 island 功能，也可以单独使用 <span class="inline-code">less()</span> from <span class="inline-code">@lessjs/adapter-vite</span>。</p>
     <h2>Main Options</h2>
     <table><thead><tr><th>Option</th><th>Default</th><th>Purpose</th></tr></thead><tbody>
       <tr><td>routesDir</td><td>'app/routes'</td><td>Page routes, API routes, renderer and route-tree middleware.</td></tr>
@@ -64,7 +64,7 @@ export default defineConfig({ plugins: [lessjs()] });</code></pre></less-code-bl
     <less-code-block><pre><code>import { defineConfig } from 'vite';
 import { lessjs } from '@lessjs/app';
 export default defineConfig({ plugins: [lessjs()] });</code></pre></less-code-block>
-    <p>Use <span class="inline-code">lessjs()</span> as the recommended entry — it combines the core plugin, content pipeline, and i18n in a single call. If you only need core routing and island functionality, you can use <span class="inline-code">less()</span> from <span class="inline-code">@lessjs/adapter-vite</span> directly.</p>
+    <p>Use <span class="inline-code">lessjs()</span> as the recommended entry - it combines the core plugin, content pipeline, and i18n in a single call. If you only need core routing and island functionality, you can use <span class="inline-code">less()</span> from <span class="inline-code">@lessjs/adapter-vite</span> directly.</p>
     <h2>Options Reference</h2>
     <table><thead><tr><th>Option</th><th>Default</th><th>Purpose</th></tr></thead><tbody>
       <tr><td>routesDir</td><td>'app/routes'</td><td>Page routes, API routes, renderer and route-tree middleware.</td></tr>

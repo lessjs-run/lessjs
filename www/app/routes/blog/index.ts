@@ -1,11 +1,10 @@
 /**
- * Blog Index Page — Data-driven rendering via virtual:less-blog-data
+ * Blog Index Page - Data-driven rendering via virtual:less-blog-data
  */
 export const meta = { section: 'History', label: 'Blog', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterBlogNav } from '../../utils/nav-filter.js';
 import { DsdElement, StyleSheet } from '@lessjs/core';
-import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import { posts } from 'virtual:less-blog-data';
 

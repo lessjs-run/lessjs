@@ -1,5 +1,5 @@
 /**
- * Registry Hub — Package Search & List
+ * Registry Hub - Package Search & List
  *
  * v0.19.0: Browse and search validated Web Component packages.
  * Data is embedded during SSG via JSON import, no client-side fetch needed.
@@ -13,7 +13,6 @@ export const meta = { section: 'Registry', label: 'Package Registry', order: 5 }
 import { DsdElement, StyleSheet } from '@lessjs/core';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterRegistryNav } from '../../utils/nav-filter.js';
-import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 
 // ─── Data ────────────────────────────────────────────────────────────────
@@ -161,7 +160,7 @@ routeSheet.replaceSync(`
         margin-bottom: 1rem;
       }
 
-      /* Package List — grid layout (v0.19.1 Phase 6, ADR-0035 B3) */
+      /* Package List - grid layout (v0.19.1 Phase 6, ADR-0035 B3) */
       .package-list {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -345,7 +344,7 @@ export default class DocsRegistryHome extends DsdElement {
   // ─── Lifecycle ────────────────────────────────────────────────────────
   // Data is available at import time from hub-data.ts.
   // Constructor loads data synchronously so render() has it during SSR/SSG.
-  // On the client, the same import is used — no fetch needed.
+  // On the client, the same import is used - no fetch needed.
 
   constructor() {
     super();
@@ -436,7 +435,7 @@ export default class DocsRegistryHome extends DsdElement {
             </p>
             <p class="early-access-note">
               🚧 Currently indexing 3 packages. We're actively onboarding more Web Components libraries.
-              <a href="https://github.com/lessjs-run/lessjs/issues?q=label%3Ahub-submit">Submit your package →</a>
+              <a href="https://github.com/lessjs-run/lessjs/issues?q=label%3Ahub-submit">Submit your package -></a>
             </p>
           </div>
 

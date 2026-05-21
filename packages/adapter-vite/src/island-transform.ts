@@ -9,7 +9,7 @@
  *
  * Web Standards alignment:
  * - Uses standard customElements.define() API
- * - No framework runtime — just native Custom Elements v1
+ * - No framework runtime - just native Custom Elements v1
  * - Declarative Shadow DOM provides the fallback (Level 0)
  */
 

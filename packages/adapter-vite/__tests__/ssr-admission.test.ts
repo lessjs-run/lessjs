@@ -67,7 +67,7 @@ const parentWithClientChild: IslandDecl = {
 
 // ─── Tests ────────────────────────────────────────────────
 
-Deno.test('SSR Admission: local island with ssr=false → clientOnlyTags', () => {
+Deno.test('SSR Admission: local island with ssr=false -> clientOnlyTags', () => {
   const islands: IslandDecl[] = [localSsrFalse];
   const plan = buildSsrAdmissionPlan(islands);
 
@@ -81,7 +81,7 @@ Deno.test('SSR Admission: local island with ssr=false → clientOnlyTags', () =>
   assertEquals(decision.reason, 'local island exports less.ssr=false');
 });
 
-Deno.test('SSR Admission: package island with ssr=false → clientOnlyTags', () => {
+Deno.test('SSR Admission: package island with ssr=false -> clientOnlyTags', () => {
   const islands: IslandDecl[] = [packageSsrFalse];
   const plan = buildSsrAdmissionPlan(islands);
 
@@ -95,7 +95,7 @@ Deno.test('SSR Admission: package island with ssr=false → clientOnlyTags', () 
   assertEquals(decision.reason, 'less.ssr is false');
 });
 
-Deno.test('SSR Admission: local island with ssr=true → renderableTags', () => {
+Deno.test('SSR Admission: local island with ssr=true -> renderableTags', () => {
   const islands: IslandDecl[] = [localSsrTrue];
   const plan = buildSsrAdmissionPlan(islands);
 
@@ -108,7 +108,7 @@ Deno.test('SSR Admission: local island with ssr=true → renderableTags', () => 
   assertEquals(decision.reason, 'less.ssr is true');
 });
 
-Deno.test('SSR Admission: package island with ssr=true → renderableTags', () => {
+Deno.test('SSR Admission: package island with ssr=true -> renderableTags', () => {
   const islands: IslandDecl[] = [packageSsrTrue];
   const plan = buildSsrAdmissionPlan(islands);
 
@@ -121,7 +121,7 @@ Deno.test('SSR Admission: package island with ssr=true → renderableTags', () =
   assertEquals(decision.reason, 'package island with less.ssr=true');
 });
 
-Deno.test('SSR Admission: duplicate tag → rejectedTags', () => {
+Deno.test('SSR Admission: duplicate tag -> rejectedTags', () => {
   // Create two islands with same tagName to simulate duplicate
   const island1 = { ...localSsrFalse };
   const island2 = { ...localSsrFalse, modulePath: localSsrFalse.modulePath + '.2' };
@@ -139,7 +139,7 @@ Deno.test('SSR Admission: duplicate tag → rejectedTags', () => {
   assertEquals(decision.reason, 'duplicate custom element tag');
 });
 
-Deno.test('SSR Admission: parent with client-child → parent renderable, child client-only', () => {
+Deno.test('SSR Admission: parent with client-child -> parent renderable, child client-only', () => {
   const islands: IslandDecl[] = [parentWithClientChild, localSsrFalse];
   const plan = buildSsrAdmissionPlan(islands);
 
@@ -159,7 +159,7 @@ Deno.test('SSR Admission: parent with client-child → parent renderable, child 
   assertEquals(childDecision.renderPath, 'client-only');
 });
 
-Deno.test('SSR Admission: mixed islands → correct categorization', () => {
+Deno.test('SSR Admission: mixed islands -> correct categorization', () => {
   const islands: IslandDecl[] = [
     localSsrTrue,
     localSsrFalse,
@@ -202,7 +202,7 @@ Deno.test('SSR Admission: decisions array has correct structure', () => {
 
 // ─── CEM Classifications (v0.18.0) ──────────────────────────────────────────
 
-Deno.test('SSR Admission: CEM ssr-capable → renderableTags', () => {
+Deno.test('SSR Admission: CEM ssr-capable -> renderableTags', () => {
   const islands: IslandDecl[] = [
     {
       tagName: 'cem-ssr-capable',
@@ -235,7 +235,7 @@ Deno.test('SSR Admission: CEM ssr-capable → renderableTags', () => {
   assertEquals(decision.reason.includes('CEM ssr-capable'), true);
 });
 
-Deno.test('SSR Admission: CEM client-only → clientOnlyTags', () => {
+Deno.test('SSR Admission: CEM client-only -> clientOnlyTags', () => {
   const islands: IslandDecl[] = [
     {
       tagName: 'cem-client-only',
@@ -268,7 +268,7 @@ Deno.test('SSR Admission: CEM client-only → clientOnlyTags', () => {
   assertEquals(decision.reason.includes('CEM client-only'), true);
 });
 
-Deno.test('SSR Admission: CEM rejected → rejectedTags', () => {
+Deno.test('SSR Admission: CEM rejected -> rejectedTags', () => {
   const islands: IslandDecl[] = [
     {
       tagName: 'cem-rejected',
@@ -301,7 +301,7 @@ Deno.test('SSR Admission: CEM rejected → rejectedTags', () => {
   assertEquals(decision.reason.includes('CEM rejected'), true);
 });
 
-Deno.test('SSR Admission: CEM experimental-dom → clientOnlyTags (conservative)', () => {
+Deno.test('SSR Admission: CEM experimental-dom -> clientOnlyTags (conservative)', () => {
   const islands: IslandDecl[] = [
     {
       tagName: 'cem-experimental',
@@ -403,7 +403,7 @@ Deno.test('SSR Admission: CEM takes precedence over island metadata', () => {
   assertEquals(decision.reason.includes('CEM client-only'), true);
 });
 
-Deno.test('SSR Admission: conservative default - CEM without Less extension → client-only', () => {
+Deno.test('SSR Admission: conservative default - CEM without Less extension -> client-only', () => {
   // No Less extension, just a bare CEM without ssr/dsd metadata
   const islands: IslandDecl[] = [
     {
@@ -474,16 +474,16 @@ Deno.test('SSR Admission: mixed island + CEM classifications', () => {
 
   const plan = buildSsrAdmissionPlan(islands, cemClassifications);
 
-  // localSsrTrue → ssr+client (island metadata)
+  // localSsrTrue -> ssr+client (island metadata)
   assertEquals(plan.renderableTags.includes('local-ssr-true'), true);
 
-  // packageSsrFalse → client-only (island metadata)
+  // packageSsrFalse -> client-only (island metadata)
   assertEquals(plan.clientOnlyTags.includes('package-ssr-false'), true);
 
-  // cem-ssr-capable → ssr+client (CEM classification)
+  // cem-ssr-capable -> ssr+client (CEM classification)
   assertEquals(plan.renderableTags.includes('cem-ssr-capable'), true);
 
-  // cem-client-only → client-only (CEM classification)
+  // cem-client-only -> client-only (CEM classification)
   assertEquals(plan.clientOnlyTags.includes('cem-client-only'), true);
 
   // Total counts

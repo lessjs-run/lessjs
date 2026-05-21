@@ -2,14 +2,14 @@
  * @lessjs/ui - Open Props Design Tokens (CSSStyleSheet).
  *
  * ZERO Lit dependency. Pure CSSStyleSheet containing inlined Open Props
- * design tokens. No CDN dependency — all values are embedded for zero
+ * design tokens. No CDN dependency - all values are embedded for zero
  * flash-of-unstyled-content (FOUC) on first paint.
  *
  * Architecture (v0.20.0):
  *   - CSSStyleSheet replaces Lit's CSSResult for framework-agnostic usage.
  *   - DsdElement.styles can reference this directly via adoptedStyleSheets.
  *   - SSR pipeline extracts CSS rules from CSSStyleSheet via cssRules.
- *   - All values inlined — no open-props.style CDN needed.
+ *   - All values inlined - no open-props.style CDN needed.
  *
  * Token naming convention:
  *   Open Props native: --size-N, --gray-N, --indigo-N, --radius-N,
@@ -26,7 +26,7 @@
  *                      --font-size-display/h1/xs/sm/md/lg/xl/2xl/3xl,
  *                      --z-dropdown/sticky/fixed/tooltip/modal/popover/modal-backdrop
  *
- * All variables are wrapped in `:host { }` so they are valid CSS rules —
+ * All variables are wrapped in `:host { }` so they are valid CSS rules -
  * both for native CSSStyleSheet.replaceSync() in the browser and for
  * the ShimStyleSheet parser in Deno/Node SSR environments.
  *
@@ -50,7 +50,7 @@ import { StyleSheet, type StyleSheetLike } from '@lessjs/core';
  *
  * Provides spacing scale, gray palette, brand colors, border radius,
  * shadows, typography, and animation easing tokens. All values are
- * embedded directly — no network requests.
+ * embedded directly - no network requests.
  *
  * Components can adopt this stylesheet via `static styles` (DsdElement)
  * or `adoptedStyleSheets` (vanilla Web Components).
@@ -239,7 +239,7 @@ function createTokenSheet(): StyleSheetLike {
    Dark Mode Overrides
    ═══════════════════════════════════════════════ */
 :host([data-theme="dark"]) {
-  /* ─── Gray palette (dark mode — inverted) ─── */
+  /* ─── Gray palette (dark mode - inverted) ─── */
   --gray-0: #030507;
   --gray-1: #0d0f12;
   --gray-2: #16191d;

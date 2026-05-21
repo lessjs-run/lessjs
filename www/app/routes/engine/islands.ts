@@ -2,7 +2,6 @@ export const meta = { section: 'Principles', label: 'Island Upgrade', order: 40 
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/core';
-import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
@@ -165,7 +164,7 @@ export class IslandsGuidePage extends DsdElement {
           <h1>Island Upgrade</h1>
           <p class="subtitle">
             LessJS islands are Custom Element upgrades that follow DSD HTML. This is not full-page
-            hydration — it does not restore the entire application state on the client.
+            hydration - it does not restore the entire application state on the client.
           </p>
           <h2>Why Islands</h2>
           <div class="comparison">

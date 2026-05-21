@@ -2,7 +2,7 @@
  * @lessjs/signals - Framework Layer
  *
  * Developer-friendly API wrapping the engine.
- * signal(), computed(), effect() — the primary API surface.
+ * signal(), computed(), effect() - the primary API surface.
  *
  * @module @lessjs/signals/framework
  */

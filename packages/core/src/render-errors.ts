@@ -65,7 +65,7 @@ export function instantiationErrorHtml(
 ): string {
   // Bare-tag fallback: output just the custom element tag.
   // The component will be upgraded client-side when JS loads.
-  // No shadow DOM template — this is correct progressive enhancement.
+  // No shadow DOM template - this is correct progressive enhancement.
   return `<${tagName}></${tagName}>`;
 }
 

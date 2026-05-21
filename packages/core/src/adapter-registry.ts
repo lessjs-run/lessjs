@@ -9,7 +9,7 @@
  *
  * With viteBuild(ssr:true, noExternal) producing a self-contained ESM bundle,
  * all virtual modules resolve at compile time and there is only one module
- * instance — so a plain module variable replaces the former globalThis bridge.
+ * instance - so a plain module variable replaces the former globalThis bridge.
  *
  * @warning Do NOT call registerAdapter() manually more than once unless you
  * are intentionally switching adapters. Each call overwrites the previous

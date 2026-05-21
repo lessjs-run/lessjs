@@ -9,7 +9,7 @@ function waitForEffects(ms = 50): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-Deno.test('themeSignal — default value', async (t) => {
+Deno.test('themeSignal - default value', async (t) => {
   await t.step('defaults to "dark" when no DOM is available', () => {
     assertEquals(themeSignal.value, 'dark');
   });
@@ -22,7 +22,7 @@ Deno.test('themeSignal — default value', async (t) => {
   });
 });
 
-Deno.test('themeSignal — subscribe', async (t) => {
+Deno.test('themeSignal - subscribe', async (t) => {
   await t.step('subscribe receives current value', () => {
     let received: string | undefined;
     const unsub = themeSignal.subscribe((v) => {
@@ -46,7 +46,7 @@ Deno.test('themeSignal — subscribe', async (t) => {
   });
 });
 
-Deno.test('themeSignal — is a WritableSignal', async (t) => {
+Deno.test('themeSignal - is a WritableSignal', async (t) => {
   await t.step('has .value getter and setter', () => {
     const orig = themeSignal.value;
     themeSignal.value = 'solarized';

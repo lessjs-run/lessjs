@@ -1,8 +1,8 @@
 export const meta = { section: 'Core', label: 'Routing', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
+import { DsdElement } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
@@ -84,7 +84,7 @@ export default AboutPage;
 export const tagName = 'page-about';</code></pre></less-code-block>
 
           <h2>当前边界</h2>
-          <p>路由扫描已经可以稳定处理页面、动态片段、renderer、middleware 和 API routes。v0.5.3 已修复根级 <span class="inline-code">_middleware.ts</span> 的挂载范围——现在会正确生成 <span class="inline-code">app.use('/*', ...)</span> 覆盖整个路由树。</p>
+          <p>路由扫描已经可以稳定处理页面、动态片段、renderer、middleware 和 API routes。v0.5.3 已修复根级 <span class="inline-code">_middleware.ts</span> 的挂载范围--现在会正确生成 <span class="inline-code">app.use('/*', ...)</span> 覆盖整个路由树。</p>
 
           <div class="nav-row">
             <a href="/engine/architecture" class="nav-link">&larr; 架构</a>
@@ -166,7 +166,7 @@ export default AboutPage;
 export const tagName = 'page-about';</code></pre></less-code-block>
 
           <h2>Current Boundaries</h2>
-          <p>Route scanning handles pages, dynamic segments, renderers, middleware, and API routes stably. v0.5.3 fixed root-level <span class="inline-code">_middleware.ts</span> mounting scope — it now correctly generates <span class="inline-code">app.use('/*', ...)</span> covering the entire route tree.</p>
+          <p>Route scanning handles pages, dynamic segments, renderers, middleware, and API routes stably. v0.5.3 fixed root-level <span class="inline-code">_middleware.ts</span> mounting scope - it now correctly generates <span class="inline-code">app.use('/*', ...)</span> covering the entire route tree.</p>
 
           <div class="nav-row">
             <a href="/engine/architecture" class="nav-link">&larr; Architecture</a>

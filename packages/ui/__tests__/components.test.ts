@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any no-unused-vars require-await
 /**
- * @lessjs/ui — Comprehensive component tests (Deno)
+ * @lessjs/ui - Comprehensive component tests (Deno)
  *
  * Tests all 6 UI components for:
  * - Export shape (tagName, class)
@@ -107,7 +107,7 @@ if (typeof globalThis.HTMLElement === 'undefined') {
   };
 }
 
-// â”€â”€â”€ Component Export Shape â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Component Export Shape ----------------------------------
 
 const COMPONENT_FILES = [
   'less-button',
@@ -139,7 +139,7 @@ for (const name of COMPONENT_FILES) {
   });
 }
 
-// â”€â”€â”€ Design Tokens â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Design Tokens -----------------------------------------
 
 Deno.test('open-props-tokens: openPropsTokenSheet is StyleSheet', async () => {
   const { openPropsTokenSheet } = await import('../src/open-props-tokens.ts');
@@ -179,7 +179,7 @@ Deno.test('index: re-exports all components', async () => {
   // Tokens
   assertExists(mod.openPropsTokenSheet);
 
-  // Plugin removed — lessUI() was dead code (zero consumers)
+  // Plugin removed - lessUI() was dead code (zero consumers)
 });
 
 Deno.test('index: manifest has correct declarations', async () => {
@@ -200,7 +200,7 @@ Deno.test('index: manifest has correct declarations', async () => {
   }
 });
 
-// â”€â”€â”€ Component Instantiation & render() â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Component Instantiation & render() ---------------------
 
 const COMPONENT_CLASSES = [
   ['less-button', 'LessButton'],
@@ -289,7 +289,7 @@ Deno.test('less-theme-toggle: renders and handles theme', async () => {
   result = instance.render();
   assertExists(result);
 
-  // Test _isLight property assignment (private â€?use as any)
+  // Test _isLight property assignment (private -use as any)
   (instance as any)._isLight = true;
   assertEquals((instance as any)._isLight, true);
 });
@@ -315,13 +315,13 @@ Deno.test('less-input: renders with properties', async () => {
 Deno.test('less-code-block: renders with properties', async () => {
   const { LessCodeBlock } = await import('../src/less-code-block.ts');
   const instance = new LessCodeBlock();
-  // language is not a declared reactive property â€?set via any for test
+  // language is not a declared reactive property -set via any for test
   (instance as any).language = 'typescript';
   const result = instance.render();
   assertExists(result);
 });
 
-// â”€â”€â”€ Enhanced Component Tests for Coverage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Enhanced Component Tests for Coverage ------------------
 
 // Mock document and localStorage for less-theme-toggle tests
 // Returns a restore function to undo the mocks
@@ -393,7 +393,7 @@ Deno.test('less-code-block: _copy method success path', async () => {
   // Deno test runner does not provide a full clipboard API.
   // Skip if clipboard API is not available.
   if (!globalThis.navigator?.clipboard?.writeText) {
-    return; // Skip in Deno test â€?this is tested in browser E2E
+    return; // Skip in Deno test -this is tested in browser E2E
   }
 
   const { LessCodeBlock } = await import('../src/less-code-block.ts');
@@ -505,7 +505,7 @@ Deno.test('less-input: render without label', async () => {
   assertExists(result);
 });
 
-// â”€â”€â”€ less-input Form Callbacks (coverage) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- less-input Form Callbacks (coverage) ------------------
 
 Deno.test('less-input: connectedCallback sets internals', async () => {
   const { LessInput } = await import('../src/less-input.ts');
@@ -519,7 +519,7 @@ Deno.test('less-input: connectedCallback sets internals', async () => {
     },
   });
   instance.removeAttribute('value');
-  // Skip super.connectedCallback() â€?just test our own logic
+  // Skip super.connectedCallback() -just test our own logic
   (instance as any)._internals = {
     setFormValue: (val: string) => {
       setFormValueCalled = true;
@@ -608,7 +608,7 @@ Deno.test('less-input: render with error includes aria attributes', async () => 
   assertExists(result);
 });
 
-// â”€â”€â”€ less-code-block Enhanced Tests â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- less-code-block Enhanced Tests --------------------------
 
 Deno.test('less-code-block: render with _copyState=copied', async () => {
   const { LessCodeBlock } = await import('../src/less-code-block.ts');
@@ -637,7 +637,7 @@ Deno.test('less-code-block: render with _copyState=idle (default)', async () => 
 Deno.test('less-code-block: _copy success path (mocked clipboard)', async () => {
   const { LessCodeBlock } = await import('../src/less-code-block.ts');
   const instance = new LessCodeBlock();
-  // Mock clipboard â€?must be set before _copy is called
+  // Mock clipboard -must be set before _copy is called
   let writtenText = '';
   const mockWriteText = async (text: string) => {
     writtenText = text;
@@ -687,7 +687,7 @@ Deno.test('less-code-block: _copy failure path (mocked clipboard)', async () => 
   assertEquals((instance as any)._copyState, 'idle');
 });
 
-// â”€â”€â”€ less-button Branch Coverage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- less-button Branch Coverage --------------------------
 
 Deno.test('less-button: renders as anchor with href', async () => {
   const { LessButton } = await import('../src/less-button.ts');
@@ -734,7 +734,7 @@ Deno.test('less-button: anchor with same-origin target', async () => {
   assertExists(result);
 });
 
-// â”€â”€â”€ less-theme-toggle Enhanced Coverage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- less-theme-toggle Enhanced Coverage ------------------
 
 Deno.test('less-theme-toggle: connectedCallback with theme=light', async () => {
   const restore = setupDOMMocks();
@@ -844,7 +844,7 @@ Deno.test('less-theme-toggle: connectedCallback defaults to dark', async () => {
   }
 });
 
-Deno.test('less-theme-toggle: _handleToggle switches darkâ†’light', async () => {
+Deno.test('less-theme-toggle: _handleToggle switches dark->light', async () => {
   const orig = localStorage.getItem('less-theme');
   const savedDoc = (globalThis as any).document;
   (globalThis as any).document = {
@@ -868,7 +868,7 @@ Deno.test('less-theme-toggle: _handleToggle switches darkâ†’light', async (
   }
 });
 
-// â”€â”€â”€ less-theme-toggle connectedCallback via direct call â”€â”€â”€â”€
+// --- less-theme-toggle connectedCallback via direct call ----
 
 Deno.test('less-theme-toggle: connectedCallback full path with theme=light', async () => {
   const savedDoc = (globalThis as any).document;
@@ -1037,14 +1037,14 @@ Deno.test('less-theme-toggle: connectedCallback defaults to dark theme', async (
   }
 });
 
-// â”€â”€â”€ less-input connectedCallback full path â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- less-input connectedCallback full path ----------------
 
 Deno.test('less-input: connectedCallback with attachInternals mock', () => {
-  // Requires real DOM ElementInternals API — skip in Deno test environment
+  // Requires real DOM ElementInternals API - skip in Deno test environment
 });
 
 Deno.test('less-input: connectedCallback with existing value', () => {
-  // Requires real DOM ElementInternals API — skip in Deno test environment
+  // Requires real DOM ElementInternals API - skip in Deno test environment
 });
 
 Deno.test('less-input: _handleInput syncs form value via internals', async () => {
@@ -1064,7 +1064,7 @@ Deno.test('less-input: _handleInput syncs form value via internals', async () =>
   assertEquals(lastFormValue, 'typed text');
 });
 
-// â”€â”€â”€ less-layout Branch Coverage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- less-layout Branch Coverage --------------------------
 
 Deno.test('less-layout: _navLink with active and icon', async () => {
   const { LessLayout } = await import('../src/less-layout.ts');
@@ -1092,21 +1092,21 @@ Deno.test('less-layout: home=true renders home layout (no sidebar)', async () =>
   instance.setAttribute('home', '');
   const result = instance.render();
   assertExists(result);
-  // home=true means no sidebar, no mobile menu â€?just main slot
+  // home=true means no sidebar, no mobile menu -just main slot
 });
 
 Deno.test('less-layout: currentPath highlights active nav link', async () => {
   const { LessLayout } = await import('../src/less-layout.ts');
   const instance = new LessLayout();
   instance.setAttribute('current-path', '');
-  // Use default nav â€?/guide/getting-started exists in DEFAULT_NAV
+  // Use default nav -/guide/getting-started exists in DEFAULT_NAV
   const result = instance.render();
   assertExists(result);
 });
 
-Deno.test('less-layout: no hardcoded DEFAULT_NAV â€?nav is data-driven via navItems property', async () => {
+Deno.test('less-layout: no hardcoded DEFAULT_NAV -nav is data-driven via navItems property', async () => {
   const { LessLayout } = await import('../src/less-layout.ts');
-  // DEFAULT_NAV was removed â€?navItems must be passed via property
+  // DEFAULT_NAV was removed -navItems must be passed via property
   // (supplied by @lessjs/content virtual:less-nav module)
   const instance = new LessLayout();
   // Without navItems, sidebar should render empty

@@ -5,7 +5,7 @@
  * Provides the common DSD detection, event binding, and cleanup pattern
  * shared by all DSD Interactive vanilla components.
  *
- * Usage (recommended — extend pre-composed base class):
+ * Usage (recommended - extend pre-composed base class):
  * ```ts
  * import { DsdVanillaElement } from '@lessjs/adapter-vanilla';
  *
@@ -21,7 +21,7 @@
  * }
  * ```
  *
- * Usage (advanced — Mixin with custom base class):
+ * Usage (advanced - Mixin with custom base class):
  * ```ts
  * import { WithDsdHydration } from '@lessjs/adapter-vanilla';
  *
@@ -119,7 +119,7 @@ export function WithDsdHydration<T extends Constructor<HTMLElement>>(
      */
     connectedCallback(): void {
       // Call the actual parent class (captured in mixin closure),
-      // NOT Object.getPrototypeOf which can find our own method → infinite recursion.
+      // NOT Object.getPrototypeOf which can find our own method -> infinite recursion.
       if (typeof superClass.prototype.connectedCallback === 'function') {
         superClass.prototype.connectedCallback.call(this);
       }
@@ -197,7 +197,7 @@ let _cached: (typeof HTMLElement) & (new (...args: any[]) => HTMLElement & DsdHy
  * Use this instead of `WithDsdHydration(HTMLElement)` in your component
  * `extends` clause.
  *
- * Lazily initialized — only calls `WithDsdHydration(HTMLElement)` once
+ * Lazily initialized - only calls `WithDsdHydration(HTMLElement)` once
  * on first access, so it won't crash in non-DOM test environments.
  *
  * @example

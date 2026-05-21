@@ -2,11 +2,11 @@
  * @lessjs/core - Entry Descriptor
  *
  * Structured data model describing the generated Hono entry module.
- * This is a pure data object — no code generation logic lives here.
+ * This is a pure data object - no code generation logic lives here.
  *
  * Architecture:
- *   routes + options → buildEntryDescriptor() → EntryDescriptor
- *   EntryDescriptor  → renderEntry()           → string (virtual module code)
+ *   routes + options -> buildEntryDescriptor() -> EntryDescriptor
+ *   EntryDescriptor  -> renderEntry()           -> string (virtual module code)
  *
  * Separating "what to generate" from "how to render it" makes the
  * entry pipeline testable, serializable, and diffable.
@@ -56,7 +56,7 @@ export interface ImportDecl {
 
 // ─── Middleware declarations ────────────────────────────────────
 
-/** CORS origin configuration — string, array of strings, or serialized function body */
+/** CORS origin configuration - string, array of strings, or serialized function body */
 export type CorsOriginConfig =
   | string
   | string[]
@@ -165,11 +165,11 @@ export interface SsrAdmissionPlan {
 
 // ─── Special file declarations (v0.3.0) ─────────────────────────
 
-/** Renderer declaration — wraps page SSR output (like Next.js layout.tsx) */
+/** Renderer declaration - wraps page SSR output (like Next.js layout.tsx) */
 export interface RendererDecl {
   /** Variable name for the imported module */
   varName: string;
-  /** Directory scope (e.g. '/guide') — applies to this dir and subdirs */
+  /** Directory scope (e.g. '/guide') - applies to this dir and subdirs */
   scope: string;
   /** Full import path for Vite SSR */
   importPath: string;
@@ -177,7 +177,7 @@ export interface RendererDecl {
   depth: number;
 }
 
-/** Middleware scope declaration — Hono middleware mounted to directory prefix */
+/** Middleware scope declaration - Hono middleware mounted to directory prefix */
 export interface MiddlewareScopeDecl {
   /** Variable name for the imported module */
   varName: string;
@@ -237,10 +237,10 @@ export interface EntryDescriptor {
   /** Hub registry client-only tag names (ADR-0035 A1) */
   hubClientOnlyTags?: string[];
 
-  /** Renderer declarations (from _renderer.ts files) — v0.3.0 */
+  /** Renderer declarations (from _renderer.ts files) - v0.3.0 */
   renderers: RendererDecl[];
 
-  /** Middleware scope declarations (from _middleware.ts files) — v0.3.0 */
+  /** Middleware scope declarations (from _middleware.ts files) - v0.3.0 */
   middlewareScopes: MiddlewareScopeDecl[];
 
   /** Document wrapping config */
@@ -253,12 +253,12 @@ export interface EntryDescriptor {
   debugRoutes?: Array<{ path: string; type: string }>;
 }
 
-// ─── Builder: routes + options → EntryDescriptor ───────────────
+// ─── Builder: routes + options -> EntryDescriptor ───────────────
 
 /**
  * Build a structured EntryDescriptor from scanned routes and framework options.
  *
- * This is a pure function — same inputs always produce the same descriptor.
+ * This is a pure function - same inputs always produce the same descriptor.
  * No side effects, no string concatenation, no code generation.
  */
 export function buildEntryDescriptor(
@@ -296,7 +296,7 @@ export function buildEntryDescriptor(
   // Always needed
   imports.push({ from: 'hono', names: ['Hono'] });
   // v0.5.0: DSD renderer replaces the old Lit SSR pipeline.
-  // Components use render(): string — no TemplateResult, no <!--lit-part--> markers.
+  // Components use render(): string - no TemplateResult, no <!--lit-part--> markers.
   // ADR 0021: Always import from @lessjs/core main entry.
   // @lessjs/core is a pure runtime with zero Vite/Hono dependencies.
   imports.push({ from: '@lessjs/core', names: ['renderDSD', 'renderDSDByName', 'escapeHtml'] });
@@ -322,13 +322,13 @@ export function buildEntryDescriptor(
   if (mw?.requestId !== false) {
     middleware.push({
       kind: 'requestId',
-      comment: '1. Request ID — base for logging and error tracking',
+      comment: '1. Request ID - base for logging and error tracking',
     });
   }
   if (mw?.logger !== false) {
     middleware.push({
       kind: 'logger',
-      comment: '2. Logger — structured request logging',
+      comment: '2. Logger - structured request logging',
     });
   }
   if (mw?.cors !== false) {
@@ -346,7 +346,7 @@ export function buildEntryDescriptor(
     }
     middleware.push({
       kind: 'cors',
-      comment: '3. CORS — Web Standards (no process.env)',
+      comment: '3. CORS - Web Standards (no process.env)',
       config: { corsOrigin },
     });
   }
@@ -423,8 +423,8 @@ export function buildEntryDescriptor(
   const islandMeta = options.islandMeta || {};
   const packageManifests = options.packageManifests || [];
 
-  // Local islands — use real file paths when available to support
-  // nested directories (e.g. posts/index.ts → tag "posts-index").
+  // Local islands - use real file paths when available to support
+  // nested directories (e.g. posts/index.ts -> tag "posts-index").
   // Fallback to tagName-based path when no real file path is available.
   const localIslands: IslandDecl[] = islandTagNames.map((tagName, i) => ({
     tagName,
@@ -618,7 +618,7 @@ export function buildSsrAdmissionPlan(
 
   // v0.19.1 Phase 6: Hub client-only tags (ADR-0035 A1)
   // Tags from Hub registry data (e.g. Shoelace, Media Chrome) that are
-  // not islands or CEM-classified — they come from static hub data.
+  // not islands or CEM-classified - they come from static hub data.
   // Without this, renderNestedCustomElements() would try to instantiate
   // and render them during SSG, causing 72 DSD errors.
   for (const tag of hubClientOnlyTags) {

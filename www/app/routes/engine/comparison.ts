@@ -5,7 +5,6 @@
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/core';
-import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 
 export const tagName = 'comparison-page';
@@ -246,16 +245,16 @@ export default class ComparisonPage extends DsdElement {
 
           <h2>LessJS 三支柱差异化</h2>
           <ul>
-            <li><strong>支柱 2 独有价值</strong> — DSD 零 runtime 首屏。Astro 不做 WC 原生，Fresh 不做 DSD，Next 必须加载 React runtime。浏览器原生能力，无法通过工程优化追平</li>
-            <li><strong>支柱 2+3 组合</strong> — 渲染引擎 + Registry 一体。安装即渲染，验证即分层</li>
-            <li><strong>支柱 1 差异</strong> — WC 原生全栈。不是"全栈框架 + WC 容忍"，而是"WC 是一等公民"</li>
+            <li><strong>支柱 2 独有价值</strong> - DSD 零 runtime 首屏。Astro 不做 WC 原生，Fresh 不做 DSD，Next 必须加载 React runtime。浏览器原生能力，无法通过工程优化追平</li>
+            <li><strong>支柱 2+3 组合</strong> - 渲染引擎 + Registry 一体。安装即渲染，验证即分层</li>
+            <li><strong>支柱 1 差异</strong> - WC 原生全栈。不是"全栈框架 + WC 容忍"，而是"WC 是一等公民"</li>
           </ul>
 
           <h2>LessJS 不优化的方向</h2>
           <ul>
-            <li><strong>大而全的元框架</strong> — LessJS 三支柱各有独立价值，不是什么都做的平台</li>
-            <li><strong>npm 生态优先</strong> — JSR-only 包分发对 npm 用户需要额外配置</li>
-            <li><strong>旧浏览器兼容</strong> — 需要 DSD 支持的浏览器（Chrome 90+、Safari 16.4+、Firefox 123+）</li>
+            <li><strong>大而全的元框架</strong> - LessJS 三支柱各有独立价值，不是什么都做的平台</li>
+            <li><strong>npm 生态优先</strong> - JSR-only 包分发对 npm 用户需要额外配置</li>
+            <li><strong>旧浏览器兼容</strong> - 需要 DSD 支持的浏览器（Chrome 90+、Safari 16.4+、Firefox 123+）</li>
           </ul>
         </div>
       </less-layout>

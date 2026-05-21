@@ -8,7 +8,6 @@
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/core';
-import { pageStyles } from '../../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 
 export const tagName = 'api-core-page';
@@ -107,7 +106,7 @@ export default class ApiCorePage extends DsdElement {
 
             <div class="fn-name">escapeHtml() / escapeAttr() / escapeAttrValue()</div>
             <div class="fn-sig">
-              escapeHtml(str): string — escapeAttrValue(value): string — escapeAttr(attr): string
+              escapeHtml(str): string - escapeAttrValue(value): string - escapeAttr(attr): string
             </div>
             <div class="fn-desc">
               HTML/属性转义，使用 SafeHtml/UnsafeHtml 品牌类型防止双重转义。
@@ -121,23 +120,23 @@ export default class ApiCorePage extends DsdElement {
 
             <div class="fn-name">lessBind() / getSSRProps()</div>
             <div class="fn-sig">
-              lessBind(element, props): void — getSSRProps(element): Record&lt;string, unknown&gt;
+              lessBind(element, props): void - getSSRProps(element): Record&lt;string, unknown&gt;
             </div>
             <div class="fn-desc">框架无关的 SSR 属性绑定和反序列化。</div>
 
             <div class="fn-name">registerAdapter() / getAdapter()</div>
             <div class="fn-sig">
-              registerAdapter(adapter: RenderAdapter): void — getAdapter(): RenderAdapter | undefined
+              registerAdapter(adapter: RenderAdapter): void - getAdapter(): RenderAdapter | undefined
             </div>
             <div class="fn-desc">
-              SSR 渲染器插件接口（如 Lit TemplateResult → DSD HTML 通过 @lessjs/adapter-lit）。
+              SSR 渲染器插件接口（如 Lit TemplateResult -> DSD HTML 通过 @lessjs/adapter-lit）。
               当前注册表存储一个活跃适配器。未来渲染器协议必须定义适配器身份、能力、错误、
               Hydration 提示和 DSD 约束，然后多适配器行为才会被记录为稳定。
             </div>
 
             <div class="fn-name">createSsrContext() / extractParams() / parseQuery()</div>
             <div class="fn-sig">
-              createSsrContext(opts): SsrContext — extractParams(ctx, keys): Record — parseQuery(ctx):
+              createSsrContext(opts): SsrContext - extractParams(ctx, keys): Record - parseQuery(ctx):
               Record
             </div>
             <div class="fn-desc">
@@ -257,7 +256,7 @@ export default class ApiCorePage extends DsdElement {
 
             <div class="fn-name">installLitAdapter()</div>
             <div class="fn-desc">
-              修补核心渲染管线以处理 Lit TemplateResult → DSD HTML 转换。在 SSR bundle 入口调用一次。
+              修补核心渲染管线以处理 Lit TemplateResult -> DSD HTML 转换。在 SSR bundle 入口调用一次。
             </div>
 
             <div class="fn-name">WithDsdHydration / DsdLitElement</div>
@@ -345,7 +344,7 @@ export default class ApiCorePage extends DsdElement {
 
             <div class="fn-name">escapeHtml() / escapeAttr() / escapeAttrValue()</div>
             <div class="fn-sig">
-              escapeHtml(str): string — escapeAttrValue(value): string — escapeAttr(attr): string
+              escapeHtml(str): string - escapeAttrValue(value): string - escapeAttr(attr): string
             </div>
             <div class="fn-desc">
               HTML/attribute escaping with SafeHtml/UnsafeHtml branded types for double-escape prevention.
@@ -360,16 +359,16 @@ export default class ApiCorePage extends DsdElement {
 
             <div class="fn-name">lessBind() / getSSRProps()</div>
             <div class="fn-sig">
-              lessBind(element, props): void — getSSRProps(element): Record&lt;string, unknown&gt;
+              lessBind(element, props): void - getSSRProps(element): Record&lt;string, unknown&gt;
             </div>
             <div class="fn-desc">Framework-agnostic SSR prop binding and deserialization.</div>
 
             <div class="fn-name">registerAdapter() / getAdapter()</div>
             <div class="fn-sig">
-              registerAdapter(adapter: RenderAdapter): void — getAdapter(): RenderAdapter | undefined
+              registerAdapter(adapter: RenderAdapter): void - getAdapter(): RenderAdapter | undefined
             </div>
             <div class="fn-desc">
-              Plugin interface for SSR renderers (e.g., Lit TemplateResult → DSD HTML via
+              Plugin interface for SSR renderers (e.g., Lit TemplateResult -> DSD HTML via
               @lessjs/adapter-lit). The current registry stores one active adapter. A future renderer
               protocol must define adapter identity, capabilities, errors, hydration hints, and DSD
               constraints before multi-adapter behavior is documented as stable.
@@ -377,7 +376,7 @@ export default class ApiCorePage extends DsdElement {
 
             <div class="fn-name">createSsrContext() / extractParams() / parseQuery()</div>
             <div class="fn-sig">
-              createSsrContext(opts): SsrContext — extractParams(ctx, keys): Record — parseQuery(ctx):
+              createSsrContext(opts): SsrContext - extractParams(ctx, keys): Record - parseQuery(ctx):
               Record
             </div>
             <div class="fn-desc">
@@ -504,7 +503,7 @@ export default class ApiCorePage extends DsdElement {
 
             <div class="fn-name">installLitAdapter()</div>
             <div class="fn-desc">
-              Patches core's render pipeline to handle Lit TemplateResult → DSD HTML conversion. Call once
+              Patches core's render pipeline to handle Lit TemplateResult -> DSD HTML conversion. Call once
               in SSR bundle entry.
             </div>
 

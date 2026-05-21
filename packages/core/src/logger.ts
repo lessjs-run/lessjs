@@ -12,7 +12,7 @@ import { LessError } from './errors.js';
 
 // ─── Log Level ──────────────────────────────────────────────────
 
-/** Log level enum — higher value = less verbose */
+/** Log level enum - higher value = less verbose */
 export enum LogLevel {
   DEBUG = 0,
   INFO = 1,

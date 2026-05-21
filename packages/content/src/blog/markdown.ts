@@ -11,9 +11,9 @@ import type { BlogPost, LessBlogOptions } from './types.ts';
 
 /**
  * Allow-list HTML sanitizer using sanitize-html.
- * Only permits safe tags and attributes — all other HTML is stripped.
+ * Only permits safe tags and attributes - all other HTML is stripped.
  * href/src/action only allow http/https/mailto/#/relative URLs.
- * This is a build-time defense-in-depth — content files are developer-controlled,
+ * This is a build-time defense-in-depth - content files are developer-controlled,
  * but sanitization prevents accidental or malicious XSS via raw HTML in markdown.
  */
 const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
@@ -119,8 +119,8 @@ export async function parseMarkdownFile(
 
 /**
  * Derive a URL-safe slug from a filename.
- * e.g. "2026-05-07-hello-world.md" → "hello-world"
- *      "my-post.md" → "my-post"
+ * e.g. "2026-05-07-hello-world.md" -> "hello-world"
+ *      "my-post.md" -> "my-post"
  */
 export function slugFromFilename(filename: string): string {
   return filename

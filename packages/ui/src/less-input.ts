@@ -11,10 +11,10 @@
  * - Supports label, placeholder, error, disabled, required
  * - Dispatches 'less-input' custom event on value change
  *
- * @csspart wrapper —The outer input-wrapper div
- * @csspart label —The label element
- * @csspart control —The input/textarea/select element
- * @csspart error —The error message small element
+ * @csspart wrapper -The outer input-wrapper div
+ * @csspart label -The label element
+ * @csspart control -The input/textarea/select element
+ * @csspart error -The error message small element
  *
  * Usage:
  * ```html

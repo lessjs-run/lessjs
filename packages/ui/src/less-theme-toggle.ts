@@ -9,9 +9,9 @@
  *   - hydrateEvents preserved for DSD event binding
  *   - Direct DOM manipulation for class toggling
  *
- * @csspart toggle —The button element
- * @csspart icon-sun —The sun SVG icon
- * @csspart icon-moon —The moon SVG icon
+ * @csspart toggle -The button element
+ * @csspart icon-sun -The sun SVG icon
+ * @csspart icon-moon -The moon SVG icon
  *
  * Usage:
  * ```html

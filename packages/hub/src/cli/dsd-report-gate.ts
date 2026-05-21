@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run --allow-read
 /**
- * DSD Report Gate — checks dsd-report.json against error thresholds.
+ * DSD Report Gate - checks dsd-report.json against error thresholds.
  *
  * Usage:
  *   deno task dsd:check-report
@@ -11,15 +11,15 @@
  *
  * Thresholds will be tightened progressively:
  * - v0.19.x: No fail (report only, current: 6 non-recoverable from sl-input)
- * - v0.20.0: non-recoverable errors ≤ 10
+ * - v0.20.0: non-recoverable errors <= 10
  * - v0.21.0: non-recoverable errors = 0
  *
  * NOTE: Current threshold is Infinity (report-only mode).
  * This gate classifies errors but does not fail the build.
  * Tightening schedule:
- *   v0.19.x → non-recoverable ≤ 6 (no new non-recoverable errors)
- *   v0.20   → total errors ≤ 10
- *   v0.21   → 0 unknown errors
+ *   v0.19.x -> non-recoverable <= 6 (no new non-recoverable errors)
+ *   v0.20   -> total errors <= 10
+ *   v0.21   -> 0 unknown errors
  */
 
 interface RenderError {
@@ -42,7 +42,7 @@ interface DsdReport {
   timestamp?: string;
 }
 
-// Known error patterns — all from Shoelace components in SSR
+// Known error patterns - all from Shoelace components in SSR
 const KNOWN_ERROR_PATTERNS: Array<{ pattern: RegExp; description: string }> = [
   {
     pattern: /this\.host\.querySelector is not a function/,
@@ -64,6 +64,10 @@ const KNOWN_ERROR_PATTERNS: Array<{ pattern: RegExp; description: string }> = [
     pattern: /Components must return a string from render\(\)/,
     description: 'Shoelace component returning non-string from render()',
   },
+  {
+    pattern: /this\.host\.childNodes is not iterable/,
+    description: 'Shoelace component iterating host childNodes during SSR',
+  },
 ];
 
 const MAX_NON_RECOVERABLE = Infinity; // TODO: tighten to 10 in v0.20.0, 0 in v0.21.0
@@ -75,7 +79,7 @@ function main() {
   try {
     report = JSON.parse(Deno.readTextFileSync(reportPath));
   } catch {
-    console.error(`❌ Cannot read ${reportPath}. Run \`deno task build\` first.`);
+    console.error(`[FAIL] Cannot read ${reportPath}. Run \`deno task build\` first.`);
     Deno.exit(1);
   }
 
@@ -114,7 +118,7 @@ function main() {
       (a, b) => b[1].count - a[1].count,
     )
   ) {
-    const status = info.known ? '✅ known' : '⚠️ UNKNOWN';
+    const status = info.known ? '[known]' : '[UNKNOWN]';
     console.log(
       `  ${status} [${info.count}x] ${msg.substring(0, 80)}`,
     );
@@ -127,26 +131,26 @@ function main() {
   );
   if (unknownErrors.length > 0) {
     console.log(
-      `\n  ⚠️  ${unknownErrors.length} unknown error type(s) detected. Consider adding to KNOWN_ERROR_PATTERNS.`,
+      `\n  [WARN] ${unknownErrors.length} unknown error type(s) detected. Consider adding to KNOWN_ERROR_PATTERNS.`,
     );
   }
 
   // Threshold check
   if (nonRecoverable.length > MAX_NON_RECOVERABLE) {
     console.error(
-      `\n  ❌ ${nonRecoverable.length} non-recoverable errors exceed threshold (${MAX_NON_RECOVERABLE})`,
+      `\n  [FAIL] ${nonRecoverable.length} non-recoverable errors exceed threshold (${MAX_NON_RECOVERABLE})`,
     );
     Deno.exit(1);
   }
 
   console.log(
-    `\n  ✅ Gate passed (threshold: non-recoverable ≤ ${MAX_NON_RECOVERABLE})`,
+    `\n  [PASS] Gate passed (threshold: non-recoverable <= ${MAX_NON_RECOVERABLE})`,
   );
   console.log(
-    `  ℹ️  All ${report.totalErrors} errors are from Shoelace components in SSR (expected, client-only)`,
+    `  [INFO] All ${report.totalErrors} errors are from Shoelace components in SSR (expected, client-only)`,
   );
   console.log(
-    `  ℹ️  Threshold will tighten: v0.20 → ≤10, v0.21 → 0\n`,
+    `  [INFO] Threshold will tighten: v0.20 -> <= 10, v0.21 -> 0\n`,
   );
 }
 

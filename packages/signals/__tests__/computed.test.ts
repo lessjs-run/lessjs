@@ -9,7 +9,7 @@
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { computed, signal } from '../src/index.ts';
 
-Deno.test('computed() — basic', async (t) => {
+Deno.test('computed() - basic', async (t) => {
   await t.step('computes derived value', () => {
     const a = signal(2);
     const b = signal(3);
@@ -51,7 +51,7 @@ Deno.test('computed() — basic', async (t) => {
   });
 });
 
-Deno.test('computed() — subscribe()', async (t) => {
+Deno.test('computed() - subscribe()', async (t) => {
   await t.step('subscribe is called immediately with computed value', () => {
     const a = signal(3);
     const c = computed(() => a.value * 10);
@@ -74,7 +74,7 @@ Deno.test('computed() — subscribe()', async (t) => {
   });
 });
 
-Deno.test('computed() — lazy evaluation', async (t) => {
+Deno.test('computed() - lazy evaluation', async (t) => {
   await t.step('computed is not re-evaluated until read', () => {
     let callCount = 0;
     const a = signal(1);

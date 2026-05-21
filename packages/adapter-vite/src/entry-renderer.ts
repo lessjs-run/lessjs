@@ -1,7 +1,7 @@
 /**
  * @lessjs/core - Entry Renderer
  *
- * Pure function: EntryDescriptor → string (virtual module code).
+ * Pure function: EntryDescriptor -> string (virtual module code).
  *
  * LessJS Architecture (v0.5.0):
  * - API routes use Hono standard app.route() (not app.all + fetch transform)
@@ -10,10 +10,10 @@
  *   referenced via <script type="module" src="..."> and imports island modules
  *   for side-effect custom element registration.
  * - HTML document wrapping delegates to wrapInDocument from html-escape.ts
- *   (imported at runtime — single source of truth, no duplicate HTML logic)
+ *   (imported at runtime - single source of truth, no duplicate HTML logic)
  * - DSD output must remain plain HTML, without Lit SSR marker comments.
  *
- * H-16 KNOWN ISSUE: Circular dependency between adapter-vite ↔ content
+ * H-16 KNOWN ISSUE: Circular dependency between adapter-vite <-> content
  *   adapter-vite generates code that imports @lessjs/content/sitemap
  *   content package imports @lessjs/adapter-vite/build-context
  * TODO: Extract shared types to @lessjs/build-types, or move sitemap generation into adapter-vite
@@ -93,7 +93,7 @@ function renderMiddleware(lines: string[], mw: MiddlewareDecl): void {
 
     case 'cors': {
       const corsOrigin = mw.config?.corsOrigin;
-      // v0.14.10: Reject '*' + credentials: true — browsers refuse this combo.
+      // v0.14.10: Reject '*' + credentials: true - browsers refuse this combo.
       if (corsOrigin === '*' || (Array.isArray(corsOrigin) && corsOrigin.includes('*'))) {
         throw new Error(
           'CORS misconfiguration: origin "*" with credentials: true is invalid. ' +
@@ -106,7 +106,7 @@ function renderMiddleware(lines: string[], mw: MiddlewareDecl): void {
           `app.use('*', cors({ origin: ${originStr}, ${CORS_ALLOW} }))`,
         );
       } else {
-        // v0.3.0: Tightened default — only allow localhost.
+        // v0.3.0: Tightened default - only allow localhost.
         // Production deployments MUST explicitly configure corsOrigin.
         // Returning '*' with credentials:true violates the Fetch spec.
         lines.push("app.use('*', cors({ origin: (origin) => {");
@@ -245,7 +245,7 @@ function renderPageRoute(
 
   lines.push(`    let content = html`);
   if (matchingRenderers.length > 0) {
-    lines.push(`    // Renderer wrapping (outer → inner)`);
+    lines.push(`    // Renderer wrapping (outer -> inner)`);
     for (const renderer of matchingRenderers) {
       lines.push(`    content = ${renderer.varName}.default.wrap(content, c)`);
     }
@@ -283,7 +283,7 @@ function renderPageRoute(
 /**
  * Render an EntryDescriptor into a complete virtual module string.
  *
- * Pure function — deterministic, testable, side-effect-free.
+ * Pure function - deterministic, testable, side-effect-free.
  *
  * v0.5.0: Island upgrade is handled by the Vite-built client entry (Phase 2),
  * not by inline scripts in SSG HTML. The client entry imports each island
@@ -304,7 +304,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   );
 
   // --- SSG: DSD renderer doesn't need DOM shim ---
-  // v0.5.0: render-dsd.ts uses pure string concatenation — no DOM shim needed
+  // v0.5.0: render-dsd.ts uses pure string concatenation - no DOM shim needed
   // The old @lit-labs/ssr DOM shim import has been removed.
 
   // --- Imports ---
@@ -348,14 +348,14 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('');
 
   // --- SSG: Auto-install all available adapters ---
-  // v0.17.3: Multi-adapter support — install Lit, Vanilla, and React adapters.
+  // v0.17.3: Multi-adapter support - install Lit, Vanilla, and React adapters.
   // With viteBuild(ssr:true, noExternal), adapters are inlined into the bundle.
   // Installing at module load time ensures registerAdapter() runs before any
   // renderDSD() call. Each try/catch makes missing adapters a no-op.
   // Both SSG and dev mode need adapters to render framework-specific results.
   {
     lines.push('// v0.17.3: Auto-install all available SSR adapters');
-    lines.push('// Lit adapter — handles Lit TemplateResults');
+    lines.push('// Lit adapter - handles Lit TemplateResults');
     lines.push('try {');
     lines.push(
       "  const { installLitAdapter } = await import('@lessjs/adapter-lit');",
@@ -363,7 +363,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('  installLitAdapter();');
     lines.push('} catch { /* @lessjs/adapter-lit not available */ }');
     lines.push('');
-    lines.push('// Vanilla adapter — handles string-based render()');
+    lines.push('// Vanilla adapter - handles string-based render()');
     lines.push('try {');
     lines.push(
       "  const { installVanillaAdapter } = await import('@lessjs/adapter-vanilla');",
@@ -371,7 +371,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('  installVanillaAdapter();');
     lines.push('} catch { /* @lessjs/adapter-vanilla not available */ }');
     lines.push('');
-    lines.push('// React adapter — handles React elements');
+    lines.push('// React adapter - handles React elements');
     lines.push('try {');
     lines.push(
       "  const { installReactAdapter } = await import('@lessjs/adapter-react');",
@@ -384,7 +384,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   // --- Register page components in SSR customElements registry ---
   // This is essential for renderDSD() to find and render Shadow DOM.
   // Each SSR route module exports { default: ComponentClass, tagName: string }.
-  // ADR 0014: Patch customElements.define to be idempotent in SSR —
+  // ADR 0014: Patch customElements.define to be idempotent in SSR -
   // must apply in BOTH dev and SSG modes because island modules call
   // customElements.define() as a side-effect (guard try/catch), and
   // the SSR dom-shim throws on duplicate define() even with the same tag.
@@ -483,7 +483,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('// Outputs standard DSD; no client render markers needed');
   lines.push('async function __ssr(tag, props = {}, sourceInfo = {}) {');
   lines.push(
-    '  // Validate tag name — must be a valid Custom Element (contains hyphen)',
+    '  // Validate tag name - must be a valid Custom Element (contains hyphen)',
   );
   lines.push('  if (!tag || !tag.includes("-")) {');
   lines.push(
@@ -492,7 +492,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('  }');
   lines.push('  const Cls = customElements.get(tag)');
   lines.push('  if (!Cls) {');
-  lines.push('    log.warn("<" + tag + "> not registered — rendering empty")');
+  lines.push('    log.warn("<" + tag + "> not registered - rendering empty")');
   lines.push('    return "<" + tag + "></" + tag + ">"');
   lines.push('  }');
   lines.push('  const out = await renderDSD(tag, Cls, props, sourceInfo)');
@@ -576,17 +576,17 @@ export function renderEntry(desc: EntryDescriptor): string {
       'export { locales, getDefaultLocale, getI18nOptions } from "virtual:less-i18n-data"',
     );
 
-    // ── ADR 0014: renderRoute() — DSD-first rendering API ───────
-    // The SSR bundle owns all rendering knowledge (tagName → component
+    // ── ADR 0014: renderRoute() - DSD-first rendering API ───────
+    // The SSR bundle owns all rendering knowledge (tagName -> component
     // mapping, customElements registry, renderDSD, wrapInDocument).
-    // build-ssg.ts only calls renderRoute() and getStaticPaths() —
+    // build-ssg.ts only calls renderRoute() and getStaticPaths() -
     // no globalThis access, no source file regex, no direct renderDSD().
     lines.push('');
     lines.push(
       '// ── ADR 0014: DSD-first rendering API ──────────────────────',
     );
     lines.push(
-      '// build-ssg.ts calls these — never touches customElements directly.',
+      '// build-ssg.ts calls these - never touches customElements directly.',
     );
     lines.push('');
 
@@ -634,7 +634,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('}');
     lines.push('');
 
-    // --- renderRoute: path + options → structured output ---
+    // --- renderRoute: path + options -> structured output ---
     lines.push('/**');
     lines.push(' * Render a route to structured output with diagnostics (ADR 0014, v0.15.3).');
     lines.push(
@@ -684,7 +684,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('}');
     lines.push('');
 
-    // --- getStaticPaths: dynamic route → params[] ---
+    // --- getStaticPaths: dynamic route -> params[] ---
     // Only dynamic routes have getStaticPaths(). The function body
     // dispatches to the appropriate route module's getStaticPaths().
     lines.push('/**');
@@ -743,8 +743,8 @@ export interface HonoEntryOptions {
  * Generate the Hono entry module code from scanned routes.
  *
  * Internally:
- *  1. buildEntryDescriptor() — pure data transformation
- *  2. renderEntry()          — pure string rendering
+ *  1. buildEntryDescriptor() - pure data transformation
+ *  2. renderEntry()          - pure string rendering
  *
  * Both steps are exported individually for testing.
  */

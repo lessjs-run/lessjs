@@ -13,14 +13,14 @@
 
 #### 1.1 核心技术挑战
 
-| 挑战 | 描述 | 方案 |
-|------|------|------|
-| **Lit 解耦** | 当前所有 10 个 UI 组件依赖 LitElement/DsdLitElement | 新建 `DsdElement extends HTMLElement` 基类，直接使用 Web 标准 API |
-| **样式系统迁移** | Lit `css\`\` → CSSResult` 需替换为原生 `CSSStyleSheet` | `static styles: CSSStyleSheet` + `adoptedStyleSheets` 自动合并 |
-| **属性响应** | Lit `@property()` 装饰器 + `static properties` 需替换 | `static observedAttributes` + `attributeChangedCallback` |
-| **事件绑定** | Lit `@click` 模板绑定在 SSR 下失效 | `hydrateEvents()` 模式从 `WithDsdHydration` Mixin 移植到基类 |
-| **SSR CSSStyleSheet 提取** | `render-dsd.ts` 当前通过适配器提取样式，需直接支持 CSSStyleSheet | 在适配器循环前插入原生 CSSStyleSheet 序列化逻辑 |
-| **Open Props tokens** | `design-tokens.ts` 依赖 Lit `css` 标签 | 改为纯 `CSSStyleSheet`，内联 Open Props 灰度值 |
+| 挑战                       | 描述                                                             | 方案                                                              |
+| -------------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------- |
+| **Lit 解耦**               | 当前所有 10 个 UI 组件依赖 LitElement/DsdLitElement              | 新建 `DsdElement extends HTMLElement` 基类，直接使用 Web 标准 API |
+| **样式系统迁移**           | Lit `css\`\` → CSSResult`需替换为原生`CSSStyleSheet`             | `static styles: CSSStyleSheet` + `adoptedStyleSheets` 自动合并    |
+| **属性响应**               | Lit `@property()` 装饰器 + `static properties` 需替换            | `static observedAttributes` + `attributeChangedCallback`          |
+| **事件绑定**               | Lit `@click` 模板绑定在 SSR 下失效                               | `hydrateEvents()` 模式从 `WithDsdHydration` Mixin 移植到基类      |
+| **SSR CSSStyleSheet 提取** | `render-dsd.ts` 当前通过适配器提取样式，需直接支持 CSSStyleSheet | 在适配器循环前插入原生 CSSStyleSheet 序列化逻辑                   |
+| **Open Props tokens**      | `design-tokens.ts` 依赖 Lit `css` 标签                           | 改为纯 `CSSStyleSheet`，内联 Open Props 灰度值                    |
 
 #### 1.2 架构模式
 
@@ -64,15 +64,15 @@ www/app/islands/
 
 ### 2. 框架选型
 
-| 层级 | 技术 | 理由 |
-|------|------|------|
-| **基类** | `DsdElement extends HTMLElement` | 零依赖，Web 标准 API |
-| **样式** | `CSSStyleSheet` (Constructable Stylesheets) | 浏览器原生，无构建时依赖 |
-| **模板** | 模板字面量 → `render(): string` | SSR 兼容，render-dsd.ts 原生支持 |
-| **设计令牌** | Open Props CSS 变量（内联灰度值） | 消除 ~100 行 Lit 胶水代码 |
-| **保留 Lit** | `less-hero-ping` (仅此一个) | Island 参考实现，不参与迁移 |
-| **运行时** | Deno 2.x + Vite 8.x + TypeScript 5.9 | 现有技术栈不变 |
-| **测试** | Deno test + Playwright | 现有测试基础设施 |
+| 层级         | 技术                                        | 理由                             |
+| ------------ | ------------------------------------------- | -------------------------------- |
+| **基类**     | `DsdElement extends HTMLElement`            | 零依赖，Web 标准 API             |
+| **样式**     | `CSSStyleSheet` (Constructable Stylesheets) | 浏览器原生，无构建时依赖         |
+| **模板**     | 模板字面量 → `render(): string`             | SSR 兼容，render-dsd.ts 原生支持 |
+| **设计令牌** | Open Props CSS 变量（内联灰度值）           | 消除 ~100 行 Lit 胶水代码        |
+| **保留 Lit** | `less-hero-ping` (仅此一个)                 | Island 参考实现，不参与迁移      |
+| **运行时**   | Deno 2.x + Vite 8.x + TypeScript 5.9        | 现有技术栈不变                   |
+| **测试**     | Deno test + Playwright                      | 现有测试基础设施                 |
 
 ### 3. 文件列表
 
@@ -122,7 +122,7 @@ www/app/islands/
 
 #### 4.1 DsdElement API 契约
 
-```typescript
+````typescript
 /**
  * DsdElement — LessJS 零依赖 Web Component 基类。
  *
@@ -148,7 +148,7 @@ www/app/islands/
  * }
  * ```
  */
-```
+````
 
 #### 4.2 类图
 
@@ -159,9 +159,9 @@ www/app/islands/
 ```typescript
 // 已在 packages/core/src/types.ts 中定义，无需修改
 interface HydrateEventDescriptor {
-  selector: string;   // CSS 选择器（shadow root 内）
-  event: string;      // DOM 事件名 ('click', 'input', 'keydown')
-  method: string;     // 组件方法名
+  selector: string; // CSS 选择器（shadow root 内）
+  event: string; // DOM 事件名 ('click', 'input', 'keydown')
+  method: string; // 组件方法名
 }
 ```
 
@@ -211,31 +211,32 @@ export const openPropsTokenSheet: CSSStyleSheet;
 
 #### T01: 项目基础设施 — DsdElement 基类 + SSR CSSStyleSheet + Open Props
 
-| 属性 | 值 |
-|------|-----|
-| **Task ID** | T01 |
+| 属性          | 值                                                                           |
+| ------------- | ---------------------------------------------------------------------------- |
+| **Task ID**   | T01                                                                          |
 | **Task Name** | 项目基础设施：DsdElement 基类 + SSR CSSStyleSheet 提取 + Open Props 令牌迁移 |
-| **优先级** | P0 |
-| **依赖** | 无 |
+| **优先级**    | P0                                                                           |
+| **依赖**      | 无                                                                           |
 
 **源文件**：
 
-| 操作 | 文件路径 | 说明 |
-|------|----------|------|
-| NEW | `packages/core/src/dsd-element.ts` | DsdElement 基类 (~150行)，实现：createRenderRoot DSD 检测、adoptedStyleSheets 合并、hydrateEvents、observedAttributes→attributeChangedCallback、_dsdHydrated 标记 |
-| EDIT | `packages/core/src/index.ts` | 新增 `export { DsdElement }` 及关联类型导出 |
-| NEW | `packages/core/__tests__/dsd-element.test.ts` | DsdElement 单元测试：shadow root 复用、样式合并、属性变更回调、事件绑定 |
-| EDIT | `packages/core/src/render-dsd.ts` | 在 line 247（适配器样式提取循环之前）插入 ~15 行：检测 `componentClass.styles` 是否为 CSSStyleSheet，若是则直接序列化 CSS 规则 |
-| EDIT | `packages/core/src/types.ts` | 按需新增 `DsdElementConfig` 类型（如需要暴露 `delegatesFocus`/`formAssociated` 等静态配置） |
-| DELETE | `packages/ui/src/tokens/color-values.ts` | 删除（迁移到 open-props-tokens.ts） |
-| DELETE | `packages/ui/src/tokens/colors.ts` | 删除（迁移到 open-props-tokens.ts） |
-| NEW | `packages/ui/src/open-props-tokens.ts` | 重写 design-tokens.ts 为纯 CSSStyleSheet：内联所有 Open Props 灰度值（gray-0~gray-12 的 light + dark），所有 spacing/typography/effects/radius/animation 令牌用 `CSSStyleSheet` 的 `replaceSync` 或 `insertRule` 构建 |
-| EDIT | `packages/ui/deno.json` | 移除 `lit`/`@lessjs/adapter-lit` imports，移除 `./tokens/color-values`/`./tokens/colors` 导出，新增 `./open-props-tokens` 导出 |
-| EDIT | `packages/ui/src/index.ts` | 新增 `export { openPropsTokenSheet } from './open-props-tokens.js'`，移除 tokens/colors 相关导出 |
-| EDIT | `deno.json`（根目录） | 按需更新 `@lessjs/ui/tokens/*` imports 映射 |
-| EDIT | `packages/adapter-lit/src/index.ts` | 标记 `DsdLitElement`/`WithDsdHydration` 为 `@deprecated`（less-hero-ping 过渡用） |
+| 操作   | 文件路径                                      | 说明                                                                                                                                                                                                                  |
+| ------ | --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| NEW    | `packages/core/src/dsd-element.ts`            | DsdElement 基类 (~150行)，实现：createRenderRoot DSD 检测、adoptedStyleSheets 合并、hydrateEvents、observedAttributes→attributeChangedCallback、_dsdHydrated 标记                                                     |
+| EDIT   | `packages/core/src/index.ts`                  | 新增 `export { DsdElement }` 及关联类型导出                                                                                                                                                                           |
+| NEW    | `packages/core/__tests__/dsd-element.test.ts` | DsdElement 单元测试：shadow root 复用、样式合并、属性变更回调、事件绑定                                                                                                                                               |
+| EDIT   | `packages/core/src/render-dsd.ts`             | 在 line 247（适配器样式提取循环之前）插入 ~15 行：检测 `componentClass.styles` 是否为 CSSStyleSheet，若是则直接序列化 CSS 规则                                                                                        |
+| EDIT   | `packages/core/src/types.ts`                  | 按需新增 `DsdElementConfig` 类型（如需要暴露 `delegatesFocus`/`formAssociated` 等静态配置）                                                                                                                           |
+| DELETE | `packages/ui/src/tokens/color-values.ts`      | 删除（迁移到 open-props-tokens.ts）                                                                                                                                                                                   |
+| DELETE | `packages/ui/src/tokens/colors.ts`            | 删除（迁移到 open-props-tokens.ts）                                                                                                                                                                                   |
+| NEW    | `packages/ui/src/open-props-tokens.ts`        | 重写 design-tokens.ts 为纯 CSSStyleSheet：内联所有 Open Props 灰度值（gray-0~gray-12 的 light + dark），所有 spacing/typography/effects/radius/animation 令牌用 `CSSStyleSheet` 的 `replaceSync` 或 `insertRule` 构建 |
+| EDIT   | `packages/ui/deno.json`                       | 移除 `lit`/`@lessjs/adapter-lit` imports，移除 `./tokens/color-values`/`./tokens/colors` 导出，新增 `./open-props-tokens` 导出                                                                                        |
+| EDIT   | `packages/ui/src/index.ts`                    | 新增 `export { openPropsTokenSheet } from './open-props-tokens.js'`，移除 tokens/colors 相关导出                                                                                                                      |
+| EDIT   | `deno.json`（根目录）                         | 按需更新 `@lessjs/ui/tokens/*` imports 映射                                                                                                                                                                           |
+| EDIT   | `packages/adapter-lit/src/index.ts`           | 标记 `DsdLitElement`/`WithDsdHydration` 为 `@deprecated`（less-hero-ping 过渡用）                                                                                                                                     |
 
 **说明**：
+
 - DsdElement 基类从 `WithDsdHydration` Mixin 移植以下逻辑：
   - `createRenderRoot()`: 检测 `this.shadowRoot?.childElementCount > 0` → 复用 DSD shadow root
   - `_hydrateEvents()`: 从 `static hydrateEvents` 绑定事件到 shadow DOM
@@ -251,24 +252,24 @@ export const openPropsTokenSheet: CSSStyleSheet;
 
 #### T02: 展示组件 + 属性驱动组件迁移
 
-| 属性 | 值 |
-|------|-----|
-| **Task ID** | T02 |
+| 属性          | 值                                                           |
+| ------------- | ------------------------------------------------------------ |
+| **Task ID**   | T02                                                          |
 | **Task Name** | 展示 + 属性驱动组件迁移：card/callout/step-card/button/input |
-| **优先级** | P0 |
-| **依赖** | T01 |
+| **优先级**    | P0                                                           |
+| **依赖**      | T01                                                          |
 
 **源文件**：
 
-| 操作 | 文件路径 | 说明 |
-|------|----------|------|
-| EDIT | `packages/ui/src/less-card.ts` | ~96行，迁移模式：`import { DsdLitElement } from '@lessjs/adapter-lit'` → `import { DsdElement } from '@lessjs/core'`，`css\`\`` → `CSSStyleSheet`，`html\`\`` → 模板字面量字符串，添加 `part="container/header/body/footer"` |
-| EDIT | `packages/ui/src/less-callout.ts` | ~60行，同上迁移模式，纯展示组件无交互 |
-| EDIT | `packages/ui/src/less-step-card.ts` | ~100行，同上，添加 `part="step/indicator/content"` |
-| EDIT | `packages/ui/src/less-button.ts` | ~251行，属性驱动：`static observedAttributes = ['variant','size','disabled','href','target','type']`，`attributeChangedCallback` 触发 DOM 同步，`hydrateEvents` 声明 click 事件，保留 `delegatesFocus`/`formAssociated` 静态属性 |
-| EDIT | `packages/ui/src/less-input.ts` | ~254行，属性驱动 + 事件：`observedAttributes` 声明 label/value/type/error/placeholder，`attributeChangedCallback` → `_syncDOM()` 更新内部 input 元素，`hydrateEvents` 声明 input/focus/blur 事件 |
-| EDIT | `packages/ui/src/manifest.ts` | 更新这 5 个组件的声明：`less.adapter` 从 `'lit'` 改为 `'vanilla'`，`superclassName` 从 `'LitElement'` 改为 `'DsdElement'` |
-| EDIT | `packages/ui/__tests__/components.test.ts` | 适配新的 DsdElement API |
+| 操作 | 文件路径                                   | 说明                                                                                                                                                                                                                             |
+| ---- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| EDIT | `packages/ui/src/less-card.ts`             | ~96行，迁移模式：`import { DsdLitElement } from '@lessjs/adapter-lit'` → `import { DsdElement } from '@lessjs/core'`，`css\`\``→`CSSStyleSheet`，`html\`\``→ 模板字面量字符串，添加`part="container/header/body/footer"`         |
+| EDIT | `packages/ui/src/less-callout.ts`          | ~60行，同上迁移模式，纯展示组件无交互                                                                                                                                                                                            |
+| EDIT | `packages/ui/src/less-step-card.ts`        | ~100行，同上，添加 `part="step/indicator/content"`                                                                                                                                                                               |
+| EDIT | `packages/ui/src/less-button.ts`           | ~251行，属性驱动：`static observedAttributes = ['variant','size','disabled','href','target','type']`，`attributeChangedCallback` 触发 DOM 同步，`hydrateEvents` 声明 click 事件，保留 `delegatesFocus`/`formAssociated` 静态属性 |
+| EDIT | `packages/ui/src/less-input.ts`            | ~254行，属性驱动 + 事件：`observedAttributes` 声明 label/value/type/error/placeholder，`attributeChangedCallback` → `_syncDOM()` 更新内部 input 元素，`hydrateEvents` 声明 input/focus/blur 事件                                 |
+| EDIT | `packages/ui/src/manifest.ts`              | 更新这 5 个组件的声明：`less.adapter` 从 `'lit'` 改为 `'vanilla'`，`superclassName` 从 `'LitElement'` 改为 `'DsdElement'`                                                                                                        |
+| EDIT | `packages/ui/__tests__/components.test.ts` | 适配新的 DsdElement API                                                                                                                                                                                                          |
 
 **迁移模式示例**（less-card）：
 
@@ -295,96 +296,96 @@ class LessCard extends DsdElement {
 
 #### T03: 交互组件迁移
 
-| 属性 | 值 |
-|------|-----|
-| **Task ID** | T03 |
+| 属性          | 值                                                  |
+| ------------- | --------------------------------------------------- |
+| **Task ID**   | T03                                                 |
 | **Task Name** | 交互组件迁移：theme-toggle/code-block/dialog/layout |
-| **优先级** | P0 |
-| **依赖** | T01（不依赖 T02，可并行） |
+| **优先级**    | P0                                                  |
+| **依赖**      | T01（不依赖 T02，可并行）                           |
 
 **源文件**：
 
-| 操作 | 文件路径 | 说明 |
-|------|----------|------|
-| EDIT | `packages/ui/src/less-theme-toggle.ts` | ~259行：localStorage 主题持久化 + 图标切换。`hydrateEvents` 声明 toggle click，`observedAttributes` 声明 theme。迁移 SVG 图标到字符串模板 |
-| EDIT | `packages/ui/src/less-code-block.ts` | ~394行：clipboard API + `:state(copied)` CSS 自定义状态。`hydrateEvents` 声明 copy button click。`ElementInternals.states` 管理 copied 状态 |
-| EDIT | `packages/ui/src/less-dialog.ts` | ~317行：overlay + focus trap + ESC 关闭。`hydrateEvents` 声明 close/backdrop click/keydown。`observedAttributes` 声明 open/label |
-| EDIT | `packages/ui/src/less-layout.ts` | ~1202行（最大组件）：分 3 步迁移 — (1)styles→CSSStyleSheet (2)events→hydrateEvents (3)state→observedAttributes。涉及 header/sidebar/footer/nav 多 slot 布局 |
-| EDIT | `packages/ui/src/manifest.ts` | 更新这 4 个组件的声明（同 T02 模式） |
-| EDIT | `packages/ui/__tests__/components.test.ts` | 适配交互组件的 DsdElement API |
+| 操作 | 文件路径                                   | 说明                                                                                                                                                        |
+| ---- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| EDIT | `packages/ui/src/less-theme-toggle.ts`     | ~259行：localStorage 主题持久化 + 图标切换。`hydrateEvents` 声明 toggle click，`observedAttributes` 声明 theme。迁移 SVG 图标到字符串模板                   |
+| EDIT | `packages/ui/src/less-code-block.ts`       | ~394行：clipboard API + `:state(copied)` CSS 自定义状态。`hydrateEvents` 声明 copy button click。`ElementInternals.states` 管理 copied 状态                 |
+| EDIT | `packages/ui/src/less-dialog.ts`           | ~317行：overlay + focus trap + ESC 关闭。`hydrateEvents` 声明 close/backdrop click/keydown。`observedAttributes` 声明 open/label                            |
+| EDIT | `packages/ui/src/less-layout.ts`           | ~1202行（最大组件）：分 3 步迁移 — (1)styles→CSSStyleSheet (2)events→hydrateEvents (3)state→observedAttributes。涉及 header/sidebar/footer/nav 多 slot 布局 |
+| EDIT | `packages/ui/src/manifest.ts`              | 更新这 4 个组件的声明（同 T02 模式）                                                                                                                        |
+| EDIT | `packages/ui/__tests__/components.test.ts` | 适配交互组件的 DsdElement API                                                                                                                               |
 
 **关键交互模式**：
 
-| 组件 | 交互模式 | DsdElement 实现 |
-|------|----------|----------------|
-| theme-toggle | localStorage + 图标切换 | `hydrateEvents: [{ selector: 'button', event: 'click', method: '_toggle' }]` |
-| code-block | Clipboard API + CSS :state() | `ElementInternals.states.add('copied')` / `delete('copied')` |
-| dialog | Overlay + Focus trap + ESC | `_handleKeydown` 通过 `hydrateEvents` 绑定，`open` 属性驱动 |
-| layout | SPA 导航 + 移动端菜单 | `hydrateEvents` 绑定 nav click / menu toggle，`observedAttributes` 声明 `navSections`/`navLinks` |
+| 组件         | 交互模式                     | DsdElement 实现                                                                                  |
+| ------------ | ---------------------------- | ------------------------------------------------------------------------------------------------ |
+| theme-toggle | localStorage + 图标切换      | `hydrateEvents: [{ selector: 'button', event: 'click', method: '_toggle' }]`                     |
+| code-block   | Clipboard API + CSS :state() | `ElementInternals.states.add('copied')` / `delete('copied')`                                     |
+| dialog       | Overlay + Focus trap + ESC   | `_handleKeydown` 通过 `hydrateEvents` 绑定，`open` 属性驱动                                      |
+| layout       | SPA 导航 + 移动端菜单        | `hydrateEvents` 绑定 nav click / menu toggle，`observedAttributes` 声明 `navSections`/`navLinks` |
 
 ---
 
 #### T04: Islands + CSS Parts 全覆盖 + less-search 迁移
 
-| 属性 | 值 |
-|------|-----|
-| **Task ID** | T04 |
+| 属性          | 值                                                 |
+| ------------- | -------------------------------------------------- |
+| **Task ID**   | T04                                                |
 | **Task Name** | Islands 保留 + CSS Parts 全覆盖 + less-search 迁移 |
-| **优先级** | P1 |
-| **依赖** | T01（不依赖 T02/T03，可并行） |
+| **优先级**    | P1                                                 |
+| **依赖**      | T01（不依赖 T02/T03，可并行）                      |
 
 **源文件**：
 
-| 操作 | 文件路径 | 说明 |
-|------|----------|------|
-| EDIT | `packages/ui/src/less-hero-ping.ts` | **保留 Lit/DsdLitElement**，仅添加 `part="ping-ring/ping-dot"` CSS Parts 属性 |
-| EDIT | `packages/ui/src/less-card.ts` | CSS Parts 审核：确保 `part="container/header/body/footer"` 存在 |
-| EDIT | `packages/ui/src/less-callout.ts` | CSS Parts 审核：确保 `part="container/icon/content"` 存在 |
-| EDIT | `packages/ui/src/less-step-card.ts` | CSS Parts 审核：确保 `part="step/indicator/content"` 存在 |
-| EDIT | `packages/ui/src/less-button.ts` | CSS Parts 审核：确保 `part="button"` 存在 |
-| EDIT | `packages/ui/src/less-input.ts` | CSS Parts 审核：确保 `part="input/label/error"` 存在 |
-| EDIT | `packages/ui/src/less-theme-toggle.ts` | CSS Parts 审核：确保 `part="toggle/icon-sun/icon-moon"` 存在 |
-| EDIT | `packages/ui/src/less-code-block.ts` | CSS Parts 审核：确保 `part="code/copy-button"` 存在 |
-| EDIT | `packages/ui/src/less-dialog.ts` | CSS Parts 审核：确保 `part="overlay/panel/close/heading/content"` 存在 |
-| EDIT | `packages/ui/src/less-layout.ts` | CSS Parts 审核：确保 `part="header/sidebar/main/footer/nav"` 存在 |
-| EDIT | `www/app/islands/less-search.ts` | ~317行，Lit→DsdElement 迁移：document.body overlay + keyboard nav (↑↓Enter ESC) + SPA 导航重置。`hydrateEvents` 声明 input/keydown/click 事件 |
-| EDIT | `packages/ui/src/manifest.ts` | less-hero-ping 保持 `less.adapter: 'lit'`，添加 `cssParts` 声明；less-search 注册为新声明 |
+| 操作 | 文件路径                               | 说明                                                                                                                                          |
+| ---- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| EDIT | `packages/ui/src/less-hero-ping.ts`    | **保留 Lit/DsdLitElement**，仅添加 `part="ping-ring/ping-dot"` CSS Parts 属性                                                                 |
+| EDIT | `packages/ui/src/less-card.ts`         | CSS Parts 审核：确保 `part="container/header/body/footer"` 存在                                                                               |
+| EDIT | `packages/ui/src/less-callout.ts`      | CSS Parts 审核：确保 `part="container/icon/content"` 存在                                                                                     |
+| EDIT | `packages/ui/src/less-step-card.ts`    | CSS Parts 审核：确保 `part="step/indicator/content"` 存在                                                                                     |
+| EDIT | `packages/ui/src/less-button.ts`       | CSS Parts 审核：确保 `part="button"` 存在                                                                                                     |
+| EDIT | `packages/ui/src/less-input.ts`        | CSS Parts 审核：确保 `part="input/label/error"` 存在                                                                                          |
+| EDIT | `packages/ui/src/less-theme-toggle.ts` | CSS Parts 审核：确保 `part="toggle/icon-sun/icon-moon"` 存在                                                                                  |
+| EDIT | `packages/ui/src/less-code-block.ts`   | CSS Parts 审核：确保 `part="code/copy-button"` 存在                                                                                           |
+| EDIT | `packages/ui/src/less-dialog.ts`       | CSS Parts 审核：确保 `part="overlay/panel/close/heading/content"` 存在                                                                        |
+| EDIT | `packages/ui/src/less-layout.ts`       | CSS Parts 审核：确保 `part="header/sidebar/main/footer/nav"` 存在                                                                             |
+| EDIT | `www/app/islands/less-search.ts`       | ~317行，Lit→DsdElement 迁移：document.body overlay + keyboard nav (↑↓Enter ESC) + SPA 导航重置。`hydrateEvents` 声明 input/keydown/click 事件 |
+| EDIT | `packages/ui/src/manifest.ts`          | less-hero-ping 保持 `less.adapter: 'lit'`，添加 `cssParts` 声明；less-search 注册为新声明                                                     |
 
 **CSS Parts 命名规范**：
 
-| 组件 | Parts |
-|------|-------|
-| less-card | `container`, `header`, `body`, `footer` |
-| less-callout | `container`, `icon`, `content` |
-| less-step-card | `step`, `indicator`, `content` |
-| less-button | `button` |
-| less-input | `input`, `label`, `error` |
-| less-theme-toggle | `toggle`, `icon-sun`, `icon-moon` |
-| less-code-block | `code`, `copy-button` |
-| less-dialog | `overlay`, `panel`, `close`, `heading`, `content` |
-| less-layout | `header`, `sidebar`, `main`, `footer`, `nav` |
-| less-hero-ping | `ping-ring`, `ping-dot` |
+| 组件              | Parts                                             |
+| ----------------- | ------------------------------------------------- |
+| less-card         | `container`, `header`, `body`, `footer`           |
+| less-callout      | `container`, `icon`, `content`                    |
+| less-step-card    | `step`, `indicator`, `content`                    |
+| less-button       | `button`                                          |
+| less-input        | `input`, `label`, `error`                         |
+| less-theme-toggle | `toggle`, `icon-sun`, `icon-moon`                 |
+| less-code-block   | `code`, `copy-button`                             |
+| less-dialog       | `overlay`, `panel`, `close`, `heading`, `content` |
+| less-layout       | `header`, `sidebar`, `main`, `footer`, `nav`      |
+| less-hero-ping    | `ping-ring`, `ping-dot`                           |
 
 ---
 
 #### T05: 构建验证 + 回归测试
 
-| 属性 | 值 |
-|------|-----|
-| **Task ID** | T05 |
-| **Task Name** | 构建验证 + 回归测试 |
-| **优先级** | P0 |
-| **依赖** | T01 + T02 + T03 + T04 |
+| 属性          | 值                    |
+| ------------- | --------------------- |
+| **Task ID**   | T05                   |
+| **Task Name** | 构建验证 + 回归测试   |
+| **优先级**    | P0                    |
+| **依赖**      | T01 + T02 + T03 + T04 |
 
 **源文件**：
 
-| 操作 | 文件路径 | 说明 |
-|------|----------|------|
-| EDIT | `packages/ui/__tests__/components.test.ts` | 完整回归测试：所有 10 组件渲染输出验证、属性变更响应、事件触发 |
-| EDIT | `packages/ui/__tests__/smoke.test.ts` | 冒烟测试更新 |
-| EDIT | `packages/core/__tests__/dsd-element.test.ts` | 补充交互组件集成测试 |
-| NEW/EDIT | `www/e2e/*.spec.ts` | Playwright E2E 视觉回归测试：截图对比迁移前后 UI |
-| - | CLI 命令 | `deno task build` — SSG 构建验证：bundle size ≤6KB gzip, zero Lit imports audit, DSD 输出正确性 |
+| 操作     | 文件路径                                      | 说明                                                                                            |
+| -------- | --------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| EDIT     | `packages/ui/__tests__/components.test.ts`    | 完整回归测试：所有 10 组件渲染输出验证、属性变更响应、事件触发                                  |
+| EDIT     | `packages/ui/__tests__/smoke.test.ts`         | 冒烟测试更新                                                                                    |
+| EDIT     | `packages/core/__tests__/dsd-element.test.ts` | 补充交互组件集成测试                                                                            |
+| NEW/EDIT | `www/e2e/*.spec.ts`                           | Playwright E2E 视觉回归测试：截图对比迁移前后 UI                                                |
+| -        | CLI 命令                                      | `deno task build` — SSG 构建验证：bundle size ≤6KB gzip, zero Lit imports audit, DSD 输出正确性 |
 
 **验证检查清单**：
 
@@ -472,14 +473,14 @@ graph TD
 
 ## 待明确事项
 
-| # | 问题 | 影响范围 | 建议 |
-|---|------|----------|------|
-| 1 | **less-search 归属** — `less-search.ts` 当前在 `www/app/islands/` 而非 `packages/ui/src/`，迁移后是否需要移入 `@lessjs/ui` 包？ | T04 文件路径 | 建议保留在 app 层作为 Islands，保持与 less-hero-ping 一致的 Island 模式 |
-| 2 | **@lessjs/adapter-lit 包保留策略** — DsdLitElement 标记 deprecated 后，adapter-lit 包是否继续发布？ | T01, 发布流程 | 建议保留但标记 deprecated，less-hero-ping 仍需使用 |
-| 3 | **deno.json lit 依赖** — 根 `deno.json` 中 lit 映射是否保留？less-hero-ping 仍需 lit | T01, 构建 | 保留 `"lit": "npm:lit@^3.2.0"` 映射，仅从 `packages/ui/deno.json` 移除 |
-| 4 | **bundle size 基线** — 当前 bundle 的 gzip 大小基线是多少？目标 ≤6KB 是否可达成？ | T05 | 需在 T05 执行前测量基线 |
-| 5 | **ADR-0036 文件** — 当前 `docs/adr/` 中无 0036 文件，是否需要创建？ | 文档 | 建议由 PM 在确认本设计后创建 |
-| 6 | **manifest.ts 中 less-search 声明** — `less-search` 不在 `packages/ui/src/` 中，是否需要在 manifest 中注册？ | T04 | 建议在 `www/` 的独立 manifest 中声明，或在 `packages/ui/src/manifest.ts` 中添加 |
+| # | 问题                                                                                                                            | 影响范围      | 建议                                                                            |
+| - | ------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------------------------------------------------------------------- |
+| 1 | **less-search 归属** — `less-search.ts` 当前在 `www/app/islands/` 而非 `packages/ui/src/`，迁移后是否需要移入 `@lessjs/ui` 包？ | T04 文件路径  | 建议保留在 app 层作为 Islands，保持与 less-hero-ping 一致的 Island 模式         |
+| 2 | **@lessjs/adapter-lit 包保留策略** — DsdLitElement 标记 deprecated 后，adapter-lit 包是否继续发布？                             | T01, 发布流程 | 建议保留但标记 deprecated，less-hero-ping 仍需使用                              |
+| 3 | **deno.json lit 依赖** — 根 `deno.json` 中 lit 映射是否保留？less-hero-ping 仍需 lit                                            | T01, 构建     | 保留 `"lit": "npm:lit@^3.2.0"` 映射，仅从 `packages/ui/deno.json` 移除          |
+| 4 | **bundle size 基线** — 当前 bundle 的 gzip 大小基线是多少？目标 ≤6KB 是否可达成？                                               | T05           | 需在 T05 执行前测量基线                                                         |
+| 5 | **ADR-0036 文件** — 当前 `docs/adr/` 中无 0036 文件，是否需要创建？                                                             | 文档          | 建议由 PM 在确认本设计后创建                                                    |
+| 6 | **manifest.ts 中 less-search 声明** — `less-search` 不在 `packages/ui/src/` 中，是否需要在 manifest 中注册？                    | T04           | 建议在 `www/` 的独立 manifest 中声明，或在 `packages/ui/src/manifest.ts` 中添加 |
 
 ---
 

@@ -1,5 +1,5 @@
 /**
- * nav-filter.ts — Sidebar navigation filtering utilities.
+ * nav-filter.ts - Sidebar navigation filtering utilities.
  *
  * The `less-layout` component renders all navItems without filtering.
  * These functions allow route components to pass only relevant navSections

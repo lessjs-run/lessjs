@@ -82,7 +82,7 @@ class MockLitElement {
   isConnected = false;
   private _attachedShadow = false;
 
-  /** Called by the mixin — simulates attachShadow */
+  /** Called by the mixin - simulates attachShadow */
   attachShadow(_options: { mode: string }): MockShadowRoot {
     this._attachedShadow = true;
     this.shadowRoot = new MockShadowRoot();
@@ -176,7 +176,7 @@ function applyDsdHydration(
 
 // ─── Tests ────────────────────────────────────────────────────
 
-Deno.test('WithDsdHydration — DSD detection', async (t) => {
+Deno.test('WithDsdHydration - DSD detection', async (t) => {
   await t.step('detects pre-populated shadow root as DSD', () => {
     const Hydrated = applyDsdHydration(MockLitElement);
     const el = new Hydrated();
@@ -212,7 +212,7 @@ Deno.test('WithDsdHydration — DSD detection', async (t) => {
   });
 });
 
-Deno.test('WithDsdHydration — _hydrateEvents()', async (t) => {
+Deno.test('WithDsdHydration - _hydrateEvents()', async (t) => {
   await t.step('binds events to matching elements', () => {
     let clickCount = 0;
     const Hydrated = applyDsdHydration(MockLitElement, [
@@ -272,7 +272,7 @@ Deno.test('WithDsdHydration — _hydrateEvents()', async (t) => {
   });
 });
 
-Deno.test('WithDsdHydration — AbortController cleanup', async (t) => {
+Deno.test('WithDsdHydration - AbortController cleanup', async (t) => {
   await t.step('disconnectedCallback aborts the controller', () => {
     let abortCount = 0;
     const Hydrated = applyDsdHydration(MockLitElement, [
@@ -300,12 +300,12 @@ Deno.test('WithDsdHydration — AbortController cleanup', async (t) => {
   await t.step('no error if disconnected without hydration', () => {
     const Hydrated = applyDsdHydration(MockLitElement);
     const el = new Hydrated();
-    // Should not throw — no abort controller
+    // Should not throw - no abort controller
     el.disconnect();
   });
 });
 
-Deno.test('WithDsdHydration — connectedCallback auto-hydration', async (t) => {
+Deno.test('WithDsdHydration - connectedCallback auto-hydration', async (t) => {
   await t.step('auto-calls _hydrateEvents when DSD hydrated', () => {
     let hydrated = false;
     const Hydrated = applyDsdHydration(MockLitElement, [

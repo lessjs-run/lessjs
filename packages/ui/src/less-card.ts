@@ -6,8 +6,8 @@
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *
- * @csspart container — The article wrapper
- * @csspart body — The card body content area
+ * @csspart container - The article wrapper
+ * @csspart body - The card body content area
  *
  * Usage:
  * ```html

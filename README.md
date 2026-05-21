@@ -2,7 +2,7 @@
 
 [English](./README.en.md) | 简体中文
 
-**全栈框架 + 通用 WC 渲染引擎 + Registry Hub** — 以 Web Components 为一等公民的全栈开发平台。基于 Declarative Shadow DOM 的零 JS 首屏渲染，Island 架构按需升级交互，Hono + Serverless API 提供后端能力，Registry Hub 一键发现和安装 WC 组件。
+**全栈框架 + 通用 WC 渲染引擎 + Registry Hub** - 以 Web Components 为一等公民的全栈开发平台。基于 Declarative Shadow DOM 的零 JS 首屏渲染，Island 架构按需升级交互，Hono + Serverless API 提供后端能力，Registry Hub 一键发现和安装 WC 组件。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
@@ -21,8 +21,8 @@ LessJS
 │   └── Serverless 部署（CF Pages / Deno Deploy）
 │
 ├── 2. 通用 WC 渲染引擎
-│   ├── DSD 字符串渲染（renderDSD — 纯字符串拼接）
-│   ├── 多框架适配器（Lit / React / Vanilla → Vue）
+│   ├── DSD 字符串渲染（renderDSD - 纯字符串拼接）
+│   ├── 多框架适配器（Lit / React / Vanilla -> Vue）
 │   ├── 渲染时机无关（build-time / ISR / request-time）
 │   └── 兼容性分类 + 验证
 │
@@ -32,7 +32,7 @@ LessJS
     └── 一键安装（less add）
 ```
 
-**不是 SSG 框架** — SSG 只是渲染引擎的当前使用模式。`renderDSD()` **架构上**是渲染时机无关的：build-time (SSG)、cache-expiry-time (ISR)、request-time (SSR) 用的是同一套引擎。**当前实现**: SSG only, ISR/SSR 计划中。
+**不是 SSG 框架** - SSG 只是渲染引擎的当前使用模式。`renderDSD()` **架构上**是渲染时机无关的：build-time (SSG)、cache-expiry-time (ISR)、request-time (SSR) 用的是同一套引擎。**当前实现**: SSG only, ISR/SSR 计划中。
 
 ## 特性
 
@@ -40,31 +40,31 @@ LessJS
 
 > ⚠️ 早期阶段：路由、开发服务器和 API Route 已可用。Hydration 策略、ISR 和 SSR 计划在 v0.20 实现。
 
-- **文件约定路由** — `app/routes/` 自动扫描 + Hono 挂载
-- **API Route** — `app/routes/api/*.ts` → Hono sub-app，Serverless 部署
-- **Hono 运行时** — Fetch API 对齐，Deno / Node / Edge 多运行时
-- **ISR (计划中)** — stale-while-revalidate 缓存层，`renderDSD()` ~1-5ms 天然匹配
+- **文件约定路由** - `app/routes/` 自动扫描 + Hono 挂载
+- **API Route** - `app/routes/api/*.ts` -> Hono sub-app，Serverless 部署
+- **Hono 运行时** - Fetch API 对齐，Deno / Node / Edge 多运行时
+- **ISR (计划中)** - stale-while-revalidate 缓存层，`renderDSD()` ~1-5ms 天然匹配
 
 ### 支柱 2：通用 WC 渲染引擎
 
-- **Declarative Shadow DOM** — WHATWG 标准，零 JS 首屏
-- **Island 升级** — 仅交互组件加载客户端 JS（`client:load/idle/visible/only` — 计划中）
-- **多适配器** — Lit / React / Vanilla 适配器，同一页面多框架共存
-- **Universal WC Engine** — 自动检测第三方 Web Component，4 级兼容性分类
-- **Renderer Protocol** — 结构化渲染输出 + 错误分类 + DSD 指标
+- **Declarative Shadow DOM** - WHATWG 标准，零 JS 首屏
+- **Island 升级** - 仅交互组件加载客户端 JS（`client:load/idle/visible/only` - 计划中）
+- **多适配器** - Lit / React / Vanilla 适配器，同一页面多框架共存
+- **Universal WC Engine** - 自动检测第三方 Web Component，4 级兼容性分类
+- **Renderer Protocol** - 结构化渲染输出 + 错误分类 + DSD 指标
 
 ### 支柱 3：Registry Hub（Early Access）
 
-- **包搜索 + 过滤** — 发现兼容的 Web Component 库
-- **兼容性验证 + 报告** — 安装前检查 SSR 能力
-- **组件预览** — Playwright 渲染真实组件快照
-- **一键安装** — `less add @scope/pkg` 自动配置
+- **包搜索 + 过滤** - 发现兼容的 Web Component 库
+- **兼容性验证 + 报告** - 安装前检查 SSR 能力
+- **组件预览** - Playwright 渲染真实组件快照
+- **一键安装** - `less add @scope/pkg` 自动配置
 
 ### 通用
 
-- **Deno workspace** — 纯 ESM，零 `package.json`
-- **validate-manifest CLI** — 安装前验证 CEM manifest 兼容性
-- **less add 安全安装** — dry-run + 验证门禁 + 计划生成
+- **Deno workspace** - 纯 ESM，零 `package.json`
+- **validate-manifest CLI** - 安装前验证 CEM manifest 兼容性
+- **less add 安全安装** - dry-run + 验证门禁 + 计划生成
 
 ## 快速开始
 
@@ -83,7 +83,7 @@ deno task build    # SSG 构建
 | ------------------------- | ---------------------------------------------------------------------- |
 | `@lessjs/core`            | DSD 渲染器、Renderer Protocol、CEM 解析器、兼容性分类器、manifest 验证 |
 | `@lessjs/adapter-vite`    | Vite 编排、路由扫描、SSG 管线、CEM 自动检测                            |
-| `@lessjs/adapter-lit`     | Lit TemplateResult → DSD HTML                                          |
+| `@lessjs/adapter-lit`     | Lit TemplateResult -> DSD HTML                                         |
 | `@lessjs/adapter-react`   | React 适配器                                                           |
 | `@lessjs/adapter-vanilla` | Vanilla JS 适配器                                                      |
 | `@lessjs/app`             | 统一入口 `lessjs()`                                                    |
@@ -92,17 +92,17 @@ deno task build    # SSG 构建
 | `@lessjs/ui`              | Web Components 组件库                                                  |
 | `@lessjs/signals`         | Signals 辅助                                                           |
 | `@lessjs/rpc`             | Fetch RPC                                                              |
-| `@lessjs/hub`             | Registry Hub — schema、indexer、scanner、snapshot-renderer             |
+| `@lessjs/hub`             | Registry Hub - schema、indexer、scanner、snapshot-renderer             |
 | `@lessjs/create`          | 项目脚手架 CLI                                                         |
 
 ## 渲染管线
 
 ```
-render() → RenderAdapter → renderDSD() → DSD HTML → 浏览器解析
+render() -> RenderAdapter -> renderDSD() -> DSD HTML -> 浏览器解析
                                                        ↓
                                             customElements.upgrade()
                                                        ↓
-                                            dsd-interactive → 绑定 hydrateEvents
+                                            dsd-interactive -> 绑定 hydrateEvents
 ```
 
 **渲染时机无关**：同一套 `renderDSD()` 引擎在不同时机调用：
@@ -116,7 +116,7 @@ render() → RenderAdapter → renderDSD() → DSD HTML → 浏览器解析
 ## 第三方包兼容性管线 (v0.18.x)
 
 ```
-node_modules/*/custom-elements.json → CEM Parser → 4级分类器 → SSR admission
+node_modules/*/custom-elements.json -> CEM Parser -> 4级分类器 -> SSR admission
                                                           ↓
                                               less validate-manifest (CLI)
                                                           ↓

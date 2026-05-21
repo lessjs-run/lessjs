@@ -99,7 +99,7 @@ export function scanClientBuild(
   let clientEntry: ArtifactInfo | null = null;
   let totalJsBytes = 0;
 
-  // Scan islands/ subdirectory (single pass — avoid redundant directory scans)
+  // Scan islands/ subdirectory (single pass - avoid redundant directory scans)
   const islandsDir = join(clientDir, 'islands');
   if (existsSync(islandsDir)) {
     const files = readdirSync(islandsDir);
@@ -194,7 +194,7 @@ export function printBuildManifest(options: {
   for (const page of htmlPages) {
     if (page.sizeBytes > PAGE_BUDGET_KB * 1024) {
       warnings.push(
-        `⚠️  ${page.path} (${page.sizeKB}) exceeds ${PAGE_BUDGET_KB} KB — consider compression`,
+        `⚠️  ${page.path} (${page.sizeKB}) exceeds ${PAGE_BUDGET_KB} KB - consider compression`,
       );
     }
   }
@@ -215,7 +215,7 @@ export function printBuildManifest(options: {
   console.log('');
   console.log('╔═══════════════════════════════════════════════════════════════╗');
   console.log(
-    `║  LessJS Build Manifest — Phase ${phase} @ ${timestamp.slice(11, 19)}              ║`,
+    `║  LessJS Build Manifest - Phase ${phase} @ ${timestamp.slice(11, 19)}              ║`,
   );
   console.log('╚═══════════════════════════════════════════════════════════════╝');
 
@@ -242,7 +242,7 @@ export function printBuildManifest(options: {
     console.log(`  │ ${'TOTAL JS'.padEnd(26)} │ ${formatSize(manifest.totalJsBytes).padEnd(8)} │`);
     console.log('  └────────────────────────────┴──────────┘');
   } else {
-    console.log('\n  📦 Client Islands: (none — zero client JS)');
+    console.log('\n  📦 Client Islands: (none - zero client JS)');
   }
 
   // HTML pages (Phase 3 only)

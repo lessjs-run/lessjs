@@ -1,8 +1,8 @@
 /**
- * Homepage — v8 redesign
+ * Homepage - v8 redesign
  *
- * Three-act rhythm: Dark Hero → Light Narrative → Warm-gray Footer
- * 6 sections: Hero → Code Strip → Benchmark → Multi-framework → Bento → Quick Start
+ * Three-act rhythm: Dark Hero -> Light Narrative -> Warm-gray Footer
+ * 6 sections: Hero -> Code Strip -> Benchmark -> Multi-framework -> Bento -> Quick Start
  *
  * v8 Redesign key changes:
  * - Hero: Display-level typography, enhanced gradient glow, brand-shadow buttons
@@ -51,30 +51,6 @@ const CODE_DSD = `<page-home>
   </template>
 </page-home>`;
 
-const CODE_LIT = `// Lit island — app/islands/counter.ts
-import { LitElement, html } from 'lit';
-export class MyCounter extends LitElement {
-  @state() count = 0;
-  render() {
-    return html\`<button @click=\${() => this.count--}>−</button>
-      <span>\${this.count}</span>
-      <button @click=\${() => this.count++}>+</button>\`;
-  }
-}`;
-
-const CODE_REACT = `// React island — app/islands/hello.tsx
-export default function Hello({ name }) {
-  return <h1>Hello, {name}!</h1>;
-}
-// ReactDOMServer → DSD, zero-config SSR`;
-
-const CODE_VANILLA = `// Vanilla island — app/islands/player.ts
-import { WithDsdHydration } from '@lessjs/adapter-vanilla';
-class MediaPlayer extends WithDsdHydration(HTMLElement) {
-  connectedCallback() { /* upgrade logic */ }
-}
-customElements.define('media-player', MediaPlayer);`;
-
 const indexSheet = new StyleSheet();
 indexSheet.replaceSync(`
     :host {
@@ -85,7 +61,7 @@ indexSheet.replaceSync(`
       display:flex;flex-direction:column;
     }
 
-    /* ── I. Hero — dark immersive opening with fluid wave ── */
+    /* ── I. Hero - dark immersive opening with fluid wave ── */
     .hero {
       background: linear-gradient(170deg, var(--brand-deep, #26215C) 0%, #0d0d1f 40%, var(--brand-deep, #26215C) 100%);
       color: #fff;
@@ -221,7 +197,7 @@ indexSheet.replaceSync(`
       border-color: rgba(255,255,255,0.25);
       background: rgba(255,255,255,0.08);
     }
-    /* ── II. Code Strip — dark code comparison ── */
+    /* ── II. Code Strip - dark code comparison ── */
     .code-strip {
       background: linear-gradient(180deg, var(--brand-deep, #26215C) 0%, #0f0f1a 100%);
       width: 100vw;
@@ -374,7 +350,7 @@ indexSheet.replaceSync(`
     .card-pills { display:flex;gap:6px;margin-top:12px }
     .card-pill { display:inline-flex;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:500;color:var(--brand,#534AB7);background:rgba(83,74,183,0.08);border:1px solid rgba(83,74,183,0.15) }
 
-    /* ── Multi-Framework Grid — three independent showcase cards ── */
+    /* ── Multi-Framework Grid - three independent showcase cards ── */
     .multi-fw-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -444,7 +420,7 @@ indexSheet.replaceSync(`
       .multi-fw-grid { grid-template-columns: 1fr; }
     }
 
-    /* ── CSS Houdini @property — smooth brand-color transitions ── */
+    /* ── CSS Houdini @property - smooth brand-color transitions ── */
     @supports (background: paint(something)) {
       .card-dominant {
         transition: border-left-color var(--duration-fast,200ms) var(--easing-default,ease-out),
@@ -515,7 +491,7 @@ indexSheet.replaceSync(`
       line-height: 1.7;
     }
 
-    /* ── Benchmark — horizontal bar chart ── */
+    /* ── Benchmark - horizontal bar chart ── */
     .bench {
       margin-bottom: 2rem;
     }
@@ -642,12 +618,12 @@ indexSheet.replaceSync(`
     .qs-cta a { display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 24px;border-radius:var(--radius-md,8px);font-size:14px;font-weight:600;text-decoration:none;color:var(--brand,#534AB7);background:transparent;border:1.5px solid var(--brand,#534AB7);transition:transform var(--duration-micro,150ms) var(--easing-default,ease-out),background 0.2s,color 0.2s }
     .qs-cta a:hover { transform:translateY(-1px);background:var(--brand,#534AB7);color:#fff }
 
-    /* ── III. Site Footer — deep still water ── */
+    /* ── III. Site Footer - deep still water ── */
     .site-footer {
       background: linear-gradient(180deg, #0d0d1f 0%, #080816 100%);
       border-top: none;
       padding: 3rem 1.5rem 1.5rem;
-      /* Full viewport width — extend beyond parent container */
+      /* Full viewport width - extend beyond parent container */
       width: 100vw;
       margin-left: calc(-50vw + 50%);
       box-sizing: border-box;
@@ -923,7 +899,7 @@ export default class DocsHome extends DsdElement {
       JSON.stringify(headerNav)
     }' current-path="/" home>
         <less-search slot="header-actions"></less-search>
-        <!-- ═══ I. Hero — 暗色沉浸式开场 ═══ -->
+        <!-- ═══ I. Hero - 暗色沉浸式开场 ═══ -->
         <section class="hero">
           <div class="hero-inner">
             <div class="hero-lockup">
@@ -938,7 +914,7 @@ export default class DocsHome extends DsdElement {
             <h1>全栈框架 · <em>零 JS 首屏</em> · <em>多框架共存</em></h1>
             <p class="hero-desc">DSD 原生渲染，浏览器零 JS 看到完整页面</p>
             <div class="hero-actions">
-              <a class="hero-pri" href="/guide/getting-started">开始使用 →</a>
+              <a class="hero-pri" href="/guide/getting-started">开始使用 -></a>
               <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style="flex-shrink:0"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
                 GitHub
@@ -947,12 +923,12 @@ export default class DocsHome extends DsdElement {
           </div>
         </section>
 
-        <!-- ═══ II. Code Strip — 代码对比 ═══ -->
+        <!-- ═══ II. Code Strip - 代码对比 ═══ -->
         <div class="code-strip">
           <div class="code-strip-inner">
             <div class="code-strip-header">
               <span class="code-strip-label">你的组件</span>
-              <span class="code-strip-arrow">→</span>
+              <span class="code-strip-arrow">-></span>
               <span class="code-strip-label">SSG 输出</span>
               <span class="zero-badge">0 KB JS</span>
             </div>
@@ -961,7 +937,9 @@ export default class DocsHome extends DsdElement {
                 <div class="code-bar">
                   <i class="r"></i><i class="y"></i><i class="g"></i><span>你的组件</span>
                 </div>
-                <less-code-block><pre><code>${escHtml(CODE_COMPONENT)}</code></pre></less-code-block>
+                <less-code-block><pre><code>${
+      escHtml(CODE_COMPONENT)
+    }</code></pre></less-code-block>
               </div>
               <div class="code-pane">
                 <div class="code-bar">
@@ -976,10 +954,10 @@ export default class DocsHome extends DsdElement {
         <hr class="turn-line">
 
 
-        <!-- ═══ III. Benchmark — 水平条形图 ═══ -->
+        <!-- ═══ III. Benchmark - 水平条形图 ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">性能</h2>
-          <p class="sec-title">首屏 JS 体积——零就是零</p>
+          <p class="sec-title">首屏 JS 体积--零就是零</p>
           <div class="sec-bd">
             <div class="bench">
               <div class="bench-row">
@@ -1021,7 +999,7 @@ export default class DocsHome extends DsdElement {
         </div>
 
 
-        <!-- ═══ IV. Multi-Framework — three independent showcases ═══ -->
+        <!-- ═══ IV. Multi-Framework - three independent showcases ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">多框架</h2>
           <p class="sec-title">任意框架，同一个 island</p>
@@ -1087,10 +1065,10 @@ export default class DocsHome extends DsdElement {
         <hr class="turn-glow">
 
 
-        <!-- ═══ V. Bento Grid — 三支柱 ═══ -->
+        <!-- ═══ V. Bento Grid - 三支柱 ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">三支柱</h2>
-          <p class="sec-title">框架 · 引擎 · Hub——一个产品，三重能力</p>
+          <p class="sec-title">框架 · 引擎 · Hub--一个产品，三重能力</p>
           <div class="sec-bd">
             <div class="cards">
               <div class="card card-dominant">
@@ -1098,7 +1076,7 @@ export default class DocsHome extends DsdElement {
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
                 </div>
                 <h3>WC 渲染引擎</h3>
-                <p>DSD 零 JS 首屏——浏览器原生解析 Declarative Shadow DOM，无需任何运行时。Lit / React / Vanilla 三种适配器共享同一渲染管线，同一页面三种框架组件协同运行。</p>
+                <p>DSD 零 JS 首屏--浏览器原生解析 Declarative Shadow DOM，无需任何运行时。Lit / React / Vanilla 三种适配器共享同一渲染管线，同一页面三种框架组件协同运行。</p>
                 <div class="card-pills">
                   <span class="card-pill">DSD</span>
                   <span class="card-pill">Island</span>
@@ -1125,7 +1103,7 @@ export default class DocsHome extends DsdElement {
           </div>
         </div>
 
-        <!-- ═══ VI. Quick Start — 纵向时间轴 ═══ -->
+        <!-- ═══ VI. Quick Start - 纵向时间轴 ═══ -->
         <div class="sec sec-qs-last">
           <h2 class="sec-lbl">快速开始</h2>
           <p class="sec-title">三步上手，零摩擦</p>
@@ -1137,24 +1115,24 @@ export default class DocsHome extends DsdElement {
               </div>
               <div class="qs-step-card">
                 <less-step-card step="2" label="开发"><code>cd my-app &amp;&amp; deno task dev</code></less-step-card>
-                <p class="qs-desc">热更新 + DSD 实时预览 → localhost:5173</p>
+                <p class="qs-desc">热更新 + DSD 实时预览 -> localhost:5173</p>
               </div>
               <div class="qs-step-card">
-                <less-step-card step="3" label="构建"><code>deno task build → dist/</code></less-step-card>
+                <less-step-card step="3" label="构建"><code>deno task build -> dist/</code></less-step-card>
                 <p class="qs-desc">纯静态文件，部署到任何 Serverless 平台</p>
               </div>
             </div>
             <div class="qs-cta">
-              <a href="/guide/deployment">部署项目 →</a>
+              <a href="/guide/deployment">部署项目 -></a>
             </div>
           </div>
         </div>
-        <!-- ═══ Footer — 暖灰安静谢幕 ═══ -->
+        <!-- ═══ Footer - 暖灰安静谢幕 ═══ -->
         <footer class="site-footer">
           <div class="site-footer-inner">
             <div class="footer-brand">
               <code>&lt;less/&gt;</code>
-              <span>— 重量更轻，能力更强的 Web</span>
+              <span>- 重量更轻，能力更强的 Web</span>
             </div>
             <hr class="footer-sep">
             <div class="footer-grid">
@@ -1179,12 +1157,12 @@ export default class DocsHome extends DsdElement {
               <div class="footer-terminal">
                 <span class="prompt">$</span> npx create-less<br>
                 <span class="success">  ✓ 已生成脚手架</span><br>
-                <span class="success">  → npm run dev</span>
+                <span class="success">  -> npm run dev</span>
               </div>
             </div>
             <div class="footer-bottom">
               <span>MIT License · Made with less</span>
-              <a href="/guide/getting-started">探索文档 →</a>
+              <a href="/guide/getting-started">探索文档 -></a>
             </div>
           </div>
         </footer>
@@ -1200,7 +1178,7 @@ export default class DocsHome extends DsdElement {
       JSON.stringify(headerNav)
     }' current-path="/en/" home>
         <less-search slot="header-actions"></less-search>
-        <!-- ═══ I. Hero — dark immersive opening ═══ -->
+        <!-- ═══ I. Hero - dark immersive opening ═══ -->
         <section class="hero">
           <div class="hero-inner">
             <div class="hero-lockup">
@@ -1215,7 +1193,7 @@ export default class DocsHome extends DsdElement {
             <h1>Full-stack · <em>Zero-JS First Paint</em> · <em>Multi-framework</em></h1>
             <p class="hero-desc">DSD 原生渲染，浏览器零 JS 看到完整页面</p>
             <div class="hero-actions">
-              <a class="hero-pri" href="/guide/getting-started">Get started →</a>
+              <a class="hero-pri" href="/guide/getting-started">Get started -></a>
               <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style="flex-shrink:0"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
                 GitHub
@@ -1224,12 +1202,12 @@ export default class DocsHome extends DsdElement {
           </div>
         </section>
 
-        <!-- ═══ II. Code Strip — code comparison ═══ -->
+        <!-- ═══ II. Code Strip - code comparison ═══ -->
         <div class="code-strip">
           <div class="code-strip-inner">
             <div class="code-strip-header">
               <span class="code-strip-label">your component</span>
-              <span class="code-strip-arrow">→</span>
+              <span class="code-strip-arrow">-></span>
               <span class="code-strip-label">SSG output</span>
               <span class="zero-badge">0 KB JS</span>
             </div>
@@ -1238,7 +1216,9 @@ export default class DocsHome extends DsdElement {
                 <div class="code-bar">
                   <i class="r"></i><i class="y"></i><i class="g"></i><span>your component</span>
                 </div>
-                <less-code-block><pre><code>${escHtml(CODE_COMPONENT)}</code></pre></less-code-block>
+                <less-code-block><pre><code>${
+      escHtml(CODE_COMPONENT)
+    }</code></pre></less-code-block>
               </div>
               <div class="code-pane">
                 <div class="code-bar">
@@ -1253,10 +1233,10 @@ export default class DocsHome extends DsdElement {
         <hr class="turn-line">
 
 
-        <!-- ═══ III. Benchmark — horizontal bars ═══ -->
+        <!-- ═══ III. Benchmark - horizontal bars ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">performance</h2>
-          <p class="sec-title">JS at first paint — zero means zero</p>
+          <p class="sec-title">JS at first paint - zero means zero</p>
           <div class="sec-bd">
             <div class="bench">
               <div class="bench-row">
@@ -1285,20 +1265,20 @@ export default class DocsHome extends DsdElement {
 <div class="bench-grid">
                 <div class="bench-stat">
                   <h4><span class="brand">DSD first-class</span> vs Preact-only</h4>
-                  <p>Browser-native Shadow DOM parsing — other frameworks can only simulate</p>
+                  <p>Browser-native Shadow DOM parsing - other frameworks can only simulate</p>
                 </div>
                 <div class="bench-stat">
                   <h4><span class="brand">Built-in Registry Hub</span></h4>
-                  <p>Component discovery + compat validation + one-click install — competitors have none</p>
+                  <p>Component discovery + compat validation + one-click install - competitors have none</p>
                 </div>
               </div>
-              <p class="bench-note">Island-only JS: payload scales with component complexity, not page count. Zero-JS first paint is a browser-native capability — no engineering optimization can match it.</p>
+              <p class="bench-note">Island-only JS: payload scales with component complexity, not page count. Zero-JS first paint is a browser-native capability - no engineering optimization can match it.</p>
             </div>
           </div>
         </div>
 
 
-        <!-- ═══ IV. Multi-framework — three independent showcases ═══ -->
+        <!-- ═══ IV. Multi-framework - three independent showcases ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">multi-framework</h2>
           <p class="sec-title">Any framework, same island</p>
@@ -1364,10 +1344,10 @@ export default class DocsHome extends DsdElement {
         <hr class="turn-glow">
 
 
-        <!-- ═══ V. Bento Grid — three pillars ═══ -->
+        <!-- ═══ V. Bento Grid - three pillars ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">three pillars</h2>
-          <p class="sec-title">Framework · Engine · Hub — one product, three capabilities</p>
+          <p class="sec-title">Framework · Engine · Hub - one product, three capabilities</p>
           <div class="sec-bd">
             <div class="cards">
               <div class="card card-dominant">
@@ -1375,7 +1355,7 @@ export default class DocsHome extends DsdElement {
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
                 </div>
                 <h3>WC Rendering Engine</h3>
-                <p>DSD zero-JS first paint — browser-native Declarative Shadow DOM parsing with zero runtime. Lit, React and Vanilla adapters share one pipeline — three frameworks coexist on the same page.</p>
+                <p>DSD zero-JS first paint - browser-native Declarative Shadow DOM parsing with zero runtime. Lit, React and Vanilla adapters share one pipeline - three frameworks coexist on the same page.</p>
                 <div class="card-pills">
                   <span class="card-pill">DSD</span>
                   <span class="card-pill">Island</span>
@@ -1387,7 +1367,7 @@ export default class DocsHome extends DsdElement {
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 3v14M13 3v14M3 10h14"/></svg>
                 </div>
                 <h3>Full-stack Framework</h3>
-                <p>File-convention routing + Hono API routes + serverless one-click deploy. SSG / ISR / SSR — same engine, one codebase for static and dynamic.</p>
+                <p>File-convention routing + Hono API routes + serverless one-click deploy. SSG / ISR / SSR - same engine, one codebase for static and dynamic.</p>
                 <div class="card-meta"><span>file routing</span><span>hono</span><span>serverless</span></div>
               </div>
               <div class="card">
@@ -1402,7 +1382,7 @@ export default class DocsHome extends DsdElement {
           </div>
         </div>
 
-        <!-- ═══ VI. Quick Start — vertical timeline ═══ -->
+        <!-- ═══ VI. Quick Start - vertical timeline ═══ -->
         <div class="sec sec-qs-last">
           <h2 class="sec-lbl">quick start</h2>
           <p class="sec-title">Three steps, zero friction</p>
@@ -1414,24 +1394,24 @@ export default class DocsHome extends DsdElement {
               </div>
               <div class="qs-step-card">
                 <less-step-card step="2" label="develop"><code>cd my-app &amp;&amp; deno task dev</code></less-step-card>
-                <p class="qs-desc">HMR + DSD live preview → localhost:5173</p>
+                <p class="qs-desc">HMR + DSD live preview -> localhost:5173</p>
               </div>
               <div class="qs-step-card">
-                <less-step-card step="3" label="build"><code>deno task build → dist/</code></less-step-card>
+                <less-step-card step="3" label="build"><code>deno task build -> dist/</code></less-step-card>
                 <p class="qs-desc">Pure static files, deploy to any serverless platform</p>
               </div>
             </div>
             <div class="qs-cta">
-              <a href="/guide/deployment">Deploy now →</a>
+              <a href="/guide/deployment">Deploy now -></a>
             </div>
           </div>
         </div>
-<!-- ═══ Footer — warm-gray quiet landing ═══ -->
+<!-- ═══ Footer - warm-gray quiet landing ═══ -->
         <footer class="site-footer">
           <div class="site-footer-inner">
             <div class="footer-brand">
               <code>&lt;less/&gt;</code>
-              <span>— Web that weighs less, does more</span>
+              <span>- Web that weighs less, does more</span>
             </div>
             <hr class="footer-sep">
             <div class="footer-grid">
@@ -1456,12 +1436,12 @@ export default class DocsHome extends DsdElement {
               <div class="footer-terminal">
                 <span class="prompt">$</span> npx create-less<br>
                 <span class="success">  ✓ scaffolded</span><br>
-                <span class="success">  → npm run dev</span>
+                <span class="success">  -> npm run dev</span>
               </div>
             </div>
             <div class="footer-bottom">
               <span>MIT License · Made with less</span>
-              <a href="/en/guide/getting-started">Explore docs →</a>
+              <a href="/en/guide/getting-started">Explore docs -></a>
             </div>
           </div>
         </footer>
