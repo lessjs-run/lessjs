@@ -157,7 +157,7 @@ export class ChangelogPage extends DsdElement {
                 <li><strong>Theme 事件传播</strong>：less-theme-toggle 派发 less:theme-change 自定义事件；less-layout 监听并传播 data-theme 到自身和 light DOM 子组件</li>
                 <li><strong>首页 Code Strip DSD 输出为空</strong>：CODE_DSD 包含 &lt;template&gt; 等 HTML 标签，在 &lt;pre&gt;&lt;code&gt; 中浏览器解析为实际 HTML 而非文本 → &lt;template&gt; 元素默认不显示；修复为 escHtml() 转义后再渲染</li>
                 <li><strong>Theme 切换不即时生效 / 跨页面不互通</strong>：DsdElement 子组件连接时未同步 document.documentElement 的 data-theme，导致切换后子组件变量不更新；SPA 导航后新插入组件缺少 data-theme → 页面主题重置；修复：DsdElement.connectedCallback 自动同步 data-theme；less-layout._loadContent() 插入后递归传播；_propagateTheme() 深入 shadow DOM 遍历</li>
-                <li><strong>Blog/Decisions/Registry 页面内容显示 [object Object]</strong>：DsdElement.render() 返回纯字符串，但 blog [slug].ts / decisions [slug].ts / registry [component].ts 使用了 Lit 的 unsafeHTML() 指令（返回 DirectiveResult 对象），模板字符串插值 ${unsafeHTML(...)} 调用 .toString() 得到 [object Object]；移除 unsafeHTML 直接插入原始 HTML 字符串</li>
+                <li><strong>Blog/Decisions/Registry 页面内容显示 [object Object]</strong>：DsdElement.render() 返回纯字符串，但 blog [slug].ts / decisions [slug].ts / registry [component].ts 使用了 Lit 的 unsafeHTML() 指令（返回 DirectiveResult 对象），模板字符串插值 \${unsafeHTML(...)} 调用 .toString() 得到 [object Object]；移除 unsafeHTML 直接插入原始 HTML 字符串</li>
                 <li><strong>deno fmt 格式问题</strong>：修复 12 个文件格式不符合 deno fmt 规范</li>
               </ul>
             </div>
