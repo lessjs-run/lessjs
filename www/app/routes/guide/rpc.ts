@@ -1,16 +1,23 @@
 export const meta = { section: 'Core', label: 'RPC', order: 70 };
-import { navSections, headerNav } from 'virtual:less-nav';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class RpcGuidePage extends LitElement {
+export class RpcGuidePage extends DsdElement {
   static override styles = [pageStyles];
-  override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
+  override render() {
+    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+  }
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/rpc"><div class="container">
+  private _renderZh() {
+    return `<less-layout locale="${this.getAttribute('locale') || 'zh'}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/guide/rpc"><div class="container">
     <h1>RPC 远程调用</h1>
     <p class="subtitle">@lessjs/rpc 是零依赖的 fetch 抽象层，用原生 Web API（fetch、AbortController）管理 Island 的远程调用。框架无关，可以和 Lit、原生 HTMLElement 或任何 Web Component 库一起使用。</p>
     <h2>设计理念</h2>
@@ -19,7 +26,7 @@ export class RpcGuidePage extends LitElement {
     <h2>基本用法</h2>
     <less-code-block><pre><code>import { LitElement, html } from 'lit';
 import { RpcController } from '@lessjs/rpc';
-class PostList extends LitElement {
+class PostList extends DsdElement {
   private rpc = new RpcController(this);
   private _posts = [];
   override connectedCallback() {
@@ -36,9 +43,15 @@ class PostList extends LitElement {
     <h2>Type-Safe RPC</h2>
     <p>@lessjs/rpc 同时提供类型安全的调用约定——在 API 定义和客户端调用之间共享类型。</p>
     <div class="nav-row"><a href="/guide/api" class="nav-link">&larr; API Routes</a><a href="/guide/content-system" class="nav-link">Content System &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/rpc"><div class="container">
+  private _renderEn() {
+    return `<less-layout locale="${this.getAttribute('locale') || 'en'}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/en/guide/rpc"><div class="container">
     <h1>RPC</h1>
     <p class="subtitle"><span class="inline-code">@lessjs/rpc</span> is a zero-dependency fetch abstraction layer that uses native Web APIs (fetch, AbortController) to manage remote calls from Islands. Framework-agnostic — works with Lit, native HTMLElement, or any Web Component library.</p>
     <h2>Design Philosophy</h2>
@@ -47,7 +60,7 @@ class PostList extends LitElement {
     <h2>Basic Usage</h2>
     <less-code-block><pre><code>import { LitElement, html } from 'lit';
 import { RpcController } from '@lessjs/rpc';
-class PostList extends LitElement {
+class PostList extends DsdElement {
   private rpc = new RpcController(this);
   override connectedCallback() {
     super.connectedCallback();
@@ -63,7 +76,8 @@ class PostList extends LitElement {
     <h2>Type-Safe RPC</h2>
     <p><span class="inline-code">@lessjs/rpc</span> also provides type-safe calling conventions — shared types between API definitions and client calls.</p>
     <div class="nav-row"><a href="/guide/api" class="nav-link">&larr; API Routes</a><a href="/guide/content-system" class="nav-link">Content System &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 }
 
 customElements.define('page-rpc-guide', RpcGuidePage);

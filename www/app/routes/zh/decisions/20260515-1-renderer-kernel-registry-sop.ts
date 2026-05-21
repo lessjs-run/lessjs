@@ -5,18 +5,15 @@ export const meta = {
 };
 
 import { headerNav, navSections } from 'virtual:less-nav';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 
 export const tagName = 'decision-20260515-1-renderer-kernel-registry-sop';
 
-export default class RendererKernelRegistrySopDecision extends LitElement {
-  declare locale?: string;
+const routeSheet = new StyleSheet();
 
-  static override styles = [
-    pageStyles,
-    css`
+routeSheet.replaceSync(`
       .decision-meta {
         display: flex;
         flex-wrap: wrap;
@@ -72,20 +69,24 @@ export default class RendererKernelRegistrySopDecision extends LitElement {
         font-family: "SF Mono", monospace;
         font-size: 0.8125rem;
       }
-    `,
-  ];
+    `);
+
+export default class RendererKernelRegistrySopDecision extends DsdElement {
+  declare locale?: string;
+
+  static override styles = [routeSheet];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
-        .headerNav="${headerNav}"
+        locale="${this.getAttribute('locale') || 'zh'}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(navSections)}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/zh/decisions/20260515-1-renderer-kernel-registry-sop"
       >
         <div class="container">
@@ -244,12 +245,12 @@ export default class RendererKernelRegistrySopDecision extends LitElement {
   }
 
   private _renderEn() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'en'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
-        .headerNav="${headerNav}"
+        locale="${this.getAttribute('locale') || 'en'}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(navSections)}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/zh/decisions/20260515-1-renderer-kernel-registry-sop"
       >
         <div class="container">

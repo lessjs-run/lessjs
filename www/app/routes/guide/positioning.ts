@@ -1,28 +1,28 @@
 export const meta = { section: 'Quick Start', label: 'Framework Positioning', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-callout';
 
-export class PositioningPage extends LitElement {
+export class PositioningPage extends DsdElement {
   declare locale?: string;
 
   static override styles = [pageStyles];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
+    return `
       <less-layout
-        .navItems="${filterFrameworkNav(navSections)}"
-        .headerNav="${headerNav}"
+        nav-items='${JSON.stringify(filterFrameworkNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/guide/positioning"
         locale="zh"
-        .locales="${['en', 'zh']}"
+        locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">
           <h1>框架定位</h1>
@@ -226,13 +226,13 @@ export class PositioningPage extends LitElement {
   }
 
   private _renderEn() {
-    return html`
+    return `
       <less-layout
-        .navItems="${filterFrameworkNav(navSections)}"
-        .headerNav="${headerNav}"
+        nav-items='${JSON.stringify(filterFrameworkNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/en/guide/positioning"
         locale="en"
-        .locales="${['en', 'zh']}"
+        locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">
           <h1>Framework Positioning</h1>

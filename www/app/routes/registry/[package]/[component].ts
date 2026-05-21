@@ -14,7 +14,7 @@
 
 export const meta = { section: 'Registry', label: 'Component Detail', order: 6 };
 
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterRegistryNav } from '../../../utils/nav-filter.js';
@@ -115,22 +115,9 @@ const COMPAT_COLORS: Record<string, string> = {
   'experimental-dom': '#8b5cf6',
 };
 
-export default class DocsRegistryComponentDetail extends LitElement {
-  /** Route parameter: "package" */
-  package = '';
-  /** Route parameter: "component" */
-  component = '';
+const routeSheet = new StyleSheet();
 
-  private _record: HubPackageRecord | null = null;
-
-  static override properties = {
-    package: { type: String },
-    component: { type: String },
-  };
-
-  static override styles = [
-    pageStyles,
-    css`
+routeSheet.replaceSync(`
       .detail-header {
         margin-bottom: 2rem;
       }
@@ -277,8 +264,22 @@ export default class DocsRegistryComponentDetail extends LitElement {
       .back-link:hover {
         text-decoration: underline;
       }
-    `,
-  ];
+    `);
+
+export default class DocsRegistryComponentDetail extends DsdElement {
+  /** Route parameter: "package" */
+  package = '';
+  /** Route parameter: "component" */
+  component = '';
+
+  private _record: HubPackageRecord | null = null;
+
+  static override properties = {
+    package: { type: String },
+    component: { type: String },
+  };
+
+  static override styles = [routeSheet];
 
   constructor() {
     super();
@@ -328,14 +329,21 @@ export default class DocsRegistryComponentDetail extends LitElement {
   }
 
   /** Build iframe srcdoc from HubSnapshotMeta (ADR-0035 A3) */
-  private _buildSrcdoc(meta: { tagName: string; importUrl: string; importSpec: string; demoAttrs: Record<string, string>; demoSlots: string; themeCssUrl?: string }): string {
+  private _buildSrcdoc(
+    meta: {
+      tagName: string;
+      importUrl: string;
+      importSpec: string;
+      demoAttrs: Record<string, string>;
+      demoSlots: string;
+      themeCssUrl?: string;
+    },
+  ): string {
     const attrs = Object.entries(meta.demoAttrs)
       .map(([k, v]) => v === '' ? k : `${k}="${v}"`)
       .join(' ');
     const attrStr = attrs ? ` ${attrs}` : '';
-    const themeLink = meta.themeCssUrl
-      ? `<link rel="stylesheet" href="${meta.themeCssUrl}">`
-      : '';
+    const themeLink = meta.themeCssUrl ? `<link rel="stylesheet" href="${meta.themeCssUrl}">` : '';
     // LessJS UI components need design token CSS injected inline because their
     // styles reference CSS custom properties (--less-bg-card, --less-border, etc.)
     // that are normally declared on :root by lessRootColorCSS. In the iframe
@@ -356,13 +364,13 @@ export default class DocsRegistryComponentDetail extends LitElement {
     const pkgRoute = this.package?.replace('~', '/') || '';
 
     if (!pkg) {
-      return html`
+      return `
         <less-layout
-          .navItems="${filterRegistryNav(navSections)}"
-          .headerNav="${headerNav}"
+          nav-items='${JSON.stringify(filterRegistryNav(navSections))}'
+          header-nav='${JSON.stringify(headerNav)}'
           current-path="/registry/${pkgRoute}"
           locale="en"
-          .locales="${['en']}"
+          locales='${JSON.stringify(['en'])}'
         >
           <div class="container">
             <div class="not-found">
@@ -380,13 +388,13 @@ export default class DocsRegistryComponentDetail extends LitElement {
     const tagName = this.component || 'unknown';
 
     if (!tag) {
-      return html`
+      return `
         <less-layout
-          .navItems="${filterRegistryNav(navSections)}"
-          .headerNav="${headerNav}"
+          nav-items='${JSON.stringify(filterRegistryNav(navSections))}'
+          header-nav='${JSON.stringify(headerNav)}'
           current-path="/registry/${pkgRoute}"
           locale="en"
-          .locales="${['en']}"
+          locales='${JSON.stringify(['en'])}'
         >
           <div class="container">
             <div class="not-found">
@@ -411,13 +419,13 @@ export default class DocsRegistryComponentDetail extends LitElement {
 
     const usageSnippet = this._buildUsageSnippet(tagName, pkg);
 
-    return html`
+    return `
       <less-layout
-        .navItems="${filterRegistryNav(navSections)}"
-        .headerNav="${headerNav}"
+        nav-items='${JSON.stringify(filterRegistryNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/registry/${pkgRoute}"
         locale="en"
-        .locales="${['en']}"
+        locales='${JSON.stringify(['en'])}'
       >
         <div class="container">
           <a class="back-link" href="/registry/${this.package}">← Back to ${fullPkgName}</a>
@@ -437,17 +445,19 @@ export default class DocsRegistryComponentDetail extends LitElement {
               >
                 <span class="compat-dot" style="background:${compatColor}"></span>${compatLabel}
               </span>
-              ${tag.validationErrors > 0
-                ? html`
-                  <span style="color:#ef4444;font-size:0.8125rem;">${tag
-                    .validationErrors} error(s)</span>
+              ${
+      tag.validationErrors > 0
+        ? `
+                  <span style="color:#ef4444;font-size:0.8125rem;">${tag.validationErrors} error(s)</span>
                 `
-                : ''} ${tag.validationWarnings > 0
-                ? html`
-                  <span style="color:#f59e0b;font-size:0.8125rem;">${tag
-                    .validationWarnings} warning(s)</span>
+        : ''
+    } ${
+      tag.validationWarnings > 0
+        ? `
+                  <span style="color:#f59e0b;font-size:0.8125rem;">${tag.validationWarnings} warning(s)</span>
                 `
-                : ''}
+        : ''
+    }
             </div>
           </div>
 
@@ -456,35 +466,41 @@ export default class DocsRegistryComponentDetail extends LitElement {
             <div class="section-title">Rendered Preview</div>
             <div class="preview-label">Pre-rendered at build time</div>
             <div class="preview-frame">
-              ${tag.snapshotMeta
-                ? html`
+              ${
+      tag.snapshotMeta
+        ? `
                   <iframe
                     class="preview-iframe"
                     data-srcdoc=${btoa(this._buildSrcdoc(tag.snapshotMeta))}
                   ></iframe>
                 `
-                : hasSnapshot
-                  ? html`
+        : hasSnapshot
+        ? `
                     <div style="width:100%;">${unsafeHTML(sanitizeSnapshot(tag.ssrSnapshot))}</div>
                   `
-                  : html`
+        : `
                     <div class="preview-placeholder">
                       <div style="font-size:0.875rem;margin-bottom:0.25rem;">&lt;${tagName}&gt;</div>
                       <div>No preview snapshot available.</div>
-                      ${tag.compatibility === 'client-only'
-                        ? html`
+                      ${
+          tag.compatibility === 'client-only'
+            ? `
                           <div style="margin-top:0.5rem;font-size:0.75rem;">
                             Client-only components require a browser to render.
                           </div>
                         `
-                        : ''}
+            : ''
+        }
                     </div>
-                  `}
+                  `
+    }
             </div>
             <div class="preview-note">
-              ${tag.compatibility === 'ssr-capable'
-                ? 'SSR-rendered. This component is rendered at build time and available immediately.'
-                : 'Client-only. This component renders in the browser after JavaScript loads.'}
+              ${
+      tag.compatibility === 'ssr-capable'
+        ? 'SSR-rendered. This component is rendered at build time and available immediately.'
+        : 'Client-only. This component renders in the browser after JavaScript loads.'
+    }
             </div>
           </div>
 
@@ -503,8 +519,7 @@ export default class DocsRegistryComponentDetail extends LitElement {
             <table class="meta-table">
               <tr>
                 <th>Package</th>
-                <td><a href="/registry/${this
-                  .package}" style="color:var(--less-accent);">${fullPkgName}</a></td>
+                <td><a href="/registry/${this.package}" style="color:var(--less-accent);">${fullPkgName}</a></td>
               </tr>
               <tr>
                 <th>Version</th>
@@ -525,13 +540,15 @@ export default class DocsRegistryComponentDetail extends LitElement {
               </tr>
               <tr>
                 <th>Errors</th>
-                <td style="color:${tag.validationErrors > 0 ? '#ef4444' : '#22c55e'};">${tag
-                  .validationErrors}</td>
+                <td style="color:${
+      tag.validationErrors > 0 ? '#ef4444' : '#22c55e'
+    };">${tag.validationErrors}</td>
               </tr>
               <tr>
                 <th>Warnings</th>
-                <td style="color:${tag.validationWarnings > 0 ? '#f59e0b' : '#22c55e'};">${tag
-                  .validationWarnings}</td>
+                <td style="color:${
+      tag.validationWarnings > 0 ? '#f59e0b' : '#22c55e'
+    };">${tag.validationWarnings}</td>
               </tr>
               <tr>
                 <th>Source</th>
@@ -545,8 +562,9 @@ export default class DocsRegistryComponentDetail extends LitElement {
           </div>
 
           <!-- Snapshot info (when available) -->
-          ${hasSnapshot
-            ? html`
+          ${
+      hasSnapshot
+        ? `
               <div class="section">
                 <div class="section-title">Preview Details</div>
                 <div style="font-size:0.8125rem;color:var(--less-text-secondary);line-height:1.6;">
@@ -555,11 +573,13 @@ export default class DocsRegistryComponentDetail extends LitElement {
                 </div>
               </div>
             `
-            : ''}
+        : ''
+    }
 
           <!-- API Reference (from CEM) -->
-          ${tag.attributes && tag.attributes.length > 0
-            ? html`
+          ${
+      tag.attributes && tag.attributes.length > 0
+        ? `
               <div class="section">
                 <div class="section-title">Attributes</div>
                 <table class="meta-table">
@@ -569,23 +589,29 @@ export default class DocsRegistryComponentDetail extends LitElement {
                     <th>Default</th>
                     <th>Description</th>
                   </tr>
-                  ${tag.attributes.map((a) =>
-                    html`
+                  ${
+          tag.attributes.map((a) => `
                       <tr>
                         <td style="font-family:monospace;font-size:0.8125rem;">${a.name}</td>
-                        <td style="font-size:0.75rem;color:var(--less-text-tertiary);">${a.type ||
-                          '—'}</td>
-                        <td style="font-size:0.75rem;color:var(--less-text-tertiary);">${a
-                          .default || '—'}</td>
+                        <td style="font-size:0.75rem;color:var(--less-text-tertiary);">${
+            a.type ||
+            '—'
+          }</td>
+                        <td style="font-size:0.75rem;color:var(--less-text-tertiary);">${
+            a
+              .default || '—'
+          }</td>
                         <td style="font-size:0.8125rem;">${a.description || ''}</td>
                       </tr>
-                    `
-                  )}
+                    `)
+        }
                 </table>
               </div>
             `
-            : ''} ${tag.events && tag.events.length > 0
-            ? html`
+        : ''
+    } ${
+      tag.events && tag.events.length > 0
+        ? `
               <div class="section">
                 <div class="section-title">Events</div>
                 <table class="meta-table">
@@ -594,21 +620,25 @@ export default class DocsRegistryComponentDetail extends LitElement {
                     <th>Type</th>
                     <th>Description</th>
                   </tr>
-                  ${tag.events.map((e) =>
-                    html`
+                  ${
+          tag.events.map((e) => `
                       <tr>
                         <td style="font-family:monospace;font-size:0.8125rem;">${e.name}</td>
-                        <td style="font-size:0.75rem;color:var(--less-text-tertiary);">${e.type ||
-                          '—'}</td>
+                        <td style="font-size:0.75rem;color:var(--less-text-tertiary);">${
+            e.type ||
+            '—'
+          }</td>
                         <td style="font-size:0.8125rem;">${e.description || ''}</td>
                       </tr>
-                    `
-                  )}
+                    `)
+        }
                 </table>
               </div>
             `
-            : ''} ${tag.slots && tag.slots.length > 0
-            ? html`
+        : ''
+    } ${
+      tag.slots && tag.slots.length > 0
+        ? `
               <div class="section">
                 <div class="section-title">Slots</div>
                 <table class="meta-table">
@@ -616,19 +646,22 @@ export default class DocsRegistryComponentDetail extends LitElement {
                     <th>Name</th>
                     <th>Description</th>
                   </tr>
-                  ${tag.slots.map((s) =>
-                    html`
+                  ${
+          tag.slots.map((s) => `
                       <tr>
-                        <td style="font-family:monospace;font-size:0.8125rem;">${s.name ||
-                          '(default)'}</td>
+                        <td style="font-family:monospace;font-size:0.8125rem;">${
+            s.name ||
+            '(default)'
+          }</td>
                         <td style="font-size:0.8125rem;">${s.description || ''}</td>
                       </tr>
-                    `
-                  )}
+                    `)
+        }
                 </table>
               </div>
             `
-            : ''}
+        : ''
+    }
 
           <!-- Install -->
           <div class="section">
@@ -637,44 +670,50 @@ export default class DocsRegistryComponentDetail extends LitElement {
               To use this component in your project:
             </div>
             <div class="usage-block">less add ${fullPkgName}</div>
-            ${pkg.installGuidance.warnings.length > 0
-              ? html`
+            ${
+      pkg.installGuidance.warnings.length > 0
+        ? `
                 <div style="margin-top:0.75rem;font-size:0.8125rem;color:var(--less-text-secondary);">
-                  ${pkg.installGuidance.warnings.map((w) =>
-                    html`
+                  ${
+          pkg.installGuidance.warnings.map((w) => `
                       <div style="padding:0.125rem 0;">⚠ ${w}</div>
-                    `
-                  )}
+                    `)
+        }
                 </div>
               `
-              : ''}
+        : ''
+    }
           </div>
 
           <!-- Related components in the same package -->
-          ${relatedComponents.length > 0
-            ? html`
+          ${
+      relatedComponents.length > 0
+        ? `
               <div class="section">
                 <div class="section-title">Other Components in ${fullPkgName}</div>
                 <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
-                  ${relatedComponents.map((t) =>
-                    html`
+                  ${
+          relatedComponents.map((t) => `
                       <a
                         href="/registry/${this.package}/${t.tagName}"
                         style="display:inline-flex;align-items:center;gap:0.375rem;padding:0.375rem 0.625rem;background:var(--less-bg-code);border-radius:4px;font-size:0.8125rem;font-family:monospace;color:inherit;text-decoration:none;border:0.5px solid transparent;"
                       >
                         <span
-                          style="width:6px;height:6px;border-radius:50%;display:inline-block;background:${COMPAT_COLORS[
-                            t.compatibility
-                          ] || '#888'}"
+                          style="width:6px;height:6px;border-radius:50%;display:inline-block;background:${
+            COMPAT_COLORS[
+              t.compatibility
+            ] || '#888'
+          }"
                         ></span>
                         ${t.tagName}
                       </a>
-                    `
-                  )}
+                    `)
+        }
                 </div>
               </div>
             `
-            : ''}
+        : ''
+    }
         </div>
       </less-layout>
     `;

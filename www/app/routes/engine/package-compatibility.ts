@@ -2,30 +2,30 @@ export const meta = { section: 'Compatibility', label: 'Package Compatibility', 
 
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 const baseStyle = pageStyles;
 
-export class PackageCompatibilityGuidePage extends LitElement {
+export class PackageCompatibilityGuidePage extends DsdElement {
   declare locale?: string;
 
   static override styles = [baseStyle];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
+    return `
       <less-layout
-        .navItems="${filterEngineNav(navSections)}"
-        .headerNav="${headerNav}"
+        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/package-compatibility"
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
+        locale="${this.getAttribute('locale') || 'zh'}"
+        locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">
           <h1>第三方包兼容性</h1>
@@ -182,13 +182,13 @@ for (const pkg of node_modules) {
   }
 
   private _renderEn() {
-    return html`
+    return `
       <less-layout
-        .navItems="${filterEngineNav(navSections)}"
-        .headerNav="${headerNav}"
+        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/en/engine/package-compatibility"
-        locale="${this.locale || 'en'}"
-        .locales="${['en', 'zh']}"
+        locale="${this.getAttribute('locale') || 'en'}"
+        locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">
           <h1>Package Compatibility</h1>

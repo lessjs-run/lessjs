@@ -2,16 +2,15 @@
 export const meta = { section: 'Quick Start', label: 'Getting Started', order: 20 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
 
-export class GettingStartedPage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+
+routeSheet.replaceSync(`
       .step {
         margin: 1.5rem 0 2rem;
       }
@@ -31,16 +30,18 @@ export class GettingStartedPage extends LitElement {
       .note p {
         margin: 0;
       }
-    `,
-  ];
+    `);
+
+export class GettingStartedPage extends DsdElement {
+  static override styles = [routeSheet];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/getting-started">
+    return `
+      <less-layout locale="${this.getAttribute('locale') || 'zh'}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${JSON.stringify(headerNav)}' current-path="/guide/getting-started">
         <div class="container">
           <h1>快速开始</h1>
           <p class="subtitle">
@@ -108,7 +109,7 @@ cd my-app</code></pre></less-code-block>
           </p>
           <less-code-block><pre><code>import { html, LitElement } from 'lit';
 
-export class HomePage extends LitElement {
+export class HomePage extends DsdElement {
   override render() {
     return html&#96;&lt;main&gt;Hello LessJS&lt;/main&gt;&#96;;
   }
@@ -142,8 +143,8 @@ export const tagName = 'page-home';</code></pre></less-code-block>
   }
 
   private _renderEn() {
-    return html`
-      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/getting-started">
+    return `
+      <less-layout locale="${this.getAttribute('locale') || 'en'}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${JSON.stringify(headerNav)}' current-path="/en/guide/getting-started">
         <div class="container">
           <h1>Getting Started</h1>
           <p class="subtitle">
@@ -217,7 +218,7 @@ cd my-app</code></pre></less-code-block>
           </p>
           <less-code-block><pre><code>import { html, LitElement } from 'lit';
 
-export class HomePage extends LitElement {
+export class HomePage extends DsdElement {
   override render() {
     return html&#96;&lt;main&gt;Hello LessJS&lt;/main&gt;&#96;;
   }

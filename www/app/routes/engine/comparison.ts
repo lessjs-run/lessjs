@@ -4,7 +4,7 @@
 
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 
@@ -12,10 +12,9 @@ export const tagName = 'comparison-page';
 
 export const meta = { section: 'Principles', label: 'Comparison', order: 20 };
 
-export default class ComparisonPage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+
+routeSheet.replaceSync(`
       .table-wrap {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
@@ -125,16 +124,18 @@ export default class ComparisonPage extends LitElement {
         color: var(--less-text-primary);
         font-weight: 500;
       }
-    `,
-  ];
+    `);
+
+export default class ComparisonPage extends DsdElement {
+  static override styles = [routeSheet];
 
   override render() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${filterEngineNav(navSections)}"
-        .headerNav="${headerNav}"
+        locale="${this.getAttribute('locale') || 'zh'}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/comparison"
       >
         <div class="container">

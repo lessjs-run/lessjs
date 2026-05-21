@@ -2,8 +2,10 @@
  * 404 Not Found Page — with search, helpful links, and old URL redirects
  */
 import { headerNav, navSections } from 'virtual:less-nav';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../components/page-styles.js';
+const pageSheet = new StyleSheet();
+pageSheet.replaceSync(pageStyles);
 import '@lessjs/ui/less-layout';
 import '../islands/less-search.js';
 
@@ -33,10 +35,9 @@ const REDIRECT_MAP: Record<string, string> = {
   '/community': '/',
 };
 
-export class NotFoundPage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+
+routeSheet.replaceSync(`
       :host {
         display: block;
       }
@@ -123,8 +124,10 @@ export class NotFoundPage extends LitElement {
       .home-link:hover {
         border-color: var(--less-text-primary);
       }
-    `,
-  ];
+    `);
+
+export class NotFoundPage extends DsdElement {
+  static override styles = [routeSheet];
 
   private _onSearchKeydown(e: KeyboardEvent) {
     if (e.key === 'Enter') {
@@ -144,12 +147,12 @@ export class NotFoundPage extends LitElement {
   }
 
   override render() {
-    return html`
+    return `
       <less-layout
         locale="en"
-        .locales="${['en']}"
-        .navItems="${navSections}"
-        .headerNav="${headerNav}"
+        locales='${JSON.stringify(['en'])}'
+        nav-items='${JSON.stringify(navSections)}'
+        header-nav='${JSON.stringify(headerNav)}'
         home
       >
         <less-search slot="header-actions"></less-search>
@@ -168,12 +171,13 @@ export class NotFoundPage extends LitElement {
           <div class="links">
             <div class="links-title">Popular Pages</div>
             <div class="link-grid">
-              ${POPULAR_LINKS.map(
-                (l) =>
-                  html`
+              ${
+      POPULAR_LINKS.map(
+        (l) => `
                     <a href="${l.href}">${l.label}</a>
                   `,
-              )}
+      )
+    }
             </div>
           </div>
 

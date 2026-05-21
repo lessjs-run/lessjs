@@ -1,21 +1,25 @@
 export const meta = { section: 'Core', label: 'Routing', order: 10 };
-import { navSections, headerNav } from 'virtual:less-nav';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class RoutingGuidePage extends LitElement {
+export class RoutingGuidePage extends DsdElement {
   static override styles = [pageStyles];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/routing">
+    return `
+      <less-layout locale="${this.getAttribute('locale') || 'zh'}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/guide/routing">
         <div class="container">
           <h1>路由</h1>
           <p class="subtitle">
@@ -49,7 +53,7 @@ export class RoutingGuidePage extends LitElement {
             </tbody>
           </table>
 
-          <less-code-block><pre><code>export class PostPage extends LitElement {
+          <less-code-block><pre><code>export class PostPage extends DsdElement {
   slug = '';
   override render() {
     return html&#96;&lt;article&gt;Post: \${this.slug}&lt;/article&gt;&#96;;
@@ -69,7 +73,7 @@ export class RoutingGuidePage extends LitElement {
           <h2>路由模块契约</h2>
           <less-code-block><pre><code>import { html, LitElement } from 'lit';
 
-export class AboutPage extends LitElement {
+export class AboutPage extends DsdElement {
   override render() {
     return html&#96;&lt;main&gt;About&lt;/main&gt;&#96;;
   }
@@ -92,8 +96,12 @@ export const tagName = 'page-about';</code></pre></less-code-block>
   }
 
   private _renderEn() {
-    return html`
-      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/routing">
+    return `
+      <less-layout locale="${this.getAttribute('locale') || 'en'}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/en/guide/routing">
         <div class="container">
           <h1>Routing</h1>
           <p class="subtitle">
@@ -127,7 +135,7 @@ export const tagName = 'page-about';</code></pre></less-code-block>
             </tbody>
           </table>
 
-          <less-code-block><pre><code>export class PostPage extends LitElement {
+          <less-code-block><pre><code>export class PostPage extends DsdElement {
   slug = '';
   override render() {
     return html&#96;&lt;article&gt;Post: \${this.slug}&lt;/article&gt;&#96;;
@@ -147,7 +155,7 @@ export const tagName = 'page-about';</code></pre></less-code-block>
           <h2>Route Module Contract</h2>
           <less-code-block><pre><code>import { html, LitElement } from 'lit';
 
-export class AboutPage extends LitElement {
+export class AboutPage extends DsdElement {
   override render() {
     return html&#96;&lt;main&gt;About&lt;/main&gt;&#96;;
   }

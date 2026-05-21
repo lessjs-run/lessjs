@@ -1,17 +1,16 @@
 export const meta = { section: '', label: 'Roadmap', order: 10 };
 
 import { headerNav, navSections } from 'virtual:less-nav';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../components/page-styles.js';
+const pageSheet = new StyleSheet();
+pageSheet.replaceSync(pageStyles);
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-callout';
 
-export class RoadmapPage extends LitElement {
-  declare locale?: string;
+const routeSheet = new StyleSheet();
 
-  static override styles = [
-    pageStyles,
-    css`
+routeSheet.replaceSync(`
       .reset-table,
       .version-table {
         width: 100%;
@@ -133,20 +132,24 @@ export class RoadmapPage extends LitElement {
           min-width: 9rem;
         }
       }
-    `,
-  ];
+    `);
+
+export class RoadmapPage extends DsdElement {
+  declare locale?: string;
+
+  static override styles = [routeSheet];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
-        .headerNav="${headerNav}"
+        locale="${this.getAttribute('locale') || 'zh'}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(navSections)}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/roadmap"
         home
       >
@@ -352,12 +355,12 @@ export class RoadmapPage extends LitElement {
   }
 
   private _renderEn() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'en'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
-        .headerNav="${headerNav}"
+        locale="${this.getAttribute('locale') || 'en'}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(navSections)}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/en/roadmap"
         home
       >

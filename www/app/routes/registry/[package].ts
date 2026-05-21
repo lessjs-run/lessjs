@@ -11,7 +11,7 @@
  * @see ADR-0030
  */
 
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterRegistryNav } from '../../utils/nav-filter.js';
 import { pageStyles } from '../../components/page-styles.js';
@@ -68,7 +68,12 @@ export function getStaticPaths(): Array<Record<string, string>> {
     ];
     let index: { packages: Array<{ name: string; scope: string }> } | null = null;
     for (const p of paths) {
-      try { index = JSON.parse(Deno.readTextFileSync(p)); break; } catch { continue; }
+      try {
+        index = JSON.parse(Deno.readTextFileSync(p));
+        break;
+      } catch {
+        continue;
+      }
     }
     if (!index) return [];
     return index.packages.map((pkg) => ({
@@ -93,20 +98,9 @@ const COMPAT_COLORS: Record<string, string> = {
   'experimental-dom': '#8b5cf6',
 };
 
-export default class DocsRegistryDetail extends LitElement {
-  /** Route parameter: "package" — set by the framework from `[package].ts` */
-  package = '';
+const routeSheet = new StyleSheet();
 
-  private _record: HubPackageRecord | null = null;
-  private _showValidation = false;
-
-  static override properties = {
-    package: { type: String },
-  };
-
-  static override styles = [
-    pageStyles,
-    css`
+routeSheet.replaceSync(`
       .detail-header { margin-bottom: 2rem; }
       .breadcrumb { font-size: 0.8125rem; color: var(--less-text-tertiary); margin-bottom: 0.75rem; }
       .breadcrumb a { color: var(--less-accent); text-decoration: none; }
@@ -128,7 +122,7 @@ export default class DocsRegistryDetail extends LitElement {
       .install-cmd { font-family: monospace; background: var(--less-bg-code); padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.875rem; margin: 0.5rem 0; user-select: all; }
       .warning-list { list-style: none; padding: 0; margin: 0.5rem 0 0; }
       .warning-list li { font-size: 0.8125rem; padding: 0.25rem 0; padding-left: 1.25rem; position: relative; color: var(--less-text-secondary); }
-      .warning-list li::before { content: '\u26a0\ufe0f'; position: absolute; left: 0; }
+      .warning-list li::before { content: '\\u26a0\\ufe0f'; position: absolute; left: 0; }
       .tag-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
       .tag-item { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.625rem; background: var(--less-bg-code); border-radius: 4px; font-size: 0.8125rem; font-family: monospace; }
       .tag-status { width: 6px; height: 6px; border-radius: 50%; }
@@ -139,8 +133,20 @@ export default class DocsRegistryDetail extends LitElement {
       .accordion-toggle { background: none; border: none; color: var(--less-accent); cursor: pointer; font-size: 0.8125rem; padding: 0.25rem 0; }
       .accordion-toggle:hover { text-decoration: underline; }
       .accordion-content { margin-top: 0.75rem; padding: 0.75rem; background: var(--less-bg-code); border-radius: 4px; font-family: monospace; font-size: 0.75rem; white-space: pre-wrap; max-height: 400px; overflow: auto; }
-    `,
-  ];
+    `);
+
+export default class DocsRegistryDetail extends DsdElement {
+  /** Route parameter: "package" — set by the framework from `[package].ts` */
+  package = '';
+
+  private _record: HubPackageRecord | null = null;
+  private _showValidation = false;
+
+  static override properties = {
+    package: { type: String },
+  };
+
+  static override styles = [routeSheet];
 
   constructor() {
     super();
@@ -161,8 +167,11 @@ export default class DocsRegistryDetail extends LitElement {
   }
 
   private _formatJson(json: string): string {
-    try { return JSON.stringify(JSON.parse(json), null, 2); }
-    catch { return json; }
+    try {
+      return JSON.stringify(JSON.parse(json), null, 2);
+    } catch {
+      return json;
+    }
   }
 
   /** Build link to a component in this package */
@@ -186,8 +195,10 @@ export default class DocsRegistryDetail extends LitElement {
     const compatLabel = pkg ? COMPAT_LABELS[pkg.compatibility] || pkg.compatibility : 'Unknown';
 
     if (!pkg) {
-      return html`
-        <less-layout .navItems="${filterRegistryNav(navSections)}" .headerNav="${headerNav}" current-path="/registry/${fullName}" locale="en" .locales="${['en']}">
+      return `
+        <less-layout nav-items='${JSON.stringify(filterRegistryNav(navSections))}' header-nav='${
+        JSON.stringify(headerNav)
+      }' current-path="/registry/${fullName}" locale="en" locales='${JSON.stringify(['en'])}'>
           <div class="container">
             <div class="not-found"><h2>Package Not Found</h2><p>"${fullName}" is not in the registry.</p>
             <a href="/registry" style="color:var(--less-accent);font-size:0.875rem;">← Back to Registry</a></div>
@@ -198,8 +209,10 @@ export default class DocsRegistryDetail extends LitElement {
 
     const hasSnapshots = Object.keys(pkg.snapshotPaths).length > 0;
 
-    return html`
-      <less-layout .navItems="${filterRegistryNav(navSections)}" .headerNav="${headerNav}" current-path="/registry/${fullName}" locale="en" .locales="${['en']}">
+    return `
+      <less-layout nav-items='${JSON.stringify(filterRegistryNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/registry/${fullName}" locale="en" locales='${JSON.stringify(['en'])}'>
         <div class="container">
           <div class="breadcrumb"><a href="/registry">Registry</a> / <span>${fullName}</span></div>
 
@@ -211,10 +224,12 @@ export default class DocsRegistryDetail extends LitElement {
                 <span class="compat-dot" style="background:${compatColor}"></span>${compatLabel}
               </span>
             </div>
-            ${pkg.description ? html`<p class="pkg-desc">${pkg.description}</p>` : ''}
+            ${pkg.description ? `<p class="pkg-desc">${pkg.description}</p>` : ''}
             <div class="pkg-links">
-              ${pkg.repository ? html`<a href="${pkg.repository}" target="_blank">Repository →</a>` : ''}
-              ${pkg.homepage ? html`<a href="${pkg.homepage}" target="_blank">Homepage →</a>` : ''}
+              ${
+      pkg.repository ? `<a href="${pkg.repository}" target="_blank">Repository →</a>` : ''
+    }
+              ${pkg.homepage ? `<a href="${pkg.homepage}" target="_blank">Homepage →</a>` : ''}
               <span>Source: ${pkg.source}</span>
               <span>Validated: ${new Date(pkg.submittedAt).toLocaleDateString()}</span>
             </div>
@@ -222,25 +237,41 @@ export default class DocsRegistryDetail extends LitElement {
 
           <div class="section">
             <div class="section-title">Install</div>
-            <div class="install-box ${pkg.installGuidance.safeToInstall ? 'install-safe' : 'install-unsafe'}">
+            <div class="install-box ${
+      pkg.installGuidance.safeToInstall ? 'install-safe' : 'install-unsafe'
+    }">
               <div style="font-weight:600;font-size:0.875rem;margin-bottom:0.25rem;">
                 ${pkg.installGuidance.safeToInstall ? 'Safe to install' : 'Not installable'}
               </div>
               <div style="font-size:0.8125rem;color:var(--less-text-secondary);margin-bottom:0.5rem;">
-                ${pkg.installGuidance.ssrCapable ? 'SSR-capable. Server-rendered.' : 'Client-only rendering.'}
+                ${
+      pkg.installGuidance.ssrCapable ? 'SSR-capable. Server-rendered.' : 'Client-only rendering.'
+    }
               </div>
               <div class="install-cmd">${pkg.installGuidance.command}</div>
-              ${pkg.installGuidance.configChanges.length > 0 ? html`
+              ${
+      pkg.installGuidance.configChanges.length > 0
+        ? `
                 <div style="font-size:0.8125rem;color:var(--less-text-secondary);margin-top:0.5rem;">
                   <strong>Config changes:</strong>
                   <ul style="margin:0.25rem 0 0;padding-left:1.25rem;">
-                    ${pkg.installGuidance.configChanges.map(c => html`<li style="font-size:0.75rem;">${c}</li>`)}
+                    ${
+          pkg.installGuidance.configChanges.map((c) => `<li style="font-size:0.75rem;">${c}</li>`)
+        }
                   </ul>
                 </div>
-              ` : ''}
-              ${pkg.installGuidance.warnings.length > 0 ? html`
-                <ul class="warning-list">${pkg.installGuidance.warnings.map(w => html`<li>${w}</li>`)}</ul>
-              ` : ''}
+              `
+        : ''
+    }
+              ${
+      pkg.installGuidance.warnings.length > 0
+        ? `
+                <ul class="warning-list">${
+          pkg.installGuidance.warnings.map((w) => `<li>${w}</li>`)
+        }</ul>
+              `
+        : ''
+    }
             </div>
           </div>
 
@@ -281,31 +312,58 @@ export default class DocsRegistryDetail extends LitElement {
               Click a component to see its rendered preview, usage example, and compatibility details.
             </div>
             <div class="tag-list">
-              ${pkg.tags.map(tag => {
-                const tagColor = tag.validationErrors > 0 ? '#ef4444' : tag.compatibility === 'ssr-capable' ? '#22c55e' : '#f59e0b';
-                return html`
-                  <a class="tag-item" href="${this._componentLink(tag.tagName)}" style="text-decoration:none;color:inherit;transition:border-color 0.15s;border:0.5px solid transparent;">
+              ${
+      pkg.tags.map((tag) => {
+        const tagColor = tag.validationErrors > 0
+          ? '#ef4444'
+          : tag.compatibility === 'ssr-capable'
+          ? '#22c55e'
+          : '#f59e0b';
+        return `
+                  <a class="tag-item" href="${
+          this._componentLink(tag.tagName)
+        }" style="text-decoration:none;color:inherit;transition:border-color 0.15s;border:0.5px solid transparent;">
                     <span class="tag-status" style="background:${tagColor}"></span>
                     &lt;${tag.tagName}&gt;
-                    ${tag.validationErrors > 0 ? html`<span style="color:#ef4444;font-size:0.6875rem;">(${tag.validationErrors} err)</span>` : ''}
-                    ${tag.validationWarnings > 0 ? html`<span style="color:#f59e0b;font-size:0.6875rem;">(${tag.validationWarnings} warn)</span>` : ''}
+                    ${
+          tag.validationErrors > 0
+            ? `<span style="color:#ef4444;font-size:0.6875rem;">(${tag.validationErrors} err)</span>`
+            : ''
+        }
+                    ${
+          tag.validationWarnings > 0
+            ? `<span style="color:#f59e0b;font-size:0.6875rem;">(${tag.validationWarnings} warn)</span>`
+            : ''
+        }
                     <span style="font-size:0.625rem;color:var(--less-text-tertiary);margin-left:0.25rem;">→</span>
                   </a>
                 `;
-              })}
+      })
+    }
             </div>
           </div>
 
           <div class="section">
             <div class="section-title">Previews</div>
-            ${hasSnapshots ? html`<div style="font-size:0.875rem;color:var(--less-text-secondary);">SSR snapshots available for ${Object.keys(pkg.snapshotPaths).length} component(s). Visit component detail pages to view them.</div>`
-            : html`<div style="font-size:0.875rem;color:var(--less-text-secondary);">No preview available. Previews are generated during package validation.</div>`}
+            ${
+      hasSnapshots
+        ? `<div style="font-size:0.875rem;color:var(--less-text-secondary);">SSR snapshots available for ${
+          Object.keys(pkg.snapshotPaths).length
+        } component(s). Visit component detail pages to view them.</div>`
+        : `<div style="font-size:0.875rem;color:var(--less-text-secondary);">No preview available. Previews are generated during package validation.</div>`
+    }
           </div>
 
           <div class="section">
             <div class="section-title">Validation Report</div>
-            <button class="accordion-toggle" @click="${this._toggleValidation}">${this._showValidation ? 'Hide' : 'Show'} validation details</button>
-            ${this._showValidation ? html`<div class="accordion-content">${this._formatJson(pkg.reports.validation)}</div>` : ''}
+            <button class="accordion-toggle" @click="${this._toggleValidation}">${
+      this._showValidation ? 'Hide' : 'Show'
+    } validation details</button>
+            ${
+      this._showValidation
+        ? `<div class="accordion-content">${this._formatJson(pkg.reports.validation)}</div>`
+        : ''
+    }
           </div>
         </div>
       </less-layout>

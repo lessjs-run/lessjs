@@ -7,7 +7,7 @@
 
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../../utils/nav-filter.ts';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 
@@ -15,12 +15,9 @@ export const tagName = 'api-core-page';
 
 export const meta = { section: 'Reference', label: 'API Reference', order: 5 };
 
-export default class ApiCorePage extends LitElement {
-  declare locale?: string;
+const routeSheet = new StyleSheet();
 
-  static override styles = [
-    pageStyles,
-    css`
+routeSheet.replaceSync(`
       .api-section {
         margin-bottom: 2.5rem;
       }
@@ -55,20 +52,24 @@ export default class ApiCorePage extends LitElement {
         color: var(--less-text-secondary);
         margin-bottom: 0.5rem;
       }
-    `,
-  ];
+    `);
+
+export default class ApiCorePage extends DsdElement {
+  declare locale?: string;
+
+  static override styles = [routeSheet];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
+    return `
       <less-layout
         locale="zh"
-        .locales="${['en', 'zh']}"
-        .navItems="${filterEngineNav(navSections)}"
-        .headerNav="${headerNav}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/reference/core"
       >
         <div class="container">
@@ -299,12 +300,12 @@ export default class ApiCorePage extends LitElement {
   }
 
   private _renderEn() {
-    return html`
+    return `
       <less-layout
         locale="en"
-        .locales="${['en', 'zh']}"
-        .navItems="${filterEngineNav(navSections)}"
-        .headerNav="${headerNav}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/reference/core"
       >
         <div class="container">

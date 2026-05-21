@@ -5,7 +5,7 @@
  */
 export const meta = { section: '', label: 'Architecture Decisions', order: 20 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
 import { posts } from 'virtual:less-blog-data';
 import '@lessjs/ui/less-layout';
@@ -22,10 +22,9 @@ function adrId(slug: string): string {
   return m ? m[1] : slug.slice(0, 4);
 }
 
-export class DecisionsIndexPage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+
+routeSheet.replaceSync(`
       .decision-list {
         display: grid;
         gap: 0.75rem;
@@ -75,25 +74,27 @@ export class DecisionsIndexPage extends LitElement {
         font-size: 0.8125rem;
         line-height: 1.6;
       }
-    `,
-  ];
+    `);
+
+export class DecisionsIndexPage extends DsdElement {
+  static override styles = [routeSheet];
 
   override render() {
     const adrs = posts.filter((p) => p.frontmatter.type === 'adr');
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
-        .headerNav="${headerNav}"
+        locale="${this.getAttribute('locale') || 'zh'}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(navSections)}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/decisions"
       >
         <div class="container">
           <h1>Architecture Decisions</h1>
           <p class="subtitle">ADR documents published from the @lessjs/content blog pipeline.</p>
           <div class="decision-list">
-            ${adrs.map((p) =>
-              html`
+            ${
+      adrs.map((p) => `
                 <a class="decision-link" href="/decisions/${p.slug}">
                   <div class="decision-title">
                     <span>${adrId(p.slug)}: ${p.frontmatter.title}</span>
@@ -101,8 +102,8 @@ export class DecisionsIndexPage extends LitElement {
                   </div>
                   <div class="decision-summary">${p.frontmatter.excerpt ?? ''}</div>
                 </a>
-              `
-            )}
+              `)
+    }
           </div>
           <div class="nav-row">
             <a href="/engine/content-system" class="nav-link">&larr; Content System</a>

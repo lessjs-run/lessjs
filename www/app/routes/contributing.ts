@@ -3,16 +3,59 @@
  */
 export const meta = { section: '', label: 'Contributing', order: 30 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../components/page-styles.js';
+const pageSheet = new StyleSheet();
+pageSheet.replaceSync(pageStyles);
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class ContributingPage extends LitElement {
-  static override styles = [pageStyles, css`.layer-diagram { padding: 1.25rem; background: var(--less-bg-surface); border: 0.5px solid var(--less-border); border-radius: 6px; margin: 1.5rem 0; font-size: 0.8125rem; line-height: 1.8; font-family: "SF Mono", monospace; white-space: pre; overflow-x: auto; color: var(--less-text-secondary); } .commit-types { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin: 1rem 0; } .commit-type { padding: 0.75rem 1rem; background: var(--less-bg-surface); border: 0.5px solid var(--less-border); border-radius: 4px; font-size: 0.875rem; } .commit-type code { color: var(--less-accent); font-weight: 600; }`];
-  override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
+export class ContributingPage extends DsdElement {
+  static override styles = [
+    pageStyles,
+    css`
+      .layer-diagram {
+        padding: 1.25rem;
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
+        border-radius: 6px;
+        margin: 1.5rem 0;
+        font-size: 0.8125rem;
+        line-height: 1.8;
+        font-family: "SF Mono", monospace;
+        white-space: pre;
+        overflow-x: auto;
+        color: var(--less-text-secondary);
+      }
+      .commit-types {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 0.75rem;
+        margin: 1rem 0;
+      }
+      .commit-type {
+        padding: 0.75rem 1rem;
+        background: var(--less-bg-surface);
+        border: 0.5px solid var(--less-border);
+        border-radius: 4px;
+        font-size: 0.875rem;
+      }
+      .commit-type code {
+        color: var(--less-accent);
+        font-weight: 600;
+      }
+    `,
+  ];
+  override render() {
+    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+  }
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/contributing" home><div class="container">
+  private _renderZh() {
+    return `<less-layout locale="${this.getAttribute('locale') || 'zh'}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(navSections)}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/contributing" home><div class="container">
     <h1>Contributing to LessJS</h1>
     <p class="subtitle">感谢你对 LessJS 框架的兴趣！</p>
     <h2>开发环境设置</h2>
@@ -28,9 +71,15 @@ deno task docs:dev</code></pre></less-code-block>
     <h2>发布流程</h2>
     <ol><li>更新版本号（packages/*/deno.json）</li><li>更新 changelog</li><li>运行测试</li><li>发布到 JSR</li><li>创建 GitHub Release</li></ol>
     <div class="nav-row"><a href="/changelog" class="nav-link">&larr; Changelog</a><a href="/roadmap" class="nav-link">Roadmap &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/contributing" home><div class="container">
+  private _renderEn() {
+    return `<less-layout locale="${this.getAttribute('locale') || 'en'}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(navSections)}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/en/contributing" home><div class="container">
     <h1>Contributing to LessJS</h1>
     <p class="subtitle">Thank you for your interest in the LessJS framework!</p>
     <h2>Development Setup</h2>
@@ -46,7 +95,8 @@ deno task docs:dev</code></pre></less-code-block>
     <h2>Release Process</h2>
     <ol><li>Update version numbers (<span class="inline-code">packages/*/deno.json</span>)</li><li>Update changelog</li><li>Run tests: <span class="inline-code">deno task test</span></li><li>Publish to JSR: <span class="inline-code">deno task publish</span></li><li>Create GitHub Release</li></ol>
     <div class="nav-row"><a href="/changelog" class="nav-link">&larr; Changelog</a><a href="/roadmap" class="nav-link">Roadmap &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 }
 
 customElements.define('page-contributing', ContributingPage);

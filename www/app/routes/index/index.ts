@@ -10,7 +10,7 @@
  * - Quick Start: less-step-card components
  * - Bento hierarchy with WC Engine dominant card, sec-divider-free transitions
  */
-import { css, html } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { DsdLitElement } from '@lessjs/adapter-lit';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { lessDesignTokens } from '@lessjs/ui/design-tokens';
@@ -71,12 +71,8 @@ class MediaPlayer extends WithDsdHydration(HTMLElement) {
 }
 customElements.define('media-player', MediaPlayer);`;
 
-export default class DocsHome extends DsdLitElement {
-  private _mfaTab = 0;
-
-  static override styles = [
-    lessDesignTokens,
-    css`
+const indexSheet = new StyleSheet();
+indexSheet.replaceSync(`
     :host {
       display: block;
     }
@@ -904,15 +900,24 @@ export default class DocsHome extends DsdLitElement {
         flex-direction: column;
       }
     }
-  `];
+  `);
+
+export default class DocsHome extends DsdElement {
+  private _mfaTab = 0;
+
+  static override styles = [lessDesignTokens, indexSheet];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/" home>
+    return `
+      <less-layout locale="${this.getAttribute('locale') || 'zh'}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(navSections)}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/" home>
         <!-- ═══ I. Hero — 暗色沉浸式开场 ═══ -->
         <section class="hero">
           <div class="hero-inner">
@@ -1183,8 +1188,12 @@ export default class DocsHome extends DsdLitElement {
   }
 
   private _renderEn() {
-    return html`
-      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/" home>
+    return `
+      <less-layout locale="${this.getAttribute('locale') || 'en'}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(navSections)}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/en/" home>
         <!-- ═══ I. Hero — dark immersive opening ═══ -->
         <section class="hero">
           <div class="hero-inner">

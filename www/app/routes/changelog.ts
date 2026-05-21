@@ -3,14 +3,15 @@
  */
 export const meta = { section: '', label: 'Changelog', order: 20 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../components/page-styles.js';
+const pageSheet = new StyleSheet();
+pageSheet.replaceSync(pageStyles);
 import '@lessjs/ui/less-layout';
 
-export class ChangelogPage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+
+routeSheet.replaceSync(`
       .version-section {
         margin: 2rem 0;
         padding: 1.5rem;
@@ -98,16 +99,18 @@ export class ChangelogPage extends LitElement {
         font-weight: 600;
         color: var(--less-text-primary);
       }
-    `,
-  ];
+    `);
+
+export class ChangelogPage extends DsdElement {
+  static override styles = [routeSheet];
 
   override render() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
-        .headerNav="${headerNav}"
+        locale="${this.getAttribute('locale') || 'zh'}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(navSections)}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/changelog"
         home
       >
@@ -358,7 +361,7 @@ export class ChangelogPage extends LitElement {
                   <strong>双语文档站</strong>： 25/30 文档页面添加 <span class="inline-code"
                   >_renderEn()</span> 英文版，
                   <span class="inline-code">render()</span> 根据 <span class="inline-code"
-                  >this.locale</span> 分发。 language switcher 在 header-right 可点击切换整个网站语言。
+                  >this.getAttribute('locale')</span> 分发。 language switcher 在 header-right 可点击切换整个网站语言。
                 </li>
                 <li>
                   <strong>i18n StaticPaths</strong>：
@@ -1885,9 +1888,9 @@ export class ChangelogPage extends LitElement {
           </div>
         </less-layout>
       `;
-    }
   }
+}
 
-  customElements.define('page-changelog', ChangelogPage);
-  export default ChangelogPage;
-  export const tagName = 'page-changelog';
+customElements.define('page-changelog', ChangelogPage);
+export default ChangelogPage;
+export const tagName = 'page-changelog';

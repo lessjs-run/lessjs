@@ -10,7 +10,7 @@
 
 export const meta = { section: 'Registry', label: 'Package Registry', order: 5 };
 
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterRegistryNav } from '../../utils/nav-filter.js';
 import { pageStyles } from '../../components/page-styles.js';
@@ -40,17 +40,9 @@ const COMPAT_COLORS: Record<string, string> = {
   'experimental-dom': '#8b5cf6',
 };
 
-export default class DocsRegistryHome extends LitElement {
-  private _packages: HubIndexEntry[] = [];
-  private _filtered: HubIndexEntry[] = [];
-  private _query = '';
-  private _tierFilter = 'all';
-  private _sortBy: 'name' | 'tags' | 'compatibility' = 'name';
-  private _loading = true;
+const routeSheet = new StyleSheet();
 
-  static override styles = [
-    pageStyles,
-    css`
+routeSheet.replaceSync(`
       .registry-header {
         margin-bottom: 2rem;
       }
@@ -338,8 +330,17 @@ export default class DocsRegistryHome extends LitElement {
           align-items: stretch;
         }
       }
-    `,
-  ];
+    `);
+
+export default class DocsRegistryHome extends DsdElement {
+  private _packages: HubIndexEntry[] = [];
+  private _filtered: HubIndexEntry[] = [];
+  private _query = '';
+  private _tierFilter = 'all';
+  private _sortBy: 'name' | 'tags' | 'compatibility' = 'name';
+  private _loading = true;
+
+  static override styles = [routeSheet];
 
   // ─── Lifecycle ────────────────────────────────────────────────────────
   // Data is available at import time from hub-data.ts.
@@ -418,13 +419,13 @@ export default class DocsRegistryHome extends LitElement {
   }
 
   override render() {
-    return html`
+    return `
       <less-layout
-        .navItems="${filterRegistryNav(navSections)}"
-        .headerNav="${headerNav}"
+        nav-items='${JSON.stringify(filterRegistryNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/registry"
         locale="en"
-        .locales="${['en']}"
+        locales='${JSON.stringify(['en'])}'
       >
         <div class="container">
           <div class="registry-header">
@@ -474,65 +475,74 @@ export default class DocsRegistryHome extends LitElement {
               </button>
             </div>
             <select class="sort-select" @change="${(e: Event) => {
-              this._sortBy = (e.target as HTMLSelectElement).value as
-                | 'name'
-                | 'tags'
-                | 'compatibility';
-              this._applyFilters();
-            }}">
+      this._sortBy = (e.target as HTMLSelectElement).value as
+        | 'name'
+        | 'tags'
+        | 'compatibility';
+      this._applyFilters();
+    }}">
               <option value="name" ?selected="${this._sortBy === 'name'}">Sort: Name</option>
               <option value="tags" ?selected="${this._sortBy === 'tags'}">Sort: Components</option>
-              <option value="compatibility" ?selected="${this._sortBy ===
-                'compatibility'}">Sort: Compatibility</option>
+              <option value="compatibility" ?selected="${
+      this._sortBy ===
+        'compatibility'
+    }">Sort: Compatibility</option>
             </select>
           </div>
 
-          ${this._loading
-            ? html`
+          ${
+      this._loading
+        ? `
               <div class="empty-state">Loading registry...</div>
             `
-            : this._filtered.length === 0
-            ? html`
+        : this._filtered.length === 0
+        ? `
               <div class="empty-state">
-                ${this._query || this._tierFilter !== 'all'
-                  ? 'No packages match your search criteria.'
-                  : 'No packages in the registry yet.'}
+                ${
+          this._query || this._tierFilter !== 'all'
+            ? 'No packages match your search criteria.'
+            : 'No packages in the registry yet.'
+        }
               </div>
             `
-            : html`
-              <div class="stats">${this._filtered.length} package${this._filtered.length !== 1
-                ? 's'
-                : ''} found</div>
+        : `
+              <div class="stats">${this._filtered.length} package${
+          this._filtered.length !== 1 ? 's' : ''
+        } found</div>
 
               <div class="package-list">
-                ${this._filtered.map((pkg) => {
-                  const fullName = pkg.scope ? `${pkg.scope}/${pkg.name}` : pkg.name;
-                  const compatLabel = COMPAT_LABELS[pkg.compatibility] || pkg.compatibility;
-                  const compatColor = COMPAT_COLORS[pkg.compatibility] || '#888';
+                ${
+          this._filtered.map((pkg) => {
+            const fullName = pkg.scope ? `${pkg.scope}/${pkg.name}` : pkg.name;
+            const compatLabel = COMPAT_LABELS[pkg.compatibility] || pkg.compatibility;
+            const compatColor = COMPAT_COLORS[pkg.compatibility] || '#888';
 
-                  // "New" badge: submitted within 7 days
-                  const submittedDate = new Date(pkg.submittedAt);
-                  const daysSinceSubmit = (Date.now() - submittedDate.getTime()) /
-                    (1000 * 60 * 60 * 24);
-                  const isNew = daysSinceSubmit < 7;
+            // "New" badge: submitted within 7 days
+            const submittedDate = new Date(pkg.submittedAt);
+            const daysSinceSubmit = (Date.now() - submittedDate.getTime()) /
+              (1000 * 60 * 60 * 24);
+            const isNew = daysSinceSubmit < 7;
 
-                  // SSR vs client component breakdown
-                  const totalTags = pkg.tags.length;
-                  const ssrCount = pkg.ssrCapable ? totalTags : 0;
-                  const clientCount = totalTags - ssrCount;
+            // SSR vs client component breakdown
+            const totalTags = pkg.tags.length;
+            const ssrCount = pkg.ssrCapable ? totalTags : 0;
+            const clientCount = totalTags - ssrCount;
 
-                  return html`
-                    <a class="package-card" href="${this._packageLink(pkg)}" data-compat="${pkg
-                      .compatibility}">
+            return `
+                    <a class="package-card" href="${
+              this._packageLink(pkg)
+            }" data-compat="${pkg.compatibility}">
                       <div class="package-info">
                         <div class="package-name">
                           <code>${fullName}</code>
                           <span class="package-version">v${pkg.version}</span>
-                          ${isNew
-                            ? html`
+                          ${
+              isNew
+                ? `
                               <span class="new-badge">New</span>
                             `
-                            : ''}
+                : ''
+            }
                         </div>
                         <div class="package-desc">${pkg.description || 'No description'}</div>
                         <div class="package-meta">
@@ -540,33 +550,39 @@ export default class DocsRegistryHome extends LitElement {
                             <span class="compat-dot" style="background:${compatColor}"></span>
                             ${compatLabel}
                           </span>
-                          <span class="install-badge ${pkg.safeToInstall
-                            ? 'install-safe'
-                            : 'install-unsafe'}">
+                          <span class="install-badge ${
+              pkg.safeToInstall ? 'install-safe' : 'install-unsafe'
+            }">
                             ${pkg.safeToInstall ? '✅ Safe install' : '❌ Not installable'}
                           </span>
                           <span class="component-breakdown">
-                            ${ssrCount > 0
-                              ? html`
+                            ${
+              ssrCount > 0
+                ? `
                                 <span class="breakdown-segment">
                                   <span class="breakdown-dot" style="background:#22c55e"></span>${ssrCount} SSR
                                 </span>
                               `
-                              : ''} ${clientCount > 0
-                              ? html`
+                : ''
+            } ${
+              clientCount > 0
+                ? `
                                 <span class="breakdown-segment">
                                   <span class="breakdown-dot" style="background:#f59e0b"></span>${clientCount} client
                                 </span>
                               `
-                              : ''}
+                : ''
+            }
                           </span>
                         </div>
                       </div>
                     </a>
                   `;
-                })}
+          })
+        }
               </div>
-            `}
+            `
+    }
         </div>
       </less-layout>
     `;

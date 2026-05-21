@@ -4,15 +4,14 @@
 export const meta = { section: 'History', label: 'Blog', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterBlogNav } from '../../utils/nav-filter.js';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import { posts } from 'virtual:less-blog-data';
 
-export class BlogIndexPage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+
+routeSheet.replaceSync(`
       .blog-list {
         list-style: none;
         padding: 0;
@@ -76,66 +75,76 @@ export class BlogIndexPage extends LitElement {
         vertical-align: middle;
         margin-left: 0.25rem;
       }
-    `,
-  ];
+    `);
+
+export class BlogIndexPage extends DsdElement {
+  static override styles = [routeSheet];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${filterBlogNav(navSections)}"
-        .headerNav="${headerNav}"
+        locale="${this.getAttribute('locale') || 'zh'}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(filterBlogNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/blog"
       >
         <div class="container">
           <h1>博客</h1>
           <p class="subtitle">LessJS 框架的设计思考、架构决策和发展路线。</p>
-          <div class="blog-list">${posts.filter((p) => p.frontmatter.type !== 'adr').map(
-            (post, i) => {
-              const tags = post.frontmatter.tags ?? [];
-              return html`
+          <div class="blog-list">${
+      posts.filter((p) => p.frontmatter.type !== 'adr').map(
+        (post, i) => {
+          const tags = post.frontmatter.tags ?? [];
+          return `
                 <a href="/blog/${post.slug}" class="blog-item">
-                  <h2>${post.frontmatter.title} ${i === 0
-                    ? html`
+                  <h2>${post.frontmatter.title} ${
+            i === 0
+              ? `
                       <span class="new-badge">NEW</span>
                     `
-                    : ''}</h2>
-                  ${post.frontmatter.excerpt
-                    ? html`
+              : ''
+          }</h2>
+                  ${
+            post.frontmatter.excerpt
+              ? `
                       <p class="blog-desc">${post.frontmatter.excerpt}</p>
                     `
-                    : ''}
+              : ''
+          }
                   <span class="blog-date">${post.frontmatter.date}</span>
-                  ${tags.length > 0
-                    ? html`
-                      <div class="blog-tags">${tags.map((tag) =>
-                        html`
+                  ${
+            tags.length > 0
+              ? `
+                      <div class="blog-tags">${
+                tags.map((tag) => `
                           <span class="blog-tag">${tag}</span>
-                        `
-                      )}</div>
+                        `)
+              }</div>
                     `
-                    : ''}
+              : ''
+          }
                 </a>
               `;
-            },
-          )}</div>
+        },
+      )
+    }</div>
         </div>
       </less-layout>
     `;
   }
 
   private _renderEn() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'en'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${filterBlogNav(navSections)}"
-        .headerNav="${headerNav}"
+        locale="${this.getAttribute('locale') || 'en'}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(filterBlogNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/en/blog"
       >
         <div class="container">
@@ -143,35 +152,43 @@ export class BlogIndexPage extends LitElement {
           <p class="subtitle">
             Design thoughts, architecture decisions, and development roadmap for the LessJS framework.
           </p>
-          <div class="blog-list">${posts.filter((p) => p.frontmatter.type !== 'adr').map(
-            (post, i) => {
-              const tags = post.frontmatter.tags ?? [];
-              return html`
+          <div class="blog-list">${
+      posts.filter((p) => p.frontmatter.type !== 'adr').map(
+        (post, i) => {
+          const tags = post.frontmatter.tags ?? [];
+          return `
                 <a href="/en/blog/${post.slug}" class="blog-item">
-                  <h2>${post.frontmatter.title} ${i === 0
-                    ? html`
+                  <h2>${post.frontmatter.title} ${
+            i === 0
+              ? `
                       <span class="new-badge">NEW</span>
                     `
-                    : ''}</h2>
-                  ${post.frontmatter.excerpt
-                    ? html`
+              : ''
+          }</h2>
+                  ${
+            post.frontmatter.excerpt
+              ? `
                       <p class="blog-desc">${post.frontmatter.excerpt}</p>
                     `
-                    : ''}
+              : ''
+          }
                   <span class="blog-date">${post.frontmatter.date}</span>
-                  ${tags.length > 0
-                    ? html`
-                      <div class="blog-tags">${tags.map((tag) =>
-                        html`
+                  ${
+            tags.length > 0
+              ? `
+                      <div class="blog-tags">${
+                tags.map((tag) => `
                           <span class="blog-tag">${tag}</span>
-                        `
-                      )}</div>
+                        `)
+              }</div>
                     `
-                    : ''}
+              : ''
+          }
                 </a>
               `;
-            },
-          )}</div>
+        },
+      )
+    }</div>
         </div>
       </less-layout>
     `;

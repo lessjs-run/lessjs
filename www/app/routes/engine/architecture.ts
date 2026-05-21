@@ -1,23 +1,27 @@
 export const meta = { section: 'Principles', label: 'Architecture', order: 10 };
-import { navSections, headerNav } from 'virtual:less-nav';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class ArchitecturePage extends LitElement {
+export class ArchitecturePage extends DsdElement {
   declare locale?: string;
 
   static override styles = [pageStyles];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${filterEngineNav(navSections)}" .headerNav="${headerNav}" current-path="/engine/architecture">
+    return `
+      <less-layout locale="${this.getAttribute('locale') || 'zh'}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/engine/architecture">
         <div class="container">
           <h1>Architecture</h1>
           <p class="subtitle">
@@ -236,8 +240,12 @@ Phase 3: SSG
   }
 
   private _renderEn() {
-    return html`
-      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${filterEngineNav(navSections)}" .headerNav="${headerNav}" current-path="/en/engine/architecture">
+    return `
+      <less-layout locale="${this.getAttribute('locale') || 'en'}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/en/engine/architecture">
         <div class="container">
           <h1>Architecture</h1>
           <p class="subtitle">

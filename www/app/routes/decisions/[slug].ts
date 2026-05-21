@@ -5,7 +5,7 @@
  * The slug is derived from the ADR filename (e.g. 0001-keep-hono-vite-dev-server).
  */
 import { headerNav, navSections } from 'virtual:less-nav';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import { posts } from 'virtual:less-blog-data';
@@ -30,12 +30,9 @@ export function getStaticPaths(): Array<Record<string, string>> {
     .map((p) => ({ slug: p.slug }));
 }
 
-export default class DecisionSlugPage extends LitElement {
-  slug = '';
+const routeSheet = new StyleSheet();
 
-  static override styles = [
-    pageStyles,
-    css`
+routeSheet.replaceSync(`
       .decision-meta {
         display: flex;
         gap: 0.5rem;
@@ -159,19 +156,23 @@ export default class DecisionSlugPage extends LitElement {
         padding: 4rem 1rem;
         color: var(--less-text-muted);
       }
-    `,
-  ];
+    `);
+
+export default class DecisionSlugPage extends DsdElement {
+  slug = '';
+
+  static override styles = [routeSheet];
 
   override render() {
     const adrs = posts.filter((p) => p.frontmatter.type === 'adr');
     const post = adrs.find((p) => p.slug === this.slug);
     if (!post) {
-      return html`
+      return `
         <less-layout
-          locale="${this.locale || 'zh'}"
-          .locales="${['en', 'zh']}"
-          .navItems="${navSections}"
-          .headerNav="${headerNav}"
+          locale="${this.getAttribute('locale') || 'zh'}"
+          locales='${JSON.stringify(['en', 'zh'])}'
+          nav-items='${JSON.stringify(navSections)}'
+          header-nav='${JSON.stringify(headerNav)}'
           current-path="/decisions"
         >
           <div class="container">
@@ -184,25 +185,29 @@ export default class DecisionSlugPage extends LitElement {
       `;
     }
     const status = extractStatus(post.content);
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
-        .headerNav="${headerNav}"
+        locale="${this.getAttribute('locale') || 'zh'}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(navSections)}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/decisions/${this.slug}"
       >
         <div class="container">
           <h1>${adrId(post.slug)}: ${post.frontmatter.title}</h1>
-          ${post.frontmatter.excerpt
-            ? html`
+          ${
+      post.frontmatter.excerpt
+        ? `
               <p class="subtitle">${post.frontmatter.excerpt}</p>
             `
-            : ''} ${status
-            ? html`
+        : ''
+    } ${
+      status
+        ? `
               <div class="decision-meta"><span class="badge">${status}</span></div>
             `
-            : ''}
+        : ''
+    }
           <div class="markdown">${unsafeHTML(post.html)}</div>
           <div class="nav-row">
             <a href="/decisions" class="nav-link">&larr; Decisions</a>

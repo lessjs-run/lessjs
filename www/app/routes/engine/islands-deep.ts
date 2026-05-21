@@ -1,15 +1,14 @@
 export const meta = { section: 'Principles', label: 'Island Deep Dive', order: 50 };
-import { navSections, headerNav } from 'virtual:less-nav';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class IslandsDeepGuidePage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+
+routeSheet.replaceSync(`
       .layer-card { padding: 1.25rem 1.5rem; margin: 1rem 0; border-left: 2px solid var(--less-border-hover); background: var(--less-bg-surface); border-radius: 0 3px 3px 0; }
       .layer-card .layer-tag { font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--less-text-muted); margin-bottom: 0.25rem; }
       .layer-card h3 { margin: 0 0 0.5rem; }
@@ -18,11 +17,20 @@ export class IslandsDeepGuidePage extends LitElement {
       .strategy-item .strat-name { font-weight: 500; font-size: 0.875rem; color: var(--less-text-primary); margin-bottom: 0.25rem; }
       .strategy-item .strat-name code { font-size: 0.75rem; background: var(--less-code-bg); padding: 0.125rem 0.375rem; border-radius: 3px; }
       @media (max-width: 720px) { .strategy-grid { grid-template-columns: 1fr; } }
-    `,
-  ];
-  override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
+    `);
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterEngineNav(navSections)}" .headerNav="${headerNav}" current-path="/engine/islands-deep"><div class="container">
+export class IslandsDeepGuidePage extends DsdElement {
+  static override styles = [routeSheet];
+  override render() {
+    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+  }
+
+  private _renderZh() {
+    return `<less-layout locale="${this.getAttribute('locale') || 'zh'}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/engine/islands-deep"><div class="container">
     <h1>Island 深度指南</h1>
     <p class="subtitle">Island 是 LessJS 中唯一允许的客户端 JavaScript 单元。本页深入讲解 Island 的三层架构、升级策略、声明式事件绑定和数据传递机制。</p>
     <h2>Island 架构原理</h2>
@@ -47,9 +55,15 @@ export class IslandsDeepGuidePage extends LitElement {
     <h2>最佳实践</h2>
     <p>1. 从 Layer 1 开始。大部分展示性组件永远不需要离开 Layer 1。<br>2. 用 CSS 优先于 JavaScript。hover、focus、响应式布局等 CSS 就能解决。<br>3. 保持 Island 小且独立。多个小 Island 比一个大 Island 更容易理解和优化。<br>4. visible 策略优先于 lazy。对于不在首屏的组件更精确。<br>5. 注意 data-ssr-props 大小。大型数据集应通过 fetch 在客户端获取。<br>6. WithDsdHydration 的 render() 必须检查 _dsdHydrated，否则会导致 DOM 重复渲染。</p>
     <div class="nav-row"><a href="/engine/dsd" class="nav-link">&larr; DSD 渲染架构</a><a href="/guide/rpc" class="nav-link">RPC 远程调用 &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterEngineNav(navSections)}" .headerNav="${headerNav}" current-path="/en/engine/islands-deep"><div class="container">
+  private _renderEn() {
+    return `<less-layout locale="${this.getAttribute('locale') || 'en'}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/en/engine/islands-deep"><div class="container">
     <h1>Island Deep Dive</h1>
     <p class="subtitle">Islands are the only allowed client-side JavaScript units in LessJS. This page covers the three-layer architecture, upgrade strategies, declarative event binding, and data passing mechanisms.</p>
     <h2>Island Architecture</h2>
@@ -73,7 +87,8 @@ export class IslandsDeepGuidePage extends LitElement {
     <h2>Best Practices</h2>
     <p>1. Start with Layer 1. Most presentational components never need to leave Layer 1.<br>2. Prefer CSS over JavaScript. Hover, focus, responsive layouts can be done with CSS alone.<br>3. Keep islands small and independent. Multiple small islands are easier to understand and optimize than one large one.<br>4. Prefer visible over lazy for below-the-fold components.<br>5. Keep data-ssr-props small. Large datasets should be fetched client-side.<br>6. WithDsdHydration render() must check _dsdHydrated to avoid re-rendering the DSD DOM.</p>
     <div class="nav-row"><a href="/engine/dsd" class="nav-link">&larr; DSD Architecture</a><a href="/guide/rpc" class="nav-link">RPC &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 }
 
 customElements.define('page-islands-deep-guide', IslandsDeepGuidePage);
