@@ -11,13 +11,13 @@
  *   - SPA navigation via Navigation API (navigate/fetch/swap) preserved
  *   - Event delegation at shadow root level for nav clicks
  *
- * @csspart container â€?The app-layout root div
- * @csspart header â€?The sticky header element
- * @csspart sidebar â€?The docs-sidebar nav
- * @csspart main â€?The layout-main element
- * @csspart footer â€?The app-footer element
- * @csspart nav â€?The header-nav element
- * @csspart nav-toggle â€?The mobile menu toggle button
+ * @csspart container — The app-layout root div
+ * @csspart header — The sticky header element
+ * @csspart sidebar — The docs-sidebar nav
+ * @csspart main — The layout-main element
+ * @csspart footer — The app-footer element
+ * @csspart nav — The header-nav element
+ * @csspart nav-toggle — The mobile menu toggle button
  *
  * Usage:
  * ```html

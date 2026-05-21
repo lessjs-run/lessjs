@@ -6,10 +6,8 @@
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *
- * @csspart container â€?The article wrapper
- * @csspart header â€?The header slot wrapper (visible when header slot is used)
- * @csspart body â€?The card content area
- * @csspart footer â€?The footer slot wrapper (visible when footer slot is used)
+ * @csspart container — The article wrapper
+ * @csspart body — The card body content area
  *
  * Usage:
  * ```html
@@ -78,12 +76,13 @@ sheet.replaceSync(`
 
 export class LessCard extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
+  static override observedAttributes = ['variant'];
 
   override render(): string {
     return `
       <article part="container">
         <slot name="header"></slot>
-        <div class="card-body">
+        <div class="card-body" part="body">
           <slot></slot>
         </div>
         <slot name="footer"></slot>

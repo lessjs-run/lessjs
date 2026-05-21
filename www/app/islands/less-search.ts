@@ -23,7 +23,8 @@
  * - Component state is reset on connectedCallback() for SPA navigation safety
  */
 
-import { DsdElement, type HydrateEventDescriptor } from '@lessjs/core';
+import { DsdElement, type HydrateEventDescriptor, StyleSheet } from '@lessjs/core';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
 interface SearchEntry {
   path: string;
@@ -35,7 +36,7 @@ interface SearchEntry {
 export const tagName = 'less-search';
 
 // â”€â”€ Shadow DOM styles (trigger button) â”€â”€
-const sheet = new CSSStyleSheet();
+const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host { display: inline-flex; align-items: center; }
 
@@ -71,8 +72,11 @@ sheet.replaceSync(`
 `);
 
 // â”€â”€ Overlay styles (document-level, injected into document.adoptedStyleSheets) â”€â”€
-const overlaySheet = new CSSStyleSheet();
-overlaySheet.replaceSync(`
+let _overlaySheet: CSSStyleSheet | null = null;
+function getOverlaySheet(): CSSStyleSheet {
+  if (!_overlaySheet) {
+    _overlaySheet = new CSSStyleSheet();
+    _overlaySheet.replaceSync(`
   .less-search-overlay {
     position: fixed;
     top: 0; right: 0; bottom: 0; left: 0;
@@ -152,9 +156,12 @@ overlaySheet.replaceSync(`
     font-size: 0.875rem;
   }
 `);
+  }
+  return _overlaySheet;
+}
 
 export default class LessSearch extends DsdElement {
-  static override styles = sheet;
+  static override styles = [openPropsTokenSheet, sheet];
 
   static override hydrateEvents: HydrateEventDescriptor[] = [
     { selector: 'button.search-trigger', event: 'click', method: '_handleTriggerClick' },
@@ -191,10 +198,11 @@ export default class LessSearch extends DsdElement {
 
   override connectedCallback(): void {
     // Clean up orphaned overlays from previous SPA pages
-    document.querySelectorAll('.less-search-overlay').forEach(el => el.remove());
+    document.querySelectorAll('.less-search-overlay').forEach((el) => el.remove());
     this._resetState();
     super.connectedCallback();
     // Inject overlay stylesheet into document
+    const overlaySheet = getOverlaySheet();
     if (!document.adoptedStyleSheets.includes(overlaySheet)) {
       document.adoptedStyleSheets = [...document.adoptedStyleSheets, overlaySheet];
     }
@@ -278,9 +286,9 @@ export default class LessSearch extends DsdElement {
       };
       const paths = new Set<string>();
       for (const field of index.search(this._query, { limit: 10 })) {
-        field.result.forEach(p => paths.add(p));
+        field.result.forEach((p) => paths.add(p));
       }
-      this._results = this._entries.filter(entry => paths.has(entry.path)).slice(0, 10);
+      this._results = this._entries.filter((entry) => paths.has(entry.path)).slice(0, 10);
     }
     this._updateResults();
   }
@@ -289,7 +297,7 @@ export default class LessSearch extends DsdElement {
     const resultsDiv = this._overlayEl?.querySelector('.less-search-results');
     if (resultsDiv) {
       resultsDiv.innerHTML = this._getResultsHtml();
-      resultsDiv.querySelectorAll('a').forEach(a => {
+      resultsDiv.querySelectorAll('a').forEach((a) => {
         a.addEventListener('click', () => this._closeOverlay());
       });
     }
@@ -297,8 +305,10 @@ export default class LessSearch extends DsdElement {
 
   private _getResultsHtml(): string {
     if (this._results.length > 0) {
-      return this._results.map(r =>
-        `<a href="${this._escapeAttr(r.path)}" class="less-search-item" data-path="${this._escapeAttr(r.path)}">` +
+      return this._results.map((r) =>
+        `<a href="${this._escapeAttr(r.path)}" class="less-search-item" data-path="${
+          this._escapeAttr(r.path)
+        }">` +
         `<div class="less-search-section">${this._escapeHtml(r.section)}</div>` +
         `<div class="less-search-title">${this._escapeHtml(r.title)}</div>` +
         `<div class="less-search-text">${this._escapeHtml(r.text)}</div>` +
@@ -306,7 +316,9 @@ export default class LessSearch extends DsdElement {
       ).join('');
     }
     if (this._query.length >= 2) {
-      return `<div class="less-search-empty">No results found for "${this._escapeHtml(this._query)}"</div>`;
+      return `<div class="less-search-empty">No results found for "${
+        this._escapeHtml(this._query)
+      }"</div>`;
     }
     return `<div class="less-search-empty">Type at least 2 characters to search</div>`;
   }

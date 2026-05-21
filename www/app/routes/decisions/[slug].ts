@@ -38,51 +38,51 @@ routeSheet.replaceSync(`
         gap: 0.5rem;
         align-items: center;
         margin: 0.75rem 0 2rem;
-        color: var(--less-text-muted);
+        color: var(--text-muted);
         font-size: 0.75rem;
       }
       .badge {
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 3px;
         padding: 0.125rem 0.375rem;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
       }
       .markdown h1 {
         display: none;
       }
       .markdown h4 {
         margin: 1rem 0 0.5rem;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         font-size: 0.8125rem;
       }
       .markdown blockquote {
         margin: 1rem 0;
         padding: 0.75rem 1rem;
-        border-left: 2px solid var(--less-border-hover);
-        background: var(--less-bg-surface);
-        color: var(--less-text-secondary);
+        border-left: 2px solid var(--border-hover);
+        background: var(--bg-surface);
+        color: var(--text-secondary);
       }
       .markdown hr {
         border: 0;
-        border-top: 0.5px solid var(--less-border);
+        border-top: 0.5px solid var(--border);
         margin: 2rem 0;
       }
       .markdown {
         font-size: 0.9375rem;
         line-height: 1.75;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
         min-width: 0;
         overflow-wrap: anywhere;
       }
       .markdown h2 {
         margin-top: 2.5rem;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         font-size: 1.125rem;
         font-weight: 600;
       }
       .markdown h3 {
         margin-top: 2rem;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         font-size: 1rem;
         font-weight: 600;
       }
@@ -97,10 +97,10 @@ routeSheet.replaceSync(`
         margin: 0.375rem 0;
       }
       .markdown strong {
-        color: var(--less-text-primary);
+        color: var(--text-primary);
       }
       .markdown code {
-        background: var(--less-code-bg);
+        background: var(--bg-code);
         padding: 0.125rem 0.375rem;
         border-radius: 2px;
         font-size: 0.8125rem;
@@ -108,8 +108,8 @@ routeSheet.replaceSync(`
         overflow-wrap: anywhere;
       }
       .markdown pre {
-        background: var(--less-bg-surface);
-        border: 0.5px solid var(--less-border);
+        background: var(--bg-surface);
+        border: 0.5px solid var(--border);
         border-radius: 4px;
         padding: 1rem;
         overflow-x: auto;
@@ -134,18 +134,18 @@ routeSheet.replaceSync(`
       .markdown th, .markdown td {
         padding: 0.5rem 0.75rem;
         text-align: left;
-        border-bottom: 0.5px solid var(--less-border);
+        border-bottom: 0.5px solid var(--border);
       }
       .markdown th {
-        background: var(--less-bg-surface);
-        color: var(--less-text-muted);
+        background: var(--bg-surface);
+        color: var(--text-muted);
         font-weight: 600;
         font-size: 0.6875rem;
         text-transform: uppercase;
         letter-spacing: 0.06em;
       }
       .markdown a {
-        color: var(--less-accent);
+        color: var(--brand);
         text-decoration: none;
       }
       .markdown a:hover {
@@ -154,7 +154,7 @@ routeSheet.replaceSync(`
       .not-found {
         text-align: center;
         padding: 4rem 1rem;
-        color: var(--less-text-muted);
+        color: var(--text-muted);
       }
     `);
 

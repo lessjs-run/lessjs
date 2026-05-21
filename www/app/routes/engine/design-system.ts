@@ -30,17 +30,17 @@ routeSheet.replaceSync(
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.16em;
-        color: var(--less-text-muted);
+        color: var(--text-muted);
         margin-bottom: 1.5rem;
         padding-bottom: 0.75rem;
-        border-bottom: 0.5px solid var(--less-border);
+        border-bottom: 0.5px solid var(--border);
       }
       .palette-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1px;
-        background: var(--less-border);
-        border: 0.5px solid var(--less-border);
+        background: var(--border);
+        border: 0.5px solid var(--border);
         border-radius: 6px;
         overflow: hidden;
       }
@@ -48,7 +48,7 @@ routeSheet.replaceSync(
         padding: 1.5rem;
       }
       .palette-dark {
-        background: var(--less-bg-base);
+        background: var(--bg-base);
       }
       .palette-light {
         background: #fff;
@@ -61,10 +61,10 @@ routeSheet.replaceSync(
         margin-bottom: 1rem;
       }
       .palette-dark .palette-name {
-        color: var(--less-text-muted);
+        color: var(--text-muted);
       }
       .palette-light .palette-name {
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
       }
       .swatch-grid {
         display: grid;
@@ -93,26 +93,26 @@ routeSheet.replaceSync(
         letter-spacing: 0.04em;
       }
       .palette-dark .swatch-label {
-        color: var(--less-text-muted);
+        color: var(--text-muted);
       }
       .palette-light .swatch-label {
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
       }
       .palette-desc {
         font-size: 0.75rem;
         line-height: 1.6;
       }
       .palette-dark .palette-desc {
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
       }
       .palette-dark .palette-desc strong {
-        color: var(--less-text-primary);
+        color: var(--text-primary);
       }
       .palette-light .palette-desc {
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
       }
       .palette-light .palette-desc strong {
-        color: var(--less-text-primary);
+        color: var(--text-primary);
       }
       .type-scale {
         display: flex;
@@ -123,7 +123,7 @@ routeSheet.replaceSync(
         align-items: baseline;
         gap: 1.5rem;
         padding: 0.75rem 0;
-        border-bottom: 0.5px solid var(--less-border);
+        border-bottom: 0.5px solid var(--border);
       }
       .type-row:last-child {
         border-bottom: none;
@@ -134,20 +134,20 @@ routeSheet.replaceSync(
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        color: var(--less-text-muted);
+        color: var(--text-muted);
       }
       .type-sample {
-        color: var(--less-text-primary);
+        color: var(--text-primary);
       }
       .preview-card {
-        background: var(--less-bg-surface);
-        border: 0.5px solid var(--less-border);
+        background: var(--bg-surface);
+        border: 0.5px solid var(--border);
         border-radius: 6px;
         overflow: hidden;
       }
       .preview-header {
         padding: 0.875rem 1.25rem;
-        border-bottom: 0.5px solid var(--less-border);
+        border-bottom: 0.5px solid var(--border);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -155,7 +155,7 @@ routeSheet.replaceSync(
       .preview-title {
         font-size: 0.8125rem;
         font-weight: 600;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
       }
       .preview-badge {
         font-size: 0.5625rem;
@@ -164,9 +164,9 @@ routeSheet.replaceSync(
         letter-spacing: 0.08em;
         padding: 0.25rem 0.5rem;
         border-radius: 3px;
-        background: var(--less-accent-subtle);
-        color: var(--less-text-secondary);
-        border: 0.5px solid var(--less-border);
+        background: var(--brand-subtle);
+        color: var(--text-secondary);
+        border: 0.5px solid var(--border);
       }
       .preview-body {
         padding: 1.25rem;
@@ -183,15 +183,15 @@ routeSheet.replaceSync(
       .install-section {
         margin-top: 3.5rem;
         padding: 2rem;
-        background: var(--less-bg-surface);
-        border: 0.5px solid var(--less-border);
+        background: var(--bg-surface);
+        border: 0.5px solid var(--border);
         border-radius: 6px;
         text-align: center;
       }
       .install-section h3 {
         font-size: 0.9375rem;
         font-weight: 600;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         margin: 0 0 1rem;
       }
       .install-cmd {
@@ -199,19 +199,19 @@ routeSheet.replaceSync(
         align-items: center;
         gap: 0.625rem;
         padding: 0.625rem 1.25rem;
-        background: var(--less-bg-elevated);
-        border: 0.5px solid var(--less-border);
+        background: var(--bg-elevated);
+        border: 0.5px solid var(--border);
         border-radius: 4px;
         font-family: "SF Mono", monospace;
         font-size: 0.8125rem;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
       }
       .install-cmd .prompt {
-        color: var(--less-text-muted);
+        color: var(--text-muted);
       }
       .install-section p {
         font-size: 0.8125rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         margin: 0.75rem 0 0;
       }
       @media (max-width: 900px) {

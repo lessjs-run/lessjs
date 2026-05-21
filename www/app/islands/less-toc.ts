@@ -27,19 +27,19 @@ styles.replaceSync(`
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--less-text-tertiary);
+    color: var(--text-muted);
     margin-bottom: 0.75rem;
   }
   .toc-list {
     list-style: none;
     margin: 0;
     padding: 0;
-    border-left: 0.5px solid var(--less-border);
+    border-left: 0.5px solid var(--border);
   }
   .toc-link {
     display: block;
     padding: 0.25rem 0.75rem;
-    color: var(--less-text-tertiary);
+    color: var(--text-muted);
     text-decoration: none;
     border-left: 1px solid transparent;
     margin-left: -1px;
@@ -47,11 +47,11 @@ styles.replaceSync(`
     line-height: 1.5;
   }
   .toc-link:hover {
-    color: var(--less-text-primary);
+    color: var(--text-primary);
   }
   .toc-link.active {
-    color: var(--less-text-primary);
-    border-left-color: var(--less-text-primary);
+    color: var(--text-primary);
+    border-left-color: var(--text-primary);
   }
   .toc-link.h3 {
     padding-left: 1.5rem;

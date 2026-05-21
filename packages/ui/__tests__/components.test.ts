@@ -148,20 +148,14 @@ Deno.test('design-tokens: openPropsTokenSheet is StyleSheet', async () => {
   assertExists(Array.isArray(openPropsTokenSheet.cssRules), 'should have cssRules array');
 });
 
-Deno.test('design-tokens: individual token modules export CSS', async () => {
-  const tokenModules = [
-    ['tokens/spacing', 'lessSpacingTokens'],
-    ['tokens/typography', 'lessTypographyTokens'],
-    ['tokens/effects', 'lessEffectTokens'],
-  ];
-
-  for (const [modPath, exportName] of tokenModules) {
-    const mod = await import(`../src/${modPath}.ts`);
-    assertExists(mod[exportName as keyof typeof mod], `${modPath} should export ${exportName}`);
-  }
+Deno.test('open-props-tokens: token sheet is valid CSSStyleSheet', async () => {
+  const { openPropsTokenSheet } = await import('../src/open-props-tokens.ts');
+  assertExists(openPropsTokenSheet);
+  assertExists(typeof openPropsTokenSheet.replaceSync === 'function', 'should have replaceSync');
+  assertExists(Array.isArray(openPropsTokenSheet.cssRules), 'should have cssRules array');
 });
 
-// â”€â”€â”€ Index Re-exports â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Index Re-exports ──────────────────────────────────────────────────────
 
 Deno.test('index: re-exports all components', async () => {
   const mod = await import('../src/index.ts');
@@ -184,11 +178,8 @@ Deno.test('index: re-exports all components', async () => {
 
   // Tokens
   assertExists(mod.openPropsTokenSheet);
-  assertExists(mod.lessSpacingTokens);
-  assertExists(mod.lessTypographyTokens);
-  assertExists(mod.lessEffectTokens);
 
-  // Plugin removed â€?lessUI() was dead code (zero consumers)
+  // Plugin removed — lessUI() was dead code (zero consumers)
 });
 
 Deno.test('index: manifest has correct declarations', async () => {

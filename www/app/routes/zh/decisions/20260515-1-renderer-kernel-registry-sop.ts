@@ -19,14 +19,14 @@ routeSheet.replaceSync(`
         flex-wrap: wrap;
         gap: 0.5rem;
         margin: 0.75rem 0 2rem;
-        color: var(--less-text-muted);
+        color: var(--text-muted);
         font-size: 0.75rem;
       }
       .badge {
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 3px;
         padding: 0.125rem 0.375rem;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
       }
       .matrix {
         width: 100%;
@@ -37,13 +37,13 @@ routeSheet.replaceSync(`
       .matrix th,
       .matrix td {
         padding: 0.625rem 0.75rem;
-        border-bottom: 0.5px solid var(--less-border);
+        border-bottom: 0.5px solid var(--border);
         text-align: left;
         vertical-align: top;
       }
       .matrix th {
-        background: var(--less-bg-surface);
-        color: var(--less-text-muted);
+        background: var(--bg-surface);
+        color: var(--text-muted);
         font-size: 0.6875rem;
         font-weight: 600;
         letter-spacing: 0.04em;
@@ -55,15 +55,15 @@ routeSheet.replaceSync(`
         margin: 1rem 0 2rem;
       }
       .step {
-        border-left: 2px solid var(--less-border-hover);
+        border-left: 2px solid var(--border-hover);
         padding-left: 1rem;
       }
       .step-title {
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         font-weight: 600;
       }
       code {
-        background: var(--less-code-bg);
+        background: var(--bg-code);
         border-radius: 2px;
         padding: 0.125rem 0.375rem;
         font-family: "SF Mono", monospace;

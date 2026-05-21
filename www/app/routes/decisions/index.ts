@@ -33,19 +33,19 @@ routeSheet.replaceSync(`
       .decision-link {
         display: block;
         padding: 1rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 6px;
         text-decoration: none;
-        background: var(--less-bg-surface);
+        background: var(--bg-surface);
       }
       .decision-link:hover {
-        border-color: var(--less-border-hover);
+        border-color: var(--border-hover);
       }
       .decision-title {
         display: flex;
         justify-content: space-between;
         gap: 1rem;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         font-size: 0.9375rem;
         font-weight: 500;
         min-width: 0;
@@ -55,7 +55,7 @@ routeSheet.replaceSync(`
         min-width: 0;
       }
       .decision-status {
-        color: var(--less-text-muted);
+        color: var(--text-muted);
         font-size: 0.75rem;
         white-space: nowrap;
       }
@@ -70,7 +70,7 @@ routeSheet.replaceSync(`
       }
       .decision-summary {
         margin-top: 0.5rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         font-size: 0.8125rem;
         line-height: 1.6;
       }

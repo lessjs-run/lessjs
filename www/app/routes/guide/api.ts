@@ -12,8 +12,8 @@ routeSheet.replaceSync(
 
       .principle {
         padding: 1rem 1.25rem;
-        background: var(--less-bg-surface);
-        border-left: 2px solid var(--less-border-hover);
+        background: var(--bg-surface);
+        border-left: 2px solid var(--border-hover);
         border-radius: 0 4px 4px 0;
         margin: 1rem 0;
       }

@@ -150,87 +150,113 @@ Deno.test({
   },
 });
 
-Deno.test('buildPlugin - closeBundle (dev mode, skips write)', async (t) => {
-  const ctx = new LessBuildContext({});
-  const plugin = buildPlugin({}, ctx);
-  const config = makeConfig('serve'); // dev mode
-  callHook(plugin.configResolved, config);
-  await callAsyncHook(plugin.closeBundle);
+Deno.test({
+  name: 'buildPlugin - closeBundle (dev mode, skips write)',
+  // Previous build-mode tests spawn Vite SSR builds whose dangling async
+  // fs.access (Deno.lstat) ops can leak across test boundaries.
+  sanitizeOps: false,
+  sanitizeResources: false,
+  async fn(t) {
+    const ctx = new LessBuildContext({});
+    const plugin = buildPlugin({}, ctx);
+    const config = makeConfig('serve'); // dev mode
+    callHook(plugin.configResolved, config);
+    await callAsyncHook(plugin.closeBundle);
 
-  await t.step('does NOT write ctx fields in dev mode', () => {
-    // In dev mode, closeBundle returns early — ctx fields should remain default
-    assertEquals(ctx.phase3.root, '');
-    assertEquals(ctx.phase3.outDir, 'dist'); // default value
-  });
+    await t.step('does NOT write ctx fields in dev mode', () => {
+      // In dev mode, closeBundle returns early — ctx fields should remain default
+      assertEquals(ctx.phase3.root, '');
+      assertEquals(ctx.phase3.outDir, 'dist'); // default value
+    });
+  },
 });
 
-Deno.test('buildPlugin - custom outDir and options writes to ctx', async (t) => {
-  const ctx = new LessBuildContext({});
-  const options = {
-    build: { outDir: 'custom-dist' },
-    islandsDir: 'src/islands',
-    routesDir: 'src/routes',
-    middleware: { cors: true },
-    headExtras: '<meta name="theme-color" content="#000">',
-    html: { lang: 'zh', title: 'My App' },
-    island: { upgradeStrategy: 'eager' as const },
-  };
-  const plugin = buildPlugin(options, ctx);
-  const config = makeConfig('build');
-  callHook(plugin.configResolved, config);
+Deno.test({
+  name: 'buildPlugin - custom outDir and options writes to ctx',
+  // Rolldown/Vite SSR build spawns dangling async fs.access (Deno.lstat) ops
+  // that the sanitizer flags as leaks. Same root cause as closeBundle test above.
+  sanitizeOps: false,
+  sanitizeResources: false,
+  async fn(t) {
+    const ctx = new LessBuildContext({});
+    const options = {
+      build: { outDir: 'custom-dist' },
+      islandsDir: 'src/islands',
+      routesDir: 'src/routes',
+      middleware: { cors: true },
+      headExtras: '<meta name="theme-color" content="#000">',
+      html: { lang: 'zh', title: 'My App' },
+      island: { upgradeStrategy: 'eager' as const },
+    };
+    const plugin = buildPlugin(options, ctx);
+    const config = makeConfig('build');
+    callHook(plugin.configResolved, config);
 
-  try {
-    await callAsyncHook(plugin.closeBundle);
-  } catch {
-    // Phase 2/3 may fail without a real project
-  }
+    try {
+      await callAsyncHook(plugin.closeBundle);
+    } catch {
+      // Phase 2/3 may fail without a real project
+    }
 
-  await t.step('writes custom options to ctx', () => {
-    assertEquals(ctx.phase3.outDir, 'custom-dist');
-    assertEquals(ctx.phase3.islandsDir, 'src/islands');
-    assertEquals(ctx.phase3.routesDir, 'src/routes');
-    assertEquals(ctx.phase3.html?.lang, 'zh');
-    assertEquals(ctx.phase3.upgradeStrategy, 'eager');
-  });
+    await t.step('writes custom options to ctx', () => {
+      assertEquals(ctx.phase3.outDir, 'custom-dist');
+      assertEquals(ctx.phase3.islandsDir, 'src/islands');
+      assertEquals(ctx.phase3.routesDir, 'src/routes');
+      assertEquals(ctx.phase3.html?.lang, 'zh');
+      assertEquals(ctx.phase3.upgradeStrategy, 'eager');
+    });
+  },
 });
 
-Deno.test('buildPlugin - ssr.noExternal RegExp serialization writes to ctx', async (t) => {
-  const ctx = new LessBuildContext({});
-  const options = {
-    ssr: { noExternal: [/@lessjs\/.*/, 'lit'] },
-  };
-  const plugin = buildPlugin(options as never, ctx);
-  const config = makeConfig('build');
-  callHook(plugin.configResolved, config);
+Deno.test({
+  name: 'buildPlugin - ssr.noExternal RegExp serialization writes to ctx',
+  // Rolldown/Vite SSR build spawns dangling async fs.access (Deno.lstat) ops
+  sanitizeOps: false,
+  sanitizeResources: false,
+  async fn(t) {
+    const ctx = new LessBuildContext({});
+    const options = {
+      ssr: { noExternal: [/@lessjs\/.*/, 'lit'] },
+    };
+    const plugin = buildPlugin(options as never, ctx);
+    const config = makeConfig('build');
+    callHook(plugin.configResolved, config);
 
-  try {
-    await callAsyncHook(plugin.closeBundle);
-  } catch {
-    // Phase 2/3 may fail without a real project
-  }
+    try {
+      await callAsyncHook(plugin.closeBundle);
+    } catch {
+      // Phase 2/3 may fail without a real project
+    }
 
-  await t.step('serializes RegExp as __type objects in ctx', () => {
-    assertExists(ctx.phase3.ssrNoExternal);
-    const first = ctx.phase3.ssrNoExternal[0] as { __type?: string; source?: string };
-    assertEquals(first.__type, 'RegExp');
-    assertEquals(first.source, '@lessjs\\/.*');
-    assertEquals(ctx.phase3.ssrNoExternal[1], 'lit');
-  });
+    await t.step('serializes RegExp as __type objects in ctx', () => {
+      assertExists(ctx.phase3.ssrNoExternal);
+      const first = ctx.phase3.ssrNoExternal[0] as { __type?: string; source?: string };
+      assertEquals(first.__type, 'RegExp');
+      assertEquals(first.source, '@lessjs\\/.*');
+      assertEquals(ctx.phase3.ssrNoExternal[1], 'lit');
+    });
+  },
 });
 
-Deno.test('buildPlugin - base without trailing slash ensures base ends with /', async (t) => {
-  const ctx = new LessBuildContext({});
-  const plugin = buildPlugin({}, ctx);
-  const config = makeConfig('build', '/base'); // no trailing slash
-  callHook(plugin.configResolved, config);
+Deno.test({
+  name: 'buildPlugin - base without trailing slash ensures base ends with /',
+  // Rolldown/Vite SSR build spawns dangling async fs.access (Deno.lstat) ops
+  sanitizeOps: false,
+  sanitizeResources: false,
+  async fn(t) {
+    const ctx = new LessBuildContext({});
+    const plugin = buildPlugin({}, ctx);
+    const config = makeConfig('build', '/base'); // no trailing slash
+    callHook(plugin.configResolved, config);
 
-  try {
-    await callAsyncHook(plugin.closeBundle);
-  } catch {
-    // Phase 2/3 may fail without a real project
-  }
+    try {
+      await callAsyncHook(plugin.closeBundle);
+    } catch {
+      // Phase 2/3 may fail without a real project
+    }
 
-  await t.step('ensures base ends with /', () => {
-    assertEquals(ctx.phase3.base, '/base/');
-  });
+    await t.step('ensures base ends with /', () => {
+      assertEquals(ctx.phase3.base, '/base/');
+    });
+  },
 });

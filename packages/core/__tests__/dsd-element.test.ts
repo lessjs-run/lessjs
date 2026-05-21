@@ -225,8 +225,7 @@ Deno.test('DsdElement: M-17 guard skips methods starting with __', () => {
 
   const el = document.createElement(tagName) as M17Element;
   const shadow = el.attachShadow({ mode: 'open' });
-  shadow.innerHTML =
-    '<button class="normal">Normal</button><button class="dunder">Dunder</button>';
+  shadow.innerHTML = '<button class="normal">Normal</button><button class="dunder">Dunder</button>';
   el['_dsdHydrated'] = true;
 
   document.body.appendChild(el);

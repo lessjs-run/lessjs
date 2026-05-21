@@ -134,16 +134,24 @@ export class DsdElement extends _HTMLElement {
     const root = this.attachShadow({ mode: 'open', delegatesFocus });
 
     // Apply static styles via adoptedStyleSheets
-    if (ctor.styles) {
-      const sheets = Array.isArray(ctor.styles) ? ctor.styles : [ctor.styles];
-      if (sheets.length > 0) {
-        // StyleSheet delegates to native CSSStyleSheet in browser
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (root as any).adoptedStyleSheets = sheets;
-      }
-    }
+    this._applyStyles(ctor, root);
 
     return root;
+  }
+
+  /**
+   * Apply static styles to the shadow root via adoptedStyleSheets.
+   * Shared between CSR (createRenderRoot) and DSD (connectedCallback) paths.
+   */
+  private _applyStyles(ctor: typeof DsdElement, root?: ShadowRoot): void {
+    const target = root ?? this.shadowRoot;
+    if (!target || !ctor.styles) return;
+    const sheets = Array.isArray(ctor.styles) ? ctor.styles : [ctor.styles];
+    if (sheets.length > 0) {
+      // StyleSheet delegates to native CSSStyleSheet in browser
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (target as any).adoptedStyleSheets = sheets;
+    }
   }
 
   /**
@@ -170,6 +178,11 @@ export class DsdElement extends _HTMLElement {
       // hydrated so the CSR path (innerHTML = render()) does not
       // destroy the pre-populated shadow DOM content.
       this._dsdHydrated = true;
+
+      // Apply adoptedStyleSheets on DSD path too — this ensures styles
+      // survive if a component later re-renders via innerHTML (which
+      // destroys <style> tags injected by SSR but not adoptedStyleSheets).
+      this._applyStyles(ctor);
     }
 
     if (this._dsdHydrated) {
@@ -236,6 +249,11 @@ export class DsdElement extends _HTMLElement {
     const events = ctor.hydrateEvents || [];
     if (events.length === 0) return;
 
+    // Abort any previous hydration listeners to prevent memory leaks
+    // when _hydrateEvents is called multiple times (e.g. after _reRender)
+    if (this._hydrateAbortController) {
+      this._hydrateAbortController.abort();
+    }
     this._hydrateAbortController = new AbortController();
     const { signal } = this._hydrateAbortController;
 

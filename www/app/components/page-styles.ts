@@ -11,7 +11,7 @@
  * - H2: 1rem → 1.25rem, weight 500 → 600
  * - Container: 720px → 800px
  * - Paragraph/H2 spacing increased
- * - Links use brand color (--less-brand)
+ * - Links use brand color (--brand)
  * - Code blocks: dark theme with better line-height
  * - Tables: striped rows + cleaner borders
  * - Cards/sections: border-radius 6px + shadow
@@ -48,12 +48,12 @@ export const pageStyles = `
     font-weight: 700;
     letter-spacing: -0.025em;
     margin: 0 0 0.75rem;
-    color: var(--less-text-primary);
+    color: var(--text-primary);
     line-height: 1.15;
   }
 
   .subtitle {
-    color: var(--less-text-tertiary);
+    color: var(--text-muted);
     margin-bottom: 3rem;
     font-size: 1rem;
     line-height: 1.7;
@@ -63,7 +63,7 @@ export const pageStyles = `
     font-size: 1.25rem;
     font-weight: 600;
     margin: 2.5rem 0 1rem;
-    color: var(--less-text-primary);
+    color: var(--text-primary);
     letter-spacing: -0.01em;
   }
 
@@ -71,18 +71,18 @@ export const pageStyles = `
     font-size: 1rem;
     font-weight: 600;
     margin: 1.5rem 0 0.5rem;
-    color: var(--less-text-primary);
+    color: var(--text-primary);
   }
 
   p {
     line-height: 1.75;
     margin: 0.5rem 0;
-    color: var(--less-text-secondary);
+    color: var(--text-secondary);
     font-size: 0.9375rem;
   }
 
   strong {
-    color: var(--less-text-primary);
+    color: var(--text-primary);
     font-weight: 600;
   }
   em {
@@ -90,24 +90,24 @@ export const pageStyles = `
   }
 
   a {
-    color: var(--less-brand, #534ab7);
+    color: var(--brand, #534ab7);
     text-decoration: underline;
     text-underline-offset: 3px;
-    text-decoration-color: var(--less-brand, #534ab7);
+    text-decoration-color: var(--brand, #534ab7);
     text-decoration-thickness: 0.5px;
     opacity: 0.9;
     transition: opacity 0.15s, text-decoration-color 0.15s;
   }
   a:hover {
     opacity: 1;
-    text-decoration-color: var(--less-brand, #534ab7);
+    text-decoration-color: var(--brand, #534ab7);
   }
 
   /* Brand section label (matches homepage) */
   .section-label {
     font-size: 11px;
     font-weight: 600;
-    color: var(--less-brand, #534ab7);
+    color: var(--brand, #534ab7);
     text-transform: uppercase;
     letter-spacing: 0.14em;
     margin-bottom: 14px;
@@ -117,7 +117,7 @@ export const pageStyles = `
   .section-divider {
     border: none;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--less-brand, #534AB7) 20%, var(--less-brand-light, #6D5CE8) 80%, transparent);
+    background: linear-gradient(90deg, transparent, var(--brand, #534AB7) 20%, var(--brand-light, #6D5CE8) 80%, transparent);
     opacity: 0.2;
     margin: 2.5rem 0;
   }
@@ -141,16 +141,16 @@ export const pageStyles = `
   }
 
   p code, li code {
-    background: var(--less-code-bg);
+    background: var(--bg-code);
     padding: 0.125rem 0.375rem;
     border-radius: 4px;
     font-size: 0.75rem;
-    color: var(--less-text-secondary);
-    border: 0.5px solid var(--less-code-border);
+    color: var(--text-secondary);
+    border: 0.5px solid var(--code-border);
   }
 
   .inline-code {
-    background: var(--less-code-bg);
+    background: var(--bg-code);
     padding: 0.125rem 0.375rem;
     border-radius: 4px;
     font-size: 0.875em;
@@ -164,28 +164,28 @@ export const pageStyles = `
     font-size: 0.8125rem;
   }
   th, td {
-    border: 1px solid var(--less-border);
+    border: 1px solid var(--border);
     padding: 0.625rem 0.875rem;
     text-align: left;
   }
   th {
     font-weight: 600;
-    color: var(--less-text-secondary);
-    background: var(--less-bg-surface);
+    color: var(--text-secondary);
+    background: var(--bg-surface);
   }
   td {
-    color: var(--less-text-tertiary);
+    color: var(--text-muted);
   }
   tr:nth-child(even) td {
-    background: var(--less-bg-surface);
+    background: var(--bg-surface);
   }
 
   /* Callouts */
   .callout {
     padding: 1rem 1.25rem;
     margin: 1rem 0;
-    border-left: 3px solid var(--less-brand, #534ab7);
-    background: var(--less-bg-surface);
+    border-left: 3px solid var(--brand, #534ab7);
+    background: var(--bg-surface);
     border-radius: 0 8px 8px 0;
   }
   .callout.warn {
@@ -195,8 +195,8 @@ export const pageStyles = `
   .pillar {
     padding: 1.25rem 1.5rem;
     margin: 1rem 0;
-    border-left: 3px solid var(--less-brand, #534ab7);
-    background: var(--less-bg-surface);
+    border-left: 3px solid var(--brand, #534ab7);
+    background: var(--bg-surface);
     border-radius: 0 8px 8px 0;
   }
   .pillar .num {
@@ -204,7 +204,7 @@ export const pageStyles = `
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--less-brand, #534ab7);
+    color: var(--brand, #534ab7);
     margin-bottom: 0.25rem;
   }
   .pillar h3 {
@@ -213,8 +213,8 @@ export const pageStyles = `
 
   .hard-constraint {
     display: inline-block;
-    background: var(--less-code-bg);
-    border: 0.5px solid var(--less-border-hover);
+    background: var(--bg-code);
+    border: 0.5px solid var(--border-hover);
     padding: 0.25rem 0.625rem;
     border-radius: 4px;
     font-size: 0.75rem;
@@ -224,7 +224,7 @@ export const pageStyles = `
   /* Lists */
   ul, ol {
     padding-left: 1.25rem;
-    color: var(--less-text-secondary);
+    color: var(--text-secondary);
     line-height: 1.7;
   }
   li {
@@ -243,15 +243,15 @@ export const pageStyles = `
     padding: 0.5rem 1rem;
     font-size: 0.75rem;
     font-weight: 500;
-    color: var(--less-text-secondary);
+    color: var(--text-secondary);
     text-decoration: none;
-    border: 0.5px solid var(--less-border);
+    border: 0.5px solid var(--border);
     border-radius: 6px;
     transition: color 0.15s, border-color 0.15s;
   }
   .nav-link:hover {
-    color: var(--less-text-primary);
-    border-color: var(--less-border-hover);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
   }
 
   @media (max-width: 900px) {
@@ -301,7 +301,7 @@ export const pageStyles = `
   }
 
   :focus-visible {
-    outline: 2px solid var(--less-brand, #534ab7);
+    outline: 2px solid var(--brand, #534ab7);
     outline-offset: 2px;
   }
 

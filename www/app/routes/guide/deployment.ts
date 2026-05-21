@@ -18,7 +18,7 @@ routeSheet.replaceSync(
       }
       .platform-card {
         padding: 1rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 4px;
       }
       .platform-card h3 {

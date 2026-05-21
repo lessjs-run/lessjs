@@ -6,9 +6,9 @@
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *
- * @csspart container â€?The callout wrapper
- * @csspart icon â€?The type icon span
- * @csspart content â€?The body content area
+ * @csspart container —The callout wrapper
+ * @csspart icon —The type icon span
+ * @csspart content —The body content area
  *
  * Usage:
  * ```html
@@ -120,11 +120,9 @@ export class LessCallout extends DsdElement {
     this._hydrateEvents();
   }
 
-  /** Escape HTML to prevent XSS */
+  /** Escape HTML text content to prevent XSS (SSR-safe, no DOM API) */
   private _esc(s: string): string {
-    const div = document.createElement('div');
-    div.textContent = s;
-    return div.innerHTML;
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 }
 

@@ -123,22 +123,22 @@ routeSheet.replaceSync(`
       }
       .breadcrumb {
         font-size: 0.8125rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         margin-bottom: 0.75rem;
       }
       .breadcrumb a {
-        color: var(--less-accent);
+        color: var(--brand);
         text-decoration: none;
       }
       .breadcrumb a:hover {
         text-decoration: underline;
       }
       .section {
-        border: 1px solid var(--less-border);
+        border: 1px solid var(--border);
         border-radius: 10px;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
-        background: var(--less-bg-surface);
+        background: var(--bg-surface);
         box-shadow: 0 1px 3px rgba(0,0,0,0.03);
       }
       .section-title {
@@ -181,7 +181,7 @@ routeSheet.replaceSync(`
 
       /* Preview area */
       .preview-frame {
-        border: 1px solid var(--less-border);
+        border: 1px solid var(--border);
         border-radius: 10px;
         padding: 1.5rem;
         background: #fff;
@@ -200,26 +200,26 @@ routeSheet.replaceSync(`
         border-radius: 6px;
       }
       .preview-placeholder {
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         font-size: 0.8125rem;
         text-align: center;
       }
       .preview-note {
         font-size: 0.75rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         margin-top: 0.5rem;
         text-align: center;
       }
       .preview-label {
         font-size: 0.75rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         margin-bottom: 0.5rem;
         font-weight: 500;
       }
 
       /* Usage code block */
       .usage-block {
-        background: var(--less-bg-code);
+        background: var(--bg-code);
         border-radius: 6px;
         padding: 1rem;
         font-family: monospace;
@@ -238,10 +238,10 @@ routeSheet.replaceSync(`
         text-align: left;
         padding: 0.375rem 0.5rem;
         font-size: 0.8125rem;
-        border-bottom: 0.5px solid var(--less-border);
+        border-bottom: 0.5px solid var(--border);
       }
       .meta-table th {
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         font-weight: 500;
       }
       .meta-table th:not(:first-child) {
@@ -251,14 +251,14 @@ routeSheet.replaceSync(`
       .not-found {
         text-align: center;
         padding: 3rem 1rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
       }
 
       .back-link {
         display: inline-block;
         margin-bottom: 1rem;
         font-size: 0.8125rem;
-        color: var(--less-accent);
+        color: var(--brand);
         text-decoration: none;
       }
       .back-link:hover {
@@ -345,11 +345,11 @@ export default class DocsRegistryComponentDetail extends DsdElement {
     const attrStr = attrs ? ` ${attrs}` : '';
     const themeLink = meta.themeCssUrl ? `<link rel="stylesheet" href="${meta.themeCssUrl}">` : '';
     // LessJS UI components need design token CSS injected inline because their
-    // styles reference CSS custom properties (--less-bg-card, --less-border, etc.)
+    // styles reference CSS custom properties (--bg-card, --border, etc.)
     // that are normally declared on :root by lessRootColorCSS. In the iframe
     // there is no LessJS runtime, so we inline the light-theme tokens directly.
     const lessThemeCss = meta.importSpec === '@lessjs/ui'
-      ? `<style>:root{--gray-0:#f8f9fa;--gray-1:#f1f3f5;--gray-2:#e9ecef;--gray-3:#dee2e6;--gray-4:#ced4da;--gray-5:#adb5bd;--gray-6:#868e96;--gray-7:#495057;--gray-8:#343a40;--gray-9:#212529;--gray-10:#16191d;--gray-11:#0d0f12;--gray-12:#030507;--less-bg-base:var(--gray-0);--less-bg-surface:var(--gray-1);--less-bg-elevated:var(--gray-2);--less-bg-hover:var(--gray-2);--less-bg-card:var(--gray-0);--less-border:var(--gray-3);--less-border-hover:var(--gray-4);--less-text-primary:var(--gray-12);--less-text-secondary:var(--gray-8);--less-text-tertiary:var(--gray-7);--less-text-muted:var(--gray-6);--less-accent:var(--gray-12);--less-accent-dim:var(--gray-8);--less-accent-subtle:var(--gray-2);--less-brand:#534AB7;--less-brand-subtle:#EEEDFE;--less-code-bg:var(--gray-2);--less-code-border:var(--gray-3);--less-error:var(--red-7);--less-scrollbar-track:transparent;--less-scrollbar-thumb:var(--gray-4);color-scheme:light}</style>`
+      ? `<style>:root{--gray-0:#f8f9fa;--gray-1:#f1f3f5;--gray-2:#e9ecef;--gray-3:#dee2e6;--gray-4:#ced4da;--gray-5:#adb5bd;--gray-6:#868e96;--gray-7:#495057;--gray-8:#343a40;--gray-9:#212529;--gray-10:#16191d;--gray-11:#0d0f12;--gray-12:#030507;--bg-base:var(--gray-0);--bg-surface:var(--gray-1);--bg-elevated:var(--gray-2);--bg-hover:var(--gray-2);--bg-card:var(--gray-0);--border:var(--gray-3);--border-hover:var(--gray-4);--text-primary:var(--gray-12);--text-secondary:var(--gray-8);--text-muted:var(--gray-7);--text-muted:var(--gray-6);--brand:var(--gray-12);--brand-light:var(--gray-8);--brand-subtle:var(--gray-2);--brand:#534AB7;--brand-subtle:#EEEDFE;--bg-code:var(--gray-2);--code-border:var(--gray-3);--error:var(--red-7);--scrollbar-track:transparent;--scrollbar-thumb:var(--gray-4);color-scheme:light}</style>`
       : '';
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${themeLink}${lessThemeCss}<script type="module" src="${meta.importUrl}"></script><style>*,*::before,*::after{box-sizing:border-box}body{margin:0;padding:20px;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5;color:#1a1a2e;background:#fff;overflow:hidden}</style></head><body><${meta.tagName}${attrStr}>${meta.demoSlots}</${meta.tagName}></body></html>`;
   }
@@ -376,7 +376,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
             <div class="not-found">
               <h2>Component Not Found</h2>
               <p>"${fullPkgName}" is not in the registry.</p>
-              <a href="/registry" style="color:var(--less-accent);font-size:0.875rem;"
+              <a href="/registry" style="color:var(--brand);font-size:0.875rem;"
               >← Back to Registry</a>
             </div>
           </div>
@@ -400,7 +400,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
             <div class="not-found">
               <h2>Component Not Found</h2>
               <p>"&lt;${tagName}&gt;" is not in the ${fullPkgName} package.</p>
-              <a href="/registry" style="color:var(--less-accent);font-size:0.875rem;"
+              <a href="/registry" style="color:var(--brand);font-size:0.875rem;"
               >← Back to Registry</a>
             </div>
           </div>
@@ -507,7 +507,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
           <!-- Usage -->
           <div class="section">
             <div class="section-title">Usage</div>
-            <div style="margin-bottom:0.5rem;font-size:0.8125rem;color:var(--less-text-secondary);">
+            <div style="margin-bottom:0.5rem;font-size:0.8125rem;color:var(--text-secondary);">
               Copy the code below into your LessJS route file.
             </div>
             <div class="usage-block">${usageSnippet}</div>
@@ -519,7 +519,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
             <table class="meta-table">
               <tr>
                 <th>Package</th>
-                <td><a href="/registry/${this.package}" style="color:var(--less-accent);">${fullPkgName}</a></td>
+                <td><a href="/registry/${this.package}" style="color:var(--brand);">${fullPkgName}</a></td>
               </tr>
               <tr>
                 <th>Version</th>
@@ -567,7 +567,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
         ? `
               <div class="section">
                 <div class="section-title">Preview Details</div>
-                <div style="font-size:0.8125rem;color:var(--less-text-secondary);line-height:1.6;">
+                <div style="font-size:0.8125rem;color:var(--text-secondary);line-height:1.6;">
                   This preview was generated during package validation and stored as a static HTML snapshot. The
                   snapshot is pre-rendered at build time — no client-side rendering needed.
                 </div>
@@ -593,11 +593,11 @@ export default class DocsRegistryComponentDetail extends DsdElement {
           tag.attributes.map((a) => `
                       <tr>
                         <td style="font-family:monospace;font-size:0.8125rem;">${a.name}</td>
-                        <td style="font-size:0.75rem;color:var(--less-text-tertiary);">${
+                        <td style="font-size:0.75rem;color:var(--text-muted);">${
             a.type ||
             '—'
           }</td>
-                        <td style="font-size:0.75rem;color:var(--less-text-tertiary);">${
+                        <td style="font-size:0.75rem;color:var(--text-muted);">${
             a
               .default || '—'
           }</td>
@@ -624,7 +624,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
           tag.events.map((e) => `
                       <tr>
                         <td style="font-family:monospace;font-size:0.8125rem;">${e.name}</td>
-                        <td style="font-size:0.75rem;color:var(--less-text-tertiary);">${
+                        <td style="font-size:0.75rem;color:var(--text-muted);">${
             e.type ||
             '—'
           }</td>
@@ -673,7 +673,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
             ${
       pkg.installGuidance.warnings.length > 0
         ? `
-                <div style="margin-top:0.75rem;font-size:0.8125rem;color:var(--less-text-secondary);">
+                <div style="margin-top:0.75rem;font-size:0.8125rem;color:var(--text-secondary);">
                   ${
           pkg.installGuidance.warnings.map((w) => `
                       <div style="padding:0.125rem 0;">⚠ ${w}</div>
@@ -696,7 +696,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
           relatedComponents.map((t) => `
                       <a
                         href="/registry/${this.package}/${t.tagName}"
-                        style="display:inline-flex;align-items:center;gap:0.375rem;padding:0.375rem 0.625rem;background:var(--less-bg-code);border-radius:4px;font-size:0.8125rem;font-family:monospace;color:inherit;text-decoration:none;border:0.5px solid transparent;"
+                        style="display:inline-flex;align-items:center;gap:0.375rem;padding:0.375rem 0.625rem;background:var(--bg-code);border-radius:4px;font-size:0.8125rem;font-family:monospace;color:inherit;text-decoration:none;border:0.5px solid transparent;"
                       >
                         <span
                           style="width:6px;height:6px;border-radius:50%;display:inline-block;background:${

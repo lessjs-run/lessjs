@@ -5,8 +5,7 @@
  * Consumers (adapter-vite) read manifest.declarations to derive
  * island metadata (tagName, module, hydrate, ssr, dsd).
  *
- * v0.20.0: Ocean components use DsdElement (zero framework).
- *   less-hero-ping remains LitElement (Island component).
+ * v0.20.0: All components use DsdElement (zero framework).
  */
 
 import type { LessPackageManifest } from '@lessjs/core';
@@ -233,7 +232,6 @@ export const manifest: LessPackageManifest = {
       ],
       cssParts: [
         { name: 'overlay', description: 'The dialog element (backdrop)' },
-        { name: 'dialog', description: 'The dialog container' },
         { name: 'header', description: 'The header bar' },
         { name: 'close', description: 'The close button' },
         { name: 'body', description: 'The content area' },
@@ -286,7 +284,7 @@ export const manifest: LessPackageManifest = {
     {
       tagName: 'less-hero-ping',
       className: 'LessHeroPing',
-      superclassName: 'LitElement', // v0.20.0: Island component â€” retains Lit
+      superclassName: 'DsdElement', // v0.20.0: migrated from Lit to DsdElement€” retains Lit
       description: 'Animated hero ping indicator (Island)',
       cssParts: [
         { name: 'dot-static', description: 'The static status dot' },

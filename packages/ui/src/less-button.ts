@@ -9,7 +9,7 @@
  * Variants: default (outlined), primary (filled), ghost (no border), accent (gradient)
  * Sizes: sm, md (default), lg
  *
- * @csspart control â€?The button or anchor element
+ * @csspart control —The button or anchor element
  *
  * Usage:
  * ```html
@@ -163,7 +163,7 @@ export class LessButton extends DsdElement {
 
   override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
     if (old === val) return;
-    // href change may switch element type (a vs button) â€?full re-render
+    // href change may switch element type (a vs button) —full re-render
     if (name === 'href') {
       this._reRender();
     } else if (name === 'disabled') {
@@ -190,14 +190,13 @@ export class LessButton extends DsdElement {
 
   private _reRender(): void {
     if (!this.shadowRoot) return;
-    const slotContent = this.shadowRoot.querySelector('slot')?.assignedNodes({ flatten: true }) ||
-      [];
+    // NOTE: We do NOT capture assignedNodes before innerHTML replacement.
+    // Light DOM children remain in the host element and automatically
+    // re-project to the new <slot> — no manual DOM manipulation needed.
+    // The previous approach (replaceChildren) incorrectly moved light DOM
+    // children into the shadow root, breaking slot projection.
     this.shadowRoot.innerHTML = this.render();
     this._hydrateEvents();
-    const newSlot = this.shadowRoot.querySelector('slot');
-    if (newSlot && slotContent.length) {
-      newSlot.replaceChildren(...slotContent);
-    }
   }
 
   private _updateState(): void {

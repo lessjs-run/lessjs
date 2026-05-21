@@ -12,14 +12,14 @@ routeSheet.replaceSync(
 
       .chain {
         padding: 1rem;
-        background: var(--less-bg-surface);
-        border-left: 2px solid var(--less-border-hover);
+        background: var(--bg-surface);
+        border-left: 2px solid var(--border-hover);
         border-radius: 0 4px 4px 0;
         margin: 1rem 0;
         font-family: "SF Mono", monospace;
         font-size: 0.8125rem;
         line-height: 1.8;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
         white-space: pre-wrap;
       }
     `,

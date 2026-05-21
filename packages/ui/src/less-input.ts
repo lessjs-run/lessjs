@@ -11,10 +11,10 @@
  * - Supports label, placeholder, error, disabled, required
  * - Dispatches 'less-input' custom event on value change
  *
- * @csspart wrapper â€?The outer input-wrapper div
- * @csspart label â€?The label element
- * @csspart control â€?The input/textarea/select element
- * @csspart error â€?The error message small element
+ * @csspart wrapper —The outer input-wrapper div
+ * @csspart label —The label element
+ * @csspart control —The input/textarea/select element
+ * @csspart error —The error message small element
  *
  * Usage:
  * ```html
@@ -84,7 +84,7 @@ sheet.replaceSync(`
   }
 
   .input--error {
-    border-color: #e55;
+    border-color: var(--error, #dc3545);
   }
 
   :host(:state(disabled)) .input {
@@ -94,12 +94,12 @@ sheet.replaceSync(`
   }
 
   :host(:state(invalid)) .input {
-    border-color: #e55;
+    border-color: var(--error, #dc3545);
   }
 
   .error-message {
     font-size: var(--font-size-00);
-    color: #e55;
+    color: var(--error, #dc3545);
   }
 `);
 
@@ -259,9 +259,7 @@ export class LessInput extends DsdElement {
   }
 
   private _esc(s: string): string {
-    const div = document.createElement('div');
-    div.textContent = s;
-    return div.innerHTML;
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   private _escAttr(s: string): string {

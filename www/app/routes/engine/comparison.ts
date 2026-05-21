@@ -19,7 +19,7 @@ routeSheet.replaceSync(`
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         margin: 1.5rem 0 2.5rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 8px;
       }
 
@@ -37,19 +37,19 @@ routeSheet.replaceSync(`
       }
 
       th {
-        background: var(--less-bg-surface, #f8f8f8);
+        background: var(--bg-surface, #f8f8f8);
         font-weight: 500;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         text-align: left;
         padding: 0.75rem 1rem;
-        border-bottom: 0.5px solid var(--less-border);
+        border-bottom: 0.5px solid var(--border);
         white-space: nowrap;
       }
 
       td {
         padding: 0.625rem 1rem;
-        border-bottom: 0.5px solid var(--less-border);
-        color: var(--less-text-secondary);
+        border-bottom: 0.5px solid var(--border);
+        color: var(--text-secondary);
         line-height: 1.5;
       }
 
@@ -64,7 +64,7 @@ routeSheet.replaceSync(`
       }
 
       tbody tr:hover {
-        background: var(--less-bg-surface, #f5f5f5);
+        background: var(--bg-surface, #f5f5f5);
       }
 
       tbody tr:last-child td {
@@ -73,7 +73,7 @@ routeSheet.replaceSync(`
 
       td:first-child {
         font-weight: 500;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         white-space: nowrap;
       }
 
@@ -82,7 +82,7 @@ routeSheet.replaceSync(`
       }
 
       .tag-yes {
-        color: var(--less-brand, #534AB7);
+        color: var(--brand, #534AB7);
         font-weight: 500;
       }
 
@@ -91,29 +91,29 @@ routeSheet.replaceSync(`
       }
 
       .tag-no {
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
       }
 
       .tag-partial {
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         font-style: italic;
       }
 
       /* LessJS column highlight */
       th.lessjs-col {
-        color: var(--less-brand, #534AB7);
+        color: var(--brand, #534AB7);
         font-weight: 600;
       }
 
       td.lessjs-col {
-        background: var(--less-brand-subtle, rgba(83,74,183,0.04));
+        background: var(--brand-subtle, rgba(83,74,183,0.04));
         font-weight: 500;
       }
 
       /* Prose lists */
       ul {
         padding-left: 1.25rem;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
         line-height: 1.7;
         font-size: 0.875rem;
       }
@@ -121,7 +121,7 @@ routeSheet.replaceSync(`
         margin: 0.5rem 0;
       }
       li strong {
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         font-weight: 500;
       }
     `);

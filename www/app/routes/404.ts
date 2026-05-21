@@ -51,12 +51,12 @@ routeSheet.replaceSync(`
         font-size: 4rem;
         font-weight: 800;
         letter-spacing: -0.06em;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         margin: 0 0 0.25rem;
         line-height: 1;
       }
       .error-message {
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         font-size: 0.9375rem;
         margin: 0 0 1.5rem;
       }
@@ -64,20 +64,20 @@ routeSheet.replaceSync(`
         width: 100%;
         max-width: 400px;
         padding: 0.625rem 0.875rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 6px;
-        background: var(--less-bg-surface);
-        color: var(--less-text-primary);
+        background: var(--bg-surface);
+        color: var(--text-primary);
         font-size: 0.875rem;
         outline: none;
         box-sizing: border-box;
         transition: border-color 0.15s;
       }
       .search-box:focus {
-        border-color: var(--less-text-primary);
+        border-color: var(--text-primary);
       }
       .search-box::placeholder {
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
       }
       .links {
         margin-top: 2rem;
@@ -87,7 +87,7 @@ routeSheet.replaceSync(`
         font-weight: 500;
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         margin-bottom: 0.75rem;
       }
       .link-grid {
@@ -99,30 +99,30 @@ routeSheet.replaceSync(`
       .link-grid a {
         display: block;
         padding: 0.5rem 0.75rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 4px;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         text-decoration: none;
         font-size: 0.8125rem;
         transition: border-color 0.15s, background 0.15s;
       }
       .link-grid a:hover {
-        border-color: var(--less-border-hover);
-        background: var(--less-bg-surface);
+        border-color: var(--border-hover);
+        background: var(--bg-surface);
       }
       .home-link {
         display: inline-block;
         margin-top: 2rem;
         padding: 0.5rem 1.25rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 4px;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         text-decoration: none;
         font-size: 0.8125rem;
         transition: border-color 0.15s;
       }
       .home-link:hover {
-        border-color: var(--less-text-primary);
+        border-color: var(--text-primary);
       }
     `);
 

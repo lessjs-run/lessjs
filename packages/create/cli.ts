@@ -157,7 +157,6 @@ const lessUiAliases = {
   '@lessjs/ui/less-layout': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-layout.ts',
   '@lessjs/ui/less-theme-toggle': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-theme-toggle.ts',
   '@lessjs/ui/open-props-tokens': 'https://jsr.io/@lessjs/ui/${v.ui}/src/open-props-tokens.ts',
-  '@lessjs/ui/design-tokens': 'https://jsr.io/@lessjs/ui/${v.ui}/src/design-tokens.ts',
   '@lessjs/ui/less-button': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-button.ts',
   '@lessjs/ui/less-card': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-card.ts',
   '@lessjs/ui/less-code-block': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-code-block.ts',
@@ -210,7 +209,7 @@ const styles = new StyleSheet();
 styles.replaceSync(\`
   :host { display: block; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
   h1 { font-size: 2rem; margin-bottom: 0.5rem; }
-  p { color: var(--less-text-secondary, #666); }
+  p { color: var(--text-secondary, #666); }
 \`);
 
 export default class HomePage extends DsdElement {

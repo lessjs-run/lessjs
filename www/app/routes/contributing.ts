@@ -4,6 +4,7 @@
 export const meta = { section: '', label: 'Contributing', order: 30 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { DsdElement, StyleSheet } from '@lessjs/core';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../components/page-styles.js';
 const pageSheet = new StyleSheet();
 pageSheet.replaceSync(pageStyles);
@@ -16,8 +17,8 @@ routeSheet.replaceSync(
 
       .layer-diagram {
         padding: 1.25rem;
-        background: var(--less-bg-surface);
-        border: 0.5px solid var(--less-border);
+        background: var(--bg-surface);
+        border: 0.5px solid var(--border);
         border-radius: 6px;
         margin: 1.5rem 0;
         font-size: 0.8125rem;
@@ -25,7 +26,7 @@ routeSheet.replaceSync(
         font-family: "SF Mono", monospace;
         white-space: pre;
         overflow-x: auto;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
       }
       .commit-types {
         display: grid;
@@ -35,20 +36,20 @@ routeSheet.replaceSync(
       }
       .commit-type {
         padding: 0.75rem 1rem;
-        background: var(--less-bg-surface);
-        border: 0.5px solid var(--less-border);
+        background: var(--bg-surface);
+        border: 0.5px solid var(--border);
         border-radius: 4px;
         font-size: 0.875rem;
       }
       .commit-type code {
-        color: var(--less-accent);
+        color: var(--brand);
         font-weight: 600;
       }
     `,
 );
 
 export class ContributingPage extends DsdElement {
-  static override styles = [routeSheet];
+  static override styles = [openPropsTokenSheet, pageSheet, routeSheet];
   override render() {
     return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }

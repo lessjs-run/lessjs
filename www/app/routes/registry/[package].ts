@@ -102,37 +102,37 @@ const routeSheet = new StyleSheet();
 
 routeSheet.replaceSync(`
       .detail-header { margin-bottom: 2rem; }
-      .breadcrumb { font-size: 0.8125rem; color: var(--less-text-tertiary); margin-bottom: 0.75rem; }
-      .breadcrumb a { color: var(--less-accent); text-decoration: none; }
+      .breadcrumb { font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+      .breadcrumb a { color: var(--brand); text-decoration: none; }
       .breadcrumb a:hover { text-decoration: underline; }
       .pkg-title { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin: 0 0 0.5rem; }
       .pkg-title h1 { font-size: 1.75rem; font-weight: 700; margin: 0; }
-      .pkg-title code { font-size: 1.25rem; background: var(--less-bg-code); padding: 0.125rem 0.5rem; border-radius: 4px; }
+      .pkg-title code { font-size: 1.25rem; background: var(--bg-code); padding: 0.125rem 0.5rem; border-radius: 4px; }
       .compat-badge-lg { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.75rem; border-radius: 14px; font-size: 0.8125rem; font-weight: 600; }
       .compat-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-      .pkg-desc { font-size: 0.9375rem; color: var(--less-text-secondary); line-height: 1.6; margin: 0 0 0.75rem; max-width: 640px; }
+      .pkg-desc { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.6; margin: 0 0 0.75rem; max-width: 640px; }
       .pkg-links { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem; font-size: 0.8125rem; }
-      .pkg-links a { color: var(--less-accent); text-decoration: none; }
+      .pkg-links a { color: var(--brand); text-decoration: none; }
       .pkg-links a:hover { text-decoration: underline; }
-      .section { border: 0.5px solid var(--less-border); border-radius: 8px; padding: 1.25rem; margin-bottom: 1.25rem; background: var(--less-bg-surface); }
+      .section { border: 0.5px solid var(--border); border-radius: 8px; padding: 1.25rem; margin-bottom: 1.25rem; background: var(--bg-surface); }
       .section-title { font-size: 1rem; font-weight: 600; margin: 0 0 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
       .install-box { padding: 1rem; border-radius: 6px; margin-bottom: 0.75rem; }
       .install-safe { background: rgba(34, 197, 94, 0.08); border: 0.5px solid rgba(34, 197, 94, 0.2); }
       .install-unsafe { background: rgba(239, 68, 68, 0.08); border: 0.5px solid rgba(239, 68, 68, 0.2); }
-      .install-cmd { font-family: monospace; background: var(--less-bg-code); padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.875rem; margin: 0.5rem 0; user-select: all; }
+      .install-cmd { font-family: monospace; background: var(--bg-code); padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.875rem; margin: 0.5rem 0; user-select: all; }
       .warning-list { list-style: none; padding: 0; margin: 0.5rem 0 0; }
-      .warning-list li { font-size: 0.8125rem; padding: 0.25rem 0; padding-left: 1.25rem; position: relative; color: var(--less-text-secondary); }
+      .warning-list li { font-size: 0.8125rem; padding: 0.25rem 0; padding-left: 1.25rem; position: relative; color: var(--text-secondary); }
       .warning-list li::before { content: '\\u26a0\\ufe0f'; position: absolute; left: 0; }
       .tag-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-      .tag-item { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.625rem; background: var(--less-bg-code); border-radius: 4px; font-size: 0.8125rem; font-family: monospace; }
+      .tag-item { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.625rem; background: var(--bg-code); border-radius: 4px; font-size: 0.8125rem; font-family: monospace; }
       .tag-status { width: 6px; height: 6px; border-radius: 50%; }
       .meta-table { width: 100%; border-collapse: collapse; }
-      .meta-table th, .meta-table td { text-align: left; padding: 0.375rem 0.5rem; font-size: 0.8125rem; border-bottom: 0.5px solid var(--less-border); }
-      .meta-table th { width: 140px; color: var(--less-text-tertiary); font-weight: 500; }
-      .not-found { text-align: center; padding: 3rem 1rem; color: var(--less-text-tertiary); }
-      .accordion-toggle { background: none; border: none; color: var(--less-accent); cursor: pointer; font-size: 0.8125rem; padding: 0.25rem 0; }
+      .meta-table th, .meta-table td { text-align: left; padding: 0.375rem 0.5rem; font-size: 0.8125rem; border-bottom: 0.5px solid var(--border); }
+      .meta-table th { width: 140px; color: var(--text-muted); font-weight: 500; }
+      .not-found { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+      .accordion-toggle { background: none; border: none; color: var(--brand); cursor: pointer; font-size: 0.8125rem; padding: 0.25rem 0; }
       .accordion-toggle:hover { text-decoration: underline; }
-      .accordion-content { margin-top: 0.75rem; padding: 0.75rem; background: var(--less-bg-code); border-radius: 4px; font-family: monospace; font-size: 0.75rem; white-space: pre-wrap; max-height: 400px; overflow: auto; }
+      .accordion-content { margin-top: 0.75rem; padding: 0.75rem; background: var(--bg-code); border-radius: 4px; font-family: monospace; font-size: 0.75rem; white-space: pre-wrap; max-height: 400px; overflow: auto; }
     `);
 
 export default class DocsRegistryDetail extends DsdElement {
@@ -201,7 +201,7 @@ export default class DocsRegistryDetail extends DsdElement {
       }' current-path="/registry/${fullName}" locale="en" locales='${JSON.stringify(['en'])}'>
           <div class="container">
             <div class="not-found"><h2>Package Not Found</h2><p>"${fullName}" is not in the registry.</p>
-            <a href="/registry" style="color:var(--less-accent);font-size:0.875rem;">← Back to Registry</a></div>
+            <a href="/registry" style="color:var(--brand);font-size:0.875rem;">← Back to Registry</a></div>
           </div>
         </less-layout>
       `;
@@ -219,7 +219,7 @@ export default class DocsRegistryDetail extends DsdElement {
           <div class="detail-header">
             <div class="pkg-title">
               <code>${fullName}</code>
-              <span style="font-size:1rem;color:var(--less-text-tertiary);">v${pkg.version}</span>
+              <span style="font-size:1rem;color:var(--text-muted);">v${pkg.version}</span>
               <span class="compat-badge-lg" style="background:${compatColor}15;border:0.5px solid ${compatColor}40;">
                 <span class="compat-dot" style="background:${compatColor}"></span>${compatLabel}
               </span>
@@ -243,7 +243,7 @@ export default class DocsRegistryDetail extends DsdElement {
               <div style="font-weight:600;font-size:0.875rem;margin-bottom:0.25rem;">
                 ${pkg.installGuidance.safeToInstall ? 'Safe to install' : 'Not installable'}
               </div>
-              <div style="font-size:0.8125rem;color:var(--less-text-secondary);margin-bottom:0.5rem;">
+              <div style="font-size:0.8125rem;color:var(--text-secondary);margin-bottom:0.5rem;">
                 ${
       pkg.installGuidance.ssrCapable ? 'SSR-capable. Server-rendered.' : 'Client-only rendering.'
     }
@@ -252,7 +252,7 @@ export default class DocsRegistryDetail extends DsdElement {
               ${
       pkg.installGuidance.configChanges.length > 0
         ? `
-                <div style="font-size:0.8125rem;color:var(--less-text-secondary);margin-top:0.5rem;">
+                <div style="font-size:0.8125rem;color:var(--text-secondary);margin-top:0.5rem;">
                   <strong>Config changes:</strong>
                   <ul style="margin:0.25rem 0 0;padding-left:1.25rem;">
                     ${
@@ -282,7 +282,7 @@ export default class DocsRegistryDetail extends DsdElement {
                 <span class="compat-dot" style="background:${compatColor}"></span>${compatLabel}
               </span>
             </div>
-            <p style="font-size:0.875rem;color:var(--less-text-secondary);margin:0 0 0.75rem;line-height:1.6;">${pkg.compatibilityJustification}</p>
+            <p style="font-size:0.875rem;color:var(--text-secondary);margin:0 0 0.75rem;line-height:1.6;">${pkg.compatibilityJustification}</p>
             <table class="meta-table">
               <tr><th>Validator</th><td>@lessjs/core v${pkg.validatorVersion}</td></tr>
               <tr><th>Manifest hash</th><td style="font-family:monospace;font-size:0.75rem;">${pkg.manifestHash}</td></tr>
@@ -293,11 +293,11 @@ export default class DocsRegistryDetail extends DsdElement {
           <!-- Usage -->
           <div class="section">
             <div class="section-title">Usage</div>
-            <div style="margin-bottom:0.5rem;font-size:0.8125rem;color:var(--less-text-secondary);">
+            <div style="margin-bottom:0.5rem;font-size:0.8125rem;color:var(--text-secondary);">
               Add this package to your LessJS project:
             </div>
             <div class="install-cmd">${pkg.installGuidance.command}</div>
-            <div style="margin-top:0.75rem;font-size:0.8125rem;color:var(--less-text-secondary);">
+            <div style="margin-top:0.75rem;font-size:0.8125rem;color:var(--text-secondary);">
               Then import it in your route:
             </div>
             <div class="install-cmd" style="margin-top:0.375rem;">import '${fullName}';</div>
@@ -308,7 +308,7 @@ export default class DocsRegistryDetail extends DsdElement {
 
           <div class="section">
             <div class="section-title">Components (${pkg.tags.length})</div>
-            <div style="font-size:0.8125rem;color:var(--less-text-tertiary);margin-bottom:0.75rem;">
+            <div style="font-size:0.8125rem;color:var(--text-muted);margin-bottom:0.75rem;">
               Click a component to see its rendered preview, usage example, and compatibility details.
             </div>
             <div class="tag-list">
@@ -335,7 +335,7 @@ export default class DocsRegistryDetail extends DsdElement {
             ? `<span style="color:#f59e0b;font-size:0.6875rem;">(${tag.validationWarnings} warn)</span>`
             : ''
         }
-                    <span style="font-size:0.625rem;color:var(--less-text-tertiary);margin-left:0.25rem;">→</span>
+                    <span style="font-size:0.625rem;color:var(--text-muted);margin-left:0.25rem;">→</span>
                   </a>
                 `;
       })
@@ -347,10 +347,10 @@ export default class DocsRegistryDetail extends DsdElement {
             <div class="section-title">Previews</div>
             ${
       hasSnapshots
-        ? `<div style="font-size:0.875rem;color:var(--less-text-secondary);">SSR snapshots available for ${
+        ? `<div style="font-size:0.875rem;color:var(--text-secondary);">SSR snapshots available for ${
           Object.keys(pkg.snapshotPaths).length
         } component(s). Visit component detail pages to view them.</div>`
-        : `<div style="font-size:0.875rem;color:var(--less-text-secondary);">No preview available. Previews are generated during package validation.</div>`
+        : `<div style="font-size:0.875rem;color:var(--text-secondary);">No preview available. Previews are generated during package validation.</div>`
     }
           </div>
 

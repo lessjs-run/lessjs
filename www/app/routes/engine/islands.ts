@@ -17,16 +17,16 @@ routeSheet.replaceSync(`
       }
       .comparison-item {
         padding: 1rem 1.25rem;
-        border: 1px solid var(--less-border);
+        border: 1px solid var(--border);
         border-radius: 8px;
         transition: border-color 0.2s, box-shadow 0.2s;
       }
       .comparison-item:hover {
-        border-color: var(--less-border-hover);
+        border-color: var(--border-hover);
       }
       .comparison-item.less {
-        background: var(--less-bg-surface);
-        border-left: 3px solid var(--less-brand, #534AB7);
+        background: var(--bg-surface);
+        border-left: 3px solid var(--brand, #534AB7);
       }
       @media (max-width: 720px) {
         .comparison {

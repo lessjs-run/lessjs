@@ -54,7 +54,7 @@ routeSheet.replaceSync(`
       }
 
       .registry-header p {
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
         margin: 0;
         font-size: 0.9375rem;
       }
@@ -67,8 +67,8 @@ routeSheet.replaceSync(`
         letter-spacing: 0.05em;
         padding: 0.15em 0.5em;
         border-radius: 4px;
-        background: var(--less-color-primary-50, #eff6ff);
-        color: var(--less-color-primary-600, #2563eb);
+        background: var(--brand-subtle, #eff6ff);
+        color: var(--brand, #2563eb);
         vertical-align: middle;
         margin-left: 0.5rem;
       }
@@ -80,7 +80,7 @@ routeSheet.replaceSync(`
       }
 
       .early-access-note a {
-        color: var(--less-color-primary-600, #2563eb);
+        color: var(--brand, #2563eb);
         text-decoration: underline;
       }
 
@@ -97,22 +97,22 @@ routeSheet.replaceSync(`
         flex: 1;
         min-width: 200px;
         padding: 0.625rem 0.875rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 6px;
-        background: var(--less-bg-surface);
-        color: var(--less-text-primary);
+        background: var(--bg-surface);
+        color: var(--text-primary);
         font-size: 0.875rem;
         outline: none;
         transition: border-color 0.15s;
       }
 
       .search-box:focus {
-        border-color: var(--less-brand, #534AB7);
-        box-shadow: 0 0 0 3px var(--less-brand-glow, rgba(83,74,183,0.35)), var(--less-shadow-glow, 0 0 20px rgba(83,74,183,0.15));
+        border-color: var(--brand, #534AB7);
+        box-shadow: 0 0 0 3px var(--brand-glow, rgba(83,74,183,0.35)), var(--shadow-glow, 0 0 20px rgba(83,74,183,0.15));
       }
 
       .search-box::placeholder {
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
       }
 
       .filter-group {
@@ -123,20 +123,20 @@ routeSheet.replaceSync(`
 
       .sort-select {
         padding: 0.375rem 0.5rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 14px;
         background: transparent;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
         font-size: 0.75rem;
         cursor: pointer;
       }
 
       .filter-btn {
         padding: 0.375rem 0.75rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 14px;
         background: transparent;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
         font-size: 0.75rem;
         cursor: pointer;
         transition: all 0.15s;
@@ -144,20 +144,20 @@ routeSheet.replaceSync(`
       }
 
       .filter-btn:hover {
-        border-color: var(--less-border-hover);
-        color: var(--less-text-primary);
+        border-color: var(--border-hover);
+        color: var(--text-primary);
       }
 
       .filter-btn.active {
-        background: var(--less-brand, #534AB7);
-        border-color: var(--less-brand, #534AB7);
+        background: var(--brand, #534AB7);
+        border-color: var(--brand, #534AB7);
         color: #fff;
       }
 
       /* Stats */
       .stats {
         font-size: 0.8125rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         margin-bottom: 1rem;
       }
 
@@ -173,9 +173,9 @@ routeSheet.replaceSync(`
         flex-direction: column;
         gap: 0.5rem;
         padding: 1.25rem;
-        border: 1px solid var(--less-border);
+        border: 1px solid var(--border);
         border-radius: 10px;
-        background: var(--less-bg-surface);
+        background: var(--bg-surface);
         box-shadow: 0 1px 4px rgba(0,0,0,0.04);
         transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
         cursor: pointer;
@@ -184,8 +184,8 @@ routeSheet.replaceSync(`
       }
 
       .package-card:hover {
-        border-color: var(--less-brand, #534ab7);
-        box-shadow: var(--less-shadow-brand-md, 0 4px 20px rgba(83,74,183,0.3));
+        border-color: var(--brand, #534ab7);
+        box-shadow: var(--shadow-brand-md, 0 4px 20px rgba(83,74,183,0.3));
         transform: translateY(-3px);
       }
 
@@ -206,20 +206,20 @@ routeSheet.replaceSync(`
 
       .package-name code {
         font-size: 0.875rem;
-        background: var(--less-bg-code);
+        background: var(--bg-code);
         padding: 0.125rem 0.375rem;
         border-radius: 3px;
       }
 
       .package-version {
         font-size: 0.75rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         font-weight: 400;
       }
 
       .package-desc {
         font-size: 0.8125rem;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
         margin: 0.25rem 0;
         line-height: 1.5;
         display: -webkit-box;
@@ -257,10 +257,10 @@ routeSheet.replaceSync(`
       .tag-pill {
         display: inline-block;
         padding: 0.0625rem 0.375rem;
-        background: var(--less-bg-code);
+        background: var(--bg-code);
         border-radius: 3px;
         font-size: 0.6875rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
       }
 
       .install-badge {
@@ -301,7 +301,7 @@ routeSheet.replaceSync(`
         align-items: center;
         gap: 0.5rem;
         font-size: 0.6875rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
       }
 
       .breakdown-segment {
@@ -320,7 +320,7 @@ routeSheet.replaceSync(`
       .empty-state {
         text-align: center;
         padding: 3rem 1rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         font-size: 0.9375rem;
       }
 

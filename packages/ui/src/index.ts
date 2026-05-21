@@ -2,15 +2,19 @@
  * @lessjs/ui - LessJS UI Component Library
  *
  * Swiss International Style: Pure B&W, minimal, typography-driven.
- * Built on Lit + design tokens CSS custom properties.
+ * Zero Lit dependency — built on DsdElement (native HTMLElement).
  *
  * Components:
- * - less-button: Button with variants (default, primary, ghost)
+ * - less-button: Button with variants (default, primary, ghost, accent)
  * - less-card: Card container with optional header/footer
  * - less-input: Input field with label and error states
  * - less-code-block: Code block with copy button
  * - less-layout: App layout with header, sidebar, footer
  * - less-theme-toggle: Theme toggle Island (Dark/Light)
+ * - less-dialog: Dialog component using native <dialog>
+ * - less-callout: Callout/notice box (info/warning/danger/tip)
+ * - less-step-card: Step card with numbered indicator
+ * - less-hero-ping: Hero ping Island (API health check)
  *
  * Usage:
  * ```ts
@@ -24,16 +28,8 @@
  * @module @lessjs/ui
  */
 
-// Design tokens (CSS custom properties)
-export { lessDesignTokens } from './design-tokens.js';
-// Open Props tokens (CSSStyleSheet, zero Lit dependency)
+// Design tokens (CSSStyleSheet, zero Lit dependency)
 export { openPropsTokenSheet } from './open-props-tokens.js';
-// Individual token sub-modules (for partial imports)
-export { lessSpacingTokens } from './tokens/spacing.js';
-export { lessTypographyTokens } from './tokens/typography.js';
-export { lessEffectTokens } from './tokens/effects.js';
-export { lessRadiusTokens } from './tokens/radius.js';
-export { lessAnimationTokens } from './tokens/animation.js';
 
 // Components
 export { LessButton, tagName as lessButtonTagName } from './less-button.js';

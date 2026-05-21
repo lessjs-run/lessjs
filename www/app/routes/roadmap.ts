@@ -2,6 +2,7 @@ export const meta = { section: '', label: 'Roadmap', order: 10 };
 
 import { headerNav, navSections } from 'virtual:less-nav';
 import { DsdElement, StyleSheet } from '@lessjs/core';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../components/page-styles.js';
 const pageSheet = new StyleSheet();
 pageSheet.replaceSync(pageStyles);
@@ -22,7 +23,7 @@ routeSheet.replaceSync(`
       .reset-table td,
       .version-table th,
       .version-table td {
-        border: 1px solid var(--less-border);
+        border: 1px solid var(--border);
         padding: 0.75rem;
         text-align: left;
         vertical-align: top;
@@ -30,7 +31,7 @@ routeSheet.replaceSync(`
 
       .reset-table th,
       .version-table th {
-        background: var(--less-bg-muted);
+        background: var(--bg-muted);
         font-weight: 600;
       }
 
@@ -42,10 +43,10 @@ routeSheet.replaceSync(`
       }
 
       .track {
-        border: 1px solid var(--less-border);
+        border: 1px solid var(--border);
         border-radius: 8px;
         padding: 1rem;
-        background: var(--less-bg-surface);
+        background: var(--bg-surface);
       }
 
       .track h3 {
@@ -55,22 +56,22 @@ routeSheet.replaceSync(`
 
       .track p {
         margin: 0;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
       }
 
       .phase {
-        border-left: 4px solid var(--less-color-primary);
+        border-left: 4px solid var(--brand);
         padding-left: 1rem;
         margin: 2rem 0;
       }
 
       .phase h3 {
         margin: 0 0 0.5rem;
-        color: var(--less-color-primary);
+        color: var(--brand);
       }
 
       .phase.deferred {
-        border-left-color: var(--less-text-secondary);
+        border-left-color: var(--text-secondary);
       }
 
       .status {
@@ -98,8 +99,8 @@ routeSheet.replaceSync(`
       }
 
       .status.deferred {
-        background: var(--less-bg-muted);
-        color: var(--less-text-secondary);
+        background: var(--bg-muted);
+        color: var(--text-secondary);
       }
 
       .compact-list,
@@ -137,7 +138,7 @@ routeSheet.replaceSync(`
 export class RoadmapPage extends DsdElement {
   declare locale?: string;
 
-  static override styles = [routeSheet];
+  static override styles = [openPropsTokenSheet, pageSheet, routeSheet];
 
   override render() {
     return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();

@@ -24,32 +24,32 @@ routeSheet.replaceSync(`
       .pkg-name {
         font-size: 1.125rem;
         font-weight: 600;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         margin: 2rem 0 0.5rem;
       }
       .pkg-import {
         font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
         font-size: 0.75rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         margin-bottom: 1rem;
       }
       .fn-name {
         font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
         font-size: 0.8125rem;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         margin: 1.25rem 0 0.25rem;
       }
       .fn-sig {
         font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
         font-size: 0.75rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         margin-bottom: 0.5rem;
         line-height: 1.5;
       }
       .fn-desc {
         font-size: 0.875rem;
         line-height: 1.7;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
         margin-bottom: 0.5rem;
       }
     `);

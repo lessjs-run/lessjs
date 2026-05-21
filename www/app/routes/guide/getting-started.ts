@@ -20,8 +20,8 @@ routeSheet.replaceSync(`
       }
 
       .note {
-        background: var(--less-bg-surface);
-        border: 0.5px solid var(--less-border);
+        background: var(--bg-surface);
+        border: 0.5px solid var(--border);
         border-radius: 4px;
         padding: 0.75rem 1rem;
         margin: 1rem 0;

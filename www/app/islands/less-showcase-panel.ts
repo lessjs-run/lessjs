@@ -9,7 +9,7 @@
  */
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/core';
-import { lessDesignTokens } from '@lessjs/ui/design-tokens';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-code-block';
 
 import './shoelace-showcase.js';
@@ -39,7 +39,7 @@ panelStyles.replaceSync(`
   .tab-bar {
     display: flex;
     gap: 4px;
-    border-bottom: 1px solid var(--less-border);
+    border-bottom: 1px solid var(--border);
     margin-bottom: 16px;
   }
   .tab-item {
@@ -47,11 +47,11 @@ panelStyles.replaceSync(`
     cursor: pointer;
     border-bottom: 2px solid transparent;
     margin-bottom: -1px;
-    color: var(--less-text-tertiary, #71717a);
+    color: var(--text-muted, #71717a);
     font-size: 13px;
     font-weight: 500;
-    transition: border-color var(--less-duration-fast, 200ms) var(--less-easing-default, ease-out),
-                color var(--less-duration-fast, 200ms) var(--less-easing-default, ease-out);
+    transition: border-color var(--duration-fast, 200ms) var(--easing-default, ease-out),
+                color var(--duration-fast, 200ms) var(--easing-default, ease-out);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -62,11 +62,11 @@ panelStyles.replaceSync(`
     font-family: inherit;
   }
   .tab-item:hover {
-    color: var(--less-text-secondary);
+    color: var(--text-secondary);
   }
   .tab-item[active] {
-    border-bottom-color: var(--less-brand, #534AB7);
-    color: var(--less-brand, #534AB7);
+    border-bottom-color: var(--brand, #534AB7);
+    color: var(--brand, #534AB7);
   }
   .tab-tag {
     display: inline-block;
@@ -86,9 +86,9 @@ panelStyles.replaceSync(`
     gap: 16px;
   }
   .showcase-left {
-    background: var(--less-bg-surface);
-    border: 1px solid var(--less-border);
-    border-radius: var(--less-radius-lg, 12px);
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg, 12px);
     padding: 1.25rem;
     min-height: 200px;
     display: flex;
@@ -96,7 +96,7 @@ panelStyles.replaceSync(`
   }
   .showcase-right {
     background: #0d0d12;
-    border-radius: var(--less-radius-lg, 12px);
+    border-radius: var(--radius-lg, 12px);
     border: 1px solid rgba(255,255,255,0.06);
     overflow: hidden;
   }
@@ -142,20 +142,20 @@ panelStyles.replaceSync(`
     gap: 16px;
     flex-wrap: wrap;
     padding-top: 12px;
-    border-top: 1px solid var(--less-border);
+    border-top: 1px solid var(--border);
   }
   .adapter-desc {
     font-size: 12px;
-    color: var(--less-text-secondary);
+    color: var(--text-secondary);
   }
   .install-cmd {
     font-family: "JetBrains Mono", "SF Mono", "Fira Code", Consolas, monospace;
     font-size: 12px;
-    color: var(--less-text-primary);
-    background: var(--less-code-bg);
+    color: var(--text-primary);
+    background: var(--bg-code);
     padding: 4px 10px;
-    border-radius: var(--less-radius-sm, 4px);
-    border: 0.5px solid var(--less-code-border);
+    border-radius: var(--radius-sm, 4px);
+    border: 0.5px solid var(--code-border);
   }
   @media (max-width: 760px) {
     .showcase-content {
@@ -172,13 +172,13 @@ panelStyles.replaceSync(`
     }
   }
   .tab-item:focus-visible {
-    outline: 2px solid var(--less-brand);
+    outline: 2px solid var(--brand);
     outline-offset: 2px;
   }
 `);
 
 export default class LessShowcasePanel extends DsdElement {
-  static override styles = [lessDesignTokens, panelStyles];
+  static override styles = [openPropsTokenSheet, panelStyles];
 
   private _activeTab = 0;
   private _tabs: ShowcaseTab[] = [];

@@ -6,12 +6,11 @@
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *
- * @csspart overlay â€?The dialog backdrop/element
- * @csspart dialog â€?The dialog container
- * @csspart header â€?The header bar
- * @csspart close â€?The close button
- * @csspart body â€?The content area (<slot>)
- * @csspart footer â€?The optional footer slot
+ * @csspart overlay — The dialog backdrop/element
+ * @csspart header —The header bar
+ * @csspart close —The close button
+ * @csspart body —The content area (<slot>)
+ * @csspart footer —The optional footer slot
  *
  * Usage:
  * ```html
@@ -114,7 +113,6 @@ sheet.replaceSync(`
 export class LessDialog extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override delegatesFocus = true;
-  static override formAssociated = true;
   static override observedAttributes = ['open', 'label'];
 
   static override hydrateEvents: HydrateEventDescriptor[] = [
@@ -240,9 +238,7 @@ export class LessDialog extends DsdElement {
   }
 
   private _esc(s: string): string {
-    const div = document.createElement('div');
-    div.textContent = s;
-    return div.innerHTML;
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   private _escAttr(s: string): string {

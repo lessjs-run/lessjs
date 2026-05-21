@@ -4,6 +4,7 @@
 export const meta = { section: '', label: 'Changelog', order: 20 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { DsdElement, StyleSheet } from '@lessjs/core';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../components/page-styles.js';
 const pageSheet = new StyleSheet();
 pageSheet.replaceSync(pageStyles);
@@ -15,9 +16,9 @@ routeSheet.replaceSync(`
       .version-section {
         margin: 2rem 0;
         padding: 1.5rem;
-        background: var(--less-bg-surface);
+        background: var(--bg-surface);
         /* 0.5px: reduced to match less-ui spec */
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 6px;
       }
       .version-header {
@@ -29,13 +30,13 @@ routeSheet.replaceSync(`
       .version-number {
         font-size: 1.25rem;
         font-weight: 700;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
       }
       .version-date {
         font-size: 0.75rem;
-        color: var(--less-text-muted);
+        color: var(--text-muted);
         padding: 0.25rem 0.5rem;
-        background: var(--less-bg-elevated);
+        background: var(--bg-elevated);
         border-radius: 3px;
       }
       .change-category {
@@ -46,17 +47,17 @@ routeSheet.replaceSync(`
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: var(--less-text-muted);
+        color: var(--text-muted);
         margin-bottom: 0.5rem;
       }
       .change-category.added h4 {
-        color: var(--less-accent);
+        color: var(--brand);
       }
       .change-category.changed h4 {
-        color: var(--less-accent-dim);
+        color: var(--brand-light);
       }
       .change-category.fixed h4 {
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
       }
       .change-list {
         list-style: none;
@@ -67,14 +68,14 @@ routeSheet.replaceSync(`
         padding: 0.375rem 0;
         padding-left: 1.25rem;
         position: relative;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
         font-size: 0.875rem;
       }
       .change-list li::before {
         content: "•";
         position: absolute;
         left: 0;
-        color: var(--less-text-muted);
+        color: var(--text-muted);
       }
       .version-table {
         width: 100%;
@@ -86,23 +87,23 @@ routeSheet.replaceSync(`
       .version-table td {
         padding: 0.75rem 1rem;
         text-align: left;
-        border-bottom: 0.5px solid var(--less-border);
+        border-bottom: 0.5px solid var(--border);
       }
       .version-table th {
         font-size: 0.6875rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: var(--less-text-muted);
+        color: var(--text-muted);
       }
       .version-table td:first-child {
         font-weight: 600;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
       }
     `);
 
 export class ChangelogPage extends DsdElement {
-  static override styles = [routeSheet];
+  static override styles = [openPropsTokenSheet, pageSheet, routeSheet];
 
   override render() {
     return `
@@ -1253,7 +1254,7 @@ export class ChangelogPage extends DsdElement {
 
             <h2>
               v0.5.0-alpha.1 — 架构审计与精准修复 <span
-                style="font-size:0.75rem;color:var(--less-text-muted);font-weight:400"
+                style="font-size:0.75rem;color:var(--text-muted);font-weight:400"
               >2026-05-02</span>
             </h2>
 

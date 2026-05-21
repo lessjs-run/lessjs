@@ -30,9 +30,9 @@ Deno.test('less-ui — less-theme-toggle exports tagName', async () => {
   assertExists(mod.LessThemeToggle, 'LessThemeToggle class should be exported');
 });
 
-Deno.test('less-ui — design-tokens exports lessDesignTokens', async () => {
-  const mod = await import('../src/design-tokens.ts');
-  assertExists(mod.lessDesignTokens, 'lessDesignTokens should be exported');
+Deno.test('less-ui — open-props-tokens exports openPropsTokenSheet', async () => {
+  const mod = await import('../src/open-props-tokens.ts');
+  assertExists(mod.openPropsTokenSheet, 'openPropsTokenSheet should be exported');
 });
 
 Deno.test('less-ui — all components export tagName', async () => {
