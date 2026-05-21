@@ -169,7 +169,7 @@ export default class DecisionSlugPage extends DsdElement {
     if (!post) {
       return `
         <less-layout
-          locale="${this.getAttribute('locale') || 'zh'}"
+          locale="${this._getLocale('zh')}"
           locales='${JSON.stringify(['en', 'zh'])}'
           nav-items='${JSON.stringify(navSections)}'
           header-nav='${JSON.stringify(headerNav)}'
@@ -187,7 +187,7 @@ export default class DecisionSlugPage extends DsdElement {
     const status = extractStatus(post.content);
     return `
       <less-layout
-        locale="${this.getAttribute('locale') || 'zh'}"
+        locale="${this._getLocale('zh')}"
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'

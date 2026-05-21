@@ -77,13 +77,13 @@ export default class RendererKernelRegistrySopDecision extends DsdElement {
   static override styles = [routeSheet];
 
   override render() {
-    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
     return `
       <less-layout
-        locale="${this.getAttribute('locale') || 'zh'}"
+        locale="${this._getLocale('zh')}"
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
@@ -247,7 +247,7 @@ export default class RendererKernelRegistrySopDecision extends DsdElement {
   private _renderEn() {
     return `
       <less-layout
-        locale="${this.getAttribute('locale') || 'en'}"
+        locale="${this._getLocale('en')}"
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'

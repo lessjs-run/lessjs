@@ -23,11 +23,11 @@ routeSheet.replaceSync(
 export class ApiPage extends DsdElement {
   static override styles = [routeSheet];
   override render() {
-    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return `<less-layout locale="${this.getAttribute('locale') || 'zh'}" locales='${
+    return `<less-layout locale="${this._getLocale('zh')}" locales='${
       JSON.stringify(['en', 'zh'])
     }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)
@@ -47,7 +47,7 @@ export class ApiPage extends DsdElement {
   }
 
   private _renderEn() {
-    return `<less-layout locale="${this.getAttribute('locale') || 'en'}" locales='${
+    return `<less-layout locale="${this._getLocale('en')}" locales='${
       JSON.stringify(['en', 'zh'])
     }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)

@@ -8,8 +8,17 @@ import { defineConfig } from 'vite';
 
 // v0.20.0: migrated from lessRootColorCSS (deleted) to openPropsTokenSheet
 const rootCSS = [...openPropsTokenSheet.cssRules].map((r) => r.cssText).join('\n');
+const darkCSS = `
+[data-theme="dark"] body {
+  background: #030507;
+  color: #e9ecef;
+}
+[data-theme="dark"] ::selection {
+  background: rgba(124,111,245,0.3);
+  color: #f1f3f5;
+}`;
 const colorTokensStyle =
-  `<style>${rootCSS}body{margin:0;background:var(--gray-1);color:var(--gray-9);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>`;
+  `<style>${rootCSS}body{margin:0;background:var(--gray-1);color:var(--gray-9);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}${darkCSS}</style>`;
 
 export default defineConfig({
   base: '/',

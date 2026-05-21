@@ -132,7 +132,7 @@ export default class ComparisonPage extends DsdElement {
   override render() {
     return `
       <less-layout
-        locale="${this.getAttribute('locale') || 'zh'}"
+        locale="${this._getLocale('zh')}"
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(filterEngineNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'

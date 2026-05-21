@@ -60,7 +60,7 @@ export default class ApiCorePage extends DsdElement {
   static override styles = [routeSheet];
 
   override render() {
-    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {

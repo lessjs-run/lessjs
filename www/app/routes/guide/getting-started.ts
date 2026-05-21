@@ -36,12 +36,12 @@ export class GettingStartedPage extends DsdElement {
   static override styles = [routeSheet];
 
   override render() {
-    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
     return `
-      <less-layout locale="${this.getAttribute('locale') || 'zh'}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${JSON.stringify(headerNav)}' current-path="/guide/getting-started">
+      <less-layout locale="${this._getLocale('zh')}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${JSON.stringify(headerNav)}' current-path="/guide/getting-started">
         <div class="container">
           <h1>快速开始</h1>
           <p class="subtitle">
@@ -144,7 +144,7 @@ export const tagName = 'page-home';</code></pre></less-code-block>
 
   private _renderEn() {
     return `
-      <less-layout locale="${this.getAttribute('locale') || 'en'}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${JSON.stringify(headerNav)}' current-path="/en/guide/getting-started">
+      <less-layout locale="${this._getLocale('en')}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${JSON.stringify(headerNav)}' current-path="/en/guide/getting-started">
         <div class="container">
           <h1>Getting Started</h1>
           <p class="subtitle">

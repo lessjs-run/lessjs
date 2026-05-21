@@ -100,7 +100,8 @@ sheet.replaceSync(`
   }
 
   :host([data-theme="dark"]) .app-header {
-    background: rgba(18, 18, 26, 0.82);
+    background: rgba(3, 5, 7, 0.85);
+    border-bottom-color: var(--gray-3);
   }
 
   .header-inner {
@@ -410,7 +411,8 @@ sheet.replaceSync(`
     }
 
     :host([data-theme="dark"]) .mobile-tab-bar {
-      background: rgba(18, 18, 26, 0.88);
+      background: rgba(3, 5, 7, 0.88);
+      border-top-color: var(--gray-3);
     }
 
     .tab-item {
@@ -496,6 +498,7 @@ export class LessLayout extends DsdElement {
 
   private _navCleanup?: () => void;
   private _navUnlisten?: () => void;
+  private _themeHandler?: (e: Event) => void;
 
   override render(): string {
     return this._renderLayout();
@@ -783,6 +786,27 @@ export class LessLayout extends DsdElement {
       }
     }
 
+    // Sync data-theme from document.documentElement on connect
+    const docTheme = document.documentElement?.dataset?.theme;
+    if (docTheme) {
+      this.setAttribute('data-theme', docTheme);
+    }
+
+    // Listen for theme change events from less-theme-toggle
+    this._themeHandler = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.theme) {
+        this.setAttribute('data-theme', detail.theme);
+        // Propagate to all light DOM custom element children
+        this.querySelectorAll('*').forEach((el) => {
+          if (el.shadowRoot || el.tagName.includes('-')) {
+            el.setAttribute('data-theme', detail.theme);
+          }
+        });
+      }
+    };
+    globalThis.addEventListener?.('less:theme-change', this._themeHandler);
+
     if (this._dsdHydrated) {
       this._setupDetailsToggle();
     }
@@ -800,6 +824,9 @@ export class LessLayout extends DsdElement {
     super.disconnectedCallback();
     this._navCleanup?.();
     this._navUnlisten?.();
+    if (this._themeHandler) {
+      globalThis.removeEventListener?.('less:theme-change', this._themeHandler);
+    }
   }
 
   override attributeChangedCallback(name: string, old: string | null, val: string | null): void {

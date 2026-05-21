@@ -83,7 +83,7 @@ export class DecisionsIndexPage extends DsdElement {
     const adrs = posts.filter((p) => p.frontmatter.type === 'adr');
     return `
       <less-layout
-        locale="${this.getAttribute('locale') || 'zh'}"
+        locale="${this._getLocale('zh')}"
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'

@@ -12,12 +12,12 @@ export class ArchitecturePage extends DsdElement {
   static override styles = [pageStyles];
 
   override render() {
-    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
     return `
-      <less-layout locale="${this.getAttribute('locale') || 'zh'}" locales='${
+      <less-layout locale="${this._getLocale('zh')}" locales='${
       JSON.stringify(['en', 'zh'])
     }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)
@@ -241,7 +241,7 @@ Phase 3: SSG
 
   private _renderEn() {
     return `
-      <less-layout locale="${this.getAttribute('locale') || 'en'}" locales='${
+      <less-layout locale="${this._getLocale('en')}" locales='${
       JSON.stringify(['en', 'zh'])
     }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)

@@ -271,6 +271,22 @@ export class DsdElement extends _HTMLElement {
   }
 
   /**
+   * Read locale from JS property (set by SSR injectProps) first,
+   * then HTML attribute, then fallback to provided default.
+   *
+   * SSR injectProps() sets camelCase JS properties (e.g. this.locale = 'en')
+   * but getAttribute() only reads HTML attributes, which remain null.
+   * This method resolves the mismatch by checking JS property first.
+   *
+   * @param fallback - Default value when neither source has a value. Defaults to 'en'.
+   */
+  protected _getLocale(fallback = 'en'): string {
+    const prop = (this as Record<string, unknown>).locale;
+    if (typeof prop === 'string' && prop) return prop;
+    return this.getAttribute('locale') || fallback;
+  }
+
+  /**
    * Return Shadow DOM inner HTML as a string.
    *
    * Subclasses MUST override this method. During SSR, this string is

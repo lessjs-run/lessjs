@@ -15,7 +15,7 @@ export class PackageCompatibilityGuidePage extends DsdElement {
   static override styles = [baseStyle];
 
   override render() {
-    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
@@ -24,7 +24,7 @@ export class PackageCompatibilityGuidePage extends DsdElement {
         nav-items='${JSON.stringify(filterEngineNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/package-compatibility"
-        locale="${this.getAttribute('locale') || 'zh'}"
+        locale="${this._getLocale('zh')}"
         locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">
@@ -187,7 +187,7 @@ for (const pkg of node_modules) {
         nav-items='${JSON.stringify(filterEngineNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/en/engine/package-compatibility"
-        locale="${this.getAttribute('locale') || 'en'}"
+        locale="${this._getLocale('en')}"
         locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">

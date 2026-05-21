@@ -233,6 +233,67 @@ function createTokenSheet(): StyleSheetLike {
   --z-modal-backdrop: 500;
   --z-modal: 510;
   --z-popover: 600;
+}
+
+/* ═══════════════════════════════════════════════
+   Dark Mode Overrides
+   ═══════════════════════════════════════════════ */
+:host([data-theme="dark"]) {
+  /* ─── Gray palette (dark mode — inverted) ─── */
+  --gray-0: #030507;
+  --gray-1: #0d0f12;
+  --gray-2: #16191d;
+  --gray-3: #212529;
+  --gray-4: #343a40;
+  --gray-5: #495057;
+  --gray-6: #868e96;
+  --gray-7: #adb5bd;
+  --gray-8: #ced4da;
+  --gray-9: #dee2e6;
+  --gray-10: #e9ecef;
+  --gray-11: #f1f3f5;
+  --gray-12: #f8f9fa;
+
+  /* ─── Brand (slightly lighter for dark bg) ─── */
+  --brand: #7c6ff5;
+  --brand-hover: #6d5ce8;
+  --brand-light: #8b7cf6;
+  --brand-pale: #a594f8;
+  --brand-deep: #3d3580;
+  --brand-subtle: rgba(124, 111, 245, 0.15);
+  --brand-glow: rgba(124, 111, 245, 0.2);
+
+  /* ─── Text ─── */
+  --text-primary: var(--gray-10);
+  --text-secondary: var(--gray-7);
+  --text-muted: var(--gray-6);
+
+  /* ─── Background ─── */
+  --bg-base: var(--gray-0);
+  --bg-surface: var(--gray-1);
+  --bg-card: var(--gray-2);
+  --bg-code: #0d0d12;
+  --bg-elevated: var(--gray-2);
+  --bg-hover: var(--gray-3);
+  --bg-muted: var(--gray-1);
+
+  /* ─── Border ─── */
+  --border: var(--gray-3);
+  --border-hover: var(--gray-4);
+  --code-border: rgba(255, 255, 255, 0.08);
+
+  /* ─── Status ─── */
+  --error: #f06565;
+
+  /* ─── Brand shadows (brighter for dark) ─── */
+  --shadow-brand-sm: 0 2px 12px rgba(124, 111, 245, 0.25);
+  --shadow-brand-md: 0 4px 20px rgba(124, 111, 245, 0.35);
+  --shadow-brand-lg: 0 8px 32px rgba(124, 111, 245, 0.45);
+  --shadow-glow: 0 0 20px rgba(124, 111, 245, 0.2);
+
+  /* ─── Layout ─── */
+  --scrollbar-thumb: var(--gray-5);
+  --scrollbar-track: var(--gray-1);
 }`);
   return sheet;
 }

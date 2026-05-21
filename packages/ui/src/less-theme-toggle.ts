@@ -148,6 +148,22 @@ export class LessThemeToggle extends DsdElement {
     if (document.documentElement.style) {
       document.documentElement.style.colorScheme = theme;
     }
+
+    // Propagate data-theme to parent <less-layout> so :host([data-theme="dark"]) matches
+    try {
+      const root = this.getRootNode();
+      if (root instanceof ShadowRoot && root.host) {
+        root.host.setAttribute('data-theme', theme);
+      }
+    } catch { /* not connected to DOM */ }
+
+    // Dispatch global event so all DsdElement components can react
+    try {
+      if (typeof CustomEvent !== 'undefined' && typeof globalThis.dispatchEvent === 'function') {
+        globalThis.dispatchEvent(new CustomEvent('less:theme-change', { detail: { theme } }));
+      }
+    } catch { /* silent */ }
+
     try {
       localStorage.setItem('less-theme', theme);
     } catch { /* silent */ }

@@ -51,11 +51,11 @@ routeSheet.replaceSync(
 export class ContributingPage extends DsdElement {
   static override styles = [openPropsTokenSheet, pageSheet, routeSheet];
   override render() {
-    return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return `<less-layout locale="${this.getAttribute('locale') || 'zh'}" locales='${
+    return `<less-layout locale="${this._getLocale('zh')}" locales='${
       JSON.stringify(['en', 'zh'])
     }' nav-items='${JSON.stringify(navSections)}' header-nav='${
       JSON.stringify(headerNav)
@@ -79,7 +79,7 @@ deno task docs:dev</code></pre></less-code-block>
   }
 
   private _renderEn() {
-    return `<less-layout locale="${this.getAttribute('locale') || 'en'}" locales='${
+    return `<less-layout locale="${this._getLocale('en')}" locales='${
       JSON.stringify(['en', 'zh'])
     }' nav-items='${JSON.stringify(navSections)}' header-nav='${
       JSON.stringify(headerNav)

@@ -108,7 +108,7 @@ export class ChangelogPage extends DsdElement {
   override render() {
     return `
       <less-layout
-        locale="${this.getAttribute('locale') || 'zh'}"
+        locale="${this._getLocale('zh')}"
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
@@ -152,6 +152,9 @@ export class ChangelogPage extends DsdElement {
                 <li><strong>布局过一会全炸（DSD 水合 bug）</strong>：connectedCallback 中 shadowRoot 已存在时跳过 createRenderRoot()，_dsdHydrated 未标记 → CSR 路径执行 innerHTML = render() 清空 DSD 内容</li>
                 <li><strong>嵌套 CE 不渲染</strong>：renderNestedCustomElements 单次扫描，less-layout DSD 输出中的 less-theme-toggle 未被发现；增加 DSD 子节点递归渲染</li>
                 <li><strong>index/index.ts 未使用 import</strong>：移除无效的 DsdLitElement 导入</li>
+                <li><strong>主题切换不生效（dark mode）</strong>：openPropsTokenSheet 缺少 :host([data-theme="dark"]) 覆盖 → 切换后颜色不变；less-theme-toggle 未传播 data-theme 到父 less-layout；vite.config.ts 全局 CSS 缺 dark mode body 覆盖</li>
+                <li><strong>语言切换不生效</strong>：路由组件用 this.getAttribute('locale') 读取 locale，但 SSR injectProps() 设的是 JS 属性而非 HTML 属性 → getAttribute 返回 null → 回退硬编码 'zh' → 所有页面永远渲染中文；修复为 DsdElement._getLocale() 方法（JS 属性优先 → HTML 属性 → 回退默认值）</li>
+                <li><strong>Theme 事件传播</strong>：less-theme-toggle 派发 less:theme-change 自定义事件；less-layout 监听并传播 data-theme 到自身和 light DOM 子组件</li>
               </ul>
             </div>
           </div>
