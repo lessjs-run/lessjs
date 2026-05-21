@@ -559,7 +559,11 @@ export class LessLayout extends DsdElement {
       if (Array.isArray(raw)) return raw as string[];
       // String from HTML attribute — try JSON parse
       if (typeof raw === 'string') {
-        try { return JSON.parse(raw); } catch { return ['en']; }
+        try {
+          return JSON.parse(raw);
+        } catch {
+          return ['en'];
+        }
       }
       return ['en'];
     } catch {

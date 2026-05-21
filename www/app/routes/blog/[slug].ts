@@ -9,7 +9,6 @@
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterBlogNav } from '../../utils/nav-filter.js';
 import { DsdElement, StyleSheet } from '@lessjs/core';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import { posts, getPostBySlug } from 'virtual:less-blog-data';
@@ -71,7 +70,7 @@ export default class BlogPostPage extends DsdElement {
           <p class="subtitle">${post.frontmatter.excerpt ?? ''}</p>
           ${tags.length > 0 ? `<div class="blog-tags">${tags.map(tag => `<span class="blog-tag">${tag}</span>`)}</div>` : ''}
           <p class="blog-date">${post.frontmatter.date}</p>
-          <div class="blog-content">${unsafeHTML(post.html)}</div>
+          <div class="blog-content">${post.html}</div>
           <div class="nav-row"><a href="/blog" class="nav-link">&larr; 返回博客</a></div>
         </div>
       </less-layout>
@@ -92,7 +91,7 @@ export default class BlogPostPage extends DsdElement {
           <p class="subtitle">${post.frontmatter.excerpt ?? ''}</p>
           ${tags.length > 0 ? `<div class="blog-tags">${tags.map(tag => `<span class="blog-tag">${tag}</span>`)}</div>` : ''}
           <p class="blog-date">${post.frontmatter.date}</p>
-          <div class="blog-content">${unsafeHTML(post.html)}</div>
+          <div class="blog-content">${post.html}</div>
           <div class="nav-row"><a href="/blog" class="nav-link">&larr; Back to Blog</a></div>
         </div>
       </less-layout>

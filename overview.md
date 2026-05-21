@@ -10,34 +10,34 @@ LessJS v0.20.0 "Ocean-Island Architecture" 全部 12 个 SOP 实现完成。9 �
 
 ## 交付概览
 
-| 指标 | 值 |
-|------|-----|
-| 文件变更 | 27 文件, +3391/-3012 行 |
-| Lit 依赖 | 9 个 DSD 组件: **零 Lit** |
-| DsdElement 导入 | 10/10 组件使用 @lessjs/core |
+| 指标              | 值                                |
+| ----------------- | --------------------------------- |
+| 文件变更          | 27 文件, +3391/-3012 行           |
+| Lit 依赖          | 9 个 DSD 组件: **零 Lit**         |
+| DsdElement 导入   | 10/10 组件使用 @lessjs/core       |
 | _dsdHydrated hack | **已移除**（DsdElement 自动处理） |
-| CSS Parts | 10/10 组件全覆盖 |
-| Open Props | 内联 CSSStyleSheet，零 CDN 依赖 |
-| 推送状态 | ✅ origin/dev (d2a9745..0df25ec) |
+| CSS Parts         | 10/10 组件全覆盖                  |
+| Open Props        | 内联 CSSStyleSheet，零 CDN 依赖   |
+| 推送状态          | ✅ origin/dev (d2a9745..0df25ec)  |
 
 ---
 
 ## 12 个 SOP 实现清单
 
-| SOP | 内容 | 状态 |
-|-----|------|------|
-| SOP-001 | DsdElement 基类 (packages/core/src/dsd-element.ts) | ✅ |
-| SOP-002 | SSR CSSStyleSheet 提取 (render-dsd.ts +15行) | ✅ |
-| SOP-003 | Open Props Token 迁移 (删除 ~100 行，新建 open-props-tokens.ts) | ✅ |
-| SOP-004 | less-card / less-callout / less-step-card 迁移 | ✅ |
-| SOP-005 | less-button / less-input 迁移 | ✅ |
-| SOP-006 | less-theme-toggle / less-code-block / less-dialog 迁移 | ✅ |
-| SOP-007 | less-layout 3步分层迁移 | ✅ |
-| SOP-008 | less-search 迁移 (document.body overlay + document.adoptedStyleSheets) | ✅ |
-| SOP-009 | less-hero-ping 保留 Lit + CSS Parts | ✅ |
-| SOP-010 | CSS Parts 全覆盖 (10/10 组件) | ✅ |
-| SOP-011 | 构建验证 (零 Lit imports, 零 hack) | ✅ |
-| SOP-012 | 回归测试矩阵 | ✅ |
+| SOP     | 内容                                                                   | 状态 |
+| ------- | ---------------------------------------------------------------------- | ---- |
+| SOP-001 | DsdElement 基类 (packages/core/src/dsd-element.ts)                     | ✅   |
+| SOP-002 | SSR CSSStyleSheet 提取 (render-dsd.ts +15行)                           | ✅   |
+| SOP-003 | Open Props Token 迁移 (删除 ~100 行，新建 open-props-tokens.ts)        | ✅   |
+| SOP-004 | less-card / less-callout / less-step-card 迁移                         | ✅   |
+| SOP-005 | less-button / less-input 迁移                                          | ✅   |
+| SOP-006 | less-theme-toggle / less-code-block / less-dialog 迁移                 | ✅   |
+| SOP-007 | less-layout 3步分层迁移                                                | ✅   |
+| SOP-008 | less-search 迁移 (document.body overlay + document.adoptedStyleSheets) | ✅   |
+| SOP-009 | less-hero-ping 保留 Lit + CSS Parts                                    | ✅   |
+| SOP-010 | CSS Parts 全覆盖 (10/10 组件)                                          | ✅   |
+| SOP-011 | 构建验证 (零 Lit imports, 零 hack)                                     | ✅   |
+| SOP-012 | 回归测试矩阵                                                           | ✅   |
 
 ---
 

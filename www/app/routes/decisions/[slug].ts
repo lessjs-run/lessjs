@@ -208,7 +208,7 @@ export default class DecisionSlugPage extends DsdElement {
             `
         : ''
     }
-          <div class="markdown">${unsafeHTML(post.html)}</div>
+          <div class="markdown">${post.html}</div>
           <div class="nav-row">
             <a href="/decisions" class="nav-link">&larr; Decisions</a>
             <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
@@ -220,4 +220,3 @@ export default class DecisionSlugPage extends DsdElement {
 }
 
 customElements.define('page-decision-slug', DecisionSlugPage);
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';

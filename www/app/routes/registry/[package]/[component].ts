@@ -15,7 +15,6 @@
 export const meta = { section: 'Registry', label: 'Component Detail', order: 6 };
 
 import { DsdElement, StyleSheet } from '@lessjs/core';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterRegistryNav } from '../../../utils/nav-filter.js';
 import { pageStyles } from '../../../components/page-styles.js';
@@ -476,7 +475,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
                 `
         : hasSnapshot
         ? `
-                    <div style="width:100%;">${unsafeHTML(sanitizeSnapshot(tag.ssrSnapshot))}</div>
+                    <div style="width:100%;">${sanitizeSnapshot(tag.ssrSnapshot)}</div>
                   `
         : `
                     <div class="preview-placeholder">

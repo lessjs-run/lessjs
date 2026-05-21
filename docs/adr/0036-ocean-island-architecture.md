@@ -90,16 +90,16 @@ We adopt a **two-layer component model**:
 
 ### 2.2 Key Design Decisions
 
-| ID | Decision                       | Rationale                                            |
-| -- | ------------------------------ | ---------------------------------------------------- |
-| D1 | `DsdElement` in `@lessjs/core` | Zero deps, co-located with `renderDSD()`             |
-| D2 | `render(): string`             | Already supported by `renderDSD()` line 177-181      |
-| D3 | `StyleSheet` for styles (SSR-safe CSSStyleSheet shim) | Native API in browser, shim in Deno/Node |
-| D4 | Open Props for tokens          | Replace ~100 lines of custom token code              |
-| D5 | `hydrateEvents` preserved      | Proven pattern, ported from DsdLitElement            |
-| D6 | `@lessjs/adapter-lit` retained | v0.20 keeps compatibility; v0.21 deprecates DSD path |
-| D7 | `less-hero-ping` keeps Lit     | Only pure Island component, needs reactivity         |
-| D8 | CSS Parts on every component   | Standard WC external styling API                     |
+| ID | Decision                                              | Rationale                                            |
+| -- | ----------------------------------------------------- | ---------------------------------------------------- |
+| D1 | `DsdElement` in `@lessjs/core`                        | Zero deps, co-located with `renderDSD()`             |
+| D2 | `render(): string`                                    | Already supported by `renderDSD()` line 177-181      |
+| D3 | `StyleSheet` for styles (SSR-safe CSSStyleSheet shim) | Native API in browser, shim in Deno/Node             |
+| D4 | Open Props for tokens                                 | Replace ~100 lines of custom token code              |
+| D5 | `hydrateEvents` preserved                             | Proven pattern, ported from DsdLitElement            |
+| D6 | `@lessjs/adapter-lit` retained                        | v0.20 keeps compatibility; v0.21 deprecates DSD path |
+| D7 | `less-hero-ping` keeps Lit                            | Only pure Island component, needs reactivity         |
+| D8 | CSS Parts on every component                          | Standard WC external styling API                     |
 
 ### 2.3 What Changes
 
