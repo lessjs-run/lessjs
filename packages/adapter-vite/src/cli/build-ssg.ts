@@ -238,7 +238,17 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     hubClientOnlyTags,
   }).ssrAdmissionPlan;
 
-  const ssgEntryCode = generateHonoEntryCode(routes, {
+  const ssgEntryCode = `\
+// SSR polyfill: Lit references CSSStyleSheet in its internals.
+// This must load before any Lit module is evaluated.
+import { StyleSheet } from '@lessjs/core';
+if (typeof globalThis.CSSStyleSheet === 'undefined') {
+  (globalThis as any).CSSStyleSheet = class {
+    replaceSync(_css: string) {}
+    get cssRules() { return []; }
+  };
+}
+` + generateHonoEntryCode(routes, {
     routesDir,
     islandsDir,
     middleware: options.middleware,

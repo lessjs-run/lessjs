@@ -72,3 +72,10 @@ function resolveStyleSheetCtor(): new () => StyleSheetLike {
 
 export const StyleSheet: new () => StyleSheetLike =
   resolveStyleSheetCtor() as unknown as new () => StyleSheetLike;
+
+// Polyfill global CSSStyleSheet for SSR environments so that code
+// that references CSSStyleSheet directly (e.g. Lit internals in the
+// SSR bundle) does not throw ReferenceError.
+if (typeof globalThis.CSSStyleSheet === 'undefined') {
+  (globalThis as Record<string, unknown>).CSSStyleSheet = ShimStyleSheet;
+}
