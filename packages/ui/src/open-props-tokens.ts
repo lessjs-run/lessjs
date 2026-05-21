@@ -27,8 +27,10 @@
  * @module @lessjs/ui/open-props-tokens
  */
 
+import { StyleSheet, type StyleSheetLike } from '@lessjs/core';
+
 /**
- * Open Props design tokens as an inlined CSSStyleSheet.
+ * Open Props design tokens as an inlined StyleSheet.
  *
  * Provides spacing scale, gray palette, brand colors, border radius,
  * shadows, typography, and animation easing tokens. All values are
@@ -39,8 +41,8 @@
  */
 export const openPropsTokenSheet = createTokenSheet();
 
-function createTokenSheet(): CSSStyleSheet {
-  const sheet = new CSSStyleSheet();
+function createTokenSheet(): StyleSheetLike {
+  const sheet = new StyleSheet();
   sheet.replaceSync(`
   /* ─── Spacing scale (from Open Props) ─── */
   --size-1: 4px;

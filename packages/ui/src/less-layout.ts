@@ -27,7 +27,7 @@
  * ```
  */
 
-import { DsdElement, type HydrateEventDescriptor } from '@lessjs/core';
+import { DsdElement, StyleSheet, type HydrateEventDescriptor } from '@lessjs/core';
 import { navigate, onNavigate } from '@lessjs/core/navigation';
 import './less-theme-toggle.js';
 
@@ -49,7 +49,7 @@ export interface HeaderNavLink {
   label: string;
 }
 
-const sheet = new CSSStyleSheet();
+const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;

@@ -22,11 +22,11 @@
  * ```
  */
 
-import { DsdElement, type HydrateEventDescriptor } from '@lessjs/core';
+import { DsdElement, StyleSheet, type HydrateEventDescriptor } from '@lessjs/core';
 
 export const tagName = 'less-dialog';
 
-const sheet = new CSSStyleSheet();
+const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: inline-block;

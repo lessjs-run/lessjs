@@ -3,12 +3,13 @@
  *
  * Tests for the zero-dependency DsdElement base class.
  * Covers DSD detection, CSR fallback, event hydration,
- * AbortController cleanup, M-17 guard, CSSStyleSheet merging,
+ * AbortController cleanup, M-17 guard, StyleSheet merging,
  * and delegatesFocus.
  */
 
 import { assertEquals, assertExists, assertFalse, assertStrictEquals } from 'jsr:@std/assert';
 import { DsdElement } from '../src/dsd-element.js';
+import { StyleSheet, type StyleSheetLike } from '../src/style-sheet.js';
 import type { HydrateEventDescriptor } from '../src/types.js';
 
 // ─── Helper: create a minimal subclass for testing ────────────
@@ -17,17 +18,17 @@ function defineTestElement(options?: {
   tagName?: string;
   renderContent?: string;
   hydrateEvents?: HydrateEventDescriptor[];
-  styles?: CSSStyleSheet | CSSStyleSheet[];
+  styles?: StyleSheetLike | StyleSheetLike[];
   delegatesFocus?: boolean;
   formAssociated?: boolean;
   observedAttributes?: string[];
 }): {
   tagName: string;
   ctor: typeof DsdElement & (new () => DsdElement);
-  sheet: CSSStyleSheet;
+  sheet: StyleSheetLike;
 } {
   const tagName = options?.tagName ?? `test-el-${Math.random().toString(36).slice(2, 7)}`;
-  const sheet = new CSSStyleSheet();
+  const sheet = new StyleSheet();
   sheet.replaceSync(':host { display: block; }');
 
   class TestElement extends DsdElement {
@@ -234,12 +235,12 @@ Deno.test('DsdElement: M-17 guard skips methods starting with __', () => {
   document.body.removeChild(el);
 });
 
-// ─── Test 7: CSSStyleSheet merging ──────────────────────────────
+// ─── Test 7: StyleSheetLike merging ──────────────────────────────
 
-Deno.test('DsdElement: CSSStyleSheet(s) applied to adoptedStyleSheets in CSR', () => {
-  const sheet1 = new CSSStyleSheet();
+Deno.test('DsdElement: StyleSheetLike(s) applied to adoptedStyleSheets in CSR', () => {
+  const sheet1 = new StyleSheet();
   sheet1.replaceSync(':host { color: red; }');
-  const sheet2 = new CSSStyleSheet();
+  const sheet2 = new StyleSheet();
   sheet2.replaceSync(':host { margin: 8px; }');
 
   const { tagName } = defineTestElement({
@@ -254,14 +255,14 @@ Deno.test('DsdElement: CSSStyleSheet(s) applied to adoptedStyleSheets in CSR', (
   assertExists(el.shadowRoot);
   const adopted = el.shadowRoot!.adoptedStyleSheets;
   assertEquals(adopted.length, 2);
-  assertEquals(adopted[0], sheet1);
-  assertEquals(adopted[1], sheet2);
+  assertStrictEquals(adopted[0], sheet1);
+  assertStrictEquals(adopted[1], sheet2);
 
   document.body.removeChild(el);
 });
 
 Deno.test('DsdElement: single CSSStyleSheet applied correctly', () => {
-  const sheet = new CSSStyleSheet();
+  const sheet = new StyleSheet();
   sheet.replaceSync(':host { display: block; }');
 
   const { tagName } = defineTestElement({ styles: sheet });
@@ -272,7 +273,7 @@ Deno.test('DsdElement: single CSSStyleSheet applied correctly', () => {
   assertExists(el.shadowRoot);
   const adopted = el.shadowRoot!.adoptedStyleSheets;
   assertEquals(adopted.length, 1);
-  assertEquals(adopted[0], sheet);
+  assertStrictEquals(adopted[0], sheet);
 
   document.body.removeChild(el);
 });

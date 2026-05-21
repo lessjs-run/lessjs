@@ -24,11 +24,11 @@
  * ```
  */
 
-import { DsdElement } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 
 export const tagName = 'less-card';
 
-const sheet = new CSSStyleSheet();
+const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;

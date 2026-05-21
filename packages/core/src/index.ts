@@ -30,6 +30,8 @@ export { LessError, SsrRenderError } from './errors.js';
 export { createSsrContext, extractParams, parseQuery } from './context.js';
 export { renderSsrError, wrapInDocument } from './html-escape.js';
 export { DsdElement } from './dsd-element.js';
+export { StyleSheet } from './style-sheet.js';
+export type { StyleSheetLike, StyleSheetRule } from './style-sheet.js';
 export { renderDSD, renderDSDByName } from './render-dsd.js';
 export { camelToKebab } from './render-serialize.js';
 export { getAdapter, getRegisteredAdapters, registerAdapter } from './adapter-registry.js';

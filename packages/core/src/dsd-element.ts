@@ -4,7 +4,7 @@
  * Zero-dependency Custom Element base class providing:
  *   - Declarative Shadow DOM (DSD) detection at upgrade time
  *   - Client-Side Rendering (CSR) fallback when no DSD content exists
- *   - CSSStyleSheet support via adoptedStyleSheets
+ *   - StyleSheet (SSR-safe CSSStyleSheet) via adoptedStyleSheets
  *   - Declarative event hydration via static hydrateEvents
  *   - AbortController cleanup on disconnect
  *   - formAssociated + delegatesFocus support
@@ -45,6 +45,7 @@
  */
 
 import type { HydrateEventDescriptor } from './types.js';
+import type { StyleSheetLike } from './style-sheet.js';
 
 /**
  * Server-safe base class fallback when HTMLElement is unavailable
@@ -69,11 +70,8 @@ const _HTMLElement: typeof HTMLElement =
  * Subclasses MUST override `render(): string`.
  */
 export class DsdElement extends _HTMLElement {
-  /**
-   * Component stylesheets applied via adoptedStyleSheets.
-   * Supports single CSSStyleSheet or an array of them.
-   */
-  static styles?: CSSStyleSheet | CSSStyleSheet[];
+  /** Component stylesheets (SSR-safe — StyleSheet delegates to native CSSStyleSheet in browser). */
+  static styles?: StyleSheetLike | StyleSheetLike[];
 
   /**
    * Declarative event bindings for DSD hydration.
@@ -140,7 +138,9 @@ export class DsdElement extends _HTMLElement {
     if (ctor.styles) {
       const sheets = Array.isArray(ctor.styles) ? ctor.styles : [ctor.styles];
       if (sheets.length > 0) {
-        root.adoptedStyleSheets = sheets;
+        // StyleSheet delegates to native CSSStyleSheet in browser
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (root as any).adoptedStyleSheets = sheets;
       }
     }
 

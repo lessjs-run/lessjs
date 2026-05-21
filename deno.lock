@@ -994,9 +994,7 @@
       },
       "packages/ui": {
         "dependencies": [
-          "jsr:@lessjs/adapter-lit@0.18",
-          "jsr:@lessjs/core@0.18",
-          "npm:lit@^3.2.0"
+          "jsr:@lessjs/core@0.18"
         ]
       }
     }

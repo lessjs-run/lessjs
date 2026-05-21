@@ -27,11 +27,11 @@
  * ```
  */
 
-import { DsdElement, type HydrateEventDescriptor } from '@lessjs/core';
+import { DsdElement, StyleSheet, type HydrateEventDescriptor } from '@lessjs/core';
 
 export const tagName = 'less-input';
 
-const sheet = new CSSStyleSheet();
+const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;

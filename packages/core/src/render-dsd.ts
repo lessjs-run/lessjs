@@ -62,6 +62,7 @@ import {
 } from './types.js';
 import { getRegisteredAdapters } from './adapter-registry.js';
 import { renderNestedCustomElements } from './render-nested.js';
+import type { StyleSheetLike } from './style-sheet.js';
 import { createLogger } from './logger.js';
 
 // ─── Extracted modules ─────────────────────────────────────────
@@ -251,7 +252,7 @@ export async function renderDSD(
 
   // Phase 1: Native DsdElement styles (CSSStyleSheet) — zero-dependency path
   const ctor = componentClass as unknown as {
-    styles?: CSSStyleSheet | CSSStyleSheet[];
+    styles?: StyleSheetLike | StyleSheetLike[];
   };
   if (ctor.styles) {
     const sheets = Array.isArray(ctor.styles) ? ctor.styles : [ctor.styles];

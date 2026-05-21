@@ -18,7 +18,7 @@
  * ```
  */
 
-import { DsdElement } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 
 export const tagName = 'less-callout';
 
@@ -45,7 +45,7 @@ const TYPE_CONFIG: Record<string, { borderColor: string; bgColor: string; icon: 
   },
 };
 
-const sheet = new CSSStyleSheet();
+const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;
