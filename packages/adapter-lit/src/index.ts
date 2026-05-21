@@ -23,5 +23,10 @@
 
 export { installLitAdapter, uninstallLitAdapter } from './ssr.js';
 export { isLitTemplateResult, renderLitToString } from './ssr.js';
+/**
+ * @deprecated Use `DsdElement` from `@lessjs/core` instead.
+ * DsdLitElement is the Lit-based predecessor; the framework is migrating
+ * to zero-dependency DsdElement (extends HTMLElement directly, no Lit).
+ */
 export { DsdLitElement, WithDsdHydration } from './dsd-hydration.js';
 export type { DsdHydration, DsdHydrationMixin } from './dsd-hydration.js';

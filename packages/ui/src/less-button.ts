@@ -4,15 +4,12 @@
  * Minimal button component following Swiss International Style.
  * Pure B&W design with subtle hover states.
  *
- * Variants:
- * - default: outlined button
- * - primary: filled button (black/white)
- * - ghost: no border, subtle hover
+ * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *
- * Sizes:
- * - sm: compact button
- * - md: default size
- * - lg: prominent button
+ * Variants: default (outlined), primary (filled), ghost (no border), accent (gradient)
+ * Sizes: sm, md (default), lg
+ *
+ * @csspart control â€?The button or anchor element
  *
  * Usage:
  * ```html
@@ -22,177 +19,189 @@
  * ```
  */
 
-import { css, type CSSResult, html, nothing, type TemplateResult } from 'lit';
-import { DsdLitElement } from '@lessjs/adapter-lit';
-import { lessDesignTokens } from './design-tokens.js';
+import { DsdElement, type HydrateEventDescriptor } from '@lessjs/core';
 
 export const tagName = 'less-button';
 
-export class LessButton extends DsdLitElement {
-  /** DSD: delegates focus to the first focusable element in the shadow DOM */
-  static delegatesFocus = true;
+const sheet = new CSSStyleSheet();
+sheet.replaceSync(`
+  :host {
+    display: inline-block;
+  }
 
-  /** Form-Associated Custom Element: enables type="submit" in <form> */
-  static formAssociated = true;
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--size-2);
+    font-family: var(--font-sans);
+    font-weight: var(--font-weight-5);
+    text-decoration: none;
+    cursor: pointer;
+    border: var(--border-size-1) solid var(--gray-3);
+    background: transparent;
+    color: var(--gray-9);
+    border-radius: var(--radius-2);
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
 
-  /** Element internals for form participation + :state() pseudo-classes */
-  private _internals?: ElementInternals;
+  /* Sizes */
+  .btn--sm {
+    padding: var(--size-1) var(--size-3);
+    font-size: var(--font-size-0);
+    height: 28px;
+  }
 
-  static override styles: CSSResult[] = [
-    lessDesignTokens,
-    css`
-      :host {
-        display: inline-block;
-      }
+  .btn--md {
+    padding: var(--size-2) var(--size-4);
+    font-size: var(--font-size-1);
+    height: 36px;
+  }
 
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--less-size-2);
-        font-family: var(--less-font-sans);
-        font-weight: var(--less-font-weight-medium);
-        text-decoration: none;
-        cursor: pointer;
-        border: 0.5px solid var(--less-border);
-        background: transparent;
-        color: var(--less-text-primary);
-        border-radius: var(--less-radius-md);
-        transition:
-          color var(--less-transition-normal),
-          border-color var(--less-transition-normal),
-          background var(--less-transition-normal);
-        white-space: nowrap;
-        letter-spacing: var(--less-letter-spacing-wide);
-      }
+  .btn--lg {
+    padding: var(--size-3) var(--size-5);
+    font-size: var(--font-size-2);
+    height: 44px;
+  }
 
-      /* Sizes */
-      .btn--sm {
-        padding: var(--less-size-1) var(--less-size-3);
-        font-size: var(--less-font-size-sm);
-        height: 28px;
-      }
+  /* Variants */
+  .btn--default:hover {
+    color: var(--gray-9);
+    border-color: var(--gray-5);
+    background: rgba(83,74,183,0.06);
+  }
 
-      .btn--md {
-        padding: var(--less-size-2) var(--less-size-4);
-        font-size: var(--less-font-size-md);
-        height: 36px;
-      }
+  .btn--primary {
+    background: var(--brand, var(--indigo-6));
+    color: var(--gray-0);
+    border-color: var(--brand, var(--indigo-6));
+  }
 
-      .btn--lg {
-        padding: var(--less-size-3) var(--less-size-5);
-        font-size: var(--less-font-size-lg);
-        height: 44px;
-      }
+  .btn--primary:hover {
+    background: var(--brand-hover, var(--indigo-7));
+    border-color: var(--brand-hover, var(--indigo-7));
+  }
 
-      /* Variants */
-      .btn--default:hover {
-        color: var(--less-text-primary);
-        border-color: var(--less-border-hover);
-        background: var(--less-accent-subtle);
-      }
+  .btn--ghost {
+    border-color: transparent;
+  }
 
-      .btn--primary {
-        background: var(--less-accent);
-        color: var(--less-bg-base);
-        border-color: var(--less-accent);
-      }
+  .btn--ghost:hover {
+    background: rgba(83,74,183,0.06);
+    border-color: transparent;
+  }
 
-      .btn--primary:hover {
-        background: var(--less-accent-dim);
-        border-color: var(--less-accent-dim);
-      }
+  .btn--accent {
+    background: linear-gradient(135deg, var(--brand, #534ab7), #7c3aed);
+    color: white;
+    border-color: transparent;
+  }
+  .btn--accent:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-2);
+    filter: brightness(1.05);
+  }
+  .btn--accent:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-1);
+  }
 
-      .btn--ghost {
-        border-color: transparent;
-      }
+  /* States */
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
 
-      .btn--ghost:hover {
-        background: var(--less-accent-subtle);
-        border-color: transparent;
-      }
+  .btn:focus-visible {
+    outline: 2px solid var(--brand, var(--indigo-6));
+    outline-offset: 2px;
+  }
 
-      /* v0.19.1 Phase 6: Accent gradient variant (ADR-0035 B2) */
-      .btn--accent {
-        background: linear-gradient(135deg, var(--less-brand, #534ab7), #7c3aed);
-        color: white;
-        border-color: transparent;
-      }
-      .btn--accent:hover {
-        transform: translateY(-1px);
-        box-shadow: var(--less-shadow-md);
-        filter: brightness(1.05);
-      }
-      .btn--accent:active {
-        transform: translateY(0);
-        box-shadow: var(--less-shadow-sm);
-      }
+  :host(:state(disabled)) .btn {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+`);
 
-      /* States */
-      .btn:disabled,
-      .btn[aria-disabled="true"] {
-        opacity: 0.5;
-        cursor: not-allowed;
-        pointer-events: none;
-      }
+export class LessButton extends DsdElement {
+  static override styles = sheet;
+  static override delegatesFocus = true;
+  static override formAssociated = true;
+  static override observedAttributes = ['variant', 'size', 'disabled', 'href', 'target', 'type'];
 
-      .btn:focus-visible {
-        outline: 2px solid var(--less-accent);
-        outline-offset: 2px;
-      }
-
-      /* :state() pseudo-class support â€” CSS custom states via ElementInternals */
-      :host(:state(disabled)) .btn {
-        opacity: 0.5;
-        cursor: not-allowed;
-        pointer-events: none;
-      }
-    `,
+  static override hydrateEvents: HydrateEventDescriptor[] = [
+    { selector: '.btn', event: 'click', method: '_handleClick' },
   ];
 
-  static override properties = {
-    variant: { type: String, reflect: true },
-    size: { type: String, reflect: true },
-    disabled: { type: Boolean, reflect: true },
-    href: { type: String, reflect: true },
-    target: { type: String, reflect: true },
-    type: { type: String },
-  };
 
-  /** Button variant style: 'default' (outlined), 'primary' (filled), 'ghost' (no border), or 'accent' (gradient) */
-  declare variant: 'default' | 'primary' | 'ghost' | 'accent';
-  /** Button size: 'sm', 'md' (default), or 'lg' */
-  declare size: 'sm' | 'md' | 'lg';
-  /** Whether the button is disabled */
-  declare disabled: boolean;
-  /** If set, renders as an anchor link instead of a button */
-  declare href: string | undefined;
-  /** Target attribute for link mode (e.g. '_blank') */
-  declare target: string | undefined;
-  /** Button type: 'submit', 'button', or 'reset' (default: 'button'). Only applies in button mode (no href). */
-  declare type: 'submit' | 'button' | 'reset';
+  override render(): string {
+    const v = this.getAttribute('variant') || 'default';
+    const s = this.getAttribute('size') || 'md';
+    const d = this.hasAttribute('disabled');
+    const href = this.getAttribute('href') || '';
+    const target = this.getAttribute('target') || '';
+    const type = this.getAttribute('type') || 'button';
+    const classes = `btn btn--${v} btn--${s}`;
 
-  constructor() {
-    super();
-    this.variant = 'default';
-    this.size = 'md';
-    this.disabled = false;
-    this.href = undefined;
-    this.target = undefined;
-    this.type = 'button';
-    // Form-Associated CE: attach internals for form participation
-    this._internals = this.attachInternals();
+    if (href) {
+      const hrefAttr = d ? '' : `href="${this._escAttr(href)}"`;
+      const disabledAttr = d ? 'aria-disabled="true"' : '';
+      const targetAttr = target ? `target="${this._escAttr(target)}"` : '';
+      const relAttr = target === '_blank' ? 'rel="noopener noreferrer"' : '';
+      return `<a class="${classes}" part="control" ${hrefAttr} ${targetAttr} ${disabledAttr} ${relAttr}>
+        <slot></slot></a>`;
+    }
+
+    return `<button class="${classes}" part="control" ${d ? 'disabled' : ''} type="${type}">
+      <slot></slot></button>`;
   }
 
-  override connectedCallback(): void {
-    super.connectedCallback();
-    this._updateState();
+  override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
+    if (old === val) return;
+    // href change may switch element type (a vs button) â€?full re-render
+    if (name === 'href') {
+      this._reRender();
+    } else if (name === 'disabled') {
+      this._syncDOM();
+      this._updateState();
+    } else {
+      this._syncDOM();
+    }
   }
 
-  /** Update :state() pseudo-classes via ElementInternals */
+  private _syncDOM(): void {
+    const el = this.shadowRoot?.querySelector('.btn') as HTMLElement | null;
+    if (!el) return;
+    const v = this.getAttribute('variant') || 'default';
+    const s = this.getAttribute('size') || 'md';
+    el.className = `btn btn--${v} btn--${s}`;
+    if (el instanceof HTMLButtonElement) {
+      el.disabled = this.hasAttribute('disabled');
+    }
+    if (el instanceof HTMLAnchorElement && this.hasAttribute('disabled')) {
+      el.setAttribute('aria-disabled', 'true');
+    }
+  }
+
+  private _reRender(): void {
+    if (!this.shadowRoot) return;
+    const slotContent = this.shadowRoot.querySelector('slot')?.assignedNodes({ flatten: true }) || [];
+    this.shadowRoot.innerHTML = this.render();
+    this._hydrateEvents();
+    const newSlot = this.shadowRoot.querySelector('slot');
+    if (newSlot && slotContent.length) {
+      newSlot.replaceChildren(...slotContent);
+    }
+  }
+
   private _updateState(): void {
     if (!this._internals?.states) return;
-    if (this.disabled) {
+    if (this.hasAttribute('disabled')) {
       this._internals.states.delete('enabled');
       this._internals.states.add('disabled');
     } else {
@@ -201,50 +210,14 @@ export class LessButton extends DsdLitElement {
     }
   }
 
-  /** Watch disabled changes to update :state() */
-  override updated(changed: Map<string, unknown>): void {
-    super.updated(changed);
-    if (changed.has('disabled')) {
-      this._updateState();
-    }
+  private _handleClick(e: Event): void {
+    this.dispatchEvent(new CustomEvent('less-click', { bubbles: true, composed: true }));
   }
 
-  /** Prevent default on disabled anchor clicks */
-  private _preventClick(e: Event) {
-    e.preventDefault();
-  }
-
-  /** When DSD hydrated, return nothing â€” the shadow DOM already has content. */
-  override render(): TemplateResult | typeof nothing {
-    if (this._dsdHydrated) return nothing;
-    const classes = `btn btn--${this.variant} btn--${this.size}`;
-
-    if (this.href) {
-      // disabled anchor: remove href and use aria-disabled (disabled is not valid on <a>)
-      const hrefAttr = this.disabled ? undefined : this.href;
-      return html`
-        <a
-          class="${classes}"
-          href="${hrefAttr ?? nothing}"
-          target="${this.target || nothing}"
-          aria-disabled="${this.disabled || nothing}"
-          rel="${this.target === '_blank' ? 'noopener noreferrer' : nothing}"
-          @click="${this.disabled ? this._preventClick : nothing}"
-        >
-          <slot></slot>
-        </a>
-      `;
-    }
-
-    return html`
-      <button class="${classes}" ?disabled="${this.disabled}" type="${this.type}">
-        <slot></slot>
-      </button>
-    `;
+  private _escAttr(s: string): string {
+    return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 }
 
-// v0.14.5: Direct registration guard supports both island() and direct import paths.
-// When used via island(), the registration here is a no-op (idempotent guard).
-// When imported directly without island(), this ensures the element is still registered.
+// Guard: idempotent across SSR paths
 if (!customElements.get(tagName)) customElements.define(tagName, LessButton);

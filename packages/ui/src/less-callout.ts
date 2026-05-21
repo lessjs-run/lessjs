@@ -4,127 +4,126 @@
  * Callout/notice box for inline documentation alerts.
  * Supports 4 types: info, warning, danger, tip.
  *
+ * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
+ *
+ * @csspart container �?The callout wrapper
+ * @csspart icon �?The type icon span
+ * @csspart content �?The body content area
+ *
  * Usage:
  * ```html
  * <less-callout type="info" label="Note">
  *   This is an informational callout.
  * </less-callout>
  * ```
- *
- * Technical: Uses private _type/_title + requestUpdate() pattern
- * because Rolldown does not correctly transpile @property() decorators.
  */
-import { css, html } from 'lit';
-import { DsdLitElement } from '@lessjs/adapter-lit';
-import { lessDesignTokens } from './design-tokens.js';
+
+import { DsdElement } from '@lessjs/core';
 
 export const tagName = 'less-callout';
 
 const TYPE_CONFIG: Record<string, { borderColor: string; bgColor: string; icon: string }> = {
   info: {
-    borderColor: 'var(--less-brand, #534AB7)',
-    bgColor: 'var(--less-brand-subtle, rgba(83,74,183,0.06))',
-    icon: 'ℹ️',
+    borderColor: 'var(--brand, #534AB7)',
+    bgColor: 'rgba(83,74,183,0.06)',
+    icon: '\u2139\uFE0F',
   },
   warning: {
     borderColor: '#F59E0B',
     bgColor: 'rgba(245,158,11,0.06)',
-    icon: '⚠',
+    icon: '\u26A0',
   },
   danger: {
     borderColor: '#EF4444',
     bgColor: 'rgba(239,68,68,0.06)',
-    icon: '✕',
+    icon: '\u2715',
   },
   tip: {
     borderColor: '#22C55E',
     bgColor: 'rgba(34,197,94,0.06)',
-    icon: '✓',
+    icon: '\u2713',
   },
 };
 
-export class LessCallout extends DsdLitElement {
-  private _type: 'info' | 'warning' | 'danger' | 'tip' = 'info';
-  private _label = '';
-
-  static override styles = [
-    lessDesignTokens,
-    css`
-      :host {
-        display: block;
-      }
-      .callout {
-        padding: 1rem 1.25rem;
-        margin: 1rem 0;
-        border-left: 3px solid var(--less-brand, #534ab7);
-        background: var(--less-brand-subtle, rgba(83, 74, 183, 0.06));
-        border-radius: 0 var(--less-radius-md, 8px) var(--less-radius-md, 8px) 0;
-      }
-      .callout-header {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin-bottom: 4px;
-      }
-      .callout-icon {
-        font-size: 14px;
-        line-height: 1;
-        flex-shrink: 0;
-      }
-      .callout-title {
-        font-size: 0.8125rem;
-        font-weight: 600;
-        color: var(--less-text-primary);
-      }
-      .callout-body {
-        font-size: 0.9375rem;
-        line-height: 1.75;
-        color: var(--less-text-secondary);
-      }
-      .callout-body ::slotted(p) {
-        margin: 0;
-      }
-    `,
-  ];
-
-  /** Callout type — determines color scheme and icon */
-  get type(): 'info' | 'warning' | 'danger' | 'tip' {
-    return this._type;
+const sheet = new CSSStyleSheet();
+sheet.replaceSync(`
+  :host {
+    display: block;
   }
-  set type(val: 'info' | 'warning' | 'danger' | 'tip') {
-    this._type = val;
-    this.requestUpdate();
+  .callout {
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    border-left: 3px solid var(--brand, #534AB7);
+    background: rgba(83,74,183,0.06);
+    border-radius: 0 var(--radius-2, 8px) var(--radius-2, 8px) 0;
   }
+  .callout-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .callout-icon {
+    font-size: 14px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .callout-title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--gray-9);
+  }
+  .callout-body {
+    font-size: 0.9375rem;
+    line-height: 1.75;
+    color: var(--gray-7);
+  }
+  .callout-body ::slotted(p) {
+    margin: 0;
+  }
+`);
 
-  /** Optional label text (callout heading) */
-  get label(): string {
-    return this._label;
-  }
-  set label(val: string) {
-    this._label = val;
-    this.requestUpdate();
-  }
+export class LessCallout extends DsdElement {
+  static override styles = sheet;
+  static override observedAttributes = ['type', 'label'];
 
-  override render() {
-    const config = TYPE_CONFIG[this._type] || TYPE_CONFIG.info;
-    return html`
-      <div
-        class="callout"
-        style="border-left-color: ${config.borderColor}; background: ${config.bgColor};"
-      >
-        ${this._label
-          ? html`
-            <div class="callout-header">
-              <span class="callout-icon">${config.icon}</span>
-              <span class="callout-title">${this._label}</span>
-            </div>
-          `
-          : ''}
-        <div class="callout-body">
-          <slot></slot>
-        </div>
+  override render(): string {
+    const type = this.getAttribute('type') || 'info';
+    const label = this.getAttribute('label') || '';
+    const config = TYPE_CONFIG[type] || TYPE_CONFIG.info;
+
+    const header = label
+      ? `<div class="callout-header">
+          <span class="callout-icon" part="icon">${config.icon}</span>
+          <span class="callout-title">${this._esc(label)}</span>
+        </div>`
+      : '';
+
+    return `<div class="callout" part="container"
+        style="border-left-color:${config.borderColor};background:${config.bgColor};">
+      ${header}
+      <div class="callout-body" part="content">
+        <slot></slot>
       </div>
-    `;
+    </div>`;
+  }
+
+  override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
+    if (old === val) return;
+    this._syncDOM();
+  }
+
+  private _syncDOM(): void {
+    if (!this.shadowRoot) return;
+    this.shadowRoot.innerHTML = this.render();
+    this._hydrateEvents();
+  }
+
+  /** Escape HTML to prevent XSS */
+  private _esc(s: string): string {
+    const div = document.createElement('div');
+    div.textContent = s;
+    return div.innerHTML;
   }
 }
 
