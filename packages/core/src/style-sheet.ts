@@ -65,7 +65,8 @@ function resolveStyleSheetCtor(): new () => StyleSheetLike {
   // typeof on undeclared variable returns 'undefined' without throwing.
   // Function wrapper prevents bundlers from inlining the CSSStyleSheet
   // reference into a position where it would throw ReferenceError in SSR.
-  if (typeof CSSStyleSheet !== 'undefined') return CSSStyleSheet;
+  const g = globalThis as Record<string, unknown>;
+  if (typeof g.CSSStyleSheet !== 'undefined') return g.CSSStyleSheet as new () => StyleSheetLike;
   return ShimStyleSheet;
 }
 
