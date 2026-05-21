@@ -10,7 +10,7 @@
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// ─── Package versions ──────────────────────────────────────────
+// ??? Package versions ??????????????????????????????????????????
 // ADR 0016: Handle both local (file://) and JSR remote (https://) execution.
 // When running from JSR, import.meta.url is https://jsr.io/... and
 // fileURLToPath() throws ERR_INVALID_URL_SCHEME.
@@ -75,7 +75,7 @@ async function fetchJsrVersion(pkg: string): Promise<string> {
   return version;
 }
 
-/** Resolve all package versions �?local from workspace, remote from JSR API. */
+/** Resolve all package versions ??local from workspace, remote from JSR API. */
 async function resolveVersions(): Promise<Record<string, string>> {
   const metaUrl = import.meta.url;
   const isRemote = metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
@@ -161,7 +161,7 @@ const lessUiAliases = {
   '@lessjs/ui/less-card': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-card.ts',
   '@lessjs/ui/less-code-block': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-code-block.ts',
   '@lessjs/ui/less-dialog': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-dialog.ts',
-  // Parent alias LAST �� must come after all subpath aliases
+  // Parent alias LAST ?? must come after all subpath aliases
   '@lessjs/ui': 'https://jsr.io/@lessjs/ui/${v.ui}/src/index.ts',
 };
 

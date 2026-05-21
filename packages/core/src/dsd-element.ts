@@ -149,7 +149,7 @@ export class DsdElement extends _HTMLElement {
     const sheets = Array.isArray(ctor.styles) ? ctor.styles : [ctor.styles];
     if (sheets.length > 0) {
       // StyleSheet delegates to native CSSStyleSheet in browser
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // deno-lint-ignore no-explicit-any
       (target as any).adoptedStyleSheets = sheets;
     }
   }

@@ -7,12 +7,12 @@
  * and delegatesFocus.
  */
 
-import { assertEquals, assertExists, assertFalse, assertStrictEquals } from 'jsr:@std/assert';
+import { assertEquals, assertExists, assertFalse, assertStrictEquals } from 'jsr:@std/assert@1';
 import { DsdElement } from '../src/dsd-element.js';
 import { StyleSheet, type StyleSheetLike } from '../src/style-sheet.js';
 import type { HydrateEventDescriptor } from '../src/types.js';
 
-// â”€â”€â”€ Helper: create a minimal subclass for testing â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ????????? Helper: create a minimal subclass for testing ????????????????????????????????????
 
 function defineTestElement(options?: {
   tagName?: string;
@@ -50,7 +50,7 @@ function defineTestElement(options?: {
 // Skip all tests when no DOM (SSR/Deno without --dom flag)
 const hasDOM = typeof customElements !== 'undefined';
 
-// â”€â”€â”€ Test 1: render() returns string â€?SSR-usable â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ????????? Test 1: render() returns string ???SSR-usable ????????????????????????????????????
 
 Deno.test('DsdElement: render() returns string for SSR compatibility', () => {
   if (!hasDOM) return;
@@ -61,7 +61,7 @@ Deno.test('DsdElement: render() returns string for SSR compatibility', () => {
   assertEquals(result, '<span>hello</span>');
 });
 
-// â”€â”€â”€ Test 2: DSD detection â€?pre-populated shadow root â”€â”€â”€â”€â”€â”€â”€â”€
+// ????????? Test 2: DSD detection ???pre-populated shadow root ????????????????????????
 
 Deno.test('DsdElement: DSD detection sets _dsdHydrated when shadowRoot has children', () => {
   if (!hasDOM) return;
@@ -72,20 +72,20 @@ Deno.test('DsdElement: DSD detection sets _dsdHydrated when shadowRoot has child
   const shadow = el.attachShadow({ mode: 'open' });
   shadow.innerHTML = '<div class="dsd-content">pre-populated</div>';
 
-  // Now call createRenderRoot â€?should detect DSD
+  // Now call createRenderRoot ???should detect DSD
   const root = el.createRenderRoot();
   assertStrictEquals(root, shadow);
   assertEquals(el['_dsdHydrated'], true);
 });
 
-// â”€â”€â”€ Test 3: CSR fallback â€?no shadow root â†?create + populate â”€â”€
+// ????????? Test 3: CSR fallback ???no shadow root ???create + populate ??????
 
 Deno.test('DsdElement: CSR fallback creates shadow root and populates from render()', () => {
   if (!hasDOM) return;
   const { tagName } = defineTestElement({ renderContent: '<p>csr content</p>' });
   const el = document.createElement(tagName) as DsdElement;
 
-  // No DSD â€?shadowRoot should be null initially
+  // No DSD ???shadowRoot should be null initially
   assertEquals(el.shadowRoot, null);
 
   // connect to DOM to trigger connectedCallback
@@ -101,17 +101,17 @@ Deno.test('DsdElement: CSR fallback creates shadow root and populates from rende
   document.body.removeChild(el);
 });
 
-// â”€â”€â”€ Test 4: hydrateEvents binding â€?events trigger correctly â”€â”€
+// ????????? Test 4: hydrateEvents binding ???events trigger correctly ??????
 
 Deno.test('DsdElement: hydrateEvents bind events to shadow DOM elements', () => {
   if (!hasDOM) return;
-  let clickCount = 0;
+  const _clickCount = 0;
 
   const events: HydrateEventDescriptor[] = [
     { selector: 'button.action', event: 'click', method: '_handleClick' },
   ];
 
-  const { tagName } = defineTestElement({
+  const { tagName: _tagName } = defineTestElement({
     renderContent: '<button class="action">Click me</button>',
     hydrateEvents: events,
   });
@@ -152,7 +152,7 @@ Deno.test('DsdElement: hydrateEvents bind events to shadow DOM elements', () => 
   document.body.removeChild(el);
 });
 
-// â”€â”€â”€ Test 5: AbortController cleanup on disconnect â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ????????? Test 5: AbortController cleanup on disconnect ????????????????????????????????????
 
 Deno.test('DsdElement: disconnectedCallback aborts event listeners', () => {
   if (!hasDOM) return;
@@ -195,7 +195,7 @@ Deno.test('DsdElement: disconnectedCallback aborts event listeners', () => {
   assertFalse(!!el['_hydrateAbortController']);
 });
 
-// â”€â”€â”€ Test 6: M-17 guard â€?__ methods skipped â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ????????? Test 6: M-17 guard ???__ methods skipped ??????????????????????????????????????????????????????
 
 Deno.test('DsdElement: M-17 guard skips methods starting with __', () => {
   if (!hasDOM) return;
@@ -243,7 +243,7 @@ Deno.test('DsdElement: M-17 guard skips methods starting with __', () => {
   document.body.removeChild(el);
 });
 
-// â”€â”€â”€ Test 7: StyleSheetLike merging â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ????????? Test 7: StyleSheetLike merging ??????????????????????????????????????????????????????????????????????????????????????????
 
 Deno.test('DsdElement: StyleSheetLike(s) applied to adoptedStyleSheets in CSR', () => {
   if (!hasDOM) return;
@@ -288,7 +288,7 @@ Deno.test('DsdElement: single CSSStyleSheet applied correctly', () => {
   document.body.removeChild(el);
 });
 
-// â”€â”€â”€ Test 8: delegatesFocus â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ????????? Test 8: delegatesFocus ???????????????????????????????????????????????????????????????????????????????????????????????????????????????
 
 Deno.test('DsdElement: delegatesFocus is passed to attachShadow', () => {
   if (!hasDOM) return;
@@ -326,7 +326,7 @@ Deno.test('DsdElement: delegatesFocus defaults to false', () => {
   document.body.removeChild(el);
 });
 
-// â”€â”€â”€ Test: DSD path skips innerHTML population â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ????????? Test: DSD path skips innerHTML population ???????????????????????????????????????????????????
 
 Deno.test('DsdElement: DSD path does not overwrite existing shadow DOM', () => {
   if (!hasDOM) return;
@@ -337,7 +337,7 @@ Deno.test('DsdElement: DSD path does not overwrite existing shadow DOM', () => {
   const shadow = el.attachShadow({ mode: 'open' });
   shadow.innerHTML = '<div class="dsd-content">dsd original</div>';
 
-  // Connect â€?should detect DSD and NOT overwrite
+  // Connect ???should detect DSD and NOT overwrite
   document.body.appendChild(el);
 
   assertEquals(el['_dsdHydrated'], true);
