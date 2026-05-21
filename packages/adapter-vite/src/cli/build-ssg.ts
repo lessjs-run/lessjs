@@ -462,12 +462,15 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
                 ? a.replacement
                 : resolve(root, a.replacement),
             }))
-            : Object.fromEntries(
-              Object.entries(alias).map(([k, v]) => [
-                k,
-                v.startsWith('/') || /^[A-Za-z]:/.test(v) ? v : resolve(root, v),
-              ]),
-            ))
+            // Convert Record to Array so Vite resolves longest match first.
+            // Prevents base @lessjs/ui → index.ts from shadowing subpath
+            // aliases like @lessjs/ui/less-callout → less-callout.ts.
+            : Object.entries(alias)
+              .map(([k, v]) => ({
+                find: k,
+                replacement: v.startsWith('/') || /^[A-Za-z]:/.test(v) ? v : resolve(root, v),
+              }))
+              .sort((a, b) => b.find.length - a.find.length))
           : undefined,
       },
     });
