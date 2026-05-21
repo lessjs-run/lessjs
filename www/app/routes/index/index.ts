@@ -17,6 +17,7 @@ import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
 import '@lessjs/ui/less-step-card';
+import '../../islands/less-search.js';
 import '../../islands/less-term.js';
 import '../../islands/shoelace-showcase.js';
 import '../../islands/react-showcase.js';
@@ -917,6 +918,7 @@ export default class DocsHome extends DsdElement {
     }' nav-items='${JSON.stringify(navSections)}' header-nav='${
       JSON.stringify(headerNav)
     }' current-path="/" home>
+        <less-search slot="header-actions"></less-search>
         <!-- ═══ I. Hero — 暗色沉浸式开场 ═══ -->
         <section class="hero">
           <div class="hero-inner">
@@ -1193,6 +1195,7 @@ export default class DocsHome extends DsdElement {
     }' nav-items='${JSON.stringify(navSections)}' header-nav='${
       JSON.stringify(headerNav)
     }' current-path="/en/" home>
+        <less-search slot="header-actions"></less-search>
         <!-- ═══ I. Hero — dark immersive opening ═══ -->
         <section class="hero">
           <div class="hero-inner">
