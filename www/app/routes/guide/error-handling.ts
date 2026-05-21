@@ -6,10 +6,10 @@ import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class ErrorHandlingPage extends DsdElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+routeSheet.replaceSync(
+  pageStyles + `
+
       .error-hierarchy {
         padding: 1rem;
         background: var(--less-bg-surface);
@@ -22,7 +22,10 @@ export class ErrorHandlingPage extends DsdElement {
         color: var(--less-text-secondary);
       }
     `,
-  ];
+);
+
+export class ErrorHandlingPage extends DsdElement {
+  static override styles = [routeSheet];
   override render() {
     return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }

@@ -6,10 +6,10 @@ import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class SecurityMiddlewarePage extends DsdElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+routeSheet.replaceSync(
+  pageStyles + `
+
       .chain {
         padding: 1rem;
         background: var(--less-bg-surface);
@@ -23,7 +23,10 @@ export class SecurityMiddlewarePage extends DsdElement {
         white-space: pre-wrap;
       }
     `,
-  ];
+);
+
+export class SecurityMiddlewarePage extends DsdElement {
+  static override styles = [routeSheet];
   override render() {
     return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }

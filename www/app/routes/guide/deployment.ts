@@ -6,10 +6,10 @@ import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class DeploymentPage extends DsdElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+routeSheet.replaceSync(
+  pageStyles + `
+
       .platform-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
@@ -29,7 +29,10 @@ export class DeploymentPage extends DsdElement {
         font-size: 0.8125rem;
       }
     `,
-  ];
+);
+
+export class DeploymentPage extends DsdElement {
+  static override styles = [routeSheet];
 
   override render() {
     return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();

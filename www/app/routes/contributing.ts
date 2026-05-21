@@ -10,10 +10,10 @@ pageSheet.replaceSync(pageStyles);
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class ContributingPage extends DsdElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+routeSheet.replaceSync(
+  pageStyles + `
+
       .layer-diagram {
         padding: 1.25rem;
         background: var(--less-bg-surface);
@@ -45,7 +45,10 @@ export class ContributingPage extends DsdElement {
         font-weight: 600;
       }
     `,
-  ];
+);
+
+export class ContributingPage extends DsdElement {
+  static override styles = [routeSheet];
   override render() {
     return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }

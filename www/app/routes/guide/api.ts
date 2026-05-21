@@ -6,10 +6,10 @@ import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class ApiPage extends DsdElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+routeSheet.replaceSync(
+  pageStyles + `
+
       .principle {
         padding: 1rem 1.25rem;
         background: var(--less-bg-surface);
@@ -18,7 +18,10 @@ export class ApiPage extends DsdElement {
         margin: 1rem 0;
       }
     `,
-  ];
+);
+
+export class ApiPage extends DsdElement {
+  static override styles = [routeSheet];
   override render() {
     return (this.getAttribute('locale') || 'zh') === 'en' ? this._renderEn() : this._renderZh();
   }
