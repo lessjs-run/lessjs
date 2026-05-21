@@ -243,8 +243,8 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
 // This must load before any Lit module is evaluated.
 import { StyleSheet } from '@lessjs/core';
 if (typeof globalThis.CSSStyleSheet === 'undefined') {
-  (globalThis as any).CSSStyleSheet = class {
-    replaceSync(_css: string) {}
+  globalThis.CSSStyleSheet = class {
+    replaceSync(_css) {}
     get cssRules() { return []; }
   };
 }
