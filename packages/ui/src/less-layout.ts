@@ -502,20 +502,33 @@ export class LessLayout extends DsdElement {
   }
 
   private _getStr(attr: string, def: string): string {
+    // JS property first (set by injectProps in SSR), then HTML attribute
+    const camel = attr.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
+    const prop = (this as Record<string, unknown>)[camel];
+    if (prop !== undefined && prop !== null) return String(prop);
     return this.getAttribute(attr) || def;
   }
 
   private _getBool(attr: string): boolean {
+    // JS property first (set by injectProps in SSR), then HTML attribute
+    const camel = attr.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
+    const prop = (this as Record<string, unknown>)[camel];
+    if (typeof prop === 'boolean') return prop;
     return this.hasAttribute(attr);
   }
 
   private _currentPath(): string {
-    let cp = this.getAttribute('current-path') || this.getAttribute('currentpath') || '';
+    // JS property first (set by injectProps in SSR), then HTML attributes
+    let cp = (this as Record<string, unknown>).currentPath as string | undefined;
+    if (!cp) cp = this.getAttribute('current-path') || this.getAttribute('currentpath') || '';
     return cp;
   }
 
   private _navItems(): NavSection[] {
     try {
+      // JS property first (set by injectProps in SSR), then HTML attribute
+      const prop = (this as Record<string, unknown>).navItems;
+      if (prop && Array.isArray(prop)) return prop as NavSection[];
       const raw = this.getAttribute('nav-items');
       return raw ? JSON.parse(raw) : [];
     } catch {
@@ -525,6 +538,9 @@ export class LessLayout extends DsdElement {
 
   private _headerNav(): HeaderNavLink[] {
     try {
+      // JS property first (set by injectProps in SSR), then HTML attribute
+      const prop = (this as Record<string, unknown>).headerNav;
+      if (prop && Array.isArray(prop)) return prop as HeaderNavLink[];
       const raw = this.getAttribute('header-nav');
       return raw ? JSON.parse(raw) : [];
     } catch {
