@@ -185,6 +185,13 @@ export class DsdElement extends _HTMLElement {
       this._applyStyles(ctor);
     }
 
+    // Sync data-theme from document root so all components inherit
+    // the current dark/light mode without waiting for external propagation.
+    const docTheme = document.documentElement?.dataset?.theme;
+    if (docTheme && !this.hasAttribute('data-theme')) {
+      this.setAttribute('data-theme', docTheme);
+    }
+
     if (this._dsdHydrated) {
       // DSD path: only bind events â€” DOM is already present
       this._hydrateEvents();

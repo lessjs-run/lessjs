@@ -36,6 +36,10 @@ export class Home extends LitElement {
 }
 customElements.define('page-home', Home);`;
 
+function escHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 const CODE_DSD = `<page-home>
   <template shadowrootmode="open">
     <h1>hello world</h1>
@@ -957,13 +961,13 @@ export default class DocsHome extends DsdElement {
                 <div class="code-bar">
                   <i class="r"></i><i class="y"></i><i class="g"></i><span>你的组件</span>
                 </div>
-                <less-code-block><pre><code>${CODE_COMPONENT}</code></pre></less-code-block>
+                <less-code-block><pre><code>${escHtml(CODE_COMPONENT)}</code></pre></less-code-block>
               </div>
               <div class="code-pane">
                 <div class="code-bar">
                   <i class="r"></i><i class="y"></i><i class="g"></i><span>SSG 输出 (DSD)</span>
                 </div>
-                <less-code-block><pre><code>${CODE_DSD}</code></pre></less-code-block>
+                <less-code-block><pre><code>${escHtml(CODE_DSD)}</code></pre></less-code-block>
               </div>
             </div>
           </div>
@@ -1234,13 +1238,13 @@ export default class DocsHome extends DsdElement {
                 <div class="code-bar">
                   <i class="r"></i><i class="y"></i><i class="g"></i><span>your component</span>
                 </div>
-                <less-code-block><pre><code>${CODE_COMPONENT}</code></pre></less-code-block>
+                <less-code-block><pre><code>${escHtml(CODE_COMPONENT)}</code></pre></less-code-block>
               </div>
               <div class="code-pane">
                 <div class="code-bar">
                   <i class="r"></i><i class="y"></i><i class="g"></i><span>SSG output (DSD)</span>
                 </div>
-                <less-code-block><pre><code>${CODE_DSD}</code></pre></less-code-block>
+                <less-code-block><pre><code>${escHtml(CODE_DSD)}</code></pre></less-code-block>
               </div>
             </div>
           </div>

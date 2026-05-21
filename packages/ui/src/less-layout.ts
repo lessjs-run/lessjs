@@ -797,12 +797,7 @@ export class LessLayout extends DsdElement {
       const detail = (e as CustomEvent).detail;
       if (detail?.theme) {
         this.setAttribute('data-theme', detail.theme);
-        // Propagate to all light DOM custom element children
-        this.querySelectorAll('*').forEach((el) => {
-          if (el.shadowRoot || el.tagName.includes('-')) {
-            el.setAttribute('data-theme', detail.theme);
-          }
-        });
+        this._propagateTheme(detail.theme);
       }
     };
     globalThis.addEventListener?.('less:theme-change', this._themeHandler);
@@ -885,6 +880,24 @@ export class LessLayout extends DsdElement {
     return () => this.shadowRoot?.removeEventListener('click', handler);
   }
 
+  /**
+   * Recursively propagate data-theme to all custom element descendants,
+   * including those nested inside shadow DOM trees.
+   */
+  private _propagateTheme(theme: string): void {
+    const walk = (root: Element | ShadowRoot) => {
+      root.querySelectorAll('*').forEach((el) => {
+        if (el.tagName.includes('-')) {
+          el.setAttribute('data-theme', theme);
+        }
+        if (el.shadowRoot) {
+          walk(el.shadowRoot);
+        }
+      });
+    };
+    walk(this);
+  }
+
   private async _loadContent(path: string): Promise<void> {
     try {
       const resp = await fetch(path);
@@ -896,6 +909,14 @@ export class LessLayout extends DsdElement {
       while (this.firstChild) this.removeChild(this.firstChild);
       while (newLayout.firstChild) this.appendChild(newLayout.firstChild);
       this.setAttribute('current-path', path);
+
+      // Ensure newly inserted components inherit current theme
+      const currentTheme = this.getAttribute('data-theme') ||
+        document.documentElement?.dataset?.theme;
+      if (currentTheme) {
+        this._propagateTheme(currentTheme);
+      }
+
       globalThis.scrollTo({ top: 0, behavior: 'smooth' });
     } catch {
       globalThis.location.reload();
