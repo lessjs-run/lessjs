@@ -222,14 +222,18 @@ export async function renderNestedCustomElements(
   // Collect custom element nodes in bottom-up (deepest-first) order
   const ceNodes: Array<{ node: P5Element; depth: number }> = [];
 
-  function collectCustomElements(node: P5ChildNode, depth = 0): void {
+  function collectCustomElements(
+    node: P5ChildNode,
+    depth: number,
+    out: Array<{ node: P5Element; depth: number }>,
+  ): void {
     if (!('tagName' in node)) return;
     const element = node as P5Element;
 
     // Recurse into children first (bottom-up: children before parent)
     if (element.childNodes) {
       for (const child of element.childNodes) {
-        collectCustomElements(child, depth + 1);
+        collectCustomElements(child, depth + 1, out);
       }
     }
 
@@ -253,12 +257,12 @@ export async function renderNestedCustomElements(
     // Skip if exceeds max depth (prevents stack overflow on pathological nesting)
     if (depth > maxDepth) return;
 
-    ceNodes.push({ node: element, depth });
+    out.push({ node: element, depth });
   }
 
   // Fragment childNodes are the top-level nodes directly
   for (const child of ast.childNodes ?? []) {
-    collectCustomElements(child);
+    collectCustomElements(child, 0, ceNodes);
   }
 
   // Process each custom element (already in bottom-up order)
@@ -355,6 +359,69 @@ export async function renderNestedCustomElements(
       }
       (child as P5Element).parentNode = ceNode;
       ceNode.childNodes.push(child);
+    }
+
+    // v0.20.1: After inserting DSD children, scan the shadow DOM content
+    // for any nested Custom Elements that renderDSD may have generated
+    // (e.g. <less-theme-toggle> inside <less-layout>'s render() output).
+    // These weren't present in the original HTML, so the initial collectCustomElements
+    // pass missed them. We scan the dsdChildren (the <template> and its contents)
+    // recursively to find and render any such CEs.
+    if (dsdCeElement) {
+      const nestedCeNodes: Array<{ node: P5Element; depth: number }> = [];
+      // Scan the DSD children (which are now attached to ceNode)
+      for (const child of dsdChildren) {
+        collectCustomElements(child, depth + 1, nestedCeNodes);
+      }
+      // Process any newly discovered CEs synchronously
+      for (const { node: nestedCe, depth: nestedDepth } of nestedCeNodes) {
+        const nestedTagName = nestedCe.tagName;
+        const nestedCls = globalThis.customElements!.get(nestedTagName) as CustomElementConstructor;
+        if (!nestedCls) continue;
+
+        const nestedProps = parseAttrsToProps(nestedCe.attrs);
+        const nestedDsdOpts = inferDsdOptions(nestedTagName, nestedCls);
+
+        const nestedResult = await renderDSD(
+          nestedTagName,
+          nestedCls,
+          nestedProps,
+          undefined,
+          nestedDsdOpts,
+          collector,
+          nestedDepth,
+          hooks,
+        );
+
+        if (nestedResult.errors.length > 0) {
+          allNestedErrors.push(...nestedResult.errors);
+        }
+        if (nestedResult.hydrationHints.length > 0) {
+          allNestedHints.push(...nestedResult.hydrationHints);
+        }
+
+        const nestedFragment = parse5.parseFragment(nestedResult.html);
+        const nestedCeElement = nestedFragment.childNodes?.find(
+          (child): child is P5Element =>
+            'tagName' in (child as P5Element) && (child as P5Element).tagName === nestedTagName,
+        );
+
+        if (nestedCeElement) {
+          for (const attr of nestedCeElement.attrs) {
+            const alreadyExists = nestedCe.attrs.some((a) => a.name === attr.name);
+            if (!alreadyExists) {
+              nestedCe.attrs.push(attr);
+            }
+          }
+          const nestedChildren = nestedCeElement.childNodes ?? [];
+          // Replace the nested CE's children with the rendered DSD template
+          nestedCe.childNodes = [];
+          for (const child of nestedChildren) {
+            (child as P5Element).parentNode = nestedCe;
+            nestedCe.childNodes.push(child);
+          }
+        }
+      }
     }
   }
 

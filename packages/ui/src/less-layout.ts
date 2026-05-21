@@ -533,14 +533,23 @@ export class LessLayout extends DsdElement {
 
   private _locales(): string[] {
     try {
-      const raw = this.getAttribute('locales');
-      return raw ? JSON.parse(raw) : ['en'];
+      // Check JS property first (set by injectProps in SSR), then HTML attribute
+      const raw = (this as Record<string, unknown>).locales || this.getAttribute('locales');
+      if (!raw) return ['en'];
+      if (Array.isArray(raw)) return raw as string[];
+      // String from HTML attribute — try JSON parse
+      if (typeof raw === 'string') {
+        try { return JSON.parse(raw); } catch { return ['en']; }
+      }
+      return ['en'];
     } catch {
       return ['en'];
     }
   }
 
   private _locale(): string {
+    const prop = (this as Record<string, unknown>).locale;
+    if (typeof prop === 'string') return prop;
     return this.getAttribute('locale') || 'en';
   }
 
@@ -867,9 +876,8 @@ export class LessLayout extends DsdElement {
   // â”€â”€â”€ Utilities â”€â”€â”€
 
   private _esc(s: string): string {
-    const div = document.createElement('div');
-    div.textContent = s;
-    return div.innerHTML;
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
   private _escAttr(s: string): string {

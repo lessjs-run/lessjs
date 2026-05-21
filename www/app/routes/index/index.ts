@@ -11,7 +11,6 @@
  * - Bento hierarchy with WC Engine dominant card, sec-divider-free transitions
  */
 import { DsdElement, StyleSheet } from '@lessjs/core';
-import { DsdLitElement } from '@lessjs/adapter-lit';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { lessDesignTokens } from '@lessjs/ui/design-tokens';
 import '@lessjs/ui/less-layout';

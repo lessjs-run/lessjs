@@ -3,9 +3,11 @@
   "specifiers": {
     "jsr:@std/assert@*": "1.0.14",
     "jsr:@std/assert@1": "1.0.14",
+    "jsr:@std/fs@1": "1.0.23",
     "jsr:@std/internal@^1.0.10": "1.0.13",
     "jsr:@std/internal@^1.0.12": "1.0.13",
     "jsr:@std/path@1": "1.1.4",
+    "jsr:@std/path@^1.1.4": "1.1.4",
     "npm:@hono/vite-dev-server@~0.25.3": "0.25.3_hono@4.12.19",
     "npm:@lit-labs/ssr-dom-shim@^1.5.0": "1.6.0",
     "npm:@lit/reactive-element@2": "2.1.2",
@@ -41,6 +43,13 @@
       "integrity": "68d0d4a43b365abc927f45a9b85c639ea18a9fab96ad92281e493e4ed84abaa4",
       "dependencies": [
         "jsr:@std/internal@^1.0.10"
+      ]
+    },
+    "@std/fs@1.0.23": {
+      "integrity": "3ecbae4ce4fee03b180fa710caff36bb5adb66631c46a6460aaad49515565a37",
+      "dependencies": [
+        "jsr:@std/internal@^1.0.12",
+        "jsr:@std/path@^1.1.4"
       ]
     },
     "@std/internal@1.0.13": {
