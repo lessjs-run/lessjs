@@ -485,7 +485,7 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
                 k,
                 v.startsWith('/') || /^[A-Za-z]:/.test(v) ? v : resolve(root, v),
               ]),
-            )))
+            ))
           : undefined,
       },
     });
