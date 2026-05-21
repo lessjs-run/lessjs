@@ -238,7 +238,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     hubClientOnlyTags,
   }).ssrAdmissionPlan;
 
-  const ssgEntryCode = `\
+  const rawSsgEntryCode = `\
 // SSR polyfill: Lit references CSSStyleSheet in its internals.
 // This must load before any Lit module is evaluated.
 import { StyleSheet } from '@lessjs/core';
@@ -263,6 +263,16 @@ if (typeof globalThis.CSSStyleSheet === 'undefined') {
     upgradeStrategy: options.upgradeStrategy || 'lazy',
     hubClientOnlyTags,
   });
+  // Post-process: rewrite @lessjs/ui subpath imports to direct file
+  // paths. Rolldown with configFile:false mishandles subpath exports
+  // when the base alias maps to a file (index.ts → ENOTDIR).
+  const ssgEntryCode = rawSsgEntryCode.replace(
+    /from\s+['"]@lessjs\/ui\/(less-[\w-]+)['"]/g,
+    (_m: string, sub: string) => {
+      const resolved = resolve(root, `../packages/ui/src/${sub}.ts`);
+      return `from '${resolved}'`;
+    },
+  );
 
   try {
     const { build: viteBuild } = await import('vite');
