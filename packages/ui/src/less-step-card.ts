@@ -6,11 +6,11 @@
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *
- * @csspart container �?The step card wrapper
- * @csspart indicator �?The step number circle
- * @csspart title �?The step label heading
- * @csspart description �?The step description paragraph
- * @csspart content �?The slot content area
+ * @csspart container â€?The step card wrapper
+ * @csspart indicator â€?The step number circle
+ * @csspart title â€?The step label heading
+ * @csspart description â€?The step description paragraph
+ * @csspart content â€?The slot content area
  *
  * Usage:
  * ```html
@@ -115,6 +115,6 @@ export class LessStepCard extends DsdElement {
 }
 
 // Guard: idempotent across SSR paths
-if (!customElements.get(tagName)) {
-  if (typeof customElements !== "undefined") customElements.define(tagName, LessStepCard);
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
+  customElements.define(tagName, LessStepCard);
 }

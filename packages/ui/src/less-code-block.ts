@@ -8,11 +8,11 @@
  *   - Copy button uses ElementInternals :state(copied) for CSS feedback
  *   - DSD renders <slot> for SSR (no JS content fallback)
  *
- * @csspart container �?The code-block wrapper
- * @csspart header �?The header bar with lang badge and copy button
- * @csspart lang �?The language badge
- * @csspart copy �?The copy button
- * @csspart body �?The pre/code area
+ * @csspart container â€?The code-block wrapper
+ * @csspart header â€?The header bar with lang badge and copy button
+ * @csspart lang â€?The language badge
+ * @csspart copy â€?The copy button
+ * @csspart body â€?The pre/code area
  *
  * Usage:
  * ```html
@@ -256,4 +256,4 @@ export class LessCodeBlock extends DsdElement {
 }
 
 // Guard: idempotent across SSR paths
-if (typeof customElements !== "undefined" && !customElements.get(tagName)) customElements.define(tagName, LessCodeBlock);
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) { customElements.define(tagName, LessCodeBlock); }

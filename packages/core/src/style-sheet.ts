@@ -1,9 +1,9 @@
 /**
- * @lessjs/core — StyleSheet (cross-environment CSSStyleSheet abstraction).
+ * @lessjs/core â€” StyleSheet (cross-environment CSSStyleSheet abstraction).
  *
  * In the browser this delegates to the native CSSStyleSheet API at zero
  * cost.  In Deno / Node / Bun (where the CSSOM is not available) it falls
- * back to a minimal in‑memory implementation that satisfies the same
+ * back to a minimal inâ€‘memory implementation that satisfies the same
  * contract needed by `renderDSD()` and `DsdElement`.
  *
  * Public contract (subset of `CSSStyleSheet`):
@@ -13,13 +13,13 @@
  *
  * Where `CSSRuleLike` has exactly one property: `cssText: string`.
  *
- * The shim is intentionally NOT a full CSSOM polyfill — it only implements
+ * The shim is intentionally NOT a full CSSOM polyfill â€” it only implements
  * the surface that LessJS touches.
  */
 
-// ── Types ───────────────────────────────────────────────────────
+// â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-/** Minimal rule interface — only the field LessJS reads. */
+/** Minimal rule interface â€” only the field LessJS reads. */
 export interface StyleSheetRule {
   cssText: string;
 }
@@ -30,7 +30,7 @@ export interface StyleSheetLike {
   readonly cssRules: StyleSheetRule[];
 }
 
-// ── CSS Rule parser (lightweight, no DOM needed) ────────────────
+// â”€â”€ CSS Rule parser (lightweight, no DOM needed) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const RULE_RE = /\s*([^{]+)\s*\{\s*([^}]*)\s*\}/g;
 
@@ -43,7 +43,7 @@ function parseRules(css: string): StyleSheetRule[] {
   return rules;
 }
 
-// ── Shim (Deno / Node) ──────────────────────────────────────────
+// â”€â”€ Shim (Deno / Node) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class ShimStyleSheet implements StyleSheetLike {
   #raw = '';
@@ -59,7 +59,7 @@ class ShimStyleSheet implements StyleSheetLike {
   }
 }
 
-// ── Constructor: auto-detect environment ────────────────────────
+// â”€â”€ Constructor: auto-detect environment â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /**
  * Cross-environment StyleSheet constructor.

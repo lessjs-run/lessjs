@@ -12,10 +12,10 @@
  * - Theme switching via data-theme attribute
  *
  * v0.3.1: Tokens are organized into sub-modules for maintainability:
- *   tokens/spacing.ts   — spacing scale, radius, z-index, transitions
- *   tokens/typography.ts — font families, sizes, weights, line-height
- *   tokens/colors.ts     — dark/light theme color palettes (SINGLE SOURCE OF TRUTH)
- *   tokens/effects.ts    — box shadows
+ *   tokens/spacing.ts   â€” spacing scale, radius, z-index, transitions
+ *   tokens/typography.ts â€” font families, sizes, weights, line-height
+ *   tokens/colors.ts     â€” dark/light theme color palettes (SINGLE SOURCE OF TRUTH)
+ *   tokens/effects.ts    â€” box shadows
  *
  * This file combines all tokens into a single CSSResult for convenience.
  * Import individual token modules if you only need a subset:

@@ -9,13 +9,13 @@
  *   - AbortController cleanup on disconnect
  *   - formAssociated + delegatesFocus support
  *
- * DsdElement extends HTMLElement directly — ZERO Lit dependency.
+ * DsdElement extends HTMLElement directly â€” ZERO Lit dependency.
  * Components return `render(): string` (plain HTML), not TemplateResult.
  *
  * Lifecycle:
- *   SSR: instantiate → set props → render() → wrap in DSD template
- *   Client (DSD): browser attaches shadow root from DSD → upgrade → _hydrateEvents()
- *   Client (CSR): connectedCallback → createRenderRoot → shadowRoot.innerHTML = render()
+ *   SSR: instantiate â†’ set props â†’ render() â†’ wrap in DSD template
+ *   Client (DSD): browser attaches shadow root from DSD â†’ upgrade â†’ _hydrateEvents()
+ *   Client (CSR): connectedCallback â†’ createRenderRoot â†’ shadowRoot.innerHTML = render()
  *
  * Usage (static DSD component):
  * ```ts
@@ -52,7 +52,7 @@ import type { StyleSheetLike } from './style-sheet.js';
  * (Node.js / Deno server environments without DOM globals).
  *
  * In SSR/build contexts, DsdElement is only used for its render(): string
- * method and static property access — the class is never instantiated as
+ * method and static property access â€” the class is never instantiated as
  * a live Custom Element. This stub ensures the class declaration itself
  * does not throw at module evaluation time.
  */
@@ -70,7 +70,7 @@ const _HTMLElement: typeof HTMLElement =
  * Subclasses MUST override `render(): string`.
  */
 export class DsdElement extends _HTMLElement {
-  /** Component stylesheets (SSR-safe — StyleSheet delegates to native CSSStyleSheet in browser). */
+  /** Component stylesheets (SSR-safe â€” StyleSheet delegates to native CSSStyleSheet in browser). */
   static styles?: StyleSheetLike | StyleSheetLike[];
 
   /**
@@ -168,7 +168,7 @@ export class DsdElement extends _HTMLElement {
     }
 
     if (this._dsdHydrated) {
-      // DSD path: only bind events — DOM is already present
+      // DSD path: only bind events â€” DOM is already present
       this._hydrateEvents();
     } else if (this.shadowRoot) {
       // CSR path: populate shadow DOM from render()
@@ -208,7 +208,7 @@ export class DsdElement extends _HTMLElement {
     _oldValue: string | null,
     _newValue: string | null,
   ): void {
-    // Subclass override point — base implementation is intentionally empty.
+    // Subclass override point â€” base implementation is intentionally empty.
   }
 
   /**

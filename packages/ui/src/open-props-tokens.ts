@@ -2,14 +2,14 @@
  * @lessjs/ui - Open Props Design Tokens (CSSStyleSheet).
  *
  * ZERO Lit dependency. Pure CSSStyleSheet containing inlined Open Props
- * design tokens. No CDN dependency — all values are embedded for zero
+ * design tokens. No CDN dependency â€” all values are embedded for zero
  * flash-of-unstyled-content (FOUC) on first paint.
  *
  * Architecture (v0.20.0):
  *   - CSSStyleSheet replaces Lit's CSSResult for framework-agnostic usage.
  *   - DsdElement.styles can reference this directly via adoptedStyleSheets.
  *   - SSR pipeline extracts CSS rules from CSSStyleSheet via cssRules.
- *   - All values inlined — no open-props.style CDN needed.
+ *   - All values inlined â€” no open-props.style CDN needed.
  *
  * Token naming follows Open Props convention:
  *   --size-N, --gray-N, --indigo-N, --radius-N, --shadow-N, --font-*, --ease-*
@@ -34,7 +34,7 @@ import { StyleSheet, type StyleSheetLike } from '@lessjs/core';
  *
  * Provides spacing scale, gray palette, brand colors, border radius,
  * shadows, typography, and animation easing tokens. All values are
- * embedded directly — no network requests.
+ * embedded directly â€” no network requests.
  *
  * Components can adopt this stylesheet via `static styles` (DsdElement)
  * or `adoptedStyleSheets` (vanilla Web Components).
@@ -44,7 +44,7 @@ export const openPropsTokenSheet = createTokenSheet();
 function createTokenSheet(): StyleSheetLike {
   const sheet = new StyleSheet();
   sheet.replaceSync(`
-  /* ─── Spacing scale (from Open Props) ─── */
+  /* â”€â”€â”€ Spacing scale (from Open Props) â”€â”€â”€ */
   --size-1: 4px;
   --size-2: 8px;
   --size-3: 12px;
@@ -56,7 +56,7 @@ function createTokenSheet(): StyleSheetLike {
   --size-12: 96px;
   --size-16: 128px;
 
-  /* ─── Gray palette (from Open Props) - light mode ─── */
+  /* â”€â”€â”€ Gray palette (from Open Props) - light mode â”€â”€â”€ */
   --gray-0: #f8f9fa;
   --gray-1: #f1f3f5;
   --gray-2: #e9ecef;
@@ -71,32 +71,32 @@ function createTokenSheet(): StyleSheetLike {
   --gray-11: #0d0f12;
   --gray-12: #030507;
 
-  /* ─── Indigo palette (brand accent) ─── */
+  /* â”€â”€â”€ Indigo palette (brand accent) â”€â”€â”€ */
   --indigo-5: #7950f2;
   --indigo-6: #6741d9;
   --indigo-7: #5a32b3;
 
-  /* ─── Brand overrides ─── */
+  /* â”€â”€â”€ Brand overrides â”€â”€â”€ */
   --brand: #534ab7;
   --brand-hover: #4039a0;
 
-  /* ─── Border radius ─── */
+  /* â”€â”€â”€ Border radius â”€â”€â”€ */
   --radius-1: 4px;
   --radius-2: 8px;
   --radius-3: 12px;
   --radius-4: 16px;
   --radius-round: 9999px;
 
-  /* ─── Border size ─── */
+  /* â”€â”€â”€ Border size â”€â”€â”€ */
   --border-size-1: 1px;
   --border-size-2: 2px;
 
-  /* ─── Shadows ─── */
+  /* â”€â”€â”€ Shadows â”€â”€â”€ */
   --shadow-1: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-2: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-3: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 
-  /* ─── Typography ─── */
+  /* â”€â”€â”€ Typography â”€â”€â”€ */
   --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', monospace;
   --font-size-00: 0.75rem;
@@ -110,7 +110,7 @@ function createTokenSheet(): StyleSheetLike {
   --font-weight-6: 600;
   --font-weight-7: 700;
 
-  /* ─── Animation easing ─── */
+  /* â”€â”€â”€ Animation easing â”€â”€â”€ */
   --ease-1: cubic-bezier(.25, 0, .5, 1);
   --ease-2: cubic-bezier(.45, 0, .25, 1);
   --ease-3: cubic-bezier(.5, 0, 0, 1);

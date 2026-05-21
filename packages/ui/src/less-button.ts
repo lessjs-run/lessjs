@@ -9,7 +9,7 @@
  * Variants: default (outlined), primary (filled), ghost (no border), accent (gradient)
  * Sizes: sm, md (default), lg
  *
- * @csspart control �?The button or anchor element
+ * @csspart control â€?The button or anchor element
  *
  * Usage:
  * ```html
@@ -163,7 +163,7 @@ export class LessButton extends DsdElement {
 
   override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
     if (old === val) return;
-    // href change may switch element type (a vs button) �?full re-render
+    // href change may switch element type (a vs button) â€?full re-render
     if (name === 'href') {
       this._reRender();
     } else if (name === 'disabled') {
@@ -220,4 +220,4 @@ export class LessButton extends DsdElement {
 }
 
 // Guard: idempotent across SSR paths
-if (typeof customElements !== "undefined" && !customElements.get(tagName)) customElements.define(tagName, LessButton);
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) customElements.define(tagName, LessButton);

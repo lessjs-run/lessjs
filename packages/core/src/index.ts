@@ -2,9 +2,9 @@
  * @lessjs/core - Pure runtime.
  *
  * LessJS is a static-first framework with a pure runtime core:
- * - Zero node:* imports — no filesystem, no process, no path
- * - Zero Vite dependency — no Plugin, no build orchestration
- * - Zero npm: specifiers — works in Deno, Node, Bun, Edge
+ * - Zero node:* imports â€” no filesystem, no process, no path
+ * - Zero Vite dependency â€” no Plugin, no build orchestration
+ * - Zero npm: specifiers â€” works in Deno, Node, Bun, Edge
  * - Pure Web Standard: URL, fetch, import.meta.url, console
  *
  * Rendering: DSD (Declarative Shadow DOM) string concatenation
@@ -15,7 +15,7 @@
  * For the unified lessjs() entry, use @lessjs/app instead.
  */
 
-// ─── Public API re-exports ─────────────────────────────────────────
+// â”€â”€â”€ Public API re-exports â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export type {
   FrameworkOptions,
@@ -90,7 +90,7 @@ export { DANGEROUS_KEYS, getSSRProps, island, type IslandOptions, lessBind } fro
 export { hasNavigationApi, matchRoute, navigate, onNavigate } from './navigation.js';
 export type { NavigationCallback } from './navigation.js';
 
-// G10 fix: Build-time shared types — breaks adapter-vite ↔ content circular dep
+// G10 fix: Build-time shared types â€” breaks adapter-vite â†” content circular dep
 export type {
   LessBlogOptions,
   LessBuildContextLike,
@@ -121,14 +121,14 @@ export { generateAddPlan } from './less-add.js';
 export type { AddPlan, AddTagEntry, FileMutation, PackageSource } from './less-add.js';
 
 // DOM Simulation Experiment (v0.18.3)
-// DEPRECATED from barrel — import from '@lessjs/core/dom-simulation' instead.
+// DEPRECATED from barrel â€” import from '@lessjs/core/dom-simulation' instead.
 // This experimental API requires happy-dom at runtime, which violates
 // core's "zero npm/node/vite" constraint when imported via the barrel.
 // The subpath export is retained for backward compatibility.
 // export { buildDomSimulationReport, renderWithDomSimulation } from './dom-simulation.js';
 // export type { DomSimulationOptions, DomSimulationResult } from './dom-simulation.js';
 
-// G10 fix: Virtual module IDs — shared across adapter-vite, content, i18n
+// G10 fix: Virtual module IDs â€” shared across adapter-vite, content, i18n
 export {
   RESOLVED_BLOG_DATA_ID,
   RESOLVED_I18N_DATA_ID,

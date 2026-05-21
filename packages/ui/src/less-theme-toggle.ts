@@ -9,9 +9,9 @@
  *   - hydrateEvents preserved for DSD event binding
  *   - Direct DOM manipulation for class toggling
  *
- * @csspart toggle �?The button element
- * @csspart icon-sun �?The sun SVG icon
- * @csspart icon-moon �?The moon SVG icon
+ * @csspart toggle â€?The button element
+ * @csspart icon-sun â€?The sun SVG icon
+ * @csspart icon-moon â€?The moon SVG icon
  *
  * Usage:
  * ```html
@@ -169,4 +169,4 @@ export class LessThemeToggle extends DsdElement {
 }
 
 // Guard: idempotent across SSR paths
-if (typeof customElements !== "undefined" && !customElements.get(tagName)) customElements.define(tagName, LessThemeToggle);
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) { customElements.define(tagName, LessThemeToggle); }

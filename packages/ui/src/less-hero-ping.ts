@@ -1,16 +1,16 @@
 /**
- * Hero Ping Island — calls real API, shows status dot.
+ * Hero Ping Island â€” calls real API, shows status dot.
  *
  * Layer 3 (Pure Island): no DSD template.
  * Uses Lit's full reactivity cycle (requestUpdate) for state changes,
  * which requires framework ownership of the shadow root.
  * SSR emits just <less-hero-ping></less-hero-ping>, client creates shadow DOM.
  *
- * v0.20.0: Island component — retains Lit. CSS Parts added for external styling.
+ * v0.20.0: Island component â€” retains Lit. CSS Parts added for external styling.
  *
- * @csspart wrapper — The ping wrapper span
- * @csspart dot-static — The static status dot
- * @csspart dot-animated — The animated ping dot
+ * @csspart wrapper â€” The ping wrapper span
+ * @csspart dot-static â€” The static status dot
+ * @csspart dot-animated â€” The animated ping dot
  */
 import { css, type CSSResult, html, LitElement } from 'lit';
 
@@ -145,4 +145,4 @@ export default class HeroPing extends LitElement {
 }
 
 // Guard: idempotent across SSR paths
-if (typeof customElements !== "undefined" && !customElements.get(tagName)) customElements.define(tagName, HeroPing);
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) { customElements.define(tagName, HeroPing); }

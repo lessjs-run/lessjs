@@ -26,7 +26,7 @@ export const manifest: LessPackageManifest = {
     cssPrefix: 'less',
   },
   declarations: [
-    // ── Ocean (DSD, DsdElement) ──
+    // â”€â”€ Ocean (DSD, DsdElement) â”€â”€
     {
       tagName: 'less-card',
       className: 'LessCard',
@@ -268,11 +268,11 @@ export const manifest: LessPackageManifest = {
         export: 'LessLayout',
       },
     },
-    // ── Island (Lit, kept for reactivity) ──
+    // â”€â”€ Island (Lit, kept for reactivity) â”€â”€
     {
       tagName: 'less-hero-ping',
       className: 'LessHeroPing',
-      superclassName: 'LitElement', // v0.20.0: Island component — retains Lit
+      superclassName: 'LitElement', // v0.20.0: Island component â€” retains Lit
       description: 'Animated hero ping indicator (Island)',
       cssParts: [
         { name: 'dot-static', description: 'The static status dot' },

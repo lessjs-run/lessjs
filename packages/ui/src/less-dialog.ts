@@ -2,16 +2,16 @@
  * @lessjs/ui - less-dialog
  *
  * Dialog component using native <dialog> element + popover API.
- * Per WHATWG HTML Living Standard §4.11.4 (dialog) and §6.9.2 (popover).
+ * Per WHATWG HTML Living Standard Â§4.11.4 (dialog) and Â§6.9.2 (popover).
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *
- * @csspart overlay �?The dialog backdrop/element
- * @csspart dialog �?The dialog container
- * @csspart header �?The header bar
- * @csspart close �?The close button
- * @csspart body �?The content area (<slot>)
- * @csspart footer �?The optional footer slot
+ * @csspart overlay â€?The dialog backdrop/element
+ * @csspart dialog â€?The dialog container
+ * @csspart header â€?The header bar
+ * @csspart close â€?The close button
+ * @csspart body â€?The content area (<slot>)
+ * @csspart footer â€?The optional footer slot
  *
  * Usage:
  * ```html
@@ -250,4 +250,4 @@ export class LessDialog extends DsdElement {
 }
 
 // Guard: idempotent across SSR paths
-if (typeof customElements !== "undefined" && !customElements.get(tagName)) customElements.define(tagName, LessDialog);
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) { customElements.define(tagName, LessDialog); }

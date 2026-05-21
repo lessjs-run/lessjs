@@ -6,9 +6,9 @@
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *
- * @csspart container �?The callout wrapper
- * @csspart icon �?The type icon span
- * @csspart content �?The body content area
+ * @csspart container â€?The callout wrapper
+ * @csspart icon â€?The type icon span
+ * @csspart content â€?The body content area
  *
  * Usage:
  * ```html
@@ -128,6 +128,6 @@ export class LessCallout extends DsdElement {
 }
 
 // Guard: idempotent across SSR paths
-if (!customElements.get(tagName)) {
-  if (typeof customElements !== "undefined") customElements.define(tagName, LessCallout);
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
+  customElements.define(tagName, LessCallout);
 }

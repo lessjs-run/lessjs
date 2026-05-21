@@ -11,13 +11,13 @@
  *   - SPA navigation via Navigation API (navigate/fetch/swap) preserved
  *   - Event delegation at shadow root level for nav clicks
  *
- * @csspart container �?The app-layout root div
- * @csspart header �?The sticky header element
- * @csspart sidebar �?The docs-sidebar nav
- * @csspart main �?The layout-main element
- * @csspart footer �?The app-footer element
- * @csspart nav �?The header-nav element
- * @csspart nav-toggle �?The mobile menu toggle button
+ * @csspart container â€?The app-layout root div
+ * @csspart header â€?The sticky header element
+ * @csspart sidebar â€?The docs-sidebar nav
+ * @csspart main â€?The layout-main element
+ * @csspart footer â€?The app-footer element
+ * @csspart nav â€?The header-nav element
+ * @csspart nav-toggle â€?The mobile menu toggle button
  *
  * Usage:
  * ```html
@@ -292,7 +292,7 @@ sheet.replaceSync(`
   .nav-section summary::marker { content: ""; }
 
   .nav-section summary::before {
-    content: "�?;
+    content: "â–?;
     font-size: 0.5rem;
     transition: transform 0.2s ease;
     display: inline-block;
@@ -528,7 +528,7 @@ export class LessLayout extends DsdElement {
     return this.getAttribute('locale') || 'en';
   }
 
-  // ─── i18n helpers ───
+  // â”€â”€â”€ i18n helpers â”€â”€â”€
 
   private _otherLocalePath(): string {
     const locales = this._locales();
@@ -560,7 +560,7 @@ export class LessLayout extends DsdElement {
     return `/${this._locale()}${path}`;
   }
 
-  // ─── Icons ───
+  // â”€â”€â”€ Icons â”€â”€â”€
 
   private _icon(label: string): string {
     const icons: Record<string, string> = {
@@ -572,7 +572,7 @@ export class LessLayout extends DsdElement {
     return icons[label] || `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="M6 6l3 5 5 3-3-5z"/></svg>`;
   }
 
-  // ─── Main render ───
+  // â”€â”€â”€ Main render â”€â”€â”€
 
   private _renderLayout(): string {
     const home = this._getBool('home');
@@ -711,7 +711,7 @@ export class LessLayout extends DsdElement {
     return `<nav class="mobile-tab-bar" aria-label="Quick navigation">${items}</nav>`;
   }
 
-  // ─── Lifecycle ───
+  // â”€â”€â”€ Lifecycle â”€â”€â”€
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -754,7 +754,7 @@ export class LessLayout extends DsdElement {
     }
   }
 
-  // ─── Mobile menu ───
+  // â”€â”€â”€ Mobile menu â”€â”€â”€
 
   private _setupDetailsToggle(): void {
     if (!this.shadowRoot) return;
@@ -787,7 +787,7 @@ export class LessLayout extends DsdElement {
     }
   }
 
-  // ─── SPA Navigation ───
+  // â”€â”€â”€ SPA Navigation â”€â”€â”€
 
   private _setupNavDelegation(): () => void {
     if (!this.shadowRoot) return () => {};
@@ -833,7 +833,7 @@ export class LessLayout extends DsdElement {
     });
   }
 
-  // ─── Utilities ───
+  // â”€â”€â”€ Utilities â”€â”€â”€
 
   private _esc(s: string): string {
     const div = document.createElement('div');
@@ -847,4 +847,4 @@ export class LessLayout extends DsdElement {
 }
 
 // Guard: idempotent across SSR paths
-if (typeof customElements !== "undefined" && !customElements.get(tagName)) customElements.define(tagName, LessLayout);
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) { customElements.define(tagName, LessLayout); }

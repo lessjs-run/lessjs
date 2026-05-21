@@ -11,10 +11,10 @@
  * - Supports label, placeholder, error, disabled, required
  * - Dispatches 'less-input' custom event on value change
  *
- * @csspart wrapper �?The outer input-wrapper div
- * @csspart label �?The label element
- * @csspart control �?The input/textarea/select element
- * @csspart error �?The error message small element
+ * @csspart wrapper â€?The outer input-wrapper div
+ * @csspart label â€?The label element
+ * @csspart control â€?The input/textarea/select element
+ * @csspart error â€?The error message small element
  *
  * Usage:
  * ```html
@@ -253,4 +253,4 @@ export class LessInput extends DsdElement {
 }
 
 // Guard: idempotent across SSR paths
-if (typeof customElements !== "undefined" && !customElements.get(tagName)) customElements.define(tagName, LessInput);
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) { customElements.define(tagName, LessInput); }

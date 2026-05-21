@@ -6,10 +6,10 @@
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *
- * @csspart container �?The article wrapper
- * @csspart header �?The header slot wrapper (visible when header slot is used)
- * @csspart body �?The card content area
- * @csspart footer �?The footer slot wrapper (visible when footer slot is used)
+ * @csspart container â€?The article wrapper
+ * @csspart header â€?The header slot wrapper (visible when header slot is used)
+ * @csspart body â€?The card content area
+ * @csspart footer â€?The footer slot wrapper (visible when footer slot is used)
  *
  * Usage:
  * ```html
@@ -91,4 +91,4 @@ export class LessCard extends DsdElement {
 }
 
 // Guard: idempotent across SSR paths
-if (typeof customElements !== "undefined" && !customElements.get(tagName)) customElements.define(tagName, LessCard);
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) { customElements.define(tagName, LessCard); }
