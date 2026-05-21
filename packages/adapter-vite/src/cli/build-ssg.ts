@@ -328,21 +328,9 @@ if (typeof globalThis.CSSStyleSheet === 'undefined') {
         .filter(Boolean),
     );
 
-    // Build resolve aliases from workspace import map.
-    // Subpath exports (e.g. @lessjs/ui/less-callout) must be explicit
-    // because the base @lessjs/ui → packages/ui/src/index.ts alias
-    // would append /less-callout as a file path, producing ENOTDIR.
-    const resolveAliases: { find: string | RegExp; replacement: string }[] = [];
-    if (alias && !Array.isArray(alias)) {
-      for (const [find, replacement] of Object.entries(alias)) {
-        resolveAliases.push({ find, replacement });
-      }
-    }
-
     await viteBuild({
       configFile: false,
       root,
-      resolve: resolveAliases.length > 0 ? { alias: resolveAliases } : undefined,
       build: {
         ssr: true,
         outDir: ssrOutDir,
