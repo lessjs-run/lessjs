@@ -260,10 +260,6 @@ Deno.test('create-less: generated project builds through the one-command pipelin
         replacement: vitePath(join(repoRoot, 'packages', 'adapter-lit', 'src', 'index.ts')),
       },
       {
-        find: '@lessjs/ui/design-tokens',
-        replacement: vitePath(join(uiSrc, 'design-tokens.ts')),
-      },
-      {
         find: '@lessjs/ui/open-props-tokens',
         replacement: vitePath(join(uiSrc, 'open-props-tokens.ts')),
       },

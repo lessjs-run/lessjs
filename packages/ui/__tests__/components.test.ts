@@ -141,7 +141,7 @@ for (const name of COMPONENT_FILES) {
 
 // â”€â”€â”€ Design Tokens â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-Deno.test('design-tokens: openPropsTokenSheet is StyleSheet', async () => {
+Deno.test('open-props-tokens: openPropsTokenSheet is StyleSheet', async () => {
   const { openPropsTokenSheet } = await import('../src/open-props-tokens.ts');
   assertExists(openPropsTokenSheet);
   assertExists(typeof openPropsTokenSheet.replaceSync === 'function', 'should have replaceSync');
