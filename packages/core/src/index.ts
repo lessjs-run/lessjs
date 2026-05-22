@@ -29,6 +29,16 @@ export type {
 export { LessError, SsrRenderError } from './errors.js';
 export { createSsrContext, extractParams, parseQuery } from './context.js';
 export { renderSsrError, wrapInDocument } from './html-escape.js';
+export { createLessApiContext } from './api.js';
+export type { LessApiContext, LessApiHandler } from './api.js';
+export { createIsrCacheKey, isIsrRouteConfig, MemoryIsrCache } from './isr.js';
+export type {
+  IsrCache,
+  IsrCacheEntry,
+  IsrCacheResult,
+  IsrCacheState,
+  IsrRouteConfig,
+} from './isr.js';
 export { DsdElement } from './dsd-element.js';
 export { StyleSheet } from './style-sheet.js';
 export type { StyleSheetLike, StyleSheetRule } from './style-sheet.js';
@@ -44,11 +54,13 @@ export type {
   DomSimulationReport,
   DsdBuildReport,
   DsdHydrationHintSummary,
+  DsdHydrationStrategySummary,
   DsdMetricsSummary,
   DsdOptions,
   DsdPageDiagnostics,
   HydrateEventDescriptor,
   HydrationHint,
+  HydrationStrategy,
   LessAttribute,
   LessCssPart,
   LessCssProperty,

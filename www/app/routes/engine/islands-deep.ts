@@ -41,8 +41,8 @@ export class IslandsDeepGuidePage extends DsdElement {
     <h2>升级策略</h2>
     <p>Island 的 strategy 控制客户端模块何时加载并注册。策略在 island() 调用时声明，构建器通过 island manifest 传递到客户端 entry。</p>
     <div class="strategy-grid">
-      <div class="strategy-item"><div class="strat-name"><code>eager</code></div><p>模块加载后立即调用 customElements.define()。适用于首屏交互组件（导航、主题切换）。</p></div>
-      <div class="strategy-item"><div class="strat-name"><code>lazy</code> / <code>idle</code></div><p>延迟到 requestIdleCallback 注册。默认策略，适用于非紧急交互组件。</p></div>
+      <div class="strategy-item"><div class="strat-name"><code>client:load</code></div><p>客户端入口加载后立即导入模块。适用于首屏交互组件（导航、主题切换）。</p></div>
+      <div class="strategy-item"><div class="strat-name"><code>client:idle</code></div><p>延迟到 requestIdleCallback 注册。默认策略，适用于非紧急交互组件。</p></div>
       <div class="strategy-item"><div class="strat-name"><code>visible</code></div><p>使用 IntersectionObserver 延迟到元素进入视口前 200px 注册。适用于折叠内容、评论区等不在首屏的组件。</p></div>
     </div>
     <h2>Speculative Loading</h2>
@@ -52,7 +52,7 @@ export class IslandsDeepGuidePage extends DsdElement {
     <h2>data-ssr-props 机制</h2>
     <p>SSR 渲染时，组件的属性值被序列化为 JSON 并写入 data-ssr-props 属性。客户端升级时，less:bind 自动解析并恢复这些属性值，确保 SSR 和客户端状态一致。</p>
     <h2>最佳实践</h2>
-    <p>1. 从 Layer 1 开始。大部分展示性组件永远不需要离开 Layer 1。<br>2. 用 CSS 优先于 JavaScript。hover、focus、响应式布局等 CSS 就能解决。<br>3. 保持 Island 小且独立。多个小 Island 比一个大 Island 更容易理解和优化。<br>4. visible 策略优先于 lazy。对于不在首屏的组件更精确。<br>5. 注意 data-ssr-props 大小。大型数据集应通过 fetch 在客户端获取。<br>6. WithDsdHydration 的 render() 必须检查 _dsdHydrated，否则会导致 DOM 重复渲染。</p>
+    <p>1. 从 Layer 1 开始。大部分展示性组件永远不需要离开 Layer 1。<br>2. 用 CSS 优先于 JavaScript。hover、focus、响应式布局等 CSS 就能解决。<br>3. 保持 Island 小且独立。多个小 Island 比一个大 Island 更容易理解和优化。<br>4. client:visible 策略优先于 client:idle。对于不在首屏的组件更精确。<br>5. 注意 data-ssr-props 大小。大型数据集应通过 fetch 在客户端获取。<br>6. WithDsdHydration 的 render() 必须检查 _dsdHydrated，否则会导致 DOM 重复渲染。</p>
     <div class="nav-row"><a href="/engine/dsd" class="nav-link">&larr; DSD 渲染架构</a><a href="/guide/rpc" class="nav-link">RPC 远程调用 &rarr;</a></div>
   </div></less-layout>`;
   }
@@ -73,9 +73,10 @@ export class IslandsDeepGuidePage extends DsdElement {
     <div class="layer-card"><div class="layer-tag">Layer 3 - pure-island</div><h3>Framework Owns Shadow Root</h3><p>Components needing full framework reactivity: local state, timers, polling, WebSocket. SSR outputs only the tag and data-ssr-props - no DSD template. The client framework creates the shadow root and controls rendering entirely.</p></div>
     <h2>Upgrade Strategies</h2>
     <div class="strategy-grid">
-      <div class="strategy-item"><div class="strat-name"><code>eager</code></div><p>Registers immediately after module load. For first-paint interactive components (nav, theme toggle).</p></div>
-      <div class="strategy-item"><div class="strat-name"><code>lazy</code> / <code>idle</code></div><p>Defers to requestIdleCallback. Default strategy for non-urgent interactive components.</p></div>
-      <div class="strategy-item"><div class="strat-name"><code>visible</code></div><p>Uses IntersectionObserver to register when the element is 200px before the viewport. For below-the-fold components like collapsible sections and comments.</p></div>
+      <div class="strategy-item"><div class="strat-name"><code>client:load</code></div><p>Imports immediately after the client entry loads. For first-paint interactive components such as nav and theme controls.</p></div>
+      <div class="strategy-item"><div class="strat-name"><code>client:idle</code></div><p>Defers to requestIdleCallback. Default strategy for non-urgent interactive components.</p></div>
+      <div class="strategy-item"><div class="strat-name"><code>client:visible</code></div><p>Uses IntersectionObserver to import when the element is 200px before the viewport. For below-the-fold components like collapsible sections and comments.</p></div>
+      <div class="strategy-item"><div class="strat-name"><code>client:only</code></div><p>Excludes the component from SSR and lets the browser own rendering. For browser-only components that cannot produce reliable DSD.</p></div>
     </div>
     <h2>Speculative Loading</h2>
     <p>During SSG post-processing, LessJS generates a per-page island manifest listing every island present on each page, with chunk URLs and strategies. The runtime only loads islands actually used on the current page.</p>
@@ -84,7 +85,7 @@ export class IslandsDeepGuidePage extends DsdElement {
     <h2>data-ssr-props Mechanism</h2>
     <p>During SSR, component property values are serialized to JSON and written to the data-ssr-props attribute. On client upgrade, less:bind automatically parses and restores these values, ensuring SSR and client state stay in sync.</p>
     <h2>Best Practices</h2>
-    <p>1. Start with Layer 1. Most presentational components never need to leave Layer 1.<br>2. Prefer CSS over JavaScript. Hover, focus, responsive layouts can be done with CSS alone.<br>3. Keep islands small and independent. Multiple small islands are easier to understand and optimize than one large one.<br>4. Prefer visible over lazy for below-the-fold components.<br>5. Keep data-ssr-props small. Large datasets should be fetched client-side.<br>6. WithDsdHydration render() must check _dsdHydrated to avoid re-rendering the DSD DOM.</p>
+    <p>1. Start with Layer 1. Most presentational components never need to leave Layer 1.<br>2. Prefer CSS over JavaScript. Hover, focus, responsive layouts can be done with CSS alone.<br>3. Keep islands small and independent. Multiple small islands are easier to understand and optimize than one large one.<br>4. Prefer client:visible over client:idle for below-the-fold components.<br>5. Keep data-ssr-props small. Large datasets should be fetched client-side.<br>6. WithDsdHydration render() must check _dsdHydrated to avoid re-rendering the DSD DOM.</p>
     <div class="nav-row"><a href="/engine/dsd" class="nav-link">&larr; DSD Architecture</a><a href="/guide/rpc" class="nav-link">RPC &rarr;</a></div>
   </div></less-layout>`;
   }

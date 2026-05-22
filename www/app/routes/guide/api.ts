@@ -57,13 +57,22 @@ export class ApiPage extends DsdElement {
     <h2>Design Principles</h2>
     <div class="principle"><p><strong>Use platform primitives.</strong> Prefer Fetch, Request, Response over framework-specific transports.</p><p><strong>Validate at boundaries.</strong> Parse and validate request bodies before business logic sees the data.</p><p><strong>Declare runtime explicitly.</strong> Static pages can call APIs, but the APIs need a serverless or edge deployment target.</p></div>
     <h2>Create API Routes</h2>
-    <p>Place API routes in <span class="inline-code">app/routes/api</span>. Each module exports a Hono app as default.</p>
+    <p>Place API routes in <span class="inline-code">app/routes/api</span>. Each module can default-export a Hono app or a <span class="inline-code">LessApiHandler</span> that receives <span class="inline-code">request</span>, <span class="inline-code">params</span>, <span class="inline-code">env</span>, and <span class="inline-code">platform</span>.</p>
     <less-code-block><pre><code>// app/routes/api/posts.ts
 import { Hono } from 'hono';
 const app = new Hono();
 app.get('/', (c) => c.json([{ id: 1, title: 'Hello' }]));
 app.post('/', async (c) => { const body = await c.req.json(); return c.json({ id: 2, ...body }, 201); });
 export default app;</code></pre></less-code-block>
+    <less-code-block><pre><code>// app/routes/api/health.ts
+import type { LessApiHandler } from '@lessjs/core/api';
+
+const handler: LessApiHandler = ({ env }) => Response.json({
+  ok: true,
+  mode: env.MODE ?? 'production',
+});
+
+export default handler;</code></pre></less-code-block>
     <h2>Request Validation</h2>
     <p>LessJS does not mandate a validation library. Zod with <span class="inline-code">@hono/zod-validator</span> is a practical default.</p>
     <h2>Type-Safe RPC</h2>

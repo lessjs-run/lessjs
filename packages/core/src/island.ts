@@ -3,7 +3,7 @@
  *
  * v0.6.2: island() wraps any Custom Element class to provide:
  *   - Automatic registration via customElements.define()
- *   - Upgrade strategy support (eager, lazy, visible)
+ *   - Hydration strategy support (load, idle, visible, only)
  *   - __island / __tagName / __layer metadata markers
  *   - data-ssr-props property binding on client upgrade (less:bind)
  *   - DSD opt-out via `dsd: false` (Pure Island / Layer 3)
@@ -23,17 +23,17 @@
  *   render() { return html`<button @click=${() => this.count++}>${this.count}</button>`; }
  * }
  *
- * // Register with eager strategy (DSD enabled by default)
- * export default island('my-counter', MyCounter, { strategy: 'eager' });
+ * // Register with load strategy (DSD enabled by default)
+ * export default island('my-counter', MyCounter, { strategy: 'load' });
  *
  * // Pure Island - no DSD, full framework reactivity
- * export default island('my-counter', MyCounter, { strategy: 'eager', dsd: false });
+ * export default island('my-counter', MyCounter, { strategy: 'only' });
  * ```
  *
  * Web Standards alignment:
  *   - Uses standard customElements.define() API
  *   - IntersectionObserver for visible strategy
- *   - requestIdleCallback for lazy strategy
+ *   - requestIdleCallback for idle strategy
  *   - Zero framework runtime - just native platform APIs
  *
  * @module @lessjs/core/island
@@ -42,7 +42,9 @@
 /** Island registration options */
 
 import { createLogger } from './logger.js';
+import type { HydrationStrategy } from './types.js';
 const log = createLogger('core');
+const VALID_STRATEGIES = new Set<HydrationStrategy>(['load', 'idle', 'visible', 'only']);
 
 // Module-level store of active visibility strategy timeout IDs.
 // Used for test cleanup - tests can call _clearAllVisibilityTimeouts()
@@ -58,13 +60,13 @@ export function _clearAllVisibilityTimeouts(): void {
 }
 
 export interface IslandOptions {
-  /** Upgrade strategy:
-   *   - 'eager': load immediately when module is imported
-   *   - 'lazy':  defer to requestIdleCallback (default)
+  /** Hydration strategy:
+   *   - 'load': load immediately when module is imported
+   *   - 'idle': defer to requestIdleCallback (default)
    *   - 'visible': use IntersectionObserver to defer until element is visible
-   *   - 'idle': same as lazy (requestIdleCallback)
+   *   - 'only': client-only render, no DSD/SSR output
    */
-  strategy?: 'eager' | 'lazy' | 'idle' | 'visible';
+  strategy?: HydrationStrategy;
 
   /** Optional tag name override. If provided, used instead of the first argument. */
   tagName?: string;
@@ -259,13 +261,13 @@ function createVisibleStrategy(
 }
 
 /**
- * Create a lazy (requestIdleCallback-based) upgrade strategy.
+ * Create an idle (requestIdleCallback-based) hydration strategy.
  * v0.6': Improved fallback chain:
  *   1. requestIdleCallback (optimal, progressive)
  *   2. requestAnimationFrame (next frame, good for interaction)
  *   3. setTimeout(fn, 50) (final fallback, shorter than old 200ms)
  */
-function createLazyStrategy(registerFn: () => void): void {
+function createIdleStrategy(registerFn: () => void): void {
   const g = globalThis as unknown as {
     requestIdleCallback?: (fn: () => void) => void;
     requestAnimationFrame?: (fn: () => void) => number;
@@ -312,8 +314,8 @@ function createLazyStrategy(registerFn: () => void): void {
  * // With visible strategy (IntersectionObserver)
  * export default island('my-counter', MyCounter, { strategy: 'visible' });
  *
- * // With eager strategy (immediate upgrade)
- * export default island('my-counter', MyCounter, { strategy: 'eager' });
+ * // With load strategy (immediate upgrade)
+ * export default island('my-counter', MyCounter, { strategy: 'load' });
  * ```
  */
 export function island<T extends CustomElementConstructor>(
@@ -321,8 +323,14 @@ export function island<T extends CustomElementConstructor>(
   componentClass: T,
   options: IslandOptions = {},
 ): T {
-  const strategy = options.strategy || 'lazy';
-  const useDsd = options.dsd !== false; // default true
+  const strategy = options.strategy || 'idle';
+  if (!VALID_STRATEGIES.has(strategy)) {
+    throw new Error(
+      `[LessJS] Invalid island hydration strategy "${String(strategy)}". ` +
+        'Use one of: load, idle, visible, only.',
+    );
+  }
+  const useDsd = strategy === 'only' ? false : options.dsd !== false; // default true
 
   // Validate tag name per WHATWG Custom Element name rules
   // https://html.spec.whatwg.org/multipage/custom-elements.html#valid-custom-element-name
@@ -412,21 +420,20 @@ export function island<T extends CustomElementConstructor>(
 
   // Apply strategy
   switch (strategy) {
-    case 'eager':
+    case 'load':
       register();
       break;
 
-    case 'lazy':
     case 'idle':
-      createLazyStrategy(register);
+      createIdleStrategy(register);
       break;
 
     case 'visible':
       createVisibleStrategy(tagName, register);
       break;
 
-    default:
-      createLazyStrategy(register);
+    case 'only':
+      createIdleStrategy(register);
       break;
   }
 

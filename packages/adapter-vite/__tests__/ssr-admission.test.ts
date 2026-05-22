@@ -12,7 +12,7 @@ import { buildSsrAdmissionPlan } from '../src/entry-descriptor.ts';
 import type { IslandDecl } from '../src/entry-descriptor.ts';
 import type { CompatibilityClassification } from '@lessjs/core';
 
-// ─── Fixture imports ─────────────────────────────────────
+// 鈹€鈹€鈹€ Fixture imports 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 // Local island with less.ssr = false
 const localSsrFalse: IslandDecl = {
@@ -21,7 +21,7 @@ const localSsrFalse: IslandDecl = {
   source: 'local',
   ssr: false,
   dsd: false,
-  hydrate: 'lazy',
+  hydrate: 'idle',
   reason: 'local island exports less.ssr=false',
 };
 
@@ -33,7 +33,7 @@ const packageSsrFalse: IslandDecl = {
   source: 'package',
   ssr: false,
   dsd: false,
-  hydrate: 'lazy',
+  hydrate: 'idle',
 };
 
 // Local island with ssr: true (renderable)
@@ -43,7 +43,7 @@ const localSsrTrue: IslandDecl = {
   source: 'local',
   ssr: true,
   dsd: true,
-  hydrate: 'eager',
+  hydrate: 'load',
 };
 
 // Package island with ssr: true (renderable)
@@ -65,7 +65,7 @@ const parentWithClientChild: IslandDecl = {
   dsd: true,
 };
 
-// ─── Tests ────────────────────────────────────────────────
+// 鈹€鈹€鈹€ Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('SSR Admission: local island with ssr=false -> clientOnlyTags', () => {
   const islands: IslandDecl[] = [localSsrFalse];
@@ -200,7 +200,7 @@ Deno.test('SSR Admission: decisions array has correct structure', () => {
   assertEquals(typeof decision.reason, 'string');
 });
 
-// ─── CEM Classifications (v0.18.0) ──────────────────────────────────────────
+// 鈹€鈹€鈹€ CEM Classifications (v0.18.0) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('SSR Admission: CEM ssr-capable -> renderableTags', () => {
   const islands: IslandDecl[] = [
@@ -353,7 +353,7 @@ Deno.test('SSR Admission: CEM classifications are preserved in plan', () => {
       modulePath: '/node_modules/test-package/button.ts',
       ssr: true,
       dsd: true,
-      hydrate: 'eager',
+      hydrate: 'load',
     },
   ];
 
@@ -366,7 +366,7 @@ Deno.test('SSR Admission: CEM classifications are preserved in plan', () => {
   assertEquals(plan.cemClassifications[0].tier, 'ssr-capable');
   assertEquals(plan.cemClassifications[0].ssr, true);
   assertEquals(plan.cemClassifications[0].dsd, true);
-  assertEquals(plan.cemClassifications[0].hydrate, 'eager');
+  assertEquals(plan.cemClassifications[0].hydrate, 'load');
 });
 
 Deno.test('SSR Admission: CEM takes precedence over island metadata', () => {

@@ -19,7 +19,7 @@ import { normalizePath } from 'vite';
 import process from 'node:process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import type { Plugin } from 'vite';
-import type { FrameworkOptions, LessPackageManifest } from '@lessjs/core';
+import type { FrameworkOptions, HydrationStrategy, LessPackageManifest } from '@lessjs/core';
 import type { LessBuildContext } from '../build-context.js';
 import type { SsgRenderOptions } from './ssg-render.js';
 import { SsrRenderError } from '@lessjs/core/errors';
@@ -127,7 +127,7 @@ interface BuildSSGOptions {
   headExtras?: string;
   allowHeadExtrasScripts?: boolean;
   html?: { lang?: string; title?: string };
-  upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';
+  upgradeStrategy?: HydrationStrategy;
   resolveAlias?: Record<string, string> | import('vite').Alias[];
   base?: string;
   pwa?: { name?: string; shortName?: string; themeColor?: string; backgroundColor?: string };
@@ -260,7 +260,7 @@ if (typeof globalThis.CSSStyleSheet === 'undefined') {
     headExtras: options.headExtras,
     allowHeadExtrasScripts: options.allowHeadExtrasScripts,
     html: options.html,
-    upgradeStrategy: options.upgradeStrategy || 'lazy',
+    upgradeStrategy: options.upgradeStrategy || 'idle',
     hubClientOnlyTags,
   });
   // Deno import map resolution handles bare specifiers (e.g. @lessjs/ui/less-callout)

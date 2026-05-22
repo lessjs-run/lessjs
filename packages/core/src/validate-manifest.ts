@@ -275,7 +275,7 @@ function validateLessExtensions(
 
       // Validate hydrate strategy
       if (ce.less.hydrate !== undefined) {
-        const validStrategies = ['eager', 'lazy', 'idle', 'visible', 'client'];
+        const validStrategies = ['load', 'idle', 'visible', 'only'];
         if (!validStrategies.includes(ce.less.hydrate)) {
           errors.push({
             code: 'INVALID_HYDRATE_STRATEGY',

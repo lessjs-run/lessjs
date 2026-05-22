@@ -115,7 +115,7 @@ export default class ApiCorePage extends DsdElement {
             <div class="fn-name">island()</div>
             <div class="fn-sig">island(componentClass, options?): CustomElementConstructor</div>
             <div class="fn-desc">
-              为 CE 类包装 Island 升级逻辑。支持 4 种策略：eager、lazy、idle、visible。
+              为 CE 类包装 Island 升级逻辑。支持 4 种策略：load、idle、visible、only。
             </div>
 
             <div class="fn-name">lessBind() / getSSRProps()</div>
@@ -353,8 +353,8 @@ export default class ApiCorePage extends DsdElement {
             <div class="fn-name">island()</div>
             <div class="fn-sig">island(componentClass, options?): CustomElementConstructor</div>
             <div class="fn-desc">
-              Wraps a CE class with island upgrade logic. Supports 4 strategies: eager, lazy, idle,
-              visible.
+              Wraps a CE class with island upgrade logic. Supports 4 strategies: load, idle,
+              visible, only.
             </div>
 
             <div class="fn-name">lessBind() / getSSRProps()</div>

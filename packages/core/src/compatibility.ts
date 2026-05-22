@@ -130,7 +130,7 @@ export function classifyComponent(
   // Step 2: Apply LessJS extensions with conservative defaults
   const ssr = less?.ssr ?? false;
   const dsd = less?.dsd ?? false;
-  const hydrate = less?.hydrate ?? 'lazy';
+  const hydrate = less?.hydrate ?? 'idle';
   const layer = less?.layer;
 
   // Step 3: Classify based on LessJS extensions
@@ -260,7 +260,7 @@ export function classifyComponents(
         modulePath: input.modulePath,
         ssr: false,
         dsd: false,
-        hydrate: 'lazy',
+        hydrate: 'idle',
       });
       continue;
     }
@@ -277,7 +277,7 @@ export function classifyComponents(
           modulePath: input.modulePath,
           ssr: false,
           dsd: false,
-          hydrate: 'lazy',
+          hydrate: 'idle',
         });
         continue;
       }

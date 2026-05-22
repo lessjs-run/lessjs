@@ -1,23 +1,25 @@
 /**
  * @lessjs/core - Entry Generators
  *
- * v0.5.0: requestIdleCallback-based lazy loading.
- * Eager islands (theme) load immediately, rest deferred to browser idle.
+ * v0.21.0: manifest-driven hydration strategies.
  * Zero DOM interaction - cannot interfere with DSD rendering.
- *
- * v0.6: Added 'visible' strategy (IntersectionObserver-based).
- * Visible islands are loaded when their DOM element enters the viewport.
  */
+
+import type { HydrationStrategy } from '@lessjs/core';
 
 export interface ClientIslandEntry {
   tagName: string;
   modulePath: string;
   isPackage?: boolean;
-  strategy?: 'eager' | 'lazy' | 'visible' | 'idle';
+  strategy: HydrationStrategy;
+  ssr?: boolean;
+  dsd?: boolean;
+  reason?: string;
 }
 
 const CUSTOM_ELEMENT_NAME_RE = /^[a-z][.0-9_a-z]*-[\-.0-9_a-z]*$/;
 const UNSAFE_IMPORT_PROTOCOL_RE = /^(?:javascript|data|vbscript|node):/i;
+const VALID_STRATEGIES = new Set<HydrationStrategy>(['load', 'idle', 'visible', 'only']);
 
 function hasControlCharacter(value: string): boolean {
   for (let i = 0; i < value.length; i++) {
@@ -39,6 +41,12 @@ export function validateClientIslandEntry(entry: ClientIslandEntry): void {
   ) {
     throw new Error(`Invalid island modulePath for ${entry.tagName}: ${entry.modulePath}`);
   }
+  if (!VALID_STRATEGIES.has(entry.strategy)) {
+    throw new Error(
+      `Invalid island strategy for ${entry.tagName}: ${String(entry.strategy)}. ` +
+        'Use one of: load, idle, visible, only.',
+    );
+  }
 }
 
 export function generateClientEntry(
@@ -55,23 +63,24 @@ export function generateClientEntry(
     .join(',\n');
 
   const tags = islands.map((i) => JSON.stringify(i.tagName)).join(', ');
-  const eagerTags = islands
-    .filter((i) => i.strategy === 'eager')
+  const loadTags = islands
+    .filter((i) => i.strategy === 'load')
     .map((i) => JSON.stringify(i.tagName))
     .join(', ');
   const visibleTags = islands
     .filter((i) => i.strategy === 'visible')
     .map((i) => JSON.stringify(i.tagName))
     .join(', ');
-  const lazyTags = islands
-    .filter((i) => !i.strategy || i.strategy === 'lazy' || i.strategy === 'idle')
+  const idleTags = islands
+    .filter((i) => i.strategy === 'idle' || i.strategy === 'only')
     .map((i) => JSON.stringify(i.tagName))
     .join(', ');
 
-  return `// LessJS Client Entry (v0.6 - eager/lazy/visible)
-// Eager islands load immediately.
-// Visible islands load when their element enters the viewport (IntersectionObserver).
-// Lazy islands deferred to browser idle.
+  return `// LessJS Client Entry (v0.21 - load/idle/visible/only)
+// load islands import immediately.
+// idle islands import during browser idle time.
+// visible islands import when their host enters the viewport.
+// only islands are client-only and import during idle time.
 // Zero DOM interaction - safe with DSD rendering.
 
 var log = {
@@ -91,15 +100,34 @@ function __load(tag) {
   }
 }
 
-// Eager islands - load immediately (theme toggle, above-fold)
-[${eagerTags || ''}].filter(Boolean).forEach(__load);
+function __onReady(fn) {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fn, { once: true });
+  } else {
+    fn();
+  }
+}
 
-// Visible islands - load when their element enters viewport
+function __dispatchReady(strategy, tags) {
+  document.dispatchEvent(new CustomEvent('less:ready', {
+    detail: { strategy: strategy, islands: tags }
+  }));
+}
+
+// client:load islands - load immediately
+[${loadTags || ''}].filter(Boolean).forEach(__load);
+
+// client:visible islands - load when their element enters viewport
 ${
     visibleTags
       ? `var __visibleTags = [${visibleTags || ''}];
 var __observedTags = [];
 function __observeVisible() {
+  if (!('IntersectionObserver' in window)) {
+    __visibleTags.forEach(__load);
+    __dispatchReady('visible', __visibleTags);
+    return;
+  }
   __visibleTags.forEach(function(tag) {
     var els = document.querySelectorAll(tag);
     if (els.length > 0 && __observedTags.indexOf(tag) === -1) {
@@ -109,6 +137,7 @@ function __observeVisible() {
           entries.forEach(function(entry) {
             if (entry.isIntersecting) {
               __load(tag);
+              __dispatchReady('visible', [tag]);
               obs.disconnect();
             }
           });
@@ -118,27 +147,21 @@ function __observeVisible() {
     }
   });
 }
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', __observeVisible);
-} else {
-  __observeVisible();
-}`
-      : '// No visible-strategy islands'
+__onReady(__observeVisible);`
+      : '// No client:visible islands'
   }
 
-// Defer remaining lazy islands to browser idle
+// client:idle and client:only islands - defer to browser idle
 ${
-    lazyTags
-      ? `var __lazyTags = [${lazyTags || ''}];
+    idleTags
+      ? `var __idleTags = [${idleTags || ''}];
 var __deferred = function() {
-  __lazyTags.forEach(__load);
-  document.dispatchEvent(new CustomEvent('less:ready', {
-    detail: { islands: __lazyTags }
-  }));
+  __idleTags.forEach(__load);
+  __dispatchReady('idle', __idleTags);
 };
 var __schedule = window.requestIdleCallback || window.requestAnimationFrame || function(fn) { setTimeout(fn, 50); };
 __schedule(__deferred);`
-      : '// No lazy islands'
+      : '// No client:idle/client:only islands'
   }
 `;
 }

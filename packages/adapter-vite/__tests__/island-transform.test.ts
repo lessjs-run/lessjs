@@ -95,7 +95,13 @@ Deno.test('island-transform - islandTransformPlugin', async (t) => {
 
 Deno.test('entry-generators - generateClientEntry (v0.5.0 CE upgrade)', async (t) => {
   await t.step('no legacy SSR client imports - CE-native upgrade', () => {
-    const islands = [{ tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' }];
+    const islands = [
+      {
+        tagName: 'my-counter',
+        modulePath: '/app/islands/my-counter.ts',
+        strategy: 'idle' as const,
+      },
+    ];
     const code = generateClientEntry(islands);
     // v0.5.0: browser CE spec upgrades elements automatically
     assertEquals(
@@ -106,8 +112,17 @@ Deno.test('entry-generators - generateClientEntry (v0.5.0 CE upgrade)', async (t
 
   await t.step('registers custom elements via dynamic import', () => {
     const islands = [
-      { tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' },
-      { tagName: 'theme-toggle', modulePath: '@lessjs/ui/less-theme-toggle', isPackage: true },
+      {
+        tagName: 'my-counter',
+        modulePath: '/app/islands/my-counter.ts',
+        strategy: 'idle' as const,
+      },
+      {
+        tagName: 'theme-toggle',
+        modulePath: '@lessjs/ui/less-theme-toggle',
+        isPackage: true,
+        strategy: 'idle' as const,
+      },
     ];
     const code = generateClientEntry(islands);
     // All islands (local + package) use dynamic import() - they self-register
@@ -117,15 +132,27 @@ Deno.test('entry-generators - generateClientEntry (v0.5.0 CE upgrade)', async (t
     assertEquals(code.includes("customElements.define('my-counter'"), false);
   });
 
-  await t.step('uses requestIdleCallback for lazy loading', () => {
-    const islands = [{ tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' }];
+  await t.step('uses requestIdleCallback for idle loading', () => {
+    const islands = [
+      {
+        tagName: 'my-counter',
+        modulePath: '/app/islands/my-counter.ts',
+        strategy: 'idle' as const,
+      },
+    ];
     const code = generateClientEntry(islands);
     assertEquals(code.includes('requestIdleCallback'), true);
     assertEquals(code.includes('function __load'), true);
   });
 
   await t.step('dispatches less:ready event after upgrade', () => {
-    const islands = [{ tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' }];
+    const islands = [
+      {
+        tagName: 'my-counter',
+        modulePath: '/app/islands/my-counter.ts',
+        strategy: 'idle' as const,
+      },
+    ];
     const code = generateClientEntry(islands);
     // v0.5.0: no old marker, CE-native upgrade
     assertEquals(code.includes('defer-hydration'), false);

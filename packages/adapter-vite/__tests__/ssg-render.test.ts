@@ -71,6 +71,22 @@ Deno.test('ssgRender - handles empty routeInfo gracefully', async () => {
   await ssgRender(bundle, defaultOptions);
 });
 
+Deno.test('ssgRender - writes ISR manifest for revalidate routes', async () => {
+  const outDir = './dist-test-ssg-render-isr';
+  await Deno.remove(outDir, { recursive: true }).catch(() => {});
+  const bundle = createMockBundle({
+    routeInfo: [
+      { path: '/', tagName: 'index-page', isDynamic: false, paramNames: [], revalidate: 60 },
+    ],
+  });
+
+  await ssgRender(bundle, { ...defaultOptions, outDir });
+
+  const manifest = JSON.parse(await Deno.readTextFile(`${outDir}/isr-manifest.json`));
+  assertEquals(manifest.routes, [{ path: '/', revalidate: 60 }]);
+  await Deno.remove(outDir, { recursive: true }).catch(() => {});
+});
+
 Deno.test('ssgRender - handles dynamic routes with no getStaticPaths', async () => {
   const bundle = createMockBundle({
     routeInfo: [

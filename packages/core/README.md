@@ -71,7 +71,7 @@ component render()
 interface PackageIslandMeta {
   tagName: string;
   modulePath: string;
-  strategy?: 'eager' | 'lazy' | 'idle' | 'visible';
+  strategy?: 'load' | 'idle' | 'visible' | 'only';
 }
 ```
 

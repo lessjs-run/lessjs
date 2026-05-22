@@ -46,7 +46,7 @@ export class PositioningPage extends DsdElement {
             <div class="num">支柱 2</div>
             <h3>通用 WC 渲染引擎</h3>
             <p>
-              Declarative Shadow DOM 零 JS 首屏。v0.20.0 已引入 DsdElement、StyleSheet 和 CSS Parts。
+              Declarative Shadow DOM 零 JS 首屏。v0.21.0 已引入 DsdElement、StyleSheet、CSS Parts、Hydration 策略与 ISR 元数据。
               第三方 WC 通过兼容性分类得到 SSR、client-only 或拒绝构建的确定结果。
             </p>
           </div>
@@ -142,8 +142,8 @@ export class PositioningPage extends DsdElement {
           <h2>正在建设的能力</h2>
           <p>以下能力已规划但尚未完成，不应视为成熟卖点：</p>
           <ul>
-            <li>Hydration 策略（client:load/idle/visible/only）- 当前只有 ssr:true/false</li>
-            <li>ISR 缓存层 - stale-while-revalidate</li>
+            <li>Hydration 策略（client:load/idle/visible/only）</li>
+            <li>ISR 缓存基础层 - stale-while-revalidate primitives + SSG manifest</li>
             <li>Vue adapter - 当前支持 Lit/React/Vanilla</li>
             <li>Supabase 集成 - Auth + DB + Realtime</li>
             <li>公开 Hub 服务 - 当前为本地 MVP</li>
@@ -177,7 +177,7 @@ export class PositioningPage extends DsdElement {
               <tr>
                 <td>渲染时机无关</td>
                 <td>同一引擎支持 SSG/ISR/SSR，不锁定渲染模式。</td>
-                <td>ISR 和 request-time SSR 尚未实现。</td>
+                <td>ISR 元数据已实现；request-time SSR 尚未实现。</td>
               </tr>
             </tbody>
           </table>
@@ -257,7 +257,7 @@ export class PositioningPage extends DsdElement {
             <div class="num">Pillar 2</div>
             <h3>Universal WC Rendering Engine</h3>
             <p>
-              Declarative Shadow DOM zero-JS first paint. v0.20.0 adds DsdElement, StyleSheet, and CSS Parts.
+              Declarative Shadow DOM zero-JS first paint. v0.21.0 adds DsdElement, StyleSheet, CSS Parts, hydration strategies, and ISR metadata.
               Third-party WCs get deterministic SSR, client-only, or rejected outcomes through compatibility classification.
             </p>
           </div>
@@ -371,8 +371,8 @@ export class PositioningPage extends DsdElement {
             The following capabilities are planned but not yet complete. They should not be described as mature selling points:
           </p>
           <ul>
-            <li>Hydration strategies (client:load/idle/visible/only) - currently only ssr:true/false</li>
-            <li>ISR cache layer - stale-while-revalidate</li>
+            <li>Hydration strategies (client:load/idle/visible/only)</li>
+            <li>ISR cache foundation - stale-while-revalidate primitives + SSG manifest</li>
             <li>Vue adapter - currently supports Lit/React/Vanilla</li>
             <li>Supabase integration - Auth + DB + Realtime</li>
             <li>Public Hub service - currently a local MVP</li>
@@ -406,7 +406,7 @@ export class PositioningPage extends DsdElement {
               <tr>
                 <td>Rendering-timing-agnostic</td>
                 <td>Same engine supports SSG/ISR/SSR, no rendering mode lock-in.</td>
-                <td>ISR and request-time SSR are not yet implemented.</td>
+                <td>ISR metadata is implemented; request-time SSR is not yet implemented.</td>
               </tr>
             </tbody>
           </table>

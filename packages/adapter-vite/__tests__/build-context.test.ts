@@ -28,7 +28,7 @@ Deno.test('LessBuildContext reset clears all mutable state', () => {
   // Mutate
   ctx.phase1.honoEntryCode = 'test code';
   ctx.phase1.islandTagNames = ['a', 'b'];
-  ctx.phase1.packageIslandDecls = [{ tagName: 'x', modulePath: './x', hydrate: 'lazy' }];
+  ctx.phase1.packageIslandDecls = [{ tagName: 'x', modulePath: './x', hydrate: 'idle' }];
   ctx.phase1.buildCompleted = true;
   ctx.phase1.resolvedConfig = {} as unknown as NonNullable<typeof ctx.phase1.resolvedConfig>;
   ctx.phase1.userResolveAlias = { '@lessjs/ui': './ui' };

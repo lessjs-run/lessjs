@@ -62,17 +62,24 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
           : `${islandsDir}/${tagName}.ts`,
       ).replace(/\\/g, '/'),
       isPackage: false,
-      strategy: (ctx as unknown as { localIslandStrategies?: string[] })
-          .localIslandStrategies?.[i] === 'eager'
-        ? 'eager' as const
-        : undefined,
+      strategy: ctx.phase1.islandMeta[tagName]?.hydrate || ctx.phase3.upgradeStrategy || 'idle',
+      ssr: ctx.phase1.islandMeta[tagName]?.hydrate === 'only'
+        ? false
+        : ctx.phase1.islandMeta[tagName]?.ssr,
+      dsd: ctx.phase1.islandMeta[tagName]?.hydrate === 'only'
+        ? false
+        : ctx.phase1.islandMeta[tagName]?.dsd,
+      reason: ctx.phase1.islandMeta[tagName]?.reason,
     })),
     ...packageIslandDecls.map(
       (island) => ({
         tagName: island.tagName,
         modulePath: island.modulePath,
         isPackage: true,
-        strategy: island.hydrate === 'eager' ? 'eager' as const : 'lazy' as const,
+        strategy: island.hydrate || ctx.phase3.upgradeStrategy || 'idle',
+        ssr: island.hydrate === 'only' ? false : island.ssr,
+        dsd: island.hydrate === 'only' ? false : island.dsd,
+        reason: island.reason,
       }),
     ),
   ];

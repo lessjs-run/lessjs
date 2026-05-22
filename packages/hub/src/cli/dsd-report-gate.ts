@@ -217,7 +217,7 @@ function main() {
     `  [INFO] Known errors are from third-party client-only SSR boundaries.`,
   );
   console.log(
-    `  [INFO] Threshold will tighten again for v0.21 when third-party SSR fallbacks are resolved.\n`,
+    `  [INFO] Threshold will tighten again for v0.22 when third-party SSR fallbacks are resolved.\n`,
   );
 }
 

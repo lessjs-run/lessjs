@@ -105,7 +105,7 @@ export interface LessElementExtensions {
   /** Component layer in the three-layer model */
   layer?: ComponentLayer;
   /** Hydration strategy for client-side upgrade */
-  hydrate?: 'eager' | 'lazy' | 'idle' | 'visible';
+  hydrate?: HydrationStrategy;
   /** Declarative event bindings for dsd-interactive components */
   hydrateEvents?: HydrateEventDescriptor[];
   /** Module path for import (e.g. '@lessjs/ui/less-button') */
@@ -360,13 +360,12 @@ export interface FrameworkOptions {
   island?: {
     /**
      * Controls when island modules are imported for custom element upgrade.
-     * 'lazy' (default): import on requestIdleCallback
-     * 'eager': import immediately
-     * 'idle': same as 'lazy' (requestIdleCallback)
+     * 'idle' (default): import on requestIdleCallback
+     * 'load': import immediately
      * 'visible': import when element enters viewport (IntersectionObserver)
-     * NOTE: 'idle' and 'visible' are available in v0.6 via island() wrapper.
+     * 'only': client-only render; excluded from SSR admission
      */
-    upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';
+    upgradeStrategy?: HydrationStrategy;
   };
 
   /** Build configuration */
@@ -539,6 +538,9 @@ export type { SsrContext } from './context.js';
 /** Component layer in the three-layer model */
 export type ComponentLayer = 'dsd-static' | 'dsd-interactive' | 'pure-island';
 
+/** v0.21 hydration strategies. Legacy eager/lazy names are intentionally not accepted. */
+export type HydrationStrategy = 'load' | 'idle' | 'visible' | 'only';
+
 /**
  * Declarative event binding for DSD Interactive components.
  *
@@ -628,7 +630,7 @@ export interface HydrationHint {
   /** Declarative event bindings (dsd-interactive only) */
   events?: HydrateEventDescriptor[];
   /** Island upgrade strategy */
-  strategy?: 'eager' | 'lazy' | 'idle' | 'visible';
+  strategy?: HydrationStrategy;
 }
 
 /**
@@ -795,6 +797,15 @@ export interface DsdHydrationHintSummary {
   pureIslandCount: number;
 }
 
+/** v0.21 strategy evidence aggregated into dsd-report.json. */
+export interface DsdHydrationStrategySummary {
+  load: number;
+  idle: number;
+  visible: number;
+  only: number;
+  clientOnlyExcluded: number;
+}
+
 /**
  * Manifest-driven render decision for a single island declaration.
  *
@@ -813,7 +824,7 @@ export interface ManifestDecision {
   ssr: boolean;
   /** Whether this component uses Declarative Shadow DOM (from manifest `less.dsd`) */
   dsd: boolean;
-  /** Hydration strategy from manifest (eager/lazy/idle/visible) */
+  /** Hydration strategy from manifest (load/idle/visible/only) */
   hydrate?: string;
   /** Resolved render path: 'ssr+client' = SSR rendering + client upgrade; 'client-only' = client-only */
   renderPath: 'ssr+client' | 'client-only';
@@ -854,6 +865,8 @@ export interface DsdBuildReport {
   metricsSummary: DsdMetricsSummary;
   /** Aggregated hydration hint summary */
   hydrationHintSummary: DsdHydrationHintSummary;
+  /** v0.21 hydration strategy counts and client-only exclusion evidence. */
+  hydrationStrategySummary?: DsdHydrationStrategySummary;
   /**
    * Manifest-driven render decisions per package island.
    * Records how each island's manifest flags resolved to a render path.

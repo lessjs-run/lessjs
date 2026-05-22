@@ -35,7 +35,7 @@
           "less": {
             "ssr": true,
             "dsd": true,
-            "hydrate": "eager",
+            "hydrate": "load",
             "layer": "dsd-interactive"
           }
         }

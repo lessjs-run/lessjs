@@ -916,7 +916,7 @@ export default class DocsHome extends DsdElement {
               <span>LessJS</span>
             </div>
             <h1>DSD-first 框架 · <em>零 JS 首屏</em> · <em>多框架共存</em></h1>
-            <p class="hero-desc">v0.20 Ocean-Island：DsdElement 原生渲染，浏览器零 JS 看到完整页面。</p>
+            <p class="hero-desc">v0.21 Hydration + ISR：DsdElement 保持零 JS DSD 首屏，Island 使用明确的客户端策略。</p>
             <div class="hero-actions">
               <a class="hero-pri" href="/guide/getting-started">开始使用 -></a>
               <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">
@@ -982,7 +982,7 @@ export default class DocsHome extends DsdElement {
               </div>
               
             <div class="bench-stats-row">
-              <div class="met"><strong>v0.20.0</strong><span>project line</span></div>
+              <div class="met"><strong>v0.21.0</strong><span>project line</span></div>
               <div class="met"><strong>743</strong><span>tests</span></div>
               <div class="met"><strong>13</strong><span>packages</span></div>
               <div class="met"><strong>1</strong><span>runtime</span></div>
@@ -1092,7 +1092,7 @@ export default class DocsHome extends DsdElement {
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 3v14M13 3v14M3 10h14"/></svg>
                 </div>
                 <h3>应用框架</h3>
-                <p>文件约定路由 + Hono API Route + SSG 构建已可用。ISR 和 request-time SSR 是 v0.21+ 路线图能力。</p>
+                <p>文件约定路由、Hono API Route、SSG、Hydration 策略与 ISR 元数据已可用。request-time SSR 是后续路线图能力。</p>
                 <div class="card-meta"><span>file routing</span><span>hono</span><span>serverless</span></div>
               </div>
               <div class="card">
@@ -1195,7 +1195,7 @@ export default class DocsHome extends DsdElement {
               <span>LessJS</span>
             </div>
             <h1>DSD-first · <em>Zero-JS First Paint</em> · <em>Multi-framework</em></h1>
-            <p class="hero-desc">v0.20 Ocean-Island: DsdElement renders native DSD so the page is visible before JS.</p>
+            <p class="hero-desc">v0.21 Hydration + ISR: DsdElement keeps zero-JS DSD first paint while islands choose explicit client strategies.</p>
             <div class="hero-actions">
               <a class="hero-pri" href="/guide/getting-started">Get started -></a>
               <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">
@@ -1261,7 +1261,7 @@ export default class DocsHome extends DsdElement {
               </div>
               
             <div class="bench-stats-row">
-              <div class="met"><strong>v0.20.0</strong><span>project line</span></div>
+              <div class="met"><strong>v0.21.0</strong><span>project line</span></div>
               <div class="met"><strong>743</strong><span>tests</span></div>
               <div class="met"><strong>13</strong><span>packages</span></div>
               <div class="met"><strong>1</strong><span>runtime</span></div>
@@ -1371,7 +1371,7 @@ export default class DocsHome extends DsdElement {
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 3v14M13 3v14M3 10h14"/></svg>
                 </div>
                 <h3>Application Framework</h3>
-                <p>File-convention routing, Hono API routes, and SSG builds are available today. ISR and request-time SSR are v0.21+ roadmap work.</p>
+                <p>File-convention routing, Hono API routes, SSG builds, hydration strategies, and ISR metadata are available today. Request-time SSR remains later work.</p>
                 <div class="card-meta"><span>file routing</span><span>hono</span><span>serverless</span></div>
               </div>
               <div class="card">

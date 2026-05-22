@@ -15,7 +15,12 @@
  */
 
 import type { Plugin } from 'vite';
-import type { FrameworkOptions, LessPackageManifest, RouteEntry } from '@lessjs/core';
+import type {
+  FrameworkOptions,
+  HydrationStrategy,
+  LessPackageManifest,
+  RouteEntry,
+} from '@lessjs/core';
 
 import { join } from 'node:path';
 import process from 'node:process';
@@ -507,7 +512,7 @@ export function less(
       headExtras: resolvedOptions.headExtras,
       allowHeadExtrasScripts,
       html: resolvedOptions.html,
-      upgradeStrategy: resolvedOptions.island?.upgradeStrategy || 'lazy',
+      upgradeStrategy: resolvedOptions.island?.upgradeStrategy || 'idle',
       hubClientOnlyTags: _cachedHubClientOnlyTags || [],
     });
   }
@@ -588,9 +593,9 @@ export function less(
                   tagName: d.tagName,
                   modulePath: d.less!.module!,
                   isPackage: true,
-                  hydrate: d.less?.hydrate as 'eager' | 'lazy' | 'idle' | 'visible' | undefined,
-                  ssr: d.less?.ssr,
-                  dsd: d.less?.dsd,
+                  hydrate: d.less?.hydrate as HydrationStrategy | undefined,
+                  ssr: d.less?.hydrate === 'only' ? false : d.less?.ssr,
+                  dsd: d.less?.hydrate === 'only' ? false : d.less?.dsd,
                 }))
             );
             log.info(

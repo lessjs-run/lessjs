@@ -73,14 +73,14 @@ Deno.test('generateIslandManifests: empty islands for pages without custom eleme
   cleanup();
 });
 
-Deno.test('generateIslandManifests: defaults strategy to lazy and layer to dsd-static', () => {
+Deno.test('generateIslandManifests: defaults strategy to idle and layer to dsd-static', () => {
   setup();
   writeFileSync(join(TMP_DIR, 'guide.html'), '<less-button>Click</less-button>');
 
   const chunkMap = { 'less-button': '/client/islands/island-less-button-xyz.js' };
   const manifests = generateIslandManifests(TMP_DIR, chunkMap);
 
-  assertEquals(manifests[0].islands[0].strategy, 'lazy');
+  assertEquals(manifests[0].islands[0].strategy, 'idle');
   assertEquals(manifests[0].islands[0].layer, 'dsd-static');
   cleanup();
 });
@@ -93,7 +93,7 @@ Deno.test('writeIslandManifests: creates JSON files in island-manifests dir', ()
       islands: [{
         tagName: 'less-toggle',
         chunkUrl: '/client/toggle.js',
-        strategy: 'eager',
+        strategy: 'load',
         layer: 'dsd-static',
       }],
       builtAt: '2026-05-08T00:00:00.000Z',

@@ -2,10 +2,10 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version Line: v0.20.0
+## Current Version Line: v0.21.0
 
-Status: **Ocean-Island Architecture implemented, post-release cleanup gates
-hardened, strategic docs alignment in progress.**
+Status: **Hydration strategy contract, ISR primitives, and API route production
+parity implemented.**
 
 The current product center is:
 
@@ -17,14 +17,14 @@ positioning boundary.
 
 ## Current Rendering Mode
 
-| Mode                 | State   | Notes                                            |
-| -------------------- | ------- | ------------------------------------------------ |
-| SSG                  | shipped | default production rendering mode                |
-| DSD                  | shipped | `renderDSD()` outputs declarative shadow roots   |
-| Island upgrade       | shipped | binary SSR/client-only boundary exists           |
-| Hydration strategies | next    | `client:load/idle/visible/only` are v0.21 work   |
-| ISR                  | next    | stale-while-revalidate cache layer is v0.21 work |
-| Request-time SSR     | later   | not a v0.20 guarantee                            |
+| Mode                 | State   | Notes                                             |
+| -------------------- | ------- | ------------------------------------------------- |
+| SSG                  | shipped | default production rendering mode                 |
+| DSD                  | shipped | `renderDSD()` outputs declarative shadow roots    |
+| Island upgrade       | shipped | binary SSR/client-only boundary exists            |
+| Hydration strategies | shipped | `client:load/idle/visible/only` strategy contract |
+| ISR                  | shipped | cache primitives and SSG `isr-manifest.json`      |
+| Request-time SSR     | later   | runtime adapters are not a v0.21 guarantee        |
 
 ## Package Version State
 
@@ -50,23 +50,30 @@ LessJS has three product pillars:
 3. **Registry Hub** - discovery, validation, one-command install, snapshots.
 
 The strongest current moat is pillar 2 plus the Hub evidence pipeline. Full
-stack breadth is intentionally sequenced after hydration strategies and ISR.
+stack breadth is intentionally sequenced after runtime adapters and broader
+deployment parity.
 
 ## Completion by Pillar
 
-| Pillar                  | Completion | Main gap                                                                |
-| ----------------------- | ---------- | ----------------------------------------------------------------------- |
-| Application framework   | ~50%       | ISR, request context, deployment parity, auth/data patterns             |
-| DSD/WC rendering engine | ~82%       | hydration directives, Signals integration, broader third-party coverage |
-| Registry Hub            | ~55%       | package count, self-service governance, hermetic snapshots              |
-| Overall                 | ~62%       | product coherence and ecosystem scale                                   |
+| Pillar                  | Completion | Main gap                                                   |
+| ----------------------- | ---------- | ---------------------------------------------------------- |
+| Application framework   | ~58%       | runtime adapters, deployment parity, auth/data patterns    |
+| DSD/WC rendering engine | ~86%       | Signals integration, broader third-party coverage          |
+| Registry Hub            | ~55%       | package count, self-service governance, hermetic snapshots |
+| Overall                 | ~67%       | product coherence and ecosystem scale                      |
 
 Percentages are planning estimates, not release promises.
 
-## Last Completed Line: v0.20.0
+## Last Completed Line: v0.21.0
 
 Delivered:
 
+- `client:load`, `client:idle`, `client:visible`, and `client:only`.
+- Page-level island manifest strategy metadata.
+- Client-only SSR exclusion for `client:only`.
+- ISR cache primitives and SSG `isr-manifest.json` emission.
+- API routes support default-exported Hono apps and function handlers.
+- `DsdBuildReport.hydrationStrategySummary`.
 - `DsdElement` zero-dependency base class.
 - SSR-safe `StyleSheet` abstraction.
 - DSD-native `@lessjs/ui` ocean components.
@@ -76,19 +83,18 @@ Delivered:
 - SOP-014 cleanup gate hardening.
 - ADR-0037 + SOP-015 strategic docs alignment.
 
-## Next Planned Line: v0.21.x
+## Next Planned Line: v0.22.x
 
 Primary goals:
 
-1. `client:load`, `client:idle`, `client:visible`, `client:only`.
-2. ISR cache layer.
-3. API route production parity.
-4. Request context for runtime adapters.
-5. Hub author onboarding and package-count growth.
+1. Runtime adapter ISR integration.
+2. Signals-backed DsdElement rendering helpers.
+3. Hub author onboarding and package-count growth.
+4. Broader third-party WC compatibility evidence.
 
 ## Current Verification Baseline
 
-Recent v0.20 cleanup verification recorded:
+Recent v0.21 implementation verification recorded:
 
 - `deno task fmt:check` - passed
 - `deno task lint` - passed
@@ -138,8 +144,8 @@ Third-party package handling is conservative:
 | v0.18.2 | `docs/sop/v0.18.2-less-add-install-flow.md`            | Done    | `less add` dry-run/install is validation-gated                             |
 | v0.18.3 | `docs/sop/v0.18.3-dom-simulation-experiment.md`        | Done    | opt-in DOM simulation decision recorded                                    |
 | v0.19.0 | `docs/sop/v0.19.0-platform-hub.md`                     | Done    | Hub ingests artifacts, CLI submit, component browser, Playwright snapshots |
-| v0.20.0 | `docs/sop/v0.20.0/`                                    | Current | Ocean-Island migration, cleanup gate, public docs alignment                |
-| v0.21.x | TBD                                                    | Next    | hydration strategies + ISR + API route parity                              |
+| v0.20.0 | `docs/sop/v0.20.0/`                                    | Done    | Ocean-Island migration, cleanup gate, public docs alignment                |
+| v0.21.0 | `docs/sop/v0.21.0/`                                    | Current | hydration strategies + ISR + API route parity                              |
 | v1.0.0  | `docs/sop/v1.0.0-general-purpose-engine.md`            | Vision  | stable contracts and deterministic package outcomes                        |
 
 ## Operator Checklist

@@ -19,12 +19,12 @@ admission contracts instead of outrunning them.
 
 | Area                      | State                                                 |
 | ------------------------- | ----------------------------------------------------- |
-| Project line              | v0.20.0 Ocean-Island Architecture                     |
+| Project line              | v0.21.0 Hydration + ISR                               |
 | Current rendering mode    | SSG + Declarative Shadow DOM                          |
 | Current DSD base          | `DsdElement` + SSR-safe `StyleSheet`                  |
 | Current framework surface | file routes, Hono API routes, dev/build pipeline      |
 | Current Hub surface       | early Registry Hub, validation, snapshots, `less add` |
-| Next milestone            | v0.21.x Hydration Strategies + ISR                    |
+| Next milestone            | v0.22.x Reactive DSD                                  |
 
 Package publishing is staggered. The roadmap tracks the project line, while
 individual package versions may lag until a coordinated publish pass.
@@ -38,8 +38,8 @@ individual package versions may lag until a coordinated publish pass.
 | 3     | v0.17.x | Ecosystem Entry           | Manifest-native pipeline and multi-adapter boundary            | Done    |
 | 4     | v0.18.x | Universal WC Engine       | CEM parser, compatibility tiers, validation CLI, safe add flow | Done    |
 | 5     | v0.19.x | Registry Hub MVP          | Searchable validated package index with reports and snapshots  | Done    |
-| 6     | v0.20.x | Ocean-Island Architecture | DsdElement, DSD-native UI, CSS Parts, cleanup gates            | Current |
-| 7     | v0.21.x | Hydration + ISR           | `client:*` directives, ISR cache, API route parity             | Next    |
+| 6     | v0.20.x | Ocean-Island Architecture | DsdElement, DSD-native UI, CSS Parts, cleanup gates            | Done    |
+| 7     | v0.21.x | Hydration + ISR           | `client:*` directives, ISR cache, API route parity             | Current |
 | 8     | v0.22.x | Reactive DSD              | DsdElement + Signals, safe templates, optional DOM diffing     | Planned |
 | 9     | v1.0.x  | Stable Engine             | API/schema freeze and deterministic package guarantees         | Vision  |
 
@@ -138,59 +138,22 @@ Exit criteria:
 - README, roadmap, status, and website docs no longer describe v0.18/v0.19 as
   the current public line.
 
-## Next: v0.21.x - Hydration + ISR
+### v0.21.x - Hydration + ISR
 
-Goal: make LessJS credible as a DSD-first application framework, not only a
-static rendering engine.
+Delivered:
 
 ### P0: Hydration Strategies
 
-| Directive        | Behavior                   | Exit requirement            |
-| ---------------- | -------------------------- | --------------------------- |
-| `client:load`    | Hydrate immediately        | dev and build parity        |
-| `client:idle`    | Hydrate on browser idle    | no fallback breakage        |
-| `client:visible` | Hydrate on viewport entry  | IntersectionObserver tested |
-| `client:only`    | No SSR, client-only render | SSR bundle excludes module  |
+- `client:load`, `client:idle`, `client:visible`, and `client:only`.
+- Strategy-aware client runtime and island manifests.
+- `client:only` SSR exclusion for local and package islands.
+- ISR cache primitives and SSG `isr-manifest.json`.
+- API route production parity for Hono apps and function handlers.
+- DSD report hydration strategy summary.
 
-Exit criteria:
+Exit criteria: met for the v0.21 contract layer.
 
-- Directives work for local islands and package islands.
-- DSD report records strategy and reason.
-- Pages load only the islands they use.
-
-### P0: ISR Cache Layer
-
-Goal: add stale-while-revalidate HTML regeneration without forcing every route
-into request-time SSR.
-
-Exit criteria:
-
-- Route-level revalidation metadata.
-- Cache hit, stale hit, and regeneration paths covered by tests.
-- At least one www route demonstrates ISR behavior behind a runtime adapter.
-
-### P1: API Route Production Parity
-
-Goal: API routes should behave consistently across dev, build, and serverless
-deployment.
-
-Exit criteria:
-
-- Request context object.
-- Environment variable and platform access pattern.
-- API route examples and tests.
-- Clear deployment guide.
-
-### P1: Hub Ecosystem Growth
-
-Goal: move from a proof-of-concept index to useful package discovery.
-
-Exit criteria:
-
-- At least 10 real packages indexed.
-- Compatibility badges distinguish SSR-capable, client-only, rejected, and
-  snapshot-verified packages.
-- Author-facing Hub submission guide.
+Runtime adapter execution of ISR remains v0.22+ work.
 
 ## Planned: v0.22.x - Reactive DSD
 
@@ -202,6 +165,7 @@ Scope:
 - `DsdElement` + Signals integration.
 - Safe HTML helper with automatic escaping.
 - Optional DOM diffing for stateful island paths.
+- Runtime adapter ISR integration.
 - Clear distinction between static DSD, event-only DSD, and reactive island.
 
 Non-goals:
@@ -209,6 +173,17 @@ Non-goals:
 - replacing Lit as a full template language
 - making every DSD component reactive by default
 - shipping a compiler before runtime contracts are stable
+
+### P1: Hub Ecosystem Growth
+
+Goal: move from a proof-of-concept index to useful package discovery.
+
+Exit criteria:
+
+- At least 10 real packages indexed.
+- Compatibility badges distinguish SSR-capable, client-only, rejected, and
+  snapshot-verified packages.
+- Author-facing Hub submission guide.
 
 ## Vision: v1.0 Stable Engine
 
@@ -235,8 +210,8 @@ v1.0 should not promise:
 | Concern                      | Current state                                       | Target                                                       |
 | ---------------------------- | --------------------------------------------------- | ------------------------------------------------------------ |
 | Third-party UI compatibility | Known SSR errors are classified and gated           | More packages with explicit compatibility badges             |
-| Full-stack capabilities      | routing, SSG, Hono API routes                       | ISR, request context, deployment parity                      |
-| Islands hydration            | binary SSR/client-only boundary                     | `client:*` user-facing strategies                            |
+| Full-stack capabilities      | routing, SSG, Hono API routes, ISR metadata         | runtime ISR adapters, deployment parity                      |
+| Islands hydration            | `client:*` user-facing strategies                   | richer diagnostics and runtime coverage                      |
 | Documentation sync           | SOP-015 governs public docs                         | release checklist blocks stale current-version claims        |
 | Test coverage                | strong core/build/e2e base, uneven package coverage | targeted coverage for UI, i18n, create, adapters             |
 | Hub scale                    | early index                                         | at least 10 useful packages before stronger market claims    |

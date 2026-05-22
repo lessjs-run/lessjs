@@ -11,7 +11,7 @@
  */
 
 import type { Plugin, ResolvedConfig } from 'vite';
-import type { FrameworkOptions } from '@lessjs/core';
+import type { ComponentLayer, FrameworkOptions, HydrationStrategy } from '@lessjs/core';
 import type { LessBuildContext, Phase1Token, Phase2Token, Phase3Token } from './build-context.js';
 import { join } from 'node:path';
 import process from 'node:process';
@@ -103,7 +103,7 @@ export function buildPlugin(
         ctx.phase3.middleware = options.middleware || null;
         ctx.phase3.html = options.html || null;
         ctx.phase3.pwa = options.pwa || null;
-        ctx.phase3.upgradeStrategy = options.island?.upgradeStrategy || 'lazy';
+        ctx.phase3.upgradeStrategy = options.island?.upgradeStrategy || 'idle';
         ctx.phase3.viewTransition = options.viewTransition ?? true;
         ctx.phase3.speculation = options.speculation ?? null;
         ctx.phase3.headExtras = options.headExtras || '';
@@ -166,9 +166,55 @@ export function buildPlugin(
               ) {
                 const base = ctx.phase3.base || '/';
                 const scriptSrc = `${base}client/${entry.file}`;
-                const { injectClientScript } = await import('./ssg-postprocess.js');
+                const { buildIslandChunkMap, injectClientScript } = await import(
+                  './ssg-postprocess.js'
+                );
+                const {
+                  generateIslandManifests,
+                  writeIslandManifests,
+                } = await import('./island-manifest.js');
                 const outputDir = join(root, outDir);
                 injectClientScript(outputDir, scriptSrc);
+                const chunkMap = buildIslandChunkMap(
+                  root,
+                  outDir,
+                  [
+                    ...(ctx.phase1.islandTagNames || []),
+                    ...(ctx.phase1.packageIslandDecls || []).map((island) => island.tagName),
+                  ],
+                  base,
+                );
+                const strategyMap = Object.fromEntries([
+                  ...Object.entries(ctx.phase1.islandMeta || {}).map(([tag, meta]) => [
+                    tag,
+                    meta.hydrate || ctx.phase3.upgradeStrategy || 'idle',
+                  ]),
+                  ...(ctx.phase1.packageIslandDecls || []).map((island) => [
+                    island.tagName,
+                    island.hydrate || ctx.phase3.upgradeStrategy || 'idle',
+                  ]),
+                ]) as Record<string, HydrationStrategy>;
+                const layerMap = Object.fromEntries([
+                  ...Object.entries(ctx.phase1.islandMeta || {}).map(([tag, meta]) => [
+                    tag,
+                    meta.hydrate === 'only' || meta.ssr === false
+                      ? 'pure-island'
+                      : 'dsd-interactive',
+                  ]),
+                  ...(ctx.phase1.packageIslandDecls || []).map((island) => [
+                    island.tagName,
+                    island.hydrate === 'only' || island.ssr === false
+                      ? 'pure-island'
+                      : 'dsd-interactive',
+                  ]),
+                ]) as Record<string, ComponentLayer>;
+                const pageManifests = generateIslandManifests(
+                  outputDir,
+                  chunkMap,
+                  strategyMap,
+                  layerMap,
+                );
+                writeIslandManifests(outputDir, pageManifests);
                 log.info(`Client script injected: ${scriptSrc}`);
                 break;
               }

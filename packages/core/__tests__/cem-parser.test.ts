@@ -14,7 +14,7 @@ import {
 
 import { assert, assertEquals, assertExists } from 'https://deno.land/std@0.224.0/assert/mod.ts';
 
-// ─── Test Fixtures ──────────────────────────────────────────────
+// 鈹€鈹€鈹€ Test Fixtures 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 const SSR_CAPABLE_CEM = JSON.stringify({
   schemaVersion: '1.0.0',
@@ -30,7 +30,7 @@ const SSR_CAPABLE_CEM = JSON.stringify({
           tagName: 'ssr-capable-element',
           className: 'MyElement',
           superClass: { name: 'LitElement' },
-          less: { ssr: true, dsd: true, hydrate: 'eager' },
+          less: { ssr: true, dsd: true, hydrate: 'load' },
         },
       ],
       exports: [
@@ -112,7 +112,7 @@ const INVALID_CEM_DUPLICATE_TAG = JSON.stringify({
   ],
 });
 
-// ─── Tests ─────────────────────────────────────────────────────
+// 鈹€鈹€鈹€ Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('CEM Parser: parse valid SSR-capable manifest', () => {
   const result = parseCem(SSR_CAPABLE_CEM);
@@ -193,7 +193,7 @@ Deno.test('CEM Parser: preserve unknown fields', () => {
   assertEquals(manifest.anotherField.nested, true);
 });
 
-// ─── Classification Tests ──────────────────────────────────────
+// 鈹€鈹€鈹€ Classification Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('Classify: SSR-capable with less.ssr = true', () => {
   const result = parseCem(SSR_CAPABLE_CEM);
@@ -257,10 +257,10 @@ Deno.test('Classify: conservative defaults applied', () => {
   assertEquals(classifications.length, 1);
   assertEquals(classifications[0].ssr, false); // default
   assertEquals(classifications[0].dsd, false); // default
-  assertEquals(classifications[0].hydrate, 'lazy'); // default
+  assertEquals(classifications[0].hydrate, 'idle'); // default
 });
 
-// ─── Extract Less Declarations Tests ──────────────────────────
+// 鈹€鈹€鈹€ Extract Less Declarations Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('Extract: convert CEM to LessDeclaration', () => {
   const result = parseCem(SSR_CAPABLE_CEM);
@@ -303,7 +303,7 @@ Deno.test('Extract: preserve attributes from CEM', () => {
   assertEquals(declarations[0].attributes![0].type, 'string');
 });
 
-// ─── Find Module Path Tests ───────────────────────────────────
+// 鈹€鈹€鈹€ Find Module Path Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('Find module path for tag name', () => {
   const result = parseCem(SSR_CAPABLE_CEM);
@@ -319,7 +319,7 @@ Deno.test('Find module path: return undefined for unknown tag', () => {
   assertEquals(modulePath, undefined);
 });
 
-// ─── Validate Module Paths Tests ──────────────────────────────
+// 鈹€鈹€鈹€ Validate Module Paths Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('Validate module paths: accept valid relative paths', () => {
   const json = JSON.stringify({
@@ -364,7 +364,7 @@ Deno.test('Validate module paths: reject absolute paths', () => {
   assert(errors.some((e) => e.code === 'CEM_INVALID_MODULE_PATH'));
 });
 
-// ─── Integration Tests ────────────────────────────────────────
+// 鈹€鈹€鈹€ Integration Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('Integration: full parse -> classify -> extract flow', () => {
   // 1. Parse
@@ -397,5 +397,5 @@ Deno.test('Integration: client-only package gets conservative treatment', () => 
   const less = classifications[0];
   assertEquals(less.ssr, false);
   assertEquals(less.dsd, false);
-  assertEquals(less.hydrate, 'lazy');
+  assertEquals(less.hydrate, 'idle');
 });

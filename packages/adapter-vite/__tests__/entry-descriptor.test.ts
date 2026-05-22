@@ -131,7 +131,7 @@ Deno.test('renderEntry: produces valid module code', () => {
   assertStringIncludes(code, "import { Hono } from 'hono'");
   assertStringIncludes(
     code,
-    "import { renderDSD, renderDSDByName, escapeHtml } from '@lessjs/core'",
+    "import { renderDSD, renderDSDByName, escapeHtml, createLessApiContext } from '@lessjs/core'",
   );
   assertStringIncludes(code, 'export default app');
   assertStringIncludes(code, 'const app = new Hono()');
@@ -168,8 +168,9 @@ Deno.test('renderEntry: API routes are registered with app.route', () => {
   const desc = buildEntryDescriptor(sampleRoutes);
   const code = renderEntry(desc);
 
-  // v0.3.0: API routes use app.route() (Hono standard) not app.all + fetch transform
+  // v0.21: API routes accept Hono sub-apps and direct LessApiHandler functions.
   assertStringIncludes(code, "app.route('/api/hello'");
+  assertStringIncludes(code, 'createLessApiContext');
   assertStringIncludes(code, '$apiHello');
 });
 
@@ -300,4 +301,23 @@ Deno.test('buildEntryDescriptor: islandFiles omitted falls back to tagName paths
   });
 
   assertEquals(desc.islands[0].modulePath, '/app/islands/my-counter.ts');
+});
+
+Deno.test('buildEntryDescriptor: client:only is excluded from SSR admission', () => {
+  const desc = buildEntryDescriptor(islandRoutes, {
+    islandTagNames: ['client-only-widget'],
+    islandFiles: ['client-only-widget.ts'],
+    islandMeta: {
+      'client-only-widget': {
+        tagName: 'client-only-widget',
+        hydrate: 'only',
+      },
+    },
+  });
+
+  assertEquals(desc.islands[0].hydrate, 'only');
+  assertEquals(desc.islands[0].ssr, false);
+  assertEquals(desc.islands[0].dsd, false);
+  assertEquals(desc.ssrAdmissionPlan.clientOnlyTags, ['client-only-widget']);
+  assertEquals(desc.ssrAdmissionPlan.renderableTags, []);
 });
