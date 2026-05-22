@@ -58,7 +58,7 @@ import { StyleSheet, type StyleSheetLike } from '@lessjs/core';
 export const openPropsTokenSheet = createTokenSheet();
 
 function createTokenSheet(): StyleSheetLike {
-  const sheet = new StyleSheet();
+  const sheet: StyleSheetLike = new StyleSheet();
   sheet.replaceSync(`:host {
   /* ═══════════════════════════════════════════════
      Open Props Native Tokens

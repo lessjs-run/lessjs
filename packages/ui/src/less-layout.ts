@@ -27,7 +27,12 @@
  * ```
  */
 
-import { DsdElement, type HydrateEventDescriptor, StyleSheet } from '@lessjs/core';
+import {
+  DsdElement,
+  type HydrateEventDescriptor,
+  StyleSheet,
+  type StyleSheetLike,
+} from '@lessjs/core';
 import { navigate, onNavigate } from '@lessjs/core/navigation';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import './less-theme-toggle.js';
@@ -50,7 +55,7 @@ export interface HeaderNavLink {
   label: string;
 }
 
-const sheet = new StyleSheet();
+const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;

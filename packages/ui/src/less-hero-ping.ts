@@ -10,12 +10,12 @@
  */
 import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
-import { StyleSheet } from '@lessjs/core';
+import { StyleSheet, type StyleSheetLike } from '@lessjs/core';
 import type { HydrateEventDescriptor } from '@lessjs/core';
 
 export const tagName = 'less-hero-ping';
 
-const styles = new StyleSheet();
+const styles: StyleSheetLike = new StyleSheet();
 styles.replaceSync(`
   :host {
     display: inline-flex;

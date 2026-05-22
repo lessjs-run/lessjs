@@ -21,12 +21,17 @@
  * ```
  */
 
-import { DsdElement, type HydrateEventDescriptor, StyleSheet } from '@lessjs/core';
+import {
+  DsdElement,
+  type HydrateEventDescriptor,
+  StyleSheet,
+  type StyleSheetLike,
+} from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-dialog';
 
-const sheet = new StyleSheet();
+const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: inline-block;

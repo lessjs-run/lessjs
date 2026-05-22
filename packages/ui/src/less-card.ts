@@ -22,12 +22,12 @@
  * ```
  */
 
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet, type StyleSheetLike } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-card';
 
-const sheet = new StyleSheet();
+const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;
