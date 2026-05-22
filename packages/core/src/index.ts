@@ -29,8 +29,7 @@ export type {
 export { LessError, SsrRenderError } from './errors.js';
 export { createSsrContext, extractParams, parseQuery } from './context.js';
 export { renderSsrError, wrapInDocument } from './html-escape.js';
-export { createLessApiContext } from './api.js';
-export type { LessApiContext, LessApiHandler } from './api.js';
+export type { LessApiContext } from './api.js';
 export { createIsrCacheKey, isIsrRouteConfig, MemoryIsrCache, RedisIsrCache } from './isr.js';
 export type {
   IsrCache,

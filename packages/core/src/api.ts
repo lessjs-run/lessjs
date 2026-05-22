@@ -1,20 +1,21 @@
 /**
  * @lessjs/core - API route contract.
  *
- * v0.21: Hono is LessJS's API runtime engine (14KB, Web-standard, edge-native).
- * For complex APIs, import Hono directly. LessApiContext is a thin convenience
- * wrapper for simple endpoints where full Hono is unnecessary.
+ * LessJS uses Hono (https://hono.dev) as its API runtime engine — 14KB,
+ * Web-standard, edge-native. For complex APIs, import Hono directly.
  *
- * Usage:
- *   // Complex API → use Hono directly
- *   import { Hono } from 'hono';
- *   const app = new Hono().get('/api/users/:id', (c) => c.json({ id: c.req.param('id') }));
- *   export default app;
+ * LessApiContext is a convenience type describing the flat context object
+ * passed to simple API route handlers:
  *
- *   // Simple endpoint → use LessApiHandler
  *   export function GET(ctx: LessApiContext): Response {
- *     return Response.json({ hello: 'world' });
+ *     return Response.json({ id: ctx.params.id });
  *   }
+ *
+ * For full Hono features (middleware, streaming, validation), use Hono directly:
+ *
+ *   import { Hono } from 'hono';
+ *   const app = new Hono().get('/users/:id', (c) => c.json({ id: c.req.param('id') }));
+ *   export default app;
  */
 
 export interface LessApiContext {
@@ -22,24 +23,4 @@ export interface LessApiContext {
   params: Record<string, string>;
   env: Record<string, string | undefined>;
   platform?: unknown;
-}
-
-export type LessApiHandler = (
-  ctx: LessApiContext,
-) => Response | Promise<Response>;
-
-export function createLessApiContext(
-  request: Request,
-  options: {
-    params?: Record<string, string>;
-    env?: Record<string, string | undefined>;
-    platform?: unknown;
-  } = {},
-): LessApiContext {
-  return {
-    request,
-    params: options.params || {},
-    env: options.env || {},
-    platform: options.platform,
-  };
 }

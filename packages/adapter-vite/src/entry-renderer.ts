@@ -201,15 +201,16 @@ function renderApiRoute(lines: string[], route: ApiRouteDecl): void {
   lines.push(`  app.route('${route.path}', ${route.varName}.default)`);
   lines.push(`} else if (typeof ${route.varName}.default === 'function') {`);
   lines.push(`  app.all('${route.path}', async (c) => {`);
-  lines.push(`    return await ${route.varName}.default(createLessApiContext(c.req.raw, {`);
+  lines.push(`    return await ${route.varName}.default({`);
+  lines.push(`      request: c.req.raw,`);
   lines.push(`      params: c.req.param() || {},`);
   lines.push(`      env: c.env || {},`);
   lines.push(`      platform: c.executionCtx,`);
-  lines.push(`    }))`);
+  lines.push(`    })`);
   lines.push(`  })`);
   lines.push(`} else {`);
   lines.push(
-    `  throw new Error('API route ${route.path} must default-export a Hono app or LessApiHandler')`,
+    `  throw new Error('API route ${route.path} must default-export a Hono app or a function (ctx) => Response')`,
   );
   lines.push(`}`);
   lines.push('');

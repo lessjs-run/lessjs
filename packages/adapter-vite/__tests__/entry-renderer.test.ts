@@ -276,13 +276,13 @@ Deno.test('renderEntry: no bare process.env references', () => {
   );
 });
 
-Deno.test('renderEntry: API routes support Hono apps and LessApiHandler', () => {
+Deno.test('renderEntry: API routes support Hono apps and direct functions', () => {
   const desc = buildEntryDescriptor(basicRoutes);
   const code = renderEntry(desc);
 
   assertStringIncludes(code, "app.route('/api/hello'");
   assertStringIncludes(code, "app.all('/api/hello'");
-  assertStringIncludes(code, 'createLessApiContext');
+  assertStringIncludes(code, 'request: c.req.raw');
   assertEquals(code.includes("app.get('/api/hello'"), false);
 });
 

@@ -131,7 +131,7 @@ Deno.test('renderEntry: produces valid module code', () => {
   assertStringIncludes(code, "import { Hono } from 'hono'");
   assertStringIncludes(
     code,
-    "import { renderDSD, renderDSDByName, escapeHtml, createLessApiContext } from '@lessjs/core'",
+    "import { renderDSD, renderDSDByName, escapeHtml } from '@lessjs/core'",
   );
   assertStringIncludes(code, 'export default app');
   assertStringIncludes(code, 'const app = new Hono()');
@@ -168,9 +168,9 @@ Deno.test('renderEntry: API routes are registered with app.route', () => {
   const desc = buildEntryDescriptor(sampleRoutes);
   const code = renderEntry(desc);
 
-  // v0.21: API routes accept Hono sub-apps and direct LessApiHandler functions.
+  // v0.21: API routes accept Hono sub-apps and direct (ctx) => Response functions.
   assertStringIncludes(code, "app.route('/api/hello'");
-  assertStringIncludes(code, 'createLessApiContext');
+  assertStringIncludes(code, 'request: c.req.raw');
   assertStringIncludes(code, '$apiHello');
 });
 
