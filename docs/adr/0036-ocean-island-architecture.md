@@ -98,7 +98,7 @@ We adopt a **two-layer component model**:
 | D4 | Open Props for tokens                                 | Replace ~100 lines of custom token code              |
 | D5 | `hydrateEvents` preserved                             | Proven pattern, ported from DsdLitElement            |
 | D6 | `@lessjs/adapter-lit` retained                        | v0.20 keeps compatibility; v0.21 deprecates DSD path |
-| D7 | `less-hero-ping` migrated to DsdElement            | OBE: fully migrated in SOP-017 convergence pass    |
+| D7 | `less-hero-ping` migrated to DsdElement               | OBE: fully migrated in SOP-017 convergence pass      |
 | D8 | CSS Parts on every component                          | Standard WC external styling API                     |
 
 ### 2.3 What Changes
