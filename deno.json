@@ -86,6 +86,7 @@
     "hub:check-index": "deno run --allow-read packages/hub/src/cli/check-index.ts",
     "hub:index:update": "deno run --allow-read --allow-write packages/hub/src/cli/update-index.ts",
     "dsd:check-report": "deno run --allow-read --allow-env packages/hub/src/cli/dsd-report-gate.ts",
+    "docs:check-strategy": "deno run --allow-read tools/check-strategic-docs.ts",
     "publish:core": "cd packages/core && deno publish",
     "publish:rpc": "cd packages/rpc && deno publish",
     "publish:ui": "cd packages/ui && deno publish",

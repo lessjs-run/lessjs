@@ -120,3 +120,7 @@ Neutral:
 Docs that mention current version, current rendering mode, full-stack status,
 Hydration strategy status, Registry Hub maturity, or v0.20/v0.21 scope must be
 checked against this ADR during release closure.
+
+Run `deno task docs:check-strategy` before release closure. The task blocks
+known stale version claims, over-shipped Hydration/ISR/SSR claims, and mature
+marketplace wording in the primary public documentation surface.

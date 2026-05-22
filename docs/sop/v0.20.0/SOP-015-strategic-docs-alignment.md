@@ -100,6 +100,7 @@ Use these exact claim boundaries across public docs:
 ## Verification Checklist
 
 - [ ] `deno task fmt:check`
+- [ ] `deno task docs:check-strategy`
 - [ ] `deno task typecheck`
 - [ ] `deno task build`
 - [ ] `deno task dsd:check-report`
