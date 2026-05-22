@@ -66,7 +66,7 @@ Deno.test('less:ready event', () => {
   }
 });
 
-Deno.test('client:only islands are scheduled with idle client-only bucket', () => {
+Deno.test('client:only islands are scheduled with immediate load (not idle)', () => {
   const code = generateClientEntry([
     {
       tagName: 'client-only-widget',
@@ -77,8 +77,10 @@ Deno.test('client:only islands are scheduled with idle client-only bucket', () =
     },
   ]);
 
-  assert(code.includes('client:idle and client:only islands'));
+  assert(code.includes('client:only islands - import immediately'));
   assert(code.includes('"client-only-widget"'));
+  // v0.21: only uses immediate load, NOT idle deferral
+  assertEquals(code.includes('client:idle and client:only'), false);
   new Function(code);
 });
 

@@ -1,51 +1,99 @@
 /**
  * v0.21 Demo: Hydration strategies guide.
- *
- * Demonstrates all four client:* hydration strategies:
- *   - client:load    → import immediately
- *   - client:idle    → defer to requestIdleCallback
- *   - client:visible → import on viewport entry (IntersectionObserver)
- *   - client:only    → client-only, no SSR/DSD
  */
+export const meta = { section: 'Core', label: 'Islands & Hydration', order: 25 };
 
-import { html } from 'lit';
-import type { ServerHandler } from '@lessjs/core';
+import { headerNav, navSections } from 'virtual:less-nav';
+import { pageStyles } from '../../components/page-styles.js';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
+import { DsdElement } from '@lessjs/core';
+import '@lessjs/ui/less-layout';
 
-// Side-effect imports: island() registers custom elements
+// Side-effect imports: island() registers custom elements for SSR rendering.
+// During SSR the strategy scheduling (IntersectionObserver etc.) is skipped
+// via the SSR guard in island.ts — only customElements.define() runs.
 import '../../islands/demo-load.js';
 import '../../islands/demo-idle.js';
 import '../../islands/demo-visible.js';
 import '../../islands/demo-only.js';
 
-export const tagName = 'guide-islands';
+export class IslandsGuidePage extends DsdElement {
+  declare locale?: string;
 
-export default {
-  default: (() => {
-    return html`
-      <h1>Hydration Strategies</h1>
-      <p>LessJS v0.21 supports four hydration strategies:</p>
+  static override styles = [pageStyles];
 
-      <h2>client:load</h2>
-      <p>Imports immediately when the module loads. Best for above-the-fold interactive elements.</p>
-      <demo-load></demo-load>
+  override render(): string {
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
+  }
 
-      <h2>client:idle</h2>
-      <p>
-        Defers until browser is idle (requestIdleCallback). Best for below-the-fold or non-critical UI.
-      </p>
-      <demo-idle></demo-idle>
+  private _getLocale(_defaultLocale: string): string {
+    return this.locale || _defaultLocale;
+  }
 
-      <h2>client:visible</h2>
-      <p>
-        Imports when the element enters the viewport (IntersectionObserver, 200px rootMargin). Best for
-        lazy content.
-      </p>
-      <div style="height:400px"></div>
-      <demo-visible></demo-visible>
+  private _renderZh(): string {
+    return `
+      <less-layout locale="${this._getLocale('zh')}" locales='${
+      JSON.stringify(['zh', 'en'])
+    }' headerNav='${this._escape(JSON.stringify(headerNav))}' navSections='${
+      this._escape(JSON.stringify(filterFrameworkNav(navSections)))
+    }'>
+        <h1>Hydration 策略</h1>
+        <p>LessJS v0.21 支持四种 hydration 策略：</p>
 
-      <h2>client:only</h2>
-      <p>Client-only render — no DSD, no SSR. The component fully owns its shadow root.</p>
-      <demo-only></demo-only>
+        <h2><code>client:load</code></h2>
+        <p>模块加载时立即导入。适用于首屏交互元素。</p>
+        <demo-load></demo-load>
+
+        <h2><code>client:idle</code></h2>
+        <p>延迟到浏览器空闲时导入（requestIdleCallback）。适用于非关键 UI。</p>
+        <demo-idle></demo-idle>
+
+        <h2><code>client:visible</code></h2>
+        <p>元素进入视口时导入（IntersectionObserver，200px rootMargin）。适用于懒加载内容。</p>
+        <div style="height:400px"></div>
+        <demo-visible></demo-visible>
+
+        <h2><code>client:only</code></h2>
+        <p>纯客户端渲染——无 DSD，无 SSR。组件完全拥有其 shadow root。</p>
+        <demo-only></demo-only>
+      </less-layout>
     `;
-  }) as unknown as ServerHandler,
-};
+  }
+
+  private _renderEn(): string {
+    return `
+      <less-layout locale="en" locales='${JSON.stringify(['zh', 'en'])}' headerNav='${
+      this._escape(JSON.stringify(headerNav))
+    }' navSections='${this._escape(JSON.stringify(filterFrameworkNav(navSections)))}'>
+        <h1>Hydration Strategies</h1>
+        <p>LessJS v0.21 supports four hydration strategies:</p>
+
+        <h2><code>client:load</code></h2>
+        <p>Imports immediately when the module loads. Best for above-the-fold interactive elements.</p>
+        <demo-load></demo-load>
+
+        <h2><code>client:idle</code></h2>
+        <p>Defers until browser is idle (requestIdleCallback). Best for below-the-fold or non-critical UI.</p>
+        <demo-idle></demo-idle>
+
+        <h2><code>client:visible</code></h2>
+        <p>Imports when entering the viewport (IntersectionObserver, 200px rootMargin). Best for lazy content.</p>
+        <div style="height:400px"></div>
+        <demo-visible></demo-visible>
+
+        <h2><code>client:only</code></h2>
+        <p>Client-only render — no DSD, no SSR. The component fully owns its shadow root.</p>
+        <demo-only></demo-only>
+      </less-layout>
+    `;
+  }
+
+  private _escape(str: string): string {
+    return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(
+      /</g,
+      '&lt;',
+    ).replace(/>/g, '&gt;');
+  }
+}
+
+export default IslandsGuidePage;
