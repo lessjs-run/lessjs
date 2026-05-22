@@ -26,6 +26,7 @@ docs/sop/v0.20.0/
   SOP-013-lit-cleanup.md                   -> Lit dependency cleanup
   SOP-014-repository-cleanup.md            -> Cleanup gate hardening
   SOP-015-strategic-docs-alignment.md      -> Public positioning + roadmap alignment
+  SOP-016-dsd-element-sufficiency-hardening.md -> DsdElement/code-doc sufficiency pass
 ```
 
 ## Execution Order
@@ -52,7 +53,10 @@ Phase 5: Cleanup Hardening (0.5d)
 Phase 6: Strategic Docs Alignment (0.5-1d)
   SOP-015
 
-Total: ~8.2 days (single developer, sequential)
+Phase 7: DsdElement Sufficiency Hardening (0.5d)
+  SOP-016
+
+Total: ~8.7 days (single developer, sequential)
 ```
 
 ## Key Decisions
@@ -66,6 +70,7 @@ Total: ~8.2 days (single developer, sequential)
 | CSS Parts on every component               | ADR section 2.2 D8, SOP-010 |
 | Cleanup gates are enforceable              | SOP-014                     |
 | Public claims follow DSD-first boundary    | ADR-0037, SOP-015           |
+| DsdElement examples are the default        | SOP-016                     |
 
 ## Before Starting
 
