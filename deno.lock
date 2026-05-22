@@ -993,6 +993,11 @@
           "jsr:@lessjs/core@0.19",
           "npm:vite@8.0.10"
         ]
+      },
+      "packages/ui": {
+        "dependencies": [
+          "jsr:@lessjs/core@0.19"
+        ]
       }
     }
   }
