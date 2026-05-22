@@ -19,12 +19,12 @@ admission contracts instead of outrunning them.
 
 | Area                      | State                                                 |
 | ------------------------- | ----------------------------------------------------- |
-| Project line              | v0.21.0 Hydration + ISR                               |
+| Project line              | v0.21.0 Reactive DSD                                  |
 | Current rendering mode    | SSG + Declarative Shadow DOM                          |
 | Current DSD base          | `DsdElement` + SSR-safe `StyleSheet`                  |
 | Current framework surface | file routes, Hono API routes, dev/build pipeline      |
 | Current Hub surface       | early Registry Hub, validation, snapshots, `less add` |
-| Next milestone            | v0.22.x Reactive DSD                                  |
+| Next milestone            | v0.21.x Reactive DSD                                  |
 
 Package publishing is staggered. The roadmap tracks the project line, while
 individual package versions may lag until a coordinated publish pass.
@@ -39,8 +39,8 @@ individual package versions may lag until a coordinated publish pass.
 | 4     | v0.18.x | Universal WC Engine       | CEM parser, compatibility tiers, validation CLI, safe add flow | Done    |
 | 5     | v0.19.x | Registry Hub MVP          | Searchable validated package index with reports and snapshots  | Done    |
 | 6     | v0.20.x | Ocean-Island Architecture | DsdElement, DSD-native UI, CSS Parts, cleanup gates            | Done    |
-| 7     | v0.21.x | Hydration + ISR           | `client:*` directives, ISR cache, API route parity             | Current |
-| 8     | v0.22.x | Reactive DSD              | DsdElement + Signals, safe templates, optional DOM diffing     | Planned |
+| 7     | v0.21.x | Reactive DSD              | DsdElement + Signals, safe templates, DOM diff, streaming DSD  | Current |
+| 8     | v0.22.x | Edge Full-Stack           | ISR handler, KV adapters, Showcase, deployment guides          | Planned |
 | 9     | v1.0.x  | Stable Engine             | API/schema freeze and deterministic package guarantees         | Vision  |
 
 ## Compatibility Admission Model
@@ -138,31 +138,38 @@ Exit criteria:
 - README, roadmap, status, and website docs no longer describe v0.18/v0.19 as
   the current public line.
 
-### v0.21.x - Hydration + ISR
+### v0.21.x - Reactive DSD
 
-Delivered:
-
-### P0: Hydration Strategies
-
-- `client:load`, `client:idle`, `client:visible`, and `client:only`.
-- Strategy-aware client runtime and island manifests.
-- `client:only` SSR exclusion for local and package islands.
-- ISR cache primitives and SSG `isr-manifest.json`.
-- API route production parity for Hono apps and function handlers.
-- DSD report hydration strategy summary.
-
-Exit criteria: met for the v0.21 contract layer.
-
-Runtime adapter execution of ISR remains v0.22+ work.
-
-## Planned: v0.22.x - Reactive DSD
-
-Goal: improve component authoring without turning DSD components into a heavy
-client framework.
+Goal: make `DsdElement` the universal reactive base class via Signals integration.
+Ocean components gain reactivity without Lit, React, or any framework runtime.
 
 Scope:
 
-- `DsdElement` + Signals integration.
+- DsdElement + Signals auto-tracking (render → signal.get → dependency)
+- Fine-grained DOM updates (microtask-batched, direct DOM mutation)
+- `html` tagged template literal (zero build step, XSS-safe by default)
+- Safe templates: automatic escaping, `unsafeHTML()` escape hatch
+- Optional DOM diffing: keyed subtree diff for complex list/conditional blocks
+- Streaming DSD: `renderDSDStream()` → `ReadableStream<string>`
+- Progressive page delivery: TTFB < 50ms, per-component chunking
+- Priority ordering: above-fold first, below-fold deferred
+
+See `docs/sop/v0.21.0/` for detailed SOPs.
+
+## Planned: v0.22.x - Edge Full-Stack
+
+Goal: close the ISR loop — production handler, KV adapters, and www self-hosting proof.
+
+Scope:
+
+- ISR production handler (CF Workers / Deno Deploy)
+- KvIsrCache adapters (CF Workers KV + Deno KV)
+- www Showcase pages (Reactive DSD demo, ISR stopwatch, serverless API)
+- Deployment guides (CF Workers, Deno Deploy, static-only)
+- v0.21 cleanup and release verification
+
+See `docs/sop/v0.22.0/` for detailed SOPs.
+
 - Safe HTML helper with automatic escaping.
 - Optional DOM diffing for stateful island paths.
 - Runtime adapter ISR integration.
