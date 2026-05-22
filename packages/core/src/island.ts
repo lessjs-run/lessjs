@@ -49,7 +49,7 @@ const VALID_STRATEGIES = new Set<HydrationStrategy>(['load', 'idle', 'visible', 
 // Module-level store of active visibility strategy timeout IDs.
 // Used for test cleanup - tests can call _clearAllVisibilityTimeouts()
 // to prevent timer leaks.
-const _visibilityTimeouts: Set<number> = new Set();
+const _visibilityTimeouts = new Set<ReturnType<typeof setTimeout>>();
 
 /** Clear all active visibility strategy timeouts (for test cleanup). */
 export function _clearAllVisibilityTimeouts(): void {
