@@ -14,7 +14,7 @@
  * Technical: Uses private _step/_label + requestUpdate() pattern
  * because Rolldown does not correctly transpile @property() decorators.
  */
-import { css, html } from 'lit';
+import { css, html, type CSSResultGroup } from 'lit';
 import { DsdLitElement } from '@lessjs/adapter-lit';
 import { lessDesignTokens } from './design-tokens.js';
 
@@ -24,7 +24,7 @@ export class LessStepCard extends DsdLitElement {
   private _step = 1;
   private _label = '';
 
-  static override styles = [
+  static override styles: CSSResultGroup = [
     lessDesignTokens,
     css`
       :host {
@@ -95,7 +95,7 @@ export class LessStepCard extends DsdLitElement {
     this.requestUpdate();
   }
 
-  override render() {
+  override render(): unknown {
     return html`
       <div class="step-card">
         <div class="step-header">

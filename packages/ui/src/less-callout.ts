@@ -14,7 +14,7 @@
  * Technical: Uses private _type/_title + requestUpdate() pattern
  * because Rolldown does not correctly transpile @property() decorators.
  */
-import { css, html } from 'lit';
+import { css, html, type CSSResultGroup } from 'lit';
 import { DsdLitElement } from '@lessjs/adapter-lit';
 import { lessDesignTokens } from './design-tokens.js';
 
@@ -47,7 +47,7 @@ export class LessCallout extends DsdLitElement {
   private _type: 'info' | 'warning' | 'danger' | 'tip' = 'info';
   private _label = '';
 
-  static override styles = [
+  static override styles: CSSResultGroup = [
     lessDesignTokens,
     css`
       :host {
@@ -105,7 +105,7 @@ export class LessCallout extends DsdLitElement {
     this.requestUpdate();
   }
 
-  override render() {
+  override render(): unknown {
     const config = TYPE_CONFIG[this._type] || TYPE_CONFIG.info;
     return html`
       <div
