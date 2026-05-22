@@ -53,10 +53,12 @@ export class RoutingGuidePage extends DsdElement {
             </tbody>
           </table>
 
-          <less-code-block><pre><code>export class PostPage extends DsdElement {
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+
+export class PostPage extends DsdElement {
   slug = '';
   override render() {
-    return html&#96;&lt;article&gt;Post: \${this.slug}&lt;/article&gt;&#96;;
+    return &#96;&lt;article&gt;Post: \${this.slug}&lt;/article&gt;&#96;;
   }
 }</code></pre></less-code-block>
 
@@ -71,11 +73,11 @@ export class RoutingGuidePage extends DsdElement {
           </table>
 
           <h2>路由模块契约</h2>
-          <less-code-block><pre><code>import { html, LitElement } from 'lit';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
 export class AboutPage extends DsdElement {
   override render() {
-    return html&#96;&lt;main&gt;About&lt;/main&gt;&#96;;
+    return &#96;&lt;main&gt;About&lt;/main&gt;&#96;;
   }
 }
 
@@ -135,10 +137,12 @@ export const tagName = 'page-about';</code></pre></less-code-block>
             </tbody>
           </table>
 
-          <less-code-block><pre><code>export class PostPage extends DsdElement {
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+
+export class PostPage extends DsdElement {
   slug = '';
   override render() {
-    return html&#96;&lt;article&gt;Post: \${this.slug}&lt;/article&gt;&#96;;
+    return &#96;&lt;article&gt;Post: \${this.slug}&lt;/article&gt;&#96;;
   }
 }</code></pre></less-code-block>
 
@@ -153,11 +157,11 @@ export const tagName = 'page-about';</code></pre></less-code-block>
           </table>
 
           <h2>Route Module Contract</h2>
-          <less-code-block><pre><code>import { html, LitElement } from 'lit';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
 export class AboutPage extends DsdElement {
   override render() {
-    return html&#96;&lt;main&gt;About&lt;/main&gt;&#96;;
+    return &#96;&lt;main&gt;About&lt;/main&gt;&#96;;
   }
 }
 

@@ -240,6 +240,30 @@ export class DsdElement extends _HTMLElement {
   }
 
   /**
+   * Re-render the shadow DOM from `render()` and re-bind declarative events.
+   *
+   * DsdElement intentionally does not include a reactive scheduler. Components
+   * with local state can call this method after state changes instead of
+   * duplicating `shadowRoot.innerHTML = this.render()` and event hydration.
+   */
+  update(): void {
+    if (!this.shadowRoot) return;
+    this.shadowRoot.innerHTML = this.render();
+    this._hydrateEvents();
+  }
+
+  /**
+   * ReactiveController-compatible update hook.
+   *
+   * `@lessjs/rpc` calls this method when async state changes. Keeping this
+   * tiny alias lets DsdElement host controllers without inheriting Lit or a
+   * scheduler.
+   */
+  requestUpdate(): void {
+    this.update();
+  }
+
+  /**
    * Bind declared events to existing shadow DOM elements after DSD upgrade.
    *
    * Iterates `static hydrateEvents` from the constructor, queries the shadow

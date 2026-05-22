@@ -127,14 +127,14 @@ for (const name of COMPONENT_FILES) {
     assertExists(mod.tagName.includes('-'), `tagName "${mod.tagName}" must contain a hyphen`);
   });
 
-  Deno.test(`less-${name}: exports LitElement subclass`, async () => {
+  Deno.test(`less-${name}: exports DsdElement-compatible class`, async () => {
     const mod = await import(`../src/${name}.ts`);
     const className = Object.keys(mod).find((k) => k !== 'tagName' && typeof mod[k] === 'function');
     assertExists(className, `${name} should export a class`);
     const Cls = mod[className as keyof typeof mod];
     assertExists(
       Cls.prototype.connectedCallback || Cls.prototype.render,
-      `${name} class should be a LitElement`,
+      `${name} class should expose a custom-element lifecycle or render method`,
     );
   });
 }
@@ -444,7 +444,6 @@ Deno.test('less-code-block: _copy method failure path', async () => {
       configurable: true,
     });
 
-    // Mock requestUpdate to avoid LitElement errors
     // Mock setTimeout to execute immediately (avoid timer leaks in tests)
     const originalSetTimeout = globalThis.setTimeout;
     globalThis.setTimeout = ((callback: () => void) => {
@@ -742,7 +741,7 @@ Deno.test('less-theme-toggle: connectedCallback with theme=light', async () => {
     const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
     const instance = new LessThemeToggle();
     instance.setAttribute('theme', 'light');
-    // Don't call connectedCallback (needs document.createElement from LitElement)
+    // Don't call connectedCallback (the test DOM is intentionally minimal).
     // Instead, test the logic directly by replicating what connectedCallback does
     if (instance.getAttribute('theme') === 'light') {
       (instance as any)._isLight = true;

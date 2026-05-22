@@ -197,6 +197,66 @@ Deno.test('DsdElement: hydrateEvents bind events after CSR render()', () => {
   document.body.removeChild(el);
 });
 
+Deno.test('DsdElement: update() re-renders and rebinds hydrateEvents', () => {
+  if (!hasDOM) return;
+  let callCount = 0;
+
+  const tagName = `test-update-${Math.random().toString(36).slice(2, 7)}`;
+  class UpdateElement extends DsdElement {
+    static override hydrateEvents: HydrateEventDescriptor[] = [
+      { selector: 'button', event: 'click', method: '_onClick' },
+    ];
+
+    count = 0;
+
+    _onClick(): void {
+      callCount++;
+    }
+
+    override render(): string {
+      return `<button>Count ${this.count}</button>`;
+    }
+  }
+  customElements.define(tagName, UpdateElement);
+
+  const el = document.createElement(tagName) as UpdateElement;
+  document.body.appendChild(el);
+
+  el.count = 1;
+  el.update();
+
+  assertEquals(el.shadowRoot!.innerHTML, '<button>Count 1</button>');
+  const button = el.shadowRoot!.querySelector('button') as HTMLButtonElement;
+  button.click();
+  assertEquals(callCount, 1);
+
+  document.body.removeChild(el);
+});
+
+Deno.test('DsdElement: requestUpdate() aliases update() for controllers', () => {
+  if (!hasDOM) return;
+
+  const tagName = `test-request-update-${Math.random().toString(36).slice(2, 7)}`;
+  class RequestUpdateElement extends DsdElement {
+    value = 'before';
+
+    override render(): string {
+      return `<span>${this.value}</span>`;
+    }
+  }
+  customElements.define(tagName, RequestUpdateElement);
+
+  const el = document.createElement(tagName) as RequestUpdateElement;
+  document.body.appendChild(el);
+
+  el.value = 'after';
+  el.requestUpdate();
+
+  assertEquals(el.shadowRoot!.innerHTML, '<span>after</span>');
+
+  document.body.removeChild(el);
+});
+
 // AbortController cleanup on disconnect.
 
 Deno.test('DsdElement: disconnectedCallback aborts event listeners', () => {

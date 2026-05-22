@@ -109,9 +109,7 @@ export class LessStepCard extends DsdElement {
   }
 
   private _syncDOM(): void {
-    if (!this.shadowRoot) return;
-    this.shadowRoot.innerHTML = this.render();
-    this._hydrateEvents();
+    this.update();
   }
 
   /** Escape HTML text content to prevent XSS (SSR-safe, no DOM API) */

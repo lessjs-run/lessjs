@@ -409,7 +409,7 @@ export default class DocsRegistryHome extends DsdElement {
     });
 
     this._filtered = result;
-    this.requestUpdate();
+    this.update();
   }
 
   private _packageLink(pkg: HubIndexEntry): string {

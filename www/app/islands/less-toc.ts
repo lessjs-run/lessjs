@@ -174,8 +174,8 @@ export default class LessToc extends DsdElement {
 
   /** Re-render shadow DOM and re-bind click events on each TOC link. */
   private _updateDOM(): void {
+    this.update();
     if (!this.shadowRoot) return;
-    this.shadowRoot.innerHTML = this.render();
 
     // Bind click handlers on rendered links
     const linkEls = this.shadowRoot.querySelectorAll<HTMLAnchorElement>('[data-toc-id]');

@@ -189,14 +189,12 @@ export class LessButton extends DsdElement {
   }
 
   private _reRender(): void {
-    if (!this.shadowRoot) return;
     // NOTE: We do NOT capture assignedNodes before innerHTML replacement.
     // Light DOM children remain in the host element and automatically
     // re-project to the new <slot> - no manual DOM manipulation needed.
     // The previous approach (replaceChildren) incorrectly moved light DOM
     // children into the shadow root, breaking slot projection.
-    this.shadowRoot.innerHTML = this.render();
-    this._hydrateEvents();
+    this.update();
   }
 
   private _updateState(): void {

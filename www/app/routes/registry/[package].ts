@@ -141,10 +141,6 @@ export default class DocsRegistryDetail extends DsdElement {
   private _record: HubPackageRecord | null = null;
   private _showValidation = false;
 
-  static override properties = {
-    package: { type: String },
-  };
-
   static override styles = [routeSheet];
 
   constructor() {
@@ -162,7 +158,7 @@ export default class DocsRegistryDetail extends DsdElement {
 
   private _toggleValidation() {
     this._showValidation = !this._showValidation;
-    this.requestUpdate();
+    this.update();
   }
 
   private _formatJson(json: string): string {

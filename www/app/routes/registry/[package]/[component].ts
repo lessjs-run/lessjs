@@ -272,11 +272,6 @@ export default class DocsRegistryComponentDetail extends DsdElement {
 
   private _record: HubPackageRecord | null = null;
 
-  static override properties = {
-    package: { type: String },
-    component: { type: String },
-  };
-
   static override styles = [routeSheet];
 
   constructor() {
