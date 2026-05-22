@@ -47,7 +47,7 @@ export function islandEffect(
   let lastParent = host.parentElement ?? host.parentNode;
 
   // Periodic check for two edge cases that MutationObserver alone cannot cover:
-  // 1. The element is moved to a new parent — MO still watches the old parent
+  // 1. The element is moved to a new parent - MO still watches the old parent
   //    (there's no DOM event for "element reparented")
   // 2. MO fails silently in certain edge cases (extremely rare in modern browsers)
   // A 30-second interval is a lightweight safety net for these scenarios.
@@ -90,7 +90,7 @@ export function untracked<T>(fn: () => T): T {
 
 // ─── Channel (Event Bus) ────────────────────────────────────────
 
-// M-05 fix: Lazy getter for _getChannelTarget() — deferred until first access,
+// M-05 fix: Lazy getter for _getChannelTarget() - deferred until first access,
 // so SSR environments don't capture null at module load time.
 let _channelTargetCache: EventTarget | null | undefined = undefined;
 function _getChannelTarget(): EventTarget | null {
@@ -106,7 +106,7 @@ function _getChannelTarget(): EventTarget | null {
 export function channel<T = unknown>(name: string): Channel<T> {
   if (!_getChannelTarget()) {
     console.warn(
-      '[LessJS/Signal] No DOM available — channel events will be no-ops (expected in SSR/SSG).',
+      '[LessJS/Signal] No DOM available - channel events will be no-ops (expected in SSR/SSG).',
     );
   }
 

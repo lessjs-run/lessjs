@@ -10,7 +10,7 @@
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// ─── Package versions ──────────────────────────────────────────
+// ??? Package versions ??????????????????????????????????????????
 // ADR 0016: Handle both local (file://) and JSR remote (https://) execution.
 // When running from JSR, import.meta.url is https://jsr.io/... and
 // fileURLToPath() throws ERR_INVALID_URL_SCHEME.
@@ -75,7 +75,7 @@ async function fetchJsrVersion(pkg: string): Promise<string> {
   return version;
 }
 
-/** Resolve all package versions — local from workspace, remote from JSR API. */
+/** Resolve all package versions ??local from workspace, remote from JSR API. */
 async function resolveVersions(): Promise<Record<string, string>> {
   const metaUrl = import.meta.url;
   const isRemote = metaUrl.startsWith('https://') || metaUrl.startsWith('http://');
@@ -114,11 +114,6 @@ node_modules/
 `,
     'deno.json': `{
   "imports": {
-    "lit": "npm:lit@^3.2.0",
-    "@lit/reactive-element": "npm:@lit/reactive-element@^2",
-    "lit-element": "npm:lit-element@^4",
-    "lit-html": "npm:lit-html@^3",
-    "@lit-labs/ssr-dom-shim": "npm:@lit-labs/ssr-dom-shim@^1.5.0",
     "vite": "npm:vite@8.0.10",
     "@lessjs/app": "jsr:@lessjs/app@^${v.app}",
     "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^${v.adapterLit}",
@@ -129,8 +124,7 @@ node_modules/
     "@lessjs/i18n": "jsr:@lessjs/i18n@^${v.i18n}",
     "@lessjs/signals": "jsr:@lessjs/signals@^${v.signals}",
     "@lessjs/ui": "jsr:@lessjs/ui@^${v.ui}",
-    "@lessjs/ui/tokens/colors": "jsr:@lessjs/ui@^${v.ui}/tokens/colors",
-    "@lessjs/ui/tokens/color-values": "jsr:@lessjs/ui@^${v.ui}/tokens/color-values",
+    "@lessjs/ui/open-props-tokens": "jsr:@lessjs/ui@^${v.ui}/open-props-tokens",
     "@lessjs/ui/": "jsr:@lessjs/ui@^${v.ui}/"
   },
   "nodeModulesDir": "auto",
@@ -146,26 +140,29 @@ node_modules/
 }
 `,
     'vite.config.ts': `import { lessjs } from '@lessjs/app';
-import { lessRootColorCSS } from '@lessjs/ui/tokens/colors';
 import { defineConfig } from 'vite';
 
-// DRY: All color token values come from @lessjs/ui/tokens/colors.ts
-// (single source of truth). Do NOT hand-write color values here.
-const colorTokensStyle = '<style>' + lessRootColorCSS + 'body{margin:0;background:var(--less-bg-base);color:var(--less-text-primary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>';
+// Design tokens (from Open Props)
+const colorTokensStyle =
+  '<style>' +
+  '--gray-0:#f8f9fa;--gray-1:#f1f3f5;--gray-3:#dee2e6;--gray-5:#adb5bd;--gray-7:#495057;--gray-9:#212529;' +
+  '--brand:#534ab7;--size-1:4px;--size-2:8px;--size-3:12px;--size-4:16px;--border-size-1:1px;--radius-2:8px;' +
+  '--font-sans:system-ui,-apple-system,sans-serif;--font-size-0:0.875rem;--font-weight-5:500;' +
+  '--shadow-1:0 1px 3px 0 rgb(0 0 0 / 0.1);' +
+  'body{margin:0;background:var(--gray-1);color:var(--gray-9);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>';
 
 const lessUiAliases = {
-  '@lessjs/ui': 'https://jsr.io/@lessjs/ui/${v.ui}/src/index.ts',
-  '@lessjs/ui/design-tokens': 'https://jsr.io/@lessjs/ui/${v.ui}/src/design-tokens.ts',
-  '@lessjs/ui/less-button': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-button.ts',
-  '@lessjs/ui/less-card': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-card.ts',
-  '@lessjs/ui/less-code-block': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-code-block.ts',
-  '@lessjs/ui/less-dialog': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-dialog.ts',
   '@lessjs/ui/less-hero-ping': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-hero-ping.ts',
   '@lessjs/ui/less-input': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-input.ts',
   '@lessjs/ui/less-layout': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-layout.ts',
   '@lessjs/ui/less-theme-toggle': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-theme-toggle.ts',
-  '@lessjs/ui/tokens/colors': 'https://jsr.io/@lessjs/ui/${v.ui}/src/tokens/colors.ts',
-  '@lessjs/ui/tokens/color-values': 'https://jsr.io/@lessjs/ui/${v.ui}/src/tokens/color-values.ts',
+  '@lessjs/ui/open-props-tokens': 'https://jsr.io/@lessjs/ui/${v.ui}/src/open-props-tokens.ts',
+  '@lessjs/ui/less-button': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-button.ts',
+  '@lessjs/ui/less-card': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-card.ts',
+  '@lessjs/ui/less-code-block': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-code-block.ts',
+  '@lessjs/ui/less-dialog': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-dialog.ts',
+  // Parent alias LAST ?? must come after all subpath aliases
+  '@lessjs/ui': 'https://jsr.io/@lessjs/ui/${v.ui}/src/index.ts',
 };
 
 export default defineConfig({
@@ -183,7 +180,7 @@ export default defineConfig({
     },
     inject: {
       headFragments: [
-        // Design tokens - DRY: values from @lessjs/ui/tokens/colors.ts
+        // Design tokens - DRY: values from @lessjs/ui/open-props-tokens.ts
         colorTokensStyle,
       ],
     },
@@ -203,54 +200,67 @@ export default defineConfig({
   })],
 });
 `,
-    'app/routes/index.ts': `import { css, html, LitElement } from 'lit';
+    'app/routes/index.ts': `import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/core';
 
 export const tagName = 'home-page';
-export default class HomePage extends LitElement {
-  static override styles = css\`
-    :host { display: block; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
-    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
-    p { color: var(--less-text-secondary, #666); }
-    \`;
+
+const styles = new StyleSheet();
+styles.replaceSync(\`
+  :host { display: block; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+  h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+  p { color: var(--text-secondary, #666); }
+\`);
+
+export default class HomePage extends DsdElement {
+  static override styles = styles;
 
   override render() {
-    return html\`
-      <h1>Hello from LessJS!</h1>
-      <p>Your LessJS app is running. Edit <code>app/routes/index.ts</code> to get started.</p>
-      <my-counter></my-counter>
-    \`;
+    return \`<h1>Hello from LessJS!</h1>
+<p>Your LessJS app is running. Edit <code>app/routes/index.ts</code> to get started.</p>
+<my-counter></my-counter>\`;
   }
 }
 `,
-    'app/islands/my-counter.ts': `import { css, html, LitElement } from 'lit';
+    'app/islands/my-counter.ts': `import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/core';
+import type { HydrateEventDescriptor } from '@lessjs/core';
 
 export const tagName = 'my-counter';
 
-export default class MyCounter extends LitElement {
-  static override styles = css\`
-    :host { display: inline-flex; gap: 0.5rem; align-items: center; margin-top: 1rem; }
-    button { padding: 0.25rem 0.75rem; cursor: pointer; }
-  \`;
+const styles = new StyleSheet();
+styles.replaceSync(\`
+  :host { display: inline-flex; gap: 0.5rem; align-items: center; margin-top: 1rem; }
+  button { padding: 0.25rem 0.75rem; cursor: pointer; }
+\`);
 
-  static override properties = { count: { type: Number } };
+export default class MyCounter extends DsdElement {
+  static override styles = styles;
 
-  declare count: number;
+  static override hydrateEvents: HydrateEventDescriptor[] = [
+    { selector: 'button.dec', event: 'click', method: '_dec' },
+    { selector: 'button.inc', event: 'click', method: '_inc' },
+  ];
 
-  constructor() {
-    super();
-    this.count = 0;
-  }
+  count = 0;
 
   override render() {
-    return html\`
-      <button @click=\${() => this.count--}>-</button>
-      <span>\${this.count}</span>
-      <button @click=\${() => this.count++}>+</button>
-    \`;
+    return \`<button class="dec">-</button>
+<span>\${this.count}</span>
+<button class="inc">+</button>\`;
+  }
+
+  private _dec() { this.count--; this._update(); }
+  private _inc() { this.count++; this._update(); }
+
+  private _update() {
+    if (!this.shadowRoot) return;
+    this.shadowRoot.innerHTML = this.render();
+    this._hydrateEvents();
   }
 }
 
-if (!customElements.get(tagName)) {
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
   customElements.define(tagName, MyCounter);
 }
   `,

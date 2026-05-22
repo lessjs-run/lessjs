@@ -2,9 +2,9 @@
  * @lessjs/core - Build-time shared types.
  *
  * G10 fix: Extracted from @lessjs/adapter-vite/build-context to break
- * the circular dependency between adapter-vite ↔ content/i18n.
+ * the circular dependency between adapter-vite <-> content/i18n.
  *
- * These types contain zero Vite-specific imports — they are pure data
+ * These types contain zero Vite-specific imports - they are pure data
  * interfaces that content and i18n use to communicate with the build context.
  * The actual LessBuildContext class (which has Vite Plugin dependencies)
  * remains in adapter-vite and implements these interfaces.
@@ -36,7 +36,7 @@ export interface LessI18nContextOptions {
 }
 
 /**
- * Plugin metadata interface — the data bridge between sub-plugins
+ * Plugin metadata interface - the data bridge between sub-plugins
  * (content, i18n) and the build context.
  *
  * This is the interface that content/i18n import instead of the full
@@ -59,7 +59,7 @@ export interface LessPluginMeta {
 
 /**
  * Minimal build context interface that sub-plugins can use.
- * Only exposes the `plugins` field — the only part content/i18n need.
+ * Only exposes the `plugins` field - the only part content/i18n need.
  */
 export interface LessBuildContextLike {
   plugins: LessPluginMeta;

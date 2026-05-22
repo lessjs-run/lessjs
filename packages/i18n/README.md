@@ -1,6 +1,6 @@
 # @lessjs/i18n
 
-国际化插件 — SSG locale 展开、路径辅助、语言切换。
+国际化插件 - SSG locale 展开、路径辅助、语言切换。
 
 ## 安装
 
@@ -47,7 +47,7 @@ export function getStaticPaths() {
 }
 
 // 生成跨 locale 链接
-const enPath = switchLocale('/zh/about', 'en'); // → '/en/about'
+const enPath = switchLocale('/zh/about', 'en'); // -> '/en/about'
 ```
 
 ### 独立使用（需显式传递 ctx）

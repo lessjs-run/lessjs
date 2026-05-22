@@ -1,7 +1,7 @@
 import { assert, assertEquals, assertThrows } from 'jsr:@std/assert@^1.0.0';
 import { generateClientEntry } from '../src/entry-generators.ts';
 
-Deno.test('empty → zero JS', () => {
+Deno.test('empty -> zero JS', () => {
   assert(generateClientEntry([]).includes('zero client JS needed'));
 });
 

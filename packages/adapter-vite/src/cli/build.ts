@@ -3,7 +3,7 @@
  *
  * ADR 0011: One-command build entry. viteBuild() triggers Phase 1,
  * and closeBundle() in less:build plugin automatically runs Phase 2/3.
- * No orchestrator needed — all three phases run in a single viteBuild() call.
+ * No orchestrator needed - all three phases run in a single viteBuild() call.
  *
  * Usage:
  *   deno run -A jsr:@lessjs/adapter-vite/cli/build

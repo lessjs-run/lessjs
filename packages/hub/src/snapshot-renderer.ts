@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub — Snapshot Renderer
+ * @lessjs/hub - Snapshot Renderer
  *
  * v0.19.0 Phase 2: Renders Lit components / Web Components to static HTML
  * for Hub previews. Supports three strategies:

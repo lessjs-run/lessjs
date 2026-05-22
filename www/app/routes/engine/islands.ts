@@ -1,17 +1,13 @@
 export const meta = { section: 'Principles', label: 'Island Upgrade', order: 40 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { css, html, LitElement } from 'lit';
-import { pageStyles } from '../../components/page-styles.js';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class IslandsGuidePage extends LitElement {
-  declare locale?: string;
+const routeSheet = new StyleSheet();
 
-  static override styles = [
-    pageStyles,
-    css`
+routeSheet.replaceSync(`
       .comparison {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -20,36 +16,40 @@ export class IslandsGuidePage extends LitElement {
       }
       .comparison-item {
         padding: 1rem 1.25rem;
-        border: 1px solid var(--less-border);
+        border: 1px solid var(--border);
         border-radius: 8px;
         transition: border-color 0.2s, box-shadow 0.2s;
       }
       .comparison-item:hover {
-        border-color: var(--less-border-hover);
+        border-color: var(--border-hover);
       }
       .comparison-item.less {
-        background: var(--less-bg-surface);
-        border-left: 3px solid var(--less-brand, #534AB7);
+        background: var(--bg-surface);
+        border-left: 3px solid var(--brand, #534AB7);
       }
       @media (max-width: 720px) {
         .comparison {
           grid-template-columns: 1fr;
         }
       }
-    `,
-  ];
+    `);
+
+export class IslandsGuidePage extends DsdElement {
+  declare locale?: string;
+
+  static override styles = [routeSheet];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${filterEngineNav(navSections)}"
-        .headerNav="${headerNav}"
+        locale="${this._getLocale('zh')}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/islands"
       >
         <div class="container">
@@ -116,22 +116,35 @@ export class IslandsGuidePage extends LitElement {
             本地 island 放在 <span class="inline-code">app/islands</span>。构建器会扫描它，生成 client
             entry，并在静态 HTML 中注入 entry script。
           </p>
-          <less-code-block
-          ><pre><code>// app/islands/my-counter.ts
-            import { css, html, LitElement } from 'lit';
-            export const tagName = 'my-counter';
-            export default class MyCounter extends LitElement {
-              static override styles = css&#96;:host { display: inline-flex; gap: 0.5rem; align-items: center; }&#96;;
-              count = 0;
-              override render() {
-                return html&#96;
-                  &lt;button @click=\\${() => this.count--}&gt;-&lt;/button&gt;
-                  &lt;span&gt;\\${this.count}&lt;/span&gt;
-                  &lt;button @click=\\${() => this.count++}&gt;+&lt;/button&gt;
-                &#96;;
-              }
-            }
-            customElements.define(tagName, MyCounter);</code></pre></less-code-block>
+          <less-code-block><pre><code>// app/islands/my-counter.ts
+import { DsdElement, StyleSheet } from '@lessjs/core';
+
+export const tagName = 'my-counter';
+
+const sheet = new StyleSheet();
+sheet.replaceSync(':host { display: inline-flex; gap: 0.5rem; align-items: center; }');
+
+export default class MyCounter extends DsdElement {
+  count = 0;
+  static override styles = sheet;
+  static override hydrateEvents = [
+    { selector: '[data-dec]', event: 'click', method: 'dec' },
+    { selector: '[data-inc]', event: 'click', method: 'inc' },
+  ];
+
+  override render(): string {
+    return '&lt;button data-dec&gt;-&lt;/button&gt;&lt;span data-count&gt;' + this.count + '&lt;/span&gt;&lt;button data-inc&gt;+&lt;/button&gt;';
+  }
+
+  dec() { this.count--; this.syncCount(); }
+  inc() { this.count++; this.syncCount(); }
+  private syncCount() {
+    const out = this.shadowRoot?.querySelector('[data-count]');
+    if (out) out.textContent = String(this.count);
+  }
+}
+
+if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);</code></pre></less-code-block>
           <h2>Package Islands</h2>
           <p>
             可复用包可以导出 island metadata，LessJS 在构建时读取这些信息，用于 SSR 注册和 client entry
@@ -152,19 +165,19 @@ export class IslandsGuidePage extends LitElement {
   }
 
   private _renderEn() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'en'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${filterEngineNav(navSections)}"
-        .headerNav="${headerNav}"
+        locale="${this._getLocale('en')}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/en/engine/islands"
       >
         <div class="container">
           <h1>Island Upgrade</h1>
           <p class="subtitle">
             LessJS islands are Custom Element upgrades that follow DSD HTML. This is not full-page
-            hydration — it does not restore the entire application state on the client.
+            hydration - it does not restore the entire application state on the client.
           </p>
           <h2>Why Islands</h2>
           <div class="comparison">

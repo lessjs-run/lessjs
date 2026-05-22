@@ -101,7 +101,7 @@ function flush(): Promise<void> {
   });
 }
 
-Deno.test('islandEffect() — lifecycle', async (t) => {
+Deno.test('islandEffect() - lifecycle', async (t) => {
   installMocks();
 
   await t.step('runs effect callback initially', () => {
@@ -151,7 +151,7 @@ Deno.test('islandEffect() — lifecycle', async (t) => {
     parent.removeChild(host);
     assertEquals(host.isConnected, false);
 
-    // Change signal — effect should NOT re-run (auto-disposed)
+    // Change signal - effect should NOT re-run (auto-disposed)
     s.value = 1;
     await flush();
     assertEquals(count, 1);

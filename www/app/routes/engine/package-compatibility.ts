@@ -1,31 +1,31 @@
 export const meta = { section: 'Compatibility', label: 'Package Compatibility', order: 10 };
 
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
+import { filterEngineNav } from '../../utils/nav-filter.ts';
+import { DsdElement } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 const baseStyle = pageStyles;
 
-export class PackageCompatibilityGuidePage extends LitElement {
+export class PackageCompatibilityGuidePage extends DsdElement {
   declare locale?: string;
 
   static override styles = [baseStyle];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
+    return `
       <less-layout
-        .navItems="${filterEngineNav(navSections)}"
-        .headerNav="${headerNav}"
+        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/package-compatibility"
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
+        locale="${this._getLocale('zh')}"
+        locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">
           <h1>第三方包兼容性</h1>
@@ -83,7 +83,7 @@ export class PackageCompatibilityGuidePage extends LitElement {
             在 Vite 插件的 <code>buildStart()</code> 阶段，LessJS 会自动扫描
             <code>node_modules</code> 下的所有包，寻找 <code>custom-elements.json</code>：
           </p>
-          <less-code-block><pre><code>// 伪代码 — 实际实现在 route-scanner.ts
+          <less-code-block><pre><code>// 伪代码 - 实际实现在 route-scanner.ts
 for (const pkg of node_modules) {
   const cemPath = join(pkg, 'custom-elements.json');
   if (exists(cemPath)) {
@@ -95,10 +95,10 @@ for (const pkg of node_modules) {
 
           <h3>特点</h3>
           <ul>
-            <li><strong>不执行包代码</strong> — 只读 JSON，安全可靠</li>
-            <li><strong>支持 scoped 包</strong> — 正确处理 <code>@org/pkg</code> 模式</li>
-            <li><strong>失败不阻塞</strong> — 某个包 CEM 损坏不会导致构建失败</li>
-            <li><strong>零配置</strong> — 自动运行，不需要手动声明</li>
+            <li><strong>不执行包代码</strong> - 只读 JSON，安全可靠</li>
+            <li><strong>支持 scoped 包</strong> - 正确处理 <code>@org/pkg</code> 模式</li>
+            <li><strong>失败不阻塞</strong> - 某个包 CEM 损坏不会导致构建失败</li>
+            <li><strong>零配置</strong> - 自动运行，不需要手动声明</li>
           </ul>
 
           <h2>dsd-report 中的兼容性报告</h2>
@@ -128,7 +128,7 @@ for (const pkg of node_modules) {
             虽然 v0.18.0 的检测能力已经就绪，但当前 www 示例站点使用的第三方包
             <code>@shoelace-style/shoelace</code> 和 <code>media-chrome</code>
             <strong>都没有发布</strong> <code>custom-elements.json</code>。
-            因此自动检测在它们上不会返回结果——它们仍然依赖
+            因此自动检测在它们上不会返回结果--它们仍然依赖
             <code>vite.config.ts</code> 中 <code>packageIslands</code> 的显式声明。
           </p>
 
@@ -167,14 +167,14 @@ for (const pkg of node_modules) {
 
           <h2>路线图展望</h2>
           <ul class="compact-list">
-            <li><strong>v0.18.1</strong>: <code>less validate-manifest</code> CLI — 安装前手动验证</li>
-            <li><strong>v0.18.2</strong>: <code>less add</code> — 一键安装 + 配置第三方包</li>
-            <li><strong>v0.18.3</strong>: DOM 模拟 — 实验性尝试渲染 client-only 组件</li>
+            <li><strong>v0.18.1</strong>: <code>less validate-manifest</code> CLI - 安装前手动验证</li>
+            <li><strong>v0.18.2</strong>: <code>less add</code> - 一键安装 + 配置第三方包</li>
+            <li><strong>v0.18.3</strong>: DOM 模拟 - 实验性尝试渲染 client-only 组件</li>
           </ul>
 
           <nav class="nav-row">
             <a class="nav-link" href="/engine/architecture">← Architecture</a>
-            <a class="nav-link" href="/engine/standards-registry">Standards &amp; Registry →</a>
+            <a class="nav-link" href="/engine/standards-registry">Standards &amp; Registry -></a>
           </nav>
         </div>
       </less-layout>
@@ -182,19 +182,19 @@ for (const pkg of node_modules) {
   }
 
   private _renderEn() {
-    return html`
+    return `
       <less-layout
-        .navItems="${filterEngineNav(navSections)}"
-        .headerNav="${headerNav}"
+        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/en/engine/package-compatibility"
-        locale="${this.locale || 'en'}"
-        .locales="${['en', 'zh']}"
+        locale="${this._getLocale('en')}"
+        locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">
           <h1>Package Compatibility</h1>
           <p class="subtitle">
             Introduced in v0.18.0, the Universal WC Engine enables LessJS to automatically detect
-            and classify third-party Web Component packages — deciding safely which ones can SSR
+            and classify third-party Web Component packages - deciding safely which ones can SSR
             and which must stay client-only.
           </p>
 
@@ -202,7 +202,7 @@ for (const pkg of node_modules) {
           <p>
             Third-party Web Components come from different ecosystems. Some use Lit, some use
             vanilla classes, some are browser-only with real-DOM dependencies. LessJS no longer
-            assumes every package is SSR-safe — it reads their <code>custom-elements.json</code>
+            assumes every package is SSR-safe - it reads their <code>custom-elements.json</code>
             manifest and makes informed decisions.
           </p>
           <h3>Reality check: CEM adoption is still low</h3>
@@ -251,7 +251,7 @@ for (const pkg of node_modules) {
             During the Vite plugin's <code>buildStart()</code> phase, LessJS automatically scans
             <code>node_modules</code> for <code>custom-elements.json</code> files:
           </p>
-          <less-code-block><pre><code>// Pseudocode — actual implementation in route-scanner.ts
+          <less-code-block><pre><code>// Pseudocode - actual implementation in route-scanner.ts
 for (const pkg of node_modules) {
   const cemPath = join(pkg, 'custom-elements.json');
   if (exists(cemPath)) {
@@ -263,10 +263,10 @@ for (const pkg of node_modules) {
 
           <h3>Key properties</h3>
           <ul>
-            <li><strong>No code execution</strong> — reads JSON only, safe</li>
-            <li><strong>Scoped package support</strong> — handles <code>@org/pkg</code> patterns</li>
-            <li><strong>Non-fatal</strong> — a corrupted CEM won't break the build</li>
-            <li><strong>Zero-config</strong> — automatic, no manual declarations needed</li>
+            <li><strong>No code execution</strong> - reads JSON only, safe</li>
+            <li><strong>Scoped package support</strong> - handles <code>@org/pkg</code> patterns</li>
+            <li><strong>Non-fatal</strong> - a corrupted CEM won't break the build</li>
+            <li><strong>Zero-config</strong> - automatic, no manual declarations needed</li>
           </ul>
 
           <h2>Compatibility Report in dsd-report.json</h2>
@@ -294,8 +294,8 @@ for (const pkg of node_modules) {
 
           <h2>Current Site Results</h2>
           <p>
-            Although v0.18.0 detection is live, the third-party packages used on this site —
-            <code>@shoelace-style/shoelace</code> and <code>media-chrome</code> —
+            Although v0.18.0 detection is live, the third-party packages used on this site -
+            <code>@shoelace-style/shoelace</code> and <code>media-chrome</code> -
             <strong>do not ship</strong> <code>custom-elements.json</code>. So auto-detection
             returns no results for them. They continue to rely on explicit
             <code>packageIslands</code> declarations in <code>vite.config.ts</code>.
@@ -336,14 +336,14 @@ for (const pkg of node_modules) {
 
           <h2>Roadmap</h2>
           <ul class="compact-list">
-            <li><strong>v0.18.1</strong>: <code>less validate-manifest</code> CLI — pre-install validation</li>
-            <li><strong>v0.18.2</strong>: <code>less add</code> — one-click install and configure</li>
-            <li><strong>v0.18.3</strong>: DOM simulation — experimental client-only component rendering</li>
+            <li><strong>v0.18.1</strong>: <code>less validate-manifest</code> CLI - pre-install validation</li>
+            <li><strong>v0.18.2</strong>: <code>less add</code> - one-click install and configure</li>
+            <li><strong>v0.18.3</strong>: DOM simulation - experimental client-only component rendering</li>
           </ul>
 
           <nav class="nav-row">
             <a class="nav-link" href="/engine/architecture">← Architecture</a>
-            <a class="nav-link" href="/engine/standards-registry">Standards &amp; Registry →</a>
+            <a class="nav-link" href="/engine/standards-registry">Standards &amp; Registry -></a>
           </nav>
         </div>
       </less-layout>

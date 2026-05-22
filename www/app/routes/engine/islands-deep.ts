@@ -1,36 +1,43 @@
 export const meta = { section: 'Principles', label: 'Island Deep Dive', order: 50 };
-import { navSections, headerNav } from 'virtual:less-nav';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { css, html, LitElement } from 'lit';
-import { pageStyles } from '../../components/page-styles.js';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class IslandsDeepGuidePage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
-      .layer-card { padding: 1.25rem 1.5rem; margin: 1rem 0; border-left: 2px solid var(--less-border-hover); background: var(--less-bg-surface); border-radius: 0 3px 3px 0; }
-      .layer-card .layer-tag { font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--less-text-muted); margin-bottom: 0.25rem; }
+const routeSheet = new StyleSheet();
+
+routeSheet.replaceSync(`
+      .layer-card { padding: 1.25rem 1.5rem; margin: 1rem 0; border-left: 2px solid var(--border-hover); background: var(--bg-surface); border-radius: 0 3px 3px 0; }
+      .layer-card .layer-tag { font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.25rem; }
       .layer-card h3 { margin: 0 0 0.5rem; }
       .strategy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0 1.5rem; }
-      .strategy-item { padding: 1rem 1.25rem; border: 0.5px solid var(--less-border); border-radius: 4px; background: var(--less-bg-surface); }
-      .strategy-item .strat-name { font-weight: 500; font-size: 0.875rem; color: var(--less-text-primary); margin-bottom: 0.25rem; }
-      .strategy-item .strat-name code { font-size: 0.75rem; background: var(--less-code-bg); padding: 0.125rem 0.375rem; border-radius: 3px; }
+      .strategy-item { padding: 1rem 1.25rem; border: 0.5px solid var(--border); border-radius: 4px; background: var(--bg-surface); }
+      .strategy-item .strat-name { font-weight: 500; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 0.25rem; }
+      .strategy-item .strat-name code { font-size: 0.75rem; background: var(--bg-code); padding: 0.125rem 0.375rem; border-radius: 3px; }
       @media (max-width: 720px) { .strategy-grid { grid-template-columns: 1fr; } }
-    `,
-  ];
-  override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
+    `);
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterEngineNav(navSections)}" .headerNav="${headerNav}" current-path="/engine/islands-deep"><div class="container">
+export class IslandsDeepGuidePage extends DsdElement {
+  static override styles = [routeSheet];
+  override render() {
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
+  }
+
+  private _renderZh() {
+    return `<less-layout locale="${this._getLocale('zh')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/engine/islands-deep"><div class="container">
     <h1>Island 深度指南</h1>
     <p class="subtitle">Island 是 LessJS 中唯一允许的客户端 JavaScript 单元。本页深入讲解 Island 的三层架构、升级策略、声明式事件绑定和数据传递机制。</p>
     <h2>Island 架构原理</h2>
-    <p>LessJS 的 Island 是对 Custom Element Upgrade 机制的诚实利用。浏览器解析 HTML 时看到 <span class="inline-code">&lt;my-counter&gt;</span>，稍后加载模块调用 <span class="inline-code">customElements.define()</span>，已有元素被升级——这就是 Island 的全部原理。关于 DSD 渲染模型和为什么选择 DSD-first，参见 <a href="/engine/dsd">DSD 渲染架构</a>。</p>
+    <p>LessJS 的 Island 是对 Custom Element Upgrade 机制的诚实利用。浏览器解析 HTML 时看到 <span class="inline-code">&lt;my-counter&gt;</span>，稍后加载模块调用 <span class="inline-code">customElements.define()</span>，已有元素被升级--这就是 Island 的全部原理。关于 DSD 渲染模型和为什么选择 DSD-first，参见 <a href="/engine/dsd">DSD 渲染架构</a>。</p>
     <h2>三层 Island 架构</h2>
-    <div class="layer-card"><div class="layer-tag">Layer 1 — dsd-static</div><h3>无 JS，纯 DSD</h3><p>导航栏、文章内容、页脚等纯展示组件。SSG 输出完整 DSD HTML，客户端不加载任何 JavaScript。组件即使永远不会被 customElements.define() 升级，内容也始终可见且样式完整。</p></div>
-    <div class="layer-card"><div class="layer-tag">Layer 2 — dsd-interactive</div><h3>DSD + 事件绑定</h3><p>需要交互但状态简单的组件。SSR 输出完整 DSD（首屏可见），客户端加载模块后检测已有 shadow root，跳过 render()，只绑定声明的事件处理器。</p></div>
-    <div class="layer-card"><div class="layer-tag">Layer 3 — pure-island</div><h3>框架完全拥有 Shadow Root</h3><p>需要完整框架响应性的组件：本地状态、定时器、轮询、WebSocket。SSR 只输出标签和 data-ssr-props，不输出 DSD 模板。客户端框架创建 shadow root 并完全控制渲染。</p></div>
+    <div class="layer-card"><div class="layer-tag">Layer 1 - dsd-static</div><h3>无 JS，纯 DSD</h3><p>导航栏、文章内容、页脚等纯展示组件。SSG 输出完整 DSD HTML，客户端不加载任何 JavaScript。组件即使永远不会被 customElements.define() 升级，内容也始终可见且样式完整。</p></div>
+    <div class="layer-card"><div class="layer-tag">Layer 2 - dsd-interactive</div><h3>DSD + 事件绑定</h3><p>需要交互但状态简单的组件。SSR 输出完整 DSD（首屏可见），客户端加载模块后检测已有 shadow root，跳过 render()，只绑定声明的事件处理器。</p></div>
+    <div class="layer-card"><div class="layer-tag">Layer 3 - pure-island</div><h3>框架完全拥有 Shadow Root</h3><p>需要完整框架响应性的组件：本地状态、定时器、轮询、WebSocket。SSR 只输出标签和 data-ssr-props，不输出 DSD 模板。客户端框架创建 shadow root 并完全控制渲染。</p></div>
     <h2>升级策略</h2>
     <p>Island 的 strategy 控制客户端模块何时加载并注册。策略在 island() 调用时声明，构建器通过 island manifest 传递到客户端 entry。</p>
     <div class="strategy-grid">
@@ -47,17 +54,23 @@ export class IslandsDeepGuidePage extends LitElement {
     <h2>最佳实践</h2>
     <p>1. 从 Layer 1 开始。大部分展示性组件永远不需要离开 Layer 1。<br>2. 用 CSS 优先于 JavaScript。hover、focus、响应式布局等 CSS 就能解决。<br>3. 保持 Island 小且独立。多个小 Island 比一个大 Island 更容易理解和优化。<br>4. visible 策略优先于 lazy。对于不在首屏的组件更精确。<br>5. 注意 data-ssr-props 大小。大型数据集应通过 fetch 在客户端获取。<br>6. WithDsdHydration 的 render() 必须检查 _dsdHydrated，否则会导致 DOM 重复渲染。</p>
     <div class="nav-row"><a href="/engine/dsd" class="nav-link">&larr; DSD 渲染架构</a><a href="/guide/rpc" class="nav-link">RPC 远程调用 &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterEngineNav(navSections)}" .headerNav="${headerNav}" current-path="/en/engine/islands-deep"><div class="container">
+  private _renderEn() {
+    return `<less-layout locale="${this._getLocale('en')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/en/engine/islands-deep"><div class="container">
     <h1>Island Deep Dive</h1>
     <p class="subtitle">Islands are the only allowed client-side JavaScript units in LessJS. This page covers the three-layer architecture, upgrade strategies, declarative event binding, and data passing mechanisms.</p>
     <h2>Island Architecture</h2>
     <p>LessJS islands are a straightforward exploitation of the Custom Element Upgrade mechanism. The browser sees <span class="inline-code">&lt;my-counter&gt;</span> during HTML parsing; later the module loads and calls <span class="inline-code">customElements.define()</span>, upgrading the existing element. See <a href="/engine/dsd">DSD Architecture</a> for the rendering model.</p>
     <h2>Three-Layer Island Architecture</h2>
-    <div class="layer-card"><div class="layer-tag">Layer 1 — dsd-static</div><h3>No JS, Pure DSD</h3><p>Purely presentational components: nav, article content, footer. SSG outputs full DSD HTML; the client loads zero JavaScript. Content remains visible and styled even if customElements.define() is never called.</p></div>
-    <div class="layer-card"><div class="layer-tag">Layer 2 — dsd-interactive</div><h3>DSD + Event Binding</h3><p>Components needing simple interactivity. SSR outputs full DSD (visible on first paint); after the client module loads, it detects the existing shadow root, skips render(), and binds only the declared event handlers.</p></div>
-    <div class="layer-card"><div class="layer-tag">Layer 3 — pure-island</div><h3>Framework Owns Shadow Root</h3><p>Components needing full framework reactivity: local state, timers, polling, WebSocket. SSR outputs only the tag and data-ssr-props — no DSD template. The client framework creates the shadow root and controls rendering entirely.</p></div>
+    <div class="layer-card"><div class="layer-tag">Layer 1 - dsd-static</div><h3>No JS, Pure DSD</h3><p>Purely presentational components: nav, article content, footer. SSG outputs full DSD HTML; the client loads zero JavaScript. Content remains visible and styled even if customElements.define() is never called.</p></div>
+    <div class="layer-card"><div class="layer-tag">Layer 2 - dsd-interactive</div><h3>DSD + Event Binding</h3><p>Components needing simple interactivity. SSR outputs full DSD (visible on first paint); after the client module loads, it detects the existing shadow root, skips render(), and binds only the declared event handlers.</p></div>
+    <div class="layer-card"><div class="layer-tag">Layer 3 - pure-island</div><h3>Framework Owns Shadow Root</h3><p>Components needing full framework reactivity: local state, timers, polling, WebSocket. SSR outputs only the tag and data-ssr-props - no DSD template. The client framework creates the shadow root and controls rendering entirely.</p></div>
     <h2>Upgrade Strategies</h2>
     <div class="strategy-grid">
       <div class="strategy-item"><div class="strat-name"><code>eager</code></div><p>Registers immediately after module load. For first-paint interactive components (nav, theme toggle).</p></div>
@@ -73,7 +86,8 @@ export class IslandsDeepGuidePage extends LitElement {
     <h2>Best Practices</h2>
     <p>1. Start with Layer 1. Most presentational components never need to leave Layer 1.<br>2. Prefer CSS over JavaScript. Hover, focus, responsive layouts can be done with CSS alone.<br>3. Keep islands small and independent. Multiple small islands are easier to understand and optimize than one large one.<br>4. Prefer visible over lazy for below-the-fold components.<br>5. Keep data-ssr-props small. Large datasets should be fetched client-side.<br>6. WithDsdHydration render() must check _dsdHydrated to avoid re-rendering the DSD DOM.</p>
     <div class="nav-row"><a href="/engine/dsd" class="nav-link">&larr; DSD Architecture</a><a href="/guide/rpc" class="nav-link">RPC &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 }
 
 customElements.define('page-islands-deep-guide', IslandsDeepGuidePage);

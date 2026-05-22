@@ -6,12 +6,12 @@
  * with a single object that's explicitly passed around.
  *
  * Also replaces the .less/ temp directory as IPC between build phases:
- * - Phase 1 (less:build) writes metadata → ctx fields
- * - Phase 2 (build-client) reads metadata → ctx fields
- * - Phase 3 (build-ssg) reads metadata → ctx fields
- * - Sub-plugins (lessContent, lessI18n) write their data → ctx fields
+ * - Phase 1 (less:build) writes metadata -> ctx fields
+ * - Phase 2 (build-client) reads metadata -> ctx fields
+ * - Phase 3 (build-ssg) reads metadata -> ctx fields
+ * - Sub-plugins (lessContent, lessI18n) write their data -> ctx fields
  *
- * ctx is passed via explicit parameter — no globalThis or module-level discovery.
+ * ctx is passed via explicit parameter - no globalThis or module-level discovery.
  * Use lessjs() from @lessjs/app for the recommended unified entry.
  *
  * Fields are grouped by Phase to improve type safety and maintainability.
@@ -166,7 +166,7 @@ export class PluginMeta implements LessPluginMeta {
 
 // ─── Root context ────────────────────────────────────────────────
 export class LessBuildContext {
-  /** Phase completion tokens — used for compile-time ordering enforcement */
+  /** Phase completion tokens - used for compile-time ordering enforcement */
   readonly _phaseTokens: {
     1: Phase1Token | null;
     2: Phase2Token | null;
@@ -235,7 +235,7 @@ export class LessBuildContext {
     this.phase1.cemClassifications = [];
     this.phase1.buildCompleted = false;
     this.phase1.resolvedConfig = null;
-    // NOTE: userResolveAlias is NOT reset — it's user configuration, not
+    // NOTE: userResolveAlias is NOT reset - it's user configuration, not
     // build state. It's set in config()/configResolved() and must persist
     // through buildStart() for Phase 2 and 3 to use.
     this.phase2.clientEntryCode = '';

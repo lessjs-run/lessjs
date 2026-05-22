@@ -1,17 +1,49 @@
 export const meta = { section: 'Production', label: 'Deployment', order: 50 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class DeploymentPage extends LitElement {
-  static override styles = [pageStyles, css`.platform-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 0.75rem; margin: 1rem 0 1.5rem; } .platform-card { padding: 1rem; border: 0.5px solid var(--less-border); border-radius: 4px; } .platform-card h3 { margin: 0 0 0.4rem; } .platform-card p { margin: 0; font-size: 0.8125rem; }`];
+const routeSheet = new StyleSheet();
+routeSheet.replaceSync(
+  pageStyles + `
 
-  override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
+      .platform-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+        gap: 0.75rem;
+        margin: 1rem 0 1.5rem;
+      }
+      .platform-card {
+        padding: 1rem;
+        border: 0.5px solid var(--border);
+        border-radius: 4px;
+      }
+      .platform-card h3 {
+        margin: 0 0 0.4rem;
+      }
+      .platform-card p {
+        margin: 0;
+        font-size: 0.8125rem;
+      }
+    `,
+);
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/deployment"><div class="container">
+export class DeploymentPage extends DsdElement {
+  static override styles = [routeSheet];
+
+  override render() {
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
+  }
+
+  private _renderZh() {
+    return `<less-layout locale="${this._getLocale('zh')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/guide/deployment"><div class="container">
     <h1>部署</h1>
     <p class="subtitle">LessJS 优先部署静态文件。运行时 API 路由在应用需要动态行为时，通过 serverless 或 edge adapter 单独部署。</p>
     <h2>Build Once</h2>
@@ -37,9 +69,15 @@ export class DeploymentPage extends LitElement {
     <h2>Deployment Checklist</h2>
     <ul><li>在本地或 CI 中运行 deno task build。</li><li>发布前预览 dist/。</li><li>确认部署在子目录下的 base path。</li><li>确认所选托管路径下 CSP/安全头仍然有效。</li><li>如果 island 调用运行时端点，单独部署 API 路由。</li></ul>
     <div class="nav-row"><a href="/guide/testing" class="nav-link">&larr; 测试</a><a href="/roadmap" class="nav-link">开发计划 &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/deployment"><div class="container">
+  private _renderEn() {
+    return `<less-layout locale="${this._getLocale('en')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/en/guide/deployment"><div class="container">
     <h1>Deployment</h1>
     <p class="subtitle">LessJS prioritizes static file deployment. Runtime API routes are deployed separately via serverless or edge adapters when the app needs dynamic behavior.</p>
     <h2>Build Once</h2>
@@ -60,7 +98,8 @@ export class DeploymentPage extends LitElement {
     <h2>Deployment Checklist</h2>
     <ul><li>Run <span class="inline-code">deno task build</span> locally or in CI.</li><li>Preview <span class="inline-code">dist/</span> before publishing.</li><li>Confirm base path when deploying to a sub-directory.</li><li>Verify CSP/security headers still apply at the chosen hosting path.</li><li>If islands call runtime endpoints, deploy API routes separately.</li></ul>
     <div class="nav-row"><a href="/guide/testing" class="nav-link">&larr; Testing</a><a href="/roadmap" class="nav-link">Roadmap &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 }
 
 customElements.define('page-deployment', DeploymentPage);

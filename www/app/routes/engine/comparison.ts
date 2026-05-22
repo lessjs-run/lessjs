@@ -4,23 +4,21 @@
 
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { css, html, LitElement } from 'lit';
-import { pageStyles } from '../../components/page-styles.js';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 
 export const tagName = 'comparison-page';
 
 export const meta = { section: 'Principles', label: 'Comparison', order: 20 };
 
-export default class ComparisonPage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+
+routeSheet.replaceSync(`
       .table-wrap {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         margin: 1.5rem 0 2.5rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 8px;
       }
 
@@ -38,19 +36,19 @@ export default class ComparisonPage extends LitElement {
       }
 
       th {
-        background: var(--less-bg-surface, #f8f8f8);
+        background: var(--bg-surface, #f8f8f8);
         font-weight: 500;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         text-align: left;
         padding: 0.75rem 1rem;
-        border-bottom: 0.5px solid var(--less-border);
+        border-bottom: 0.5px solid var(--border);
         white-space: nowrap;
       }
 
       td {
         padding: 0.625rem 1rem;
-        border-bottom: 0.5px solid var(--less-border);
-        color: var(--less-text-secondary);
+        border-bottom: 0.5px solid var(--border);
+        color: var(--text-secondary);
         line-height: 1.5;
       }
 
@@ -65,7 +63,7 @@ export default class ComparisonPage extends LitElement {
       }
 
       tbody tr:hover {
-        background: var(--less-bg-surface, #f5f5f5);
+        background: var(--bg-surface, #f5f5f5);
       }
 
       tbody tr:last-child td {
@@ -74,7 +72,7 @@ export default class ComparisonPage extends LitElement {
 
       td:first-child {
         font-weight: 500;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         white-space: nowrap;
       }
 
@@ -83,7 +81,7 @@ export default class ComparisonPage extends LitElement {
       }
 
       .tag-yes {
-        color: var(--less-brand, #534AB7);
+        color: var(--brand, #534AB7);
         font-weight: 500;
       }
 
@@ -92,29 +90,29 @@ export default class ComparisonPage extends LitElement {
       }
 
       .tag-no {
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
       }
 
       .tag-partial {
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         font-style: italic;
       }
 
       /* LessJS column highlight */
       th.lessjs-col {
-        color: var(--less-brand, #534AB7);
+        color: var(--brand, #534AB7);
         font-weight: 600;
       }
 
       td.lessjs-col {
-        background: var(--less-brand-subtle, rgba(83,74,183,0.04));
+        background: var(--brand-subtle, rgba(83,74,183,0.04));
         font-weight: 500;
       }
 
       /* Prose lists */
       ul {
         padding-left: 1.25rem;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
         line-height: 1.7;
         font-size: 0.875rem;
       }
@@ -122,25 +120,28 @@ export default class ComparisonPage extends LitElement {
         margin: 0.5rem 0;
       }
       li strong {
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         font-weight: 500;
       }
-    `,
-  ];
+    `);
+
+export default class ComparisonPage extends DsdElement {
+  static override styles = [routeSheet];
 
   override render() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${filterEngineNav(navSections)}"
-        .headerNav="${headerNav}"
+        locale="${this._getLocale('zh')}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/comparison"
       >
         <div class="container">
           <h1>LessJS vs Alternatives</h1>
           <p class="subtitle">
-            LessJS = 全栈框架 + 通用 WC 渲染引擎 + Registry Hub。与同级框架的对比基于三支柱视角。
+            LessJS 当前是 DSD-first Web Components 应用框架。与同级框架的对比基于 DSD/WC 引擎、
+            渐进 island 和 Registry evidence pipeline。
           </p>
 
           <div class="table-wrap">
@@ -157,7 +158,7 @@ export default class ComparisonPage extends LitElement {
               <tbody>
                 <tr>
                   <td>定位</td>
-                  <td class="lessjs-col">全栈 + WC引擎 + Hub</td>
+                  <td class="lessjs-col">DSD-first WC 应用框架</td>
                   <td>全栈（多框架）</td>
                   <td>全栈（Preact）</td>
                   <td>全栈（React）</td>
@@ -192,7 +193,7 @@ export default class ComparisonPage extends LitElement {
                 </tr>
                 <tr>
                   <td>Rendering</td>
-                  <td class="lessjs-col">SSG + DSD + Islands (ISR planned)</td>
+                  <td class="lessjs-col">SSG + DSD + DsdElement + Islands (ISR next)</td>
                   <td>SSG + SSR + Islands</td>
                   <td>SSR + Islands</td>
                   <td>SSR + RSC + SSG</td>
@@ -245,16 +246,16 @@ export default class ComparisonPage extends LitElement {
 
           <h2>LessJS 三支柱差异化</h2>
           <ul>
-            <li><strong>支柱 2 独有价值</strong> — DSD 零 runtime 首屏。Astro 不做 WC 原生，Fresh 不做 DSD，Next 必须加载 React runtime。浏览器原生能力，无法通过工程优化追平</li>
-            <li><strong>支柱 2+3 组合</strong> — 渲染引擎 + Registry 一体。安装即渲染，验证即分层</li>
-            <li><strong>支柱 1 差异</strong> — WC 原生全栈。不是"全栈框架 + WC 容忍"，而是"WC 是一等公民"</li>
+            <li><strong>支柱 2 独有价值</strong> - DSD 零 runtime 首屏。Astro 不做 WC 原生，Fresh 不做 DSD，Next 必须加载 React runtime。浏览器原生能力，无法通过工程优化追平</li>
+            <li><strong>支柱 2+3 组合</strong> - 渲染引擎 + Registry 一体。安装即渲染，验证即分层</li>
+            <li><strong>支柱 1 差异</strong> - WC 原生全栈。不是"全栈框架 + WC 容忍"，而是"WC 是一等公民"</li>
           </ul>
 
           <h2>LessJS 不优化的方向</h2>
           <ul>
-            <li><strong>大而全的元框架</strong> — LessJS 三支柱各有独立价值，不是什么都做的平台</li>
-            <li><strong>npm 生态优先</strong> — JSR-only 包分发对 npm 用户需要额外配置</li>
-            <li><strong>旧浏览器兼容</strong> — 需要 DSD 支持的浏览器（Chrome 90+、Safari 16.4+、Firefox 123+）</li>
+            <li><strong>大而全的元框架</strong> - LessJS 三支柱各有独立价值，不是什么都做的平台</li>
+            <li><strong>npm 生态优先</strong> - JSR-only 包分发对 npm 用户需要额外配置</li>
+            <li><strong>旧浏览器兼容</strong> - 需要 DSD 支持的浏览器（Chrome 90+、Safari 16.4+、Firefox 123+）</li>
           </ul>
         </div>
       </less-layout>

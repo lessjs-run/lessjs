@@ -1,6 +1,6 @@
 # @lessjs/rpc
 
-Lit ReactiveController 风格的 RPC — 基于 Fetch API + AbortController，零框架依赖。
+Lit ReactiveController 风格的 RPC - 基于 Fetch API + AbortController，零框架依赖。
 
 ## 安装
 

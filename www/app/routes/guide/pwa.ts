@@ -1,19 +1,26 @@
 /**
- * PWA Support — via less() plugin (from @lessjs/adapter-vite)
+ * PWA Support - via less() plugin (from @lessjs/adapter-vite)
  */
 export const meta = { section: 'Production', label: 'PWA Support', order: 60 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
+import { DsdElement } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class PwaPage extends LitElement {
+export class PwaPage extends DsdElement {
   static override styles = [pageStyles];
-  override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
+  override render() {
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
+  }
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/pwa"><div class="container">
+  private _renderZh() {
+    return `<less-layout locale="${this._getLocale('zh')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/guide/pwa"><div class="container">
     <h1>PWA 支持</h1>
     <p class="subtitle">LessJS 生成纯静态 HTML + Declarative Shadow DOM，天然是 PWA 的理想基座：页面预渲染、资源版本化哈希、API routes 可独立部署到 serverless 平台。</p>
     <h2>快速启用</h2>
@@ -26,9 +33,15 @@ export class PwaPage extends LitElement {
     <h2>与 Islands 的配合</h2>
     <p>PWA 和 Islands 架构天然互补：Layer 1 DSD 组件离线直接可用，Layer 2 JS chunk 被 CacheFirst 缓存，Layer 3 框架代码已缓存。API routes 走 NetworkFirst。</p>
     <div class="nav-row"><a href="/guide/deployment" class="nav-link">&larr; Deployment</a><a href="/guide/content-system" class="nav-link">Content System &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/pwa"><div class="container">
+  private _renderEn() {
+    return `<less-layout locale="${this._getLocale('en')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/en/guide/pwa"><div class="container">
     <h1>PWA Support</h1>
     <p class="subtitle">LessJS generates static HTML + Declarative Shadow DOM, making it a natural PWA foundation: pages are pre-rendered, assets are version-hashed, and API routes deploy independently to serverless platforms.</p>
     <h2>Quick Setup</h2>
@@ -41,7 +54,8 @@ export class PwaPage extends LitElement {
     <h2>Integration With Islands</h2>
     <p>PWA and Islands architecture complement each other: Layer 1 DSD components work offline immediately, Layer 2 JS chunks are cached via CacheFirst, Layer 3 framework code is cached. API routes use NetworkFirst for fresh data.</p>
     <div class="nav-row"><a href="/guide/deployment" class="nav-link">&larr; Deployment</a><a href="/guide/content-system" class="nav-link">Content System &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 }
 
 customElements.define('page-pwa', PwaPage);

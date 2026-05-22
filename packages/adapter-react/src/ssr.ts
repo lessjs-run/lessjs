@@ -13,7 +13,7 @@
  * Why renderToStaticMarkup() instead of renderToString()?
  *   renderToString() adds data-reactroot attributes for client hydration.
  *   Since LessJS uses DSD (Declarative Shadow DOM) for SSR, we don't need
- *   React's hydration markers — the browser handles DOM from the template.
+ *   React's hydration markers - the browser handles DOM from the template.
  *   renderToStaticMarkup() produces clean HTML without extra attributes.
  *
  * @module @lessjs/adapter-react/ssr
@@ -65,7 +65,7 @@ async function loadRenderToStaticMarkup(): Promise<
       return _renderToStaticMarkup;
     }
   } catch {
-    log.warn('react-dom/server not available — React SSR disabled');
+    log.warn('react-dom/server not available - React SSR disabled');
   }
   return undefined;
 }
@@ -126,7 +126,7 @@ let _installed = false;
  *   import { installReactAdapter } from '@lessjs/adapter-react';
  *   installReactAdapter();
  *
- * Idempotent — safe to call multiple times.
+ * Idempotent - safe to call multiple times.
  */
 export function installReactAdapter(): void {
   if (_installed) return;

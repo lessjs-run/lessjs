@@ -1,34 +1,34 @@
 export const meta = { section: 'Quick Start', label: 'Framework Positioning', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
+import { DsdElement } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-callout';
 
-export class PositioningPage extends LitElement {
+export class PositioningPage extends DsdElement {
   declare locale?: string;
 
   static override styles = [pageStyles];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
+    return `
       <less-layout
-        .navItems="${filterFrameworkNav(navSections)}"
-        .headerNav="${headerNav}"
+        nav-items='${JSON.stringify(filterFrameworkNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/guide/positioning"
         locale="zh"
-        .locales="${['en', 'zh']}"
+        locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">
           <h1>框架定位</h1>
           <p class="subtitle">
-            LessJS 是<strong>全栈框架 + 通用 WC 渲染引擎 + Registry Hub</strong>。
-            三个支柱各自独立有价值，组合形成独特定位。
+            LessJS 当前最准确的定位是 <strong>DSD-first Web Components 应用框架</strong>：
+            以 DSD/WC 渲染引擎为中心，向应用框架和 Registry Hub 延伸。
           </p>
 
           <h2>三支柱架构</h2>
@@ -37,7 +37,7 @@ export class PositioningPage extends LitElement {
             <div class="num">支柱 1</div>
             <h3>全栈框架</h3>
             <p>
-              文件约定路由 + Hono API Route + Serverless 部署。SSG/ISR/SSR 同一套渲染引擎——<strong>不是 SSG 框架</strong>，
+              文件约定路由 + Hono API Route + Serverless 部署。SSG/ISR/SSR 同一套渲染引擎--<strong>不是 SSG 框架</strong>，
               SSG 只是渲染引擎的当前使用模式。renderDSD() 是渲染时机无关的，build-time / ISR / request-time 都用同一套引擎。
             </p>
           </div>
@@ -46,8 +46,8 @@ export class PositioningPage extends LitElement {
             <div class="num">支柱 2</div>
             <h3>通用 WC 渲染引擎</h3>
             <p>
-              Declarative Shadow DOM 零 JS 首屏。Lit/React/Vanilla 多框架适配器在同一页面共存。
-              第三方 WC 4 级兼容性分类 + 验证。Hydration 策略（client:load/idle/visible/only）计划中。
+              Declarative Shadow DOM 零 JS 首屏。v0.20.0 已引入 DsdElement、StyleSheet 和 CSS Parts。
+              第三方 WC 通过兼容性分类得到 SSR、client-only 或拒绝构建的确定结果。
             </p>
           </div>
 
@@ -56,7 +56,7 @@ export class PositioningPage extends LitElement {
             <h3>Registry Hub</h3>
             <p>
               Web Component 发现、兼容性验证、一键安装。Playwright 渲染真实组件预览。
-              安装即渲染，验证即分层。less add 一键安装 + 兼容性报告。
+              当前是 early access evidence pipeline，不是成熟 marketplace。
             </p>
           </div>
 
@@ -75,7 +75,7 @@ export class PositioningPage extends LitElement {
             <div class="num">Principle 02</div>
             <h3>Rendering-Timing-Agnostic</h3>
             <p>
-              renderDSD() 不关心什么时候被调用——build-time (SSG)、cache-expiry-time (ISR)、
+              renderDSD() 不关心什么时候被调用--build-time (SSG)、cache-expiry-time (ISR)、
               request-time (SSR) 用同一套引擎。SSG 是当前默认模式，不是框架身份。
             </p>
           </div>
@@ -142,11 +142,11 @@ export class PositioningPage extends LitElement {
           <h2>正在建设的能力</h2>
           <p>以下能力已规划但尚未完成，不应视为成熟卖点：</p>
           <ul>
-            <li>Hydration 策略（client:load/idle/visible/only）— 当前只有 ssr:true/false</li>
-            <li>ISR 缓存层 — stale-while-revalidate</li>
-            <li>Vue adapter — 当前支持 Lit/React/Vanilla</li>
-            <li>Supabase 集成 — Auth + DB + Realtime</li>
-            <li>公开 Hub 服务 — 当前为本地 MVP</li>
+            <li>Hydration 策略（client:load/idle/visible/only）- 当前只有 ssr:true/false</li>
+            <li>ISR 缓存层 - stale-while-revalidate</li>
+            <li>Vue adapter - 当前支持 Lit/React/Vanilla</li>
+            <li>Supabase 集成 - Auth + DB + Realtime</li>
+            <li>公开 Hub 服务 - 当前为本地 MVP</li>
           </ul>
 
           <h2>工程取舍</h2>
@@ -211,9 +211,9 @@ export class PositioningPage extends LitElement {
           </table>
 
           <less-callout type="info" label="为什么选 WC 不选 React？">
-            三个答案：(1) 样式隔离 — Shadow DOM 是浏览器机制不是约定；
-            (2) 跨框架 — Shoelace/Material Web 写一次，React/Vue/Angular/Svelte 都能用；
-            (3) 零 JS 首屏 — DSD 是浏览器原生 HTML，不需要任何 runtime。
+            三个答案：(1) 样式隔离 - Shadow DOM 是浏览器机制不是约定；
+            (2) 跨框架 - Shoelace/Material Web 写一次，React/Vue/Angular/Svelte 都能用；
+            (3) 零 JS 首屏 - DSD 是浏览器原生 HTML，不需要任何 runtime。
           </less-callout>
 
           <div class="nav-row">
@@ -226,19 +226,19 @@ export class PositioningPage extends LitElement {
   }
 
   private _renderEn() {
-    return html`
+    return `
       <less-layout
-        .navItems="${filterFrameworkNav(navSections)}"
-        .headerNav="${headerNav}"
+        nav-items='${JSON.stringify(filterFrameworkNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/en/guide/positioning"
         locale="en"
-        .locales="${['en', 'zh']}"
+        locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">
           <h1>Framework Positioning</h1>
           <p class="subtitle">
-            LessJS is a <strong>full-stack framework + universal WC rendering engine + Registry Hub</strong>.
-            Three pillars, each independently valuable, combined into a unique positioning.
+            LessJS is best described today as a <strong>DSD-first Web Components application framework</strong>:
+            a DSD/WC rendering engine that extends into an app framework and Registry Hub.
           </p>
 
           <h2>Three-Pillar Architecture</h2>
@@ -247,8 +247,8 @@ export class PositioningPage extends LitElement {
             <div class="num">Pillar 1</div>
             <h3>Full-Stack Framework</h3>
             <p>
-              File-convention routing + Hono API routes + serverless deployment. SSG/ISR/SSR — same rendering engine.
-              <strong>Not an SSG framework</strong> — SSG is one mode of the rendering engine, not the framework's identity.
+              File-convention routing + Hono API routes + serverless deployment. SSG/ISR/SSR - same rendering engine.
+              <strong>Not an SSG framework</strong> - SSG is one mode of the rendering engine, not the framework's identity.
               renderDSD() is rendering-timing-agnostic: build-time, ISR, or request-time, same engine.
             </p>
           </div>
@@ -257,8 +257,8 @@ export class PositioningPage extends LitElement {
             <div class="num">Pillar 2</div>
             <h3>Universal WC Rendering Engine</h3>
             <p>
-              Declarative Shadow DOM zero-JS first paint. Lit/React/Vanilla multi-framework adapters coexist on the same page.
-              Third-party WC 4-tier compatibility classification + validation. Hydration strategies (client:load/idle/visible/only) planned.
+              Declarative Shadow DOM zero-JS first paint. v0.20.0 adds DsdElement, StyleSheet, and CSS Parts.
+              Third-party WCs get deterministic SSR, client-only, or rejected outcomes through compatibility classification.
             </p>
           </div>
 
@@ -267,7 +267,7 @@ export class PositioningPage extends LitElement {
             <h3>Registry Hub</h3>
             <p>
               Web Component discovery, compatibility validation, one-click install. Playwright-rendered real component previews.
-              Install-to-render, validate-to-tier. less add one-click install + compatibility reports.
+              This is an early-access evidence pipeline, not a mature marketplace yet.
             </p>
           </div>
 
@@ -286,7 +286,7 @@ export class PositioningPage extends LitElement {
             <div class="num">Principle 02</div>
             <h3>Rendering-Timing-Agnostic</h3>
             <p>
-              renderDSD() doesn't care when it's called — build-time (SSG), cache-expiry-time (ISR),
+              renderDSD() doesn't care when it's called - build-time (SSG), cache-expiry-time (ISR),
               request-time (SSR), same engine. SSG is the current default mode, not the framework's identity.
             </p>
           </div>
@@ -371,11 +371,11 @@ export class PositioningPage extends LitElement {
             The following capabilities are planned but not yet complete. They should not be described as mature selling points:
           </p>
           <ul>
-            <li>Hydration strategies (client:load/idle/visible/only) — currently only ssr:true/false</li>
-            <li>ISR cache layer — stale-while-revalidate</li>
-            <li>Vue adapter — currently supports Lit/React/Vanilla</li>
-            <li>Supabase integration — Auth + DB + Realtime</li>
-            <li>Public Hub service — currently a local MVP</li>
+            <li>Hydration strategies (client:load/idle/visible/only) - currently only ssr:true/false</li>
+            <li>ISR cache layer - stale-while-revalidate</li>
+            <li>Vue adapter - currently supports Lit/React/Vanilla</li>
+            <li>Supabase integration - Auth + DB + Realtime</li>
+            <li>Public Hub service - currently a local MVP</li>
           </ul>
 
           <h2>Engineering Trade-Offs</h2>
@@ -440,9 +440,9 @@ export class PositioningPage extends LitElement {
           </table>
 
           <less-callout type="info" label="Why WC over React?">
-            Three answers: (1) Style isolation — Shadow DOM is a browser mechanism, not a convention;
-            (2) Cross-framework — Shoelace/Material Web write once, works with React/Vue/Angular/Svelte;
-            (3) Zero-JS first paint — DSD is native browser HTML, requires no runtime.
+            Three answers: (1) Style isolation - Shadow DOM is a browser mechanism, not a convention;
+            (2) Cross-framework - Shoelace/Material Web write once, works with React/Vue/Angular/Svelte;
+            (3) Zero-JS first paint - DSD is native browser HTML, requires no runtime.
           </less-callout>
 
           <div class="nav-row">

@@ -1,21 +1,25 @@
 export const meta = { section: 'Core', label: 'Routing', order: 10 };
-import { navSections, headerNav } from 'virtual:less-nav';
-import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { html, LitElement } from 'lit';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
+import { DsdElement } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class RoutingGuidePage extends LitElement {
+export class RoutingGuidePage extends DsdElement {
   static override styles = [pageStyles];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/routing">
+    return `
+      <less-layout locale="${this._getLocale('zh')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/guide/routing">
         <div class="container">
           <h1>路由</h1>
           <p class="subtitle">
@@ -49,10 +53,12 @@ export class RoutingGuidePage extends LitElement {
             </tbody>
           </table>
 
-          <less-code-block><pre><code>export class PostPage extends LitElement {
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+
+export class PostPage extends DsdElement {
   slug = '';
   override render() {
-    return html&#96;&lt;article&gt;Post: \${this.slug}&lt;/article&gt;&#96;;
+    return &#96;&lt;article&gt;Post: \${this.slug}&lt;/article&gt;&#96;;
   }
 }</code></pre></less-code-block>
 
@@ -67,11 +73,11 @@ export class RoutingGuidePage extends LitElement {
           </table>
 
           <h2>路由模块契约</h2>
-          <less-code-block><pre><code>import { html, LitElement } from 'lit';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
-export class AboutPage extends LitElement {
+export class AboutPage extends DsdElement {
   override render() {
-    return html&#96;&lt;main&gt;About&lt;/main&gt;&#96;;
+    return &#96;&lt;main&gt;About&lt;/main&gt;&#96;;
   }
 }
 
@@ -80,7 +86,7 @@ export default AboutPage;
 export const tagName = 'page-about';</code></pre></less-code-block>
 
           <h2>当前边界</h2>
-          <p>路由扫描已经可以稳定处理页面、动态片段、renderer、middleware 和 API routes。v0.5.3 已修复根级 <span class="inline-code">_middleware.ts</span> 的挂载范围——现在会正确生成 <span class="inline-code">app.use('/*', ...)</span> 覆盖整个路由树。</p>
+          <p>路由扫描已经可以稳定处理页面、动态片段、renderer、middleware 和 API routes。v0.5.3 已修复根级 <span class="inline-code">_middleware.ts</span> 的挂载范围--现在会正确生成 <span class="inline-code">app.use('/*', ...)</span> 覆盖整个路由树。</p>
 
           <div class="nav-row">
             <a href="/engine/architecture" class="nav-link">&larr; 架构</a>
@@ -92,8 +98,12 @@ export const tagName = 'page-about';</code></pre></less-code-block>
   }
 
   private _renderEn() {
-    return html`
-      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/routing">
+    return `
+      <less-layout locale="${this._getLocale('en')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/en/guide/routing">
         <div class="container">
           <h1>Routing</h1>
           <p class="subtitle">
@@ -127,10 +137,12 @@ export const tagName = 'page-about';</code></pre></less-code-block>
             </tbody>
           </table>
 
-          <less-code-block><pre><code>export class PostPage extends LitElement {
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+
+export class PostPage extends DsdElement {
   slug = '';
   override render() {
-    return html&#96;&lt;article&gt;Post: \${this.slug}&lt;/article&gt;&#96;;
+    return &#96;&lt;article&gt;Post: \${this.slug}&lt;/article&gt;&#96;;
   }
 }</code></pre></less-code-block>
 
@@ -145,11 +157,11 @@ export const tagName = 'page-about';</code></pre></less-code-block>
           </table>
 
           <h2>Route Module Contract</h2>
-          <less-code-block><pre><code>import { html, LitElement } from 'lit';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
-export class AboutPage extends LitElement {
+export class AboutPage extends DsdElement {
   override render() {
-    return html&#96;&lt;main&gt;About&lt;/main&gt;&#96;;
+    return &#96;&lt;main&gt;About&lt;/main&gt;&#96;;
   }
 }
 
@@ -158,7 +170,7 @@ export default AboutPage;
 export const tagName = 'page-about';</code></pre></less-code-block>
 
           <h2>Current Boundaries</h2>
-          <p>Route scanning handles pages, dynamic segments, renderers, middleware, and API routes stably. v0.5.3 fixed root-level <span class="inline-code">_middleware.ts</span> mounting scope — it now correctly generates <span class="inline-code">app.use('/*', ...)</span> covering the entire route tree.</p>
+          <p>Route scanning handles pages, dynamic segments, renderers, middleware, and API routes stably. v0.5.3 fixed root-level <span class="inline-code">_middleware.ts</span> mounting scope - it now correctly generates <span class="inline-code">app.use('/*', ...)</span> covering the entire route tree.</p>
 
           <div class="nav-row">
             <a href="/engine/architecture" class="nav-link">&larr; Architecture</a>

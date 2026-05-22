@@ -94,7 +94,7 @@ Deno.test('SSG report: dsd-report.json is produced after ssgRender', async (t) =
     assertEquals(typeof hs.pureIslandCount, 'number');
   });
 
-  await t.step('report is deterministic — no undefined or null values', () => {
+  await t.step('report is deterministic - no undefined or null values', () => {
     const report = readReport(TEST_OUT_DIR);
     const json = JSON.stringify(report);
     assertStringIncludes(json, '"reportVersion"');
@@ -215,7 +215,7 @@ Deno.test('SSG report: manifestDecisions is present (empty when no ctx)', async 
   }
 
   const bundle = createMockBundle();
-  // No ctx passed → manifestDecisions should be empty array
+  // No ctx passed -> manifestDecisions should be empty array
   await ssgRender(bundle, defaultOptions);
 
   const report = readReport(TEST_OUT_DIR);
@@ -250,7 +250,7 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
           tagName: 'less-button',
           less: { module: '@lessjs/ui/less-button', hydrate: 'lazy', ssr: false },
         },
-        { tagName: 'less-card', less: { module: '@lessjs/ui/less-card' } }, // no ssr field → default true
+        { tagName: 'less-card', less: { module: '@lessjs/ui/less-card' } }, // no ssr field -> default true
       ],
     },
   ];
@@ -271,7 +271,7 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
       ssr: false,
       dsd: true,
     },
-    { tagName: 'less-card', modulePath: '@lessjs/ui/less-card', isPackage: true, hydrate: 'lazy' }, // no ssr → default true
+    { tagName: 'less-card', modulePath: '@lessjs/ui/less-card', isPackage: true, hydrate: 'lazy' }, // no ssr -> default true
   ];
 
   const bundle = createMockBundle();
@@ -294,7 +294,7 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
     assertEquals(layout.packageName, '@lessjs/ui');
   });
 
-  await t.step('ssr: false → renderPath client-only', () => {
+  await t.step('ssr: false -> renderPath client-only', () => {
     const button = decisions.find((d) => d.tagName === 'less-button');
     assertExists(button);
     assertEquals(button.ssr, false);
@@ -324,7 +324,7 @@ Deno.test('SSG report: cemCompatibility is absent when no CEM classifications', 
   }
 
   const bundle = createMockBundle();
-  // No ctx → no CEM classifications
+  // No ctx -> no CEM classifications
   await ssgRender(bundle, defaultOptions);
 
   const report = readReport(TEST_OUT_DIR);

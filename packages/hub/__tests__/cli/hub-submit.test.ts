@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub — CLI Hub Submit Tests
+ * @lessjs/hub - CLI Hub Submit Tests
  *
  * v0.19.0: Test CLI flag parsing and submission flow.
  * Does not actually create GitHub PRs (requires gh CLI).
@@ -54,7 +54,7 @@ Deno.test('hub-submit: CLI parses --submit flag correctly', () => {
   // Import parseArgs directly to test flag parsing
   // We can't easily import the module, so we test the CLI output
   // by checking that --submit is advertised in help
-  const helpText = `less hub submit — Submit a package to the LessJS Registry Hub
+  const helpText = `less hub submit - Submit a package to the LessJS Registry Hub
 
 USAGE:
   less hub submit [options]

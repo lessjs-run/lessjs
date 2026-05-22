@@ -1,5 +1,5 @@
 /**
- * Counter Island — Interactive Component
+ * Counter Island - Interactive Component
  *
  * I 约束演示：
  * - Shadow DOM 封装
@@ -19,25 +19,25 @@ export default class CounterIsland extends LitElement {
       display: inline-flex;
       align-items: center;
       gap: 0;
-      border: 1px solid var(--less-border, #ddd);
+      border: 1px solid var(--border, #ddd);
       border-radius: var(--radius, 8px);
       overflow: hidden;
-      background: var(--less-bg-base, #fff);
+      background: var(--bg-base, #fff);
     }
     .count {
       font-size: 1.5rem;
       font-weight: 700;
       min-width: 3.5rem;
       text-align: center;
-      color: var(--less-text-primary, inherit);
+      color: var(--text-primary, inherit);
       padding: 0.35rem 0.75rem;
-      border-left: 1px solid var(--less-border, #ddd);
-      border-right: 1px solid var(--less-border, #ddd);
-      background: var(--less-bg-surface, #f5f5f5);
+      border-left: 1px solid var(--border, #ddd);
+      border-right: 1px solid var(--border, #ddd);
+      background: var(--bg-surface, #f5f5f5);
     }
     button {
       background: transparent;
-      color: var(--less-text-secondary, #666);
+      color: var(--text-secondary, #666);
       border: none;
       border-radius: 0;
       padding: 0.4rem 0.85rem;
@@ -52,11 +52,11 @@ export default class CounterIsland extends LitElement {
       justify-content: center;
     }
     button:hover {
-      background: var(--less-accent-subtle, #f0f0f0);
-      color: var(--less-text-primary, inherit);
+      background: var(--brand-subtle, #f0f0f0);
+      color: var(--text-primary, inherit);
     }
     button:active {
-      background: var(--less-bg-hover, #e8e8e8);
+      background: var(--bg-hover, #e8e8e8);
       transform: scale(0.97);
     }
   `;

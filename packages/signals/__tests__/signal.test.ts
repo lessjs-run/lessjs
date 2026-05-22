@@ -9,7 +9,7 @@ function waitForEffects(ms = 50): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-Deno.test('signal() — read/write', async (t) => {
+Deno.test('signal() - read/write', async (t) => {
   await t.step('initial value is readable via .value', () => {
     const s = signal(42);
     assertEquals(s.value, 42);
@@ -57,7 +57,7 @@ Deno.test('signal() — read/write', async (t) => {
   });
 });
 
-Deno.test('signal() — subscribe()', async (t) => {
+Deno.test('signal() - subscribe()', async (t) => {
   await t.step('subscribe is called immediately with current value', () => {
     const s = signal(10);
     let received: number | undefined;

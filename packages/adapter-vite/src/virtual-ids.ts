@@ -2,7 +2,7 @@
  * @lessjs/adapter-vite - Virtual module ID constants.
  *
  * G10 fix: Canonical definitions moved to @lessjs/core/virtual-ids
- * to break the adapter-vite ↔ content circular dependency.
+ * to break the adapter-vite <-> content circular dependency.
  * This module re-exports for consumers that import from adapter-vite.
  */
 export {

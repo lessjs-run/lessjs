@@ -41,7 +41,7 @@ import {
   scanRoutes,
 } from './route-scanner.js';
 
-// ─── Subpath resolution (ADR 0016 — JSR remote only) ─────────────
+// ─── Subpath resolution (ADR 0016 - JSR remote only) ─────────────
 //
 // ADR 0018 Phase 0: buildCoreSubpathAliases() DELETED.
 // Local mode now relies on @deno/vite-plugin for bare specifier resolution.
@@ -190,7 +190,7 @@ function createCoreResolvePlugin(metaUrl: string): Plugin {
       // Check cache
       if (jsrSourceCache.has(id)) return cacheGet(id);
 
-      // Normalize .js → .ts (Deno convention: imports use .js, files are .ts)
+      // Normalize .js -> .ts (Deno convention: imports use .js, files are .ts)
       let filePath = id.slice(VIRTUAL_CORE_PREFIX.length);
       if (filePath.endsWith('.js') && !filePath.endsWith('.ts')) {
         filePath = filePath.slice(0, -3) + '.ts';
@@ -222,7 +222,7 @@ function createCoreResolvePlugin(metaUrl: string): Plugin {
         );
       }
 
-      // Compile TypeScript → JavaScript via esbuild
+      // Compile TypeScript -> JavaScript via esbuild
       let jsCode: string;
       try {
         const result = await esbuildTransform(tsCode, {
@@ -298,7 +298,7 @@ export function less(
       for (const proto of blockedProtocols) {
         if (lower.startsWith(proto)) {
           throw new LessError(
-            `Unsafe URL in ${context}: "${url}" — ${proto} protocol is not allowed`,
+            `Unsafe URL in ${context}: "${url}" - ${proto} protocol is not allowed`,
             'UNSAFE_URL',
             400,
             false,
@@ -314,12 +314,12 @@ export function less(
       // We treat actual URIError as unsafe, but log the distinction for debugging.
       if (e instanceof URIError) {
         log.debug(
-          `decodeURIComponent failed for URL in ${context}: "${url}" — ${e.message}. ` +
+          `decodeURIComponent failed for URL in ${context}: "${url}" - ${e.message}. ` +
             'This may be a legitimate encoding issue or a malicious URL.',
         );
       }
       throw new LessError(
-        `Invalid URL in ${context}: "${url}" — malformed percent-encoding`,
+        `Invalid URL in ${context}: "${url}" - malformed percent-encoding`,
         'UNSAFE_URL',
         400,
         false,
@@ -335,7 +335,7 @@ export function less(
   if (options.inject && !headExtras) {
     const fragments: string[] = [];
 
-    // headFragments FIRST (meta, styles, anti-flash) — must exist in DOM
+    // headFragments FIRST (meta, styles, anti-flash) - must exist in DOM
     // before scripts that reference them (e.g. theme-init.js removes anti-flash).
     for (const frag of options.inject.headFragments || []) {
       assertNoScriptTags(frag, 'inject.headFragments');
@@ -368,7 +368,7 @@ export function less(
       fragments.push(`<link ${linkAttrs.join(' ')} />`);
     }
 
-    // Scripts last — depend on headFragments being in DOM
+    // Scripts last - depend on headFragments being in DOM
     for (const script of options.inject.scripts || []) {
       const isObjectScript = typeof script === 'object';
       const src = isObjectScript ? script.src : script;
@@ -417,7 +417,7 @@ export function less(
 
   // Pre-generate workspace aliases (sync, once, cached in ctx).
   // Phase 1 config, Phase 2 client build, and Phase 3 SSG build
-  // all read ctx.phase1.userResolveAlias — zero redundant generation.
+  // all read ctx.phase1.userResolveAlias - zero redundant generation.
   try {
     const wsRoot = findWorkspaceRoot(process.cwd());
     if (wsRoot) {
@@ -429,7 +429,7 @@ export function less(
       );
     }
   } catch {
-    log.debug('Workspace not available — aliases stay null');
+    log.debug('Workspace not available - aliases stay null');
   }
 
   const VIRTUAL_ENTRY_ID = 'virtual:less-hono-entry';
@@ -447,7 +447,7 @@ export function less(
       const hubDataPath = join(root, routesDir, 'registry', '_hub-data-full.ts');
       const content = readFileSync(hubDataPath, 'utf-8');
       const tags: string[] = [];
-      // Simple regex extraction — look for pairs of:
+      // Simple regex extraction - look for pairs of:
       //   "tagName": "sl-xxx" followed by "compatibility": "client-only"
       // or entire packages with "compatibility": "client-only"
       const tagRe = /"tagName":\s*"([^"]+)"/g;
@@ -483,7 +483,7 @@ export function less(
       }
       return tags;
     } catch {
-      // Hub data not available — skip (non-fatal)
+      // Hub data not available - skip (non-fatal)
       _cachedHubClientOnlyTags = [];
       return [];
     }
@@ -545,9 +545,9 @@ export function less(
         ctx.phase1.userResolveAlias = cfg.resolve.alias;
       }
       // v0.14.6: Generate placeholder entry code with empty routes in configResolved.
-      // This is a Vite requirement — the virtual entry must exist before buildStart().
+      // This is a Vite requirement - the virtual entry must exist before buildStart().
       // The real entry with actual routes is generated in buildStart() which runs later.
-      // This is NOT a duplicate — both calls are intentional and serve different phases.
+      // This is NOT a duplicate - both calls are intentional and serve different phases.
       ctx.phase1.honoEntryCode = generateEntry(
         [],
         ctx.phase1.islandTagNames,
@@ -600,7 +600,7 @@ export function less(
         }
 
         // Cache routes for lazy load() regeneration (ctx.blogOptions may not
-        // be set yet — lessContent() buildStart() runs after this one).
+        // be set yet - lessContent() buildStart() runs after this one).
         ctx.phase1.cachedRoutes = routes;
 
         ctx.phase1.honoEntryCode = generateEntry(
@@ -611,7 +611,7 @@ export function less(
         );
         const { buildEntryDescriptor } = await import('./entry-descriptor.js');
 
-        // v0.18.0: CEM auto-detection — scan node_modules for custom-elements.json
+        // v0.18.0: CEM auto-detection - scan node_modules for custom-elements.json
         // without importing or executing any package code.
         try {
           const nodeModulesDir = join(process.cwd(), 'node_modules');
@@ -622,7 +622,7 @@ export function less(
             );
           }
         } catch (err) {
-          // CEM detection is best-effort — never fail the build
+          // CEM detection is best-effort - never fail the build
           log.debug(
             `CEM auto-detection failed (non-fatal): ${
               err instanceof Error ? err.message : String(err)

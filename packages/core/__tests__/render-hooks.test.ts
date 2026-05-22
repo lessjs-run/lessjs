@@ -58,7 +58,7 @@ function asCtor(cls: new () => MockComponent): CustomElementConstructor {
 
 // ─── beforeRender hook ──────────────────────────────────────
 
-Deno.test('RenderHooks — beforeRender', async (t) => {
+Deno.test('RenderHooks - beforeRender', async (t) => {
   await t.step('beforeRender fires before instantiation', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<p>Hello</p>');
@@ -115,7 +115,7 @@ Deno.test('RenderHooks — beforeRender', async (t) => {
       },
     };
 
-    // Should not throw — hook errors are caught silently
+    // Should not throw - hook errors are caught silently
     const output = await renderDSD(
       'hook-test-3',
       asCtor(cls),
@@ -132,7 +132,7 @@ Deno.test('RenderHooks — beforeRender', async (t) => {
 
 // ─── afterRender hook ───────────────────────────────────────
 
-Deno.test('RenderHooks — afterRender', async (t) => {
+Deno.test('RenderHooks - afterRender', async (t) => {
   await t.step('afterRender receives full RenderOutput', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<p>World</p>');
@@ -191,7 +191,7 @@ Deno.test('RenderHooks — afterRender', async (t) => {
 
 // ─── onError hook ───────────────────────────────────────────
 
-Deno.test('RenderHooks — onError', async (t) => {
+Deno.test('RenderHooks - onError', async (t) => {
   await t.step('onError fires for instantiation errors', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('', { throwOnConstruct: true });
@@ -249,7 +249,7 @@ Deno.test('RenderHooks — onError', async (t) => {
 
 // ─── Hooks are optional ─────────────────────────────────────
 
-Deno.test('RenderHooks — optional (undefined)', async (t) => {
+Deno.test('RenderHooks - optional (undefined)', async (t) => {
   await t.step('pipeline works with no hooks', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<p>No hooks</p>');
@@ -321,7 +321,7 @@ Deno.test('RenderHooks — optional (undefined)', async (t) => {
 
 // ─── RenderOutput shape ─────────────────────────────────────
 
-Deno.test('RenderOutput — structured output', async (t) => {
+Deno.test('RenderOutput - structured output', async (t) => {
   await t.step(
     'successful render returns RenderOutput with html, errors, metrics, hydrationHints',
     async () => {
@@ -356,7 +356,7 @@ Deno.test('RenderOutput — structured output', async (t) => {
 
     const output = await renderDSD('output-test-2', asCtor(cls), {});
 
-    // v0.19.1: Bare-tag fallback — no error comments in HTML
+    // v0.19.1: Bare-tag fallback - no error comments in HTML
     assertStringIncludes(output.html, '<output-test-2>');
     assertStringIncludes(output.html, '</output-test-2>');
     assertFalse(output.html.includes('LessJS ERROR'));

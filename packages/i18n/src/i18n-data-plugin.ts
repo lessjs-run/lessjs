@@ -5,8 +5,8 @@
  * locale configuration data to route components during SSR.
  *
  * Lives in @lessjs/i18n (not adapter-vite) because it depends on
- * @lessjs/i18n's loadI18nData() — avoids circular dependency between
- * adapter-vite ↔ i18n.
+ * @lessjs/i18n's loadI18nData() - avoids circular dependency between
+ * adapter-vite <-> i18n.
  */
 
 import type { Plugin } from 'vite';

@@ -1,5 +1,5 @@
 /**
- * Type compatibility test — drift detection for local ReactiveElement interface.
+ * Type compatibility test - drift detection for local ReactiveElement interface.
  *
  * This test asserts that the local ReactiveElement and ReactiveController
  * interfaces are self-consistent and structurally compatible with any
@@ -37,6 +37,6 @@ const _host: ReactiveElement = null as unknown as {
   updateComplete: Promise<boolean>;
 };
 
-Deno.test('RPC type compatibility — local interfaces are self-consistent', () => {
+Deno.test('RPC type compatibility - local interfaces are self-consistent', () => {
   console.log('✅ Local ReactiveElement/ReactiveController are structurally sound');
 });

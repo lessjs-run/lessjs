@@ -4,12 +4,12 @@
  * Client build for Island components.
  * Produces dist/client/islands/*.js + manifest for SSG post-processing.
  *
- * ADR 0011: This module exports buildClient() only — it is called from
+ * ADR 0011: This module exports buildClient() only - it is called from
  * closeBundle() in less:build plugin. No longer a standalone CLI entry.
  * ctx parameter is required (no globalThis fallback).
  *
  * Usage:
- *   deno task build  (unified entry — runs all 3 phases)
+ *   deno task build  (unified entry - runs all 3 phases)
  */
 
 import { build as viteBuild, type InlineConfig } from 'vite';
@@ -44,7 +44,7 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
     : null;
 
   if (localIslands.length === 0 && packageIslandDecls.length === 0) {
-    log.info('No islands found — zero client JS output');
+    log.info('No islands found - zero client JS output');
     return;
   }
 
@@ -103,7 +103,7 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
       emptyOutDir: true,
       chunkSizeWarningLimit: 1500,
       minify: 'oxc',
-      // @ts-ignore — Vite's own manifest option (not Rollup's)
+      // @ts-ignore - Vite's own manifest option (not Rollup's)
       manifest: true,
       rollupOptions: {
         input: { client: VIRTUAL_CLIENT_ENTRY_ID },
@@ -144,7 +144,7 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
 
   try {
     await viteBuild(clientConfig);
-    log.info('Client bundle built → ' + clientOutDir);
+    log.info('Client bundle built -> ' + clientOutDir);
 
     const { printBuildManifest } = await import('../build-manifest.js');
     printBuildManifest({ root, outDir, phase: 2 });

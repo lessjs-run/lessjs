@@ -72,7 +72,7 @@ Deno.test('renderEntry: CSP without nonce generates header middleware', () => {
 
   assertStringIncludes(code, 'Content-Security-Policy');
   assertStringIncludes(code, "default-src 'self'; script-src 'self'");
-  // No nonce middleware when not configured — c.get('cspNonce') returns undefined
+  // No nonce middleware when not configured - c.get('cspNonce') returns undefined
   assertEquals(code.includes('crypto.randomUUID()'), false);
   // cspNonce is always passed to wrapInDocument but will be undefined
   // when no CSP nonce middleware is configured
@@ -305,7 +305,7 @@ Deno.test('renderEntry: SSG mode includes no DOM shim (DSD renderer)', () => {
   const desc = buildEntryDescriptor(basicRoutes, { ssg: true });
   const code = renderEntry(desc);
 
-  // v0.5.0: DSD renderer doesn't need DOM shim — pure string concatenation
+  // v0.5.0: DSD renderer doesn't need DOM shim - pure string concatenation
   assertEquals(code.includes('install-global-dom-shim'), false);
 });
 
@@ -586,5 +586,5 @@ Deno.test('buildEntryDescriptor: ssr field is extracted from manifest declaratio
 
   assertEquals(ssrComp?.ssr, true);
   assertEquals(clientOnly?.ssr, false);
-  assertEquals(defaultComp?.ssr, undefined); // no ssr field in manifest → undefined
+  assertEquals(defaultComp?.ssr, undefined); // no ssr field in manifest -> undefined
 });

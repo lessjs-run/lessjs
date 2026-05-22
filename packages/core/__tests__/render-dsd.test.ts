@@ -5,7 +5,7 @@
  * DSD rendering pipeline, DSD options, pure-island layer, adapter protocol,
  * and error handling.
  *
- * Uses plain class mocks — no browser HTMLElement needed.
+ * Uses plain class mocks - no browser HTMLElement needed.
  */
 import { assertEquals, assertFalse, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
 import { renderDSD, renderDSDByName } from '../src/render-dsd.ts';
@@ -186,9 +186,9 @@ Deno.test('escapeHtml', async (t) => {
   });
 });
 
-// ─── renderDSD — Basic rendering ─────────────────────────────
+// ─── renderDSD - Basic rendering ─────────────────────────────
 
-Deno.test('renderDSD — basic rendering', async (t) => {
+Deno.test('renderDSD - basic rendering', async (t) => {
   await t.step('renders a simple component with DSD template', async () => {
     const cls = createMockClass('<p>Hello</p>');
     const output = await renderDSD('test-comp-1', asCtor(cls), {});
@@ -245,13 +245,13 @@ Deno.test('renderDSD — basic rendering', async (t) => {
   });
 });
 
-// ─── renderDSD — Error handling ──────────────────────────────
+// ─── renderDSD - Error handling ──────────────────────────────
 
-Deno.test('renderDSD — error handling', async (t) => {
+Deno.test('renderDSD - error handling', async (t) => {
   await t.step('handles component that throws on instantiation', async () => {
     const cls = createMockClass('', { throwOnConstruct: true });
     const output = await renderDSD('broken-el-1', asCtor(cls), {});
-    // v0.19.1: Bare-tag fallback — no shadow DOM, no error comments in HTML
+    // v0.19.1: Bare-tag fallback - no shadow DOM, no error comments in HTML
     assertStringIncludes(output.html, '<broken-el-1>');
     assertStringIncludes(output.html, '</broken-el-1>');
     assertFalse(output.html.includes('LessJS ERROR'));
@@ -263,7 +263,7 @@ Deno.test('renderDSD — error handling', async (t) => {
   await t.step('handles render() that throws', async () => {
     const cls = createMockClass('', { throwOnRender: true });
     const output = await renderDSD('error-el-1', asCtor(cls), {});
-    // v0.19.1: Bare-tag fallback — no shadow DOM, no error comments in HTML
+    // v0.19.1: Bare-tag fallback - no shadow DOM, no error comments in HTML
     assertStringIncludes(output.html, '<error-el-1>');
     assertStringIncludes(output.html, '</error-el-1>');
     assertFalse(output.html.includes('LessJS ERROR'));
@@ -289,9 +289,9 @@ Deno.test('renderDSD — error handling', async (t) => {
   });
 });
 
-// ─── renderDSD — DSD Options ─────────────────────────────────
+// ─── renderDSD - DSD Options ─────────────────────────────────
 
-Deno.test('renderDSD — DSD options', async (t) => {
+Deno.test('renderDSD - DSD options', async (t) => {
   await t.step('adds shadowrootdelegatesfocus when delegatesFocus=true', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<button>Click</button>');
@@ -361,9 +361,9 @@ Deno.test('renderDSD — DSD options', async (t) => {
   });
 });
 
-// ─── renderDSD — Pure Island layer ──────────────────────────
+// ─── renderDSD - Pure Island layer ──────────────────────────
 
-Deno.test('renderDSD — pure-island layer', async (t) => {
+Deno.test('renderDSD - pure-island layer', async (t) => {
   await t.step('skips DSD template for pure-island layer', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<div>island</div>');
@@ -399,11 +399,11 @@ Deno.test('renderDSD — pure-island layer', async (t) => {
   });
 });
 
-// ─── renderDSD — Source info ─────────────────────────────────
+// ─── renderDSD - Source info ─────────────────────────────────
 // v0.19.1: Instantiation errors now produce bare-tag fallback without
 // source info attributes. Source info is still recorded in the errors array.
 
-Deno.test('renderDSD — source info', async (t) => {
+Deno.test('renderDSD - source info', async (t) => {
   await t.step('instantiation error is recorded with route info', async () => {
     const cls = createMockClass('', { throwOnConstruct: true });
     const output = await renderDSD('err-el-1', asCtor(cls), {}, { route: '/about' });
@@ -444,7 +444,7 @@ Deno.test('renderDSDByName', async (t) => {
 
 // ─── Adapter protocol ────────────────────────────────────────
 
-Deno.test('renderDSD — adapter protocol', async (t) => {
+Deno.test('renderDSD - adapter protocol', async (t) => {
   await t.step('uses adapter to render non-string template results', async () => {
     const fakeTemplate = { _$litType$: 1, __brand: 'TemplateResult' };
     let renderCalled = false;
@@ -507,7 +507,7 @@ Deno.test('renderDSD — adapter protocol', async (t) => {
 
 // ─── Edge cases ──────────────────────────────────────────────
 
-Deno.test('renderDSD — edge cases', async (t) => {
+Deno.test('renderDSD - edge cases', async (t) => {
   await t.step('handles empty render output', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('');

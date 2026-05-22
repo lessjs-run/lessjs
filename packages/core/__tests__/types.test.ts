@@ -19,7 +19,7 @@ type _LessMiddleware = LessMiddleware;
 type _LessRenderer = LessRenderer;
 type _SpecialFileType = SpecialFileType;
 
-// These are compile-time assertions — if the types don't exist or have
+// These are compile-time assertions - if the types don't exist or have
 // wrong shapes, this file won't compile.
 
 Deno.test('types: FrameworkOptions has expected shape', () => {
@@ -90,7 +90,7 @@ Deno.test('types: LessPackageManifest has required fields', () => {
 });
 
 Deno.test('types: SsrContext has expected properties', () => {
-  // SsrContext is created by createSsrContext() — just verify the type exists
+  // SsrContext is created by createSsrContext() - just verify the type exists
   type _Check = SsrContext extends { route: RouteEntry; url: URL; params: Record<string, string> }
     ? true
     : never;

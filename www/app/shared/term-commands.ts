@@ -1,5 +1,5 @@
 /**
- * Shared term command handler — used by both the Hono API route
+ * Shared term command handler - used by both the Hono API route
  * and the Cloudflare Pages Function.
  *
  * G11 fix: Deduplicated command logic from:
@@ -7,7 +7,7 @@
  *   - functions/api/term.ts (Cloudflare Pages Function)
  */
 
-/** Escape HTML entities — prevents reflected XSS in command responses. */
+/** Escape HTML entities - prevents reflected XSS in command responses. */
 export function escapeHtml(s: string): string {
   return s
     .replace(/&/g, '&amp;')
@@ -42,7 +42,7 @@ function neofetch(): string[] {
 function buildSim(): string[] {
   return [
     '<span style="color:#fbbf24;">$</span> deno task build',
-    `<span style="color:#52525b;">│</span> <span style="color:#7dd3fc;">less</span> v${VERSION} — ssg pipeline`,
+    `<span style="color:#52525b;">│</span> <span style="color:#7dd3fc;">less</span> v${VERSION} - ssg pipeline`,
     '<span style="color:#52525b;">├─ phase 1</span> route scan  <span style="color:#52525b;">··</span> <span style="color:#86efac;">8 pages, 2 islands</span>',
     '<span style="color:#52525b;">├─ phase 2</span> client build <span style="color:#52525b;">··</span> <span style="color:#86efac;">2 island chunks (1.2 kb)</span>',
     '<span style="color:#52525b;">├─ phase 3</span> ssg render  <span style="color:#52525b;">··</span> <span style="color:#86efac;">8/8 pages rendered</span>',
@@ -93,7 +93,7 @@ export function executeTermCommand(rawCmd: string): string[] {
 
     case 'version':
       return [
-        `<span style="color:#86efac;">v${VERSION}</span> — security hardening, circular dep fix, code hygiene`,
+        `<span style="color:#86efac;">v${VERSION}</span> - security hardening, circular dep fix, code hygiene`,
       ];
 
     case 'build':
@@ -114,7 +114,7 @@ export function executeTermCommand(rawCmd: string): string[] {
       return [
         '<span style="color:#7dd3fc;">declarative shadow dom:</span>',
         'ssg renders your lit components into <span style="color:#fbbf24;">&lt;template shadowrootmode&gt;</span>',
-        'browsers parse it natively — no js framework needed.',
+        'browsers parse it natively - no js framework needed.',
         'content is visible <span style="color:#86efac;">before</span> javascript downloads.',
       ];
 

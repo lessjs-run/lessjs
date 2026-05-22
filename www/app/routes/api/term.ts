@@ -1,5 +1,5 @@
 /**
- * Terminal API — powers the interactive terminal on the homepage.
+ * Terminal API - powers the interactive terminal on the homepage.
  *
  * Commands: help, neofetch, build, ls, whoami, uname, version, clear, dsd
  * Mounted as a Hono sub-app at /api/term
@@ -19,7 +19,7 @@ app.post('/', async (c) => {
     return c.json({ output: ['invalid request: malformed JSON'] }, 400);
   }
 
-  // v0.14.10: runtime type validation — cmd must be a string
+  // v0.14.10: runtime type validation - cmd must be a string
   if (body.cmd !== undefined && typeof body.cmd !== 'string') {
     return c.json({ output: ['invalid command: expected string'] }, 400);
   }

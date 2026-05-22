@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub — Demo Configuration for Snapshot Rendering
+ * @lessjs/hub - Demo Configuration for Snapshot Rendering
  *
  * Centralized configuration for rendering component previews.
  * Shared by all snapshot renderers (Playwright, Lit SSR, etc.)
@@ -9,14 +9,14 @@
  *  Many WC libraries default to hidden/closed states (e.g. sl-alert open=false).
  */
 export const DEMO_ATTRS: Record<string, Record<string, string>> = {
-  // Shoelace — need 'open' to be visible
+  // Shoelace - need 'open' to be visible
   'sl-alert': { open: '', variant: 'primary' },
   'sl-dialog': { open: '', label: 'Dialog' },
   'sl-drawer': { open: '', label: 'Drawer' },
   'sl-details': { open: '', summary: 'Details' },
   'sl-dropdown': { open: '' },
   'sl-tooltip': { content: 'Tooltip content', open: '', placement: 'top' },
-  // Shoelace — need value/content to show state
+  // Shoelace - need value/content to show state
   'sl-progress-bar': { value: '50' },
   'sl-progress-ring': { value: '50' },
   'sl-range': { value: '50' },

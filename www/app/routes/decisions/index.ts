@@ -1,12 +1,11 @@
 /**
- * ADR Index Page — Dynamic from virtual:less-blog-data
+ * ADR Index Page - Dynamic from virtual:less-blog-data
  *
  * Displays all ADRs (posts with type === 'adr') in a card layout.
  */
 export const meta = { section: '', label: 'Architecture Decisions', order: 20 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { css, html, LitElement } from 'lit';
-import { pageStyles } from '../../components/page-styles.js';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { posts } from 'virtual:less-blog-data';
 import '@lessjs/ui/less-layout';
 
@@ -22,10 +21,9 @@ function adrId(slug: string): string {
   return m ? m[1] : slug.slice(0, 4);
 }
 
-export class DecisionsIndexPage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+
+routeSheet.replaceSync(`
       .decision-list {
         display: grid;
         gap: 0.75rem;
@@ -34,19 +32,19 @@ export class DecisionsIndexPage extends LitElement {
       .decision-link {
         display: block;
         padding: 1rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 6px;
         text-decoration: none;
-        background: var(--less-bg-surface);
+        background: var(--bg-surface);
       }
       .decision-link:hover {
-        border-color: var(--less-border-hover);
+        border-color: var(--border-hover);
       }
       .decision-title {
         display: flex;
         justify-content: space-between;
         gap: 1rem;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         font-size: 0.9375rem;
         font-weight: 500;
         min-width: 0;
@@ -56,7 +54,7 @@ export class DecisionsIndexPage extends LitElement {
         min-width: 0;
       }
       .decision-status {
-        color: var(--less-text-muted);
+        color: var(--text-muted);
         font-size: 0.75rem;
         white-space: nowrap;
       }
@@ -71,29 +69,31 @@ export class DecisionsIndexPage extends LitElement {
       }
       .decision-summary {
         margin-top: 0.5rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         font-size: 0.8125rem;
         line-height: 1.6;
       }
-    `,
-  ];
+    `);
+
+export class DecisionsIndexPage extends DsdElement {
+  static override styles = [routeSheet];
 
   override render() {
     const adrs = posts.filter((p) => p.frontmatter.type === 'adr');
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
-        .headerNav="${headerNav}"
+        locale="${this._getLocale('zh')}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(navSections)}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/decisions"
       >
         <div class="container">
           <h1>Architecture Decisions</h1>
           <p class="subtitle">ADR documents published from the @lessjs/content blog pipeline.</p>
           <div class="decision-list">
-            ${adrs.map((p) =>
-              html`
+            ${
+      adrs.map((p) => `
                 <a class="decision-link" href="/decisions/${p.slug}">
                   <div class="decision-title">
                     <span>${adrId(p.slug)}: ${p.frontmatter.title}</span>
@@ -101,8 +101,8 @@ export class DecisionsIndexPage extends LitElement {
                   </div>
                   <div class="decision-summary">${p.frontmatter.excerpt ?? ''}</div>
                 </a>
-              `
-            )}
+              `)
+    }
           </div>
           <div class="nav-row">
             <a href="/engine/content-system" class="nav-link">&larr; Content System</a>

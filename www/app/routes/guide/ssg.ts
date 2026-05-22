@@ -1,23 +1,27 @@
 export const meta = { section: 'Core', label: 'SSG/ISR/SSR Rendering', order: 20 };
-import { navSections, headerNav } from 'virtual:less-nav';
-import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { html, LitElement } from 'lit';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
+import { DsdElement } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class SSGGuidePage extends LitElement {
+export class SSGGuidePage extends DsdElement {
   declare locale?: string;
 
   static override styles = [pageStyles];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/ssg">
+    return `
+      <less-layout locale="${this._getLocale('zh')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/guide/ssg">
         <div class="container">
           <h1>渲染与 SSG</h1>
           <p class="subtitle">LessJS 的默认生产产物是静态 HTML。构建阶段会把页面渲染成带 Declarative Shadow DOM 的文档，并注入必要的 client island entry。</p>
@@ -61,8 +65,12 @@ export class SSGGuidePage extends LitElement {
   }
 
   private _renderEn() {
-    return html`
-      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/ssg">
+    return `
+      <less-layout locale="${this._getLocale('en')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/en/guide/ssg">
         <div class="container">
           <h1>Rendering &amp; SSG</h1>
           <p class="subtitle">LessJS's default production output is static HTML. During the build phase, pages are rendered into documents with Declarative Shadow DOM, and the necessary client island entry is injected.</p>
@@ -81,7 +89,7 @@ export class SSGGuidePage extends LitElement {
           <h2>Three Internal Phases</h2>
           <table><thead><tr><th>Phase</th><th>Input</th><th>Output</th></tr></thead><tbody>
             <tr><td>SSR bundle</td><td>routes, renderers, middleware, API handlers, islands</td><td>Generated Hono entry (build metadata stored in ctx)</td></tr>
-            <tr><td>Client islands</td><td>build metadata</td><td>Island entry + browser chunks → dist/client</td></tr>
+            <tr><td>Client islands</td><td>build metadata</td><td>Island entry + browser chunks -> dist/client</td></tr>
             <tr><td>SSG</td><td>Generated Hono app</td><td>Static HTML, copied assets, post-processed document head</td></tr>
           </tbody></table>
           <h2>DSD Semantics</h2>

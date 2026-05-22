@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub — Registry Hub SDK
+ * @lessjs/hub - Registry Hub SDK
  *
  * v0.19.0: Schema, builder, indexer, submission pipeline.
  *

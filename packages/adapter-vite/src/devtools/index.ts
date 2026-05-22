@@ -37,7 +37,7 @@ export function devtoolsPlugin(): Plugin {
   };
 }
 
-// 鈹€鈹€鈹€ Client-side DevTools Panel code 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+// --- Client-side DevTools Panel code ------------------------------
 // This is injected as an inline <script type="module"> in dev mode.
 // It defines the <less-devtool> custom element that provides:
 //   - A floating toggle button (bottom-right corner)
@@ -46,7 +46,7 @@ export function devtoolsPlugin(): Plugin {
 //   - Island information
 
 const CLIENT_PANEL_CODE = `
-// LessJS DevTools 鈥?DSD Debug Panel
+// LessJS DevTools -DSD Debug Panel
 (function() {
   const STYLES = \`
     <style>
@@ -117,7 +117,7 @@ const CLIENT_PANEL_CODE = `
         if (panel.classList.contains('open')) this._scan();
       });
 
-      // v0.14.10: Panel starts closed — scan only on explicit toggle open.
+      // v0.14.10: Panel starts closed - scan only on explicit toggle open.
       // Avoids full querySelectorAll('*') on every page load in dev mode.
     }
 

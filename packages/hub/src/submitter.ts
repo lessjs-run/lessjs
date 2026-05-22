@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub — Submission Bundler + GitHub PR Pipeline
+ * @lessjs/hub - Submission Bundler + GitHub PR Pipeline
  *
  * v0.19.0: Bundle validation artifacts into submission format,
  * optionally create GitHub Pull Requests for Hub registration.
@@ -20,8 +20,8 @@ import type {
 /**
  * Build a HubSubmission bundle from a package record and its artifacts.
  *
- * @param record — The HubPackageRecord to submit
- * @param artifacts — Supporting artifacts (snapshots, reports, etc.)
+ * @param record - The HubPackageRecord to submit
+ * @param artifacts - Supporting artifacts (snapshots, reports, etc.)
  * @returns A fully formed HubSubmission
  */
 export function buildSubmissionBundle(
@@ -89,9 +89,9 @@ export function createHtmlArtifact(
  * 2. If dry-run: print preview and exit
  * 3. If not dry-run: create GitHub fork + PR via gh CLI
  *
- * @param record — HubPackageRecord to submit
- * @param artifacts — Supporting artifacts
- * @param options — Submission options
+ * @param record - HubPackageRecord to submit
+ * @param artifacts - Supporting artifacts
+ * @param options - Submission options
  * @returns SubmissionResult
  */
 export async function runSubmission(
@@ -169,8 +169,8 @@ export async function runSubmission(
  * - `gh` CLI installed and authenticated
  * - A fork of the target repository (created automatically if needed)
  *
- * @param bundle — The submission bundle
- * @param options — Submission options
+ * @param bundle - The submission bundle
+ * @param options - Submission options
  * @returns PR URL or null
  */
 export async function createGithubPr(

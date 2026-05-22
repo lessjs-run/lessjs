@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub — Builder Tests
+ * @lessjs/hub - Builder Tests
  *
  * v0.19.0: Test HubPackageRecord construction from artifacts.
  * v0.19.0 fix: buildPackageRecord is now async (computes manifestHash).

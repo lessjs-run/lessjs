@@ -2,17 +2,13 @@ export const meta = { section: 'Principles', label: 'DSD Rendering', order: 30 }
 
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { css, html, LitElement } from 'lit';
-import { pageStyles } from '../../components/page-styles.js';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class DsdGuidePage extends LitElement {
-  declare locale?: string;
+const routeSheet = new StyleSheet();
 
-  static override styles = [
-    pageStyles,
-    css`
+routeSheet.replaceSync(`
       .comparison {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -21,43 +17,48 @@ export class DsdGuidePage extends LitElement {
       }
       .comparison-item {
         padding: 1rem 1.25rem;
-        border: 1px solid var(--less-border);
+        border: 1px solid var(--border);
         border-radius: 8px;
         transition: border-color 0.2s, box-shadow 0.2s;
       }
       .comparison-item:hover {
-        border-color: var(--less-border-hover);
+        border-color: var(--border-hover);
       }
       .comparison-item.less {
-        background: var(--less-bg-surface);
-        border-left: 3px solid var(--less-brand, #534AB7);
+        background: var(--bg-surface);
+        border-left: 3px solid var(--brand, #534AB7);
       }
       @media (max-width: 720px) {
         .comparison {
           grid-template-columns: 1fr;
         }
       }
-    `,
-  ];
+    `);
+
+export class DsdGuidePage extends DsdElement {
+  declare locale?: string;
+
+  static override styles = [routeSheet];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${filterEngineNav(navSections)}"
-        .headerNav="${headerNav}"
+        locale="${this._getLocale('zh')}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/dsd"
       >
         <div class="container">
           <h1>DSD 渲染架构</h1>
           <p class="subtitle">
             Declarative Shadow DOM 是 LessJS 的核心渲染模型：服务端输出标准 HTML，浏览器在解析阶段创建
-            shadow root，JavaScript 只负责后续升级和必要事件绑定。
+            shadow root，JavaScript 只负责后续升级和必要事件绑定。v0.20 起，DSD 组件默认以
+            DsdElement + StyleSheet 实现。
           </p>
 
           <h2>什么是 DSD</h2>
@@ -135,12 +136,12 @@ export class DsdGuidePage extends LitElement {
   }
 
   private _renderEn() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'en'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${filterEngineNav(navSections)}"
-        .headerNav="${headerNav}"
+        locale="${this._getLocale('en')}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/en/engine/dsd"
       >
         <div class="container">
@@ -148,7 +149,7 @@ export class DsdGuidePage extends LitElement {
           <p class="subtitle">
             Declarative Shadow DOM is the core LessJS rendering model: the server emits standard HTML,
             the browser creates shadow roots during parsing, and JavaScript only upgrades components and
-            binds necessary events.
+            binds necessary events. Since v0.20, DSD components are built on DsdElement + StyleSheet by default.
           </p>
 
           <h2>What Is DSD</h2>

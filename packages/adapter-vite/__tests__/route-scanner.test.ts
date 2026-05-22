@@ -349,7 +349,7 @@ Deno.test(
     try {
       const pkg = join(tmpDir, 'vanilla-wc');
       await Deno.mkdir(pkg, { recursive: true });
-      // CEM with a custom element but no Less extension → conservative default: client-only
+      // CEM with a custom element but no Less extension -> conservative default: client-only
       const cem = JSON.stringify({
         schemaVersion: '1.0.0',
         modules: [{

@@ -1,8 +1,8 @@
 /**
- * @lessjs/rpc — Deep tests: State machine + Abort + Retry
+ * @lessjs/rpc - Deep tests: State machine + Abort + Retry
  *
  * Tests cover:
- * - Loading state transitions (idle → loading → idle)
+ * - Loading state transitions (idle -> loading -> idle)
  * - Error state management (set/clear)
  * - AbortController integration
  * - Retry with exponential backoff
@@ -29,7 +29,7 @@ class TrackingHost extends MockHost {
 
 // ─── State Machine Tests ──────────────────────────────────
 
-Deno.test('RpcController — state machine: idle → loading → idle on success', async () => {
+Deno.test('RpcController - state machine: idle -> loading -> idle on success', async () => {
   const host = new TrackingHost();
   const ctrl = new RpcController(host as never);
 
@@ -49,7 +49,7 @@ Deno.test('RpcController — state machine: idle → loading → idle on success
   assert(host.updateCount >= 2, 'requestUpdate should be called on state changes');
 });
 
-Deno.test('RpcController — state machine: idle → loading → error on failure', async () => {
+Deno.test('RpcController - state machine: idle -> loading -> error on failure', async () => {
   const host = new TrackingHost();
   const ctrl = new RpcController(host as never);
 
@@ -65,7 +65,7 @@ Deno.test('RpcController — state machine: idle → loading → error on failur
   assertEquals(ctrl.error!.message, 'fail');
 });
 
-Deno.test('RpcController — state machine: error resets on next success', async () => {
+Deno.test('RpcController - state machine: error resets on next success', async () => {
   const host = new TrackingHost();
   const ctrl = new RpcController(host as never);
 
@@ -76,7 +76,7 @@ Deno.test('RpcController — state machine: error resets on next success', async
 
   assertInstanceOf(ctrl.error, RpcError);
 
-  // Second call succeeds — error should clear
+  // Second call succeeds - error should clear
   const result = await ctrl.call(() => Promise.resolve('recovered'));
   assertEquals(result, 'recovered');
   assertEquals(ctrl.error, null);
@@ -85,7 +85,7 @@ Deno.test('RpcController — state machine: error resets on next success', async
 
 // ─── AbortController Tests ────────────────────────────────
 
-Deno.test('RpcController — abort signal is passed to caller', async () => {
+Deno.test('RpcController - abort signal is passed to caller', async () => {
   const host = new MockHost();
   const ctrl = new RpcController(host as never);
 
@@ -100,7 +100,7 @@ Deno.test('RpcController — abort signal is passed to caller', async () => {
   assertEquals(receivedSignal!.aborted, false);
 });
 
-Deno.test('RpcController — abort cancels in-flight request', async () => {
+Deno.test('RpcController - abort cancels in-flight request', async () => {
   const host = new MockHost();
   const ctrl = new RpcController(host as never);
 
@@ -129,7 +129,7 @@ Deno.test('RpcController — abort cancels in-flight request', async () => {
   assertEquals(ctrl.loading, false, 'Loading should reset after abort');
 });
 
-Deno.test('RpcController — hostDisconnected clears abort', () => {
+Deno.test('RpcController - hostDisconnected clears abort', () => {
   const host = new MockHost();
   const ctrl = new RpcController(host as never);
 
@@ -142,7 +142,7 @@ Deno.test('RpcController — hostDisconnected clears abort', () => {
 
 // ─── Retry / Error Classification ─────────────────────────
 
-Deno.test('RpcError — classifies HTTP errors correctly', () => {
+Deno.test('RpcError - classifies HTTP errors correctly', () => {
   const clientErr = new RpcError(400, 'Bad Request');
   assertEquals(clientErr.status, 400);
   assertEquals(clientErr.name, 'RpcError');
@@ -154,7 +154,7 @@ Deno.test('RpcError — classifies HTTP errors correctly', () => {
   assertEquals(networkErr.status, 0);
 });
 
-Deno.test('RpcController — wraps non-RpcError errors', async () => {
+Deno.test('RpcController - wraps non-RpcError errors', async () => {
   const host = new MockHost();
   const ctrl = new RpcController(host as never);
 
@@ -179,11 +179,11 @@ function assertStringIncludes(actual: string, expected: string) {
 
 // ─── Edge Cases ───────────────────────────────────────────
 
-Deno.test('RpcController — rapid sequential calls handle state correctly', async () => {
+Deno.test('RpcController - rapid sequential calls handle state correctly', async () => {
   const host = new TrackingHost();
   const ctrl = new RpcController(host as never);
 
-  // Fire multiple rapid calls — only the last one's result matters
+  // Fire multiple rapid calls - only the last one's result matters
   const results = await Promise.allSettled([
     ctrl.call(() => Promise.resolve('first')),
     ctrl.call(() => Promise.resolve('second')),
@@ -198,7 +198,7 @@ Deno.test('RpcController — rapid sequential calls handle state correctly', asy
   assertEquals(ctrl.loading, false);
 });
 
-Deno.test('RpcController — call() without function argument works', async () => {
+Deno.test('RpcController - call() without function argument works', async () => {
   const host = new MockHost();
   const ctrl = new RpcController(host as never);
 

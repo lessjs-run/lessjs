@@ -6,12 +6,12 @@
  * then imports it to render all pages to static HTML, and post-processes
  * island paths.
  *
- * ADR 0011: This module exports buildSSG() only — it is called from
+ * ADR 0011: This module exports buildSSG() only - it is called from
  * closeBundle() in less:build plugin. No longer a standalone CLI entry.
  * ctx parameter is required (no globalThis fallback).
  *
  * Usage:
- *   deno task build  (unified entry — runs all 3 phases)
+ *   deno task build  (unified entry - runs all 3 phases)
  */
 
 import { join, resolve } from 'node:path';
@@ -101,8 +101,8 @@ function optionalPackageStubsPlugin(): import('vite').Plugin {
       if (id in stubs) {
         // Try to resolve the real package first
         const resolved = await this.resolve(id, undefined, { skipSelf: true });
-        if (resolved) return null; // Package exists — let normal resolution proceed
-        return `\0stub:${id}`; // Package missing — use stub
+        if (resolved) return null; // Package exists - let normal resolution proceed
+        return `\0stub:${id}`; // Package missing - use stub
       }
     },
     load(id) {
@@ -225,7 +225,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
         `Hub client-only tags: ${hubClientOnlyTags.length} tag(s) for SSG admission`,
       );
     }
-  } catch { /* hub data not available — skip */ }
+  } catch { /* hub data not available - skip */ }
 
   ctx.phase1.ssrAdmissionPlan = buildEntryDescriptor(routes, {
     routesDir,
@@ -238,7 +238,17 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     hubClientOnlyTags,
   }).ssrAdmissionPlan;
 
-  const ssgEntryCode = generateHonoEntryCode(routes, {
+  const rawSsgEntryCode = `\
+// SSR polyfill: Lit references CSSStyleSheet in its internals.
+// This must load before any Lit module is evaluated.
+import { StyleSheet } from '@lessjs/core';
+if (typeof globalThis.CSSStyleSheet === 'undefined') {
+  globalThis.CSSStyleSheet = class {
+    replaceSync(_css) {}
+    get cssRules() { return []; }
+  };
+}
+` + generateHonoEntryCode(routes, {
     routesDir,
     islandsDir,
     middleware: options.middleware,
@@ -253,6 +263,9 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     upgradeStrategy: options.upgradeStrategy || 'lazy',
     hubClientOnlyTags,
   });
+  // Deno import map resolution handles bare specifiers (e.g. @lessjs/ui/less-callout)
+  // via the createDenoImportMapPlugin added to the Phase 3 viteBuild plugins below.
+  const ssgEntryCode = rawSsgEntryCode;
 
   try {
     const { build: viteBuild } = await import('vite');
@@ -275,7 +288,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     const userNoExternal = options.ssr?.noExternal || [];
     const allNoExternal = [...defaultNoExternal, ...userNoExternal];
 
-    // Handle alias — prefer CLI options, then ctx from Phase 1
+    // Handle alias - prefer CLI options, then ctx from Phase 1
     const alias = metadataResolveAlias;
     if (alias) {
       if (Array.isArray(alias)) {
@@ -307,7 +320,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     // noExternal ensures all dependencies are inlined into a single bundle,
     // so module-level variables (Phase B) are shared across the entire graph.
     const ssrOutDir = join(root, outDir, 'server');
-    log.info(`Building SSR bundle → ${ssrOutDir}`);
+    log.info(`Building SSR bundle -> ${ssrOutDir}`);
     const clientOnlyIslandIds = new Set(
       Object.entries(ssgIslandMeta)
         .filter(([, meta]) => meta.ssr === false)
@@ -365,11 +378,11 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
             if (id === RESOLVED_SSG_ENTRY_ID) return ssgEntryCode;
           },
         },
-        // ADR 0018: Virtual data modules — resolve virtual:less-blog-data
+        // ADR 0018: Virtual data modules - resolve virtual:less-blog-data
         // and virtual:less-i18n-data in the SSR bundle.
         // Use dispatch plugin (checks ctx.plugins at resolve/load time).
         // The actual plugin may not be registered yet at SSG build time.
-        // If not registered, the user hasn't configured blog/i18n → resolve as resolved ID
+        // If not registered, the user hasn't configured blog/i18n -> resolve as resolved ID
         // and load() returns empty data.
         {
           name: 'less:ssg-data-dispatch',
@@ -406,7 +419,7 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
         },
         // ADR 0008 Phase C: Provide stubs for optional packages.
         // The generated entry code statically imports @lessjs/adapter-lit,
-        // @lessjs/content, @lessjs/i18n — but these may not be installed.
+        // @lessjs/content, @lessjs/i18n - but these may not be installed.
         // This plugin resolves them to empty stubs when missing, so the
         // viteBuild() succeeds regardless of which packages are available.
         optionalPackageStubsPlugin(),
@@ -423,7 +436,7 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
             ].join('\n');
           },
         },
-        // Resolve virtual:less-nav — shared nav/pwa/speculation constants
+        // Resolve virtual:less-nav - shared nav/pwa/speculation constants
         {
           name: 'less:ssg-virtual-nav',
           resolveId(id) {
@@ -517,9 +530,9 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
 
       const importMapPath = join(ssrOutDir, 'importmap.json');
       writeFileSync(importMapPath, JSON.stringify({ imports: importMap }, null, 2), 'utf-8');
-      log.info(`Import map written → ${importMapPath} (${Object.keys(importMap).length} entries)`);
+      log.info(`Import map written -> ${importMapPath} (${Object.keys(importMap).length} entries)`);
     } catch (e) {
-      log.warn('Failed to write importmap.json — non-fatal:', e);
+      log.warn('Failed to write importmap.json - non-fatal:', e);
     }
 
     // Load the SSR bundle and run SSG rendering pipeline
@@ -535,7 +548,7 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
       throw new SsrRenderError('virtual:less-ssg-entry', new Error('Failed to load Hono app'));
     }
 
-    // Delegate to shared ssgRender() — zero Vite dependency from this point
+    // Delegate to shared ssgRender() - zero Vite dependency from this point
     await ssgRender(module as Parameters<typeof ssgRender>[0], {
       root,
       outDir,
@@ -549,7 +562,7 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
       pwa: (options as Record<string, unknown>).pwa as SsgRenderOptions['pwa'],
     }, ctx);
 
-    log.info('Static site generated → ' + join(root, outDir));
+    log.info('Static site generated -> ' + join(root, outDir));
   } catch (err) {
     const cause = err instanceof Error ? err : new Error(String(err));
     throw new SsrRenderError('SSG pipeline', cause);

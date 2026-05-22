@@ -46,7 +46,7 @@ test.describe('Link Navigation', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    // Links are inside Shadow DOM — use piercing evaluate to find them
+    // Links are inside Shadow DOM - use piercing evaluate to find them
     const internalLinks = await page.evaluate(() => {
       const allLinks: HTMLAnchorElement[] = [];
 
@@ -193,7 +193,7 @@ test.describe('Blog Pages', () => {
     await page.waitForLoadState('networkidle');
 
     // Blog index should have links to blog posts
-    // Links are inside Shadow DOM — pierce through
+    // Links are inside Shadow DOM - pierce through
     const blogLinks = await page.evaluate(() => {
       const links: string[] = [];
 

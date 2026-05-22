@@ -1,22 +1,24 @@
 /**
- * Changelog Page — LessJS Framework Version History
+ * Changelog Page - LessJS Framework Version History
  */
 export const meta = { section: '', label: 'Changelog', order: 20 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../components/page-styles.js';
+const pageSheet = new StyleSheet();
+pageSheet.replaceSync(pageStyles);
 import '@lessjs/ui/less-layout';
 
-export class ChangelogPage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+
+routeSheet.replaceSync(`
       .version-section {
         margin: 2rem 0;
         padding: 1.5rem;
-        background: var(--less-bg-surface);
+        background: var(--bg-surface);
         /* 0.5px: reduced to match less-ui spec */
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 6px;
       }
       .version-header {
@@ -28,13 +30,13 @@ export class ChangelogPage extends LitElement {
       .version-number {
         font-size: 1.25rem;
         font-weight: 700;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
       }
       .version-date {
         font-size: 0.75rem;
-        color: var(--less-text-muted);
+        color: var(--text-muted);
         padding: 0.25rem 0.5rem;
-        background: var(--less-bg-elevated);
+        background: var(--bg-elevated);
         border-radius: 3px;
       }
       .change-category {
@@ -45,17 +47,17 @@ export class ChangelogPage extends LitElement {
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: var(--less-text-muted);
+        color: var(--text-muted);
         margin-bottom: 0.5rem;
       }
       .change-category.added h4 {
-        color: var(--less-accent);
+        color: var(--brand);
       }
       .change-category.changed h4 {
-        color: var(--less-accent-dim);
+        color: var(--brand-light);
       }
       .change-category.fixed h4 {
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
       }
       .change-list {
         list-style: none;
@@ -66,14 +68,14 @@ export class ChangelogPage extends LitElement {
         padding: 0.375rem 0;
         padding-left: 1.25rem;
         position: relative;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
         font-size: 0.875rem;
       }
       .change-list li::before {
         content: "•";
         position: absolute;
         left: 0;
-        color: var(--less-text-muted);
+        color: var(--text-muted);
       }
       .version-table {
         width: 100%;
@@ -85,29 +87,31 @@ export class ChangelogPage extends LitElement {
       .version-table td {
         padding: 0.75rem 1rem;
         text-align: left;
-        border-bottom: 0.5px solid var(--less-border);
+        border-bottom: 0.5px solid var(--border);
       }
       .version-table th {
         font-size: 0.6875rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: var(--less-text-muted);
+        color: var(--text-muted);
       }
       .version-table td:first-child {
         font-weight: 600;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
       }
-    `,
-  ];
+    `);
+
+export class ChangelogPage extends DsdElement {
+  static override styles = [openPropsTokenSheet, pageSheet, routeSheet];
 
   override render() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
-        .headerNav="${headerNav}"
+        locale="${this._getLocale('zh')}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(navSections)}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/changelog"
         home
       >
@@ -125,6 +129,39 @@ export class ChangelogPage extends LitElement {
             历史条目保留当时术语；当前文档统一把 LessJS 的客户端模型称为 Island Upgrade，而不是传统
             hydration。
           </p>
+
+          <div class="version-section">
+            <div class="version-header">
+              <span class="version-number">0.20.0</span>
+              <span class="version-date">2026-05-21</span>
+            </div>
+            <div class="change-category breaking">
+              <h4>Ocean-Island 架构 - Lit 全面移除</h4>
+              <ul class="change-list">
+                <li>所有路由组件从 LitElement 迁移到 DsdElement：render() 返回 string，StyleSheet.replaceSync() 替代 css\`\`</li>
+                <li>Open Props tokens 通过 StyleSheet.cssRules 提取 + 注入 shadow DOM，替代 Lit 的全局 CSS 注入</li>
+                <li>parseRules 从正则改为括号计数解析器，正确处理 @media/@keyframes 嵌套块</li>
+              </ul>
+            </div>
+            <div class="change-category fixed">
+              <h4>修复</h4>
+              <ul class="change-list">
+                <li><strong>导航栏样式丢失</strong>：parseRules 扁平化 @media 导致移动端 display:none 覆盖桌面端 display:flex</li>
+                <li><strong>主题切换/语言切换按钮消失</strong>：less-layout._esc() 用 document.createElement 在 SSR 抛异常 -> 空 DSD 回退；injectProps 设 JS 属性但 _locale()/_locales() 只读 getAttribute -> lang-switch 始终为空</li>
+                <li><strong>CSS 变量全部未定义</strong>：openPropsTokenSheet 裸声明 --gray-0: #f8f9fa 无选择器，旧 parseRules 跳过整块 token sheet；10 个 UI 组件 static styles 未包含 openPropsTokenSheet</li>
+                <li><strong>布局过一会全炸（DSD 水合 bug）</strong>：connectedCallback 中 shadowRoot 已存在时跳过 createRenderRoot()，_dsdHydrated 未标记 -> CSR 路径执行 innerHTML = render() 清空 DSD 内容</li>
+                <li><strong>嵌套 CE 不渲染</strong>：renderNestedCustomElements 单次扫描，less-layout DSD 输出中的 less-theme-toggle 未被发现；增加 DSD 子节点递归渲染</li>
+                <li><strong>index/index.ts 未使用 import</strong>：移除无效的 DsdLitElement 导入</li>
+                <li><strong>主题切换不生效（dark mode）</strong>：openPropsTokenSheet 缺少 :host([data-theme="dark"]) 覆盖 -> 切换后颜色不变；less-theme-toggle 未传播 data-theme 到父 less-layout；vite.config.ts 全局 CSS 缺 dark mode body 覆盖</li>
+                <li><strong>语言切换不生效</strong>：路由组件用 this.getAttribute('locale') 读取 locale，但 SSR injectProps() 设的是 JS 属性而非 HTML 属性 -> getAttribute 返回 null -> 回退硬编码 'zh' -> 所有页面永远渲染中文；修复为 DsdElement._getLocale() 方法（JS 属性优先 -> HTML 属性 -> 回退默认值）</li>
+                <li><strong>Theme 事件传播</strong>：less-theme-toggle 派发 less:theme-change 自定义事件；less-layout 监听并传播 data-theme 到自身和 light DOM 子组件</li>
+                <li><strong>首页 Code Strip DSD 输出为空</strong>：CODE_DSD 包含 &lt;template&gt; 等 HTML 标签，在 &lt;pre&gt;&lt;code&gt; 中浏览器解析为实际 HTML 而非文本 -> &lt;template&gt; 元素默认不显示；修复为 escHtml() 转义后再渲染</li>
+                <li><strong>Theme 切换不即时生效 / 跨页面不互通</strong>：DsdElement 子组件连接时未同步 document.documentElement 的 data-theme，导致切换后子组件变量不更新；SPA 导航后新插入组件缺少 data-theme -> 页面主题重置；修复：DsdElement.connectedCallback 自动同步 data-theme；less-layout._loadContent() 插入后递归传播；_propagateTheme() 深入 shadow DOM 遍历</li>
+                <li><strong>Blog/Decisions/Registry 页面内容显示 [object Object]</strong>：DsdElement.render() 返回纯字符串，但 blog [slug].ts / decisions [slug].ts / registry [component].ts 使用了 Lit 的 unsafeHTML() 指令（返回 DirectiveResult 对象），模板字符串插值 \${unsafeHTML(...)} 调用 .toString() 得到 [object Object]；移除 unsafeHTML 直接插入原始 HTML 字符串</li>
+                <li><strong>deno fmt 格式问题</strong>：修复 12 个文件格式不符合 deno fmt 规范</li>
+              </ul>
+            </div>
+          </div>
 
           <div class="version-section">
             <div class="version-header">
@@ -149,7 +186,7 @@ export class ChangelogPage extends LitElement {
                 <li>
                   <strong>框架运行时与构建编排解耦</strong>（ADR 0017）： @lessjs/core 成为纯 Web Standard
                   运行时包，可在 Deno / Node / Bun / Edge 任意运行。 Vite 插件、路由扫描、SSG
-                  三阶段流水线、npm:→bare 翻译全部移至 @lessjs/adapter-vite。
+                  三阶段流水线、npm:->bare 翻译全部移至 @lessjs/adapter-vite。
                 </li>
                 <li>
                   <strong>API 迁移</strong>：
@@ -164,7 +201,7 @@ export class ChangelogPage extends LitElement {
                   Vite、esbuild、@hono/vite-dev-server、node:*。 仅保留 parse5 作为纯 JS HTML 解析器依赖。
                 </li>
                 <li>
-                  <strong>包版本变更</strong>： @lessjs/core 0.10.7 → 0.11.0； @lessjs/app 0.2.6 → 0.3.0；
+                  <strong>包版本变更</strong>： @lessjs/core 0.10.7 -> 0.11.0； @lessjs/app 0.2.6 -> 0.3.0；
                   @lessjs/adapter-vite 新增 0.1.0。
                 </li>
               </ul>
@@ -182,8 +219,8 @@ export class ChangelogPage extends LitElement {
                 <li>
                   <strong>SSR Bundle 公共 API</strong>（ADR 0014）： SSR bundle 新增 <span
                     class="inline-code"
-                  >renderRoute(path, opts)→HTML</span>、
-                  <span class="inline-code">getStaticPaths(path)→params[]</span>、
+                  >renderRoute(path, opts)->HTML</span>、
+                  <span class="inline-code">getStaticPaths(path)->params[]</span>、
                   <span class="inline-code">routeInfo[]</span> 三个导出。
                   <span class="inline-code">build-ssg.ts</span> 不再直接访问 customElements、
                   不再用正则解析源文件提取 tagName、不再直接调用 renderDSD/wrapInDocument，
@@ -228,9 +265,9 @@ export class ChangelogPage extends LitElement {
                   <span class="inline-code">__lessBuildMetadata</span> 数据传递。
                 </li>
                 <li>
-                  <strong>包版本变更</strong>： @lessjs/core 0.9.2 → 0.10.0； @lessjs/app 0.1.0 → 0.2.0；
-                  @lessjs/content 0.2.0 → 0.3.0； @lessjs/adapter-lit 0.7.1 → 0.8.0； @lessjs/create 0.6.2
-                  → 0.7.0。
+                  <strong>包版本变更</strong>： @lessjs/core 0.9.2 -> 0.10.0； @lessjs/app 0.1.0 -> 0.2.0；
+                  @lessjs/content 0.2.0 -> 0.3.0； @lessjs/adapter-lit 0.7.1 -> 0.8.0； @lessjs/create 0.6.2
+                  -> 0.7.0。
                 </li>
               </ul>
             </div>
@@ -285,7 +322,7 @@ export class ChangelogPage extends LitElement {
                 <li>
                   <strong>SSG Post-process 管线重构</strong>：
                   <span class="inline-code">ssg-postprocess.ts</span> 从单一函数拆分为 5 步管线：
-                  injectClientScript → injectViewTransitionMeta → injectSpeculationRules → injectCspMeta →
+                  injectClientScript -> injectViewTransitionMeta -> injectSpeculationRules -> injectCspMeta ->
                   injectDsdPolyfill。 每步独立、可测试、可配置。39 个测试。
                 </li>
               </ul>
@@ -294,7 +331,7 @@ export class ChangelogPage extends LitElement {
               <h4>变更</h4>
               <ul class="change-list">
                 <li>
-                  <strong>Phase 1→3 配置传递补全</strong>：
+                  <strong>Phase 1->3 配置传递补全</strong>：
                   <span class="inline-code">viewTransition</span> 和 <span class="inline-code"
                   >speculation</span>
                   配置项从 Phase 1 写入 <span class="inline-code">build-metadata.json</span>， Phase 3
@@ -311,7 +348,7 @@ export class ChangelogPage extends LitElement {
                   >speculation: true</span>， 避免不必要的带宽消耗。属于性能优化，非核心渲染功能。
                 </li>
                 <li>
-                  <strong>包版本变更</strong>： @lessjs/core 0.9.0-alpha-1 → 0.9.2； 其余包未变更。
+                  <strong>包版本变更</strong>： @lessjs/core 0.9.0-alpha-1 -> 0.9.2； 其余包未变更。
                 </li>
               </ul>
             </div>
@@ -358,7 +395,7 @@ export class ChangelogPage extends LitElement {
                   <strong>双语文档站</strong>： 25/30 文档页面添加 <span class="inline-code"
                   >_renderEn()</span> 英文版，
                   <span class="inline-code">render()</span> 根据 <span class="inline-code"
-                  >this.locale</span> 分发。 language switcher 在 header-right 可点击切换整个网站语言。
+                  >this.getAttribute('locale')</span> 分发。 language switcher 在 header-right 可点击切换整个网站语言。
                 </li>
                 <li>
                   <strong>i18n StaticPaths</strong>：
@@ -399,7 +436,7 @@ export class ChangelogPage extends LitElement {
                 </li>
                 <li>
                   <strong>kissjs.org 域名残留</strong>： UI 组件示例邮箱 <span class="inline-code"
-                  >hello@kissjs.org</span> →
+                  >hello@kissjs.org</span> ->
                   <span class="inline-code">hello@lessjs.org</span>。
                 </li>
               </ul>
@@ -419,7 +456,7 @@ export class ChangelogPage extends LitElement {
                   <span class="inline-code">lessContent()</span> 合并 Blog + Nav + Sitemap 三模块，
                   每个模块 opt-in。Blog 模块从
                   <span class="inline-code">@lessjs/blog</span> 升级而来， 新增 Nav 模块（路由文件 meta
-                  扫描 → sidebar 自动生成）和 Sitemap 模块（SSG 产物扫描 → sitemap.xml + robots.txt）。 25
+                  扫描 -> sidebar 自动生成）和 Sitemap 模块（SSG 产物扫描 -> sitemap.xml + robots.txt）。 25
                   个测试用例覆盖全部三模块。
                 </li>
                 <li>
@@ -440,7 +477,7 @@ export class ChangelogPage extends LitElement {
                   >.prop="$&#123;val&#125;"</span>
                   不再被 SSR 剥弃，而是转换为 kebab-case HTML 属性 + JSON 序列化值 （如 <span
                     class="inline-code"
-                  >.navItems="$&#123;arr&#125;"</span> →
+                  >.navItems="$&#123;arr&#125;"</span> ->
                   <span class="inline-code">nav-items="[{...}]"</span>）， 嵌套自定义元素在 SSR
                   阶段获得属性数据。事件绑定仍被剥离。
                 </li>
@@ -458,8 +495,8 @@ export class ChangelogPage extends LitElement {
               <h4>变更</h4>
               <ul class="change-list">
                 <li>
-                  <strong>@lessjs/blog → @lessjs/content</strong>：
-                  <span class="inline-code">lessBlog()</span> →
+                  <strong>@lessjs/blog -> @lessjs/content</strong>：
+                  <span class="inline-code">lessBlog()</span> ->
                   <span class="inline-code">lessContent()</span>， 0.x 阶段 Breaking Change。API
                   入口从单一博客扩展为三合一内容插件。
                 </li>
@@ -469,8 +506,8 @@ export class ChangelogPage extends LitElement {
                   不采用固定版本（虚增未修改包），也不采用完全独立（缺叙事节奏）。
                 </li>
                 <li>
-                  <strong>包版本变更</strong>： @lessjs/core 0.8.1→0.9.0-alpha-1， @lessjs/adapter-lit
-                  0.6.4→0.7.0， @lessjs/content 0.1.0→0.2.0； ui/rpc/signal/create 不变。
+                  <strong>包版本变更</strong>： @lessjs/core 0.8.1->0.9.0-alpha-1， @lessjs/adapter-lit
+                  0.6.4->0.7.0， @lessjs/content 0.1.0->0.2.0； ui/rpc/signal/create 不变。
                 </li>
               </ul>
             </div>
@@ -498,7 +535,7 @@ export class ChangelogPage extends LitElement {
                   /ui 页面合并了 @lessjs/ui 文档（组件清单、设计令牌、SSR 兼容性）。
                 </li>
                 <li>
-                  <strong>/guide/blog-system → /guide/content-system</strong>：重命名并更新为
+                  <strong>/guide/blog-system -> /guide/content-system</strong>：重命名并更新为
                   <span class="inline-code">@lessjs/content</span> 文档。
                 </li>
                 <li>
@@ -584,7 +621,7 @@ export class ChangelogPage extends LitElement {
               <h4>变更</h4>
               <ul class="change-list">
                 <li>
-                  <strong>render-dsd.ts 拆分</strong>：770 行单文件拆为 4 个模块 —
+                  <strong>render-dsd.ts 拆分</strong>：770 行单文件拆为 4 个模块 -
                   <span class="inline-code">render-dsd-core.ts</span>（主渲染器）、
                   <span class="inline-code">render-dsd-escape.ts</span>（XSS 安全）、
                   <span class="inline-code">render-dsd-nested.ts</span>（L2 嵌套）、
@@ -694,7 +731,7 @@ export class ChangelogPage extends LitElement {
                 </li>
                 <li>
                   <strong>部署迁移至 Cloudflare Pages</strong>：从 GitHub Pages 迁移到 Cloudflare Pages
-                  Connect GitHub 模式。main → Production（lessjs.com），dev → Preview（自动分配 URL）。
+                  Connect GitHub 模式。main -> Production（lessjs.com），dev -> Preview（自动分配 URL）。
                 </li>
               </ul>
             </div>
@@ -737,7 +774,7 @@ export class ChangelogPage extends LitElement {
                 </li>
                 <li>
                   <strong>Footer CSS 选择器修复</strong>：
-                  <span class="inline-code">.app-footer footer</span> →
+                  <span class="inline-code">.app-footer footer</span> ->
                   <span class="inline-code">.app-footer</span>。 原选择器匹配不到实际 DOM 结构（<span
                     class="inline-code"
                   >&lt;footer class="app-footer"&gt;</span>）， 导致 Footer 无样式（无
@@ -839,7 +876,7 @@ export class ChangelogPage extends LitElement {
                 <li>
                   <strong>Island Mixin 替代猴子补丁</strong>：
                   <span class="inline-code">__lessIslandWrapped</span> 防重入。
-                  <span class="inline-code">idle</span> 降级改进：rIC → rAF → setTimeout(50)。
+                  <span class="inline-code">idle</span> 降级改进：rIC -> rAF -> setTimeout(50)。
                 </li>
                 <li>
                   <strong>prefers-color-scheme 检测</strong>：
@@ -870,7 +907,7 @@ export class ChangelogPage extends LitElement {
               <ul class="change-list">
                 <li>
                   <strong>Navigation API navigationType bug</strong>：
-                  <span class="inline-code">navigationType</span> 未按 WHATWG §7.4 规范返回正确类型。
+                  <span class="inline-code">navigationType</span> 未按 WHATWG section7.4 规范返回正确类型。
                 </li>
                 <li>
                   <strong>首页 content 被 sidebar BFC 裁剪</strong>：改为条件渲染， home 时不渲染 desktop
@@ -891,7 +928,7 @@ export class ChangelogPage extends LitElement {
                 </li>
                 <li>
                   <strong>仓库迁移</strong>：<span class="inline-code">SisyphusZheng/kiss</span>
-                  → <span class="inline-code">lessjs-run/lessjs</span>。
+                  -> <span class="inline-code">lessjs-run/lessjs</span>。
                 </li>
               </ul>
             </div>
@@ -906,24 +943,24 @@ export class ChangelogPage extends LitElement {
               <h4>变更</h4>
               <ul class="change-list">
                 <li>
-                  <strong>全面品牌重塑 KISS → LessJS 完成</strong>：包名 <span class="inline-code"
+                  <strong>全面品牌重塑 KISS -> LessJS 完成</strong>：包名 <span class="inline-code"
                   >@kissjs/*</span>
-                  → <span class="inline-code">@lessjs/*</span>，主函数 <span class="inline-code"
+                  -> <span class="inline-code">@lessjs/*</span>，主函数 <span class="inline-code"
                   >kiss()</span>
-                  → <span class="inline-code">less()</span>，全部类名、变量名、注释完成迁移。 涉及 105
+                  -> <span class="inline-code">less()</span>，全部类名、变量名、注释完成迁移。 涉及 105
                   个文件，1171 行新增，905 行删除。
                 </li>
                 <li>
                   <strong>文档站全站品牌更新</strong>：CSS 变量 <span class="inline-code">--kiss-*</span>
-                  → <span class="inline-code">--less-*</span>（69 处），域名 <span class="inline-code"
+                  -> <span class="inline-code">--less-*</span>（69 处），域名 <span class="inline-code"
                   >kiss.js.org</span>
-                  → <span class="inline-code">lessjs.com</span>，路由 <span class="inline-code"
+                  -> <span class="inline-code">lessjs.com</span>，路由 <span class="inline-code"
                   >/kiss-compiler</span>
-                  → <span class="inline-code">/less-compiler</span>，README.en.md 全文重写。
+                  -> <span class="inline-code">/less-compiler</span>，README.en.md 全文重写。
                 </li>
                 <li>
-                  <strong>版本号提升</strong>：core 0.5.4→0.5.5，ui 0.5.4→0.5.5， rpc
-                  0.3.0→0.3.1，adapter-lit 0.2.0→0.2.1，create 0.4.5→0.4.6。
+                  <strong>版本号提升</strong>：core 0.5.4->0.5.5，ui 0.5.4->0.5.5， rpc
+                  0.3.0->0.3.1，adapter-lit 0.2.0->0.2.1，create 0.4.5->0.4.6。
                 </li>
               </ul>
             </div>
@@ -946,13 +983,13 @@ export class ChangelogPage extends LitElement {
                 <li>
                   <strong>PWA manifest.json favicon 路径错误</strong>：<span class="inline-code"
                   >/favicon.svg</span>
-                  → <span class="inline-code">/assets/less-logo.svg</span>，修复浏览器默认 favicon 请求
+                  -> <span class="inline-code">/assets/less-logo.svg</span>，修复浏览器默认 favicon 请求
                   404。
                 </li>
                 <li>
                   <strong>dnt npm 构建失败</strong>：<span class="inline-code"
                   >packages/rpc/_build_npm.ts</span>
-                  的 LICENSE 路径错误（<span class="inline-code">../LICENSE</span> → <span
+                  的 LICENSE 路径错误（<span class="inline-code">../LICENSE</span> -> <span
                     class="inline-code"
                   >../../LICENSE</span>）。
                 </li>
@@ -963,8 +1000,8 @@ export class ChangelogPage extends LitElement {
                 </li>
                 <li>
                   <strong>遗留 KISS 引用清理</strong>：<span class="inline-code">__kissLit*</span>
-                  全局变量 → <span class="inline-code">__lessLit*</span>，<span class="inline-code"
-                  >.kiss-row</span> CSS 类 → <span class="inline-code"
+                  全局变量 -> <span class="inline-code">__lessLit*</span>，<span class="inline-code"
+                  >.kiss-row</span> CSS 类 -> <span class="inline-code"
                   >.less-row</span>，文档中构建路径引用更新。
                 </li>
               </ul>
@@ -1223,8 +1260,8 @@ export class ChangelogPage extends LitElement {
             </div>
 
             <h2>
-              v0.5.0-alpha.1 — 架构审计与精准修复 <span
-                style="font-size:0.75rem;color:var(--less-text-muted);font-weight:400"
+              v0.5.0-alpha.1 - 架构审计与精准修复 <span
+                style="font-size:0.75rem;color:var(--text-muted);font-weight:400"
               >2026-05-02</span>
             </h2>
 
@@ -1264,7 +1301,7 @@ export class ChangelogPage extends LitElement {
             <ul>
               <li>kiss-adapter-lit：0 测试（两个 Bug 都出在这里）</li>
               <li>escapeHtml 在 3 处重复编写，编码还不同（&#x27; vs &#39;）</li>
-              <li>所有 9 个 Island 全 eager 加载 → 每页完整全局 island entry → 需要页面级 manifest</li>
+              <li>所有 9 个 Island 全 eager 加载 -> 每页完整全局 island entry -> 需要页面级 manifest</li>
               <li>旧 Lit SSR client 路线仍在依赖/术语中残留（v0.5.0 声称已移除）</li>
               <li>renderNestedDsd() 是空函数 stub</li>
             </ul>
@@ -1302,7 +1339,7 @@ export class ChangelogPage extends LitElement {
                 <ul class="change-list">
                   <li>
                     <strong>Serverless API CI 部署</strong>：less-demo-api.sisyphuszheng.deno.net
-                    生产在线，deploy-api.yml 自动化（CORS 修复、平台迁移 deployctl→deno deploy）
+                    生产在线，deploy-api.yml 自动化（CORS 修复、平台迁移 deployctl->deno deploy）
                   </li>
                   <li>
                     <strong>less-hero-ping 组件</strong>：可配置 API 的 ping Island，🟢/🔴 状态点。提取到
@@ -1313,7 +1350,7 @@ export class ChangelogPage extends LitElement {
                     start
                   </li>
                   <li><strong>Blog 系统</strong>：v0.4.0 发布文 + kiss-compiler 设计决策</li>
-                  <li><strong>路線图</strong>：v0.5.0 → v1.0.0 六阶段规划</li>
+                  <li><strong>路線图</strong>：v0.5.0 -> v1.0.0 六阶段规划</li>
                 </ul>
               </div>
 
@@ -1325,14 +1362,14 @@ export class ChangelogPage extends LitElement {
                     networkFirst（实时更新），动态缓存名，skipWaiting +
                     clients.claim。根因定位：切回首页变旧版是 SW 缓存，不是 CDN
                   </li>
-                  <li><strong>全站 1px → 0.5px 统一</strong>：17 文件、40+ 处边框</li>
+                  <li><strong>全站 1px -> 0.5px 统一</strong>：17 文件、40+ 处边框</li>
                   <li>
-                    <strong>全站非 Hero 颜色 → CSS
+                    <strong>全站非 Hero 颜色 -> CSS
                       变量</strong>：--less-text-primary/secondary/tertiary/muted，--less-border，--less-bg-surface
                     等
                   </li>
                   <li>
-                    <strong>less-layout 响应式</strong>：sidebar 240px → clamp(200px, 20vw, 280px)，header
+                    <strong>less-layout 响应式</strong>：sidebar 240px -> clamp(200px, 20vw, 280px)，header
                     max-width CSS 变量化
                   </li>
                   <li>
@@ -1349,20 +1386,20 @@ export class ChangelogPage extends LitElement {
                 <h4>修复</h4>
                 <ul class="change-list">
                   <li>
-                    <strong>Upgrade race</strong>：嵌套在父 Shadow DOM 内的 Island 双渲染问题 — _renderer.ts
+                    <strong>Upgrade race</strong>：嵌套在父 Shadow DOM 内的 Island 双渲染问题 - _renderer.ts
                     剥离 defer-hydration
                   </li>
-                  <li><strong>Hero 文字可见度</strong>：#555→#999（hero-desc），#444→#777（hero-tech）</li>
+                  <li><strong>Hero 文字可见度</strong>：#555->#999（hero-desc），#444->#777（hero-tech）</li>
                   <li>
-                    <strong>页面组件事件不生效</strong>：docs-home 的 @click 在客户端不工作 — 提取为独立
+                    <strong>页面组件事件不生效</strong>：docs-home 的 @click 在客户端不工作 - 提取为独立
                     Island
                   </li>
                   <li><strong>less-hero-ping 类型错误</strong>：static override 顺序、catch e:unknow</li>
                   <li>
-                    <strong>Quick start 命令错误</strong>：npm create@lessjs/app → deno run -A
+                    <strong>Quick start 命令错误</strong>：npm create@lessjs/app -> deno run -A
                     jsr:@lessjs/create
                   </li>
-                  <li><strong>API 版本 0.3.6 → 0.4.0</strong></li>
+                  <li><strong>API 版本 0.3.6 -> 0.4.0</strong></li>
                 </ul>
               </div>
             </div>
@@ -1436,68 +1473,68 @@ export class ChangelogPage extends LitElement {
                     环境下报 "Cannot use import statement outside module"，移除（现代浏览器已原生支持 DSD）
                   </li>
                   <li>
-                    <strong>P0 — less-input 显示 "undefined" 字符串</strong>：.value="&#36;{this.value ??
+                    <strong>P0 - less-input 显示 "undefined" 字符串</strong>：.value="&#36;{this.value ??
                     ''}"，避免未设置值时显示文本 "undefined"
                   </li>
                   <li>
-                    <strong>P0 — @lessjs/core 缺少 CLI exports</strong>：deno.json 和 jsr.json 未导出
+                    <strong>P0 - @lessjs/core 缺少 CLI exports</strong>：deno.json 和 jsr.json 未导出
                     cli/build-client 和 cli/build-ssg，导致 create-kiss 脚手架创建的项目无法运行 deno task
                     build:client/build:ssg
                   </li>
                   <li>
-                    <strong>P0 — dist/tokens/colors.js 缺失</strong>：deno.json
+                    <strong>P0 - dist/tokens/colors.js 缺失</strong>：deno.json
                     已声明导出但构建产出中不存在（build 重新执行后修复）
                   </li>
                   <li>
-                    <strong>P0 — SSG 构建崩溃（globalThis.module 删早）</strong>：CJS polyfill 在
+                    <strong>P0 - SSG 构建崩溃（globalThis.module 删早）</strong>：CJS polyfill 在
                     ssrLoadModule 被删除，导致 node-domexception 报 ReferenceError
                   </li>
                   <li>
-                    <strong>P1 — 暗色模式阴影不可见</strong>：effects.ts 中 rgba(0,0,0,...)
+                    <strong>P1 - 暗色模式阴影不可见</strong>：effects.ts 中 rgba(0,0,0,...)
                     阴影在黑色背景上不可见，添加 [data-theme="dark"] 亮色阴影变体
                   </li>
                   <li>
-                    <strong>P1 — less-button href/target 渲染 "undefined"</strong>：href=&#36;{hrefAttr} /
+                    <strong>P1 - less-button href/target 渲染 "undefined"</strong>：href=&#36;{hrefAttr} /
                     target=&#36;{this.target} 在未设置时渲染字面量 "undefined"，改用 nothing sentinel
                   </li>
                   <li>
-                    <strong>P1 — less-button 每次 render 创建新箭头函数</strong>：disabled 时的 @click
+                    <strong>P1 - less-button 每次 render 创建新箭头函数</strong>：disabled 时的 @click
                     内联箭头函数提取为类方法 _preventClick
                   </li>
                   <li>
-                    <strong>P1 — less-input 错误状态 ARIA 默认值</strong>：aria-invalid="false" /
+                    <strong>P1 - less-input 错误状态 ARIA 默认值</strong>：aria-invalid="false" /
                     aria-errormessage="" 始终存在，改用 nothing sentinel
                   </li>
                   <li>
-                    <strong>P1 — less-code-block setTimeout 无清理</strong>：添加 _copyTimer +
+                    <strong>P1 - less-code-block setTimeout 无清理</strong>：添加 _copyTimer +
                     disconnectedCallback 清除超时
                   </li>
                   <li>
-                    <strong>P1 — colors.ts 注释颠倒</strong>：lessDarkColors / lessLightColors 的 JSDoc
+                    <strong>P1 - colors.ts 注释颠倒</strong>：lessDarkColors / lessLightColors 的 JSDoc
                     Light/Dark 标签互换
                   </li>
                   <li>
-                    <strong>P1 — kiss-rpc 重试延迟不响应 abort</strong>：await new Promise(setTimeout)
+                    <strong>P1 - kiss-rpc 重试延迟不响应 abort</strong>：await new Promise(setTimeout)
                     不监听 signal.aborted，改为 race 模式
                   </li>
                   <li>
-                    <strong>P1 — less-theme-toggle 无限递归</strong>：_propagateTheme 无递归深度限制，添加
+                    <strong>P1 - less-theme-toggle 无限递归</strong>：_propagateTheme 无递归深度限制，添加
                     depth 参数 + 最大 10 层
                   </li>
                   <li>
-                    <strong>P2 — vite-plugin-dts 隐式依赖</strong>：@lessjs/rpc 的 devDependencies 中包含
+                    <strong>P2 - vite-plugin-dts 隐式依赖</strong>：@lessjs/rpc 的 devDependencies 中包含
                     vite-plugin-dts，但 @lessjs/core 也使用但未声明
                   </li>
                   <li>
-                    <strong>P2 — build-ssg.ts 全局污染未清理</strong>：CJS
+                    <strong>P2 - build-ssg.ts 全局污染未清理</strong>：CJS
                     polyfill（globalThis.module/exports）用完未 delete
                   </li>
                   <li>
-                    <strong>P2 — ssg-smoke 测试 silent pass</strong>：7 个测试在无构建产出时 return
+                    <strong>P2 - ssg-smoke 测试 silent pass</strong>：7 个测试在无构建产出时 return
                     而非跳过，改为 Deno.test({ ignore })
                   </li>
                   <li>
-                    <strong>P0/P1 — 8 个 assertEquals(true, true) 僵尸断言</strong>：替换为有意义断言或移除
+                    <strong>P0/P1 - 8 个 assertEquals(true, true) 僵尸断言</strong>：替换为有意义断言或移除
                   </li>
                   <li>
                     <strong>types.ts JSDoc 错误</strong>：packageIslands 注释说
@@ -1596,7 +1633,7 @@ export class ChangelogPage extends LitElement {
                 <h4>变更</h4>
                 <ul class="change-list">
                   <li>
-                    <strong>破坏性变更</strong>：<code>less-layout</code> 主题切换逻辑已移除 — 请使用
+                    <strong>破坏性变更</strong>：<code>less-layout</code> 主题切换逻辑已移除 - 请使用
                     <code>less-theme-toggle</code> Island
                   </li>
                   <li>
@@ -1669,7 +1706,7 @@ export class ChangelogPage extends LitElement {
               <div class="change-category changed">
                 <h4>变更</h4>
                 <ul class="change-list">
-                  <li>合并页面样式（pageStyles）— 消除 840 行重复 CSS</li>
+                  <li>合并页面样式（pageStyles）- 消除 840 行重复 CSS</li>
                   <li>移除页面样式中所有 !important hack</li>
                   <li>侧边栏现在使用滑入动画 + 背景模糊</li>
                 </ul>
@@ -1776,7 +1813,7 @@ export class ChangelogPage extends LitElement {
                   <td>动态 import() 确保旧客户端补丁先于任何组件注册执行</td>
                 </tr>
                 <tr>
-                  <td>@lessjs/core → lit resolve alias</td>
+                  <td>@lessjs/core -> lit resolve alias</td>
                   <td>
                     Vite lib mode 构建中将 @lessjs/core 映射为 lit，使编译产物直接依赖 lit 而非 @lessjs/core
                   </td>
@@ -1790,7 +1827,7 @@ export class ChangelogPage extends LitElement {
                   <td>.gitattributes eol=lf 统一行尾</td>
                 </tr>
                 <tr>
-                  <td>tsup → Vite lib mode</td>
+                  <td>tsup -> Vite lib mode</td>
                   <td>tsup 不支持 Deno 的 node: 前缀保留</td>
                   <td>Node 原生模块导入失败</td>
                   <td>迁移至 Vite lib format: 'es'，天然保留 node: 前缀</td>
@@ -1885,9 +1922,9 @@ export class ChangelogPage extends LitElement {
           </div>
         </less-layout>
       `;
-    }
   }
+}
 
-  customElements.define('page-changelog', ChangelogPage);
-  export default ChangelogPage;
-  export const tagName = 'page-changelog';
+customElements.define('page-changelog', ChangelogPage);
+export default ChangelogPage;
+export const tagName = 'page-changelog';

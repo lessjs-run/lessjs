@@ -1,8 +1,8 @@
 /**
- * Homepage — v8 redesign
+ * Homepage - v8 redesign
  *
- * Three-act rhythm: Dark Hero → Light Narrative → Warm-gray Footer
- * 6 sections: Hero → Code Strip → Benchmark → Multi-framework → Bento → Quick Start
+ * Three-act rhythm: Dark Hero -> Light Narrative -> Warm-gray Footer
+ * 6 sections: Hero -> Code Strip -> Benchmark -> Multi-framework -> Bento -> Quick Start
  *
  * v8 Redesign key changes:
  * - Hero: Display-level typography, enhanced gradient glow, brand-shadow buttons
@@ -10,14 +10,14 @@
  * - Quick Start: less-step-card components
  * - Bento hierarchy with WC Engine dominant card, sec-divider-free transitions
  */
-import { css, html } from 'lit';
-import { DsdLitElement } from '@lessjs/adapter-lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { headerNav, navSections } from 'virtual:less-nav';
-import { lessDesignTokens } from '@lessjs/ui/design-tokens';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
 import '@lessjs/ui/less-step-card';
+import '../../islands/less-search.js';
 import '../../islands/less-term.js';
 import '../../islands/shoelace-showcase.js';
 import '../../islands/react-showcase.js';
@@ -26,15 +26,23 @@ import '../../islands/media-chrome-showcase.js';
 export const tagName = 'docs-home';
 
 const CODE_COMPONENT = `// app/routes/index.ts
-import { html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 
-export class Home extends LitElement {
+const sheet = new StyleSheet();
+sheet.replaceSync(':host { display: block; }');
+
+export class Home extends DsdElement {
+  static styles = sheet;
   render() {
-    return html\`<h1>hello world</h1>
+    return \`<h1>hello world</h1>
   <my-counter></my-counter>\`;
   }
 }
 customElements.define('page-home', Home);`;
+
+function escHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
 
 const CODE_DSD = `<page-home>
   <template shadowrootmode="open">
@@ -47,36 +55,8 @@ const CODE_DSD = `<page-home>
   </template>
 </page-home>`;
 
-const _CODE_LIT = `// Lit island — app/islands/counter.ts
-import { LitElement, html } from 'lit';
-export class MyCounter extends LitElement {
-  @state() count = 0;
-  render() {
-    return html\`<button @click=\${() => this.count--}>−</button>
-      <span>\${this.count}</span>
-      <button @click=\${() => this.count++}>+</button>\`;
-  }
-}`;
-
-const _CODE_REACT = `// React island — app/islands/hello.tsx
-export default function Hello({ name }) {
-  return <h1>Hello, {name}!</h1>;
-}
-// ReactDOMServer → DSD, zero-config SSR`;
-
-const _CODE_VANILLA = `// Vanilla island — app/islands/player.ts
-import { WithDsdHydration } from '@lessjs/adapter-vanilla';
-class MediaPlayer extends WithDsdHydration(HTMLElement) {
-  connectedCallback() { /* upgrade logic */ }
-}
-customElements.define('media-player', MediaPlayer);`;
-
-export default class DocsHome extends DsdLitElement {
-  private _mfaTab = 0;
-
-  static override styles = [
-    lessDesignTokens,
-    css`
+const indexSheet = new StyleSheet();
+indexSheet.replaceSync(`
     :host {
       display: block;
     }
@@ -85,9 +65,9 @@ export default class DocsHome extends DsdLitElement {
       display:flex;flex-direction:column;
     }
 
-    /* ── I. Hero — dark immersive opening with fluid wave ── */
+    /* ── I. Hero - dark immersive opening with fluid wave ── */
     .hero {
-      background: linear-gradient(170deg, var(--less-brand-deep, #26215C) 0%, #0d0d1f 40%, var(--less-brand-deep, #26215C) 100%);
+      background: linear-gradient(170deg, var(--brand-deep, #26215C) 0%, #0d0d1f 40%, var(--brand-deep, #26215C) 100%);
       color: #fff;
       width: 100vw;
       margin-left: calc(-50vw + 50%);
@@ -162,7 +142,7 @@ export default class DocsHome extends DsdLitElement {
       letter-spacing: -0.01em;
     }
     .hero h1 {
-      font-size: var(--less-font-size-display, clamp(3rem, 7vw, 5rem));
+      font-size: var(--font-size-display, clamp(3rem, 7vw, 5rem));
       font-weight: 800;
       color: #fff;
       line-height: 1.05;
@@ -171,13 +151,13 @@ export default class DocsHome extends DsdLitElement {
     }
     .hero h1 em {
       font-style: normal;
-      background: linear-gradient(135deg, var(--less-brand, #534AB7), var(--less-brand-light, #6D5CE8), var(--less-brand-pale, #8B7CF6));
+      background: linear-gradient(135deg, var(--brand, #534AB7), var(--brand-light, #6D5CE8), var(--brand-pale, #8B7CF6));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .hero-desc {
-      color: var(--less-text-secondary, rgba(255,255,255,0.55));
+      color: var(--text-secondary, rgba(255,255,255,0.55));
       font-size: 15px;
       line-height: 1.75;
       max-width: 520px;
@@ -194,23 +174,23 @@ export default class DocsHome extends DsdLitElement {
       gap: 6px;
       height: 40px;
       padding: 0 22px;
-      border-radius: var(--less-radius-md, 8px);
+      border-radius: var(--radius-md, 8px);
       font-size: 13.5px;
       font-weight: 600;
       text-decoration: none;
-      transition: transform var(--less-duration-micro, 150ms) var(--less-easing-default, ease-out),
-                  box-shadow var(--less-duration-micro, 150ms) var(--less-easing-default, ease-out);
+      transition: transform var(--duration-micro, 150ms) var(--easing-default, ease-out),
+                  box-shadow var(--duration-micro, 150ms) var(--easing-default, ease-out);
     }
     .hero-actions a:hover {
       transform: translateY(-1px);
     }
     .hero-pri {
-      background: linear-gradient(135deg, var(--less-brand, #534ab7), var(--less-brand-light, #6d5ce8));
+      background: linear-gradient(135deg, var(--brand, #534ab7), var(--brand-light, #6d5ce8));
       color: #fff;
-      box-shadow: var(--less-shadow-brand-md, 0 4px 20px rgba(83,74,183,0.3));
+      box-shadow: var(--shadow-brand-md, 0 4px 20px rgba(83,74,183,0.3));
     }
     .hero-pri:hover {
-      box-shadow: var(--less-shadow-brand-lg, 0 8px 32px rgba(83,74,183,0.4));
+      box-shadow: var(--shadow-brand-lg, 0 8px 32px rgba(83,74,183,0.4));
     }
     .hero-sec {
       border: 1px solid rgba(255,255,255,0.15);
@@ -221,9 +201,9 @@ export default class DocsHome extends DsdLitElement {
       border-color: rgba(255,255,255,0.25);
       background: rgba(255,255,255,0.08);
     }
-    /* ── II. Code Strip — dark code comparison ── */
+    /* ── II. Code Strip - dark code comparison ── */
     .code-strip {
-      background: linear-gradient(180deg, var(--less-brand-deep, #26215C) 0%, #0f0f1a 100%);
+      background: linear-gradient(180deg, var(--brand-deep, #26215C) 0%, #0f0f1a 100%);
       width: 100vw;
       margin-left: calc(-50vw + 50%);
       padding: 3rem 0;
@@ -242,13 +222,13 @@ export default class DocsHome extends DsdLitElement {
     .code-strip-label {
       font-size: 11px;
       font-weight: 600;
-      color: var(--less-brand, #534AB7);
+      color: var(--brand, #534AB7);
       text-transform: uppercase;
       letter-spacing: 0.14em;
     }
     .code-strip-arrow {
       font-size: 14px;
-      color: var(--less-brand, #534AB7);
+      color: var(--brand, #534AB7);
       animation: arrowPulse 2s ease-in-out infinite;
     }
     @keyframes arrowPulse {
@@ -265,7 +245,7 @@ export default class DocsHome extends DsdLitElement {
       border: 1px solid rgba(83,74,183,0.4);
       font-size: 11px;
       font-weight: 600;
-      color: var(--less-brand-pale, #8b7cf6);
+      color: var(--brand-pale, #8b7cf6);
       letter-spacing: 0.02em;
     }
     .code-compare {
@@ -273,10 +253,10 @@ export default class DocsHome extends DsdLitElement {
       grid-template-columns: 1fr 1fr;
       gap: 1px;
       background: #0d0d12;
-      border-radius: var(--less-radius-xl, 16px);
+      border-radius: var(--radius-xl, 16px);
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.06);
-      box-shadow: var(--less-shadow-brand-sm, 0 2px 12px rgba(83,74,183,0.2));
+      box-shadow: var(--shadow-brand-sm, 0 2px 12px rgba(83,74,183,0.2));
     }
     .code-pane {
       background: #0d0d12;
@@ -298,7 +278,7 @@ export default class DocsHome extends DsdLitElement {
     .code-bar .y { background: #febc2e; }
     .code-bar .g { background: #28c840; }
     .code-bar span {
-      color: var(--less-text-muted);
+      color: var(--text-muted);
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -330,7 +310,7 @@ export default class DocsHome extends DsdLitElement {
         .sec-lbl {
       font-size: 11px;
       font-weight: 600;
-      color: var(--less-brand, #534ab7);
+      color: var(--brand, #534ab7);
       text-transform: uppercase;
       letter-spacing: 0.14em;
       margin: 0 1.5rem 6px;
@@ -338,7 +318,7 @@ export default class DocsHome extends DsdLitElement {
     .sec-title {
       font-size: 1.25rem;
       font-weight: 650;
-      color: var(--less-text-primary);
+      color: var(--text-primary);
       margin: 0 1.5rem 18px;
       line-height: 1.4;
     }
@@ -365,25 +345,25 @@ export default class DocsHome extends DsdLitElement {
     }
 
     /* ── Transition lines ── */
-    .turn-line { width:100vw;margin-left:calc(-50vw+50%);height:1px;background:linear-gradient(90deg,transparent,var(--less-brand,#534AB7) 50%,transparent);opacity:0.3;border:none }
-    .turn-glow { width:100vw;margin-left:calc(-50vw+50%);height:1px;background:radial-gradient(ellipse at 50% 50%,var(--less-brand-glow,rgba(83,74,183,0.25)),transparent 70%);border:none }
-    .card-dominant { grid-column:1/-1;background:linear-gradient(135deg,rgba(83,74,183,0.06),rgba(83,74,183,0.02));border-left:3px solid var(--less-brand,#534AB7);border-top:1px solid rgba(83,74,183,0.1);border-right:1px solid rgba(83,74,183,0.1);border-bottom:1px solid rgba(83,74,183,0.1) }
-    .card-dominant:hover { border-left-color:var(--less-brand-light,#6D5CE8);box-shadow:0 0 20px var(--less-brand-glow,rgba(83,74,183,0.15)) inset,var(--less-shadow-brand-sm,0 2px 12px rgba(83,74,183,0.2)) }
+    .turn-line { width:100vw;margin-left:calc(-50vw+50%);height:1px;background:linear-gradient(90deg,transparent,var(--brand,#534AB7) 50%,transparent);opacity:0.3;border:none }
+    .turn-glow { width:100vw;margin-left:calc(-50vw+50%);height:1px;background:radial-gradient(ellipse at 50% 50%,var(--brand-glow,rgba(83,74,183,0.25)),transparent 70%);border:none }
+    .card-dominant { grid-column:1/-1;background:linear-gradient(135deg,rgba(83,74,183,0.06),rgba(83,74,183,0.02));border-left:3px solid var(--brand,#534AB7);border-top:1px solid rgba(83,74,183,0.1);border-right:1px solid rgba(83,74,183,0.1);border-bottom:1px solid rgba(83,74,183,0.1) }
+    .card-dominant:hover { border-left-color:var(--brand-light,#6D5CE8);box-shadow:0 0 20px var(--brand-glow,rgba(83,74,183,0.15)) inset,var(--shadow-brand-sm,0 2px 12px rgba(83,74,183,0.2)) }
     .card-meta { display:flex;gap:6px;margin-top:10px;flex-wrap:wrap }
-    .card-meta span { display:inline-flex;padding:1px 8px;border-radius:4px;font-size:10px;font-weight:500;color:var(--less-text-muted);background:var(--less-bg-surface);border:0.5px solid var(--less-border);font-family:var(--font-mono,"SF Mono","JetBrains Mono",monospace) }
+    .card-meta span { display:inline-flex;padding:1px 8px;border-radius:4px;font-size:10px;font-weight:500;color:var(--text-muted);background:var(--bg-surface);border:0.5px solid var(--border);font-family:var(--font-mono,"SF Mono","JetBrains Mono",monospace) }
     .card-pills { display:flex;gap:6px;margin-top:12px }
-    .card-pill { display:inline-flex;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:500;color:var(--less-brand,#534AB7);background:rgba(83,74,183,0.08);border:1px solid rgba(83,74,183,0.15) }
+    .card-pill { display:inline-flex;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:500;color:var(--brand,#534AB7);background:rgba(83,74,183,0.08);border:1px solid rgba(83,74,183,0.15) }
 
-    /* ── Multi-Framework Grid — three independent showcase cards ── */
+    /* ── Multi-Framework Grid - three independent showcase cards ── */
     .multi-fw-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
     }
     .mfw-card {
-      background: var(--less-bg-surface);
-      border: 1px solid var(--less-border);
-      border-radius: var(--less-radius-lg, 12px);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg, 12px);
       overflow: hidden;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
@@ -396,7 +376,7 @@ export default class DocsHome extends DsdLitElement {
       align-items: center;
       gap: 8px;
       padding: 12px 14px;
-      border-bottom: 1px solid var(--less-border);
+      border-bottom: 1px solid var(--border);
     }
     .mfw-tag {
       font-size: 9px;
@@ -409,7 +389,7 @@ export default class DocsHome extends DsdLitElement {
     .mfw-label {
       font-size: 13px;
       font-weight: 600;
-      color: var(--less-text-primary);
+      color: var(--text-primary);
     }
     .mfw-demo {
       padding: 16px;
@@ -432,9 +412,9 @@ export default class DocsHome extends DsdLitElement {
     }
     .mfw-footer {
       padding: 10px 14px;
-      border-top: 1px solid var(--less-border);
+      border-top: 1px solid var(--border);
       font-size: 10px;
-      color: var(--less-text-tertiary);
+      color: var(--text-muted);
       font-family: "JetBrains Mono", "SF Mono", Consolas, monospace;
     }
     @media (max-width: 900px) {
@@ -444,12 +424,12 @@ export default class DocsHome extends DsdLitElement {
       .multi-fw-grid { grid-template-columns: 1fr; }
     }
 
-    /* ── CSS Houdini @property — smooth brand-color transitions ── */
+    /* ── CSS Houdini @property - smooth brand-color transitions ── */
     @supports (background: paint(something)) {
       .card-dominant {
-        transition: border-left-color var(--less-duration-fast,200ms) var(--less-easing-default,ease-out),
-                    box-shadow var(--less-duration-fast,200ms) var(--less-easing-default,ease-out),
-                    transform var(--less-duration-fast,200ms) var(--less-easing-default,ease-out);
+        transition: border-left-color var(--duration-fast,200ms) var(--easing-default,ease-out),
+                    box-shadow var(--duration-fast,200ms) var(--easing-default,ease-out),
+                    transform var(--duration-fast,200ms) var(--easing-default,ease-out);
       }
     }
 
@@ -463,7 +443,7 @@ export default class DocsHome extends DsdLitElement {
       to { opacity:1;transform:translateY(0) }
     }
     @media (prefers-reduced-motion: no-preference) {
-      .sec { animation: fadeUp 0.6s var(--less-easing-default,ease-out) both;animation-timeline:view();animation-range:entry 10% entry 60% }
+      .sec { animation: fadeUp 0.6s var(--easing-default,ease-out) both;animation-timeline:view();animation-range:entry 10% entry 60% }
     }
 
     /* ── Bento Grid (three pillars) ── */
@@ -475,17 +455,17 @@ export default class DocsHome extends DsdLitElement {
     }
     
     .card {
-      border: 1px solid var(--less-border);
-      border-radius: var(--less-radius-lg, 12px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg, 12px);
       padding: 1.5rem;
-      background: var(--less-bg-surface);
-      transition: border-color var(--less-duration-fast, 200ms) var(--less-easing-default, ease-out),
-                  box-shadow var(--less-duration-fast, 200ms) var(--less-easing-default, ease-out),
-                  transform var(--less-duration-fast, 200ms) var(--less-easing-default, ease-out);
+      background: var(--bg-surface);
+      transition: border-color var(--duration-fast, 200ms) var(--easing-default, ease-out),
+                  box-shadow var(--duration-fast, 200ms) var(--easing-default, ease-out),
+                  transform var(--duration-fast, 200ms) var(--easing-default, ease-out);
     }
     .card:hover {
-      border-color: var(--less-border-hover);
-      box-shadow: var(--less-shadow-brand-sm, 0 2px 12px rgba(83,74,183,0.2));
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-brand-sm, 0 2px 12px rgba(83,74,183,0.2));
       transform: translateY(-2px);
     }
     .card-icon {
@@ -506,16 +486,16 @@ export default class DocsHome extends DsdLitElement {
       margin: 0 0 6px;
       font-size: 15px;
       font-weight: 650;
-      color: var(--less-text-primary);
+      color: var(--text-primary);
     }
     .card p {
       margin: 0;
       font-size: 13px;
-      color: var(--less-text-secondary);
+      color: var(--text-secondary);
       line-height: 1.7;
     }
 
-    /* ── Benchmark — horizontal bar chart ── */
+    /* ── Benchmark - horizontal bar chart ── */
     .bench {
       margin-bottom: 2rem;
     }
@@ -529,30 +509,30 @@ export default class DocsHome extends DsdLitElement {
       width: 90px;
       font-size: 12.5px;
       font-weight: 600;
-      color: var(--less-text-primary);
+      color: var(--text-primary);
       text-align: right;
       flex-shrink: 0;
     }
     .bench-track {
       flex: 1;
       height: 32px;
-      border-radius: var(--less-radius-sm, 6px);
-      background: var(--less-bg-surface, #f1f1f3);
+      border-radius: var(--radius-sm, 6px);
+      background: var(--bg-surface, #f1f1f3);
       overflow: hidden;
       position: relative;
     }
     .bench-fill {
       height: 100%;
-      border-radius: var(--less-radius-sm, 6px);
+      border-radius: var(--radius-sm, 6px);
       display: flex;
       align-items: center;
       padding-left: 12px;
       font-size: 12px;
       font-weight: 600;
-      transition: width 0.6s var(--less-easing-default, ease-out);
+      transition: width 0.6s var(--easing-default, ease-out);
     }
     .bench-fill.brand {
-      background: linear-gradient(135deg, var(--less-brand, #534AB7), var(--less-brand-light, #6D5CE8));
+      background: linear-gradient(135deg, var(--brand, #534AB7), var(--brand-light, #6D5CE8));
       color: #fff;
       width: 2%;
       min-width: 56px;
@@ -567,15 +547,15 @@ export default class DocsHome extends DsdLitElement {
     }
     .bench-note {
       font-size: 12px;
-      color: var(--less-text-muted);
+      color: var(--text-muted);
       margin-top: 12px;
       line-height: 1.6;
     }
     .bench-stats-row { display:flex;gap:12px;margin-bottom:16px }
-    .bench-stats-row .met { flex:1;text-align:center;padding:12px 8px;border-radius:8px;background:var(--less-bg-surface);border:0.5px solid var(--less-border);transition:border-color 0.2s,box-shadow 0.2s }
+    .bench-stats-row .met { flex:1;text-align:center;padding:12px 8px;border-radius:8px;background:var(--bg-surface);border:0.5px solid var(--border);transition:border-color 0.2s,box-shadow 0.2s }
     .bench-stats-row .met:hover { border-color:rgba(83,74,183,0.3);box-shadow:0 2px 8px rgba(83,74,183,0.08) }
-    .bench-stats-row .met strong { display:block;font-size:20px;font-weight:600;color:var(--less-brand,#534AB7);margin-bottom:2px }
-    .bench-stats-row .met span { display:block;font-size:11px;color:var(--less-text-muted);text-transform:uppercase;letter-spacing:0.06em }
+    .bench-stats-row .met strong { display:block;font-size:20px;font-weight:600;color:var(--brand,#534AB7);margin-bottom:2px }
+    .bench-stats-row .met span { display:block;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em }
     .bench-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -583,25 +563,25 @@ export default class DocsHome extends DsdLitElement {
       margin-top: 18px;
     }
     .bench-stat {
-      border: 1px solid var(--less-border);
-      border-radius: var(--less-radius-md, 10px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md, 10px);
       padding: 1rem 1.25rem;
-      background: var(--less-bg-surface);
+      background: var(--bg-surface);
     }
     .bench-stat h4 {
       margin: 0 0 4px;
       font-size: 13px;
       font-weight: 600;
-      color: var(--less-text-primary);
+      color: var(--text-primary);
     }
     .bench-stat p {
       margin: 0;
       font-size: 12px;
-      color: var(--less-text-secondary);
+      color: var(--text-secondary);
       line-height: 1.5;
     }
     .bench-stat .brand {
-      color: var(--less-brand, #534AB7);
+      color: var(--brand, #534AB7);
       font-weight: 600;
     }
 
@@ -620,7 +600,7 @@ export default class DocsHome extends DsdLitElement {
       top: 0;
       bottom: 0;
       width: 2px;
-      background: var(--less-brand, #534AB7);
+      background: var(--brand, #534AB7);
     }
     .qs-step-card {
       margin-bottom: 16px;
@@ -634,20 +614,20 @@ export default class DocsHome extends DsdLitElement {
       width: 12px;
       height: 12px;
       border-radius: 50%;
-      background: var(--less-brand, #534AB7);
-      box-shadow: 0 0 8px var(--less-brand-glow, rgba(83,74,183,0.35));
+      background: var(--brand, #534AB7);
+      box-shadow: 0 0 8px var(--brand-glow, rgba(83,74,183,0.35));
     }
-    .qs-desc { font-size:12px;color:var(--less-text-muted);margin:4px 0 0;line-height:1.5 }
+    .qs-desc { font-size:12px;color:var(--text-muted);margin:4px 0 0;line-height:1.5 }
     .qs-cta { text-align:center;margin-top:12px;padding-bottom:2rem }
-    .qs-cta a { display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 24px;border-radius:var(--less-radius-md,8px);font-size:14px;font-weight:600;text-decoration:none;color:var(--less-brand,#534AB7);background:transparent;border:1.5px solid var(--less-brand,#534AB7);transition:transform var(--less-duration-micro,150ms) var(--less-easing-default,ease-out),background 0.2s,color 0.2s }
-    .qs-cta a:hover { transform:translateY(-1px);background:var(--less-brand,#534AB7);color:#fff }
+    .qs-cta a { display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 24px;border-radius:var(--radius-md,8px);font-size:14px;font-weight:600;text-decoration:none;color:var(--brand,#534AB7);background:transparent;border:1.5px solid var(--brand,#534AB7);transition:transform var(--duration-micro,150ms) var(--easing-default,ease-out),background 0.2s,color 0.2s }
+    .qs-cta a:hover { transform:translateY(-1px);background:var(--brand,#534AB7);color:#fff }
 
-    /* ── III. Site Footer — deep still water ── */
+    /* ── III. Site Footer - deep still water ── */
     .site-footer {
       background: linear-gradient(180deg, #0d0d1f 0%, #080816 100%);
       border-top: none;
       padding: 3rem 1.5rem 1.5rem;
-      /* Full viewport width — extend beyond parent container */
+      /* Full viewport width - extend beyond parent container */
       width: 100vw;
       margin-left: calc(-50vw + 50%);
       box-sizing: border-box;
@@ -659,7 +639,7 @@ export default class DocsHome extends DsdLitElement {
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 2px;
-      background: linear-gradient(90deg, transparent, var(--less-brand, #534AB7) 30%, var(--less-brand-light, #6D5CE8) 70%, transparent);
+      background: linear-gradient(90deg, transparent, var(--brand, #534AB7) 30%, var(--brand-light, #6D5CE8) 70%, transparent);
       opacity: 0.5;
     }
     .site-footer::after {
@@ -706,7 +686,7 @@ export default class DocsHome extends DsdLitElement {
     .footer-col-title {
       font-size: 0.6875rem;
       font-weight: 500;
-      color: var(--less-brand, #534AB7);
+      color: var(--brand, #534AB7);
       text-transform: uppercase;
       letter-spacing: 0.06em;
       margin-bottom: 0.5rem;
@@ -717,7 +697,7 @@ export default class DocsHome extends DsdLitElement {
       color: rgba(255,255,255,0.45);
       text-decoration: none;
       padding: 0.2rem 0;
-      transition: color var(--less-duration-micro, 150ms) var(--less-easing-default, ease-out);
+      transition: color var(--duration-micro, 150ms) var(--easing-default, ease-out);
     }
     .footer-col a:hover {
       color: rgba(255,255,255,0.85);
@@ -725,7 +705,7 @@ export default class DocsHome extends DsdLitElement {
     .footer-terminal {
       background: rgba(83,74,183,0.08);
       border: 0.5px solid rgba(83,74,183,0.2);
-      border-radius: var(--less-radius-md, 8px);
+      border-radius: var(--radius-md, 8px);
       padding: 0.75rem 1rem;
       font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
       font-size: 0.6875rem;
@@ -756,7 +736,7 @@ export default class DocsHome extends DsdLitElement {
       text-decoration: none;
     }
     .footer-bottom a:hover {
-      color: var(--less-brand, #534AB7);
+      color: var(--brand, #534AB7);
     }
     @media (max-width: 768px) {
       .site-footer {
@@ -786,7 +766,7 @@ export default class DocsHome extends DsdLitElement {
 
     /* ── Focus visible ── */
     :focus-visible {
-      outline: 2px solid var(--less-brand);
+      outline: 2px solid var(--brand);
       outline-offset: 2px;
     }
 
@@ -904,16 +884,26 @@ export default class DocsHome extends DsdLitElement {
         flex-direction: column;
       }
     }
-  `];
+  `);
+
+export default class DocsHome extends DsdElement {
+  private _mfaTab = 0;
+
+  static override styles = [openPropsTokenSheet, indexSheet];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/" home>
-        <!-- ═══ I. Hero — 暗色沉浸式开场 ═══ -->
+    return `
+      <less-layout locale="${this._getLocale('zh')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(navSections)}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/" home>
+        <less-search slot="header-actions"></less-search>
+        <!-- ═══ I. Hero - 暗色沉浸式开场 ═══ -->
         <section class="hero">
           <div class="hero-inner">
             <div class="hero-lockup">
@@ -925,10 +915,10 @@ export default class DocsHome extends DsdLitElement {
               </svg>
               <span>LessJS</span>
             </div>
-            <h1>全栈框架 · <em>零 JS 首屏</em> · <em>多框架共存</em></h1>
-            <p class="hero-desc">DSD 原生渲染，浏览器零 JS 看到完整页面</p>
+            <h1>DSD-first 框架 · <em>零 JS 首屏</em> · <em>多框架共存</em></h1>
+            <p class="hero-desc">v0.20 Ocean-Island：DsdElement 原生渲染，浏览器零 JS 看到完整页面。</p>
             <div class="hero-actions">
-              <a class="hero-pri" href="/guide/getting-started">开始使用 →</a>
+              <a class="hero-pri" href="/guide/getting-started">开始使用 -></a>
               <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style="flex-shrink:0"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
                 GitHub
@@ -937,12 +927,12 @@ export default class DocsHome extends DsdLitElement {
           </div>
         </section>
 
-        <!-- ═══ II. Code Strip — 代码对比 ═══ -->
+        <!-- ═══ II. Code Strip - 代码对比 ═══ -->
         <div class="code-strip">
           <div class="code-strip-inner">
             <div class="code-strip-header">
               <span class="code-strip-label">你的组件</span>
-              <span class="code-strip-arrow">→</span>
+              <span class="code-strip-arrow">-></span>
               <span class="code-strip-label">SSG 输出</span>
               <span class="zero-badge">0 KB JS</span>
             </div>
@@ -951,13 +941,15 @@ export default class DocsHome extends DsdLitElement {
                 <div class="code-bar">
                   <i class="r"></i><i class="y"></i><i class="g"></i><span>你的组件</span>
                 </div>
-                <less-code-block><pre><code>${CODE_COMPONENT}</code></pre></less-code-block>
+                <less-code-block><pre><code>${
+      escHtml(CODE_COMPONENT)
+    }</code></pre></less-code-block>
               </div>
               <div class="code-pane">
                 <div class="code-bar">
                   <i class="r"></i><i class="y"></i><i class="g"></i><span>SSG 输出 (DSD)</span>
                 </div>
-                <less-code-block><pre><code>${CODE_DSD}</code></pre></less-code-block>
+                <less-code-block><pre><code>${escHtml(CODE_DSD)}</code></pre></less-code-block>
               </div>
             </div>
           </div>
@@ -966,10 +958,10 @@ export default class DocsHome extends DsdLitElement {
         <hr class="turn-line">
 
 
-        <!-- ═══ III. Benchmark — 水平条形图 ═══ -->
+        <!-- ═══ III. Benchmark - 水平条形图 ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">性能</h2>
-          <p class="sec-title">首屏 JS 体积——零就是零</p>
+          <p class="sec-title">首屏 JS 体积--零就是零</p>
           <div class="sec-bd">
             <div class="bench">
               <div class="bench-row">
@@ -990,8 +982,8 @@ export default class DocsHome extends DsdLitElement {
               </div>
               
             <div class="bench-stats-row">
-              <div class="met"><strong>v0.19.0</strong><span>latest</span></div>
-              <div class="met"><strong>681</strong><span>tests</span></div>
+              <div class="met"><strong>v0.20.0</strong><span>project line</span></div>
+              <div class="met"><strong>743</strong><span>tests</span></div>
               <div class="met"><strong>13</strong><span>packages</span></div>
               <div class="met"><strong>1</strong><span>runtime</span></div>
             </div>
@@ -1011,7 +1003,7 @@ export default class DocsHome extends DsdLitElement {
         </div>
 
 
-        <!-- ═══ IV. Multi-Framework — three independent showcases ═══ -->
+        <!-- ═══ IV. Multi-Framework - three independent showcases ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">多框架</h2>
           <p class="sec-title">任意框架，同一个 island</p>
@@ -1077,18 +1069,18 @@ export default class DocsHome extends DsdLitElement {
         <hr class="turn-glow">
 
 
-        <!-- ═══ V. Bento Grid — 三支柱 ═══ -->
+        <!-- ═══ V. Bento Grid - 三支柱 ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">三支柱</h2>
-          <p class="sec-title">框架 · 引擎 · Hub——一个产品，三重能力</p>
+          <p class="sec-title">框架 · 引擎 · Hub--一个产品，三重能力</p>
           <div class="sec-bd">
             <div class="cards">
               <div class="card card-dominant">
-                <div class="card-icon" style="background:var(--less-brand-subtle, #EEEDFE);color:var(--less-brand, #534AB7);">
+                <div class="card-icon" style="background:var(--brand-subtle, #EEEDFE);color:var(--brand, #534AB7);">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
                 </div>
                 <h3>WC 渲染引擎</h3>
-                <p>DSD 零 JS 首屏——浏览器原生解析 Declarative Shadow DOM，无需任何运行时。Lit / React / Vanilla 三种适配器共享同一渲染管线，同一页面三种框架组件协同运行。</p>
+                <p>DSD 零 JS 首屏--浏览器原生解析 Declarative Shadow DOM，无需任何运行时。Lit / React / Vanilla 三种适配器共享同一渲染管线，同一页面三种框架组件协同运行。</p>
                 <div class="card-pills">
                   <span class="card-pill">DSD</span>
                   <span class="card-pill">Island</span>
@@ -1099,8 +1091,8 @@ export default class DocsHome extends DsdLitElement {
                 <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 3v14M13 3v14M3 10h14"/></svg>
                 </div>
-                <h3>全栈框架</h3>
-                <p>文件约定路由 + Hono API Route + Serverless 一键部署。SSG / ISR / SSR 同一引擎，一套代码覆盖静态与动态场景。</p>
+                <h3>应用框架</h3>
+                <p>文件约定路由 + Hono API Route + SSG 构建已可用。ISR 和 request-time SSR 是 v0.21+ 路线图能力。</p>
                 <div class="card-meta"><span>file routing</span><span>hono</span><span>serverless</span></div>
               </div>
               <div class="card">
@@ -1115,7 +1107,7 @@ export default class DocsHome extends DsdLitElement {
           </div>
         </div>
 
-        <!-- ═══ VI. Quick Start — 纵向时间轴 ═══ -->
+        <!-- ═══ VI. Quick Start - 纵向时间轴 ═══ -->
         <div class="sec sec-qs-last">
           <h2 class="sec-lbl">快速开始</h2>
           <p class="sec-title">三步上手，零摩擦</p>
@@ -1127,24 +1119,24 @@ export default class DocsHome extends DsdLitElement {
               </div>
               <div class="qs-step-card">
                 <less-step-card step="2" label="开发"><code>cd my-app &amp;&amp; deno task dev</code></less-step-card>
-                <p class="qs-desc">热更新 + DSD 实时预览 → localhost:5173</p>
+                <p class="qs-desc">热更新 + DSD 实时预览 -> localhost:5173</p>
               </div>
               <div class="qs-step-card">
-                <less-step-card step="3" label="构建"><code>deno task build → dist/</code></less-step-card>
+                <less-step-card step="3" label="构建"><code>deno task build -> dist/</code></less-step-card>
                 <p class="qs-desc">纯静态文件，部署到任何 Serverless 平台</p>
               </div>
             </div>
             <div class="qs-cta">
-              <a href="/guide/deployment">部署项目 →</a>
+              <a href="/guide/deployment">部署项目 -></a>
             </div>
           </div>
         </div>
-        <!-- ═══ Footer — 暖灰安静谢幕 ═══ -->
+        <!-- ═══ Footer - 暖灰安静谢幕 ═══ -->
         <footer class="site-footer">
           <div class="site-footer-inner">
             <div class="footer-brand">
               <code>&lt;less/&gt;</code>
-              <span>— 重量更轻，能力更强的 Web</span>
+              <span>- 重量更轻，能力更强的 Web</span>
             </div>
             <hr class="footer-sep">
             <div class="footer-grid">
@@ -1169,12 +1161,12 @@ export default class DocsHome extends DsdLitElement {
               <div class="footer-terminal">
                 <span class="prompt">$</span> npx create-less<br>
                 <span class="success">  ✓ 已生成脚手架</span><br>
-                <span class="success">  → npm run dev</span>
+                <span class="success">  -> npm run dev</span>
               </div>
             </div>
             <div class="footer-bottom">
               <span>MIT License · Made with less</span>
-              <a href="/guide/getting-started">探索文档 →</a>
+              <a href="/guide/getting-started">探索文档 -></a>
             </div>
           </div>
         </footer>
@@ -1183,9 +1175,14 @@ export default class DocsHome extends DsdLitElement {
   }
 
   private _renderEn() {
-    return html`
-      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${navSections}" .headerNav="${headerNav}" current-path="/en/" home>
-        <!-- ═══ I. Hero — dark immersive opening ═══ -->
+    return `
+      <less-layout locale="${this._getLocale('en')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(navSections)}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/en/" home>
+        <less-search slot="header-actions"></less-search>
+        <!-- ═══ I. Hero - dark immersive opening ═══ -->
         <section class="hero">
           <div class="hero-inner">
             <div class="hero-lockup">
@@ -1197,10 +1194,10 @@ export default class DocsHome extends DsdLitElement {
               </svg>
               <span>LessJS</span>
             </div>
-            <h1>Full-stack · <em>Zero-JS First Paint</em> · <em>Multi-framework</em></h1>
-            <p class="hero-desc">DSD 原生渲染，浏览器零 JS 看到完整页面</p>
+            <h1>DSD-first · <em>Zero-JS First Paint</em> · <em>Multi-framework</em></h1>
+            <p class="hero-desc">v0.20 Ocean-Island: DsdElement renders native DSD so the page is visible before JS.</p>
             <div class="hero-actions">
-              <a class="hero-pri" href="/guide/getting-started">Get started →</a>
+              <a class="hero-pri" href="/guide/getting-started">Get started -></a>
               <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style="flex-shrink:0"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
                 GitHub
@@ -1209,12 +1206,12 @@ export default class DocsHome extends DsdLitElement {
           </div>
         </section>
 
-        <!-- ═══ II. Code Strip — code comparison ═══ -->
+        <!-- ═══ II. Code Strip - code comparison ═══ -->
         <div class="code-strip">
           <div class="code-strip-inner">
             <div class="code-strip-header">
               <span class="code-strip-label">your component</span>
-              <span class="code-strip-arrow">→</span>
+              <span class="code-strip-arrow">-></span>
               <span class="code-strip-label">SSG output</span>
               <span class="zero-badge">0 KB JS</span>
             </div>
@@ -1223,13 +1220,15 @@ export default class DocsHome extends DsdLitElement {
                 <div class="code-bar">
                   <i class="r"></i><i class="y"></i><i class="g"></i><span>your component</span>
                 </div>
-                <less-code-block><pre><code>${CODE_COMPONENT}</code></pre></less-code-block>
+                <less-code-block><pre><code>${
+      escHtml(CODE_COMPONENT)
+    }</code></pre></less-code-block>
               </div>
               <div class="code-pane">
                 <div class="code-bar">
                   <i class="r"></i><i class="y"></i><i class="g"></i><span>SSG output (DSD)</span>
                 </div>
-                <less-code-block><pre><code>${CODE_DSD}</code></pre></less-code-block>
+                <less-code-block><pre><code>${escHtml(CODE_DSD)}</code></pre></less-code-block>
               </div>
             </div>
           </div>
@@ -1238,10 +1237,10 @@ export default class DocsHome extends DsdLitElement {
         <hr class="turn-line">
 
 
-        <!-- ═══ III. Benchmark — horizontal bars ═══ -->
+        <!-- ═══ III. Benchmark - horizontal bars ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">performance</h2>
-          <p class="sec-title">JS at first paint — zero means zero</p>
+          <p class="sec-title">JS at first paint - zero means zero</p>
           <div class="sec-bd">
             <div class="bench">
               <div class="bench-row">
@@ -1262,28 +1261,28 @@ export default class DocsHome extends DsdLitElement {
               </div>
               
             <div class="bench-stats-row">
-              <div class="met"><strong>v0.19.0</strong><span>latest</span></div>
-              <div class="met"><strong>681</strong><span>tests</span></div>
+              <div class="met"><strong>v0.20.0</strong><span>project line</span></div>
+              <div class="met"><strong>743</strong><span>tests</span></div>
               <div class="met"><strong>13</strong><span>packages</span></div>
               <div class="met"><strong>1</strong><span>runtime</span></div>
             </div>
 <div class="bench-grid">
                 <div class="bench-stat">
                   <h4><span class="brand">DSD first-class</span> vs Preact-only</h4>
-                  <p>Browser-native Shadow DOM parsing — other frameworks can only simulate</p>
+                  <p>Browser-native Shadow DOM parsing - other frameworks can only simulate</p>
                 </div>
                 <div class="bench-stat">
                   <h4><span class="brand">Built-in Registry Hub</span></h4>
-                  <p>Component discovery + compat validation + one-click install — competitors have none</p>
+                  <p>Component discovery + compat validation + one-click install - competitors have none</p>
                 </div>
               </div>
-              <p class="bench-note">Island-only JS: payload scales with component complexity, not page count. Zero-JS first paint is a browser-native capability — no engineering optimization can match it.</p>
+              <p class="bench-note">Island-only JS: payload scales with component complexity, not page count. Zero-JS first paint is a browser-native capability - no engineering optimization can match it.</p>
             </div>
           </div>
         </div>
 
 
-        <!-- ═══ IV. Multi-framework — three independent showcases ═══ -->
+        <!-- ═══ IV. Multi-framework - three independent showcases ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">multi-framework</h2>
           <p class="sec-title">Any framework, same island</p>
@@ -1349,18 +1348,18 @@ export default class DocsHome extends DsdLitElement {
         <hr class="turn-glow">
 
 
-        <!-- ═══ V. Bento Grid — three pillars ═══ -->
+        <!-- ═══ V. Bento Grid - three pillars ═══ -->
         <div class="sec">
           <h2 class="sec-lbl">three pillars</h2>
-          <p class="sec-title">Framework · Engine · Hub — one product, three capabilities</p>
+          <p class="sec-title">Framework · Engine · Hub - one product, three capabilities</p>
           <div class="sec-bd">
             <div class="cards">
               <div class="card card-dominant">
-                <div class="card-icon" style="background:var(--less-brand-subtle, #EEEDFE);color:var(--less-brand, #534AB7);">
+                <div class="card-icon" style="background:var(--brand-subtle, #EEEDFE);color:var(--brand, #534AB7);">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
                 </div>
                 <h3>WC Rendering Engine</h3>
-                <p>DSD zero-JS first paint — browser-native Declarative Shadow DOM parsing with zero runtime. Lit, React and Vanilla adapters share one pipeline — three frameworks coexist on the same page.</p>
+                <p>DSD zero-JS first paint - browser-native Declarative Shadow DOM parsing with zero runtime. Lit, React and Vanilla adapters share one pipeline - three frameworks coexist on the same page.</p>
                 <div class="card-pills">
                   <span class="card-pill">DSD</span>
                   <span class="card-pill">Island</span>
@@ -1371,8 +1370,8 @@ export default class DocsHome extends DsdLitElement {
                 <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 3v14M13 3v14M3 10h14"/></svg>
                 </div>
-                <h3>Full-stack Framework</h3>
-                <p>File-convention routing + Hono API routes + serverless one-click deploy. SSG / ISR / SSR — same engine, one codebase for static and dynamic.</p>
+                <h3>Application Framework</h3>
+                <p>File-convention routing, Hono API routes, and SSG builds are available today. ISR and request-time SSR are v0.21+ roadmap work.</p>
                 <div class="card-meta"><span>file routing</span><span>hono</span><span>serverless</span></div>
               </div>
               <div class="card">
@@ -1387,7 +1386,7 @@ export default class DocsHome extends DsdLitElement {
           </div>
         </div>
 
-        <!-- ═══ VI. Quick Start — vertical timeline ═══ -->
+        <!-- ═══ VI. Quick Start - vertical timeline ═══ -->
         <div class="sec sec-qs-last">
           <h2 class="sec-lbl">quick start</h2>
           <p class="sec-title">Three steps, zero friction</p>
@@ -1399,24 +1398,24 @@ export default class DocsHome extends DsdLitElement {
               </div>
               <div class="qs-step-card">
                 <less-step-card step="2" label="develop"><code>cd my-app &amp;&amp; deno task dev</code></less-step-card>
-                <p class="qs-desc">HMR + DSD live preview → localhost:5173</p>
+                <p class="qs-desc">HMR + DSD live preview -> localhost:5173</p>
               </div>
               <div class="qs-step-card">
-                <less-step-card step="3" label="build"><code>deno task build → dist/</code></less-step-card>
+                <less-step-card step="3" label="build"><code>deno task build -> dist/</code></less-step-card>
                 <p class="qs-desc">Pure static files, deploy to any serverless platform</p>
               </div>
             </div>
             <div class="qs-cta">
-              <a href="/guide/deployment">Deploy now →</a>
+              <a href="/guide/deployment">Deploy now -></a>
             </div>
           </div>
         </div>
-<!-- ═══ Footer — warm-gray quiet landing ═══ -->
+<!-- ═══ Footer - warm-gray quiet landing ═══ -->
         <footer class="site-footer">
           <div class="site-footer-inner">
             <div class="footer-brand">
               <code>&lt;less/&gt;</code>
-              <span>— Web that weighs less, does more</span>
+              <span>- Web that weighs less, does more</span>
             </div>
             <hr class="footer-sep">
             <div class="footer-grid">
@@ -1441,12 +1440,12 @@ export default class DocsHome extends DsdLitElement {
               <div class="footer-terminal">
                 <span class="prompt">$</span> npx create-less<br>
                 <span class="success">  ✓ scaffolded</span><br>
-                <span class="success">  → npm run dev</span>
+                <span class="success">  -> npm run dev</span>
               </div>
             </div>
             <div class="footer-bottom">
               <span>MIT License · Made with less</span>
-              <a href="/en/guide/getting-started">Explore docs →</a>
+              <a href="/en/guide/getting-started">Explore docs -></a>
             </div>
           </div>
         </footer>

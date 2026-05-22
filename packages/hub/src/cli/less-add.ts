@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run -A
 /**
- * @lessjs/hub — `less add` CLI
+ * @lessjs/hub - `less add` CLI
  *
  * v0.19.0: One-command package installation for LessJS projects.
  *
@@ -14,7 +14,7 @@
  *   --verbose    Print detailed diagnostics
  *
  * Flow:
- *   1. Resolve package source (JSR → npm → local path)
+ *   1. Resolve package source (JSR -> npm -> local path)
  *   2. Determine compatibility tier
  *   3. Build install guidance
  *   4. Print summary (dry-run) or update config (--apply)
@@ -219,7 +219,7 @@ async function resolveLocal(
     const cemPath = `${localPath}/custom-elements.json`;
     manifestContent = await Deno.readTextFile(cemPath);
   } catch {
-    // No CEM manifest — package will be classified based on heuristics
+    // No CEM manifest - package will be classified based on heuristics
   }
 
   return {
@@ -324,7 +324,7 @@ async function classifyCompatibility(
         }
       }
     } catch {
-      // Invalid CEM — will use generic classification
+      // Invalid CEM - will use generic classification
     }
   }
 
@@ -403,7 +403,7 @@ function printSummary(
     log('  Components:');
     for (const tag of tags) {
       const icon = tag.validationErrors > 0 ? '✗' : '✓';
-      log(`    ${icon} <${tag.tagName}> — ${tag.compatibility}`);
+      log(`    ${icon} <${tag.tagName}> - ${tag.compatibility}`);
     }
   }
 
@@ -470,7 +470,7 @@ async function applyToConfig(
   } else if (pkg.source === 'jsr') {
     importSpecifier = `jsr:${fullName}@${pkg.version}`;
   } else {
-    // Local — use a relative path hint
+    // Local - use a relative path hint
     importSpecifier = fullName;
   }
 
@@ -502,7 +502,7 @@ async function applyToConfig(
   log('  Next steps:');
   log(`    1. Import in your route:  import '${fullName}';`);
   if (tier === 'client-only') {
-    log('    2. This is a client-only component — avoid SSR import.');
+    log('    2. This is a client-only component - avoid SSR import.');
     log('       Use <less-client-only> wrapper or client:only directive.');
   } else {
     log('    2. Use the component in your template.');
@@ -526,7 +526,7 @@ async function main() {
   const pkg = await resolvePackage(args.packageSpec, args);
 
   if (args.verbose) {
-    log(`  → ${pkg.scope ? `${pkg.scope}/` : ''}${pkg.name}@${pkg.version} (${pkg.source})`);
+    log(`  -> ${pkg.scope ? `${pkg.scope}/` : ''}${pkg.name}@${pkg.version} (${pkg.source})`);
   }
 
   // Step 2: Classify compatibility

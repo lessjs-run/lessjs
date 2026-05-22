@@ -1,5 +1,5 @@
 /**
- * _renderer.ts — Layout renderer for the Registry section.
+ * _renderer.ts - Layout renderer for the Registry section.
  *
  * v0.19.0: Injects vanilla JS search for the registry index page.
  * docs-registry-home is NOT an island, so Lit event handlers never
@@ -9,7 +9,7 @@
 import type { LessRenderer } from '@lessjs/core';
 
 const SEARCH_SCRIPT = `<script>
-// Registry Hub — vanilla JS search (Lit component never hydrates on SSG pages)
+// Registry Hub - vanilla JS search (Lit component never hydrates on SSG pages)
 (function() {
   var DEBOUNCE, ROOT;
 
@@ -75,7 +75,7 @@ const SEARCH_SCRIPT = `<script>
 <\/script>`;
 
 const IFRAME_RESIZE_SCRIPT = `<script>
-// Registry Hub — iframe srcdoc + auto-resize (component detail pages, no Lit hydration)
+// Registry Hub - iframe srcdoc + auto-resize (component detail pages, no Lit hydration)
 // Lit SSR cannot serialize .srcdoc or srcdoc= correctly for complex HTML content,
 // so we store the srcdoc as Base64 in data-srcdoc and decode it client-side.
 (function() {
@@ -115,7 +115,8 @@ const renderer: LessRenderer = {
 
     // DSD contains CSS + button markup (matching SSR output).
     // Client-side Lit detects the existing button and skips render() to avoid duplicates.
-    const SEARCH_DSD = '<less-search slot="header-actions"><template shadowrootmode="open"><style>:host{display:inline-flex;align-items:center}.search-trigger{display:inline-flex;align-items:center;gap:0.375rem;padding:0.375rem 0.5rem;border:0.5px solid var(--less-border);border-radius:6px;background:transparent;color:var(--less-text-muted);font-size:0.6875rem;font-weight:500;letter-spacing:0.02em;cursor:pointer;transition:color 150ms ease-out,border-color 150ms ease-out}.search-trigger:hover{color:var(--less-text-secondary);border-color:var(--less-border-hover)}.search-trigger kbd{font-family:inherit;padding:0.0625rem 0.3125rem;border:0.5px solid var(--less-border);border-radius:3px;font-size:0.625rem;margin-left:0.25rem}.search-icon{display:none;width:16px;height:16px}@media(max-width:640px){.search-trigger span{display:none}.search-trigger kbd{display:none}.search-icon{display:inline-block}.search-trigger{padding:0.375rem}}</style><button class="search-trigger"><svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg><span>Search</span><kbd>⌘K</kbd></button></template></less-search>';
+    const SEARCH_DSD =
+      '<less-search slot="header-actions"><template shadowrootmode="open"><style>:host{display:inline-flex;align-items:center}.search-trigger{display:inline-flex;align-items:center;gap:0.375rem;padding:0.375rem 0.5rem;border:0.5px solid var(--border);border-radius:6px;background:transparent;color:var(--text-muted);font-size:0.6875rem;font-weight:500;letter-spacing:0.02em;cursor:pointer;transition:color 150ms ease-out,border-color 150ms ease-out}.search-trigger:hover{color:var(--text-secondary);border-color:var(--border-hover)}.search-trigger kbd{font-family:inherit;padding:0.0625rem 0.3125rem;border:0.5px solid var(--border);border-radius:3px;font-size:0.625rem;margin-left:0.25rem}.search-icon{display:none;width:16px;height:16px}@media(max-width:640px){.search-trigger span{display:none}.search-trigger kbd{display:none}.search-icon{display:inline-block}.search-trigger{padding:0.375rem}}</style><button class="search-trigger"><svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg><span>Search</span><kbd>⌘K</kbd></button></template></less-search>';
     const layoutOpen = html.indexOf('<less-layout');
     if (layoutOpen >= 0) {
       const closeGt = html.indexOf('>', layoutOpen);

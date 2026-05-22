@@ -30,7 +30,7 @@
  *    - SSR decision: `manifest.declarations[].less.ssr` field
  *
  * 3. CEM manifests (v0.18.0):
- *    - Discovered by `scanCemManifests()` — reads custom-elements.json from
+ *    - Discovered by `scanCemManifests()` - reads custom-elements.json from
  *      node_modules packages WITHOUT importing package code
  *    - Results fed into the compatibility classifier (parseCem + classifyCemManifest)
  *
@@ -57,14 +57,14 @@ const log = createLogger('core');
 
 /**
  * Convert a file path to a URL path pattern.
- * e.g., 'index.ts' → '/', 'about.ts' → '/about', 'posts/[id].ts' → '/posts/:id'
+ * e.g., 'index.ts' -> '/', 'about.ts' -> '/about', 'posts/[id].ts' -> '/posts/:id'
  *
  * v0.6': Uses URLPattern-compatible syntax where possible.
- * URLPattern is the WHATWG standard for URL matching (§7.2).
+ * URLPattern is the WHATWG standard for URL matching (section7.2).
  * Pattern :param is compatible with both Hono and URLPattern.
  */
 function filePathToRoutePath(filePath: string): string {
-  // Normalize separators — handle Windows backslash paths
+  // Normalize separators - handle Windows backslash paths
   // v0.14.3: Use posix.join to ensure all output paths use forward slashes
   // regardless of platform. This prevents \ from leaking into URL patterns.
   let p = filePath.split(sep).join(posix.sep);
@@ -100,7 +100,7 @@ function getRouteType(filePath: string): 'page' | 'api' {
 
 /**
  * Generate a valid JS variable name from a route path.
- * e.g., '/' → 'RouteIndex', '/about' → 'RouteAbout', '/posts/:id' → 'RoutePostsId'
+ * e.g., '/' -> 'RouteIndex', '/about' -> 'RouteAbout', '/posts/:id' -> 'RoutePostsId'
  */
 function pathToVarName(path: string): string {
   let name = path
@@ -114,7 +114,7 @@ function pathToVarName(path: string): string {
 
 /**
  * Identify special file types by name.
- * _renderer.ts → renderer, _middleware.ts → middleware
+ * _renderer.ts -> renderer, _middleware.ts -> middleware
  */
 function getSpecialFileType(fileName: string): SpecialFileType | null {
   const baseName = fileName.replace(/\.[^.]+$/, '');
@@ -150,7 +150,7 @@ export async function scanRoutes(
   try {
     files = await readdir(routesDir);
   } catch (e) {
-    // Directory doesn't exist yet — return empty
+    // Directory doesn't exist yet - return empty
     log.debug(
       `Routes directory "${routesDir}" not found: ${e instanceof Error ? e.message : String(e)}`,
     );
@@ -181,11 +181,11 @@ export async function scanRoutes(
       // Check for special files
       const specialType = getSpecialFileType(file);
       if (specialType) {
-        // Add as a special entry — not a route handler, but loadable
+        // Add as a special entry - not a route handler, but loadable
         entries.push({
           path: filePathToRoutePath(relativePath),
           filePath: relativePath.split(sep).join(posix.sep),
-          type: 'special', // Not a page or API route — renderer/middleware only
+          type: 'special', // Not a page or API route - renderer/middleware only
           varName: `Special_${specialType}_${baseDir.replace(/[\\/]/g, '_') || 'root'}`,
           special: specialType,
         });
@@ -227,9 +227,9 @@ export async function scanRoutes(
  * - Converts to lowercase
  *
  * Examples:
- *   'my-counter.ts'        → 'my-counter'
- *   'posts/index.ts'       → 'posts-index'
- *   'admin\\dashboard.ts'  → 'admin-dashboard'
+ *   'my-counter.ts'        -> 'my-counter'
+ *   'posts/index.ts'       -> 'posts-index'
+ *   'admin\\dashboard.ts'  -> 'admin-dashboard'
  */
 export function fileToTagName(fileName: string): string {
   return fileName
@@ -252,7 +252,7 @@ export async function scanIslands(
   try {
     entries = await readdir(islandsDir);
   } catch (e) {
-    // Directory doesn't exist yet — return empty
+    // Directory doesn't exist yet - return empty
     log.debug(
       `Islands directory "${islandsDir}" not found: ${e instanceof Error ? e.message : String(e)}`,
     );
@@ -445,7 +445,7 @@ export interface CemScanResult {
  * Strategy:
  *   1. Read node_modules directory entries (top-level packages + scoped orgs)
  *   2. For each package, check if `<pkg>/custom-elements.json` exists
- *   3. Return the raw JSON — caller is responsible for parsing + classifying
+ *   3. Return the raw JSON - caller is responsible for parsing + classifying
  *
  * This function reads files only. It never imports or executes package code.
  *
@@ -461,7 +461,7 @@ export async function scanCemManifests(
   try {
     entries = await readdir(nodeModulesDir);
   } catch {
-    // node_modules directory doesn't exist — nothing to scan
+    // node_modules directory doesn't exist - nothing to scan
     return results;
   }
 
@@ -469,7 +469,7 @@ export async function scanCemManifests(
     if (entry.startsWith('.')) continue;
 
     if (entry.startsWith('@')) {
-      // Scoped package directory — recurse one level
+      // Scoped package directory - recurse one level
       const scopeDir = join(nodeModulesDir, entry);
       let scopedEntries: string[];
       try {
@@ -551,7 +551,7 @@ export async function detectAndClassifyCemPackages(
     const { stats } = classResult;
     if (stats.totalComponents > 0) {
       log.info(
-        `CEM: ${packageName} — ${stats.totalComponents} component(s): ` +
+        `CEM: ${packageName} - ${stats.totalComponents} component(s): ` +
           `${stats.ssrCapableCount} ssr-capable, ${stats.clientOnlyCount} client-only` +
           (stats.rejectedCount > 0 ? `, ${stats.rejectedCount} rejected` : '') +
           (stats.experimentalDomCount > 0 ? `, ${stats.experimentalDomCount} experimental` : ''),

@@ -26,7 +26,7 @@ export type UnsafeHtml = string & { readonly __unsafeHtml: unique symbol };
 /**
  * Escape a string for safe HTML text content insertion.
  * Uses single-pass replacement for performance (P-01 fix).
- * Branded types are compile-time only — removed dead runtime branches (M-01 fix).
+ * Branded types are compile-time only - removed dead runtime branches (M-01 fix).
  */
 const ESCAPE_MAP: Record<string, string> = {
   '&': '&amp;',
@@ -97,7 +97,7 @@ export function wrapInDocument(
   }
   const nonceAttr = validNonce ? ` nonce="${validNonce}"` : '';
 
-  // v0.14.8: C-02 fix — Runtime enforcement for headExtras.
+  // v0.14.8: C-02 fix - Runtime enforcement for headExtras.
   // If headExtras contains <script> tags and allowHeadExtrasScripts is false,
   // strip them to prevent XSS. Developer should use inject.scripts for safe injection.
   let safeHeadExtras = headExtras;

@@ -1,5 +1,5 @@
 /**
- * Registry Hub — Package Search & List
+ * Registry Hub - Package Search & List
  *
  * v0.19.0: Browse and search validated Web Component packages.
  * Data is embedded during SSG via JSON import, no client-side fetch needed.
@@ -10,10 +10,9 @@
 
 export const meta = { section: 'Registry', label: 'Package Registry', order: 5 };
 
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterRegistryNav } from '../../utils/nav-filter.js';
-import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 
 // ─── Data ────────────────────────────────────────────────────────────────
@@ -40,17 +39,9 @@ const COMPAT_COLORS: Record<string, string> = {
   'experimental-dom': '#8b5cf6',
 };
 
-export default class DocsRegistryHome extends LitElement {
-  private _packages: HubIndexEntry[] = [];
-  private _filtered: HubIndexEntry[] = [];
-  private _query = '';
-  private _tierFilter = 'all';
-  private _sortBy: 'name' | 'tags' | 'compatibility' = 'name';
-  private _loading = true;
+const routeSheet = new StyleSheet();
 
-  static override styles = [
-    pageStyles,
-    css`
+routeSheet.replaceSync(`
       .registry-header {
         margin-bottom: 2rem;
       }
@@ -62,7 +53,7 @@ export default class DocsRegistryHome extends LitElement {
       }
 
       .registry-header p {
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
         margin: 0;
         font-size: 0.9375rem;
       }
@@ -75,8 +66,8 @@ export default class DocsRegistryHome extends LitElement {
         letter-spacing: 0.05em;
         padding: 0.15em 0.5em;
         border-radius: 4px;
-        background: var(--less-color-primary-50, #eff6ff);
-        color: var(--less-color-primary-600, #2563eb);
+        background: var(--brand-subtle, #eff6ff);
+        color: var(--brand, #2563eb);
         vertical-align: middle;
         margin-left: 0.5rem;
       }
@@ -88,7 +79,7 @@ export default class DocsRegistryHome extends LitElement {
       }
 
       .early-access-note a {
-        color: var(--less-color-primary-600, #2563eb);
+        color: var(--brand, #2563eb);
         text-decoration: underline;
       }
 
@@ -105,22 +96,22 @@ export default class DocsRegistryHome extends LitElement {
         flex: 1;
         min-width: 200px;
         padding: 0.625rem 0.875rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 6px;
-        background: var(--less-bg-surface);
-        color: var(--less-text-primary);
+        background: var(--bg-surface);
+        color: var(--text-primary);
         font-size: 0.875rem;
         outline: none;
         transition: border-color 0.15s;
       }
 
       .search-box:focus {
-        border-color: var(--less-brand, #534AB7);
-        box-shadow: 0 0 0 3px var(--less-brand-glow, rgba(83,74,183,0.35)), var(--less-shadow-glow, 0 0 20px rgba(83,74,183,0.15));
+        border-color: var(--brand, #534AB7);
+        box-shadow: 0 0 0 3px var(--brand-glow, rgba(83,74,183,0.35)), var(--shadow-glow, 0 0 20px rgba(83,74,183,0.15));
       }
 
       .search-box::placeholder {
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
       }
 
       .filter-group {
@@ -131,20 +122,20 @@ export default class DocsRegistryHome extends LitElement {
 
       .sort-select {
         padding: 0.375rem 0.5rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 14px;
         background: transparent;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
         font-size: 0.75rem;
         cursor: pointer;
       }
 
       .filter-btn {
         padding: 0.375rem 0.75rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 14px;
         background: transparent;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
         font-size: 0.75rem;
         cursor: pointer;
         transition: all 0.15s;
@@ -152,24 +143,24 @@ export default class DocsRegistryHome extends LitElement {
       }
 
       .filter-btn:hover {
-        border-color: var(--less-border-hover);
-        color: var(--less-text-primary);
+        border-color: var(--border-hover);
+        color: var(--text-primary);
       }
 
       .filter-btn.active {
-        background: var(--less-brand, #534AB7);
-        border-color: var(--less-brand, #534AB7);
+        background: var(--brand, #534AB7);
+        border-color: var(--brand, #534AB7);
         color: #fff;
       }
 
       /* Stats */
       .stats {
         font-size: 0.8125rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         margin-bottom: 1rem;
       }
 
-      /* Package List — grid layout (v0.19.1 Phase 6, ADR-0035 B3) */
+      /* Package List - grid layout (v0.19.1 Phase 6, ADR-0035 B3) */
       .package-list {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -181,9 +172,9 @@ export default class DocsRegistryHome extends LitElement {
         flex-direction: column;
         gap: 0.5rem;
         padding: 1.25rem;
-        border: 1px solid var(--less-border);
+        border: 1px solid var(--border);
         border-radius: 10px;
-        background: var(--less-bg-surface);
+        background: var(--bg-surface);
         box-shadow: 0 1px 4px rgba(0,0,0,0.04);
         transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
         cursor: pointer;
@@ -192,8 +183,8 @@ export default class DocsRegistryHome extends LitElement {
       }
 
       .package-card:hover {
-        border-color: var(--less-brand, #534ab7);
-        box-shadow: var(--less-shadow-brand-md, 0 4px 20px rgba(83,74,183,0.3));
+        border-color: var(--brand, #534ab7);
+        box-shadow: var(--shadow-brand-md, 0 4px 20px rgba(83,74,183,0.3));
         transform: translateY(-3px);
       }
 
@@ -214,20 +205,20 @@ export default class DocsRegistryHome extends LitElement {
 
       .package-name code {
         font-size: 0.875rem;
-        background: var(--less-bg-code);
+        background: var(--bg-code);
         padding: 0.125rem 0.375rem;
         border-radius: 3px;
       }
 
       .package-version {
         font-size: 0.75rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         font-weight: 400;
       }
 
       .package-desc {
         font-size: 0.8125rem;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
         margin: 0.25rem 0;
         line-height: 1.5;
         display: -webkit-box;
@@ -265,10 +256,10 @@ export default class DocsRegistryHome extends LitElement {
       .tag-pill {
         display: inline-block;
         padding: 0.0625rem 0.375rem;
-        background: var(--less-bg-code);
+        background: var(--bg-code);
         border-radius: 3px;
         font-size: 0.6875rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
       }
 
       .install-badge {
@@ -309,7 +300,7 @@ export default class DocsRegistryHome extends LitElement {
         align-items: center;
         gap: 0.5rem;
         font-size: 0.6875rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
       }
 
       .breakdown-segment {
@@ -328,7 +319,7 @@ export default class DocsRegistryHome extends LitElement {
       .empty-state {
         text-align: center;
         padding: 3rem 1rem;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         font-size: 0.9375rem;
       }
 
@@ -338,13 +329,22 @@ export default class DocsRegistryHome extends LitElement {
           align-items: stretch;
         }
       }
-    `,
-  ];
+    `);
+
+export default class DocsRegistryHome extends DsdElement {
+  private _packages: HubIndexEntry[] = [];
+  private _filtered: HubIndexEntry[] = [];
+  private _query = '';
+  private _tierFilter = 'all';
+  private _sortBy: 'name' | 'tags' | 'compatibility' = 'name';
+  private _loading = true;
+
+  static override styles = [routeSheet];
 
   // ─── Lifecycle ────────────────────────────────────────────────────────
   // Data is available at import time from hub-data.ts.
   // Constructor loads data synchronously so render() has it during SSR/SSG.
-  // On the client, the same import is used — no fetch needed.
+  // On the client, the same import is used - no fetch needed.
 
   constructor() {
     super();
@@ -409,7 +409,7 @@ export default class DocsRegistryHome extends LitElement {
     });
 
     this._filtered = result;
-    this.requestUpdate();
+    this.update();
   }
 
   private _packageLink(pkg: HubIndexEntry): string {
@@ -418,13 +418,13 @@ export default class DocsRegistryHome extends LitElement {
   }
 
   override render() {
-    return html`
+    return `
       <less-layout
-        .navItems="${filterRegistryNav(navSections)}"
-        .headerNav="${headerNav}"
+        nav-items='${JSON.stringify(filterRegistryNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/registry"
         locale="en"
-        .locales="${['en']}"
+        locales='${JSON.stringify(['en'])}'
       >
         <div class="container">
           <div class="registry-header">
@@ -435,7 +435,7 @@ export default class DocsRegistryHome extends LitElement {
             </p>
             <p class="early-access-note">
               🚧 Currently indexing 3 packages. We're actively onboarding more Web Components libraries.
-              <a href="https://github.com/lessjs-run/lessjs/issues?q=label%3Ahub-submit">Submit your package →</a>
+              <a href="https://github.com/lessjs-run/lessjs/issues?q=label%3Ahub-submit">Submit your package -></a>
             </p>
           </div>
 
@@ -474,65 +474,74 @@ export default class DocsRegistryHome extends LitElement {
               </button>
             </div>
             <select class="sort-select" @change="${(e: Event) => {
-              this._sortBy = (e.target as HTMLSelectElement).value as
-                | 'name'
-                | 'tags'
-                | 'compatibility';
-              this._applyFilters();
-            }}">
+      this._sortBy = (e.target as HTMLSelectElement).value as
+        | 'name'
+        | 'tags'
+        | 'compatibility';
+      this._applyFilters();
+    }}">
               <option value="name" ?selected="${this._sortBy === 'name'}">Sort: Name</option>
               <option value="tags" ?selected="${this._sortBy === 'tags'}">Sort: Components</option>
-              <option value="compatibility" ?selected="${this._sortBy ===
-                'compatibility'}">Sort: Compatibility</option>
+              <option value="compatibility" ?selected="${
+      this._sortBy ===
+        'compatibility'
+    }">Sort: Compatibility</option>
             </select>
           </div>
 
-          ${this._loading
-            ? html`
+          ${
+      this._loading
+        ? `
               <div class="empty-state">Loading registry...</div>
             `
-            : this._filtered.length === 0
-            ? html`
+        : this._filtered.length === 0
+        ? `
               <div class="empty-state">
-                ${this._query || this._tierFilter !== 'all'
-                  ? 'No packages match your search criteria.'
-                  : 'No packages in the registry yet.'}
+                ${
+          this._query || this._tierFilter !== 'all'
+            ? 'No packages match your search criteria.'
+            : 'No packages in the registry yet.'
+        }
               </div>
             `
-            : html`
-              <div class="stats">${this._filtered.length} package${this._filtered.length !== 1
-                ? 's'
-                : ''} found</div>
+        : `
+              <div class="stats">${this._filtered.length} package${
+          this._filtered.length !== 1 ? 's' : ''
+        } found</div>
 
               <div class="package-list">
-                ${this._filtered.map((pkg) => {
-                  const fullName = pkg.scope ? `${pkg.scope}/${pkg.name}` : pkg.name;
-                  const compatLabel = COMPAT_LABELS[pkg.compatibility] || pkg.compatibility;
-                  const compatColor = COMPAT_COLORS[pkg.compatibility] || '#888';
+                ${
+          this._filtered.map((pkg) => {
+            const fullName = pkg.scope ? `${pkg.scope}/${pkg.name}` : pkg.name;
+            const compatLabel = COMPAT_LABELS[pkg.compatibility] || pkg.compatibility;
+            const compatColor = COMPAT_COLORS[pkg.compatibility] || '#888';
 
-                  // "New" badge: submitted within 7 days
-                  const submittedDate = new Date(pkg.submittedAt);
-                  const daysSinceSubmit = (Date.now() - submittedDate.getTime()) /
-                    (1000 * 60 * 60 * 24);
-                  const isNew = daysSinceSubmit < 7;
+            // "New" badge: submitted within 7 days
+            const submittedDate = new Date(pkg.submittedAt);
+            const daysSinceSubmit = (Date.now() - submittedDate.getTime()) /
+              (1000 * 60 * 60 * 24);
+            const isNew = daysSinceSubmit < 7;
 
-                  // SSR vs client component breakdown
-                  const totalTags = pkg.tags.length;
-                  const ssrCount = pkg.ssrCapable ? totalTags : 0;
-                  const clientCount = totalTags - ssrCount;
+            // SSR vs client component breakdown
+            const totalTags = pkg.tags.length;
+            const ssrCount = pkg.ssrCapable ? totalTags : 0;
+            const clientCount = totalTags - ssrCount;
 
-                  return html`
-                    <a class="package-card" href="${this._packageLink(pkg)}" data-compat="${pkg
-                      .compatibility}">
+            return `
+                    <a class="package-card" href="${
+              this._packageLink(pkg)
+            }" data-compat="${pkg.compatibility}">
                       <div class="package-info">
                         <div class="package-name">
                           <code>${fullName}</code>
                           <span class="package-version">v${pkg.version}</span>
-                          ${isNew
-                            ? html`
+                          ${
+              isNew
+                ? `
                               <span class="new-badge">New</span>
                             `
-                            : ''}
+                : ''
+            }
                         </div>
                         <div class="package-desc">${pkg.description || 'No description'}</div>
                         <div class="package-meta">
@@ -540,33 +549,39 @@ export default class DocsRegistryHome extends LitElement {
                             <span class="compat-dot" style="background:${compatColor}"></span>
                             ${compatLabel}
                           </span>
-                          <span class="install-badge ${pkg.safeToInstall
-                            ? 'install-safe'
-                            : 'install-unsafe'}">
+                          <span class="install-badge ${
+              pkg.safeToInstall ? 'install-safe' : 'install-unsafe'
+            }">
                             ${pkg.safeToInstall ? '✅ Safe install' : '❌ Not installable'}
                           </span>
                           <span class="component-breakdown">
-                            ${ssrCount > 0
-                              ? html`
+                            ${
+              ssrCount > 0
+                ? `
                                 <span class="breakdown-segment">
                                   <span class="breakdown-dot" style="background:#22c55e"></span>${ssrCount} SSR
                                 </span>
                               `
-                              : ''} ${clientCount > 0
-                              ? html`
+                : ''
+            } ${
+              clientCount > 0
+                ? `
                                 <span class="breakdown-segment">
                                   <span class="breakdown-dot" style="background:#f59e0b"></span>${clientCount} client
                                 </span>
                               `
-                              : ''}
+                : ''
+            }
                           </span>
                         </div>
                       </div>
                     </a>
                   `;
-                })}
+          })
+        }
               </div>
-            `}
+            `
+    }
         </div>
       </less-layout>
     `;

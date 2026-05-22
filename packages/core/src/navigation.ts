@@ -1,7 +1,7 @@
 /**
  * @lessjs/core - Navigation API utility
  *
- * WHATWG Navigation API (§7.4) integration for LessJS.
+ * WHATWG Navigation API (section7.4) integration for LessJS.
  * Provides modern client-side navigation replacing the History API.
  *
  * When Navigation API is available (Chrome 102+), uses native navigation.
@@ -23,7 +23,7 @@ const log = createLogger('core');
 // Only the first subscriber installs the patch; only the last removes it.
 let _historyPatchCount = 0;
 
-// Capture originals lazily — not at module load time (SSR/tests may not
+// Capture originals lazily - not at module load time (SSR/tests may not
 // have `history`). Use null as sentinel; patching is only needed when
 // onNavigate() is actually called in a browser context.
 // G12 fix: Use specific type instead of any
@@ -114,9 +114,9 @@ export function hasNavigationApi(): boolean {
 /**
  * Navigate to a new URL using Navigation API (preferred) or History API (fallback).
  *
- * Navigation API (WHATWG §7.4):
- *   - navigation.navigate() — push new entry
- *   - navigation.back() / forward() — traverse history
+ * Navigation API (WHATWG section7.4):
+ *   - navigation.navigate() - push new entry
+ *   - navigation.back() / forward() - traverse history
  *   - Fires navigatesuccess / navigateerror events
  *
  * History API (fallback):
@@ -179,7 +179,7 @@ export function onNavigate(callback: NavigationCallback): () => void {
     // v0.14.3: Track whether the last navigation was a pushState/replaceState
     // so we can distinguish 'push' from 'back' in the popstate handler.
     // History API fires popstate for back/forward navigation but NOT for
-    // pushState/replaceState — so we dispatch it manually in navigate()
+    // pushState/replaceState - so we dispatch it manually in navigate()
     // and use a flag to tell them apart.
     //
     // B-4 fix: Monkey-patching uses a shared reference counter (_historyPatchCount)
@@ -203,7 +203,7 @@ export function onNavigate(callback: NavigationCallback): () => void {
 }
 
 /**
- * Match a URL against route patterns using URLPattern API (WHATWG §7.2).
+ * Match a URL against route patterns using URLPattern API (WHATWG section7.2).
  * Falls back to simple string matching if URLPattern is not available.
  *
  * @returns Match result with extracted params, or null if no match
@@ -227,7 +227,7 @@ export function matchRoute(
           };
         }
       } catch (e) {
-        // URLPattern might not support this pattern — fall through to regex
+        // URLPattern might not support this pattern - fall through to regex
         log.debug(
           `URLPattern failed for "${pattern.path}": ${e instanceof Error ? e.message : String(e)}`,
         );

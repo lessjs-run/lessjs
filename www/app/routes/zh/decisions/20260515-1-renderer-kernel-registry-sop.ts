@@ -5,31 +5,27 @@ export const meta = {
 };
 
 import { headerNav, navSections } from 'virtual:less-nav';
-import { css, html, LitElement } from 'lit';
-import { pageStyles } from '../../../components/page-styles.js';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 
 export const tagName = 'decision-20260515-1-renderer-kernel-registry-sop';
 
-export default class RendererKernelRegistrySopDecision extends LitElement {
-  declare locale?: string;
+const routeSheet = new StyleSheet();
 
-  static override styles = [
-    pageStyles,
-    css`
+routeSheet.replaceSync(`
       .decision-meta {
         display: flex;
         flex-wrap: wrap;
         gap: 0.5rem;
         margin: 0.75rem 0 2rem;
-        color: var(--less-text-muted);
+        color: var(--text-muted);
         font-size: 0.75rem;
       }
       .badge {
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 3px;
         padding: 0.125rem 0.375rem;
-        color: var(--less-text-secondary);
+        color: var(--text-secondary);
       }
       .matrix {
         width: 100%;
@@ -40,13 +36,13 @@ export default class RendererKernelRegistrySopDecision extends LitElement {
       .matrix th,
       .matrix td {
         padding: 0.625rem 0.75rem;
-        border-bottom: 0.5px solid var(--less-border);
+        border-bottom: 0.5px solid var(--border);
         text-align: left;
         vertical-align: top;
       }
       .matrix th {
-        background: var(--less-bg-surface);
-        color: var(--less-text-muted);
+        background: var(--bg-surface);
+        color: var(--text-muted);
         font-size: 0.6875rem;
         font-weight: 600;
         letter-spacing: 0.04em;
@@ -58,34 +54,38 @@ export default class RendererKernelRegistrySopDecision extends LitElement {
         margin: 1rem 0 2rem;
       }
       .step {
-        border-left: 2px solid var(--less-border-hover);
+        border-left: 2px solid var(--border-hover);
         padding-left: 1rem;
       }
       .step-title {
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         font-weight: 600;
       }
       code {
-        background: var(--less-code-bg);
+        background: var(--bg-code);
         border-radius: 2px;
         padding: 0.125rem 0.375rem;
         font-family: "SF Mono", monospace;
         font-size: 0.8125rem;
       }
-    `,
-  ];
+    `);
+
+export default class RendererKernelRegistrySopDecision extends DsdElement {
+  declare locale?: string;
+
+  static override styles = [routeSheet];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'zh'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
-        .headerNav="${headerNav}"
+        locale="${this._getLocale('zh')}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(navSections)}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/zh/decisions/20260515-1-renderer-kernel-registry-sop"
       >
         <div class="container">
@@ -244,12 +244,12 @@ export default class RendererKernelRegistrySopDecision extends LitElement {
   }
 
   private _renderEn() {
-    return html`
+    return `
       <less-layout
-        locale="${this.locale || 'en'}"
-        .locales="${['en', 'zh']}"
-        .navItems="${navSections}"
-        .headerNav="${headerNav}"
+        locale="${this._getLocale('en')}"
+        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items='${JSON.stringify(navSections)}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/zh/decisions/20260515-1-renderer-kernel-registry-sop"
       >
         <div class="container">

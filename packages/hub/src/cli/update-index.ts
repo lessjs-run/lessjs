@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run --allow-read --allow-write
 /**
- * Hub Index Updater — regenerates and writes hub-index/index.json.
+ * Hub Index Updater - regenerates and writes hub-index/index.json.
  *
  * Usage:
  *   deno task hub:index:update
@@ -64,7 +64,7 @@ function main() {
   const newIndex = buildIndex(records);
   const newIndexJson = JSON.stringify(newIndex, null, 2);
 
-  // Compare with existing — ignore updatedAt since it changes on every run
+  // Compare with existing - ignore updatedAt since it changes on every run
   let needsUpdate = true;
   try {
     const existingIndex = Deno.readTextFileSync(indexPath);
@@ -76,7 +76,7 @@ function main() {
       needsUpdate = false;
     }
   } catch {
-    // File doesn't exist — needs update
+    // File doesn't exist - needs update
   }
 
   if (needsUpdate) {

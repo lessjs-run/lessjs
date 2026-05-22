@@ -1,9 +1,11 @@
 /**
- * 404 Not Found Page — with search, helpful links, and old URL redirects
+ * 404 Not Found Page - with search, helpful links, and old URL redirects
  */
 import { headerNav, navSections } from 'virtual:less-nav';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../components/page-styles.js';
+const pageSheet = new StyleSheet();
+pageSheet.replaceSync(pageStyles);
 import '@lessjs/ui/less-layout';
 import '../islands/less-search.js';
 
@@ -33,10 +35,9 @@ const REDIRECT_MAP: Record<string, string> = {
   '/community': '/',
 };
 
-export class NotFoundPage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+
+routeSheet.replaceSync(`
       :host {
         display: block;
       }
@@ -50,12 +51,12 @@ export class NotFoundPage extends LitElement {
         font-size: 4rem;
         font-weight: 800;
         letter-spacing: -0.06em;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         margin: 0 0 0.25rem;
         line-height: 1;
       }
       .error-message {
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         font-size: 0.9375rem;
         margin: 0 0 1.5rem;
       }
@@ -63,20 +64,20 @@ export class NotFoundPage extends LitElement {
         width: 100%;
         max-width: 400px;
         padding: 0.625rem 0.875rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 6px;
-        background: var(--less-bg-surface);
-        color: var(--less-text-primary);
+        background: var(--bg-surface);
+        color: var(--text-primary);
         font-size: 0.875rem;
         outline: none;
         box-sizing: border-box;
         transition: border-color 0.15s;
       }
       .search-box:focus {
-        border-color: var(--less-text-primary);
+        border-color: var(--text-primary);
       }
       .search-box::placeholder {
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
       }
       .links {
         margin-top: 2rem;
@@ -86,7 +87,7 @@ export class NotFoundPage extends LitElement {
         font-weight: 500;
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        color: var(--less-text-tertiary);
+        color: var(--text-muted);
         margin-bottom: 0.75rem;
       }
       .link-grid {
@@ -98,33 +99,35 @@ export class NotFoundPage extends LitElement {
       .link-grid a {
         display: block;
         padding: 0.5rem 0.75rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 4px;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         text-decoration: none;
         font-size: 0.8125rem;
         transition: border-color 0.15s, background 0.15s;
       }
       .link-grid a:hover {
-        border-color: var(--less-border-hover);
-        background: var(--less-bg-surface);
+        border-color: var(--border-hover);
+        background: var(--bg-surface);
       }
       .home-link {
         display: inline-block;
         margin-top: 2rem;
         padding: 0.5rem 1.25rem;
-        border: 0.5px solid var(--less-border);
+        border: 0.5px solid var(--border);
         border-radius: 4px;
-        color: var(--less-text-primary);
+        color: var(--text-primary);
         text-decoration: none;
         font-size: 0.8125rem;
         transition: border-color 0.15s;
       }
       .home-link:hover {
-        border-color: var(--less-text-primary);
+        border-color: var(--text-primary);
       }
-    `,
-  ];
+    `);
+
+export class NotFoundPage extends DsdElement {
+  static override styles = [routeSheet];
 
   private _onSearchKeydown(e: KeyboardEvent) {
     if (e.key === 'Enter') {
@@ -144,18 +147,18 @@ export class NotFoundPage extends LitElement {
   }
 
   override render() {
-    return html`
+    return `
       <less-layout
         locale="en"
-        .locales="${['en']}"
-        .navItems="${navSections}"
-        .headerNav="${headerNav}"
+        locales='${JSON.stringify(['en'])}'
+        nav-items='${JSON.stringify(navSections)}'
+        header-nav='${JSON.stringify(headerNav)}'
         home
       >
         <less-search slot="header-actions"></less-search>
         <div class="container">
           <div class="error-code">404</div>
-          <p class="error-message">This page does not exist — or has moved to a different route.</p>
+          <p class="error-message">This page does not exist - or has moved to a different route.</p>
 
           <input
             class="search-box"
@@ -168,12 +171,13 @@ export class NotFoundPage extends LitElement {
           <div class="links">
             <div class="links-title">Popular Pages</div>
             <div class="link-grid">
-              ${POPULAR_LINKS.map(
-                (l) =>
-                  html`
+              ${
+      POPULAR_LINKS.map(
+        (l) => `
                     <a href="${l.href}">${l.label}</a>
                   `,
-              )}
+      )
+    }
             </div>
           </div>
 

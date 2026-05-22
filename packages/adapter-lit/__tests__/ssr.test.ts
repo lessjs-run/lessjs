@@ -158,7 +158,7 @@ Deno.test('extractLitStyles handles single CSSResult (not array)', () => {
 });
 
 Deno.test('extractLitStyles handles plain string styles', () => {
-  // @ts-expect-error — string[] is not a valid CSSResultGroup, but the
+  // @ts-expect-error - string[] is not a valid CSSResultGroup, but the
   // extractor handles it defensively at runtime
   class StringStyleElement extends LitElement {
     static override styles = ['div { color: blue; }', 'span { font-size: 12px; }'];

@@ -41,7 +41,7 @@ Deno.test('LessBuildContext reset clears all mutable state', () => {
   assertEquals(ctx.phase1.packageIslandDecls.length, 0);
   assertEquals(ctx.phase1.buildCompleted, false);
   assertEquals(ctx.phase1.resolvedConfig, null);
-  // NOTE: userResolveAlias is intentionally NOT reset — it's user configuration,
+  // NOTE: userResolveAlias is intentionally NOT reset - it's user configuration,
   // not build state (see build-context.ts:138-140). It persists through reset()
   // so Phase 2/3 can still access resolve aliases after buildStart() calls reset().
   assertEquals(ctx.phase1.userResolveAlias, { '@lessjs/ui': './ui' });

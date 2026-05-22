@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run --allow-read --allow-write --allow-env --allow-run
 /**
- * @lessjs/hub-submit — CLI for submitting packages to the Registry Hub.
+ * @lessjs/hub-submit - CLI for submitting packages to the Registry Hub.
  *
  * Usage:
  *   deno run -A jsr:@lessjs/hub/cli/hub-submit [options]
@@ -18,10 +18,10 @@
  *   -h, --help        Show help
  *
  * Exit codes:
- *   0 — Submission ready
- *   1 — Validation failed
- *   2 — Build failed
- *   3 — Submission bundle invalid
+ *   0 - Submission ready
+ *   1 - Validation failed
+ *   2 - Build failed
+ *   3 - Submission bundle invalid
  *
  * @see ADR-0030
  */
@@ -101,7 +101,7 @@ function parseArgs(args: string[]): CliFlags {
 
 function printHelp() {
   console.log(`
-less hub submit — Submit a package to the LessJS Registry Hub
+less hub submit - Submit a package to the LessJS Registry Hub
 
 USAGE:
   less hub submit [options]

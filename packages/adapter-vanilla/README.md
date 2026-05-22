@@ -5,13 +5,13 @@ Vanilla Web Component SSR adapter for [LessJS](https://github.com/lessjs-run/les
 ## Overview
 
 SSR adapter for plain/vanilla Web Components whose `render()` returns a
-string directly — no template framework like Lit or React required.
+string directly - no template framework like Lit or React required.
 
 Provides:
 
-- **installVanillaAdapter()** — registers `'vanilla'` adapter for DSD rendering
-- **extractVanillaStyles()** — extracts static styles from vanilla components
-- **DsdVanillaElement** — base class with DSD detection + hydration event binding
+- **installVanillaAdapter()** - registers `'vanilla'` adapter for DSD rendering
+- **extractVanillaStyles()** - extracts static styles from vanilla components
+- **DsdVanillaElement** - base class with DSD detection + hydration event binding
 
 ## Installation
 
@@ -56,7 +56,7 @@ customElements.define('my-toggle', MyToggle);
 ### `installVanillaAdapter()`
 
 Registers the `'vanilla'` adapter with `@lessjs/core`'s render pipeline.
-Idempotent — safe to call multiple times.
+Idempotent - safe to call multiple times.
 
 ### `uninstallVanillaAdapter()`
 

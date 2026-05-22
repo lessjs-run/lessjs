@@ -1,5 +1,5 @@
 /**
- * @lessjs/hub — Indexer Tests
+ * @lessjs/hub - Indexer Tests
  *
  * v0.19.0: Test search index building and filtering.
  */

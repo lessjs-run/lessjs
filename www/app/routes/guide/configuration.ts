@@ -1,25 +1,32 @@
 export const meta = { section: 'Production', label: 'Configuration', order: 10 };
-import { navSections, headerNav } from 'virtual:less-nav';
-import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { html, LitElement } from 'lit';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
+import { filterFrameworkNav } from '../../utils/nav-filter.ts';
+import { DsdElement } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class ConfigurationPage extends LitElement {
+export class ConfigurationPage extends DsdElement {
   declare locale?: string;
 
   static override styles = [pageStyles];
-  override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
+  override render() {
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
+  }
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/configuration"><div class="container">
+  private _renderZh() {
+    return `<less-layout locale="${this._getLocale('zh')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/guide/configuration"><div class="container">
     <h1>配置</h1>
     <p class="subtitle">LessJS 通过 Vite 插件配置。路由、island、静态输出、head 注入、PWA 和 middleware 是各自独立的关注点。</p>
     <h2>Minimal Configuration</h2>
     <less-code-block><pre><code>import { defineConfig } from 'vite';
 import { lessjs } from '@lessjs/app';
 export default defineConfig({ plugins: [lessjs()] });</code></pre></less-code-block>
-    <p>使用 <span class="inline-code">lessjs()</span> 是推荐方式——它组合了核心插件、内容管线和 i18n，一个调用包含所有功能。如果你只需要核心路由和 island 功能，也可以单独使用 <span class="inline-code">less()</span> from <span class="inline-code">@lessjs/adapter-vite</span>。</p>
+    <p>使用 <span class="inline-code">lessjs()</span> 是推荐方式--它组合了核心插件、内容管线和 i18n，一个调用包含所有功能。如果你只需要核心路由和 island 功能，也可以单独使用 <span class="inline-code">less()</span> from <span class="inline-code">@lessjs/adapter-vite</span>。</p>
     <h2>Main Options</h2>
     <table><thead><tr><th>Option</th><th>Default</th><th>Purpose</th></tr></thead><tbody>
       <tr><td>routesDir</td><td>'app/routes'</td><td>Page routes, API routes, renderer and route-tree middleware.</td></tr>
@@ -41,9 +48,15 @@ export default defineConfig({ plugins: [lessjs()] });</code></pre></less-code-bl
   i18n: { locales: ['en', 'zh'], defaultLocale: 'en' },
 });</code></pre></less-code-block>
     <div class="nav-row"><a href="/guide/api-design" class="nav-link">&larr; API Design</a><a href="/guide/security-middleware" class="nav-link">Security &amp; Middleware &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/configuration"><div class="container">
+  private _renderEn() {
+    return `<less-layout locale="${this._getLocale('en')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/en/guide/configuration"><div class="container">
     <h1>Configuration</h1>
     <p class="subtitle">LessJS is configured through Vite plugins. Routes, islands, static output, head injection, PWA, and middleware are independent concerns.</p>
     <p>All options are the same as the Chinese version. Refer to the code examples below:</p>
@@ -51,7 +64,7 @@ export default defineConfig({ plugins: [lessjs()] });</code></pre></less-code-bl
     <less-code-block><pre><code>import { defineConfig } from 'vite';
 import { lessjs } from '@lessjs/app';
 export default defineConfig({ plugins: [lessjs()] });</code></pre></less-code-block>
-    <p>Use <span class="inline-code">lessjs()</span> as the recommended entry — it combines the core plugin, content pipeline, and i18n in a single call. If you only need core routing and island functionality, you can use <span class="inline-code">less()</span> from <span class="inline-code">@lessjs/adapter-vite</span> directly.</p>
+    <p>Use <span class="inline-code">lessjs()</span> as the recommended entry - it combines the core plugin, content pipeline, and i18n in a single call. If you only need core routing and island functionality, you can use <span class="inline-code">less()</span> from <span class="inline-code">@lessjs/adapter-vite</span> directly.</p>
     <h2>Options Reference</h2>
     <table><thead><tr><th>Option</th><th>Default</th><th>Purpose</th></tr></thead><tbody>
       <tr><td>routesDir</td><td>'app/routes'</td><td>Page routes, API routes, renderer and route-tree middleware.</td></tr>
@@ -66,7 +79,8 @@ export default defineConfig({ plugins: [lessjs()] });</code></pre></less-code-bl
     </p>
     <p>See <a href="/guide/api">API Reference</a> for the complete options table, or check the <a href="/guide/security-middleware">Security &amp; Middleware</a> guide for CSP and middleware configuration.</p>
     <div class="nav-row"><a href="/guide/api-design" class="nav-link">&larr; API Design</a><a href="/guide/security-middleware" class="nav-link">Security &amp; Middleware &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 }
 
 customElements.define('page-configuration', ConfigurationPage);

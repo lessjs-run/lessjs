@@ -2,16 +2,14 @@
 export const meta = { section: 'Quick Start', label: 'Getting Started', order: 20 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { css, html, LitElement } from 'lit';
-import { pageStyles } from '../../components/page-styles.js';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
 
-export class GettingStartedPage extends LitElement {
-  static override styles = [
-    pageStyles,
-    css`
+const routeSheet = new StyleSheet();
+
+routeSheet.replaceSync(`
       .step {
         margin: 1.5rem 0 2rem;
       }
@@ -21,8 +19,8 @@ export class GettingStartedPage extends LitElement {
       }
 
       .note {
-        background: var(--less-bg-surface);
-        border: 0.5px solid var(--less-border);
+        background: var(--bg-surface);
+        border: 0.5px solid var(--border);
         border-radius: 4px;
         padding: 0.75rem 1rem;
         margin: 1rem 0;
@@ -31,16 +29,18 @@ export class GettingStartedPage extends LitElement {
       .note p {
         margin: 0;
       }
-    `,
-  ];
+    `);
+
+export class GettingStartedPage extends DsdElement {
+  static override styles = [routeSheet];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
-      <less-layout locale="${this.locale || 'zh'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/getting-started">
+    return `
+      <less-layout locale="${this._getLocale('zh')}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${JSON.stringify(headerNav)}' current-path="/guide/getting-started">
         <div class="container">
           <h1>快速开始</h1>
           <p class="subtitle">
@@ -106,11 +106,11 @@ cd my-app</code></pre></less-code-block>
             页面是一个 Web Component。SSR 会把它渲染成 Declarative Shadow DOM， 所以内容在 JavaScript
             运行前就已经可见。
           </p>
-          <less-code-block><pre><code>import { html, LitElement } from 'lit';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
-export class HomePage extends LitElement {
-  override render() {
-    return html&#96;&lt;main&gt;Hello LessJS&lt;/main&gt;&#96;;
+export class HomePage extends DsdElement {
+  override render(): string {
+    return '&lt;main&gt;Hello LessJS&lt;/main&gt;';
   }
 }
 
@@ -142,8 +142,8 @@ export const tagName = 'page-home';</code></pre></less-code-block>
   }
 
   private _renderEn() {
-    return html`
-      <less-layout locale="${this.locale || 'en'}" .locales="${['en', 'zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/getting-started">
+    return `
+      <less-layout locale="${this._getLocale('en')}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${JSON.stringify(headerNav)}' current-path="/en/guide/getting-started">
         <div class="container">
           <h1>Getting Started</h1>
           <p class="subtitle">
@@ -152,7 +152,7 @@ export const tagName = 'page-home';</code></pre></less-code-block>
           </p>
 
           <less-callout type="info" label="Recommended">
-            Deno 2.7+ recommended. LessJS is a Deno-first project — dependencies are managed
+            Deno 2.7+ recommended. LessJS is a Deno-first project - dependencies are managed
             through <span class="inline-code">deno.json</span>, and all dev/build commands
             use Deno tasks.
           </less-callout>
@@ -215,11 +215,11 @@ cd my-app</code></pre></less-code-block>
             A page is a Web Component. SSR renders it into Declarative Shadow DOM, so content
             is visible before JavaScript runs.
           </p>
-          <less-code-block><pre><code>import { html, LitElement } from 'lit';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
-export class HomePage extends LitElement {
-  override render() {
-    return html&#96;&lt;main&gt;Hello LessJS&lt;/main&gt;&#96;;
+export class HomePage extends DsdElement {
+  override render(): string {
+    return '&lt;main&gt;Hello LessJS&lt;/main&gt;';
   }
 }
 

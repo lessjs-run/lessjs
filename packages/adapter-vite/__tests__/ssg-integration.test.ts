@@ -2,9 +2,9 @@
  * @lessjs/adapter-vite - SSG integration tests (Deno)
  *
  * Tests the SSG post-processing pipeline:
- *   1. buildIslandChunkMap — scan client build output → tagName → chunk path mapping
- *   2. injectClientScript — add client script tags to HTML
- *   3. injectCspMeta — add CSP meta tags to HTML
+ *   1. buildIslandChunkMap - scan client build output -> tagName -> chunk path mapping
+ *   2. injectClientScript - add client script tags to HTML
+ *   3. injectCspMeta - add CSP meta tags to HTML
  *
  * LessJS Architecture constraints verified:
  *   - S (Static): DSD content visible without JS
@@ -101,7 +101,7 @@ Deno.test('SSG integration', { permissions: { read: true, write: true } }, async
       '/kiss/',
     );
 
-    // No .vite/manifest.json exists → empty map
+    // No .vite/manifest.json exists -> empty map
     assertEquals(Object.keys(chunkMap).length, 0);
   });
 

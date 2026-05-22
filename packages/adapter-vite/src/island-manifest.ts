@@ -30,10 +30,10 @@ export interface PageIslandManifest {
   builtAt: string;
 }
 
-/** Strategy map type: tagName → strategy */
+/** Strategy map type: tagName -> strategy */
 export type IslandStrategyMap = Record<string, 'eager' | 'lazy' | 'idle' | 'visible'>;
 
-/** Layer map type: tagName → layer */
+/** Layer map type: tagName -> layer */
 export type IslandLayerMap = Record<string, 'dsd-static' | 'dsd-interactive' | 'pure-island'>;
 
 /**

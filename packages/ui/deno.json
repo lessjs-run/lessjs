@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/ui",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "exports": {
     ".": "./src/index.ts",
     "./less-button": "./src/less-button.ts",
@@ -13,21 +13,12 @@
     "./less-dialog": "./src/less-dialog.ts",
     "./less-callout": "./src/less-callout.ts",
     "./less-step-card": "./src/less-step-card.ts",
-    "./design-tokens": "./src/design-tokens.ts",
-    "./design-tokens.js": "./src/design-tokens.ts",
-    "./tokens/colors": "./src/tokens/colors.ts",
-    "./tokens/color-values": "./src/tokens/color-values.ts",
-    "./tokens/spacing": "./src/tokens/spacing.ts",
-    "./tokens/typography": "./src/tokens/typography.ts",
-    "./tokens/effects": "./src/tokens/effects.ts",
-    "./tokens/radius": "./src/tokens/radius.ts",
-    "./tokens/animation": "./src/tokens/animation.ts"
+    "./open-props-tokens": "./src/open-props-tokens.ts",
+    "./open-props-tokens.js": "./src/open-props-tokens.ts"
   },
   "imports": {
-    "lit": "npm:lit@^3.2.0",
-    "@lessjs/core": "jsr:@lessjs/core@^0.19.0",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.19.0/navigation",
-    "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^0.19.0"
+    "@lessjs/core": "jsr:@lessjs/core@^0.18.0",
+    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.18.0/navigation"
   },
   "publish": {
     "include": [

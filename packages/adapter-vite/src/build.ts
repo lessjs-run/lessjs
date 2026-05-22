@@ -2,12 +2,12 @@
  * @lessjs/adapter-vite - Build plugin
  * LessJS Architecture (K·I·S·S): Knowledge · Isolated · Semantic · Static
  * Build produces only static files (K+S), Islands are the only JS (I).
- * API Routes (S — Serverless extension) deploy separately.
+ * API Routes (S - Serverless extension) deploy separately.
  *
  * ADR 0011: closeBundle writes metadata to ctx, then triggers Phase 2/3.
  * ADR 0022: Phase 2/3 extracted into explicit BuildStep classes for
  *           error isolation and future extensibility.
- * No globalThis bridge — ctx stays in less() closure scope throughout.
+ * No globalThis bridge - ctx stays in less() closure scope throughout.
  */
 
 import type { Plugin, ResolvedConfig } from 'vite';
@@ -26,7 +26,7 @@ export interface BuildStep {
   run(ctx: LessBuildContext, token: Phase1Token | Phase2Token | Phase3Token): Promise<void>;
 }
 
-/** Phase 2: Client island bundle — runs AFTER SSG (ADR 0023) */
+/** Phase 2: Client island bundle - runs AFTER SSG (ADR 0023) */
 class ClientBuildStep implements BuildStep {
   readonly name = 'Client island build';
   readonly phase = 2 as const;
@@ -38,7 +38,7 @@ class ClientBuildStep implements BuildStep {
   }
 }
 
-/** Phase 3: Static site generation — runs BEFORE Phase 2 (ADR 0023) */
+/** Phase 3: Static site generation - runs BEFORE Phase 2 (ADR 0023) */
 class SSGBuildStep implements BuildStep {
   readonly name = 'Static site generation';
   readonly phase = 3 as const;
@@ -80,7 +80,7 @@ export function buildPlugin(
         return;
       }
 
-      // Serialize SSR noExternal patterns (RegExp → marker objects)
+      // Serialize SSR noExternal patterns (RegExp -> marker objects)
       const ssrNoExternal = ((options.ssr?.noExternal ||
         (config.ssr as { noExternal?: (string | RegExp)[] } | undefined)?.noExternal) || [])
         .map((item) => {
@@ -113,16 +113,16 @@ export function buildPlugin(
       const totalIslands = (ctx.phase1.islandTagNames?.length || 0) +
         (ctx.phase1.packageIslandDecls?.length || 0);
 
-      log.info('Phase 1/3 complete — SSR bundle + metadata written to ctx');
+      log.info('Phase 1/3 complete - SSR bundle + metadata written to ctx');
 
       // ADR 0023: Phase 3 (SSG) runs before Phase 2 (client bundle).
-      // SSG only needs Phase 1 — it renders HTML from the SSR bundle.
+      // SSG only needs Phase 1 - it renders HTML from the SSR bundle.
       // Phase 2 runs last because client chunks have content hashes that
       // don't affect HTML content, and injection is a post-processing step.
       const phase1Token = ctx.completePhase1();
       const steps: BuildStep[] = [];
 
-      // Phase 3: SSG render (always runs — generates HTML pages)
+      // Phase 3: SSG render (always runs - generates HTML pages)
       steps.push(new SSGBuildStep());
 
       // Phase 2: Client island bundle (only if islands exist)
@@ -140,9 +140,9 @@ export function buildPlugin(
           if (step.phase === 2 && ctx._phaseTokens[2]) {
             currentToken = ctx._phaseTokens[2] as Phase2Token;
           }
-          log.info(`[${step.phase}/3] ${step.name} — complete`);
+          log.info(`[${step.phase}/3] ${step.name} - complete`);
         } catch (error) {
-          log.error(`[${step.phase}/3] ${step.name} — FAILED:`, error);
+          log.error(`[${step.phase}/3] ${step.name} - FAILED:`, error);
           throw error;
         }
       }
@@ -178,7 +178,7 @@ export function buildPlugin(
           log.warn('Failed to inject client script:', error);
         }
       } else {
-        log.info('No Phase 2 — client script injection skipped');
+        log.info('No Phase 2 - client script injection skipped');
       }
 
       // ── Clean Phase 1 SSR artifacts from public dist (v0.14.10) ──
@@ -202,7 +202,7 @@ export function buildPlugin(
           log.info(`Removed ${toDelete.length} unreferenced SSR artifact(s) from dist/assets/`);
         }
       } catch {
-        // Non-critical — assets dir may not exist in some configs
+        // Non-critical - assets dir may not exist in some configs
       }
 
       log.info('Build complete.');

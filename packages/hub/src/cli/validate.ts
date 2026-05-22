@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run --allow-read
 /**
- * Hub Record Validator — validate hub-index records against schema.
+ * Hub Record Validator - validate hub-index records against schema.
  *
  * Usage:
  *   deno run -A packages/hub/src/cli/validate.ts
@@ -113,7 +113,7 @@ function validateRecords(records: HubPackageRecord[], strict: boolean): Validate
     // Check manifest hash format
     if (!record.manifestHash || record.manifestHash === '') {
       result.warnings.push(
-        `${fullName}: manifestHash is empty — CEM manifest integrity not verified`,
+        `${fullName}: manifestHash is empty - CEM manifest integrity not verified`,
       );
     } else if (record.manifestHash.length !== 64) {
       result.warnings.push(

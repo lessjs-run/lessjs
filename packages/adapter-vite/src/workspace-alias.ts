@@ -20,8 +20,8 @@ function tryReadJson(path: string): Record<string, unknown> | null {
     const content = typeof Deno !== 'undefined'
       ? Deno.readTextFileSync(path)
       : require('node:fs').readFileSync(path, 'utf-8');
-    // deno.json files may contain comments — strip them before JSON.parse.
-    // Naive regex breaks URLs (https:// → https:), so we walk character by character,
+    // deno.json files may contain comments - strip them before JSON.parse.
+    // Naive regex breaks URLs (https:// -> https:), so we walk character by character,
     // tracking whether we're inside a string literal.
     let result = '';
     let inString = false;
@@ -116,12 +116,17 @@ export function generateWorkspaceAliases(workspaceRoot: string): AliasEntry[] {
         replacement: resolve(memberDir, sourcePath as string),
       });
     }
-    // Parent alias last
+    // Parent alias last - use directory path to avoid ENOTDIR.
+    // When the "." export points to a file (e.g. src/index.ts),
+    // Rolldown resolves subpath imports like @lessjs/ui/less-callout
+    // as index.ts/less-callout -> ENOTDIR. Pointing to the parent
+    // directory instead lets Vite resolve subpaths correctly.
     if (exports['.']) {
-      aliases.push({
-        find: name,
-        replacement: resolve(memberDir, exports['.'] as string),
-      });
+      let replacement = resolve(memberDir, exports['.'] as string);
+      if (replacement.match(/\.(ts|js|tsx|jsx)$/)) {
+        replacement = resolve(replacement, '..');
+      }
+      aliases.push({ find: name, replacement });
     }
   }
   return aliases;

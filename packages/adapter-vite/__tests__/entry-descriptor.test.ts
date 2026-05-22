@@ -2,8 +2,8 @@
  * @lessjs/adapter-vite - Entry descriptor + renderer tests (Deno)
  *
  * Tests the two-step entry pipeline:
- *   1. buildEntryDescriptor — produces structured data
- *   2. renderEntry — renders data to code string
+ *   1. buildEntryDescriptor - produces structured data
+ *   2. renderEntry - renders data to code string
  *
  * Also integration-tests that generateHonoEntryCode still works.
  */
@@ -141,7 +141,7 @@ Deno.test('renderEntry: SSG mode excludes DOM shim (DSD renderer has no shim dep
   const desc = buildEntryDescriptor(sampleRoutes, { ssg: true });
   const code = renderEntry(desc);
 
-  // v0.5.0: DSD renderer doesn't need DOM shim — no @lit-labs/ssr dependency
+  // v0.5.0: DSD renderer doesn't need DOM shim - no @lit-labs/ssr dependency
   assertEquals(code.includes('install-global-dom-shim'), false);
 });
 

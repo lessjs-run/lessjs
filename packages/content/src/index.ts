@@ -1,7 +1,7 @@
 /**
  * @lessjs/content - Unified content plugin for LessJS
  *
- * Blog + Nav + Sitemap — build-time only, zero runtime.
+ * Blog + Nav + Sitemap - build-time only, zero runtime.
  * Each module is opt-in: pass options to enable, omit or false to disable.
  *
  * ADR 0018: Route components import data from virtual:less-blog-data,
@@ -164,7 +164,7 @@ export function lessContent(
         const mod = server.moduleGraph.getModuleById(RESOLVED_BLOG_DATA_ID);
         if (mod) {
           server.moduleGraph.invalidateModule(mod);
-          log.info(`Content changed: ${relative(server.config.root, file)} — reloading`);
+          log.info(`Content changed: ${relative(server.config.root, file)} - reloading`);
           server.hot.send({ type: 'full-reload' });
         }
       };

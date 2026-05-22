@@ -1,28 +1,28 @@
 export const meta = { section: 'Compatibility', label: 'Standards & Registry', order: 20 };
 
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { html, LitElement } from 'lit';
 import { pageStyles } from '../../components/page-styles.js';
+import { filterEngineNav } from '../../utils/nav-filter.ts';
+import { DsdElement } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 
-export class StandardsRegistryGuidePage extends LitElement {
+export class StandardsRegistryGuidePage extends DsdElement {
   declare locale?: string;
 
   static override styles = [pageStyles];
 
   override render() {
-    return (this.locale || 'zh') === 'en' ? this._renderEn() : this._renderZh();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   private _renderZh() {
-    return html`
+    return `
       <less-layout
-        .navItems="${filterEngineNav(navSections)}"
-        .headerNav="${headerNav}"
+        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/standards-registry"
         locale="zh"
-        .locales="${['en', 'zh']}"
+        locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">
           <h1>标准与 Registry 策略</h1>
@@ -154,13 +154,13 @@ export class StandardsRegistryGuidePage extends LitElement {
   }
 
   private _renderEn() {
-    return html`
+    return `
       <less-layout
-        .navItems="${filterEngineNav(navSections)}"
-        .headerNav="${headerNav}"
+        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        header-nav='${JSON.stringify(headerNav)}'
         current-path="/en/engine/standards-registry"
         locale="en"
-        .locales="${['en', 'zh']}"
+        locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">
           <h1>Standards &amp; Registry Strategy</h1>

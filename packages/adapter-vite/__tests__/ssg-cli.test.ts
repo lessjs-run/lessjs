@@ -5,12 +5,12 @@
  * Full SSG pipeline tests are in ssg-render.test.ts.
  */
 
-Deno.test('ssg CLI — module can be imported', async () => {
+Deno.test('ssg CLI - module can be imported', async () => {
   const mod = await import('../src/cli/ssg.ts');
   _assert(mod !== null && typeof mod === 'object');
 });
 
-Deno.test('ssg CLI — ssgRender is exported from ssg-render', async () => {
+Deno.test('ssg CLI - ssgRender is exported from ssg-render', async () => {
   const mod = await import('../src/cli/ssg-render.js');
   _assert(typeof mod.ssgRender === 'function');
 });

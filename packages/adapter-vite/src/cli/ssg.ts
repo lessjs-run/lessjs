@@ -56,24 +56,24 @@ async function loadSsrBundle(ssrDir: string) {
   const bundlePath = existsSync(mjsPath) ? mjsPath : entryPath;
 
   if (!existsSync(bundlePath)) {
-    throw new Error(`SSR bundle not found — expected at ${ssrDir}/entry.{js,mjs}`);
+    throw new Error(`SSR bundle not found - expected at ${ssrDir}/entry.{js,mjs}`);
   }
 
   if (!existsSync(importMapPath)) {
     log.warn(
-      `No importmap.json at ${importMapPath} — bundle may not resolve outside build environment`,
+      `No importmap.json at ${importMapPath} - bundle may not resolve outside build environment`,
     );
   } else {
     const importMap = JSON.parse(readFileSync(importMapPath, 'utf-8'));
     log.info(`Loaded import map with ${Object.keys(importMap.imports || {}).length} entries`);
-    log.info(`  → pass --import-map=${importMapPath} to Deno for bare specifier resolution`);
+    log.info(`  -> pass --import-map=${importMapPath} to Deno for bare specifier resolution`);
   }
 
   const bundleUrl = process.platform === 'win32'
     ? 'file:///' + bundlePath.replace(/\\/g, '/')
     : 'file://' + bundlePath;
 
-  log.info(`Loading SSR bundle → ${bundleUrl}`);
+  log.info(`Loading SSR bundle -> ${bundleUrl}`);
   const module = await import(bundleUrl) as Record<string, unknown>;
   return module;
 }
@@ -93,7 +93,7 @@ async function main() {
       throw new Error('SSR bundle loaded but no Hono app found (no default export)');
     }
 
-    log.info('SSR bundle loaded successfully — running SSG rendering pipeline');
+    log.info('SSR bundle loaded successfully - running SSG rendering pipeline');
 
     // Full SSG rendering via shared ssgRender()
     // Same pipeline as build-ssg.ts: dynamic routes, toSSG, 404 redirect,
@@ -105,7 +105,7 @@ async function main() {
       base: opts.base || '/',
     });
 
-    log.info(`SSG complete → ${opts.outDir}`);
+    log.info(`SSG complete -> ${opts.outDir}`);
   } catch (err) {
     log.error('SSG failed:', err instanceof Error ? err.message : String(err));
     if (err instanceof Error && err.stack) {

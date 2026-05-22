@@ -1,27 +1,29 @@
 {
   "schema": "hub-index-v1",
-  "updatedAt": "2026-05-19T02:38:21.420Z",
+  "updatedAt": "2026-05-22T07:25:04.079Z",
   "packages": [
     {
       "name": "ui",
       "scope": "@lessjs",
-      "version": "0.18.3",
-      "description": "LessJS UI component library with DSD-first Lit elements. All components are SSR-capable.",
+      "version": "0.20.0",
+      "description": "LessJS UI component library with DSD-native DsdElement components. All components are SSR-capable.",
       "compatibility": "ssr-capable",
       "tags": [
         "less-button",
         "less-card",
+        "less-callout",
         "less-code-block",
         "less-dialog",
         "less-hero-ping",
         "less-input",
         "less-layout",
+        "less-step-card",
         "less-theme-toggle"
       ],
       "source": "local",
       "safeToInstall": true,
       "ssrCapable": true,
-      "submittedAt": "2026-05-19T02:38:21.412Z"
+      "submittedAt": "2026-05-22T07:16:40.383Z"
     },
     {
       "name": "shoelace",
@@ -73,7 +75,7 @@
       "source": "npm",
       "safeToInstall": true,
       "ssrCapable": false,
-      "submittedAt": "2026-05-19T02:38:21.418Z"
+      "submittedAt": "2026-05-22T07:17:20.180Z"
     }
   ]
 }

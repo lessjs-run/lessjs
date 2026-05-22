@@ -5,7 +5,7 @@
  *   - build-ssg.ts (Vite inline mode, called from closeBundle)
  *   - ssg.ts (standalone CLI, loads SSR bundle via importmap)
  *
- * This module has zero Vite dependency — it only needs the SSR bundle module.
+ * This module has zero Vite dependency - it only needs the SSR bundle module.
  */
 
 import { join } from 'node:path';
@@ -175,7 +175,7 @@ export function resolveDynamicRoutePath(
     }
 
     // Encode spaces and other URL-unsafe chars, but preserve @ for scoped packages.
-    // Full encodeURIComponent would encode @ → %40, breaking file-to-URL matching.
+    // Full encodeURIComponent would encode @ -> %40, breaking file-to-URL matching.
     const safeValue = value.replace(/ /g, '%20');
     resolvedPath = resolvedPath.replace(`:${name}`, safeValue);
   }
@@ -259,7 +259,7 @@ export async function ssgRender(
       }
 
       if (paramsList.length === 0) {
-        log.info(`Dynamic route ${route.path} has no static paths — skipping`);
+        log.info(`Dynamic route ${route.path} has no static paths - skipping`);
         continue;
       }
 
@@ -294,7 +294,7 @@ export async function ssgRender(
           mkdirSync(pageDir, { recursive: true });
           writeFileSync(join(pageDir, 'index.html'), html, 'utf-8');
           log.info(
-            `Dynamic route: ${resolvedPath} → ${resolvedPath}/index.html`,
+            `Dynamic route: ${resolvedPath} -> ${resolvedPath}/index.html`,
           );
         } catch (e) {
           log.warn(
@@ -346,7 +346,7 @@ export async function ssgRender(
 
   // ── Post-processing ─────────────────────────────────────────
 
-  // Rename 404/index.html → 404.html for GitHub Pages
+  // Rename 404/index.html -> 404.html for GitHub Pages
   const _404Dir = join(outputDir, '404');
   const _404Html = join(outputDir, '404.html');
   const _404Index = join(_404Dir, 'index.html');
@@ -354,7 +354,7 @@ export async function ssgRender(
     // Check if target already exists before renaming
     if (existsSync(_404Html)) {
       log.warn(
-        '404.html already exists in output dir — removing before rename',
+        '404.html already exists in output dir - removing before rename',
       );
       rmSync(_404Html, { force: true });
     }
@@ -362,10 +362,10 @@ export async function ssgRender(
     if (existsSync(_404Dir)) {
       rmSync(_404Dir, { recursive: true, force: true });
     }
-    log.info('404 page → dist/404.html (GitHub Pages)');
+    log.info('404 page -> dist/404.html (GitHub Pages)');
   }
 
-  // Convert flat HTML files to clean URLs: about.html → about/index.html
+  // Convert flat HTML files to clean URLs: about.html -> about/index.html
   const allHtmlFiles = findHtmlFiles(outputDir);
   for (const filePath of allHtmlFiles) {
     const rel = nodePath.relative(outputDir, filePath);
@@ -377,10 +377,10 @@ export async function ssgRender(
     if (existsSync(dirPath)) continue;
     mkdirSync(dirPath, { recursive: true });
     renameSync(filePath, indexPath);
-    log.info(`Clean URL: /${urlBaseName} → ${urlBaseName}/index.html`);
+    log.info(`Clean URL: /${urlBaseName} -> ${urlBaseName}/index.html`);
   }
 
-  log.info(`Static site generated → ${outputDir}`);
+  log.info(`Static site generated -> ${outputDir}`);
 
   // ── i18n locale expansion (if ctx available) ────────────────
   const i18nOpts = ctx?.plugins?.i18nOptions || null;
@@ -391,7 +391,7 @@ export async function ssgRender(
       for (const locale of locales) {
         for (const route of routeInfo) {
           let paramsList: Array<Record<string, string>>;
-          // v0.14.6: Fix pre-existing bug — static routes use [{}] directly;
+          // v0.14.6: Fix pre-existing bug - static routes use [{}] directly;
           // only dynamic routes should call getStaticPaths()
           if (!route.isDynamic) {
             paramsList = [{}];
@@ -551,7 +551,7 @@ self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   if (e.request.headers.has('authorization')) return;
   const url = new URL(e.request.url);
-  // Only handle same-origin requests — cross-origin (CDN, analytics) pass through
+  // Only handle same-origin requests - cross-origin (CDN, analytics) pass through
   if (url.origin !== location.origin || !url.protocol.startsWith('http')) return;
   if (/\\/(api|rpc)(?:\\/|$)/.test(url.pathname)) return;
   if (/\\/(auth|session|login|logout)(?:\\/|$)/.test(url.pathname)) return;
@@ -642,7 +642,7 @@ async function networkFirst(req) {
   const totalComponents = pageDiagnostics.reduce((sum, p) => sum + p.componentCount, 0);
   const totalRenderTimeMs = pageDiagnostics.reduce((sum, p) => sum + p.renderTimeMs, 0);
   const totalTemplateSize = pageDiagnostics.reduce(
-    (sum, p) => sum + p.hydrationHints.length, // proxy — exact size from collector
+    (sum, p) => sum + p.hydrationHints.length, // proxy - exact size from collector
     0,
   );
   const errorComponentCount = pageDiagnostics.filter((p) => p.errors.length > 0).length;
@@ -693,7 +693,7 @@ async function networkFirst(req) {
 
   const reportPath = join(outputDir, 'dsd-report.json');
   writeFileSync(reportPath, JSON.stringify(report, null, 2), 'utf-8');
-  log.info(`DSD report → ${reportPath} (${pageDiagnostics.length} pages, ${totalErrors} errors)`);
+  log.info(`DSD report -> ${reportPath} (${pageDiagnostics.length} pages, ${totalErrors} errors)`);
 }
 
 // ─── Manifest Decisions Builder (v0.17.2) ───────────────────────
@@ -713,7 +713,7 @@ function buildManifestDecisions(ctx?: LessBuildContext): ManifestDecision[] {
   const manifests = ctx?.phase1?.packageManifests;
   if (!decls?.length || !manifests?.length) return [];
 
-  // Build a tagName → packageName lookup from manifests
+  // Build a tagName -> packageName lookup from manifests
   const tagNameToPackage = new Map<string, string>();
   for (const pkg of manifests) {
     for (const decl of pkg.declarations) {

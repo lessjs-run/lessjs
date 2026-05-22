@@ -11,7 +11,7 @@ function waitForEffects(ms = 50): Promise<void> {
 
 // ─── batch() ──────────────────────────────────────────────────
 
-Deno.test('batch() — groups multiple writes', async (t) => {
+Deno.test('batch() - groups multiple writes', async (t) => {
   await t.step('multiple writes in batch trigger single effect', async () => {
     const a = signal(1);
     const b = signal(2);
@@ -60,7 +60,7 @@ Deno.test('batch() — groups multiple writes', async (t) => {
 
 // ─── untracked() ──────────────────────────────────────────────
 
-Deno.test('untracked() — prevents dependency tracking', async (t) => {
+Deno.test('untracked() - prevents dependency tracking', async (t) => {
   await t.step('untracked read does not create dependency', async () => {
     const tracked = signal(1);
     const untrackedSig = signal(100);

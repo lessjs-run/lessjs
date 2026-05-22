@@ -1,8 +1,9 @@
 # ADR-0036: Ocean-Island Architecture for v0.20.0
 
-> **Status**: PROPOSED
-> **Date**: 2026-05-20
+> **Status**: ACCEPTED / IMPLEMENTED
+> **Date**: 2026-05-20 (updated 2026-05-21)
 > **Author**: 齐活林（Delivery Director）with 许清楚（PM）+ 高见远（Architect）
+> **Key Amendment**: ADR-0036a — StyleSheet cross-environment shim (2026-05-21)
 > **Supersedes**: v0.20.0-prd.md, v0.20.0-architecture.md（merged into this ADR）
 
 ---
@@ -66,7 +67,7 @@ We adopt a **two-layer component model**:
 │  │  Base: DsdElement (native HTMLElement)           │  │
 │  │  render(): string → SSR as DSD template          │  │
 │  │  hydrateEvents → declarative event binding       │  │
-│  │  CSSStyleSheet → adoptedStyleSheets              │  │
+│  │  StyleSheet (ssr-safe CSSStyleSheet)          │  │
 │  │  CSS Parts ::part() → external customization     │  │
 │  │  Zero framework dependency                       │  │
 │  └────────────────────────────────────────────────┘  │
@@ -81,7 +82,7 @@ We adopt a **two-layer component model**:
 │  CSS Stack (3 layers, all native)                      │
 │  ┌────────────────────────────────────────────────┐  │
 │  │  Layer 1: Open Props — design tokens             │  │
-│  │  Layer 2: CSSStyleSheet — component styles       │  │
+│  │  Layer 2: StyleSheet — component styles       │  │
 │  │  Layer 3: CSS Parts ::part() — external API      │  │
 │  └────────────────────────────────────────────────┘  │
 └──────────────────────────────────────────────────────┘
@@ -89,16 +90,16 @@ We adopt a **two-layer component model**:
 
 ### 2.2 Key Design Decisions
 
-| ID | Decision                       | Rationale                                            |
-| -- | ------------------------------ | ---------------------------------------------------- |
-| D1 | `DsdElement` in `@lessjs/core` | Zero deps, co-located with `renderDSD()`             |
-| D2 | `render(): string`             | Already supported by `renderDSD()` line 177-181      |
-| D3 | `CSSStyleSheet` for styles     | Native API, one parse shared across instances        |
-| D4 | Open Props for tokens          | Replace ~100 lines of custom token code              |
-| D5 | `hydrateEvents` preserved      | Proven pattern, ported from DsdLitElement            |
-| D6 | `@lessjs/adapter-lit` retained | v0.20 keeps compatibility; v0.21 deprecates DSD path |
-| D7 | `less-hero-ping` keeps Lit     | Only pure Island component, needs reactivity         |
-| D8 | CSS Parts on every component   | Standard WC external styling API                     |
+| ID | Decision                                              | Rationale                                            |
+| -- | ----------------------------------------------------- | ---------------------------------------------------- |
+| D1 | `DsdElement` in `@lessjs/core`                        | Zero deps, co-located with `renderDSD()`             |
+| D2 | `render(): string`                                    | Already supported by `renderDSD()` line 177-181      |
+| D3 | `StyleSheet` for styles (SSR-safe CSSStyleSheet shim) | Native API in browser, shim in Deno/Node             |
+| D4 | Open Props for tokens                                 | Replace ~100 lines of custom token code              |
+| D5 | `hydrateEvents` preserved                             | Proven pattern, ported from DsdLitElement            |
+| D6 | `@lessjs/adapter-lit` retained                        | v0.20 keeps compatibility; v0.21 deprecates DSD path |
+| D7 | `less-hero-ping` migrated to DsdElement               | OBE: fully migrated in SOP-017 convergence pass      |
+| D8 | CSS Parts on every component                          | Standard WC external styling API                     |
 
 ### 2.3 What Changes
 
@@ -217,7 +218,23 @@ SSR mechanics:
 
 ---
 
-## 4. Component Migration Plan
+### 3.6 StyleSheet — Cross-Environment CSSStyleSheet Abstraction (ADR-0036a)
+
+`packages/core/src/style-sheet.ts` provides a `StyleSheet` class that auto-detects the environment:
+
+```
+Browser:           new StyleSheet()  ===  new CSSStyleSheet()  (zero overhead)
+Deno/Node/Worker:  new StyleSheet()  ===  new ShimStyleSheet()  (in-memory)
+```
+
+ShimSurface: `replaceSync(css)`, `cssRules: { cssText }[]` — only the subset LessJS needs.
+Usage: all component files and `open-props-tokens.ts` use `new StyleSheet()` instead of
+`new CSSStyleSheet()`. The SSR pipeline (`render-dsd.ts`) reads `StyleSheetLike` type.
+
+This eliminates the `ReferenceError: CSSStyleSheet is not defined` crash that occurred in
+Deno tests, SSR builds, and Node.js environments where the CSSOM is unavailable.
+
+---
 
 ### 4.1 Migration Order
 

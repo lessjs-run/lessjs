@@ -1,16 +1,37 @@
 export const meta = { section: 'Core', label: 'API Routes', order: 60 };
-import { navSections, headerNav } from 'virtual:less-nav';
+import { headerNav, navSections } from 'virtual:less-nav';
 import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { css, html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
-export class ApiPage extends LitElement {
-  static override styles = [pageStyles, css`.principle { padding: 1rem 1.25rem; background: var(--less-bg-surface); border-left: 2px solid var(--less-border-hover); border-radius: 0 4px 4px 0; margin: 1rem 0; }`];
-  override render() { return (this.locale||'zh')==='en'?this._renderEn():this._renderZh(); }
+const routeSheet = new StyleSheet();
+routeSheet.replaceSync(
+  pageStyles + `
 
-  private _renderZh() { return html`<less-layout locale="${this.locale||'zh'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/guide/api"><div class="container">
+      .principle {
+        padding: 1rem 1.25rem;
+        background: var(--bg-surface);
+        border-left: 2px solid var(--border-hover);
+        border-radius: 0 4px 4px 0;
+        margin: 1rem 0;
+      }
+    `,
+);
+
+export class ApiPage extends DsdElement {
+  static override styles = [routeSheet];
+  override render() {
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
+  }
+
+  private _renderZh() {
+    return `<less-layout locale="${this._getLocale('zh')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/guide/api"><div class="container">
     <h1>API Routes</h1>
     <p class="subtitle">LessJS 的服务端层是 Hono。API routes 使用标准 Request/Response 语义，适合部署到 serverless 或 edge runtime。</p>
     <h2>Design Principles</h2>
@@ -22,9 +43,15 @@ export class ApiPage extends LitElement {
     <h2>Static Build Boundary</h2>
     <p>SSG 输出是静态文件。API routes 是生成的 Hono app 的一部分，但纯静态托管不会运行它们。当应用需要运行时行为时，通过 serverless adapter 或平台函数部署 API routes。</p>
     <div class="nav-row"><a href="/guide/rpc" class="nav-link">&larr; RPC 远程调用</a><a href="/guide/configuration" class="nav-link">Configuration &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 
-  private _renderEn() { return html`<less-layout locale="${this.locale||'en'}" .locales="${['en','zh']}" .navItems="${filterFrameworkNav(navSections)}" .headerNav="${headerNav}" current-path="/en/guide/api"><div class="container">
+  private _renderEn() {
+    return `<less-layout locale="${this._getLocale('en')}" locales='${
+      JSON.stringify(['en', 'zh'])
+    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+      JSON.stringify(headerNav)
+    }' current-path="/en/guide/api"><div class="container">
     <h1>API Routes</h1>
     <p class="subtitle">LessJS's server layer is Hono. API routes use standard Request/Response semantics and are suitable for serverless or edge runtime deployment.</p>
     <h2>Design Principles</h2>
@@ -44,7 +71,8 @@ export default app;</code></pre></less-code-block>
     <h2>Static Build Boundary</h2>
     <p>SSG output is static files. API routes are part of the generated Hono app, but static hosting won't execute them. Deploy API routes via serverless adapters or platform functions when runtime behavior is needed.</p>
     <div class="nav-row"><a href="/guide/rpc" class="nav-link">&larr; RPC</a><a href="/guide/configuration" class="nav-link">Configuration &rarr;</a></div>
-  </div></less-layout>`; }
+  </div></less-layout>`;
+  }
 }
 
 customElements.define('page-api', ApiPage);

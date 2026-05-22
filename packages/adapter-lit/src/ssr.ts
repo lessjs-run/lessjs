@@ -2,7 +2,7 @@
  * @lessjs/adapter-lit - SSR Adapter
  *
  * Converts Lit TemplateResult to HTML string via safe interpolation.
- * No dependency on @lit-labs/ssr — produces clean DSD HTML without
+ * No dependency on @lit-labs/ssr - produces clean DSD HTML without
  * Lit SSR marker comments (<!--lit-part-->, <!--lit-node-->).
  *
  * Why not @lit-labs/ssr?
@@ -17,15 +17,15 @@
  *   We interleave: strings[0] + valueToString(values[0]) + strings[1] + ...
  *   - Text content values are HTML-escaped
  *   - Attribute values are attribute-escaped
- *   - Nested TemplateResult → recursive interpolation
- *   - Boolean attrs (?disabled) → proper HTML boolean attribute
- *   - Event bindings (@click) → stripped (can't work in static HTML)
- *   - Property bindings (.prop) → stripped (can't work in static HTML)
- *   - Lit's `nothing` sentinel → removes attribute or outputs empty string
+ *   - Nested TemplateResult -> recursive interpolation
+ *   - Boolean attrs (?disabled) -> proper HTML boolean attribute
+ *   - Event bindings (@click) -> stripped (can't work in static HTML)
+ *   - Property bindings (.prop) -> stripped (can't work in static HTML)
+ *   - Lit's `nothing` sentinel -> removes attribute or outputs empty string
  *
  * Client-side behavior is unaffected:
  *   customElements.define() upgrades elements and attaches event
- *   listeners / sets properties fresh — the SSR HTML is only for
+ *   listeners / sets properties fresh - the SSR HTML is only for
  *   initial paint.
  *
  * v0.6: Uses SafeHtml/UnsafeHtml branded types from @lessjs/core.
@@ -43,7 +43,7 @@
 /** Marker property that identifies a Lit TemplateResult */
 const LIT_TEMPLATE_TYPE_MARKER = '_$litType$';
 
-/** Lit's `nothing` sentinel — used to conditionally remove attributes */
+/** Lit's `nothing` sentinel - used to conditionally remove attributes */
 const NOTHING_SYMBOL = Symbol.for('lit-nothing');
 
 /**
@@ -74,11 +74,11 @@ type BindingType = 'content' | 'attribute' | 'boolean' | 'event' | 'property';
  * Detect the binding type from the preceding string segment.
  *
  * Lit's tagged template literal encodes binding prefixes:
- *   ?disabled="${val}"  →  boolean attribute
- *   @click="${val}"     →  event binding
- *   .prop="${val}"      →  property binding
- *   class="${val}"      →  regular attribute
- *   ${val}              →  text content
+ *   ?disabled="${val}"  ->  boolean attribute
+ *   @click="${val}"     ->  event binding
+ *   .prop="${val}"      ->  property binding
+ *   class="${val}"      ->  regular attribute
+ *   ${val}              ->  text content
  */
 function detectBindingType(precedingStr: string): BindingType {
   const match = precedingStr.match(/([?@.]?)([\w-]+)="\s*$/);
@@ -129,11 +129,11 @@ function startsWithCustomElement(html: string): boolean {
  * outputs the nested CE's DSD as TEXT CONTENT in the parent's shadow DOM. This
  * causes the nested CE to appear as raw HTML instead of a real DOM element.
  *
- * Case 1: Result starts with a CE tag → extract just the CE tag.
+ * Case 1: Result starts with a CE tag -> extract just the CE tag.
  *   Input:  `<less-layout><template shadowrootmode="open">CONTENT</template></less-layout>`
  *   Output: `<less-layout>`
  *
- * Case 2: Result starts with static content followed by a CE DSD → replace the
+ * Case 2: Result starts with static content followed by a CE DSD -> replace the
  *   CE's DSD wrapper with just the CE tag (to become a real DOM node).
  *   Input:  `<style>...</style>\n<counter-island><template shadowrootmode="open">...</template></counter-island>`
  *   Output: `<style>...</style>\n<counter-island>`
@@ -143,7 +143,7 @@ function startsWithCustomElement(html: string): boolean {
  */
 function unwrapDsdForNestedCe(html: string): string {
   const trimmed = html.trimStart();
-  // Case 1: starts with a CE tag → extract just the CE tag
+  // Case 1: starts with a CE tag -> extract just the CE tag
   if (startsWithCustomElement(trimmed)) {
     // Find the first CE tag in the HTML
     const ceTagMatch = trimmed.match(/^<([a-z][a-z0-9]*-[a-z0-9-]+)[^>]*>/);
@@ -154,7 +154,7 @@ function unwrapDsdForNestedCe(html: string): string {
     }
     // If no CE tag found, fall through to case 2
   }
-  // Case 2: static content + CE DSD → replace CE's DSD with just CE tag
+  // Case 2: static content + CE DSD -> replace CE's DSD with just CE tag
   // Pattern: anything before <template shadowrootmode>, then the DSD template, then anything after
   // This handles: `<style>...</style>\n<counter-island><template shadowrootmode="open">...</template></counter-island>`
   return html.replace(
@@ -219,7 +219,7 @@ function stringifyContentValue(value: unknown): string {
         }
       }
     }
-    // _$litDirective$ also appears in other Lit directives — fall through
+    // _$litDirective$ also appears in other Lit directives - fall through
   }
 
   return escapeHtml(String(value));
@@ -233,7 +233,7 @@ function stringifyAttributeValue(value: unknown): string {
 }
 
 /**
- * Core interpolation: Lit TemplateResult → HTML string.
+ * Core interpolation: Lit TemplateResult -> HTML string.
  *
  * Interleaves the `strings` and `values` arrays, handling Lit's
  * special binding prefixes (? @ .) and the `nothing` sentinel.
@@ -269,8 +269,8 @@ function interpolate(result: unknown): string {
       switch (bindingType) {
         case 'boolean': {
           // ?disabled="${val}"
-          //   truthy → output just "disabled" (no value)
-          //   falsy  → remove the entire attribute
+          //   truthy -> output just "disabled" (no value)
+          //   falsy  -> remove the entire attribute
           if (value && !isNothing(value)) {
             output = output.replace(/\?([\w-]+)="\s*$/, '$1');
           } else {
@@ -281,14 +281,14 @@ function interpolate(result: unknown): string {
         }
 
         case 'event': {
-          // @click="${handler}" — cannot work in static HTML, strip entirely.
+          // @click="${handler}" - cannot work in static HTML, strip entirely.
           output = output.replace(/\s?@[\w-]+="\s*$/, '');
           skipNextQuote = true;
           break;
         }
 
         case 'property': {
-          // .prop="${val}" — convert to kebab-case HTML attribute with
+          // .prop="${val}" - convert to kebab-case HTML attribute with
           // serialized value so nested custom elements receive property data
           // during SSR rendering.
           //
@@ -297,7 +297,7 @@ function interpolate(result: unknown): string {
           // data-driven components like <less-layout .navItems="${data}">
           // which need the data during renderNestedCustomElements().
           //
-          // Now: .navItems="${arr}" → nav-items="[{...}]" (JSON-encoded)
+          // Now: .navItems="${arr}" -> nav-items="[{...}]" (JSON-encoded)
           // The render-nested.ts parser (parseAttrsToProps) detects JSON
           // attribute values and parses them back to JS objects/arrays.
           const propMatch = str.match(/\.([\w-]+)="\s*$/);
@@ -312,7 +312,7 @@ function interpolate(result: unknown): string {
             } else if (value != null && !isNothing(value)) {
               output += stringifyAttributeValue(String(value));
             }
-            // Don't set skipNextQuote — the closing " from the next string
+            // Don't set skipNextQuote - the closing " from the next string
             // segment is needed to close the attribute value.
           } else {
             // Fallback: strip if we can't parse the property name
@@ -329,7 +329,7 @@ function interpolate(result: unknown): string {
             output = output.replace(/\s?([\w-]+)="\s*$/, '');
             skipNextQuote = true;
           } else if (value == null) {
-            // null/undefined → empty attribute value (attr="")
+            // null/undefined -> empty attribute value (attr="")
             output += '';
           } else {
             output += stringifyAttributeValue(value);
@@ -359,7 +359,7 @@ function interpolate(result: unknown): string {
  * - An array of CSSResult
  *
  * Lit 3.x CSSResult has a `cssText` property that contains the fully
- * interpolated CSS string — no need to manually interleave strings/values.
+ * interpolated CSS string - no need to manually interleave strings/values.
  */
 export function extractLitStyles(componentClass: CustomElementConstructor): string | undefined {
   try {
@@ -374,7 +374,7 @@ export function extractLitStyles(componentClass: CustomElementConstructor): stri
     for (const s of styleList) {
       if (s != null && typeof s === 'object') {
         const obj = s as Record<string, unknown>;
-        // Lit 3.x CSSResult has cssText — the fully compiled CSS string
+        // Lit 3.x CSSResult has cssText - the fully compiled CSS string
         if (typeof obj.cssText === 'string') {
           parts.push(obj.cssText);
         } else if (typeof obj._strings !== 'undefined') {
@@ -451,20 +451,20 @@ export function renderLitToString(
  *   installLitAdapter();
  *
  * The adapter stays installed for the lifetime of the process.
- * Idempotent — safe to call multiple times.
+ * Idempotent - safe to call multiple times.
  */
 
 // Module-level idempotency guard.
 // With viteBuild(ssr:true, noExternal) producing a self-contained ESM bundle,
-// there is only one module instance — a plain module variable suffices.
+// there is only one module instance - a plain module variable suffices.
 let _installed = false;
 
 export function installLitAdapter(): void {
   if (_installed) {
-    return; // Already installed — idempotent
+    return; // Already installed - idempotent
   }
 
-  // Use registerAdapter() — backed by a module-level variable in @lessjs/core,
+  // Use registerAdapter() - backed by a module-level variable in @lessjs/core,
   // so the registration is shared within the self-contained SSR bundle.
   registerAdapter({
     name: 'lit',

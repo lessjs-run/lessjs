@@ -2,16 +2,16 @@
  * @lessjs/core - SSG Post-Processing
  *
  * Pure Node.js fs operations for SSG output post-processing.
- * No Vite dependency — these functions only read/write files.
+ * No Vite dependency - these functions only read/write files.
  *
- * URLPattern is used for route matching per WHATWG §7.2.
+ * URLPattern is used for route matching per WHATWG section7.2.
  *
  * Post-processing pipeline (called after SSG rendering):
- * 1. injectClientScript() — add island client entry
- * 2. injectViewTransitionMeta() — enable cross-page View Transitions
- * 3. injectSpeculationRules() — prefetch/prerender for navigation performance
- * 4. injectCspMeta() — Content-Security-Policy meta tag
- * 5. injectDsdPolyfill() — DSD polyfill for Firefox
+ * 1. injectClientScript() - add island client entry
+ * 2. injectViewTransitionMeta() - enable cross-page View Transitions
+ * 3. injectSpeculationRules() - prefetch/prerender for navigation performance
+ * 4. injectCspMeta() - Content-Security-Policy meta tag
+ * 5. injectDsdPolyfill() - DSD polyfill for Firefox
  */
 
 import { join, resolve } from 'node:path';
@@ -74,7 +74,7 @@ function insertBeforeBodyClose(html: string, content: string): string {
 // ─── Public API ────────────────────────────────────────────────────────
 
 /**
- * Scan client build output to build tagName → chunk path mapping.
+ * Scan client build output to build tagName -> chunk path mapping.
  * Reads Rollup manifest JSON (v0.3.0+ deterministic approach).
  */
 export function buildIslandChunkMap(
@@ -111,7 +111,7 @@ export function buildIslandChunkMap(
       }
     }
   } catch (e) {
-    // Malformed manifest — warn and return empty map
+    // Malformed manifest - warn and return empty map
     log.warn(
       `Could not parse client manifest: ${e instanceof Error ? e.message : String(e)}`,
     );
@@ -136,7 +136,7 @@ export function injectClientScript(dir: string, scriptSrc: string): void {
  *
  * For static sites, CSP is enforced via <meta http-equiv="Content-Security-Policy">
  * rather than HTTP headers. Nonce-based CSP is NOT supported for SSG
- * (nonces must be per-request and unpredictable — impossible in static files).
+ * (nonces must be per-request and unpredictable - impossible in static files).
  */
 export function injectCspMeta(
   dir: string,
@@ -175,7 +175,7 @@ const DSD_POLYFILL = `
     const t = document.createElement('template');
     t.setAttribute('shadowrootmode', 'open');
     if ('shadowRootMode' in t) return; // Native support
-  } catch { /* native detection failed — fallback to polyfill */ }
+  } catch { /* native detection failed - fallback to polyfill */ }
   
   const attachDSD = (root) => {
     root.querySelectorAll('template[shadowrootmode]').forEach(tpl => {
@@ -220,7 +220,7 @@ export function injectDsdPolyfill(dir: string): void {
  *
  * The View Transitions API (Chrome 111+, Safari 18+, Firefox 129+) enables
  * smooth cross-page animations for MPA (Multi-Page App) navigation.
- * For SSG sites, this is a single meta tag — zero JavaScript required.
+ * For SSG sites, this is a single meta tag - zero JavaScript required.
  *
  * When a user clicks a link, the browser automatically creates a cross-fade
  * transition between the old and new page. No SPA routing needed.
@@ -278,11 +278,11 @@ export interface SpeculationRulesOptions {
  *
  * If user-provided rules exist, they are used directly.
  * Otherwise, heuristics are applied based on the route list:
- * - Home page (/) → prerender (moderate)
- * - Top-level static pages (1 level deep) → prerender (conservative)
- * - Nested static pages → prefetch
- * - Dynamic routes (containing :) → excluded (content depends on params)
- * - API routes → excluded
+ * - Home page (/) -> prerender (moderate)
+ * - Top-level static pages (1 level deep) -> prerender (conservative)
+ * - Nested static pages -> prefetch
+ * - Dynamic routes (containing :) -> excluded (content depends on params)
+ * - API routes -> excluded
  *
  * This two-tier strategy balances instant navigation for high-probability
  * targets (prerender) with bandwidth-conscious loading for deeper pages (prefetch).
@@ -342,9 +342,9 @@ export function buildSpeculationRulesJson(
   if (staticPagePaths.length === 0) return '';
 
   // Two-tier strategy:
-  //   - Home page is the highest-probability target → prerender (moderate)
-  //   - Top-level pages (e.g. /about, /blog) → prerender (conservative)
-  //   - Nested pages (e.g. /blog/post-slug, /docs/guide) → prefetch only
+  //   - Home page is the highest-probability target -> prerender (moderate)
+  //   - Top-level pages (e.g. /about, /blog) -> prerender (conservative)
+  //   - Nested pages (e.g. /blog/post-slug, /docs/guide) -> prefetch only
   const prerenderPaths: string[] = [];
   const prefetchPaths: string[] = [];
 
@@ -368,7 +368,7 @@ export function buildSpeculationRulesJson(
 
   if (prerenderPaths.length > 0) {
     rules.prerender = prerenderPaths.map((pattern) => {
-      // Home page (/): use list rule (source + urls) — no document matcher
+      // Home page (/): use list rule (source + urls) - no document matcher
       if (pattern === '/') {
         return {
           source: 'list',
@@ -400,7 +400,7 @@ export function buildSpeculationRulesJson(
     for (const key of ['prerender', 'prefetch'] as const) {
       if (rules[key]) {
         for (const rule of rules[key] as Record<string, unknown>[]) {
-          // Only add exclusion to document rules (where) — list rules (source+urls) don't have where
+          // Only add exclusion to document rules (where) - list rules (source+urls) don't have where
           if (rule.where && typeof rule.where === 'object') {
             (rule.where as Record<string, unknown>).not = { or_matches: excludeWhere };
           }
@@ -420,7 +420,7 @@ export function buildSpeculationRulesJson(
  * This makes navigation feel instant for SSG sites.
  *
  * Speculation Rules are declarative JSON in a <script type="speculationrules"> tag.
- * They have zero JavaScript runtime cost — the browser handles everything natively.
+ * They have zero JavaScript runtime cost - the browser handles everything natively.
  *
  * Only Chromium-based browsers (Chrome, Edge) support this as of 2026.
  * Safari and Firefox silently ignore the script tag (graceful degradation).

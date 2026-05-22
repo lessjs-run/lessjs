@@ -1,5 +1,5 @@
 /**
- * API Consumer Island — JAM Pattern Interactive Demo
+ * API Consumer Island - JAM Pattern Interactive Demo
  *
  * A lightweight island component that calls the LessJS serverless API.
  * Rendered initially as DSD, then upgraded on the client.
@@ -18,16 +18,16 @@ export default class ApiConsumer extends LitElement {
     }
 
     .card {
-      border: 0.5px solid var(--less-border);
+      border: 0.5px solid var(--border);
       border-radius: 8px;
       padding: 1.25rem;
-      background: var(--less-bg-surface);
+      background: var(--bg-surface);
     }
     .card h3 {
       font-size: 0.875rem;
       font-weight: 700;
       margin: 0 0 0.75rem;
-      color: var(--less-text-primary);
+      color: var(--text-primary);
       letter-spacing: -0.01em;
     }
     .status-row {
@@ -35,7 +35,7 @@ export default class ApiConsumer extends LitElement {
       align-items: center;
       gap: 0.5rem;
       font-size: 0.8125rem;
-      color: var(--less-text-tertiary);
+      color: var(--text-muted);
       margin-bottom: 0.75rem;
     }
     .status-dot {
@@ -45,13 +45,13 @@ export default class ApiConsumer extends LitElement {
       display: inline-block;
     }
     .status-dot.loading {
-      background: var(--less-accent-dim);
+      background: var(--brand-light);
     }
     .status-dot.connected {
       background: #22c55e;
     }
     .status-dot.error {
-      background: var(--less-error);
+      background: var(--error);
     }
 
     .data-grid {
@@ -62,23 +62,23 @@ export default class ApiConsumer extends LitElement {
       margin-bottom: 0.75rem;
     }
     .data-grid .key {
-      color: var(--less-text-tertiary);
+      color: var(--text-muted);
       font-family: "SF Mono", "Fira Code", "Consolas", monospace;
       font-size: 0.75rem;
     }
     .data-grid .val {
-      color: var(--less-text-primary);
+      color: var(--text-primary);
       font-weight: 500;
     }
 
     .pre-box {
-      background: var(--less-code-bg);
-      border: 0.5px solid var(--less-code-border);
+      background: var(--bg-code);
+      border: 0.5px solid var(--code-border);
       border-radius: 6px;
       padding: 0.75rem 1rem;
       font-size: 0.75rem;
       font-family: "SF Mono", "Fira Code", "Consolas", monospace;
-      color: var(--less-text-secondary);
+      color: var(--text-secondary);
       overflow-x: auto;
       margin: 0.75rem 0;
       line-height: 1.6;
@@ -89,40 +89,40 @@ export default class ApiConsumer extends LitElement {
       align-items: center;
       gap: 0.35rem;
       padding: 0.4rem 0.85rem;
-      border: 0.5px solid var(--less-border);
+      border: 0.5px solid var(--border);
       border-radius: 6px;
-      background: var(--less-bg-card);
-      color: var(--less-text-secondary);
+      background: var(--bg-card);
+      color: var(--text-secondary);
       font-size: 0.8125rem;
       cursor: pointer;
       transition: all 0.15s;
     }
     .btn:hover {
-      border-color: var(--less-border-hover);
-      color: var(--less-text-primary);
-      background: var(--less-bg-hover);
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+      background: var(--bg-hover);
     }
     .btn:disabled {
       opacity: 0.4;
       cursor: not-allowed;
     }
     .btn.primary {
-      background: var(--less-accent);
-      color: var(--less-bg-base);
-      border-color: var(--less-accent);
+      background: var(--brand);
+      color: var(--bg-base);
+      border-color: var(--brand);
     }
     .btn.primary:hover {
       opacity: 0.85;
     }
     .btn.primary:disabled {
       opacity: 0.25;
-      background: var(--less-text-muted);
+      background: var(--text-muted);
       border-color: transparent;
     }
 
     .divider {
       border: none;
-      border-top: 0.5px solid var(--less-border);
+      border-top: 0.5px solid var(--border);
       margin: 1.25rem 0;
     }
 
@@ -135,19 +135,19 @@ export default class ApiConsumer extends LitElement {
     .form-row input {
       flex: 1;
       padding: 0.45rem 0.7rem;
-      border: 0.5px solid var(--less-border);
+      border: 0.5px solid var(--border);
       border-radius: 6px;
-      background: var(--less-bg-card);
-      color: var(--less-text-primary);
+      background: var(--bg-card);
+      color: var(--text-primary);
       font-size: 0.8125rem;
       outline: none;
       transition: border-color 0.15s;
     }
     .form-row input:focus {
-      border-color: var(--less-border-hover);
+      border-color: var(--border-hover);
     }
     .form-row input::placeholder {
-      color: var(--less-text-muted);
+      color: var(--text-muted);
     }
 
     .greeting {
@@ -156,10 +156,10 @@ export default class ApiConsumer extends LitElement {
       border-radius: 6px;
       font-size: 0.9375rem;
       font-weight: 500;
-      background: color-mix(in srgb, var(--less-accent) 6%, transparent);
+      background: color-mix(in srgb, var(--brand) 6%, transparent);
       // TODO: 0.5px after color-mix support
-      border: 1px solid color-mix(in srgb, var(--less-accent) 15%, transparent);
-      color: var(--less-text-primary);
+      border: 1px solid color-mix(in srgb, var(--brand) 15%, transparent);
+      color: var(--text-primary);
       animation: fadeSlide 0.25s ease;
     }
     .err-msg {
@@ -167,10 +167,10 @@ export default class ApiConsumer extends LitElement {
       padding: 0.6rem 0.85rem;
       border-radius: 6px;
       font-size: 0.8125rem;
-      background: color-mix(in srgb, var(--less-error) 8%, transparent);
+      background: color-mix(in srgb, var(--error) 8%, transparent);
       // TODO: 0.5px after color-mix support
-      border: 1px solid color-mix(in srgb, var(--less-error) 20%, transparent);
-      color: var(--less-error);
+      border: 1px solid color-mix(in srgb, var(--error) 20%, transparent);
+      color: var(--error);
       animation: fadeSlide 0.25s ease;
     }
 
@@ -321,7 +321,7 @@ export default class ApiConsumer extends LitElement {
           `
           : ''} ${this.apiError
           ? html`
-            <div class="pre-box" style="color:var(--less-error)">
+            <div class="pre-box" style="color:var(--error)">
               ${this.apiError}
             </div>
           `
@@ -338,7 +338,7 @@ export default class ApiConsumer extends LitElement {
 
         <h3>Say Hello</h3>
         <p
-          style="font-size:0.8125rem;color:var(--less-text-tertiary);margin:0 0 0.75rem;line-height:1.6"
+          style="font-size:0.8125rem;color:var(--text-muted);margin:0 0 0.75rem;line-height:1.6"
         >
           Type your name and the serverless API will greet you back. Calls
           <code style="font-size:0.75rem">GET /api/hello/:name</code> on Deno Deploy.
@@ -356,7 +356,7 @@ export default class ApiConsumer extends LitElement {
             @click="${this._sayHello}"
             ?disabled="${this.helloLoading || !this.name.trim()}"
           >
-            ${this.helloLoading ? 'Sending...' : 'Say Hello →'}
+            ${this.helloLoading ? 'Sending...' : 'Say Hello ->'}
           </button>
         </div>
         ${this.helloMsg

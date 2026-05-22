@@ -10,13 +10,13 @@
 import { escapeAttrValue } from './html-escape.js';
 import type { DsdOptions } from './types.js';
 
-// ─── camelCase → kebab-case ────────────────────────────────────
+// ─── camelCase -> kebab-case ────────────────────────────────────
 
 /**
  * Convert camelCase to kebab-case for HTML attribute names.
- * e.g. currentPath → current-path, navItems → nav-items
+ * e.g. currentPath -> current-path, navItems -> nav-items
  *
- * HTML attributes are case-insensitive — browsers lowercase them.
+ * HTML attributes are case-insensitive - browsers lowercase them.
  * Lit's @property({attribute: 'current-path'}) expects kebab-case.
  * Without this conversion, currentPath would render as "currentpath"
  * (lowercased by the browser) and never match "current-path".
@@ -90,8 +90,8 @@ export function wrapDsdOutput(params: {
   const { tagName, props, content, styleCss, layer, sourceStr, dsdOptions } = params;
   const attrs = serializeAttributes(props);
   // NOTE: Object-type props are intentionally serialized TWICE:
-  //   1. In HTML attributes via serializeAttributes() — used by SSR rendering
-  //   2. In data-ssr-props — used by client-side lessBind() for hydration
+  //   1. In HTML attributes via serializeAttributes() - used by SSR rendering
+  //   2. In data-ssr-props - used by client-side lessBind() for hydration
   const ssrPropsAttr = Object.keys(props).length > 0
     ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
     : '';
