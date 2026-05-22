@@ -3,7 +3,7 @@
 > Version: v0.21.0\
 > Phase: ISR + API Parity\
 > Priority: P1\
-> Status: PLANNED
+> Status: IMPLEMENTED
 
 ## Objective
 

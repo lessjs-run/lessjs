@@ -3,7 +3,7 @@
 > Version: v0.21.0\
 > Phase: Release Closure\
 > Priority: P0\
-> Status: PLANNED
+> Status: IMPLEMENTED
 
 ## Required Commands
 

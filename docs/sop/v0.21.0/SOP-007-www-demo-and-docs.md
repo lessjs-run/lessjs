@@ -3,7 +3,7 @@
 > Version: v0.21.0\
 > Phase: Public Surface\
 > Priority: P1\
-> Status: PLANNED
+> Status: IMPLEMENTED
 
 ## Objective
 

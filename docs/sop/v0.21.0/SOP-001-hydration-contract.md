@@ -3,7 +3,7 @@
 > Version: v0.21.0\
 > Phase: Contract\
 > Priority: P0\
-> Status: PLANNED
+> Status: IMPLEMENTED
 
 ## Objective
 

@@ -330,6 +330,27 @@ if (typeof globalThis.CSSStyleSheet === 'undefined') {
         })
         .filter(Boolean),
     );
+    // v0.21: Build filePath → tagName map for client-only placeholder generation.
+    const clientOnlyTagMap = new Map<string, string>();
+    for (const [tag, meta] of Object.entries(ssgIslandMeta)) {
+      if (meta.ssr !== false) continue;
+      const file = ssgIslandFiles[ssgIslandTagNames.indexOf(tag)];
+      if (file) clientOnlyTagMap.set(normalizePath(resolve(root, islandsDir, file)), tag);
+    }
+
+    // v0.21 SOP-004: Conflict detection — same tag must not be both SSR and client:only.
+    const ssrTags = new Set(
+      Object.entries(ssgIslandMeta)
+        .filter(([, meta]) => meta.ssr !== false)
+        .map(([tag]) => tag),
+    );
+    const conflictTags = [...clientOnlyTagMap.values()].filter((t) => ssrTags.has(t));
+    if (conflictTags.length > 0) {
+      throw new Error(
+        `[LessJS] SSR+client:only conflict detected for tags: ${conflictTags.join(', ')}. ` +
+          'A tag cannot be both SSR-capable and client:only on the same page.',
+      );
+    }
 
     await viteBuild({
       configFile: false,
@@ -429,10 +450,20 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
           load(id) {
             const normalized = normalizePath(id.split('?')[0]);
             if (!clientOnlyIslandIds.has(normalized)) return;
+            const tagName = clientOnlyTagMap.get(normalized) || 'less-client-only-stub';
+            // v0.21: Preserve original tag name with data-less-client-only marker.
+            // SSR outputs <tag-name data-less-client-only="true"></tag-name>
+            // Client runtime imports the real module and upgrades the element.
             return [
-              'export const tagName = "less-client-only-stub";',
+              `export const tagName = ${JSON.stringify(tagName)};`,
               'export const less = { ssr: false };',
-              'export default class LessClientOnlyStub extends HTMLElement {}',
+              `export default class LessClientOnlyStub extends HTMLElement {
+  connectedCallback() {
+    if (!this.hasAttribute('data-less-client-only')) {
+      this.setAttribute('data-less-client-only', 'true');
+    }
+  }
+}`,
             ].join('\n');
           },
         },

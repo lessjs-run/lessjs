@@ -35,6 +35,8 @@ export interface HubTagRecord {
   events?: CemEvent[];
   slots?: CemSlot[];
   usageExample?: string;
+  /** v0.21: Default hydration strategy declared in package manifest. */
+  defaultHydrationStrategy?: 'load' | 'idle' | 'visible' | 'only';
 }
 
 /** CEM attribute descriptor */

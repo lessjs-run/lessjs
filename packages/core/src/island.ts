@@ -433,7 +433,9 @@ export function island<T extends CustomElementConstructor>(
       break;
 
     case 'only':
-      createIdleStrategy(register);
+      // v0.21: client:only imports immediately - no DSD, no idle deferral.
+      // The component fully owns its shadow root on client.
+      register();
       break;
   }
 

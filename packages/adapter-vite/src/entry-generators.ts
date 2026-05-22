@@ -7,11 +7,14 @@
 
 import type { HydrationStrategy } from '@lessjs/core';
 
+export type StrategySource = 'directive' | 'island-options' | 'manifest' | 'default';
+
 export interface ClientIslandEntry {
   tagName: string;
   modulePath: string;
   isPackage?: boolean;
   strategy: HydrationStrategy;
+  strategySource?: StrategySource;
   ssr?: boolean;
   dsd?: boolean;
   reason?: string;
@@ -72,7 +75,11 @@ export function generateClientEntry(
     .map((i) => JSON.stringify(i.tagName))
     .join(', ');
   const idleTags = islands
-    .filter((i) => i.strategy === 'idle' || i.strategy === 'only')
+    .filter((i) => i.strategy === 'idle')
+    .map((i) => JSON.stringify(i.tagName))
+    .join(', ');
+  const onlyTags = islands
+    .filter((i) => i.strategy === 'only')
     .map((i) => JSON.stringify(i.tagName))
     .join(', ');
 
@@ -80,7 +87,7 @@ export function generateClientEntry(
 // load islands import immediately.
 // idle islands import during browser idle time.
 // visible islands import when their host enters the viewport.
-// only islands are client-only and import during idle time.
+// only islands are client-only and import immediately (no DSD/SSR).
 // Zero DOM interaction - safe with DSD rendering.
 
 var log = {
@@ -114,9 +121,15 @@ function __dispatchReady(strategy, tags) {
   }));
 }
 
-// client:load islands - load immediately
+// client:load islands - import immediately
 [${loadTags || ''}].filter(Boolean).forEach(__load);
 
+// client:only islands - import immediately, no DSD/SSR expected
+${
+    onlyTags
+      ? `var __onlyTags = [${onlyTags || ''}];\n__onlyTags.forEach(__load);\n`
+      : '// No client:only islands\n'
+  }
 // client:visible islands - load when their element enters viewport
 ${
     visibleTags
@@ -151,7 +164,7 @@ __onReady(__observeVisible);`
       : '// No client:visible islands'
   }
 
-// client:idle and client:only islands - defer to browser idle
+// client:idle islands - defer to browser idle
 ${
     idleTags
       ? `var __idleTags = [${idleTags || ''}];
@@ -161,7 +174,7 @@ var __deferred = function() {
 };
 var __schedule = window.requestIdleCallback || window.requestAnimationFrame || function(fn) { setTimeout(fn, 50); };
 __schedule(__deferred);`
-      : '// No client:idle/client:only islands'
+      : '// No client:idle islands'
   }
 `;
 }

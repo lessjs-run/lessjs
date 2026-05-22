@@ -529,6 +529,8 @@ export interface RouteEntry {
   varName: string;
   /** Special file type (renderer or middleware), if applicable */
   special?: SpecialFileType;
+  /** v0.21 ISR: revalidation interval in seconds. 0 = always, missing = static. */
+  revalidate?: number;
 }
 
 export type { SsrContext } from './context.js';
@@ -540,6 +542,9 @@ export type ComponentLayer = 'dsd-static' | 'dsd-interactive' | 'pure-island';
 
 /** v0.21 hydration strategies. Legacy eager/lazy names are intentionally not accepted. */
 export type HydrationStrategy = 'load' | 'idle' | 'visible' | 'only';
+
+/** v0.21 strategy origin tracking for diagnostics and build reports. */
+export type StrategySource = 'directive' | 'island-options' | 'manifest' | 'default';
 
 /**
  * Declarative event binding for DSD Interactive components.
@@ -826,6 +831,8 @@ export interface ManifestDecision {
   dsd: boolean;
   /** Hydration strategy from manifest (load/idle/visible/only) */
   hydrate?: string;
+  /** v0.21: strategy origin (directive/island-options/manifest/default) */
+  strategySource?: StrategySource;
   /** Resolved render path: 'ssr+client' = SSR rendering + client upgrade; 'client-only' = client-only */
   renderPath: 'ssr+client' | 'client-only';
   /** Admission reason shown in build reports */
@@ -888,6 +895,15 @@ export interface DsdBuildReport {
    * through the Happy DOM simulation path. Absent when domSimulation is 'off'.
    */
   domSimulation?: DomSimulationReport;
+  /** v0.21: ISR route records for routes exporting revalidate. */
+  isrRoutes?: IsrRouteRecord[];
+}
+
+/** v0.21 ISR route record published in dsd-report.json. */
+export interface IsrRouteRecord {
+  path: string;
+  revalidate: number;
+  cacheKey: string;
 }
 
 /**

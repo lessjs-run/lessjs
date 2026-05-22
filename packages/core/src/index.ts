@@ -61,6 +61,7 @@ export type {
   HydrateEventDescriptor,
   HydrationHint,
   HydrationStrategy,
+  IsrRouteRecord,
   LessAttribute,
   LessCssPart,
   LessCssProperty,
