@@ -55,7 +55,7 @@ import { StyleSheet, type StyleSheetLike } from '@lessjs/core';
  * Components can adopt this stylesheet via `static styles` (DsdElement)
  * or `adoptedStyleSheets` (vanilla Web Components).
  */
-export const openPropsTokenSheet = createTokenSheet();
+export const openPropsTokenSheet: StyleSheetLike = createTokenSheet();
 
 function createTokenSheet(): StyleSheetLike {
   const sheet: StyleSheetLike = new StyleSheet();
