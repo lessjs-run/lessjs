@@ -46,6 +46,7 @@ architectural decision, its context, and consequences.
 | 0035 | SSG Resilient Rendering + Visual Overhaul | Accepted                                 |
 | 0036 | Ocean-Island Architecture                 | Accepted / Implemented                   |
 | 0037 | DSD-First Strategic Boundary              | Accepted                                 |
+| 0038 | ISR + Edge KV Architecture                | Accepted                                 |
 
 ## Superseded / Historical
 

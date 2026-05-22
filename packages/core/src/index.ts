@@ -30,7 +30,7 @@ export { LessError, SsrRenderError } from './errors.js';
 export { createSsrContext, extractParams, parseQuery } from './context.js';
 export { renderSsrError, wrapInDocument } from './html-escape.js';
 export type { LessApiContext } from './api.js';
-export { createIsrCacheKey, isIsrRouteConfig, MemoryIsrCache, RedisIsrCache } from './isr.js';
+export { createIsrCacheKey, isIsrRouteConfig, MemoryIsrCache } from './isr.js';
 export type {
   IsrCache,
   IsrCacheEntry,

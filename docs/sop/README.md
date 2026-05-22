@@ -29,7 +29,8 @@ have one SOP with:
 | v0.19.0 | [v0.19.0-platform-hub.md](./v0.19.0-platform-hub.md)                                         | Done     | Hub ingestion MVP                  |
 | v0.19.1 | [v0.19.1-hub-previews-quality-gates.md](./v0.19.1-hub-previews-quality-gates.md)             | Deferred | Hub previews and scores            |
 | v0.20.0 | [v0.20.0/](./v0.20.0/)                                                                       | Done     | Ocean-Island + docs alignment      |
-| v0.21.0 | [v0.21.0/](./v0.21.0/)                                                                       | Current  | Hydration strategies + ISR         |
+| v0.21.0 | [v0.21.0/](./v0.21.0/)                                                                       | Done     | Hydration strategies + ISR         |
+| v0.22.0 | [v0.22.0/](./v0.22.0/)                                                                       | Planning | ISR handler + KV + Showcase        |
 | v1.0.0  | [v1.0.0-general-purpose-engine.md](./v1.0.0-general-purpose-engine.md)                       | Vision   | API freeze                         |
 
 ## Operator Rules
