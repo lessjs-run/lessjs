@@ -34,7 +34,8 @@
     "npm:react@^19.1.0": "19.2.6",
     "npm:sanitize-html@^2.17.4": "2.17.4",
     "npm:typescript@^5.9.0": "5.9.3",
-    "npm:vite@8.0.10": "8.0.10_@types+node@22.19.19_esbuild@0.25.12"
+    "npm:vite@8.0.10": "8.0.10_@types+node@22.19.19_esbuild@0.25.12",
+    "npm:ws@^8.20.1": "8.20.1"
   },
   "jsr": {
     "@std/assert@1.0.14": {
@@ -867,8 +868,8 @@
     "whatwg-mimetype@3.0.0": {
       "integrity": "sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q=="
     },
-    "ws@8.20.0": {
-      "integrity": "sha512-sAt8BhgNbzCtgGbt2OxmpuryO63ZoDk/sqaB/znQm94T4fCEsy/yV+7CdC1kJhOU9lboAEU7R3kquuycDoibVA=="
+    "ws@8.20.1": {
+      "integrity": "sha512-It4dO0K5v//JtTXuPkfEOaI3uUN87iYPnqo/ZzqCoG3g8uhA66QUMs/SrM0YK7/NAu+r4LMh/9dq2A7k+rHs+w=="
     }
   },
   "remote": {
@@ -928,7 +929,8 @@
       "npm:react-dom@^19.1.0",
       "npm:react@^19.1.0",
       "npm:typescript@^5.9.0",
-      "npm:vite@8.0.10"
+      "npm:vite@8.0.10",
+      "npm:ws@^8.20.1"
     ],
     "members": {
       "packages/adapter-lit": {
