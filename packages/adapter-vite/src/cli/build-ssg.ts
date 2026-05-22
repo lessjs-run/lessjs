@@ -361,6 +361,12 @@ if (typeof globalThis.CSSStyleSheet === 'undefined') {
         chunkSizeWarningLimit: 1500,
         rollupOptions: {
           input: { entry: VIRTUAL_SSG_ENTRY_ID },
+          // v0.21: Suppress IMPORT_IS_UNDEFINED for revalidate — the generated
+          // code uses typeof check which correctly handles undefined exports.
+          onwarn(warning, warn) {
+            if (warning.code === 'IMPORT_IS_UNDEFINED') return;
+            warn(warning);
+          },
           output: {
             format: 'esm',
             // ADR-0028: Inject globalThis.HTMLElement polyfill as banner.

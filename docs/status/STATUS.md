@@ -4,27 +4,30 @@
 
 ## Current Version Line: v0.21.0
 
-Status: **Hydration strategy contract, ISR primitives, and API route production
-parity implemented.**
+Status: **Hydration strategies (load/idle/visible/only), ISR primitives, API route
+production parity, client-only SSR exclusion, demo pages — all 10 SOPs completed.**
 
 The current product center is:
 
 > DSD-first Web Components application framework with SSG, progressive islands,
-> Hono API routes, and early Registry Hub evidence.
+> `client:*` hydration strategies, Hono API routes, ISR cache contract, and
+> early Registry Hub evidence.
 
 See [ADR-0037](../adr/0037-dsd-first-strategic-boundary.md) for the public
 positioning boundary.
 
 ## Current Rendering Mode
 
-| Mode                 | State   | Notes                                             |
-| -------------------- | ------- | ------------------------------------------------- |
-| SSG                  | shipped | default production rendering mode                 |
-| DSD                  | shipped | `renderDSD()` outputs declarative shadow roots    |
-| Island upgrade       | shipped | binary SSR/client-only boundary exists            |
-| Hydration strategies | shipped | `client:load/idle/visible/only` strategy contract |
-| ISR                  | shipped | cache primitives and SSG `isr-manifest.json`      |
-| Request-time SSR     | later   | runtime adapters are not a v0.21 guarantee        |
+| Mode                 | State   | Notes                                            |
+| -------------------- | ------- | ------------------------------------------------ |
+| SSG                  | shipped | default production rendering mode                |
+| DSD                  | shipped | `renderDSD()` outputs declarative shadow roots   |
+| Island upgrade       | shipped | binary SSR/client-only boundary exists           |
+| Hydration strategies | shipped | `client:load/idle/visible/only` — all 4 verified |
+| ISR cache            | shipped | core primitives (IsrCache, MemoryIsrCache)       |
+| API route parity     | shipped | LessApiContext / LessApiHandler types            |
+| ISR                  | shipped | cache primitives and SSG `isr-manifest.json`     |
+| Request-time SSR     | later   | runtime adapters are not a v0.21 guarantee       |
 
 ## Package Version State
 

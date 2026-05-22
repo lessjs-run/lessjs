@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/ui",
-  "version": "0.20.0",
+  "version": "0.21.0",
   "exports": {
     ".": "./src/index.ts",
     "./less-button": "./src/less-button.ts",
@@ -17,8 +17,8 @@
     "./open-props-tokens.js": "./src/open-props-tokens.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.18.0",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.18.0/navigation"
+    "@lessjs/core": "jsr:@lessjs/core@^0.21.0",
+    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.21.0/navigation"
   },
   "publish": {
     "include": [

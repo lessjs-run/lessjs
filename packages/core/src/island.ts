@@ -418,25 +418,30 @@ export function island<T extends CustomElementConstructor>(
     }
   };
 
-  // Apply strategy
-  switch (strategy) {
-    case 'load':
-      register();
-      break;
+  // SSR guard: browser-specific strategy scheduling is a no-op during SSR.
+  // IntersectionObserver, MutationObserver etc. are browser-only APIs.
+  // During SSR we just define the custom element and let the generated
+  // client entry handle strategy dispatch in the browser.
+  const isBrowser = typeof IntersectionObserver !== 'undefined';
 
-    case 'idle':
-      createIdleStrategy(register);
-      break;
-
-    case 'visible':
-      createVisibleStrategy(tagName, register);
-      break;
-
-    case 'only':
-      // v0.21: client:only imports immediately - no DSD, no idle deferral.
-      // The component fully owns its shadow root on client.
-      register();
-      break;
+  if (isBrowser) {
+    switch (strategy) {
+      case 'load':
+        register();
+        break;
+      case 'idle':
+        createIdleStrategy(register);
+        break;
+      case 'visible':
+        createVisibleStrategy(tagName, register);
+        break;
+      case 'only':
+        register();
+        break;
+    }
+  } else {
+    // SSR path: define the element idempotently, strategy runs on client.
+    register();
   }
 
   return componentClass;
