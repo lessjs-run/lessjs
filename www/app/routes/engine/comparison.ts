@@ -140,7 +140,8 @@ export default class ComparisonPage extends DsdElement {
         <div class="container">
           <h1>LessJS vs Alternatives</h1>
           <p class="subtitle">
-            LessJS = 全栈框架 + 通用 WC 渲染引擎 + Registry Hub。与同级框架的对比基于三支柱视角。
+            LessJS 当前是 DSD-first Web Components 应用框架。与同级框架的对比基于 DSD/WC 引擎、
+            渐进 island 和 Registry evidence pipeline。
           </p>
 
           <div class="table-wrap">
@@ -157,7 +158,7 @@ export default class ComparisonPage extends DsdElement {
               <tbody>
                 <tr>
                   <td>定位</td>
-                  <td class="lessjs-col">全栈 + WC引擎 + Hub</td>
+                  <td class="lessjs-col">DSD-first WC 应用框架</td>
                   <td>全栈（多框架）</td>
                   <td>全栈（Preact）</td>
                   <td>全栈（React）</td>
@@ -192,7 +193,7 @@ export default class ComparisonPage extends DsdElement {
                 </tr>
                 <tr>
                   <td>Rendering</td>
-                  <td class="lessjs-col">SSG + DSD + Islands (ISR planned)</td>
+                  <td class="lessjs-col">SSG + DSD + DsdElement + Islands (ISR next)</td>
                   <td>SSG + SSR + Islands</td>
                   <td>SSR + Islands</td>
                   <td>SSR + RSC + SSG</td>

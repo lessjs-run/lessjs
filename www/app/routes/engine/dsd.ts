@@ -57,7 +57,8 @@ export class DsdGuidePage extends DsdElement {
           <h1>DSD 渲染架构</h1>
           <p class="subtitle">
             Declarative Shadow DOM 是 LessJS 的核心渲染模型：服务端输出标准 HTML，浏览器在解析阶段创建
-            shadow root，JavaScript 只负责后续升级和必要事件绑定。
+            shadow root，JavaScript 只负责后续升级和必要事件绑定。v0.20 起，DSD 组件默认以
+            DsdElement + StyleSheet 实现。
           </p>
 
           <h2>什么是 DSD</h2>
@@ -148,7 +149,7 @@ export class DsdGuidePage extends DsdElement {
           <p class="subtitle">
             Declarative Shadow DOM is the core LessJS rendering model: the server emits standard HTML,
             the browser creates shadow roots during parsing, and JavaScript only upgrades components and
-            binds necessary events.
+            binds necessary events. Since v0.20, DSD components are built on DsdElement + StyleSheet by default.
           </p>
 
           <h2>What Is DSD</h2>

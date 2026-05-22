@@ -26,11 +26,15 @@ import '../../islands/media-chrome-showcase.js';
 export const tagName = 'docs-home';
 
 const CODE_COMPONENT = `// app/routes/index.ts
-import { html, LitElement } from 'lit';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 
-export class Home extends LitElement {
+const sheet = new StyleSheet();
+sheet.replaceSync(':host { display: block; }');
+
+export class Home extends DsdElement {
+  static styles = sheet;
   render() {
-    return html\`<h1>hello world</h1>
+    return \`<h1>hello world</h1>
   <my-counter></my-counter>\`;
   }
 }
@@ -911,8 +915,8 @@ export default class DocsHome extends DsdElement {
               </svg>
               <span>LessJS</span>
             </div>
-            <h1>全栈框架 · <em>零 JS 首屏</em> · <em>多框架共存</em></h1>
-            <p class="hero-desc">DSD 原生渲染，浏览器零 JS 看到完整页面</p>
+            <h1>DSD-first 框架 · <em>零 JS 首屏</em> · <em>多框架共存</em></h1>
+            <p class="hero-desc">v0.20 Ocean-Island：DsdElement 原生渲染，浏览器零 JS 看到完整页面。</p>
             <div class="hero-actions">
               <a class="hero-pri" href="/guide/getting-started">开始使用 -></a>
               <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">
@@ -978,8 +982,8 @@ export default class DocsHome extends DsdElement {
               </div>
               
             <div class="bench-stats-row">
-              <div class="met"><strong>v0.19.0</strong><span>latest</span></div>
-              <div class="met"><strong>681</strong><span>tests</span></div>
+              <div class="met"><strong>v0.20.0</strong><span>project line</span></div>
+              <div class="met"><strong>743</strong><span>tests</span></div>
               <div class="met"><strong>13</strong><span>packages</span></div>
               <div class="met"><strong>1</strong><span>runtime</span></div>
             </div>
@@ -1087,8 +1091,8 @@ export default class DocsHome extends DsdElement {
                 <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 3v14M13 3v14M3 10h14"/></svg>
                 </div>
-                <h3>全栈框架</h3>
-                <p>文件约定路由 + Hono API Route + Serverless 一键部署。SSG / ISR / SSR 同一引擎，一套代码覆盖静态与动态场景。</p>
+                <h3>应用框架</h3>
+                <p>文件约定路由 + Hono API Route + SSG 构建已可用。ISR 和 request-time SSR 是 v0.21+ 路线图能力。</p>
                 <div class="card-meta"><span>file routing</span><span>hono</span><span>serverless</span></div>
               </div>
               <div class="card">
@@ -1190,8 +1194,8 @@ export default class DocsHome extends DsdElement {
               </svg>
               <span>LessJS</span>
             </div>
-            <h1>Full-stack · <em>Zero-JS First Paint</em> · <em>Multi-framework</em></h1>
-            <p class="hero-desc">DSD 原生渲染，浏览器零 JS 看到完整页面</p>
+            <h1>DSD-first · <em>Zero-JS First Paint</em> · <em>Multi-framework</em></h1>
+            <p class="hero-desc">v0.20 Ocean-Island: DsdElement renders native DSD so the page is visible before JS.</p>
             <div class="hero-actions">
               <a class="hero-pri" href="/guide/getting-started">Get started -></a>
               <a class="hero-sec" href="https://github.com/lessjs-run/lessjs" target="_blank" rel="noopener">
@@ -1257,8 +1261,8 @@ export default class DocsHome extends DsdElement {
               </div>
               
             <div class="bench-stats-row">
-              <div class="met"><strong>v0.19.0</strong><span>latest</span></div>
-              <div class="met"><strong>681</strong><span>tests</span></div>
+              <div class="met"><strong>v0.20.0</strong><span>project line</span></div>
+              <div class="met"><strong>743</strong><span>tests</span></div>
               <div class="met"><strong>13</strong><span>packages</span></div>
               <div class="met"><strong>1</strong><span>runtime</span></div>
             </div>
@@ -1366,8 +1370,8 @@ export default class DocsHome extends DsdElement {
                 <div class="card-icon" style="background:#E6F1FB;color:#185FA5;">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 3v14M13 3v14M3 10h14"/></svg>
                 </div>
-                <h3>Full-stack Framework</h3>
-                <p>File-convention routing + Hono API routes + serverless one-click deploy. SSG / ISR / SSR - same engine, one codebase for static and dynamic.</p>
+                <h3>Application Framework</h3>
+                <p>File-convention routing, Hono API routes, and SSG builds are available today. ISR and request-time SSR are v0.21+ roadmap work.</p>
                 <div class="card-meta"><span>file routing</span><span>hono</span><span>serverless</span></div>
               </div>
               <div class="card">

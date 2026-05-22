@@ -116,22 +116,35 @@ export class IslandsGuidePage extends DsdElement {
             本地 island 放在 <span class="inline-code">app/islands</span>。构建器会扫描它，生成 client
             entry，并在静态 HTML 中注入 entry script。
           </p>
-          <less-code-block
-          ><pre><code>// app/islands/my-counter.ts
-            import { css, html, LitElement } from 'lit';
-            export const tagName = 'my-counter';
-            export default class MyCounter extends DsdElement {
-              static override styles = css&#96;:host { display: inline-flex; gap: 0.5rem; align-items: center; }&#96;;
-              count = 0;
-              override render() {
-                return html&#96;
-                  &lt;button @click=\\${() => this.count--}&gt;-&lt;/button&gt;
-                  &lt;span&gt;\\${this.count}&lt;/span&gt;
-                  &lt;button @click=\\${() => this.count++}&gt;+&lt;/button&gt;
-                &#96;;
-              }
-            }
-            customElements.define(tagName, MyCounter);</code></pre></less-code-block>
+          <less-code-block><pre><code>// app/islands/my-counter.ts
+import { DsdElement, StyleSheet } from '@lessjs/core';
+
+export const tagName = 'my-counter';
+
+const sheet = new StyleSheet();
+sheet.replaceSync(':host { display: inline-flex; gap: 0.5rem; align-items: center; }');
+
+export default class MyCounter extends DsdElement {
+  count = 0;
+  static override styles = sheet;
+  static override hydrateEvents = [
+    { selector: '[data-dec]', event: 'click', method: 'dec' },
+    { selector: '[data-inc]', event: 'click', method: 'inc' },
+  ];
+
+  override render(): string {
+    return '&lt;button data-dec&gt;-&lt;/button&gt;&lt;span data-count&gt;' + this.count + '&lt;/span&gt;&lt;button data-inc&gt;+&lt;/button&gt;';
+  }
+
+  dec() { this.count--; this.syncCount(); }
+  inc() { this.count++; this.syncCount(); }
+  private syncCount() {
+    const out = this.shadowRoot?.querySelector('[data-count]');
+    if (out) out.textContent = String(this.count);
+  }
+}
+
+if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);</code></pre></less-code-block>
           <h2>Package Islands</h2>
           <p>
             可复用包可以导出 island metadata，LessJS 在构建时读取这些信息，用于 SSR 注册和 client entry

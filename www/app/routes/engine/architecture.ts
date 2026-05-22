@@ -48,17 +48,17 @@ export class ArchitecturePage extends DsdElement {
               <tr>
                 <td>1. 全栈框架</td>
                 <td>路由 + API Route + Serverless 部署 + Hono 运行时</td>
-                <td>60% - 缺 ISR/auth/DB/context</td>
+                <td>50% - 缺 ISR/request context/deployment parity</td>
               </tr>
               <tr>
                 <td>2. WC 渲染引擎</td>
                 <td>DSD 渲染 + 多框架适配器 + 兼容性分类</td>
-                <td>75% - 缺 Vue/hydration策略/streaming</td>
+                <td>82% - v0.20 DsdElement 已完成，缺 client:* 策略和 Signals</td>
               </tr>
               <tr>
                 <td>3. Registry Hub</td>
                 <td>包发现 + 验证 + 预览 + 一键安装</td>
-                <td>65% - 缺公开服务</td>
+                <td>55% - 缺包规模、公开服务和治理</td>
               </tr>
             </tbody>
           </table>
@@ -194,7 +194,7 @@ Phase 3: SSG
               </tr>
               <tr>
                 <td><span class="inline-code">@lessjs/adapter-lit</span></td>
-                <td>Lit SSR 适配 + WithDsdHydration Mixin。</td>
+                <td>Lit SSR 适配，DSD 基类已迁移到 <span class="inline-code">DsdElement</span>。</td>
               </tr>
               <tr>
                 <td><span class="inline-code">@lessjs/content</span></td>
@@ -206,7 +206,7 @@ Phase 3: SSG
               </tr>
               <tr>
                 <td><span class="inline-code">@lessjs/ui</span></td>
-                <td>8 个 Web Component（less-button、less-layout、less-theme-toggle 等）。</td>
+                <td>10 个 Web Component，Ocean 组件以 DsdElement 为基类，保留少量 Island 示例。</td>
               </tr>
               <tr>
                 <td><span class="inline-code">@lessjs/signals</span></td>
@@ -226,8 +226,8 @@ Phase 3: SSG
           <h2>信任边界</h2>
           <p>
             当前最重要的架构工作不是增加功能，而是把已经承诺的能力做可信：
-            middleware 范围必须准确，SSG 和 Hono entry 的 CSP 行为必须一致，嵌套 island
-            路径必须稳定，加载策略不能在构建时丢失。
+            DSD report gate 必须继续阻止未知错误类，Hydration 策略必须贯穿 dev/build，
+            API route 与 request context 必须在生产部署中有一致语义。
           </p>
 
           <div class="nav-row">
@@ -273,17 +273,17 @@ Phase 3: SSG
               <tr>
                 <td>1. Full-Stack Framework</td>
                 <td>Routing + API Routes + Serverless deployment + Hono runtime</td>
-                <td>60% - missing ISR/auth/DB/context</td>
+                <td>50% - missing ISR/request context/deployment parity</td>
               </tr>
               <tr>
                 <td>2. WC Rendering Engine</td>
                 <td>DSD rendering + multi-framework adapters + compatibility classification</td>
-                <td>75% - missing Vue/hydration strategies/streaming</td>
+                <td>82% - v0.20 DsdElement shipped; missing client:* strategies and Signals</td>
               </tr>
               <tr>
                 <td>3. Registry Hub</td>
                 <td>Package discovery + validation + preview + one-click install</td>
-                <td>65% - missing public service</td>
+                <td>55% - missing package scale, public service, and governance</td>
               </tr>
             </tbody>
           </table>
@@ -430,7 +430,7 @@ Phase 3: SSG
               </tr>
               <tr>
                 <td><span class="inline-code">@lessjs/adapter-lit</span></td>
-                <td>Lit SSR adapter + WithDsdHydration Mixin.</td>
+                <td>Lit SSR adapter; the DSD base has moved to <span class="inline-code">DsdElement</span>.</td>
               </tr>
               <tr>
                 <td><span class="inline-code">@lessjs/content</span></td>
@@ -442,7 +442,7 @@ Phase 3: SSG
               </tr>
               <tr>
                 <td><span class="inline-code">@lessjs/ui</span></td>
-                <td>8 Web Components (less-button, less-layout, less-theme-toggle, etc.).</td>
+                <td>10 Web Components. Ocean components use DsdElement; a small island example remains.</td>
               </tr>
               <tr>
                 <td><span class="inline-code">@lessjs/signals</span></td>
@@ -462,9 +462,9 @@ Phase 3: SSG
           <h2>Trust Boundaries</h2>
           <p>
             The most important architectural work right now is not adding features, but making
-            already-promised capabilities trustworthy: middleware scope must be accurate,
-            SSG and Hono entry CSP behavior must be consistent, nested island paths must be
-            stable, and loading strategies must not be lost during builds.
+            already-promised capabilities trustworthy: the DSD report gate must continue blocking
+            unknown error classes, hydration strategies must survive dev and build, and API routes
+            plus request context need consistent production semantics.
           </p>
 
           <div class="nav-row">

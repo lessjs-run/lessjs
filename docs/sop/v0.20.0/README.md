@@ -25,6 +25,7 @@ docs/sop/v0.20.0/
   SOP-012-regression-testing.md            -> Full regression test matrix
   SOP-013-lit-cleanup.md                   -> Lit dependency cleanup
   SOP-014-repository-cleanup.md            -> Cleanup gate hardening
+  SOP-015-strategic-docs-alignment.md      -> Public positioning + roadmap alignment
 ```
 
 ## Execution Order
@@ -48,7 +49,10 @@ Phase 4: Verification (0.8d)
 Phase 5: Cleanup Hardening (0.5d)
   SOP-013 -> SOP-014
 
-Total: ~7.4 days (single developer, sequential)
+Phase 6: Strategic Docs Alignment (0.5-1d)
+  SOP-015
+
+Total: ~8.2 days (single developer, sequential)
 ```
 
 ## Key Decisions
@@ -61,6 +65,7 @@ Total: ~7.4 days (single developer, sequential)
 | adapter-lit retained for Island SSR only   | ADR section 2.2 D6          |
 | CSS Parts on every component               | ADR section 2.2 D8, SOP-010 |
 | Cleanup gates are enforceable              | SOP-014                     |
+| Public claims follow DSD-first boundary    | ADR-0037, SOP-015           |
 
 ## Before Starting
 

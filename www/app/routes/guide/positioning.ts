@@ -27,8 +27,8 @@ export class PositioningPage extends DsdElement {
         <div class="container">
           <h1>框架定位</h1>
           <p class="subtitle">
-            LessJS 是<strong>全栈框架 + 通用 WC 渲染引擎 + Registry Hub</strong>。
-            三个支柱各自独立有价值，组合形成独特定位。
+            LessJS 当前最准确的定位是 <strong>DSD-first Web Components 应用框架</strong>：
+            以 DSD/WC 渲染引擎为中心，向应用框架和 Registry Hub 延伸。
           </p>
 
           <h2>三支柱架构</h2>
@@ -46,8 +46,8 @@ export class PositioningPage extends DsdElement {
             <div class="num">支柱 2</div>
             <h3>通用 WC 渲染引擎</h3>
             <p>
-              Declarative Shadow DOM 零 JS 首屏。Lit/React/Vanilla 多框架适配器在同一页面共存。
-              第三方 WC 4 级兼容性分类 + 验证。Hydration 策略（client:load/idle/visible/only）计划中。
+              Declarative Shadow DOM 零 JS 首屏。v0.20 已引入 DsdElement、StyleSheet 和 CSS Parts。
+              第三方 WC 通过兼容性分类得到 SSR、client-only 或拒绝构建的确定结果。
             </p>
           </div>
 
@@ -56,7 +56,7 @@ export class PositioningPage extends DsdElement {
             <h3>Registry Hub</h3>
             <p>
               Web Component 发现、兼容性验证、一键安装。Playwright 渲染真实组件预览。
-              安装即渲染，验证即分层。less add 一键安装 + 兼容性报告。
+              当前是 early access evidence pipeline，不是成熟 marketplace。
             </p>
           </div>
 
@@ -237,8 +237,8 @@ export class PositioningPage extends DsdElement {
         <div class="container">
           <h1>Framework Positioning</h1>
           <p class="subtitle">
-            LessJS is a <strong>full-stack framework + universal WC rendering engine + Registry Hub</strong>.
-            Three pillars, each independently valuable, combined into a unique positioning.
+            LessJS is best described today as a <strong>DSD-first Web Components application framework</strong>:
+            a DSD/WC rendering engine that extends into an app framework and Registry Hub.
           </p>
 
           <h2>Three-Pillar Architecture</h2>
@@ -257,8 +257,8 @@ export class PositioningPage extends DsdElement {
             <div class="num">Pillar 2</div>
             <h3>Universal WC Rendering Engine</h3>
             <p>
-              Declarative Shadow DOM zero-JS first paint. Lit/React/Vanilla multi-framework adapters coexist on the same page.
-              Third-party WC 4-tier compatibility classification + validation. Hydration strategies (client:load/idle/visible/only) planned.
+              Declarative Shadow DOM zero-JS first paint. v0.20 adds DsdElement, StyleSheet, and CSS Parts.
+              Third-party WCs get deterministic SSR, client-only, or rejected outcomes through compatibility classification.
             </p>
           </div>
 
@@ -267,7 +267,7 @@ export class PositioningPage extends DsdElement {
             <h3>Registry Hub</h3>
             <p>
               Web Component discovery, compatibility validation, one-click install. Playwright-rendered real component previews.
-              Install-to-render, validate-to-tier. less add one-click install + compatibility reports.
+              This is an early-access evidence pipeline, not a mature marketplace yet.
             </p>
           </div>
 
