@@ -4,7 +4,7 @@ import { createIsrCacheKey, isIsrRouteConfig, MemoryIsrCache } from '../src/isr.
 Deno.test('createIsrCacheKey sorts and encodes params', () => {
   assertEquals(
     createIsrCacheKey('/blog/:slug', { slug: 'hello world', locale: 'en' }),
-    '/blog/:slug?locale=en&slug=hello%20world',
+    'lessjs:isr:/blog/:slug?locale=en&slug=hello%20world',
   );
 });
 

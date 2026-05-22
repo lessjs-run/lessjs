@@ -42,7 +42,18 @@ export type {
 export { DsdElement } from './dsd-element.js';
 export { StyleSheet } from './style-sheet.js';
 export type { StyleSheetLike, StyleSheetRule } from './style-sheet.js';
-export { renderDSD, renderDSDByName } from './render-dsd.js';
+export {
+  createRenderDSDStreamMetrics,
+  renderDSD,
+  renderDSDByName,
+  renderDSDStream,
+} from './render-dsd.js';
+export type {
+  RenderDSDStreamChunk,
+  RenderDSDStreamComponent,
+  RenderDSDStreamMetrics,
+  RenderDSDStreamOptions,
+} from './render-dsd.js';
 export { camelToKebab } from './render-serialize.js';
 export { getAdapter, getRegisteredAdapters, registerAdapter } from './adapter-registry.js';
 export type {
@@ -98,6 +109,15 @@ export {
   type SafeHtml,
   type UnsafeHtml,
 } from './html-escape.js';
+export {
+  html,
+  isSignalLike,
+  isTemplateResult,
+  isUnsafeHTML,
+  renderTemplateToString,
+  unsafeHTML,
+} from './template.js';
+export type { SignalLike, TemplateResult, TemplateValue, UnsafeHtmlValue } from './template.js';
 export { createLogger, LessLogger, LogLevel } from './logger.js';
 export { DANGEROUS_KEYS, getSSRProps, island, type IslandOptions, lessBind } from './island.js';
 export { hasNavigationApi, matchRoute, navigate, onNavigate } from './navigation.js';

@@ -10,12 +10,12 @@
  *   - formAssociated + delegatesFocus support
  *
  * DsdElement extends HTMLElement directly - ZERO Lit dependency.
- * Components return `render(): string` (plain HTML), not TemplateResult.
+ * Components return `render(): string | TemplateResult`.
  *
  * Lifecycle:
  *   SSR: instantiate -> set props -> render() -> wrap in DSD template
  *   Client (DSD): browser attaches shadow root from DSD -> upgrade -> _hydrateEvents()
- *   Client (CSR): connectedCallback -> createRenderRoot -> shadowRoot.innerHTML = render()
+ *   Client (CSR): connectedCallback -> createRenderRoot -> render into shadowRoot
  *
  * Usage (static DSD component):
  * ```ts
@@ -46,12 +46,19 @@
 
 import type { HydrateEventDescriptor } from './types.js';
 import type { StyleSheetLike } from './style-sheet.js';
+import {
+  applyRuntimeTemplateBindings,
+  collectTemplateSignals,
+  isTemplateResult,
+  renderTemplateToString,
+  type TemplateResult,
+} from './template.js';
 
 /**
  * Server-safe base class fallback when HTMLElement is unavailable
  * (Node.js / Deno server environments without DOM globals).
  *
- * In SSR/build contexts, DsdElement is only used for its render(): string
+ * In SSR/build contexts, DsdElement is only used for its render() output
  * method and static property access - the class is never instantiated as
  * a live Custom Element. This stub ensures the class declaration itself
  * does not throw at module evaluation time.
@@ -66,7 +73,7 @@ const _HTMLElement: typeof HTMLElement = typeof HTMLElement !== 'undefined'
  * Provides DSD detection, CSR fallback, event hydration, and style management
  * without any framework dependency (no Lit, no reactive-element).
  *
- * Subclasses MUST override `render(): string`.
+ * Subclasses MUST override `render(): string | TemplateResult`.
  */
 export class DsdElement extends _HTMLElement {
   /** Component stylesheets (SSR-safe - StyleSheet delegates to native CSSStyleSheet in browser). */
@@ -105,6 +112,15 @@ export class DsdElement extends _HTMLElement {
 
   /** AbortController for hydration event listener cleanup */
   private _hydrateAbortController?: AbortController;
+
+  /** AbortController for html`...` runtime event listener cleanup */
+  private _templateAbortController?: AbortController;
+
+  /** Signal subscriptions collected from the latest TemplateResult */
+  private _signalUnsubscribers: Array<() => void> = [];
+
+  /** Microtask batching guard for signal-driven updates */
+  private _reactiveUpdateQueued = false;
 
   /** ElementInternals for form-associated custom elements */
   protected _internals?: ElementInternals;
@@ -195,12 +211,12 @@ export class DsdElement extends _HTMLElement {
     }
 
     if (this._dsdHydrated) {
-      // DSD path: only bind events - DOM is already present
+      // DSD path: bind events/signals against existing DOM without replacing it.
+      this._bindCurrentRenderTemplate();
       this._hydrateEvents();
     } else if (this.shadowRoot) {
       // CSR path: populate shadow DOM from render()
-      this.shadowRoot.innerHTML = this.render();
-      this._hydrateEvents();
+      this._renderIntoShadowRoot();
     }
 
     // Attach ElementInternals for form-associated custom elements
@@ -218,6 +234,8 @@ export class DsdElement extends _HTMLElement {
       this._hydrateAbortController.abort();
       this._hydrateAbortController = undefined;
     }
+    this._disposeTemplateRuntime();
+    this._disposeSignalSubscriptions();
   }
 
   /**
@@ -247,9 +265,7 @@ export class DsdElement extends _HTMLElement {
    * duplicating `shadowRoot.innerHTML = this.render()` and event hydration.
    */
   update(): void {
-    if (!this.shadowRoot) return;
-    this.shadowRoot.innerHTML = this.render();
-    this._hydrateEvents();
+    this._renderIntoShadowRoot();
   }
 
   /**
@@ -261,6 +277,80 @@ export class DsdElement extends _HTMLElement {
    */
   requestUpdate(): void {
     this.update();
+  }
+
+  private _renderIntoShadowRoot(): void {
+    if (!this.shadowRoot) return;
+    this._disposeTemplateRuntime();
+    this._disposeSignalSubscriptions();
+
+    const result = this.render();
+    if (isTemplateResult(result)) {
+      this.shadowRoot.innerHTML = renderTemplateToString(result, { runtimeMarkers: true });
+      this._bindTemplateRuntime(result);
+      this._subscribeTemplateSignals(result);
+    } else {
+      this.shadowRoot.innerHTML = result;
+    }
+    this._hydrateEvents();
+  }
+
+  private _bindCurrentRenderTemplate(): void {
+    this._disposeTemplateRuntime();
+    this._disposeSignalSubscriptions();
+
+    const result = this.render();
+    if (!isTemplateResult(result) || !this.shadowRoot) return;
+    this._bindTemplateRuntime(result);
+    this._subscribeTemplateSignals(result);
+  }
+
+  private _bindTemplateRuntime(result: TemplateResult): void {
+    if (!this.shadowRoot) return;
+    this._templateAbortController = new AbortController();
+    applyRuntimeTemplateBindings(
+      this.shadowRoot,
+      result,
+      this,
+      this._templateAbortController.signal,
+    );
+  }
+
+  private _subscribeTemplateSignals(result: TemplateResult): void {
+    for (const signal of collectTemplateSignals(result)) {
+      let initial = true;
+      const unsubscribe = signal.subscribe(() => {
+        if (initial) {
+          initial = false;
+          return;
+        }
+        this._scheduleReactiveUpdate();
+      });
+      this._signalUnsubscribers.push(unsubscribe);
+    }
+  }
+
+  private _scheduleReactiveUpdate(): void {
+    if (this._reactiveUpdateQueued) return;
+    this._reactiveUpdateQueued = true;
+    queueMicrotask(() => {
+      this._reactiveUpdateQueued = false;
+      if (!this.isConnected) return;
+      this._renderIntoShadowRoot();
+    });
+  }
+
+  private _disposeTemplateRuntime(): void {
+    if (this._templateAbortController) {
+      this._templateAbortController.abort();
+      this._templateAbortController = undefined;
+    }
+  }
+
+  private _disposeSignalSubscriptions(): void {
+    for (const unsubscribe of this._signalUnsubscribers.splice(0)) {
+      unsubscribe();
+    }
   }
 
   /**
@@ -321,15 +411,16 @@ export class DsdElement extends _HTMLElement {
   }
 
   /**
-   * Return Shadow DOM inner HTML as a string.
+   * Return Shadow DOM inner HTML as a string or safe TemplateResult.
    *
-   * Subclasses MUST override this method. During SSR, this string is
-   * wrapped in a <template shadowrootmode="open"> tag. During CSR,
-   * it is assigned to `shadowRoot.innerHTML`.
+   * Subclasses MUST override this method. During SSR, rendered content is
+   * wrapped in a <template shadowrootmode="open"> tag. During CSR, strings are
+   * assigned to `shadowRoot.innerHTML`; TemplateResult values also get runtime
+   * event/property bindings and signal subscriptions.
    *
-   * @returns HTML string for the shadow DOM content.
+   * @returns HTML string or TemplateResult for the shadow DOM content.
    */
-  render(): string {
+  render(): string | TemplateResult {
     return '';
   }
 }

@@ -1,55 +1,135 @@
-# LessJS v0.21.0 — Reactive DSD
+# LessJS v0.21.0 - Reactive DSD
 
-> Status: PLANNING
-> Target: DsdElement + Signals, safe templates, optional DOM diffing, streaming DSD
+> Status: IMPLEMENTED
+> Target: DsdElement + Signals, safe templates, streaming DSD
 
-## Vision
+## Mission
 
-v0.21 makes `DsdElement` the universal reactive base class. Ocean components
-(80% of the page, zero JS by default) gain declarative, fine-grained reactivity
-via Signals — without pulling in Lit, React, or any framework runtime.
+v0.21.0 is the core-runtime deepening release. It makes `DsdElement` strong
+enough for common interactive Web Components without pulling the Ocean layer
+into Lit, React, JSX, a compiler, or a virtual DOM.
 
-Streaming DSD enables progressive page delivery: each component's shadow DOM
-streams to the browser as it renders, achieving sub-50ms Time-To-First-Byte.
+The release has three product outcomes:
 
-These two capabilities complete the Ocean-Island architecture (ADR-0036):
-Ocean = zero JS static + optional Signals reactivity. Island = full framework
-(React/Lit) for complex interactions.
+1. `DsdElement` can opt into Signals-driven reactive rendering.
+2. `html` templates are safe by default across SSR, CSR, and nested templates.
+3. `renderDSDStream()` gives the future edge handler a request-time streaming
+   primitive.
 
-## SOP Index
+Static DSD remains the default. Framework islands remain the right answer for
+large state machines, data grids, editors, rich charts, and deeply interactive
+application surfaces.
 
-| SOP | Title                               | Priority |
-| --- | ----------------------------------- | -------- |
-| 001 | DsdElement + Signals Integration    | P0       |
-| 002 | Safe Templates — Automatic Escaping | P0       |
-| 003 | Optional DOM Diffing                | P1       |
-| 004 | Streaming DSD                       | P1       |
-| 005 | Verification + Release Gate         | P0       |
+## DOM Diff Decision
 
-## Architecture Principle
+DOM diffing is intentionally removed from v0.21.0.
 
+For LessJS, the right boundary is:
+
+| Need                                                                        | v0.21 answer                                    |
+| --------------------------------------------------------------------------- | ----------------------------------------------- |
+| A text value, attribute, boolean flag, or small event-driven widget changes | Signals binding patch                           |
+| A small conditional block changes                                           | Re-render the local binding region              |
+| A large keyed list or complex stateful subtree changes                      | Use a framework island                          |
+| A third-party component owns its shadow DOM                                 | Do not diff it; treat it as an upgrade boundary |
+
+Adding `diff()` in v0.21 would create a second rendering engine inside
+`DsdElement`. That would increase scheduler, focus, selection, form-state, and
+DOM-ownership complexity without matching the DSD-first architecture. The
+v0.21 principle is smaller and stronger: patch simple bindings precisely, and
+escalate complex UI to Islands.
+
+## Release Order
+
+| Step | SOP     | Priority | Purpose                                         | Must Finish Before            |
+| ---- | ------- | -------- | ----------------------------------------------- | ----------------------------- |
+| 1    | SOP-001 | P0       | `DsdElement` + Signals reactive render contract | Any public Reactive DSD claim |
+| 2    | SOP-002 | P0       | Safe `html` template processor                  | Exporting `html` from core    |
+| 3    | SOP-003 | P1       | `renderDSDStream()` and stream metrics          | v0.22 ISR handler             |
+| 4    | SOP-004 | P0       | Verification, release gates, docs sync          | v0.21.0 completion            |
+
+## Entry Criteria
+
+- v0.20 Ocean-Island baseline is stable: `DsdElement`, `StyleSheet`,
+  `hydrateEvents`, DSD report, and static `render(): string` tests pass.
+- `@lessjs/signals` has passing `signal`, `computed`, `effect`, batching, and
+  subscription tests.
+- `docs/status/STATUS.md`, `docs/roadmap/ROADMAP.md`, and this SOP agree that
+  v0.21.0 is Reactive DSD and v0.22.0 is Edge Full-Stack.
+- The worktree has no unrelated generated artifacts before implementation
+  starts.
+
+## Architecture Contract
+
+```text
+DsdElement.render()
+  -> string
+      existing static path, unchanged
+  -> TemplateResult
+      created by html`...`
+      -> safe SSR string output
+      -> binding records for dynamic values
+      -> signal subscriptions for reactive values
+      -> microtask-batched updates
+      -> direct text/attribute/property/boolean binding patches
+
+Event binding
+  -> @click=${handler}
+  -> event descriptors attached after DSD upgrade or CSR render
+  -> handler may update Signals
+  -> Signal write schedules component update
+
+Streaming
+  -> renderDSDStream()
+  -> ReadableStream<Uint8Array>
+  -> shell first, component chunks next, footer last
+  -> per-chunk error fallback and metrics
 ```
-DsdElement.render() calls signal.get() → auto-track dependency
-    ↓
-signal.set(value) → notify DsdElement (microtask batched)
-    ↓
-Fine-grained DOM update — only changed expression, no virtual DOM
-    ↓
-Optional subtree diff for complex blocks (keyed list, conditionals)
-    ↓
-Streaming: each component chunk sent as rendered, not after full page
+
+## Public API Target
+
+<!-- deno-fmt-ignore -->
+```ts
+import { DsdElement, html, unsafeHTML } from '@lessjs/core';
+import { signal } from '@lessjs/signals';
+
+class LessCounter extends DsdElement {
+  #count = signal(0);
+
+  render() {
+    return html`
+      <button @click=${() => this.#count.value++}>
+        Count: ${this.#count}
+      </button>
+    `;
+  }
+}
 ```
 
-## Key Decisions
+## Documentation Requirements
 
-- **`html` tagged template, not JSX.** Aligns with Lit ecosystem, zero build step.
-- **Microtask batching.** Standard platform primitive — no custom scheduler.
-- **Fine-grained by default.** Most components only have 1-2 reactive bindings. Diffing is opt-in for complex cases.
-- **Signals in `@lessjs/signals`.** Existing package, already published. DsdElement depends on it.
+- Public docs must distinguish static DSD, event-hydrated DSD, reactive DSD,
+  framework islands, ISR, and request-time streaming.
+- `unsafeHTML()` must be documented as a trust boundary, not a convenience API.
+- Docs must say DOM diffing is intentionally not in v0.21.0.
+- Docs must not imply every Web Component becomes reactive or SSR-safe.
 
-## Related ADRs
+## Exit Criteria
 
+- Static `DsdElement` components behave exactly as before.
+- Reactive components update via microtask-batched component-local rerendering
+  after Signal writes.
+- Template interpolation is escaped by default in SSR and CSR paths.
+- Event bindings work after DSD upgrade and after CSR fallback render.
+- `renderDSDStream()` works in a Web `Response`.
+- SOP-004 targeted and full release gates pass.
+
+## Related
+
+- ADR-0036: Ocean-Island Architecture
 - ADR-0039: DsdElement + Signals Reactive Architecture
 - ADR-0040: Streaming DSD
-- ADR-0036: Ocean-Island Architecture (v0.20 baseline)
-- ADR-0033: Renderer Kernel (timing-independent renderDSD)
+- SOP-001: DsdElement + Signals Integration
+- SOP-002: Safe Templates
+- SOP-003: Streaming DSD
+- SOP-004: Verification + Release Gate

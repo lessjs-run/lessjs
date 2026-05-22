@@ -24,7 +24,7 @@ admission contracts instead of outrunning them.
 | Current DSD base          | `DsdElement` + SSR-safe `StyleSheet`                  |
 | Current framework surface | file routes, Hono API routes, dev/build pipeline      |
 | Current Hub surface       | early Registry Hub, validation, snapshots, `less add` |
-| Next milestone            | v0.21.x Reactive DSD                                  |
+| Next milestone            | v0.22.x Edge Full-Stack                               |
 
 Package publishing is staggered. The roadmap tracks the project line, while
 individual package versions may lag until a coordinated publish pass.
@@ -39,8 +39,8 @@ individual package versions may lag until a coordinated publish pass.
 | 4     | v0.18.x | Universal WC Engine       | CEM parser, compatibility tiers, validation CLI, safe add flow | Done    |
 | 5     | v0.19.x | Registry Hub MVP          | Searchable validated package index with reports and snapshots  | Done    |
 | 6     | v0.20.x | Ocean-Island Architecture | DsdElement, DSD-native UI, CSS Parts, cleanup gates            | Done    |
-| 7     | v0.21.x | Reactive DSD              | DsdElement + Signals, safe templates, DOM diff, streaming DSD  | Current |
-| 8     | v0.22.x | Edge Full-Stack           | ISR handler, KV adapters, Showcase, deployment guides          | Planned |
+| 7     | v0.21.x | Reactive DSD              | DsdElement + Signals, safe templates, streaming DSD            | Done    |
+| 8     | v0.22.x | Edge Full-Stack           | ISR handler, KV adapters, Showcase, deployment guides          | Current |
 | 9     | v1.0.x  | Stable Engine             | API/schema freeze and deterministic package guarantees         | Vision  |
 
 ## Compatibility Admission Model
@@ -145,18 +145,18 @@ Ocean components gain reactivity without Lit, React, or any framework runtime.
 
 Scope:
 
-- DsdElement + Signals auto-tracking (render → signal.get → dependency)
-- Fine-grained DOM updates (microtask-batched, direct DOM mutation)
+- DsdElement + Signals subscription tracking for TemplateResult values
+- Microtask-batched component-local rerendering for Signal writes
 - `html` tagged template literal (zero build step, XSS-safe by default)
 - Safe templates: automatic escaping, `unsafeHTML()` escape hatch
-- Optional DOM diffing: keyed subtree diff for complex list/conditional blocks
-- Streaming DSD: `renderDSDStream()` → `ReadableStream<string>`
+- Streaming DSD: `renderDSDStream()` -> `ReadableStream<Uint8Array>`
 - Progressive page delivery: TTFB < 50ms, per-component chunking
 - Priority ordering: above-fold first, below-fold deferred
+- No DOM diff in v0.21: complex UI remains an Island responsibility
 
 See `docs/sop/v0.21.0/` for detailed SOPs.
 
-## Planned: v0.22.x - Edge Full-Stack
+## Current: v0.22.x - Edge Full-Stack
 
 Goal: close the ISR loop — production handler, KV adapters, and www self-hosting proof.
 
@@ -169,11 +169,6 @@ Scope:
 - v0.21 cleanup and release verification
 
 See `docs/sop/v0.22.0/` for detailed SOPs.
-
-- Safe HTML helper with automatic escaping.
-- Optional DOM diffing for stateful island paths.
-- Runtime adapter ISR integration.
-- Clear distinction between static DSD, event-only DSD, and reactive island.
 
 Non-goals:
 

@@ -69,18 +69,20 @@ v0.20.x is now the Ocean-Island and repository cleanup line:
 - `@lessjs/ui` is DSD-native except the retained Lit island example.
 - DSD report gates fail on unknown error classes and excess hard errors.
 
-v0.21.x becomes the next framework-credibility line:
-
-- `client:load`, `client:idle`, `client:visible`, and `client:only`.
-- ISR cache layer.
-- API route production parity and request context.
-- Public docs and examples that demonstrate the above in both dev and build.
-
-v0.22.x should focus on reactive DSD authoring:
+v0.21.x becomes the Reactive DSD line:
 
 - `DsdElement` + Signals integration.
 - Safe HTML template helpers with automatic escaping.
-- Optional DOM diffing for stateful islands, only where needed.
+- Streaming DSD as the request-time rendering primitive.
+- No DOM diff in core; simple bindings patch directly, complex stateful UI
+  remains an Island responsibility.
+
+v0.22.x becomes the Edge Full-Stack line:
+
+- ISR production handler.
+- KV-backed ISR adapters for Cloudflare Workers and Deno KV.
+- www self-hosting proof with Showcase, ISR demo, and Hono API route.
+- Deployment guides for static-only, Cloudflare Workers, and Deno Deploy.
 
 v1.0 freezes the contracts that are already proven:
 
