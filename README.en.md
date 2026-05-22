@@ -21,9 +21,8 @@ The current production rendering mode is **SSG + Declarative Shadow DOM**.
 framework guarantees.
 
 Package publishing is currently staggered: `@lessjs/ui` carries the v0.20.0
-Ocean-Island work, `@lessjs/hub` is on the v0.19 line, and several core
-packages still carry earlier package versions until the next coordinated
-publish pass.
+Ocean-Island work, and core packages have been aligned to a coordinated
+version baseline.
 
 ## Three Product Pillars
 

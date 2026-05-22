@@ -18,7 +18,7 @@ Island、Hono API Route 和早期 Registry Hub 组合在一起，让 Web Compone
 未来在缓存过期时运行 ISR，或在请求时运行 SSR，但 ISR/SSR 仍是路线图能力，不应写成已发布保证。
 
 包版本目前是分阶段发布状态：`@lessjs/ui` 已承载 v0.20.0 Ocean-Island 工作，
-`@lessjs/hub` 仍在 v0.19 线，多数核心包会在下一次协调发布时统一版本。
+核心包已协调统一版本。
 
 ## 三个产品支柱
 

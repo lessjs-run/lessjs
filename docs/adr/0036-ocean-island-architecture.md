@@ -1,6 +1,6 @@
 # ADR-0036: Ocean-Island Architecture for v0.20.0
 
-> **Status**: ACCEPTED / IMPLEMENTING
+> **Status**: ACCEPTED / IMPLEMENTED
 > **Date**: 2026-05-20 (updated 2026-05-21)
 > **Author**: 齐活林（Delivery Director）with 许清楚（PM）+ 高见远（Architect）
 > **Key Amendment**: ADR-0036a — StyleSheet cross-environment shim (2026-05-21)
@@ -98,7 +98,7 @@ We adopt a **two-layer component model**:
 | D4 | Open Props for tokens                                 | Replace ~100 lines of custom token code              |
 | D5 | `hydrateEvents` preserved                             | Proven pattern, ported from DsdLitElement            |
 | D6 | `@lessjs/adapter-lit` retained                        | v0.20 keeps compatibility; v0.21 deprecates DSD path |
-| D7 | `less-hero-ping` keeps Lit                            | Only pure Island component, needs reactivity         |
+| D7 | `less-hero-ping` migrated to DsdElement            | OBE: fully migrated in SOP-017 convergence pass    |
 | D8 | CSS Parts on every component                          | Standard WC external styling API                     |
 
 ### 2.3 What Changes
