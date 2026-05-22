@@ -935,24 +935,24 @@
     "members": {
       "packages/adapter-lit": {
         "dependencies": [
-          "jsr:@lessjs/core@0.19"
+          "jsr:@lessjs/core@0.20"
         ]
       },
       "packages/adapter-react": {
         "dependencies": [
-          "jsr:@lessjs/core@0.19",
+          "jsr:@lessjs/core@0.20",
           "npm:react-dom@19",
           "npm:react@19"
         ]
       },
       "packages/adapter-vanilla": {
         "dependencies": [
-          "jsr:@lessjs/core@0.19"
+          "jsr:@lessjs/core@0.20"
         ]
       },
       "packages/adapter-vite": {
         "dependencies": [
-          "jsr:@lessjs/core@0.19",
+          "jsr:@lessjs/core@0.20",
           "npm:@hono/vite-dev-server@~0.25.3",
           "npm:esbuild@0.25",
           "npm:hono@4",
@@ -961,16 +961,16 @@
       },
       "packages/app": {
         "dependencies": [
-          "jsr:@lessjs/adapter-vite@0.19",
-          "jsr:@lessjs/content@0.19",
-          "jsr:@lessjs/core@0.19",
-          "jsr:@lessjs/i18n@0.19",
+          "jsr:@lessjs/adapter-vite@0.20",
+          "jsr:@lessjs/content@0.20",
+          "jsr:@lessjs/core@0.20",
+          "jsr:@lessjs/i18n@0.20",
           "npm:vite@8.0.10"
         ]
       },
       "packages/content": {
         "dependencies": [
-          "jsr:@lessjs/core@0.19",
+          "jsr:@lessjs/core@0.20",
           "npm:@types/sanitize-html@2",
           "npm:gray-matter@^4.0.3",
           "npm:marked@15",
@@ -990,13 +990,13 @@
       },
       "packages/i18n": {
         "dependencies": [
-          "jsr:@lessjs/core@0.19",
+          "jsr:@lessjs/core@0.20",
           "npm:vite@8.0.10"
         ]
       },
       "packages/ui": {
         "dependencies": [
-          "jsr:@lessjs/core@0.19"
+          "jsr:@lessjs/core@0.20"
         ]
       }
     }
