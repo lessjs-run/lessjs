@@ -600,6 +600,36 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
     }, ctx);
 
     log.info('Static site generated -> ' + join(root, outDir));
+
+    // v0.21: Write ISR manifest for routes exporting revalidate > 0.
+    try {
+      const ssgModule = module as Record<string, unknown>;
+      const routes = (ssgModule.routes || ssgModule.__routes) as
+        | Array<Record<string, unknown>>
+        | undefined;
+      if (routes && routes.length > 0) {
+        const isrRoutes: Record<string, unknown>[] = [];
+        for (const r of routes) {
+          const revalidate = typeof r.revalidate === 'number' && r.revalidate > 0
+            ? r.revalidate
+            : undefined;
+          if (!revalidate) continue;
+          isrRoutes.push({
+            path: r.path,
+            revalidate,
+            cacheKey: `lessjs:isr:${r.path}`,
+            params: r.params || {},
+          });
+        }
+        if (isrRoutes.length > 0) {
+          const manifestPath = join(root, outDir, 'isr-manifest.json');
+          writeFileSync(manifestPath, JSON.stringify(isrRoutes, null, 2), 'utf-8');
+          log.info(`ISR manifest written -> ${manifestPath} (${isrRoutes.length} routes)`);
+        }
+      }
+    } catch (e) {
+      log.warn('Failed to write isr-manifest.json — non-fatal:', e);
+    }
   } catch (err) {
     const cause = err instanceof Error ? err : new Error(String(err));
     throw new SsrRenderError('SSG pipeline', cause);

@@ -31,12 +31,13 @@ export { createSsrContext, extractParams, parseQuery } from './context.js';
 export { renderSsrError, wrapInDocument } from './html-escape.js';
 export { createLessApiContext } from './api.js';
 export type { LessApiContext, LessApiHandler } from './api.js';
-export { createIsrCacheKey, isIsrRouteConfig, MemoryIsrCache } from './isr.js';
+export { createIsrCacheKey, isIsrRouteConfig, MemoryIsrCache, RedisIsrCache } from './isr.js';
 export type {
   IsrCache,
   IsrCacheEntry,
   IsrCacheResult,
   IsrCacheState,
+  IsrManifestEntry,
   IsrRouteConfig,
 } from './isr.js';
 export { DsdElement } from './dsd-element.js';
