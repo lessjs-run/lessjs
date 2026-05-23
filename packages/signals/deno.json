@@ -2,7 +2,8 @@
   "name": "@lessjs/signals",
   "version": "0.20.1",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./framework": "./src/framework.ts"
   },
   "publish": {
     "include": [

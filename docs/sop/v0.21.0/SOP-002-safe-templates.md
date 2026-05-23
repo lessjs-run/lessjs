@@ -2,7 +2,7 @@
 
 > Version: v0.21.0
 > Priority: P0
-> Status: PLANNED
+> Status: IMPLEMENTED
 > Depends on: SOP-001
 
 ## Objective

@@ -2,7 +2,7 @@
 
 > Version: v0.21.0
 > Priority: P1
-> Status: PLANNED
+> Status: IMPLEMENTED
 > Depends on: ADR-0040, SOP-001, SOP-002
 
 ## Objective
@@ -16,13 +16,22 @@ Streaming is for request-time regeneration, demos, and future runtime handlers.
 ## Public API Target
 
 ```ts
-const stream = renderDSDStream('my-page', MyPage, props, {
-  document: {
-    title: 'My page',
-    head: '<meta name="description" content="...">',
+const stream = renderDSDStream(
+  [
+    {
+      tagName: 'my-page',
+      componentClass: MyPage,
+      props,
+      priority: 'critical',
+    },
+  ],
+  {
+    document: {
+      title: 'My page',
+      head: '<meta name="description" content="...">',
+    },
   },
-  priority: 'document-order',
-});
+);
 
 return new Response(stream, {
   headers: { 'Content-Type': 'text/html; charset=utf-8' },
@@ -177,7 +186,8 @@ Required test cases:
 
 - Streaming is a proven primitive for v0.22 ISR.
 - Static SSG behavior is unchanged.
-- Report schema changes are optional and backward compatible.
+- Report schema changes must be explicit and documented. When a compatibility
+  constraint blocks the v0.21 stream contract, the stream contract wins.
 
 ## Related
 

@@ -26,6 +26,7 @@
     "@lessjs/core/navigation": "./packages/core/src/navigation.ts",
     "@lessjs/rpc": "./packages/rpc/src/index.ts",
     "@lessjs/signals": "./packages/signals/src/index.ts",
+    "@lessjs/signals/framework": "./packages/signals/src/framework.ts",
     "@lessjs/ui": "./packages/ui/src/index.ts",
     // Explicit subpath entries required - Vite alias prefix-matching
     // cannot handle subpath exports from a file-based alias (ENOTDIR).

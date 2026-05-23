@@ -228,6 +228,7 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     writeFileSync(denoJsonPath, JSON.stringify(denoJson, null, 2));
 
     const uiSrc = join(repoRoot, 'packages', 'ui', 'src');
+    const signalsSrc = join(repoRoot, 'packages', 'signals', 'src');
     const aliases = [
       {
         find: '@lessjs/adapter-vite/build-context',
@@ -250,6 +251,10 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       {
         find: '@lessjs/core',
         replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'index.ts')),
+      },
+      {
+        find: '@lessjs/signals/framework',
+        replacement: vitePath(join(signalsSrc, 'framework.ts')),
       },
       {
         find: '@lessjs/adapter-lit/ssr',

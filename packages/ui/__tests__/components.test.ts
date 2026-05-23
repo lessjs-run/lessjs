@@ -289,9 +289,9 @@ Deno.test('less-theme-toggle: renders and handles theme', async () => {
   result = instance.render();
   assertExists(result);
 
-  // Test _isLight property assignment (private -use as any)
-  (instance as any)._isLight = true;
-  assertEquals((instance as any)._isLight, true);
+  // Reactive DSD state is held in the component-local signal.
+  (instance as any)._theme.value = 'light';
+  assertEquals((instance as any)._theme.value, 'light');
 });
 
 Deno.test('less-button: renders with properties', async () => {
@@ -372,7 +372,7 @@ Deno.test('less-theme-toggle: _handleToggle switches theme from light to dark', 
   try {
     const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
     const instance = new LessThemeToggle();
-    (instance as any)._isLight = true;
+    (instance as any)._theme.value = 'light';
 
     const calls: any[] = [];
     (document.documentElement as any).setAttribute = (...args: any[]) => {
@@ -381,7 +381,7 @@ Deno.test('less-theme-toggle: _handleToggle switches theme from light to dark', 
 
     (instance as any)._handleToggle();
 
-    assertEquals((instance as any)._isLight, false);
+    assertEquals((instance as any)._theme.value, 'dark');
     assertEquals(calls[0], ['data-theme', 'dark']);
   } finally {
     restore();
@@ -744,9 +744,9 @@ Deno.test('less-theme-toggle: connectedCallback with theme=light', async () => {
     // Don't call connectedCallback (the test DOM is intentionally minimal).
     // Instead, test the logic directly by replicating what connectedCallback does
     if (instance.getAttribute('theme') === 'light') {
-      (instance as any)._isLight = true;
+      (instance as any)._theme.value = 'light';
     }
-    assertEquals((instance as any)._isLight, true);
+    assertEquals((instance as any)._theme.value, 'light');
   } finally {
     restore();
   }
@@ -759,9 +759,9 @@ Deno.test('less-theme-toggle: connectedCallback with theme=dark', async () => {
     const instance = new LessThemeToggle();
     instance.setAttribute('theme', 'dark');
     if (instance.getAttribute('theme') === 'dark') {
-      (instance as any)._isLight = false;
+      (instance as any)._theme.value = 'dark';
     }
-    assertEquals((instance as any)._isLight, false);
+    assertEquals((instance as any)._theme.value, 'dark');
   } finally {
     restore();
   }
@@ -792,9 +792,9 @@ Deno.test('less-theme-toggle: connectedCallback reads document data-theme', asyn
       !instance.getAttribute('theme') &&
       (globalThis as any).document.documentElement.dataset.theme === 'light'
     ) {
-      (instance as any)._isLight = true;
+      (instance as any)._theme.value = 'light';
     }
-    assertEquals((instance as any)._isLight, true);
+    assertEquals((instance as any)._theme.value, 'light');
   } finally {
     (globalThis as any).document = savedDoc;
     (globalThis as any).localStorage = savedLS;
@@ -815,9 +815,9 @@ Deno.test('less-theme-toggle: connectedCallback reads localStorage fallback', as
     // Simulate localStorage fallback logic
     const saved = localStorage.getItem('less-theme');
     if (saved === 'light') {
-      (instance as any)._isLight = true;
+      (instance as any)._theme.value = 'light';
     }
-    assertEquals((instance as any)._isLight, true);
+    assertEquals((instance as any)._theme.value, 'light');
   } finally {
     (globalThis as any).document = savedDoc;
     if (orig === null) localStorage.removeItem('less-theme');
@@ -836,7 +836,7 @@ Deno.test('less-theme-toggle: connectedCallback defaults to dark', async () => {
   try {
     const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
     const instance = new LessThemeToggle();
-    assertEquals((instance as any)._isLight, false);
+    assertEquals((instance as any)._theme.value, 'dark');
   } finally {
     (globalThis as any).document = savedDoc;
     if (orig !== null) localStorage.setItem('less-theme', orig);
@@ -856,9 +856,9 @@ Deno.test('less-theme-toggle: _handleToggle switches dark->light', async () => {
   try {
     const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
     const instance = new LessThemeToggle();
-    (instance as any)._isLight = false; // Start dark
+    (instance as any)._theme.value = 'dark';
     (instance as any)._handleToggle();
-    assertEquals((instance as any)._isLight, true);
+    assertEquals((instance as any)._theme.value, 'light');
     assertEquals(localStorage.getItem('less-theme'), 'light');
   } finally {
     (globalThis as any).document = savedDoc;
@@ -893,7 +893,7 @@ Deno.test('less-theme-toggle: connectedCallback full path with theme=light', asy
 
     try {
       instance.connectedCallback();
-      assertEquals((instance as any)._isLight, true);
+      assertEquals((instance as any)._theme.value, 'light');
       assertEquals(instance.getAttribute('data-theme'), 'light');
     } finally {
       Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback = origConnected;
@@ -928,7 +928,7 @@ Deno.test('less-theme-toggle: connectedCallback full path with theme=dark', asyn
 
     try {
       instance.connectedCallback();
-      assertEquals((instance as any)._isLight, false);
+      assertEquals((instance as any)._theme.value, 'dark');
       assertEquals(instance.getAttribute('data-theme'), 'dark');
     } finally {
       Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback = origConnected;
@@ -962,7 +962,7 @@ Deno.test('less-theme-toggle: connectedCallback reads document.documentElement.d
 
     try {
       instance.connectedCallback();
-      assertEquals((instance as any)._isLight, true);
+      assertEquals((instance as any)._theme.value, 'light');
       assertEquals(instance.getAttribute('data-theme'), 'light');
     } finally {
       Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback = origConnected;
@@ -992,7 +992,7 @@ Deno.test('less-theme-toggle: connectedCallback reads localStorage fallback', as
 
     try {
       instance.connectedCallback();
-      assertEquals((instance as any)._isLight, true);
+      assertEquals((instance as any)._theme.value, 'light');
       assertEquals(instance.getAttribute('data-theme'), 'light');
     } finally {
       Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback = origConnected;
@@ -1024,7 +1024,7 @@ Deno.test('less-theme-toggle: connectedCallback defaults to dark theme', async (
 
     try {
       instance.connectedCallback();
-      assertEquals((instance as any)._isLight, false);
+      assertEquals((instance as any)._theme.value, 'dark');
       assertEquals(instance.getAttribute('data-theme'), 'dark');
     } finally {
       Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback = origConnected;

@@ -2,7 +2,7 @@
 
 > Version: v0.21.0
 > Priority: P0
-> Status: PLANNED
+> Status: IMPLEMENTED
 > Depends on: v0.20 Ocean-Island, `@lessjs/signals`, ADR-0039
 
 ## Objective
@@ -35,7 +35,8 @@ The runtime should:
 - batch signal writes in a microtask;
 - rerender the component locally after Signal writes without introducing a
   general DOM diff engine;
-- keep `render(): string` fully backward compatible.
+- preserve the existing `render(): string` path where it does not block the new
+  `TemplateResult` runtime; in conflicts, the v0.21 Reactive DSD contract wins.
 
 ## Non-Goals
 

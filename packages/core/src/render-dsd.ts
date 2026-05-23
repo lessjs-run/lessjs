@@ -183,7 +183,7 @@ export async function renderDSD(
     } else if (typeof result === 'string') {
       content = result;
     } else if (isTemplateResult(result)) {
-      content = renderTemplateToString(result);
+      content = renderTemplateToString(result, { runtimeMarkers: true });
     } else {
       // v0.17.3: Multi-adapter dispatch - try all registered adapters
       // until one claims the result via isTemplate(). This allows Lit,

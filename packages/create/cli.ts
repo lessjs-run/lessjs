@@ -123,6 +123,7 @@ node_modules/
     "@lessjs/core/navigation": "jsr:@lessjs/core@^${v.core}/navigation",
     "@lessjs/i18n": "jsr:@lessjs/i18n@^${v.i18n}",
     "@lessjs/signals": "jsr:@lessjs/signals@^${v.signals}",
+    "@lessjs/signals/framework": "jsr:@lessjs/signals@^${v.signals}/framework",
     "@lessjs/ui": "jsr:@lessjs/ui@^${v.ui}",
     "@lessjs/ui/open-props-tokens": "jsr:@lessjs/ui@^${v.ui}/open-props-tokens",
     "@lessjs/ui/": "jsr:@lessjs/ui@^${v.ui}/"
@@ -152,6 +153,7 @@ const colorTokensStyle =
   'body{margin:0;background:var(--gray-1);color:var(--gray-9);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>';
 
 const lessUiAliases = {
+  '@lessjs/signals/framework': 'https://jsr.io/@lessjs/signals/${v.signals}/src/framework.ts',
   '@lessjs/ui/less-hero-ping': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-hero-ping.ts',
   '@lessjs/ui/less-input': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-input.ts',
   '@lessjs/ui/less-layout': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-layout.ts',

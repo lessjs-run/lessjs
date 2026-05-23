@@ -66,6 +66,21 @@ Deno.test('renderDSD renders native LessJS TemplateResult without an adapter', a
   assertEquals(output.errors.length, 0);
 });
 
+Deno.test('renderDSD keeps runtime markers for DSD upgrade template events', async () => {
+  class EventComponent {
+    render() {
+      return html`
+        <button @click="${() => {}}">Run</button>
+      `;
+    }
+  }
+
+  const output = await renderDSD('event-el', asCtor(EventComponent), {});
+  assertStringIncludes(output.html, 'data-less-event-0');
+  assertFalse(output.html.includes('@click'));
+  assertFalse(output.html.includes('() =>'));
+});
+
 Deno.test('renderDSDStream yields shell, component chunks, and footer', async () => {
   const stream = renderDSDStream([
     { tagName: 'template-el', componentClass: asCtor(TemplateComponent) },

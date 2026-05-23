@@ -46,7 +46,8 @@ export class PositioningPage extends DsdElement {
             <div class="num">支柱 2</div>
             <h3>通用 WC 渲染引擎</h3>
             <p>
-              Declarative Shadow DOM 零 JS 首屏。v0.21.0 已引入 DsdElement、StyleSheet、CSS Parts、Hydration 策略与 ISR 元数据。
+              Declarative Shadow DOM 零 JS 首屏。v0.21.0 已引入 Reactive DSD：DsdElement、
+              html 安全模板、Signal 驱动的局部重渲染，以及可交给 Response 的 streaming DSD。
               第三方 WC 通过兼容性分类得到 SSR、client-only 或拒绝构建的确定结果。
             </p>
           </div>
@@ -257,7 +258,9 @@ export class PositioningPage extends DsdElement {
             <div class="num">Pillar 2</div>
             <h3>Universal WC Rendering Engine</h3>
             <p>
-              Declarative Shadow DOM zero-JS first paint. v0.21.0 adds DsdElement, StyleSheet, CSS Parts, hydration strategies, and ISR metadata.
+              Declarative Shadow DOM zero-JS first paint. v0.21.0 adds Reactive DSD:
+              DsdElement, safe html templates, Signal-driven local rerendering, and
+              Response-ready streaming DSD.
               Third-party WCs get deterministic SSR, client-only, or rejected outcomes through compatibility classification.
             </p>
           </div>
