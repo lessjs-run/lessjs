@@ -16,8 +16,7 @@
  * ```
  */
 
-import { DsdElement, html, StyleSheet, unsafeHTML } from '@lessjs/core';
-import { signal } from '@lessjs/signals/framework';
+import { DsdElement, html, signal, StyleSheet, unsafeHTML } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-theme-toggle';

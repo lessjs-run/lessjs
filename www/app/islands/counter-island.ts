@@ -10,8 +10,7 @@
  *   - State: signal() from @lessjs/signals
  *   - Events: @click declarative bindings (hydrateEvents)
  */
-import { DsdElement, html, StyleSheet } from '@lessjs/core';
-import { signal } from '@lessjs/signals';
+import { DsdElement, html, signal, StyleSheet } from '@lessjs/core';
 
 export const tagName = 'counter-island';
 

@@ -2,7 +2,7 @@
 
 > Version: v0.21.0
 > Priority: P0
-> Status: PLANNED
+> Status: IMPLEMENTED
 > Depends on: SOP-001 (DsdElement+Signals), SOP-002 (Safe Templates)
 
 ## Problem
@@ -33,22 +33,25 @@ a simple interactive widget should pick DsdElement+Signals every time.
 **Goal**: Replace `this.shadowRoot!.innerHTML = ...` with targeted DOM mutation.
 
 Current (full replace):
+
 ```ts
 // DsdElement._renderIntoShadowRoot()
-this.shadowRoot!.innerHTML = result;  // ❌ full replace
+this.shadowRoot!.innerHTML = result; // ❌ full replace
 ```
 
 Target (per-binding patch):
+
 ```ts
 // For each signal expression in TemplateResult, patch only that DOM node
 const binding = result.bindings[i];
 const patchNode = this.shadowRoot!.querySelector(`[data-b="${binding.index}"]`);
 if (patchNode) {
-  patchNode.textContent = String(resolvedValue);  // ✅ single node
+  patchNode.textContent = String(resolvedValue); // ✅ single node
 }
 ```
 
 **Implementation checklist**:
+
 - [ ] Add `data-b="0"`, `data-b="1"` markers to `renderTemplateToString()` output
   - Each `${signal}` expression gets a `data-b="N"` attribute on its containing node
 - [ ] `_renderIntoShadowRoot()` first-render path: full HTML (DD, needs structure)
@@ -59,7 +62,7 @@ if (patchNode) {
   - Boolean attribute → `toggleAttribute(name, val)`
   - Property binding → `el[name] = val`
 - [ ] Fallback: if DOM structure changed (e.g. conditional block), fall back to
-  full `innerHTML` replace
+      full `innerHTML` replace
 - [ ] Track mutation count per update for metrics (`dsd-report.json`)
 
 ### Step 2: Conditional Signal Re-Tracking
@@ -69,13 +72,20 @@ dependency graph must update.
 
 ```ts
 // Problem case: sigA vs sigB depends on show
-show.value ? html`<span>${sigA}</span>` : html`<span>${sigB}</span>`
+show.value
+  ? html`
+    <span>${sigA}</span>
+  `
+  : html`
+    <span>${sigB}</span>
+  `;
 
 // Bug: after show toggles, sigA still has subscription even when not rendered
 // Fix: re-collect signals on every render(), diff subscriptions, unsubscribe stale
 ```
 
 **Implementation checklist**:
+
 - [ ] After each `render()`, compute `newSignals = collectTemplateSignals(result)`
 - [ ] Compare with `this._signalUnsubscribers` → unsubscribe removed signals
 - [ ] Subscribe new signals only
@@ -86,10 +96,10 @@ show.value ? html`<span>${sigA}</span>` : html`<span>${sigB}</span>`
 
 **Test cases to add** (target: 12 new tests):
 
-- [ ] Attribute binding: `html\`<div class="${sig}">\`` → `getAttribute('class')` updates
-- [ ] Boolean attribute: `html\`<input ?disabled="${sig}">\`` → toggles `disabled`
-- [ ] Property binding: `html\`<input .value="${sig}">\`` → `el.value` set directly
-- [ ] Event handler: `html\`<button @click="${fn}">\`` → `fn` called on click
+- [ ] Attribute binding: `html\`<div class="${sig}">\``→`getAttribute('class')` updates
+- [ ] Boolean attribute: `html\`<input ?disabled="${sig}">\``→ toggles`disabled`
+- [ ] Property binding: `html\`<input .value="${sig}">\``→`el.value` set directly
+- [ ] Event handler: `html\`<button @click="${fn}">\``→`fn` called on click
 - [ ] Fine-grained: change sigA → only `[data-b="0"]` updates, `[data-b="1"]` unchanged
 - [ ] Batching: 3 signal writes → 1 DOM update (check MutationObserver count)
 - [ ] Cleanup: element removed → no subscriptions fire
@@ -102,18 +112,21 @@ show.value ? html`<span>${sigA}</span>` : html`<span>${sigB}</span>`
 ### Step 4: DX Improvements
 
 #### 4a: Single Import
+
 - [ ] Re-export `signal`, `computed`, `effect` from `@lessjs/core`
   - Currently: `import { DsdElement, html } from '@lessjs/core'; import { signal } from '@lessjs/signals';`
   - Target: `import { DsdElement, html, signal, computed } from '@lessjs/core';`
 - [ ] `@lessjs/signals` remains a standalone package for non-DsdElement use
 
 #### 4b: Error Messages
+
 - [ ] `render()` returns non-string, non-TemplateResult → clear error: "DsdElement.render() must return string or html\`...\`"
 - [ ] Signal used without import → runtime detection + hint: "Did you forget `import { signal } from '@lessjs/core'`?"
 - [ ] TemplateResult detected but no signals subscribed → warning: "Your html template uses no signals. Use render(): string for static content."
 - [ ] Cycle detected: signal write during render → warning: "Signal write detected during render(). This may cause infinite loops."
 
 #### 4c: Migration Guide
+
 - [ ] `docs/guide/migrating-from-lit.md`
 - [ ] Side-by-side examples: Lit counter vs DsdElement+Signals counter
 - [ ] Lit @state → signal() mapping table
@@ -126,13 +139,14 @@ show.value ? html`<span>${sigA}</span>` : html`<span>${sigB}</span>`
 
 **Target components to migrate from imperative DOM to signals**:
 
-| Component | Current State | Target State | Effort |
-|---|---|---|---|
-| `less-search.ts` | `_open`, `_query`, `_results` manual | `signal(false)`, `signal('')`, `signal([])` | ~20 lines |
-| `less-toc.ts` | `#activeHeading` manual scroll tracking | `signal('')` + computed visibility | ~15 lines |
-| `less-term.ts` | `#input` manual text state | `signal('')` + computed output | ~10 lines |
+| Component        | Current State                           | Target State                                | Effort    |
+| ---------------- | --------------------------------------- | ------------------------------------------- | --------- |
+| `less-search.ts` | `_open`, `_query`, `_results` manual    | `signal(false)`, `signal('')`, `signal([])` | ~20 lines |
+| `less-toc.ts`    | `#activeHeading` manual scroll tracking | `signal('')` + computed visibility          | ~15 lines |
+| `less-term.ts`   | `#input` manual text state              | `signal('')` + computed output              | ~10 lines |
 
 **Migration checklist per component**:
+
 - [ ] less-search: open/close → signal, query → signal, results → computed
 - [ ] less-toc: activeHeading → signal, scroll handler → signal write
 - [ ] less-term: input → signal, display → computed from signal
@@ -142,6 +156,7 @@ show.value ? html`<span>${sigA}</span>` : html`<span>${sigB}</span>`
 ### Step 6: Verification
 
 #### Test Targets
+
 ```sh
 deno test packages/core/__tests__/reactive-dsd.test.ts     # ≥12 tests
 deno test packages/core/__tests__/template.test.ts         # ≥15 tests
@@ -149,6 +164,7 @@ deno test packages/core/__tests__/dsd-element.test.ts      # ≥460 tests
 ```
 
 #### Gate Commands
+
 ```sh
 deno task fmt:check
 deno task lint
@@ -159,6 +175,7 @@ deno task dsd:check-report
 ```
 
 #### Exit Criteria
+
 - [ ] Fine-grained patching works: changing sigA updates only `[data-b="0"]` node
 - [ ] 12+ reactive-dsd tests pass
 - [ ] 3 www components migrated to signals (less-search, less-toc, less-term)

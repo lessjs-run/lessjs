@@ -118,6 +118,7 @@ export function renderTemplateToString(
 ): string {
   let output = '';
   let stripNextQuote: '"' | "'" | '' = '';
+  let bindingIndex = 0;
 
   for (let i = 0; i < result.values.length; i++) {
     let chunk = result.strings[i] ?? '';
@@ -131,12 +132,19 @@ export function renderTemplateToString(
     if (binding) {
       output += binding.prefix;
       stripNextQuote = binding.quoted;
-      output += renderBinding(i, binding, value, options.runtimeMarkers === true);
+      output += renderBinding(bindingIndex, binding, value, options.runtimeMarkers === true);
+      bindingIndex++;
       continue;
     }
 
     output += chunk;
-    output += renderValue(value, 'text');
+    // v0.21: wrap signal text values in data-b markers for fine-grained patching
+    if (options.runtimeMarkers && isSignalLike(value)) {
+      output += `<span data-b="${bindingIndex}">${renderValue(value, 'text')}</span>`;
+      bindingIndex++;
+    } else {
+      output += renderValue(value, 'text');
+    }
   }
 
   let tail = result.strings[result.strings.length - 1] ?? '';

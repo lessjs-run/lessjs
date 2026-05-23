@@ -40,6 +40,9 @@ export type {
   IsrRouteConfig,
 } from './isr.js';
 export { DsdElement } from './dsd-element.js';
+// v0.21: Re-export signals for single-import DX
+// import { DsdElement, html, signal, computed } from '@lessjs/core';
+export { computed, effect, signal } from '../../signals/src/framework.js';
 export { StyleSheet } from './style-sheet.js';
 export type { StyleSheetLike, StyleSheetRule } from './style-sheet.js';
 export {

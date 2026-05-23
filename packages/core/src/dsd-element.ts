@@ -49,6 +49,7 @@ import type { StyleSheetLike } from './style-sheet.js';
 import {
   applyRuntimeTemplateBindings,
   collectTemplateSignals,
+  isSignalLike,
   isTemplateResult,
   renderTemplateToString,
   type TemplateResult,
@@ -121,6 +122,9 @@ export class DsdElement extends _HTMLElement {
 
   /** Microtask batching guard for signal-driven updates */
   private _reactiveUpdateQueued = false;
+
+  /** Whether the first render has completed (used to switch from full replace to patch mode) */
+  private _initialRenderDone = false;
 
   /** ElementInternals for form-associated custom elements */
   protected _internals?: ElementInternals;
@@ -295,6 +299,45 @@ export class DsdElement extends _HTMLElement {
     this._hydrateEvents();
   }
 
+  /**
+   * v0.21: Fine-grained DOM patching for reactive signal updates.
+   *
+   * Instead of replacing the entire shadowRoot.innerHTML, this method
+   * queries for [data-b="N"] markers and patches only those nodes.
+   * Events (@click) and properties (.value) use existing markers
+   * (data-less-event-N / data-less-prop-N).
+   *
+   * Preserves focus, scroll, CSS transitions, and input state.
+   */
+  private _patchBindings(): void {
+    if (!this.shadowRoot) return;
+    this._disposeTemplateRuntime();
+    this._disposeSignalSubscriptions();
+
+    const result = this.render();
+    if (!isTemplateResult(result)) return;
+
+    // Re-bind event handlers and property bindings
+    this._bindTemplateRuntime(result);
+    this._subscribeTemplateSignals(result);
+
+    // Patch signal text values using data-b markers
+    const values = result.values;
+    for (let i = 0; i < values.length; i++) {
+      const value = values[i];
+      if (!isSignalLike(value)) continue;
+      const el = this.shadowRoot.querySelector(`[data-b="${i}"]`);
+      if (!el) continue;
+      const raw = (value as { value: unknown }).value;
+      el.textContent = raw == null ? '' : String(raw);
+    }
+
+    // Re-process event binding attributes onto the updated DOM
+    // (event handlers are already re-attached above, but we need to
+    //  ensure they target the correct DOM nodes)
+    this._hydrateEvents();
+  }
+
   private _bindCurrentRenderTemplate(): void {
     this._disposeTemplateRuntime();
     this._disposeSignalSubscriptions();
@@ -336,7 +379,13 @@ export class DsdElement extends _HTMLElement {
     queueMicrotask(() => {
       this._reactiveUpdateQueued = false;
       if (!this.isConnected) return;
-      this._renderIntoShadowRoot();
+      // v0.21: initial render uses full innerHTML, subsequent updates use fine-grained patch
+      if (this._initialRenderDone) {
+        this._patchBindings();
+      } else {
+        this._renderIntoShadowRoot();
+        this._initialRenderDone = true;
+      }
     });
   }
 
