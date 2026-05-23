@@ -2,21 +2,22 @@
 
 ## 快速对照
 
-| Lit | DsdElement + Signals |
-|-----|---------------------|
-| `LitElement` | `DsdElement` |
-| `@state() count = 0` | `#count = signal(0)` |
-| `@property() name` | `signal('')` + `attributeChangedCallback` |
-| `render()` → TemplateResult | `render()` → `html\`...\`` |
-| `@click=${handler}` | `@click=${handler}` (相同!) |
-| `static styles = css\`...\`` | `static styles = new StyleSheet()` |
-| `firstUpdated()` | `connectedCallback()` |
-| `updated()` | signal.subscribe() |
-| `requestUpdate()` | `this.update()` |
+| Lit                          | DsdElement + Signals                      |
+| ---------------------------- | ----------------------------------------- |
+| `LitElement`                 | `DsdElement`                              |
+| `@state() count = 0`         | `#count = signal(0)`                      |
+| `@property() name`           | `signal('')` + `attributeChangedCallback` |
+| `render()` → TemplateResult  | `render()` → `html\`...\``                |
+| `@click=${handler}`          | `@click=${handler}` (相同!)               |
+| `static styles = css\`...\`` | `static styles = new StyleSheet()`        |
+| `firstUpdated()`             | `connectedCallback()`                     |
+| `updated()`                  | signal.subscribe()                        |
+| `requestUpdate()`            | `this.update()`                           |
 
 ## 示例对照
 
 ### Lit Counter
+
 ```ts
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
@@ -32,6 +33,7 @@ class MyCounter extends LitElement {
 ```
 
 ### DsdElement Counter
+
 ```ts
 import { DsdElement, html, signal, StyleSheet } from '@lessjs/core';
 
@@ -61,6 +63,6 @@ customElements.define('my-counter', MyCounter);
 - [ ] 属性：`@property()` → `signal()` + `attributeChangedCallback`
 - [ ] 模板：Lit `html` → `@lessjs/core` `html`
 - [ ] 事件：`@click=${fn}`（相同语法！）
-- [ ] 样式：`css\`...\`` → `new StyleSheet()` + `replaceSync()`
+- [ ] 样式：`css\`...\``→`new StyleSheet()`+`replaceSync()`
 - [ ] 生命周期：`firstUpdated()` → `connectedCallback()`
 - [ ] 手动刷新：`requestUpdate()` → `this.update()`

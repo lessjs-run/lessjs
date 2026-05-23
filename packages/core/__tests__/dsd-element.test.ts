@@ -113,9 +113,6 @@ Deno.test('DsdElement: existing empty shadow root uses CSR render path', () => {
   document.body.removeChild(el);
 });
 
-
-
-
 Deno.test('DsdElement: requestUpdate() aliases update() for controllers', () => {
   if (!hasDOM) return;
 

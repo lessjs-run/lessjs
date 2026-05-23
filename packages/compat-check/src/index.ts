@@ -14,13 +14,12 @@
  * check a package's SSR readiness.
  */
 
-// Re-export from core for now (shared implementation)
-// In a future release, the classifier will live here directly.
+// v0.21.0: Physical implementation now lives in this package (SOP-007).
 export {
   classifyCemManifest,
-  classifyTag,
+  classifyComponent as classifyTag,
   isValidTagName,
   validateModulePath,
-} from '@lessjs/core/compatibility';
+} from './compatibility.js';
 
 export type { CompatibilityTier } from '@lessjs/core';

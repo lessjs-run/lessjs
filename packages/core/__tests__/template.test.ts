@@ -93,3 +93,82 @@ Deno.test('renderDSDStream yields shell, component chunks, and footer', async ()
   assertStringIncludes(body, '<template-el>');
   assertStringIncludes(body, '</main>');
 });
+
+// === v0.21 Security Tests ===
+
+Deno.test('Text XSS: script tag is escaped as text', () => {
+  const result = html`
+    <p>${'<script>alert(1)</script>'}</p>
+  `;
+  const rendered = renderTemplateToString(result);
+  assertStringIncludes(rendered, '&lt;script&gt;alert(1)&lt;/script&gt;');
+  assertFalse(rendered.includes('<script>'));
+});
+
+Deno.test('Attribute breakout: quote injection cannot break attribute', () => {
+  const payload = '" onclick="alert(1)"';
+  const result = html`
+    <div title="${payload}">x</div>
+  `;
+  const rendered = renderTemplateToString(result);
+  // The payload should be escaped, not create an onclick handler
+  assertStringIncludes(rendered, '&quot;');
+  assertFalse(rendered.includes('onclick='));
+});
+
+Deno.test('URL attack: javascript: protocol is neutralized', () => {
+  const result = html`
+    <a href="${'javascript:alert(1)'}">click</a>
+  `;
+  const rendered = compact(renderTemplateToString(result));
+  // href should be neutralized to #
+  assertEquals(rendered, '<a href="#">click</a>');
+});
+
+Deno.test('Boolean false: ?disabled=false produces no disabled attribute in SSR', () => {
+  const result = html`
+    <input ?disabled="${false}">
+  `;
+  const rendered = compact(renderTemplateToString(result));
+  assertFalse(rendered.includes('disabled'));
+  assertEquals(rendered, '<input >');
+});
+
+Deno.test('Property no-serialize: .value binding is not serialized in SSR', () => {
+  const evil = { toString: () => 'evil' };
+  const result = html`
+    <input .value="${evil}">
+  `;
+  const rendered = compact(renderTemplateToString(result));
+  assertFalse(rendered.includes('evil'));
+  assertFalse(rendered.includes('value='));
+});
+
+Deno.test('Event no-serialize: @click handler emits no function source in SSR', () => {
+  const result = html`
+    <button @click="${() => {/* evil */}}">x</button>
+  `;
+  const rendered = compact(renderTemplateToString(result));
+  assertFalse(rendered.includes('() =>'));
+  assertFalse(rendered.includes('function'));
+  assertFalse(rendered.includes('evil'));
+});
+
+Deno.test('unsafeHTML: renders raw HTML without escaping', () => {
+  const result = html`
+    <div>${unsafeHTML('<em>bold</em>')}</div>
+  `;
+  const rendered = compact(renderTemplateToString(result));
+  assertEquals(rendered, '<div><em>bold</em></div>');
+});
+
+Deno.test('Nested escape: nested template does not double-escape', () => {
+  const result = html`
+    <div>${html`
+      <span>${'<b>'}</span>
+    `}</div>
+  `;
+  const rendered = compact(renderTemplateToString(result));
+  // Should be single-escaped, not double-escaped
+  assertEquals(rendered, '<div><span>&lt;b&gt;</span></div>');
+});

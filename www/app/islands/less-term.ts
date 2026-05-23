@@ -7,10 +7,12 @@
  * - Command history, local commands, API fallback
  * - Direct DOM manipulation for output (no full re-render)
  *
+ * v0.21.0: Signal migration — _cmdHistory, _historyIdx → signals.
+ *   render() is static (terminal shell); output is imperative DOM.
+ *
  * Pure DsdElement - zero Lit dependency.
  */
-import { DsdElement, html } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/core';
+import { DsdElement, html, signal, StyleSheet } from '@lessjs/core';
 
 const styles = new StyleSheet();
 styles.replaceSync(`
@@ -75,9 +77,12 @@ styles.replaceSync(`
 export class LessTermDemo extends DsdElement {
   static override styles = styles;
 
+  /** Command history (signal for consistency with reactive DSD pattern). */
+  #cmdHistory = signal<string[]>([]);
+  /** Current position in history navigation (signal for consistency). */
+  #historyIdx = signal(-1);
+
   private _abortController = new AbortController();
-  private _cmdHistory: string[] = [];
-  private _historyIdx = -1;
 
   private static _escapeHtml(s: string): string {
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -90,13 +95,13 @@ export class LessTermDemo extends DsdElement {
         <div class="term-bar">
           <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
         </div>
-        <div class="term-body" @click=${this._focusInput}>
+        <div class="term-body" @click="${this._focusInput}">
           <div class="output">
             <div><span class="prompt">$</span> type <span class="hl">help</span> to get started</div>
           </div>
           <div class="input-line">
             <span class="prompt">$</span>
-            <input type="text" autocomplete="off" spellcheck="false" @keydown=${this._onKey}>
+            <input type="text" autocomplete="off" spellcheck="false" @keydown="${this._onKey}">
           </div>
         </div>
       </div>
@@ -164,17 +169,20 @@ export class LessTermDemo extends DsdElement {
     const input = ke.target as HTMLInputElement;
 
     if (ke.key === 'ArrowUp') {
-      if (this._cmdHistory.length) {
-        this._historyIdx = Math.max(0, this._historyIdx - 1);
-        input.value = this._cmdHistory[this._historyIdx] || '';
+      if (this.#cmdHistory.value.length) {
+        this.#historyIdx.value = Math.max(0, this.#historyIdx.value - 1);
+        input.value = this.#cmdHistory.value[this.#historyIdx.value] || '';
       }
       ke.preventDefault();
       return;
     }
     if (ke.key === 'ArrowDown') {
-      if (this._historyIdx < this._cmdHistory.length) {
-        this._historyIdx = Math.min(this._cmdHistory.length, this._historyIdx + 1);
-        input.value = this._cmdHistory[this._historyIdx] || '';
+      if (this.#historyIdx.value < this.#cmdHistory.value.length) {
+        this.#historyIdx.value = Math.min(
+          this.#cmdHistory.value.length,
+          this.#historyIdx.value + 1,
+        );
+        input.value = this.#cmdHistory.value[this.#historyIdx.value] || '';
       }
       ke.preventDefault();
       return;
@@ -183,8 +191,8 @@ export class LessTermDemo extends DsdElement {
 
     const cmd = input.value.trim();
     input.value = '';
-    this._cmdHistory.push(cmd);
-    this._historyIdx = this._cmdHistory.length;
+    this.#cmdHistory.value = [...this.#cmdHistory.value, cmd];
+    this.#historyIdx.value = this.#cmdHistory.value.length;
     this._addLine(`<span class="prompt">$</span> ${LessTermDemo._escapeHtml(cmd)}`);
 
     if (cmd.toLowerCase() === 'clear') {

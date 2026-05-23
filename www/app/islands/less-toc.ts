@@ -4,9 +4,12 @@
  * Client-side TOC: reads h2/h3 from the page content and renders
  * a right sidebar with IntersectionObserver for active tracking.
  * Pure DsdElement - zero Lit dependency.
+ *
+ * v0.21.0: Signal migration — _headings, _activeId → #headings, #activeId signals.
+ *   render() uses html tagged template with @click bindings.
+ *   _updateDOM() removed; signals auto-trigger re-render via _patchBindings().
  */
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/core';
+import { DsdElement, html, signal, StyleSheet } from '@lessjs/core';
 
 export const tagName = 'less-toc';
 
@@ -66,9 +69,12 @@ styles.replaceSync(`
 export default class LessToc extends DsdElement {
   static override styles = styles;
 
-  private _headings: Array<{ level: number; id: string; text: string }> = [];
+  /** Reactive headings list. Signal writes trigger _patchBindings() → re-render. */
+  #headings = signal<Array<{ level: number; id: string; text: string }>>([]);
+  /** Reactive active heading ID. Observer callback writes → re-render. */
+  #activeId = signal('');
+
   private _observer: IntersectionObserver | null = null;
-  private _activeId = '';
   private _retryTimer: ReturnType<typeof setTimeout> | null = null;
 
   override connectedCallback(): void {
@@ -89,7 +95,7 @@ export default class LessToc extends DsdElement {
     if (!contentCol) return;
 
     this._extractHeadings(contentCol);
-    if (this._headings.length === 0) {
+    if (this.#headings.value.length === 0) {
       this._retryTimer = setTimeout(() => this._extractHeadings(contentCol), 100);
     }
   }
@@ -110,29 +116,28 @@ export default class LessToc extends DsdElement {
       usedIds.add(h.id);
     });
 
-    this._headings = [];
+    const newHeadings: Array<{ level: number; id: string; text: string }> = [];
     headings.forEach((h) => {
-      this._headings.push({
+      newHeadings.push({
         level: h.tagName === 'H2' ? 2 : 3,
         id: h.id,
         text: h.textContent || '',
       });
     });
 
-    this._updateDOM();
+    this.#headings.value = newHeadings;
 
-    if (this._headings.length >= 2) {
+    if (newHeadings.length >= 2) {
       this.style.display = 'block';
     }
 
-    // IntersectionObserver for active tracking
+    // IntersectionObserver for active tracking — writes to #activeId signal
     this._observer?.disconnect();
     this._observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            this._activeId = entry.target.id;
-            this._updateDOM();
+            this.#activeId.value = entry.target.id;
           }
         }
       },
@@ -141,7 +146,7 @@ export default class LessToc extends DsdElement {
     headings.forEach((h) => this._observer!.observe(h));
   }
 
-  private _onClick(e: MouseEvent, id: string): void {
+  private _onClick(e: Event, id: string): void {
     e.preventDefault();
     const el = document.getElementById(id);
     if (el) {
@@ -150,37 +155,26 @@ export default class LessToc extends DsdElement {
     }
   }
 
-  override render(): string {
-    if (this._headings.length < 2) return '';
+  override render() {
+    const headings = this.#headings.value;
+    const activeId = this.#activeId.value;
 
-    const links = this._headings.map((h) => {
-      const cls = ['toc-link'];
-      if (h.level === 3) cls.push('h3');
-      if (this._activeId === h.id) cls.push('active');
-      const escapedText = h.text.replace(/&/g, '&amp;').replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-      return `<a class="${cls.join(' ')}" href="#${h.id}" data-toc-id="${h.id}">${escapedText}</a>`;
-    });
+    if (headings.length < 2) return '';
 
-    return `
+    return html`
       <div class="toc-title">On this page</div>
-      <nav class="toc-list">${links.join('')}</nav>
+      <nav class="toc-list">
+        ${headings.map((h) => {
+          const cls = ['toc-link'];
+          if (h.level === 3) cls.push('h3');
+          if (activeId === h.id) cls.push('active');
+          return html`
+            <a class="${cls.join(' ')}" href="#${h.id}" @click="${(e: Event) =>
+              this._onClick(e, h.id)}">${h.text}</a>
+          `;
+        })}
+      </nav>
     `;
-  }
-
-  /** Re-render shadow DOM and re-bind click events on each TOC link. */
-  private _updateDOM(): void {
-    this.update();
-    if (!this.shadowRoot) return;
-
-    // Bind click handlers on rendered links
-    const linkEls = this.shadowRoot.querySelectorAll<HTMLAnchorElement>('[data-toc-id]');
-    linkEls.forEach((a) => {
-      const id = a.getAttribute('data-toc-id') || '';
-      a.addEventListener('click', (e: Event) => {
-        this._onClick(e as MouseEvent, id);
-      });
-    });
   }
 }
 

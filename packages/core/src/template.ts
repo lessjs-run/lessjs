@@ -140,7 +140,7 @@ export function renderTemplateToString(
     output += chunk;
     // v0.21: wrap signal text values in data-b markers for fine-grained patching
     if (options.runtimeMarkers && isSignalLike(value)) {
-      output += `<span data-b="${bindingIndex}">${renderValue(value, 'text')}</span>`;
+      output += `<span data-less-b="${bindingIndex}">${renderValue(value, 'text')}</span>`;
       bindingIndex++;
     } else {
       output += renderValue(value, 'text');

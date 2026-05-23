@@ -603,12 +603,13 @@ export interface ReactiveHost {
    * The host batches multiple requests via microtask queue.
    */
   requestReactiveUpdate(): void;
-}/**
+} /**
  * Renderer Protocol - the adapter interface for framework-specific rendering.
  *
  * Every adapter MUST provide a `name` for diagnostics and multi-adapter support.
  * The last registered adapter is the default (returned by `getAdapter()`).
  */
+
 export interface RendererProtocol {
   /** Adapter name for diagnostics, logging, and named lookup */
   name: string;

@@ -41,16 +41,17 @@ escalate complex UI to Islands.
 
 ## Release Order
 
-| Step | SOP     | Priority | Purpose                                         | Must Finish Before              |
-| ---- | ------- | -------- | ----------------------------------------------- | ------------------------------- |
-| 1    | SOP-001 | P0       | `DsdElement` + Signals reactive render contract | Any public Reactive DSD claim   |
-| 2    | SOP-002 | P0       | Safe `html` template processor                  | Exporting `html` from core      |
-| 3    | SOP-003 | P1       | `renderDSDStream()` and stream metrics          | v0.22 ISR handler               |
-| 4    | SOP-004 | P0       | Fine-grained patching + DX + www migration      | Convincing Lit → Ocean story    |
-| 5    | SOP-006 | P0       | Unified event model — retire `hydrateEvents`    | v0.21.0 release (no dual model) |
-| 6    | SOP-005 | P0       | Verification, release gates, docs sync          | v0.21.0 completion              |
-| 7    | SOP-007 | P0       | Core package split — `@lessjs/compat-check`, `@lessjs/cem`, `@lessjs/style-sheet` | v0.21.0 completion              |
-| 8    | SOP-008 | P0       | ReactiveHost protocol — explicit Signal integration protocol (replaces Duck Typing) | v0.21.0 completion              |
+| Step | SOP     | Priority | Purpose                                                                             | Status         |
+| ---- | ------- | -------- | ----------------------------------------------------------------------------------- | -------------- |
+| 1    | SOP-001 | P0       | `DsdElement` + Signals reactive render contract                                     | ✅ IMPLEMENTED |
+| 2    | SOP-002 | P0       | Safe `html` template processor                                                      | ✅ IMPLEMENTED |
+| 3    | SOP-003 | P1       | `renderDSDStream()` and stream metrics                                              | ✅ IMPLEMENTED |
+| 4    | SOP-004 | P0       | Fine-grained patching + DX + www migration                                          | ⚠️ PARTIAL     |
+| 5    | SOP-006 | P0       | Unified event model — retire `hydrateEvents`                                        | ✅ IMPLEMENTED |
+| 6    | SOP-005 | P0       | Verification, release gates, docs sync                                              | ✅ IMPLEMENTED |
+| 7    | SOP-007 | P0       | Core package split — `@lessjs/compat-check`, `@lessjs/cem`, `@lessjs/style-sheet`   | ✅ IMPLEMENTED |
+| 8    | SOP-008 | P0       | ReactiveHost protocol — explicit Signal integration protocol (replaces Duck Typing) | ✅ IMPLEMENTED |
+| 9    | SOP-009 | P0       | Closure & Remediation — fix all review gaps                                         | 🔴 IN PROGRESS |
 
 ## Entry Criteria
 
@@ -140,6 +141,7 @@ class LessCounter extends DsdElement {
 - `ReactiveHost` protocol implemented; `DsdElement` uses protocol, not Duck Typing.
 - `@lessjs/compat-check`, `@lessjs/cem`, `@lessjs/style-sheet` extracted from core as independent packages.
 - SOP-004 targeted and full release gates pass.
+- **SOP-009**: All P0 remediation items complete (STATUS.md fixed, www signals migrated, migration guide exists).
 
 ## Related
 
@@ -149,7 +151,10 @@ class LessCounter extends DsdElement {
 - SOP-001: DsdElement + Signals Integration
 - SOP-002: Safe Templates
 - SOP-003: Streaming DSD
-- SOP-004: Verification + Release Gate
+- SOP-004: Integration Depth + DX
+- SOP-005: Verification + Release Gate
 - SOP-006: Unified Event Model — hydrateEvents Retirement
 - SOP-007: Core Package Split — compat-check, cem, style-sheet
 - SOP-008: ReactiveHost Protocol — explicit Signal integration
+- SOP-009: Closure & Remediation — fix all review gaps (IN PROGRESS)
+- Comprehensive Review: `C:\Users\Administrator\Documents\GitHub\lessjs-v0.21.0-comprehensive-review.md`

@@ -84,7 +84,7 @@ export type {
   RenderDSDStreamComponent,
   RenderDSDStreamMetrics,
   RenderDSDStreamOptions,
-} from './render-dsd.js';
+} from './render-dsd-stream.js';
 export { camelToKebab } from './render-serialize.js';
 export { getAdapter, getRegisteredAdapters, registerAdapter } from './adapter-registry.js';
 export type {
@@ -121,7 +121,6 @@ export type {
   ReactiveHost,
   RegistryIndex,
   RegistryIndexEntry,
-  Unsubscribe,
   RendererProtocol,
   RenderError,
   RenderHooks,
@@ -129,6 +128,7 @@ export type {
   RenderOutput,
   RenderPhase,
   SsrAdmissionDecision,
+  Unsubscribe,
   ValidatedTag,
   ValidationDiagnostic,
   ValidationError,

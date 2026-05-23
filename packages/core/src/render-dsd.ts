@@ -438,86 +438,12 @@ export async function renderDSDByName(
   );
 }
 
-export interface RenderDSDStreamChunk {
-  html: string;
-  output: RenderOutput;
-}
-
-export interface RenderDSDStreamMetrics {
-  chunkCount: number;
-  errorCount: number;
-  startedAt: number;
-  endedAt?: number;
-}
-
-export interface RenderDSDStreamOptions {
-  shell?: string | (() => string | Promise<string>);
-  footer?: string | (() => string | Promise<string>);
-  onChunk?: (chunk: RenderDSDStreamChunk) => void;
-  onError?: (error: RenderError, tagName: string) => void;
-  metrics?: RenderDSDStreamMetrics;
-}
-
-export interface RenderDSDStreamComponent {
-  tagName: string;
-  componentClass: CustomElementConstructor;
-  props?: Record<string, unknown>;
-  sourceInfo?: { route?: string; source?: string };
-  dsdOptions?: DsdOptions;
-}
-
-export function createRenderDSDStreamMetrics(): RenderDSDStreamMetrics {
-  return {
-    chunkCount: 0,
-    errorCount: 0,
-    startedAt: now(),
-  };
-}
-
-export function renderDSDStream(
-  components: Iterable<RenderDSDStreamComponent>,
-  options: RenderDSDStreamOptions = {},
-): ReadableStream<Uint8Array> {
-  const encoderMetrics = options.metrics ?? createRenderDSDStreamMetrics();
-
-  return new ReadableStream<Uint8Array>({
-    async start(controller) {
-      try {
-        const shell = await resolveStreamPart(options.shell);
-        if (shell) {
-          controller.enqueue(textEncoder.encode(shell));
-          encoderMetrics.chunkCount++;
-        }
-
-        for (const component of components) {
-          const output = await renderDSD(
-            component.tagName,
-            component.componentClass,
-            component.props ?? {},
-            component.sourceInfo,
-            component.dsdOptions,
-          );
-          for (const error of output.errors) {
-            encoderMetrics.errorCount++;
-            options.onError?.(error, component.tagName);
-          }
-          controller.enqueue(textEncoder.encode(output.html));
-          encoderMetrics.chunkCount++;
-          options.onChunk?.({ html: output.html, output });
-        }
-
-        const footer = await resolveStreamPart(options.footer);
-        if (footer) {
-          controller.enqueue(textEncoder.encode(footer));
-          encoderMetrics.chunkCount++;
-        }
-        encoderMetrics.endedAt = now();
-        controller.close();
-      } catch (error) {
-        encoderMetrics.errorCount++;
-        encoderMetrics.endedAt = now();
-        controller.error(error);
-      }
-    },
-  });
-}
+// v0.21.0: Streaming types and functions moved to render-dsd-stream.ts.
+// Re-exported here for backward compatibility.
+export { createRenderDSDStreamMetrics, renderDSDStream } from './render-dsd-stream.js';
+export type {
+  RenderDSDStreamChunk,
+  RenderDSDStreamComponent,
+  RenderDSDStreamMetrics,
+  RenderDSDStreamOptions,
+} from './render-dsd-stream.js';

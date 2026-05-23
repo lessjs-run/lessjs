@@ -33,7 +33,7 @@ and [ADR-0040](../adr/0040-streaming-dsd.md) for Streaming DSD.
 
 ## Package Version State
 
-All 13 packages aligned to **v0.20.1**.
+All 16 packages aligned to **v0.21.0**.
 
 ## Architecture Positioning
 
@@ -43,14 +43,19 @@ Three pillars:
 2. **DSD/WC rendering engine** - `DsdElement`, `renderDSD()`, adapters, compatibility.
 3. **Registry Hub** - discovery, validation, `less add`.
 
-## v0.21.0 - Reactive DSD (4 SOPs)
+## v0.21.0 - Reactive DSD (9 SOPs)
 
-| SOP | Title                            | Priority |
-| --- | -------------------------------- | -------- |
-| 001 | DsdElement + Signals Integration | P0       |
-| 002 | Safe Templates                   | P0       |
-| 003 | Streaming DSD                    | P1       |
-| 004 | Verification + Release Gate      | P0       |
+| SOP | Title                                               | Priority |
+| --- | --------------------------------------------------- | -------- |
+| 001 | DsdElement + Signals Integration                    | P0       |
+| 002 | Safe Templates                                      | P0       |
+| 003 | Streaming DSD                                       | P1       |
+| 004 | Integration Depth + DX                              | P0       |
+| 005 | Verification + Release Gate                         | P0       |
+| 006 | Unified Event Model — hydrateEvents Retirement      | P0       |
+| 007 | Core Package Split — compat-check, cem, style-sheet | P0       |
+| 008 | ReactiveHost Protocol — explicit Signal integration | P0       |
+| 009 | Closure & Remediation — fix all review gaps         | P0       |
 
 See `docs/sop/v0.21.0/README.md`. Key ADRs: 0039 (Signals), 0040 (Streaming).
 
