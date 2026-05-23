@@ -132,7 +132,7 @@ export class LessCodeBlock extends DsdElement {
   private _highlightTimer: ReturnType<typeof setTimeout> | undefined;
   private _highlightedInShadow = false;
   private _highlightRetries = 0;
-  private static MAX_HIGHLIGHT_RETRIES = 20;
+  private static MAX_HIGHLIGHT_RETRIES = 40;
 
   override render(): string {
     return `<slot></slot>
