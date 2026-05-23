@@ -16,7 +16,7 @@
  * ```
  */
 
-import { DsdElement, html, signal, StyleSheet, unsafeHTML, type HydrateEventDescriptor } from '@lessjs/core';
+import { DsdElement, html, signal, StyleSheet, unsafeHTML } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-theme-toggle';
@@ -77,11 +77,6 @@ export class LessThemeToggle extends DsdElement {
   static override delegatesFocus = true;
   static override observedAttributes = ['theme'];
 
-  // Fallback hydrateEvents in case @click TemplateResult binding fails
-  static override hydrateEvents: HydrateEventDescriptor[] = [
-    { selector: 'button.theme-toggle', event: 'click', method: '_handleToggle' },
-  ];
-
   private _theme = signal<'dark' | 'light'>('dark');
 
   override connectedCallback(): void {
@@ -127,6 +122,7 @@ export class LessThemeToggle extends DsdElement {
         part="toggle"
         title="${title}"
         aria-label="Toggle theme"
+        @click="${() => this._handleToggle()}"
       >
         ${unsafeHTML(
           `<svg class="icon-sun" part="icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
@@ -148,8 +144,7 @@ export class LessThemeToggle extends DsdElement {
     `;
   }
 
-  // Accept optional event param for hydrateEvents compatibility
-  private _handleToggle(_e?: Event): void {
+  private _handleToggle(): void {
     const theme = this._theme.value === 'light' ? 'dark' : 'light';
     this._theme.value = theme;
 
