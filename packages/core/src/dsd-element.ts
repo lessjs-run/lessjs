@@ -218,6 +218,9 @@ export class DsdElement extends _HTMLElement {
       // DSD path: bind events/signals against existing DOM without replacing it.
       this._bindCurrentRenderTemplate();
       this._hydrateEvents();
+      // Mark initial render done so signal-driven updates use _patchBindings (fine-grained)
+      // instead of _renderIntoShadowRoot (full innerHTML replacement).
+      this._initialRenderDone = true;
     } else if (this.shadowRoot) {
       // CSR path: populate shadow DOM from render()
       this._renderIntoShadowRoot();

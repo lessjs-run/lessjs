@@ -13,7 +13,8 @@ import { computed, DsdElement, html, signal, StyleSheet } from '@lessjs/core';
 
 export const tagName = 'reactive-showcase';
 
-const showcaseStyles = new StyleSheet(`
+const showcaseStyles = new StyleSheet();
+showcaseStyles.replaceSync(`
   :host { display: block; }
   .showcase { display: flex; flex-direction: column; gap: var(--size-4); }
   .card {

@@ -9,11 +9,24 @@
  */
 import { DsdElement, StyleSheet } from '@lessjs/core';
 import '@shoelace-style/shoelace/dist/themes/light.css';
-import '@shoelace-style/shoelace/dist/components/button/button.js';
-import '@shoelace-style/shoelace/dist/components/badge/badge.js';
-import '@shoelace-style/shoelace/dist/components/input/input.js';
-import '@shoelace-style/shoelace/dist/components/alert/alert.js';
+
+// Explicit component imports to prevent Rolldown tree-shaking.
+// Shoelace ESM modules only export classes; they do NOT auto-register.
+import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js';
+import SlBadge from '@shoelace-style/shoelace/dist/components/badge/badge.js';
+import SlInput from '@shoelace-style/shoelace/dist/components/input/input.js';
+import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert.js';
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities/icon-library.js';
+
+// Register Shoelace components explicitly so sl-* elements upgrade in the DSD shadow root.
+if (typeof customElements !== 'undefined') {
+  if (!customElements.get('sl-button')) customElements.define('sl-button', SlButton);
+  if (!customElements.get('sl-badge')) customElements.define('sl-badge', SlBadge);
+  if (!customElements.get('sl-input')) customElements.define('sl-input', SlInput);
+  if (!customElements.get('sl-alert')) customElements.define('sl-alert', SlAlert);
+  if (!customElements.get('sl-icon')) customElements.define('sl-icon', SlIcon);
+}
 
 registerIconLibrary('default', {
   resolver: (name: string) =>

@@ -178,7 +178,8 @@ export default class LessSearch extends DsdElement {
   private _inputEl: HTMLInputElement | null = null;
 
   override render(): string {
-    return `<button class="search-trigger" part="trigger" aria-label="Search">
+    // onclick attribute as fallback in case hydrateEvents fails to bind
+    return `<button class="search-trigger" part="trigger" aria-label="Search" onclick="this.getRootNode().host._handleTriggerClick()">
       <svg class="search-icon" part="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
         <circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/>
       </svg>

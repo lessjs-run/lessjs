@@ -14,7 +14,8 @@ import { DsdElement, html, signal, StyleSheet } from '@lessjs/core';
 
 export const tagName = 'counter-island';
 
-const counterStyles = new StyleSheet(`
+const counterStyles = new StyleSheet();
+counterStyles.replaceSync(`
   :host {
     display: block;
   }
