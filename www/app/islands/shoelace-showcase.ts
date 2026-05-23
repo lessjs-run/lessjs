@@ -7,7 +7,7 @@
  *
  * @lessjs/app island - Shoelace WCs need client DOM, but static wrapper renders via DSD.
  */
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, html, StyleSheet } from '@lessjs/core';
 import '@shoelace-style/shoelace/dist/themes/light.css';
 
 // Explicit component imports to prevent Rolldown tree-shaking.
@@ -60,8 +60,8 @@ styles.replaceSync(`
 export default class ShoelaceShowcase extends DsdElement {
   static override styles = styles;
 
-  override render(): string {
-    return `
+  override render() {
+    return html`
       <div class="sl-row">
         <sl-button variant="primary" size="small">Primary</sl-button>
         <sl-button variant="success" size="small">Success</sl-button>

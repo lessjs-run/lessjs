@@ -23,7 +23,7 @@
  * - Component state is reset on connectedCallback() for SPA navigation safety
  */
 
-import { DsdElement, type HydrateEventDescriptor, StyleSheet } from '@lessjs/core';
+import { DsdElement, html, StyleSheet } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
 interface SearchEntry {
@@ -163,10 +163,6 @@ function getOverlaySheet(): CSSStyleSheet {
 export default class LessSearch extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
 
-  static override hydrateEvents: HydrateEventDescriptor[] = [
-    { selector: 'button.search-trigger', event: 'click', method: '_handleTriggerClick' },
-  ];
-
   // State
   private _open = false;
   private _query = '';
@@ -177,13 +173,25 @@ export default class LessSearch extends DsdElement {
   private _overlayEl: HTMLDivElement | null = null;
   private _inputEl: HTMLInputElement | null = null;
 
-  override render(): string {
-    return `<button class="search-trigger" part="trigger" aria-label="Search">
-      <svg class="search-icon" part="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-        <circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/>
-      </svg>
-      <span part="label">Search</span><kbd part="shortcut">\u2318K</kbd>
-    </button>`;
+  override render() {
+    return html`
+      <button class="search-trigger" part="trigger" aria-label="Search" @click="${() =>
+        this._handleTriggerClick()}">
+        <svg
+          class="search-icon"
+          part="icon"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        >
+          <circle cx="7" cy="7" r="4.5" />
+          <path d="M10.5 10.5L14 14" />
+        </svg>
+        <span part="label">Search</span><kbd part="shortcut">\\u2318K</kbd>
+      </button>
+    `;
   }
 
   // Cmd+K handler (bound to document)

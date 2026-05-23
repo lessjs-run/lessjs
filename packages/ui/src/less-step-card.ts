@@ -20,7 +20,7 @@
  * ```
  */
 
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, html, StyleSheet } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-step-card';
@@ -80,27 +80,29 @@ export class LessStepCard extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['step', 'label', 'description', 'status'];
 
-  override render(): string {
+  override render() {
     const step = parseInt(this.getAttribute('step') || '1', 10);
     const label = this.getAttribute('label') || '';
     const description = this.getAttribute('description') || '';
 
-    return `<div class="step-card" part="container">
-      <div class="step-header">
-        <span class="step-number" part="indicator">${step}</span>
-        <span class="step-label" part="title">${this._esc(label)}</span>
+    return html`
+      <div class="step-card" part="container">
+        <div class="step-header">
+          <span class="step-number" part="indicator">${step}</span>
+          <span class="step-label" part="title">${this._esc(label)}</span>
+        </div>
+        ${description
+          ? html`
+            <p part="description" style="margin:0 0 10px;color:var(--gray-7);font-size:0.875rem;">
+              ${this._esc(description)}
+            </p>
+          `
+          : ''}
+        <div class="step-body" part="content">
+          <slot></slot>
+        </div>
       </div>
-      ${
-      description
-        ? `<p part="description" style="margin:0 0 10px;color:var(--gray-7);font-size:0.875rem;">${
-          this._esc(description)
-        }</p>`
-        : ''
-    }
-      <div class="step-body" part="content">
-        <slot></slot>
-      </div>
-    </div>`;
+    `;
   }
 
   override attributeChangedCallback(_name: string, old: string | null, val: string | null): void {

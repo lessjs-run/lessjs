@@ -21,7 +21,7 @@
  * ```
  */
 
-import { DsdElement, type HydrateEventDescriptor, StyleSheet } from '@lessjs/core';
+import { DsdElement, html, StyleSheet } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-dialog';
@@ -115,22 +115,21 @@ export class LessDialog extends DsdElement {
   static override delegatesFocus = true;
   static override observedAttributes = ['open', 'label'];
 
-  static override hydrateEvents: HydrateEventDescriptor[] = [
-    { selector: 'slot[name="trigger"]', event: 'click', method: '_handleTrigger' },
-    { selector: 'dialog', event: 'cancel', method: '_handleCancel' },
-    { selector: 'dialog', event: 'close', method: '_handleClose' },
-    { selector: 'button.dialog-close', event: 'click', method: '_handleClose' },
-  ];
-
   private static _originalInertStates = new WeakMap<Element, boolean>();
 
-  override render(): string {
+  override render() {
     const label = this._esc(this.getAttribute('label') || '');
-    return `<slot name="trigger"></slot>
-      <dialog aria-label="${this._escAttr(this.getAttribute('label') || '')}" part="overlay">
+    return html`
+      <slot name="trigger" @click="${() => this._handleTrigger()}"></slot>
+      <dialog aria-label="${this.getAttribute('label') || ''}" part="overlay" @cancel="${(
+        e: Event,
+      ) => this._handleCancel(e)}" @close="${() => this._handleClose()}">
         <div class="dialog-header" part="header">
           <h2 class="dialog-title">${label}</h2>
-          <button class="dialog-close" part="close" aria-label="Close">&times;</button>
+          <button class="dialog-close" part="close" aria-label="Close" @click="${() =>
+            this._handleClose()}">
+            &times;
+          </button>
         </div>
         <div class="dialog-body" part="body">
           <slot></slot>
@@ -138,7 +137,8 @@ export class LessDialog extends DsdElement {
         <div class="dialog-footer" part="footer">
           <slot name="footer"></slot>
         </div>
-      </dialog>`;
+      </dialog>
+    `;
   }
 
   override attributeChangedCallback(name: string, old: string | null, val: string | null): void {

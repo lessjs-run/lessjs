@@ -41,14 +41,14 @@ escalate complex UI to Islands.
 
 ## Release Order
 
-| Step | SOP     | Priority | Purpose                                         | Must Finish Before            |
-| ---- | ------- | -------- | ----------------------------------------------- | ----------------------------- |
-| 1    | SOP-001 | P0       | `DsdElement` + Signals reactive render contract | Any public Reactive DSD claim |
-| 2    | SOP-002 | P0       | Safe `html` template processor                  | Exporting `html` from core    |
-| 3    | SOP-003 | P1       | `renderDSDStream()` and stream metrics          | v0.22 ISR handler             |
-| 4    | SOP-004 | P0       | Fine-grained patching + DX + www migration      | Convincing Lit → Ocean story  |
+| Step | SOP     | Priority | Purpose                                         | Must Finish Before              |
+| ---- | ------- | -------- | ----------------------------------------------- | ------------------------------- |
+| 1    | SOP-001 | P0       | `DsdElement` + Signals reactive render contract | Any public Reactive DSD claim   |
+| 2    | SOP-002 | P0       | Safe `html` template processor                  | Exporting `html` from core      |
+| 3    | SOP-003 | P1       | `renderDSDStream()` and stream metrics          | v0.22 ISR handler               |
+| 4    | SOP-004 | P0       | Fine-grained patching + DX + www migration      | Convincing Lit → Ocean story    |
 | 5    | SOP-006 | P0       | Unified event model — retire `hydrateEvents`    | v0.21.0 release (no dual model) |
-| 6    | SOP-005 | P0       | Verification, release gates, docs sync          | v0.21.0 completion            |
+| 6    | SOP-005 | P0       | Verification, release gates, docs sync          | v0.21.0 completion              |
 
 ## Entry Criteria
 

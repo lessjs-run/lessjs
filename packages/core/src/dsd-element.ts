@@ -82,7 +82,10 @@ export class DsdElement extends _HTMLElement {
 
   /**
    * Declarative event bindings for DSD hydration.
-   * Each entry maps a CSS selector + DOM event to a method on the instance.
+   *
+   * @deprecated Since v0.21.0. Use `@click` in `html` tagged templates instead.
+   * `hydrateEvents` will be removed in v1.0.
+   * See ADR-0039 and SOP-006 for migration guidance.
    */
   static hydrateEvents?: HydrateEventDescriptor[];
 
@@ -217,7 +220,14 @@ export class DsdElement extends _HTMLElement {
     if (this._dsdHydrated) {
       // DSD path: bind events/signals against existing DOM without replacing it.
       this._bindCurrentRenderTemplate();
-      this._hydrateEvents();
+      // v0.21: hydrateEvents is backward-compat only (see SOP-006).
+      if (ctor.hydrateEvents?.length) {
+        console.warn(
+          `[LessJS] hydrateEvents is deprecated since v0.21.0. ` +
+            `Migrate ${ctor.name || 'this component'} to @click in html tagged templates.`,
+        );
+        this._hydrateEvents();
+      }
       // Mark initial render done so signal-driven updates use _patchBindings (fine-grained)
       // instead of _renderIntoShadowRoot (full innerHTML replacement).
       this._initialRenderDone = true;
@@ -299,7 +309,18 @@ export class DsdElement extends _HTMLElement {
     } else {
       this.shadowRoot.innerHTML = result;
     }
-    this._hydrateEvents();
+    // v0.21: _hydrateEvents is a backward-compat path for third-party
+    // components still using static hydrateEvents. Internal components
+    // are migrated to @click. See SOP-006.
+    const ctor = this.constructor as typeof DsdElement;
+    if (ctor.hydrateEvents?.length) {
+      console.warn(
+        `[LessJS] hydrateEvents is deprecated since v0.21.0. ` +
+          `Migrate ${ctor.name || 'this component'} to @click in html tagged templates. ` +
+          `See https://lessjs.run/guide/sop-006 for migration steps.`,
+      );
+      this._hydrateEvents();
+    }
   }
 
   /**
@@ -338,7 +359,15 @@ export class DsdElement extends _HTMLElement {
     // Re-process event binding attributes onto the updated DOM
     // (event handlers are already re-attached above, but we need to
     //  ensure they target the correct DOM nodes)
-    this._hydrateEvents();
+    // v0.21: Only call _hydrateEvents for backward compat.
+    const ctor = this.constructor as typeof DsdElement;
+    if (ctor.hydrateEvents?.length) {
+      console.warn(
+        `[LessJS] hydrateEvents is deprecated since v0.21.0. ` +
+          `Migrate ${ctor.name || 'this component'} to @click in html tagged templates.`,
+      );
+      this._hydrateEvents();
+    }
   }
 
   private _bindCurrentRenderTemplate(): void {

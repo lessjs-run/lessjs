@@ -22,7 +22,7 @@
  * ```
  */
 
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, html, StyleSheet } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-card';
@@ -78,15 +78,16 @@ export class LessCard extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['variant'];
 
-  override render(): string {
-    return `
+  override render() {
+    return html`
       <article part="container">
         <slot name="header"></slot>
         <div class="card-body" part="body">
           <slot></slot>
         </div>
         <slot name="footer"></slot>
-      </article>`;
+      </article>
+    `;
   }
 }
 

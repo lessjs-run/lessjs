@@ -549,15 +549,20 @@ export type StrategySource = 'directive' | 'island-options' | 'manifest' | 'defa
 /**
  * Declarative event binding for DSD Interactive components.
  *
+ * @deprecated Since v0.21.0. Use `@click` in `html` tagged templates instead.
+ * `hydrateEvents` will be removed in v1.0.
+ * See ADR-0039 and SOP-006 for migration guidance.
+ *
  * When a component's shadow root is pre-populated by DSD, framework template
  * bindings (e.g. Lit's @click) are never executed because render() returns nothing.
  * This descriptor tells the adapter which DOM events need manual wiring.
  *
  * @example
  * ```ts
- * static hydrateEvents: HydrateEventDescriptor[] = [
- *   { selector: 'button.theme-toggle', event: 'click', method: '_handleToggle' },
- * ];
+ * // Deprecated — migrate to html + @click:
+ * // static hydrateEvents: HydrateEventDescriptor[] = [
+ * //   { selector: 'button.theme-toggle', event: 'click', method: '_handleToggle' },
+ * // ];
  * ```
  */
 export interface HydrateEventDescriptor {

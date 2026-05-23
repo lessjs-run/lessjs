@@ -2,7 +2,7 @@
 
 > Version: v0.21.0
 > Priority: P0
-> Status: IN PROGRESS
+> Status: DONE
 > Depends on: SOP-001 (DsdElement+Signals), SOP-004 (Fine-Grained Patching)
 > Supercedes: `static hydrateEvents` API surface from ADR-0036
 
@@ -24,11 +24,11 @@ These two mechanisms coexisted because `render(): string` could not express
 event bindings, and `html` template results were new in v0.21. The coexistence
 creates real problems:
 
-| Problem | Impact |
-|---------|--------|
-| Two mental models for the same thing | Developer confusion — when to use which? |
-| `@click` + `hydrateEvents` on the same component = double-fire | Event handler fires twice per click |
-| `hydrateEvents` selector decoupled from template | Selector drifts when template changes, silent failure |
+| Problem                                                             | Impact                                                               |
+| ------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Two mental models for the same thing                                | Developer confusion — when to use which?                             |
+| `@click` + `hydrateEvents` on the same component = double-fire      | Event handler fires twice per click                                  |
+| `hydrateEvents` selector decoupled from template                    | Selector drifts when template changes, silent failure                |
 | `hydrateEvents` only works in DSD/CSR after `_hydrateEvents()` call | Misses the `_initialRenderDone` → signal update → innerHTML nuke bug |
 
 The root cause: `render(): string` cannot express `@click`, so `hydrateEvents`
@@ -106,28 +106,28 @@ must be migrated.
 
 ### @lessjs/ui components
 
-| Component | Current | Target | Effort |
-|-----------|---------|--------|--------|
-| `less-theme-toggle` | `html` + `@click` + signal | Already done | 0 |
-| `less-search` | `render(): string` + `hydrateEvents` | `html` + `@click` | ~10 lines |
-| `less-layout` | `render(): string` + `hydrateEvents` | `html` + `@click` | ~30 lines |
-| `less-button` | `render(): string` + `hydrateEvents` | `html` + `@click` | ~5 lines |
-| `less-input` | `render(): string` + `hydrateEvents` | `html` + `@click` | ~5 lines |
-| `less-code-block` | `render(): string` | `html` (no events, just strings) | ~3 lines |
-| `less-card` | `render(): string` | `html` (no events) | ~3 lines |
-| `less-callout` | `render(): string` | `html` (no events) | ~3 lines |
-| `less-step-card` | `render(): string` | `html` (no events) | ~3 lines |
-| `less-dialog` | `render(): string` + `hydrateEvents` | `html` + `@click` | ~15 lines |
+| Component           | Current                              | Target                           | Effort    |
+| ------------------- | ------------------------------------ | -------------------------------- | --------- |
+| `less-theme-toggle` | `html` + `@click` + signal           | Already done                     | 0         |
+| `less-search`       | `render(): string` + `hydrateEvents` | `html` + `@click`                | ~10 lines |
+| `less-layout`       | `render(): string` + `hydrateEvents` | `html` + `@click`                | ~30 lines |
+| `less-button`       | `render(): string` + `hydrateEvents` | `html` + `@click`                | ~5 lines  |
+| `less-input`        | `render(): string` + `hydrateEvents` | `html` + `@click`                | ~5 lines  |
+| `less-code-block`   | `render(): string`                   | `html` (no events, just strings) | ~3 lines  |
+| `less-card`         | `render(): string`                   | `html` (no events)               | ~3 lines  |
+| `less-callout`      | `render(): string`                   | `html` (no events)               | ~3 lines  |
+| `less-step-card`    | `render(): string`                   | `html` (no events)               | ~3 lines  |
+| `less-dialog`       | `render(): string` + `hydrateEvents` | `html` + `@click`                | ~15 lines |
 
 ### www island components
 
-| Component | Current | Target | Effort |
-|-----------|---------|--------|--------|
-| `less-search.ts` | `render(): string` + `hydrateEvents` | `html` + `@click` | ~10 lines |
-| `shoelace-showcase.ts` | `render(): string` | `html` (no events) | ~3 lines |
-| `media-chrome-showcase.ts` | `render(): string` | `html` (no events) | ~3 lines |
-| `reactive-showcase.ts` | `html` + `@click` + signal | Already done | 0 |
-| `counter-island.ts` | `html` + `@click` + signal | Already done | 0 |
+| Component                  | Current                              | Target             | Effort    |
+| -------------------------- | ------------------------------------ | ------------------ | --------- |
+| `less-search.ts`           | `render(): string` + `hydrateEvents` | `html` + `@click`  | ~10 lines |
+| `shoelace-showcase.ts`     | `render(): string`                   | `html` (no events) | ~3 lines  |
+| `media-chrome-showcase.ts` | `render(): string`                   | `html` (no events) | ~3 lines  |
+| `reactive-showcase.ts`     | `html` + `@click` + signal           | Already done       | 0         |
+| `counter-island.ts`        | `html` + `@click` + signal           | Already done       | 0         |
 
 ## Step-by-Step Execution
 
@@ -304,11 +304,11 @@ Required test cases:
 
 ## Retirement Timeline
 
-| Version | `hydrateEvents` Status | `_hydrateEvents()` Internal |
-|---------|----------------------|----------------------------|
-| v0.21.0 | `@deprecated`, dev-mode warning | Active, guarded |
-| v0.22.0 | Still works, warning on every use | Same |
-| v1.0 | **Removed from public API** | **Removed entirely** |
+| Version | `hydrateEvents` Status            | `_hydrateEvents()` Internal |
+| ------- | --------------------------------- | --------------------------- |
+| v0.21.0 | `@deprecated`, dev-mode warning   | Active, guarded             |
+| v0.22.0 | Still works, warning on every use | Same                        |
+| v1.0    | **Removed from public API**       | **Removed entirely**        |
 
 ## Rationale
 

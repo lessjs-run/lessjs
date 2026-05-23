@@ -108,11 +108,11 @@ inline in the template itself — no selector, no drift, no double-fire risk.
 **Decision**: `static hydrateEvents` is deprecated in v0.21.0 and will be
 removed in v1.0.
 
-| Version | `hydrateEvents` Status |
-|---------|----------------------|
+| Version | `hydrateEvents` Status          |
+| ------- | ------------------------------- |
 | v0.21.0 | `@deprecated`, dev-mode warning |
-| v0.22.0 | Still works, warning persists |
-| v1.0 | **Removed from public API** |
+| v0.22.0 | Still works, warning persists   |
+| v1.0    | **Removed from public API**     |
 
 Rationale:
 
@@ -139,9 +139,9 @@ Fix (already applied):
 
 ```ts
 if (this._dsdHydrated) {
-  this._bindCurrentRenderTemplate();  // @click + signal subscription
-  this._hydrateEvents();              // backward compat
-  this._initialRenderDone = true;     // ← was missing
+  this._bindCurrentRenderTemplate(); // @click + signal subscription
+  this._hydrateEvents(); // backward compat
+  this._initialRenderDone = true; // ← was missing
 }
 ```
 
