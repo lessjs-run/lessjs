@@ -1,6 +1,6 @@
 # ADR-0039: DsdElement + Signals Reactive Architecture
 
-> **Status**: ACCEPTED
+> **Status**: ACCEPTED (amended 2026-05-23 — hydrateEvents retirement)
 > **Date**: 2026-05-23
 > **Supercedes**: Extends ADR-0036 (Ocean-Island Architecture)
 > **Applies to**: v0.21.0 (Reactive DSD)
@@ -96,7 +96,57 @@ render(): string {
 - `html` is a function, not a tag that requires a build step (unlike JSX)
 - Signal values are read during render → auto-tracked
 - Non-signal values are static → no re-render triggered
-- `@click` declarative event binding (existing v0.20 `hydrateEvents` mechanism)
+- `@click` declarative event binding — replaces `static hydrateEvents` (see below)
+
+## hydrateEvents Retirement
+
+ADR-0036 introduced `static hydrateEvents` as a workaround: `render(): string`
+could not express event bindings, so a separate declarative array mapped CSS
+selectors to methods. With `html` tagged templates, `@click` expresses events
+inline in the template itself — no selector, no drift, no double-fire risk.
+
+**Decision**: `static hydrateEvents` is deprecated in v0.21.0 and will be
+removed in v1.0.
+
+| Version | `hydrateEvents` Status |
+|---------|----------------------|
+| v0.21.0 | `@deprecated`, dev-mode warning |
+| v0.22.0 | Still works, warning persists |
+| v1.0 | **Removed from public API** |
+
+Rationale:
+
+1. **One model**: `@click` covers every case `hydrateEvents` handles, plus
+   nested templates and dynamic selectors.
+2. **Colocation**: event binding lives next to the element it targets, not in a
+   separate static array that can drift.
+3. **No double-fire**: `@click` + `hydrateEvents` on the same element fires
+   twice. Removing `hydrateEvents` eliminates this class of bug.
+4. **`html` is a superset of `render(): string`**: wrapping a static string in
+   `html` adds zero overhead and unlocks `@click` + signal for free.
+
+See SOP-006 for the step-by-step migration plan.
+
+## `_initialRenderDone` Contract (v0.21.0 amendment)
+
+A critical bug was discovered: `connectedCallback()` in the DSD hydration path
+did not set `_initialRenderDone = true` after binding events and subscribing
+signals. This caused the first signal-driven update to use
+`_renderIntoShadowRoot()` (full `innerHTML` replacement) instead of
+`_patchBindings()` (fine-grained DOM patch), destroying all event listeners.
+
+Fix (already applied):
+
+```ts
+if (this._dsdHydrated) {
+  this._bindCurrentRenderTemplate();  // @click + signal subscription
+  this._hydrateEvents();              // backward compat
+  this._initialRenderDone = true;     // ← was missing
+}
+```
+
+This is now a documented contract: DSD hydration path MUST set
+`_initialRenderDone = true` after binding is complete.
 
 ## Consequences
 

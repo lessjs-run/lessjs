@@ -47,7 +47,8 @@ escalate complex UI to Islands.
 | 2    | SOP-002 | P0       | Safe `html` template processor                  | Exporting `html` from core    |
 | 3    | SOP-003 | P1       | `renderDSDStream()` and stream metrics          | v0.22 ISR handler             |
 | 4    | SOP-004 | P0       | Fine-grained patching + DX + www migration      | Convincing Lit → Ocean story  |
-| 5    | SOP-005 | P0       | Verification, release gates, docs sync          | v0.21.0 completion            |
+| 5    | SOP-006 | P0       | Unified event model — retire `hydrateEvents`    | v0.21.0 release (no dual model) |
+| 6    | SOP-005 | P0       | Verification, release gates, docs sync          | v0.21.0 completion            |
 
 ## Entry Criteria
 
@@ -64,21 +65,18 @@ escalate complex UI to Islands.
 
 ```text
 DsdElement.render()
-  -> string
-      existing static path, unchanged
-  -> TemplateResult
-      created by html`...`
+  -> TemplateResult (via html`...`)
       -> safe SSR string output
       -> binding records for dynamic values
       -> signal subscriptions for reactive values
       -> microtask-batched updates
       -> direct text/attribute/property/boolean binding patches
 
-Event binding
-  -> @click=${handler}
-  -> event descriptors attached after DSD upgrade or CSR render
-  -> handler may update Signals
-  -> Signal write schedules component update
+Event binding (unified in v0.21.0)
+  -> @click=${handler}  — sole event binding mechanism
+  -> SSR emits data-less-event-N marker
+  -> client resolves marker to addEventListener
+  -> hydrateEvents: DEPRECATED (SOP-006), removed v1.0
 
 Streaming
   -> renderDSDStream()
@@ -134,3 +132,4 @@ class LessCounter extends DsdElement {
 - SOP-002: Safe Templates
 - SOP-003: Streaming DSD
 - SOP-004: Verification + Release Gate
+- SOP-006: Unified Event Model — hydrateEvents Retirement
