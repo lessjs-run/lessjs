@@ -6,7 +6,7 @@
  *   - Client-Side Rendering (CSR) fallback when no DSD content exists
  *   - StyleSheet (SSR-safe CSSStyleSheet) via adoptedStyleSheets
  *   - Declarative event binding via html template @click / @keydown etc.
- *   - Signal-driven fine-grained DOM patching via data-b markers
+ *   - Signal-driven fine-grained DOM patching via data-less-b markers
  *   - AbortController cleanup on disconnect
  *   - formAssociated + delegatesFocus support
  *   - ReactiveHost protocol for explicit Signal integration
@@ -341,7 +341,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       this._bindTemplateRuntime(result);
       this._subscribeTemplateSignals(result);
 
-      // Patch signal text values using data-b markers
+      // Patch signal text values using data-less-b markers
       const values = result.values;
       for (let i = 0; i < values.length; i++) {
         const value = values[i];

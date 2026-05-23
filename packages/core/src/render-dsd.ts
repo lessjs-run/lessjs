@@ -73,7 +73,7 @@ import { serializeAttributes, wrapDsdOutput } from './render-serialize.js';
 import { isTemplateResult, renderTemplateToString } from './template.js';
 
 const log = createLogger('core');
-const textEncoder = new TextEncoder();
+const _textEncoder = new TextEncoder();
 
 // --- DSD Rendering ----------------------------------------------
 
@@ -361,11 +361,11 @@ function renderEnd_timeFallback(): number {
   return Date.now();
 }
 
-function now(): number {
+function _now(): number {
   return typeof performance !== 'undefined' ? performance.now() : Date.now();
 }
 
-async function resolveStreamPart(
+async function _resolveStreamPart(
   part?: string | (() => string | Promise<string>),
 ): Promise<string> {
   if (!part) return '';
