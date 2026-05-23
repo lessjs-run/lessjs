@@ -67,6 +67,15 @@ Tests:
 - `packages/core/__tests__/template-events.test.ts`
 - `packages/core/__tests__/render-dsd.test.ts`
 
+> **v0.21.0 implementation note:** `template-bindings` logic is inlined in
+> `template.ts` (not a separate file). `render-dsd-stream` logic is inlined in
+> `render-dsd.ts` in the v0.21.0 actual implementation, with types re-exported
+> from a separate `render-dsd-stream.ts` for the public API surface.
+>
+> **v0.21.0 实际实现**：`template-bindings.ts` 和 `render-dsd-stream.ts` 的内容
+> 已分别内联到 `template.ts` 和 `render-dsd.ts` 中，减少了不必要的文件拆分。
+> v0.22.0 可能根据模块大小重新评估是否拆分。
+
 ## Public Types
 
 ```ts
