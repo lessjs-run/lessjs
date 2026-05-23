@@ -70,7 +70,7 @@ LessJS
 - **ISR metadata** - routes can expose `revalidate`, producing ISR manifest
   evidence and using core cache primitives for adapter implementations.
 - **API route parity** - API modules can export a Hono app or a
-  `LessApiHandler` with `request`, `params`, `env`, and `platform`.
+  `LessApiContext` with `request`, `params`, `env`, and `platform` (type-only).
 - **Registry evidence pipeline** - Hub records, package validation, snapshots,
   and `less add` exist as early-access infrastructure.
 - **Release gates** - formatting, linting, typechecking, tests, build, e2e,
