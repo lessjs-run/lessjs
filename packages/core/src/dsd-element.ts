@@ -330,25 +330,33 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    */
   private _patchBindings(): void {
     if (!this.shadowRoot) return;
-    this._disposeTemplateRuntime();
-    this._disposeSignalSubscriptions();
+    try {
+      this._disposeTemplateRuntime();
+      this._disposeSignalSubscriptions();
 
-    const result = this.render();
-    if (!isTemplateResult(result)) return;
+      const result = this.render();
+      if (!isTemplateResult(result)) return;
 
-    // Re-bind event handlers and property bindings
-    this._bindTemplateRuntime(result);
-    this._subscribeTemplateSignals(result);
+      // Re-bind event handlers and property bindings
+      this._bindTemplateRuntime(result);
+      this._subscribeTemplateSignals(result);
 
-    // Patch signal text values using data-b markers
-    const values = result.values;
-    for (let i = 0; i < values.length; i++) {
-      const value = values[i];
-      if (!isSignalLike(value)) continue;
-      const el = this.shadowRoot.querySelector(`[data-b="${i}"]`);
-      if (!el) continue;
-      const raw = (value as { value: unknown }).value;
-      el.textContent = raw == null ? '' : String(raw);
+      // Patch signal text values using data-b markers
+      const values = result.values;
+      for (let i = 0; i < values.length; i++) {
+        const value = values[i];
+        if (!isSignalLike(value)) continue;
+        const el = this.shadowRoot.querySelector(`[data-less-b="${i}"]`);
+        if (!el) continue;
+        const raw = (value as { value: unknown }).value;
+        el.textContent = raw == null ? '' : String(raw);
+      }
+    } catch (err) {
+      console.warn(
+        `[DsdElement] _patchBindings failed for <${this.tagName.toLowerCase()}>:`,
+        err,
+      );
+      // Leave last good DOM in place
     }
   }
 
