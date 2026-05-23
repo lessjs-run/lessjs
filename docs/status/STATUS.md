@@ -78,11 +78,17 @@ See `docs/sop/v0.22.0/README.md`. Key ADR: 0038 (ISR + Edge KV).
 - **Signals in DsdElement.** Zero-framework reactivity for Ocean components.
 - **No DOM diff in v0.21.** Signal writes rerender the component locally; complex subtrees stay in Islands.
 - **Streaming DSD.** Progressive page delivery via Response-compatible Web Streams.
+- **Unified event model.** `@click` in `html` templates is the sole event binding mechanism; `hydrateEvents` removed.
+- **ReactiveHost protocol.** Explicit `subscribeTo()` / `requestReactiveUpdate()` contract replaces Duck Typing.
+- **Core package split.** `@lessjs/compat-check`, `@lessjs/cem`, `@lessjs/style-sheet` extracted as independent packages.
+- **Fine-grained DOM patching.** `_patchBindings()` with `data-less-b` markers preserves focus/scroll/CSS transitions.
 - **Edge Full-Stack is bounded.** v0.22 covers ISR/API/deploy runtime, not auth, ORM, or database ownership.
 
 ## Last Completed Line: v0.21.0
 
 Delivered: native `html` TemplateResult support, safe interpolation,
 `unsafeHTML()`, Signal-like reactive `DsdElement` updates, runtime template
-event/property bindings, Response-compatible `renderDSDStream()`, and removal of
-DOM diffing from v0.21 scope.
+event/property bindings, Response-compatible `renderDSDStream()`, unified event
+model (`@click` only), ReactiveHost protocol, core package split, fine-grained
+DOM patching, 787 tests passing with zero failures, and removal of DOM diffing
+from v0.21 scope. Full SOP coverage: 9 SOPs (001–009) all implemented.
