@@ -8,7 +8,7 @@
  *   - Styles: StyleSheet (SSR-safe, adoptedStyleSheets)
  *   - Template: html`...` from @lessjs/core
  *   - State: signal() from @lessjs/signals
- *   - Events: @click declarative bindings (hydrateEvents)
+ *   - Events: @click declarative bindings
  */
 import { DsdElement, html, signal, StyleSheet } from '@lessjs/core';
 

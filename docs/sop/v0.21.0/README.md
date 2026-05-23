@@ -49,6 +49,8 @@ escalate complex UI to Islands.
 | 4    | SOP-004 | P0       | Fine-grained patching + DX + www migration      | Convincing Lit → Ocean story    |
 | 5    | SOP-006 | P0       | Unified event model — retire `hydrateEvents`    | v0.21.0 release (no dual model) |
 | 6    | SOP-005 | P0       | Verification, release gates, docs sync          | v0.21.0 completion              |
+| 7    | SOP-007 | P0       | Core package split — `@lessjs/compat-check`, `@lessjs/cem`, `@lessjs/style-sheet` | v0.21.0 completion              |
+| 8    | SOP-008 | P0       | ReactiveHost protocol — explicit Signal integration protocol (replaces Duck Typing) | v0.21.0 completion              |
 
 ## Entry Criteria
 
@@ -76,7 +78,20 @@ Event binding (unified in v0.21.0)
   -> @click=${handler}  — sole event binding mechanism
   -> SSR emits data-less-event-N marker
   -> client resolves marker to addEventListener
-  -> hydrateEvents: DEPRECATED (SOP-006), removed v1.0
+  -> hydrateEvents: REMOVED in v0.21.0 (no backward compat)
+
+ReactiveHost Protocol
+  -> ReactiveHost interface in @lessjs/core/types
+  -> subscribeTo(source: SignalLike): Unsubscribe
+  -> requestReactiveUpdate(): void
+  -> DsdElement implements ReactiveHost
+  -> External signal libs target ReactiveHost, not Duck Typing
+
+Core Package Split
+  -> @lessjs/core: DSD engine + DsdElement + adapter registry + types
+  -> @lessjs/compat-check: SSR compatibility classifier
+  -> @lessjs/cem: Custom Elements Manifest parser
+  -> @lessjs/style-sheet: Cross-environment CSSStyleSheet shim
 
 Streaming
   -> renderDSDStream()
@@ -121,6 +136,9 @@ class LessCounter extends DsdElement {
 - Template interpolation is escaped by default in SSR and CSR paths.
 - Event bindings work after DSD upgrade and after CSR fallback render.
 - `renderDSDStream()` works in a Web `Response`.
+- `hydrateEvents` fully removed from all internal components; only `@click` in `html` templates.
+- `ReactiveHost` protocol implemented; `DsdElement` uses protocol, not Duck Typing.
+- `@lessjs/compat-check`, `@lessjs/cem`, `@lessjs/style-sheet` extracted from core as independent packages.
 - SOP-004 targeted and full release gates pass.
 
 ## Related
@@ -133,3 +151,5 @@ class LessCounter extends DsdElement {
 - SOP-003: Streaming DSD
 - SOP-004: Verification + Release Gate
 - SOP-006: Unified Event Model — hydrateEvents Retirement
+- SOP-007: Core Package Split — compat-check, cem, style-sheet
+- SOP-008: ReactiveHost Protocol — explicit Signal integration

@@ -14,6 +14,9 @@
     "./packages/i18n",
     "./packages/app",
     "./packages/hub",
+    "./packages/style-sheet",
+    "./packages/compat-check",
+    "./packages/cem",
     "./www"
   ],
   "imports": {
@@ -24,9 +27,14 @@
     "@lessjs/core/isr": "./packages/core/src/isr.ts",
     "@lessjs/core/logger": "./packages/core/src/logger.ts",
     "@lessjs/core/navigation": "./packages/core/src/navigation.ts",
+    "@lessjs/core/compatibility": "./packages/core/src/compatibility.ts",
+    "@lessjs/core/cem-parser": "./packages/core/src/cem-parser.ts",
     "@lessjs/rpc": "./packages/rpc/src/index.ts",
     "@lessjs/signals": "./packages/signals/src/index.ts",
     "@lessjs/signals/framework": "./packages/signals/src/framework.ts",
+    "@lessjs/style-sheet": "./packages/style-sheet/src/index.ts",
+    "@lessjs/compat-check": "./packages/compat-check/src/index.ts",
+    "@lessjs/cem": "./packages/cem/src/index.ts",
     "@lessjs/ui": "./packages/ui/src/index.ts",
     // Explicit subpath entries required - Vite alias prefix-matching
     // cannot handle subpath exports from a file-based alias (ENOTDIR).

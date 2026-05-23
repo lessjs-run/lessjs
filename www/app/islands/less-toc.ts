@@ -7,7 +7,6 @@
  */
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/core';
-import type { HydrateEventDescriptor } from '@lessjs/core';
 
 export const tagName = 'less-toc';
 
@@ -66,9 +65,6 @@ styles.replaceSync(`
 
 export default class LessToc extends DsdElement {
   static override styles = styles;
-
-  // Click handlers are bound via hydrateEvents after each re-render
-  static override hydrateEvents: HydrateEventDescriptor[] = [];
 
   private _headings: Array<{ level: number; id: string; text: string }> = [];
   private _observer: IntersectionObserver | null = null;

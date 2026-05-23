@@ -1,17 +1,16 @@
 /**
- * less-term-demo - Ocean component (v0.20.0 Ocean-Island).
+ * less-term-demo - Ocean component (v0.21.0 Reactive DSD).
  *
  * Interactive terminal for the homepage. Features:
  * - DSD SSR for first paint (no JS needed)
- * - Client upgrade via DsdElement + hydrateEvents
+ * - Client upgrade via DsdElement + html template @click/@keydown
  * - Command history, local commands, API fallback
  * - Direct DOM manipulation for output (no full re-render)
  *
  * Pure DsdElement - zero Lit dependency.
  */
-import { DsdElement } from '@lessjs/core';
+import { DsdElement, html } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/core';
-import type { HydrateEventDescriptor } from '@lessjs/core';
 
 const styles = new StyleSheet();
 styles.replaceSync(`
@@ -76,11 +75,6 @@ styles.replaceSync(`
 export class LessTermDemo extends DsdElement {
   static override styles = styles;
 
-  static override hydrateEvents: HydrateEventDescriptor[] = [
-    { selector: '.term-body', event: 'click', method: '_focusInput' },
-    { selector: 'input', event: 'keydown', method: '_onKey' },
-  ];
-
   private _abortController = new AbortController();
   private _cmdHistory: string[] = [];
   private _historyIdx = -1;
@@ -90,20 +84,19 @@ export class LessTermDemo extends DsdElement {
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  override render(): string {
-    if (this._dsdHydrated) return '';
-    return `
+  override render() {
+    return html`
       <div class="term">
         <div class="term-bar">
           <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
         </div>
-        <div class="term-body">
+        <div class="term-body" @click=${this._focusInput}>
           <div class="output">
             <div><span class="prompt">$</span> type <span class="hl">help</span> to get started</div>
           </div>
           <div class="input-line">
             <span class="prompt">$</span>
-            <input type="text" autocomplete="off" spellcheck="false">
+            <input type="text" autocomplete="off" spellcheck="false" @keydown=${this._onKey}>
           </div>
         </div>
       </div>

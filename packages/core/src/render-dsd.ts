@@ -317,11 +317,10 @@ export async function renderDSD(
   }
 
   // Collect hydration hint for this component
-  if (resolvedLayer !== 'dsd-static' || instance.hydrateEvents?.length) {
+  if (resolvedLayer !== 'dsd-static') {
     collectedHints.push({
       tagName,
       layer: resolvedLayer as ComponentLayer,
-      events: instance.hydrateEvents,
     });
   }
 

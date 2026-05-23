@@ -106,8 +106,6 @@ export interface LessElementExtensions {
   layer?: ComponentLayer;
   /** Hydration strategy for client-side upgrade */
   hydrate?: HydrationStrategy;
-  /** Declarative event bindings for dsd-interactive components */
-  hydrateEvents?: HydrateEventDescriptor[];
   /** Module path for import (e.g. '@lessjs/ui/less-button') */
   module?: string;
   /** Export name from the module (default: tagName in PascalCase) */
@@ -547,22 +545,22 @@ export type HydrationStrategy = 'load' | 'idle' | 'visible' | 'only';
 export type StrategySource = 'directive' | 'island-options' | 'manifest' | 'default';
 
 /**
- * Declarative event binding for DSD Interactive components.
+ * Declarative event binding descriptor.
  *
- * @deprecated Since v0.21.0. Use `@click` in `html` tagged templates instead.
- * `hydrateEvents` will be removed in v1.0.
- * See ADR-0039 and SOP-006 for migration guidance.
- *
- * When a component's shadow root is pre-populated by DSD, framework template
- * bindings (e.g. Lit's @click) are never executed because render() returns nothing.
- * This descriptor tells the adapter which DOM events need manual wiring.
+ * @deprecated Removed in v0.21.0. Use `@click` / `@keydown` etc. in `html` tagged templates.
+ * See ADR-0039 and SOP-006 for migration.
  *
  * @example
  * ```ts
- * // Deprecated — migrate to html + @click:
- * // static hydrateEvents: HydrateEventDescriptor[] = [
- * //   { selector: 'button.theme-toggle', event: 'click', method: '_handleToggle' },
+ * // Before (hydrateEvents — removed in v0.21.0):
+ * // static hydrateEvents = [
+ * //   { selector: 'button', event: 'click', method: '_handleToggle' },
  * // ];
+ *
+ * // After (html + @click):
+ * // render() {
+ * //   return html`<button @click=${this._handleToggle}>Toggle</button>`;
+ * // }
  * ```
  */
 export interface HydrateEventDescriptor {
@@ -575,6 +573,37 @@ export interface HydrateEventDescriptor {
 }
 
 /**
+ * Unsubscribe function returned by reactive subscriptions.
+ */
+export type Unsubscribe = () => void;
+
+/**
+ * ReactiveHost protocol — explicit interface for DsdElement Signal integration.
+ *
+ * Instead of Duck Typing signals via `isSignalLike()`, external signal libraries
+ * and reactive sources target this protocol. DsdElement implements ReactiveHost,
+ * and the template runtime calls `host.subscribeTo(source)` during binding.
+ *
+ * This replaces the v0.21.0-alpha Duck Typing approach with an explicit contract.
+ *
+ * @since v0.21.0
+ */
+export interface ReactiveHost {
+  /**
+   * Subscribe to a reactive source. The host decides how to handle updates
+   * (e.g. schedule a microtask-batched re-render).
+   *
+   * @param source - Any object with `subscribe(fn)` (satisfies SignalLike contract)
+   * @returns Unsubscribe function to clean up the subscription
+   */
+  subscribeTo(source: { subscribe(fn: (value: unknown) => void): Unsubscribe }): Unsubscribe;
+
+  /**
+   * Request a reactive update. Called by the reactive source on value change.
+   * The host batches multiple requests via microtask queue.
+   */
+  requestReactiveUpdate(): void;
+}/**
  * Renderer Protocol - the adapter interface for framework-specific rendering.
  *
  * Every adapter MUST provide a `name` for diagnostics and multi-adapter support.
@@ -637,8 +666,6 @@ export interface HydrationHint {
   tagName: string;
   /** Component layer */
   layer: ComponentLayer;
-  /** Declarative event bindings (dsd-interactive only) */
-  events?: HydrateEventDescriptor[];
   /** Island upgrade strategy */
   strategy?: HydrationStrategy;
 }
@@ -685,8 +712,6 @@ export interface RenderOutput {
  *   - 'dsd-static' (default): static content, no hydration needed
  *   - 'dsd-interactive': needs event bindings after DSD upgrade
  *   - 'pure-island': no DSD, framework fully owns shadow root
- *
- * v0.6.2: Added `hydrateEvents` for declarative event binding (Layer 2).
  */
 export interface DsdComponent {
   /** Return Shadow DOM inner HTML as a string */
@@ -703,13 +728,6 @@ export interface DsdComponent {
    * @default 'dsd-static'
    */
   layer?: ComponentLayer;
-
-  /**
-   * Declarative event bindings for DSD Interactive components.
-   * Used by adapters to attach event listeners to existing DSD DOM.
-   * Only relevant when layer === 'dsd-interactive'.
-   */
-  hydrateEvents?: HydrateEventDescriptor[];
 
   /** Set named property/value */
   [key: string]: unknown;

@@ -7,7 +7,7 @@
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *   - CSSStyleSheet replaces Lit css\`\`
  *   - render() returns string
- *   - hydrateEvents for mobile menu toggle
+ *   - @click bindings for mobile menu toggle
  *   - SPA navigation via Navigation API (navigate/fetch/swap) preserved
  *   - Event delegation at shadow root level for nav clicks
  *

@@ -45,6 +45,34 @@ export { DsdElement } from './dsd-element.js';
 export { computed, effect, signal } from '@lessjs/signals/framework';
 export { StyleSheet } from './style-sheet.js';
 export type { StyleSheetLike, StyleSheetRule } from './style-sheet.js';
+
+// SOP-007: Re-export from extracted sub-packages for direct access
+export {
+  classifyCemManifest,
+  classifyComponent,
+  classifyComponents,
+  classifyLessManifest,
+  getClassificationSummary,
+  isKnownSsrAdapter,
+  isKnownSsrSuperclass,
+  isValidTagName,
+  mergeClassifications,
+  validateModulePath,
+} from './compatibility.js';
+export type {
+  ClassificationInput,
+  ClassificationResult,
+  ClassificationStats,
+  ClassifierConfig,
+} from './compatibility.js';
+
+export {
+  extractLessDeclarations,
+  findModulePathForTag,
+  parseCem,
+  readCemFile,
+  validateModulePaths,
+} from './cem-parser.js';
 export {
   createRenderDSDStreamMetrics,
   renderDSD,
@@ -90,8 +118,10 @@ export type {
   LessSlot,
   ManifestDecision,
   ManifestValidationReport,
+  ReactiveHost,
   RegistryIndex,
   RegistryIndexEntry,
+  Unsubscribe,
   RendererProtocol,
   RenderError,
   RenderHooks,

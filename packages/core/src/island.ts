@@ -120,8 +120,8 @@ export function getSSRProps(el: HTMLElement): Record<string, unknown> | null {
  *
  * v0.6.2: Framework-agnostic. No Lit-specific detection.
  * Props are set directly on the instance. DSD hydration (event binding,
- * state sync) is handled at the component level via WithDsdHydration
- * Mixin and declarative hydrateEvents.
+ * state sync) is handled at the component level via DsdElement
+ * and html template @click bindings.
  *
  * v0.14.3: Prototype pollution fix - filters dangerous keys
  * (__proto__, constructor, prototype) from parsed SSR props.

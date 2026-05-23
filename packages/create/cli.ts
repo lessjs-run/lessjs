@@ -224,9 +224,8 @@ export default class HomePage extends DsdElement {
   }
 }
 `,
-    'app/islands/my-counter.ts': `import { DsdElement } from '@lessjs/core';
+    'app/islands/my-counter.ts': `import { DsdElement, html, signal } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/core';
-import type { HydrateEventDescriptor } from '@lessjs/core';
 
 export const tagName = 'my-counter';
 
@@ -239,26 +238,12 @@ styles.replaceSync(\`
 export default class MyCounter extends DsdElement {
   static override styles = styles;
 
-  static override hydrateEvents: HydrateEventDescriptor[] = [
-    { selector: 'button.dec', event: 'click', method: '_dec' },
-    { selector: 'button.inc', event: 'click', method: '_inc' },
-  ];
-
-  count = 0;
+  count = signal(0);
 
   override render() {
-    return \`<button class="dec">-</button>
+    return html\`<button @click=\${() => this.count.value--}>-</button>
 <span>\${this.count}</span>
-<button class="inc">+</button>\`;
-  }
-
-  private _dec() { this.count--; this._update(); }
-  private _inc() { this.count++; this._update(); }
-
-  private _update() {
-    if (!this.shadowRoot) return;
-    this.shadowRoot.innerHTML = this.render();
-    this._hydrateEvents();
+<button @click=\${() => this.count.value++}>+</button>\`;
   }
 }
 
