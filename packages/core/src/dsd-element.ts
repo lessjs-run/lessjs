@@ -322,7 +322,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    * v0.21: Fine-grained DOM patching for reactive signal updates.
    *
    * Instead of replacing the entire shadowRoot.innerHTML, this method
-   * queries for [data-b="N"] markers and patches only those nodes.
+   * queries for [data-less-b="N"] markers and patches only those nodes.
    * Events (@click) and properties (.value) use existing markers
    * (data-less-event-N / data-less-prop-N).
    *
