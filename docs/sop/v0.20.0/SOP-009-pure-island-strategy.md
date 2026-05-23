@@ -62,18 +62,18 @@ static override layer: ComponentLayer = 'dsd-interactive';
 
 ## Island Strategy Table
 
-| Component            | Type        | Framework         | Island Strategy     |
-| -------------------- | ----------- | ----------------- | ------------------- |
-| `less-button`        | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-card`          | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-callout`       | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-step-card`     | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-input`         | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-code-block`    | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-theme-toggle`  | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-dialog`        | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-layout`        | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-search`        | Ocean (DSD) | None (DsdElement) | —                   |
+| Component            | Type        | Framework         | Island Strategy    |
+| -------------------- | ----------- | ----------------- | ------------------ |
+| `less-button`        | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-card`          | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-callout`       | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-step-card`     | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-input`         | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-code-block`    | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-theme-toggle`  | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-dialog`        | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-layout`        | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-search`        | Ocean (DSD) | None (DsdElement) | —                  |
 | **`less-hero-ping`** | **Island**  | **Lit**           | **load (default)** |
 
 ---

@@ -16,6 +16,7 @@ import '../../islands/demo-load.js';
 import '../../islands/demo-idle.js';
 import '../../islands/demo-visible.js';
 import '../../islands/demo-only.js';
+import '../../islands/reactive-showcase.js';
 
 export class IslandsGuidePage extends DsdElement {
   declare locale?: string;
@@ -37,7 +38,11 @@ export class IslandsGuidePage extends DsdElement {
     }' headerNav='${this._escape(JSON.stringify(headerNav))}' navSections='${
       this._escape(JSON.stringify(filterFrameworkNav(navSections)))
     }'>
-        <h1>Hydration 策略</h1>
+        <h1>Ocean 响应式（DsdElement + Signals）</h1>
+        <p>v0.21 的核心能力：Ocean 组件不再需要 Lit 或 React 来实现响应式。<code>signal()</code> + <code>html</code> 模板 + <code>@click</code> 事件绑定 = 零框架运行时。</p>
+        <reactive-showcase></reactive-showcase>
+
+        <h2>Hydration 策略</h2>
         <p>LessJS v0.21 支持四种 hydration 策略：</p>
 
         <h2><code>client:load</code></h2>
@@ -65,7 +70,11 @@ export class IslandsGuidePage extends DsdElement {
       <less-layout locale="en" locales='${JSON.stringify(['zh', 'en'])}' headerNav='${
       this._escape(JSON.stringify(headerNav))
     }' navSections='${this._escape(JSON.stringify(filterFrameworkNav(navSections)))}'>
-        <h1>Hydration Strategies</h1>
+        <h1>Reactive DSD (DsdElement + Signals)</h1>
+        <p>v0.21's signature: Ocean components no longer need Lit or React for reactivity. <code>signal()</code> + <code>html</code> template + <code>@click</code> bindings = zero framework runtime.</p>
+        <reactive-showcase></reactive-showcase>
+
+        <h2>Hydration Strategies</h2>
         <p>LessJS v0.21 supports four hydration strategies:</p>
 
         <h2><code>client:load</code></h2>
