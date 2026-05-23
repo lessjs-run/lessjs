@@ -1,4 +1,4 @@
-# SOP-004: Reactive DSD Verification + Release Gate
+# SOP-005: Reactive DSD Verification + Release Gate
 
 > Version: v0.21.0
 > Priority: P0
