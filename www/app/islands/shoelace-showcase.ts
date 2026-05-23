@@ -5,10 +5,9 @@
  * Pure DsdElement - zero framework dependency at the wrapper level.
  * Shoelace itself uses Lit internally, but that's the library's choice.
  *
- * @lessjs/app island - client-only (ssr: false), Shoelace needs real DOM.
+ * @lessjs/app island - Shoelace WCs need client DOM, but static wrapper renders via DSD.
  */
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/core';
 import '@shoelace-style/shoelace/dist/themes/light.css';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/badge/badge.js';
@@ -23,7 +22,7 @@ registerIconLibrary('default', {
 
 export const tagName = 'shoelace-showcase';
 
-export const less = { ssr: false };
+export const less = { ssr: true };
 
 const styles = new StyleSheet();
 styles.replaceSync(`

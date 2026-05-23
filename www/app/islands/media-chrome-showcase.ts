@@ -46,9 +46,12 @@ export default class MediaChromeShowcase extends MediaChromeBase {
     }
     super.connectedCallback();
 
+    // Populate shadow root with render() content
+    if (this.shadowRoot && !this.shadowRoot.childNodes.length) {
+      this.shadowRoot.innerHTML = this.render();
+    }
+
     // Load media-chrome dynamically on the client only.
-    // Using import() to define media-chrome custom elements
-    // without crashing during SSR.
     if (!this._mcLoaded && typeof globalThis.HTMLElement !== 'undefined') {
       this._mcLoaded = true;
       import('media-chrome').then(() => {
