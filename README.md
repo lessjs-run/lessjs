@@ -8,7 +8,7 @@ Island、Hono API Route 和早期 Registry Hub 组合在一起，让 Web Compone
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
 [![JSR](https://img.shields.io/badge/JSR-published-blue)](https://jsr.io/@lessjs/core)
-[![@lessjs/core](https://img.shields.io/badge/jsr-v0.19.0-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
+[![@lessjs/core](https://img.shields.io/badge/jsr-v0.21.0-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
 
 ## 海洋-岛屿架构
 
