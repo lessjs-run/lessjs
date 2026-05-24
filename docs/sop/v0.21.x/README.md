@@ -24,6 +24,7 @@ The product stance for this line is:
 | v0.21.3 | SOP-007 to SOP-008 | Harden adapter-vite admission, SSG build reports, and the blog/docs product path.                |
 | v0.21.4 | SOP-009            | Make Registry Hub evidence and package trust checks credible enough to support ecosystem growth. |
 | v0.21.5 | SOP-010            | Run the pre-v0.22 release gate and decide whether Edge Full-Stack can start.                     |
+| v0.21.9 | SOP-011            | Harden the JSR consumer ESM graph so Vite/Rolldown only owns final bundling optimization.        |
 
 ## SOP List
 
@@ -37,6 +38,7 @@ The product stance for this line is:
 8. [SOP-008 SSG Product Stack Hardening](./SOP-008-ssg-product-hardening.md)
 9. [SOP-009 Hub Evidence and Trust Pipeline](./SOP-009-hub-evidence-trust.md)
 10. [SOP-010 v0.22 Entry Gate](./SOP-010-v022-entry-gate.md)
+11. [SOP-011 JSR Consumer ESM Graph Hardening](./SOP-011-jsr-consumer-esm-graph.md)
 
 ## Public API Classification
 
