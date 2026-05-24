@@ -116,6 +116,7 @@ node_modules/
     'deno.json': `{
   "imports": {
     "vite": "npm:vite@8.0.10",
+    "@deno/vite-plugin": "npm:@deno/vite-plugin@2",
     "@lessjs/app": "jsr:@lessjs/app@^${v.app}",
     "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^${v.adapterLit}",
     "@lessjs/adapter-vite": "jsr:@lessjs/adapter-vite@^${v.adapterVite}",
@@ -143,6 +144,7 @@ node_modules/
 `,
     'vite.config.ts': `import { lessjs } from '@lessjs/app';
 import { defineConfig } from 'vite';
+import deno from '@deno/vite-plugin';
 
 // Design tokens (from Open Props)
 const colorTokensStyle =
@@ -154,7 +156,7 @@ const colorTokensStyle =
   'body{margin:0;background:var(--gray-1);color:var(--gray-9);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>';
 
 export default defineConfig({
-  plugins: [lessjs({
+  plugins: [deno(), lessjs({
     html: { title: 'My LessJS App' },
     // Use pre-built UI components from @lessjs/ui
     // (JSR distributes compiled JS - no decorator errors)

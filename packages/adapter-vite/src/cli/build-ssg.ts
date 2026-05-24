@@ -33,7 +33,7 @@ const log = createLogger('ssg');
 
 const VIRTUAL_SSG_ENTRY_ID = 'virtual:less-ssg-entry';
 const RESOLVED_SSG_ENTRY_ID = '\0' + VIRTUAL_SSG_ENTRY_ID;
-const FALLBACK_LESSJS_VERSION = '0.21.11';
+const FALLBACK_LESSJS_VERSION = '0.21.12';
 
 function getJsrPackageVersion(metaUrl: string): string {
   const match = metaUrl.match(/\/@lessjs\/adapter-vite\/([^/]+)\//);
