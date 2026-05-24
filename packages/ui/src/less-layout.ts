@@ -27,7 +27,14 @@
  * ```
  */
 
-import { DsdElement, html, StyleSheet, unsafeHTML } from '@lessjs/core';
+import {
+  DsdElement,
+  html,
+  StyleSheet,
+  type StyleSheetLike,
+  type TemplateResult,
+  unsafeHTML,
+} from '@lessjs/core';
 import { navigate, onNavigate } from '@lessjs/core/navigation';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import './less-theme-toggle.js';
@@ -50,7 +57,7 @@ export interface HeaderNavLink {
   label: string;
 }
 
-const sheet = new StyleSheet();
+const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;
@@ -496,7 +503,7 @@ export class LessLayout extends DsdElement {
   private _navUnlisten?: () => void;
   private _themeHandler?: (e: Event) => void;
 
-  override render() {
+  override render(): string | TemplateResult {
     return this._renderLayout();
   }
 

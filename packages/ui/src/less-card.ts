@@ -22,12 +22,18 @@
  * ```
  */
 
-import { DsdElement, html, StyleSheet } from '@lessjs/core';
+import {
+  DsdElement,
+  html,
+  StyleSheet,
+  type StyleSheetLike,
+  type TemplateResult,
+} from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-card';
 
-const sheet = new StyleSheet();
+const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;
@@ -78,7 +84,7 @@ export class LessCard extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['variant'];
 
-  override render() {
+  override render(): string | TemplateResult {
     return html`
       <article part="container">
         <slot name="header"></slot>

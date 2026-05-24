@@ -27,12 +27,18 @@
  * ```
  */
 
-import { DsdElement, html, StyleSheet } from '@lessjs/core';
+import {
+  DsdElement,
+  html,
+  StyleSheet,
+  type StyleSheetLike,
+  type TemplateResult,
+} from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-input';
 
-const sheet = new StyleSheet();
+const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;
@@ -118,7 +124,7 @@ export class LessInput extends DsdElement {
     'error',
   ];
 
-  override render() {
+  override render(): string | TemplateResult {
     const type = this.getAttribute('type') || 'text';
     const placeholder = this.getAttribute('placeholder') || '';
     const label = this.getAttribute('label') || '';
