@@ -85,7 +85,7 @@ Deno.test('less() accepts options without error', () => {
     headExtras: '<link rel="stylesheet" />',
     html: { title: 'Test', lang: 'ja' },
     packageIslands: ['@lessjs/ui'],
-    island: { upgradeStrategy: 'eager' },
+    island: { upgradeStrategy: 'load' },
     middleware: { corsOrigin: '*' },
   });
 
@@ -270,7 +270,7 @@ Deno.test('less() with all options branches covered', () => {
     routesDir: 'pages',
     islandsDir: 'islands',
     packageIslands: ['@lessjs/ui'],
-    island: { upgradeStrategy: 'eager' },
+    island: { upgradeStrategy: 'load' },
     middleware: { corsOrigin: ['http://localhost:3000'] },
     html: { title: 'Test', lang: 'ja' },
     inject: {
@@ -296,16 +296,16 @@ Deno.test('less() with middleware.corsOrigin as array', () => {
   assertLessPluginArray(plugins);
 });
 
-Deno.test('less() with island.upgradeStrategy=eager', () => {
+Deno.test('less() with island.upgradeStrategy=load', () => {
   const plugins = less({
-    island: { upgradeStrategy: 'eager' },
+    island: { upgradeStrategy: 'load' },
   });
   assertLessPluginArray(plugins);
 });
 
-Deno.test('less() with island.upgradeStrategy=eager', () => {
+Deno.test('less() with island.upgradeStrategy=load', () => {
   const plugins = less({
-    island: { upgradeStrategy: 'eager' },
+    island: { upgradeStrategy: 'load' },
   });
   assertLessPluginArray(plugins);
 });

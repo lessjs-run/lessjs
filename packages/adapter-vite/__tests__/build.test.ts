@@ -52,8 +52,16 @@ Deno.test('build - generateClientEntry', async (t) => {
 
   await t.step('generates dynamic imports for island files', () => {
     const islands = [
-      { tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' },
-      { tagName: 'theme-toggle', modulePath: '/app/islands/theme-toggle.ts' },
+      {
+        tagName: 'my-counter',
+        modulePath: '/app/islands/my-counter.ts',
+        strategy: 'idle' as const,
+      },
+      {
+        tagName: 'theme-toggle',
+        modulePath: '/app/islands/theme-toggle.ts',
+        strategy: 'idle' as const,
+      },
     ];
     const code = generateClientEntry(islands);
     // All islands use dynamic import for CE auto-upgrade
@@ -62,7 +70,13 @@ Deno.test('build - generateClientEntry', async (t) => {
   });
 
   await t.step('islands self-register via dynamic import side effects', () => {
-    const islands = [{ tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' }];
+    const islands = [
+      {
+        tagName: 'my-counter',
+        modulePath: '/app/islands/my-counter.ts',
+        strategy: 'idle' as const,
+      },
+    ];
     const code = generateClientEntry(islands);
     // No explicit customElements.define() - islands self-register via dynamic import
     assertFalse(code.includes("customElements.define('my-counter'"));
@@ -70,20 +84,38 @@ Deno.test('build - generateClientEntry', async (t) => {
   });
 
   await t.step('no duplicate registration guards needed', () => {
-    const islands = [{ tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' }];
+    const islands = [
+      {
+        tagName: 'my-counter',
+        modulePath: '/app/islands/my-counter.ts',
+        strategy: 'idle' as const,
+      },
+    ];
     const code = generateClientEntry(islands);
     // No explicit customElements.define() - no duplicate guard needed
     assertFalse(code.includes("if (!customElements.get('my-counter'))"));
   });
 
   await t.step('includes LessJS Client Entry comment', () => {
-    const islands = [{ tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' }];
+    const islands = [
+      {
+        tagName: 'my-counter',
+        modulePath: '/app/islands/my-counter.ts',
+        strategy: 'idle' as const,
+      },
+    ];
     const code = generateClientEntry(islands);
     assertStringIncludes(code, 'LessJS Client Entry');
   });
 
   await t.step('no legacy SSR client imports (v0.5.0 CE-native upgrade)', () => {
-    const islands = [{ tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' }];
+    const islands = [
+      {
+        tagName: 'my-counter',
+        modulePath: '/app/islands/my-counter.ts',
+        strategy: 'idle' as const,
+      },
+    ];
     const code = generateClientEntry(islands);
     // v0.5.0: browser CE spec handles upgrade
     assertEquals(code.includes('lit-element-hydrate-support'), false);
@@ -91,8 +123,14 @@ Deno.test('build - generateClientEntry', async (t) => {
     assertEquals(code.includes('LitElement'), false);
   });
 
-  await t.step('uses idle-time lazy loading', () => {
-    const islands = [{ tagName: 'my-counter', modulePath: '/app/islands/my-counter.ts' }];
+  await t.step('uses idle-time idle loading', () => {
+    const islands = [
+      {
+        tagName: 'my-counter',
+        modulePath: '/app/islands/my-counter.ts',
+        strategy: 'idle' as const,
+      },
+    ];
     const code = generateClientEntry(islands);
     assertStringIncludes(code, 'requestIdleCallback');
     assertStringIncludes(code, 'less:ready');
@@ -186,7 +224,7 @@ Deno.test({
       middleware: { cors: true },
       headExtras: '<meta name="theme-color" content="#000">',
       html: { lang: 'zh', title: 'My App' },
-      island: { upgradeStrategy: 'eager' as const },
+      island: { upgradeStrategy: 'load' as const },
     };
     const plugin = buildPlugin(options, ctx);
     const config = makeConfig('build');
@@ -203,7 +241,7 @@ Deno.test({
       assertEquals(ctx.phase3.islandsDir, 'src/islands');
       assertEquals(ctx.phase3.routesDir, 'src/routes');
       assertEquals(ctx.phase3.html?.lang, 'zh');
-      assertEquals(ctx.phase3.upgradeStrategy, 'eager');
+      assertEquals(ctx.phase3.upgradeStrategy, 'load');
     });
   },
 });

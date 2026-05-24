@@ -37,6 +37,7 @@
 import type {
   CompatibilityClassification,
   FrameworkOptions,
+  HydrationStrategy,
   LessPackageManifest,
   RouteEntry,
 } from '@lessjs/core';
@@ -131,8 +132,8 @@ export interface IslandDecl {
   modulePath: string;
   /** Package islands are upgraded by the client entry and are not SSR-registered here. */
   isPackage?: boolean;
-  /** Hydration strategy from manifest (eager/lazy/idle/visible) */
-  hydrate?: 'eager' | 'lazy' | 'idle' | 'visible';
+  /** Hydration strategy from manifest (load/idle/visible/only) */
+  hydrate?: HydrationStrategy;
   /** Whether this island supports SSR rendering (from manifest) */
   ssr?: boolean;
   /** Whether this island uses Declarative Shadow DOM (from manifest) */
@@ -246,8 +247,8 @@ export interface EntryDescriptor {
   /** Document wrapping config */
   document: DocumentConfig;
 
-  /** Island upgrade strategy for Islands (default: 'lazy') */
-  upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';
+  /** Default island hydration strategy (default: 'idle') */
+  upgradeStrategy?: HydrationStrategy;
 
   /** Route info for debug endpoint (dev only) */
   debugRoutes?: Array<{ path: string; type: string }>;
@@ -281,7 +282,7 @@ export function buildEntryDescriptor(
     headExtras?: string;
     allowHeadExtrasScripts?: boolean;
     html?: { lang?: string; title?: string };
-    upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';
+    upgradeStrategy?: HydrationStrategy;
     /** Hub registry client-only tag names (ADR-0035 A1) */
     hubClientOnlyTags?: string[];
   } = {},
@@ -299,7 +300,10 @@ export function buildEntryDescriptor(
   // Components use render(): string - no TemplateResult, no <!--lit-part--> markers.
   // ADR 0021: Always import from @lessjs/core main entry.
   // @lessjs/core is a pure runtime with zero Vite/Hono dependencies.
-  imports.push({ from: '@lessjs/core', names: ['renderDSD', 'renderDSDByName', 'escapeHtml'] });
+  imports.push({
+    from: '@lessjs/core',
+    names: ['renderDSD', 'renderDSDByName', 'escapeHtml'],
+  });
 
   // Conditional middleware imports
   const mw = options.middleware;
@@ -432,9 +436,9 @@ export function buildEntryDescriptor(
       ? `/${islandsDir}/${islandFiles[i]}`
       : `/${islandsDir}/${tagName}.ts`,
     source: 'local',
-    ssr: islandMeta[tagName]?.ssr,
-    dsd: islandMeta[tagName]?.dsd,
-    hydrate: islandMeta[tagName]?.hydrate,
+    ssr: islandMeta[tagName]?.hydrate === 'only' ? false : islandMeta[tagName]?.ssr,
+    dsd: islandMeta[tagName]?.hydrate === 'only' ? false : islandMeta[tagName]?.dsd,
+    hydrate: islandMeta[tagName]?.hydrate || options.upgradeStrategy || 'idle',
     reason: islandMeta[tagName]?.reason,
   }));
 
@@ -447,9 +451,9 @@ export function buildEntryDescriptor(
         modulePath: d.less!.module!,
         isPackage: true,
         source: 'package',
-        hydrate: d.less?.hydrate as IslandDecl['hydrate'],
-        ssr: d.less?.ssr,
-        dsd: d.less?.dsd,
+        hydrate: (d.less?.hydrate || options.upgradeStrategy || 'idle') as IslandDecl['hydrate'],
+        ssr: d.less?.hydrate === 'only' ? false : d.less?.ssr,
+        dsd: d.less?.hydrate === 'only' ? false : d.less?.dsd,
       }))
   );
 
@@ -488,7 +492,7 @@ export function buildEntryDescriptor(
     renderers,
     middlewareScopes,
     document,
-    upgradeStrategy: options.upgradeStrategy || 'lazy',
+    upgradeStrategy: options.upgradeStrategy || 'idle',
     debugRoutes,
   };
 }
@@ -574,6 +578,9 @@ export function buildSsrAdmissionPlan(
           reason =
             `Unknown CEM tier (${cemClassification.tier}) - conservative default to client-only`;
       }
+    } else if (island.hydrate === 'only') {
+      renderPath = 'client-only';
+      reason = island.reason || 'client:only island is excluded from SSR';
     } else if (island.ssr === false) {
       renderPath = 'client-only';
       reason = island.reason || 'less.ssr is false';

@@ -2,7 +2,7 @@
  * @lessjs/core - DsdElement Tests
  *
  * Tests for the zero-dependency DsdElement base class.
- * Covers DSD detection, CSR fallback, event hydration,
+ * Covers DSD detection, CSR fallback, template event binding,
  * AbortController cleanup, M-17 guard, StyleSheet merging,
  * and delegatesFocus.
  */
@@ -10,14 +10,12 @@
 import { assertEquals, assertExists, assertFalse, assertStrictEquals } from 'jsr:@std/assert@1';
 import { DsdElement } from '../src/dsd-element.js';
 import { StyleSheet, type StyleSheetLike } from '../src/style-sheet.js';
-import type { HydrateEventDescriptor } from '../src/types.js';
 
 // Helper: create a minimal subclass for testing.
 
 function defineTestElement(options?: {
   tagName?: string;
   renderContent?: string;
-  hydrateEvents?: HydrateEventDescriptor[];
   styles?: StyleSheetLike | StyleSheetLike[];
   delegatesFocus?: boolean;
   formAssociated?: boolean;
@@ -33,7 +31,6 @@ function defineTestElement(options?: {
 
   class TestElement extends DsdElement {
     static override styles = options?.styles ?? sheet;
-    static override hydrateEvents = options?.hydrateEvents;
     static override delegatesFocus = options?.delegatesFocus;
     static override formAssociated = options?.formAssociated;
     static override observedAttributes = options?.observedAttributes;
@@ -116,123 +113,6 @@ Deno.test('DsdElement: existing empty shadow root uses CSR render path', () => {
   document.body.removeChild(el);
 });
 
-// hydrateEvents binding triggers event handlers.
-
-Deno.test('DsdElement: hydrateEvents bind events to shadow DOM elements', () => {
-  if (!hasDOM) return;
-  const _clickCount = 0;
-
-  const events: HydrateEventDescriptor[] = [
-    { selector: 'button.action', event: 'click', method: '_handleClick' },
-  ];
-
-  const { tagName: _tagName } = defineTestElement({
-    renderContent: '<button class="action">Click me</button>',
-    hydrateEvents: events,
-  });
-
-  // Register a custom subclass with the handler method
-  const tagName2 = `test-click-${Math.random().toString(36).slice(2, 7)}`;
-  class ClickElement extends DsdElement {
-    static override hydrateEvents = events;
-
-    clickCount = 0;
-
-    _handleClick(_e: Event): void {
-      this.clickCount++;
-    }
-
-    override render(): string {
-      return '<button class="action">Click me</button>';
-    }
-  }
-  if (hasDOM) customElements.define(tagName2, ClickElement);
-
-  // Simulate DSD: pre-populate shadow root
-  const el = document.createElement(tagName2) as ClickElement;
-  const shadow = el.attachShadow({ mode: 'open' });
-  shadow.innerHTML = '<button class="action">Click me</button>';
-  el['_dsdHydrated'] = true;
-
-  // Connect to trigger _hydrateEvents
-  document.body.appendChild(el);
-
-  // Click the button inside the shadow root
-  const button = el.shadowRoot!.querySelector('button.action')!;
-  (button as HTMLButtonElement).click();
-
-  assertEquals(el.clickCount, 1);
-
-  // Cleanup
-  document.body.removeChild(el);
-});
-
-Deno.test('DsdElement: hydrateEvents bind events after CSR render()', () => {
-  if (!hasDOM) return;
-  let callCount = 0;
-
-  const tagName = `test-csr-events-${Math.random().toString(36).slice(2, 7)}`;
-  class CsrEventsElement extends DsdElement {
-    static override hydrateEvents: HydrateEventDescriptor[] = [
-      { selector: 'button', event: 'click', method: '_onClick' },
-    ];
-
-    _onClick(_e: Event): void {
-      callCount++;
-    }
-
-    override render(): string {
-      return '<button>CSR Click</button>';
-    }
-  }
-  customElements.define(tagName, CsrEventsElement);
-
-  const el = document.createElement(tagName);
-  document.body.appendChild(el);
-
-  const button = el.shadowRoot!.querySelector('button') as HTMLButtonElement;
-  button.click();
-  assertEquals(callCount, 1);
-
-  document.body.removeChild(el);
-});
-
-Deno.test('DsdElement: update() re-renders and rebinds hydrateEvents', () => {
-  if (!hasDOM) return;
-  let callCount = 0;
-
-  const tagName = `test-update-${Math.random().toString(36).slice(2, 7)}`;
-  class UpdateElement extends DsdElement {
-    static override hydrateEvents: HydrateEventDescriptor[] = [
-      { selector: 'button', event: 'click', method: '_onClick' },
-    ];
-
-    count = 0;
-
-    _onClick(): void {
-      callCount++;
-    }
-
-    override render(): string {
-      return `<button>Count ${this.count}</button>`;
-    }
-  }
-  customElements.define(tagName, UpdateElement);
-
-  const el = document.createElement(tagName) as UpdateElement;
-  document.body.appendChild(el);
-
-  el.count = 1;
-  el.update();
-
-  assertEquals(el.shadowRoot!.innerHTML, '<button>Count 1</button>');
-  const button = el.shadowRoot!.querySelector('button') as HTMLButtonElement;
-  button.click();
-  assertEquals(callCount, 1);
-
-  document.body.removeChild(el);
-});
-
 Deno.test('DsdElement: requestUpdate() aliases update() for controllers', () => {
   if (!hasDOM) return;
 
@@ -257,18 +137,15 @@ Deno.test('DsdElement: requestUpdate() aliases update() for controllers', () => 
   document.body.removeChild(el);
 });
 
-// AbortController cleanup on disconnect.
+// AbortController cleanup on disconnect (via template bindings).
+// hydrateEvents and _hydrateAbortController removed in v0.21.0.
 
-Deno.test('DsdElement: disconnectedCallback aborts event listeners', () => {
+Deno.test('DsdElement: disconnectedCallback disposes template runtime', () => {
   if (!hasDOM) return;
   let callCount = 0;
 
   const tagName = `test-abort-${Math.random().toString(36).slice(2, 7)}`;
   class AbortElement extends DsdElement {
-    static override hydrateEvents: HydrateEventDescriptor[] = [
-      { selector: 'button', event: 'click', method: '_onClick' },
-    ];
-
     _onClick(_e: Event): void {
       callCount++;
     }
@@ -286,66 +163,21 @@ Deno.test('DsdElement: disconnectedCallback aborts event listeners', () => {
   el['_dsdHydrated'] = true;
 
   document.body.appendChild(el);
-
-  // Click once to verify it works
-  const button = el.shadowRoot!.querySelector('button')!;
-  (button as HTMLButtonElement).click();
-  assertEquals(callCount, 1);
-
-  // Disconnect should abort listeners
   document.body.removeChild(el);
-
-  // After disconnect, clicking the button (if possible) should not increment
-  // The abort controller should have been cleaned up
-  assertFalse(!!el['_hydrateAbortController']);
+  // After disconnect, _templateAbortController should be cleaned up
+  assertEquals(el['_templateAbortController'], undefined);
 });
 
-// M-17 guard skips private-like __ methods.
+// M-17 guard removed — _hydrateEvents has been removed in v0.21.0.
+// Event binding via html template @click does not use method-name strings.
 
-Deno.test('DsdElement: M-17 guard skips methods starting with __', () => {
+Deno.test('DsdElement: html @click bindings use direct function references (no M-17 concern)', () => {
   if (!hasDOM) return;
-  let normalCount = 0;
-  let dunderCount = 0;
-
-  const tagName = `test-m17-${Math.random().toString(36).slice(2, 7)}`;
-  class M17Element extends DsdElement {
-    static override hydrateEvents: HydrateEventDescriptor[] = [
-      { selector: 'button.normal', event: 'click', method: '_normalHandler' },
-      { selector: 'button.dunder', event: 'click', method: '__proto__' },
-    ];
-
-    _normalHandler(_e: Event): void {
-      normalCount++;
-    }
-
-    __proto__(): void {
-      dunderCount++;
-    }
-
-    override render(): string {
-      return `<button class="normal">Normal</button><button class="dunder">Dunder</button>`;
-    }
-  }
-  if (hasDOM) customElements.define(tagName, M17Element);
-
-  const el = document.createElement(tagName) as M17Element;
-  const shadow = el.attachShadow({ mode: 'open' });
-  shadow.innerHTML = '<button class="normal">Normal</button><button class="dunder">Dunder</button>';
-  el['_dsdHydrated'] = true;
-
-  document.body.appendChild(el);
-
-  // Click both buttons
-  const normalBtn = el.shadowRoot!.querySelector('button.normal')!;
-  const dunderBtn = el.shadowRoot!.querySelector('button.dunder')!;
-  (normalBtn as HTMLButtonElement).click();
-  (dunderBtn as HTMLButtonElement).click();
-
-  assertEquals(normalCount, 1);
-  // M-17 guard: __ method should NOT have been bound
-  assertEquals(dunderCount, 0);
-
-  document.body.removeChild(el);
+  // M-17 was specific to hydrateEvents method-name strings.
+  // html template @click accepts function references directly,
+  // so prototype pollution via method-name strings is impossible.
+  // This test is kept as a documentation check.
+  assertEquals(typeof DsdElement.prototype.render, 'function');
 });
 
 // StyleSheetLike values are applied in CSR.

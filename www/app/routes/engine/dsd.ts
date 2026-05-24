@@ -5,6 +5,7 @@ import { filterEngineNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/core';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
+import '../../islands/reactive-showcase.js';
 
 const routeSheet = new StyleSheet();
 
@@ -125,6 +126,14 @@ export class DsdGuidePage extends DsdElement {
             LessJS 应通过 Playwright 验证目标浏览器行为。旧浏览器 polyfill 只能作为降级路径，不能替代真实浏览器验证。
           </p>
 
+          <h2>Reactive DSD（v0.21）</h2>
+          <p>
+            DsdElement + Signals 让 Ocean 组件获得零框架响应式。
+            一个 <code>signal(0)</code> 驱动计数器，一个 <code>computed()</code> 驱动过滤器——
+            不需要 Lit、React 或任何框架运行时。
+          </p>
+          <reactive-showcase></reactive-showcase>
+
           <div class="nav-row">
             <a href="/engine/architecture" class="nav-link">&larr; Architecture</a>
             <a href="/engine/islands" class="nav-link">Island Upgrade &rarr;</a>
@@ -218,6 +227,14 @@ export class DsdGuidePage extends DsdElement {
             LessJS should validate target browser behavior with Playwright. Polyfills for older browsers
             are graceful fallback, not a replacement for real-browser validation.
           </p>
+
+          <h2>Reactive DSD (v0.21)</h2>
+          <p>
+            DsdElement + Signals gives Ocean components zero-framework reactivity.
+            A single <code>signal(0)</code> drives a counter, a <code>computed()</code> drives a filter —
+            no Lit, React, or any framework runtime required.
+          </p>
+          <reactive-showcase></reactive-showcase>
 
           <div class="nav-row">
             <a href="/engine/architecture" class="nav-link">&larr; Architecture</a>

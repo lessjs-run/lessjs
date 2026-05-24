@@ -5,17 +5,19 @@
  *   - Declarative Shadow DOM (DSD) detection at upgrade time
  *   - Client-Side Rendering (CSR) fallback when no DSD content exists
  *   - StyleSheet (SSR-safe CSSStyleSheet) via adoptedStyleSheets
- *   - Declarative event hydration via static hydrateEvents
+ *   - Declarative event binding via html template @click / @keydown etc.
+ *   - Signal-driven fine-grained DOM patching via data-less-b markers
  *   - AbortController cleanup on disconnect
  *   - formAssociated + delegatesFocus support
+ *   - ReactiveHost protocol for explicit Signal integration
  *
  * DsdElement extends HTMLElement directly - ZERO Lit dependency.
- * Components return `render(): string` (plain HTML), not TemplateResult.
+ * Components return `render(): string | TemplateResult`.
  *
  * Lifecycle:
  *   SSR: instantiate -> set props -> render() -> wrap in DSD template
- *   Client (DSD): browser attaches shadow root from DSD -> upgrade -> _hydrateEvents()
- *   Client (CSR): connectedCallback -> createRenderRoot -> shadowRoot.innerHTML = render()
+ *   Client (DSD): browser attaches shadow root from DSD -> upgrade -> bind template events
+ *   Client (CSR): connectedCallback -> createRenderRoot -> render into shadowRoot
  *
  * Usage (static DSD component):
  * ```ts
@@ -28,15 +30,16 @@
  * customElements.define('my-card', MyCard);
  * ```
  *
- * Usage (DSD interactive component):
+ * Usage (reactive DSD component):
  * ```ts
  * class MyToggle extends DsdElement {
- *   static hydrateEvents = [
- *     { selector: 'button', event: 'click', method: '_handleToggle' },
- *   ];
- *   _handleToggle(e: Event) { ... }
- *   render(): string {
- *     return `<button>Toggle</button>`;
+ *   #active = signal(false);
+ *   render() {
+ *     return html`
+ *       <button @click=${() => this.#active.value = !this.#active.value}>
+ *         ${this.#active.value ? 'ON' : 'OFF'}
+ *       </button>
+ *     `;
  *   }
  * }
  * ```
@@ -44,14 +47,22 @@
  * @module @lessjs/core/dsd-element
  */
 
-import type { HydrateEventDescriptor } from './types.js';
+import type { ReactiveHost } from './types.js';
 import type { StyleSheetLike } from './style-sheet.js';
+import {
+  applyRuntimeTemplateBindings,
+  collectTemplateSignals,
+  isSignalLike,
+  isTemplateResult,
+  renderTemplateToString,
+  type TemplateResult,
+} from './template.js';
 
 /**
  * Server-safe base class fallback when HTMLElement is unavailable
  * (Node.js / Deno server environments without DOM globals).
  *
- * In SSR/build contexts, DsdElement is only used for its render(): string
+ * In SSR/build contexts, DsdElement is only used for its render() output
  * method and static property access - the class is never instantiated as
  * a live Custom Element. This stub ensures the class declaration itself
  * does not throw at module evaluation time.
@@ -66,17 +77,11 @@ const _HTMLElement: typeof HTMLElement = typeof HTMLElement !== 'undefined'
  * Provides DSD detection, CSR fallback, event hydration, and style management
  * without any framework dependency (no Lit, no reactive-element).
  *
- * Subclasses MUST override `render(): string`.
+ * Subclasses MUST override `render(): string | TemplateResult`.
  */
-export class DsdElement extends _HTMLElement {
+export class DsdElement extends _HTMLElement implements ReactiveHost {
   /** Component stylesheets (SSR-safe - StyleSheet delegates to native CSSStyleSheet in browser). */
   static styles?: StyleSheetLike | StyleSheetLike[];
-
-  /**
-   * Declarative event bindings for DSD hydration.
-   * Each entry maps a CSS selector + DOM event to a method on the instance.
-   */
-  static hydrateEvents?: HydrateEventDescriptor[];
 
   /**
    * Attributes that trigger attributeChangedCallback.
@@ -103,8 +108,17 @@ export class DsdElement extends _HTMLElement {
    */
   protected _dsdHydrated = false;
 
-  /** AbortController for hydration event listener cleanup */
-  private _hydrateAbortController?: AbortController;
+  /** AbortController for html`...` runtime event listener cleanup */
+  private _templateAbortController?: AbortController;
+
+  /** Signal subscriptions collected from the latest TemplateResult */
+  private _signalUnsubscribers: Array<() => void> = [];
+
+  /** Microtask batching guard for signal-driven updates */
+  private _reactiveUpdateQueued = false;
+
+  /** Whether the first render has completed (used to switch from full replace to patch mode) */
+  private _initialRenderDone = false;
 
   /** ElementInternals for form-associated custom elements */
   protected _internals?: ElementInternals;
@@ -173,35 +187,22 @@ export class DsdElement extends _HTMLElement {
   connectedCallback(): void {
     const ctor = this.constructor as typeof DsdElement;
 
-    // Ensure shadow root exists
+    // Ensure shadow root exists and detect DSD pre-population
     if (!this.shadowRoot) {
       this.createRenderRoot();
     } else {
-      // Existing roots with content are DSD upgrades. Empty roots are CSR-owned
-      // and still need render() output.
-      if (this.shadowRoot.childNodes.length > 0) {
-        this._dsdHydrated = true;
-      }
-
-      // Apply adoptedStyleSheets on existing-root paths too.
+      if (this.shadowRoot.childNodes.length > 0) this._dsdHydrated = true;
       this._applyStyles(ctor);
     }
 
-    // Sync data-theme from document root so all components inherit
-    // the current dark/light mode without waiting for external propagation.
+    // Sync data-theme from document root
     const docTheme = document.documentElement?.dataset?.theme;
     if (docTheme && !this.hasAttribute('data-theme')) {
       this.setAttribute('data-theme', docTheme);
     }
 
-    if (this._dsdHydrated) {
-      // DSD path: only bind events - DOM is already present
-      this._hydrateEvents();
-    } else if (this.shadowRoot) {
-      // CSR path: populate shadow DOM from render()
-      this.shadowRoot.innerHTML = this.render();
-      this._hydrateEvents();
-    }
+    // Dispatch: DSD bindings vs CSR full render
+    this._hydrateOrRender();
 
     // Attach ElementInternals for form-associated custom elements
     if (ctor.formAssociated && typeof this.attachInternals === 'function') {
@@ -210,14 +211,28 @@ export class DsdElement extends _HTMLElement {
   }
 
   /**
+   * Dispatch between DSD event binding (existing DOM) and CSR full render.
+   *
+   * DSD path: bind events/signals against pre-populated DOM, mark
+   * _initialRenderDone so signal-driven updates use _patchBindings.
+   * CSR path: populate shadow DOM from render().
+   */
+  private _hydrateOrRender(): void {
+    if (this._dsdHydrated) {
+      this._bindCurrentRenderTemplate();
+      this._initialRenderDone = true;
+    } else if (this.shadowRoot) {
+      this._renderIntoShadowRoot();
+    }
+  }
+
+  /**
    * Lifecycle: called when the element is disconnected from the DOM.
    * Aborts all hydration event listeners for cleanup.
    */
   disconnectedCallback(): void {
-    if (this._hydrateAbortController) {
-      this._hydrateAbortController.abort();
-      this._hydrateAbortController = undefined;
-    }
+    this._disposeTemplateRuntime();
+    this._disposeSignalSubscriptions();
   }
 
   /**
@@ -247,9 +262,7 @@ export class DsdElement extends _HTMLElement {
    * duplicating `shadowRoot.innerHTML = this.render()` and event hydration.
    */
   update(): void {
-    if (!this.shadowRoot) return;
-    this.shadowRoot.innerHTML = this.render();
-    this._hydrateEvents();
+    this._renderIntoShadowRoot();
   }
 
   /**
@@ -264,43 +277,145 @@ export class DsdElement extends _HTMLElement {
   }
 
   /**
-   * Bind declared events to existing shadow DOM elements after DSD upgrade.
+   * ReactiveHost: subscribe to a reactive source.
    *
-   * Iterates `static hydrateEvents` from the constructor, queries the shadow
-   * root for matching elements, and attaches event listeners that delegate to
-   * the component's methods. Each listener is bound with an AbortSignal for
-   * automatic cleanup on disconnect.
-   *
-   * M-17 guard: methods starting with `__` are skipped to prevent prototype
-   * pollution attacks via hydration descriptors.
+   * The host receives a subscription callback from any Signal-like source.
+   * On value change, `requestReactiveUpdate()` is called to schedule a
+   * microtask-batched DOM patch.
    */
-  protected _hydrateEvents(): void {
-    if (!this.shadowRoot) return;
-
-    const ctor = this.constructor as typeof DsdElement & {
-      hydrateEvents?: HydrateEventDescriptor[];
-    };
-    const events = ctor.hydrateEvents || [];
-    if (events.length === 0) return;
-
-    // Abort any previous hydration listeners to prevent memory leaks
-    // when _hydrateEvents is called multiple times (e.g. after _reRender)
-    if (this._hydrateAbortController) {
-      this._hydrateAbortController.abort();
-    }
-    this._hydrateAbortController = new AbortController();
-    const { signal } = this._hydrateAbortController;
-
-    for (const desc of events) {
-      // M-17 guard: skip methods starting with __
-      if (desc.method.startsWith('__')) continue;
-      const elements = this.shadowRoot.querySelectorAll(desc.selector);
-      for (const el of elements) {
-        const handler = (this as unknown as Record<string, unknown>)[desc.method];
-        if (typeof handler === 'function') {
-          el.addEventListener(desc.event, (handler as EventListener).bind(this), { signal });
-        }
+  subscribeTo(source: { subscribe(fn: (value: unknown) => void): () => void }): () => void {
+    let initial = true;
+    const unsubscribe = source.subscribe(() => {
+      if (initial) {
+        initial = false;
+        return;
       }
+      this.requestReactiveUpdate();
+    });
+    return unsubscribe;
+  }
+
+  /**
+   * ReactiveHost: request a reactive update.
+   *
+   * Public entry point for external signal libraries. Batched via microtask.
+   */
+  requestReactiveUpdate(): void {
+    this._scheduleReactiveUpdate();
+  }
+
+  private _renderIntoShadowRoot(): void {
+    if (!this.shadowRoot) return;
+    this._disposeTemplateRuntime();
+    this._disposeSignalSubscriptions();
+
+    const result = this.render();
+    if (isTemplateResult(result)) {
+      this.shadowRoot.innerHTML = renderTemplateToString(result, { runtimeMarkers: true });
+      this._bindTemplateRuntime(result);
+      this._subscribeTemplateSignals(result);
+    } else {
+      this.shadowRoot.innerHTML = result;
+    }
+  }
+
+  /**
+   * v0.21: Fine-grained DOM patching for reactive signal updates.
+   *
+   * Instead of replacing the entire shadowRoot.innerHTML, this method
+   * queries for [data-less-b="N"] markers and patches only those nodes.
+   * Events (@click) and properties (.value) use existing markers
+   * (data-less-event-N / data-less-prop-N).
+   *
+   * Preserves focus, scroll, CSS transitions, and input state.
+   */
+  private _patchBindings(): void {
+    if (!this.shadowRoot) return;
+    try {
+      this._disposeTemplateRuntime();
+      this._disposeSignalSubscriptions();
+
+      const result = this.render();
+      if (!isTemplateResult(result)) return;
+
+      // Re-bind event handlers and property bindings
+      this._bindTemplateRuntime(result);
+      this._subscribeTemplateSignals(result);
+
+      // Patch signal text values using data-less-b markers
+      const values = result.values;
+      for (let i = 0; i < values.length; i++) {
+        const value = values[i];
+        if (!isSignalLike(value)) continue;
+        const el = this.shadowRoot.querySelector(`[data-less-b="${i}"]`);
+        if (!el) continue;
+        const raw = (value as { value: unknown }).value;
+        el.textContent = raw == null ? '' : String(raw);
+      }
+    } catch (err) {
+      console.warn(
+        `[DsdElement] _patchBindings failed for <${this.tagName.toLowerCase()}>:`,
+        err,
+      );
+      // Leave last good DOM in place
+    }
+  }
+
+  private _bindCurrentRenderTemplate(): void {
+    this._disposeTemplateRuntime();
+    this._disposeSignalSubscriptions();
+
+    const result = this.render();
+    if (!isTemplateResult(result) || !this.shadowRoot) return;
+    this._bindTemplateRuntime(result);
+    this._subscribeTemplateSignals(result);
+  }
+
+  private _bindTemplateRuntime(result: TemplateResult): void {
+    if (!this.shadowRoot) return;
+    this._templateAbortController = new AbortController();
+    applyRuntimeTemplateBindings(
+      this.shadowRoot,
+      result,
+      this,
+      this._templateAbortController.signal,
+    );
+  }
+
+  private _subscribeTemplateSignals(result: TemplateResult): void {
+    for (const signal of collectTemplateSignals(result)) {
+      // Use ReactiveHost.subscribeTo() protocol instead of Duck Typing
+      const unsubscribe = this.subscribeTo(signal);
+      this._signalUnsubscribers.push(unsubscribe);
+    }
+  }
+
+  private _scheduleReactiveUpdate(): void {
+    if (this._reactiveUpdateQueued) return;
+    this._reactiveUpdateQueued = true;
+    queueMicrotask(() => {
+      this._reactiveUpdateQueued = false;
+      if (!this.isConnected) return;
+      // v0.21: initial render uses full innerHTML, subsequent updates use fine-grained patch
+      if (this._initialRenderDone) {
+        this._patchBindings();
+      } else {
+        this._renderIntoShadowRoot();
+        this._initialRenderDone = true;
+      }
+    });
+  }
+
+  private _disposeTemplateRuntime(): void {
+    if (this._templateAbortController) {
+      this._templateAbortController.abort();
+      this._templateAbortController = undefined;
+    }
+  }
+
+  private _disposeSignalSubscriptions(): void {
+    for (const unsubscribe of this._signalUnsubscribers.splice(0)) {
+      unsubscribe();
     }
   }
 
@@ -321,15 +436,16 @@ export class DsdElement extends _HTMLElement {
   }
 
   /**
-   * Return Shadow DOM inner HTML as a string.
+   * Return Shadow DOM inner HTML as a string or safe TemplateResult.
    *
-   * Subclasses MUST override this method. During SSR, this string is
-   * wrapped in a <template shadowrootmode="open"> tag. During CSR,
-   * it is assigned to `shadowRoot.innerHTML`.
+   * Subclasses MUST override this method. During SSR, rendered content is
+   * wrapped in a <template shadowrootmode="open"> tag. During CSR, strings are
+   * assigned to `shadowRoot.innerHTML`; TemplateResult values also get runtime
+   * event/property bindings and signal subscriptions.
    *
-   * @returns HTML string for the shadow DOM content.
+   * @returns HTML string or TemplateResult for the shadow DOM content.
    */
-  render(): string {
+  render(): string | TemplateResult {
     return '';
   }
 }

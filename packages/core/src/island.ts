@@ -3,7 +3,7 @@
  *
  * v0.6.2: island() wraps any Custom Element class to provide:
  *   - Automatic registration via customElements.define()
- *   - Upgrade strategy support (eager, lazy, visible)
+ *   - Hydration strategy support (load, idle, visible, only)
  *   - __island / __tagName / __layer metadata markers
  *   - data-ssr-props property binding on client upgrade (less:bind)
  *   - DSD opt-out via `dsd: false` (Pure Island / Layer 3)
@@ -23,17 +23,17 @@
  *   render() { return html`<button @click=${() => this.count++}>${this.count}</button>`; }
  * }
  *
- * // Register with eager strategy (DSD enabled by default)
- * export default island('my-counter', MyCounter, { strategy: 'eager' });
+ * // Register with load strategy (DSD enabled by default)
+ * export default island('my-counter', MyCounter, { strategy: 'load' });
  *
  * // Pure Island - no DSD, full framework reactivity
- * export default island('my-counter', MyCounter, { strategy: 'eager', dsd: false });
+ * export default island('my-counter', MyCounter, { strategy: 'only' });
  * ```
  *
  * Web Standards alignment:
  *   - Uses standard customElements.define() API
  *   - IntersectionObserver for visible strategy
- *   - requestIdleCallback for lazy strategy
+ *   - requestIdleCallback for idle strategy
  *   - Zero framework runtime - just native platform APIs
  *
  * @module @lessjs/core/island
@@ -42,7 +42,9 @@
 /** Island registration options */
 
 import { createLogger } from './logger.js';
+import type { HydrationStrategy } from './types.js';
 const log = createLogger('core');
+const VALID_STRATEGIES = new Set<HydrationStrategy>(['load', 'idle', 'visible', 'only']);
 
 // Module-level store of active visibility strategy timeout IDs.
 // Used for test cleanup - tests can call _clearAllVisibilityTimeouts()
@@ -58,13 +60,13 @@ export function _clearAllVisibilityTimeouts(): void {
 }
 
 export interface IslandOptions {
-  /** Upgrade strategy:
-   *   - 'eager': load immediately when module is imported
-   *   - 'lazy':  defer to requestIdleCallback (default)
+  /** Hydration strategy:
+   *   - 'load': load immediately when module is imported
+   *   - 'idle': defer to requestIdleCallback (default)
    *   - 'visible': use IntersectionObserver to defer until element is visible
-   *   - 'idle': same as lazy (requestIdleCallback)
+   *   - 'only': client-only render, no DSD/SSR output
    */
-  strategy?: 'eager' | 'lazy' | 'idle' | 'visible';
+  strategy?: HydrationStrategy;
 
   /** Optional tag name override. If provided, used instead of the first argument. */
   tagName?: string;
@@ -118,8 +120,8 @@ export function getSSRProps(el: HTMLElement): Record<string, unknown> | null {
  *
  * v0.6.2: Framework-agnostic. No Lit-specific detection.
  * Props are set directly on the instance. DSD hydration (event binding,
- * state sync) is handled at the component level via WithDsdHydration
- * Mixin and declarative hydrateEvents.
+ * state sync) is handled at the component level via DsdElement
+ * and html template @click bindings.
  *
  * v0.14.3: Prototype pollution fix - filters dangerous keys
  * (__proto__, constructor, prototype) from parsed SSR props.
@@ -131,24 +133,7 @@ export function getSSRProps(el: HTMLElement): Record<string, unknown> | null {
  * v0.14.7: Extended to cover all Object.prototype methods that could be
  * exploited via arbitrary property assignment (C-03 fix).
  */
-const DANGEROUS_KEYS: Set<string> = new Set([
-  '__proto__',
-  'constructor',
-  'prototype',
-  '__defineGetter__',
-  '__defineSetter__',
-  '__lookupGetter__',
-  '__lookupSetter__',
-  'hasOwnProperty',
-  'isPrototypeOf',
-  'propertyIsEnumerable',
-  'toString',
-  'toLocaleString',
-  'valueOf',
-]);
-
-/** Export DANGEROUS_KEYS for reuse in render-dsd.ts (C-04 fix). */
-export { DANGEROUS_KEYS };
+import { DANGEROUS_KEYS } from './security.js';
 
 export function lessBind(el: HTMLElement): void {
   const props = getSSRProps(el);
@@ -259,13 +244,13 @@ function createVisibleStrategy(
 }
 
 /**
- * Create a lazy (requestIdleCallback-based) upgrade strategy.
+ * Create an idle (requestIdleCallback-based) hydration strategy.
  * v0.6': Improved fallback chain:
  *   1. requestIdleCallback (optimal, progressive)
  *   2. requestAnimationFrame (next frame, good for interaction)
  *   3. setTimeout(fn, 50) (final fallback, shorter than old 200ms)
  */
-function createLazyStrategy(registerFn: () => void): void {
+function createIdleStrategy(registerFn: () => void): void {
   const g = globalThis as unknown as {
     requestIdleCallback?: (fn: () => void) => void;
     requestAnimationFrame?: (fn: () => void) => number;
@@ -312,8 +297,8 @@ function createLazyStrategy(registerFn: () => void): void {
  * // With visible strategy (IntersectionObserver)
  * export default island('my-counter', MyCounter, { strategy: 'visible' });
  *
- * // With eager strategy (immediate upgrade)
- * export default island('my-counter', MyCounter, { strategy: 'eager' });
+ * // With load strategy (immediate upgrade)
+ * export default island('my-counter', MyCounter, { strategy: 'load' });
  * ```
  */
 export function island<T extends CustomElementConstructor>(
@@ -321,8 +306,14 @@ export function island<T extends CustomElementConstructor>(
   componentClass: T,
   options: IslandOptions = {},
 ): T {
-  const strategy = options.strategy || 'lazy';
-  const useDsd = options.dsd !== false; // default true
+  const strategy = options.strategy || 'idle';
+  if (!VALID_STRATEGIES.has(strategy)) {
+    throw new Error(
+      `[LessJS] Invalid island hydration strategy "${String(strategy)}". ` +
+        'Use one of: load, idle, visible, only.',
+    );
+  }
+  const useDsd = strategy === 'only' ? false : options.dsd !== false; // default true
 
   // Validate tag name per WHATWG Custom Element name rules
   // https://html.spec.whatwg.org/multipage/custom-elements.html#valid-custom-element-name
@@ -410,24 +401,30 @@ export function island<T extends CustomElementConstructor>(
     }
   };
 
-  // Apply strategy
-  switch (strategy) {
-    case 'eager':
-      register();
-      break;
+  // SSR guard: browser-specific strategy scheduling is a no-op during SSR.
+  // IntersectionObserver, MutationObserver etc. are browser-only APIs.
+  // During SSR we just define the custom element and let the generated
+  // client entry handle strategy dispatch in the browser.
+  const isBrowser = typeof IntersectionObserver !== 'undefined';
 
-    case 'lazy':
-    case 'idle':
-      createLazyStrategy(register);
-      break;
-
-    case 'visible':
-      createVisibleStrategy(tagName, register);
-      break;
-
-    default:
-      createLazyStrategy(register);
-      break;
+  if (isBrowser) {
+    switch (strategy) {
+      case 'load':
+        register();
+        break;
+      case 'idle':
+        createIdleStrategy(register);
+        break;
+      case 'visible':
+        createVisibleStrategy(tagName, register);
+        break;
+      case 'only':
+        register();
+        break;
+    }
+  } else {
+    // SSR path: define the element idempotently, strategy runs on client.
+    register();
   }
 
   return componentClass;

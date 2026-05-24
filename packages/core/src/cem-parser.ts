@@ -220,7 +220,7 @@ export async function readCemFile(filePath: string): Promise<CemParseResult> {
  * Applies conservative defaults:
  * - less.ssr ??= false (CEM describes elements, not SSR safety)
  * - less.dsd ??= false
- * - hydrate.strategy ??= 'client'
+ * - hydrate.strategy ??= 'idle'
  *
  * @param manifest - Parsed CEM manifest
  * @returns Array of compatibility classifications
@@ -261,7 +261,7 @@ export function classifyCemManifest(
       less.ssr ??= false;
       less.dsd ??= false;
       if (less.hydrate === undefined) {
-        less.hydrate = 'lazy';
+        less.hydrate = 'idle';
       }
 
       // Classify based on LessJS extensions

@@ -18,7 +18,7 @@
  * ```
  */
 
-import { DsdElement, StyleSheet, type StyleSheetLike } from '@lessjs/core';
+import { DsdElement, html, StyleSheet } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-callout';
@@ -46,7 +46,7 @@ const TYPE_CONFIG: Record<string, { borderColor: string; bgColor: string; icon: 
   },
 };
 
-const sheet: StyleSheetLike = new StyleSheet();
+const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;
@@ -88,25 +88,29 @@ export class LessCallout extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['type', 'label'];
 
-  override render(): string {
+  override render() {
     const type = this.getAttribute('type') || 'info';
     const label = this.getAttribute('label') || '';
     const config = TYPE_CONFIG[type] || TYPE_CONFIG.info;
 
     const header = label
-      ? `<div class="callout-header">
+      ? html`
+        <div class="callout-header">
           <span class="callout-icon" part="icon">${config.icon}</span>
           <span class="callout-title">${this._esc(label)}</span>
-        </div>`
+        </div>
+      `
       : '';
 
-    return `<div class="callout" part="container"
-        style="border-left-color:${config.borderColor};background:${config.bgColor};">
-      ${header}
-      <div class="callout-body" part="content">
-        <slot></slot>
+    return html`
+      <div class="callout" part="container" style="border-left-color:${config
+        .borderColor};background:${config.bgColor};">
+        ${header}
+        <div class="callout-body" part="content">
+          <slot></slot>
+        </div>
       </div>
-    </div>`;
+    `;
   }
 
   override attributeChangedCallback(_name: string, old: string | null, val: string | null): void {

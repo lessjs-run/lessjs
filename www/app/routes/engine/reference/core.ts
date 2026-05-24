@@ -115,7 +115,7 @@ export default class ApiCorePage extends DsdElement {
             <div class="fn-name">island()</div>
             <div class="fn-sig">island(componentClass, options?): CustomElementConstructor</div>
             <div class="fn-desc">
-              为 CE 类包装 Island 升级逻辑。支持 4 种策略：eager、lazy、idle、visible。
+              为 CE 类包装 Island 升级逻辑。支持 4 种策略：load、idle、visible、only。
             </div>
 
             <div class="fn-name">lessBind() / getSSRProps()</div>
@@ -334,6 +334,24 @@ export default class ApiCorePage extends DsdElement {
               dsd-interactive, pure-island.
             </div>
 
+            <div class="fn-name">html() / unsafeHTML()</div>
+            <div class="fn-sig">
+              html(strings, ...values): TemplateResult - unsafeHTML(value): UnsafeHtmlValue
+            </div>
+            <div class="fn-desc">
+              Reactive DSD template API. Dynamic text and attributes are escaped by default;
+              unsafeHTML is the explicit trust boundary for audited raw markup.
+            </div>
+
+            <div class="fn-name">renderDSDStream()</div>
+            <div class="fn-sig">
+              renderDSDStream(components, options?): ReadableStream&lt;Uint8Array&gt;
+            </div>
+            <div class="fn-desc">
+              Streams a document shell, DSD component chunks, and footer using Web Streams so
+              request-time handlers can return new Response(stream).
+            </div>
+
             <div class="fn-name">renderDSDByName()</div>
             <div class="fn-sig">
               renderDSDByName(tagName, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;
@@ -353,8 +371,8 @@ export default class ApiCorePage extends DsdElement {
             <div class="fn-name">island()</div>
             <div class="fn-sig">island(componentClass, options?): CustomElementConstructor</div>
             <div class="fn-desc">
-              Wraps a CE class with island upgrade logic. Supports 4 strategies: eager, lazy, idle,
-              visible.
+              Wraps a CE class with island upgrade logic. Supports 4 strategies: load, idle,
+              visible, only.
             </div>
 
             <div class="fn-name">lessBind() / getSSRProps()</div>

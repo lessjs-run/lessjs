@@ -68,16 +68,15 @@ export function islandEffect(
 }
 
 /**
- * @deprecated
- * Current implementation is a no-op placeholder until the TC39 Signal
- * specification finalizes native batching support. At that point, this
- * function will be updated to batch multiple signal writes into a single
- * reactive update.
- *
- * Using this function currently provides no optimization benefit.
- * You can safely remove calls to batch() without changing behavior.
+ * @deprecated v0.21.0: batch() is a no-op. DsdElement already batches signal
+ * writes at the microtask level via _scheduleReactiveUpdate(). This function
+ * will be removed in v1.0.0. Simply remove calls to batch() — no replacement needed.
  */
 export function batch<T>(fn: () => T): T {
+  console.warn(
+    '[LessJS/Signals] batch() is deprecated and a no-op. ' +
+      'DsdElement automatically batches signal updates. Remove batch() calls.',
+  );
   return fn();
 }
 

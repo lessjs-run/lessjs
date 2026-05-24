@@ -9,7 +9,7 @@
  * DOM globals. The class is just a placeholder for metadata export.
  */
 
-export const less = { ssr: true, dsd: true, hydrate: 'eager' };
+export const less = { ssr: true, dsd: true, hydrate: 'load' };
 
 export default class ParentWithClientChild {
   // Placeholder - in browser this would extend HTMLElement

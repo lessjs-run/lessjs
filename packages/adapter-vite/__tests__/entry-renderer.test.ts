@@ -4,7 +4,7 @@
  * Snapshot tests for renderEntry output covering:
  * - CSP middleware (with/without nonce)
  * - _renderer.ts / _middleware.ts special routes
- * - Island upgrade strategies (eager/lazy/idle/visible)
+ * - Island upgrade strategies (load/idle/visible/only)
 // Package islands
 // Code structure validation
  */
@@ -58,7 +58,7 @@ const withSpecialRoutes: RouteEntry[] = [
   },
 ];
 
-// ─── CSP Tests ───────────────────────────────────────────────
+// 鈹€鈹€鈹€ CSP Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('renderEntry: CSP without nonce generates header middleware', () => {
   const desc = buildEntryDescriptor(basicRoutes, {
@@ -128,7 +128,7 @@ Deno.test('buildEntryDescriptor: CSP config is serialized into descriptor', () =
   assertEquals(cspMw.config?.csp?.nonce, true);
 });
 
-// ─── Renderer / Middleware Special Routes ───────────────────
+// 鈹€鈹€鈹€ Renderer / Middleware Special Routes 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('renderEntry: _renderer.ts generates wrap call', () => {
   const desc = buildEntryDescriptor(withSpecialRoutes);
@@ -167,31 +167,31 @@ Deno.test('buildEntryDescriptor: special routes are separated from page/api', ()
 
 // Island upgrade strategy tests
 
-Deno.test('buildEntryDescriptor: upgradeStrategy is recorded (eager)', () => {
+Deno.test('buildEntryDescriptor: upgradeStrategy is recorded (load)', () => {
   const desc = buildEntryDescriptor(basicRoutes, {
     islandTagNames: ['my-counter'],
-    upgradeStrategy: 'eager',
+    upgradeStrategy: 'load',
   });
 
-  assertEquals(desc.upgradeStrategy, 'eager');
+  assertEquals(desc.upgradeStrategy, 'load');
 });
 
 Deno.test('buildEntryDescriptor: upgradeStrategy is recorded (visible)', () => {
   const desc = buildEntryDescriptor(basicRoutes, {
-    islandTagNames: ['lazy-image'],
+    islandTagNames: ['idle-image'],
     upgradeStrategy: 'visible',
   });
 
   assertEquals(desc.upgradeStrategy, 'visible');
 });
 
-Deno.test('buildEntryDescriptor: default upgradeStrategy is lazy', () => {
+Deno.test('buildEntryDescriptor: default upgradeStrategy is idle', () => {
   const desc = buildEntryDescriptor(basicRoutes, {
     islandTagNames: ['my-counter'],
   });
 
-  // Default should be 'lazy'
-  assertEquals(desc.upgradeStrategy, 'lazy');
+  // Default should be 'idle'
+  assertEquals(desc.upgradeStrategy, 'idle');
 });
 
 // Package islands
@@ -209,12 +209,12 @@ Deno.test('renderEntry: package islands are included in island upgrade entry', (
           {
             tagName: 'less-layout',
             className: 'LessLayout',
-            less: { module: '@lessjs/ui/less-layout', hydrate: 'eager' },
+            less: { module: '@lessjs/ui/less-layout', hydrate: 'load' },
           },
           {
             tagName: 'less-button',
             className: 'LessButton',
-            less: { module: '@lessjs/ui/less-button', hydrate: 'lazy' },
+            less: { module: '@lessjs/ui/less-button', hydrate: 'idle' },
           },
         ],
       },
@@ -238,12 +238,12 @@ Deno.test('renderEntry: package islands are not imported by SSR entry', () => {
           {
             tagName: 'less-layout',
             className: 'LessLayout',
-            less: { module: '@lessjs/ui/less-layout', hydrate: 'eager' },
+            less: { module: '@lessjs/ui/less-layout', hydrate: 'load' },
           },
           {
             tagName: 'less-button',
             className: 'LessButton',
-            less: { module: '@lessjs/ui/less-button', hydrate: 'lazy' },
+            less: { module: '@lessjs/ui/less-button', hydrate: 'idle' },
           },
         ],
       },
@@ -276,12 +276,13 @@ Deno.test('renderEntry: no bare process.env references', () => {
   );
 });
 
-Deno.test('renderEntry: app.route for API routes (not app.all)', () => {
+Deno.test('renderEntry: API routes support Hono apps and direct functions', () => {
   const desc = buildEntryDescriptor(basicRoutes);
   const code = renderEntry(desc);
 
   assertStringIncludes(code, "app.route('/api/hello'");
-  assertEquals(code.includes("app.all('/api/hello'"), false);
+  assertStringIncludes(code, "app.all('/api/hello'");
+  assertStringIncludes(code, 'request: c.req.raw');
   assertEquals(code.includes("app.get('/api/hello'"), false);
 });
 
@@ -309,7 +310,7 @@ Deno.test('renderEntry: SSG mode includes no DOM shim (DSD renderer)', () => {
   assertEquals(code.includes('install-global-dom-shim'), false);
 });
 
-// ─── Integration: Full Pipeline ────────────────────────────
+// 鈹€鈹€鈹€ Integration: Full Pipeline 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('generateHonoEntryCode: CSP flows through full pipeline', () => {
   const code = generateHonoEntryCode(basicRoutes, {
@@ -345,14 +346,14 @@ Deno.test('generateHonoEntryCode: complex scenario with all features', () => {
           {
             tagName: 'less-layout',
             className: 'LessLayout',
-            less: { module: '@lessjs/ui/less-layout', hydrate: 'eager' },
+            less: { module: '@lessjs/ui/less-layout', hydrate: 'load' },
           },
         ],
       },
     ],
-    html: { lang: 'zh-CN', title: 'LessJS 文档' },
+    html: { lang: 'zh-CN', title: 'LessJS 鏂囨。' },
     headExtras: '<link rel="stylesheet" href="/styles.css" />',
-    upgradeStrategy: 'lazy',
+    upgradeStrategy: 'idle',
   });
 
   // All features present
@@ -363,14 +364,14 @@ Deno.test('generateHonoEntryCode: complex scenario with all features', () => {
   assertStringIncludes(code, '_middleware');
   assertStringIncludes(code, 'less-layout');
   assertStringIncludes(code, 'lang: "zh-CN"');
-  assertStringIncludes(code, 'LessJS 文档');
+  assertStringIncludes(code, 'LessJS 鏂囨。');
   assertStringIncludes(code, '/styles.css');
   // No process.env
   const codeLines = code.split('\n').filter((l) => !l.trimStart().startsWith('//'));
   assertFalse(codeLines.some((l) => l.includes('process.env')));
 });
 
-// ─── Additional Branch Coverage ──────────────────────────
+// 鈹€鈹€鈹€ Additional Branch Coverage 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('renderEntry: CSP nonce with existing script-src in policy', () => {
   const desc = buildEntryDescriptor(basicRoutes, {
@@ -485,7 +486,7 @@ Deno.test('renderEntry: SSG mode disabled by default', () => {
   assertEquals(code.includes('install-global-dom-shim'), false);
 });
 
-// ─── SSR Filtering (v0.17.2) ──────────────────────────────────
+// 鈹€鈹€鈹€ SSR Filtering (v0.17.2) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('renderEntry: local island with ssr===true is registered in SSR', () => {
   const desc = buildEntryDescriptor(basicRoutes, {
@@ -530,12 +531,12 @@ Deno.test('renderEntry: package island with ssr===false excluded from SSR but in
           {
             tagName: 'less-layout',
             className: 'LessLayout',
-            less: { module: '@lessjs/ui/less-layout', hydrate: 'eager', ssr: true },
+            less: { module: '@lessjs/ui/less-layout', hydrate: 'load', ssr: true },
           },
           {
             tagName: 'less-widget',
             className: 'LessWidget',
-            less: { module: '@lessjs/ui/less-widget', hydrate: 'lazy', ssr: false },
+            less: { module: '@lessjs/ui/less-widget', hydrate: 'idle', ssr: false },
           },
         ],
       },

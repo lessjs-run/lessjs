@@ -5,12 +5,12 @@ Deno.test('empty -> zero JS', () => {
   assert(generateClientEntry([]).includes('zero client JS needed'));
 });
 
-Deno.test('eager island loads immediately', () => {
+Deno.test('client:load island loads immediately', () => {
   const code = generateClientEntry([
-    { tagName: 'less-theme-toggle', modulePath: '@lessjs/ui/less-theme-toggle', strategy: 'eager' },
+    { tagName: 'less-theme-toggle', modulePath: '@lessjs/ui/less-theme-toggle', strategy: 'load' },
   ]);
   assert(code.includes('import("@lessjs/ui/less-theme-toggle")'));
-  assert(code.includes('Eager islands'));
+  assert(code.includes('client:load islands'));
   try {
     new Function(code);
   } catch (e) {
@@ -18,9 +18,9 @@ Deno.test('eager island loads immediately', () => {
   }
 });
 
-Deno.test('lazy island deferred to idle', () => {
+Deno.test('client:idle island deferred to idle', () => {
   const code = generateClientEntry([
-    { tagName: 'less-hero-ping', modulePath: './ping.ts', strategy: 'lazy' },
+    { tagName: 'less-hero-ping', modulePath: './ping.ts', strategy: 'idle' },
   ]);
   assert(code.includes('requestIdleCallback'));
   assert(code.includes('import("./ping.ts")'));
@@ -31,11 +31,11 @@ Deno.test('lazy island deferred to idle', () => {
   }
 });
 
-Deno.test('mixed eager+lazy', () => {
+Deno.test('mixed load+idle', () => {
   const code = generateClientEntry([
-    { tagName: 'less-theme-toggle', modulePath: '@lessjs/ui/less-theme-toggle', strategy: 'eager' },
-    { tagName: 'less-hero-ping', modulePath: '@lessjs/ui/less-hero-ping', strategy: 'lazy' },
-    { tagName: 'api-consumer', modulePath: './api-consumer.ts', strategy: 'lazy' },
+    { tagName: 'less-theme-toggle', modulePath: '@lessjs/ui/less-theme-toggle', strategy: 'load' },
+    { tagName: 'less-hero-ping', modulePath: '@lessjs/ui/less-hero-ping', strategy: 'idle' },
+    { tagName: 'api-consumer', modulePath: './api-consumer.ts', strategy: 'idle' },
   ]);
   assert(code.includes('requestIdleCallback'));
   assert(code.includes('less:ready'));
@@ -48,7 +48,7 @@ Deno.test('mixed eager+lazy', () => {
 
 Deno.test('no legacy SSR client runtime', () => {
   const code = generateClientEntry([
-    { tagName: 'my-counter', modulePath: './counter.ts' },
+    { tagName: 'my-counter', modulePath: './counter.ts', strategy: 'idle' },
   ]);
   assertEquals(code.includes('LitElement'), false);
   assertEquals(code.includes('lit-element-hydrate-support'), false);
@@ -56,7 +56,7 @@ Deno.test('no legacy SSR client runtime', () => {
 
 Deno.test('less:ready event', () => {
   const code = generateClientEntry([
-    { tagName: 'my-island', modulePath: './island.ts' },
+    { tagName: 'my-island', modulePath: './island.ts', strategy: 'idle' },
   ]);
   assert(code.includes('less:ready'));
   try {
@@ -66,28 +66,56 @@ Deno.test('less:ready event', () => {
   }
 });
 
-// ─── v0.5 Trust Release: strategy must reach client entry ────
+Deno.test('client:only islands are scheduled with immediate load (not idle)', () => {
+  const code = generateClientEntry([
+    {
+      tagName: 'client-only-widget',
+      modulePath: './client-only-widget.ts',
+      strategy: 'only',
+      ssr: false,
+      dsd: false,
+    },
+  ]);
 
-Deno.test('package island strategy:eager is preserved in client entry', () => {
+  assert(code.includes('client:only islands - import immediately'));
+  assert(code.includes('"client-only-widget"'));
+  // v0.21: only uses immediate load, NOT idle deferral
+  assertEquals(code.includes('client:idle and client:only'), false);
+  new Function(code);
+});
+
+Deno.test('legacy eager/lazy strategies are not emitted by v0.21 runtime', () => {
+  const code = generateClientEntry([
+    { tagName: 'x-load', modulePath: './load.ts', strategy: 'load' },
+    { tagName: 'x-idle', modulePath: './idle.ts', strategy: 'idle' },
+  ]);
+
+  assertEquals(code.includes('eager'), false);
+  assertEquals(code.includes('lazy'), false);
+});
+
+// 鈹€鈹€鈹€ v0.5 Trust Release: strategy must reach client entry 鈹€鈹€鈹€鈹€
+
+Deno.test('package island strategy:load is preserved in client entry', () => {
   // Bug: buildClient used to drop strategy from packageIslands, so
-  // less-theme-toggle (strategy: 'eager') was treated as lazy.
+  // less-theme-toggle (strategy: 'load') must stay in the immediate bucket.
   // Fix: strategy is now passed through from metadata.
   const code = generateClientEntry([
     {
       tagName: 'less-theme-toggle',
       modulePath: '@lessjs/ui/less-theme-toggle',
-      strategy: 'eager',
+      strategy: 'load',
       isPackage: true,
     },
     {
       tagName: 'less-button',
       modulePath: '@lessjs/ui/less-button',
-      strategy: 'lazy',
+      strategy: 'idle',
       isPackage: true,
     },
   ]);
 
-  // Eager island must appear in the immediate-load array
+  // Load island must appear in the immediate-load array
   assert(code.includes('"less-theme-toggle"'));
   // Both must appear in the island map
   assert(code.includes('import("@lessjs/ui/less-theme-toggle")'));
@@ -99,7 +127,7 @@ Deno.test('client entry safely escapes tag names and module paths', () => {
     {
       tagName: 'x-safe',
       modulePath: './safe"quote.ts',
-      strategy: 'eager',
+      strategy: 'load',
     },
   ]);
 
@@ -114,6 +142,7 @@ Deno.test('client entry rejects malicious package island metadata', () => {
         {
           tagName: "x-bad');alert(1);//",
           modulePath: './safe.ts',
+          strategy: 'idle',
         },
       ]),
     Error,
@@ -126,9 +155,25 @@ Deno.test('client entry rejects malicious package island metadata', () => {
         {
           tagName: 'x-safe',
           modulePath: 'javascript:alert(1)',
+          strategy: 'idle',
         },
       ]),
     Error,
     'Invalid island modulePath',
+  );
+});
+
+Deno.test('client entry rejects legacy eager/lazy strategy values', () => {
+  assertThrows(
+    () =>
+      generateClientEntry([
+        {
+          tagName: 'x-old',
+          modulePath: './old.ts',
+          strategy: 'eager',
+        } as never,
+      ]),
+    Error,
+    'Invalid island strategy',
   );
 });

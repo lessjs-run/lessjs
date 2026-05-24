@@ -4,7 +4,7 @@
  * Tests cover:
  * - island() registration and metadata markers
  * - getSSRProps / lessBind
- * - Strategy implementations (eager, lazy, idle, visible)
+ * - Strategy implementations (load, idle, visible, only)
  * - Tag name validation
  * - DSD opt-out (dsd: false -> pure-island layer)
  * - connectedCallback wrapping
@@ -14,7 +14,7 @@
  * We mock customElements, IntersectionObserver, MutationObserver etc.
  */
 
-import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
+import { assertEquals, assertStringIncludes, assertThrows } from 'jsr:@std/assert@^1.0.0';
 import { _clearAllVisibilityTimeouts, getSSRProps, island, lessBind } from '../src/island.ts';
 
 // ─── Mock infrastructure ─────────────────────────────────────────
@@ -192,22 +192,22 @@ Deno.test('island: sets __layer to dsd-interactive when dsd explicitly true', ()
 
 // ─── island() - strategy ───────────────────────────────────────
 
-Deno.test('island: eager strategy registers immediately', () => {
+Deno.test('island: load strategy registers immediately', () => {
   setupMocks();
   try {
-    const tag = `eager-reg-${Date.now()}`;
+    const tag = `load-reg-${Date.now()}`;
     const Cls = createMockElementClass();
-    island(tag, Cls, { strategy: 'eager' });
+    island(tag, Cls, { strategy: 'load' });
     assertEquals(mockRegistry.get(tag), Cls);
   } finally {
     teardownMocks();
   }
 });
 
-Deno.test('island: default strategy is lazy (uses requestIdleCallback)', () => {
+Deno.test('island: default strategy is idle (uses requestIdleCallback)', () => {
   setupMocks();
   try {
-    const tag = `lazy-default-${Date.now()}`;
+    const tag = `idle-default-${Date.now()}`;
     const Cls = createMockElementClass();
     const result = island(tag, Cls);
     // With mock RIC (immediate), the element should be registered
@@ -218,7 +218,7 @@ Deno.test('island: default strategy is lazy (uses requestIdleCallback)', () => {
   }
 });
 
-Deno.test('island: idle strategy is alias for lazy', () => {
+Deno.test('island: idle strategy defers to requestIdleCallback', () => {
   setupMocks();
   try {
     const tag = `idle-alias-${Date.now()}`;
@@ -232,14 +232,17 @@ Deno.test('island: idle strategy is alias for lazy', () => {
   }
 });
 
-Deno.test('island: unknown strategy falls back to lazy', () => {
+Deno.test('island: unknown strategy throws', () => {
   setupMocks();
   try {
     const tag = `unknown-strat-${Date.now()}`;
     const Cls = createMockElementClass();
-    // @ts-expect-error testing invalid strategy value
-    const result = island(tag, Cls, { strategy: 'bogus' });
-    assertEquals(result, Cls);
+    assertThrows(
+      // @ts-expect-error testing invalid strategy value
+      () => island(tag, Cls, { strategy: 'bogus' }),
+      Error,
+      'Invalid island hydration strategy',
+    );
   } finally {
     teardownMocks();
   }
@@ -311,11 +314,11 @@ Deno.test('island: does not re-register already defined element', () => {
     const Cls1 = createMockElementClass();
     const Cls2 = createMockElementClass();
 
-    island(tag, Cls1, { strategy: 'eager' });
+    island(tag, Cls1, { strategy: 'load' });
     const first = mockRegistry.get(tag);
 
     // Second registration should not replace
-    island(tag, Cls2, { strategy: 'eager' });
+    island(tag, Cls2, { strategy: 'load' });
     assertEquals(mockRegistry.get(tag), first);
   } finally {
     teardownMocks();
@@ -329,7 +332,7 @@ Deno.test('island: wraps connectedCallback for SSR prop binding', () => {
   try {
     const tag = `cb-wrap-${Date.now()}`;
     const Cls = createMockElementClass();
-    island(tag, Cls, { strategy: 'eager' });
+    island(tag, Cls, { strategy: 'load' });
 
     // The prototype's connectedCallback should be a function
     const proto = (Cls as unknown as { prototype: { connectedCallback?: () => void } }).prototype;
@@ -344,7 +347,7 @@ Deno.test('island: marks prototype as __lessIslandWrapped', () => {
   try {
     const tag = `wrap-marker-${Date.now()}`;
     const Cls = createMockElementClass();
-    island(tag, Cls, { strategy: 'eager' });
+    island(tag, Cls, { strategy: 'load' });
 
     const proto = (Cls as unknown as { prototype: Record<string, unknown> }).prototype;
     assertEquals(proto.__lessIslandWrapped, true);
@@ -359,12 +362,12 @@ Deno.test('island: does not double-wrap connectedCallback', () => {
     const tag = `no-double-wrap-${Date.now()}`;
     const Cls = createMockElementClass();
 
-    island(tag, Cls, { strategy: 'eager' });
+    island(tag, Cls, { strategy: 'load' });
     const proto = (Cls as unknown as { prototype: Record<string, unknown> }).prototype;
     const firstWrap = proto.__lessIslandWrapped;
 
     // Call island again with same class (should not double-wrap)
-    island(tag, Cls, { strategy: 'eager' });
+    island(tag, Cls, { strategy: 'load' });
     assertEquals(firstWrap, true);
     assertEquals(proto.__lessIslandWrapped, true);
   } finally {

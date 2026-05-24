@@ -145,7 +145,7 @@ export function validate(manifest: LessPackageManifest): ValidationResult {
     }
 
     // 4. Invalid hydrate strategy
-    if (decl.less?.hydrate && !['eager', 'lazy', 'idle', 'visible'].includes(decl.less.hydrate)) {
+    if (decl.less?.hydrate && !['load', 'idle', 'visible', 'only'].includes(decl.less.hydrate)) {
       errors.push({
         code: 'INVALID_HYDRATE_STRATEGY',
         message: `Invalid hydrate strategy "${decl.less.hydrate}"`,

@@ -5,16 +5,28 @@
  * Pure DsdElement - zero framework dependency at the wrapper level.
  * Shoelace itself uses Lit internally, but that's the library's choice.
  *
- * @lessjs/app island - client-only (ssr: false), Shoelace needs real DOM.
+ * @lessjs/app island - Shoelace WCs need client DOM, but static wrapper renders via DSD.
  */
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/core';
+import { DsdElement, html, StyleSheet } from '@lessjs/core';
 import '@shoelace-style/shoelace/dist/themes/light.css';
-import '@shoelace-style/shoelace/dist/components/button/button.js';
-import '@shoelace-style/shoelace/dist/components/badge/badge.js';
-import '@shoelace-style/shoelace/dist/components/input/input.js';
-import '@shoelace-style/shoelace/dist/components/alert/alert.js';
+
+// Explicit component imports to prevent Rolldown tree-shaking.
+// Shoelace ESM modules only export classes; they do NOT auto-register.
+import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js';
+import SlBadge from '@shoelace-style/shoelace/dist/components/badge/badge.js';
+import SlInput from '@shoelace-style/shoelace/dist/components/input/input.js';
+import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert.js';
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities/icon-library.js';
+
+// Register Shoelace components explicitly so sl-* elements upgrade in the DSD shadow root.
+if (typeof customElements !== 'undefined') {
+  if (!customElements.get('sl-button')) customElements.define('sl-button', SlButton);
+  if (!customElements.get('sl-badge')) customElements.define('sl-badge', SlBadge);
+  if (!customElements.get('sl-input')) customElements.define('sl-input', SlInput);
+  if (!customElements.get('sl-alert')) customElements.define('sl-alert', SlAlert);
+  if (!customElements.get('sl-icon')) customElements.define('sl-icon', SlIcon);
+}
 
 registerIconLibrary('default', {
   resolver: (name: string) =>
@@ -23,7 +35,7 @@ registerIconLibrary('default', {
 
 export const tagName = 'shoelace-showcase';
 
-export const less = { ssr: false };
+export const less = { ssr: true };
 
 const styles = new StyleSheet();
 styles.replaceSync(`
@@ -48,8 +60,8 @@ styles.replaceSync(`
 export default class ShoelaceShowcase extends DsdElement {
   static override styles = styles;
 
-  override render(): string {
-    return `
+  override render() {
+    return html`
       <div class="sl-row">
         <sl-button variant="primary" size="small">Primary</sl-button>
         <sl-button variant="success" size="small">Success</sl-button>

@@ -7,7 +7,7 @@
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  *   - CSSStyleSheet replaces Lit css\`\`
  *   - render() returns string
- *   - hydrateEvents for mobile menu toggle
+ *   - @click bindings for mobile menu toggle
  *   - SPA navigation via Navigation API (navigate/fetch/swap) preserved
  *   - Event delegation at shadow root level for nav clicks
  *
@@ -27,12 +27,7 @@
  * ```
  */
 
-import {
-  DsdElement,
-  type HydrateEventDescriptor,
-  StyleSheet,
-  type StyleSheetLike,
-} from '@lessjs/core';
+import { DsdElement, html, StyleSheet, unsafeHTML } from '@lessjs/core';
 import { navigate, onNavigate } from '@lessjs/core/navigation';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import './less-theme-toggle.js';
@@ -55,7 +50,7 @@ export interface HeaderNavLink {
   label: string;
 }
 
-const sheet: StyleSheetLike = new StyleSheet();
+const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;
@@ -497,15 +492,11 @@ export class LessLayout extends DsdElement {
     'locales',
   ];
 
-  static override hydrateEvents: HydrateEventDescriptor[] = [
-    { selector: 'summary.mobile-menu-btn', event: 'click', method: '_toggleMenu' },
-  ];
-
   private _navCleanup?: () => void;
   private _navUnlisten?: () => void;
   private _themeHandler?: (e: Event) => void;
 
-  override render(): string {
+  override render() {
     return this._renderLayout();
   }
 
@@ -633,77 +624,96 @@ export class LessLayout extends DsdElement {
 
   // --- Main render ---
 
-  private _renderLayout(): string {
+  private _renderLayout() {
     const home = this._getBool('home');
     const logoText = this._esc(this._getStr('logo-text', 'LessJS'));
     const logoSub = this._esc(this._getStr('logo-sub', ''));
-    const githubUrl = this._escAttr(
-      this._getStr('github-url', 'https://github.com/lessjs-run/LessJS'),
-    );
-    const editUrl = this._escAttr(this.getAttribute('edit-url') || '');
+    const githubUrl = this._getStr('github-url', 'https://github.com/lessjs-run/LessJS');
+    const editUrl = this.getAttribute('edit-url') || '';
     const locales = this._locales();
     const otherLocaleLabel = locales.length > 1 ? this._esc(this._otherLocaleLabel()) : '';
-    const otherLocalePath = locales.length > 1 ? this._escAttr(this._otherLocalePath()) : '';
+    const otherLocalePath = locales.length > 1 ? this._otherLocalePath() : '';
 
     const headerNavHtml = this._renderHeaderNavHtml();
     const sidebarHtml = !home ? this._renderSidebarNavHtml() : '';
     const mobileTabHtml = this._renderMobileTabBarHtml();
     const langSwitchHtml = locales.length > 1
-      ? `<a class="lang-switch" href="${otherLocalePath}">${otherLocaleLabel}</a>`
+      ? html`
+        <a class="lang-switch" href="${otherLocalePath}">${otherLocaleLabel}</a>
+      `
       : '';
 
-    const footerHtml = `<footer class="app-footer" part="footer">
-      <p>
-        ${
-      editUrl
-        ? `<a href="${editUrl}" target="_blank" rel="noopener" style="margin-right:0.75rem;">Edit this page</a>`
-        : ''
-    }
-        Built with <a href="${githubUrl}" target="_blank" rel="noopener noreferrer">LessJS Framework</a>
-        <span class="divider"></span>
-        Self-bootstrapped from JSR
-        <span class="divider"></span>
-        LESS IS MORE
-      </p>
-    </footer>`;
+    const footerHtml = html`
+      <footer class="app-footer" part="footer">
+        <p>
+          ${editUrl
+            ? html`
+              <a href="${editUrl}" target="_blank" rel="noopener" style="margin-right:0.75rem;"
+              >Edit this page</a>
+            `
+            : ''} Built with <a href="${githubUrl}" target="_blank" rel="noopener noreferrer"
+          >LessJS Framework</a>
+          <span class="divider"></span>
+          Self-bootstrapped from JSR
+          <span class="divider"></span>
+          LESS IS MORE
+        </p>
+      </footer>
+    `;
 
-    return `<div class="app-layout"${home ? ' home' : ''} part="container">
-      <header class="app-header" part="header">
-        <nav class="header-inner" aria-label="Primary navigation">
-          <a class="logo" href="/">${logoText}<span class="logo-sub">${logoSub}</span></a>
-          ${headerNavHtml}
-          <div class="header-right">
-            <slot name="header-actions"></slot>
-            <details class="mobile-menu">
-              <summary class="mobile-menu-btn" part="nav-toggle" aria-label="Toggle navigation">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                  <line x1="3" y1="4.5" x2="15" y2="4.5"/>
-                  <line x1="3" y1="9" x2="15" y2="9"/>
-                  <line x1="3" y1="13.5" x2="15" y2="13.5"/>
+    return html`
+      <div class="app-layout" ${home ? ' home' : ''} part="container">
+        <header class="app-header" part="header">
+          <nav class="header-inner" aria-label="Primary navigation">
+            <a class="logo" href="/">${logoText}<span class="logo-sub">${logoSub}</span></a>
+            ${unsafeHTML(headerNavHtml)}
+            <div class="header-right">
+              <slot name="header-actions"></slot>
+              <details class="mobile-menu">
+                <summary
+                  class="mobile-menu-btn"
+                  part="nav-toggle"
+                  aria-label="Toggle navigation"
+                  @click="${this._toggleMenu}"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  >
+                    <line x1="3" y1="4.5" x2="15" y2="4.5" />
+                    <line x1="3" y1="9" x2="15" y2="9" />
+                    <line x1="3" y1="13.5" x2="15" y2="13.5" />
+                  </svg>
+                </summary>
+              </details>
+              <less-theme-toggle></less-theme-toggle>
+              ${langSwitchHtml}
+              <a class="github-link" href="${githubUrl}" aria-label="GitHub repository">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <path
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+                  />
                 </svg>
-              </summary>
-            </details>
-            <less-theme-toggle></less-theme-toggle>
-            ${langSwitchHtml}
-            <a class="github-link" href="${githubUrl}" aria-label="GitHub repository">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-              </svg>
-              <span class="github-text">GitHub</span>
-            </a>
-          </div>
-        </nav>
-      </header>
-      <div class="mobile-backdrop"></div>
-      <div class="layout-body">
-        ${sidebarHtml}
-        <main class="layout-main" part="main">
-          <slot></slot>
-        </main>
+                <span class="github-text">GitHub</span>
+              </a>
+            </div>
+          </nav>
+        </header>
+        <div class="mobile-backdrop"></div>
+        <div class="layout-body">
+          ${unsafeHTML(sidebarHtml)}
+          <main class="layout-main" part="main">
+            <slot></slot>
+          </main>
+        </div>
+        ${footerHtml} ${unsafeHTML(mobileTabHtml)}
       </div>
-      ${footerHtml}
-      ${mobileTabHtml}
-    </div>`;
+    `;
   }
 
   private _renderHeaderNavHtml(): string {

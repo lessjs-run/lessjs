@@ -21,6 +21,7 @@ import type { Alias, Plugin, ResolvedConfig } from 'vite';
 import type {
   CompatibilityClassification,
   FrameworkOptions,
+  HydrationStrategy,
   LessPackageManifest,
   LessPluginMeta,
   RouteEntry,
@@ -40,7 +41,7 @@ export class Phase1Meta {
   /** The generated Hono entry module code (virtual module content) */
   honoEntryCode: string = '';
 
-  /** Cached routes from buildStart() for lazy load() regeneration */
+  /** Cached routes from buildStart() for virtual entry regeneration */
   cachedRoutes: RouteEntry[] = [];
 
   /** Island tag names discovered during route scanning (local islands) */
@@ -103,8 +104,8 @@ export class Phase3Meta {
   /** PWA config from less() options */
   pwa: FrameworkOptions['pwa'] | null = null;
 
-  /** Island upgrade strategy (default: 'lazy') */
-  upgradeStrategy: 'eager' | 'lazy' | 'idle' | 'visible' = 'lazy';
+  /** Island hydration strategy (default: 'idle') */
+  upgradeStrategy: HydrationStrategy = 'idle';
 
   /** View Transitions enabled (default: true) */
   viewTransition: boolean = true;
@@ -246,7 +247,7 @@ export class LessBuildContext {
     this.phase3.middleware = null;
     this.phase3.html = null;
     this.phase3.pwa = null;
-    this.phase3.upgradeStrategy = 'lazy';
+    this.phase3.upgradeStrategy = 'idle';
     this.phase3.viewTransition = true;
     this.phase3.speculation = null;
     this.phase3.headExtras = '';

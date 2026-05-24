@@ -6,22 +6,22 @@
     "jsr:@std/internal@^1.0.10": "1.0.13",
     "jsr:@std/internal@^1.0.12": "1.0.13",
     "jsr:@std/path@1": "1.1.4",
-    "npm:@hono/vite-dev-server@~0.25.3": "0.25.3_hono@4.12.19",
+    "npm:@hono/vite-dev-server@~0.25.3": "0.25.3_hono@4.12.22",
     "npm:@lit-labs/ssr-dom-shim@^1.5.0": "1.6.0",
     "npm:@lit/reactive-element@2": "2.1.2",
     "npm:@playwright/test@1.59.1": "1.59.1",
-    "npm:@shoelace-style/shoelace@^2.19.0": "2.20.1_@floating-ui+utils@0.2.11_@types+react@19.2.14",
+    "npm:@shoelace-style/shoelace@^2.19.0": "2.20.1_@floating-ui+utils@0.2.11_@types+react@19.2.15",
     "npm:@types/node@22": "22.19.19",
-    "npm:@types/react-dom@^19.1.0": "19.2.3_@types+react@19.2.14",
-    "npm:@types/react@^19.1.0": "19.2.14",
+    "npm:@types/react-dom@^19.1.0": "19.2.3_@types+react@19.2.15",
+    "npm:@types/react@^19.1.0": "19.2.15",
     "npm:@types/sanitize-html@2": "2.16.1",
     "npm:entities@4": "4.5.0",
     "npm:esbuild@0.25": "0.25.12",
     "npm:flexsearch@0.8.212": "0.8.212",
     "npm:gray-matter@^4.0.3": "4.0.3",
     "npm:happy-dom@^20.8.9": "20.9.0",
-    "npm:hono@4": "4.12.19",
-    "npm:hono@^4.12.18": "4.12.19",
+    "npm:hono@4": "4.12.22",
+    "npm:hono@^4.12.18": "4.12.22",
     "npm:lit-element@4": "4.2.2",
     "npm:lit-html@3": "3.3.3",
     "npm:lit@^3.2.0": "3.3.3",
@@ -223,13 +223,13 @@
     "@floating-ui/utils@0.2.11": {
       "integrity": "sha512-RiB/yIh78pcIxl6lLMG0CgBXAZ2Y0eVHqMPYugu+9U0AeT6YBeiJpf7lbdJNIugFP5SIjwNRgo4DhR1Qxi26Gg=="
     },
-    "@hono/node-server@1.19.14_hono@4.12.19": {
+    "@hono/node-server@1.19.14_hono@4.12.22": {
       "integrity": "sha512-GwtvgtXxnWsucXvbQXkRgqksiH2Qed37H9xHZocE5sA3N8O8O8/8FA3uclQXxXVzc9XBZuEOMK7+r02FmSpHtw==",
       "dependencies": [
         "hono"
       ]
     },
-    "@hono/vite-dev-server@0.25.3_hono@4.12.19": {
+    "@hono/vite-dev-server@0.25.3_hono@4.12.22": {
       "integrity": "sha512-w3uQ0KQF0i/SDcJ6+d5njEFTr6pbolajrt/GxV0pliYL+4ywiBqiOFRWSpwW3mTuZ80boww7+ZxJTGTBIzyBQg==",
       "dependencies": [
         "@hono/node-server",
@@ -240,7 +240,7 @@
     "@lit-labs/ssr-dom-shim@1.6.0": {
       "integrity": "sha512-VHb0ALPMTlgKjM6yIxxoQNnpKyUKLD04VzeQdsiXkMqkvYlAHxq9glGLmgbb889/1GsohSOAjvQYoiBppXFqrQ=="
     },
-    "@lit/react@1.0.8_@types+react@19.2.14": {
+    "@lit/react@1.0.8_@types+react@19.2.15": {
       "integrity": "sha512-p2+YcF+JE67SRX3mMlJ1TKCSTsgyOVdAwd/nxp3NuV1+Cb6MWALbN6nT7Ld4tpmYofcE5kcaSY1YBB9erY+6fw==",
       "dependencies": [
         "@types/react"
@@ -358,7 +358,7 @@
     "@shoelace-style/localize@3.2.2": {
       "integrity": "sha512-h3+2/cFWGaw3KQUwintkP4Cy3PtrVW//ysr9DM5nOfIXYekgrHwsELk/nyxc8hmjVP/Kcon7KCzvUtSwUBipfQ=="
     },
-    "@shoelace-style/shoelace@2.20.1_@floating-ui+utils@0.2.11_@types+react@19.2.14": {
+    "@shoelace-style/shoelace@2.20.1_@floating-ui+utils@0.2.11_@types+react@19.2.15": {
       "integrity": "sha512-FSghU95jZPGbwr/mybVvk66qRZYpx5FkXL+vLNpy1Vp8UsdwSxXjIHE3fsvMbKWTKi9UFfewHTkc5e7jAqRYoQ==",
       "dependencies": [
         "@ctrl/tinycolor",
@@ -383,14 +383,14 @@
         "undici-types"
       ]
     },
-    "@types/react-dom@19.2.3_@types+react@19.2.14": {
+    "@types/react-dom@19.2.3_@types+react@19.2.15": {
       "integrity": "sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==",
       "dependencies": [
         "@types/react"
       ]
     },
-    "@types/react@19.2.14": {
-      "integrity": "sha512-ilcTH/UniCkMdtexkoCN0bI7pMcJDvmQFPvuPvmEaYA/NSfFTAgdUSLAoVjaRJm7+6PvcM+q1zYOwS4wTYMF9w==",
+    "@types/react@19.2.15": {
+      "integrity": "sha512-eRwcGNHve+E8qtEQSSRl6urh+rFop4v8gm6O8rGv25CodbvFdLjA1vVQ1KkiFE0w0UPOnb8tDiFKL5lp0rtY5Q==",
       "dependencies": [
         "csstype"
       ]
@@ -571,8 +571,8 @@
         "ws"
       ]
     },
-    "hono@4.12.19": {
-      "integrity": "sha512-xa3eYXYXx68XTT4hZ7dRzsXBhaq85ToSrlUJNoR0gwz/1Ap/CNwX47wfvV7pc/xWhjKVVkLT7zBJy8chhNguqQ=="
+    "hono@4.12.22": {
+      "integrity": "sha512-7fvVPbB92zNRsQke+uiRGwtTuef0tB2Dg4hWxYfFNvkQhIltWoyi0ONReM5LWA+jJWS3nfT5lTq+qbsIpX0IQw=="
     },
     "htmlparser2@10.1.0": {
       "integrity": "sha512-VTZkM9GWRAtEpveh7MSF6SjjrpNVNNVJfFup7xTY3UpFtm67foy9HDVXneLtFVt4pMz5kZtgNcvCniNFb1hlEQ==",
@@ -751,8 +751,8 @@
       ],
       "bin": true
     },
-    "postcss@8.5.14": {
-      "integrity": "sha512-SoSL4+OSEtR99LHFZQiJLkT59C5B1amGO1NzTwj7TT1qCUgUO6hxOvzkOYxD+vMrXBM3XJIKzokoERdqQq/Zmg==",
+    "postcss@8.5.15": {
+      "integrity": "sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==",
       "dependencies": [
         "nanoid",
         "picocolors",
@@ -935,24 +935,24 @@
     "members": {
       "packages/adapter-lit": {
         "dependencies": [
-          "jsr:@lessjs/core@0.20"
+          "jsr:@lessjs/core@0.21"
         ]
       },
       "packages/adapter-react": {
         "dependencies": [
-          "jsr:@lessjs/core@0.20",
+          "jsr:@lessjs/core@0.21",
           "npm:react-dom@19",
           "npm:react@19"
         ]
       },
       "packages/adapter-vanilla": {
         "dependencies": [
-          "jsr:@lessjs/core@0.20"
+          "jsr:@lessjs/core@0.21"
         ]
       },
       "packages/adapter-vite": {
         "dependencies": [
-          "jsr:@lessjs/core@0.20",
+          "jsr:@lessjs/core@0.21",
           "npm:@hono/vite-dev-server@~0.25.3",
           "npm:esbuild@0.25",
           "npm:hono@4",
@@ -961,16 +961,16 @@
       },
       "packages/app": {
         "dependencies": [
-          "jsr:@lessjs/adapter-vite@0.20",
-          "jsr:@lessjs/content@0.20",
-          "jsr:@lessjs/core@0.20",
-          "jsr:@lessjs/i18n@0.20",
+          "jsr:@lessjs/adapter-vite@0.21",
+          "jsr:@lessjs/content@0.21",
+          "jsr:@lessjs/core@0.21",
+          "jsr:@lessjs/i18n@0.21",
           "npm:vite@8.0.10"
         ]
       },
       "packages/content": {
         "dependencies": [
-          "jsr:@lessjs/core@0.20",
+          "jsr:@lessjs/core@0.21",
           "npm:@types/sanitize-html@2",
           "npm:gray-matter@^4.0.3",
           "npm:marked@15",
@@ -990,13 +990,13 @@
       },
       "packages/i18n": {
         "dependencies": [
-          "jsr:@lessjs/core@0.20",
+          "jsr:@lessjs/core@0.21",
           "npm:vite@8.0.10"
         ]
       },
       "packages/ui": {
         "dependencies": [
-          "jsr:@lessjs/core@0.20"
+          "jsr:@lessjs/core@0.21"
         ]
       }
     }

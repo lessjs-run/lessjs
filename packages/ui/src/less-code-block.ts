@@ -18,17 +18,12 @@
  * ```
  */
 
-import {
-  DsdElement,
-  type HydrateEventDescriptor,
-  StyleSheet,
-  type StyleSheetLike,
-} from '@lessjs/core';
+import { DsdElement, html, StyleSheet } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-code-block';
 
-const sheet: StyleSheetLike = new StyleSheet();
+const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;
@@ -128,20 +123,18 @@ sheet.replaceSync(`
 export class LessCodeBlock extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
 
-  static override hydrateEvents: HydrateEventDescriptor[] = [
-    { selector: 'button.copy-btn', event: 'click', method: '_copy' },
-  ];
-
   private _copyState: 'idle' | 'copied' | 'failed' = 'idle';
   private _copyTimer: ReturnType<typeof setTimeout> | undefined;
   private _highlightTimer: ReturnType<typeof setTimeout> | undefined;
   private _highlightedInShadow = false;
   private _highlightRetries = 0;
-  private static MAX_HIGHLIGHT_RETRIES = 20;
+  private static MAX_HIGHLIGHT_RETRIES = 40;
 
-  override render(): string {
-    return `<slot></slot>
-      <button class="copy-btn" part="copy">Copy</button>`;
+  override render() {
+    return html`
+      <slot></slot>
+      <button class="copy-btn" part="copy" @click="${() => this._copy()}">Copy</button>
+    `;
   }
 
   override connectedCallback(): void {

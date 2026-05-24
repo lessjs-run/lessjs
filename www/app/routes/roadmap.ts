@@ -129,8 +129,8 @@ export class RoadmapPage extends DsdElement {
         <div class="container">
           <h1>Roadmap</h1>
           <p class="subtitle">
-            当前项目线是 <code>v0.20.0 Ocean-Island Architecture</code>。LessJS 的中心是
-            DSD-first Web Components 渲染引擎，SSG 已发布，Hydration 策略与 ISR 是 v0.21 下一阶段。
+            当前项目线是 <code>v0.21.0 Hydration + ISR Contract</code>。LessJS 的中心是
+            DSD-first Web Components 渲染引擎，SSG 已发布，Hydration 策略与 ISR 合同已在 v0.21 落地。
           </p>
 
           <less-callout type="info">
@@ -154,15 +154,15 @@ export class RoadmapPage extends DsdElement {
               <tr><td>v0.17.x</td><td>Ecosystem Entry</td><td>manifest-native pipeline、多适配器边界</td><td><span class="status done">Done</span></td></tr>
               <tr><td>v0.18.x</td><td>Universal WC Engine</td><td>CEM parser、兼容性分层、验证 CLI、less add</td><td><span class="status done">Done</span></td></tr>
               <tr><td>v0.19.x</td><td>Registry Hub MVP</td><td>可搜索包索引、报告、快照和组件浏览</td><td><span class="status done">Done</span></td></tr>
-              <tr><td>v0.20.x</td><td>Ocean-Island</td><td>DsdElement、DSD-native UI、CSS Parts、cleanup gate</td><td><span class="status current">Current</span></td></tr>
-              <tr><td>v0.21.x</td><td>Hydration + ISR</td><td><code>client:*</code> 指令、ISR、API route parity</td><td><span class="status next">Next</span></td></tr>
+              <tr><td>v0.20.x</td><td>Ocean-Island</td><td>DsdElement、DSD-native UI、CSS Parts、cleanup gate</td><td><span class="status shipped">Shipped</span></td></tr>
+              <tr><td>v0.21.x</td><td>Hydration + ISR</td><td><code>client:*</code> 指令、ISR、API route parity</td><td><span class="status current">Current</span></td></tr>
               <tr><td>v0.22.x</td><td>Reactive DSD</td><td>DsdElement + Signals、安全模板、可选 DOM diff</td><td><span class="status planned">Planned</span></td></tr>
               <tr><td>v1.0.x</td><td>Stable Engine</td><td>API/schema freeze、确定性包准入保证</td><td><span class="status vision">Vision</span></td></tr>
             </tbody>
           </table>
 
           <div class="phase">
-            <span class="status current">Current</span>
+            <span class="status shipped">Shipped</span>
             <h3>v0.20.x - Ocean-Island Architecture</h3>
             <p>
               v0.20 把 DSD 组件从 Lit 运行时中解耦出来：<code>DsdElement</code> 成为 DSD 基类，
@@ -176,7 +176,7 @@ export class RoadmapPage extends DsdElement {
           </div>
 
           <div class="phase next">
-            <span class="status next">Next</span>
+            <span class="status current">Current</span>
             <h3>v0.21.x - Hydration Strategies + ISR</h3>
             <p>
               v0.21 的目标是让 LessJS 从 DSD-first SSG 引擎推进到更可信的应用框架。
@@ -229,9 +229,9 @@ export class RoadmapPage extends DsdElement {
         <div class="container">
           <h1>Roadmap</h1>
           <p class="subtitle">
-            The current project line is <code>v0.20.0 Ocean-Island Architecture</code>.
+            The current project line is <code>v0.21.0 Hydration + ISR Contract</code>.
             LessJS centers on a DSD-first Web Components rendering engine. SSG is shipped;
-            Hydration strategies and ISR are the v0.21 next step.
+            Hydration strategies and the ISR contract landed in v0.21.
           </p>
 
           <less-callout type="info">
@@ -256,15 +256,15 @@ export class RoadmapPage extends DsdElement {
               <tr><td>v0.17.x</td><td>Ecosystem Entry</td><td>Manifest-native pipeline and multi-adapter boundary</td><td><span class="status done">Done</span></td></tr>
               <tr><td>v0.18.x</td><td>Universal WC Engine</td><td>CEM parser, compatibility tiers, validation CLI, less add</td><td><span class="status done">Done</span></td></tr>
               <tr><td>v0.19.x</td><td>Registry Hub MVP</td><td>Searchable package index, reports, snapshots, component browser</td><td><span class="status done">Done</span></td></tr>
-              <tr><td>v0.20.x</td><td>Ocean-Island</td><td>DsdElement, DSD-native UI, CSS Parts, cleanup gate</td><td><span class="status current">Current</span></td></tr>
-              <tr><td>v0.21.x</td><td>Hydration + ISR</td><td><code>client:*</code> directives, ISR, API route parity</td><td><span class="status next">Next</span></td></tr>
+              <tr><td>v0.20.x</td><td>Ocean-Island</td><td>DsdElement, DSD-native UI, CSS Parts, cleanup gate</td><td><span class="status shipped">Shipped</span></td></tr>
+              <tr><td>v0.21.x</td><td>Hydration + ISR</td><td><code>client:*</code> directives, ISR, API route parity</td><td><span class="status current">Current</span></td></tr>
               <tr><td>v0.22.x</td><td>Reactive DSD</td><td>DsdElement + Signals, safe templates, optional DOM diffing</td><td><span class="status planned">Planned</span></td></tr>
               <tr><td>v1.0.x</td><td>Stable Engine</td><td>API/schema freeze and deterministic package guarantees</td><td><span class="status vision">Vision</span></td></tr>
             </tbody>
           </table>
 
           <div class="phase">
-            <span class="status current">Current</span>
+            <span class="status shipped">Shipped</span>
             <h3>v0.20.x - Ocean-Island Architecture</h3>
             <p>
               v0.20 decouples DSD components from the Lit runtime. <code>DsdElement</code>
@@ -279,7 +279,7 @@ export class RoadmapPage extends DsdElement {
           </div>
 
           <div class="phase next">
-            <span class="status next">Next</span>
+            <span class="status current">Current</span>
             <h3>v0.21.x - Hydration Strategies + ISR</h3>
             <p>
               v0.21 moves LessJS from a DSD-first SSG engine toward a more credible

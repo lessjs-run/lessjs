@@ -80,6 +80,7 @@ export interface SsrBundle {
     tagName: string;
     isDynamic: boolean;
     paramNames: string[];
+    revalidate?: number;
   }>;
   renderRoute?: (
     path: string,
@@ -226,6 +227,7 @@ export async function ssgRender(
     tagName: string;
     isDynamic: boolean;
     paramNames: string[];
+    revalidate?: number;
   }>;
   const renderRoute = module.renderRoute as
     | ((path: string, opts?: Record<string, unknown>) => Promise<SsgPageOutput>)
@@ -343,6 +345,20 @@ export async function ssgRender(
   const result = await toSSG(app as never, fsModule, { dir: outputDir });
 
   if (!result.success) throw result.error;
+
+  const isrRoutes = routeInfo
+    .filter((route) => typeof route.revalidate === 'number' && route.revalidate > 0)
+    .map((route) => ({ path: route.path, revalidate: route.revalidate }));
+  if (isrRoutes.length > 0) {
+    writeFileSync(
+      join(outputDir, 'isr-manifest.json'),
+      JSON.stringify({ routes: isrRoutes }, null, 2),
+      'utf-8',
+    );
+    log.info(
+      `ISR manifest -> ${join(outputDir, 'isr-manifest.json')} (${isrRoutes.length} route(s))`,
+    );
+  }
 
   // ── Post-processing ─────────────────────────────────────────
 
@@ -656,9 +672,10 @@ async function networkFirst(req) {
     0,
   );
   const totalHints = pageDiagnostics.reduce((sum, p) => sum + p.hydrationHints.length, 0);
+  const strategySummary = buildHydrationStrategySummary(ctx);
 
   const report: import('@lessjs/core').DsdBuildReport = {
-    reportVersion: '1.1.0',
+    reportVersion: '1.2.0',
     timestamp: new Date().toISOString(),
     totalPages: pageDiagnostics.length,
     totalErrors,
@@ -684,6 +701,7 @@ async function networkFirst(req) {
       interactiveCount,
       pureIslandCount,
     },
+    hydrationStrategySummary: strategySummary,
     // v0.17.2: Manifest-driven render decisions per package island
     manifestDecisions: buildManifestDecisions(ctx),
     admissionDecisions: ctx?.phase1?.ssrAdmissionPlan?.decisions || [],
@@ -694,6 +712,35 @@ async function networkFirst(req) {
   const reportPath = join(outputDir, 'dsd-report.json');
   writeFileSync(reportPath, JSON.stringify(report, null, 2), 'utf-8');
   log.info(`DSD report -> ${reportPath} (${pageDiagnostics.length} pages, ${totalErrors} errors)`);
+}
+
+function buildHydrationStrategySummary(
+  ctx?: LessBuildContext,
+): import('@lessjs/core').DsdHydrationStrategySummary {
+  const summary: import('@lessjs/core').DsdHydrationStrategySummary = {
+    load: 0,
+    idle: 0,
+    visible: 0,
+    only: 0,
+    clientOnlyExcluded: 0,
+  };
+  const decisions = ctx?.phase1?.ssrAdmissionPlan?.decisions || [];
+  const localMeta = ctx?.phase1?.islandMeta || {};
+
+  for (const meta of Object.values(localMeta)) {
+    const strategy = meta.hydrate || 'idle';
+    if (strategy in summary) {
+      summary[strategy as keyof typeof summary]++;
+    }
+  }
+  for (const decl of ctx?.phase1?.packageIslandDecls || []) {
+    const strategy = decl.hydrate || 'idle';
+    if (strategy in summary) {
+      summary[strategy as keyof typeof summary]++;
+    }
+  }
+  summary.clientOnlyExcluded = decisions.filter((d) => d.renderPath === 'client-only').length;
+  return summary;
 }
 
 // ─── Manifest Decisions Builder (v0.17.2) ───────────────────────

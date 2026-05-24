@@ -34,7 +34,7 @@ Island、Hono API Route 和早期 Registry Hub 组合在一起，让 Web Compone
 
 ## 当前状态
 
-项目线：**v0.20.0 Ocean-Island Architecture**。
+项目线：**v0.21.0 Hydration + ISR Contract**。
 
 当前生产渲染模式是 **SSG + Declarative Shadow DOM**。`renderDSD()` 的架构设计允许
 未来在缓存过期时运行 ISR，或在请求时运行 SSR，但 ISR/SSR 仍是路线图能力，不应写成已发布保证。
@@ -123,11 +123,11 @@ route component
   -> hydrateEvents / island runtime only where needed
 ```
 
-| Mode | 状态     | 渲染时机      | 服务器要求                |
-| ---- | -------- | ------------- | ------------------------- |
-| SSG  | 已发布   | build time    | 构建后不需要              |
-| ISR  | 下一阶段 | cache expiry  | edge/serverless function  |
-| SSR  | 后续     | every request | always-on request runtime |
+| Mode | 状态   | 渲染时机      | 服务器要求                |
+| ---- | ------ | ------------- | ------------------------- |
+| SSG  | 已发布 | build time    | 构建后不需要              |
+| ISR  | v0.21  | cache expiry  | edge/serverless function  |
+| SSR  | 后续   | every request | always-on request runtime |
 
 ## 兼容性边界
 
@@ -146,8 +146,8 @@ LessJS 不承诺任意 Web Component 都能自动 SSR。每个组件应该得到
 | v0.17 | Ecosystem Entry + SSR Boundary                | Done    |
 | v0.18 | Universal WC Engine                           | Done    |
 | v0.19 | Registry Hub + Component Browser              | Done    |
-| v0.20 | Ocean-Island Architecture + DSD-native UI     | Current |
-| v0.21 | Hydration Strategies + ISR + API Route parity | Next    |
+| v0.20 | Ocean-Island Architecture + DSD-native UI     | Shipped |
+| v0.21 | Hydration Strategies + ISR + API Route parity | Current |
 | v0.22 | DsdElement + Signals rendering                | Planned |
 | v1.0  | Stable Engine contracts                       | Vision  |
 

@@ -11,6 +11,10 @@
  *   - Overlay is always appended to document.body
  *   - SPA-safe: state reset on connectedCallback, Cmd+K keyboard binding
  *
+ * v0.21.0: Signal migration — _open, _query, _results → #open, #query, #results signals.
+ *   - Overlay stays imperative (document.body, not shadow DOM).
+ *   - render() only controls the trigger button.
+ *
  * @csspart trigger -The search trigger button
  * @csspart icon -The search SVG icon
  * @csspart label -The "Search" text span
@@ -23,7 +27,7 @@
  * - Component state is reset on connectedCallback() for SPA navigation safety
  */
 
-import { DsdElement, type HydrateEventDescriptor, StyleSheet } from '@lessjs/core';
+import { DsdElement, html, signal, StyleSheet } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
 interface SearchEntry {
@@ -163,35 +167,45 @@ function getOverlaySheet(): CSSStyleSheet {
 export default class LessSearch extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
 
-  static override hydrateEvents: HydrateEventDescriptor[] = [
-    { selector: 'button.search-trigger', event: 'click', method: '_handleTriggerClick' },
-  ];
+  // Reactive state (signals)
+  #open = signal(false);
+  #query = signal('');
+  #results = signal<SearchEntry[]>([]);
 
-  // State
-  private _open = false;
-  private _query = '';
-  private _results: SearchEntry[] = [];
+  // Internal data/state (non-reactive — not used in render())
   private _index: unknown = null;
   private _entries: SearchEntry[] = [];
   private _loaded = false;
   private _overlayEl: HTMLDivElement | null = null;
   private _inputEl: HTMLInputElement | null = null;
 
-  override render(): string {
-    return `<button class="search-trigger" part="trigger" aria-label="Search">
-      <svg class="search-icon" part="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-        <circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/>
-      </svg>
-      <span part="label">Search</span><kbd part="shortcut">\u2318K</kbd>
-    </button>`;
+  override render() {
+    return html`
+      <button class="search-trigger" part="trigger" aria-label="Search" @click="${() =>
+        this._handleTriggerClick()}">
+        <svg
+          class="search-icon"
+          part="icon"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        >
+          <circle cx="7" cy="7" r="4.5" />
+          <path d="M10.5 10.5L14 14" />
+        </svg>
+        <span part="label">Search</span><kbd part="shortcut">\\u2318K</kbd>
+      </button>
+    `;
   }
 
   // Cmd+K handler (bound to document)
   private _onKeydown = (e: KeyboardEvent) => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
       e.preventDefault();
-      this._open ? this._closeOverlay() : this._handleTriggerClick();
-    } else if (e.key === 'Escape' && this._open) {
+      this.#open.value ? this._closeOverlay() : this._handleTriggerClick();
+    } else if (e.key === 'Escape' && this.#open.value) {
       this._closeOverlay();
     }
   };
@@ -216,15 +230,15 @@ export default class LessSearch extends DsdElement {
   }
 
   private _resetState(): void {
-    this._open = false;
-    this._query = '';
-    this._results = [];
+    this.#open.value = false;
+    this.#query.value = '';
+    this.#results.value = [];
     this._overlayEl = null;
     this._inputEl = null;
   }
 
   private _handleTriggerClick(): void {
-    this._open = true;
+    this.#open.value = true;
     this._loadIndex();
     this._createOverlay();
     requestAnimationFrame(() => {
@@ -233,7 +247,7 @@ export default class LessSearch extends DsdElement {
   }
 
   private _closeOverlay(): void {
-    this._open = false;
+    this.#open.value = false;
     this._destroyOverlay();
   }
 
@@ -276,23 +290,24 @@ export default class LessSearch extends DsdElement {
 
   private _onInput(e: Event): void {
     const target = e.target as HTMLInputElement;
-    this._query = target.value;
+    this.#query.value = target.value;
 
-    if (this._query.length < 2 || !this._index) {
-      this._results = [];
+    if (this.#query.value.length < 2 || !this._index) {
+      this.#results.value = [];
     } else {
       const index = this._index as {
         search: (q: string, opts: { limit: number }) => Array<{ field: string; result: string[] }>;
       };
       const paths = new Set<string>();
-      for (const field of index.search(this._query, { limit: 10 })) {
+      for (const field of index.search(this.#query.value, { limit: 10 })) {
         field.result.forEach((p) => paths.add(p));
       }
-      this._results = this._entries.filter((entry) => paths.has(entry.path)).slice(0, 10);
+      this.#results.value = this._entries.filter((entry) => paths.has(entry.path)).slice(0, 10);
     }
     this._updateResults();
   }
 
+  /** Update search results DOM imperatively (overlay lives in document.body, not shadow DOM). */
   private _updateResults(): void {
     const resultsDiv = this._overlayEl?.querySelector('.less-search-results');
     if (resultsDiv) {
@@ -304,8 +319,8 @@ export default class LessSearch extends DsdElement {
   }
 
   private _getResultsHtml(): string {
-    if (this._results.length > 0) {
-      return this._results.map((r) =>
+    if (this.#results.value.length > 0) {
+      return this.#results.value.map((r) =>
         `<a href="${this._escapeAttr(r.path)}" class="less-search-item" data-path="${
           this._escapeAttr(r.path)
         }">` +
@@ -315,9 +330,9 @@ export default class LessSearch extends DsdElement {
         `</a>`
       ).join('');
     }
-    if (this._query.length >= 2) {
+    if (this.#query.value.length >= 2) {
       return `<div class="less-search-empty">No results found for "${
-        this._escapeHtml(this._query)
+        this._escapeHtml(this.#query.value)
       }"</div>`;
     }
     return `<div class="less-search-empty">Type at least 2 characters to search</div>`;

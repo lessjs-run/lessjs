@@ -70,8 +70,10 @@ import { injectProps, instantiateComponent } from './render-instantiate.js';
 import { instantiationErrorHtml, wrongTypeErrorHtml } from './render-errors.js';
 import { classifyError } from './render-errors.js';
 import { serializeAttributes, wrapDsdOutput } from './render-serialize.js';
+import { isTemplateResult, renderTemplateToString } from './template.js';
 
 const log = createLogger('core');
+const _textEncoder = new TextEncoder();
 
 // --- DSD Rendering ----------------------------------------------
 
@@ -180,6 +182,8 @@ export async function renderDSD(
       content = '';
     } else if (typeof result === 'string') {
       content = result;
+    } else if (isTemplateResult(result)) {
+      content = renderTemplateToString(result, { runtimeMarkers: true });
     } else {
       // v0.17.3: Multi-adapter dispatch - try all registered adapters
       // until one claims the result via isTemplate(). This allows Lit,
@@ -313,11 +317,10 @@ export async function renderDSD(
   }
 
   // Collect hydration hint for this component
-  if (resolvedLayer !== 'dsd-static' || instance.hydrateEvents?.length) {
+  if (resolvedLayer !== 'dsd-static') {
     collectedHints.push({
       tagName,
       layer: resolvedLayer as ComponentLayer,
-      events: instance.hydrateEvents,
     });
   }
 
@@ -423,3 +426,13 @@ export async function renderDSDByName(
     hooks,
   );
 }
+
+// v0.21.0: Streaming types and functions moved to render-dsd-stream.ts.
+// Re-exported here for backward compatibility.
+export { createRenderDSDStreamMetrics, renderDSDStream } from './render-dsd-stream.js';
+export type {
+  RenderDSDStreamChunk,
+  RenderDSDStreamComponent,
+  RenderDSDStreamMetrics,
+  RenderDSDStreamOptions,
+} from './render-dsd-stream.js';

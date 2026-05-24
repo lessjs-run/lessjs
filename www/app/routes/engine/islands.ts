@@ -117,7 +117,7 @@ export class IslandsGuidePage extends DsdElement {
             entry，并在静态 HTML 中注入 entry script。
           </p>
           <less-code-block><pre><code>// app/islands/my-counter.ts
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet, html, signal } from '@lessjs/core';
 
 export const tagName = 'my-counter';
 
@@ -125,22 +125,15 @@ const sheet = new StyleSheet();
 sheet.replaceSync(':host { display: inline-flex; gap: 0.5rem; align-items: center; }');
 
 export default class MyCounter extends DsdElement {
-  count = 0;
+  count = signal(0);
   static override styles = sheet;
-  static override hydrateEvents = [
-    { selector: '[data-dec]', event: 'click', method: 'dec' },
-    { selector: '[data-inc]', event: 'click', method: 'inc' },
-  ];
 
-  override render(): string {
-    return '&lt;button data-dec&gt;-&lt;/button&gt;&lt;span data-count&gt;' + this.count + '&lt;/span&gt;&lt;button data-inc&gt;+&lt;/button&gt;';
-  }
-
-  dec() { this.count--; this.syncCount(); }
-  inc() { this.count++; this.syncCount(); }
-  private syncCount() {
-    const out = this.shadowRoot?.querySelector('[data-count]');
-    if (out) out.textContent = String(this.count);
+  override render() {
+    return html\`
+      &lt;button @click=\${() => this.count.value--}&gt;-&lt;/button&gt;
+      &lt;span&gt;\${this.count}&lt;/span&gt;
+      &lt;button @click=\${() => this.count.value++}&gt;+&lt;/button&gt;
+    \`;
   }
 }
 

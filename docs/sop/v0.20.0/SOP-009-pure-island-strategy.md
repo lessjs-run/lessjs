@@ -53,7 +53,7 @@ CSS Parts:
 ### 3. Island metadata
 
 ```typescript
-// For future Island strategy (eager/lazy/visible/idle):
+// For future Island strategy (load/idle/visible/idle):
 static override layer: ComponentLayer = 'dsd-interactive';
 // or in v0.21: static island: IslandConfig = { strategy: 'visible' };
 ```
@@ -62,19 +62,19 @@ static override layer: ComponentLayer = 'dsd-interactive';
 
 ## Island Strategy Table
 
-| Component            | Type        | Framework         | Island Strategy     |
-| -------------------- | ----------- | ----------------- | ------------------- |
-| `less-button`        | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-card`          | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-callout`       | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-step-card`     | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-input`         | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-code-block`    | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-theme-toggle`  | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-dialog`        | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-layout`        | Ocean (DSD) | None (DsdElement) | —                   |
-| `less-search`        | Ocean (DSD) | None (DsdElement) | —                   |
-| **`less-hero-ping`** | **Island**  | **Lit**           | **eager (default)** |
+| Component            | Type        | Framework         | Island Strategy    |
+| -------------------- | ----------- | ----------------- | ------------------ |
+| `less-button`        | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-card`          | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-callout`       | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-step-card`     | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-input`         | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-code-block`    | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-theme-toggle`  | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-dialog`        | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-layout`        | Ocean (DSD) | None (DsdElement) | —                  |
+| `less-search`        | Ocean (DSD) | None (DsdElement) | —                  |
+| **`less-hero-ping`** | **Island**  | **Lit**           | **load (default)** |
 
 ---
 

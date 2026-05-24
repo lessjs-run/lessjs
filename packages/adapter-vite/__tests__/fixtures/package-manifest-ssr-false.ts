@@ -18,7 +18,7 @@ export const manifest: LessPackageManifest = {
         module: './dist/package-island-ssr-false.js',
         ssr: false,
         dsd: false,
-        hydrate: 'lazy',
+        hydrate: 'idle',
       },
     },
   ],

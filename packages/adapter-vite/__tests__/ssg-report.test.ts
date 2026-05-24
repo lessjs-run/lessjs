@@ -64,9 +64,9 @@ Deno.test('SSG report: dsd-report.json is produced after ssgRender', async (t) =
     assertEquals(typeof report.hydrationHintSummary, 'object');
   });
 
-  await t.step('report version is 1.1.0', () => {
+  await t.step('report version is 1.2.0', () => {
     const report = readReport(TEST_OUT_DIR);
-    assertEquals(report.reportVersion, '1.1.0');
+    assertEquals(report.reportVersion, '1.2.0');
   });
 
   await t.step('timestamp is valid ISO 8601', () => {
@@ -207,7 +207,7 @@ Deno.test('SSG report: handles string return from renderRoute (backward compat)'
   }
 });
 
-// ─── Manifest Decisions (v0.17.2) ──────────────────────────────
+// 鈹€鈹€鈹€ Manifest Decisions (v0.17.2) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('SSG report: manifestDecisions is present (empty when no ctx)', async () => {
   if (existsSync(TEST_OUT_DIR)) {
@@ -244,11 +244,11 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
       declarations: [
         {
           tagName: 'less-layout',
-          less: { module: '@lessjs/ui/less-layout', hydrate: 'eager', ssr: true },
+          less: { module: '@lessjs/ui/less-layout', hydrate: 'load', ssr: true },
         },
         {
           tagName: 'less-button',
-          less: { module: '@lessjs/ui/less-button', hydrate: 'lazy', ssr: false },
+          less: { module: '@lessjs/ui/less-button', hydrate: 'idle', ssr: false },
         },
         { tagName: 'less-card', less: { module: '@lessjs/ui/less-card' } }, // no ssr field -> default true
       ],
@@ -259,7 +259,7 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
       tagName: 'less-layout',
       modulePath: '@lessjs/ui/less-layout',
       isPackage: true,
-      hydrate: 'eager',
+      hydrate: 'load',
       ssr: true,
       dsd: true,
     },
@@ -267,11 +267,11 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
       tagName: 'less-button',
       modulePath: '@lessjs/ui/less-button',
       isPackage: true,
-      hydrate: 'lazy',
+      hydrate: 'idle',
       ssr: false,
       dsd: true,
     },
-    { tagName: 'less-card', modulePath: '@lessjs/ui/less-card', isPackage: true, hydrate: 'lazy' }, // no ssr -> default true
+    { tagName: 'less-card', modulePath: '@lessjs/ui/less-card', isPackage: true, hydrate: 'idle' }, // no ssr -> default true
   ];
 
   const bundle = createMockBundle();
@@ -289,7 +289,7 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
     assertExists(layout);
     assertEquals(layout.ssr, false);
     assertEquals(layout.dsd, true);
-    assertEquals(layout.hydrate, 'eager');
+    assertEquals(layout.hydrate, 'load');
     assertEquals(layout.renderPath, 'client-only');
     assertEquals(layout.packageName, '@lessjs/ui');
   });
@@ -299,7 +299,7 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
     assertExists(button);
     assertEquals(button.ssr, false);
     assertEquals(button.dsd, true);
-    assertEquals(button.hydrate, 'lazy');
+    assertEquals(button.hydrate, 'idle');
     assertEquals(button.renderPath, 'client-only');
   });
 
@@ -316,7 +316,7 @@ Deno.test('SSG report: manifestDecisions populated from ctx', async (t) => {
   }
 });
 
-// ─── CEM Compatibility Report (v0.18.0) ─────────────────────────
+// 鈹€鈹€鈹€ CEM Compatibility Report (v0.18.0) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('SSG report: cemCompatibility is absent when no CEM classifications', async () => {
   if (existsSync(TEST_OUT_DIR)) {
@@ -354,7 +354,7 @@ Deno.test('SSG report: cemCompatibility populated from ctx.phase1.cemClassificat
       modulePath: './ssr-button.js',
       ssr: true,
       dsd: true,
-      hydrate: 'eager',
+      hydrate: 'load',
     },
     {
       tagName: 'client-button',
@@ -364,7 +364,7 @@ Deno.test('SSG report: cemCompatibility populated from ctx.phase1.cemClassificat
       modulePath: './client-button.js',
       ssr: false,
       dsd: false,
-      hydrate: 'lazy',
+      hydrate: 'idle',
     },
     {
       tagName: 'invalid-tag',
@@ -467,7 +467,7 @@ Deno.test('SSG report: cemCompatibility with only ssr-capable components', async
   }
 });
 
-Deno.test('SSG report: reportVersion is 1.1.0 with CEM support', async () => {
+Deno.test('SSG report: reportVersion is 1.2.0 with hydration strategy summary', async () => {
   if (existsSync(TEST_OUT_DIR)) {
     rmSync(TEST_OUT_DIR, { recursive: true, force: true });
   }
@@ -476,7 +476,7 @@ Deno.test('SSG report: reportVersion is 1.1.0 with CEM support', async () => {
   await ssgRender(bundle, defaultOptions);
 
   const report = readReport(TEST_OUT_DIR);
-  assertEquals(report.reportVersion, '1.1.0');
+  assertEquals(report.reportVersion, '1.2.0');
 
   if (existsSync(TEST_OUT_DIR)) {
     rmSync(TEST_OUT_DIR, { recursive: true, force: true });

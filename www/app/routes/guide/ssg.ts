@@ -102,8 +102,8 @@ export class SSGGuidePage extends DsdElement {
           </tbody></table>
           <h2>Security Post-Processing</h2>
           <p>SSG output must preserve the security behavior from the generated Hono entry. CSP metadata, nonces, PWA head tags, and island scripts should be injected through a shared post-processing path, ensuring static deployment does not silently lose protections present in SSR mode.</p>
-          <h2>ISR Not Yet Supported</h2>
-          <p>LessJS's current stable delivery is SSG. ISR requires route-level revalidation, cache locking, adapter contracts, failure fallback, and CDN semantics. It belongs on the roadmap, not as a currently dependable production capability.</p>
+          <h2>ISR Metadata</h2>
+          <p>LessJS v0.21 supports route-level <span class="inline-code">revalidate</span> metadata and emits <span class="inline-code">isr-manifest.json</span> during build. Cache persistence, locking, and CDN invalidation semantics belong to deployment adapters.</p>
           <h2>Universal Rendering Boundary</h2>
           <p>
             SSG can pre-render LessJS pages and manifest-valid Web Components, but it cannot safely

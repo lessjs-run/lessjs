@@ -1,14 +1,14 @@
 {
   "name": "@lessjs/adapter-react",
-  "version": "0.20.0",
+  "version": "0.21.0",
   "exports": {
     ".": "./src/index.ts",
     "./ssr": "./src/ssr.ts",
     "./dsd-hydration": "./src/dsd-hydration.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.20.0",
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.20.0/logger",
+    "@lessjs/core": "jsr:@lessjs/core@^0.21.0",
+    "@lessjs/core/logger": "jsr:@lessjs/core@^0.21.0/logger",
     "react": "npm:react@^19",
     "react-dom": "npm:react-dom@^19",
     "react-dom/server": "npm:react-dom@^19/server.node"

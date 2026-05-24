@@ -8,14 +8,12 @@
  * @csspart dot-static  - The static status dot
  * @csspart dot-animated - The animated ping button
  */
-import { DsdElement } from '@lessjs/core';
+import { DsdElement, html, StyleSheet } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
-import { StyleSheet, type StyleSheetLike } from '@lessjs/core';
-import type { HydrateEventDescriptor } from '@lessjs/core';
 
 export const tagName = 'less-hero-ping';
 
-const styles: StyleSheetLike = new StyleSheet();
+const styles = new StyleSheet();
 styles.replaceSync(`
   :host {
     display: inline-flex;
@@ -76,10 +74,6 @@ styles.replaceSync(`
 export default class HeroPing extends DsdElement {
   static override styles = [openPropsTokenSheet, styles];
 
-  static override hydrateEvents: HydrateEventDescriptor[] = [
-    { selector: 'button.ping', event: 'click', method: '_fetch' },
-  ];
-
   apiUrl = '';
   _state: 'idle' | 'loading' | 'ok' | 'err' = 'idle';
   _msg = '';
@@ -120,23 +114,26 @@ export default class HeroPing extends DsdElement {
     }
   };
 
-  override render(): string {
+  override render() {
     const dotClass = `dot ${this._state}`;
     const loading = this._state === 'loading';
-    return [
-      `<span class="${dotClass}" part="dot-static"></span>`,
-      `<button class="ping" part="dot-animated"${loading ? ' disabled' : ''}>`,
-      loading ? 'pinging...' : 'ping server',
-      '</button>',
-      this._msg ? `<span class="info"><span class="${this._state}">${this._msg}</span></span>` : '',
-    ].join('');
+    return html`
+      <span class="${dotClass}" part="dot-static"></span>
+      <button class="ping" part="dot-animated" ?disabled="${loading}" @click="${this._fetch}">
+        ${loading ? 'pinging...' : 'ping server'}
+      </button>
+      ${this._msg
+        ? html`
+          <span class="info"><span class="${this._state}">${this._msg}</span></span>
+        `
+        : ''}
+    `;
   }
 
   /** Re-render shadow DOM and re-hydrate click events. */
   private _renderToDOM(): void {
     if (!this.shadowRoot) return;
-    this.shadowRoot.innerHTML = this.render();
-    this._hydrateEvents();
+    this.update();
   }
 }
 

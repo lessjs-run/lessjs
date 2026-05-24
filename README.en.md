@@ -13,12 +13,14 @@ early Registry Hub for Web Component discovery and compatibility evidence.
 
 ## Current State
 
-Project line: **v0.20.0 Ocean-Island Architecture**.
+Project line: **v0.21.0 Reactive DSD**.
 
-The current production rendering mode is **SSG + Declarative Shadow DOM**.
-`renderDSD()` is designed so the same engine can later run at cache-expiry time
-(ISR) or request time (SSR), but those modes are roadmap work, not shipped
-framework guarantees.
+The current production rendering mode is **SSG + Declarative Shadow DOM** with
+explicit island hydration strategies, route-level ISR metadata, and Reactive DSD
+for small DSD-native Web Component interactions. `renderDSD()` remains the
+rendering kernel; v0.21 adds safe `html` templates, Signal-driven `DsdElement`
+updates, and streaming DSD without turning LessJS into a generic request-time
+SSR server.
 
 Package publishing is currently staggered: `@lessjs/ui` carries the v0.20.0
 Ocean-Island work, and core packages have been aligned to a coordinated
@@ -57,7 +59,18 @@ LessJS
   that works during Deno/Node builds.
 - **Ocean-Island UI model** - most UI components render as DSD-native ocean
   components; framework-heavy behavior remains in islands.
-- **Hono API routes** - basic API routes work through the app route tree.
+- **Hydration strategies** - `client:load`, `client:idle`, `client:visible`,
+  and `client:only` are the only public island strategies.
+- **Reactive DSD** - `DsdElement` can render native `html` templates and update
+  from Signal-like values for small interactive components.
+- **Safe templates** - template interpolation escapes by default, with
+  `unsafeHTML()` as the explicit trust boundary.
+- **Streaming DSD** - `renderDSDStream()` emits Response-compatible Web Stream
+  chunks for future edge handlers.
+- **ISR metadata** - routes can expose `revalidate`, producing ISR manifest
+  evidence and using core cache primitives for adapter implementations.
+- **API route parity** - API modules can export a Hono app or a
+  `LessApiContext` with `request`, `params`, `env`, and `platform` (type-only).
 - **Registry evidence pipeline** - Hub records, package validation, snapshots,
   and `less add` exist as early-access infrastructure.
 - **Release gates** - formatting, linting, typechecking, tests, build, e2e,
@@ -65,13 +78,8 @@ LessJS
 
 ## What Is Next
 
-- **Hydration strategies** - user-facing `client:load`, `client:idle`,
-  `client:visible`, and `client:only`.
-- **ISR cache layer** - stale-while-revalidate HTML regeneration.
-- **Request context** - consistent env, platform, and request data for API and
-  future SSR paths.
-- **Signals + DsdElement** - reactive DOM updates without turning DSD components
-  into a framework runtime.
+- **Edge Full-Stack** - ISR production handler, KV adapters, showcase proof, and
+  deployment guides.
 - **Hub growth** - more real Web Component packages and clearer compatibility
   badges.
 
@@ -119,7 +127,7 @@ route component
 | Mode | State   | When rendering happens | Server requirement        |
 | ---- | ------- | ---------------------- | ------------------------- |
 | SSG  | shipped | build time             | none after build          |
-| ISR  | next    | cache expiry           | edge/serverless function  |
+| ISR  | v0.21   | cache expiry           | edge/serverless function  |
 | SSR  | later   | every request          | always-on request runtime |
 
 ## Compatibility Boundary
@@ -133,17 +141,17 @@ Every component should reach one deterministic outcome:
 
 ## Roadmap
 
-| Version | Target                                        | Status  |
-| ------- | --------------------------------------------- | ------- |
-| v0.15   | Renderer Kernel Protocol                      | Done    |
-| v0.16   | WC Package Protocol                           | Done    |
-| v0.17   | Ecosystem Entry + SSR Boundary                | Done    |
-| v0.18   | Universal WC Engine                           | Done    |
-| v0.19   | Registry Hub + Component Browser              | Done    |
-| v0.20   | Ocean-Island Architecture + DSD-native UI     | Current |
-| v0.21   | Hydration Strategies + ISR + API Route parity | Next    |
-| v0.22   | DsdElement + Signals rendering                | Planned |
-| v1.0    | Stable Engine contracts                       | Vision  |
+| Version | Target                                    | Status  |
+| ------- | ----------------------------------------- | ------- |
+| v0.15   | Renderer Kernel Protocol                  | Done    |
+| v0.16   | WC Package Protocol                       | Done    |
+| v0.17   | Ecosystem Entry + SSR Boundary            | Done    |
+| v0.18   | Universal WC Engine                       | Done    |
+| v0.19   | Registry Hub + Component Browser          | Done    |
+| v0.20   | Ocean-Island Architecture + DSD-native UI | Shipped |
+| v0.21   | Reactive DSD + streaming                  | Current |
+| v0.22   | Edge Full-Stack ISR + KV + Showcase       | Planned |
+| v1.0    | Stable Engine contracts                   | Vision  |
 
 See [ADR docs](docs/adr/), [SOP docs](docs/sop/), and
 [Roadmap](docs/roadmap/ROADMAP.md) for the governing documents.

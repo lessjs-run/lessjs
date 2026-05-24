@@ -293,7 +293,7 @@ export interface LocalIslandMeta {
   filePath: string;
   ssr?: boolean;
   dsd?: boolean;
-  hydrate?: 'eager' | 'lazy' | 'idle' | 'visible';
+  hydrate?: 'load' | 'idle' | 'visible' | 'only';
   reason?: string;
 }
 
@@ -309,7 +309,7 @@ function readBooleanMeta(source: string, key: 'ssr' | 'dsd'): boolean | undefine
 }
 
 function readHydrateMeta(source: string): LocalIslandMeta['hydrate'] | undefined {
-  const match = source.match(/hydrate\s*:\s*['"](eager|lazy|idle|visible)['"]/);
+  const match = source.match(/hydrate\s*:\s*['"](load|idle|visible|only)['"]/);
   return match ? match[1] as LocalIslandMeta['hydrate'] : undefined;
 }
 
@@ -317,7 +317,7 @@ function readHydrateMeta(source: string): LocalIslandMeta['hydrate'] | undefined
  * Read static local island metadata without importing island modules.
  *
  * Supported form:
- *   export const less = { ssr: false, dsd: true, hydrate: 'idle' }
+ *   export const less = { ssr: false, dsd: false, hydrate: 'only' }
  */
 export async function scanIslandMeta(
   islandsDir: string,
@@ -346,10 +346,14 @@ export async function scanIslandMeta(
     meta[tagName] = {
       tagName,
       filePath,
-      ssr,
-      dsd,
+      ssr: hydrate === 'only' ? false : ssr,
+      dsd: hydrate === 'only' ? false : dsd,
       hydrate,
-      reason: ssr === false ? 'local island exports less.ssr=false' : undefined,
+      reason: hydrate === 'only'
+        ? 'local island exports less.hydrate=only'
+        : ssr === false
+        ? 'local island exports less.ssr=false'
+        : undefined,
     };
   }
 

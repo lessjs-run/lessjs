@@ -27,17 +27,12 @@
  * ```
  */
 
-import {
-  DsdElement,
-  type HydrateEventDescriptor,
-  StyleSheet,
-  type StyleSheetLike,
-} from '@lessjs/core';
+import { DsdElement, html, StyleSheet } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-input';
 
-const sheet: StyleSheetLike = new StyleSheet();
+const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;
@@ -123,54 +118,55 @@ export class LessInput extends DsdElement {
     'error',
   ];
 
-  static override hydrateEvents: HydrateEventDescriptor[] = [
-    { selector: 'input, textarea, select', event: 'input', method: '_handleInput' },
-    { selector: 'input, textarea, select', event: 'change', method: '_handleChange' },
-    { selector: 'input, textarea, select', event: 'focus', method: '_handleFocus' },
-    { selector: 'input, textarea, select', event: 'blur', method: '_handleBlur' },
-  ];
-
-  override render(): string {
+  override render() {
     const type = this.getAttribute('type') || 'text';
-    const placeholder = this._escAttr(this.getAttribute('placeholder') || '');
+    const placeholder = this.getAttribute('placeholder') || '';
     const label = this.getAttribute('label') || '';
-    const value = this._escAttr(this.getAttribute('value') || '');
-    const name = this._escAttr(this.getAttribute('name') || '');
+    const value = this.getAttribute('value') || '';
+    const name = this.getAttribute('name') || '';
     const d = this.hasAttribute('disabled');
     const r = this.hasAttribute('required');
     const error = this.getAttribute('error') || '';
     const errorClass = error ? ' input--error' : '';
 
     const labelHtml = label
-      ? `<label for="input" part="label">${this._esc(label)}${r ? ' *' : ''}</label>`
+      ? html`
+        <label for="input" part="label">${this._esc(label)}${r ? ' *' : ''}</label>
+      `
       : '';
 
     const errorHtml = error
-      ? `<small id="input-error" role="alert" class="error-message" part="error">${
-        this._esc(error)
-      }</small>`
+      ? html`
+        <small id="input-error" role="alert" class="error-message" part="error">${this._esc(
+          error,
+        )}</small>
+      `
       : '';
 
-    const ariaAttrs = error
-      ? 'aria-invalid="true" aria-describedby="input-error" aria-errormessage="input-error"'
-      : '';
-
-    return `<div class="input-wrapper" part="wrapper">
-      ${labelHtml}
-      <input
-        id="input"
-        class="input${errorClass}"
-        part="control"
-        type="${type}"
-        placeholder="${placeholder}"
-        value="${value}"
-        name="${name}"
-        ${d ? 'disabled' : ''}
-        ${r ? 'required' : ''}
-        ${ariaAttrs}
-      />
-      ${errorHtml}
-    </div>`;
+    return html`
+      <div class="input-wrapper" part="wrapper">
+        ${labelHtml}
+        <input
+          id="input"
+          class="${`input${errorClass}`}"
+          part="control"
+          type="${type}"
+          placeholder="${placeholder}"
+          value="${value}"
+          name="${name}"
+          ?disabled="${d}"
+          ?required="${r}"
+          .ariaInvalid="${error ? 'true' : undefined}"
+          .ariaDescribedBy="${error ? 'input-error' : undefined}"
+          .ariaErrorMessage="${error ? 'input-error' : undefined}"
+          @input="${(e: Event) => this._handleInput(e)}"
+          @change="${(e: Event) => this._handleChange(e)}"
+          @focus="${() => this._handleFocus()}"
+          @blur="${() => this._handleBlur()}"
+        />
+        ${errorHtml}
+      </div>
+    `;
   }
 
   override attributeChangedCallback(name: string, old: string | null, val: string | null): void {

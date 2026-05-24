@@ -19,7 +19,7 @@ import { normalizePath } from 'vite';
 import process from 'node:process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import type { Plugin } from 'vite';
-import type { FrameworkOptions, LessPackageManifest } from '@lessjs/core';
+import type { FrameworkOptions, HydrationStrategy, LessPackageManifest } from '@lessjs/core';
 import type { LessBuildContext } from '../build-context.js';
 import type { SsgRenderOptions } from './ssg-render.js';
 import { SsrRenderError } from '@lessjs/core/errors';
@@ -127,7 +127,7 @@ interface BuildSSGOptions {
   headExtras?: string;
   allowHeadExtrasScripts?: boolean;
   html?: { lang?: string; title?: string };
-  upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';
+  upgradeStrategy?: HydrationStrategy;
   resolveAlias?: Record<string, string> | import('vite').Alias[];
   base?: string;
   pwa?: { name?: string; shortName?: string; themeColor?: string; backgroundColor?: string };
@@ -260,7 +260,7 @@ if (typeof globalThis.CSSStyleSheet === 'undefined') {
     headExtras: options.headExtras,
     allowHeadExtrasScripts: options.allowHeadExtrasScripts,
     html: options.html,
-    upgradeStrategy: options.upgradeStrategy || 'lazy',
+    upgradeStrategy: options.upgradeStrategy || 'idle',
     hubClientOnlyTags,
   });
   // Deno import map resolution handles bare specifiers (e.g. @lessjs/ui/less-callout)
@@ -330,6 +330,27 @@ if (typeof globalThis.CSSStyleSheet === 'undefined') {
         })
         .filter(Boolean),
     );
+    // v0.21: Build filePath → tagName map for client-only placeholder generation.
+    const clientOnlyTagMap = new Map<string, string>();
+    for (const [tag, meta] of Object.entries(ssgIslandMeta)) {
+      if (meta.ssr !== false) continue;
+      const file = ssgIslandFiles[ssgIslandTagNames.indexOf(tag)];
+      if (file) clientOnlyTagMap.set(normalizePath(resolve(root, islandsDir, file)), tag);
+    }
+
+    // v0.21 SOP-004: Conflict detection — same tag must not be both SSR and client:only.
+    const ssrTags = new Set(
+      Object.entries(ssgIslandMeta)
+        .filter(([, meta]) => meta.ssr !== false)
+        .map(([tag]) => tag),
+    );
+    const conflictTags = [...clientOnlyTagMap.values()].filter((t) => ssrTags.has(t));
+    if (conflictTags.length > 0) {
+      throw new Error(
+        `[LessJS] SSR+client:only conflict detected for tags: ${conflictTags.join(', ')}. ` +
+          'A tag cannot be both SSR-capable and client:only on the same page.',
+      );
+    }
 
     await viteBuild({
       configFile: false,
@@ -340,6 +361,12 @@ if (typeof globalThis.CSSStyleSheet === 'undefined') {
         chunkSizeWarningLimit: 1500,
         rollupOptions: {
           input: { entry: VIRTUAL_SSG_ENTRY_ID },
+          // v0.21: Suppress IMPORT_IS_UNDEFINED for revalidate — the generated
+          // code uses typeof check which correctly handles undefined exports.
+          onwarn(warning, warn) {
+            if (warning.code === 'IMPORT_IS_UNDEFINED') return;
+            warn(warning);
+          },
           output: {
             format: 'esm',
             // ADR-0028: Inject globalThis.HTMLElement polyfill as banner.
@@ -429,10 +456,20 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
           load(id) {
             const normalized = normalizePath(id.split('?')[0]);
             if (!clientOnlyIslandIds.has(normalized)) return;
+            const tagName = clientOnlyTagMap.get(normalized) || 'less-client-only-stub';
+            // v0.21: Preserve original tag name with data-less-client-only marker.
+            // SSR outputs <tag-name data-less-client-only="true"></tag-name>
+            // Client runtime imports the real module and upgrades the element.
             return [
-              'export const tagName = "less-client-only-stub";',
+              `export const tagName = ${JSON.stringify(tagName)};`,
               'export const less = { ssr: false };',
-              'export default class LessClientOnlyStub extends HTMLElement {}',
+              `export default class LessClientOnlyStub extends HTMLElement {
+  connectedCallback() {
+    if (!this.hasAttribute('data-less-client-only')) {
+      this.setAttribute('data-less-client-only', 'true');
+    }
+  }
+}`,
             ].join('\n');
           },
         },
@@ -563,6 +600,36 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
     }, ctx);
 
     log.info('Static site generated -> ' + join(root, outDir));
+
+    // v0.21: Write ISR manifest for routes exporting revalidate > 0.
+    try {
+      const ssgModule = module as Record<string, unknown>;
+      const routes = (ssgModule.routes || ssgModule.__routes) as
+        | Array<Record<string, unknown>>
+        | undefined;
+      if (routes && routes.length > 0) {
+        const isrRoutes: Record<string, unknown>[] = [];
+        for (const r of routes) {
+          const revalidate = typeof r.revalidate === 'number' && r.revalidate > 0
+            ? r.revalidate
+            : undefined;
+          if (!revalidate) continue;
+          isrRoutes.push({
+            path: r.path,
+            revalidate,
+            cacheKey: `lessjs:isr:${r.path}`,
+            params: r.params || {},
+          });
+        }
+        if (isrRoutes.length > 0) {
+          const manifestPath = join(root, outDir, 'isr-manifest.json');
+          writeFileSync(manifestPath, JSON.stringify(isrRoutes, null, 2), 'utf-8');
+          log.info(`ISR manifest written -> ${manifestPath} (${isrRoutes.length} routes)`);
+        }
+      }
+    } catch (e) {
+      log.warn('Failed to write isr-manifest.json — non-fatal:', e);
+    }
   } catch (err) {
     const cause = err instanceof Error ? err : new Error(String(err));
     throw new SsrRenderError('SSG pipeline', cause);

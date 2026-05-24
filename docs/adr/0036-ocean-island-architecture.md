@@ -90,33 +90,33 @@ We adopt a **two-layer component model**:
 
 ### 2.2 Key Design Decisions
 
-| ID | Decision                                              | Rationale                                            |
-| -- | ----------------------------------------------------- | ---------------------------------------------------- |
-| D1 | `DsdElement` in `@lessjs/core`                        | Zero deps, co-located with `renderDSD()`             |
-| D2 | `render(): string`                                    | Already supported by `renderDSD()` line 177-181      |
-| D3 | `StyleSheet` for styles (SSR-safe CSSStyleSheet shim) | Native API in browser, shim in Deno/Node             |
-| D4 | Open Props for tokens                                 | Replace ~100 lines of custom token code              |
-| D5 | `hydrateEvents` preserved                             | Proven pattern, ported from DsdLitElement            |
-| D6 | `@lessjs/adapter-lit` retained                        | v0.20 keeps compatibility; v0.21 deprecates DSD path |
-| D7 | `less-hero-ping` migrated to DsdElement               | OBE: fully migrated in SOP-017 convergence pass      |
-| D8 | CSS Parts on every component                          | Standard WC external styling API                     |
+| ID | Decision                                              | Rationale                                                                         |
+| -- | ----------------------------------------------------- | --------------------------------------------------------------------------------- |
+| D1 | `DsdElement` in `@lessjs/core`                        | Zero deps, co-located with `renderDSD()`                                          |
+| D2 | `render(): string`                                    | Already supported by `renderDSD()` line 177-181                                   |
+| D3 | `StyleSheet` for styles (SSR-safe CSSStyleSheet shim) | Native API in browser, shim in Deno/Node                                          |
+| D4 | Open Props for tokens                                 | Replace ~100 lines of custom token code                                           |
+| D5 | `hydrateEvents` preserved → **DEPRECATED v0.21.0**    | Superseded by `@click` in `html` templates (ADR-0039). See SOP-006 for migration. |
+| D6 | `@lessjs/adapter-lit` retained                        | v0.20 keeps compatibility; v0.21 deprecates DSD path                              |
+| D7 | `less-hero-ping` migrated to DsdElement               | OBE: fully migrated in SOP-017 convergence pass                                   |
+| D8 | CSS Parts on every component                          | Standard WC external styling API                                                  |
 
 ### 2.3 What Changes
 
-| v0.19 (Current)                        | v0.20 (Target)                                    |
-| -------------------------------------- | ------------------------------------------------- |
-| `DsdLitElement` (Lit base)             | `DsdElement` (HTMLElement base)                   |
-| `render() → TemplateResult`            | `render() → string`                               |
-| `css\`...\`` (Lit)                     | `CSSStyleSheet + replaceSync()`                   |
-| `static properties` + `updated()`      | `observedAttributes` + `attributeChangedCallback` |
-| `@click` (SSR stripped)                | `hydrateEvents` (same pattern, no stripping)      |
-| `color-values.ts` + `design-tokens.ts` | Open Props (zero maintenance)                     |
-| Inline `cssText` (less-search)         | `CSSStyleSheet`                                   |
+| v0.19 (Current)                        | v0.20 (Target)                                       |
+| -------------------------------------- | ---------------------------------------------------- |
+| `DsdLitElement` (Lit base)             | `DsdElement` (HTMLElement base)                      |
+| `render() → TemplateResult`            | `render() → string`                                  |
+| `css\`...\`` (Lit)                     | `CSSStyleSheet + replaceSync()`                      |
+| `static properties` + `updated()`      | `observedAttributes` + `attributeChangedCallback`    |
+| `@click` (SSR stripped)                | `hydrateEvents` (v0.20) → `@click` in `html` (v0.21) |
+| `color-values.ts` + `design-tokens.ts` | Open Props (zero maintenance)                        |
+| Inline `cssText` (less-search)         | `CSSStyleSheet`                                      |
 
 ### 2.4 What Stays the Same
 
 - `renderDSD()` and `wrapDsdOutput()` — already support `render(): string`
-- `hydrateEvents` protocol — same interface
+- `hydrateEvents` protocol — **deprecated in v0.21.0**, replaced by `@click` in `html` templates (ADR-0039, SOP-006)
 - `adapter-registry` — same multi-adapter dispatch
 - `@lessjs/adapter-lit` — retained for Pure Island SSR
 - `less-hero-ping` — stays Lit

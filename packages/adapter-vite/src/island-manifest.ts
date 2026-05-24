@@ -7,6 +7,7 @@
 
 import { join } from 'node:path';
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import type { HydrationStrategy } from '@lessjs/core';
 
 /** Island manifest entry for a single custom element */
 export interface IslandManifestEntry {
@@ -15,7 +16,7 @@ export interface IslandManifestEntry {
   /** Client chunk URL relative to site root */
   chunkUrl: string;
   /** Upgrade strategy */
-  strategy: 'eager' | 'lazy' | 'idle' | 'visible';
+  strategy: HydrationStrategy;
   /** Component layer */
   layer: 'dsd-static' | 'dsd-interactive' | 'pure-island';
 }
@@ -31,7 +32,7 @@ export interface PageIslandManifest {
 }
 
 /** Strategy map type: tagName -> strategy */
-export type IslandStrategyMap = Record<string, 'eager' | 'lazy' | 'idle' | 'visible'>;
+export type IslandStrategyMap = Record<string, HydrationStrategy>;
 
 /** Layer map type: tagName -> layer */
 export type IslandLayerMap = Record<string, 'dsd-static' | 'dsd-interactive' | 'pure-island'>;
@@ -93,7 +94,7 @@ export function generateIslandManifests(
         .map((tag) => ({
           tagName: tag,
           chunkUrl: islandChunkMap[tag],
-          strategy: strategyMap[tag] || 'lazy',
+          strategy: strategyMap[tag] || 'idle',
           layer: layerMap[tag] || 'dsd-static',
         }));
 

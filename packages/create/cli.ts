@@ -123,6 +123,7 @@ node_modules/
     "@lessjs/core/navigation": "jsr:@lessjs/core@^${v.core}/navigation",
     "@lessjs/i18n": "jsr:@lessjs/i18n@^${v.i18n}",
     "@lessjs/signals": "jsr:@lessjs/signals@^${v.signals}",
+    "@lessjs/signals/framework": "jsr:@lessjs/signals@^${v.signals}/framework",
     "@lessjs/ui": "jsr:@lessjs/ui@^${v.ui}",
     "@lessjs/ui/open-props-tokens": "jsr:@lessjs/ui@^${v.ui}/open-props-tokens",
     "@lessjs/ui/": "jsr:@lessjs/ui@^${v.ui}/"
@@ -152,6 +153,7 @@ const colorTokensStyle =
   'body{margin:0;background:var(--gray-1);color:var(--gray-9);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>';
 
 const lessUiAliases = {
+  '@lessjs/signals/framework': 'https://jsr.io/@lessjs/signals/${v.signals}/src/framework.ts',
   '@lessjs/ui/less-hero-ping': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-hero-ping.ts',
   '@lessjs/ui/less-input': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-input.ts',
   '@lessjs/ui/less-layout': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-layout.ts',
@@ -222,9 +224,8 @@ export default class HomePage extends DsdElement {
   }
 }
 `,
-    'app/islands/my-counter.ts': `import { DsdElement } from '@lessjs/core';
+    'app/islands/my-counter.ts': `import { DsdElement, html, signal } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/core';
-import type { HydrateEventDescriptor } from '@lessjs/core';
 
 export const tagName = 'my-counter';
 
@@ -237,26 +238,12 @@ styles.replaceSync(\`
 export default class MyCounter extends DsdElement {
   static override styles = styles;
 
-  static override hydrateEvents: HydrateEventDescriptor[] = [
-    { selector: 'button.dec', event: 'click', method: '_dec' },
-    { selector: 'button.inc', event: 'click', method: '_inc' },
-  ];
-
-  count = 0;
+  count = signal(0);
 
   override render() {
-    return \`<button class="dec">-</button>
+    return html\`<button @click=\${() => this.count.value--}>-</button>
 <span>\${this.count}</span>
-<button class="inc">+</button>\`;
-  }
-
-  private _dec() { this.count--; this._update(); }
-  private _inc() { this.count++; this._update(); }
-
-  private _update() {
-    if (!this.shadowRoot) return;
-    this.shadowRoot.innerHTML = this.render();
-    this._hydrateEvents();
+<button @click=\${() => this.count.value++}>+</button>\`;
   }
 }
 

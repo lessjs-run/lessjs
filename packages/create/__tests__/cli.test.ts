@@ -145,12 +145,13 @@ Deno.test('create-less: route index imports DsdElement (v0.20 Ocean-Island)', ()
   assertEquals(routeIndex.includes('LitElement'), false);
 });
 
-Deno.test('create-less: island counter imports DsdElement and self-registers (v0.20)', () => {
+Deno.test('create-less: island counter imports DsdElement and self-registers (v0.21)', () => {
   const islandCounter = extractTemplate('app/islands/my-counter.ts');
   assert(islandCounter.includes('DsdElement'));
   assert(islandCounter.includes("from '@lessjs/core'"));
   assert(islandCounter.includes("tagName = 'my-counter'"));
-  assert(islandCounter.includes('hydrateEvents'));
+  assert(islandCounter.includes('signal(0)'));
+  assert(islandCounter.includes('return html'));
   assert(islandCounter.includes('customElements.define'));
   // Verify no Lit dependency in Ocean template
   assertEquals(islandCounter.includes("from 'lit'"), false);
@@ -228,6 +229,7 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     writeFileSync(denoJsonPath, JSON.stringify(denoJson, null, 2));
 
     const uiSrc = join(repoRoot, 'packages', 'ui', 'src');
+    const signalsSrc = join(repoRoot, 'packages', 'signals', 'src');
     const aliases = [
       {
         find: '@lessjs/adapter-vite/build-context',
@@ -250,6 +252,10 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       {
         find: '@lessjs/core',
         replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'index.ts')),
+      },
+      {
+        find: '@lessjs/signals/framework',
+        replacement: vitePath(join(signalsSrc, 'framework.ts')),
       },
       {
         find: '@lessjs/adapter-lit/ssr',

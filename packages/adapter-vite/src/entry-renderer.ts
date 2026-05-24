@@ -51,7 +51,12 @@ import type {
   PageRouteDecl,
   RendererDecl,
 } from './entry-descriptor.js';
-import type { FrameworkOptions, LessPackageManifest, RouteEntry } from '@lessjs/core';
+import type {
+  FrameworkOptions,
+  HydrationStrategy,
+  LessPackageManifest,
+  RouteEntry,
+} from '@lessjs/core';
 import { buildEntryDescriptor, buildSsrAdmissionPlan } from './entry-descriptor.js';
 
 // Re-export for consumers that import from entry-renderer.ts
@@ -190,7 +195,24 @@ function renderMiddleware(lines: string[], mw: MiddlewareDecl): void {
  */
 function renderApiRoute(lines: string[], route: ApiRouteDecl): void {
   lines.push(`// API: ${route.path} (${route.filePath})`);
-  lines.push(`app.route('${route.path}', ${route.varName}.default)`);
+  lines.push(
+    `if (${route.varName}.default && typeof ${route.varName}.default.fetch === 'function') {`,
+  );
+  lines.push(`  app.route('${route.path}', ${route.varName}.default)`);
+  lines.push(`} else if (typeof ${route.varName}.default === 'function') {`);
+  lines.push(`  app.all('${route.path}', async (c) => {`);
+  lines.push(`    return await ${route.varName}.default({`);
+  lines.push(`      request: c.req.raw,`);
+  lines.push(`      params: c.req.param() || {},`);
+  lines.push(`      env: c.env || {},`);
+  lines.push(`      platform: c.executionCtx,`);
+  lines.push(`    })`);
+  lines.push(`  })`);
+  lines.push(`} else {`);
+  lines.push(
+    `  throw new Error('API route ${route.path} must default-export a Hono app or a function (ctx) => Response')`,
+  );
+  lines.push(`}`);
   lines.push('');
 }
 
@@ -601,7 +623,7 @@ export function renderEntry(desc: EntryDescriptor): string {
           JSON.stringify(
             r.paramNames || [],
           )
-        } },`,
+        }, revalidate: typeof ${r.varName}.revalidate === 'number' ? ${r.varName}.revalidate : undefined },`,
       );
     }
     lines.push('];');
@@ -734,7 +756,7 @@ export interface HonoEntryOptions {
   headExtras?: string;
   allowHeadExtrasScripts?: boolean;
   html?: { lang?: string; title?: string };
-  upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';
+  upgradeStrategy?: HydrationStrategy;
   /** Hub registry client-only tag names (ADR-0035 A1) */
   hubClientOnlyTags?: string[];
 }

@@ -46,16 +46,28 @@ export default class MediaChromeShowcase extends MediaChromeBase {
     }
     super.connectedCallback();
 
+    // Populate shadow root with render() content immediately so something is visible
+    // even before media-chrome library loads.
+    if (this.shadowRoot && !this.shadowRoot.childNodes.length) {
+      this.shadowRoot.innerHTML = this.render();
+    }
+
     // Load media-chrome dynamically on the client only.
-    // Using import() to define media-chrome custom elements
-    // without crashing during SSR.
     if (!this._mcLoaded && typeof globalThis.HTMLElement !== 'undefined') {
       this._mcLoaded = true;
       import('media-chrome').then(() => {
         this._mcError = false;
+        // Re-render so media-controller elements upgrade with media-chrome registered
+        if (this.shadowRoot) {
+          this.shadowRoot.innerHTML = this.render();
+        }
       }).catch((err: Error) => {
         this._mcError = true;
         console.warn('[media-chrome] failed to load:', err.message);
+        // Show error state in the UI
+        if (this.shadowRoot) {
+          this.shadowRoot.innerHTML = this.render();
+        }
       });
     }
   }

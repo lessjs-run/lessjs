@@ -19,12 +19,12 @@ admission contracts instead of outrunning them.
 
 | Area                      | State                                                 |
 | ------------------------- | ----------------------------------------------------- |
-| Project line              | v0.20.0 Ocean-Island Architecture                     |
+| Project line              | v0.21.0 Reactive DSD                                  |
 | Current rendering mode    | SSG + Declarative Shadow DOM                          |
 | Current DSD base          | `DsdElement` + SSR-safe `StyleSheet`                  |
 | Current framework surface | file routes, Hono API routes, dev/build pipeline      |
 | Current Hub surface       | early Registry Hub, validation, snapshots, `less add` |
-| Next milestone            | v0.21.x Hydration Strategies + ISR                    |
+| Next milestone            | v0.22.x Edge Full-Stack                               |
 
 Package publishing is staggered. The roadmap tracks the project line, while
 individual package versions may lag until a coordinated publish pass.
@@ -38,9 +38,9 @@ individual package versions may lag until a coordinated publish pass.
 | 3     | v0.17.x | Ecosystem Entry           | Manifest-native pipeline and multi-adapter boundary            | Done    |
 | 4     | v0.18.x | Universal WC Engine       | CEM parser, compatibility tiers, validation CLI, safe add flow | Done    |
 | 5     | v0.19.x | Registry Hub MVP          | Searchable validated package index with reports and snapshots  | Done    |
-| 6     | v0.20.x | Ocean-Island Architecture | DsdElement, DSD-native UI, CSS Parts, cleanup gates            | Current |
-| 7     | v0.21.x | Hydration + ISR           | `client:*` directives, ISR cache, API route parity             | Next    |
-| 8     | v0.22.x | Reactive DSD              | DsdElement + Signals, safe templates, optional DOM diffing     | Planned |
+| 6     | v0.20.x | Ocean-Island Architecture | DsdElement, DSD-native UI, CSS Parts, cleanup gates            | Done    |
+| 7     | v0.21.x | Reactive DSD              | DsdElement + Signals, safe templates, streaming DSD            | Done    |
+| 8     | v0.22.x | Edge Full-Stack           | ISR handler, KV adapters, Showcase, deployment guides          | Current |
 | 9     | v1.0.x  | Stable Engine             | API/schema freeze and deterministic package guarantees         | Vision  |
 
 ## Compatibility Admission Model
@@ -138,48 +138,43 @@ Exit criteria:
 - README, roadmap, status, and website docs no longer describe v0.18/v0.19 as
   the current public line.
 
-## Next: v0.21.x - Hydration + ISR
+### v0.21.x - Reactive DSD
 
-Goal: make LessJS credible as a DSD-first application framework, not only a
-static rendering engine.
+Goal: make `DsdElement` the universal reactive base class via Signals integration.
+Ocean components gain reactivity without Lit, React, or any framework runtime.
 
-### P0: Hydration Strategies
+Scope:
 
-| Directive        | Behavior                   | Exit requirement            |
-| ---------------- | -------------------------- | --------------------------- |
-| `client:load`    | Hydrate immediately        | dev and build parity        |
-| `client:idle`    | Hydrate on browser idle    | no fallback breakage        |
-| `client:visible` | Hydrate on viewport entry  | IntersectionObserver tested |
-| `client:only`    | No SSR, client-only render | SSR bundle excludes module  |
+- DsdElement + Signals subscription tracking for TemplateResult values
+- Microtask-batched component-local rerendering for Signal writes
+- `html` tagged template literal (zero build step, XSS-safe by default)
+- Safe templates: automatic escaping, `unsafeHTML()` escape hatch
+- Streaming DSD: `renderDSDStream()` -> `ReadableStream<Uint8Array>`
+- Progressive page delivery: TTFB < 50ms, per-component chunking
+- Priority ordering: above-fold first, below-fold deferred
+- No DOM diff in v0.21: complex UI remains an Island responsibility
 
-Exit criteria:
+See `docs/sop/v0.21.0/` for detailed SOPs.
 
-- Directives work for local islands and package islands.
-- DSD report records strategy and reason.
-- Pages load only the islands they use.
+## Current: v0.22.x - Edge Full-Stack
 
-### P0: ISR Cache Layer
+Goal: close the ISR loop — production handler, KV adapters, and www self-hosting proof.
 
-Goal: add stale-while-revalidate HTML regeneration without forcing every route
-into request-time SSR.
+Scope:
 
-Exit criteria:
+- ISR production handler (CF Workers / Deno Deploy)
+- KvIsrCache adapters (CF Workers KV + Deno KV)
+- www Showcase pages (Reactive DSD demo, ISR stopwatch, serverless API)
+- Deployment guides (CF Workers, Deno Deploy, static-only)
+- v0.21 cleanup and release verification
 
-- Route-level revalidation metadata.
-- Cache hit, stale hit, and regeneration paths covered by tests.
-- At least one www route demonstrates ISR behavior behind a runtime adapter.
+See `docs/sop/v0.22.0/` for detailed SOPs.
 
-### P1: API Route Production Parity
+Non-goals:
 
-Goal: API routes should behave consistently across dev, build, and serverless
-deployment.
-
-Exit criteria:
-
-- Request context object.
-- Environment variable and platform access pattern.
-- API route examples and tests.
-- Clear deployment guide.
+- replacing Lit as a full template language
+- making every DSD component reactive by default
+- shipping a compiler before runtime contracts are stable
 
 ### P1: Hub Ecosystem Growth
 
@@ -191,24 +186,6 @@ Exit criteria:
 - Compatibility badges distinguish SSR-capable, client-only, rejected, and
   snapshot-verified packages.
 - Author-facing Hub submission guide.
-
-## Planned: v0.22.x - Reactive DSD
-
-Goal: improve component authoring without turning DSD components into a heavy
-client framework.
-
-Scope:
-
-- `DsdElement` + Signals integration.
-- Safe HTML helper with automatic escaping.
-- Optional DOM diffing for stateful island paths.
-- Clear distinction between static DSD, event-only DSD, and reactive island.
-
-Non-goals:
-
-- replacing Lit as a full template language
-- making every DSD component reactive by default
-- shipping a compiler before runtime contracts are stable
 
 ## Vision: v1.0 Stable Engine
 
@@ -235,8 +212,8 @@ v1.0 should not promise:
 | Concern                      | Current state                                       | Target                                                       |
 | ---------------------------- | --------------------------------------------------- | ------------------------------------------------------------ |
 | Third-party UI compatibility | Known SSR errors are classified and gated           | More packages with explicit compatibility badges             |
-| Full-stack capabilities      | routing, SSG, Hono API routes                       | ISR, request context, deployment parity                      |
-| Islands hydration            | binary SSR/client-only boundary                     | `client:*` user-facing strategies                            |
+| Full-stack capabilities      | routing, SSG, Hono API routes, ISR metadata         | runtime ISR adapters, deployment parity                      |
+| Islands hydration            | `client:*` user-facing strategies                   | richer diagnostics and runtime coverage                      |
 | Documentation sync           | SOP-015 governs public docs                         | release checklist blocks stale current-version claims        |
 | Test coverage                | strong core/build/e2e base, uneven package coverage | targeted coverage for UI, i18n, create, adapters             |
 | Hub scale                    | early index                                         | at least 10 useful packages before stronger market claims    |

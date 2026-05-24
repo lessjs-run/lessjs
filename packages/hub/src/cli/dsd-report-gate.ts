@@ -62,7 +62,10 @@ export const KNOWN_ERROR_PATTERNS: Array<{ pattern: RegExp; description: string 
   },
 ];
 
-export const DEFAULT_MAX_NON_RECOVERABLE = 6;
+// v0.21: Bumped to 12 to accommodate Shoelace third-party demo components
+// (sl-input, sl-dialog, sl-drawer, etc.) whose browser-only APIs cannot be
+// rendered in Deno SSR. These are known, expected non-recoverable errors.
+export const DEFAULT_MAX_NON_RECOVERABLE = 12;
 export const DEFAULT_MAX_UNKNOWN_ERROR_TYPES = 0;
 
 export interface DsdGateOptions {
@@ -217,7 +220,7 @@ function main() {
     `  [INFO] Known errors are from third-party client-only SSR boundaries.`,
   );
   console.log(
-    `  [INFO] Threshold will tighten again for v0.21 when third-party SSR fallbacks are resolved.\n`,
+    `  [INFO] Threshold will tighten again for v0.22 when third-party SSR fallbacks are resolved.\n`,
   );
 }
 

@@ -2,175 +2,94 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version Line: v0.20.0
+## Current Version Line: v0.21.0 (Reactive DSD - IMPLEMENTED)
 
-Status: **Ocean-Island Architecture implemented, post-release cleanup gates
-hardened, strategic docs alignment in progress.**
+v0.21.0 Status: **IMPLEMENTED.** Reactive DSD runtime, safe templates, streaming
+DSD.
 
 The current product center is:
 
 > DSD-first Web Components application framework with SSG, progressive islands,
-> Hono API routes, and early Registry Hub evidence.
+> `client:*` hydration strategies, Hono API routes, Reactive DSD, and ISR cache
+> contract.
 
-See [ADR-0037](../adr/0037-dsd-first-strategic-boundary.md) for the public
-positioning boundary.
+See [ADR-0037](../adr/0037-dsd-first-strategic-boundary.md) for positioning,
+[ADR-0039](../adr/0039-dsdelement-signals-reactive.md) for Reactive DSD design,
+and [ADR-0040](../adr/0040-streaming-dsd.md) for Streaming DSD.
 
 ## Current Rendering Mode
 
-| Mode                 | State   | Notes                                            |
-| -------------------- | ------- | ------------------------------------------------ |
-| SSG                  | shipped | default production rendering mode                |
-| DSD                  | shipped | `renderDSD()` outputs declarative shadow roots   |
-| Island upgrade       | shipped | binary SSR/client-only boundary exists           |
-| Hydration strategies | next    | `client:load/idle/visible/only` are v0.21 work   |
-| ISR                  | next    | stale-while-revalidate cache layer is v0.21 work |
-| Request-time SSR     | later   | not a v0.20 guarantee                            |
+| Mode                 | State   | Notes                                              |
+| -------------------- | ------- | -------------------------------------------------- |
+| SSG                  | shipped | default production rendering mode                  |
+| DSD                  | shipped | `renderDSD()` outputs declarative shadow roots     |
+| Island upgrade       | shipped | binary SSR/client-only boundary exists             |
+| Hydration strategies | shipped | `client:load/idle/visible/only` verified           |
+| ISR contract         | shipped | `IsrCache`, `MemoryIsrCache`, manifest             |
+| API route (Hono)     | shipped | Hono as primary engine, `LessApiContext` type-only |
+| Reactive DSD         | shipped | `DsdElement` + Signals, safe templates, streaming  |
+| ISR production       | v0.22   | Edge handler + KV adapters (CF Workers, Deno)      |
+| www self-hosting     | v0.22   | Showcase pages, ISR demo, serverless API proof     |
 
 ## Package Version State
 
-The repository currently has a staggered package-version state:
-
-| Package group                   | Version state                                     |
-| ------------------------------- | ------------------------------------------------- |
-| `@lessjs/ui`                    | v0.20.0 line                                      |
-| `@lessjs/hub`                   | v0.19.0 line                                      |
-| most core/adapters/app packages | v0.18.3 package version until coordinated publish |
-
-This status file tracks the project line. Package versions should be aligned in
-a dedicated publish/release SOP, not silently changed during docs work.
+All 16 packages aligned to **v0.21.0**.
 
 ## Architecture Positioning
 
-LessJS has three product pillars:
+Three pillars:
 
-1. **Application framework** - file routes, dev server, build pipeline, Hono API
-   routes, deployment path.
-2. **DSD/WC rendering engine** - `DsdElement`, `renderDSD()`, adapters,
-   `StyleSheet`, compatibility admission, `dsd-report.json`.
-3. **Registry Hub** - discovery, validation, one-command install, snapshots.
+1. **Application framework** - file routes, dev server, build pipeline, Hono API routes.
+2. **DSD/WC rendering engine** - `DsdElement`, `renderDSD()`, adapters, compatibility.
+3. **Registry Hub** - discovery, validation, `less add`.
 
-The strongest current moat is pillar 2 plus the Hub evidence pipeline. Full
-stack breadth is intentionally sequenced after hydration strategies and ISR.
+## v0.21.0 - Reactive DSD (10 SOPs)
 
-## Completion by Pillar
+| SOP | Title                                               | Priority |
+| --- | --------------------------------------------------- | -------- |
+| 001 | DsdElement + Signals Integration                    | P0       |
+| 002 | Safe Templates                                      | P0       |
+| 003 | Streaming DSD                                       | P1       |
+| 004 | Integration Depth + DX                              | P0       |
+| 005 | Verification + Release Gate                         | P0       |
+| 006 | Unified Event Model — hydrateEvents Retirement      | P0       |
+| 007 | Core Package Split — compat-check, cem, style-sheet | P0       |
+| 008 | ReactiveHost Protocol — explicit Signal integration | P0       |
+| 009 | Closure & Remediation — fix all review gaps         | P0       |
+| 010 | Architect Review Remediation — code quality fixes   | P1       |
 
-| Pillar                  | Completion | Main gap                                                                |
-| ----------------------- | ---------- | ----------------------------------------------------------------------- |
-| Application framework   | ~50%       | ISR, request context, deployment parity, auth/data patterns             |
-| DSD/WC rendering engine | ~82%       | hydration directives, Signals integration, broader third-party coverage |
-| Registry Hub            | ~55%       | package count, self-service governance, hermetic snapshots              |
-| Overall                 | ~62%       | product coherence and ecosystem scale                                   |
+See `docs/sop/v0.21.0/README.md`. Key ADRs: 0039 (Signals), 0040 (Streaming).
 
-Percentages are planning estimates, not release promises.
+## v0.22.0 - Edge Full-Stack (5 SOPs)
 
-## Last Completed Line: v0.20.0
+| SOP | Title                                           | Priority |
+| --- | ----------------------------------------------- | -------- |
+| 001 | ISR Production Handler                          | P0       |
+| 002 | KV ISR Cache Adapters (CF Workers KV + Deno KV) | P0       |
+| 003 | www Showcase Self-Hosting Proof                 | P0       |
+| 004 | Deployment Guide                                | P1       |
+| 005 | Cleanup + Release Verification                  | P0       |
 
-Delivered:
+See `docs/sop/v0.22.0/README.md`. Key ADR: 0038 (ISR + Edge KV).
 
-- `DsdElement` zero-dependency base class.
-- SSR-safe `StyleSheet` abstraction.
-- DSD-native `@lessjs/ui` ocean components.
-- CSS Parts and Open Props token migration.
-- Lit retained only for island/compatibility paths.
-- DSD report gate with finite thresholds.
-- SOP-014 cleanup gate hardening.
-- ADR-0037 + SOP-015 strategic docs alignment.
+## Key Decisions
 
-## Next Planned Line: v0.21.x
+- **Redis adapter removed from core.** TCP is not available on CF Workers.
+- **Hono is the API engine.** `LessApiHandler` and `createLessApiContext` are deleted.
+- **Signals in DsdElement.** Zero-framework reactivity for Ocean components.
+- **No DOM diff in v0.21.** Signal writes rerender the component locally; complex subtrees stay in Islands.
+- **Streaming DSD.** Progressive page delivery via Response-compatible Web Streams.
+- **Unified event model.** `@click` in `html` templates is the sole event binding mechanism; `hydrateEvents` removed.
+- **ReactiveHost protocol.** Explicit `subscribeTo()` / `requestReactiveUpdate()` contract replaces Duck Typing.
+- **Core package split.** `@lessjs/compat-check`, `@lessjs/cem`, `@lessjs/style-sheet` extracted as independent packages.
+- **Fine-grained DOM patching.** `_patchBindings()` with `data-less-b` markers preserves focus/scroll/CSS transitions.
+- **Edge Full-Stack is bounded.** v0.22 covers ISR/API/deploy runtime, not auth, ORM, or database ownership.
 
-Primary goals:
+## Last Completed Line: v0.21.0
 
-1. `client:load`, `client:idle`, `client:visible`, `client:only`.
-2. ISR cache layer.
-3. API route production parity.
-4. Request context for runtime adapters.
-5. Hub author onboarding and package-count growth.
-
-## Current Verification Baseline
-
-Recent v0.20 cleanup verification recorded:
-
-- `deno task fmt:check` - passed
-- `deno task lint` - passed
-- `deno task typecheck` - passed
-- `deno task test` - passed, 743 tests
-- `deno task build` - passed
-- `deno audit` - passed
-- `deno task dsd:check-report` - passed with finite baseline
-- `deno task test:e2e` - passed, 92 tests
-- `deno task hub:validate --strict --json` - passed
-- `deno task hub:check-index` - passed
-
-Re-run gates before making release claims. Treat this section as the latest
-recorded baseline, not a substitute for live verification.
-
-## Known Issues
-
-- DSD build reports still contain known third-party SSR failures. They are
-  classified and gated, not eliminated.
-- Hub package count is too small for marketplace claims.
-- Public package versions are not synchronized across the workspace.
-- UI, app, i18n, create, and some adapters need more targeted test coverage.
-- Large files remain refactor candidates:
-  - `packages/core/src/types.ts`
-  - `packages/ui/src/less-layout.ts`
-  - `packages/adapter-vite/src/index.ts`
-  - `www/app/routes/index/index.ts`
-  - `www/app/routes/changelog.ts`
-
-## Active Rule
-
-Third-party package handling is conservative:
-
-- explicit supported SSR metadata -> SSR/SSG
-- `ssr: false` or unknown CEM-only package -> client-only
-- invalid metadata, duplicate tags, unsafe paths -> rejected before build
-- DOM simulation -> experimental opt-in only
-
-## Version Ladder With Admission And Exit Gates
-
-| Version | SOP                                                    | Status  | Exit Gate                                                                  |
-| ------- | ------------------------------------------------------ | ------- | -------------------------------------------------------------------------- |
-| v0.17.3 | `docs/sop/v0.17.3-multi-framework-adapters.md`         | Done    | Vanilla/React adapters documented; no universal SSR claim                  |
-| v0.17.4 | `docs/sop/v0.17.4-compatibility-boundary-hardening.md` | Done    | Client-only modules excluded before SSR entry generation                   |
-| v0.18.0 | `docs/sop/v0.18.0-universal-wc-engine.md`              | Done    | CEM parser + compatibility tiers + report reasons                          |
-| v0.18.1 | `docs/sop/v0.18.1-validate-manifest-cli.md`            | Done    | `less validate-manifest` emits stable diagnostics                          |
-| v0.18.2 | `docs/sop/v0.18.2-less-add-install-flow.md`            | Done    | `less add` dry-run/install is validation-gated                             |
-| v0.18.3 | `docs/sop/v0.18.3-dom-simulation-experiment.md`        | Done    | opt-in DOM simulation decision recorded                                    |
-| v0.19.0 | `docs/sop/v0.19.0-platform-hub.md`                     | Done    | Hub ingests artifacts, CLI submit, component browser, Playwright snapshots |
-| v0.20.0 | `docs/sop/v0.20.0/`                                    | Current | Ocean-Island migration, cleanup gate, public docs alignment                |
-| v0.21.x | TBD                                                    | Next    | hydration strategies + ISR + API route parity                              |
-| v1.0.0  | `docs/sop/v1.0.0-general-purpose-engine.md`            | Vision  | stable contracts and deterministic package outcomes                        |
-
-## Operator Checklist
-
-Before starting or continuing a version:
-
-1. Read this STATUS file.
-2. Read the target version SOP.
-3. Read linked ADRs.
-4. Confirm entry criteria are true.
-5. Implement only the target SOP scope.
-6. Run verification commands listed in the SOP.
-7. Update changelog, status, roadmap, and website docs only after evidence
-   matches the new claims.
-
-## JSR Publish Order
-
-1. `@lessjs/rpc`
-2. `@lessjs/signals`
-3. `@lessjs/core`
-4. `@lessjs/adapter-vite`
-5. `@lessjs/content`
-6. `@lessjs/i18n`
-7. `@lessjs/adapter-lit`
-8. `@lessjs/adapter-vanilla`
-9. `@lessjs/adapter-react`
-10. `@lessjs/ui`
-11. `@lessjs/app`
-12. `@lessjs/create`
-13. `@lessjs/hub`
-
-## Historical Reviews
-
-Archived in [docs/status/reviews/](./reviews/) and organized by date.
+Delivered: native `html` TemplateResult support, safe interpolation,
+`unsafeHTML()`, Signal-like reactive `DsdElement` updates, runtime template
+event/property bindings, Response-compatible `renderDSDStream()`, unified event
+model (`@click` only), ReactiveHost protocol, core package split, fine-grained
+DOM patching, 787 tests passing with zero failures, and removal of DOM diffing
+from v0.21 scope. Full SOP coverage: 9 SOPs (001–009) all implemented.

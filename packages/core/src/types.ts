@@ -105,9 +105,7 @@ export interface LessElementExtensions {
   /** Component layer in the three-layer model */
   layer?: ComponentLayer;
   /** Hydration strategy for client-side upgrade */
-  hydrate?: 'eager' | 'lazy' | 'idle' | 'visible';
-  /** Declarative event bindings for dsd-interactive components */
-  hydrateEvents?: HydrateEventDescriptor[];
+  hydrate?: HydrationStrategy;
   /** Module path for import (e.g. '@lessjs/ui/less-button') */
   module?: string;
   /** Export name from the module (default: tagName in PascalCase) */
@@ -360,13 +358,12 @@ export interface FrameworkOptions {
   island?: {
     /**
      * Controls when island modules are imported for custom element upgrade.
-     * 'lazy' (default): import on requestIdleCallback
-     * 'eager': import immediately
-     * 'idle': same as 'lazy' (requestIdleCallback)
+     * 'idle' (default): import on requestIdleCallback
+     * 'load': import immediately
      * 'visible': import when element enters viewport (IntersectionObserver)
-     * NOTE: 'idle' and 'visible' are available in v0.6 via island() wrapper.
+     * 'only': client-only render; excluded from SSR admission
      */
-    upgradeStrategy?: 'eager' | 'lazy' | 'idle' | 'visible';
+    upgradeStrategy?: HydrationStrategy;
   };
 
   /** Build configuration */
@@ -530,6 +527,8 @@ export interface RouteEntry {
   varName: string;
   /** Special file type (renderer or middleware), if applicable */
   special?: SpecialFileType;
+  /** v0.21 ISR: revalidation interval in seconds. 0 = always, missing = static. */
+  revalidate?: number;
 }
 
 export type { SsrContext } from './context.js';
@@ -539,18 +538,29 @@ export type { SsrContext } from './context.js';
 /** Component layer in the three-layer model */
 export type ComponentLayer = 'dsd-static' | 'dsd-interactive' | 'pure-island';
 
+/** v0.21 hydration strategies. Legacy eager/lazy names are intentionally not accepted. */
+export type HydrationStrategy = 'load' | 'idle' | 'visible' | 'only';
+
+/** v0.21 strategy origin tracking for diagnostics and build reports. */
+export type StrategySource = 'directive' | 'island-options' | 'manifest' | 'default';
+
 /**
- * Declarative event binding for DSD Interactive components.
+ * Declarative event binding descriptor.
  *
- * When a component's shadow root is pre-populated by DSD, framework template
- * bindings (e.g. Lit's @click) are never executed because render() returns nothing.
- * This descriptor tells the adapter which DOM events need manual wiring.
+ * @deprecated Removed in v0.21.0. Use `@click` / `@keydown` etc. in `html` tagged templates.
+ * See ADR-0039 and SOP-006 for migration.
  *
  * @example
  * ```ts
- * static hydrateEvents: HydrateEventDescriptor[] = [
- *   { selector: 'button.theme-toggle', event: 'click', method: '_handleToggle' },
- * ];
+ * // Before (hydrateEvents — removed in v0.21.0):
+ * // static hydrateEvents = [
+ * //   { selector: 'button', event: 'click', method: '_handleToggle' },
+ * // ];
+ *
+ * // After (html + @click):
+ * // render() {
+ * //   return html`<button @click=${this._handleToggle}>Toggle</button>`;
+ * // }
  * ```
  */
 export interface HydrateEventDescriptor {
@@ -563,11 +573,43 @@ export interface HydrateEventDescriptor {
 }
 
 /**
+ * Unsubscribe function returned by reactive subscriptions.
+ */
+export type Unsubscribe = () => void;
+
+/**
+ * ReactiveHost protocol — explicit interface for DsdElement Signal integration.
+ *
+ * Instead of Duck Typing signals via `isSignalLike()`, external signal libraries
+ * and reactive sources target this protocol. DsdElement implements ReactiveHost,
+ * and the template runtime calls `host.subscribeTo(source)` during binding.
+ *
+ * This replaces the v0.21.0-alpha Duck Typing approach with an explicit contract.
+ *
+ * @since v0.21.0
+ */
+export interface ReactiveHost {
+  /**
+   * Subscribe to a reactive source. The host decides how to handle updates
+   * (e.g. schedule a microtask-batched re-render).
+   *
+   * @param source - Any object with `subscribe(fn)` (satisfies SignalLike contract)
+   * @returns Unsubscribe function to clean up the subscription
+   */
+  subscribeTo(source: { subscribe(fn: (value: unknown) => void): Unsubscribe }): Unsubscribe;
+
+  /**
+   * Request a reactive update. Called by the reactive source on value change.
+   * The host batches multiple requests via microtask queue.
+   */
+  requestReactiveUpdate(): void;
+} /**
  * Renderer Protocol - the adapter interface for framework-specific rendering.
  *
  * Every adapter MUST provide a `name` for diagnostics and multi-adapter support.
  * The last registered adapter is the default (returned by `getAdapter()`).
  */
+
 export interface RendererProtocol {
   /** Adapter name for diagnostics, logging, and named lookup */
   name: string;
@@ -625,10 +667,8 @@ export interface HydrationHint {
   tagName: string;
   /** Component layer */
   layer: ComponentLayer;
-  /** Declarative event bindings (dsd-interactive only) */
-  events?: HydrateEventDescriptor[];
   /** Island upgrade strategy */
-  strategy?: 'eager' | 'lazy' | 'idle' | 'visible';
+  strategy?: HydrationStrategy;
 }
 
 /**
@@ -673,8 +713,6 @@ export interface RenderOutput {
  *   - 'dsd-static' (default): static content, no hydration needed
  *   - 'dsd-interactive': needs event bindings after DSD upgrade
  *   - 'pure-island': no DSD, framework fully owns shadow root
- *
- * v0.6.2: Added `hydrateEvents` for declarative event binding (Layer 2).
  */
 export interface DsdComponent {
   /** Return Shadow DOM inner HTML as a string */
@@ -691,13 +729,6 @@ export interface DsdComponent {
    * @default 'dsd-static'
    */
   layer?: ComponentLayer;
-
-  /**
-   * Declarative event bindings for DSD Interactive components.
-   * Used by adapters to attach event listeners to existing DSD DOM.
-   * Only relevant when layer === 'dsd-interactive'.
-   */
-  hydrateEvents?: HydrateEventDescriptor[];
 
   /** Set named property/value */
   [key: string]: unknown;
@@ -795,6 +826,15 @@ export interface DsdHydrationHintSummary {
   pureIslandCount: number;
 }
 
+/** v0.21 strategy evidence aggregated into dsd-report.json. */
+export interface DsdHydrationStrategySummary {
+  load: number;
+  idle: number;
+  visible: number;
+  only: number;
+  clientOnlyExcluded: number;
+}
+
 /**
  * Manifest-driven render decision for a single island declaration.
  *
@@ -813,8 +853,10 @@ export interface ManifestDecision {
   ssr: boolean;
   /** Whether this component uses Declarative Shadow DOM (from manifest `less.dsd`) */
   dsd: boolean;
-  /** Hydration strategy from manifest (eager/lazy/idle/visible) */
+  /** Hydration strategy from manifest (load/idle/visible/only) */
   hydrate?: string;
+  /** v0.21: strategy origin (directive/island-options/manifest/default) */
+  strategySource?: StrategySource;
   /** Resolved render path: 'ssr+client' = SSR rendering + client upgrade; 'client-only' = client-only */
   renderPath: 'ssr+client' | 'client-only';
   /** Admission reason shown in build reports */
@@ -854,6 +896,8 @@ export interface DsdBuildReport {
   metricsSummary: DsdMetricsSummary;
   /** Aggregated hydration hint summary */
   hydrationHintSummary: DsdHydrationHintSummary;
+  /** v0.21 hydration strategy counts and client-only exclusion evidence. */
+  hydrationStrategySummary?: DsdHydrationStrategySummary;
   /**
    * Manifest-driven render decisions per package island.
    * Records how each island's manifest flags resolved to a render path.
@@ -875,6 +919,15 @@ export interface DsdBuildReport {
    * through the Happy DOM simulation path. Absent when domSimulation is 'off'.
    */
   domSimulation?: DomSimulationReport;
+  /** v0.21: ISR route records for routes exporting revalidate. */
+  isrRoutes?: IsrRouteRecord[];
+}
+
+/** v0.21 ISR route record published in dsd-report.json. */
+export interface IsrRouteRecord {
+  path: string;
+  revalidate: number;
+  cacheKey: string;
 }
 
 /**

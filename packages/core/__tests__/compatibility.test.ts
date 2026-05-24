@@ -21,14 +21,14 @@ import {
   assertStringIncludes,
 } from 'https://deno.land/std@0.224.0/assert/mod.ts';
 
-// ─── Single Component Classification Tests ──────────────────────────
+// 鈹€鈹€鈹€ Single Component Classification Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('classifyComponent: SSR-capable with LitElement', () => {
   const result = classifyComponent({
     tagName: 'my-lit-element',
     modulePath: './my-element.js',
     source: 'local',
-    less: { ssr: true, dsd: true, hydrate: 'eager' },
+    less: { ssr: true, dsd: true, hydrate: 'load' },
     superClass: 'LitElement',
   });
 
@@ -115,7 +115,7 @@ Deno.test('classifyComponent: experimental DOM requires opt-in', () => {
   assert(result.reason.includes('experimental'));
 });
 
-// ─── Module Path Validation Tests ──────────────────────────────────
+// 鈹€鈹€鈹€ Module Path Validation Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('validateModulePath: accepts relative paths', () => {
   assertEquals(validateModulePath('./src/element.js').valid, true);
@@ -150,7 +150,7 @@ Deno.test('validateModulePath: rejects empty path', () => {
   assertEquals(validateModulePath(null as any).valid, false);
 });
 
-// ─── Batch Classification Tests ─────────────────────────────────────
+// 鈹€鈹€鈹€ Batch Classification Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('classifyComponents: detects duplicate tags', () => {
   const inputs = [
@@ -215,7 +215,7 @@ Deno.test('classifyComponents: builds correct tag sets', () => {
   assertEquals(result.rejectedTags, []);
 });
 
-// ─── Less Manifest Classification Tests ─────────────────────────────
+// 鈹€鈹€鈹€ Less Manifest Classification Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('classifyLessManifest: classifies all declarations', () => {
   const manifest = {
@@ -246,7 +246,7 @@ Deno.test('classifyLessManifest: classifies all declarations', () => {
   assertEquals(result.stats.clientOnlyCount, 2);
 });
 
-// ─── CEM Manifest Classification Tests ──────────────────────────────
+// 鈹€鈹€鈹€ CEM Manifest Classification Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('classifyCemManifest: CEM-only packages are client-only', () => {
   const manifest = {
@@ -275,7 +275,7 @@ Deno.test('classifyCemManifest: CEM-only packages are client-only', () => {
   assertEquals(result.clientOnlyTags, ['cem-element']);
 });
 
-// ─── Merged Classification Tests ────────────────────────────────────
+// 鈹€鈹€鈹€ Merged Classification Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('mergeClassifications: local takes precedence over package', () => {
   const local = [
@@ -315,7 +315,7 @@ Deno.test('mergeClassifications: duplicate tags across sources are rejected', ()
   assert(result.rejectedTags.includes('shared-tag'));
 });
 
-// ─── Utility Function Tests ─────────────────────────────────────────
+// 鈹€鈹€鈹€ Utility Function Tests 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('isValidTagName: accepts valid tag names', () => {
   assertEquals(isValidTagName('my-element'), true);
@@ -367,7 +367,7 @@ Deno.test('getClassificationSummary: generates readable summary', () => {
   assertStringIncludes(summary, 'SSR-capable tags: ssr-el');
 });
 
-// ─── Edge Cases ─────────────────────────────────────────────────────
+// 鈹€鈹€鈹€ Edge Cases 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
 Deno.test('classifyComponent: handles undefined superClass', () => {
   const result = classifyComponent({
@@ -403,5 +403,5 @@ Deno.test('classifyComponent: applies conservative defaults', () => {
 
   assertEquals(result.ssr, false); // Default
   assertEquals(result.dsd, false); // Default
-  assertEquals(result.hydrate, 'lazy'); // Default
+  assertEquals(result.hydrate, 'idle'); // Default
 });

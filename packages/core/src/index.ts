@@ -29,10 +29,62 @@ export type {
 export { LessError, SsrRenderError } from './errors.js';
 export { createSsrContext, extractParams, parseQuery } from './context.js';
 export { renderSsrError, wrapInDocument } from './html-escape.js';
+export type { LessApiContext } from './api.js';
+export { createIsrCacheKey, isIsrRouteConfig, MemoryIsrCache } from './isr.js';
+export type {
+  IsrCache,
+  IsrCacheEntry,
+  IsrCacheResult,
+  IsrCacheState,
+  IsrManifestEntry,
+  IsrRouteConfig,
+} from './isr.js';
 export { DsdElement } from './dsd-element.js';
+// v0.21: Re-export signals for single-import DX
+// import { DsdElement, html, signal, computed } from '@lessjs/core';
+export { computed, effect, signal } from '@lessjs/signals/framework';
 export { StyleSheet } from './style-sheet.js';
 export type { StyleSheetLike, StyleSheetRule } from './style-sheet.js';
-export { renderDSD, renderDSDByName } from './render-dsd.js';
+
+// SOP-007: Re-export from extracted sub-packages for direct access
+export {
+  classifyCemManifest,
+  classifyComponent,
+  classifyComponents,
+  classifyLessManifest,
+  getClassificationSummary,
+  isKnownSsrAdapter,
+  isKnownSsrSuperclass,
+  isValidTagName,
+  mergeClassifications,
+  validateModulePath,
+} from './compatibility.js';
+export type {
+  ClassificationInput,
+  ClassificationResult,
+  ClassificationStats,
+  ClassifierConfig,
+} from './compatibility.js';
+
+export {
+  extractLessDeclarations,
+  findModulePathForTag,
+  parseCem,
+  readCemFile,
+  validateModulePaths,
+} from './cem-parser.js';
+export {
+  createRenderDSDStreamMetrics,
+  renderDSD,
+  renderDSDByName,
+  renderDSDStream,
+} from './render-dsd.js';
+export type {
+  RenderDSDStreamChunk,
+  RenderDSDStreamComponent,
+  RenderDSDStreamMetrics,
+  RenderDSDStreamOptions,
+} from './render-dsd-stream.js';
 export { camelToKebab } from './render-serialize.js';
 export { getAdapter, getRegisteredAdapters, registerAdapter } from './adapter-registry.js';
 export type {
@@ -44,11 +96,14 @@ export type {
   DomSimulationReport,
   DsdBuildReport,
   DsdHydrationHintSummary,
+  DsdHydrationStrategySummary,
   DsdMetricsSummary,
   DsdOptions,
   DsdPageDiagnostics,
   HydrateEventDescriptor,
   HydrationHint,
+  HydrationStrategy,
+  IsrRouteRecord,
   LessAttribute,
   LessCssPart,
   LessCssProperty,
@@ -63,6 +118,7 @@ export type {
   LessSlot,
   ManifestDecision,
   ManifestValidationReport,
+  ReactiveHost,
   RegistryIndex,
   RegistryIndexEntry,
   RendererProtocol,
@@ -72,6 +128,7 @@ export type {
   RenderOutput,
   RenderPhase,
   SsrAdmissionDecision,
+  Unsubscribe,
   ValidatedTag,
   ValidationDiagnostic,
   ValidationError,
@@ -85,8 +142,18 @@ export {
   type SafeHtml,
   type UnsafeHtml,
 } from './html-escape.js';
+export {
+  html,
+  isSignalLike,
+  isTemplateResult,
+  isUnsafeHTML,
+  renderTemplateToString,
+  unsafeHTML,
+} from './template.js';
+export type { SignalLike, TemplateResult, TemplateValue, UnsafeHtmlValue } from './template.js';
 export { createLogger, LessLogger, LogLevel } from './logger.js';
-export { DANGEROUS_KEYS, getSSRProps, island, type IslandOptions, lessBind } from './island.js';
+export { DANGEROUS_KEYS } from './security.js';
+export { getSSRProps, island, type IslandOptions, lessBind } from './island.js';
 export { hasNavigationApi, matchRoute, navigate, onNavigate } from './navigation.js';
 export type { NavigationCallback } from './navigation.js';
 
@@ -120,13 +187,8 @@ export {
 export { generateAddPlan } from './less-add.js';
 export type { AddPlan, AddTagEntry, FileMutation, PackageSource } from './less-add.js';
 
-// DOM Simulation Experiment (v0.18.3)
-// DEPRECATED from barrel - import from '@lessjs/core/dom-simulation' instead.
-// This experimental API requires happy-dom at runtime, which violates
-// core's "zero npm/node/vite" constraint when imported via the barrel.
-// The subpath export is retained for backward compatibility.
-// export { buildDomSimulationReport, renderWithDomSimulation } from './dom-simulation.js';
-// export type { DomSimulationOptions, DomSimulationResult } from './dom-simulation.js';
+// DOM Simulation (v0.18.3) — experimental, not barrel-exported.
+// Import from '@lessjs/core/dom-simulation' directly; requires happy-dom at runtime.
 
 // G10 fix: Virtual module IDs - shared across adapter-vite, content, i18n
 export {
