@@ -82,12 +82,12 @@ consumer-smoke:
 
 ## Relationship to SOP-012
 
-| | SOP-012 (CI Pre-Publish) | SOP-013 (Post-Publish) |
-|---|---|---|
-| **When** | Every push to dev/main | After publish completes |
-| **Tests against** | Last published JSR version | Freshly published JSR version |
-| **Catches** | Regressions in already-shipped code | New-version integration bugs |
-| **Needs checkout** | Yes (for create scaffolding) | No (pure JSR consumption) |
+|                    | SOP-012 (CI Pre-Publish)            | SOP-013 (Post-Publish)        |
+| ------------------ | ----------------------------------- | ----------------------------- |
+| **When**           | Every push to dev/main              | After publish completes       |
+| **Tests against**  | Last published JSR version          | Freshly published JSR version |
+| **Catches**        | Regressions in already-shipped code | New-version integration bugs  |
+| **Needs checkout** | Yes (for create scaffolding)        | No (pure JSR consumption)     |
 
 Both are needed. SOP-012 catches regressions early in PR CI. SOP-013 is the
 final gate that proves the release is actually shippable.
