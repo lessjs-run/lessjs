@@ -1,91 +1,50 @@
-# SOP-012: CI Pre-Publish Consumer Smoke Test
+# SOP-012: CI Consumer Smoke Test (Retired)
 
-Status: active\
+Status: retired\
 Target version: v0.21.10+\
 Owner: CI + release owner\
-Related: SOP-011, ADR-0041
+Related: SOP-011, SOP-013, ADR-0041
 
 ## Objective
 
-Prevent ESM module graph boundary leaks before they reach JSR consumers.
+Prevent ESM module graph boundary leaks from reaching JSR consumers.
 
-SOP-011 item 4 requires a "generated consumer smoke test" that runs outside the
-monorepo. This SOP defines the CI implementation of that requirement.
+## Why This SOP Was Retired
 
-## Problem
+The original design placed a `consumer-smoke` job in `test.yml` (pre-publish CI)
+to validate JSR consumer builds. This has a **chicken-and-egg problem**:
 
-The v0.21.9 consumer 404 bug (adapter-vanilla, adapter-react intercepted by
-`ssg-package-resolver` instead of `optionalPackageStubsPlugin`) was caught by
-manual testing, not CI. The existing `ssg-smoke.test.ts` runs inside the
-workspace and cannot detect JSR-specific resolution failures.
+1. `publish.yml` depends on `test.yml` passing (`needs: [test]`)
+2. `test.yml` consumer-smoke pulls packages from JSR (already-published versions)
+3. The version on JSR is always **older** than the code being tested
+4. If the older JSR version has a bug that the current code already fixes,
+   consumer-smoke fails → test.yml fails → publish.yml never runs → fix is
+   never published
 
-## Implementation
+Example: v0.21.9 had the optional-package 404 bug. We fixed it locally and
+bumped to v0.21.10. But the CI consumer-smoke pulls `@lessjs/adapter-vite@0.21.9`
+from JSR (because 0.21.10 isn't published yet) → hits the same 404 → blocks
+the publish that would ship the fix.
 
-Add a `consumer-smoke` job to `.github/workflows/test.yml` that:
+## Replacement
 
-1. Creates a temp directory outside the repository checkout
-2. Runs `deno run -A jsr:@lessjs/create test-blog`
-3. Enters the generated project and runs `deno task build`
-4. Fails the CI if any step errors
+Consumer smoke testing is now handled exclusively by **SOP-013** (Post-Publish
+Consumer Smoke) in `publish.yml`. The post-publish smoke:
 
-### Job Definition
+- Runs **after** all packages are published to JSR
+- Tests against the **freshly published** version
+- Is not in the critical path that blocks publishing
 
-```yaml
-consumer-smoke:
-  runs-on: ubuntu-latest
-  needs: [test-core, test-adapter-vite]
-  steps:
-    - uses: actions/checkout@v4
-    - uses: denoland/setup-deno@v2
-      with:
-        deno-version: '2'
-    - name: Generate consumer project from JSR
-      env:
-        TEMP_DIR: ${{ runner.temp }}/lessjs-consumer-smoke
-      run: |
-        rm -rf "$TEMP_DIR"
-        mkdir -p "$TEMP_DIR"
-        cd "$TEMP_DIR"
-        deno run -A jsr:@lessjs/create test-blog
-    - name: Build consumer project
-      env:
-        TEMP_DIR: ${{ runner.temp }}/lessjs-consumer-smoke
-      run: |
-        cd "$TEMP_DIR/test-blog"
-        deno task build
-```
+For pre-merge validation, the existing in-workspace tests are sufficient:
 
-### Key Constraints
+- `packages/adapter-vite/__tests__/ssg-package-resolver.test.ts` — validates
+  the resolver does not intercept optional packages
+- `packages/adapter-vite/__tests__/ssg-smoke.test.ts` — validates the SSG
+  build pipeline end-to-end within the workspace
+- `packages/create/__tests__/cli.test.ts` — validates scaffold + build
 
-- The generated project **must** be outside the repository checkout to avoid
-  Deno workspace member detection.
-- The job should depend on `test-core` and `test-adapter-vite` (not gate on the
-  full matrix) to keep feedback fast.
-- No special permissions needed — `deno run` and `deno task` are standard.
+## Lesson
 
-## Acceptance Criteria
-
-- [ ] `consumer-smoke` job exists in `test.yml`
-- [ ] Job creates project outside the checkout directory
-- [ ] Job runs `deno task build` on the generated project
-- [ ] CI green on a version that is already published to JSR
-- [ ] Job fails if a required package is missing from JSR or has a resolution bug
-
-## Known Limitation
-
-This test only validates against **already-published** JSR versions. It cannot
-detect issues in a version that has not yet been published. For that, see
-SOP-013 (Post-Publish Consumer Smoke).
-
-## Validation
-
-```powershell
-# Local validation (requires published version on JSR)
-$tmp = Join-Path $env:TEMP "lessjs-consumer-smoke"
-Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue
-New-Item -ItemType Directory -Path $tmp | Out-Null
-Set-Location $tmp
-deno run -A jsr:@lessjs/create test-blog
-Set-Location test-blog
-deno task build
-```
+A JSR consumer smoke test cannot be a **pre-publish** gate because it needs the
+packages to already be published. The consumer validation belongs in the
+**post-publish** phase (SOP-013).
