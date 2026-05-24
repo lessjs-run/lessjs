@@ -5,8 +5,8 @@
     ".": "./src/index.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.21.9",
-    "@lessjs/core/compatibility": "jsr:@lessjs/core@^0.21.9/compatibility"
+    "@lessjs/core": "jsr:@lessjs/core@^0.21.10",
+    "@lessjs/core/compatibility": "jsr:@lessjs/core@^0.21.10/compatibility"
   },
   "publish": {
     "include": [

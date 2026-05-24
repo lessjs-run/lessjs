@@ -17,8 +17,8 @@
     "./open-props-tokens.js": "./src/open-props-tokens.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.21.9",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.21.9/navigation"
+    "@lessjs/core": "jsr:@lessjs/core@^0.21.10",
+    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.21.10/navigation"
   },
   "publish": {
     "include": [
