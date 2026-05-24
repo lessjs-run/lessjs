@@ -26,7 +26,9 @@
     "./dom-simulation": "./src/dom-simulation.ts"
   },
   "imports": {
-    "parse5": "npm:parse5@7.0.0"
+    "parse5": "npm:parse5@7.0.0",
+    "@lessjs/signals": "jsr:@lessjs/signals@^0.21",
+    "@lessjs/signals/framework": "jsr:@lessjs/signals@^0.21/framework"
   },
   "publish": {
     "include": [
