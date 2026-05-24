@@ -57,7 +57,7 @@ function loadWorkspaceVersion(pkg: string): string {
 
 /** Fetch the latest version of a JSR package from the Registry API. */
 async function fetchJsrVersion(pkg: string): Promise<string> {
-  const resp = await fetch(`https://jsr.io/${JSR_SCOPE}/${pkg}/meta`, {
+  const resp = await fetch(`https://jsr.io/${JSR_SCOPE}/${pkg}/meta.json`, {
     headers: { Accept: 'application/json' },
   });
   if (!resp.ok) {
@@ -66,7 +66,8 @@ async function fetchJsrVersion(pkg: string): Promise<string> {
     );
   }
   const meta = await resp.json();
-  const version = meta?.latestVersion ?? meta?.versions?.[0];
+  // JSR meta.json has { latest, versions: { "0.21.5": {}, ... } }
+  const version = meta?.latest ?? Object.keys(meta?.versions ?? {}).pop();
   if (!version) {
     throw new Error(
       `No version found for ${JSR_SCOPE}/${pkg} in JSR Registry response`,
