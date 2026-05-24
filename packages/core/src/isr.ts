@@ -70,7 +70,7 @@ export interface IsrManifestEntry {
 export class MemoryIsrCache implements IsrCache {
   readonly #entries = new Map<string, IsrCacheEntry>();
 
-  get(key: string, now = Date.now()): IsrCacheResult {
+  get(key: string, now: number = Date.now()): IsrCacheResult {
     const entry = this.#entries.get(key);
     if (!entry) return { state: 'miss' };
     const ageSeconds = Math.max(0, Math.floor((now - entry.createdAt) / 1000));
