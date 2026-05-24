@@ -14,9 +14,9 @@
     "./cli/check-index": "./src/cli/check-index.ts"
   },
   "imports": {
-    "@lessjs/core": "../core/src/index.ts",
-    "@lessjs/core/compatibility": "../core/src/compatibility.ts",
-    "@lessjs/core/validate-manifest": "../core/src/validate-manifest.ts",
+    "@lessjs/core": "jsr:@lessjs/core@^0.21",
+    "@lessjs/core/compatibility": "jsr:@lessjs/core@^0.21/compatibility",
+    "@lessjs/core/validate-manifest": "jsr:@lessjs/core@^0.21/validate-manifest",
     "typescript": "npm:typescript@^5.9.0"
   },
   "tasks": {
@@ -25,6 +25,7 @@
   },
   "publish": {
     "include": [
+      "mod.ts",
       "src/**",
       "deno.json",
       "README.md",
@@ -35,6 +36,7 @@
     "skipLibCheck": true
   },
   "include": [
+    "mod.ts",
     "src"
   ],
   "exclude": [
