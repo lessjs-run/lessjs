@@ -22,9 +22,7 @@ rendering kernel; v0.21 adds safe `html` templates, Signal-driven `DsdElement`
 updates, and streaming DSD without turning LessJS into a generic request-time
 SSR server.
 
-Package publishing is currently staggered: `@lessjs/ui` carries the v0.20.0
-Ocean-Island work, and core packages have been aligned to a coordinated
-version baseline.
+All 16 packages are released at v0.21.0.
 
 ## Three Product Pillars
 
@@ -109,6 +107,9 @@ support.
 | `@lessjs/i18n`            | Locale expansion and route helpers                                                            |
 | `@lessjs/ui`              | DSD-native Web Components and island examples                                                 |
 | `@lessjs/signals`         | Signals helpers and island effects                                                            |
+| `@lessjs/compat-check`    | SSR compatibility classifier (standalone)                                                     |
+| `@lessjs/cem`             | Custom Elements Manifest parser (standalone)                                                  |
+| `@lessjs/style-sheet`     | Cross-environment CSSStyleSheet abstraction (standalone)                                      |
 | `@lessjs/rpc`             | Fetch-based RPC controller                                                                    |
 | `@lessjs/hub`             | Registry Hub schema, indexer, scanner, validator, snapshots                                   |
 | `@lessjs/create`          | Project scaffold CLI                                                                          |
@@ -121,13 +122,13 @@ route component
   -> <template shadowrootmode="open">
   -> browser parses DSD
   -> custom element upgrade
-  -> hydrateEvents / island runtime only where needed
+  -> @click binding / island runtime only where needed
 ```
 
 | Mode | State   | When rendering happens | Server requirement        |
 | ---- | ------- | ---------------------- | ------------------------- |
 | SSG  | shipped | build time             | none after build          |
-| ISR  | v0.21   | cache expiry           | edge/serverless function  |
+| ISR  | v0.22   | cache expiry           | edge/serverless function  |
 | SSR  | later   | every request          | always-on request runtime |
 
 ## Compatibility Boundary

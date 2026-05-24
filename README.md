@@ -12,13 +12,12 @@ Island、Hono API Route 和早期 Registry Hub 组合在一起，让 Web Compone
 
 ## 当前状态
 
-项目线：**v0.21.0 Hydration + ISR Contract**。
+项目线：**v0.21.0 Reactive DSD**。
 
 当前生产渲染模式是 **SSG + Declarative Shadow DOM**。`renderDSD()` 的架构设计允许
 未来在缓存过期时运行 ISR，或在请求时运行 SSR，但 ISR/SSR 仍是路线图能力，不应写成已发布保证。
 
-包版本目前是分阶段发布状态：`@lessjs/ui` 已承载 v0.20.0 Ocean-Island 工作，
-核心包已协调统一版本。
+全部 16 个包已统一发布为 v0.21.0。
 
 ## 三个产品支柱
 
@@ -86,6 +85,9 @@ deno task build
 | `@lessjs/i18n`            | Locale 展开与路由辅助                                                                         |
 | `@lessjs/ui`              | DSD-native Web Components 与 island 示例                                                      |
 | `@lessjs/signals`         | Signals helpers 与 island effects                                                             |
+| `@lessjs/compat-check`    | SSR 兼容性分类器（独立可用）                                                                  |
+| `@lessjs/cem`             | Custom Elements Manifest 解析器（独立可用）                                                   |
+| `@lessjs/style-sheet`     | 跨环境 CSSStyleSheet 抽象（独立可用）                                                         |
 | `@lessjs/rpc`             | Fetch-based RPC controller                                                                    |
 | `@lessjs/hub`             | Registry Hub schema、indexer、scanner、validator、snapshots                                   |
 | `@lessjs/create`          | 项目脚手架 CLI                                                                                |
@@ -98,13 +100,13 @@ route component
   -> <template shadowrootmode="open">
   -> browser parses DSD
   -> custom element upgrade
-  -> hydrateEvents / island runtime only where needed
+  -> @click binding / island runtime only where needed
 ```
 
 | Mode | 状态   | 渲染时机      | 服务器要求                |
 | ---- | ------ | ------------- | ------------------------- |
 | SSG  | 已发布 | build time    | 构建后不需要              |
-| ISR  | v0.21  | cache expiry  | edge/serverless function  |
+| ISR  | v0.22  | cache expiry  | edge/serverless function  |
 | SSR  | 后续   | every request | always-on request runtime |
 
 ## 兼容性边界
@@ -117,17 +119,17 @@ LessJS 不承诺任意 Web Component 都能自动 SSR。每个组件应该得到
 
 ## 路线图
 
-| 版本  | 目标                                          | 状态    |
-| ----- | --------------------------------------------- | ------- |
-| v0.15 | Renderer Kernel Protocol                      | Done    |
-| v0.16 | WC Package Protocol                           | Done    |
-| v0.17 | Ecosystem Entry + SSR Boundary                | Done    |
-| v0.18 | Universal WC Engine                           | Done    |
-| v0.19 | Registry Hub + Component Browser              | Done    |
-| v0.20 | Ocean-Island Architecture + DSD-native UI     | Shipped |
-| v0.21 | Hydration Strategies + ISR + API Route parity | Current |
-| v0.22 | DsdElement + Signals rendering                | Planned |
-| v1.0  | Stable Engine contracts                       | Vision  |
+| 版本  | 目标                                            | 状态    |
+| ----- | ----------------------------------------------- | ------- |
+| v0.15 | Renderer Kernel Protocol                        | Done    |
+| v0.16 | WC Package Protocol                             | Done    |
+| v0.17 | Ecosystem Entry + SSR Boundary                  | Done    |
+| v0.18 | Universal WC Engine                             | Done    |
+| v0.19 | Registry Hub + Component Browser                | Done    |
+| v0.20 | Ocean-Island Architecture + DSD-native UI       | Done    |
+| v0.21 | Reactive DSD — DsdElement + Signals + Templates | Current |
+| v0.22 | Edge Full-Stack — ISR + KV adapters + Deploy    | Planned |
+| v1.0  | Stable Engine contracts                         | Vision  |
 
 详见 [ADR docs](docs/adr/)、[SOP docs](docs/sop/) 和
 [Roadmap](docs/roadmap/ROADMAP.md)。
