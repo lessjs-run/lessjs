@@ -361,17 +361,6 @@ function renderEnd_timeFallback(): number {
   return Date.now();
 }
 
-function _now(): number {
-  return typeof performance !== 'undefined' ? performance.now() : Date.now();
-}
-
-async function _resolveStreamPart(
-  part?: string | (() => string | Promise<string>),
-): Promise<string> {
-  if (!part) return '';
-  return typeof part === 'function' ? await part() : part;
-}
-
 /**
  * Heuristic check for Lit TemplateResult without importing Lit.
  * Checks for the _$litType$ marker that Lit uses internally.

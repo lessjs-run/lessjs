@@ -68,12 +68,6 @@ export function islandEffect(
 }
 
 /**
- * @deprecated
- * Current implementation is a no-op placeholder until the TC39 Signal
- * specification finalizes native batching support. At that point, this
- * function will be updated to batch multiple signal writes into a single
- * reactive update.
- *
  * @deprecated v0.21.0: batch() is a no-op. DsdElement already batches signal
  * writes at the microtask level via _scheduleReactiveUpdate(). This function
  * will be removed in v1.0.0. Simply remove calls to batch() — no replacement needed.
