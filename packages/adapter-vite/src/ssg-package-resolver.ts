@@ -1,0 +1,228 @@
+import type { Plugin } from 'vite';
+
+const VIRTUAL_LESSJS_PACKAGE_PREFIX = '\0lessjs:ssg-pkg/';
+const DEFAULT_LESSJS_PACKAGES = new Set([
+  'adapter-lit',
+  'adapter-react',
+  'adapter-vanilla',
+  'adapter-vite',
+  'app',
+  'cem',
+  'compat-check',
+  'content',
+  'core',
+  'hub',
+  'i18n',
+  'rpc',
+  'signals',
+  'style-sheet',
+  'ui',
+]);
+
+const LESSJS_EXPORT_FILES: Record<string, Record<string, string>> = {
+  core: {
+    '.': 'src/index.ts',
+    api: 'src/api.ts',
+    'build-types': 'src/build-types.ts',
+    'cem-parser': 'src/cem-parser.ts',
+    'cli/less-add': 'src/cli/less-add.ts',
+    'cli/validate-manifest': 'src/cli/validate-manifest.ts',
+    compatibility: 'src/compatibility.ts',
+    context: 'src/context.ts',
+    'dom-simulation': 'src/dom-simulation.ts',
+    errors: 'src/errors.ts',
+    isr: 'src/isr.ts',
+    'less-add': 'src/less-add.ts',
+    logger: 'src/logger.ts',
+    navigation: 'src/navigation.ts',
+    'render-dsd-stream': 'src/render-dsd-stream.ts',
+    'render-errors': 'src/render-errors.ts',
+    'render-instantiate': 'src/render-instantiate.ts',
+    'render-serialize': 'src/render-serialize.ts',
+    'style-sheet': 'src/style-sheet.ts',
+    types: 'src/types.ts',
+    'validate-manifest': 'src/validate-manifest.ts',
+    'virtual-ids': 'src/virtual-ids.ts',
+  },
+  ui: {
+    '.': 'src/index.ts',
+    'less-button': 'src/less-button.ts',
+    'less-callout': 'src/less-callout.ts',
+    'less-card': 'src/less-card.ts',
+    'less-code-block': 'src/less-code-block.ts',
+    'less-dialog': 'src/less-dialog.ts',
+    'less-hero-ping': 'src/less-hero-ping.ts',
+    'less-input': 'src/less-input.ts',
+    'less-layout': 'src/less-layout.ts',
+    'less-step-card': 'src/less-step-card.ts',
+    'less-theme-toggle': 'src/less-theme-toggle.ts',
+    'open-props-tokens': 'src/open-props-tokens.ts',
+    'open-props-tokens.js': 'src/open-props-tokens.ts',
+  },
+  signals: {
+    '.': 'src/index.ts',
+    framework: 'src/framework.ts',
+  },
+  content: {
+    '.': 'src/index.ts',
+    'blog-data': 'src/blog/blog-data.ts',
+    nav: 'src/nav/index.ts',
+    sitemap: 'src/sitemap/index.ts',
+  },
+  i18n: { '.': 'src/index.ts' },
+  app: { '.': 'src/index.ts' },
+  'adapter-lit': { '.': 'src/index.ts' },
+  'adapter-react': { '.': 'src/index.ts' },
+  'adapter-vanilla': { '.': 'src/index.ts' },
+  'adapter-vite': {
+    '.': 'src/index.ts',
+    'build-context': 'src/build-context.ts',
+    'virtual-ids': 'src/virtual-ids.ts',
+  },
+  rpc: { '.': 'src/index.ts' },
+  'style-sheet': { '.': 'src/index.ts' },
+  cem: { '.': 'src/index.ts' },
+  'compat-check': { '.': 'src/index.ts' },
+  hub: {
+    '.': 'mod.ts',
+    builder: 'src/builder.ts',
+    'cli/check-index': 'src/cli/check-index.ts',
+    'cli/hub-submit': 'src/cli/hub-submit.ts',
+    'cli/less-add': 'src/cli/less-add.ts',
+    'cli/validate': 'src/cli/validate.ts',
+    indexer: 'src/indexer.ts',
+    schema: 'src/schema.ts',
+    snapshot: 'src/snapshot.ts',
+    submitter: 'src/submitter.ts',
+  },
+};
+
+export interface LessJsrPackageSpecifier {
+  packageName: string;
+  subpath: string;
+  range?: string;
+}
+
+export interface LessJsrPackageResolverOptions {
+  workspaceRoot: string | null;
+  version: string;
+  localPackageRoot?: string | null;
+  fetchSource?: (url: string) => Promise<Response>;
+  readLocalSource?: (path: string) => string;
+}
+
+export function parseLessPackageSpecifier(id: string): LessJsrPackageSpecifier | null {
+  const bare = id.match(/^@lessjs\/([^/@]+)(?:\/(.+))?$/);
+  if (bare) return { packageName: bare[1], subpath: bare[2] ?? '.' };
+
+  const jsr = id.match(/^jsr:@lessjs\/([^/@]+)(?:@([^/]+))?(?:\/(.+))?$/);
+  if (jsr) {
+    return {
+      packageName: jsr[1],
+      range: jsr[2],
+      subpath: jsr[3] ?? '.',
+    };
+  }
+
+  return null;
+}
+
+export function resolveLessPackageExport(packageName: string, subpath: string): string {
+  const exports = LESSJS_EXPORT_FILES[packageName];
+  if (!exports) throw new Error(`[LessJS/SSG] Unknown LessJS package: @lessjs/${packageName}`);
+
+  const normalized = normalizeSubpath(subpath);
+  const file = exports[normalized] ??
+    (normalized.endsWith('.js') ? exports[normalized.replace(/\.js$/, '')] : undefined);
+  if (file) return file;
+
+  throw new Error(`[LessJS/SSG] Unknown @lessjs/${packageName} export subpath: ${subpath}`);
+}
+
+export function toVirtualLessPackageId(packageName: string, sourcePath: string): string {
+  return `${VIRTUAL_LESSJS_PACKAGE_PREFIX}${packageName}/${sourcePath}`;
+}
+
+export function resolveVirtualLessPackageRelative(id: string, importer: string): string | null {
+  if (!importer.startsWith(VIRTUAL_LESSJS_PACKAGE_PREFIX)) return null;
+  if (!id.startsWith('./') && !id.startsWith('../')) return null;
+
+  const importerPath = importer.slice(VIRTUAL_LESSJS_PACKAGE_PREFIX.length);
+  const [packageName, ...pathParts] = importerPath.split('/');
+  const base = pathParts.slice(0, -1);
+  const parts = [...base, ...id.split('/')];
+  const resolved: string[] = [];
+
+  for (const part of parts) {
+    if (!part || part === '.') continue;
+    if (part === '..') resolved.pop();
+    else resolved.push(part);
+  }
+
+  return toVirtualLessPackageId(packageName, ensureTsExtension(resolved.join('/')));
+}
+
+export function createLessJsrPackageResolverPlugin(
+  options: LessJsrPackageResolverOptions,
+): Plugin {
+  const fetchSource = options.fetchSource ?? fetch;
+
+  return {
+    name: 'less:ssg-package-resolve',
+    enforce: 'pre',
+    resolveId(id, importer) {
+      if (options.workspaceRoot) return null;
+
+      const spec = parseLessPackageSpecifier(id);
+      if (spec) {
+        if (!DEFAULT_LESSJS_PACKAGES.has(spec.packageName)) return null;
+        return toVirtualLessPackageId(
+          spec.packageName,
+          resolveLessPackageExport(spec.packageName, spec.subpath),
+        );
+      }
+
+      return resolveVirtualLessPackageRelative(id, importer ?? '');
+    },
+    async load(id) {
+      if (options.workspaceRoot) return null;
+      if (!id.startsWith(VIRTUAL_LESSJS_PACKAGE_PREFIX)) return null;
+
+      const [packageName, ...pathParts] = id.slice(VIRTUAL_LESSJS_PACKAGE_PREFIX.length).split('/');
+      const filePath = pathParts.join('/');
+      if (options.localPackageRoot) {
+        const localPath = `${options.localPackageRoot}/packages/${packageName}/${filePath}`;
+        try {
+          return options.readLocalSource
+            ? options.readLocalSource(localPath)
+            : await Deno.readTextFile(localPath);
+        } catch (error) {
+          throw new Error(
+            `[LessJS/SSG] Failed to read local @lessjs/${packageName}/${filePath} ` +
+              `from ${localPath}: ${error instanceof Error ? error.message : String(error)}`,
+          );
+        }
+      }
+
+      const url = `https://jsr.io/@lessjs/${packageName}/${options.version}/${filePath}`;
+      const resp = await fetchSource(url);
+      if (!resp.ok) {
+        throw new Error(
+          `[LessJS/SSG] Failed to fetch @lessjs/${packageName}/${filePath} ` +
+            `from ${url}: HTTP ${resp.status}`,
+        );
+      }
+      return await resp.text();
+    },
+  };
+}
+
+function normalizeSubpath(subpath: string): string {
+  if (subpath === '' || subpath === '.') return '.';
+  return subpath.replace(/^\.\//, '');
+}
+
+function ensureTsExtension(path: string): string {
+  const withoutJs = path.replace(/\.js$/, '');
+  return withoutJs.endsWith('.ts') ? withoutJs : `${withoutJs}.ts`;
+}

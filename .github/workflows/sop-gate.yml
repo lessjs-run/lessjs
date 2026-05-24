@@ -150,7 +150,7 @@ jobs:
           deno-version: '2'
       - run: deno task docs:check-strategy
 
-  # ─── Gate 11b — JSR consumer build (SOP-003: real JSR, no patching) ───
+  # ─── Gate 11b — JSR consumer ESM graph build (SOP-011: real JSR, no patching) ───
   test-create-jsr:
     name: 'JSR consumer build (${{ matrix.os }})'
     runs-on: ${{ matrix.os }}
