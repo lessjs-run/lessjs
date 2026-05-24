@@ -31,15 +31,31 @@ const log = createLogger('ssg');
 
 const VIRTUAL_SSG_ENTRY_ID = 'virtual:less-ssg-entry';
 const RESOLVED_SSG_ENTRY_ID = '\0' + VIRTUAL_SSG_ENTRY_ID;
-const FALLBACK_LESSJS_VERSION = '0.21.6';
+const FALLBACK_LESSJS_VERSION = '0.21.8';
 
 function getJsrPackageVersion(metaUrl: string): string {
   const match = metaUrl.match(/\/@lessjs\/adapter-vite\/([^/]+)\//);
   return match?.[1] ?? FALLBACK_LESSJS_VERSION;
 }
 
-function coreSubpathToFilePath(subpath: string): string {
-  return subpath.endsWith('.ts') ? subpath : `${subpath}.ts`;
+function lessjsSubpathToFilePath(subpath: string): string {
+  const normalized = subpath.replace(/\.js$/, '');
+  return normalized.endsWith('.ts') ? normalized : `${normalized}.ts`;
+}
+
+function resolveVirtualLessjsRelative(id: string, importer: string): string {
+  const marker = '\0lessjs:ssg-pkg/';
+  const importerPath = importer.slice(marker.length);
+  const [pkg, ...pathParts] = importerPath.split('/');
+  const base = pathParts.slice(0, -1);
+  const parts = [...base, ...id.split('/')];
+  const resolved: string[] = [];
+  for (const part of parts) {
+    if (!part || part === '.') continue;
+    if (part === '..') resolved.pop();
+    else resolved.push(part);
+  }
+  return `${marker}${pkg}/${lessjsSubpathToFilePath(resolved.join('/'))}`;
 }
 
 function readWorkspacePackageVersion(root: string, packageDir: string): string {
@@ -427,47 +443,38 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
             if (id === RESOLVED_SSG_ENTRY_ID) return ssgEntryCode;
           },
         },
-        // SOP-v0.21.6: Resolve @lessjs/core (and subpaths) in SSR bundle build.
+        // SOP-v0.21.8: Resolve LessJS packages in SSR bundle build.
         // When running from JSR (not workspace), Vite/Rolldown cannot resolve
         // bare specifiers from the virtual SSR entry. In workspace mode, the
         // @deno/vite-plugin handles this; in JSR mode, we fetch from jsr.io.
         {
-          name: 'less:ssg-core-resolve',
+          name: 'less:ssg-package-resolve',
           enforce: 'pre',
           resolveId(id, importer) {
-            if (id === '@lessjs/core' || id.startsWith('@lessjs/core/')) {
+            const pkgMatch = id.match(/^@lessjs\/(core|ui)(?:\/(.+))?$/);
+            if (pkgMatch) {
               // Workspace mode: let deno plugin resolve from import map
               if (workspaceRoot) return null;
-              // JSR mode: resolve to virtual module
-              const subpath = id === '@lessjs/core'
-                ? 'index.ts'
-                : coreSubpathToFilePath(id.slice('@lessjs/core/'.length).replace(/\.js$/, ''));
-              return `\0lessjs:ssg-core/${subpath}`;
+              const pkg = pkgMatch[1];
+              const subpath = pkgMatch[2] ? lessjsSubpathToFilePath(pkgMatch[2]) : 'index.ts';
+              return `\0lessjs:ssg-pkg/${pkg}/${subpath}`;
             }
             if (
               !workspaceRoot &&
               (id.startsWith('./') || id.startsWith('../')) &&
-              importer?.startsWith('\0lessjs:ssg-core/')
+              importer?.startsWith('\0lessjs:ssg-pkg/')
             ) {
-              const base = importer.slice('\0lessjs:ssg-core/'.length).split('/').slice(0, -1);
-              const parts = [...base, ...id.split('/')];
-              const resolved: string[] = [];
-              for (const part of parts) {
-                if (!part || part === '.') continue;
-                if (part === '..') resolved.pop();
-                else resolved.push(part);
-              }
-              return `\0lessjs:ssg-core/${coreSubpathToFilePath(resolved.join('/'))}`;
+              return resolveVirtualLessjsRelative(id, importer);
             }
             return null;
           },
           async load(id) {
             if (workspaceRoot) return null;
-            if (!id.startsWith('\0lessjs:ssg-core/')) return null;
-            const filePath = id.slice('\0lessjs:ssg-core/'.length);
-            const url = `https://jsr.io/@lessjs/core/${
-              getJsrPackageVersion(import.meta.url)
-            }/src/${filePath}`;
+            if (!id.startsWith('\0lessjs:ssg-pkg/')) return null;
+            const [pkg, ...pathParts] = id.slice('\0lessjs:ssg-pkg/'.length).split('/');
+            const filePath = pathParts.join('/');
+            const version = getJsrPackageVersion(import.meta.url);
+            const url = `https://jsr.io/@lessjs/${pkg}/${version}/src/${filePath}`;
             const resp = await fetch(url);
             if (!resp.ok) throw new Error(`Failed to fetch ${url}: HTTP ${resp.status}`);
             // Return raw TS — Vite SSR build already has esbuild configured for TS
