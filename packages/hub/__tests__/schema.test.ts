@@ -21,7 +21,7 @@ Deno.test('validateHubPackageRecord: valid record passes', () => {
     source: 'npm',
     repository: 'https://github.com/test/pkg',
     description: 'A test package',
-    manifestHash: 'sha256-test123',
+    manifestHash: 'a'.repeat(64),
     compatibility: 'ssr-capable',
     compatibilityJustification: 'Has LessJS SSR metadata.',
     tags: [
@@ -171,7 +171,7 @@ Deno.test('validateHubSubmission: valid submission passes', () => {
       scope: '',
       version: '1.0.0',
       source: 'npm',
-      manifestHash: 'abc',
+      manifestHash: 'a'.repeat(64),
       compatibility: 'client-only',
       compatibilityJustification: 'No SSR.',
       tags: [],
@@ -209,7 +209,7 @@ Deno.test('validateHubSubmission: missing artifacts fails', () => {
       scope: '',
       version: '1.0.0',
       source: 'npm',
-      manifestHash: 'abc',
+      manifestHash: 'a'.repeat(64),
       compatibility: 'client-only',
       compatibilityJustification: 'No SSR.',
       tags: [],
@@ -229,4 +229,64 @@ Deno.test('validateHubSubmission: missing artifacts fails', () => {
 
   const errors = validateHubSubmission(submission);
   assert(errors.length > 0);
+});
+
+Deno.test('validateHubPackageRecord: missing manifestHash fails', () => {
+  const record = {
+    schema: 'hub-package-v1',
+    name: 'test',
+    scope: '',
+    version: '1.0.0',
+    source: 'npm',
+    manifestHash: '',
+    compatibility: 'client-only',
+    compatibilityJustification: 'No SSR.',
+    tags: [],
+    reports: { validation: '{}' },
+    snapshotPaths: {},
+    installGuidance: {
+      safeToInstall: true,
+      command: 'less add test',
+      configChanges: [],
+      warnings: [],
+      ssrCapable: false,
+    },
+    submittedAt: '2026-05-17T00:00:00.000Z',
+    validatorVersion: '0.19.0',
+  };
+
+  const errors = validateHubPackageRecord(record);
+  assert(errors.some((e) => e.path === 'manifestHash'));
+});
+
+Deno.test('validateHubSubmission: empty artifact content fails', () => {
+  const submission = {
+    schema: 'hub-submission-v1',
+    package: {
+      schema: 'hub-package-v1',
+      name: 'test',
+      scope: '',
+      version: '1.0.0',
+      source: 'npm',
+      manifestHash: 'a'.repeat(64),
+      compatibility: 'client-only',
+      compatibilityJustification: 'No SSR.',
+      tags: [],
+      reports: { validation: '{}' },
+      snapshotPaths: {},
+      installGuidance: {
+        safeToInstall: true,
+        command: 'less add test',
+        configChanges: [],
+        warnings: [],
+        ssrCapable: false,
+      },
+      submittedAt: '2026-05-17T00:00:00.000Z',
+      validatorVersion: '0.19.0',
+    },
+    artifacts: [{ path: 'custom-elements.json', contentType: 'application/json', content: '' }],
+  };
+
+  const errors = validateHubSubmission(submission);
+  assert(errors.some((e) => e.path === 'artifacts[0].content'));
 });

@@ -17,6 +17,14 @@ const log = createLogger('core');
 /** Phases where errors can occur during rendering */
 export type RenderPhase = 'instantiate' | 'render' | 'nested' | 'style' | 'serialize';
 
+export type RenderErrorCode =
+  | 'LESS_RENDER_INSTANTIATE_FAILED'
+  | 'LESS_RENDER_INVALID_OUTPUT'
+  | 'LESS_RENDER_RENDER_FAILED'
+  | 'LESS_RENDER_NESTED_FAILED'
+  | 'LESS_RENDER_STYLE_FAILED'
+  | 'LESS_RENDER_SERIALIZE_FAILED';
+
 /**
  * Structured error from the render pipeline.
  *
@@ -24,6 +32,10 @@ export type RenderPhase = 'instantiate' | 'render' | 'nested' | 'style' | 'seria
  * ad-hoc HTML comments and console logs.
  */
 export interface RenderError {
+  /** Stable machine-readable error code */
+  code: RenderErrorCode;
+  /** Gate severity. Non-recoverable errors are always error severity. */
+  severity: 'error' | 'warning';
   /** Pipeline phase where the error occurred */
   phase: RenderPhase;
   /** Tag name of the component that errored */
@@ -44,7 +56,25 @@ export function classifyError(
   recoverable = false,
 ): RenderError {
   const message = err instanceof Error ? err.message : String(err);
-  return { phase, tagName, message, recoverable };
+  return {
+    code: codeForRenderError(phase, message),
+    severity: recoverable ? 'warning' : 'error',
+    phase,
+    tagName,
+    message,
+    recoverable,
+  };
+}
+
+function codeForRenderError(phase: RenderPhase, message: string): RenderErrorCode {
+  if (phase === 'instantiate') return 'LESS_RENDER_INSTANTIATE_FAILED';
+  if (phase === 'nested') return 'LESS_RENDER_NESTED_FAILED';
+  if (phase === 'style') return 'LESS_RENDER_STYLE_FAILED';
+  if (phase === 'serialize') return 'LESS_RENDER_SERIALIZE_FAILED';
+  if (message.includes('Components must return a string') || message.includes('TemplateResult')) {
+    return 'LESS_RENDER_INVALID_OUTPUT';
+  }
+  return 'LESS_RENDER_RENDER_FAILED';
 }
 
 // ─── Error HTML Generation ──────────────────────────────────────

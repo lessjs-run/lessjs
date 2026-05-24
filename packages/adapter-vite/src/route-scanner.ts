@@ -55,6 +55,18 @@ import { join, posix, sep } from 'node:path';
 
 const log = createLogger('core');
 
+function readRouteTagName(source: string): string | undefined {
+  let tagName: string | undefined;
+  for (const line of source.split(/\r?\n/)) {
+    if (line.includes('</')) continue;
+    const match = line.match(
+      /^export\s+const\s+tagName\s*=\s*(['"])([a-z][a-z0-9]*(-[a-z0-9]+)+)\1\s*;?\s*$/,
+    );
+    if (match) tagName = match[2];
+  }
+  return tagName;
+}
+
 /**
  * Convert a file path to a URL path pattern.
  * e.g., 'index.ts' -> '/', 'about.ts' -> '/about', 'posts/[id].ts' -> '/posts/:id'
@@ -192,11 +204,25 @@ export async function scanRoutes(
       } else if (!file.startsWith('_')) {
         // Regular route file
         const routePath = filePathToRoutePath(relativePath);
+        const routeType = getRouteType(relativePath);
+        let tagName: string | undefined;
+        if (routeType === 'page') {
+          try {
+            tagName = readRouteTagName(await readFile(fullPath, 'utf-8'));
+          } catch (e) {
+            log.debug(
+              `Unable to read route tagName metadata: ${fullPath}${
+                e instanceof Error ? `: ${e.message}` : ''
+              }`,
+            );
+          }
+        }
         entries.push({
           path: routePath,
           filePath: relativePath.split(sep).join(posix.sep),
-          type: getRouteType(relativePath),
+          type: routeType,
           varName: pathToVarName(routePath),
+          tagName,
         });
       }
       // Other _-prefixed files (not _renderer/_middleware) are silently skipped

@@ -70,6 +70,11 @@ function renderImport(imp: ImportDecl): string {
   return `import { ${names} } from '${imp.from}'`;
 }
 
+function routeTagNameExpr(varName: string, fallback: string): string {
+  void varName;
+  return JSON.stringify(fallback);
+}
+
 // ─── CORS config rendering ─────────────────────────────────────
 
 function renderCorsOrigin(origin: CorsOriginConfig): string {
@@ -239,11 +244,10 @@ function renderPageRoute(
   lines.push(`// Page: ${route.path} (${route.filePath})`);
   // H-02 fix: escape single quotes in route path (for paths like "/it's-a-test")
   const pathStr = route.path.replace(/'/g, "\\'");
+  const tagNameExpr = routeTagNameExpr(route.varName, route.tagName);
   lines.push(`app.get('${pathStr}', async (c) => {`);
   lines.push(`  try {`);
-  lines.push(
-    `    const tag = ${route.varName}.tagName || '${route.defaultTagName}'`,
-  );
+  lines.push(`    const tag = ${tagNameExpr}`);
   // v0.5.0: DSD renderer - no <!--lit-part--> markers, no old upgrade marker.
   // __ssr() uses renderDSD() which outputs standard DSD HTML.
   // Components receive route params as props for SSR-time data access.
@@ -430,11 +434,12 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('');
   }
   for (const route of desc.pageRoutes) {
+    const tagNameExpr = routeTagNameExpr(route.varName, route.tagName);
     lines.push(
-      `if (!customElements.get(${route.varName}.tagName || '${route.defaultTagName}')) {`,
+      `if (!customElements.get(${tagNameExpr})) {`,
     );
     lines.push(
-      `  customElements.define(${route.varName}.tagName || '${route.defaultTagName}', ${route.varName}.default)`,
+      `  customElements.define(${tagNameExpr}, ${route.varName}.default)`,
     );
     lines.push(`}`);
   }
@@ -617,7 +622,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     // to be evaluated from the imported module variable.
     lines.push('export const routeInfo = [');
     for (const r of desc.pageRoutes) {
-      const tagNameExpr = `${r.varName}.tagName || '${r.defaultTagName}'`;
+      const tagNameExpr = routeTagNameExpr(r.varName, r.tagName);
       lines.push(
         `  { path: '${r.path}', tagName: ${tagNameExpr}, isDynamic: ${!!r.isDynamic}, paramNames: ${
           JSON.stringify(

@@ -329,6 +329,13 @@ export function validateHubPackageRecord(
     });
   }
 
+  if (typeof r.manifestHash !== 'string' || !/^[a-f0-9]{64}$/.test(r.manifestHash)) {
+    errors.push({
+      path: 'manifestHash',
+      message: 'Missing or invalid SHA-256 manifest hash',
+    });
+  }
+
   if (!Array.isArray(r.tags)) {
     errors.push({ path: 'tags', message: 'Missing or non-array tags' });
   } else {
@@ -428,6 +435,24 @@ export function validateHubSubmission(
 
   if (!Array.isArray(s.artifacts)) {
     errors.push({ path: 'artifacts', message: 'Missing or non-array artifacts' });
+  } else if (s.artifacts.length === 0) {
+    errors.push({ path: 'artifacts', message: 'Submission must include at least one artifact' });
+  } else {
+    for (let i = 0; i < s.artifacts.length; i++) {
+      const artifact = s.artifacts[i] as Record<string, unknown>;
+      if (typeof artifact.path !== 'string' || artifact.path.trim() === '') {
+        errors.push({ path: `artifacts[${i}].path`, message: 'Missing artifact path' });
+      }
+      if (typeof artifact.contentType !== 'string' || artifact.contentType.trim() === '') {
+        errors.push({
+          path: `artifacts[${i}].contentType`,
+          message: 'Missing artifact contentType',
+        });
+      }
+      if (typeof artifact.content !== 'string' || artifact.content.trim() === '') {
+        errors.push({ path: `artifacts[${i}].content`, message: 'Missing artifact content' });
+      }
+    }
   }
 
   return errors;

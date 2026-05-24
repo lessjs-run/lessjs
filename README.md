@@ -12,12 +12,14 @@ Island、Hono API Route 和早期 Registry Hub 组合在一起，让 Web Compone
 
 ## 当前状态
 
-项目线：**v0.21.0 Reactive DSD**。
+项目线：**v0.21.5 Reactive DSD (Hardened)**。
 
 当前生产渲染模式是 **SSG + Declarative Shadow DOM**。`renderDSD()` 的架构设计允许
 未来在缓存过期时运行 ISR，或在请求时运行 SSR，但 ISR/SSR 仍是路线图能力，不应写成已发布保证。
 
-全部 16 个包已统一发布为 v0.21.0。
+全部 16 个包已统一发布为 v0.21.5。v0.21.x 硬化线已完成：Core API 收紧、DSD 证据补强、
+Adapter 架构清理、Hub trust gate 加固。CI 配备 11 道 SOP 门禁 + CodeQL 安全扫描 +
+3 个 Copilot 自定义 Agent。
 
 ## 三个产品支柱
 
@@ -119,17 +121,17 @@ LessJS 不承诺任意 Web Component 都能自动 SSR。每个组件应该得到
 
 ## 路线图
 
-| 版本  | 目标                                            | 状态    |
-| ----- | ----------------------------------------------- | ------- |
-| v0.15 | Renderer Kernel Protocol                        | Done    |
-| v0.16 | WC Package Protocol                             | Done    |
-| v0.17 | Ecosystem Entry + SSR Boundary                  | Done    |
-| v0.18 | Universal WC Engine                             | Done    |
-| v0.19 | Registry Hub + Component Browser                | Done    |
-| v0.20 | Ocean-Island Architecture + DSD-native UI       | Done    |
-| v0.21 | Reactive DSD — DsdElement + Signals + Templates | Current |
-| v0.22 | Edge Full-Stack — ISR + KV adapters + Deploy    | Planned |
-| v1.0  | Stable Engine contracts                         | Vision  |
+| 版本  | 目标                                                      | 状态    |
+| ----- | --------------------------------------------------------- | ------- |
+| v0.15 | Renderer Kernel Protocol                                  | Done    |
+| v0.16 | WC Package Protocol                                       | Done    |
+| v0.17 | Ecosystem Entry + SSR Boundary                            | Done    |
+| v0.18 | Universal WC Engine                                       | Done    |
+| v0.19 | Registry Hub + Component Browser                          | Done    |
+| v0.20 | Ocean-Island Architecture + DSD-native UI                 | Done    |
+| v0.21 | Reactive DSD + Hardening — Core API / DSD / Adapter / Hub | Current |
+| v0.22 | Edge Full-Stack — ISR + KV adapters + Deploy              | Planned |
+| v1.0  | Stable Engine contracts                                   | Vision  |
 
 详见 [ADR docs](docs/adr/)、[SOP docs](docs/sop/) 和
 [Roadmap](docs/roadmap/ROADMAP.md)。
