@@ -48,3 +48,23 @@ www/              # lessjs.run website
 ## Release Process
 
 See [RELEASE.md](./RELEASE.md) for the full release workflow.
+
+## Windows Tips
+
+### PowerShell `git commit` with multi-line messages
+
+PowerShell's `@'...'@` here-string syntax leaks a literal `@` into the first
+line of the commit message when used with `git commit -m`. Use a temp file
+instead:
+
+```powershell
+# BAD - leaks '@' prefix
+git commit -m @'
+fix: something
+detailed body
+'@
+
+# GOOD - write to temp file, commit from file
+"fix: something`n`ndetailed body" | Out-File -Encoding utf8 /tmp/msg
+git commit -F /tmp/msg
+```

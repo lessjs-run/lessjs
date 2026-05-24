@@ -153,6 +153,19 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
   const routesDir = options.routesDir || ctx.phase3.routesDir || 'app/routes';
   const islandsDir = options.islandsDir || ctx.phase3.islandsDir || 'app/islands';
 
+  // SOP-v0.21.6: Detect if we're running from a Deno workspace.
+  // In workspace mode, @deno/vite-plugin resolves bare specifiers.
+  // In JSR mode, we need the less:ssg-core-resolve plugin.
+  const workspaceRoot = (() => {
+    try {
+      for (let d = resolve(root); d !== resolve(d, '..'); d = resolve(d, '..')) {
+        const cfg = JSON.parse(readFileSync(resolve(d, 'deno.json'), 'utf-8'));
+        if (cfg.workspace && Array.isArray(cfg.workspace)) return d;
+      }
+    } catch { /* deno.json not found, keep walking up */ }
+    return null;
+  })();
+
   // Read island metadata from ctx (ADR 0010: no .less/ fallback)
   const islandTagNames = options.islandTagNames || ctx.phase1.islandTagNames || [];
   const islandMeta = options.islandMeta || ctx.phase1.islandMeta || {};
@@ -403,6 +416,36 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
           },
           load(id) {
             if (id === RESOLVED_SSG_ENTRY_ID) return ssgEntryCode;
+          },
+        },
+        // SOP-v0.21.6: Resolve @lessjs/core (and subpaths) in SSR bundle build.
+        // When running from JSR (not workspace), Vite/Rolldown cannot resolve
+        // bare specifiers from the virtual SSR entry. In workspace mode, the
+        // @deno/vite-plugin handles this; in JSR mode, we fetch from jsr.io.
+        {
+          name: 'less:ssg-core-resolve',
+          enforce: 'pre',
+          resolveId(id) {
+            if (id === '@lessjs/core' || id.startsWith('@lessjs/core/')) {
+              // Workspace mode: let deno plugin resolve from import map
+              if (workspaceRoot) return null;
+              // JSR mode: resolve to virtual module
+              const subpath = id === '@lessjs/core'
+                ? 'index.ts'
+                : id.slice('@lessjs/core/'.length).replace(/\.js$/, '.ts');
+              return `\0lessjs:ssg-core/${subpath}`;
+            }
+            return null;
+          },
+          async load(id) {
+            if (workspaceRoot) return null;
+            if (!id.startsWith('\0lessjs:ssg-core/')) return null;
+            const filePath = id.slice('\0lessjs:ssg-core/'.length);
+            const url = `https://jsr.io/@lessjs/core/0.21.5/src/${filePath}`;
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error(`Failed to fetch ${url}: HTTP ${resp.status}`);
+            // Return raw TS — Vite SSR build already has esbuild configured for TS
+            return await resp.text();
           },
         },
         // ADR 0018: Virtual data modules - resolve virtual:less-blog-data

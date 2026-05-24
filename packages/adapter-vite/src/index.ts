@@ -66,6 +66,9 @@ const CORE_SUBPATHS: Record<string, string> = {
   logger: 'logger.ts',
   'build-context': 'build-context.ts',
   navigation: 'navigation.ts',
+  errors: 'errors.ts',
+  'virtual-ids': 'virtual-ids.ts',
+  'build-types': 'build-types.ts',
 };
 
 const OPTIONAL_PACKAGE_STUBS: Record<string, string> = {
