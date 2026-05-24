@@ -43,7 +43,7 @@ Three pillars:
 2. **DSD/WC rendering engine** - `DsdElement`, `renderDSD()`, adapters, compatibility.
 3. **Registry Hub** - discovery, validation, `less add`.
 
-## v0.21.0 - Reactive DSD (9 SOPs)
+## v0.21.0 - Reactive DSD (10 SOPs)
 
 | SOP | Title                                               | Priority |
 | --- | --------------------------------------------------- | -------- |
@@ -56,6 +56,7 @@ Three pillars:
 | 007 | Core Package Split — compat-check, cem, style-sheet | P0       |
 | 008 | ReactiveHost Protocol — explicit Signal integration | P0       |
 | 009 | Closure & Remediation — fix all review gaps         | P0       |
+| 010 | Architect Review Remediation — code quality fixes   | P1       |
 
 See `docs/sop/v0.21.0/README.md`. Key ADRs: 0039 (Signals), 0040 (Streaming).
 

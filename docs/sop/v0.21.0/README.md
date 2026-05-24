@@ -41,17 +41,18 @@ escalate complex UI to Islands.
 
 ## Release Order
 
-| Step | SOP     | Priority | Purpose                                                                             | Status         |
-| ---- | ------- | -------- | ----------------------------------------------------------------------------------- | -------------- |
-| 1    | SOP-001 | P0       | `DsdElement` + Signals reactive render contract                                     | ✅ IMPLEMENTED |
-| 2    | SOP-002 | P0       | Safe `html` template processor                                                      | ✅ IMPLEMENTED |
-| 3    | SOP-003 | P1       | `renderDSDStream()` and stream metrics                                              | ✅ IMPLEMENTED |
-| 4    | SOP-004 | P0       | Fine-grained patching + DX + www migration                                          | ⚠️ PARTIAL     |
-| 5    | SOP-006 | P0       | Unified event model — retire `hydrateEvents`                                        | ✅ IMPLEMENTED |
-| 6    | SOP-005 | P0       | Verification, release gates, docs sync                                              | ✅ IMPLEMENTED |
-| 7    | SOP-007 | P0       | Core package split — `@lessjs/compat-check`, `@lessjs/cem`, `@lessjs/style-sheet`   | ✅ IMPLEMENTED |
-| 8    | SOP-008 | P0       | ReactiveHost protocol — explicit Signal integration protocol (replaces Duck Typing) | ✅ IMPLEMENTED |
-| 9    | SOP-009 | P0       | Closure & Remediation — fix all review gaps                                         | 🔴 IN PROGRESS |
+| Step | SOP     | Priority | Purpose                                                                              | Status         |
+| ---- | ------- | -------- | ------------------------------------------------------------------------------------ | -------------- |
+| 1    | SOP-001 | P0       | `DsdElement` + Signals reactive render contract                                      | ✅ IMPLEMENTED |
+| 2    | SOP-002 | P0       | Safe `html` template processor                                                       | ✅ IMPLEMENTED |
+| 3    | SOP-003 | P1       | `renderDSDStream()` and stream metrics                                               | ✅ IMPLEMENTED |
+| 4    | SOP-004 | P0       | Fine-grained patching + DX + www migration                                           | ✅ IMPLEMENTED |
+| 5    | SOP-006 | P0       | Unified event model — retire `hydrateEvents`                                         | ✅ IMPLEMENTED |
+| 6    | SOP-005 | P0       | Verification, release gates, docs sync                                               | ✅ IMPLEMENTED |
+| 7    | SOP-007 | P0       | Core package split — `@lessjs/compat-check`, `@lessjs/cem`, `@lessjs/style-sheet`    | ✅ IMPLEMENTED |
+| 8    | SOP-008 | P0       | ReactiveHost protocol — explicit Signal integration protocol (replaces Duck Typing)  | ✅ IMPLEMENTED |
+| 9    | SOP-009 | P0       | Closure & Remediation — fix all review gaps                                          | ✅ IMPLEMENTED |
+| 10   | SOP-010 | P1       | Architect review remediation — code dedup, types export, batch(), security, callback | ✅ IMPLEMENTED |
 
 ## Entry Criteria
 
@@ -142,6 +143,7 @@ class LessCounter extends DsdElement {
 - `@lessjs/compat-check`, `@lessjs/cem`, `@lessjs/style-sheet` extracted from core as independent packages.
 - SOP-004 targeted and full release gates pass.
 - **SOP-009**: All P0 remediation items complete (STATUS.md fixed, www signals migrated, migration guide exists).
+- **SOP-010**: Architect review remediation — code dedup, types export, batch(), security extraction, callback simplification.
 
 ## Related
 
@@ -156,5 +158,7 @@ class LessCounter extends DsdElement {
 - SOP-006: Unified Event Model — hydrateEvents Retirement
 - SOP-007: Core Package Split — compat-check, cem, style-sheet
 - SOP-008: ReactiveHost Protocol — explicit Signal integration
-- SOP-009: Closure & Remediation — fix all review gaps (IN PROGRESS)
+- SOP-009: Closure & Remediation — fix all review gaps ✅
+- SOP-010: Architect Review Remediation — code dedup, types export, batch, security, callback (IN PROGRESS)
 - Comprehensive Review: `C:\Users\Administrator\Documents\GitHub\lessjs-v0.21.0-comprehensive-review.md`
+- Architect Cross-Review: 2026-05-24 (高见远) — 8.2/10, 5 actionable findings

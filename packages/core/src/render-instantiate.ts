@@ -8,7 +8,7 @@
  */
 
 import type { DsdComponent } from './types.js';
-import { DANGEROUS_KEYS } from './island.js';
+import { DANGEROUS_KEYS } from './security.js';
 import { createLogger } from './logger.js';
 
 const log = createLogger('core');

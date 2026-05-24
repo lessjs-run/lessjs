@@ -14,12 +14,13 @@
  * check a package's SSR readiness.
  */
 
-// v0.21.0: Physical implementation now lives in this package (SOP-007).
+// v0.21.0: Canonical implementation lives in @lessjs/core/compatibility.
+// This package is a thin re-export wrapper.
 export {
   classifyCemManifest,
   classifyComponent as classifyTag,
   isValidTagName,
   validateModulePath,
-} from './compatibility.js';
+} from '@lessjs/core/compatibility';
 
 export type { CompatibilityTier } from '@lessjs/core';

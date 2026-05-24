@@ -187,41 +187,42 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   connectedCallback(): void {
     const ctor = this.constructor as typeof DsdElement;
 
-    // Ensure shadow root exists
+    // Ensure shadow root exists and detect DSD pre-population
     if (!this.shadowRoot) {
       this.createRenderRoot();
     } else {
-      // Existing roots with content are DSD upgrades. Empty roots are CSR-owned
-      // and still need render() output.
-      if (this.shadowRoot.childNodes.length > 0) {
-        this._dsdHydrated = true;
-      }
-
-      // Apply adoptedStyleSheets on existing-root paths too.
+      if (this.shadowRoot.childNodes.length > 0) this._dsdHydrated = true;
       this._applyStyles(ctor);
     }
 
-    // Sync data-theme from document root so all components inherit
-    // the current dark/light mode without waiting for external propagation.
+    // Sync data-theme from document root
     const docTheme = document.documentElement?.dataset?.theme;
     if (docTheme && !this.hasAttribute('data-theme')) {
       this.setAttribute('data-theme', docTheme);
     }
 
-    if (this._dsdHydrated) {
-      // DSD path: bind events/signals against existing DOM without replacing it.
-      this._bindCurrentRenderTemplate();
-      // Mark initial render done so signal-driven updates use _patchBindings (fine-grained)
-      // instead of _renderIntoShadowRoot (full innerHTML replacement).
-      this._initialRenderDone = true;
-    } else if (this.shadowRoot) {
-      // CSR path: populate shadow DOM from render()
-      this._renderIntoShadowRoot();
-    }
+    // Dispatch: DSD bindings vs CSR full render
+    this._hydrateOrRender();
 
     // Attach ElementInternals for form-associated custom elements
     if (ctor.formAssociated && typeof this.attachInternals === 'function') {
       this._internals = this.attachInternals();
+    }
+  }
+
+  /**
+   * Dispatch between DSD event binding (existing DOM) and CSR full render.
+   *
+   * DSD path: bind events/signals against pre-populated DOM, mark
+   * _initialRenderDone so signal-driven updates use _patchBindings.
+   * CSR path: populate shadow DOM from render().
+   */
+  private _hydrateOrRender(): void {
+    if (this._dsdHydrated) {
+      this._bindCurrentRenderTemplate();
+      this._initialRenderDone = true;
+    } else if (this.shadowRoot) {
+      this._renderIntoShadowRoot();
     }
   }
 

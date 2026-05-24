@@ -11,7 +11,8 @@
  * parse CEM files, not just LessJS.
  */
 
-// v0.21.0: Physical implementation now lives in this package (SOP-007).
+// v0.21.0: Canonical implementation lives in @lessjs/core/cem-parser.
+// This package is a thin re-export wrapper.
 export {
   classifyCemManifest,
   extractLessDeclarations,
@@ -19,4 +20,4 @@ export {
   parseCem,
   readCemFile,
   validateModulePaths,
-} from './cem-parser.js';
+} from '@lessjs/core/cem-parser';
