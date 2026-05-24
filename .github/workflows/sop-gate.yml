@@ -191,9 +191,6 @@ jobs:
     steps:
       - name: Check all gates
         run: |
-          set -e
-          PASS=✅
-          FAIL=❌
           ALL_PASS=true
 
           check() { if [ "$1" = "success" ]; then echo "- [x] $2"; else echo "- [ ] $2 (failed)"; ALL_PASS=false; fi; }
