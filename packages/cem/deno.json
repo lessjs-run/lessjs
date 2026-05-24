@@ -3,5 +3,13 @@
   "version": "0.21.0",
   "exports": {
     ".": "./src/index.ts"
+  },
+  "publish": {
+    "include": [
+      "src/**",
+      "deno.json",
+      "README.md",
+      "LICENSE"
+    ]
   }
 }

@@ -28,6 +28,14 @@
   "imports": {
     "parse5": "npm:parse5@7.0.0"
   },
+  "publish": {
+    "include": [
+      "src/**",
+      "deno.json",
+      "README.md",
+      "LICENSE"
+    ]
+  },
   "tasks": {
     "build": "deno check src/index.ts src/render-dsd.ts",
     "lint": "deno lint src/ __tests__/",
