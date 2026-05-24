@@ -76,3 +76,36 @@ jobs:
           publish_if_missing "@lessjs/app" "packages/app"
           publish_if_missing "@lessjs/create" "packages/create"
           publish_if_missing "@lessjs/hub" "packages/hub"
+
+  # SOP-013: Post-Publish Consumer Smoke Test
+  # Verifies that freshly published JSR packages form a complete, buildable
+  # consumer project. This is the final release gate — it catches problems that
+  # pre-publish testing cannot because the new version does not yet exist on JSR.
+  consumer-smoke:
+    runs-on: ubuntu-latest
+    needs: [publish]
+    steps:
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: '2'
+      - name: Wait for JSR propagation
+        run: sleep 30
+      - name: Generate consumer project from JSR
+        run: |
+          CONSUMER_DIR="${{ runner.temp }}/lessjs-post-publish-smoke"
+          rm -rf "$CONSUMER_DIR"
+          mkdir -p "$CONSUMER_DIR"
+          cd "$CONSUMER_DIR"
+          deno run -A jsr:@lessjs/create test-blog
+      - name: Build consumer project
+        run: |
+          CONSUMER_DIR="${{ runner.temp }}/lessjs-post-publish-smoke"
+          cd "$CONSUMER_DIR/test-blog"
+          deno task build
+      - name: Verify output
+        run: |
+          CONSUMER_DIR="${{ runner.temp }}/lessjs-post-publish-smoke"
+          test -f "$CONSUMER_DIR/test-blog/dist/index.html" || {
+            echo "::error::dist/index.html not found — post-publish consumer build failed"
+            exit 1
+          }
