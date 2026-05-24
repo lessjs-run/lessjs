@@ -47,7 +47,7 @@ test-create-jsr:
     - uses: actions/checkout@v4
     - uses: denoland/setup-deno@v2
       with: { deno-version: '2' }
-    - run: deno run -A jsr:@lessjs/create@0.21.6 test-blog
+    - run: deno run -A jsr:@lessjs/create test-blog
     - run: cd test-blog && deno task build
     - run: test -f test-blog/dist/index.html
 ```

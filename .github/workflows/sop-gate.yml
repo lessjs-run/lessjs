@@ -163,8 +163,9 @@ jobs:
         with:
           deno-version: '2'
       - name: Create project from JSR
-        # v0.21.5 is immutable on JSR and still uses the old /meta endpoint.
-        run: deno run -A jsr:@lessjs/create@0.21.6 test-blog
+        # Track the current JSR release because this gate proves the documented
+        # user command, not a historical pinned package.
+        run: deno run -A jsr:@lessjs/create test-blog
       - name: Build generated project
         run: cd test-blog && deno task build
       - name: Verify build output
