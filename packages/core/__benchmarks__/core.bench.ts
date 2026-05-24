@@ -25,7 +25,9 @@ class BenchCard {
 class BenchReactive {
   count = signal(0);
   render() {
-    return html`<span>${this.count}</span>`;
+    return html`
+      <span>${this.count}</span>
+    `;
   }
 }
 
@@ -58,26 +60,38 @@ Deno.bench('renderDSD: with 5 attributes', async () => {
 // ─── html Template — Authoring Primitive ────────────────────
 
 Deno.bench('html: simple interpolation', () => {
-  void html`<h1>${'LessJS'}</h1>`;
+  void html`
+    <h1>${'LessJS'}</h1>
+  `;
 });
 
 Deno.bench('html: 10 interpolations (list)', () => {
   const items = Array.from({ length: 10 }, (_, i) => `item-${i}`);
-  void html`<ul>${items.map((x) => html`<li>${x}</li>`)}</ul>`;
+  void html`
+    <ul>${items.map((x) =>
+      html`
+        <li>${x}</li>
+      `
+    )}</ul>
+  `;
 });
 
 Deno.bench('html: with unsafeHTML', () => {
-  void html`<div>${unsafeHTML('<strong>bold</strong>')}</div>`;
+  void html`
+    <div>${unsafeHTML('<strong>bold</strong>')}</div>
+  `;
 });
 
 Deno.bench('html: 5 attribute bindings', () => {
-  void html`<input
-    type="text"
-    placeholder="Enter name"
-    .value=${'test'}
-    aria-label=${'Name field'}
-    data-id=${'input-1'}
-  />`;
+  void html`
+    <input
+      type="text"
+      placeholder="Enter name"
+      .value="${'test'}"
+      aria-label="${'Name field'}"
+      data-id="${'input-1'}"
+    />
+  `;
 });
 
 // ─── Signal Reactivity ──────────────────────────────────────
