@@ -18,12 +18,18 @@
  * ```
  */
 
-import { DsdElement, html, StyleSheet } from '@lessjs/core';
+import {
+  DsdElement,
+  html,
+  StyleSheet,
+  type StyleSheetLike,
+  type TemplateResult,
+} from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-code-block';
 
-const sheet = new StyleSheet();
+const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;
@@ -130,7 +136,7 @@ export class LessCodeBlock extends DsdElement {
   private _highlightRetries = 0;
   private static MAX_HIGHLIGHT_RETRIES = 40;
 
-  override render() {
+  override render(): string | TemplateResult {
     return html`
       <slot></slot>
       <button class="copy-btn" part="copy" @click="${() => this._copy()}">Copy</button>

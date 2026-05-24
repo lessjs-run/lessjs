@@ -8,12 +8,18 @@
  * @csspart dot-static  - The static status dot
  * @csspart dot-animated - The animated ping button
  */
-import { DsdElement, html, StyleSheet } from '@lessjs/core';
+import {
+  DsdElement,
+  html,
+  StyleSheet,
+  type StyleSheetLike,
+  type TemplateResult,
+} from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-hero-ping';
 
-const styles = new StyleSheet();
+const styles: StyleSheetLike = new StyleSheet();
 styles.replaceSync(`
   :host {
     display: inline-flex;
@@ -114,7 +120,7 @@ export default class HeroPing extends DsdElement {
     }
   };
 
-  override render() {
+  override render(): string | TemplateResult {
     const dotClass = `dot ${this._state}`;
     const loading = this._state === 'loading';
     return html`

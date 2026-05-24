@@ -16,12 +16,20 @@
  * ```
  */
 
-import { DsdElement, html, signal, StyleSheet, unsafeHTML } from '@lessjs/core';
+import {
+  DsdElement,
+  html,
+  signal,
+  StyleSheet,
+  type StyleSheetLike,
+  type TemplateResult,
+  unsafeHTML,
+} from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-theme-toggle';
 
-const sheet = new StyleSheet();
+const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: inline-block;
@@ -112,7 +120,7 @@ export class LessThemeToggle extends DsdElement {
     this.setAttribute('data-theme', this._theme.value);
   }
 
-  override render() {
+  override render(): string | TemplateResult {
     const lightClass = this._theme.value === 'light' ? ' is-light' : '';
     const title = this._theme.value === 'light' ? 'Switch to dark theme' : 'Switch to light theme';
 

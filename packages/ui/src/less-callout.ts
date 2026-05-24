@@ -18,7 +18,13 @@
  * ```
  */
 
-import { DsdElement, html, StyleSheet } from '@lessjs/core';
+import {
+  DsdElement,
+  html,
+  StyleSheet,
+  type StyleSheetLike,
+  type TemplateResult,
+} from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-callout';
@@ -46,7 +52,7 @@ const TYPE_CONFIG: Record<string, { borderColor: string; bgColor: string; icon: 
   },
 };
 
-const sheet = new StyleSheet();
+const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;
@@ -88,7 +94,7 @@ export class LessCallout extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['type', 'label'];
 
-  override render() {
+  override render(): string | TemplateResult {
     const type = this.getAttribute('type') || 'info';
     const label = this.getAttribute('label') || '';
     const config = TYPE_CONFIG[type] || TYPE_CONFIG.info;

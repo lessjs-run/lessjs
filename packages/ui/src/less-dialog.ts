@@ -21,12 +21,18 @@
  * ```
  */
 
-import { DsdElement, html, StyleSheet } from '@lessjs/core';
+import {
+  DsdElement,
+  html,
+  StyleSheet,
+  type StyleSheetLike,
+  type TemplateResult,
+} from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-dialog';
 
-const sheet = new StyleSheet();
+const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: inline-block;
@@ -117,7 +123,7 @@ export class LessDialog extends DsdElement {
 
   private static _originalInertStates = new WeakMap<Element, boolean>();
 
-  override render() {
+  override render(): string | TemplateResult {
     const label = this._esc(this.getAttribute('label') || '');
     return html`
       <slot name="trigger" @click="${() => this._handleTrigger()}"></slot>
