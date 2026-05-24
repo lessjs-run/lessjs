@@ -165,12 +165,14 @@ jobs:
       - name: Create project from JSR
         # Track the current JSR release because this gate proves the documented
         # user command, not a historical pinned package.
+        working-directory: ${{ runner.temp }}
         run: deno run -A jsr:@lessjs/create test-blog
       - name: Build generated project
-        run: cd test-blog && deno task build
+        working-directory: ${{ runner.temp }}/test-blog
+        run: deno task build
       - name: Verify build output
         shell: bash
-        run: test -f test-blog/dist/index.html && grep -q '<html' test-blog/dist/index.html
+        run: test -f "${RUNNER_TEMP}/test-blog/dist/index.html" && grep -q '<html' "${RUNNER_TEMP}/test-blog/dist/index.html"
 
   # ─── Gate 11 — E2E tests ───
   test-e2e:
