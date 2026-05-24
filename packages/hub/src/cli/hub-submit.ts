@@ -294,6 +294,7 @@ async function main() {
     repository: repository || undefined,
     description: description || undefined,
     validatorVersion: '0.19.0',
+    manifestContent: cemContent || undefined,
   };
 
   const record = await buildPackageRecord(recordOptions);

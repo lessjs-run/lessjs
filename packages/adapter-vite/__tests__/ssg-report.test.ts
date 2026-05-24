@@ -121,7 +121,14 @@ Deno.test('SSG report: collects diagnostics from renderRoute', async (t) => {
   const mockOutput: SsgPageOutput = {
     html: '<html><body>dynamic page</body></html>',
     errors: [
-      { phase: 'render', tagName: 'test-el', message: 'test error', recoverable: true },
+      {
+        code: 'LESS_RENDER_RENDER_FAILED',
+        severity: 'warning',
+        phase: 'render',
+        tagName: 'test-el',
+        message: 'test error',
+        recoverable: true,
+      },
     ],
     hydrationHints: [
       { tagName: 'test-el', layer: 'dsd-interactive' },

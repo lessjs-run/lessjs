@@ -111,6 +111,8 @@ export interface PageRouteDecl {
   filePath: string;
   /** Default custom element tag name derived from file name */
   defaultTagName: string;
+  /** Custom element tag name used for SSR registration and rendering */
+  tagName: string;
   /** Full import path for Vite SSR (e.g. '/app/routes/about.ts') */
   importPath: string;
   /** Whether this is a dynamic route containing :param segments */
@@ -390,6 +392,7 @@ export function buildEntryDescriptor(
         varName: `$${r.varName}`,
         filePath: r.filePath,
         defaultTagName: fileToTagName(r.filePath),
+        tagName: r.tagName || fileToTagName(r.filePath),
         importPath: `/${routesDir}/${r.filePath}`,
         isDynamic,
         paramNames,

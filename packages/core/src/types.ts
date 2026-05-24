@@ -1,3 +1,5 @@
+import type { TemplateResult } from './template.js';
+
 /**
  * @lessjs/core - Public types.
  *
@@ -525,6 +527,8 @@ export interface RouteEntry {
   type: 'page' | 'api' | 'island' | 'special';
   /** Variable name for module import */
   varName: string;
+  /** Static custom element tag name exported by the route module, when present */
+  tagName?: string;
   /** Special file type (renderer or middleware), if applicable */
   special?: SpecialFileType;
   /** v0.21 ISR: revalidation interval in seconds. 0 = always, missing = static. */
@@ -626,6 +630,18 @@ export interface RendererProtocol {
  */
 export type RenderPhase = 'instantiate' | 'render' | 'nested' | 'style' | 'serialize';
 
+/** Stable machine-readable render error code. */
+export type RenderErrorCode =
+  | 'LESS_RENDER_INSTANTIATE_FAILED'
+  | 'LESS_RENDER_INVALID_OUTPUT'
+  | 'LESS_RENDER_RENDER_FAILED'
+  | 'LESS_RENDER_NESTED_FAILED'
+  | 'LESS_RENDER_STYLE_FAILED'
+  | 'LESS_RENDER_SERIALIZE_FAILED';
+
+/** Render error severity for gates and build reports. */
+export type RenderErrorSeverity = 'error' | 'warning';
+
 /**
  * Structured error from the render pipeline.
  *
@@ -633,6 +649,10 @@ export type RenderPhase = 'instantiate' | 'render' | 'nested' | 'style' | 'seria
  * ad-hoc HTML comments and console logs.
  */
 export interface RenderError {
+  /** Stable machine-readable error code */
+  code: RenderErrorCode;
+  /** Gate severity. Non-recoverable errors are always error severity. */
+  severity: RenderErrorSeverity;
   /** Pipeline phase where the error occurred */
   phase: RenderPhase;
   /** Tag name of the component that errored */
@@ -706,8 +726,10 @@ export interface RenderOutput {
  * Interface that components must implement to be DSD-renderable.
  * Works with any Custom Element class that has render() and connectedCallback().
  *
- * render() MUST return a string. If you use Lit components that return
- * TemplateResult, install @lessjs/adapter-lit to handle the conversion.
+ * v0.21 canonical authoring uses `html` tagged templates and returns a
+ * TemplateResult. String output remains supported for static and legacy
+ * components. Other template objects require a registered RendererProtocol
+ * adapter.
  *
  * v0.6.2: Added `layer` property for three-layer component model.
  *   - 'dsd-static' (default): static content, no hydration needed
@@ -715,8 +737,8 @@ export interface RenderOutput {
  *   - 'pure-island': no DSD, framework fully owns shadow root
  */
 export interface DsdComponent {
-  /** Return Shadow DOM inner HTML as a string */
-  render(): string | unknown;
+  /** Return Shadow DOM inner HTML as a string or LessJS TemplateResult */
+  render(): string | TemplateResult | unknown;
 
   /** Optional: called after setting props, before render() */
   connectedCallback?(): void;

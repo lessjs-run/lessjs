@@ -27,6 +27,25 @@ Deno.test('hub-submit: --help prints usage', async () => {
 
 // Test dry-run mode
 Deno.test('hub-submit: --dry-run on a valid dir', async () => {
+  const tempDir = await Deno.makeTempDir({ prefix: 'lessjs-hub-submit-' });
+  await Deno.writeTextFile(
+    `${tempDir}/deno.json`,
+    JSON.stringify({ name: '@test/hub-fixture', version: '1.0.0' }),
+  );
+  await Deno.writeTextFile(
+    `${tempDir}/custom-elements.json`,
+    JSON.stringify({
+      schemaVersion: '1.0.0',
+      modules: [
+        {
+          kind: 'javascript-module',
+          path: './fixture-card.ts',
+          declarations: [{ kind: 'custom-element', tagName: 'fixture-card' }],
+        },
+      ],
+    }),
+  );
+
   const cmd = new Deno.Command(Deno.execPath(), {
     args: [
       'run',
@@ -35,18 +54,22 @@ Deno.test('hub-submit: --dry-run on a valid dir', async () => {
       '--allow-env',
       'packages/hub/src/cli/hub-submit.ts',
       '--dir',
-      `${Deno.cwd()}/packages/hub`,
+      tempDir,
       '--dry-run',
     ],
     cwd: `${Deno.cwd()}`,
   });
-  const output = await cmd.output();
-  const stdout = new TextDecoder().decode(output.stdout);
-  // Should show submission preview
-  assert(
-    stdout.includes('Submission Preview') || stdout.includes('ready'),
-    'Dry-run should show preview',
-  );
+  try {
+    const output = await cmd.output();
+    const stdout = new TextDecoder().decode(output.stdout);
+    // Should show submission preview
+    assert(
+      stdout.includes('Submission Preview') || stdout.includes('ready'),
+      'Dry-run should show preview',
+    );
+  } finally {
+    await Deno.remove(tempDir, { recursive: true });
+  }
 });
 
 // Test --submit flag sets dryRun false (validated by parsing)

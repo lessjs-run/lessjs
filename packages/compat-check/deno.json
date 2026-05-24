@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/compat-check",
-  "version": "0.21.0",
+  "version": "0.21.5",
   "exports": {
     ".": "./src/index.ts"
   },
