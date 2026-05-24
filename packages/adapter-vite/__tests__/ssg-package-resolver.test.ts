@@ -144,3 +144,38 @@ Deno.test('createLessJsrPackageResolverPlugin does not intercept optional packag
     toVirtualLessPackageId('core', 'src/index.ts'),
   );
 });
+
+Deno.test('createLessJsrPackageResolverPlugin rewrites npm: specifiers from JSR source', async () => {
+  const jsrSource = [
+    `import * as parse5 from 'npm:parse5@7.0.0';`,
+    `import type { DefaultTreeAdapterMap } from 'npm:parse5@7.0.0';`,
+    `import { LitElement } from 'npm:lit@3.3.2';`,
+    `import { something } from 'npm:@lit/reactive-element@2.1.0';`,
+    `import { ctx } from 'npm:@lessjs/core@0.21.10/context';`,
+    `export * from 'npm:@jsr/lessjs__signals@0.21.10/framework';`,
+    `import { rpc } from 'npm:@jsr/lessjs__rpc@0.21.10';`,
+  ].join('\n');
+
+  const plugin = createLessJsrPackageResolverPlugin({
+    workspaceRoot: null,
+    version: '0.21.10',
+    fetchSource: () => Promise.resolve(new Response(jsrSource)),
+  });
+  const load = plugin.load as unknown as (id: string) => string | null | Promise<string | null>;
+
+  const result = await load(toVirtualLessPackageId('core', 'src/render-nested.ts')) as string;
+
+  // npm: specifiers stripped to bare packages (version and prefix removed)
+  assertEquals(result.includes("from 'parse5'"), true);
+  assertEquals(result.includes("from 'lit'"), true);
+  assertEquals(result.includes("from '@lit/reactive-element'"), true);
+  assertEquals(result.includes("from '@lessjs/core/context'"), true);
+  assertEquals(result.includes("from '@jsr/lessjs__signals/framework'"), true);
+  assertEquals(result.includes("from '@jsr/lessjs__rpc'"), true);
+
+  // npm: prefix and version should NOT remain
+  assertEquals(result.includes('npm:'), false);
+  assertEquals(result.includes('@7.0.0'), false);
+  assertEquals(result.includes('@3.3.2'), false);
+  assertEquals(result.includes('@2.1.0'), false);
+});

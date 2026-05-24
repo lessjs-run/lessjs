@@ -1,14 +1,14 @@
 {
   "name": "@lessjs/adapter-vanilla",
-  "version": "0.21.10",
+  "version": "0.21.11",
   "exports": {
     ".": "./src/index.ts",
     "./ssr": "./src/ssr.ts",
     "./dsd-hydration": "./src/dsd-hydration.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.21.10",
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.21.10/logger"
+    "@lessjs/core": "jsr:@lessjs/core@^0.21.11",
+    "@lessjs/core/logger": "jsr:@lessjs/core@^0.21.11/logger"
   },
   "tasks": {
     "build": "deno check src/index.ts src/ssr.ts src/dsd-hydration.ts",

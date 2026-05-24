@@ -202,7 +202,11 @@ export function createLessJsrPackageResolverPlugin(
             `from ${url}: HTTP ${resp.status}`,
         );
       }
-      return await resp.text();
+      const source = await resp.text();
+      // JSR rewrites bare npm specifiers (e.g. 'parse5') to 'npm:parse5@x.y.z'.
+      // Vite/Rolldown does not understand Deno's 'npm:' scheme, so we must
+      // convert them back to bare specifiers that the bundler can resolve.
+      return rewriteNpmSpecifiers(source);
     },
   };
 }
@@ -215,4 +219,25 @@ function normalizeSubpath(subpath: string): string {
 function ensureTsExtension(path: string): string {
   const withoutJs = path.replace(/\.js$/, '');
   return withoutJs.endsWith('.ts') ? withoutJs : `${withoutJs}.ts`;
+}
+
+/**
+ * Rewrite Deno/JSR `npm:` specifiers to bare specifiers that Vite/Rolldown
+ * can resolve. JSR rewrites bare npm imports like `import from 'parse5'` to
+ * `import from 'npm:parse5@7.0.0'`. Vite doesn't understand `npm:` so we
+ * strip the prefix and version, leaving a bare specifier like `parse5` or
+ * `@lit/reactive-element`.
+ *
+ * Handles:
+ *   npm:package@version        → package
+ *   npm:@scope/pkg@version     → @scope/pkg
+ *   npm:package@version/sub    → package/sub
+ *   npm:@scope/pkg@version/sub → @scope/pkg/sub
+ */
+const NPM_SPECIFIER_RE = /(['"])npm:(@?[a-z0-9_-]+(?:\/[a-z0-9_-]+)?)@[^'"/]+(\/[^'"]*)?\1/g;
+
+function rewriteNpmSpecifiers(source: string): string {
+  return source.replace(NPM_SPECIFIER_RE, (_match, quote: string, pkg: string, subpath?: string) => {
+    return `${quote}${pkg}${subpath ?? ''}${quote}`;
+  });
 }
