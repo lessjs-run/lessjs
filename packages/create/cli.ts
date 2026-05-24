@@ -152,25 +152,7 @@ const colorTokensStyle =
   '--shadow-1:0 1px 3px 0 rgb(0 0 0 / 0.1);' +
   'body{margin:0;background:var(--gray-1);color:var(--gray-9);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>';
 
-const lessUiAliases = {
-  '@lessjs/signals/framework': 'https://jsr.io/@lessjs/signals/${v.signals}/src/framework.ts',
-  '@lessjs/ui/less-hero-ping': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-hero-ping.ts',
-  '@lessjs/ui/less-input': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-input.ts',
-  '@lessjs/ui/less-layout': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-layout.ts',
-  '@lessjs/ui/less-theme-toggle': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-theme-toggle.ts',
-  '@lessjs/ui/open-props-tokens': 'https://jsr.io/@lessjs/ui/${v.ui}/src/open-props-tokens.ts',
-  '@lessjs/ui/less-button': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-button.ts',
-  '@lessjs/ui/less-card': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-card.ts',
-  '@lessjs/ui/less-code-block': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-code-block.ts',
-  '@lessjs/ui/less-dialog': 'https://jsr.io/@lessjs/ui/${v.ui}/src/less-dialog.ts',
-  // Parent alias LAST ?? must come after all subpath aliases
-  '@lessjs/ui': 'https://jsr.io/@lessjs/ui/${v.ui}/src/index.ts',
-};
-
 export default defineConfig({
-  resolve: {
-    alias: lessUiAliases,
-  },
   plugins: [lessjs({
     html: { title: 'My LessJS App' },
     // Use pre-built UI components from @lessjs/ui

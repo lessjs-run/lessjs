@@ -1,6 +1,6 @@
 # LessJS v0.21.6 Hotfix Line
 
-Status: planned\
+Status: complete\
 Range: after v0.21.5 hardening, before v0.22.0 Edge Full-Stack\
 Owner: framework architecture\
 Trigger: v0.21.5 standalone consumer build failure on Windows
@@ -34,6 +34,7 @@ directories and generate Vite resolve aliases — but this logic only works for
 The `create/cli.ts` template generates `vite.config.ts` with hardcoded JSR URL
 aliases for each UI component (e.g., `'https://jsr.io/@lessjs/ui/0.21.5/src/less-card.ts'`).
 Three problems:
+
 1. **Redundant** — the plugin should auto-generate these (see P0 above).
 2. **Broken on Windows** — Rolldown mangles `https://` URLs into `https:/` paths,
    causing "os error 123" (invalid filename/volume syntax).
@@ -62,17 +63,18 @@ in CONTRIBUTING.md.
 
 ## SOP List
 
-| SOP | Target | Owner | Priority |
-|-----|--------|-------|----------|
-| SOP-001 | Fix ADR-0015 JSR-mode alias generation | @lessjs/adapter-vite | P0 |
-| SOP-002 | Remove hardcoded JSR URL aliases from create template | @lessjs/create | P0 |
-| SOP-003 | Add Windows + ubuntu CI for JSR consumer build | CI config | P1 |
-| SOP-004 | Document CodeQL setup conflict resolution | docs | P2 |
-| SOP-005 | Document PowerShell git commit workaround | docs | P2 |
+| SOP     | Target                                                | Owner                | Priority | Status     |
+| ------- | ----------------------------------------------------- | -------------------- | -------- | ---------- |
+| SOP-001 | Fix ADR-0015 JSR-mode alias generation                | @lessjs/adapter-vite | P0       | ✅ Done    |
+| SOP-002 | Remove hardcoded JSR URL aliases from create template | @lessjs/create       | P0       | ✅ Done    |
+| SOP-003 | Add Windows + ubuntu CI for JSR consumer build        | CI config            | P1       | ✅ Done    |
+| SOP-004 | ~~Document CodeQL setup conflict resolution~~         | —                    | —        | ❌ Removed |
+| SOP-005 | Document PowerShell git commit workaround             | docs                 | P2       | ✅ Done    |
 
 ## Non-Goals
 
 v0.21.6 must NOT:
+
 - Add features (no new APIs, no new packages)
 - Change public API surface
 - Expand v0.22 scope
@@ -89,6 +91,7 @@ ls dist/index.html       # must exist and contain valid HTML
 ```
 
 Plus the standard gate:
+
 ```powershell
 deno task fmt:check
 deno task lint

@@ -1,6 +1,6 @@
 # SOP-003: Windows + Linux CI for JSR Consumer Build
 
-Status: planned\
+Status: implemented\
 Target version: v0.21.6\
 Owner: CI config
 
@@ -14,6 +14,7 @@ undetected in CI.
 ## Problem Statement
 
 The existing `create` integration test (`cli.test.ts:161`) works by:
+
 1. Generating a project via `less create`
 2. Patching `deno.json` to replace all `jsr:@lessjs/*` with local `file://` paths
 3. Patching `vite.config.ts` to replace all JSR URL aliases with local aliases

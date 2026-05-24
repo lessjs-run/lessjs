@@ -1,6 +1,6 @@
 # SOP-002: Remove Hardcoded JSR URL Aliases from create Template
 
-Status: planned\
+Status: implemented\
 Target version: v0.21.6\
 Owner: @lessjs/create
 

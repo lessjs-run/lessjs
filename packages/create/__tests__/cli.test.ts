@@ -128,8 +128,10 @@ Deno.test('create-less: vite.config.ts imports lessjs plugin', () => {
 Deno.test('create-less: vite.config.ts includes packageIslands config', () => {
   const viteConfig = extractTemplate('vite.config.ts');
   assert(viteConfig.includes('@lessjs/ui'));
-  assert(viteConfig.includes('lessUiAliases'));
-  assert(viteConfig.includes('https://jsr.io/@lessjs/ui/${v.ui}'));
+  assert(viteConfig.includes("packageIslands: ['@lessjs/ui']"));
+  // v0.21.6: Hardcoded JSR URL aliases removed — plugin auto-generates them
+  assertFalse(viteConfig.includes('lessUiAliases'));
+  assertFalse(viteConfig.includes('https://jsr.io/@lessjs/ui/'));
 });
 
 Deno.test('create-less: route index imports DsdElement (v0.20 Ocean-Island)', () => {
@@ -340,9 +342,11 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       "packageIslands: ['@lessjs/ui'],",
       `packageIslands: [${JSON.stringify(pathToFileURL(join(uiSrc, 'index.ts')).href)}],`,
     );
+    // v0.21.6: Template no longer has hardcoded aliases.
+    // Inject resolve.alias for local workspace testing.
     viteConfig = viteConfig.replace(
-      'alias: lessUiAliases',
-      `alias: ${JSON.stringify(aliases, null, 4)}`,
+      'plugins: [less',
+      `resolve: { alias: ${JSON.stringify(aliases, null, 4)} },\n  plugins: [less`,
     );
     writeFileSync(viteConfigPath, viteConfig);
 

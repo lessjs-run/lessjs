@@ -1,6 +1,6 @@
 # SOP-001: Fix ADR-0015 JSR-mode Alias Generation
 
-Status: planned\
+Status: implemented\
 Target version: v0.21.6\
 Owner: @lessjs/adapter-vite
 
