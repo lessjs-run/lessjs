@@ -968,6 +968,16 @@
           "npm:vite@8.0.10"
         ]
       },
+      "packages/cem": {
+        "dependencies": [
+          "jsr:@lessjs/core@0.21"
+        ]
+      },
+      "packages/compat-check": {
+        "dependencies": [
+          "jsr:@lessjs/core@0.21"
+        ]
+      },
       "packages/content": {
         "dependencies": [
           "jsr:@lessjs/core@0.21",
@@ -980,6 +990,7 @@
       },
       "packages/core": {
         "dependencies": [
+          "jsr:@lessjs/signals@0.21",
           "npm:parse5@7.0.0"
         ]
       },
