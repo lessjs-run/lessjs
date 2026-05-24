@@ -36,8 +36,7 @@ Deno.test('resolveLessPackageExport maps public subpaths to source files', () =>
   assertEquals(resolveLessPackageExport('core', 'navigation'), 'src/navigation.ts');
   assertEquals(resolveLessPackageExport('ui', 'less-card'), 'src/less-card.ts');
   assertEquals(resolveLessPackageExport('signals', 'framework'), 'src/framework.ts');
-  assertEquals(resolveLessPackageExport('content', 'sitemap'), 'src/sitemap/index.ts');
-  assertEquals(resolveLessPackageExport('i18n', '.'), 'src/index.ts');
+  assertEquals(resolveLessPackageExport('app', '.'), 'src/index.ts');
 });
 
 Deno.test('resolveLessPackageExport reports unknown LessJS subpaths clearly', () => {
@@ -119,5 +118,29 @@ Deno.test('createLessJsrPackageResolverPlugin can read local package sources bef
   assertEquals(
     await load(toVirtualLessPackageId('core', 'src/index.ts')),
     '// C:/repo/packages/core/src/index.ts',
+  );
+});
+
+Deno.test('createLessJsrPackageResolverPlugin does not intercept optional packages', async () => {
+  const plugin = createLessJsrPackageResolverPlugin({
+    workspaceRoot: null,
+    version: '0.21.9',
+  });
+  const resolveId = plugin.resolveId as unknown as (
+    id: string,
+    importer?: string,
+  ) => string | null | Promise<string | null>;
+
+  // Optional packages are handled by optionalPackageStubsPlugin, not the resolver
+  assertEquals(await resolveId('@lessjs/adapter-vanilla'), null);
+  assertEquals(await resolveId('@lessjs/adapter-react'), null);
+  assertEquals(await resolveId('@lessjs/adapter-lit'), null);
+  assertEquals(await resolveId('@lessjs/content'), null);
+  assertEquals(await resolveId('@lessjs/i18n'), null);
+
+  // Required packages ARE resolved by the resolver
+  assertEquals(
+    await resolveId('@lessjs/core'),
+    toVirtualLessPackageId('core', 'src/index.ts'),
   );
 });

@@ -1,18 +1,18 @@
 import type { Plugin } from 'vite';
 
 const VIRTUAL_LESSJS_PACKAGE_PREFIX = '\0lessjs:ssg-pkg/';
+// Packages resolved by this plugin for JSR consumer SSG builds.
+// Optional packages (adapter-lit, adapter-vanilla, adapter-react, content, i18n)
+// are handled by optionalPackageStubsPlugin in build-ssg.ts instead.
+// The resolver must NOT intercept them, because it runs enforce: 'pre' and would
+// prevent the stubs plugin from providing empty stubs when packages are absent.
 const DEFAULT_LESSJS_PACKAGES = new Set([
-  'adapter-lit',
-  'adapter-react',
-  'adapter-vanilla',
   'adapter-vite',
   'app',
   'cem',
   'compat-check',
-  'content',
   'core',
   'hub',
-  'i18n',
   'rpc',
   'signals',
   'style-sheet',
@@ -63,17 +63,7 @@ const LESSJS_EXPORT_FILES: Record<string, Record<string, string>> = {
     '.': 'src/index.ts',
     framework: 'src/framework.ts',
   },
-  content: {
-    '.': 'src/index.ts',
-    'blog-data': 'src/blog/blog-data.ts',
-    nav: 'src/nav/index.ts',
-    sitemap: 'src/sitemap/index.ts',
-  },
-  i18n: { '.': 'src/index.ts' },
   app: { '.': 'src/index.ts' },
-  'adapter-lit': { '.': 'src/index.ts' },
-  'adapter-react': { '.': 'src/index.ts' },
-  'adapter-vanilla': { '.': 'src/index.ts' },
   'adapter-vite': {
     '.': 'src/index.ts',
     'build-context': 'src/build-context.ts',
