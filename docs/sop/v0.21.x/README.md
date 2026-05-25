@@ -17,14 +17,15 @@ The product stance for this line is:
 
 ## Version Plan
 
-| Version | SOPs               | Goal                                                                                             |
-| ------- | ------------------ | ------------------------------------------------------------------------------------------------ |
-| v0.21.1 | SOP-001 to SOP-003 | Freeze the Core API shape, clean stale contracts, and stabilize renderer output/error taxonomy.  |
-| v0.21.2 | SOP-004 to SOP-006 | Prove DSD, Web Components, OpenWC, and Open UI alignment with conformance fixtures and docs.     |
-| v0.21.3 | SOP-007 to SOP-008 | Harden adapter-vite admission, SSG build reports, and the blog/docs product path.                |
-| v0.21.4 | SOP-009            | Make Registry Hub evidence and package trust checks credible enough to support ecosystem growth. |
-| v0.21.5 | SOP-010            | Run the pre-v0.22 release gate and decide whether Edge Full-Stack can start.                     |
-| v0.21.9 | SOP-011            | Harden the JSR consumer ESM graph so Vite/Rolldown only owns final bundling optimization.        |
+| Version  | SOPs               | Goal                                                                                             |
+| -------- | ------------------ | ------------------------------------------------------------------------------------------------ |
+| v0.21.1  | SOP-001 to SOP-003 | Freeze the Core API shape, clean stale contracts, and stabilize renderer output/error taxonomy.  |
+| v0.21.2  | SOP-004 to SOP-006 | Prove DSD, Web Components, OpenWC, and Open UI alignment with conformance fixtures and docs.     |
+| v0.21.3  | SOP-007 to SOP-008 | Harden adapter-vite admission, SSG build reports, and the blog/docs product path.                |
+| v0.21.4  | SOP-009            | Make Registry Hub evidence and package trust checks credible enough to support ecosystem growth. |
+| v0.21.5  | SOP-010            | Run the pre-v0.22 release gate and decide whether Edge Full-Stack can start.                     |
+| v0.21.9  | SOP-011            | Harden the JSR consumer ESM graph so Vite/Rolldown only owns final bundling optimization.        |
+| v0.21.16 | SOP-012 to SOP-018 | Separate source gates, post-publish release smoke, and Windows JSR latest monitoring.            |
 
 ## SOP List
 
@@ -39,6 +40,13 @@ The product stance for this line is:
 9. [SOP-009 Hub Evidence and Trust Pipeline](./SOP-009-hub-evidence-trust.md)
 10. [SOP-010 v0.22 Entry Gate](./SOP-010-v022-entry-gate.md)
 11. [SOP-011 JSR Consumer ESM Graph Hardening](./SOP-011-jsr-consumer-esm-graph.md)
+12. [SOP-012 CI Consumer Smoke](./SOP-012-ci-consumer-smoke.md)
+13. [SOP-013 Post-publish Consumer Smoke](./SOP-013-post-publish-consumer-smoke.md)
+14. [SOP-014 Build Pipeline Clean Architecture](./SOP-014-build-pipeline-clean-arch.md)
+15. [SOP-015 Vite Config Virtual Modules](./SOP-015-vite-config-virtual-modules.md)
+16. [SOP-016 SSR HTMLElement Self-contained](./SOP-016-ssr-htmlelement-self-contained.md)
+17. [SOP-017 Deno Pre-resolution External Dependencies](./SOP-017-deno-pre-resolution-external-deps.md)
+18. [SOP-018 CI and Release Gate Separation](./SOP-018-ci-release-gate-separation.md)
 
 ## Public API Classification
 
@@ -93,6 +101,13 @@ deno task docs:check-strategy
 deno task test:e2e
 git status --short --branch
 ```
+
+JSR consumer validation is split by purpose:
+
+- source branches prove generated-project behavior through local-source tests;
+- `publish.yml` proves the freshly published JSR package set on Ubuntu;
+- `jsr-consumer-monitor.yml` monitors JSR latest on Windows by schedule or
+  manual dispatch.
 
 If a command fails, continue with independent gates and document:
 

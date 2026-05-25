@@ -60,10 +60,36 @@ All required gates passed on 2026-05-24:
 
 ## CI Configuration (2026-05-24)
 
-- `SOP Gate` workflow (`.github/workflows/sop-gate.yml`): runs all 11 gates + SSG
-  starter proof as isolated job, with summary report.
+- `SOP Gate` workflow (`.github/workflows/sop-gate.yml`): runs source-backed
+  branch validation, including SSG starter proof as an isolated job, with
+  summary report.
+- `Publish to JSR` workflow (`.github/workflows/publish.yml`): publishes
+  missing package versions and then runs the authoritative Ubuntu post-publish
+  consumer smoke against the freshly published JSR package set.
+- `JSR Consumer Monitor` workflow
+  (`.github/workflows/jsr-consumer-monitor.yml`): runs the public
+  `jsr:@lessjs/create` path on Windows by schedule or manual dispatch. It is a
+  compatibility monitor, not a source branch gate.
 - `CodeQL` security analysis (`.github/workflows/codeql.yml`): weekly +
   on-push security scans with `security-extended,security-and-quality` queries.
+
+## JSR consumer hardening update (2026-05-25)
+
+The v0.21.13 to v0.21.16 patch train closed the post-publish consumer build
+loop:
+
+- Phase 2 client builds now reuse the LessJS package resolver for package
+  islands such as `@lessjs/ui/less-card`.
+- `content.nav` defaults `routesDir` to `app/routes`, and the create template
+  writes that default explicitly.
+- Production builds now use a no-op outer Vite trigger entry so the generated
+  Hono SSR entry is not bundled as a browser artifact.
+- Remote `@lessjs/core/*` resolution derives JSR URLs from `@lessjs/core`, not
+  from `@lessjs/adapter-vite`.
+
+The CI policy is documented in
+`docs/adr/ADR-0048-ci-release-gate-separation.md` and
+`docs/sop/v0.21.x/SOP-018-ci-release-gate-separation.md`.
 
 ## Copilot Custom Agents (2026-05-24)
 
