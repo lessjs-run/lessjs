@@ -132,3 +132,8 @@ Deno.test('scanNavData: returns empty for missing directory', () => {
   const sections = scanNavData({ routesDir: '/nonexistent/path' });
   assertEquals(sections, []);
 });
+
+Deno.test('scanNavData: defaults routesDir to app/routes when omitted', () => {
+  const sections = scanNavData({});
+  assertEquals(Array.isArray(sections), true);
+});

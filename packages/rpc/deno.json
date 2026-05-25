@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/rpc",
-  "version": "0.21.14",
+  "version": "0.21.15",
   "exports": {
     ".": "./src/index.ts"
   },

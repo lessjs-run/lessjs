@@ -188,6 +188,7 @@ export default defineConfig({
         basePath: '/blog',
       },
       nav: {
+        routesDir: 'app/routes',
         headerNav: [
           { href: '/', label: 'Home' },
           { href: '/blog', label: 'Blog' },

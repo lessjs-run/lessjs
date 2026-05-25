@@ -116,9 +116,13 @@ export function lessContent(
 
       // ─── Nav module ─────────────────────────────────────
       if (navOpts) {
+        const resolvedNavOpts = {
+          ...navOpts,
+          routesDir: navOpts.routesDir ?? 'app/routes',
+        };
         if (ctx) {
-          ctx.plugins.navSections = scanNavData(navOpts);
-          ctx.plugins.headerNav = navOpts.headerNav || [];
+          ctx.plugins.navSections = scanNavData(resolvedNavOpts);
+          ctx.plugins.headerNav = resolvedNavOpts.headerNav || [];
         }
 
         log.info(`Nav: ${ctx?.plugins.navSections.length ?? 0} section(s) configured`);

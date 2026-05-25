@@ -1,14 +1,14 @@
 {
   "name": "@lessjs/adapter-lit",
-  "version": "0.21.14",
+  "version": "0.21.15",
   "exports": {
     ".": "./src/index.ts",
     "./ssr": "./src/ssr.ts",
     "./dsd-hydration": "./src/dsd-hydration.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.21.14",
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.21.14/logger"
+    "@lessjs/core": "jsr:@lessjs/core@^0.21.15",
+    "@lessjs/core/logger": "jsr:@lessjs/core@^0.21.15/logger"
   },
   "tasks": {
     "build": "deno check src/index.ts src/ssr.ts src/dsd-hydration.ts"

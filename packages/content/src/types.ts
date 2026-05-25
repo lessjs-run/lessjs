@@ -51,8 +51,8 @@ export interface RouteMeta {
 
 /** Nav module configuration */
 export interface NavOptions {
-  /** Directory containing route files to scan */
-  routesDir: string;
+  /** Directory containing route files to scan. Defaults to app/routes. */
+  routesDir?: string;
   /** Header navigation links (manually configured - changes rarely) */
   headerNav?: HeaderNavLink[];
   /** File patterns to exclude from nav scanning */

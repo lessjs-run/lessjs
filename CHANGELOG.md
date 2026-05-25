@@ -1,3 +1,13 @@
+## 0.21.15 (2026-05-25)
+
+### Fixed
+
+- Content navigation now defaults `routesDir` to `app/routes` when `content.nav`
+  is enabled without an explicit route directory.
+- The create template now writes `content.nav.routesDir`, matching the runtime
+  default and preventing post-publish consumer smoke builds from failing in
+  `@lessjs/content`.
+
 ## 0.21.14 (2026-05-25)
 
 ### Fixed

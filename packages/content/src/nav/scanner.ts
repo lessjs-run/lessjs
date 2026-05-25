@@ -178,7 +178,7 @@ function filePathToNavPath(filePath: string): string {
  * Recursively scan a directory for route files with meta exports.
  */
 export function scanNavData(options: NavOptions): NavSection[] {
-  const routesDir = resolve(options.routesDir);
+  const routesDir = resolve(options.routesDir ?? 'app/routes');
   const exclude = options.exclude || [];
 
   // Default excludes: _renderer, _middleware, 404, dot-files
