@@ -26,11 +26,16 @@ const log = createLogger('ssg');
 const VIRTUAL_CLIENT_ENTRY_ID = 'virtual:less-client-entry';
 const RESOLVED_CLIENT_ENTRY_ID = '\0' + VIRTUAL_CLIENT_ENTRY_ID;
 
-/** Workspace root derived from this module's location (packages/adapter-vite/src/cli/). */
-const WORKSPACE_ROOT = fileURLToPath(new URL('../../../..', import.meta.url)).replace(
-  /\\/g,
-  '/',
-);
+/** Workspace root derived from this module's location (packages/adapter-vite/src/cli/).
+ * Only valid in local workspace (file:// import.meta.url). In JSR consumers, returns null. */
+const WORKSPACE_ROOT: string | null = (() => {
+  if (!import.meta.url.startsWith('file:')) return null;
+  try {
+    return fileURLToPath(new URL('../../../..', import.meta.url)).replace(/\\/g, '/');
+  } catch {
+    return null;
+  }
+})();
 
 /**
  * Look up a bare specifier in a deno.json import map.
@@ -55,7 +60,7 @@ function lookupInDenoJson(
   }
 
   // Also try workspace root (module-relative, for monorepo dev / testing)
-  if (!denoJsonDirs.has(WORKSPACE_ROOT)) {
+  if (WORKSPACE_ROOT && !denoJsonDirs.has(WORKSPACE_ROOT)) {
     const found = tryDenoJsonDir(id, WORKSPACE_ROOT);
     if (found) return found;
   }
