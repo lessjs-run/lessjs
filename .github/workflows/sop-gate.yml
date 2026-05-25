@@ -1,6 +1,6 @@
-# SOP Gate — v0.21.x Hardening CI
+# SOP Gate - v0.21.x Hardening CI
 #
-# Runs the full 11-gate SOP pipeline defined in docs/sop/v0.21.x/README.md.
+# Runs the source-backed SOP pipeline defined in docs/sop/v0.21.x/README.md.
 # Triggered on push to dev/main and on PRs. Also available via workflow_dispatch.
 #
 # If any gate fails, v0.22.0 Edge Full-Stack should NOT start.
@@ -15,7 +15,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  # ─── Gate 1 ───
   fmt-check:
     name: 'fmt:check'
     runs-on: ubuntu-latest
@@ -26,7 +25,6 @@ jobs:
           deno-version: '2'
       - run: deno task fmt:check
 
-  # ─── Gate 2 ───
   lint:
     name: 'lint'
     runs-on: ubuntu-latest
@@ -37,7 +35,6 @@ jobs:
           deno-version: '2'
       - run: deno task lint
 
-  # ─── Gate 3 ───
   typecheck:
     name: 'typecheck'
     runs-on: ubuntu-latest
@@ -49,7 +46,6 @@ jobs:
       - run: deno install --node-modules-dir
       - run: deno task typecheck
 
-  # ─── Gate 4 ───
   audit:
     name: 'audit'
     runs-on: ubuntu-latest
@@ -60,9 +56,8 @@ jobs:
           deno-version: '2'
       - run: deno audit
 
-  # ─── Gate 5 — Full test suite (includes SSG starter proof) ───
   test:
-    name: 'test (incl. SSG starter proof)'
+    name: 'test'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -73,9 +68,6 @@ jobs:
       - name: Run full test suite
         run: deno task test
 
-  # ─── Gate 5b — SSG starter proof (isolated) ───
-  # SOP-010 Q4: Does the SSG blog/docs path build from a generated project?
-  # This runs ONLY the create package test that scaffolds + builds end-to-end.
   test-ssg-starter:
     name: 'SSG starter proof (SOP-010 Q4)'
     runs-on: ubuntu-latest
@@ -85,10 +77,9 @@ jobs:
         with:
           deno-version: '2'
       - run: deno install --node-modules-dir
-      - name: Run SSG starter proof test
+      - name: Run generated-project starter proof
         run: deno test packages/create/__tests__/cli.test.ts --allow-read --allow-write --allow-env --allow-run --allow-ffi --filter "generated project builds"
 
-  # ─── Gate 6 — Build ───
   build:
     name: 'build'
     runs-on: ubuntu-latest
@@ -101,7 +92,6 @@ jobs:
       - run: deno install --node-modules-dir
       - run: deno task build
 
-  # ─── Gate 7 — DSD conformance report ───
   dsd-check:
     name: 'dsd:check-report'
     runs-on: ubuntu-latest
@@ -112,11 +102,10 @@ jobs:
         with:
           deno-version: '2'
       - run: deno install --node-modules-dir
-      - name: Build www site (produces dsd-report.json)
+      - name: Build www site
         run: deno task build
       - run: deno task dsd:check-report
 
-  # ─── Gate 8 — Hub validation ───
   hub-validate:
     name: 'hub:validate'
     runs-on: ubuntu-latest
@@ -128,7 +117,6 @@ jobs:
       - run: deno install --node-modules-dir
       - run: deno task hub:validate -- --strict --json
 
-  # ─── Gate 9 — Hub index check ───
   hub-check-index:
     name: 'hub:check-index'
     runs-on: ubuntu-latest
@@ -139,7 +127,6 @@ jobs:
           deno-version: '2'
       - run: deno task hub:check-index
 
-  # ─── Gate 10 — Strategic docs check ───
   docs-check:
     name: 'docs:check-strategy'
     runs-on: ubuntu-latest
@@ -150,31 +137,6 @@ jobs:
           deno-version: '2'
       - run: deno task docs:check-strategy
 
-  # ─── Gate 11b — JSR consumer ESM graph build (SOP-011: real JSR, no patching) ───
-  test-create-jsr:
-    name: 'JSR consumer build (${{ matrix.os }})'
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Create project from JSR
-        # Track the current JSR release because this gate proves the documented
-        # user command, not a historical pinned package.
-        working-directory: ${{ runner.temp }}
-        run: deno run -A jsr:@lessjs/create test-blog
-      - name: Build generated project
-        working-directory: ${{ runner.temp }}/test-blog
-        run: deno task build
-      - name: Verify build output
-        shell: bash
-        run: test -f "${RUNNER_TEMP}/test-blog/dist/index.html" && grep -q '<html' "${RUNNER_TEMP}/test-blog/dist/index.html"
-
-  # ─── Gate 11 — E2E tests ───
   test-e2e:
     name: 'test:e2e'
     runs-on: ubuntu-latest
@@ -185,14 +147,13 @@ jobs:
         with:
           deno-version: '2'
       - run: deno install --node-modules-dir
-      - name: Build www site (needed for Playwright webServer)
+      - name: Build www site for Playwright
         run: deno task build
       - name: Install Playwright Chromium
         run: npx -y playwright@1.59.1 install chromium --with-deps
       - name: Run E2E tests
         run: deno task test:e2e
 
-  # ─── Gate Summary ───
   gate-summary:
     name: 'SOP Gate Summary'
     runs-on: ubuntu-latest
@@ -209,7 +170,6 @@ jobs:
         hub-validate,
         hub-check-index,
         docs-check,
-        test-create-jsr,
         test-e2e,
       ]
     if: always()
@@ -218,29 +178,35 @@ jobs:
         run: |
           ALL_PASS=true
 
-          check() { if [ "$1" = "success" ]; then echo "- [x] $2"; else echo "- [ ] $2 (failed)"; ALL_PASS=false; fi; }
+          check() {
+            if [ "$1" = "success" ]; then
+              echo "- [x] $2"
+            else
+              echo "- [ ] $2 (failed)"
+              ALL_PASS=false
+            fi
+          }
 
           {
             echo "## SOP Gate v0.21.x Results"
             echo ""
-            check "${{ needs.fmt-check.result }}"           "fmt:check"
-            check "${{ needs.lint.result }}"                "lint"
-            check "${{ needs.typecheck.result }}"           "typecheck"
-            check "${{ needs.audit.result }}"               "audit"
-            check "${{ needs.test.result }}"                "test (incl. SSG starter proof)"
-            check "${{ needs.test-ssg-starter.result }}"    "SSG starter proof (SOP-010 Q4)"
-            check "${{ needs.build.result }}"               "build"
-            check "${{ needs.dsd-check.result }}"           "dsd:check-report"
-            check "${{ needs.hub-validate.result }}"        "hub:validate --strict"
-            check "${{ needs.hub-check-index.result }}"     "hub:check-index"
-          check "${{ needs.docs-check.result }}"          "docs:check-strategy"
-          check "${{ needs.test-create-jsr.result }}"     "JSR consumer build (ubuntu + windows)"
-          check "${{ needs.test-e2e.result }}"            "test:e2e"
+            check "${{ needs.fmt-check.result }}"        "fmt:check"
+            check "${{ needs.lint.result }}"             "lint"
+            check "${{ needs.typecheck.result }}"        "typecheck"
+            check "${{ needs.audit.result }}"            "audit"
+            check "${{ needs.test.result }}"             "test"
+            check "${{ needs.test-ssg-starter.result }}" "SSG starter proof (SOP-010 Q4)"
+            check "${{ needs.build.result }}"            "build"
+            check "${{ needs.dsd-check.result }}"        "dsd:check-report"
+            check "${{ needs.hub-validate.result }}"     "hub:validate --strict"
+            check "${{ needs.hub-check-index.result }}"  "hub:check-index"
+            check "${{ needs.docs-check.result }}"       "docs:check-strategy"
+            check "${{ needs.test-e2e.result }}"         "test:e2e"
             echo ""
             if [ "$ALL_PASS" = "true" ]; then
-              echo "🎉 **All 13 SOP gates passed. v0.22.0 Edge Full-Stack may proceed.**"
+              echo "All source-backed SOP gates passed. v0.22.0 Edge Full-Stack may proceed."
             else
-              echo "⚠️ **Some gates failed. v0.22.0 must not start until all gates pass.**"
+              echo "Some gates failed. v0.22.0 must not start until all gates pass."
               exit 1
             fi
           } >> "$GITHUB_STEP_SUMMARY"

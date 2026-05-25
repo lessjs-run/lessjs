@@ -7,6 +7,16 @@
 - JSR remote core subpath resolution now fetches `@lessjs/core` source URLs
   instead of accidentally deriving paths from `@lessjs/adapter-vite`.
 
+### CI / Documentation
+
+- SOP Gate now stays source-backed and no longer runs the JSR latest consumer
+  matrix as a required branch gate.
+- Post-publish Ubuntu consumer smoke remains the authoritative release gate for
+  freshly published immutable JSR packages.
+- Added a scheduled/manual Windows JSR latest monitor for platform
+  compatibility without blocking source branch gates.
+- Added ADR-0048 and SOP-018 to document the CI/release gate split.
+
 ## 0.21.15 (2026-05-25)
 
 ### Fixed

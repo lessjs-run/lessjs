@@ -81,6 +81,8 @@ jobs:
   # Verifies that freshly published JSR packages form a complete, buildable
   # consumer project. This is the final release gate — it catches problems that
   # pre-publish testing cannot because the new version does not yet exist on JSR.
+  # Windows JSR-latest compatibility is monitored separately in
+  # jsr-consumer-monitor.yml so this release gate stays fast and release-scoped.
   consumer-smoke:
     runs-on: ubuntu-latest
     needs: [publish]
