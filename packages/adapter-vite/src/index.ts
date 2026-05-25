@@ -819,5 +819,6 @@ export {
   type PageIslandManifest,
   writeIslandManifests,
 } from './island-manifest.js';
+export type { ExternalManifest } from './external-resolver.js';
 
 export default less;

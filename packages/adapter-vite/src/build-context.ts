@@ -133,6 +133,12 @@ export class Phase3Meta {
 
   /** Components directory */
   componentsDir: string = 'app/components';
+
+  /** ADR-0047: Pre-resolved external dependency manifest (auto-generated from deno info). */
+  externalManifest?: import('./external-resolver.js').ExternalManifest;
+
+  /** Skip Deno pre-resolution, use regex fallback. */
+  skipPreResolution?: boolean;
 }
 
 // ─── Plugin data from content/i18n sub-plugins ──────────────────
@@ -260,6 +266,8 @@ export class LessBuildContext {
     this.phase3.routesDir = 'app/routes';
     this.phase3.islandsDir = 'app/islands';
     this.phase3.componentsDir = 'app/components';
+    this.phase3.externalManifest = undefined;
+    this.phase3.skipPreResolution = undefined;
     this.plugins.blogOptions = null;
     this.plugins.blogDataPlugin = null;
     this.plugins.i18nDataPlugin = null;
