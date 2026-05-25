@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/core",
-  "version": "0.21.12",
+  "version": "0.21.13",
   "exports": {
     ".": "./src/index.ts",
     "./errors": "./src/errors.ts",
@@ -27,8 +27,8 @@
   },
   "imports": {
     "parse5": "npm:parse5@7.0.0",
-    "@lessjs/signals": "jsr:@lessjs/signals@^0.21.12",
-    "@lessjs/signals/framework": "jsr:@lessjs/signals@^0.21.12/framework"
+    "@lessjs/signals": "jsr:@lessjs/signals@^0.21.13",
+    "@lessjs/signals/framework": "jsr:@lessjs/signals@^0.21.13/framework"
   },
   "publish": {
     "include": [
