@@ -1,3 +1,10 @@
+## 0.21.14 (2026-05-25)
+
+### Fixed
+
+- Client island builds in JSR consumers now reuse the LessJS package resolver,
+  so package islands such as `@lessjs/ui/less-card` resolve from JSR in Phase 2.
+
 ## 0.21.13 (2026-05-25)
 
 ### Architecture: Clean Architecture — Import Map Universal Resolution (ADR-0042~0045)

@@ -19,12 +19,14 @@ import { fileURLToPath } from 'node:url';
 import process from 'node:process';
 import { type ClientIslandEntry, generateClientEntry } from '../entry-generators.js';
 import type { LessBuildContext } from '../build-context.js';
+import { createLessJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
 import { createLogger } from '@lessjs/core/logger';
 
 const log = createLogger('ssg');
 
 const VIRTUAL_CLIENT_ENTRY_ID = 'virtual:less-client-entry';
 const RESOLVED_CLIENT_ENTRY_ID = '\0' + VIRTUAL_CLIENT_ENTRY_ID;
+const FALLBACK_LESSJS_VERSION = '0.21.14';
 
 /** Workspace root derived from this module's location (packages/adapter-vite/src/cli/).
  * Only valid in local workspace (file:// import.meta.url). In JSR consumers, returns null. */
@@ -36,6 +38,11 @@ const WORKSPACE_ROOT: string | null = (() => {
     return null;
   }
 })();
+
+function getJsrPackageVersion(metaUrl: string): string {
+  const match = metaUrl.match(/\/@lessjs\/adapter-vite\/([^/]+)\//);
+  return match?.[1] ?? FALLBACK_LESSJS_VERSION;
+}
 
 /**
  * Look up a bare specifier in a deno.json import map.
@@ -239,6 +246,10 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
         | undefined,
     },
     plugins: [
+      createLessJsrPackageResolverPlugin({
+        workspaceRoot: WORKSPACE_ROOT,
+        version: getJsrPackageVersion(import.meta.url),
+      }),
       {
         name: 'less:virtual-client-entry',
         resolveId(id) {

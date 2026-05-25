@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/content",
-  "version": "0.21.13",
+  "version": "0.21.14",
   "exports": {
     ".": "./src/index.ts",
     "./blog-data": "./src/blog/blog-data.ts",
@@ -13,9 +13,9 @@
     "section-matter": "npm:section-matter@^1.0.0",
     "sanitize-html": "npm:sanitize-html@^2.17.4",
     "@types/sanitize-html": "npm:@types/sanitize-html@^2",
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.21.13/logger",
-    "@lessjs/core/build-types": "jsr:@lessjs/core@^0.21.13/build-types",
-    "@lessjs/core/virtual-ids": "jsr:@lessjs/core@^0.21.13/virtual-ids",
+    "@lessjs/core/logger": "jsr:@lessjs/core@^0.21.14/logger",
+    "@lessjs/core/build-types": "jsr:@lessjs/core@^0.21.14/build-types",
+    "@lessjs/core/virtual-ids": "jsr:@lessjs/core@^0.21.14/virtual-ids",
     "vite": "npm:vite@8.0.10"
   },
   "publish": {
