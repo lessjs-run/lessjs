@@ -376,6 +376,22 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
           },
           output: {
             format: 'esm',
+            // ADR-0044: HTMLElement + customElements must run BEFORE any ESM import.
+            // Entry code body executes after all imports — only output.banner
+            // guarantees execution at the very start of the module graph.
+            banner: `\
+if (!globalThis.HTMLElement) {
+  globalThis.HTMLElement = class HTMLElement {};
+}
+if (typeof globalThis.customElements === 'undefined') {
+  globalThis.customElements = {
+    define(_name, _ctor, _options) {},
+    get(_name) { return undefined; },
+    whenDefined(_name) { return Promise.resolve(); },
+    upgrade(_root) {},
+  };
+}
+`,
           },
         },
       },
