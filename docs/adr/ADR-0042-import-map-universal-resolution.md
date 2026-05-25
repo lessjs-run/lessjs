@@ -13,6 +13,7 @@ LessJS SSG 构建管线 Phase 3 当前使用 `viteBuild({ssr:true, noExternal: [
 问题：Rolldown（Vite 底层打包器）在做 ESM 解析时，无法正确处理 npm 包的子路径导出（subpath exports）。具体表现为 `parse5` 内部引用 `entities/lib/escape.js` 时，Rolldown 无法通过 npm package.json 的 `exports` 字段正确解析该子路径，导致构建失败。
 
 根因分析：
+
 - **ESM 子路径解析是运行时（Deno/Browser）的职责**，不是打包工具的职责
 - Rolldown 的 npm 包解析基于 node_modules 文件系统布局，而非 package.json `exports` 语义
 - `noExternal` 策略强行将运行时解析责任转移给了打包工具
@@ -93,12 +94,12 @@ LessJS SSG 构建管线 Phase 3 当前使用 `viteBuild({ssr:true, noExternal: [
 
 ## Resolution Responsibility Boundary
 
-| 组件 | 旧职责 | 新职责 |
-|------|--------|--------|
-| `deno.json` import map | 仅 LessJS workspace 开发 | **所有环境**的模块分辨率来源 |
-| Rolldown/Vite | 解析所有依赖（含 npm 子路径） | 仅打包 LessJS 业务代码 + Lit 生态 |
-| Deno ESM Runtime | 不使用（self-contained bundle） | 解析所有 external 依赖（含子路径） |
-| `@deno/vite-plugin` | 开发服务器 bare specifier 解析 | 消费者构建时的 Deno import map bridge |
+| 组件                   | 旧职责                          | 新职责                                |
+| ---------------------- | ------------------------------- | ------------------------------------- |
+| `deno.json` import map | 仅 LessJS workspace 开发        | **所有环境**的模块分辨率来源          |
+| Rolldown/Vite          | 解析所有依赖（含 npm 子路径）   | 仅打包 LessJS 业务代码 + Lit 生态     |
+| Deno ESM Runtime       | 不使用（self-contained bundle） | 解析所有 external 依赖（含子路径）    |
+| `@deno/vite-plugin`    | 开发服务器 bare specifier 解析  | 消费者构建时的 Deno import map bridge |
 
 ## Non-Goals
 

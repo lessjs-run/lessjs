@@ -376,18 +376,17 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
           },
           output: {
             format: 'esm',
-            // ADR-0044: HTMLElement + customElements must run BEFORE any ESM import.
-            // Entry code body executes after all imports — only output.banner
-            // guarantees execution at the very start of the module graph.
+            // ADR-0044: customElements polyfill must run before ESM imports.
+            // Uses Map-backed define()/get() — renderDSDByName() looks up
+            // components via customElements.get(tagName) during SSG rendering.
+            // SOP-016: HTMLElement stub is self-contained in @lessjs/core/dsd-element.ts.
             banner: `\
-if (!globalThis.HTMLElement) {
-  globalThis.HTMLElement = class HTMLElement {};
-}
 if (typeof globalThis.customElements === 'undefined') {
+  const __lessCeRegistry = new Map();
   globalThis.customElements = {
-    define(_name, _ctor, _options) {},
-    get(_name) { return undefined; },
-    whenDefined(_name) { return Promise.resolve(); },
+    define(name, ctor, _opts) { __lessCeRegistry.set(name, ctor); },
+    get(name) { return __lessCeRegistry.get(name); },
+    whenDefined(name) { return Promise.resolve(__lessCeRegistry.get(name)); },
     upgrade(_root) {},
   };
 }

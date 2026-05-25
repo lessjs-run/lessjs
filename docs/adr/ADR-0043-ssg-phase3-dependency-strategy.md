@@ -12,17 +12,28 @@
 
 ```ts
 const defaultNoExternal = [
-  /^lit/, /^@lit/, /^@lessjs\/ui/, /^@lessjs\/adapter-lit/,
-  'parse5', 'entities', 'node-fetch', 'fetch-blob',
-  'data-uri-to-buffer', 'formdata-polyfill', 'domexception', 'node-domexception',
+  /^lit/,
+  /^@lit/,
+  /^@lessjs\/ui/,
+  /^@lessjs\/adapter-lit/,
+  'parse5',
+  'entities',
+  'node-fetch',
+  'fetch-blob',
+  'data-uri-to-buffer',
+  'formdata-polyfill',
+  'domexception',
+  'node-domexception',
 ];
 ```
 
 这个策略将所有依赖内联到单一 SSR bundle 中。动机是：
+
 1. 生成自包含 bundle，方便 Deno Deploy 部署
 2. 确保模块级变量（Phase B）在整个图中共享
 
 问题：
+
 1. **Rolldown 子路径解析失败**：`parse5` 内部引用 `entities/lib/escape.js`，Rolldown 无法正确解析
 2. **bundle 膨胀**：node-fetch、fetch-blob 等 Deno 已有原生实现的包被冗余打包
 3. **维护成本**：每个新增 SSR 依赖都需要手动添加到 `noExternal` 列表
@@ -35,16 +46,17 @@ const defaultNoExternal = [
 ### 第一层：noExternal — LessJS 业务代码 + Lit 生态
 
 这些包由 Rolldown 打包进 SSR bundle，因为它们需要：
+
 - TypeScript 编译（Lit decorators）
 - 模块级变量共享（Phase B 单例）
 - Tree-shaking 和 dead code elimination
 
 ```ts
 const ssrNoExternal = [
-  /^@lessjs\//,     // 所有 LessJS 框架包
-  /^lit/,            // lit, lit-html, lit-element
-  /^@lit/,           // @lit/reactive-element, @lit-labs/ssr-dom-shim
-  /^@lit-labs\//,    // @lit-labs/* (ssr-dom-shim 等)
+  /^@lessjs\//, // 所有 LessJS 框架包
+  /^lit/, // lit, lit-html, lit-element
+  /^@lit/, // @lit/reactive-element, @lit-labs/ssr-dom-shim
+  /^@lit-labs\//, // @lit-labs/* (ssr-dom-shim 等)
 ];
 ```
 
@@ -54,12 +66,12 @@ const ssrNoExternal = [
 
 ```ts
 const ssrExternal = [
-  'parse5',          // HTML parser — 有子路径导出
-  'entities',        // HTML entity codec — 有子路径导出
-  'hono',            // HTTP framework
-  'hono/*',          // Hono subpath exports
-  'node-fetch',      // Deno 有原生 fetch
-  'fetch-blob',      // Deno 有原生 Blob
+  'parse5', // HTML parser — 有子路径导出
+  'entities', // HTML entity codec — 有子路径导出
+  'hono', // HTTP framework
+  'hono/*', // Hono subpath exports
+  'node-fetch', // Deno 有原生 fetch
+  'fetch-blob', // Deno 有原生 Blob
   'data-uri-to-buffer',
   'formdata-polyfill',
   'domexception',
@@ -71,13 +83,13 @@ const ssrExternal = [
 
 判断一个依赖属于哪一层的规则：
 
-| 条件 | 层级 | 理由 |
-|------|------|------|
-| `@lessjs/*` 包 | `noExternal` | 需要 TypeScript 编译 + Phase B 单例共享 |
-| `lit` / `@lit/*` 生态 | `noExternal` | 需要 decorator 编译 + Lit SSR 内部状态 |
-| npm 包有子路径导出且被传递依赖引用 | `external` | Rolldown 无法解析 → 交还 Deno |
-| npm 包在 Deno 有原生替代 | `external` | 避免冗余打包 |
-| npm 纯 JS 包无子路径依赖 | `external`（默认） | 减少 Rolldown 负担 |
+| 条件                               | 层级               | 理由                                    |
+| ---------------------------------- | ------------------ | --------------------------------------- |
+| `@lessjs/*` 包                     | `noExternal`       | 需要 TypeScript 编译 + Phase B 单例共享 |
+| `lit` / `@lit/*` 生态              | `noExternal`       | 需要 decorator 编译 + Lit SSR 内部状态  |
+| npm 包有子路径导出且被传递依赖引用 | `external`         | Rolldown 无法解析 → 交还 Deno           |
+| npm 包在 Deno 有原生替代           | `external`         | 避免冗余打包                            |
+| npm 纯 JS 包无子路径依赖           | `external`（默认） | 减少 Rolldown 负担                      |
 
 ## Architecture
 

@@ -33,6 +33,7 @@
     "npm:react@19": "19.2.6",
     "npm:react@^19.1.0": "19.2.6",
     "npm:sanitize-html@^2.17.4": "2.17.4",
+    "npm:section-matter@1": "1.0.0",
     "npm:typescript@^5.9.0": "5.9.3",
     "npm:vite@8.0.10": "8.0.10_@types+node@22.19.19_esbuild@0.25.12",
     "npm:ws@^8.20.1": "8.20.1"
@@ -985,6 +986,7 @@
           "npm:gray-matter@^4.0.3",
           "npm:marked@15",
           "npm:sanitize-html@^2.17.4",
+          "npm:section-matter@1",
           "npm:vite@8.0.10"
         ]
       },

@@ -59,17 +59,40 @@ import {
 } from './template.js';
 
 /**
- * Server-safe base class fallback when HTMLElement is unavailable
- * (Node.js / Deno server environments without DOM globals).
+ * Minimal SSR-safe HTMLElement stub for server environments (SOP-016).
  *
- * In SSR/build contexts, DsdElement is only used for its render() output
- * method and static property access - the class is never instantiated as
- * a live Custom Element. This stub ensures the class declaration itself
- * does not throw at module evaluation time.
+ * Provides only the methods actually used by @lessjs/core internals
+ * and LessJS UI components during SSR render().
+ *
+ * When HTMLElement is unavailable on globalThis, this stub is assigned
+ * to globalThis.HTMLElement so the entire dependency graph — including
+ * client-only island stubs that write `extends HTMLElement` — shares
+ * the same base class.
+ *
+ * Subclasses MUST NOT rely on this stub's methods for real DOM
+ * behaviour. SSR rendering uses happy-dom for full DOM simulation.
  */
+const _SsrHTMLElementStub = class {
+  hasAttribute(_name: string): boolean {
+    return false;
+  }
+  getAttribute(_name: string): string | null {
+    return null;
+  }
+  setAttribute(_name: string, _value: string): void {}
+  removeAttribute(_name: string): void {}
+  get tagName(): string {
+    return '';
+  }
+  get isConnected(): boolean {
+    return false;
+  }
+};
+
 const _HTMLElement: typeof HTMLElement = typeof HTMLElement !== 'undefined'
   ? HTMLElement
-  : (class {} as unknown as typeof HTMLElement);
+  : ((globalThis as Record<string, unknown>).HTMLElement =
+    _SsrHTMLElementStub as unknown as typeof HTMLElement);
 
 /**
  * Zero-dependency Custom Element base class for DSD rendering.

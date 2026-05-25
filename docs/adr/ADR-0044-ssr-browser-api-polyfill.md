@@ -11,15 +11,17 @@
 Web Component 代码在模块顶层执行 `customElements.define()`、`class Foo extends HTMLElement`、`new CSSStyleSheet()` 等浏览器 API。SSG/SSR 构建环境（Node.js via Vite）和运行时（Deno）不提供这些浏览器原生 API。
 
 当前处理方式：
+
 - **CSSStyleSheet**：在 SSG entry code 顶部 `import { StyleSheet } from '@lessjs/core'` 后手动 shim（`build-ssg.ts` L274-280）
-- **HTMLElement**：通过 Rolldown output banner 注入 `@lit-labs/ssr-dom-shim` polyfill（L405-407）
+- **HTMLElement**：通过 `@lessjs/core/dsd-element.ts` 的 `_SsrHTMLElementStub` 自包含（[SOP-016]）
 - **customElements**：**未处理** — 这是当前导致 SSR 崩溃的直接原因
 
 问题表现：
+
 ```ts
 // app/islands/my-counter.ts
 if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
-  customElements.define(tagName, MyCounter);  // ← customElements is undefined in SSR
+  customElements.define(tagName, MyCounter); // ← customElements is undefined in SSR
 }
 ```
 
@@ -31,64 +33,42 @@ if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
 
 ### Polyfill 清单
 
-| API | Polyfill 来源 | 注入位置 | 必要性 |
-|-----|-------------|---------|--------|
-| `CSSStyleSheet` | `@lessjs/core` StyleSheet | SSG entry code 顶部 | Lit 内部引用 CSSStyleSheet，模块顶层即需 |
-| `HTMLElement` | `@lit-labs/ssr-dom-shim` | SSG entry code 顶部 | `class Foo extends HTMLElement` 在模块顶层执行 |
-| `customElements` | 自实现轻量 shim | SSG entry code 顶部 | `customElements.define()` 在模块顶层调用 |
-| `document` | happy-dom（已有） | ssgRender 阶段 | DOM 操作在渲染时发生 |
-| `window` | happy-dom（已有） | ssgRender 阶段 | 组件的 connectedCallback 可能访问 |
+| API              | Polyfill 来源                      | 注入位置                  | 必要性                                         |
+| ---------------- | ---------------------------------- | ------------------------- | ---------------------------------------------- |
+| `customElements` | Map-backed shim（[SOP-016]）       | `output.banner`           | `customElements.define()` 在模块顶层调用       |
+| `HTMLElement`    | `@lessjs/core` 自包含（[SOP-016]） | `dsd-element.ts` 模块求值 | `class Foo extends HTMLElement` 在模块顶层执行 |
+| `CSSStyleSheet`  | `@lessjs/core` StyleSheet          | SSG entry code 顶部       | Lit 内部引用 CSSStyleSheet，模块顶层即需       |
+| `document`       | happy-dom（已有）                  | ssgRender 阶段            | DOM 操作在渲染时发生                           |
+| `window`         | happy-dom（已有）                  | ssgRender 阶段            | 组件的 connectedCallback 可能访问              |
+
+[SOP-016]: ../sop/v0.21.x/SOP-016-ssr-htmlelement-self-contained.md
 
 ### 注入机制
 
-从分散的 polyfill（entry code + output banner）统一为单一 polyfill 模块：
+polyfill 按执行顺序分三层（[SOP-016]）：
 
-```ts
-// packages/adapter-vite/src/ssr-polyfills.ts
-export function generateSsrPolyfillBanner(): string {
-  return [
-    // Layer 1: CSSStyleSheet (no dependencies)
-    `import { StyleSheet } from '@lessjs/core';`,
-    `if (typeof globalThis.CSSStyleSheet === 'undefined') {`,
-    `  globalThis.CSSStyleSheet = class {`,
-    `    replaceSync(_css: string) {}`,
-    `    get cssRules() { return []; }`,
-    `  };`,
-    `}`,
-    '',
-    // Layer 2: HTMLElement (no dependencies)
-    `import { HTMLElement as _SsrHTMLElement } from '@lit-labs/ssr-dom-shim';`,
-    `if (!globalThis.HTMLElement) {`,
-    `  globalThis.HTMLElement = _SsrHTMLElement;`,
-    `}`,
-    '',
-    // Layer 3: customElements (depends on HTMLElement existing)
-    `if (typeof globalThis.customElements === 'undefined') {`,
-    `  const registry = new Map<string, typeof globalThis.HTMLElement>();`,
-    `  globalThis.customElements = {`,
-    `    define(name: string, ctor: typeof globalThis.HTMLElement) {`,
-    `      registry.set(name, ctor);`,
-    `    },`,
-    `    get(name: string) {`,
-    `      return registry.get(name);`,
-    `    },`,
-    `    whenDefined(_name: string) {`,
-    `      return Promise.resolve();`,
-    `    },`,
-    `    upgrade(_root: Node) {},`,
-    `  };`,
-    `}`,
-  ].join('\n');
-}
-```
+1. **Layer 1 — `output.banner`：customElements（Map-backed）**
+   - 最先执行，确保任何 `customElements.define()` 调用在模块图求值前可用
+   - `define()` 存入 Map，`get()` 从 Map 取出 — `renderDSDByName()` 依赖此行为
+   - 见 `packages/adapter-vite/src/cli/build-ssg.ts`
 
+2. **Layer 2 — `@lessjs/core/dsd-element.ts`：HTMLElement（自包含 stub）**
+   - `_SsrHTMLElementStub` 提供 6 个成员
+   - 在 `typeof HTMLElement === 'undefined'` 时赋值到 `globalThis.HTMLElement`
+   - `@lessjs/core` 不再依赖 `@lit-labs/ssr-dom-shim`
+
+3. **Layer 3 — SSG entry code：CSSStyleSheet**
+   - `import { StyleSheet } from '@lessjs/core'` 后在 entry code body 中 polyfill
+   - 见 `packages/adapter-vite/src/ssr-polyfills.ts`
+
+````
 ### 构建集成
 
 在 `build-ssg.ts` 的 SSG entry code 生成阶段，polyfill banner 作为 entry code 的第一部分：
 
 ```ts
 const rawSsgEntryCode = generateSsrPolyfillBanner() + '\n' + generateHonoEntryCode(routes, {...});
-```
+````
 
 替代原来分散在 entry code 和 output banner 中的 polyfill 代码。
 
@@ -117,29 +97,28 @@ const rawSsgEntryCode = generateSsrPolyfillBanner() + '\n' + generateHonoEntryCo
 
 Polyfill banner 通过 Vite virtual module 机制作为 entry code 的静态前缀注入。Rolldown 将其与业务代码一起打包，但 polyfill 的副作用（在 `globalThis` 上设置属性）保证在所有其他模块加载前执行。
 
-## 与 Lit SSR DOM Shim 的关系
+## HTMLElement 自包含策略
 
-`@lit-labs/ssr-dom-shim` 提供 `HTMLElement` 的 shim 实现。我们**继续使用它**作为 HTMLElement polyfill 的来源，但将其从 output banner 移到 entry code 中。这样做的好处：
+[SOP-016] 将 HTMLElement polyfill 从 `@lit-labs/ssr-dom-shim` 迁移到 `@lessjs/core/dsd-element.ts` 自包含：
 
-1. **统一 polyfill 位置**：所有 polyfill 在同一处管理
-2. **去除 output banner**：output banner 机制不保证在所有 Vite 版本间行为一致
-3. **明确依赖关系**：entry code 中的 import 顺序天然保证执行顺序
+1. **`@lessjs/core` 自包含**：拥有 `DsdElement` 的包必须自己提供 SSR-safe 的 HTMLElement 基类
+2. **最小 stub**：`_SsrHTMLElementStub` 只提供内部代码实际调用的 6 个方法
+3. **去除外部依赖**：不再依赖 `@lit-labs/ssr-dom-shim` 用于核心 SSR 功能
 
 ## Consequences
 
 ### Positive
 
-- **消除 customElements undefined 错误**：所有 WC 代码可在 SSR 环境安全加载
-- **统一 polyfill 管理**：从 3 个分散位置（entry code、output banner、@lit-labs/ssr-dom-shim）合并为 1 个模块
-- **明确执行顺序**：CSSStyleSheet → HTMLElement → customElements 的依赖链在 entry code 中可见
-- **易于扩展**：新增浏览器 API polyfill 只需在 `ssr-polyfills.ts` 中添加
-- **去除 output banner 依赖**：不再依赖 Rolldown 特定 API
+- **消除 customElements undefined 错误**：Map-backed polyfill 使 `define()`/`get()` 真正工作
+- **消除 DSD 渲染空白**：HTMLElement stub 提供组件 render() 所需的最小 DOM 方法
+- **`@lessjs/core` 自包含**：不再依赖 `@lit-labs/ssr-dom-shim` 用于核心 SSR
+- **最小表面**：stub 只包含 6 个成员，不模拟完整 DOM
 
 ### Negative
 
-- **customElements shim 是轻量级的**：不支持完整的 Custom Elements 生命周期（`attributeChangedCallback` 等），仅支持 `define()`/`get()` 注册
-- **模块顶层副作用**：polyfill 在模块顶层修改 `globalThis`，如果将来需要隔离 polyfill 作用域，需要重构
-- **polyfill 代码进入 bundle**：~1KB gzip 的额外开销（可接受）
+- **HTMLElement stub 是最小实现**：仅提供 SSR render() 内部使用的 6 个方法，不支持完整 DOM 行为。实际 DOM 操作由 happy-dom 在 ssgRender 阶段提供
+- **customElements shim 轻量级**：不支持完整的 Custom Elements 生命周期（`attributeChangedCallback` 等），仅支持 `define()`/`get()` 注册
+- **模块顶层副作用**：polyfill 在模块顶层修改 `globalThis`
 
 ### Neutral
 
