@@ -1,3 +1,12 @@
+## 0.21.16 (2026-05-25)
+
+### Fixed
+
+- Production builds now use a no-op outer Vite trigger entry instead of
+  bundling the generated Hono SSR entry as a browser/client artifact.
+- JSR remote core subpath resolution now fetches `@lessjs/core` source URLs
+  instead of accidentally deriving paths from `@lessjs/adapter-vite`.
+
 ## 0.21.15 (2026-05-25)
 
 ### Fixed

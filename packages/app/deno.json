@@ -1,16 +1,16 @@
 {
   "name": "@lessjs/app",
-  "version": "0.21.15",
+  "version": "0.21.16",
   "exports": {
     ".": "./src/index.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.21.15",
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.21.15/logger",
-    "@lessjs/adapter-vite": "jsr:@lessjs/adapter-vite@^0.21.15",
-    "@lessjs/adapter-vite/build-context": "jsr:@lessjs/adapter-vite@^0.21.15/build-context",
-    "@lessjs/content": "jsr:@lessjs/content@^0.21.15",
-    "@lessjs/i18n": "jsr:@lessjs/i18n@^0.21.15",
+    "@lessjs/core": "jsr:@lessjs/core@^0.21.16",
+    "@lessjs/core/logger": "jsr:@lessjs/core@^0.21.16/logger",
+    "@lessjs/adapter-vite": "jsr:@lessjs/adapter-vite@^0.21.16",
+    "@lessjs/adapter-vite/build-context": "jsr:@lessjs/adapter-vite@^0.21.16/build-context",
+    "@lessjs/content": "jsr:@lessjs/content@^0.21.16",
+    "@lessjs/i18n": "jsr:@lessjs/i18n@^0.21.16",
     "vite": "npm:vite@8.0.10"
   },
   "publish": {

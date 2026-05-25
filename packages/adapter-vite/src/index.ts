@@ -92,6 +92,21 @@ const OPTIONAL_PACKAGE_STUBS: Record<string, string> = {
   ].join('\n'),
 };
 
+const LESSJS_PACKAGE_SRC_BASE_RE = /\/@lessjs\/([^/]+)\/([^/]+)\/src\/.*$/;
+
+function getLessPackageSrcBase(metaUrl: string, packageName: string): string {
+  const match = metaUrl.match(LESSJS_PACKAGE_SRC_BASE_RE);
+  if (match) {
+    return metaUrl.replace(
+      LESSJS_PACKAGE_SRC_BASE_RE,
+      `/@lessjs/${packageName}/${match[2]}/src/`,
+    );
+  }
+  return metaUrl
+    .replace(/\/@lessjs\/[^/]+@([^/]+)\/src\/.*$/, `/@lessjs/${packageName}/$1/src/`)
+    .replace(/\/src\/.*$/, '/src/');
+}
+
 function optionalPackageStubsPlugin(): Plugin {
   return {
     name: 'less:optional-package-stubs',
@@ -144,10 +159,7 @@ function createCoreResolvePlugin(metaUrl: string): Plugin {
   // Compute JSR base URL for source fetching.
   let jsrSrcBase = '';
   if (isRemote) {
-    // Handle both @version and /version URL formats
-    jsrSrcBase = metaUrl
-      .replace(/\/src\/index\.ts$/, '/src/')
-      .replace(/@(\d+\.\d+\.\d+)\/src\/$/, '/$1/src/');
+    jsrSrcBase = getLessPackageSrcBase(metaUrl, 'core');
   }
 
   return {
@@ -442,6 +454,8 @@ export function less(
 
   const VIRTUAL_ENTRY_ID = 'virtual:less-hono-entry';
   const RESOLVED_ENTRY_ID = '\0' + VIRTUAL_ENTRY_ID;
+  const VIRTUAL_BUILD_TRIGGER_ID = 'virtual:less-build-trigger';
+  const RESOLVED_BUILD_TRIGGER_ID = '\0' + VIRTUAL_BUILD_TRIGGER_ID;
 
   // v0.19.1 Phase 6: Discover client-only tags from Hub registry data (ADR-0035 A1)
   // Reads _hub-data-full.ts at build time and extracts tagNames where
@@ -542,7 +556,7 @@ export function less(
           // Keep the budget explicit so Vite does not report it as an unexpected warning.
           chunkSizeWarningLimit: 1500,
           rollupOptions: {
-            input: [VIRTUAL_ENTRY_ID],
+            input: [VIRTUAL_BUILD_TRIGGER_ID],
           },
         },
       };
@@ -680,9 +694,13 @@ export function less(
 
     resolveId(id) {
       if (id === VIRTUAL_ENTRY_ID) return RESOLVED_ENTRY_ID;
+      if (id === VIRTUAL_BUILD_TRIGGER_ID) return RESOLVED_BUILD_TRIGGER_ID;
     },
 
     load(id) {
+      if (id === RESOLVED_BUILD_TRIGGER_ID) {
+        return 'export default null;';
+      }
       if (id === RESOLVED_ENTRY_ID) {
         // Always regenerate to pick up late-settled ctx fields (e.g., blogOptions
         // from lessContent() buildStart() which runs after less:core buildStart()).
