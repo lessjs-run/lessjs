@@ -134,6 +134,13 @@ Deno.test('create-less: vite.config.ts includes packageIslands config', () => {
   assertFalse(viteConfig.includes('https://jsr.io/@lessjs/ui/'));
 });
 
+Deno.test('create-less: vite.config.ts includes virtual-passthrough resolve plugin (SOP-015)', () => {
+  const viteConfig = extractTemplate('vite.config.ts');
+  assert(viteConfig.includes('virtual-passthrough'));
+  assert(viteConfig.includes("return '\\0' + id"));
+  assert(viteConfig.includes("from '@deno/vite-plugin'"));
+});
+
 Deno.test('create-less: route index imports DsdElement (v0.20 Ocean-Island)', () => {
   const routeIndex = extractTemplate('app/routes/index.ts');
   assert(routeIndex.includes('DsdElement'));
@@ -198,6 +205,12 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     denoJson.imports['@lessjs/core'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'index.ts'),
     ).href;
+    denoJson.imports['@lessjs/signals'] = pathToFileURL(
+      join(repoRoot, 'packages', 'signals', 'src', 'index.ts'),
+    ).href;
+    denoJson.imports['@lessjs/signals/framework'] = pathToFileURL(
+      join(repoRoot, 'packages', 'signals', 'src', 'framework.ts'),
+    ).href;
     denoJson.imports['@lessjs/content'] = pathToFileURL(
       join(repoRoot, 'packages', 'content', 'src', 'index.ts'),
     ).href;
@@ -216,9 +229,13 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     denoJson.imports['@lessjs/ui/'] = pathToFileURL(
       join(repoRoot, 'packages', 'ui', 'src') + sep,
     ).href;
+    denoJson.imports['lit'] = 'npm:lit@^3.2.0';
     denoJson.imports['vite'] = 'npm:vite@8.0.10';
     denoJson.imports['hono'] = 'npm:hono@^4';
     denoJson.imports['@hono/vite-dev-server'] = 'npm:@hono/vite-dev-server@^0.25.3';
+    denoJson.imports['parse5'] = 'npm:parse5@7.0.0';
+    denoJson.imports['entities'] = 'npm:entities@^4';
+    denoJson.imports['entities/'] = 'npm:entities@^4/';
     denoJson.tasks.build = `deno run -A ${
       join(repoRoot, 'packages', 'adapter-vite', 'src', 'cli', 'build.ts')
     }`;

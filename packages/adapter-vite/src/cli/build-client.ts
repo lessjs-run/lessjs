@@ -13,7 +13,9 @@
  */
 
 import { build as viteBuild, type InlineConfig } from 'vite';
-import { resolve } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import process from 'node:process';
 import { type ClientIslandEntry, generateClientEntry } from '../entry-generators.js';
 import type { LessBuildContext } from '../build-context.js';
@@ -23,6 +25,98 @@ const log = createLogger('ssg');
 
 const VIRTUAL_CLIENT_ENTRY_ID = 'virtual:less-client-entry';
 const RESOLVED_CLIENT_ENTRY_ID = '\0' + VIRTUAL_CLIENT_ENTRY_ID;
+
+/** Workspace root derived from this module's location (packages/adapter-vite/src/cli/). */
+const WORKSPACE_ROOT = fileURLToPath(new URL('../../../..', import.meta.url)).replace(
+  /\\/g,
+  '/',
+);
+
+/**
+ * Look up a bare specifier in a deno.json import map.
+ * Walks up directory tree to find workspace-level deno.json as fallback.
+ * Returns { target, denoJsonDir } so relative paths can be resolved correctly.
+ */
+function lookupInDenoJson(
+  id: string,
+  root: string,
+): { target: string; denoJsonDir: string } | null {
+  const denoJsonDirs = new Set<string>();
+  let dir = resolve(root);
+
+  // Walk up from consumer root
+  while (!denoJsonDirs.has(dir)) {
+    denoJsonDirs.add(dir);
+    const found = tryDenoJsonDir(id, dir);
+    if (found) return found;
+    const parent = resolve(dir, '..');
+    if (parent === dir) break;
+    dir = parent;
+  }
+
+  // Also try workspace root (module-relative, for monorepo dev / testing)
+  if (!denoJsonDirs.has(WORKSPACE_ROOT)) {
+    const found = tryDenoJsonDir(id, WORKSPACE_ROOT);
+    if (found) return found;
+  }
+
+  return null;
+}
+
+/** Check a single directory for a deno.json with the given import. */
+function tryDenoJsonDir(
+  id: string,
+  dir: string,
+): { target: string; denoJsonDir: string } | null {
+  const denoJsonPath = join(dir, 'deno.json');
+  if (!existsSync(denoJsonPath)) return null;
+  const raw = readFileSync(denoJsonPath, 'utf-8');
+  // Strip JSONC comments:
+  // - Line comments: // at start of line (after optional whitespace)
+  // - Block comments: /* ... */
+  const json = raw
+    .replace(/^\s*\/\/.*$/gm, '')
+    .replace(/\/\*[\s\S]*?\*\//g, '');
+  let denoJson: Record<string, unknown>;
+  try {
+    denoJson = JSON.parse(json);
+  } catch {
+    return null; // Invalid JSON — skip this deno.json
+  }
+  const imports = denoJson.imports as Record<string, string> | undefined;
+  if (!imports) return null;
+  // Exact match
+  if (imports[id]) return { target: imports[id], denoJsonDir: dir };
+  // Prefix/subpath matching (trailing slash)
+  for (const [key, value] of Object.entries(imports)) {
+    if (key.endsWith('/') && id.startsWith(key)) {
+      return { target: value + id.slice(key.length), denoJsonDir: dir };
+    }
+  }
+  return null;
+}
+
+/**
+ * Convert a Deno import map target to a resolvable Vite path.
+ * - file:// URLs → absolute filesystem path
+ * - Relative paths (./) → resolved relative to denoJsonDir
+ * - npm:, jsr: → null (handled by node_modules)
+ */
+function convertImportMapTarget(target: string, denoJsonDir: string): string | null {
+  if (target.startsWith('file://')) {
+    try {
+      return fileURLToPath(target).replace(/\\/g, '/');
+    } catch {
+      return null;
+    }
+  }
+  // Relative path — resolve relative to the deno.json directory
+  if (target.startsWith('./') || target.startsWith('../')) {
+    return resolve(denoJsonDir, target).replace(/\\/g, '/');
+  }
+  // npm:, jsr: — let Vite/Rolldown handle these normally
+  return null;
+}
 
 async function buildClient(ctx: LessBuildContext): Promise<void> {
   const root = ctx.phase3.root || process.cwd();
@@ -130,7 +224,10 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
         },
       },
     },
-    resolve: serializedAlias ? { alias: serializedAlias } : undefined,
+    resolve: {
+      ...(serializedAlias ? { alias: serializedAlias } : {}),
+      extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+    },
     ssr: {
       noExternal: (noExternalPatterns.length > 0 ? noExternalPatterns : undefined) as
         | (string | RegExp)[]
@@ -144,6 +241,28 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
         },
         load(id) {
           if (id === RESOLVED_CLIENT_ENTRY_ID) return clientEntryCode;
+        },
+      },
+      {
+        name: 'less:deno-import-map-resolve',
+        enforce: 'pre',
+        async resolveId(id, importer) {
+          // Only handle bare specifiers (no relative imports, no absolute paths)
+          if (id.startsWith('.') || id.startsWith('/') || id.startsWith('file:')) {
+            return null;
+          }
+
+          // Try deno.json import map — walks up from root to find
+          // workspace-level deno.json as fallback for monorepo dev.
+          const result = lookupInDenoJson(id, root);
+          if (!result) return null;
+
+          // Only handle file:// and relative targets (workspace-local dev mappings).
+          // npm:, jsr: → return null, let node_modules handle them.
+          const resolved = convertImportMapTarget(result.target, result.denoJsonDir);
+          if (!resolved) return null;
+
+          return await this.resolve(resolved, importer, { skipSelf: true });
         },
       },
     ],

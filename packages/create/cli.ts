@@ -117,6 +117,10 @@ node_modules/
   "imports": {
     "vite": "npm:vite@8.0.10",
     "@deno/vite-plugin": "npm:@deno/vite-plugin@2",
+    "hono": "npm:hono@^4.12.18",
+    "parse5": "npm:parse5@7.0.0",
+    "entities": "npm:entities@^4",
+    "entities/": "npm:entities@^4/",
     "@lessjs/app": "jsr:@lessjs/app@^${v.app}",
     "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^${v.adapterLit}",
     "@lessjs/adapter-vite": "jsr:@lessjs/adapter-vite@^${v.adapterVite}",
@@ -156,7 +160,13 @@ const colorTokensStyle =
   'body{margin:0;background:var(--gray-1);color:var(--gray-9);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>';
 
 export default defineConfig({
-  plugins: [deno(), lessjs({
+  plugins: [
+    // SOP-015: Virtual module passthrough — @deno/vite-plugin doesn't
+    // support the "virtual:" scheme. This resolve hook intercepts virtual
+    // module IDs before @deno/vite-plugin, letting the lessjs plugin handle them.
+    { name: 'virtual-passthrough', resolveId(id) { if (id.startsWith('virtual:')) return '\0' + id; }, enforce: 'pre' },
+    deno(),
+    lessjs({
     html: { title: 'My LessJS App' },
     // Use pre-built UI components from @lessjs/ui
     // (JSR distributes compiled JS - no decorator errors)

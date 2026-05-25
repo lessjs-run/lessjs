@@ -237,7 +237,10 @@ function ensureTsExtension(path: string): string {
 const NPM_SPECIFIER_RE = /(['"])npm:(@?[a-z0-9_-]+(?:\/[a-z0-9_-]+)?)@[^'"/]+(\/[^'"]*)?\1/g;
 
 function rewriteNpmSpecifiers(source: string): string {
-  return source.replace(NPM_SPECIFIER_RE, (_match, quote: string, pkg: string, subpath?: string) => {
-    return `${quote}${pkg}${subpath ?? ''}${quote}`;
-  });
+  return source.replace(
+    NPM_SPECIFIER_RE,
+    (_match, quote: string, pkg: string, subpath?: string) => {
+      return `${quote}${pkg}${subpath ?? ''}${quote}`;
+    },
+  );
 }

@@ -122,6 +122,9 @@ export class Phase3Meta {
   /** SSR noExternal patterns (serialized) */
   ssrNoExternal: (string | { __type: 'RegExp'; source: string; flags: string })[] = [];
 
+  /** SSR deps to keep as external (resolved by Deno import() at runtime per ADR-0043) */
+  ssrExternal: string[] = [];
+
   /** Routes directory */
   routesDir: string = 'app/routes';
 
@@ -253,6 +256,7 @@ export class LessBuildContext {
     this.phase3.headExtras = '';
     this.phase3.allowHeadExtrasScripts = false;
     this.phase3.ssrNoExternal = [];
+    this.phase3.ssrExternal = [];
     this.phase3.routesDir = 'app/routes';
     this.phase3.islandsDir = 'app/islands';
     this.phase3.componentsDir = 'app/components';

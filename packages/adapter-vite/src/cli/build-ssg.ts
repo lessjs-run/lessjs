@@ -28,12 +28,13 @@ import { createLogger } from '@lessjs/core/logger';
 import { RESOLVED_NAV_ID, VIRTUAL_NAV_ID } from '../virtual-ids.js';
 import { ssgRender } from './ssg-render.js';
 import { createLessJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
+import { generateSsrPolyfillBanner } from '../ssr-polyfills.js';
 
 const log = createLogger('ssg');
 
 const VIRTUAL_SSG_ENTRY_ID = 'virtual:less-ssg-entry';
 const RESOLVED_SSG_ENTRY_ID = '\0' + VIRTUAL_SSG_ENTRY_ID;
-const FALLBACK_LESSJS_VERSION = '0.21.12';
+const FALLBACK_LESSJS_VERSION = '0.21.13';
 
 function getJsrPackageVersion(metaUrl: string): string {
   const match = metaUrl.match(/\/@lessjs\/adapter-vite\/([^/]+)\//);
@@ -48,26 +49,6 @@ function getLocalLessjsPackageRoot(metaUrl: string): string | null {
   } catch {
     return null;
   }
-}
-
-function readWorkspacePackageVersion(root: string, packageDir: string): string {
-  // v0.14.6: Try import.meta.url fallback when root does not point to workspace root
-  const possibleRoots = [
-    root && resolve(root, '..'),
-    // Fallback: infer monorepo root from this file's location
-    resolve(new URL('.', import.meta.url).pathname, '..', '..', '..', '..'),
-  ].filter(Boolean) as string[];
-
-  for (const base of possibleRoots) {
-    try {
-      const denoJsonPath = resolve(base, 'packages', packageDir, 'deno.json');
-      const json = JSON.parse(readFileSync(denoJsonPath, 'utf-8'));
-      if (typeof json.version === 'string') return json.version;
-    } catch {
-      continue;
-    }
-  }
-  return FALLBACK_LESSJS_VERSION;
 }
 
 // ─── Optional Package Stubs (ADR 0008 Phase C) ──────────────────────
@@ -268,17 +249,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     hubClientOnlyTags,
   }).ssrAdmissionPlan;
 
-  const rawSsgEntryCode = `\
-// SSR polyfill: Lit references CSSStyleSheet in its internals.
-// This must load before any Lit module is evaluated.
-import { StyleSheet } from '@lessjs/core';
-if (typeof globalThis.CSSStyleSheet === 'undefined') {
-  globalThis.CSSStyleSheet = class {
-    replaceSync(_css) {}
-    get cssRules() { return []; }
-  };
-}
-` + generateHonoEntryCode(routes, {
+  const rawSsgEntryCode = generateSsrPolyfillBanner() + '\n' + generateHonoEntryCode(routes, {
     routesDir,
     islandsDir,
     middleware: options.middleware,
@@ -300,14 +271,19 @@ if (typeof globalThis.CSSStyleSheet === 'undefined') {
   try {
     const { build: viteBuild } = await import('vite');
 
-    // SSR noExternal: bundle lit ecosystem + @lessjs/ui + @lessjs/adapter-lit + parse5 + node-fetch (Deno compat)
+    // Only bundle LessJS framework code + Lit ecosystem
     const defaultNoExternal = [
+      /^@lessjs\//,
       /^lit/,
       /^@lit/,
-      /^@lessjs\/ui/,
-      /^@lessjs\/adapter-lit/,
+      /^@lit-labs\//,
+    ];
+
+    // Dependencies resolved by Deno ESM Runtime at import() stage
+    const defaultExternal = [
       'parse5',
       'entities',
+      'hono',
       'node-fetch',
       'fetch-blob',
       'data-uri-to-buffer',
@@ -315,6 +291,7 @@ if (typeof globalThis.CSSStyleSheet === 'undefined') {
       'domexception',
       'node-domexception',
     ];
+
     const userNoExternal = options.ssr?.noExternal || [];
     const allNoExternal = [...defaultNoExternal, ...userNoExternal];
 
@@ -399,16 +376,10 @@ if (typeof globalThis.CSSStyleSheet === 'undefined') {
           },
           output: {
             format: 'esm',
-            // ADR-0028: Inject globalThis.HTMLElement polyfill as banner.
-            // This ensures ssr-dom-shim's HTMLElement is available BEFORE
-            // any module-level `extends globalThis.HTMLElement` evaluates.
-            banner: `import { HTMLElement as _SsrDomShimHTMLElement } from '@lit-labs/ssr-dom-shim';
-if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
-`,
           },
         },
       },
-      ssr: { noExternal: allNoExternal },
+      ssr: { noExternal: allNoExternal, external: defaultExternal },
       // ADR 0008 Phase A: Inject headExtras via define instead of .less/head-extras.html
       // The generated entry code uses __LESS_HEAD_EXTRAS__ which gets replaced
       // at build time. This avoids the Vite SSR AsyncFunction syntax errors
@@ -554,51 +525,12 @@ if (!globalThis.HTMLElement) globalThis.HTMLElement = _SsrDomShimHTMLElement;
     // Currently emitted as metadata alongside the Vite-inline bundle; in the
     // esbuild --packages=external mode, it becomes the actual resolution map.
     try {
-      const coreVersion = readWorkspacePackageVersion(root, 'core');
-      const adapterLitVersion = readWorkspacePackageVersion(root, 'adapter-lit');
-      const uiVersion = readWorkspacePackageVersion(root, 'ui');
-
       const importMap: Record<string, string> = {
-        'hono': 'npm:hono@4',
         'parse5': 'npm:parse5@7.0.0',
-        'entities': 'npm:entities@4',
-        '@lessjs/core': `npm:@jsr/lessjs__core@${coreVersion}`,
+        'entities': 'npm:entities@^4',
+        'entities/': 'npm:entities@^4/',
+        'hono': 'npm:hono@^4.12.18',
       };
-
-      // Add public LessJS subpath exports
-      for (const subpath of ['/logger', '/errors', '/context', '/navigation']) {
-        importMap[`@lessjs/core${subpath}`] = `npm:@jsr/lessjs__core${subpath}@${coreVersion}`;
-      }
-
-      // Add adapter-lit if used
-      if (ctx?.phase1.packageManifests?.length) {
-        importMap['@lessjs/adapter-lit'] = `npm:@jsr/lessjs__adapter-lit@${adapterLitVersion}`;
-        importMap['lit'] = 'npm:lit@3.3.2';
-        importMap['@lit/reactive-element'] = 'npm:@lit/reactive-element@2.1.0';
-      }
-
-      // Add @lessjs/ui if used (root + all subpath exports used by package manifests)
-      const hasUi = allNoExternal.some((n: string | RegExp) =>
-        typeof n === 'string' ? n.includes('@lessjs/ui') : n.toString().includes('@lessjs/ui')
-      );
-      if (hasUi) {
-        const uiPkg = `npm:@jsr/lessjs__ui@${uiVersion}`;
-        importMap['@lessjs/ui'] = uiPkg;
-        // Map each subpath used by package manifests so the SSR bundle's
-        // dynamic imports (e.g. @lessjs/ui/less-layout) resolve at runtime.
-        const uiSubpaths = new Set<string>();
-        for (const pkg of packageManifests) {
-          for (const decl of pkg.declarations) {
-            const mp = decl.less?.module;
-            if (mp && mp.startsWith('@lessjs/ui/')) {
-              uiSubpaths.add(mp);
-            }
-          }
-        }
-        for (const subpath of uiSubpaths) {
-          importMap[subpath] = uiPkg;
-        }
-      }
 
       const importMapPath = join(ssrOutDir, 'importmap.json');
       writeFileSync(importMapPath, JSON.stringify({ imports: importMap }, null, 2), 'utf-8');
