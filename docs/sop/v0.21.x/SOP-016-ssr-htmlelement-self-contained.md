@@ -3,7 +3,7 @@
 > **版本**: 1.0
 > **日期**: 2026-05-25
 > **状态**: accepted
-> **适用范围**: LessJS v0.21.13
+> **适用范围**: LessJS v0.21.12
 > **关联 ADR**: ADR-0042, ADR-0044, ADR-0046
 > **前置**: [SOP-014 构建管线 Clean Architecture](./SOP-014-build-pipeline-clean-arch.md)
 

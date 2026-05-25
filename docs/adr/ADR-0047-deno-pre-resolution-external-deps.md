@@ -35,11 +35,13 @@ deno.json import map → Deno Pre-Resolution → 完整 external 清单 → Roll
 ## Consequences
 
 ### Positive
+
 - **真正 Clean Separation**：Rolldown 不再做 ESM 解析决策
 - **零手工维护**：新增 external 依赖自动发现所有传递子路径
 - **importmap.json 自动化**：从 pre-resolution 结果自动生成
 
 ### Negative
+
 - 构建时间微增（缓存命中 < 50ms，无缓存 2-5s）
 - 依赖 Deno CLI 运行时
 

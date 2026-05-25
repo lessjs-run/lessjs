@@ -29,13 +29,13 @@ import { RESOLVED_NAV_ID, VIRTUAL_NAV_ID } from '../virtual-ids.js';
 import { ssgRender } from './ssg-render.js';
 import { createLessJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
 import { generateSsrPolyfillBanner } from '../ssr-polyfills.js';
-import { type ExternalManifest, resolveExternalManifest } from '../external-resolver.js';
+import { resolveExternalManifest } from '../external-resolver.js';
 
 const log = createLogger('ssg');
 
 const VIRTUAL_SSG_ENTRY_ID = 'virtual:less-ssg-entry';
 const RESOLVED_SSG_ENTRY_ID = '\0' + VIRTUAL_SSG_ENTRY_ID;
-const FALLBACK_LESSJS_VERSION = '0.21.13';
+const FALLBACK_LESSJS_VERSION = '0.21.12';
 
 function getJsrPackageVersion(metaUrl: string): string {
   const match = metaUrl.match(/\/@lessjs\/adapter-vite\/([^/]+)\//);
