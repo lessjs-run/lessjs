@@ -279,10 +279,13 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
       /^@lit-labs\//,
     ];
 
-    // Dependencies resolved by Deno ESM Runtime at import() stage
-    const defaultExternal = [
-      'parse5',
-      'entities',
+    // Dependencies resolved by Deno ESM Runtime at import() stage.
+    // Use regex for packages with subpath exports (e.g. entities/lib/escape.js)
+    // so Rolldown doesn't attempt to resolve them during dependency analysis.
+    // ADR-0042/0043: ESM subpath resolution is the runtime's job, not the bundler's.
+    const defaultExternal: (string | RegExp)[] = [
+      /^parse5(\/|$)/,
+      /^entities(\/|$)/,
       'hono',
       'node-fetch',
       'fetch-blob',
