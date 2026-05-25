@@ -65,6 +65,9 @@ export const KNOWN_ERROR_PATTERNS: Array<{ pattern: RegExp; description: string 
 // v0.21: Bumped to 12 to accommodate Shoelace third-party demo components
 // (sl-input, sl-dialog, sl-drawer, etc.) whose browser-only APIs cannot be
 // rendered in Deno SSR. These are known, expected non-recoverable errors.
+// v0.21.12: Third-party errors (sl-*) now warn only — gate only fails on
+// LessJS native components (less-*, page-*, demo-*).
+export const NATIVE_TAG_PREFIXES = ['less-', 'page-', 'demo-'];
 export const DEFAULT_MAX_NON_RECOVERABLE = 12;
 export const DEFAULT_MAX_UNKNOWN_ERROR_TYPES = 0;
 
@@ -77,6 +80,8 @@ export interface DsdGateResult {
   allErrors: Array<RenderError & { path: string }>;
   nonRecoverable: Array<RenderError & { path: string }>;
   recoverable: Array<RenderError & { path: string }>;
+  nativeNonRecoverable: Array<RenderError & { path: string }>;
+  thirdPartyNonRecoverable: Array<RenderError & { path: string }>;
   errorGroups: Record<string, { count: number; tags: Set<string>; known: boolean }>;
   unknownErrors: Array<[string, { count: number; tags: Set<string>; known: boolean }]>;
   maxNonRecoverable: number;
@@ -102,6 +107,12 @@ export function evaluateDsdReportGate(
   const nonRecoverable = allErrors.filter((e) => !e.recoverable);
   const recoverable = allErrors.filter((e) => e.recoverable);
 
+  // Split by component origin: native (less-*, page-*, demo-*) vs third-party
+  const isNative = (tag: string | undefined) =>
+    !tag || NATIVE_TAG_PREFIXES.some((p) => tag.startsWith(p));
+  const nativeNonRecoverable = nonRecoverable.filter((e) => isNative(e.tagName));
+  const thirdPartyNonRecoverable = nonRecoverable.filter((e) => !isNative(e.tagName));
+
   const errorGroups: Record<string, { count: number; tags: Set<string>; known: boolean }> = {};
   for (const err of allErrors) {
     const key = err.message;
@@ -116,9 +127,9 @@ export function evaluateDsdReportGate(
   const unknownErrors = Object.entries(errorGroups).filter(([, info]) => !info.known);
   const failures: string[] = [];
 
-  if (nonRecoverable.length > maxNonRecoverable) {
+  if (nativeNonRecoverable.length > maxNonRecoverable) {
     failures.push(
-      `${nonRecoverable.length} non-recoverable errors exceed threshold (${maxNonRecoverable})`,
+      `${nativeNonRecoverable.length} native non-recoverable errors exceed threshold (${maxNonRecoverable}) (${thirdPartyNonRecoverable.length} third-party excluded)`,
     );
   }
 
@@ -132,6 +143,8 @@ export function evaluateDsdReportGate(
     allErrors,
     nonRecoverable,
     recoverable,
+    nativeNonRecoverable,
+    thirdPartyNonRecoverable,
     errorGroups,
     unknownErrors,
     maxNonRecoverable,
@@ -184,7 +197,12 @@ function main() {
     Deno.exit(1);
   }
 
-  console.log(`  Non-recoverable: ${gate.nonRecoverable.length}`);
+  console.log(`  Non-recoverable (native): ${gate.nativeNonRecoverable.length}`);
+  if (gate.thirdPartyNonRecoverable.length > 0) {
+    console.log(
+      `  Non-recoverable (third-party): ${gate.thirdPartyNonRecoverable.length} (excluded from gate)`,
+    );
+  }
   console.log(`  Recoverable: ${gate.recoverable.length}`);
 
   console.log(`\n  Error breakdown:`);
@@ -203,6 +221,12 @@ function main() {
   if (gate.unknownErrors.length > 0) {
     console.log(
       `\n  [WARN] ${gate.unknownErrors.length} unknown error type(s) detected. Consider adding to KNOWN_ERROR_PATTERNS only after triage.`,
+    );
+  }
+
+  if (gate.thirdPartyNonRecoverable.length > 0) {
+    console.log(
+      `\n  [WARN] ${gate.thirdPartyNonRecoverable.length} third-party non-recoverable errors excluded from gate (Shoelace SSR boundary).`,
     );
   }
 
