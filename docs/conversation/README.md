@@ -1,43 +1,36 @@
-# docs/conversation/
+# Conversation Archive
 
-Detailed troubleshooting reports, audit notes, and incident postmortems.
+## 结构
 
-## Naming Convention
+```
+YYYYMMDD/      按日期的讨论记录
+www-redesign/  www 项目重设计专题（架构+PRD+视觉规格）
+```
 
-Files are named by **problem**, not by date. This makes them searchable and
-discoverable: when you encounter a similar error, the filename tells you whether
-a prior investigation exists.
+## 2025-05-26
 
-**Pattern**: `{short-problem-description}.md`
+| 文件 | 内容 |
+|------|------|
+| 20250526-full-review.md | v0.21.16 全面评审（PM+架构+工程+QA） |
+| 20250526-tech-stack-review.md | 深度技术选型（Signals/UI/状态管理/ORM） |
+| 20250526-signals-decision.md | Signals 方案决策（自研→alien-signals） |
+| 20250526-reification-audit.md | 全仓库客体化审计 |
+| 20250526-consumer-deno-json-bloat.md | 消费者 deno.json 臃肿分析 |
 
-Examples:
+## 2026-05-24
 
-- `registry-hub-v019-audit-gaps.md` - v0.19 Registry Hub prototype gaps,
-  release blockers, and validation checklist
-- `ssr-island-extends-undefined.md` - `class extends undefined` crash in SSR
-- `sw-crash-package-ssr-admission.md` - service worker crash and package SSR
-  admission boundary
-- `vanilla-adapter-render-fallback.md` - vanilla adapter `ssr: false` blank
-  rendering and Shoelace color contrast
-- `vite-module-graph-cycle.md` - circular import causing build hangs
-- `jsr-publish-token-expiry.md` - JSR publish failure due to expired token
+| 文件 | 内容 |
+|------|------|
+| 20260524/LessJS-comprehensive-*.md | 综合架构+产品审计 |
 
-## Subdirectories
+## 2026-05-18 ~ 05-20
 
-- `www-redesign/` — 2026-05-19 www 全站重设计团队协作（PRD + 架构 + 技术债分析）
+| 日期 | 内容 |
+|------|------|
+| 20260518 | 全量评审 |
+| 20260519 | Hub v0.19 审计 |
+| 20260520 | SSR/Island/Hub 问题修复 |
 
-**Avoid**: Date-prefixed names like `2026-05-16-showcase-ssr-fix.md`. The date
-is available via `git log`, and date prefixes make it hard to find past issues
-by symptom.
+## www 重设计
 
-## Structure
-
-Each report should include:
-
-1. **Problem**: One-sentence summary with the error message or symptom
-2. **Date**: When the issue was discovered
-3. **Status**: Fixed / Open / Wontfix
-4. **Root Cause**: Why it happened
-5. **Fix**: What was changed or what still needs to change
-6. **Verification**: How it was confirmed fixed
-7. **Key Lesson**: What to remember for next time
+`www-redesign/` 包含 www 项目重设计的完整文档链：PRD → 架构 → 视觉规格。
