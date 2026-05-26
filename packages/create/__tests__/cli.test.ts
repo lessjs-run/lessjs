@@ -84,17 +84,26 @@ Deno.test('create-less: deno.json build:ssg uses @lessjs/adapter-vite', () => {
 
 Deno.test('create-less: deno.json maps LessJS package imports (v0.22 Consumer Surface Cleanup)', () => {
   const denoJson = JSON.parse(extractTemplate('deno.json'));
-  // v0.22 SOP-001: Only 4 imports in consumer deno.json (deno/vite-plugin + 3 @lessjs)
+  // v0.22 SOP-001: Keep generated import map minimal while listing direct config imports.
   const importKeys = Object.keys(denoJson.imports);
   assertEquals(
     importKeys.length,
-    4,
-    `Expected 4 imports, got ${importKeys.length}: ${importKeys.join(', ')}`,
+    5,
+    `Expected 5 imports, got ${importKeys.length}: ${importKeys.join(', ')}`,
   );
+  assertEquals(denoJson.imports['@deno/vite-plugin'], 'jsr:@deno/vite-plugin@^1');
   assertEquals(denoJson.imports['@lessjs/app'], 'jsr:@lessjs/app@^${v.app}');
   assertEquals(denoJson.imports['@lessjs/core'], 'jsr:@lessjs/core@^${v.core}');
   assertEquals(denoJson.imports['@lessjs/ui'], 'jsr:@lessjs/ui@^${v.ui}');
+  assertEquals(denoJson.imports['vite'], 'npm:vite@8.0.10');
   assertEquals(denoJson.nodeModulesDir, 'auto');
+});
+
+Deno.test('create-less: deno.json maps vite because vite.config.ts imports it directly', () => {
+  const denoJson = JSON.parse(extractTemplate('deno.json'));
+  const viteConfig = extractTemplate('vite.config.ts');
+  assert(viteConfig.includes("from 'vite'"));
+  assertEquals(denoJson.imports['vite'], 'npm:vite@8.0.10');
 });
 
 Deno.test('create-less: deno.json build uses the one-command LessJS build', () => {

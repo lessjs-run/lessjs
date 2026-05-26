@@ -118,7 +118,8 @@ node_modules/
     "@deno/vite-plugin": "jsr:@deno/vite-plugin@^1",
     "@lessjs/app": "jsr:@lessjs/app@^${v.app}",
     "@lessjs/core": "jsr:@lessjs/core@^${v.core}",
-    "@lessjs/ui": "jsr:@lessjs/ui@^${v.ui}"
+    "@lessjs/ui": "jsr:@lessjs/ui@^${v.ui}",
+    "vite": "npm:vite@8.0.10"
   },
   "nodeModulesDir": "auto",
   "tasks": {
