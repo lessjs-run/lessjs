@@ -140,10 +140,13 @@ export default defineConfig({
         nav: {
           routesDir: 'app/routes',
           headerNav: [
-            { href: '/guide/positioning', label: 'Framework' },
-            { href: '/engine/architecture', label: 'Engine' },
-            { href: '/registry', label: 'RegistryHub' },
-            { href: '/blog', label: 'Blog' },
+            { href: '/', label: 'Home' },
+            { href: '/docs', label: 'Docs' },
+            { href: '/examples', label: 'Examples' },
+            { href: '/components', label: 'Components' },
+            { href: '/architecture', label: 'Architecture' },
+            { href: '/hub', label: 'Hub' },
+            { href: '/roadmap', label: 'Roadmap' },
           ],
         },
         sitemap: {

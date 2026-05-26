@@ -644,8 +644,8 @@ export class DocsHome extends DsdElement {
                   <code>deno run -A jsr:@lessjs/create my-app</code>
                 </div>
                 <div class="actions">
-                  <a class="action primary" href="/guide/getting-started">Start building</a>
-                  <a class="action secondary" href="/engine/architecture/">Read architecture</a>
+                  <a class="action primary" href="/docs">Start building</a>
+                  <a class="action secondary" href="/architecture">Read architecture</a>
                   <a class="action secondary" href="/roadmap">Release truth</a>
                 </div>
               </div>
