@@ -27,8 +27,8 @@ import type { SignalEngine } from '@lessjs/core/signals';
  * API surface the adapter needs.
  */
 interface AlienSignalsModule {
-  signal<T>(v: T): { get(): T; set(v: T): void };
-  computed<T>(fn: () => T): { get(): T };
+  signal<T>(v: T): { (): T; (v: T): void };
+  computed<T>(fn: () => T): { (): T };
   effect(fn: () => void): { stop(): void };
 }
 
@@ -51,32 +51,31 @@ export function createAlienEngine(
 ): SignalEngine {
   return {
     signal<T>(initialValue: T) {
-      // alien-signals: alienSignal(v) returns { get: () => T, set: (v: T) => void }
+      // alien-signals 3.x: signal returns callable function s()/s(v)
       const s = alienMod.signal(initialValue);
       return {
         get value(): T {
-          return s.get();
+          return s();
         },
         set value(v: T) {
-          s.set(v);
+          s(v);
         },
         subscribe(fn: (value: T) => void): () => void {
-          // alien-signals: alienEffect(() => fn(s.get())) returns { stop: () => void }
-          const e = alienMod.effect(() => fn(s.get()));
+          const e = alienMod.effect(() => fn(s()));
           return () => e.stop();
         },
       };
     },
 
     computed<T>(fn: () => T) {
-      // alien-signals: alienComputed(fn) returns { get: () => T }
+      // alien-signals 3.x: computed returns callable function c()
       const c = alienMod.computed(fn);
       return {
         get value(): T {
-          return c.get();
+          return c();
         },
         subscribe(fn2: (value: T) => void): () => void {
-          const e = alienMod.effect(() => fn2(c.get()));
+          const e = alienMod.effect(() => fn2(c()));
           return () => e.stop();
         },
       };
