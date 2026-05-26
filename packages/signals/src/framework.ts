@@ -4,64 +4,76 @@
  * Developer-friendly API wrapping the engine.
  * signal(), computed(), effect() - the primary API surface.
  *
+ * v0.22: Alien Signals is the default engine. Falls back to TC39 polyfill
+ * if alien-signals is not installed.
+ *
  * @module @lessjs/signals/framework
  */
 
 import { _engine, _log } from './engine.ts';
 import type { ReadonlySignal, Unsubscribe, WritableSignal } from './types.ts';
+import type { SignalEngine } from '@lessjs/core/signals';
 
-/**
- * Create a new reactive signal.
- * Wraps Signal.State with .value syntax and subscribe().
- */
-export function signal<T>(initialValue: T): WritableSignal<T> {
-  const state = new _engine.State(initialValue);
+// ─── Lazy engine init (alien default, TC39 fallback) ───────────
+let _signalEngine: SignalEngine | null = null;
+let _engineInit: Promise<void> | null = null;
 
-  return {
-    get value(): T {
-      return state.get();
-    },
-    set value(newValue: T) {
-      state.set(newValue);
-    },
-    subscribe(fn: (value: T) => void): Unsubscribe {
-      const dispose = effect(() => {
-        fn(state.get());
-      });
-      return dispose;
-    },
-  };
+async function _ensureSignalEngine(): Promise<SignalEngine> {
+  if (_signalEngine) return _signalEngine;
+  if (!_engineInit) {
+    _engineInit = (async () => {
+      try {
+        const { createDefaultEngine } = await import('./alien-engine.ts');
+        const engine = await createDefaultEngine();
+        if (engine) {
+          _signalEngine = engine;
+          return;
+        }
+      } catch { /* fallback */ }
+      // Fallback to TC39 polyfill
+      _signalEngine = _tc39Engine;
+    })();
+  }
+  await _engineInit;
+  return _signalEngine!;
 }
 
-/**
- * Create a computed signal with automatic dependency tracking.
- */
-export function computed<T>(fn: () => T): ReadonlySignal<T> {
-  const c = new _engine.Computed(fn);
+const _tc39Engine: SignalEngine = {
+  signal<T>(initialValue: T) {
+    const state = new _engine.State(initialValue);
+    return {
+      get value(): T {
+        return state.get();
+      },
+      set value(n: T) {
+        state.set(n);
+      },
+      subscribe(fn: (v: T) => void) {
+        return effect(() => fn(state.get()));
+      },
+    };
+  },
+  computed<T>(fn: () => T) {
+    const c = new _engine.Computed(fn);
+    return {
+      get value(): T {
+        return c.get();
+      },
+      subscribe(fn2: (v: T) => void) {
+        return effect(() => fn2(c.get()));
+      },
+    };
+  },
+  effect(fn: () => void | (() => void)) {
+    return _tc39Effect(fn);
+  },
+};
 
-  return {
-    get value(): T {
-      return c.get();
-    },
-    subscribe(fn2: (value: T) => void): Unsubscribe {
-      const dispose = effect(() => {
-        fn2(c.get());
-      });
-      return dispose;
-    },
-  };
-}
-
-/**
- * Reactive effect: runs fn, tracks which signals it reads,
- * and re-runs when any of those signals change.
- */
-export function effect(fn: () => void | (() => void)): Unsubscribe {
+function _tc39Effect(fn: () => void | (() => void)): Unsubscribe {
   let cleanup: (() => void) | void;
   let pendingCount = 0;
 
   const c = new _engine.Computed(() => {
-    // M-07 fix: Wrap cleanup in try/catch to prevent swallowed errors
     try {
       cleanup?.();
     } catch (e) {
@@ -75,12 +87,10 @@ export function effect(fn: () => void | (() => void)): Unsubscribe {
     if (pendingCount === 1) {
       queueMicrotask(() => {
         pendingCount = 0;
-        // Loop to handle signal changes that occurred during processing
         let pendingSignals: unknown[];
         while ((pendingSignals = watcher.getPending()).length > 0) {
           for (const s of pendingSignals) {
             try {
-              // deno-lint-ignore no-explicit-any
               (s as any).get();
             } catch (err) {
               _log.warn('Effect error:', err);
@@ -92,7 +102,6 @@ export function effect(fn: () => void | (() => void)): Unsubscribe {
     }
   });
 
-  // Initial execution
   watcher.watch(c);
   try {
     c.get();
@@ -105,3 +114,25 @@ export function effect(fn: () => void | (() => void)): Unsubscribe {
     watcher.unwatch(c);
   };
 }
+
+// ─── Signal Engine (sync) ──────────────────────────────────────
+// For sync usage (signal/computed), prefer alien if ready,
+// otherwise use TC39. Both return .value-compatible objects.
+
+export function signal<T>(initialValue: T): WritableSignal<T> {
+  const e = _signalEngine ?? _tc39Engine;
+  return e.signal(initialValue) as WritableSignal<T>;
+}
+
+export function computed<T>(fn: () => T): ReadonlySignal<T> {
+  const e = _signalEngine ?? _tc39Engine;
+  return e.computed(fn) as ReadonlySignal<T>;
+}
+
+export function effect(fn: () => void | (() => void)): Unsubscribe {
+  const e = _signalEngine ?? _tc39Engine;
+  return e.effect(fn);
+}
+
+// Kick off alien engine load (non-blocking)
+_ensureSignalEngine();

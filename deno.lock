@@ -918,6 +918,7 @@
       "npm:@types/node@22",
       "npm:@types/react-dom@^19.1.0",
       "npm:@types/react@^19.1.0",
+      "npm:alien-signals@^3.2.0",
       "npm:entities@4",
       "npm:flexsearch@0.8.212",
       "npm:happy-dom@^20.8.9",

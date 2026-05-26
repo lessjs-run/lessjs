@@ -40,8 +40,8 @@ export type {
 // ─── SignalEngine facade (SOP-004) ──────────────────────────────
 export type { SignalEngine } from '@lessjs/core/signals';
 
-// ─── Experimental engine ────────────────────────────────────────
-export { createAlienEngine, getAlienEngineIfRequested } from './alien-engine.ts';
+// ─── Alien engine (default since v0.22) ────────────────────────
+export { createAlienEngine, createDefaultEngine } from './alien-engine.ts';
 
 // ─── Framework layer ────────────────────────────────────────────
 export { computed, effect, signal } from './framework.ts';

@@ -1,20 +1,15 @@
 /**
- * @lessjs/signals - Experimental Alien Signals Engine Adapter.
+ * @lessjs/signals - Alien Signals Engine Adapter.
  *
- * v0.22 (SOP-004): Experimental alternative engine using alien-signals.
+ * v0.22 (SOP-004): Default engine using alien-signals.
  *
- * This is NOT the default engine. To enable, set the environment variable:
- *   LESSJS_SIGNALS_ENGINE=alien
- *
- * Alien Signals is a lightweight (1.5KB) reactive library with push-pull
- * hybrid architecture. It has a different API surface than the TC39 Signal
- * proposal, so this module adapts it to the SignalEngine interface.
+ * Alien Signals (1.6KB) is a lightweight reactive library with push-pull
+ * hybrid architecture, used by Vue 3.6 core and XState. The TC39 polyfill
+ * remains as fallback if alien-signals cannot be loaded.
  *
  * ## Design (SOP-004 § Signals Facade)
- * - This module is experimental and behind a feature flag.
- * - Alien Signals is an optional peer dependency — never a hard import.
- * - If alien-signals is not installed, the engine gracefully falls back
- *   to the default TC39 engine with a warning.
+ * - Alien is the DEFAULT engine.
+ * - If alien-signals is not installed, falls back to TC39 polyfill.
  * - The adapter is self-contained: framework.ts and sugar.ts are unchanged.
  *
  * @module @lessjs/signals/alien-engine
@@ -111,28 +106,19 @@ export function createAlienEngine(
 // ─── Engine Selection ───────────────────────────────────────────
 
 /**
- * Get the active signal engine based on environment configuration.
+ * Get the default signal engine.
  *
  * Priority:
- *   1. LESSJS_SIGNALS_ENGINE env var (if set)
- *   2. Native browser Signal (if available)
- *   3. Default TC39 polyfill (always available)
+ *   1. alien-signals (default — via dynamic import)
+ *   2. TC39 polyfill (fallback if alien unavailable)
  *
- * This is used by the framework layer in engine.ts to select the
- * engine at runtime without breaking existing imports.
+ * Used by engine.ts to select the engine at module init.
  */
-export async function getAlienEngineIfRequested(): Promise<SignalEngine | null> {
-  if (typeof process !== 'undefined' && process.env?.LESSJS_SIGNALS_ENGINE === 'alien') {
-    try {
-      const alienMod = await import('alien-signals');
-      return createAlienEngine(alienMod);
-    } catch (e) {
-      console.error(
-        '[LessJS/Signals] Failed to initialize alien engine:',
-        e instanceof Error ? e.message : String(e),
-      );
-      return null;
-    }
+export async function createDefaultEngine(): Promise<SignalEngine | null> {
+  try {
+    const alienMod = await import('alien-signals');
+    return createAlienEngine(alienMod);
+  } catch {
+    return null; // caller falls back to TC39 polyfill
   }
-  return null;
 }
