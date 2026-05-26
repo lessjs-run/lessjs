@@ -6,6 +6,7 @@
 ## SOP-001: Consumer Surface Cleanup ✅
 
 Generated projects: 18→4 imports.
+
 - `@deno/vite-plugin` + `@lessjs/app` + `@lessjs/core` + `@lessjs/ui`
 - parse5/entities/hono handled by ADR-0047 pre-resolution (external-resolver.ts)
 - `packages/create/cli.ts` template updated
@@ -21,6 +22,7 @@ Generated projects: 18→4 imports.
 ## SOP-003: adapter-vite Decomposition ✅
 
 `index.ts`: 841→62 lines. 5 new modules:
+
 - `less-plugin.ts` — Vite plugin assembly + phase orchestration
 - `head-injection.ts` — HTML head fragment validation + serialization
 - `subpath-resolver.ts` — JSR resolution + virtual module dispatch
@@ -41,6 +43,7 @@ Generated projects: 18→4 imports.
 ## SOP-005: Quality Gates ⏳
 
 Deferred to v0.22.1:
+
 - CI coverage artifact
 - Playwright trace retention
 - lint.yml / sop-gate.yml dedup
