@@ -84,12 +84,12 @@ Deno.test('create-less: deno.json build:ssg uses @lessjs/adapter-vite', () => {
 
 Deno.test('create-less: deno.json maps LessJS package imports (v0.22 Consumer Surface Cleanup)', () => {
   const denoJson = JSON.parse(extractTemplate('deno.json'));
-  // v0.22 SOP-001: Only 3 @lessjs imports in consumer deno.json
+  // v0.22 SOP-001: Only 4 imports in consumer deno.json (deno/vite-plugin + 3 @lessjs)
   const importKeys = Object.keys(denoJson.imports);
   assertEquals(
     importKeys.length,
-    3,
-    `Expected 3 imports, got ${importKeys.length}: ${importKeys.join(', ')}`,
+    4,
+    `Expected 4 imports, got ${importKeys.length}: ${importKeys.join(', ')}`,
   );
   assertEquals(denoJson.imports['@lessjs/app'], 'jsr:@lessjs/app@^${v.app}');
   assertEquals(denoJson.imports['@lessjs/core'], 'jsr:@lessjs/core@^${v.core}');

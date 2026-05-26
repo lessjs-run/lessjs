@@ -122,7 +122,6 @@ export function createAlienEngine(
  * engine at runtime without breaking existing imports.
  */
 export async function getAlienEngineIfRequested(): Promise<SignalEngine | null> {
-  // deno-lint-ignore no-process-env
   if (typeof process !== 'undefined' && process.env?.LESSJS_SIGNALS_ENGINE === 'alien') {
     try {
       const alienMod = await import('alien-signals');

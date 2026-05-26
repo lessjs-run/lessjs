@@ -115,6 +115,7 @@ node_modules/
 `,
     'deno.json': `{
   "imports": {
+    "@deno/vite-plugin": "jsr:@deno/vite-plugin@^1",
     "@lessjs/app": "jsr:@lessjs/app@^${v.app}",
     "@lessjs/core": "jsr:@lessjs/core@^${v.core}",
     "@lessjs/ui": "jsr:@lessjs/ui@^${v.ui}"
