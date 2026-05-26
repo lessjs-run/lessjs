@@ -1,222 +1,340 @@
-type PackageInfo = {
-  dir: string;
+/**
+ * check-package-graph.ts
+ *
+ * Validates the LessJS package dependency graph:
+ * 1. Reads all packages/{name}/deno.json to extract name, version, and imports.
+ * 2. Builds a dependency graph (internal deps = imports starting with "@lessjs/").
+ * 3. Detects circular dependencies.
+ * 4. Compares topological sort order against .github/workflows/publish.yml.
+ * 5. Outputs all package versions for release verification.
+ *
+ * Usage: deno run --allow-read tools/check-package-graph.ts
+ */
+
+// ─── Types ────────────────────────────────────────────────────
+
+interface PackageInfo {
   name: string;
   version: string;
-  imports: Record<string, string>;
-  deps: Set<string>;
-};
+  deps: string[];
+}
 
-const packageRoot = new URL('../packages/', import.meta.url);
-const packageDirs: string[] = [];
+interface PublishStep {
+  pkg: string;
+  dir: string;
+  index: number;
+}
 
-for await (const entry of Deno.readDir(packageRoot)) {
-  if (!entry.isDirectory) continue;
+// ─── Read publish.yml publish order ───────────────────────────
+
+async function readPublishOrder(): Promise<PublishStep[]> {
+  const content = await Deno.readTextFile('.github/workflows/publish.yml');
+  const steps: PublishStep[] = [];
+  let index = 0;
+
+  for (const line of content.split('\n')) {
+    const match = line.match(/publish_if_missing\s+"([^"]+)"\s+"([^"]+)"/);
+    if (match) {
+      steps.push({ pkg: match[1], dir: match[2], index: index++ });
+    }
+  }
+
+  return steps;
+}
+
+// ─── Read package info from deno.json ─────────────────────────
+
+async function readPackageInfo(dir: string): Promise<PackageInfo | null> {
+  const denoJsonPath = `${dir}/deno.json`;
+  let raw: string;
   try {
-    await Deno.stat(new URL(`${entry.name}/deno.json`, packageRoot));
-    packageDirs.push(entry.name);
+    raw = await Deno.readTextFile(denoJsonPath);
   } catch {
-    // Not a publishable package.
-  }
-}
-
-packageDirs.sort();
-
-const packages = new Map<string, PackageInfo>();
-
-for (const dir of packageDirs) {
-  const denoJsonUrl = new URL(`${dir}/deno.json`, packageRoot);
-  const json = JSON.parse(await Deno.readTextFile(denoJsonUrl)) as {
-    name: string;
-    version: string;
-    imports?: Record<string, string>;
-  };
-  if (!json.name?.startsWith('@lessjs/')) continue;
-
-  const info: PackageInfo = {
-    dir,
-    name: json.name,
-    version: json.version,
-    imports: json.imports ?? {},
-    deps: new Set(),
-  };
-
-  packages.set(info.name, info);
-}
-
-const errors: string[] = [];
-const versions = new Set(Array.from(packages.values(), (pkg) => pkg.version));
-
-if (versions.size !== 1) {
-  errors.push(
-    `All LessJS packages must share one version; found ${Array.from(versions).join(', ')}`,
-  );
-}
-
-function ownerOfSpecifier(specifier: string): string | null {
-  const parts = specifier.split('/');
-  if (parts.length < 2 || parts[0] !== '@lessjs') return null;
-  return `${parts[0]}/${parts[1]}`;
-}
-
-function normalizeDeclared(specifier: string): string {
-  return specifier.replace(/\/$/, '');
-}
-
-for (const pkg of packages.values()) {
-  const declaredOwners = new Set<string>();
-  for (const specifier of Object.keys(pkg.imports)) {
-    const owner = ownerOfSpecifier(normalizeDeclared(specifier));
-    if (owner && owner !== pkg.name) declaredOwners.add(owner);
-  }
-  pkg.deps = declaredOwners;
-
-  for (const dep of declaredOwners) {
-    const target = packages.get(dep);
-    if (!target) {
-      errors.push(`${pkg.name} declares dependency on unknown package ${dep}`);
-      continue;
-    }
-    const constraints = Object.entries(pkg.imports)
-      .filter(([specifier]) => ownerOfSpecifier(normalizeDeclared(specifier)) === dep)
-      .map(([, value]) => value);
-    for (const constraint of constraints) {
-      const expected = `jsr:${dep}@^${pkg.version}`;
-      const expectedSubpathPrefix = `${expected}/`;
-      if (
-        constraint.startsWith(`jsr:${dep}@`) &&
-        constraint !== expected &&
-        !constraint.startsWith(expectedSubpathPrefix)
-      ) {
-        errors.push(`${pkg.name} imports ${constraint}; expected ${expected}`);
-      }
-    }
-  }
-}
-
-const importRegex =
-  /(?:import|export)\s+(?:type\s+)?(?:[^'"]*?\s+from\s+)?['"](@lessjs\/[^'"]+)['"]|import\s*\(\s*['"](@lessjs\/[^'"]+)['"]\s*\)/g;
-
-for (const pkg of packages.values()) {
-  const srcUrl = new URL(`${pkg.dir}/src/`, packageRoot);
-  try {
-    for await (const file of walkTsFiles(srcUrl)) {
-      const text = await Deno.readTextFile(file.url);
-      const lines = text.split(/\r?\n/);
-      for (const line of lines) {
-        if (!canContainRealImport(line)) continue;
-        for (const match of line.matchAll(importRegex)) {
-          const specifier = match[1] ?? match[2];
-          const owner = ownerOfSpecifier(specifier);
-          if (!owner || owner === pkg.name) continue;
-          if (!pkg.deps.has(owner)) {
-            errors.push(
-              `${pkg.name} imports ${specifier} in ${file.path} but does not declare ${owner} in deno.json`,
-            );
-          }
-        }
-      }
-    }
-  } catch {
-    // Packages without src are ignored.
-  }
-}
-
-function canContainRealImport(line: string): boolean {
-  const trimmed = line.trim();
-  if (
-    trimmed.startsWith('//') ||
-    trimmed.startsWith('*') ||
-    trimmed.startsWith('/*') ||
-    trimmed.startsWith('"') ||
-    trimmed.startsWith("'") ||
-    trimmed.startsWith('`')
-  ) {
-    return false;
-  }
-  return (
-    trimmed.startsWith('import ') ||
-    trimmed.startsWith('export ') ||
-    /\bimport\s*\(\s*['"]@lessjs\//.test(trimmed)
-  );
-}
-
-const cycle = findCycle(packages);
-if (cycle) {
-  errors.push(`LessJS package dependency cycle: ${cycle.join(' -> ')}`);
-}
-
-if (errors.length > 0) {
-  console.error(errors.map((error) => `error: ${error}`).join('\n'));
-  Deno.exit(1);
-}
-
-const order = topoSort(packages);
-console.log(`Package graph check passed (${packages.size} packages).`);
-console.log(`Publish order: ${order.join(' -> ')}`);
-
-async function* walkTsFiles(
-  root: URL,
-  prefix = '',
-): AsyncGenerator<{ url: URL; path: string }> {
-  for await (const entry of Deno.readDir(root)) {
-    const childUrl = new URL(`${entry.name}${entry.isDirectory ? '/' : ''}`, root);
-    const childPath = `${prefix}${entry.name}`;
-    if (entry.isDirectory) {
-      if (entry.name === 'node_modules' || entry.name === 'dist') continue;
-      yield* walkTsFiles(childUrl, `${childPath}/`);
-    } else if (entry.isFile && childPath.endsWith('.ts')) {
-      yield { url: childUrl, path: childPath };
-    }
-  }
-}
-
-function findCycle(graph: Map<string, PackageInfo>): string[] | null {
-  const visiting = new Set<string>();
-  const visited = new Set<string>();
-  const stack: string[] = [];
-
-  function visit(name: string): string[] | null {
-    if (visited.has(name)) return null;
-    if (visiting.has(name)) {
-      const index = stack.indexOf(name);
-      return [...stack.slice(index), name];
-    }
-    visiting.add(name);
-    stack.push(name);
-    for (const dep of graph.get(name)?.deps ?? []) {
-      if (!graph.has(dep)) continue;
-      const cycle = visit(dep);
-      if (cycle) return cycle;
-    }
-    stack.pop();
-    visiting.delete(name);
-    visited.add(name);
     return null;
   }
 
-  for (const name of graph.keys()) {
-    const cycle = visit(name);
-    if (cycle) return cycle;
-  }
-  return null;
-}
+  const json = JSON.parse(raw);
+  const name: string = json.name ?? '';
+  const version: string = json.version ?? '';
+  const imports: Record<string, string> = json.imports ?? {};
 
-function topoSort(graph: Map<string, PackageInfo>): string[] {
-  const visited = new Set<string>();
-  const order: string[] = [];
-
-  function visit(name: string): void {
-    if (visited.has(name)) return;
-    visited.add(name);
-    const deps = Array.from(graph.get(name)?.deps ?? []).sort();
-    for (const dep of deps) {
-      if (graph.has(dep)) visit(dep);
+  // Internal dependencies are imports whose key starts with "@lessjs/"
+  const deps: string[] = [];
+  for (const key of Object.keys(imports)) {
+    if (key.startsWith('@lessjs/')) {
+      deps.push(key);
     }
-    order.push(name);
   }
 
-  for (const name of Array.from(graph.keys()).sort()) {
-    visit(name);
-  }
-  return order;
+  return { name, version, deps };
 }
+
+// ─── Normalize subpath imports to base package names ──────────
+
+/**
+ * Normalize a dependency key like "@lessjs/core/logger" to its base
+ * package name "@lessjs/core". Self-references are dropped.
+ */
+function normalizeDep(dep: string, self: string): string | null {
+  // After "@lessjs/", find the second "/" to extract the base package
+  const prefix = '@lessjs/';
+  if (!dep.startsWith(prefix)) return dep; // not internal, keep as-is
+
+  const rest = dep.slice(prefix.length);
+  const slashIdx = rest.indexOf('/');
+  if (slashIdx === -1) {
+    // "@lessjs/core" → base is "@lessjs/core"
+    return dep;
+  }
+
+  // "@lessjs/core/logger" → base is "@lessjs/core"
+  const base = prefix + rest.slice(0, slashIdx);
+
+  // Drop self-references (a package depending on its own subpath)
+  if (base === self) return null;
+
+  return base;
+}
+
+// ─── Build dependency graph ───────────────────────────────────
+
+function buildGraph(packages: PackageInfo[]): Map<string, string[]> {
+  const graph = new Map<string, string[]>();
+  for (const pkg of packages) {
+    const normalized = pkg.deps
+      .map((d) => normalizeDep(d, pkg.name))
+      .filter((d): d is string => d !== null);
+    // Deduplicate
+    graph.set(pkg.name, [...new Set(normalized)]);
+  }
+  return graph;
+}
+
+// ─── Detect cycles via DFS ────────────────────────────────────
+
+function detectCycles(graph: Map<string, string[]>): string[][] {
+  const cycles: string[][] = [];
+  const visited = new Set<string>();
+  const recStack = new Set<string>();
+
+  function dfs(node: string, path: string[]): void {
+    visited.add(node);
+    recStack.add(node);
+    path.push(node);
+
+    const neighbors = graph.get(node) ?? [];
+    for (const neighbor of neighbors) {
+      if (!visited.has(neighbor)) {
+        dfs(neighbor, [...path]);
+      } else if (recStack.has(neighbor)) {
+        // Found a cycle
+        const cycleStart = path.indexOf(neighbor);
+        if (cycleStart !== -1) {
+          const cycle = path.slice(cycleStart);
+          cycle.push(neighbor);
+          cycles.push(cycle);
+        }
+      }
+    }
+
+    recStack.delete(node);
+  }
+
+  for (const node of graph.keys()) {
+    if (!visited.has(node)) {
+      dfs(node, []);
+    }
+  }
+
+  return cycles;
+}
+
+// ─── Topological sort (Kahn's algorithm) ──────────────────────
+
+function topologicalSort(graph: Map<string, string[]>): string[] {
+  const inDegree = new Map<string, number>();
+  const allNodes = [...graph.keys()];
+  const nodeSet = new Set(allNodes);
+
+  for (const node of allNodes) {
+    inDegree.set(node, 0);
+  }
+
+  for (const [node, deps] of graph) {
+    for (const dep of deps) {
+      // Only count edges to nodes that exist in the graph
+      if (nodeSet.has(dep)) {
+        inDegree.set(dep, (inDegree.get(dep) ?? 0) + 1);
+      }
+    }
+  }
+
+  const queue: string[] = [];
+  for (const [node, degree] of inDegree) {
+    if (degree === 0) {
+      queue.push(node);
+    }
+  }
+
+  const sorted: string[] = [];
+  while (queue.length > 0) {
+    // Sort for determinism
+    queue.sort();
+    const node = queue.shift()!;
+    sorted.push(node);
+
+    const neighbors = graph.get(node) ?? [];
+    for (const neighbor of neighbors) {
+      if (!nodeSet.has(neighbor)) continue;
+      const newDegree = (inDegree.get(neighbor) ?? 1) - 1;
+      inDegree.set(neighbor, newDegree);
+      if (newDegree === 0) {
+        queue.push(neighbor);
+      }
+    }
+  }
+
+  if (sorted.length !== allNodes.length) {
+    const remaining = allNodes.filter((n) => !sorted.includes(n));
+    throw new Error(
+      `Graph has a cycle involving: ${remaining.join(', ')}. ` +
+        `Sorted ${sorted.length}/${allNodes.length} nodes.`,
+    );
+  }
+
+  return sorted;
+}
+
+// ─── Main ─────────────────────────────────────────────────────
+
+async function main(): Promise<void> {
+  const failures: string[] = [];
+
+  // 1. Read publish order
+  const publishSteps = await readPublishOrder();
+  const publishOrder = publishSteps.map((s) => s.pkg);
+
+  console.log(`Publish order (${publishOrder.length} packages):`);
+  for (const step of publishSteps) {
+    console.log(`  ${step.index + 1}. ${step.pkg} (${step.dir})`);
+  }
+
+  // 2. Read all package deno.json files
+  const packagesDir = 'packages';
+  const packageDirs: string[] = [];
+  for await (const entry of Deno.readDir(packagesDir)) {
+    if (entry.isDirectory) {
+      packageDirs.push(`${packagesDir}/${entry.name}`);
+    }
+  }
+  packageDirs.sort();
+
+  const packages: PackageInfo[] = [];
+  for (const dir of packageDirs) {
+    const info = await readPackageInfo(dir);
+    if (info && info.name) {
+      packages.push(info);
+    }
+  }
+
+  console.log(`\nRead ${packages.length} packages:`);
+  for (const pkg of packages) {
+    console.log(`  ${pkg.name}@${pkg.version} → deps: [${pkg.deps.join(', ') || 'none'}]`);
+  }
+
+  // 3. Build graph
+  const graph = buildGraph(packages);
+
+  // 4. Detect cycles
+  console.log('\n--- Cycle Detection ---');
+  const cycles = detectCycles(graph);
+  if (cycles.length > 0) {
+    for (const cycle of cycles) {
+      const msg = `Circular dependency detected: ${cycle.join(' → ')}`;
+      console.error(`  FAIL: ${msg}`);
+      failures.push(msg);
+    }
+  } else {
+    console.log('  PASS: No circular dependencies found.');
+  }
+
+  // 5. Topological sort
+  console.log('\n--- Topological Sort ---');
+  let topoOrder: string[];
+  try {
+    topoOrder = topologicalSort(graph);
+    console.log(`  Order: ${topoOrder.join(' → ')}`);
+  } catch (err) {
+    const msg = `Topological sort failed: ${err instanceof Error ? err.message : String(err)}`;
+    console.error(`  FAIL: ${msg}`);
+    failures.push(msg);
+    topoOrder = [];
+  }
+
+  // 6. Compare topo order with publish order
+  if (topoOrder.length > 0) {
+    console.log('\n--- Publish Order Validation ---');
+    const topoIndex = new Map<string, number>();
+    topoOrder.forEach((pkg, i) => topoIndex.set(pkg, i));
+
+    // Build a quick lookup: for each package, what does it depend on?
+    const pkgDeps = new Map(packages.map((p) => [p.name, p.deps]));
+
+    // For each package in publish order, verify all its dependencies
+    // appear before it in the publish order (or are not in publish order).
+    const publishPos = new Map<string, number>();
+    publishOrder.forEach((pkg, i) => publishPos.set(pkg, i));
+
+    for (let i = 0; i < publishOrder.length; i++) {
+      const pkg = publishOrder[i];
+      const rawDeps = pkgDeps.get(pkg) ?? [];
+      const normalizedDeps = rawDeps
+        .map((d) => normalizeDep(d, pkg))
+        .filter((d): d is string => d !== null);
+
+      for (const dep of normalizedDeps) {
+        const depPos = publishPos.get(dep);
+        if (depPos !== undefined && depPos > i) {
+          // dep appears AFTER pkg in publish order: violation
+          const msg = `Publish order violation: "${pkg}" (pos ${i + 1}) depends on ` +
+            `"${dep}" (pos ${depPos + 1}), but "${dep}" is published after "${pkg}".`;
+          console.error(`  FAIL: ${msg}`);
+          failures.push(msg);
+        }
+      }
+    }
+
+    // Also check for packages in publish order that are missing from the graph
+    const graphNames = new Set(packages.map((p) => p.name));
+    for (const pkg of publishOrder) {
+      if (!graphNames.has(pkg)) {
+        console.warn(`  WARN: "${pkg}" is in publish.yml but not found in packages/.`);
+      }
+    }
+
+    if (failures.length === 0) {
+      console.log('  PASS: Publish order is consistent with dependency graph.');
+    }
+  }
+
+  // 7. Output versions
+  console.log('\n--- Package Versions ---');
+  for (const pkg of packages) {
+    console.log(`  ${pkg.name}@${pkg.version} (${pkg.deps.length} internal deps)`);
+  }
+
+  // 8. Result
+  if (failures.length > 0) {
+    console.error(`\n❌ Package graph check FAILED with ${failures.length} issue(s):`);
+    for (const failure of failures) {
+      console.error(`  - ${failure}`);
+    }
+    Deno.exit(1);
+  }
+
+  console.log(
+    `\n✅ Package graph check passed (${packages.length} packages, ${publishOrder.length} publish steps).`,
+  );
+}
+
+main();

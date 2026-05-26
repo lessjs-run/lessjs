@@ -1,0 +1,184 @@
+/**
+ * Direct Import Map Checker — verifies that every bare import in a generated
+ * LessJS project is declared in the project's deno.json imports map.
+ *
+ * Usage: deno run --allow-read --allow-write --allow-run --allow-env tools/check-import-map.ts
+ *
+ * Steps:
+ *   1. Run @lessjs/create (local workspace) to generate a test project
+ *   2. Parse all .ts files and vite.config.ts for bare imports
+ *   3. Check each bare import exists in the generated deno.json imports
+ *   4. Fail with non-zero exit code if any undeclared imports are found
+ */
+
+import { dirname, join, relative, resolve } from 'node:path';
+
+const repoRoot = new URL('../', import.meta.url);
+const repoRootPath = fileURLToPath(repoRoot);
+
+function fileURLToPath(url: URL): string {
+  // Deno on Windows returns file:///C:/... — strip the leading slash
+  const p = url.pathname;
+  if (p.startsWith('/') && p.length > 2 && p.charAt(2) === ':') {
+    return p.slice(1);
+  }
+  return p;
+}
+
+// ---------------------------------------------------------------------------
+// 1. Generate a test project using local workspace create package
+// ---------------------------------------------------------------------------
+
+const tmpDir = Deno.makeTempDirSync({ prefix: 'lessjs-import-check-' });
+const projectName = 'import-check-app';
+
+console.log(`Generating test project in ${tmpDir}...`);
+
+const createResult = await new Deno.Command(Deno.execPath(), {
+  args: ['run', '-A', join(repoRootPath, 'packages', 'create', 'cli.ts'), projectName],
+  cwd: tmpDir,
+  stdout: 'piped',
+  stderr: 'piped',
+}).output();
+
+if (createResult.code !== 0) {
+  console.error('Failed to generate test project:');
+  console.error(new TextDecoder().decode(createResult.stderr));
+  Deno.exit(1);
+}
+
+const projectDir = join(tmpDir, projectName);
+console.log(`Project generated at ${projectDir}`);
+
+// ---------------------------------------------------------------------------
+// 2. Read the generated deno.json imports map
+// ---------------------------------------------------------------------------
+
+const denoJsonPath = join(projectDir, 'deno.json');
+const denoJsonText = await Deno.readTextFile(denoJsonPath);
+const denoJson = JSON.parse(denoJsonText) as {
+  imports?: Record<string, string>;
+};
+
+const declaredImports = new Set(Object.keys(denoJson.imports ?? {}));
+console.log(`Declared imports in deno.json: ${Array.from(declaredImports).join(', ')}`);
+
+// ---------------------------------------------------------------------------
+// 3. Walk all .ts files and find bare imports
+// ---------------------------------------------------------------------------
+
+// Bare import regex — matches `from 'xxx'`, `from "xxx"`, `import('xxx')`
+// A "bare import" starts with a letter, @, or # (not ., /, or protocol)
+const bareImportRegex =
+  /(?:import|export)\s+(?:type\s+)?(?:[^'"]*?\s+from\s+)?['"]([@a-zA-Z][^'"]+)['"]|import\s*\(\s*['"]([@a-zA-Z][^'"]+)['"]\s*\)/g;
+
+interface UndeclaredImport {
+  file: string;
+  specifier: string;
+}
+
+const errors: UndeclaredImport[] = [];
+
+async function* walkTsAndConfigFiles(
+  root: string,
+  prefix = '',
+): AsyncGenerator<{ path: string; relativePath: string }> {
+  for await (const entry of Deno.readDir(root)) {
+    const childPath = join(root, entry.name);
+    const childRelPath = `${prefix}${entry.name}`;
+    if (entry.isDirectory) {
+      if (entry.name === 'node_modules' || entry.name === 'dist' || entry.name === '.git') continue;
+      yield* walkTsAndConfigFiles(childPath, `${childRelPath}/`);
+    } else if (
+      entry.isFile &&
+      (childRelPath.endsWith('.ts') || childRelPath.endsWith('.js') ||
+        childRelPath === 'vite.config.ts')
+    ) {
+      yield { path: childPath, relativePath: childRelPath };
+    }
+  }
+}
+
+/**
+ * Check if a specifier is covered by a declared import.
+ * Handles both exact matches and trailing-slash prefix matches:
+ *   - `@lessjs/core` is covered by `@lessjs/core`
+ *   - `@lessjs/core/logger` is covered by `@lessjs/core/` (trailing-slash entry)
+ *   - `@lessjs/core/logger` is NOT covered by `@lessjs/core` (exact entry)
+ */
+function isImportDeclared(specifier: string, declared: Set<string>): boolean {
+  if (declared.has(specifier)) return true;
+  // Check trailing-slash prefix: `@lessjs/core/logger` → `@lessjs/core/`
+  const slashIdx = specifier.lastIndexOf('/');
+  if (slashIdx > 0) {
+    const prefix = specifier.substring(0, slashIdx + 1);
+    if (declared.has(prefix)) return true;
+  }
+  return false;
+}
+
+for await (const file of walkTsAndConfigFiles(projectDir)) {
+  const text = await Deno.readTextFile(file.path);
+  const lines = text.split(/\r?\n/);
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    // Skip comments and strings
+    if (
+      trimmed.startsWith('//') ||
+      trimmed.startsWith('*') ||
+      trimmed.startsWith('/*') ||
+      trimmed.startsWith("'") ||
+      trimmed.startsWith('"') ||
+      trimmed.startsWith('`')
+    ) {
+      continue;
+    }
+    // Only process lines with import/export
+    if (
+      !trimmed.startsWith('import ') &&
+      !trimmed.startsWith('export ') &&
+      !/\bimport\s*\(\s*['"][@a-zA-Z]/.test(trimmed)
+    ) {
+      continue;
+    }
+
+    for (const match of line.matchAll(bareImportRegex)) {
+      const specifier = match[1] ?? match[2];
+      if (!specifier) continue;
+
+      // Normalize: strip subpath after the package scope if it's a deep import
+      // But keep the full specifier for the declared check — we need exact or prefix match
+      if (!isImportDeclared(specifier, declaredImports)) {
+        errors.push({
+          file: file.relativePath,
+          specifier,
+        });
+      }
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 4. Report results
+// ---------------------------------------------------------------------------
+
+// Clean up temp directory
+try {
+  await Deno.remove(tmpDir, { recursive: true });
+} catch {
+  // Best effort cleanup
+}
+
+if (errors.length > 0) {
+  console.error('\nUndeclared imports found in generated project:');
+  for (const err of errors) {
+    console.error(`  ${err.file}: "${err.specifier}" not in deno.json imports`);
+  }
+  console.error(
+    `\nTotal: ${errors.length} undeclared import(s). Add them to the deno.json template in packages/create/cli.ts.`,
+  );
+  Deno.exit(1);
+}
+
+console.log('\nImport map check passed — all bare imports are declared in deno.json.');

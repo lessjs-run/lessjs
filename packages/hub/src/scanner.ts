@@ -202,11 +202,11 @@ const WC_PACKAGES: KnownWcPackage[] = [
  * Raw CEM JSON parsing interface (intentionally loose).
  *
  * This is NOT the authoritative CEM type definition. The canonical CEM schema
- * types live in @lessjs/core (CemCustomElement, CemAttribute, CemEvent, CemSlot).
+ * types live in @lessjs/cem (CemCustomElement, CemAttribute, CemEvent, CemSlot).
  * This interface exists only for parsing arbitrary CEM JSON files where the
  * actual runtime shape may vary (e.g., `type` can be `{ text: string }` or `string`).
  *
- * @see @lessjs/core/types.ts for authoritative CEM schema types
+ * @see @lessjs/cem/types.ts for authoritative CEM schema types
  * @see https://github.com/webcomponents/custom-elements-manifest
  */
 interface CemDeclaration {

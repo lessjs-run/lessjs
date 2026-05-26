@@ -11,8 +11,7 @@
  * parse CEM files, not just LessJS.
  */
 
-// v0.21.0: Canonical implementation lives in @lessjs/core/cem-parser.
-// This package is a thin re-export wrapper.
+// v0.23.0: Canonical implementation moved from @lessjs/core/cem-parser.
 export {
   classifyCemManifest,
   extractLessDeclarations,
@@ -20,4 +19,45 @@ export {
   parseCem,
   readCemFile,
   validateModulePaths,
-} from '@lessjs/core/cem-parser';
+} from './cem-parser.js';
+
+// v0.23.0: Canonical type owner for CEM schema & LessJS manifest types.
+export type {
+  CemAttribute,
+  CemAttributeType,
+  CemCssPart,
+  CemCssProperty,
+  CemCustomElement,
+  CemCustomElementDefinition,
+  CemDeclarationKind,
+  CemEvent,
+  CemExport,
+  CemExportKind,
+  CemImport,
+  CemMemberType,
+  CemMethod,
+  CemModule,
+  CemModuleKind,
+  CemParameter,
+  CemParseError,
+  CemParseResult,
+  CemParseWarning,
+  CemPrivacy,
+  CemProperty,
+  CemReference,
+  CemSchemaVersion,
+  CemSlot,
+  CustomElementsManifest,
+  LessAttribute,
+  LessCssPart,
+  LessCssProperty,
+  LessDeclaration,
+  LessElementExtensions,
+  LessEvent,
+  LessExport,
+  LessMember,
+  LessModule,
+  LessPackageExtensions,
+  LessPackageManifest,
+  LessSlot,
+} from './types.js';

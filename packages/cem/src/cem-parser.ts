@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - CEM Parser
+ * @lessjs/cem - CEM Parser
  *
  * Parses standard `custom-elements.json` (Custom Elements Manifest)
  * from third-party Web Component packages without executing package code.
@@ -20,12 +20,11 @@ import type {
   CemParseError,
   CemParseResult,
   CemParseWarning,
-  CompatibilityClassification,
-  CompatibilityTier,
   CustomElementsManifest,
   LessDeclaration,
   LessElementExtensions,
 } from './types.js';
+import type { CompatibilityClassification, CompatibilityTier } from '@lessjs/compat-check';
 
 // ─── Validators ─────────────────────────────────────────────────────────
 

@@ -27,14 +27,8 @@
  * ```
  */
 
-import {
-  DsdElement,
-  html,
-  StyleSheet,
-  type StyleSheetLike,
-  type TemplateResult,
-  unsafeHTML,
-} from '@lessjs/core';
+import { DsdElement, html, type TemplateResult, unsafeHTML } from '@lessjs/core';
+import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { navigate, onNavigate } from '@lessjs/core/navigation';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc, _escAttr } from './shared/escape.js';

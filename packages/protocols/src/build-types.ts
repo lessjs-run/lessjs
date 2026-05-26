@@ -1,9 +1,9 @@
 /**
- * Shared LessJS build-time contract types.
+ * @lessjs/protocols — Shared LessJS build-time contract types.
  *
- * These are pure data interfaces consumed by feature packages and implemented
- * by build adapters. Adapter implementations own mutable behavior; this
- * package owns the cross-package shape.
+ * Zero-dependency contract layer. These are pure data interfaces consumed
+ * by feature packages (@lessjs/content, @lessjs/i18n) and implemented by
+ * build adapters (@lessjs/adapter-vite).
  */
 
 /** Blog options stored in the build context by @lessjs/content. */
@@ -31,10 +31,7 @@ export interface LessI18nContextOptions {
   [key: string]: unknown;
 }
 
-/**
- * Plugin metadata interface: the data bridge between sub-plugins and build
- * context implementations.
- */
+/** Plugin metadata interface: data bridge between sub-plugins and build context. */
 export interface LessPluginMeta {
   blogOptions: LessBlogOptions | null;
   navSections: LessNavSection[];

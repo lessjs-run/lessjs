@@ -1,9 +1,11 @@
 {
   "name": "@lessjs/adapter-vite",
-  "version": "0.22.1",
+  "version": "0.23.0",
   "exports": {
     ".": "./src/index.ts",
     "./build-context": "./src/build-context.ts",
+    "./build-types": "./src/build-types.ts",
+    "./virtual-ids": "./src/virtual-ids.ts",
     "./head-injection": "./src/head-injection.ts",
     "./less-plugin": "./src/less-plugin.ts",
     "./subpath-resolver": "./src/subpath-resolver.ts",
@@ -14,14 +16,11 @@
     "./cli/build-ssg": "./src/cli/build-ssg.ts"
   },
   "imports": {
-    "@lessjs/protocols": "jsr:@lessjs/protocols@^0.22.1",
-    "@lessjs/protocols/build-types": "jsr:@lessjs/protocols@^0.22.1/build-types",
-    "@lessjs/protocols/virtual-ids": "jsr:@lessjs/protocols@^0.22.1/virtual-ids",
-    "@lessjs/core": "jsr:@lessjs/core@^0.22.1",
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.22.1/logger",
-    "@lessjs/core/errors": "jsr:@lessjs/core@^0.22.1/errors",
-    "@lessjs/core/context": "jsr:@lessjs/core@^0.22.1/context",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.22.1/navigation",
+    "@lessjs/core": "jsr:@lessjs/core@^0.23.0",
+    "@lessjs/core/logger": "jsr:@lessjs/core@^0.23.0/logger",
+    "@lessjs/core/errors": "jsr:@lessjs/core@^0.23.0/errors",
+    "@lessjs/core/context": "jsr:@lessjs/core@^0.23.0/context",
+    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.23.0/navigation",
     "esbuild": "npm:esbuild@^0.25",
     "hono": "npm:hono@^4",
     "@hono/vite-dev-server": "npm:@hono/vite-dev-server@^0.25.3",

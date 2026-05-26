@@ -1,20 +1,19 @@
 /**
- * @lessjs/core - CEM Manifest Validator
+ * @lessjs/compat-check - CEM Manifest Validator
  *
  * Validates standard `custom-elements.json` (CEM) files from third-party
  * Web Component packages. Produces a structured ManifestValidationReport
  * with tiered diagnostics, per-tag results, and a compatibility classification.
  *
  * v0.18.1: Entry point for `less validate-manifest` CLI.
+ * v0.23.0: Types moved to canonical owner @lessjs/compat-check/types.
  *
  * @see https://github.com/webcomponents/custom-elements-manifest
  */
 
+import type { CemCustomElement, CemModule, CustomElementsManifest } from '@lessjs/cem';
 import type {
-  CemCustomElement,
-  CemModule,
   CompatibilityTier,
-  CustomElementsManifest,
   ManifestValidationReport,
   ValidatedTag,
   ValidationDiagnostic,

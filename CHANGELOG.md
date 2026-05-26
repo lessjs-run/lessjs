@@ -1,3 +1,69 @@
+## v0.23.0 — Layered Package Architecture (2026-05-26)
+
+### Core Changes
+
+- **@lessjs/runtime** — New authoring facade package providing a single import surface:
+  `DsdElement, html, signal, StyleSheet`. Components and apps author against this
+  one package instead of importing from multiple sub-packages.
+- **@lessjs/cem** — CEM (Custom Elements Manifest) parser implementation and types
+  migrated from core. Zero-dependency standalone package; canonical owner of all
+  CEM-related types and parsing logic.
+- **@lessjs/compat-check** — Compatibility classification, manifest validation,
+  and `less-add` tooling migrated from core. Standalone package for build-time
+  compatibility checks.
+- **@lessjs/core** — Refined to a pure runtime kernel: `DsdElement`, `html`,
+  `renderDSD`, islands, navigation, logger, and errors only. Zero alien-signals
+  dependency.
+
+### Breaking Changes
+
+1. `signal` / `computed` / `effect`: migrated from `@lessjs/core` to
+   `@lessjs/signals` (or import via `@lessjs/runtime`)
+2. `StyleSheet`: migrated from `@lessjs/core` to `@lessjs/style-sheet`
+   (or import via `@lessjs/runtime`)
+3. Removed core exports: `./signals`, `./style-sheet`, `./cem-parser`,
+   `./compatibility`, `./validate-manifest`, `./less-add`
+4. `@lessjs/adapter-vite`: removed `./build-context` export
+5. `@lessjs/create` templates now use `@lessjs/runtime` instead of multiple
+   sub-package imports
+
+### New Packages
+
+- `@lessjs/runtime`: Unified component authoring entry point
+- `@lessjs/cem`: Canonical owner of CEM types and parsing
+- `@lessjs/compat-check`: Compatibility classification + manifest validation + less-add
+
+### CI / Tooling
+
+- Package graph checker (`graph:check`) integrated into CI pipeline
+- Import map checker (`graph:check-imports`) integrated into CI pipeline
+- Local consumer build smoke test (`consumer:local`) added
+- `@lessjs/adapter-vite` focused test suites: head-injection (38 tests),
+  subpath-resolver (23 tests), less-plugin (44 tests)
+
+### Architecture Principles
+
+- No backward compatibility; no bridge layers
+- Core is pure runtime kernel with zero alien-signals dependency
+- 18 packages, zero circular dependencies
+- 906 tests passing
+
+### SOP
+
+- SOP-001: Contracts & Protocols
+- SOP-002: Core Kernel Boundary
+- SOP-003: Runtime & App Facades
+- SOP-004: adapter-vite Build Modularity
+- SOP-005: Package Graph & Consumer Gates
+- SOP-006: Docs Governance
+
+### Migration Guide
+
+```diff
+- import { DsdElement, html, signal, StyleSheet } from '@lessjs/core';
++ import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
+```
+
 ## 0.21.16 (2026-05-25)
 
 ### Fixed

@@ -43,7 +43,7 @@
  * @module @lessjs/ui/open-props-tokens
  */
 
-import { StyleSheet, type StyleSheetLike } from '@lessjs/core';
+import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 
 /**
  * Open Props design tokens as an inlined StyleSheet.

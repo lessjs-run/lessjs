@@ -40,39 +40,6 @@ export type {
   IsrRouteConfig,
 } from './isr.js';
 export { DsdElement } from './dsd-element.js';
-// v0.21: Re-export signals for single-import DX
-// import { DsdElement, html, signal, computed } from '@lessjs/core';
-export { computed, effect, signal } from './signals.js';
-export { StyleSheet } from './style-sheet.js';
-export type { StyleSheetLike, StyleSheetRule } from './style-sheet.js';
-
-// SOP-007: Re-export from extracted sub-packages for direct access
-export {
-  classifyCemManifest,
-  classifyComponent,
-  classifyComponents,
-  classifyLessManifest,
-  getClassificationSummary,
-  isKnownSsrAdapter,
-  isKnownSsrSuperclass,
-  isValidTagName,
-  mergeClassifications,
-  validateModulePath,
-} from './compatibility.js';
-export type {
-  ClassificationInput,
-  ClassificationResult,
-  ClassificationStats,
-  ClassifierConfig,
-} from './compatibility.js';
-
-export {
-  extractLessDeclarations,
-  findModulePathForTag,
-  parseCem,
-  readCemFile,
-  validateModulePaths,
-} from './cem-parser.js';
 export {
   createRenderDSDStreamMetrics,
   renderDSD,
@@ -168,16 +135,6 @@ export {
   register as registerManifest,
   validate as validateManifest,
 } from './registry.js';
-
-// CEM Manifest Validation (v0.18.1)
-export {
-  validateManifest as validateCemManifest,
-  validateManifestFromJson as validateCemFromJson,
-} from './validate-manifest.js';
-
-// Less Add Install Flow (v0.18.2)
-export { generateAddPlan } from './less-add.js';
-export type { AddPlan, AddTagEntry, FileMutation, PackageSource } from './less-add.js';
 
 // DOM Simulation (v0.18.3) — experimental, not barrel-exported.
 // Import from '@lessjs/core/dom-simulation' directly; requires happy-dom at runtime.

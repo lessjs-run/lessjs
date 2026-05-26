@@ -1,15 +1,12 @@
 {
   "name": "@lessjs/protocols",
-  "version": "0.22.1",
+  "version": "0.23.0",
   "exports": {
     ".": "./src/index.ts",
     "./build-types": "./src/build-types.ts",
     "./virtual-ids": "./src/virtual-ids.ts"
   },
   "imports": {},
-  "tasks": {
-    "build": "deno check src/index.ts"
-  },
   "publish": {
     "include": [
       "src/**",
@@ -17,15 +14,5 @@
       "README.md",
       "LICENSE"
     ]
-  },
-  "compilerOptions": {
-    "skipLibCheck": true
-  },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  }
 }

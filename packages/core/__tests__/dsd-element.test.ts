@@ -9,7 +9,7 @@
 
 import { assertEquals, assertExists, assertFalse, assertStrictEquals } from 'jsr:@std/assert@1';
 import { DsdElement } from '../src/dsd-element.js';
-import { StyleSheet, type StyleSheetLike } from '../src/style-sheet.js';
+import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 
 // Helper: create a minimal subclass for testing.
 
