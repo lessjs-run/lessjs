@@ -8,6 +8,7 @@ on:
       - 'packages/*/src/**'
       - 'packages/*/README.md'
       - 'packages/create/cli.ts'
+      - 'deno.lock'
       - '.github/workflows/publish.yml'
   workflow_dispatch:
 
