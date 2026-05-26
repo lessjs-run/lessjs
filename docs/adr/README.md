@@ -52,6 +52,7 @@ architectural decision, its context, and consequences.
 | 0041 | ESM Module Graph First for JSR Consumer Builds | Accepted                                 |
 | 0048 | CI and Release Gate Separation                 | Accepted                                 |
 | 0049 | Architecture Debt First Roadmap Reset          | Accepted                                 |
+| 0050 | Layered Package Architecture                   | Accepted                                 |
 
 ## Superseded / Historical
 

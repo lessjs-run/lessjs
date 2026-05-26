@@ -13,7 +13,7 @@ early Registry Hub for Web Component discovery and compatibility evidence.
 
 ## Current State
 
-Project line: **v0.21.0 Reactive DSD**.
+Project line: **v0.22.x Architecture Integrity**.
 
 The current production rendering mode is **SSG + Declarative Shadow DOM** with
 explicit island hydration strategies, route-level ISR metadata, and Reactive DSD
@@ -22,7 +22,8 @@ rendering kernel; v0.21 adds safe `html` templates, Signal-driven `DsdElement`
 updates, and streaming DSD without turning LessJS into a generic request-time
 SSR server.
 
-All 16 packages are released at v0.21.0.
+Packages are on the v0.22 line. `@lessjs/create` may advance by patch version
+when generated-project smoke fixes need a new JSR release.
 
 ## Three Product Pillars
 
@@ -82,8 +83,11 @@ LessJS
   signal engine.
 - **Validation ownership** - unify Hub, CEM, manifest, and submission gate
   diagnostics.
+- **Layered Package Architecture** - protocols/contracts ownership, core
+  runtime boundary, runtime/app facade split, package graph gates, and docs
+  governance.
 - **Edge Full-Stack after cleanup** - ISR handler, KV adapters, and deployment
-  guides resume after the architecture cleanup line exits.
+  guides resume after architecture layering exits.
 - **Hub growth** - more real Web Component packages and clearer compatibility
   badges.
 
@@ -134,7 +138,7 @@ route component
 | Mode | State   | When rendering happens | Server requirement        |
 | ---- | ------- | ---------------------- | ------------------------- |
 | SSG  | shipped | build time             | none after build          |
-| ISR  | v0.23+  | cache expiry           | edge/serverless function  |
+| ISR  | v0.24+  | cache expiry           | edge/serverless function  |
 | SSR  | later   | every request          | always-on request runtime |
 
 ## Compatibility Boundary
@@ -156,9 +160,11 @@ Every component should reach one deterministic outcome:
 | v0.18   | Universal WC Engine                       | Done    |
 | v0.19   | Registry Hub + Component Browser          | Done    |
 | v0.20   | Ocean-Island Architecture + DSD-native UI | Shipped |
-| v0.21   | Reactive DSD + streaming                  | Current |
-| v0.22   | Architecture Integrity + cleanup gates    | Planned |
-| v0.23   | Edge Full-Stack ISR + KV + Showcase       | Planned |
+| v0.21   | Reactive DSD + streaming                  | Done    |
+| v0.22   | Architecture Integrity + cleanup gates    | Current |
+| v0.23   | Layered Package Architecture              | Planned |
+| v0.24   | Edge Full-Stack ISR + KV + Showcase       | Planned |
+| v0.25   | Ecosystem Hardening                       | Planned |
 | v1.0    | Stable Engine contracts                   | Vision  |
 
 See [ADR docs](docs/adr/), [SOP docs](docs/sop/), and

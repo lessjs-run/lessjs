@@ -89,18 +89,30 @@ jobs:
     runs-on: ubuntu-latest
     needs: [publish]
     steps:
+      - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v2
         with:
           deno-version: '2'
       - name: Wait for JSR propagation
         run: sleep 30
       - name: Generate consumer project from JSR
+        shell: bash
         run: |
+          set -euo pipefail
+          CREATE_VERSION="$(sed -n 's/.*"version": "\([^"]*\)".*/\1/p' packages/create/deno.json | head -n 1)"
           CONSUMER_DIR="${{ runner.temp }}/lessjs-post-publish-smoke"
           rm -rf "$CONSUMER_DIR"
           mkdir -p "$CONSUMER_DIR"
           cd "$CONSUMER_DIR"
-          deno run -A jsr:@lessjs/create test-blog
+          for attempt in 1 2 3 4 5 6; do
+            if deno run -A "jsr:@lessjs/create@${CREATE_VERSION}" test-blog; then
+              exit 0
+            fi
+            echo "create@${CREATE_VERSION} not ready yet; retrying in 10s (${attempt}/6)"
+            rm -rf test-blog
+            sleep 10
+          done
+          deno run -A "jsr:@lessjs/create@${CREATE_VERSION}" test-blog
       - name: Build consumer project
         run: |
           CONSUMER_DIR="${{ runner.temp }}/lessjs-post-publish-smoke"

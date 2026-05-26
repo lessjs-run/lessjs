@@ -20,31 +20,32 @@ outrunning the architecture.
 
 | Area                      | State                                                 |
 | ------------------------- | ----------------------------------------------------- |
-| Project line              | v0.21.0 Reactive DSD                                  |
+| Project line              | v0.22.x Architecture Integrity                        |
 | Current rendering mode    | SSG + Declarative Shadow DOM                          |
 | Current DSD base          | `DsdElement` + SSR-safe `StyleSheet`                  |
 | Current framework surface | file routes, Hono API routes, dev/build pipeline      |
 | Current Hub surface       | early Registry Hub, validation, snapshots, `less add` |
-| Next milestone            | v0.22.x Architecture Integrity                        |
+| Next milestone            | v0.23.x Layered Package Architecture                  |
 
 Package publishing is staggered. The roadmap tracks the project line, while
 individual package versions may lag until a coordinated publish pass.
 
 ## Phase Overview
 
-| Phase | Version | Name                      | Goal                                                           | Status  |
-| ----- | ------- | ------------------------- | -------------------------------------------------------------- | ------- |
-| 1     | v0.15.x | Renderer Kernel           | Structured render output, hooks, build report                  | Done    |
-| 2     | v0.16.x | WC Package Protocol       | Manifest + local registry                                      | Done    |
-| 3     | v0.17.x | Ecosystem Entry           | Manifest-native pipeline and multi-adapter boundary            | Done    |
-| 4     | v0.18.x | Universal WC Engine       | CEM parser, compatibility tiers, validation CLI, safe add flow | Done    |
-| 5     | v0.19.x | Registry Hub MVP          | Searchable validated package index with reports and snapshots  | Done    |
-| 6     | v0.20.x | Ocean-Island Architecture | DsdElement, DSD-native UI, CSS Parts, cleanup gates            | Done    |
-| 7     | v0.21.x | Reactive DSD              | DsdElement + Signals, safe templates, streaming DSD            | Done    |
-| 8     | v0.22.x | Architecture Integrity    | Package boundaries, consumer surface, adapter cleanup, gates   | Current |
-| 9     | v0.23.x | Edge Full-Stack           | ISR handler, KV adapters, Showcase, deployment guides          | Planned |
-| 10    | v0.24.x | Ecosystem Hardening       | Hub trust policy, package evidence, compatibility growth       | Planned |
-| 11    | v1.0.x  | Stable Engine             | API/schema freeze and deterministic package guarantees         | Vision  |
+| Phase | Version | Name                         | Goal                                                           | Status  |
+| ----- | ------- | ---------------------------- | -------------------------------------------------------------- | ------- |
+| 1     | v0.15.x | Renderer Kernel              | Structured render output, hooks, build report                  | Done    |
+| 2     | v0.16.x | WC Package Protocol          | Manifest + local registry                                      | Done    |
+| 3     | v0.17.x | Ecosystem Entry              | Manifest-native pipeline and multi-adapter boundary            | Done    |
+| 4     | v0.18.x | Universal WC Engine          | CEM parser, compatibility tiers, validation CLI, safe add flow | Done    |
+| 5     | v0.19.x | Registry Hub MVP             | Searchable validated package index with reports and snapshots  | Done    |
+| 6     | v0.20.x | Ocean-Island Architecture    | DsdElement, DSD-native UI, CSS Parts, cleanup gates            | Done    |
+| 7     | v0.21.x | Reactive DSD                 | DsdElement + Signals, safe templates, streaming DSD            | Done    |
+| 8     | v0.22.x | Architecture Integrity       | Package boundaries, consumer surface, adapter cleanup, gates   | Current |
+| 9     | v0.23.x | Layered Package Architecture | Protocols, runtime facade, graph gates, docs governance        | Planned |
+| 10    | v0.24.x | Edge Full-Stack              | ISR handler, KV adapters, Showcase, deployment guides          | Planned |
+| 11    | v0.25.x | Ecosystem Hardening          | Hub trust policy, package evidence, compatibility growth       | Planned |
+| 12    | v1.0.x  | Stable Engine                | API/schema freeze and deterministic package guarantees         | Vision  |
 
 ## Compatibility Admission Model
 
@@ -185,7 +186,30 @@ Non-goals:
 - adding auth, ORM, database, or generic Node server abstractions
 - deleting public imports such as `@lessjs/signals` without a deprecation window
 
-## Planned: v0.23.x - Edge Full-Stack
+## Planned: v0.23.x - Layered Package Architecture
+
+Goal: turn the v0.22 cleanup line into a durable package architecture before
+Edge work resumes.
+
+Scope:
+
+- contracts/protocols ownership for shared build/runtime types
+- `@lessjs/core` as runtime kernel, not all-purpose DX barrel
+- optional authoring runtime facade versus `@lessjs/app` configuration facade
+- `adapter-vite` build-module ownership and shared contract extraction
+- package graph, publish order, and generated-consumer gates
+- docs/status/roadmap/changelog consistency checks
+
+See `docs/sop/v0.23.0/` for detailed SOPs. ADR-0050 is the governing decision.
+
+Non-goals:
+
+- shipping ISR production handler in v0.23
+- shipping KV adapters in v0.23
+- expanding Hub marketplace claims in v0.23
+- freezing v1.0 APIs
+
+## Planned: v0.24.x - Edge Full-Stack
 
 Goal: resume ADR-0038 after architecture cleanup exits.
 
@@ -196,7 +220,7 @@ Scope:
 - www Showcase pages (Reactive DSD demo, ISR stopwatch, serverless API)
 - Deployment guides (CF Workers, Deno Deploy, static-only)
 
-## Planned: v0.24.x - Ecosystem Hardening
+## Planned: v0.25.x - Ecosystem Hardening
 
 Goal: move from a proof-of-concept Hub index to useful package discovery and
 trust evidence.
