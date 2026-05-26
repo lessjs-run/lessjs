@@ -132,6 +132,31 @@ export class ChangelogPage extends DsdElement {
 
           <div class="version-section">
             <div class="version-header">
+              <span class="version-number">0.23.0</span>
+              <span class="version-date">2026-05-27</span>
+            </div>
+            <div class="change-category added">
+              <h4>Layered Package Architecture</h4>
+              <ul class="change-list">
+                <li><strong>@lessjs/protocols</strong> now owns shared build contracts and virtual module ids.</li>
+                <li><strong>@lessjs/runtime</strong> is the component-authoring facade used by generated projects.</li>
+                <li><strong>@lessjs/app</strong> remains the configuration facade and no longer imports adapter-vite build-context internals.</li>
+                <li><strong>Package graph gate</strong> checks cycles, publish order, unified versions, workflow coverage, and direct @lessjs/* source imports.</li>
+                <li><strong>Publish workflow</strong> now covers all 18 packages, including @lessjs/runtime.</li>
+              </ul>
+            </div>
+            <div class="change-category changed">
+              <h4>Breaking ownership moves</h4>
+              <ul class="change-list">
+                <li>Use <span class="inline-code">@lessjs/protocols/build-types</span> instead of adapter-owned build contract paths.</li>
+                <li>Use <span class="inline-code">@lessjs/protocols/virtual-ids</span> instead of adapter-owned virtual id paths.</li>
+                <li>Use <span class="inline-code">@lessjs/runtime</span> for ordinary component authoring instead of treating core as the product DX barrel.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="version-section">
+            <div class="version-header">
               <span class="version-number">0.20.0</span>
               <span class="version-date">2026-05-21</span>
             </div>
