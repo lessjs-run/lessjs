@@ -154,7 +154,9 @@ Deno.test('lessPlugin: virtual-entry resolves virtual:less-build-trigger', () =>
   const plugins = less({});
   const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
 
-  const resolved = (virtualPlugin.resolveId as (id: string) => unknown)('virtual:less-build-trigger');
+  const resolved = (virtualPlugin.resolveId as (id: string) => unknown)(
+    'virtual:less-build-trigger',
+  );
   assertExists(resolved);
   assertEquals(resolved, '\0virtual:less-build-trigger');
 });

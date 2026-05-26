@@ -4,11 +4,7 @@
  * Tests for JSR subpath resolution: core package subpath mapping,
  * virtual module resolution, npm: prefix rewriting, and edge cases.
  */
-import {
-  assertEquals,
-  assertExists,
-  assertMatch,
-} from 'jsr:@std/assert@^1.0.0';
+import { assertEquals, assertExists, assertMatch } from 'jsr:@std/assert@^1.0.0';
 import {
   CORE_SUBPATHS,
   createCoreResolvePlugin,
