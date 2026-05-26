@@ -20,11 +20,14 @@ function vitePath(path: string): string {
 
 // Extract each template by splitting on known keys
 function extractTemplate(key: string): string {
-  const marker = `'${key}': \``;
+  const marker = `'${key}':`;
   const startIdx = cliSource.indexOf(marker);
   if (startIdx === -1) throw new Error(`Template '${key}' not found`);
 
-  const contentStart = startIdx + marker.length;
+  const firstBacktick = cliSource.indexOf('`', startIdx + marker.length);
+  if (firstBacktick === -1) throw new Error(`Template '${key}' has no string body`);
+
+  const contentStart = firstBacktick + 1;
   let depth = 1;
   let i = contentStart;
 
@@ -82,9 +85,9 @@ Deno.test('create-less: deno.json build:ssg uses @lessjs/adapter-vite', () => {
   assert(denoJson.tasks['build:ssg'].includes('@lessjs/adapter-vite'));
 });
 
-Deno.test('create-less: deno.json maps LessJS package imports (v0.22 Consumer Surface Cleanup)', () => {
+Deno.test('create-less: deno.json maps LessJS package imports (v0.23 runtime facade)', () => {
   const denoJson = JSON.parse(extractTemplate('deno.json'));
-  // v0.22 SOP-001: Keep generated import map minimal while listing direct config imports.
+  // v0.23 SOP-003: Keep generated import map minimal while listing direct authoring/config imports.
   const importKeys = Object.keys(denoJson.imports);
   assertEquals(
     importKeys.length,
@@ -201,9 +204,6 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     denoJson.imports['@lessjs/core/navigation'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'navigation.ts'),
     ).href;
-    denoJson.imports['@lessjs/adapter-vite/build-context'] = pathToFileURL(
-      join(repoRoot, 'packages', 'adapter-vite', 'src', 'build-context.ts'),
-    ).href;
     denoJson.imports['@lessjs/adapter-vite'] = pathToFileURL(
       join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts'),
     ).href;
@@ -262,12 +262,6 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     const uiSrc = join(repoRoot, 'packages', 'ui', 'src');
     const signalsSrc = join(repoRoot, 'packages', 'signals', 'src');
     const aliases = [
-      {
-        find: '@lessjs/adapter-vite/build-context',
-        replacement: vitePath(
-          join(repoRoot, 'packages', 'adapter-vite', 'src', 'build-context.ts'),
-        ),
-      },
       {
         find: '@lessjs/adapter-vite',
         replacement: vitePath(join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts')),
@@ -382,8 +376,8 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     // v0.21.6: Template no longer has hardcoded aliases.
     // Inject resolve.alias for local workspace testing.
     viteConfig = viteConfig.replace(
-      'plugins: [less',
-      `resolve: { alias: ${JSON.stringify(aliases, null, 4)} },\n  plugins: [less`,
+      'plugins: [',
+      `resolve: { alias: ${JSON.stringify(aliases, null, 4)} },\n  plugins: [`,
     );
     writeFileSync(viteConfigPath, viteConfig);
 

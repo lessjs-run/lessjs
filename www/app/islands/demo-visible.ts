@@ -2,7 +2,7 @@
  * v0.21 Demo: client:visible strategy.
  * Hydrates when the element enters the viewport (IntersectionObserver, 200px rootMargin).
  */
-import { island } from '@lessjs/core';
+import { island } from '@lessjs/runtime';
 
 class DemoVisible extends HTMLElement {
   constructor() {

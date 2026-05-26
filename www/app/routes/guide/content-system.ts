@@ -5,7 +5,7 @@ export const meta = { section: 'Core', label: 'Content System', order: 40 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { DsdElement } from '@lessjs/core';
+import { DsdElement } from '@lessjs/runtime';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 

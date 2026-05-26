@@ -5,7 +5,7 @@ export const meta = {
 };
 
 import { headerNav, navSections } from 'virtual:less-nav';
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import '@lessjs/ui/less-layout';
 
 export const tagName = 'decision-20260515-1-renderer-kernel-registry-sop';

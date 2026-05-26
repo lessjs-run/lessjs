@@ -58,25 +58,26 @@ jobs:
           fi
 
           # Publish in dependency order: truly leaf first, then dependents
-          #   leaf (zero LessJS deps): rpc, style-sheet, create
+          #   leaf (zero LessJS deps): rpc, protocols, style-sheet, create
           #   core: zero LessJS deps, but needed by many packages below
           publish_if_missing "@lessjs/rpc" "packages/rpc"
+          publish_if_missing "@lessjs/protocols" "packages/protocols"
           publish_if_missing "@lessjs/style-sheet" "packages/style-sheet"
           publish_if_missing "@lessjs/create" "packages/create"
-          #   depend on core: signals, compat-check, cem, adapter-*, ui, hub
+          #   depend on core or low-level facades: signals, runtime, compat-check, cem, content, i18n, adapter-*, ui, hub
           publish_if_missing "@lessjs/core" "packages/core"
           publish_if_missing "@lessjs/signals" "packages/signals"
+          publish_if_missing "@lessjs/runtime" "packages/runtime"
           publish_if_missing "@lessjs/cem" "packages/cem"
           publish_if_missing "@lessjs/compat-check" "packages/compat-check"
+          publish_if_missing "@lessjs/content" "packages/content"
+          publish_if_missing "@lessjs/i18n" "packages/i18n"
           publish_if_missing "@lessjs/adapter-lit" "packages/adapter-lit"
           publish_if_missing "@lessjs/adapter-react" "packages/adapter-react"
           publish_if_missing "@lessjs/adapter-vanilla" "packages/adapter-vanilla"
           publish_if_missing "@lessjs/adapter-vite" "packages/adapter-vite"
           publish_if_missing "@lessjs/ui" "packages/ui"
           publish_if_missing "@lessjs/hub" "packages/hub"
-          #   depend on adapter-vite: content, i18n
-          publish_if_missing "@lessjs/content" "packages/content"
-          publish_if_missing "@lessjs/i18n" "packages/i18n"
           #   depends on all above: app
           publish_if_missing "@lessjs/app" "packages/app"
 

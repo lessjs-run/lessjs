@@ -42,6 +42,16 @@ jobs:
       - name: Run dependency audit
         run: deno audit
 
+  package-graph:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: '2'
+      - name: Check package graph
+        run: deno task graph:check
+
   test-core:
     runs-on: ubuntu-latest
     steps:

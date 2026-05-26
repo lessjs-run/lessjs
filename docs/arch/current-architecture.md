@@ -1,6 +1,6 @@
 # Current Architecture
 
-> Status: DRAFT\
+> Status: CURRENT\
 > Version line: v0.23.x\
 > Governing decision: ADR-0050 Layered Package Architecture
 
@@ -28,7 +28,7 @@ tools and release gates
   create, package graph checker, publish workflow, smoke tests
 
 product facades
-  app configuration facade, future authoring runtime facade if accepted
+  app configuration facade, runtime authoring facade
 
 build adapters
   adapter-vite, SSG phases, Vite integration, generated source
@@ -64,8 +64,8 @@ adapter.
 | `@lessjs/content`      | content feature package             | owns markdown, nav, blog data, sitemap behavior                          |
 | `@lessjs/i18n`         | i18n feature package                | owns locale data and static path helpers                                 |
 | `@lessjs/ui`           | DSD component library               | proves framework primitives with real components                         |
-| `@lessjs/cem`          | CEM package                         | should become canonical CEM parser/shape owner                           |
-| `@lessjs/compat-check` | compatibility classifier            | should become canonical compatibility owner                              |
+| `@lessjs/cem`          | CEM package                         | canonical CEM parser/shape owner                                         |
+| `@lessjs/compat-check` | compatibility classifier            | canonical compatibility owner                                            |
 | `@lessjs/hub`          | registry and trust evidence         | consumes compatibility and manifest evidence                             |
 | `@lessjs/create`       | generated project contract          | proves the user-facing package graph                                     |
 | `@lessjs/rpc`          | RPC primitives                      | dependency-light utility package                                         |
@@ -173,10 +173,19 @@ Examples:
 Breaking import moves are acceptable when they reduce architecture debt and are
 documented in release notes.
 
+## v0.23.0 Architecture State
+
+1. Canonical signal creation is owned by `@lessjs/signals`, which wraps
+   `alien-signals`.
+2. `@lessjs/runtime` owns component authoring imports.
+3. `@lessjs/cem` and `@lessjs/compat-check` own CEM and compatibility
+   implementation.
+4. `deno task graph:check` verifies direct package imports, cycles, unified
+   versions, workflow coverage, and publish order.
+5. `@lessjs/app` remains the configuration facade only.
+
 ## Next Architecture Work
 
-1. Move canonical signal creation out of `@lessjs/core`.
-2. Decide whether `@lessjs/runtime` should own component authoring imports.
-3. Move CEM and compatibility ownership out of `core` into their packages.
-4. Strengthen generated consumer import-map checks.
-5. Keep `@lessjs/app` as configuration facade only.
+1. Keep removing historical compatibility bridges whose ownership is now wrong.
+2. Add richer diagnostics around generated consumer import maps.
+3. Resume v0.24 Edge Full-Stack only after the package graph stays clean.

@@ -22,10 +22,8 @@ import type { Plugin } from 'vite';
 import type { FrameworkOptions } from '@lessjs/core';
 import type { LessContentOptions } from '@lessjs/content';
 import type { LessI18nOptions } from '@lessjs/i18n';
-import type { LessBuildContext } from '@lessjs/adapter-vite/build-context';
 
-import { less } from '@lessjs/adapter-vite';
-import { LessBuildContext as LessBuildContextClass } from '@lessjs/adapter-vite/build-context';
+import { less, LessBuildContext as LessBuildContextClass } from '@lessjs/adapter-vite';
 import { lessContent } from '@lessjs/content';
 import { lessI18n } from '@lessjs/i18n';
 import { createLogger } from '@lessjs/core/logger';
@@ -51,7 +49,7 @@ export interface LessjsOptions extends FrameworkOptions {
  */
 export function lessjs(options: LessjsOptions = {}): Plugin[] {
   const { content: contentOpts, i18n: i18nOpts, ...coreOpts } = options;
-  const ctx: LessBuildContext = new LessBuildContextClass({
+  const ctx = new LessBuildContextClass({
     ...coreOpts,
     routesDir: coreOpts.routesDir || 'app/routes',
     islandsDir: coreOpts.islandsDir || 'app/islands',

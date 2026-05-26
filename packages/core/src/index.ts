@@ -124,8 +124,7 @@ export { getSSRProps, island, type IslandOptions, lessBind } from './island.js';
 export { hasNavigationApi, matchRoute, navigate, onNavigate } from './navigation.js';
 export type { NavigationCallback } from './navigation.js';
 
-// v0.22: Build-time shared types moved to @lessjs/adapter-vite/build-types (SOP-002).
-// Import from '@lessjs/adapter-vite/build-types'.
+// v0.23: Build-time shared types live in @lessjs/protocols/build-types.
 
 // WC Package Protocol (v0.17+)
 export {
@@ -140,5 +139,4 @@ export {
 // DOM Simulation (v0.18.3) — experimental, not barrel-exported.
 // Import from '@lessjs/core/dom-simulation' directly; requires happy-dom at runtime.
 
-// v0.22: Virtual module IDs moved to @lessjs/adapter-vite/virtual-ids (SOP-002).
-// Import from '@lessjs/adapter-vite/virtual-ids'.
+// v0.23: Virtual module IDs live in @lessjs/protocols/virtual-ids.

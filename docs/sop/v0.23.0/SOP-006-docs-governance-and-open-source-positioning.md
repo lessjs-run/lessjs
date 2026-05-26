@@ -2,7 +2,7 @@
 
 > Version: v0.23.0\
 > Priority: P1\
-> Status: PLANNED\
+> Status: IMPLEMENTED\
 > Depends on: ADR-0050
 
 ## Objective
@@ -34,6 +34,7 @@ Public docs should answer these questions consistently:
 - Which imports should ordinary users write?
 - Which APIs are compatibility bridges?
 - Which gates prove a release?
+- Which package should a new contributor edit for a given concern?
 
 ## Procedure
 
@@ -57,10 +58,15 @@ Acceptance:
 - [ ] Describe `@lessjs/app` as configuration facade.
 - [ ] Describe any authoring facade separately if introduced.
 - [ ] Mark compatibility bridges where needed.
+- [ ] Describe `@lessjs/adapter-vite` as the Vite/SSG adapter, not the owner of
+      all build-time concepts.
+- [ ] Describe `@lessjs/content` and `@lessjs/i18n` as feature packages that
+      consume shared build contracts.
 
 Acceptance:
 
 - [ ] Package descriptions match code ownership.
+- [ ] README and package READMEs use the same ownership language.
 
 ### Step 3: Keep Roadmap Conservative
 
@@ -79,10 +85,25 @@ Acceptance:
 - [ ] Check ADR index includes newly accepted ADRs.
 - [ ] Check SOP index includes active version directories.
 - [ ] Check README current line does not lag status.
+- [ ] Check changelog and package versions agree during release prep.
+- [ ] Check docs do not describe deferred v0.24 Edge work as shipped v0.23
+      behavior.
 
 Acceptance:
 
 - [ ] Docs drift becomes a CI failure where practical.
+
+### Step 5: Maintain Contributor Orientation
+
+- [ ] Add a package ownership table to the public docs or contributor docs.
+- [ ] Link ADR-0050 from roadmap, status, SOP index, and contributor-facing
+      architecture docs.
+- [ ] Keep shipped/planned/deferred labels visible for architecture work.
+
+Acceptance:
+
+- [ ] A contributor can identify the right package before opening code.
+- [ ] Deferred features do not appear as release promises.
 
 ## Verification
 
@@ -100,3 +121,13 @@ deno task typecheck
   ambition.
 - The current version story is consistent across README, status, roadmap, ADR,
   SOP, and changelog.
+
+## v0.23.0 Result
+
+- `docs/arch/` describes the current layered package architecture.
+- README, status, roadmap, SOPs, and changelog identify v0.23.0 as the active
+  implemented architecture line.
+- v0.24 remains the deferred Edge Full-Stack line; ISR production handlers and
+  KV adapters are not claimed as v0.23 behavior.
+- `docs/changelog/v0.23.0.md` records the breaking ownership moves and release
+  gates.

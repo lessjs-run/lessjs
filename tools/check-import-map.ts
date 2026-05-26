@@ -11,7 +11,7 @@
  *   4. Fail with non-zero exit code if any undeclared imports are found
  */
 
-import { dirname, join, relative, resolve } from 'node:path';
+import { join } from 'node:path';
 
 const repoRoot = new URL('../', import.meta.url);
 const repoRootPath = fileURLToPath(repoRoot);

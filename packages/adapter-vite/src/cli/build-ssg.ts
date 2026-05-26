@@ -25,7 +25,7 @@ import type { LessBuildContext } from '../build-context.js';
 import type { SsgRenderOptions } from './ssg-render.js';
 import { SsrRenderError } from '@lessjs/core/errors';
 import { createLogger } from '@lessjs/core/logger';
-import { RESOLVED_NAV_ID, VIRTUAL_NAV_ID } from '../virtual-ids.js';
+import { RESOLVED_NAV_ID, VIRTUAL_NAV_ID } from '@lessjs/protocols/virtual-ids';
 import { ssgRender } from './ssg-render.js';
 import { createLessJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
 import { generateSsrPolyfillBanner } from '../ssr-polyfills.js';

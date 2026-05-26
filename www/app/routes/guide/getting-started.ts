@@ -2,7 +2,7 @@
 export const meta = { section: 'Quick Start', label: 'Getting Started', order: 20 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
@@ -106,7 +106,7 @@ cd my-app</code></pre></less-code-block>
             页面是一个 Web Component。SSR 会把它渲染成 Declarative Shadow DOM， 所以内容在 JavaScript
             运行前就已经可见。
           </p>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
 
 export class HomePage extends DsdElement {
   override render(): string {
@@ -215,7 +215,7 @@ cd my-app</code></pre></less-code-block>
             A page is a Web Component. SSR renders it into Declarative Shadow DOM, so content
             is visible before JavaScript runs.
           </p>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
 
 export class HomePage extends DsdElement {
   override render(): string {

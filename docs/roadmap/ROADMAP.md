@@ -20,12 +20,12 @@ outrunning the architecture.
 
 | Area                      | State                                                 |
 | ------------------------- | ----------------------------------------------------- |
-| Project line              | v0.22.x Architecture Integrity                        |
+| Project line              | v0.23.x Layered Package Architecture                  |
 | Current rendering mode    | SSG + Declarative Shadow DOM                          |
 | Current DSD base          | `DsdElement` + SSR-safe `StyleSheet`                  |
 | Current framework surface | file routes, Hono API routes, dev/build pipeline      |
 | Current Hub surface       | early Registry Hub, validation, snapshots, `less add` |
-| Next milestone            | v0.23.x Layered Package Architecture                  |
+| Next milestone            | v0.24.x Edge Full-Stack                               |
 
 Package publishing is staggered. The roadmap tracks the project line, while
 individual package versions may lag until a coordinated publish pass.
@@ -41,8 +41,8 @@ individual package versions may lag until a coordinated publish pass.
 | 5     | v0.19.x | Registry Hub MVP             | Searchable validated package index with reports and snapshots  | Done    |
 | 6     | v0.20.x | Ocean-Island Architecture    | DsdElement, DSD-native UI, CSS Parts, cleanup gates            | Done    |
 | 7     | v0.21.x | Reactive DSD                 | DsdElement + Signals, safe templates, streaming DSD            | Done    |
-| 8     | v0.22.x | Architecture Integrity       | Package boundaries, consumer surface, adapter cleanup, gates   | Current |
-| 9     | v0.23.x | Layered Package Architecture | Protocols, runtime facade, graph gates, docs governance        | Planned |
+| 8     | v0.22.x | Architecture Integrity       | Package boundaries, consumer surface, adapter cleanup, gates   | Done    |
+| 9     | v0.23.x | Layered Package Architecture | Protocols, runtime facade, graph gates, docs governance        | Current |
 | 10    | v0.24.x | Edge Full-Stack              | ISR handler, KV adapters, Showcase, deployment guides          | Planned |
 | 11    | v0.25.x | Ecosystem Hardening          | Hub trust policy, package evidence, compatibility growth       | Planned |
 | 12    | v1.0.x  | Stable Engine                | API/schema freeze and deterministic package guarantees         | Vision  |
@@ -160,7 +160,7 @@ Scope:
 
 See `docs/sop/v0.21.0/` for detailed SOPs.
 
-## Current: v0.22.x - Architecture Integrity
+## Completed: v0.22.x - Architecture Integrity
 
 Goal: pay down the architecture and engineering debt exposed by the 2026-05-26
 review set before adding more public framework surface.
@@ -186,7 +186,7 @@ Non-goals:
 - adding auth, ORM, database, or generic Node server abstractions
 - deleting public imports such as `@lessjs/signals` without a deprecation window
 
-## Planned: v0.23.x - Layered Package Architecture
+## Current: v0.23.x - Layered Package Architecture
 
 Goal: turn the v0.22 cleanup line into a durable package architecture before
 Edge work resumes.
@@ -195,7 +195,7 @@ Scope:
 
 - contracts/protocols ownership for shared build/runtime types
 - `@lessjs/core` as runtime kernel, not all-purpose DX barrel
-- optional authoring runtime facade versus `@lessjs/app` configuration facade
+- `@lessjs/runtime` authoring facade versus `@lessjs/app` configuration facade
 - `adapter-vite` build-module ownership and shared contract extraction
 - package graph, publish order, and generated-consumer gates
 - docs/status/roadmap/changelog consistency checks

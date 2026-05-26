@@ -29,6 +29,7 @@
     "npm:marked@15": "15.0.12",
     "npm:media-chrome@^4.19.0": "4.19.0_react@19.2.6",
     "npm:parse5@7.0.0": "7.0.0",
+    "npm:playwright@1.57.0": "1.57.0",
     "npm:react-dom@19": "19.2.6_react@19.2.6",
     "npm:react-dom@^19.1.0": "19.2.6_react@19.2.6",
     "npm:react@19": "19.2.6",
@@ -268,7 +269,7 @@
     "@playwright/test@1.59.1": {
       "integrity": "sha512-PG6q63nQg5c9rIi4/Z5lR5IVF7yU5MqmKaPOe0HSc0O2cX1fPi96sUQu5j7eo4gKCkB2AnNGoWt7y4/Xx3Kcqg==",
       "dependencies": [
-        "playwright"
+        "playwright@1.59.1"
       ],
       "bin": true
     },
@@ -742,14 +743,28 @@
     "picomatch@4.0.4": {
       "integrity": "sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A=="
     },
+    "playwright-core@1.57.0": {
+      "integrity": "sha512-agTcKlMw/mjBWOnD6kFZttAAGHgi/Nw0CZ2o6JqWSbMlI219lAFLZZCyqByTsvVAJq5XA5H8cA6PrvBRpBWEuQ==",
+      "bin": true
+    },
     "playwright-core@1.59.1": {
       "integrity": "sha512-HBV/RJg81z5BiiZ9yPzIiClYV/QMsDCKUyogwH9p3MCP6IYjUFu/MActgYAvK0oWyV9NlwM3GLBjADyWgydVyg==",
+      "bin": true
+    },
+    "playwright@1.57.0": {
+      "integrity": "sha512-ilYQj1s8sr2ppEJ2YVadYBN0Mb3mdo9J0wQ+UuDhzYqURwSoW4n1Xs5vs7ORwgDGmyEh33tRMeS8KhdkMoLXQw==",
+      "dependencies": [
+        "playwright-core@1.57.0"
+      ],
+      "optionalDependencies": [
+        "fsevents@2.3.2"
+      ],
       "bin": true
     },
     "playwright@1.59.1": {
       "integrity": "sha512-C8oWjPR3F81yljW9o5OxcWzfh6avkVwDD2VYdwIGqTkl+OGFISgypqzfu7dOe4QNLL2aqcWBmI3PMtLIK233lw==",
       "dependencies": [
-        "playwright-core"
+        "playwright-core@1.59.1"
       ],
       "optionalDependencies": [
         "fsevents@2.3.2"
@@ -958,7 +973,12 @@
       },
       "packages/adapter-vite": {
         "dependencies": [
+          "jsr:@lessjs/cem@0.23",
+          "jsr:@lessjs/compat-check@0.23",
+          "jsr:@lessjs/content@0.23",
           "jsr:@lessjs/core@0.23",
+          "jsr:@lessjs/protocols@0.23",
+          "jsr:@lessjs/style-sheet@0.23",
           "npm:@hono/vite-dev-server@~0.25.3",
           "npm:esbuild@0.25",
           "npm:hono@4",
@@ -1026,7 +1046,9 @@
       },
       "packages/ui": {
         "dependencies": [
-          "jsr:@lessjs/core@0.23"
+          "jsr:@lessjs/core@0.23",
+          "jsr:@lessjs/signals@0.23",
+          "jsr:@lessjs/style-sheet@0.23"
         ]
       }
     }

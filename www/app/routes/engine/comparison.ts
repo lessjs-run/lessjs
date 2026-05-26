@@ -4,7 +4,7 @@
 
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import '@lessjs/ui/less-layout';
 
 export const tagName = 'comparison-page';

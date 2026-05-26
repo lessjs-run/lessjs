@@ -2,7 +2,7 @@
 
 > Version: v0.23.0\
 > Priority: P0\
-> Status: PLANNED\
+> Status: IMPLEMENTED\
 > Depends on: ADR-0050
 
 ## Objective
@@ -27,6 +27,10 @@ Shared contracts are currently scattered:
 Introduce a contracts layer, either as `@lessjs/protocols` or a deliberately
 named equivalent.
 
+Default name: `@lessjs/protocols`. Use a different name only if the
+implementation PR records a clearer distinction between runtime protocols and
+build protocols.
+
 It may own:
 
 - build context interfaces used by build-time plugins;
@@ -35,6 +39,7 @@ It may own:
 - shared diagnostics and validation result shapes;
 - manifest and compatibility type primitives;
 - package graph metadata used by release tooling.
+- generated-project direct import declarations used by release gates.
 
 It must not own:
 
@@ -44,6 +49,19 @@ It must not own:
 - filesystem scanning;
 - reactive engine implementation;
 - Hub submission side effects.
+- user-facing `lessjs()` configuration assembly.
+
+## Ownership Rules
+
+| Contract type            | Owner                               | Notes                                          |
+| ------------------------ | ----------------------------------- | ---------------------------------------------- |
+| virtual module ids       | protocols                           | adapter consumes, feature packages may consume |
+| build context shape      | protocols                           | adapter owns mutable implementation            |
+| signal-like protocol     | protocols or signals                | protocol only; engine stays in signals         |
+| manifest primitives      | protocols or owning feature package | avoid routing through core                     |
+| diagnostics result shape | protocols                           | implementation packages attach details         |
+| logger runtime           | core                                | not a cross-package protocol unless proven     |
+| Vite plugin type         | adapter-vite/app                    | do not leak through protocols                  |
 
 ## Procedure
 
@@ -53,7 +71,7 @@ It must not own:
       `@lessjs/adapter-vite`, `@lessjs/signals`, `@lessjs/hub`, `@lessjs/cem`,
       and `@lessjs/compat-check`.
 - [ ] Mark each item as runtime kernel, build contract, feature API,
-      diagnostics contract, or compatibility bridge.
+      diagnostics contract, obsolete export, or wrong owner.
 - [ ] Identify all imports from `@lessjs/adapter-vite/build-types` and
       `@lessjs/adapter-vite/virtual-ids`.
 
@@ -61,6 +79,8 @@ Acceptance:
 
 - [ ] The migration list names every source file and target owner.
 - [ ] No type is moved before its runtime dependency graph is understood.
+- [ ] The inventory identifies public, internal, obsolete, and wrong-owner
+      exports.
 
 ### Step 2: Add the Contracts Package
 
@@ -81,14 +101,15 @@ Acceptance:
 - [ ] Move `LessBuildContextLike` or equivalent build plugin context types.
 - [ ] Move virtual module id constants.
 - [ ] Update `content`, `i18n`, `app`, and `adapter-vite` imports.
-- [ ] Keep compatibility re-exports only where they are needed for a minor
-      release transition.
+- [ ] Delete old adapter-owned contract exports instead of preserving a
+      compatibility bridge.
 
 Acceptance:
 
 - [ ] `content` and `i18n` no longer import adapter-vite only to get build
       contracts.
 - [ ] Existing generated projects still build.
+- [ ] `@lessjs/app` does not import `@lessjs/adapter-vite/build-context`.
 
 ### Step 4: Migrate Protocol Types
 
@@ -96,13 +117,28 @@ Acceptance:
       `Unsubscribe`.
 - [ ] Define one owner for manifest, compatibility, and validation diagnostic
       primitives.
-- [ ] Remove duplicate local type definitions after compatibility bridges are
-      in place.
+- [ ] Remove duplicate local type definitions after canonical owners are in
+      place.
 
 Acceptance:
 
 - [ ] Public signal API behavior is unchanged.
 - [ ] Type imports form an acyclic graph.
+- [ ] The public docs say `@lessjs/signals` is powered by `alien-signals`, not a
+      custom LessJS engine.
+
+### Step 5: Delete Wrong-Owner Paths
+
+- [ ] Remove old exports whose only purpose is backward compatibility.
+- [ ] Remove root import-map aliases for deleted old paths.
+- [ ] Update package resolvers and generated-source helpers so they cannot
+      resolve deleted old paths.
+- [ ] Document the canonical owner in docs and release notes.
+
+Acceptance:
+
+- [ ] No wrong-owner contract path remains exported.
+- [ ] The release notes list breaking import-path moves.
 
 ## Verification
 
@@ -119,3 +155,14 @@ deno publish --dry-run --allow-dirty
 - Shared contracts have one dependency-light owner.
 - Feature packages do not depend on adapter implementation just to share types.
 - The package graph remains acyclic and publishable.
+
+## v0.23.0 Result
+
+- `@lessjs/protocols` owns shared build context contracts and virtual module
+  ids.
+- `@lessjs/content`, `@lessjs/i18n`, and `@lessjs/adapter-vite` consume those
+  contracts from `@lessjs/protocols`.
+- Old adapter-owned contract exports and root import-map aliases for removed
+  wrong-owner paths were deleted.
+- `deno task graph:check` now verifies source-level direct `@lessjs/*` imports
+  against each package-local `deno.json`.

@@ -8,7 +8,7 @@
  */
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterBlogNav } from '../../utils/nav-filter.js';
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import { posts, getPostBySlug } from 'virtual:less-blog-data';

@@ -12,7 +12,7 @@
  *
  * Pure DsdElement - zero Lit dependency.
  */
-import { DsdElement, html, signal, StyleSheet } from '@lessjs/core';
+import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
 
 const styles = new StyleSheet();
 styles.replaceSync(`

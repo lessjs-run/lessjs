@@ -7,7 +7,7 @@
 export const meta = { section: 'Reference', label: 'Design System', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-button';

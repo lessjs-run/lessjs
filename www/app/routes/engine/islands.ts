@@ -1,7 +1,7 @@
 export const meta = { section: 'Principles', label: 'Island Upgrade', order: 40 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
@@ -117,7 +117,7 @@ export class IslandsGuidePage extends DsdElement {
             entry，并在静态 HTML 中注入 entry script。
           </p>
           <less-code-block><pre><code>// app/islands/my-counter.ts
-import { DsdElement, StyleSheet, html, signal } from '@lessjs/core';
+import { DsdElement, StyleSheet, html, signal } from '@lessjs/runtime';
 
 export const tagName = 'my-counter';
 

@@ -2,7 +2,7 @@ export const meta = { section: 'Core', label: 'RPC', order: 70 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { DsdElement } from '@lessjs/core';
+import { DsdElement } from '@lessjs/runtime';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
@@ -24,7 +24,7 @@ export class RpcGuidePage extends DsdElement {
     <p>LessJS 的 Island 是独立的 Custom Element，每个 Island 管理自己的状态和副作用。RPC 调用是最常见的副作用之一。@lessjs/rpc 的设计遵循三个原则：</p>
     <ul><li><strong>零依赖</strong>：只用 fetch 和 AbortController。</li><li><strong>框架无关</strong>：RpcController 实现了 ReactiveController 接口。</li><li><strong>安全默认</strong>：请求在组件断开时自动取消，重试只针对瞬态错误。</li></ul>
     <h2>基本用法</h2>
-    <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+    <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
 import { RpcController } from '@lessjs/rpc';
 
 class PostList extends DsdElement {
@@ -59,7 +59,7 @@ class PostList extends DsdElement {
     <p>LessJS islands are independent Custom Elements, each managing its own state and side effects. RPC calls are the most common side effect. <span class="inline-code">@lessjs/rpc</span> follows three principles:</p>
     <ul><li><strong>Zero dependencies</strong>: Only fetch and AbortController.</li><li><strong>Framework-agnostic</strong>: RpcController implements the ReactiveController interface.</li><li><strong>Safe defaults</strong>: Requests auto-cancel on disconnect; retry only for transient errors.</li></ul>
     <h2>Basic Usage</h2>
-    <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+    <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
 import { RpcController } from '@lessjs/rpc';
 
 class PostList extends DsdElement {

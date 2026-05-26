@@ -8,7 +8,7 @@ Island、Hono API Route 和早期 Registry Hub 组合在一起，让 Web Compone
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
 [![JSR](https://img.shields.io/badge/JSR-published-blue)](https://jsr.io/@lessjs/core)
-[![@lessjs/core](https://img.shields.io/badge/jsr-v0.22.1-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
+[![@lessjs/core](https://img.shields.io/badge/jsr-v0.23.0-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
 
 ## 海洋-岛屿架构
 
@@ -34,12 +34,12 @@ Island、Hono API Route 和早期 Registry Hub 组合在一起，让 Web Compone
 
 ## 当前状态
 
-项目线：**v0.22.x Architecture Integrity**。
+项目线：**v0.23.x Layered Package Architecture**。
 
 当前生产渲染模式是 **SSG + Declarative Shadow DOM**。`renderDSD()` 的架构设计允许
 未来在缓存过期时运行 ISR，或在请求时运行 SSR，但 ISR/SSR 仍是路线图能力，不应写成已发布保证。
 
-全部包已统一到 v0.22.1，确保 JSR 发布包解析为同一套版本。v0.21.x 硬化线已完成：Core API 收紧、DSD 证据补强、
+全部包已统一到 v0.23.0，确保 JSR 发布包解析为同一套版本。v0.21.x 硬化线已完成：Core API 收紧、DSD 证据补强、
 Adapter 架构清理、Hub trust gate 加固。CI 配备 11 道 SOP 门禁 + CodeQL 安全扫描 +
 3 个 Copilot 自定义 Agent。
 
@@ -152,8 +152,8 @@ LessJS 不承诺任意 Web Component 都能自动 SSR。每个组件应该得到
 | v0.19 | Registry Hub + Component Browser                          | Done    |
 | v0.20 | Ocean-Island Architecture + DSD-native UI                 | Done    |
 | v0.21 | Reactive DSD + Hardening — Core API / DSD / Adapter / Hub | Done    |
-| v0.22 | Architecture Integrity — boundaries / imports / gates     | Current |
-| v0.23 | Layered Package Architecture                              | Planned |
+| v0.22 | Architecture Integrity — boundaries / imports / gates     | Done    |
+| v0.23 | Layered Package Architecture                              | Current |
 | v0.24 | Edge Full-Stack — ISR + KV adapters + Deploy              | Planned |
 | v0.25 | Ecosystem Hardening                                       | Planned |
 | v1.0  | Stable Engine contracts                                   | Vision  |

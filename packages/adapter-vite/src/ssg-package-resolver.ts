@@ -65,8 +65,6 @@ const LESSJS_EXPORT_FILES: Record<string, Record<string, string>> = {
   'adapter-vite': {
     '.': 'src/index.ts',
     'build-context': 'src/build-context.ts',
-    'build-types': 'src/build-types.ts',
-    'virtual-ids': 'src/virtual-ids.ts',
   },
   rpc: { '.': 'src/index.ts' },
   'style-sheet': { '.': 'src/index.ts' },

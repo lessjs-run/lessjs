@@ -5,7 +5,7 @@
  * The slug is derived from the ADR filename (e.g. 0001-keep-hono-vite-dev-server).
  */
 import { headerNav, navSections } from 'virtual:less-nav';
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import '@lessjs/ui/less-layout';
 import { posts } from 'virtual:less-blog-data';
 

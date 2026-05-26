@@ -26,6 +26,19 @@ import type {
 } from './types.js';
 import type { CompatibilityClassification, CompatibilityTier } from '@lessjs/compat-check';
 
+type CompatibilityTier = 'ssr-capable' | 'client-only' | 'rejected' | 'experimental-dom';
+
+interface CompatibilityClassification {
+  tagName: string;
+  tier: CompatibilityTier;
+  reason: string;
+  source: 'package';
+  modulePath?: string;
+  ssr?: boolean;
+  dsd?: boolean;
+  hydrate?: string;
+}
+
 // ─── Validators ─────────────────────────────────────────────────────────
 
 /** Valid tag name regex per HTML spec: must contain a hyphen */

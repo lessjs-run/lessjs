@@ -5,7 +5,7 @@
  */
 export const meta = { section: '', label: 'Architecture Decisions', order: 20 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { posts } from 'virtual:less-blog-data';
 import '@lessjs/ui/less-layout';
 

@@ -3,7 +3,7 @@
  */
 export const meta = { section: '', label: 'Contributing', order: 30 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../components/page-styles.js';
 const pageSheet = new StyleSheet();

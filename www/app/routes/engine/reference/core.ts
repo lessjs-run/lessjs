@@ -7,7 +7,7 @@
 
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../../utils/nav-filter.ts';
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import '@lessjs/ui/less-layout';
 
 export const tagName = 'api-core-page';
@@ -85,7 +85,7 @@ export default class ApiCorePage extends DsdElement {
           <div class="api-section">
             <!-- ─── @lessjs/core ───────────────────────────── -->
             <div class="pkg-name">@lessjs/core</div>
-            <div class="pkg-import">import { ... } from '@lessjs/core';</div>
+            <div class="pkg-import">import { ... } from '@lessjs/runtime';</div>
             <p>纯运行时。零 Vite/Node 依赖。支持 Deno、Node、Bun、Edge。</p>
 
             <div class="fn-name">renderDSD()</div>
@@ -322,7 +322,7 @@ export default class ApiCorePage extends DsdElement {
           <div class="api-section">
             <!-- ─── @lessjs/core ───────────────────────────── -->
             <div class="pkg-name">@lessjs/core</div>
-            <div class="pkg-import">import { ... } from '@lessjs/core';</div>
+            <div class="pkg-import">import { ... } from '@lessjs/runtime';</div>
             <p>Pure runtime. Zero Vite/Node dependencies. Works in Deno, Node, Bun, Edge.</p>
 
             <div class="fn-name">renderDSD()</div>

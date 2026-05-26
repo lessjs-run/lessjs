@@ -4,7 +4,7 @@
 export const meta = { section: 'History', label: 'Blog', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterBlogNav } from '../../utils/nav-filter.js';
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import '@lessjs/ui/less-layout';
 import { posts } from 'virtual:less-blog-data';
 

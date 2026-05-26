@@ -9,7 +9,7 @@
  *   render() uses html tagged template with @click bindings.
  *   _updateDOM() removed; signals auto-trigger re-render via _patchBindings().
  */
-import { DsdElement, html, signal, StyleSheet } from '@lessjs/core';
+import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
 
 export const tagName = 'less-toc';
 
