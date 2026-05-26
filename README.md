@@ -8,7 +8,7 @@ Island、Hono API Route 和早期 Registry Hub 组合在一起，让 Web Compone
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
 [![JSR](https://img.shields.io/badge/JSR-published-blue)](https://jsr.io/@lessjs/core)
-[![@lessjs/core](https://img.shields.io/badge/jsr-v0.22.0-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
+[![@lessjs/core](https://img.shields.io/badge/jsr-v0.22.1-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
 
 ## 海洋-岛屿架构
 
@@ -39,7 +39,7 @@ Island、Hono API Route 和早期 Registry Hub 组合在一起，让 Web Compone
 当前生产渲染模式是 **SSG + Declarative Shadow DOM**。`renderDSD()` 的架构设计允许
 未来在缓存过期时运行 ISR，或在请求时运行 SSR，但 ISR/SSR 仍是路线图能力，不应写成已发布保证。
 
-全部包已进入 v0.22 线。`@lessjs/create` 可因生成项目 smoke 修复单独提升 patch 版本。v0.21.x 硬化线已完成：Core API 收紧、DSD 证据补强、
+全部包已统一到 v0.22.1，确保 JSR 发布包解析为同一套版本。v0.21.x 硬化线已完成：Core API 收紧、DSD 证据补强、
 Adapter 架构清理、Hub trust gate 加固。CI 配备 11 道 SOP 门禁 + CodeQL 安全扫描 +
 3 个 Copilot 自定义 Agent。
 

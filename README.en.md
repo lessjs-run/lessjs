@@ -22,8 +22,8 @@ rendering kernel; v0.21 adds safe `html` templates, Signal-driven `DsdElement`
 updates, and streaming DSD without turning LessJS into a generic request-time
 SSR server.
 
-Packages are on the v0.22 line. `@lessjs/create` may advance by patch version
-when generated-project smoke fixes need a new JSR release.
+All packages are aligned to v0.22.1 so published JSR packages resolve as one
+coherent version set.
 
 ## Three Product Pillars
 

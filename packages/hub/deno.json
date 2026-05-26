@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/hub",
-  "version": "0.22.0",
+  "version": "0.22.1",
   "exports": {
     ".": "./mod.ts",
     "./schema": "./src/schema.ts",
@@ -14,9 +14,9 @@
     "./cli/check-index": "./src/cli/check-index.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.22.0",
-    "@lessjs/core/compatibility": "jsr:@lessjs/core@^0.22.0/compatibility",
-    "@lessjs/core/validate-manifest": "jsr:@lessjs/core@^0.22.0/validate-manifest",
+    "@lessjs/core": "jsr:@lessjs/core@^0.22.1",
+    "@lessjs/core/compatibility": "jsr:@lessjs/core@^0.22.1/compatibility",
+    "@lessjs/core/validate-manifest": "jsr:@lessjs/core@^0.22.1/validate-manifest",
     "typescript": "npm:typescript@^5.9.0"
   },
   "tasks": {

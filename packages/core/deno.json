@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/core",
-  "version": "0.22.0",
+  "version": "0.22.1",
   "exports": {
     ".": "./src/index.ts",
     "./errors": "./src/errors.ts",
@@ -27,7 +27,7 @@
   "imports": {
     "parse5": "npm:parse5@7.0.0",
     "alien-signals": "npm:alien-signals@^3.2.0",
-    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.22.0"
+    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.22.1"
   },
   "publish": {
     "include": [

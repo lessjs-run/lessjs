@@ -1,12 +1,12 @@
 {
   "name": "@lessjs/cem",
-  "version": "0.22.0",
+  "version": "0.22.1",
   "exports": {
     ".": "./src/index.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.22.0",
-    "@lessjs/core/cem-parser": "jsr:@lessjs/core@^0.22.0/cem-parser"
+    "@lessjs/core": "jsr:@lessjs/core@^0.22.1",
+    "@lessjs/core/cem-parser": "jsr:@lessjs/core@^0.22.1/cem-parser"
   },
   "publish": {
     "include": [

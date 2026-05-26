@@ -26,7 +26,7 @@ const log = createLogger('ssg');
 
 const VIRTUAL_CLIENT_ENTRY_ID = 'virtual:less-client-entry';
 const RESOLVED_CLIENT_ENTRY_ID = '\0' + VIRTUAL_CLIENT_ENTRY_ID;
-const FALLBACK_LESSJS_VERSION = '0.22.0';
+const FALLBACK_LESSJS_VERSION = '0.22.1';
 
 /** Workspace root derived from this module's location (packages/adapter-vite/src/cli/).
  * Only valid in local workspace (file:// import.meta.url). In JSR consumers, returns null. */

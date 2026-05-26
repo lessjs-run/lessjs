@@ -41,8 +41,8 @@ layered package architecture decision.
 
 ## Package Version State
 
-All packages are on the v0.22 line. `@lessjs/create` may advance by patch
-version independently when generated-project smoke fixes must be republished.
+All packages are aligned to **v0.22.1**. Patch releases stay unified across the
+workspace so published JSR packages resolve a coherent version set.
 
 ## Architecture Positioning
 
