@@ -1,5 +1,5 @@
 /**
- * @lessjs/core - Compatibility Classifier
+ * @lessjs/compat-check - Compatibility Classifier
  *
  * Classifies Web Component packages and declarations into compatibility tiers.
  * This is the core of LessJS's conservative admission model for third-party WCs.
@@ -13,13 +13,12 @@
  * @see ADR-0028 for the full admission model documentation
  */
 
+import type { CompatibilityClassification, CompatibilityTier } from './types.js';
 import type {
-  CompatibilityClassification,
-  CompatibilityTier,
   CustomElementsManifest,
   LessElementExtensions,
   LessPackageManifest,
-} from './types.js';
+} from '@lessjs/cem';
 
 // ─── Known Adapters ─────────────────────────────────────────────────────
 

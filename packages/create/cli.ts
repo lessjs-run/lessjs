@@ -28,6 +28,8 @@ const PKG_DIR_MAP: Record<string, string> = {
   i18n: 'i18n',
   ui: 'ui',
   signals: 'signals',
+  runtime: 'runtime',
+  styleSheet: 'style-sheet',
 };
 
 function loadWorkspaceVersion(pkg: string): string {
@@ -117,7 +119,7 @@ node_modules/
   "imports": {
     "@deno/vite-plugin": "npm:@deno/vite-plugin",
     "@lessjs/app": "jsr:@lessjs/app@^${v.app}",
-    "@lessjs/core": "jsr:@lessjs/core@^${v.core}",
+    "@lessjs/runtime": "jsr:@lessjs/runtime@^${v.runtime}",
     "@lessjs/ui": "jsr:@lessjs/ui@^${v.ui}",
     "vite": "npm:vite@8.0.10"
   },
@@ -185,8 +187,7 @@ export default defineConfig({
   })],
 });
 `,
-    'app/routes/index.ts': `import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/core';
+    'app/routes/index.ts': `import { DsdElement, StyleSheet } from '@lessjs/runtime';
 
 export const tagName = 'home-page';
 
@@ -207,8 +208,8 @@ export default class HomePage extends DsdElement {
   }
 }
 `,
-    'app/islands/my-counter.ts': `import { DsdElement, html, signal } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/core';
+    'app/islands/my-counter.ts':
+      `import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
 
 export const tagName = 'my-counter';
 

@@ -66,8 +66,8 @@ jobs:
           #   depend on core: signals, compat-check, cem, adapter-*, ui, hub
           publish_if_missing "@lessjs/core" "packages/core"
           publish_if_missing "@lessjs/signals" "packages/signals"
-          publish_if_missing "@lessjs/compat-check" "packages/compat-check"
           publish_if_missing "@lessjs/cem" "packages/cem"
+          publish_if_missing "@lessjs/compat-check" "packages/compat-check"
           publish_if_missing "@lessjs/adapter-lit" "packages/adapter-lit"
           publish_if_missing "@lessjs/adapter-react" "packages/adapter-react"
           publish_if_missing "@lessjs/adapter-vanilla" "packages/adapter-vanilla"

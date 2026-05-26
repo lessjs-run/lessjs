@@ -1,11 +1,12 @@
 /**
- * @lessjs/core - `less add` Safe Install Flow
+ * @lessjs/compat-check - `less add` Safe Install Flow
  *
  * Produces a deterministic install plan for adding a third-party Web Component
  * package to a LessJS project. Every plan is validated first - invalid packages
  * are rejected before any files are touched.
  *
  * v0.18.2: Entry point for `less add` CLI.
+ * v0.23.0: Types moved to canonical owner @lessjs/compat-check/types.
  *
  * @see docs/sop/v0.18.2-less-add-install-flow.md
  */

@@ -31,12 +31,12 @@
 
 import type { Plugin, ViteDevServer } from 'vite';
 import type { LessContentOptions } from './types.ts';
-import type { LessBuildContextLike } from '@lessjs/adapter-vite/build-types';
+import type { LessBuildContextLike } from '@lessjs/protocols/build-types';
 import {
   RESOLVED_BLOG_DATA_ID,
   RESOLVED_NAV_ID,
   VIRTUAL_NAV_ID,
-} from '@lessjs/adapter-vite/virtual-ids';
+} from '@lessjs/protocols/virtual-ids';
 import { loadBlogData } from './blog/blog-data.ts';
 import { scanNavData } from './nav/scanner.ts';
 import { createLogger } from '@lessjs/core/logger';
@@ -73,7 +73,7 @@ export {
 export type { SitemapOptions, SitemapUrl } from './types.ts';
 
 // ─── Virtual module IDs ─────────────────────────────────────────
-// VIRTUAL_NAV_ID / RESOLVED_NAV_ID are in @lessjs/adapter-vite/virtual-ids
+// VIRTUAL_NAV_ID / RESOLVED_NAV_ID are in @lessjs/protocols/virtual-ids
 
 // ─── Main Plugin ────────────────────────────────────────────────
 

@@ -14,13 +14,44 @@
  * check a package's SSR readiness.
  */
 
-// v0.21.0: Canonical implementation lives in @lessjs/core/compatibility.
-// This package is a thin re-export wrapper.
+// v0.23.0: Canonical implementation moved from @lessjs/core/compatibility.
 export {
   classifyCemManifest,
+  classifyComponent,
   classifyComponent as classifyTag,
+  classifyComponents,
+  classifyLessManifest,
+  getClassificationSummary,
+  isKnownSsrAdapter,
+  isKnownSsrSuperclass,
   isValidTagName,
+  mergeClassifications,
   validateModulePath,
-} from '@lessjs/core/compatibility';
+} from './compatibility.js';
 
-export type { CompatibilityTier } from '@lessjs/core';
+// v0.23.0: Canonical type owner for compatibility types.
+export type {
+  CemCompatibilityReport,
+  CompatibilityClassification,
+  CompatibilityTier,
+  ComponentLayer,
+  HydrateEventDescriptor,
+  HydrationHint,
+  HydrationStrategy,
+  ManifestDecision,
+  ManifestValidationReport,
+  SsrAdmissionDecision,
+  StrategySource,
+  ValidatedTag,
+  ValidationDiagnostic,
+  ValidationError,
+  ValidationResult,
+  ValidationWarning,
+} from './types.js';
+
+// v0.23.0: Validate-manifest moved from @lessjs/core.
+export { validateManifest, validateManifestFromJson } from './validate-manifest.js';
+
+// v0.23.0: less-add moved from @lessjs/core.
+export { generateAddPlan } from './less-add.js';
+export type { AddPlan, AddTagEntry, FileMutation, PackageSource } from './less-add.js';

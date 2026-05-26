@@ -10,8 +10,8 @@
  */
 
 import type { Plugin } from 'vite';
-import type { LessBuildContextLike } from '@lessjs/adapter-vite/build-types';
-import { RESOLVED_BLOG_DATA_ID, VIRTUAL_BLOG_DATA_ID } from '@lessjs/adapter-vite/virtual-ids';
+import type { LessBuildContextLike } from '@lessjs/protocols/build-types';
+import { RESOLVED_BLOG_DATA_ID, VIRTUAL_BLOG_DATA_ID } from '@lessjs/protocols/virtual-ids';
 import { loadBlogData } from './blog/blog-data.ts';
 
 export function createBlogDataPlugin(ctx: LessBuildContextLike): Plugin {

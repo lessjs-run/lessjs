@@ -276,3 +276,14 @@ jobs:
         run: deno task build:docs
       - name: Run E2E tests
         run: deno task test:e2e
+
+  # v0.23: Package graph check (SOP-005)
+  package-graph:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: '2'
+      - name: Check package graph
+        run: deno task graph:check

@@ -1,12 +1,11 @@
 {
   "name": "@lessjs/core",
-  "version": "0.22.2",
+  "version": "0.23.0",
   "exports": {
     ".": "./src/index.ts",
     "./errors": "./src/errors.ts",
     "./context": "./src/context.ts",
     "./logger": "./src/logger.ts",
-    "./style-sheet": "./src/style-sheet.ts",
     "./api": "./src/api.ts",
     "./isr": "./src/isr.ts",
     "./navigation": "./src/navigation.ts",
@@ -14,20 +13,12 @@
     "./render-instantiate": "./src/render-instantiate.ts",
     "./render-errors": "./src/render-errors.ts",
     "./render-dsd-stream": "./src/render-dsd-stream.ts",
-    "./cem-parser": "./src/cem-parser.ts",
-    "./compatibility": "./src/compatibility.ts",
-    "./signals": "./src/signals.ts",
     "./types": "./src/types.ts",
-    "./validate-manifest": "./src/validate-manifest.ts",
-    "./cli/validate-manifest": "./src/cli/validate-manifest.ts",
-    "./less-add": "./src/less-add.ts",
-    "./cli/less-add": "./src/cli/less-add.ts",
     "./dom-simulation": "./src/dom-simulation.ts"
   },
   "imports": {
     "parse5": "npm:parse5@7.0.0",
-    "alien-signals": "npm:alien-signals@^3.2.0",
-    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.22.1"
+    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.23.0"
   },
   "publish": {
     "include": [

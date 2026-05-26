@@ -93,7 +93,7 @@ Deno.test('create-less: deno.json maps LessJS package imports (v0.22 Consumer Su
   );
   assertEquals(denoJson.imports['@deno/vite-plugin'], 'npm:@deno/vite-plugin');
   assertEquals(denoJson.imports['@lessjs/app'], 'jsr:@lessjs/app@^${v.app}');
-  assertEquals(denoJson.imports['@lessjs/core'], 'jsr:@lessjs/core@^${v.core}');
+  assertEquals(denoJson.imports['@lessjs/runtime'], 'jsr:@lessjs/runtime@^${v.runtime}');
   assertEquals(denoJson.imports['@lessjs/ui'], 'jsr:@lessjs/ui@^${v.ui}');
   assertEquals(denoJson.imports['vite'], 'npm:vite@8.0.10');
   assertEquals(denoJson.nodeModulesDir, 'auto');
@@ -149,7 +149,7 @@ Deno.test('create-less: vite.config.ts includes virtual-passthrough resolve plug
 Deno.test('create-less: route index imports DsdElement (v0.20 Ocean-Island)', () => {
   const routeIndex = extractTemplate('app/routes/index.ts');
   assert(routeIndex.includes('DsdElement'));
-  assert(routeIndex.includes("from '@lessjs/core'"));
+  assert(routeIndex.includes("from '@lessjs/runtime'"));
   assert(routeIndex.includes('StyleSheet'));
   assert(routeIndex.includes('static override styles'));
   assert(routeIndex.includes('override render()'));
@@ -162,7 +162,7 @@ Deno.test('create-less: route index imports DsdElement (v0.20 Ocean-Island)', ()
 Deno.test('create-less: island counter imports DsdElement and self-registers (v0.21)', () => {
   const islandCounter = extractTemplate('app/islands/my-counter.ts');
   assert(islandCounter.includes('DsdElement'));
-  assert(islandCounter.includes("from '@lessjs/core'"));
+  assert(islandCounter.includes("from '@lessjs/runtime'"));
   assert(islandCounter.includes("tagName = 'my-counter'"));
   assert(islandCounter.includes('signal(0)'));
   assert(islandCounter.includes('return html'));
@@ -215,6 +215,12 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     ).href;
     denoJson.imports['@lessjs/signals/framework'] = pathToFileURL(
       join(repoRoot, 'packages', 'signals', 'src', 'framework.ts'),
+    ).href;
+    denoJson.imports['@lessjs/runtime'] = pathToFileURL(
+      join(repoRoot, 'packages', 'runtime', 'src', 'index.ts'),
+    ).href;
+    denoJson.imports['@lessjs/style-sheet'] = pathToFileURL(
+      join(repoRoot, 'packages', 'style-sheet', 'src', 'index.ts'),
     ).href;
     denoJson.imports['@lessjs/content'] = pathToFileURL(
       join(repoRoot, 'packages', 'content', 'src', 'index.ts'),
@@ -281,6 +287,14 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       {
         find: '@lessjs/signals/framework',
         replacement: vitePath(join(signalsSrc, 'framework.ts')),
+      },
+      {
+        find: '@lessjs/runtime',
+        replacement: vitePath(join(repoRoot, 'packages', 'runtime', 'src', 'index.ts')),
+      },
+      {
+        find: '@lessjs/style-sheet',
+        replacement: vitePath(join(repoRoot, 'packages', 'style-sheet', 'src', 'index.ts')),
       },
       {
         find: '@lessjs/adapter-lit/ssr',

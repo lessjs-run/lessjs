@@ -62,7 +62,7 @@ import {
 } from './types.js';
 import { getRegisteredAdapters } from './adapter-registry.js';
 import { renderNestedCustomElements } from './render-nested.js';
-import type { StyleSheetLike } from './style-sheet.js';
+import type { StyleSheetLike } from '@lessjs/style-sheet';
 import { createLogger } from './logger.js';
 
 // --- Extracted modules -----------------------------------------

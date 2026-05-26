@@ -48,7 +48,7 @@
  */
 
 import type { ReactiveHost } from './types.js';
-import type { StyleSheetLike } from './style-sheet.js';
+import type { StyleSheetLike } from '@lessjs/style-sheet';
 import {
   applyRuntimeTemplateBindings,
   collectTemplateSignals,

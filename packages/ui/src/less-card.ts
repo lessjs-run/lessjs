@@ -22,13 +22,8 @@
  * ```
  */
 
-import {
-  DsdElement,
-  html,
-  StyleSheet,
-  type StyleSheetLike,
-  type TemplateResult,
-} from '@lessjs/core';
+import { DsdElement, html, type TemplateResult } from '@lessjs/core';
+import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
 export const tagName = 'less-card';

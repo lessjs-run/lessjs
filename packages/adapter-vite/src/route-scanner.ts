@@ -558,8 +558,8 @@ export async function detectAndClassifyCemPackages(
   const cemResults = await scanCemManifests(nodeModulesDir);
   if (cemResults.length === 0) return [];
 
-  const { parseCem } = await import('@lessjs/core/cem-parser');
-  const { classifyCemManifest } = await import('@lessjs/core/compatibility');
+  const { parseCem } = await import('@lessjs/cem');
+  const { classifyCemManifest } = await import('@lessjs/compat-check');
 
   const allClassifications: CompatibilityClassification[] = [];
 

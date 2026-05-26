@@ -941,24 +941,24 @@
     "members": {
       "packages/adapter-lit": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.22.1"
+          "jsr:@lessjs/core@0.23"
         ]
       },
       "packages/adapter-react": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.22.1",
+          "jsr:@lessjs/core@0.23",
           "npm:react-dom@19",
           "npm:react@19"
         ]
       },
       "packages/adapter-vanilla": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.22.1"
+          "jsr:@lessjs/core@0.23"
         ]
       },
       "packages/adapter-vite": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.22.1",
+          "jsr:@lessjs/core@0.23",
           "npm:@hono/vite-dev-server@~0.25.3",
           "npm:esbuild@0.25",
           "npm:hono@4",
@@ -967,27 +967,23 @@
       },
       "packages/app": {
         "dependencies": [
-          "jsr:@lessjs/adapter-vite@~0.22.1",
-          "jsr:@lessjs/content@~0.22.1",
-          "jsr:@lessjs/core@~0.22.1",
-          "jsr:@lessjs/i18n@~0.22.1",
+          "jsr:@lessjs/adapter-vite@0.23",
+          "jsr:@lessjs/content@0.23",
+          "jsr:@lessjs/core@0.23",
+          "jsr:@lessjs/i18n@0.23",
           "npm:vite@8.0.10"
-        ]
-      },
-      "packages/cem": {
-        "dependencies": [
-          "jsr:@lessjs/core@~0.22.1"
         ]
       },
       "packages/compat-check": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.22.1"
+          "jsr:@lessjs/cem@0.23",
+          "jsr:@lessjs/core@0.23"
         ]
       },
       "packages/content": {
         "dependencies": [
-          "jsr:@lessjs/adapter-vite@~0.22.1",
-          "jsr:@lessjs/core@~0.22.1",
+          "jsr:@lessjs/core@0.23",
+          "jsr:@lessjs/protocols@0.23",
           "npm:@types/sanitize-html@2",
           "npm:gray-matter@^4.0.3",
           "npm:marked@15",
@@ -998,22 +994,29 @@
       },
       "packages/core": {
         "dependencies": [
-          "jsr:@lessjs/style-sheet@~0.22.1",
-          "npm:alien-signals@^3.2.0",
+          "jsr:@lessjs/style-sheet@0.23",
           "npm:parse5@7.0.0"
         ]
       },
       "packages/hub": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.22.1",
+          "jsr:@lessjs/compat-check@0.23",
+          "jsr:@lessjs/core@0.23",
           "npm:typescript@^5.9.0"
         ]
       },
       "packages/i18n": {
         "dependencies": [
-          "jsr:@lessjs/adapter-vite@~0.22.1",
-          "jsr:@lessjs/core@~0.22.1",
+          "jsr:@lessjs/core@0.23",
+          "jsr:@lessjs/protocols@0.23",
           "npm:vite@8.0.10"
+        ]
+      },
+      "packages/runtime": {
+        "dependencies": [
+          "jsr:@lessjs/core@0.23",
+          "jsr:@lessjs/signals@0.23",
+          "jsr:@lessjs/style-sheet@0.23"
         ]
       },
       "packages/signals": {
@@ -1023,7 +1026,7 @@
       },
       "packages/ui": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.22.1"
+          "jsr:@lessjs/core@0.23"
         ]
       }
     }
