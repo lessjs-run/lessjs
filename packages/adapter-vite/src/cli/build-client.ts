@@ -26,7 +26,7 @@ const log = createLogger('ssg');
 
 const VIRTUAL_CLIENT_ENTRY_ID = 'virtual:less-client-entry';
 const RESOLVED_CLIENT_ENTRY_ID = '\0' + VIRTUAL_CLIENT_ENTRY_ID;
-const FALLBACK_LESSJS_VERSION = '0.21.16';
+const FALLBACK_LESSJS_VERSION = '0.22.0';
 
 /** Workspace root derived from this module's location (packages/adapter-vite/src/cli/).
  * Only valid in local workspace (file:// import.meta.url). In JSR consumers, returns null. */
@@ -147,7 +147,15 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
         replacement: a.replacement,
       }))
       : Object.entries(resolveAlias).map(([find, replacement]) => ({ find, replacement })))
-    : null;
+    : [];
+
+  // Always resolve @lessjs/style-sheet from workspace (core re-exports it)
+  if (WORKSPACE_ROOT) {
+    serializedAlias.push({
+      find: '@lessjs/style-sheet',
+      replacement: join(WORKSPACE_ROOT, 'packages', 'style-sheet', 'src', 'index.ts'),
+    });
+  }
 
   if (localIslands.length === 0 && packageIslandDecls.length === 0) {
     log.info('No islands found - zero client JS output');
@@ -237,7 +245,7 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
       },
     },
     resolve: {
-      ...(serializedAlias ? { alias: serializedAlias } : {}),
+      ...(serializedAlias.length > 0 ? { alias: serializedAlias } : {}),
       extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     },
     ssr: {

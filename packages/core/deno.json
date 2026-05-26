@@ -27,7 +27,8 @@
   "imports": {
     "parse5": "npm:parse5@7.0.0",
     "@lessjs/signals": "jsr:@lessjs/signals@^0.22.0",
-    "@lessjs/signals/framework": "jsr:@lessjs/signals@^0.22.0/framework"
+    "@lessjs/signals/framework": "jsr:@lessjs/signals@^0.22.0/framework",
+    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.22.0"
   },
   "publish": {
     "include": [
