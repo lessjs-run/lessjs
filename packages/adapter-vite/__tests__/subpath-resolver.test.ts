@@ -8,7 +8,6 @@ import {
   assertEquals,
   assertExists,
   assertMatch,
-  assertStringIncludes,
 } from 'jsr:@std/assert@^1.0.0';
 import {
   CORE_SUBPATHS,
@@ -188,7 +187,7 @@ Deno.test('createCoreResolvePlugin: remote mode load returns undefined for non-v
   assertEquals(result, undefined);
 });
 
-Deno.test('createCoreResolvePlugin: remote mode load checks cache', async () => {
+Deno.test('createCoreResolvePlugin: remote mode load checks cache', () => {
   // This test verifies that load function exists and handles virtual IDs.
   // Actual fetch is tested in integration; this confirms signature and cache path.
   const plugin = createCoreResolvePlugin('https://jsr.io/@lessjs/adapter-vite/0.17.0/src/index.ts');

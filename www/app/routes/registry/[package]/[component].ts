@@ -14,7 +14,7 @@
 
 export const meta = { section: 'Registry', label: 'Component Detail', order: 6 };
 
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterRegistryNav } from '../../../utils/nav-filter.js';
 import '@lessjs/ui/less-layout';

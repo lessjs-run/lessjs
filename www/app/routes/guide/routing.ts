@@ -2,7 +2,7 @@ export const meta = { section: 'Core', label: 'Routing', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { DsdElement } from '@lessjs/core';
+import { DsdElement } from '@lessjs/runtime';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
@@ -53,7 +53,7 @@ export class RoutingGuidePage extends DsdElement {
             </tbody>
           </table>
 
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
 
 export class PostPage extends DsdElement {
   slug = '';
@@ -73,7 +73,7 @@ export class PostPage extends DsdElement {
           </table>
 
           <h2>路由模块契约</h2>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
 
 export class AboutPage extends DsdElement {
   override render() {
@@ -137,7 +137,7 @@ export const tagName = 'page-about';</code></pre></less-code-block>
             </tbody>
           </table>
 
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
 
 export class PostPage extends DsdElement {
   slug = '';
@@ -157,7 +157,7 @@ export class PostPage extends DsdElement {
           </table>
 
           <h2>Route Module Contract</h2>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
 
 export class AboutPage extends DsdElement {
   override render() {

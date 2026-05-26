@@ -3,7 +3,7 @@ export const meta = { section: 'Compatibility', label: 'Standards & Registry', o
 import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
-import { DsdElement } from '@lessjs/core';
+import { DsdElement } from '@lessjs/runtime';
 import '@lessjs/ui/less-layout';
 
 export class StandardsRegistryGuidePage extends DsdElement {

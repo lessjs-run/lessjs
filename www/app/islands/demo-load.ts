@@ -2,7 +2,7 @@
  * v0.21 Demo: client:load strategy.
  * Imports immediately when the module loads.
  */
-import { island } from '@lessjs/core';
+import { island } from '@lessjs/runtime';
 
 class DemoLoad extends HTMLElement {
   constructor() {

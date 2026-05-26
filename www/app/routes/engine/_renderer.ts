@@ -6,7 +6,7 @@
  * @see {@link ../../packages/core/src/types.ts} for LessRenderer interface
  */
 
-import type { LessRenderer } from '@lessjs/core';
+import type { LessRenderer } from '@lessjs/runtime';
 
 const GITHUB_EDIT_BASE = 'https://github.com/lessjs-run/lessjs/edit/main/www/app/routes';
 

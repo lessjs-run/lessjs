@@ -10,7 +10,7 @@
  * - Quick Start: less-step-card components
  * - Bento hierarchy with WC Engine dominant card, sec-divider-free transitions
  */
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -26,7 +26,7 @@ import '../../islands/media-chrome-showcase.js';
 export const tagName = 'docs-home';
 
 const CODE_COMPONENT = `// app/routes/index.ts
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 
 const sheet = new StyleSheet();
 sheet.replaceSync(':host { display: block; }');

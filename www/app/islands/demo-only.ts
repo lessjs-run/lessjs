@@ -2,7 +2,7 @@
  * v0.21 Demo: client:only strategy.
  * Client-only render — no DSD, no SSR. Fully owns its shadow root on the client.
  */
-import { island } from '@lessjs/core';
+import { island } from '@lessjs/runtime';
 
 class DemoOnly extends HTMLElement {
   constructor() {

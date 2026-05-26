@@ -145,7 +145,7 @@ Deno.test('lessPlugin: virtual-entry resolves virtual:less-hono-entry', () => {
   const plugins = less({});
   const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
 
-  const resolved = (virtualPlugin.resolveId as Function)('virtual:less-hono-entry');
+  const resolved = (virtualPlugin.resolveId as (id: string) => unknown)('virtual:less-hono-entry');
   assertExists(resolved);
   assertEquals(resolved, '\0virtual:less-hono-entry');
 });
@@ -154,7 +154,7 @@ Deno.test('lessPlugin: virtual-entry resolves virtual:less-build-trigger', () =>
   const plugins = less({});
   const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
 
-  const resolved = (virtualPlugin.resolveId as Function)('virtual:less-build-trigger');
+  const resolved = (virtualPlugin.resolveId as (id: string) => unknown)('virtual:less-build-trigger');
   assertExists(resolved);
   assertEquals(resolved, '\0virtual:less-build-trigger');
 });
@@ -163,7 +163,7 @@ Deno.test('lessPlugin: virtual-entry resolveId returns undefined for unknown IDs
   const plugins = less({});
   const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
 
-  const result = (virtualPlugin.resolveId as Function)('some-random-module');
+  const result = (virtualPlugin.resolveId as (id: string) => unknown)('some-random-module');
   assertEquals(result, undefined);
 });
 
@@ -171,7 +171,7 @@ Deno.test('lessPlugin: virtual-entry load returns code for resolved entry ID', (
   const plugins = less({});
   const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
 
-  const code = (virtualPlugin.load as Function)('\0virtual:less-hono-entry');
+  const code = (virtualPlugin.load as (id: string) => unknown)('\0virtual:less-hono-entry');
   assertExists(code);
   assertStringIncludes(code as string, 'hono');
 });
@@ -180,7 +180,7 @@ Deno.test('lessPlugin: virtual-entry load returns null export for build trigger'
   const plugins = less({});
   const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
 
-  const code = (virtualPlugin.load as Function)('\0virtual:less-build-trigger');
+  const code = (virtualPlugin.load as (id: string) => unknown)('\0virtual:less-build-trigger');
   assertExists(code);
   assertEquals(code, 'export default null;');
 });
@@ -189,7 +189,7 @@ Deno.test('lessPlugin: virtual-entry load returns undefined for unknown IDs', ()
   const plugins = less({});
   const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
 
-  const result = (virtualPlugin.load as Function)('unknown-virtual-id');
+  const result = (virtualPlugin.load as (id: string) => unknown)('unknown-virtual-id');
   assertEquals(result, undefined);
 });
 
@@ -223,7 +223,7 @@ Deno.test('lessPlugin: core config sets chunkSizeWarningLimit', () => {
   const plugins = less({});
   const corePlugin = plugins.find((p) => p.name === 'less:core')!;
 
-  const result = (corePlugin.config as Function)({}) as Record<string, unknown>;
+  const result = (corePlugin.config as (id: string) => unknown)({}) as Record<string, unknown>;
   const build = result.build as Record<string, unknown>;
   assertEquals(build.chunkSizeWarningLimit, 1500);
 });
@@ -232,7 +232,7 @@ Deno.test('lessPlugin: core config includes rollupOptions with build trigger inp
   const plugins = less({});
   const corePlugin = plugins.find((p) => p.name === 'less:core')!;
 
-  const result = (corePlugin.config as Function)({}) as Record<string, unknown>;
+  const result = (corePlugin.config as (id: string) => unknown)({}) as Record<string, unknown>;
   const build = result.build as Record<string, unknown>;
   const rollupOptions = build.rollupOptions as Record<string, unknown>;
   const input = rollupOptions.input as string[];

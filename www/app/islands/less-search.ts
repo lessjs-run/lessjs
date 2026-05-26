@@ -27,7 +27,7 @@
  * - Component state is reset on connectedCallback() for SPA navigation safety
  */
 
-import { DsdElement, html, signal, StyleSheet } from '@lessjs/core';
+import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
 interface SearchEntry {

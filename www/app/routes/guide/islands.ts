@@ -6,7 +6,7 @@ export const meta = { section: 'Core', label: 'Islands & Hydration', order: 25 }
 import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterFrameworkNav } from '../../utils/nav-filter.ts';
-import { DsdElement } from '@lessjs/core';
+import { DsdElement } from '@lessjs/runtime';
 import '@lessjs/ui/less-layout';
 
 // Side-effect imports: island() registers custom elements for SSR rendering.

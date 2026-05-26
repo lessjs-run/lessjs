@@ -2,7 +2,7 @@
  * 404 Not Found Page - with search, helpful links, and old URL redirects
  */
 import { headerNav, navSections } from 'virtual:less-nav';
-import { DsdElement, StyleSheet } from '@lessjs/core';
+import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { pageStyles } from '../components/page-styles.js';
 const pageSheet = new StyleSheet();
 pageSheet.replaceSync(pageStyles);

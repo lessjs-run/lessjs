@@ -160,7 +160,7 @@ function topologicalSort(graph: Map<string, string[]>): string[] {
     inDegree.set(node, 0);
   }
 
-  for (const [node, deps] of graph) {
+  for (const [_node, deps] of graph) {
     for (const dep of deps) {
       // Only count edges to nodes that exist in the graph
       if (nodeSet.has(dep)) {

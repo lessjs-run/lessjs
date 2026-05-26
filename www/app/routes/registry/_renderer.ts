@@ -6,7 +6,7 @@
  * attach on the client. This script provides native search/filter.
  */
 
-import type { LessRenderer } from '@lessjs/core';
+import type { LessRenderer } from '@lessjs/runtime';
 
 const SEARCH_SCRIPT = `<script>
 // Registry Hub - vanilla JS search (Lit component never hydrates on SSG pages)

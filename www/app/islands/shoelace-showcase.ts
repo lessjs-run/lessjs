@@ -7,7 +7,7 @@
  *
  * @lessjs/app island - Shoelace WCs need client DOM, but static wrapper renders via DSD.
  */
-import { DsdElement, html, StyleSheet } from '@lessjs/core';
+import { DsdElement, html, StyleSheet } from '@lessjs/runtime';
 import '@shoelace-style/shoelace/dist/themes/light.css';
 
 // Explicit component imports to prevent Rolldown tree-shaking.
