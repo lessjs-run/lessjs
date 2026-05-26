@@ -7,7 +7,6 @@
     "./alien-engine": "./src/alien-engine.ts"
   },
   "imports": {
-    "@lessjs/core/signals": "jsr:@lessjs/core@^0.22.0/signals",
     "alien-signals": "npm:alien-signals@^3.2.0"
   },
   "publish": {

@@ -998,8 +998,8 @@
       },
       "packages/core": {
         "dependencies": [
-          "jsr:@lessjs/signals@0.22",
           "jsr:@lessjs/style-sheet@0.22",
+          "npm:alien-signals@^3.2.0",
           "npm:parse5@7.0.0"
         ]
       },
@@ -1018,7 +1018,6 @@
       },
       "packages/signals": {
         "dependencies": [
-          "jsr:@lessjs/core@0.22",
           "npm:alien-signals@^3.2.0"
         ]
       },

@@ -10,7 +10,7 @@
  */
 
 import { createDefaultEngine } from './alien-engine.ts';
-import type { SignalEngine } from '@lessjs/core/signals';
+import type { SignalEngine } from './types.ts';
 
 // ─── Engine (sync — alien-signals is hard dependency) ───────────
 const engine: SignalEngine = createDefaultEngine();

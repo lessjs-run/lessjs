@@ -33,3 +33,10 @@ export interface ReadonlySignal<T> {
 
 /** Alias for readability */
 export type Signal<T> = WritableSignal<T> | ReadonlySignal<T>;
+
+/** Signal engine protocol used by framework integrations. */
+export interface SignalEngine {
+  signal<T>(initialValue: T): WritableSignal<T>;
+  computed<T>(fn: () => T): ReadonlySignal<T>;
+  effect(fn: () => void | Unsubscribe): Unsubscribe;
+}

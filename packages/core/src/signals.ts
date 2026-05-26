@@ -14,6 +14,8 @@
  * @module @lessjs/core/signals
  */
 
+import { computed as _computed, effect as _effect, signal as _signal } from 'alien-signals';
+
 /** Unsubscribe function returned by reactive subscriptions. */
 export type Unsubscribe = () => void;
 
@@ -68,4 +70,53 @@ export interface SignalEngine {
    * and on final unsubscribe.
    */
   effect(fn: () => void | Unsubscribe): Unsubscribe;
+}
+
+/** Create a writable signal backed by alien-signals. */
+export function signal<T>(initialValue: T): WritableSignal<T> {
+  const s = _signal(initialValue);
+  return {
+    get value(): T {
+      return s();
+    },
+    set value(v: T) {
+      s(v);
+    },
+    subscribe(fn: (value: T) => void): Unsubscribe {
+      const stop = _effect(() => fn(s()));
+      return () => stop();
+    },
+  };
+}
+
+/** Create a readonly computed signal backed by alien-signals. */
+export function computed<T>(fn: () => T): ReadonlySignal<T> {
+  const c = _computed(fn);
+  return {
+    get value(): T {
+      return c();
+    },
+    subscribe(fn2: (value: T) => void): Unsubscribe {
+      const stop = _effect(() => fn2(c()));
+      return () => stop();
+    },
+  };
+}
+
+/** Run a reactive effect and return its unsubscribe handle. */
+export function effect(fn: () => void | Unsubscribe): Unsubscribe {
+  let cleanup: Unsubscribe | void;
+  const stop = _effect(() => {
+    try {
+      cleanup?.();
+    } catch { /* swallow cleanup errors */ }
+    cleanup = fn();
+  });
+
+  return () => {
+    try {
+      cleanup?.();
+    } catch { /* swallow cleanup errors */ }
+    stop();
+  };
 }

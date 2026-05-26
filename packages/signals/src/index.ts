@@ -11,10 +11,7 @@
  */
 
 // ─── Public types ───────────────────────────────────────────────
-export type { ReadonlySignal, Signal, Unsubscribe, WritableSignal } from './types.ts';
-
-// ─── SignalEngine facade (SOP-004) ──────────────────────────────
-export type { SignalEngine } from '@lessjs/core/signals';
+export type { ReadonlySignal, Signal, SignalEngine, Unsubscribe, WritableSignal } from './types.ts';
 
 // ─── Alien engine (default) ─────────────────────────────────────
 export { createAlienEngine, createDefaultEngine } from './alien-engine.ts';

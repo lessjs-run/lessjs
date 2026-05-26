@@ -15,7 +15,7 @@
  */
 
 import { computed as _c, effect as _e, signal as _s } from 'alien-signals';
-import type { SignalEngine } from '@lessjs/core/signals';
+import type { SignalEngine } from './types.ts';
 
 // ─── Adapter (synchronous wrapper around alien-signals API) ─────
 
