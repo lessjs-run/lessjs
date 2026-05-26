@@ -1,68 +1,28 @@
 /**
- * @lessjs/signals - Reactive signals for Island-to-Island communication.
+ * @lessjs/signals - Reactive signals powered by alien-signals.
  *
- * v0.6': Based on TC39 signal-polyfill (Apache-2.0 / MIT)
- * Engine: Signal.State + Signal.Computed + Signal.subtle.Watcher
- * Framework API: signal(), computed(), effect(), islandEffect(), channel(), themeSignal
+ * v0.22: Alien-signals is the sole engine. TC39 polyfill removed.
  *
- * When browser natively supports Signal, engine auto-switches to native.
- *
- * v0.22 (SOP-004): Signals Facade
- *   SignalEngine interface is defined in @lessjs/core/signals for zero-cost
- *   interop. An experimental alien-signals adapter ships as ./alien-engine.ts.
- *   Set LESSJS_SIGNALS_ENGINE=alien to test.
- *
- * Architecture (3 layers):
- *   Engine layer    -> TC39 Signal primitives (polyfill or native)
- *   Framework layer -> User-friendly API (.value syntax, subscribe)
- *   Sugar layer     -> islandEffect(), channel(), themeSignal
- *
- * LessJS L2 Island Communication Rules:
- *   1. Islands must not reference each other's shadow DOM directly.
- *   2. Islands communicate through shared signals or channel events.
- *   3. Signals are independent of any DOM lifecycle.
- *   4. Infrastructure APIs (localStorage, document.documentElement,
- *      IntersectionObserver, CustomEvent) are exempt from L2 constraints.
+ * Architecture:
+ *   Engine layer    -> alien-signals adapter (alien-engine.ts)
+ *   Framework layer -> User-friendly API: signal(), computed(), effect()
  *
  * @module @lessjs/signals
  */
 
 // ─── Public types ───────────────────────────────────────────────
-export type {
-  Channel,
-  ChannelHandler,
-  ReadonlySignal,
-  Signal,
-  Unsubscribe,
-  WritableSignal,
-} from './types.ts';
+export type { ReadonlySignal, Signal, Unsubscribe, WritableSignal } from './types.ts';
 
 // ─── SignalEngine facade (SOP-004) ──────────────────────────────
 export type { SignalEngine } from '@lessjs/core/signals';
 
-// ─── Alien engine (default since v0.22) ────────────────────────
+// ─── Alien engine (default) ─────────────────────────────────────
 export { createAlienEngine, createDefaultEngine } from './alien-engine.ts';
 
 // ─── Framework layer ────────────────────────────────────────────
 export { computed, effect, signal } from './framework.ts';
 
-// ─── Sugar layer ────────────────────────────────────────────────
-export { batch, channel, islandEffect, isNativeSignal, themeSignal, untracked } from './sugar.ts';
-
-// ─── Default export for convenient import ──────────────────────
-// Tree-shakable since bundlers eliminate the default object when
-// only named imports are used.
+// ─── Default export (tree-shakeable) ────────────────────────────
 import { computed, effect, signal } from './framework.ts';
-import { batch, channel, islandEffect, isNativeSignal, themeSignal, untracked } from './sugar.ts';
 
-export default {
-  signal,
-  computed,
-  effect,
-  islandEffect,
-  batch,
-  untracked,
-  channel,
-  themeSignal,
-  isNativeSignal,
-};
+export default { signal, computed, effect };

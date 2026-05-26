@@ -33,17 +33,3 @@ export interface ReadonlySignal<T> {
 
 /** Alias for readability */
 export type Signal<T> = WritableSignal<T> | ReadonlySignal<T>;
-
-/** Channel event handler type */
-export type ChannelHandler<T = unknown> = (data: T) => void;
-
-/**
- * A named event bus for cross-island communication.
- * Uses CustomEvent on document.body - platform API, L2 exempt.
- */
-export interface Channel<T = unknown> {
-  readonly name: string;
-  emit(event: string, data?: T): void;
-  on(event: string, handler: ChannelHandler<T>): Unsubscribe;
-  once(event: string, handler: ChannelHandler<T>): Unsubscribe;
-}
