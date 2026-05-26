@@ -1,3 +1,4 @@
+// deno-lint-ignore-file ban-types, no-unused-vars, require-await
 /**
  * @lessjs/adapter-vite - less-plugin.ts tests (Deno)
  *

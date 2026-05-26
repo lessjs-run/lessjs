@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-unused-vars
 /**
  * @lessjs/adapter-vite - subpath-resolver.ts tests (Deno)
  *

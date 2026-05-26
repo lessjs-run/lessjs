@@ -14,7 +14,7 @@
 
 import { validateManifest, validateManifestFromJson } from '../src/validate-manifest.ts';
 
-import type { CustomElementsManifest } from '../src/types.ts';
+import type { CustomElementsManifest } from '@lessjs/cem/types';
 
 import { assert, assertEquals } from 'jsr:@std/assert@1';
 
