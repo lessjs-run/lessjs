@@ -34,6 +34,10 @@ export type { SignalLike, TemplateResult, TemplateValue, UnsafeHtmlValue } from 
 export { escapeAttr, escapeAttrValue, escapeHtml } from '@lessjs/core';
 export type { SafeHtml, UnsafeHtml } from '@lessjs/core';
 
+// Island authoring helpers
+export { getSSRProps, island, lessBind } from '@lessjs/core';
+export type { IslandOptions } from '@lessjs/core';
+
 // ─── @lessjs/signals — Reactive primitives ──────────────────────
 
 export { computed, effect, signal } from '@lessjs/signals';

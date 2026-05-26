@@ -20,11 +20,14 @@ function vitePath(path: string): string {
 
 // Extract each template by splitting on known keys
 function extractTemplate(key: string): string {
-  const marker = `'${key}': \``;
+  const marker = `'${key}':`;
   const startIdx = cliSource.indexOf(marker);
   if (startIdx === -1) throw new Error(`Template '${key}' not found`);
 
-  const contentStart = startIdx + marker.length;
+  const firstBacktick = cliSource.indexOf('`', startIdx + marker.length);
+  if (firstBacktick === -1) throw new Error(`Template '${key}' has no string body`);
+
+  const contentStart = firstBacktick + 1;
   let depth = 1;
   let i = contentStart;
 
@@ -382,8 +385,8 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     // v0.21.6: Template no longer has hardcoded aliases.
     // Inject resolve.alias for local workspace testing.
     viteConfig = viteConfig.replace(
-      'plugins: [less',
-      `resolve: { alias: ${JSON.stringify(aliases, null, 4)} },\n  plugins: [less`,
+      'plugins: [',
+      `resolve: { alias: ${JSON.stringify(aliases, null, 4)} },\n  plugins: [`,
     );
     writeFileSync(viteConfigPath, viteConfig);
 

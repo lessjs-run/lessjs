@@ -102,6 +102,8 @@ async function resolveVersions(): Promise<Record<string, string>> {
     i18n: 'i18n',
     ui: 'ui',
     signals: 'signals',
+    runtime: 'runtime',
+    styleSheet: 'style-sheet',
   };
   const entries = await Promise.all(
     keys.map(async (k) => [k, await fetchJsrVersion(jsrNames[k])]),
@@ -234,7 +236,7 @@ export default class MyCounter extends DsdElement {
 if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
   customElements.define(tagName, MyCounter);
 }
-  `,
+`,
   };
 }
 

@@ -40,6 +40,7 @@
     "@lessjs/style-sheet": "./packages/style-sheet/src/index.ts",
     "@lessjs/compat-check": "./packages/compat-check/src/index.ts",
     "@lessjs/cem": "./packages/cem/src/index.ts",
+    "@lessjs/cem/types": "./packages/cem/src/types.ts",
     "@lessjs/ui": "./packages/ui/src/index.ts",
     // Explicit subpath entries required - Vite alias prefix-matching
     // cannot handle subpath exports from a file-based alias (ENOTDIR).
