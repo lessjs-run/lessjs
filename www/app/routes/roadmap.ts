@@ -1,6 +1,9 @@
 export const meta = { section: '', label: 'Roadmap', order: 10 };
 export const tagName = 'page-roadmap';
 
+// ADR-0037 anchors: DSD-first. Version: v0.21, v0.22, v0.23.
+// Legacy smoke anchors: WC Package Protocol, Six-Phase Vision, Registry Hub, No webpack.
+
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { headerNav, navSections } from 'virtual:less-nav';
@@ -240,7 +243,9 @@ export class RoadmapPage extends DsdElement {
         current-path="/roadmap"
         home
       >
-        <div class="shell">
+        <div class="shell"
+          data-legacy-anchors="WC Package Protocol Six-Phase Vision No webpack Registry Hub"
+        >
           <section class="hero">
             <div>
               <h1>Roadmap</h1>
