@@ -13,7 +13,7 @@ early Registry Hub for Web Component discovery and compatibility evidence.
 
 ## Current State
 
-Project line: **v0.22.x Architecture Integrity**.
+Project line: **v0.23.x Layered Package Architecture**.
 
 The current production rendering mode is **SSG + Declarative Shadow DOM** with
 explicit island hydration strategies, route-level ISR metadata, and Reactive DSD
@@ -22,7 +22,7 @@ rendering kernel; v0.21 adds safe `html` templates, Signal-driven `DsdElement`
 updates, and streaming DSD without turning LessJS into a generic request-time
 SSR server.
 
-All packages are aligned to v0.22.1 so published JSR packages resolve as one
+All packages are aligned to v0.23.0 so published JSR packages resolve as one
 coherent version set.
 
 ## Three Product Pillars
@@ -77,15 +77,13 @@ LessJS
 
 ## What Is Next
 
-- **Architecture Integrity** - consumer import cleanup, package boundary repair,
-  adapter-vite decomposition, and stronger quality gates.
+- **Layered Package Architecture** - protocols/contracts ownership, core
+  runtime boundary, runtime/app facade split, package graph gates, and docs
+  governance.
 - **Signals facade** - keep a LessJS-owned API while isolating the underlying
   signal engine.
 - **Validation ownership** - unify Hub, CEM, manifest, and submission gate
   diagnostics.
-- **Layered Package Architecture** - protocols/contracts ownership, core
-  runtime boundary, runtime/app facade split, package graph gates, and docs
-  governance.
 - **Edge Full-Stack after cleanup** - ISR handler, KV adapters, and deployment
   guides resume after architecture layering exits.
 - **Hub growth** - more real Web Component packages and clearer compatibility
@@ -105,24 +103,26 @@ support.
 
 ## Packages
 
-| Package                   | Role                                                                                          |
-| ------------------------- | --------------------------------------------------------------------------------------------- |
-| `@lessjs/core`            | DSD renderer, DsdElement, StyleSheet, renderer protocol, CEM parser, compatibility classifier |
-| `@lessjs/adapter-vite`    | Vite orchestration, route scanning, SSG pipeline, island entry generation                     |
-| `@lessjs/adapter-lit`     | Lit adapter, retained mainly for island and compatibility paths                               |
-| `@lessjs/adapter-react`   | React adapter                                                                                 |
-| `@lessjs/adapter-vanilla` | Vanilla Web Component adapter                                                                 |
-| `@lessjs/app`             | Unified `lessjs()` entry                                                                      |
-| `@lessjs/content`         | Blog, nav, and sitemap build plugins                                                          |
-| `@lessjs/i18n`            | Locale expansion and route helpers                                                            |
-| `@lessjs/ui`              | DSD-native Web Components and island examples                                                 |
-| `@lessjs/signals`         | Signals helpers and island effects                                                            |
-| `@lessjs/compat-check`    | SSR compatibility classifier (standalone)                                                     |
-| `@lessjs/cem`             | Custom Elements Manifest parser (standalone)                                                  |
-| `@lessjs/style-sheet`     | Cross-environment CSSStyleSheet abstraction (standalone)                                      |
-| `@lessjs/rpc`             | Fetch-based RPC controller                                                                    |
-| `@lessjs/hub`             | Registry Hub schema, indexer, scanner, validator, snapshots                                   |
-| `@lessjs/create`          | Project scaffold CLI                                                                          |
+| Package                   | Role                                                                          |
+| ------------------------- | ----------------------------------------------------------------------------- |
+| `@lessjs/core`            | Runtime kernel: DsdElement, templates, renderDSD, islands, navigation, logger |
+| `@lessjs/runtime`         | Component authoring facade: core runtime APIs, StyleSheet, and signal helpers |
+| `@lessjs/protocols`       | Shared build contracts and virtual module ids                                 |
+| `@lessjs/adapter-vite`    | Vite orchestration, route scanning, SSG pipeline, island entry generation     |
+| `@lessjs/adapter-lit`     | Lit adapter, retained mainly for island and compatibility paths               |
+| `@lessjs/adapter-react`   | React adapter                                                                 |
+| `@lessjs/adapter-vanilla` | Vanilla Web Component adapter                                                 |
+| `@lessjs/app`             | Configuration facade for `lessjs()`                                           |
+| `@lessjs/content`         | Blog, nav, and sitemap build plugins                                          |
+| `@lessjs/i18n`            | Locale expansion and route helpers                                            |
+| `@lessjs/ui`              | DSD-native Web Components and island examples                                 |
+| `@lessjs/signals`         | LessJS signal facade powered by `alien-signals`                               |
+| `@lessjs/compat-check`    | SSR compatibility classifier (standalone)                                     |
+| `@lessjs/cem`             | Custom Elements Manifest parser (standalone)                                  |
+| `@lessjs/style-sheet`     | Cross-environment CSSStyleSheet abstraction (standalone)                      |
+| `@lessjs/rpc`             | Fetch-based RPC controller                                                    |
+| `@lessjs/hub`             | Registry Hub schema, indexer, scanner, validator, snapshots                   |
+| `@lessjs/create`          | Project scaffold CLI                                                          |
 
 ## Rendering Pipeline
 
@@ -161,8 +161,8 @@ Every component should reach one deterministic outcome:
 | v0.19   | Registry Hub + Component Browser          | Done    |
 | v0.20   | Ocean-Island Architecture + DSD-native UI | Shipped |
 | v0.21   | Reactive DSD + streaming                  | Done    |
-| v0.22   | Architecture Integrity + cleanup gates    | Current |
-| v0.23   | Layered Package Architecture              | Planned |
+| v0.22   | Architecture Integrity + cleanup gates    | Done    |
+| v0.23   | Layered Package Architecture              | Current |
 | v0.24   | Edge Full-Stack ISR + KV + Showcase       | Planned |
 | v0.25   | Ecosystem Hardening                       | Planned |
 | v1.0    | Stable Engine contracts                   | Vision  |

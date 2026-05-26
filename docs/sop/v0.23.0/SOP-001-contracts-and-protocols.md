@@ -2,7 +2,7 @@
 
 > Version: v0.23.0\
 > Priority: P0\
-> Status: PLANNED\
+> Status: IMPLEMENTED\
 > Depends on: ADR-0050
 
 ## Objective
@@ -155,3 +155,14 @@ deno publish --dry-run --allow-dirty
 - Shared contracts have one dependency-light owner.
 - Feature packages do not depend on adapter implementation just to share types.
 - The package graph remains acyclic and publishable.
+
+## v0.23.0 Result
+
+- `@lessjs/protocols` owns shared build context contracts and virtual module
+  ids.
+- `@lessjs/content`, `@lessjs/i18n`, and `@lessjs/adapter-vite` consume those
+  contracts from `@lessjs/protocols`.
+- Old adapter-owned contract exports and root import-map aliases for removed
+  wrong-owner paths were deleted.
+- `deno task graph:check` now verifies source-level direct `@lessjs/*` imports
+  against each package-local `deno.json`.

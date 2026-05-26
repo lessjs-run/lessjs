@@ -60,7 +60,6 @@
     "@lessjs/adapter-react": "./packages/adapter-react/src/index.ts",
     "@lessjs/adapter-vite": "./packages/adapter-vite/src/index.ts",
     "@lessjs/adapter-vite/build-context": "./packages/adapter-vite/src/build-context.ts",
-    "@lessjs/adapter-vite/virtual-ids": "./packages/adapter-vite/src/virtual-ids.ts",
     "@lessjs/content": "./packages/content/src/index.ts",
     "@lessjs/content/sitemap": "./packages/content/src/sitemap/index.ts",
     "@lessjs/i18n": "./packages/i18n/src/index.ts",

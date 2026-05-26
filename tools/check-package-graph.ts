@@ -17,6 +17,8 @@ interface PackageInfo {
   name: string;
   version: string;
   deps: string[];
+  dir: string;
+  importKeys: Set<string>;
 }
 
 interface PublishStep {
@@ -66,7 +68,7 @@ async function readPackageInfo(dir: string): Promise<PackageInfo | null> {
     }
   }
 
-  return { name, version, deps };
+  return { name, version, deps, dir, importKeys: new Set(Object.keys(imports)) };
 }
 
 // ─── Normalize subpath imports to base package names ──────────
@@ -155,16 +157,20 @@ function topologicalSort(graph: Map<string, string[]>): string[] {
   const inDegree = new Map<string, number>();
   const allNodes = [...graph.keys()];
   const nodeSet = new Set(allNodes);
+  const dependents = new Map<string, string[]>();
 
   for (const node of allNodes) {
     inDegree.set(node, 0);
+    dependents.set(node, []);
   }
 
-  for (const [_node, deps] of graph) {
+  for (const [node, deps] of graph) {
     for (const dep of deps) {
-      // Only count edges to nodes that exist in the graph
+      // graph stores package -> dependency. For dependency-first topological
+      // order, the package has incoming edges from its dependencies.
       if (nodeSet.has(dep)) {
-        inDegree.set(dep, (inDegree.get(dep) ?? 0) + 1);
+        inDegree.set(node, (inDegree.get(node) ?? 0) + 1);
+        dependents.get(dep)!.push(node);
       }
     }
   }
@@ -183,9 +189,8 @@ function topologicalSort(graph: Map<string, string[]>): string[] {
     const node = queue.shift()!;
     sorted.push(node);
 
-    const neighbors = graph.get(node) ?? [];
+    const neighbors = dependents.get(node) ?? [];
     for (const neighbor of neighbors) {
-      if (!nodeSet.has(neighbor)) continue;
       const newDegree = (inDegree.get(neighbor) ?? 1) - 1;
       inDegree.set(neighbor, newDegree);
       if (newDegree === 0) {
@@ -203,6 +208,129 @@ function topologicalSort(graph: Map<string, string[]>): string[] {
   }
 
   return sorted;
+}
+
+async function collectTsFiles(dir: string): Promise<string[]> {
+  const files: string[] = [];
+
+  async function walk(current: string): Promise<void> {
+    for await (const entry of Deno.readDir(current)) {
+      const path = `${current}/${entry.name}`;
+      if (entry.isDirectory) {
+        if (entry.name === 'node_modules' || entry.name === 'dist') continue;
+        await walk(path);
+      } else if (entry.isFile && path.endsWith('.ts')) {
+        files.push(path);
+      }
+    }
+  }
+
+  try {
+    await walk(dir);
+  } catch {
+    // Packages without src are allowed; they simply produce no files.
+  }
+
+  return files;
+}
+
+function collectImportStatements(source: string): string[] {
+  const statements: string[] = [];
+  let current = '';
+  let inBlockComment = false;
+  let inTemplate = false;
+
+  for (const rawLine of source.split('\n')) {
+    let line = '';
+
+    for (let i = 0; i < rawLine.length; i++) {
+      const char = rawLine[i];
+      const next = rawLine[i + 1];
+
+      if (inBlockComment) {
+        if (char === '*' && next === '/') {
+          inBlockComment = false;
+          i++;
+        }
+        continue;
+      }
+
+      if (inTemplate) {
+        if (char === '`' && rawLine[i - 1] !== '\\') {
+          inTemplate = false;
+        }
+        continue;
+      }
+
+      if (char === '/' && next === '*') {
+        inBlockComment = true;
+        i++;
+        continue;
+      }
+
+      if (char === '/' && next === '/') {
+        break;
+      }
+
+      if (char === '`') {
+        inTemplate = true;
+        continue;
+      }
+
+      line += char;
+    }
+
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    const startsImportExport = /^(import|export)\b/.test(trimmed);
+    const dynamicImportIndex = trimmed.search(/\bimport\s*\(/);
+    const firstQuoteIndex = trimmed.search(/['"`]/);
+    const hasDynamicImport = dynamicImportIndex !== -1 &&
+      (firstQuoteIndex === -1 || firstQuoteIndex > dynamicImportIndex);
+
+    if (!current && !startsImportExport && !hasDynamicImport) {
+      continue;
+    }
+
+    current += `${trimmed}\n`;
+    if (trimmed.endsWith(';') || (hasDynamicImport && /\)\s*(?:as\b.*)?;?$/.test(trimmed))) {
+      statements.push(current);
+      current = '';
+    }
+  }
+
+  if (current) {
+    statements.push(current);
+  }
+
+  return statements;
+}
+
+function extractLessImports(source: string): string[] {
+  const imports = new Set<string>();
+  const patterns = [
+    /\bimport\s+(?:type\s+)?(?:[^'"]+?\s+from\s+)?['"](@lessjs\/[^'"]+)['"]/g,
+    /\bexport\s+(?:type\s+)?[^'"]+?\s+from\s+['"](@lessjs\/[^'"]+)['"]/g,
+    /\bimport\s*\(\s*['"](@lessjs\/[^'"]+)['"]\s*\)/g,
+  ];
+
+  for (const statement of collectImportStatements(source)) {
+    for (const pattern of patterns) {
+      pattern.lastIndex = 0;
+      for (const match of statement.matchAll(pattern)) {
+        imports.add(match[1]);
+      }
+    }
+  }
+
+  return [...imports];
+}
+
+function isDeclaredImport(specifier: string, pkg: PackageInfo): boolean {
+  const base = normalizeDep(specifier, pkg.name);
+  if (base === null) return true;
+  return pkg.importKeys.has(specifier) || pkg.importKeys.has(base);
 }
 
 // ─── Main ─────────────────────────────────────────────────────
@@ -258,6 +386,27 @@ async function main(): Promise<void> {
     console.log('  PASS: No circular dependencies found.');
   }
 
+  // 4b. Check source imports are declared by each package deno.json.
+  console.log('\n--- Source Import Declarations ---');
+  for (const pkg of packages) {
+    const srcDir = `${pkg.dir}/src`;
+    const sourceFiles = await collectTsFiles(srcDir);
+    for (const file of sourceFiles) {
+      const source = await Deno.readTextFile(file);
+      for (const specifier of extractLessImports(source)) {
+        if (!isDeclaredImport(specifier, pkg)) {
+          const msg =
+            `${file} imports "${specifier}" but ${pkg.dir}/deno.json does not declare it.`;
+          console.error(`  FAIL: ${msg}`);
+          failures.push(msg);
+        }
+      }
+    }
+  }
+  if (failures.length === 0) {
+    console.log('  PASS: All source-level @lessjs/* imports are declared.');
+  }
+
   // 5. Topological sort
   console.log('\n--- Topological Sort ---');
   let topoOrder: string[];
@@ -309,6 +458,18 @@ async function main(): Promise<void> {
     for (const pkg of publishOrder) {
       if (!graphNames.has(pkg)) {
         console.warn(`  WARN: "${pkg}" is in publish.yml but not found in packages/.`);
+      }
+    }
+
+    // Every package with a publishable deno.json must be present in the
+    // workflow order. Missing entries silently strand packages on old JSR
+    // versions and break generated projects that depend on a unified version.
+    const publishNames = new Set(publishOrder);
+    for (const pkg of packages) {
+      if (!publishNames.has(pkg.name)) {
+        const msg = `"${pkg.name}" exists in packages/ but is missing from publish.yml.`;
+        console.error(`  FAIL: ${msg}`);
+        failures.push(msg);
       }
     }
 

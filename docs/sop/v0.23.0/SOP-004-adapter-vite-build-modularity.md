@@ -2,7 +2,7 @@
 
 > Version: v0.23.0\
 > Priority: P0\
-> Status: PLANNED\
+> Status: IMPLEMENTED\
 > Depends on: SOP-001
 
 ## Objective
@@ -123,3 +123,13 @@ deno task test:e2e
 - Shared contracts no longer live in adapter-vite only because the adapter was
   the first user.
 - Generated consumer build behavior remains a first-class test target.
+
+## v0.23.0 Result
+
+- Shared build contracts moved out of adapter-vite to `@lessjs/protocols`.
+- Removed stale adapter-vite exports for old `build-types` and `virtual-ids`
+  ownership paths.
+- Adapter-vite declares the LessJS packages it actually imports, including
+  protocols, CEM, compatibility, stylesheet, and sitemap integration.
+- Generated-source optional adapter imports remain generated consumer code, not
+  adapter-vite package dependencies.

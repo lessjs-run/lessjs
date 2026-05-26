@@ -2,7 +2,7 @@
 
 > Version: v0.23.0\
 > Priority: P0\
-> Status: PLANNED\
+> Status: IMPLEMENTED\
 > Depends on: SOP-001, SOP-002
 
 ## Objective
@@ -120,3 +120,13 @@ deno run -A packages/create/cli.ts test-blog
 - App configuration and component authoring are separate concepts.
 - `@lessjs/core` is not forced to be the DX barrel.
 - Generated templates teach the intended architecture.
+
+## v0.23.0 Result
+
+- `@lessjs/runtime` is accepted as the component-authoring facade for
+  `DsdElement`, templates, `StyleSheet`, and signal helpers.
+- `@lessjs/app` remains the Vite/configuration facade for `lessjs()`,
+  content, i18n, and adapter assembly.
+- `@lessjs/create` generated routes and islands import authoring APIs from
+  `@lessjs/runtime`, and generated `deno.json` declares that direct import.
+- `@lessjs/app` no longer imports `@lessjs/adapter-vite/build-context`.

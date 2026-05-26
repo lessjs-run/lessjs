@@ -1,6 +1,6 @@
 # LessJS v0.23.0 - Layered Package Architecture
 
-> Status: PLANNING\
+> Status: IMPLEMENTED\
 > Target: make LessJS package ownership durable before Edge Full-Stack work\
 > Governing ADR: ADR-0050
 
@@ -67,16 +67,17 @@ ADR-0038 remains accepted, but its implementation moves to v0.24.x or later.
 
 ## Initial Inventory Findings
 
-The v0.23 work starts from the current v0.22.1 graph:
+The v0.23 work started from the v0.22.1 graph and is closed by the v0.23.0
+package graph:
 
-| Finding                                                             | Evidence                                                                               | Required response                                   |
-| ------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| `content` and `i18n` import adapter build contracts                 | imports from `@lessjs/adapter-vite/build-types` and `@lessjs/adapter-vite/virtual-ids` | move shared contracts to the contracts layer        |
-| `app` imports adapter build context                                 | `@lessjs/adapter-vite/build-context`                                                   | keep app as facade, not adapter contract owner      |
-| `core` imports `alien-signals`                                      | `packages/core/src/signals.ts`                                                         | move canonical signal creation to `@lessjs/signals` |
-| `core` re-exports `style-sheet`, CEM, compatibility, manifest tools | `packages/core/deno.json` exports                                                      | classify each as bridge or wrong owner              |
-| generated templates import authoring APIs from `core`               | `packages/create/cli.ts`                                                               | decide whether `@lessjs/runtime` is needed          |
-| `adapter-vite` generates source that imports core subpaths          | entry generation and subpath resolver                                                  | keep generated imports explicit and checked         |
+| Finding                                              | v0.23.0 response                                                            |
+| ---------------------------------------------------- | --------------------------------------------------------------------------- |
+| `content` and `i18n` imported adapter build types    | shared build types and virtual ids now live under `@lessjs/protocols`       |
+| `app` imported adapter build context                 | `@lessjs/app` now consumes the public adapter facade instead of subpaths    |
+| `core` drifted toward signal implementation          | `@lessjs/signals` remains the `alien-signals` facade and runtime owner      |
+| generated templates used core as authoring barrel    | `@lessjs/runtime` is the authoring facade used by generated projects        |
+| publish workflow missed the new runtime package      | publish order now includes every package, including `@lessjs/runtime`       |
+| direct source imports were hidden by root import map | `graph:check` now fails undeclared package-local `@lessjs/*` source imports |
 
 ## Execution Rules
 
@@ -91,17 +92,18 @@ The v0.23 work starts from the current v0.22.1 graph:
 
 ## Exit Criteria
 
-- Shared build/runtime contracts have one owner.
-- `@lessjs/core` no longer owns implementation packages or adapter contracts.
-- `@lessjs/signals` is documented as a LessJS facade over `alien-signals`.
-- `@lessjs/app` is the configuration facade; an authoring runtime facade is
-  introduced or explicitly rejected.
-- `adapter-vite` has clear build module boundaries and does not export
-  contracts only because other packages need a type.
-- CI checks LessJS package cycles, publish order, generated consumer builds,
-  and docs/status/roadmap consistency.
-- README, status, roadmap, ADR index, SOP index, and changelog agree on the
-  active version line.
+- Shared build/runtime contracts have one owner: `@lessjs/protocols`.
+- `@lessjs/core` no longer owns adapter build contracts or the authoring
+  facade.
+- `@lessjs/signals` is documented as the LessJS facade over `alien-signals`.
+- `@lessjs/app` is the configuration facade, while `@lessjs/runtime` is the
+  authoring facade.
+- `adapter-vite` no longer exports shared contracts only because other packages
+  need a type.
+- `deno task graph:check` verifies package cycles, publish order, unified
+  versions, workflow coverage, and package-local direct import declarations.
+- README, status, roadmap, architecture notes, SOP index, and changelog agree
+  on v0.23.0 as the active implemented architecture line.
 - v0.24 planning can resume without depending on adapter-owned contracts or
   core-owned implementation facades.
 

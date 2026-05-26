@@ -2,14 +2,18 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version Line: v0.22.x (Architecture Integrity - IN PROGRESS)
+## Current Version Line: v0.23.x (Layered Package Architecture - IMPLEMENTED)
 
 v0.21.0 Status: **IMPLEMENTED.** Reactive DSD runtime, safe templates, streaming
 DSD.
 
-v0.22.x Status: **IN PROGRESS.** Architecture Integrity cleanup is the active
-line: package boundaries, consumer surface, adapter decomposition, validation
+v0.22.x Status: **IMPLEMENTED.** Architecture Integrity cleanup established
+package boundaries, consumer surface, adapter decomposition, validation
 ownership, and release gates.
+
+v0.23.x Status: **IMPLEMENTED.** Layered Package Architecture is the active
+line: protocols ownership, runtime/app facade split, package graph gates, and
+docs governance.
 
 The current product center is:
 
@@ -41,7 +45,7 @@ layered package architecture decision.
 
 ## Package Version State
 
-All packages are aligned to **v0.22.1**. Patch releases stay unified across the
+All packages are aligned to **v0.23.0**. Patch releases stay unified across the
 workspace so published JSR packages resolve a coherent version set.
 
 ## Architecture Positioning
@@ -115,11 +119,9 @@ Architecture). Edge Full-Stack moves to v0.24 or later.
   contracts, core/runtime/app facade boundaries, adapter modularity, package
   graph gates, and docs governance before Edge work resumes.
 
-## Last Completed Line: v0.21.0
+## Last Completed Line: v0.23.0
 
-Delivered: native `html` TemplateResult support, safe interpolation,
-`unsafeHTML()`, Signal-like reactive `DsdElement` updates, runtime template
-event/property bindings, Response-compatible `renderDSDStream()`, unified event
-model (`@click` only), ReactiveHost protocol, core package split, fine-grained
-DOM patching, 787 tests passing with zero failures, and removal of DOM diffing
-from v0.21 scope. Full SOP coverage: 9 SOPs (001–009) all implemented.
+Delivered: `@lessjs/protocols` for shared build contracts, `@lessjs/runtime`
+for authoring imports, `@lessjs/app` as configuration facade, package-local
+direct import declarations, complete 18-package publish order, and a stricter
+package graph gate. Edge Full-Stack remains deferred to v0.24+.

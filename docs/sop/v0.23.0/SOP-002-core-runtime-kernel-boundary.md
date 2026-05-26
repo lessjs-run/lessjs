@@ -2,7 +2,7 @@
 
 > Version: v0.23.0\
 > Priority: P0\
-> Status: PLANNED\
+> Status: IMPLEMENTED\
 > Depends on: SOP-001
 
 ## Objective
@@ -132,3 +132,15 @@ cd packages/core && deno publish --dry-run --allow-dirty
 - `@lessjs/core` is explainable as a runtime kernel.
 - Convenience imports live in a facade layer or are explicitly deprecated.
 - Core remains publishable without circular package dependencies.
+
+## v0.23.0 Result
+
+- `@lessjs/core` remains the runtime kernel and does not import
+  `alien-signals`.
+- `@lessjs/signals` owns signal creation and the LessJS facade over
+  `alien-signals`.
+- `@lessjs/style-sheet`, `@lessjs/cem`, and `@lessjs/compat-check` own their
+  canonical implementation areas instead of routing new ownership through
+  `core`.
+- `@lessjs/runtime` carries ordinary component-authoring convenience imports so
+  `core` does not need to become the product DX barrel.

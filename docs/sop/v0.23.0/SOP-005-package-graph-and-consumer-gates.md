@@ -2,7 +2,7 @@
 
 > Version: v0.23.0\
 > Priority: P0\
-> Status: PLANNED\
+> Status: IMPLEMENTED\
 > Depends on: SOP-001, SOP-003
 
 ## Objective
@@ -122,3 +122,16 @@ cd packages/create && deno publish --dry-run --allow-dirty
 - CI catches package cycles, missing direct imports, and stale smoke versions.
 - Publish workflow validates the newly published create package.
 - Generated consumer failures are actionable and tied to a gate.
+
+## v0.23.0 Result
+
+- `deno task graph:check` reads every package, verifies a unified version line,
+  detects cycles, validates publish order, and fails packages missing from the
+  publish workflow.
+- The graph gate now checks source-level direct `@lessjs/*` imports against
+  each package-local `deno.json`, so root import-map success cannot hide
+  undeclared JSR dependencies.
+- The publish workflow includes all 18 packages and publishes `@lessjs/runtime`
+  before generated projects can depend on it.
+- Post-publish smoke remains pinned to the create version read from
+  `packages/create/deno.json`.

@@ -2,7 +2,7 @@
 
 > Version: v0.23.0\
 > Priority: P1\
-> Status: PLANNED\
+> Status: IMPLEMENTED\
 > Depends on: ADR-0050
 
 ## Objective
@@ -121,3 +121,13 @@ deno task typecheck
   ambition.
 - The current version story is consistent across README, status, roadmap, ADR,
   SOP, and changelog.
+
+## v0.23.0 Result
+
+- `docs/arch/` describes the current layered package architecture.
+- README, status, roadmap, SOPs, and changelog identify v0.23.0 as the active
+  implemented architecture line.
+- v0.24 remains the deferred Edge Full-Stack line; ISR production handlers and
+  KV adapters are not claimed as v0.23 behavior.
+- `docs/changelog/v0.23.0.md` records the breaking ownership moves and release
+  gates.
