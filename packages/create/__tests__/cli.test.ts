@@ -91,7 +91,7 @@ Deno.test('create-less: deno.json maps LessJS package imports (v0.22 Consumer Su
     5,
     `Expected 5 imports, got ${importKeys.length}: ${importKeys.join(', ')}`,
   );
-  assertEquals(denoJson.imports['@deno/vite-plugin'], 'jsr:@deno/vite-plugin@^1');
+  assertEquals(denoJson.imports['@deno/vite-plugin'], 'npm:@deno/vite-plugin');
   assertEquals(denoJson.imports['@lessjs/app'], 'jsr:@lessjs/app@^${v.app}');
   assertEquals(denoJson.imports['@lessjs/core'], 'jsr:@lessjs/core@^${v.core}');
   assertEquals(denoJson.imports['@lessjs/ui'], 'jsr:@lessjs/ui@^${v.ui}');
