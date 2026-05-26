@@ -19,17 +19,18 @@ and [ADR-0040](../adr/0040-streaming-dsd.md) for Streaming DSD.
 
 ## Current Rendering Mode
 
-| Mode                 | State   | Notes                                              |
-| -------------------- | ------- | -------------------------------------------------- |
-| SSG                  | shipped | default production rendering mode                  |
-| DSD                  | shipped | `renderDSD()` outputs declarative shadow roots     |
-| Island upgrade       | shipped | binary SSR/client-only boundary exists             |
-| Hydration strategies | shipped | `client:load/idle/visible/only` verified           |
-| ISR contract         | shipped | `IsrCache`, `MemoryIsrCache`, manifest             |
-| API route (Hono)     | shipped | Hono as primary engine, `LessApiContext` type-only |
-| Reactive DSD         | shipped | `DsdElement` + Signals, safe templates, streaming  |
-| ISR production       | v0.22   | Edge handler + KV adapters (CF Workers, Deno)      |
-| www self-hosting     | v0.22   | Showcase pages, ISR demo, serverless API proof     |
+| Mode                 | State   | Notes                                                 |
+| -------------------- | ------- | ----------------------------------------------------- |
+| SSG                  | shipped | default production rendering mode                     |
+| DSD                  | shipped | `renderDSD()` outputs declarative shadow roots        |
+| Island upgrade       | shipped | binary SSR/client-only boundary exists                |
+| Hydration strategies | shipped | `client:load/idle/visible/only` verified              |
+| ISR contract         | shipped | `IsrCache`, `MemoryIsrCache`, manifest                |
+| API route (Hono)     | shipped | Hono as primary engine, `LessApiContext` type-only    |
+| Reactive DSD         | shipped | `DsdElement` + Signals, safe templates, streaming     |
+| Architecture cleanup | v0.22   | Package boundaries, consumer surface, adapter cleanup |
+| ISR production       | v0.23+  | Edge handler + KV adapters (CF Workers, Deno)         |
+| www self-hosting     | v0.23+  | Showcase pages, ISR demo, serverless API proof        |
 
 ## Package Version State
 
@@ -60,17 +61,19 @@ Three pillars:
 
 See `docs/sop/v0.21.0/README.md`. Key ADRs: 0039 (Signals), 0040 (Streaming).
 
-## v0.22.0 - Edge Full-Stack (5 SOPs)
+## v0.22.0 - Architecture Integrity (5 SOPs)
 
-| SOP | Title                                           | Priority |
-| --- | ----------------------------------------------- | -------- |
-| 001 | ISR Production Handler                          | P0       |
-| 002 | KV ISR Cache Adapters (CF Workers KV + Deno KV) | P0       |
-| 003 | www Showcase Self-Hosting Proof                 | P0       |
-| 004 | Deployment Guide                                | P1       |
-| 005 | Cleanup + Release Verification                  | P0       |
+| SOP | Title                                     | Priority |
+| --- | ----------------------------------------- | -------- |
+| 001 | Consumer Surface Cleanup                  | P0       |
+| 002 | Package Boundary Repair                   | P0       |
+| 003 | adapter-vite Decomposition                | P0       |
+| 004 | Signals, Schema, and Validation Hardening | P1       |
+| 005 | Quality Gates and Release Closure         | P0       |
 
-See `docs/sop/v0.22.0/README.md`. Key ADR: 0038 (ISR + Edge KV).
+See `docs/sop/v0.22.0/README.md`. Key ADR: 0049 (Architecture Debt First
+Roadmap Reset). ADR-0038 (ISR + Edge KV) remains accepted but is deferred to
+v0.23 or later.
 
 ## Key Decisions
 
@@ -83,7 +86,9 @@ See `docs/sop/v0.22.0/README.md`. Key ADR: 0038 (ISR + Edge KV).
 - **ReactiveHost protocol.** Explicit `subscribeTo()` / `requestReactiveUpdate()` contract replaces Duck Typing.
 - **Core package split.** `@lessjs/compat-check`, `@lessjs/cem`, `@lessjs/style-sheet` extracted as independent packages.
 - **Fine-grained DOM patching.** `_patchBindings()` with `data-less-b` markers preserves focus/scroll/CSS transitions.
-- **Edge Full-Stack is bounded.** v0.22 covers ISR/API/deploy runtime, not auth, ORM, or database ownership.
+- **Architecture cleanup before feature expansion.** v0.22 covers package
+  boundaries, consumer surface, adapter decomposition, validation ownership, and
+  stronger gates before Edge Full-Stack work resumes.
 
 ## Last Completed Line: v0.21.0
 

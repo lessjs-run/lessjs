@@ -76,8 +76,14 @@ LessJS
 
 ## What Is Next
 
-- **Edge Full-Stack** - ISR production handler, KV adapters, showcase proof, and
-  deployment guides.
+- **Architecture Integrity** - consumer import cleanup, package boundary repair,
+  adapter-vite decomposition, and stronger quality gates.
+- **Signals facade** - keep a LessJS-owned API while isolating the underlying
+  signal engine.
+- **Validation ownership** - unify Hub, CEM, manifest, and submission gate
+  diagnostics.
+- **Edge Full-Stack after cleanup** - ISR handler, KV adapters, and deployment
+  guides resume after the architecture cleanup line exits.
 - **Hub growth** - more real Web Component packages and clearer compatibility
   badges.
 
@@ -128,7 +134,7 @@ route component
 | Mode | State   | When rendering happens | Server requirement        |
 | ---- | ------- | ---------------------- | ------------------------- |
 | SSG  | shipped | build time             | none after build          |
-| ISR  | v0.22   | cache expiry           | edge/serverless function  |
+| ISR  | v0.23+  | cache expiry           | edge/serverless function  |
 | SSR  | later   | every request          | always-on request runtime |
 
 ## Compatibility Boundary
@@ -151,7 +157,8 @@ Every component should reach one deterministic outcome:
 | v0.19   | Registry Hub + Component Browser          | Done    |
 | v0.20   | Ocean-Island Architecture + DSD-native UI | Shipped |
 | v0.21   | Reactive DSD + streaming                  | Current |
-| v0.22   | Edge Full-Stack ISR + KV + Showcase       | Planned |
+| v0.22   | Architecture Integrity + cleanup gates    | Planned |
+| v0.23   | Edge Full-Stack ISR + KV + Showcase       | Planned |
 | v1.0    | Stable Engine contracts                   | Vision  |
 
 See [ADR docs](docs/adr/), [SOP docs](docs/sop/), and

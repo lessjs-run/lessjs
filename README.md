@@ -78,10 +78,10 @@ LessJS
 
 ## 下一步
 
-- **Hydration strategies** - 用户可见的 `client:load`、`client:idle`、`client:visible`、`client:only`。
-- **ISR cache layer** - stale-while-revalidate HTML 再生成。
-- **Request context** - API 与未来 SSR 路径共享 env、platform、request 数据。
-- **Signals + DsdElement** - 不把 DSD 组件变成框架 runtime 的响应式 DOM 更新。
+- **Architecture Integrity** - 清理消费者 import surface、包边界、adapter-vite 拆分和质量门禁。
+- **Signals facade** - 保留 LessJS 自有 API，隔离底层 signal engine。
+- **Validation ownership** - 统一 Hub、CEM、manifest 和 submission gate 的类型与诊断边界。
+- **Edge Full-Stack after cleanup** - ISR handler、KV adapters 和部署指南顺延到架构清偿之后。
 - **Hub 增长** - 更多真实 Web Component 包和更清晰的兼容性 badge。
 
 ## 快速开始
@@ -130,7 +130,7 @@ route component
 | Mode | 状态   | 渲染时机      | 服务器要求                |
 | ---- | ------ | ------------- | ------------------------- |
 | SSG  | 已发布 | build time    | 构建后不需要              |
-| ISR  | v0.22  | cache expiry  | edge/serverless function  |
+| ISR  | v0.23+ | cache expiry  | edge/serverless function  |
 | SSR  | 后续   | every request | always-on request runtime |
 
 ## 兼容性边界
@@ -152,7 +152,8 @@ LessJS 不承诺任意 Web Component 都能自动 SSR。每个组件应该得到
 | v0.19 | Registry Hub + Component Browser                          | Done    |
 | v0.20 | Ocean-Island Architecture + DSD-native UI                 | Done    |
 | v0.21 | Reactive DSD + Hardening — Core API / DSD / Adapter / Hub | Current |
-| v0.22 | Edge Full-Stack — ISR + KV adapters + Deploy              | Planned |
+| v0.22 | Architecture Integrity — boundaries / imports / gates     | Planned |
+| v0.23 | Edge Full-Stack — ISR + KV adapters + Deploy              | Planned |
 | v1.0  | Stable Engine contracts                                   | Vision  |
 
 详见 [ADR docs](docs/adr/)、[SOP docs](docs/sop/) 和

@@ -51,6 +51,7 @@ architectural decision, its context, and consequences.
 | 0040 | Streaming DSD                                  | Accepted                                 |
 | 0041 | ESM Module Graph First for JSR Consumer Builds | Accepted                                 |
 | 0048 | CI and Release Gate Separation                 | Accepted                                 |
+| 0049 | Architecture Debt First Roadmap Reset          | Accepted                                 |
 
 ## Superseded / Historical
 

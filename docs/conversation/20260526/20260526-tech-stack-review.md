@@ -20,6 +20,7 @@
 ```
 
 **理由**：
+
 - alien-signals 780 万周下载，Vue 3.6+XState 背书，StackBlitz 维护
 - TC39 Signal 停在 Stage 1 已 2 年，浏览器原生至少 2027+
 - 自研 signals 社区采纳可能性低（alien 已形成网络效应）
@@ -31,12 +32,12 @@
 
 ### 结论：不引入第三方 UI 库
 
-| 方案 | 推荐 | 理由 |
-|------|:---:|------|
-| 引入 Shoelace 作底层 | ❌ | Lit 依赖冲突，破坏 DSD + 零 Lit 纯净性 |
-| 引入 Material Web | ❌ | Lit 依赖 + Material Design 样式约束 |
-| 引入 Melt UI | ❌ | 为 Svelte 设计，无 WC 版本，移植成本高 |
-| **继续自研 DSD 组件** | ✅ | DSD-first + 零 Lit 是护城河 |
+| 方案                  | 推荐 | 理由                                   |
+| --------------------- | :--: | -------------------------------------- |
+| 引入 Shoelace 作底层  |  ❌  | Lit 依赖冲突，破坏 DSD + 零 Lit 纯净性 |
+| 引入 Material Web     |  ❌  | Lit 依赖 + Material Design 样式约束    |
+| 引入 Melt UI          |  ❌  | 为 Svelte 设计，无 WC 版本，移植成本高 |
+| **继续自研 DSD 组件** |  ✅  | DSD-first + 零 Lit 是护城河            |
 
 ### v0.22 新增组件
 
@@ -64,15 +65,15 @@ LessJS 当前无数据库交互场景（SSG 是文件系统驱动，Hub 用 flex
 
 ## 五、v0.22 技术路线图
 
-| 优先级 | 事项 | 说明 |
-|:---:|------|------|
-| P0 | Signals 迁移 alien-signals | 删 polyfill.ts，加 wrapper，API 兼容 |
-| P0 | 新增 10 个 DSD 组件 | select/checkbox/radio/tabs 等 |
-| P1 | 补 5 篇核心文档 | Tutorial + API Reference + 样式指南 + 部署 + Recipes |
-| P1 | Shoelace a11y 参考 | 研究 ARIA 模式，不引入依赖 |
-| P2 | effectScope() 支持 | 换 alien 后自然获得 |
-| P2 | 数据库抽象接口 | `getDb()` 预留，默认 no-op |
-| 不作 | 引入第三方 UI 库 / 状态管理 / ORM | — |
+| 优先级 | 事项                              | 说明                                                 |
+| :----: | --------------------------------- | ---------------------------------------------------- |
+|   P0   | Signals 迁移 alien-signals        | 删 polyfill.ts，加 wrapper，API 兼容                 |
+|   P0   | 新增 10 个 DSD 组件               | select/checkbox/radio/tabs 等                        |
+|   P1   | 补 5 篇核心文档                   | Tutorial + API Reference + 样式指南 + 部署 + Recipes |
+|   P1   | Shoelace a11y 参考                | 研究 ARIA 模式，不引入依赖                           |
+|   P2   | effectScope() 支持                | 换 alien 后自然获得                                  |
+|   P2   | 数据库抽象接口                    | `getDb()` 预留，默认 no-op                           |
+|  不作  | 引入第三方 UI 库 / 状态管理 / ORM | —                                                    |
 
 ---
 

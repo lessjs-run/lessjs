@@ -12,8 +12,9 @@ package contract makes that safe. Otherwise it becomes client-only or fails
 validation before build output is generated.
 
 The current product center is **DSD-first Web Components rendering**. Full-stack
-capabilities are still important, but they must build on the renderer and
-admission contracts instead of outrunning them.
+capabilities are still important, but they must build on clean package
+boundaries, a small consumer surface, and verified release gates instead of
+outrunning the architecture.
 
 ## Current State
 
@@ -24,7 +25,7 @@ admission contracts instead of outrunning them.
 | Current DSD base          | `DsdElement` + SSR-safe `StyleSheet`                  |
 | Current framework surface | file routes, Hono API routes, dev/build pipeline      |
 | Current Hub surface       | early Registry Hub, validation, snapshots, `less add` |
-| Next milestone            | v0.22.x Edge Full-Stack                               |
+| Next milestone            | v0.22.x Architecture Integrity                        |
 
 Package publishing is staggered. The roadmap tracks the project line, while
 individual package versions may lag until a coordinated publish pass.
@@ -40,8 +41,10 @@ individual package versions may lag until a coordinated publish pass.
 | 5     | v0.19.x | Registry Hub MVP          | Searchable validated package index with reports and snapshots  | Done    |
 | 6     | v0.20.x | Ocean-Island Architecture | DsdElement, DSD-native UI, CSS Parts, cleanup gates            | Done    |
 | 7     | v0.21.x | Reactive DSD              | DsdElement + Signals, safe templates, streaming DSD            | Done    |
-| 8     | v0.22.x | Edge Full-Stack           | ISR handler, KV adapters, Showcase, deployment guides          | Current |
-| 9     | v1.0.x  | Stable Engine             | API/schema freeze and deterministic package guarantees         | Vision  |
+| 8     | v0.22.x | Architecture Integrity    | Package boundaries, consumer surface, adapter cleanup, gates   | Current |
+| 9     | v0.23.x | Edge Full-Stack           | ISR handler, KV adapters, Showcase, deployment guides          | Planned |
+| 10    | v0.24.x | Ecosystem Hardening       | Hub trust policy, package evidence, compatibility growth       | Planned |
+| 11    | v1.0.x  | Stable Engine             | API/schema freeze and deterministic package guarantees         | Vision  |
 
 ## Compatibility Admission Model
 
@@ -156,9 +159,35 @@ Scope:
 
 See `docs/sop/v0.21.0/` for detailed SOPs.
 
-## Current: v0.22.x - Edge Full-Stack
+## Current: v0.22.x - Architecture Integrity
 
-Goal: close the ISR loop — production handler, KV adapters, and www self-hosting proof.
+Goal: pay down the architecture and engineering debt exposed by the 2026-05-26
+review set before adding more public framework surface.
+
+Scope:
+
+- Consumer `deno.json` simplification and internal dependency hiding
+- `@lessjs/core` package boundary cleanup
+- Real ownership for extracted packages such as `@lessjs/style-sheet`
+- `adapter-vite` decomposition into smaller testable modules
+- Signals facade / engine boundary hardening
+- Hub, CEM, package manifest, and validation type unification
+- Coverage artifacts, generated-consumer E2E proof, Playwright trace, cache
+  fallback, and docs/status/roadmap consistency gates
+
+See `docs/sop/v0.22.0/` for detailed SOPs. ADR-0049 is the governing decision.
+
+Non-goals:
+
+- shipping the ISR production handler in v0.22
+- shipping CF Workers KV or Deno KV adapters in v0.22
+- expanding `@lessjs/ui` from 10 components to 20 components
+- adding auth, ORM, database, or generic Node server abstractions
+- deleting public imports such as `@lessjs/signals` without a deprecation window
+
+## Planned: v0.23.x - Edge Full-Stack
+
+Goal: resume ADR-0038 after architecture cleanup exits.
 
 Scope:
 
@@ -166,26 +195,19 @@ Scope:
 - KvIsrCache adapters (CF Workers KV + Deno KV)
 - www Showcase pages (Reactive DSD demo, ISR stopwatch, serverless API)
 - Deployment guides (CF Workers, Deno Deploy, static-only)
-- v0.21 cleanup and release verification
 
-See `docs/sop/v0.22.0/` for detailed SOPs.
+## Planned: v0.24.x - Ecosystem Hardening
 
-Non-goals:
-
-- replacing Lit as a full template language
-- making every DSD component reactive by default
-- shipping a compiler before runtime contracts are stable
-
-### P1: Hub Ecosystem Growth
-
-Goal: move from a proof-of-concept index to useful package discovery.
+Goal: move from a proof-of-concept Hub index to useful package discovery and
+trust evidence.
 
 Exit criteria:
 
 - At least 10 real packages indexed.
 - Compatibility badges distinguish SSR-capable, client-only, rejected, and
   snapshot-verified packages.
-- Author-facing Hub submission guide.
+- Submission trust policy is stricter than schema-shape validation.
+- Author-facing Hub submission guide exists.
 
 ## Vision: v1.0 Stable Engine
 

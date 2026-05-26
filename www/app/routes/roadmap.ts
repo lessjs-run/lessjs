@@ -129,8 +129,8 @@ export class RoadmapPage extends DsdElement {
         <div class="container">
           <h1>Roadmap</h1>
           <p class="subtitle">
-            当前项目线是 <code>v0.21.0 Hydration + ISR Contract</code>。LessJS 的中心是
-            DSD-first Web Components 渲染引擎，SSG 已发布，Hydration 策略与 ISR 合同已在 v0.21 落地。
+            当前项目线是 <code>v0.21.0 Reactive DSD</code>。LessJS 的中心是
+            DSD-first Web Components 渲染引擎，SSG、Hydration 策略、Reactive DSD 与 ISR 合同已在 v0.21 落地。
           </p>
 
           <less-callout type="info">
@@ -155,8 +155,9 @@ export class RoadmapPage extends DsdElement {
               <tr><td>v0.18.x</td><td>Universal WC Engine</td><td>CEM parser、兼容性分层、验证 CLI、less add</td><td><span class="status done">Done</span></td></tr>
               <tr><td>v0.19.x</td><td>Registry Hub MVP</td><td>可搜索包索引、报告、快照和组件浏览</td><td><span class="status done">Done</span></td></tr>
               <tr><td>v0.20.x</td><td>Ocean-Island</td><td>DsdElement、DSD-native UI、CSS Parts、cleanup gate</td><td><span class="status shipped">Shipped</span></td></tr>
-              <tr><td>v0.21.x</td><td>Hydration + ISR</td><td><code>client:*</code> 指令、ISR、API route parity</td><td><span class="status current">Current</span></td></tr>
-              <tr><td>v0.22.x</td><td>Reactive DSD</td><td>DsdElement + Signals、安全模板、可选 DOM diff</td><td><span class="status planned">Planned</span></td></tr>
+              <tr><td>v0.21.x</td><td>Reactive DSD</td><td>DsdElement + Signals、安全模板、streaming DSD</td><td><span class="status current">Current</span></td></tr>
+              <tr><td>v0.22.x</td><td>Architecture Integrity</td><td>包边界、consumer imports、adapter 清理、质量门禁</td><td><span class="status planned">Planned</span></td></tr>
+              <tr><td>v0.23.x</td><td>Edge Full-Stack</td><td>ISR handler、KV adapters、Showcase、部署指南</td><td><span class="status planned">Planned</span></td></tr>
               <tr><td>v1.0.x</td><td>Stable Engine</td><td>API/schema freeze、确定性包准入保证</td><td><span class="status vision">Vision</span></td></tr>
             </tbody>
           </table>
@@ -177,24 +178,24 @@ export class RoadmapPage extends DsdElement {
 
           <div class="phase next">
             <span class="status current">Current</span>
-            <h3>v0.21.x - Hydration Strategies + ISR</h3>
+            <h3>v0.21.x - Reactive DSD</h3>
             <p>
-              v0.21 的目标是让 LessJS 从 DSD-first SSG 引擎推进到更可信的应用框架。
+              v0.21 让 DsdElement、Signals、安全模板和 streaming DSD 成为当前公开能力。
             </p>
             <ul class="criteria-list">
               <li><code>client:load</code>, <code>client:idle</code>, <code>client:visible</code>, <code>client:only</code></li>
-              <li>ISR stale-while-revalidate cache layer</li>
-              <li>API route production parity and request context</li>
-              <li>Hub package count and compatibility badges</li>
+              <li>Reactive DSD with safe templates</li>
+              <li>Streaming DSD contract</li>
+              <li>Route-level ISR metadata as a future handler contract</li>
             </ul>
           </div>
 
           <div class="phase planned">
             <span class="status planned">Planned</span>
-            <h3>v0.22.x - Reactive DSD</h3>
+            <h3>v0.22.x - Architecture Integrity</h3>
             <p>
-              Signals 应进入 DSD authoring 体验，但不能把所有 DSD 组件变成默认客户端 runtime。
-              默认仍是静态 HTML；响应式只服务真正需要状态更新的组件。
+              2026-05-26 的审查把 v0.22 重置为架构债务清偿线：先清理 consumer import surface、
+              core 包边界、adapter-vite 拆分、signals facade、validation ownership 和质量门禁。
             </p>
           </div>
 
@@ -203,7 +204,7 @@ export class RoadmapPage extends DsdElement {
             <li>No webpack：不把 LessJS 路线图倒回 webpack 或旧 bundler preset。</li>
             <li>不承诺任意 CEM 包自动 SSR。</li>
             <li>不把 Registry Hub 宣传成成熟 marketplace。</li>
-            <li>不在 Hydration + ISR 之前追逐泛全栈框架完整性。</li>
+            <li>不在架构债务清偿之前追逐泛全栈框架完整性。</li>
             <li>不把 auth、ORM、permission、database SDK 做进核心。</li>
           </ul>
 
@@ -229,9 +230,9 @@ export class RoadmapPage extends DsdElement {
         <div class="container">
           <h1>Roadmap</h1>
           <p class="subtitle">
-            The current project line is <code>v0.21.0 Hydration + ISR Contract</code>.
+            The current project line is <code>v0.21.0 Reactive DSD</code>.
             LessJS centers on a DSD-first Web Components rendering engine. SSG is shipped;
-            Hydration strategies and the ISR contract landed in v0.21.
+            hydration strategies, Reactive DSD, and the ISR contract landed in v0.21.
           </p>
 
           <less-callout type="info">
@@ -257,8 +258,9 @@ export class RoadmapPage extends DsdElement {
               <tr><td>v0.18.x</td><td>Universal WC Engine</td><td>CEM parser, compatibility tiers, validation CLI, less add</td><td><span class="status done">Done</span></td></tr>
               <tr><td>v0.19.x</td><td>Registry Hub MVP</td><td>Searchable package index, reports, snapshots, component browser</td><td><span class="status done">Done</span></td></tr>
               <tr><td>v0.20.x</td><td>Ocean-Island</td><td>DsdElement, DSD-native UI, CSS Parts, cleanup gate</td><td><span class="status shipped">Shipped</span></td></tr>
-              <tr><td>v0.21.x</td><td>Hydration + ISR</td><td><code>client:*</code> directives, ISR, API route parity</td><td><span class="status current">Current</span></td></tr>
-              <tr><td>v0.22.x</td><td>Reactive DSD</td><td>DsdElement + Signals, safe templates, optional DOM diffing</td><td><span class="status planned">Planned</span></td></tr>
+              <tr><td>v0.21.x</td><td>Reactive DSD</td><td>DsdElement + Signals, safe templates, streaming DSD</td><td><span class="status current">Current</span></td></tr>
+              <tr><td>v0.22.x</td><td>Architecture Integrity</td><td>Package boundaries, consumer imports, adapter cleanup, quality gates</td><td><span class="status planned">Planned</span></td></tr>
+              <tr><td>v0.23.x</td><td>Edge Full-Stack</td><td>ISR handler, KV adapters, Showcase, deployment guides</td><td><span class="status planned">Planned</span></td></tr>
               <tr><td>v1.0.x</td><td>Stable Engine</td><td>API/schema freeze and deterministic package guarantees</td><td><span class="status vision">Vision</span></td></tr>
             </tbody>
           </table>
@@ -280,26 +282,26 @@ export class RoadmapPage extends DsdElement {
 
           <div class="phase next">
             <span class="status current">Current</span>
-            <h3>v0.21.x - Hydration Strategies + ISR</h3>
+            <h3>v0.21.x - Reactive DSD</h3>
             <p>
-              v0.21 moves LessJS from a DSD-first SSG engine toward a more credible
-              application framework.
+              v0.21 makes DsdElement, Signals, safe templates, and streaming DSD
+              the current public line.
             </p>
             <ul class="criteria-list">
               <li><code>client:load</code>, <code>client:idle</code>, <code>client:visible</code>, <code>client:only</code></li>
-              <li>ISR stale-while-revalidate cache layer</li>
-              <li>API route production parity and request context</li>
-              <li>Hub package count and compatibility badges</li>
+              <li>Reactive DSD with safe templates</li>
+              <li>Streaming DSD contract</li>
+              <li>Route-level ISR metadata as a future handler contract</li>
             </ul>
           </div>
 
           <div class="phase planned">
             <span class="status planned">Planned</span>
-            <h3>v0.22.x - Reactive DSD</h3>
+            <h3>v0.22.x - Architecture Integrity</h3>
             <p>
-              Signals should improve DSD authoring without turning every DSD component into a
-              default client runtime. Static HTML remains the default; reactivity serves components
-              that actually need state updates.
+              The 2026-05-26 review resets v0.22 as an architecture debt paydown line:
+              consumer import surface, core package boundaries, adapter-vite decomposition,
+              signals facade, validation ownership, and stronger quality gates.
             </p>
           </div>
 
@@ -308,7 +310,7 @@ export class RoadmapPage extends DsdElement {
             <li>No webpack: do not route LessJS back through webpack or older bundler presets.</li>
             <li>No universal automatic SSR promise for arbitrary CEM packages.</li>
             <li>No mature marketplace claim for Registry Hub yet.</li>
-            <li>No generic full-stack parity chase before Hydration + ISR.</li>
+            <li>No generic full-stack parity chase before architecture debt paydown.</li>
             <li>No auth, ORM, permissions, or database SDK inside core.</li>
           </ul>
 

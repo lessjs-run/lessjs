@@ -1,107 +1,88 @@
-# LessJS v0.22.0 - Edge Full-Stack
+# LessJS v0.22.0 - Architecture Integrity
 
-> Status: PLANNING
-> Target: ISR handler, KV adapters, Showcase, deployment guides
+> Status: PLANNING\
+> Target: architecture debt paydown before new Edge Full-Stack surface\
+> Governing ADR: ADR-0049
 
 ## Mission
 
-v0.22.0 closes the lightweight full-stack loop for LessJS. After v0.21 makes
-the DSD renderer stronger, v0.22 proves that the same renderer can run behind
-an edge HTTP handler with API routes, static assets, ISR pages, and KV-backed
-cache persistence.
+v0.22.0 makes the current v0.21.x architecture clean enough to extend. The
+release is not a feature expansion line. It pays down the engineering and
+architecture debt exposed by the 2026-05-26 review set before LessJS resumes
+ISR/KV/Showcase work.
 
 The release should make this true:
 
 ```text
 LessJS app
-  -> SSG pages for stable content
-  -> Hono API routes for serverless JSON/endpoints
-  -> ISR routes for periodically regenerated DSD HTML
-  -> KV cache adapter for platform-native persistence
-  -> Cloudflare Workers and Deno Deploy deployment paths
-  -> www site proves the feature set
+  -> small consumer deno.json
+  -> clear public imports
+  -> runtime/build package boundaries
+  -> decomposed adapter-vite pipeline
+  -> stable signal facade
+  -> unified schema and validation ownership
+  -> stronger CI and generated-consumer gates
 ```
 
 ## Scope Boundary
 
-v0.22.0 is an Edge Full-Stack MVP, not a mature app platform.
+| Included                              | Excluded in v0.22                       |
+| ------------------------------------- | --------------------------------------- |
+| Consumer import surface cleanup       | ISR production handler                  |
+| `@lessjs/core` boundary repair        | CF Workers KV / Deno KV adapters        |
+| Extracted package ownership cleanup   | www Edge Full-Stack Showcase            |
+| `adapter-vite` decomposition          | New 10-component UI expansion           |
+| Signals facade / engine separation    | ORM/database/auth/session abstractions  |
+| Hub/CEM/schema validation unification | Generic Node server target              |
+| Coverage, consumer E2E, trace gates   | Public Edge Full-Stack completion claim |
 
-| Included                | Excluded                      |
-| ----------------------- | ----------------------------- |
-| HTTP handler            | Auth/session framework        |
-| Static file serving     | ORM/database layer            |
-| Hono API route mounting | File upload/storage product   |
-| Route-level ISR         | Queue/background job platform |
-| CF Workers KV adapter   | Admin panel/CMS               |
-| Deno KV adapter         | User accounts                 |
-| Deployment guides       | Generic Node server target    |
-| Showcase proof          | Marketplace/ecosystem growth  |
-
-This keeps LessJS realistic: the framework owns rendering, routing, API
-mounting, ISR, and deployment contracts. Data, auth, and storage can be
-integrated later through documented examples or partner services.
+ADR-0038 remains accepted, but its implementation moves to v0.23.x or later.
 
 ## Release Order
 
-| Step | SOP     | Priority | Purpose                         | Must Finish Before           |
-| ---- | ------- | -------- | ------------------------------- | ---------------------------- |
-| 1    | SOP-001 | P0       | ISR production handler          | Public Edge Full-Stack claim |
-| 2    | SOP-002 | P0       | CF KV and Deno KV adapters      | Deployed ISR demo            |
-| 3    | SOP-003 | P0       | www self-hosting proof          | Release announcement         |
-| 4    | SOP-004 | P1       | Deployment guides and templates | User adoption                |
-| 5    | SOP-005 | P0       | Cleanup, gates, release closure | v0.22.0 completion           |
+| Step | SOP     | Priority | Purpose                         | Must Finish Before          |
+| ---- | ------- | -------- | ------------------------------- | --------------------------- |
+| 1    | SOP-001 | P0       | Consumer surface cleanup        | Any release candidate build |
+| 2    | SOP-002 | P0       | Package boundary repair         | New public API claims       |
+| 3    | SOP-003 | P0       | `adapter-vite` decomposition    | Build pipeline expansion    |
+| 4    | SOP-004 | P1       | Signals/schema hardening        | v0.23 Edge restart          |
+| 5    | SOP-005 | P0       | Quality gates and release close | v0.22 completion            |
 
 ## Entry Criteria
 
-- v0.21 release gates pass.
-- `renderDSD()` and, if shipped, `renderDSDStream()` are stable enough to call
-  from a request handler.
-- `isr-manifest.json` is emitted during build for `revalidate` routes.
-- Hono API route generation works in dev and build.
-- Public docs do not call ISR production-ready before SOP-005 passes.
-
-## Architecture Contract
-
-```text
-Request
-  -> match static asset
-      -> return file
-  -> match API route
-      -> generated Hono app handles request
-  -> match ISR route
-      -> compute cache key
-      -> cache.get(key)
-          -> hit: return cached HTML
-          -> stale: return cached HTML and schedule regeneration
-          -> miss: render, cache, return fresh HTML
-          -> error: return last good HTML when available, otherwise 500
-  -> fallback static route or 404
-```
-
-## Key Design Rules
-
-- `revalidate` is the fresh window, not the KV deletion TTL.
-- KV records need enough retention to serve stale HTML while regeneration runs.
-- Cloudflare Workers uses `ExecutionContext.waitUntil`.
-- Deno Deploy uses `Deno.serve` and Deno KV.
-- Static-only deployments remain supported and must not require KV.
-- Redis stays out of core because Cloudflare Workers cannot use raw TCP.
+- v0.21 public docs and package versions are understood.
+- The 2026-05-26 conversation archive is normalized under
+  `docs/conversation/20260526/`.
+- ADR-0049 is accepted.
+- No implementation change starts without a mapped SOP step and verification
+  command.
 
 ## Exit Criteria
 
-- `deno task serve` or equivalent production command can serve built output.
-- Cloudflare Worker entry can serve static pages, API routes, and ISR pages.
-- Deno Deploy entry can serve static pages, API routes, and ISR pages.
-- `CfKvIsrCache` and `DenoKvIsrCache` pass the same contract tests.
-- The www site contains working Showcase, ISR demo, API stats, and deployment
-  guidance.
-- Full release gates pass.
+- Generated consumer projects have a minimal, explainable `deno.json`.
+- `@lessjs/core` no longer owns build-only files or duplicated extracted helper
+  implementations.
+- `adapter-vite` has testable modules for plugin assembly, import resolution,
+  head injection, optional stubs, and build phases.
+- `@lessjs/signals` has a documented facade/engine boundary.
+- Hub/CEM/schema validation has one ownership model and no type placeholders.
+- CI emits coverage artifacts, keeps generated-consumer proof meaningful, and
+  preserves Playwright traces for failures.
+- Full release gates pass and docs/status/roadmap agree with the verified
+  state.
+
+## Deferred Plans
+
+The previous v0.22 Edge Full-Stack SOPs are superseded as active v0.22 work.
+Their concepts move to v0.23.x after this cleanup line exits:
+
+- ISR production handler
+- CF Workers KV and Deno KV adapters
+- www self-hosting proof
+- deployment guides
 
 ## Related
 
+- ADR-0049: Architecture Debt First Roadmap Reset
 - ADR-0038: ISR + Edge KV Architecture
-- SOP-001: ISR Production Handler
-- SOP-002: KV ISR Cache Adapters
-- SOP-003: www Showcase Self-Hosting Proof
-- SOP-004: Deployment Guide
-- SOP-005: Cleanup and Verification
+- `docs/conversation/20260526/20260526-architecture-debt-decision.md`

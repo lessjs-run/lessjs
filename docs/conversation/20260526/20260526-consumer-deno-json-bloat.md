@@ -57,21 +57,21 @@
 
 ### 泄漏清单
 
-| 条目 | 类型 | 为什么是泄漏 | 该由谁处理 |
-|------|------|-------------|-----------|
-| `parse5` | SSR 传递依赖 | Rolldown external 策略要求消费者声明 | adapter-vite |
-| `entities` | SSR 传递依赖 | 同上 | adapter-vite |
-| `entities/lib/escape.js` | 子路径 workaround | ADR-0042 ESM 解析泄露的产物 | adapter-vite |
-| `hono` | SSR 运行时 | 入口代码 import hono，消费者必须声明 | adapter-vite |
-| `hono/secure-headers` | SSR 运行时子路径 | 同上 | adapter-vite |
-| `@lessjs/signals` | 框架内部依赖 | 页面代码可能不用 signal，但 core re-export 了 | core |
-| `@lessjs/signals/framework` | 框架内部子路径 | 同上 | core |
-| `@lessjs/adapter-lit` | 可选适配器 | 不用 Lit 组件的项目不需要 | adapter-vite |
-| `@lessjs/adapter-vite` | 构建工具 | 消费者通过 task 命令调用，不需要 import | — |
-| `@lessjs/core/navigation` | 框架内部子路径 | 消费者一般不需要直接调用 | core |
-| `@lessjs/ui/` (trailing slash) | 子路径映射 | Rolldown 不需要消费者配这个 | adapter-vite |
-| `@lessjs/ui/open-props-tokens` | 框架内部子路径 | 通过 `@lessjs/ui` 应自动可用 | ui |
-| `vite` | 构建工具 | 不需要显式声明——Deno task 自动拉 | — |
+| 条目                           | 类型              | 为什么是泄漏                                  | 该由谁处理   |
+| ------------------------------ | ----------------- | --------------------------------------------- | ------------ |
+| `parse5`                       | SSR 传递依赖      | Rolldown external 策略要求消费者声明          | adapter-vite |
+| `entities`                     | SSR 传递依赖      | 同上                                          | adapter-vite |
+| `entities/lib/escape.js`       | 子路径 workaround | ADR-0042 ESM 解析泄露的产物                   | adapter-vite |
+| `hono`                         | SSR 运行时        | 入口代码 import hono，消费者必须声明          | adapter-vite |
+| `hono/secure-headers`          | SSR 运行时子路径  | 同上                                          | adapter-vite |
+| `@lessjs/signals`              | 框架内部依赖      | 页面代码可能不用 signal，但 core re-export 了 | core         |
+| `@lessjs/signals/framework`    | 框架内部子路径    | 同上                                          | core         |
+| `@lessjs/adapter-lit`          | 可选适配器        | 不用 Lit 组件的项目不需要                     | adapter-vite |
+| `@lessjs/adapter-vite`         | 构建工具          | 消费者通过 task 命令调用，不需要 import       | —            |
+| `@lessjs/core/navigation`      | 框架内部子路径    | 消费者一般不需要直接调用                      | core         |
+| `@lessjs/ui/` (trailing slash) | 子路径映射        | Rolldown 不需要消费者配这个                   | adapter-vite |
+| `@lessjs/ui/open-props-tokens` | 框架内部子路径    | 通过 `@lessjs/ui` 应自动可用                  | ui           |
+| `vite`                         | 构建工具          | 不需要显式声明——Deno task 自动拉              | —            |
 
 ### 为什么会泄露
 
@@ -156,9 +156,9 @@ adapter-vite 的 external-resolver.ts 保持现状
 
 ## 涉及文件
 
-| 文件 | 操作 |
-|------|------|
-| `packages/app/src/index.ts` | MODIFY — 自动注册消费者 import map（核心改动） |
-| `packages/adapter-vite/src/external-resolver.ts` | MODIFY — manifest 暴露给 app 层 |
-| `packages/adapter-vite/src/cli/build-ssg.ts` | MODIFY — 使用 app 传递的 import map |
-| `docs/adr/ADR-0047` | UPDATE — 记录消费者 deno.json 简化 |
+| 文件                                             | 操作                                           |
+| ------------------------------------------------ | ---------------------------------------------- |
+| `packages/app/src/index.ts`                      | MODIFY — 自动注册消费者 import map（核心改动） |
+| `packages/adapter-vite/src/external-resolver.ts` | MODIFY — manifest 暴露给 app 层                |
+| `packages/adapter-vite/src/cli/build-ssg.ts`     | MODIFY — 使用 app 传递的 import map            |
+| `docs/adr/ADR-0047`                              | UPDATE — 记录消费者 deno.json 简化             |
