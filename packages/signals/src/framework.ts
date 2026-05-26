@@ -15,6 +15,6 @@ import type { SignalEngine } from '@lessjs/core/signals';
 // ─── Engine (sync — alien-signals is hard dependency) ───────────
 const engine: SignalEngine = createDefaultEngine();
 
-export const signal = engine.signal.bind(engine);
-export const computed = engine.computed.bind(engine);
-export const effect = engine.effect.bind(engine);
+export const signal: SignalEngine['signal'] = engine.signal.bind(engine);
+export const computed: SignalEngine['computed'] = engine.computed.bind(engine);
+export const effect: SignalEngine['effect'] = engine.effect.bind(engine);
