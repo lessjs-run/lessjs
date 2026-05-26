@@ -31,8 +31,12 @@
 
 import type { Plugin, ViteDevServer } from 'vite';
 import type { LessContentOptions } from './types.ts';
-import type { LessBuildContextLike } from '@lessjs/core/build-types';
-import { RESOLVED_BLOG_DATA_ID, RESOLVED_NAV_ID, VIRTUAL_NAV_ID } from '@lessjs/core/virtual-ids';
+import type { LessBuildContextLike } from '@lessjs/adapter-vite/build-types';
+import {
+  RESOLVED_BLOG_DATA_ID,
+  RESOLVED_NAV_ID,
+  VIRTUAL_NAV_ID,
+} from '@lessjs/adapter-vite/virtual-ids';
 import { loadBlogData } from './blog/blog-data.ts';
 import { scanNavData } from './nav/scanner.ts';
 import { createLogger } from '@lessjs/core/logger';

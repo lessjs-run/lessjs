@@ -29,6 +29,8 @@
     "@lessjs/core/navigation": "./packages/core/src/navigation.ts",
     "@lessjs/core/compatibility": "./packages/core/src/compatibility.ts",
     "@lessjs/core/cem-parser": "./packages/core/src/cem-parser.ts",
+    "@lessjs/core/signals": "./packages/core/src/signals.ts",
+    "@lessjs/core/types": "./packages/core/src/types.ts",
     "@lessjs/rpc": "./packages/rpc/src/index.ts",
     "@lessjs/signals": "./packages/signals/src/index.ts",
     "@lessjs/signals/framework": "./packages/signals/src/framework.ts",

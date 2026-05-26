@@ -198,6 +198,17 @@ const WC_PACKAGES: KnownWcPackage[] = [
 
 // ─── CEM Data Extraction ────────────────────────────────────────────────
 
+/**
+ * Raw CEM JSON parsing interface (intentionally loose).
+ *
+ * This is NOT the authoritative CEM type definition. The canonical CEM schema
+ * types live in @lessjs/core (CemCustomElement, CemAttribute, CemEvent, CemSlot).
+ * This interface exists only for parsing arbitrary CEM JSON files where the
+ * actual runtime shape may vary (e.g., `type` can be `{ text: string }` or `string`).
+ *
+ * @see @lessjs/core/types.ts for authoritative CEM schema types
+ * @see https://github.com/webcomponents/custom-elements-manifest
+ */
 interface CemDeclaration {
   tagName?: string;
   name?: string;
@@ -336,7 +347,8 @@ export interface ScanResult {
  */
 export async function scanInstalledPackages(): Promise<ScanResult> {
   const errors: string[] = [];
-  const records: HubPackageRecord[] = [];
+  const numPackages = WC_PACKAGES.length;
+  const records: (HubPackageRecord | null)[] = new Array(numPackages).fill(null);
   const skipSnapshots = Deno.args.includes('--skip-snapshots');
 
   // ── Phase 1: Collect all items to render ────────────────────────────
@@ -346,7 +358,8 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
   // Map: tagName -> package index + tag index (for results lookup)
   const playwrightIndex = new Map<string, { pkgIdx: number; tagIdx: number }>();
 
-  for (const pkg of WC_PACKAGES) {
+  for (let pkgIdx = 0; pkgIdx < numPackages; pkgIdx++) {
+    const pkg = WC_PACKAGES[pkgIdx];
     const tags: HubTagRecord[] = [];
 
     // Load CEM data for this package if available
@@ -367,9 +380,6 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
       });
     }
 
-    records.push(null!); // placeholder, will be filled later
-    const pkgIdx = records.length - 1;
-
     // Collect client-only components for Playwright batch rendering
     if (!skipSnapshots && pkg.compatibility !== 'ssr-capable') {
       for (let i = 0; i < pkg.tagNames.length; i++) {
@@ -389,7 +399,7 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
   }
 
   // ── Phase 2: Render SSR-capable Lit components (in-process) ─────────
-  for (let pkgIdx = 0; pkgIdx < WC_PACKAGES.length; pkgIdx++) {
+  for (let pkgIdx = 0; pkgIdx < numPackages; pkgIdx++) {
     const pkg = WC_PACKAGES[pkgIdx];
     if (pkg.compatibility !== 'ssr-capable') continue;
 
@@ -449,7 +459,7 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
   }
 
   // ── Phase 4: Assemble records for client-only packages ──────────────
-  for (let pkgIdx = 0; pkgIdx < WC_PACKAGES.length; pkgIdx++) {
+  for (let pkgIdx = 0; pkgIdx < numPackages; pkgIdx++) {
     const pkg = WC_PACKAGES[pkgIdx];
     if (pkg.compatibility === 'ssr-capable') continue; // already handled
 

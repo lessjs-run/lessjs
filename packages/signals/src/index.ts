@@ -7,6 +7,11 @@
  *
  * When browser natively supports Signal, engine auto-switches to native.
  *
+ * v0.22 (SOP-004): Signals Facade
+ *   SignalEngine interface is defined in @lessjs/core/signals for zero-cost
+ *   interop. An experimental alien-signals adapter ships as ./alien-engine.ts.
+ *   Set LESSJS_SIGNALS_ENGINE=alien to test.
+ *
  * Architecture (3 layers):
  *   Engine layer    -> TC39 Signal primitives (polyfill or native)
  *   Framework layer -> User-friendly API (.value syntax, subscribe)
@@ -22,6 +27,7 @@
  * @module @lessjs/signals
  */
 
+// ─── Public types ───────────────────────────────────────────────
 export type {
   Channel,
   ChannelHandler,
@@ -31,11 +37,21 @@ export type {
   WritableSignal,
 } from './types.ts';
 
+// ─── SignalEngine facade (SOP-004) ──────────────────────────────
+export type { SignalEngine } from '@lessjs/core/signals';
+
+// ─── Experimental engine ────────────────────────────────────────
+export { createAlienEngine, getAlienEngineIfRequested } from './alien-engine.ts';
+
+// ─── Framework layer ────────────────────────────────────────────
 export { computed, effect, signal } from './framework.ts';
+
+// ─── Sugar layer ────────────────────────────────────────────────
 export { batch, channel, islandEffect, isNativeSignal, themeSignal, untracked } from './sugar.ts';
 
-// Default export for convenient import - tree-shakable since bundlers
-// eliminate the default object when only named imports are used.
+// ─── Default export for convenient import ──────────────────────
+// Tree-shakable since bundlers eliminate the default object when
+// only named imports are used.
 import { computed, effect, signal } from './framework.ts';
 import { batch, channel, islandEffect, isNativeSignal, themeSignal, untracked } from './sugar.ts';
 

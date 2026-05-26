@@ -1,8 +1,10 @@
 /**
- * @lessjs/core - Build-time shared types.
+ * @lessjs/adapter-vite - Build-time shared types.
  *
- * G10 fix: Extracted from @lessjs/adapter-vite/build-context to break
- * the circular dependency between adapter-vite <-> content/i18n.
+ * Originally in @lessjs/core (G10 fix) to break the circular dependency
+ * between adapter-vite <-> content/i18n. Moved back to adapter-vite in
+ * v0.22 (SOP-002) — the circular dependency is resolved because
+ * adapter-vite no longer imports from content or i18n at module level.
  *
  * These types contain zero Vite-specific imports - they are pure data
  * interfaces that content and i18n use to communicate with the build context.

@@ -936,24 +936,24 @@
     "members": {
       "packages/adapter-lit": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.21.16"
+          "jsr:@lessjs/core@0.22"
         ]
       },
       "packages/adapter-react": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.21.16",
+          "jsr:@lessjs/core@0.22",
           "npm:react-dom@19",
           "npm:react@19"
         ]
       },
       "packages/adapter-vanilla": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.21.16"
+          "jsr:@lessjs/core@0.22"
         ]
       },
       "packages/adapter-vite": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.21.16",
+          "jsr:@lessjs/core@0.22",
           "npm:@hono/vite-dev-server@~0.25.3",
           "npm:esbuild@0.25",
           "npm:hono@4",
@@ -962,26 +962,27 @@
       },
       "packages/app": {
         "dependencies": [
-          "jsr:@lessjs/adapter-vite@~0.21.16",
-          "jsr:@lessjs/content@~0.21.16",
-          "jsr:@lessjs/core@~0.21.16",
-          "jsr:@lessjs/i18n@~0.21.16",
+          "jsr:@lessjs/adapter-vite@0.22",
+          "jsr:@lessjs/content@0.22",
+          "jsr:@lessjs/core@0.22",
+          "jsr:@lessjs/i18n@0.22",
           "npm:vite@8.0.10"
         ]
       },
       "packages/cem": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.21.16"
+          "jsr:@lessjs/core@0.22"
         ]
       },
       "packages/compat-check": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.21.16"
+          "jsr:@lessjs/core@0.22"
         ]
       },
       "packages/content": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.21.16",
+          "jsr:@lessjs/adapter-vite@0.22",
+          "jsr:@lessjs/core@0.22",
           "npm:@types/sanitize-html@2",
           "npm:gray-matter@^4.0.3",
           "npm:marked@15",
@@ -992,25 +993,32 @@
       },
       "packages/core": {
         "dependencies": [
-          "jsr:@lessjs/signals@~0.21.16",
+          "jsr:@lessjs/signals@0.22",
+          "jsr:@lessjs/style-sheet@0.22",
           "npm:parse5@7.0.0"
         ]
       },
       "packages/hub": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.21.16",
+          "jsr:@lessjs/core@0.22",
           "npm:typescript@^5.9.0"
         ]
       },
       "packages/i18n": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.21.16",
+          "jsr:@lessjs/adapter-vite@0.22",
+          "jsr:@lessjs/core@0.22",
           "npm:vite@8.0.10"
+        ]
+      },
+      "packages/signals": {
+        "dependencies": [
+          "jsr:@lessjs/core@0.22"
         ]
       },
       "packages/ui": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.21.16"
+          "jsr:@lessjs/core@0.22"
         ]
       }
     }

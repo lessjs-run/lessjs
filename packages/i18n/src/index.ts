@@ -33,7 +33,7 @@
 
 import type { Plugin } from 'vite';
 import type { LessI18nOptions } from './types.ts';
-import type { LessBuildContextLike } from '@lessjs/core/build-types';
+import type { LessBuildContextLike } from '@lessjs/adapter-vite/build-types';
 import { loadI18nData } from './i18n-data.ts';
 import { createLogger } from '@lessjs/core/logger';
 

@@ -115,24 +115,9 @@ node_modules/
 `,
     'deno.json': `{
   "imports": {
-    "vite": "npm:vite@8.0.10",
-    "@deno/vite-plugin": "npm:@deno/vite-plugin@2",
-    "hono": "npm:hono@^4.12.18",
-    "parse5": "npm:parse5@7.0.0",
-    "entities": "npm:entities@^4",
-    "entities/": "npm:entities@^4/",
     "@lessjs/app": "jsr:@lessjs/app@^${v.app}",
-    "@lessjs/adapter-lit": "jsr:@lessjs/adapter-lit@^${v.adapterLit}",
-    "@lessjs/adapter-vite": "jsr:@lessjs/adapter-vite@^${v.adapterVite}",
-    "@lessjs/content": "jsr:@lessjs/content@^${v.content}",
     "@lessjs/core": "jsr:@lessjs/core@^${v.core}",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^${v.core}/navigation",
-    "@lessjs/i18n": "jsr:@lessjs/i18n@^${v.i18n}",
-    "@lessjs/signals": "jsr:@lessjs/signals@^${v.signals}",
-    "@lessjs/signals/framework": "jsr:@lessjs/signals@^${v.signals}/framework",
-    "@lessjs/ui": "jsr:@lessjs/ui@^${v.ui}",
-    "@lessjs/ui/open-props-tokens": "jsr:@lessjs/ui@^${v.ui}/open-props-tokens",
-    "@lessjs/ui/": "jsr:@lessjs/ui@^${v.ui}/"
+    "@lessjs/ui": "jsr:@lessjs/ui@^${v.ui}"
   },
   "nodeModulesDir": "auto",
   "tasks": {

@@ -37,6 +37,7 @@ import {
 } from '@lessjs/core';
 import { navigate, onNavigate } from '@lessjs/core/navigation';
 import { openPropsTokenSheet } from './open-props-tokens.js';
+import { _esc, _escAttr } from './shared/escape.js';
 import './less-theme-toggle.js';
 
 export const tagName = 'less-layout';
@@ -965,17 +966,8 @@ export class LessLayout extends DsdElement {
 
   // --- Utilities ---
 
-  private _esc(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-  }
-
-  private _escAttr(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(
-      />/g,
-      '&gt;',
-    );
-  }
+  private _esc = _esc;
+  private _escAttr = _escAttr;
 }
 
 export default LessLayout;

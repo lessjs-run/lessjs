@@ -23,7 +23,6 @@ const LESSJS_EXPORT_FILES: Record<string, Record<string, string>> = {
   core: {
     '.': 'src/index.ts',
     api: 'src/api.ts',
-    'build-types': 'src/build-types.ts',
     'cem-parser': 'src/cem-parser.ts',
     'cli/less-add': 'src/cli/less-add.ts',
     'cli/validate-manifest': 'src/cli/validate-manifest.ts',
@@ -42,7 +41,6 @@ const LESSJS_EXPORT_FILES: Record<string, Record<string, string>> = {
     'style-sheet': 'src/style-sheet.ts',
     types: 'src/types.ts',
     'validate-manifest': 'src/validate-manifest.ts',
-    'virtual-ids': 'src/virtual-ids.ts',
   },
   ui: {
     '.': 'src/index.ts',
@@ -67,6 +65,7 @@ const LESSJS_EXPORT_FILES: Record<string, Record<string, string>> = {
   'adapter-vite': {
     '.': 'src/index.ts',
     'build-context': 'src/build-context.ts',
+    'build-types': 'src/build-types.ts',
     'virtual-ids': 'src/virtual-ids.ts',
   },
   rpc: { '.': 'src/index.ts' },

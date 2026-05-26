@@ -1,0 +1,95 @@
+sequenceDiagram
+    actor User
+    participant CLI as create/cli.ts
+    participant TPL as Template Builder
+    participant FS as Filesystem
+    participant Deno as deno task build
+    participant Vite as adapter-vite
+    participant Resolver as external-resolver.ts
+
+    User->>CLI: deno run -A jsr:@lessjs/create my-app
+    CLI->>TPL: buildTemplates(v)
+    Note over TPL: deno.json now has ONLY: @lessjs/app, @lessjs/core, @lessjs/ui
+    CLI->>FS: write deno.json + vite.config.ts + routes/islands
+    FS-->>CLI: done
+
+    User->>Deno: deno task build
+    Deno->>Vite: vite build (via lessjs() plugin)
+    Vite->>Resolver: resolve external deps (parse5, entities, hono)
+    Note over Resolver: ADR-0047 pre-resolution: injects sidecar import-map without consumer deno.json changes
+    Resolver-->>Vite: resolved deps
+    Vite->>FS: write dist/
+    FS-->>Deno: build success
+
+---
+title: Package Boundary Repair — StyleSheet Resolution
+
+sequenceDiagram
+    participant Core as @lessjs/core
+    participant SS as @lessjs/style-sheet
+    participant DSD as renderDSD()
+    participant UI as @lessjs/ui components
+
+    Note over Core,SS: Core re-exports from style-sheet
+    
+    DSD->>Core: import { StyleSheet } from '@lessjs/core'
+    Core->>SS: re-export { StyleSheet, StyleSheetLike, StyleSheetRule }
+    SS-->>Core: canonical impl (ShimStyleSheet | native CSSStyleSheet)
+    Core-->>DSD: StyleSheet constructor
+    
+    UI->>Core: import { StyleSheet } from '@lessjs/core'
+    Note over UI: Same resolution path — No duplicate implementation
+
+---
+title: adapter-vite Decomposition — Plugin Assembly
+
+sequenceDiagram
+    participant User as vite.config.ts
+    participant LP as less-plugin.ts
+    participant HI as head-injection.ts
+    participant SR as subpath-resolver.ts
+    participant OPS as optional-package-stubs.ts
+    participant PC as phase-context.ts
+    participant Vite as Vite Plugin System
+
+    User->>LP: less(options)
+    LP->>PC: new LessBuildContext(options)
+    LP->>HI: normalizeHeadExtras(options)
+    HI-->>LP: resolvedOptions with safe headExtras
+    LP->>SR: createCoreResolvePlugin(metaUrl)
+    SR-->>LP: coreResolvePlugin
+    LP->>OPS: optionalPackageStubsPlugin()
+    OPS-->>LP: stubsPlugin
+    
+    LP->>LP: assemblePlugins(ctx)
+    Note over LP: Returns Plugin[]: [corePlugin, coreResolvePlugin, dispatchDataPlugin, stubsPlugin, virtualEntryPlugin, devServerPlugin, islandTransformPlugin, buildPlugin, devtoolsPlugin]
+    
+    LP-->>Vite: Plugin[]
+    Vite-->>User: configured vite
+
+---
+title: Signals Facade — Engine Swap
+
+sequenceDiagram
+    participant User as user code
+    participant Facade as @lessjs/signals
+    participant Engine as SignalEngine
+    participant TC39 as Tc39Engine
+    participant Alien as AlienEngine (experiment)
+
+    User->>Facade: signal(0)
+    Facade->>Engine: createState(0)
+    
+    alt Default: TC39 polyfill
+        Engine->>TC39: new Signal.State(0)
+        TC39-->>Engine: state
+    else Experiment: alien-signals flag
+        Engine->>Alien: alienSignal(0)
+        Alien-->>Engine: state
+    end
+    
+    Engine-->>Facade: WritableSignal { .value, .subscribe }
+    Facade-->>User: signal instance
+    
+    User->>Facade: computed(() => signal.value * 2)
+    Note over Facade,Engine: Same flow; engine transparent

@@ -26,6 +26,7 @@ import {
   type TemplateResult,
 } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
+import { _esc } from './shared/escape.js';
 
 export const tagName = 'less-callout';
 
@@ -128,10 +129,7 @@ export class LessCallout extends DsdElement {
     this.update();
   }
 
-  /** Escape HTML text content to prevent XSS (SSR-safe, no DOM API) */
-  private _esc(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
+  private _esc = _esc;
 }
 
 export default LessCallout;

@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/core",
-  "version": "0.21.16",
+  "version": "0.22.0",
   "exports": {
     ".": "./src/index.ts",
     "./errors": "./src/errors.ts",
@@ -10,14 +10,13 @@
     "./api": "./src/api.ts",
     "./isr": "./src/isr.ts",
     "./navigation": "./src/navigation.ts",
-    "./build-types": "./src/build-types.ts",
-    "./virtual-ids": "./src/virtual-ids.ts",
     "./render-serialize": "./src/render-serialize.ts",
     "./render-instantiate": "./src/render-instantiate.ts",
     "./render-errors": "./src/render-errors.ts",
     "./render-dsd-stream": "./src/render-dsd-stream.ts",
     "./cem-parser": "./src/cem-parser.ts",
     "./compatibility": "./src/compatibility.ts",
+    "./signals": "./src/signals.ts",
     "./types": "./src/types.ts",
     "./validate-manifest": "./src/validate-manifest.ts",
     "./cli/validate-manifest": "./src/cli/validate-manifest.ts",
@@ -27,8 +26,9 @@
   },
   "imports": {
     "parse5": "npm:parse5@7.0.0",
-    "@lessjs/signals": "jsr:@lessjs/signals@^0.21.16",
-    "@lessjs/signals/framework": "jsr:@lessjs/signals@^0.21.16/framework"
+    "@lessjs/signals": "jsr:@lessjs/signals@^0.22.0",
+    "@lessjs/signals/framework": "jsr:@lessjs/signals@^0.22.0/framework",
+    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.22.0"
   },
   "publish": {
     "include": [

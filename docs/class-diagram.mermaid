@@ -1,0 +1,116 @@
+classDiagram
+    class PublicSignalAPI {
+        <<interface>>
+        +signal~T~(initial: T): WritableSignal~T~
+        +computed~T~(fn: () => T): ReadonlySignal~T~
+        +effect(fn: () => void): Unsubscribe
+    }
+    
+    class SignalEngine {
+        <<interface>>
+        +createState~T~(initial: T): EngineState~T~
+        +createComputed~T~(fn: () => T): EngineComputed~T~
+        +createEffect(fn: () => void): () => void
+    }
+    
+    class WritableSignal~T~ {
+        +get value(): T
+        +set value(v: T)
+        +subscribe(fn: (v: T) => void): Unsubscribe
+    }
+    
+    class ReadonlySignal~T~ {
+        +get value(): T
+        +subscribe(fn: (v: T) => void): Unsubscribe
+    }
+    
+    class Tc39Engine {
+        -states: Map~symbol, Signal.State~
+        +createState(initial): EngineState
+        +createComputed(fn): EngineComputed
+        +createEffect(fn): () => void
+    }
+    
+    class AlienEngine {
+        -signals: Map~symbol, AlienSignal~
+        +createState(initial): EngineState
+        +createComputed(fn): EngineComputed
+        +createEffect(fn): () => void
+    }
+
+    PublicSignalAPI ..> SignalEngine : uses
+    SignalEngine <|.. Tc39Engine : implements
+    SignalEngine <|.. AlienEngine : implements
+    PublicSignalAPI ..> WritableSignal : creates
+    PublicSignalAPI ..> ReadonlySignal : creates
+
+    class LessPlugin {
+        +less(options: FrameworkOptions, ctx?: LessBuildContext): Plugin[]
+        -normalizeOptions(options): ResolvedOptions
+        -assemblePlugins(ctx): Plugin[]
+    }
+    
+    class HeadInjection {
+        +assertNoScriptTags(html: string, context: string): void
+        +validateSafeUrl(url: string, context: string): string
+        +buildInjectFragments(inject: InjectConfig): string
+        +escapeAttr(value: string): string
+    }
+    
+    class SubpathResolver {
+        +createCoreResolvePlugin(metaUrl: string): Plugin
+        -VIRTUAL_CORE_PREFIX: string
+        -CORE_SUBPATHS: Record~string, string~
+        -fetchAndCompile(url: string): Promise~string~
+        -jsrSourceCache: Map~string, string~
+    }
+    
+    class OptionalPackageStubs {
+        +optionalPackageStubsPlugin(): Plugin
+        -OPTIONAL_PACKAGE_STUBS: Record~string, string~
+    }
+    
+    class PhaseContext {
+        +Phase1Data
+        +Phase2Data
+        +Phase3Data
+        -routeEntries: RouteEntry[]
+        -islandTagNames: string[]
+        -ssrAdmissionPlan: AdmissionPlan
+        -buildManifest: BuildManifest
+    }
+
+    LessPlugin --> HeadInjection : uses
+    LessPlugin --> SubpathResolver : uses
+    LessPlugin --> OptionalPackageStubs : uses
+    LessPlugin --> PhaseContext : owns
+
+    class LessBlogOptions {
+        +contentDir?: string
+        +basePath?: string
+    }
+    class LessPluginMeta {
+        +blogOptions: LessBlogOptions | null
+        +navSections: LessNavSection[]
+        +headerNav: LessHeaderNavLink[]
+        +i18nOptions: LessI18nContextOptions | null
+        +[key: string]: unknown
+    }
+    class LessBuildContextLike {
+        +plugins: LessPluginMeta
+    }
+    class VirtualIds {
+        +VIRTUAL_BLOG_DATA_ID: string
+        +VIRTUAL_I18N_DATA_ID: string
+        +VIRTUAL_NAV_ID: string
+        +VIRTUAL_PAGE_DATA_ID: string
+    }
+    class StyleSheetLike {
+        +replaceSync(text: string): void
+        +cssRules: StyleSheetRule[]
+    }
+    class HtmlEscape {
+        +escapeHtml(str: string): string
+        +escapeAttr(value: string): string
+        +escapeAttrValue(value: unknown): string
+    }

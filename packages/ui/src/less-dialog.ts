@@ -29,6 +29,7 @@ import {
   type TemplateResult,
 } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
+import { _esc, _escAttr } from './shared/escape.js';
 
 export const tagName = 'less-dialog';
 
@@ -243,16 +244,8 @@ export class LessDialog extends DsdElement {
     this.toggle();
   }
 
-  private _esc(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  private _escAttr(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(
-      />/g,
-      '&gt;',
-    );
-  }
+  private _esc = _esc;
+  private _escAttr = _escAttr;
 }
 
 export default LessDialog;

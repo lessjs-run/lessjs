@@ -82,22 +82,18 @@ Deno.test('create-less: deno.json build:ssg uses @lessjs/adapter-vite', () => {
   assert(denoJson.tasks['build:ssg'].includes('@lessjs/adapter-vite'));
 });
 
-Deno.test('create-less: deno.json maps LessJS package imports (v0.20 Ocean-Island)', () => {
+Deno.test('create-less: deno.json maps LessJS package imports (v0.22 Consumer Surface Cleanup)', () => {
   const denoJson = JSON.parse(extractTemplate('deno.json'));
-  assertEquals(denoJson.imports.vite, 'npm:vite@8.0.10');
+  // v0.22 SOP-001: Only 3 @lessjs imports in consumer deno.json
+  const importKeys = Object.keys(denoJson.imports);
+  assertEquals(
+    importKeys.length,
+    3,
+    `Expected 3 imports, got ${importKeys.length}: ${importKeys.join(', ')}`,
+  );
   assertEquals(denoJson.imports['@lessjs/app'], 'jsr:@lessjs/app@^${v.app}');
-  assertEquals(denoJson.imports['@lessjs/adapter-lit'], 'jsr:@lessjs/adapter-lit@^${v.adapterLit}');
   assertEquals(denoJson.imports['@lessjs/core'], 'jsr:@lessjs/core@^${v.core}');
-  assertEquals(
-    denoJson.imports['@lessjs/core/navigation'],
-    'jsr:@lessjs/core@^${v.core}/navigation',
-  );
   assertEquals(denoJson.imports['@lessjs/ui'], 'jsr:@lessjs/ui@^${v.ui}');
-  assertEquals(
-    denoJson.imports['@lessjs/ui/open-props-tokens'],
-    'jsr:@lessjs/ui@^${v.ui}/open-props-tokens',
-  );
-  assertEquals(denoJson.imports['@lessjs/ui/'], 'jsr:@lessjs/ui@^${v.ui}/');
   assertEquals(denoJson.nodeModulesDir, 'auto');
 });
 

@@ -5,18 +5,19 @@
  *
  * All types are plain data. No runtime dependencies beyond TypeScript.
  *
+ * v0.22 (SOP-004): CompatibilityTier now imported from @lessjs/core
+ * to eliminate type duplication. CemAttribute/CemEvent/CemSlot remain
+ * Hub-specific (simplified record format, not full CEM spec).
+ *
  * @see ADR-0030 (Hub Architecture - Static Index + CLI Submission Pipeline)
  * @see docs/sop/v0.19.0-platform-hub.md
  */
 
-// ─── Compatibility ───────────────────────────────────────────────────────
+import type { CompatibilityTier } from '@lessjs/core';
 
-/** 4-tier compatibility classification, same as @lessjs/core/compatibility */
-export type CompatibilityTier =
-  | 'ssr-capable'
-  | 'client-only'
-  | 'rejected'
-  | 'experimental-dom';
+// ─── Compatibility ───────────────────────────────────────────────────────
+// CompatibilityTier imported from @lessjs/core (single source of truth).
+export type { CompatibilityTier };
 
 // ─── Tag Record ──────────────────────────────────────────────────────────
 

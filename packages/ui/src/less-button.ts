@@ -27,6 +27,7 @@ import {
   type TemplateResult,
 } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
+import { _escAttr } from './shared/escape.js';
 
 export const tagName = 'less-button';
 
@@ -233,12 +234,7 @@ export class LessButton extends DsdElement {
     this.dispatchEvent(new CustomEvent('less-click', { bubbles: true, composed: true }));
   }
 
-  private _escAttr(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(
-      />/g,
-      '&gt;',
-    );
-  }
+  private _escAttr = _escAttr;
 }
 
 export default LessButton;
