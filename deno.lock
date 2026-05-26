@@ -15,6 +15,7 @@
     "npm:@types/react-dom@^19.1.0": "19.2.3_@types+react@19.2.15",
     "npm:@types/react@^19.1.0": "19.2.15",
     "npm:@types/sanitize-html@2": "2.16.1",
+    "npm:alien-signals@^3.2.0": "3.2.1",
     "npm:entities@4": "4.5.0",
     "npm:esbuild@0.25": "0.25.12",
     "npm:flexsearch@0.8.212": "0.8.212",
@@ -413,6 +414,9 @@
       "dependencies": [
         "@types/node"
       ]
+    },
+    "alien-signals@3.2.1": {
+      "integrity": "sha512-I8FjmltrfnDFoZedi5CG8DghVYNhzb/Ijluz7tCSJH0xpd0484Kowhbb1XDYOxfJpU1p5wnM2X54dA+IfGyD1g=="
     },
     "argparse@1.0.10": {
       "integrity": "sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==",
@@ -1014,7 +1018,8 @@
       },
       "packages/signals": {
         "dependencies": [
-          "jsr:@lessjs/core@0.22"
+          "jsr:@lessjs/core@0.22",
+          "npm:alien-signals@^3.2.0"
         ]
       },
       "packages/ui": {

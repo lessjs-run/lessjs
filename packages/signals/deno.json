@@ -1,13 +1,14 @@
 {
   "name": "@lessjs/signals",
-  "version": "0.22.0",
+  "version": "0.22.1",
   "exports": {
     ".": "./src/index.ts",
     "./framework": "./src/framework.ts",
     "./alien-engine": "./src/alien-engine.ts"
   },
   "imports": {
-    "@lessjs/core/signals": "jsr:@lessjs/core@^0.22.0/signals"
+    "@lessjs/core/signals": "jsr:@lessjs/core@^0.22.0/signals",
+    "alien-signals": "npm:alien-signals@^3.2.0"
   },
   "publish": {
     "include": [

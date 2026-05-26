@@ -2,29 +2,25 @@
  * @lessjs/signals - Alien Signals Engine Adapter.
  *
  * v0.22 (SOP-004): Default engine using alien-signals.
+ * v0.22.1: TC39 polyfill removed. alien-signals is the only engine.
  *
  * Alien Signals (1.6KB) is a lightweight reactive library with push-pull
- * hybrid architecture, used by Vue 3.6 core and XState. The TC39 polyfill
- * remains as fallback if alien-signals cannot be loaded.
+ * hybrid architecture, used by Vue 3.6 core and XState.
  *
  * ## Design (SOP-004 § Signals Facade)
- * - Alien is the DEFAULT engine.
- * - If alien-signals is not installed, falls back to TC39 polyfill.
- * - The adapter is self-contained: framework.ts and sugar.ts are unchanged.
+ * - Alien is the ONLY engine.
+ * - alien-signals is a hard dependency.
  *
  * @module @lessjs/signals/alien-engine
  */
 
+import { computed as _c, effect as _e, signal as _s } from 'alien-signals';
 import type { SignalEngine } from '@lessjs/core/signals';
 
 // ─── Adapter (synchronous wrapper around alien-signals API) ─────
 
 /**
  * Minimal interface for alien-signals module.
- *
- * This avoids `typeof import('alien-signals')` which requires the optional
- * dependency to be installed for type-checking. Instead we define only the
- * API surface the adapter needs.
  */
 interface AlienSignalsModule {
   signal<T>(v: T): { (): T; (v: T): void };
@@ -34,24 +30,12 @@ interface AlienSignalsModule {
 
 /**
  * Create a SignalEngine backed by alien-signals.
- *
- * This wraps alien-signals' API (e.g. `alienSignal(v)`, `alienComputed(fn)`,
- * `alienEffect(fn)`) into the LessJS SignalEngine interface (`.value` syntax,
- * `subscribe()`).
- *
- * The adaptation layer adds ~200 bytes of code — the entire solution
- * (alien-signals + adapter) is approximately 1.7KB, compared to ~3KB
- * for the TC39 polyfill.
- *
- * @param alienMod - The resolved alien-signals module (passed explicitly
- *   to avoid dynamic import inside the synchronous adapter).
  */
 export function createAlienEngine(
   alienMod: AlienSignalsModule,
 ): SignalEngine {
   return {
     signal<T>(initialValue: T) {
-      // alien-signals 3.x: signal returns callable function s()/s(v)
       const s = alienMod.signal(initialValue);
       return {
         get value(): T {
@@ -68,7 +52,6 @@ export function createAlienEngine(
     },
 
     computed<T>(fn: () => T) {
-      // alien-signals 3.x: computed returns callable function c()
       const c = alienMod.computed(fn);
       return {
         get value(): T {
@@ -82,9 +65,6 @@ export function createAlienEngine(
     },
 
     effect(fn: () => void | (() => void)) {
-      // alien-signals: alienEffect(fn) returns { stop: () => void }
-      // alien-signals effect does NOT support cleanup functions natively.
-      // We wrap to add cleanup support.
       let cleanup: (() => void) | void;
       const e = alienMod.effect(() => {
         try {
@@ -102,22 +82,16 @@ export function createAlienEngine(
   };
 }
 
-// ─── Engine Selection ───────────────────────────────────────────
+// ─── Default Engine (sync) ──────────────────────────────────────
+
+const _defaultAlienMod: AlienSignalsModule = { signal: _s, computed: _c, effect: _e };
 
 /**
  * Get the default signal engine.
  *
- * Priority:
- *   1. alien-signals (default — via dynamic import)
- *   2. TC39 polyfill (fallback if alien unavailable)
- *
- * Used by engine.ts to select the engine at module init.
+ * v0.22.1: Always returns alien-signals engine (sync).
+ * alien-signals is a hard dependency — there is no fallback.
  */
-export async function createDefaultEngine(): Promise<SignalEngine | null> {
-  try {
-    const alienMod = await import('alien-signals');
-    return createAlienEngine(alienMod);
-  } catch {
-    return null; // caller falls back to TC39 polyfill
-  }
+export function createDefaultEngine(): SignalEngine {
+  return createAlienEngine(_defaultAlienMod);
 }

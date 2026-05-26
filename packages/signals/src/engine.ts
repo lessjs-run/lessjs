@@ -2,8 +2,8 @@
 /**
  * @lessjs/signals - Engine Layer
  *
- * TC39 Signal primitives (polyfill or native).
- * Creates the _engine singleton that framework.ts uses.
+ * v0.22.1: TC39 polyfill removed. alien-signals is the only engine.
+ * This file now only exports shared types and a minimal logger.
  *
  * @module @lessjs/signals/engine
  */
@@ -18,8 +18,7 @@ export const _log = {
   },
 };
 
-// ─── Symbols (defined before import to avoid cycle issues) ──────
-const _SIGNAL = Symbol('SIGNAL');
+// ─── Symbols ────────────────────────────────────────────────────
 export const NODE = Symbol('node');
 
 // ─── Engine types ───────────────────────────────────────────────
@@ -49,9 +48,9 @@ export interface SignalEngineNamespace {
   };
 }
 
-// ─── Polyfill types needed by polyfill.ts ───────────────────────
-// These are exported so polyfill.ts can import them without cycles.
-// ReactiveNode, SignalNode, ComputedNode are internal to polyfill.ts.
+// ─── Polyfill types (kept for reference, no longer used) ────────
+// v0.22.1: These types were used by polyfill.ts which has been removed.
+// Kept to avoid breaking downstream type-only consumers if any exist.
 export interface ReactiveNode {
   version: number;
   lastCleanEpoch: number;
@@ -84,11 +83,3 @@ export interface ComputedNode<T> extends ReactiveNode {
   computation: () => T;
   equal: (a: T, b: T) => boolean;
 }
-
-// ─── Engine singleton ───────────────────────────────────────────
-// Import _createPolyfill after all exports - ensures polyfill.ts
-// gets NODE and types before engine.ts needs _createPolyfill.
-import { _createPolyfill } from './polyfill.ts';
-
-// deno-lint-ignore-next-line no-explicit-any
-export const _engine: SignalEngineNamespace = (globalThis as any).Signal ?? _createPolyfill();

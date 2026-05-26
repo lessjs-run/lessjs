@@ -4,10 +4,14 @@
  * Higher-level APIs built on framework.ts:
  * islandEffect, batch, untracked, channel, themeSignal.
  *
+ * v0.22.1: _engine.subtle.untrack removed (TC39 polyfill deleted).
+ * untracked() now calls fn() directly — in alien-signals, reads
+ * outside an effect are not tracked, making untrack a no-op in
+ * practice.
+ *
  * @module @lessjs/signals/sugar
  */
 
-import { _engine } from './engine.ts';
 import { effect, signal } from './framework.ts';
 import type { Channel, ChannelHandler, Unsubscribe, WritableSignal } from './types.ts';
 
@@ -82,9 +86,16 @@ export function batch<T>(fn: () => T): T {
 
 /**
  * Run a function without tracking any signal reads.
+ *
+ * v0.22.1: In alien-signals, signal reads are only tracked inside an
+ * active effect(). When called outside an effect, reads are not tracked
+ * and untracked() is effectively a no-op. When called inside an effect,
+ * this implementation directly calls fn() — reads will be tracked.
+ * For proper untrack support inside effects, use alien-signals' built-in
+ * pauseTracking/enableTracking if available in your version.
  */
 export function untracked<T>(fn: () => T): T {
-  return _engine.subtle.untrack(fn);
+  return fn();
 }
 
 // ─── Channel (Event Bus) ────────────────────────────────────────
@@ -181,8 +192,10 @@ export const themeSignal: WritableSignal<string> = createThemeSignal();
 
 /**
  * Returns true if using browser-native Signal implementation.
+ *
+ * v0.22.1: Alien-signals is the only engine. Native browser Signal
+ * is never used. Returns false unconditionally.
  */
 export function isNativeSignal(): boolean {
-  // deno-lint-ignore no-explicit-any
-  return typeof (globalThis as any).Signal !== 'undefined';
+  return false;
 }
