@@ -25,7 +25,7 @@ import type {
   LessPackageManifest,
   RouteEntry,
 } from '@lessjs/core';
-import type { LessPluginMeta } from './build-types.js';
+import type { LessPluginMeta } from '@lessjs/protocols/build-types';
 import type { IslandDecl, SsrAdmissionPlan } from './entry-descriptor.js';
 
 // ─── Phase Branded Types (compile-time ordering enforcement) ───

@@ -16,7 +16,8 @@
  * H-16 KNOWN ISSUE: Circular dependency between adapter-vite <-> content
  *   adapter-vite generates code that imports @lessjs/content/sitemap
  *   content package imports @lessjs/adapter-vite/build-context
- * TODO: Extract shared types to @lessjs/build-types, or move sitemap generation into adapter-vite
+ * Shared contracts now live in @lessjs/protocols. Generated optional package
+ * imports are still emitted explicitly so consumer import maps can be checked.
  */
 
 // ─── SSR Import Discovery Audit (Step1) ─────────────────────

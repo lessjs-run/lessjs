@@ -58,9 +58,10 @@ jobs:
           fi
 
           # Publish in dependency order: truly leaf first, then dependents
-          #   leaf (zero LessJS deps): rpc, style-sheet, create
+          #   leaf (zero LessJS deps): rpc, protocols, style-sheet, create
           #   core: zero LessJS deps, but needed by many packages below
           publish_if_missing "@lessjs/rpc" "packages/rpc"
+          publish_if_missing "@lessjs/protocols" "packages/protocols"
           publish_if_missing "@lessjs/style-sheet" "packages/style-sheet"
           publish_if_missing "@lessjs/create" "packages/create"
           #   depend on core: signals, compat-check, cem, adapter-*, ui, hub

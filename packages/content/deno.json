@@ -14,8 +14,8 @@
     "sanitize-html": "npm:sanitize-html@^2.17.4",
     "@types/sanitize-html": "npm:@types/sanitize-html@^2",
     "@lessjs/core/logger": "jsr:@lessjs/core@^0.22.1/logger",
-    "@lessjs/adapter-vite/build-types": "jsr:@lessjs/adapter-vite@^0.22.1/build-types",
-    "@lessjs/adapter-vite/virtual-ids": "jsr:@lessjs/adapter-vite@^0.22.1/virtual-ids",
+    "@lessjs/protocols/build-types": "jsr:@lessjs/protocols@^0.22.1/build-types",
+    "@lessjs/protocols/virtual-ids": "jsr:@lessjs/protocols@^0.22.1/virtual-ids",
     "vite": "npm:vite@8.0.10"
   },
   "publish": {
