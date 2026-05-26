@@ -48,13 +48,13 @@ JSR publish cycles and accidental transitive dependencies.
 
 Every core export must be assigned exactly one class:
 
-| Class                | Meaning                              | v0.23 action                           |
-| -------------------- | ------------------------------------ | -------------------------------------- |
-| kernel               | required for DSD runtime             | keep in core                           |
-| runtime protocol     | consumed by runtime/adapter boundary | keep or move to protocols after review |
-| compatibility bridge | old path for extracted owner         | keep temporarily with target owner     |
-| historical bridge    | no longer recommended                | deprecate or move                      |
-| wrong owner          | build/feature/tooling concept        | migrate out before v0.23 exit          |
+| Class             | Meaning                              | v0.23 action                           |
+| ----------------- | ------------------------------------ | -------------------------------------- |
+| kernel            | required for DSD runtime             | keep in core                           |
+| runtime protocol  | consumed by runtime/adapter boundary | keep or move to protocols after review |
+| obsolete export   | old path for extracted owner         | remove and document canonical owner    |
+| historical bridge | no longer recommended                | deprecate or move                      |
+| wrong owner       | build/feature/tooling concept        | migrate out before v0.23 exit          |
 
 The classification table belongs in the implementation PR and should be copied
 into release notes if public imports change.
@@ -64,14 +64,14 @@ into release notes if public imports change.
 ### Step 1: Classify Core Exports
 
 - [ ] Classify every `@lessjs/core` export as kernel, runtime protocol,
-      compatibility bridge, historical bridge, or wrong owner.
-- [ ] Mark each compatibility bridge with an owner and a deprecation policy.
+      obsolete export, historical bridge, or wrong owner.
+- [ ] Mark each obsolete export with its canonical owner and removal note.
 - [ ] Identify exports that exist only because templates or docs use a
       convenient import.
 
 Acceptance:
 
-- [ ] No export is removed without a compatibility plan.
+- [ ] Removed exports have a canonical owner and a release-note entry.
 - [ ] The public API table is included in the implementation PR.
 
 ### Step 2: Remove Implementation Ownership Drift
@@ -88,9 +88,8 @@ Acceptance:
 - [ ] `@lessjs/core` does not import `alien-signals`.
 - [ ] `@lessjs/core` does not depend on adapter packages.
 - [ ] `@lessjs/core` publish dry-run does not require unpublished LessJS
-      implementation packages except accepted compatibility bridges.
-- [ ] `@lessjs/core/signals` is either a documented bridge to
-      `@lessjs/signals` or removed from the recommended path.
+      implementation packages.
+- [ ] `@lessjs/core/signals` is removed from the recommended path.
 
 ### Step 3: Preserve Runtime Behavior
 
@@ -106,10 +105,9 @@ Acceptance:
 
 ### Step 4: Remove Tooling Ownership From Core
 
-- [ ] Move canonical CEM parser ownership to `@lessjs/cem` or keep a documented
-      bridge only.
+- [ ] Move canonical CEM parser ownership to `@lessjs/cem`.
 - [ ] Move canonical compatibility classifier ownership to
-      `@lessjs/compat-check` or keep a documented bridge only.
+      `@lessjs/compat-check`.
 - [ ] Move manifest validation primitives to the contracts layer or owning
       validation package.
 - [ ] Keep runtime errors and logger in core only where runtime code needs them.

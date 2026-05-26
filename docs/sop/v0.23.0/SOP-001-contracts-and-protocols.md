@@ -71,7 +71,7 @@ It must not own:
       `@lessjs/adapter-vite`, `@lessjs/signals`, `@lessjs/hub`, `@lessjs/cem`,
       and `@lessjs/compat-check`.
 - [ ] Mark each item as runtime kernel, build contract, feature API,
-      diagnostics contract, or compatibility bridge.
+      diagnostics contract, obsolete export, or wrong owner.
 - [ ] Identify all imports from `@lessjs/adapter-vite/build-types` and
       `@lessjs/adapter-vite/virtual-ids`.
 
@@ -79,7 +79,8 @@ Acceptance:
 
 - [ ] The migration list names every source file and target owner.
 - [ ] No type is moved before its runtime dependency graph is understood.
-- [ ] The inventory identifies public, internal, and compatibility exports.
+- [ ] The inventory identifies public, internal, obsolete, and wrong-owner
+      exports.
 
 ### Step 2: Add the Contracts Package
 
@@ -100,8 +101,8 @@ Acceptance:
 - [ ] Move `LessBuildContextLike` or equivalent build plugin context types.
 - [ ] Move virtual module id constants.
 - [ ] Update `content`, `i18n`, `app`, and `adapter-vite` imports.
-- [ ] Keep compatibility re-exports only where they are needed for a minor
-      release transition.
+- [ ] Delete old adapter-owned contract exports instead of preserving a
+      compatibility bridge.
 
 Acceptance:
 
@@ -116,8 +117,8 @@ Acceptance:
       `Unsubscribe`.
 - [ ] Define one owner for manifest, compatibility, and validation diagnostic
       primitives.
-- [ ] Remove duplicate local type definitions after compatibility bridges are
-      in place.
+- [ ] Remove duplicate local type definitions after canonical owners are in
+      place.
 
 Acceptance:
 
@@ -126,17 +127,18 @@ Acceptance:
 - [ ] The public docs say `@lessjs/signals` is powered by `alien-signals`, not a
       custom LessJS engine.
 
-### Step 5: Keep Bridges Explicit
+### Step 5: Delete Wrong-Owner Paths
 
-- [ ] Keep temporary re-exports from old locations only when they protect a
-      public minor-release path.
-- [ ] Add comments or docs that name the canonical owner.
-- [ ] Add a removal target version for each bridge.
+- [ ] Remove old exports whose only purpose is backward compatibility.
+- [ ] Remove root import-map aliases for deleted old paths.
+- [ ] Update package resolvers and generated-source helpers so they cannot
+      resolve deleted old paths.
+- [ ] Document the canonical owner in docs and release notes.
 
 Acceptance:
 
-- [ ] No compatibility bridge looks like canonical ownership.
-- [ ] The bridge list is included in the release notes.
+- [ ] No wrong-owner contract path remains exported.
+- [ ] The release notes list breaking import-path moves.
 
 ## Verification
 

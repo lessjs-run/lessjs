@@ -4,8 +4,6 @@
   "exports": {
     ".": "./src/index.ts",
     "./build-context": "./src/build-context.ts",
-    "./build-types": "./src/build-types.ts",
-    "./virtual-ids": "./src/virtual-ids.ts",
     "./head-injection": "./src/head-injection.ts",
     "./less-plugin": "./src/less-plugin.ts",
     "./subpath-resolver": "./src/subpath-resolver.ts",

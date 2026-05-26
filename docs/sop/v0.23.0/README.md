@@ -82,8 +82,8 @@ The v0.23 work starts from the current v0.22.1 graph:
 
 - Do graph gates before moving imports.
 - Move ownership before removing compatibility bridges.
-- Keep one compatibility window for public import paths unless a path is
-  internal-only.
+- Do not keep compatibility bridges for paths whose ownership is wrong.
+- Replace old imports with canonical owners and document breaking import moves.
 - Every package move must include local workspace proof and generated consumer
   proof.
 - Do not start Edge Full-Stack implementation until the v0.23 package graph

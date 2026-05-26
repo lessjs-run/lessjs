@@ -60,16 +60,16 @@ tools and ecosystem
 ```
 
 `@lessjs/core` is the runtime kernel. It should not become the all-purpose DX
-barrel. Compatibility re-exports are allowed only with explicit ownership and a
-deprecation plan.
+barrel. v0.23 architecture work does not preserve incorrectly owned public
+paths. Removed paths should be replaced by their canonical owner and documented
+as intentional architecture breakage.
 
 `@lessjs/signals` remains the LessJS signal API facade powered by
 `alien-signals`. LessJS owns the public `.value` / `subscribe()` contract and
 framework integration semantics, not the low-level reactive algorithm.
 
-`@lessjs/core` must not import `alien-signals` as the long-term canonical
-engine path. During the compatibility window it may keep a bridge, but the
-owner of signal creation, computed values, effects, and engine wrapping is
+`@lessjs/core` must not import `alien-signals` as the canonical engine path.
+The owner of signal creation, computed values, effects, and engine wrapping is
 `@lessjs/signals`.
 
 `@lessjs/app` remains the configuration facade for `lessjs()` and Vite plugin
@@ -105,7 +105,7 @@ v0.25.x.
 
 - v0.23 no longer ships the ISR production handler or KV adapters.
 - A contracts package adds one more public package to govern carefully.
-- Compatibility bridges must be maintained during a deprecation window.
+- Existing users may need import-path changes during v0.23 architecture work.
 - Some imports may move even when runtime behavior does not change.
 - Generated projects may need a minor import migration if an authoring facade is
   accepted.
@@ -175,3 +175,5 @@ engine ownership boundary is unclear. `@lessjs/signals` should wrap
 - `@lessjs/create` post-publish smoke runs the just-published create version,
   not an ambiguous latest version.
 - Future v0.23 code changes start from the SOPs in `docs/sop/v0.23.0/`.
+- Old paths with wrong ownership are removed rather than maintained as
+  compatibility bridges.
