@@ -29,7 +29,7 @@ import type { SignalEngine } from '@lessjs/core/signals';
 interface AlienSignalsModule {
   signal<T>(v: T): { (): T; (v: T): void };
   computed<T>(fn: () => T): { (): T };
-  effect(fn: () => void): { stop(): void };
+  effect(fn: () => void): () => void;
 }
 
 /**
@@ -62,7 +62,7 @@ export function createAlienEngine(
         },
         subscribe(fn: (value: T) => void): () => void {
           const e = alienMod.effect(() => fn(s()));
-          return () => e.stop();
+          return () => e();
         },
       };
     },
@@ -76,7 +76,7 @@ export function createAlienEngine(
         },
         subscribe(fn2: (value: T) => void): () => void {
           const e = alienMod.effect(() => fn2(c()));
-          return () => e.stop();
+          return () => e();
         },
       };
     },
@@ -96,7 +96,7 @@ export function createAlienEngine(
         try {
           cleanup?.();
         } catch { /* swallow */ }
-        e.stop();
+        e();
       };
     },
   };
