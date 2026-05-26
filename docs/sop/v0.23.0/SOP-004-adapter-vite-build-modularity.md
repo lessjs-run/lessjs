@@ -43,6 +43,17 @@ responsibilities and test boundaries.
 
 Contracts shared outside the adapter should move to the contracts package.
 
+## Boundary Rules
+
+- Adapter modules may depend on runtime contracts and protocols.
+- Feature packages may depend on protocols, but not adapter implementation
+  modules.
+- Generated source must import public package paths only.
+- Dynamic imports used for local-vs-published package resolution must have
+  focused tests and a consumer smoke proof.
+- Vite-specific types stay in `adapter-vite` or `app`; generic LessJS build
+  contracts move out.
+
 ## Procedure
 
 ### Step 1: Draw the Current Build Graph
@@ -55,6 +66,8 @@ Acceptance:
 
 - [ ] The graph names owner modules and data handoff points.
 - [ ] The graph includes generated consumer build behavior.
+- [ ] The graph identifies which modules emit source code and which imports
+      that generated source contains.
 
 ### Step 2: Move Shared Contracts Out
 
@@ -66,6 +79,7 @@ Acceptance:
 
 - [ ] `content`, `i18n`, and `app` do not depend on adapter implementation
       for shared contracts.
+- [ ] Adapter compatibility exports are marked as transitional.
 
 ### Step 3: Add Focused Tests by Module
 
@@ -80,6 +94,8 @@ Acceptance:
 
 - [ ] A failure in one module does not require running the entire build to
       understand the issue.
+- [ ] The missing generated `vite` import-map failure is covered by a regression
+      test or package graph gate.
 
 ### Step 4: Keep Adapter Scope Narrow
 

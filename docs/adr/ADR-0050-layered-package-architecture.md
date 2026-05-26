@@ -29,6 +29,12 @@ dependencies or when `core` becomes a convenience aggregation package.
 
 LessJS adopts a layered package architecture.
 
+The decision is not "make everything an object". LessJS keeps pure functions
+for rendering, serialization, package graph checks, and build transforms when
+functions are the clearest contract. Object-shaped APIs are reserved for
+stateful boundaries such as runtime hosts, build sessions, adapter registries,
+package manifests, diagnostics, and cache/store interfaces.
+
 The intended ownership model is:
 
 ```text
@@ -61,6 +67,11 @@ deprecation plan.
 `alien-signals`. LessJS owns the public `.value` / `subscribe()` contract and
 framework integration semantics, not the low-level reactive algorithm.
 
+`@lessjs/core` must not import `alien-signals` as the long-term canonical
+engine path. During the compatibility window it may keep a bridge, but the
+owner of signal creation, computed values, effects, and engine wrapping is
+`@lessjs/signals`.
+
 `@lessjs/app` remains the configuration facade for `lessjs()` and Vite plugin
 composition. A separate authoring facade such as `@lessjs/runtime` may be added
 if single-import component authoring remains important.
@@ -68,6 +79,10 @@ if single-import component authoring remains important.
 Build contracts shared by `adapter-vite`, `content`, `i18n`, `create`, and
 consumer smoke tests should move to a contracts layer rather than living under
 one adapter package.
+
+The first v0.23 implementation target is a package ownership map and a package
+graph gate. Refactors that move imports before the ownership map exists are out
+of order.
 
 v0.23.x is reassigned from Edge Full-Stack to Layered Package Architecture. The
 previous Edge Full-Stack plan moves to v0.24.x. Ecosystem hardening moves to
@@ -92,6 +107,8 @@ v0.25.x.
 - A contracts package adds one more public package to govern carefully.
 - Compatibility bridges must be maintained during a deprecation window.
 - Some imports may move even when runtime behavior does not change.
+- Generated projects may need a minor import migration if an authoring facade is
+  accepted.
 
 ### Neutral
 
@@ -102,6 +119,51 @@ v0.25.x.
   right layer.
 - This decision does not require turning every helper into an object or class.
   Pure functions remain preferred for rendering and serialization.
+- This decision does not make LessJS a general server framework. Hono, Vite,
+  Deno, JSR, and Web Platform APIs remain the chosen substrate.
+
+## Required Package Ownership Map
+
+v0.23 implementation must classify the current packages as follows before
+moving code:
+
+| Package                | Target role                         | v0.23 pressure                                              |
+| ---------------------- | ----------------------------------- | ----------------------------------------------------------- |
+| `@lessjs/core`         | runtime kernel                      | remove engine/build/compat drift                            |
+| `@lessjs/signals`      | LessJS facade over `alien-signals`  | own signal creation and framework semantics                 |
+| `@lessjs/style-sheet`  | CSSStyleSheet abstraction           | remain canonical owner                                      |
+| `@lessjs/adapter-vite` | Vite adapter and SSG implementation | stop owning shared contracts                                |
+| `@lessjs/app`          | configuration facade                | avoid runtime authoring exports                             |
+| `@lessjs/content`      | content feature package             | depend on contracts, not adapter internals                  |
+| `@lessjs/i18n`         | i18n feature package                | depend on contracts, not adapter internals                  |
+| `@lessjs/cem`          | CEM parser/shape owner              | stop routing canonical CEM ownership through core           |
+| `@lessjs/compat-check` | compatibility classifier            | stop routing canonical compatibility ownership through core |
+| `@lessjs/hub`          | registry and trust evidence         | consume public contracts, not core internals                |
+| `@lessjs/create`       | generated project contract          | declare every direct import it emits                        |
+| `@lessjs/ui`           | DSD component library               | use authoring facade if accepted                            |
+
+## Rejected Alternatives
+
+### Keep `core` as the DX barrel
+
+Rejected. It gives a good short-term import path, but it recreates publish
+cycles and makes the runtime kernel depend on implementation packages.
+
+### Move every shared type into `core`
+
+Rejected. It makes `core` look stable while pushing build, validation, CEM, and
+Hub concepts into the runtime layer.
+
+### Move contracts into `adapter-vite`
+
+Rejected. `content`, `i18n`, and generated consumer gates need build contracts
+without depending on Vite adapter implementation.
+
+### Replace `alien-signals`
+
+Rejected for v0.23. The debt is not the engine choice; the debt is that the
+engine ownership boundary is unclear. `@lessjs/signals` should wrap
+`alien-signals` cleanly.
 
 ## Acceptance
 

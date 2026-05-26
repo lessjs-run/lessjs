@@ -34,6 +34,10 @@ These failures are exactly the kind that local monorepo imports can hide.
 | direct import map check  | every direct source import is declared       |
 | docs/version consistency | README/status/roadmap/package versions agree |
 
+The gates should be runnable locally before publish and reused by CI. They
+should fail on structural package mistakes even when TypeScript can resolve
+imports through the monorepo import map.
+
 ## Procedure
 
 ### Step 1: Add Package Graph Checker
@@ -44,11 +48,14 @@ These failures are exactly the kind that local monorepo imports can hide.
 - [ ] Emit a publish order.
 - [ ] Fail if workflow publish order differs from the computed order unless an
       exception is documented.
+- [ ] Fail if a package imports another `@lessjs/*` package without declaring
+      it in its local `deno.json`.
 
 Acceptance:
 
 - [ ] The former core/signals cycle would fail before publish.
 - [ ] The checker runs in CI.
+- [ ] The checker explains the cycle path or missing declaration path.
 
 ### Step 2: Add Direct Import Map Checker for Generated Projects
 
@@ -57,10 +64,12 @@ Acceptance:
 - [ ] Check that every bare direct import is listed in `deno.json` or is a
       runtime-provided built-in.
 - [ ] Treat `vite` as a direct config import when `vite.config.ts` imports it.
+- [ ] Check nested generated files, islands, routes, and config files.
 
 Acceptance:
 
 - [ ] The former missing `vite` import would fail before publish.
+- [ ] The checker fails before post-publish smoke reaches JSR.
 
 ### Step 3: Pin Post-Publish Smoke to the New Version
 
@@ -79,10 +88,25 @@ Acceptance:
 - [ ] Windows published consumer monitor.
 - [ ] Local workspace generated consumer build.
 - [ ] Optional preview/e2e proof when cost is acceptable.
+- [ ] Record the exact package version used by every smoke run.
 
 Acceptance:
 
 - [ ] Generated projects are treated as product artifacts, not examples.
+
+### Step 5: Protect Unified Version Releases
+
+- [ ] Enforce that every `packages/*/deno.json` uses the same version during a
+      unified release.
+- [ ] Enforce that internal LessJS dependency constraints target that same
+      version line.
+- [ ] Fail if root lockfile or create fallback versions disagree with package
+      versions.
+
+Acceptance:
+
+- [ ] A mixed `0.22.0` / `0.22.1` release cannot pass the release gate.
+- [ ] The gate output names the mismatched packages and constraints.
 
 ## Verification
 

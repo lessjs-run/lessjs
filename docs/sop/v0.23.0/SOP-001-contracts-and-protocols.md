@@ -27,6 +27,10 @@ Shared contracts are currently scattered:
 Introduce a contracts layer, either as `@lessjs/protocols` or a deliberately
 named equivalent.
 
+Default name: `@lessjs/protocols`. Use a different name only if the
+implementation PR records a clearer distinction between runtime protocols and
+build protocols.
+
 It may own:
 
 - build context interfaces used by build-time plugins;
@@ -35,6 +39,7 @@ It may own:
 - shared diagnostics and validation result shapes;
 - manifest and compatibility type primitives;
 - package graph metadata used by release tooling.
+- generated-project direct import declarations used by release gates.
 
 It must not own:
 
@@ -44,6 +49,19 @@ It must not own:
 - filesystem scanning;
 - reactive engine implementation;
 - Hub submission side effects.
+- user-facing `lessjs()` configuration assembly.
+
+## Ownership Rules
+
+| Contract type            | Owner                               | Notes                                          |
+| ------------------------ | ----------------------------------- | ---------------------------------------------- |
+| virtual module ids       | protocols                           | adapter consumes, feature packages may consume |
+| build context shape      | protocols                           | adapter owns mutable implementation            |
+| signal-like protocol     | protocols or signals                | protocol only; engine stays in signals         |
+| manifest primitives      | protocols or owning feature package | avoid routing through core                     |
+| diagnostics result shape | protocols                           | implementation packages attach details         |
+| logger runtime           | core                                | not a cross-package protocol unless proven     |
+| Vite plugin type         | adapter-vite/app                    | do not leak through protocols                  |
 
 ## Procedure
 
@@ -61,6 +79,7 @@ Acceptance:
 
 - [ ] The migration list names every source file and target owner.
 - [ ] No type is moved before its runtime dependency graph is understood.
+- [ ] The inventory identifies public, internal, and compatibility exports.
 
 ### Step 2: Add the Contracts Package
 
@@ -89,6 +108,7 @@ Acceptance:
 - [ ] `content` and `i18n` no longer import adapter-vite only to get build
       contracts.
 - [ ] Existing generated projects still build.
+- [ ] `@lessjs/app` does not import `@lessjs/adapter-vite/build-context`.
 
 ### Step 4: Migrate Protocol Types
 
@@ -103,6 +123,20 @@ Acceptance:
 
 - [ ] Public signal API behavior is unchanged.
 - [ ] Type imports form an acyclic graph.
+- [ ] The public docs say `@lessjs/signals` is powered by `alien-signals`, not a
+      custom LessJS engine.
+
+### Step 5: Keep Bridges Explicit
+
+- [ ] Keep temporary re-exports from old locations only when they protect a
+      public minor-release path.
+- [ ] Add comments or docs that name the canonical owner.
+- [ ] Add a removal target version for each bridge.
+
+Acceptance:
+
+- [ ] No compatibility bridge looks like canonical ownership.
+- [ ] The bridge list is included in the release notes.
 
 ## Verification
 
