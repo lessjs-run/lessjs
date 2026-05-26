@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-unused-vars
 /**
  * @lessjs/adapter-vite - head-injection.ts tests (Deno)
  *
