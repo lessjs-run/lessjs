@@ -30,7 +30,7 @@ interface PublishStep {
 // ─── Read publish.yml publish order ───────────────────────────
 
 async function readPublishOrder(): Promise<PublishStep[]> {
-  const content = await Deno.readTextFile('.github/workflows/publish.yml');
+  const content = await Deno.readTextFile('.github/workflows/publish-jsr.yml');
   const steps: PublishStep[] = [];
   let index = 0;
 
