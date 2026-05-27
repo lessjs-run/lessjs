@@ -117,14 +117,13 @@ export class LessThemeToggle extends DsdElement {
     // _bindCurrentRenderTemplate may fail to find event markers because
     // parse5 re-serialization can alter attribute ordering/encoding.
     //
-    // We defer update() to the next animation frame so the browser
-    // finishes attaching the shadow DOM from the <template> DSD before
-    // _renderIntoShadowRoot replaces innerHTML with fresh runtimeMarkers
-    // and calls _bindTemplateRuntime to attach @click handlers.
-    if (typeof requestAnimationFrame !== 'undefined') {
-      requestAnimationFrame(() => {
+    // setTimeout(0) guarantees the event loop drains after DSD hydration
+    // before _renderIntoShadowRoot replaces innerHTML with fresh
+    // runtimeMarkers and calls _bindTemplateRuntime.
+    if (typeof setTimeout !== 'undefined') {
+      setTimeout(() => {
         if (this.isConnected) this.update();
-      });
+      }, 0);
     }
   }
 

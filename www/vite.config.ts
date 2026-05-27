@@ -70,7 +70,6 @@ export default defineConfig({
         // H-04 fix: All CDN scripts now have SRI integrity hashes
         scripts: [
           { src: '/theme-init.js' },
-          { src: '/mobile-menu.js', defer: true },
           {
             src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js',
             defer: true,

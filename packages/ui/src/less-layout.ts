@@ -497,6 +497,7 @@ export class LessLayout extends DsdElement {
   private _navCleanup?: () => void;
   private _navUnlisten?: () => void;
   private _themeHandler?: (e: Event) => void;
+  private _docClickCleanup?: () => void;
 
   override render(): string | TemplateResult {
     return this._renderLayout();
@@ -833,12 +834,17 @@ export class LessLayout extends DsdElement {
         this._loadContent(url.pathname);
       }
     });
+
+    // v0.23.0: Integrated from www/public/mobile-menu.js.
+    // Close mobile menu on backdrop click or sidebar nav link click.
+    this._docClickCleanup = this._setupBackdropClose();
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this._navCleanup?.();
     this._navUnlisten?.();
+    this._docClickCleanup?.();
     if (this._themeHandler) {
       globalThis.removeEventListener?.('less:theme-change', this._themeHandler);
     }
@@ -882,6 +888,48 @@ export class LessLayout extends DsdElement {
       if (menuOpen) main.setAttribute('inert', '');
       else main.removeAttribute('inert');
     }
+  }
+
+  /**
+   * v0.23.0: Integrated from www/public/mobile-menu.js.
+   * Closes mobile menu when backdrop or sidebar nav link is clicked.
+   * Uses composedPath() to detect clicks across shadow DOM boundaries.
+   */
+  private _setupBackdropClose(): () => void {
+    const handler = (e: Event) => {
+      const target = e.target;
+      if (!target || !(target instanceof Element)) return;
+
+      const path = e.composedPath();
+      let isBackdrop = false;
+      let isNavLink = false;
+
+      for (let i = 0; i < path.length; i++) {
+        const el = path[i] as Element;
+        if (!el?.classList) continue;
+        if (el.classList.contains('mobile-backdrop')) {
+          isBackdrop = true;
+          break;
+        }
+        if (el.tagName === 'A') {
+          isNavLink = true;
+          break;
+        }
+      }
+
+      if (!isBackdrop && !isNavLink) return;
+      this._closeMenu();
+    };
+
+    document.addEventListener('click', handler);
+    return () => document.removeEventListener('click', handler);
+  }
+
+  private _closeMenu(): void {
+    this.removeAttribute('menu-open');
+    const details = this.shadowRoot?.querySelector('details.mobile-menu');
+    if (details) details.removeAttribute('open');
+    this._syncInert(false);
   }
 
   // --- SPA Navigation ---
