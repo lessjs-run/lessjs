@@ -443,8 +443,6 @@ sheet.replaceSync(`
   @media (max-width: 640px) {
     .header-right { gap: var(--size-1); }
     .lang-switch { display: none; }
-    ::slotted([slot="header-actions"]) .search-trigger span,
-    ::slotted([slot="header-actions"]) .search-trigger kbd { display: none; }
   }
 
   @media (max-width: 480px) {
@@ -629,6 +627,7 @@ export class LessLayout extends DsdElement {
 
   private _renderLayout() {
     const home = this._getBool('home');
+    const noSearch = this.hasAttribute('no-search');
     const logoText = this._esc(this._getStr('logo-text', 'LessJS'));
     const logoSub = this._esc(this._getStr('logo-sub', ''));
     const githubUrl = this._getStr('github-url', 'https://github.com/lessjs-run/LessJS');
@@ -671,7 +670,7 @@ export class LessLayout extends DsdElement {
             <a class="logo" href="/">${logoText}<span class="logo-sub">${logoSub}</span></a>
             ${unsafeHTML(headerNavHtml)}
             <div class="header-right">
-              <slot name="header-actions"></slot>
+              ${noSearch ? '' : html`<less-search></less-search>`}
               <details class="mobile-menu">
                 <summary
                   class="mobile-menu-btn"

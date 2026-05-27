@@ -156,7 +156,6 @@ export class NotFoundPage extends DsdElement {
         header-nav='${JSON.stringify(headerNav)}'
         home
       >
-        <less-search slot="header-actions"></less-search>
         <div class="container">
           <div class="error-code">404</div>
           <p class="error-message">This page does not exist - or has moved to a different route.</p>

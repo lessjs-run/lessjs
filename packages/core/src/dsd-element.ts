@@ -51,7 +51,6 @@ import type { ReactiveHost } from './types.js';
 import type { StyleSheetLike } from '@lessjs/style-sheet';
 import {
   applyRuntimeTemplateBindings,
-  collectRuntimeTemplateBindings,
   collectTemplateSignals,
   isSignalLike,
   isTemplateResult,
@@ -391,26 +390,6 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
 
     const result = this.render();
     if (!isTemplateResult(result) || !this.shadowRoot) return;
-
-    // v0.23.0: When DSD static template lacks runtime markers
-    // (data-less-event-N), fall back to full re-render so
-    // applyRuntimeTemplateBindings can find and bind declarative
-    // events (@click, @keydown, etc.). The re-rendered HTML is
-    // structurally identical to the DSD template — only runtime
-    // markers are added.
-    const bindings = collectRuntimeTemplateBindings(result);
-    if (bindings.events.length > 0) {
-      const hasMarkers = bindings.events.some((b) =>
-        this.shadowRoot!.querySelector(`[data-less-event-${b.index}]`)
-      );
-      if (!hasMarkers) {
-        this.shadowRoot.innerHTML = renderTemplateToString(
-          result,
-          { runtimeMarkers: true },
-        );
-      }
-    }
-
     this._bindTemplateRuntime(result);
     this._subscribeTemplateSignals(result);
   }

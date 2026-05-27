@@ -259,7 +259,6 @@ export class RoadmapPage extends DsdElement {
         current-path="/roadmap"
         home
       >
-        <less-search slot="header-actions"></less-search>
         <div class="shell"
           data-legacy-anchors="WC Package Protocol Six-Phase Vision No webpack Registry Hub"
         >

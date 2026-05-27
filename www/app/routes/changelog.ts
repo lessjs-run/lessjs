@@ -116,7 +116,6 @@ export class ChangelogPage extends DsdElement {
         current-path="/changelog"
         home
       >
-        <less-search slot="header-actions"></less-search>
         <div class="container">
           <h1>更新日志</h1>
           <p class="subtitle">

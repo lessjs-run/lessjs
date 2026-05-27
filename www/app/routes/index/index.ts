@@ -654,7 +654,6 @@ export class DocsHome extends DsdElement {
         current-path="/"
         home
       >
-        <less-search slot="header-actions"></less-search>
         <div class="home-shell">
           <section class="hero">
             <div class="hero-inner">

@@ -1,11 +1,14 @@
 /**
  * section-renderer.ts - Shared layout renderer factory.
  *
- * Injects search button DSD and "Edit this page" via edit-url attribute.
+ * Sets "Edit this page" link via edit-url attribute on <less-layout>.
  * Used by all doc/guide/blog/component/architecture/engine/example/hub sections.
  *
- * v0.23.0: Extracted from 8 duplicate _renderer.ts files.
- *   Sets edit-url attribute on <less-layout> instead of magic-string replace.
+ * Search is rendered by less-layout itself (see packages/ui/src/less-layout.ts).
+ *
+ * v0.23.0: Search DSD injection removed — less-layout now renders <less-search>
+ *   directly. The import of less-search.js is kept for customElements registration
+ *   during SSR.
  */
 
 import type { LessRenderer } from '@lessjs/runtime';
@@ -20,17 +23,12 @@ function routeToSourcePath(path: string): string {
   return `${rel}.ts`;
 }
 
-// DSD contains CSS + button markup (matching SSR output).
-// Client-side Lit detects the existing button and skips render() to avoid duplicates.
-// Overlay is managed via imperative DOM after DSD hydration.
-const SEARCH_DSD =
-  '<less-search slot="header-actions"><template shadowrootmode="open"><style>:host{display:inline-flex;align-items:center}.search-trigger{display:inline-flex;align-items:center;gap:0.375rem;padding:0.375rem 0.5rem;border:0.5px solid var(--border);border-radius:6px;background:transparent;color:var(--text-muted);font-size:0.6875rem;font-weight:500;letter-spacing:0.02em;cursor:pointer;transition:color 150ms ease-out,border-color 150ms ease-out}.search-trigger:hover{color:var(--text-secondary);border-color:var(--border-hover)}.search-trigger kbd{font-family:inherit;padding:0.0625rem 0.3125rem;border:0.5px solid var(--border);border-radius:3px;font-size:0.625rem;margin-left:0.25rem}.search-icon{display:none;width:16px;height:16px}@media(max-width:640px){.search-trigger span{display:none}.search-trigger kbd{display:none}.search-icon{display:inline-block}.search-trigger{padding:0.375rem}}</style><button class="search-trigger"><svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg><span>Search</span><kbd>⌘K</kbd></button></template></less-search>';
-
 /**
- * Create a section renderer with search DSD injection and edit-link support.
+ * Create a section renderer with edit-link support.
  *
  * Sets `edit-url` attribute on `<less-layout>` so the component renders
- * the "Edit this page" link natively, instead of via string replacement.
+ * the "Edit this page" link natively.
+ * Search is handled by less-layout itself (no DSD injection needed).
  */
 export function createSectionRenderer(_sectionName?: string): LessRenderer {
   return {
@@ -49,17 +47,6 @@ export function createSectionRenderer(_sectionName?: string): LessRenderer {
           if (!before.includes('edit-url=')) {
             html = `${before} edit-url="${editUrl.replace(/"/g, '&quot;')}"${after}`;
           }
-        }
-      }
-
-      // Inject search button DSD into <less-layout> opening tag
-      const layoutOpen2 = html.indexOf('<less-layout');
-      if (layoutOpen2 >= 0) {
-        const closeGt2 = html.indexOf('>', layoutOpen2);
-        if (closeGt2 > 0) {
-          html = html.slice(0, closeGt2 + 1) +
-            SEARCH_DSD +
-            html.slice(closeGt2 + 1);
         }
       }
 
