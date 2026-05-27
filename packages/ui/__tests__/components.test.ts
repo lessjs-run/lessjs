@@ -867,11 +867,12 @@ Deno.test('less-theme-toggle: _handleToggle switches dark->light', async () => {
   }
 });
 
-// --- less-theme-toggle connectedCallback via direct call ----
+// --- less-theme-toggle theme initialization priority ----
 
 Deno.test('less-theme-toggle: connectedCallback full path with theme=light', async () => {
   const savedDoc = (globalThis as any).document;
   const savedLS = (globalThis as any).localStorage;
+  const savedMatchMedia = (globalThis as any).matchMedia;
   const _data: Record<string, string> = {};
   try {
     (globalThis as any).document = {
@@ -884,29 +885,25 @@ Deno.test('less-theme-toggle: connectedCallback full path with theme=light', asy
         _data[key] = value;
       },
     };
+    (globalThis as any).matchMedia = undefined;
     const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
     const instance = new LessThemeToggle();
     instance.setAttribute('theme', 'light');
 
-    const origConnected = Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback;
-    Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback = function () {};
-
-    try {
-      instance.connectedCallback();
-      assertEquals((instance as any)._theme.value, 'light');
-      assertEquals(instance.getAttribute('data-theme'), 'light');
-    } finally {
-      Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback = origConnected;
-    }
+    (instance as any)._initTheme();
+    assertEquals((instance as any)._theme.value, 'light');
+    assertEquals(instance.getAttribute('data-theme'), 'light');
   } finally {
     (globalThis as any).document = savedDoc;
     (globalThis as any).localStorage = savedLS;
+    (globalThis as any).matchMedia = savedMatchMedia;
   }
 });
 
 Deno.test('less-theme-toggle: connectedCallback full path with theme=dark', async () => {
   const savedDoc = (globalThis as any).document;
   const savedLS = (globalThis as any).localStorage;
+  const savedMatchMedia = (globalThis as any).matchMedia;
   const _data: Record<string, string> = {};
   try {
     (globalThis as any).document = {
@@ -919,29 +916,25 @@ Deno.test('less-theme-toggle: connectedCallback full path with theme=dark', asyn
         _data[key] = value;
       },
     };
+    (globalThis as any).matchMedia = undefined;
     const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
     const instance = new LessThemeToggle();
     instance.setAttribute('theme', 'dark');
 
-    const origConnected = Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback;
-    Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback = function () {};
-
-    try {
-      instance.connectedCallback();
-      assertEquals((instance as any)._theme.value, 'dark');
-      assertEquals(instance.getAttribute('data-theme'), 'dark');
-    } finally {
-      Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback = origConnected;
-    }
+    (instance as any)._initTheme();
+    assertEquals((instance as any)._theme.value, 'dark');
+    assertEquals(instance.getAttribute('data-theme'), 'dark');
   } finally {
     (globalThis as any).document = savedDoc;
     (globalThis as any).localStorage = savedLS;
+    (globalThis as any).matchMedia = savedMatchMedia;
   }
 });
 
 Deno.test('less-theme-toggle: connectedCallback reads document.documentElement.dataset', async () => {
   const savedDoc = (globalThis as any).document;
   const savedLS = (globalThis as any).localStorage;
+  const savedMatchMedia = (globalThis as any).matchMedia;
   const _data: Record<string, string> = {};
   try {
     (globalThis as any).document = {
@@ -954,22 +947,17 @@ Deno.test('less-theme-toggle: connectedCallback reads document.documentElement.d
         _data[key] = value;
       },
     };
+    (globalThis as any).matchMedia = undefined;
     const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
     const instance = new LessThemeToggle();
 
-    const origConnected = Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback;
-    Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback = function () {};
-
-    try {
-      instance.connectedCallback();
-      assertEquals((instance as any)._theme.value, 'light');
-      assertEquals(instance.getAttribute('data-theme'), 'light');
-    } finally {
-      Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback = origConnected;
-    }
+    (instance as any)._initTheme();
+    assertEquals((instance as any)._theme.value, 'light');
+    assertEquals(instance.getAttribute('data-theme'), 'light');
   } finally {
     (globalThis as any).document = savedDoc;
     (globalThis as any).localStorage = savedLS;
+    (globalThis as any).matchMedia = savedMatchMedia;
   }
 });
 
@@ -978,28 +966,24 @@ Deno.test('less-theme-toggle: connectedCallback reads localStorage fallback', as
   localStorage.setItem('less-theme', 'light');
   const savedDoc = (globalThis as any).document;
   const savedLS = (globalThis as any).localStorage;
+  const savedMatchMedia = (globalThis as any).matchMedia;
   try {
     (globalThis as any).document = {
       documentElement: { dataset: {}, setAttribute: () => {} },
       querySelectorAll: () => [],
     };
     (globalThis as any).localStorage = localStorage;
+    (globalThis as any).matchMedia = undefined;
     const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
     const instance = new LessThemeToggle();
 
-    const origConnected = Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback;
-    Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback = function () {};
-
-    try {
-      instance.connectedCallback();
-      assertEquals((instance as any)._theme.value, 'light');
-      assertEquals(instance.getAttribute('data-theme'), 'light');
-    } finally {
-      Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback = origConnected;
-    }
+    (instance as any)._initTheme();
+    assertEquals((instance as any)._theme.value, 'light');
+    assertEquals(instance.getAttribute('data-theme'), 'light');
   } finally {
     (globalThis as any).document = savedDoc;
     (globalThis as any).localStorage = savedLS;
+    (globalThis as any).matchMedia = savedMatchMedia;
     if (orig === null) localStorage.removeItem('less-theme');
     else localStorage.setItem('less-theme', orig);
   }
@@ -1010,28 +994,25 @@ Deno.test('less-theme-toggle: connectedCallback defaults to dark theme', async (
   localStorage.removeItem('less-theme');
   const savedDoc = (globalThis as any).document;
   const savedLS = (globalThis as any).localStorage;
+  const savedMatchMedia = (globalThis as any).matchMedia;
   try {
     (globalThis as any).document = {
       documentElement: { dataset: {}, setAttribute: () => {} },
       querySelectorAll: () => [],
     };
     (globalThis as any).localStorage = localStorage;
+    // Stub matchMedia to return dark preference (ensures deterministic default)
+    (globalThis as any).matchMedia = () => ({ matches: false });
     const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
     const instance = new LessThemeToggle();
 
-    const origConnected = Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback;
-    Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback = function () {};
-
-    try {
-      instance.connectedCallback();
-      assertEquals((instance as any)._theme.value, 'dark');
-      assertEquals(instance.getAttribute('data-theme'), 'dark');
-    } finally {
-      Object.getPrototypeOf(Object.getPrototypeOf(instance)).connectedCallback = origConnected;
-    }
+    (instance as any)._initTheme();
+    assertEquals((instance as any)._theme.value, 'dark');
+    assertEquals(instance.getAttribute('data-theme'), 'dark');
   } finally {
     (globalThis as any).document = savedDoc;
     (globalThis as any).localStorage = savedLS;
+    (globalThis as any).matchMedia = savedMatchMedia;
     if (orig !== null) localStorage.setItem('less-theme', orig);
   }
 });

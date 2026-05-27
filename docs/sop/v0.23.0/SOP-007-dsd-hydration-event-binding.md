@@ -1,9 +1,9 @@
 # SOP-007: DSD Hydration Event Binding 修复
 
-> Version: v0.23.0  
-> Priority: P0 (blocking)  
-> Status: IN PROGRESS  
-> Depends on: ADR-0039 (DsdElement Signals & Reactive)  
+> Version: v0.23.0\
+> Priority: P0 (blocking)\
+> Status: IN PROGRESS\
+> Depends on: ADR-0039 (DsdElement Signals & Reactive)\
 > Related: `docs/conversation/20260527/20260527-dsd-hydration-event-binding-broken.md`
 
 ## Objective
@@ -20,7 +20,7 @@ DSD 模式下 `_bindCurrentRenderTemplate()` 调用 `applyRuntimeTemplateBinding
 
 ### Step 1: 修复核心 DSD hydration 逻辑
 
-**文件**: `packages/core/src/dsd-element.ts`  
+**文件**: `packages/core/src/dsd-element.ts`\
 **方法**: `_bindCurrentRenderTemplate()` (line 387-395)
 
 - [ ] 在 `_bindTemplateRuntime(result)` 之前，检测 DSD 静态模板是否包含 `data-less-event-N` markers
@@ -56,6 +56,7 @@ private _bindCurrentRenderTemplate(): void {
 ```
 
 **Acceptance:**
+
 - [ ] 所有带 `@click` 的组件在 DSD 页面上通过 Playwright 验证 `click` 事件生效
 - [ ] innerHTML 替换不产生视觉闪烁（CLS < 0.01）
 - [ ] 信号驱动的增量更新（`_patchBindings`）不受影响
@@ -69,6 +70,7 @@ private _bindCurrentRenderTemplate(): void {
 - [ ] 保留 `_onKeydown` document-level 绑定（Cmd+K 是全局行为，不属于组件 shadow DOM 事件）
 
 **Acceptance:**
+
 - [ ] Search 在所有页面上通过 `@click` 模板绑定工作
 - [ ] Cmd+K 快捷键全局可用
 - [ ] 搜索覆盖层在 SPA 导航后正确清理
@@ -87,6 +89,7 @@ private _bindCurrentRenderTemplate(): void {
 - [ ] 或通过 app-level 共享 import 确保 search island 在 client bundle 中
 
 **Acceptance:**
+
 - [ ] 所有使用 `less-layout` 的页面自动获得 search 功能
 - [ ] 无需各页面手动添加 `<less-search slot="header-actions">`
 - [ ] Search 在首页和子页面上行为一致
@@ -100,6 +103,7 @@ private _bindCurrentRenderTemplate(): void {
 - [ ] 保留 `edit-url` 注入逻辑
 
 **Acceptance:**
+
 - [ ] SSG 构建产物中不再包含手写静态 SEARCH_DSD HTML
 - [ ] Search 模板由 `less-layout` 统一生成，保证 DSD 和 SSR 输出一致
 
@@ -119,15 +123,15 @@ private _bindCurrentRenderTemplate(): void {
 
 ## Quality Gates
 
-| Gate | Criteria |
-|------|----------|
-| G1: DSD hydration working | `@click` bindings verified on ≥ 3 components via Playwright |
-| G2: No visual regression | CLS < 0.01, no FOUC in e2e screenshots |
-| G3: Search universal | Search works on all pages (home, docs, guide, engine, hub, blog) |
-| G4: No imperative hacks | Zero `addEventListener` calls for template-defined events in app code |
-| G5: SSG build passes | `deno task build:docs` exits 0 with correct page count |
-| G6: e2e passes | All existing e2e tests pass |
-| G7: Bundle size OK | Search island chunk size within 10% of current |
+| Gate                      | Criteria                                                              |
+| ------------------------- | --------------------------------------------------------------------- |
+| G1: DSD hydration working | `@click` bindings verified on ≥ 3 components via Playwright           |
+| G2: No visual regression  | CLS < 0.01, no FOUC in e2e screenshots                                |
+| G3: Search universal      | Search works on all pages (home, docs, guide, engine, hub, blog)      |
+| G4: No imperative hacks   | Zero `addEventListener` calls for template-defined events in app code |
+| G5: SSG build passes      | `deno task build:docs` exits 0 with correct page count                |
+| G6: e2e passes            | All existing e2e tests pass                                           |
+| G7: Bundle size OK        | Search island chunk size within 10% of current                        |
 
 ## Dependencies
 

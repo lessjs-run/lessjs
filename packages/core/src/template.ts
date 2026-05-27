@@ -299,7 +299,10 @@ function sanitizeUrl(value: string): string {
     .join('')
     .trim();
   if (!trimmed) return '';
-  if (/^(https?:|mailto:|tel:|\/|\.\/|\.\.\/|#|\?)/i.test(trimmed)) return value;
+  // Allowed protocols: http, https, mailto, tel, relative paths
+  if (/^(https?:|mailto:|tel:|\/|\.\/|\.\.\/|#|\?)/i.test(trimmed)) return trimmed;
+  // Block all other protocols (javascript:, data:, vbscript:, etc.)
   if (/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) return '#';
-  return value;
+  // Non-protocol values (plain strings) are safe
+  return trimmed;
 }

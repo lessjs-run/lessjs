@@ -241,8 +241,8 @@ export class LessCodeBlock extends DsdElement {
         this._updateCopyButtonDOM();
         this._copyTimer = undefined;
       }, 2000);
-    } catch {
-      this._copyState = 'failed';
+    } catch (e) {
+      console.warn('[less-code-block] Clipboard write failed:', e);
       this._internals?.states.add('failed');
       this._internals?.states.delete('copied');
       this._updateCopyButtonDOM();

@@ -237,7 +237,9 @@ export async function renderDSD(
   }
 
   // v0.6: L2 Nested DSD - recursively render nested Custom Elements
-  const nestedOutput = await renderNestedCustomElements(content, collector, 10, hooks);
+  // v0.23.1: Pass visited set to prevent circular component references
+  const visited = new Set<string>();
+  const nestedOutput = await renderNestedCustomElements(content, collector, 10, hooks, visited);
   content = nestedOutput.html;
 
   // Propagate nested errors and hydration hints

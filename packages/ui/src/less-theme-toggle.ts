@@ -86,47 +86,81 @@ export class LessThemeToggle extends DsdElement {
   }
 
   /**
-   * v0.23.0: Theme initialization moved to onDsdHydrated() hook.
-   * This replaces the fragile order-dependent pattern of calling
-   * super.connectedCallback() + this.update() in connectedCallback().
+   * v0.23.0: Theme initialization lives in _initTheme(), called from
+   * both onDsdHydrated() and onCsrRendered() so that the priority
+   * chain works regardless of hydration path.
+   *
+   * Priority: theme attribute > document.documentElement.dataset.theme
+   * > localStorage > prefers-color-scheme > default 'dark'.
    */
-  protected override onDsdHydrated(): void {
-    super.onDsdHydrated();
-
-    // Priority: theme attribute > document.documentElement > localStorage > prefers-color-scheme > default
+  private _initTheme(): void {
     const themeAttr = this.getAttribute('theme');
     if (themeAttr === 'light') {
       this._theme.value = 'light';
     } else if (themeAttr === 'dark') {
       this._theme.value = 'dark';
-    } else if (document.documentElement.dataset.theme === 'light') {
-      this._theme.value = 'light';
     } else {
-      let resolved = false;
-      try {
-        const saved = localStorage.getItem('less-theme');
-        if (saved === 'light') {
-          this._theme.value = 'light';
-          resolved = true;
-        } else if (saved === 'dark') {
-          this._theme.value = 'dark';
-          resolved = true;
+      const docTheme = document.documentElement?.dataset?.theme;
+      if (docTheme === 'light') {
+        this._theme.value = 'light';
+      } else if (docTheme === 'dark') {
+        this._theme.value = 'dark';
+      } else {
+        let resolved = false;
+        try {
+          const saved = localStorage.getItem('less-theme');
+          if (saved === 'light') {
+            this._theme.value = 'light';
+            resolved = true;
+          } else if (saved === 'dark') {
+            this._theme.value = 'dark';
+            resolved = true;
+          }
+        } catch (e) {
+          console.debug('[less-theme-toggle] localStorage unavailable:', e);
         }
-      } catch { /* silent */ }
-      if (!resolved && typeof globalThis !== 'undefined' && globalThis.matchMedia) {
-        this._theme.value = globalThis.matchMedia('(prefers-color-scheme: light)').matches
-          ? 'light'
-          : 'dark';
+        if (!resolved && typeof globalThis !== 'undefined' && globalThis.matchMedia) {
+          this._theme.value = globalThis.matchMedia('(prefers-color-scheme: light)').matches
+            ? 'light'
+            : 'dark';
+        }
       }
     }
 
+    // Sync theme to component attribute, document root, and localStorage
     this.setAttribute('data-theme', this._theme.value);
+    try {
+      document.documentElement.setAttribute('data-theme', this._theme.value);
+      if (document.documentElement.style) {
+        document.documentElement.style.colorScheme = this._theme.value;
+      }
+    } catch (e) {
+      console.debug('[less-theme-toggle] document.documentElement unavailable:', e);
+    }
+    try {
+      localStorage.setItem('less-theme', this._theme.value);
+    } catch (e) {
+      console.debug('[less-theme-toggle] localStorage.setItem unavailable:', e);
+    }
+  }
+
+  protected override onDsdHydrated(): void {
+    super.onDsdHydrated();
+    this._initTheme();
 
     // Re-render to guarantee @click bindings regardless of DSD hydration.
     // _bindCurrentRenderTemplate relies on data-less-event-N markers that
     // parse5 re-serialization can silently drop. _renderIntoShadowRoot
     // (called by update()) sets innerHTML with fresh runtimeMarkers and
     // calls _bindTemplateRuntime, which is the well-tested CSR path.
+    this.update();
+  }
+
+  protected override onCsrRendered(): void {
+    super.onCsrRendered();
+    this._initTheme();
+
+    // Re-render with the resolved theme (first render used signal default 'dark')
     this.update();
   }
 
@@ -177,18 +211,24 @@ export class LessThemeToggle extends DsdElement {
       if (root instanceof ShadowRoot && root.host) {
         root.host.setAttribute('data-theme', theme);
       }
-    } catch { /* not connected to DOM */ }
+    } catch (e) {
+      console.debug('[less-theme-toggle] getRootNode unavailable:', e);
+    }
 
     // Dispatch global event so all DsdElement components can react
     try {
       if (typeof CustomEvent !== 'undefined' && typeof globalThis.dispatchEvent === 'function') {
         globalThis.dispatchEvent(new CustomEvent('less:theme-change', { detail: { theme } }));
       }
-    } catch { /* silent */ }
+    } catch (e) {
+      console.debug('[less-theme-toggle] localStorage.setItem unavailable:', e);
+    }
 
     try {
       localStorage.setItem('less-theme', theme);
-    } catch { /* silent */ }
+    } catch (e) {
+      console.debug('[less-theme-toggle] localStorage.setItem unavailable:', e);
+    }
     this.setAttribute('data-theme', theme);
   }
 

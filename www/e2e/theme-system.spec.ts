@@ -11,14 +11,24 @@
 
 import { expect, type Page, test } from '@playwright/test';
 
-function visibleThemeToggle(page: Page) {
-  return page.getByRole('button', { name: 'Toggle theme' }).filter({ visible: true }).first();
+/**
+ * Wait for <less-theme-toggle> to be fully upgraded:
+ * DSD hydration + _initTheme() must complete before clicks work.
+ * We wait for the component to have a data-theme attribute,
+ * which is set by _initTheme() during onDsdHydrated().
+ */
+async function waitForToggleReady(page: Page): Promise<void> {
+  await page.waitForFunction(() => {
+    const toggle = document.querySelector('less-theme-toggle');
+    return toggle?.hasAttribute('data-theme') === true;
+  }, { timeout: 10000 });
 }
 
 test.describe('Theme Toggle', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
+    await waitForToggleReady(page);
   });
 
   test('theme toggle element exists', async ({ page }) => {
@@ -35,48 +45,40 @@ test.describe('Theme Toggle', () => {
   });
 
   test('clicking theme toggle changes data-theme on document', async ({ page }) => {
-    // Get current theme
     const themeBefore = await page.evaluate(() => {
       return document.documentElement.getAttribute('data-theme');
     });
 
-    // Click the toggle button inside the shadow DOM.
-    // DSD renders the button immediately but JS upgrade (event binding)
-    // may not have completed when `networkidle` fires.
-    // v0.23.0: less-layout now renders <less-search> natively, adding
-    // one more async island to load. Increased wait to accommodate.
-    const toggleBtn = visibleThemeToggle(page);
-    if ((await toggleBtn.count()) > 0) {
-      await expect(toggleBtn).toBeVisible();
-      // Wait for island JS to load + update() to complete event binding
-      await page.waitForTimeout(500);
-      await toggleBtn.click({ force: true });
+    // Click the toggle button via evaluate to guarantee the shadow DOM
+    // button is clicked regardless of Playwright's shadow DOM piercing.
+    await page.evaluate(() => {
+      const toggle = document.querySelector('less-theme-toggle');
+      const btn = toggle?.shadowRoot?.querySelector('button');
+      btn?.click();
+    });
 
-      // Theme should have changed
-      const themeAfter = await page.evaluate(() => {
-        return document.documentElement.getAttribute('data-theme');
-      });
-      expect(themeAfter).not.toBe(themeBefore);
-    }
+    // Theme should have changed
+    const themeAfter = await page.evaluate(() => {
+      return document.documentElement.getAttribute('data-theme');
+    });
+    expect(themeAfter).not.toBe(themeBefore);
   });
 
   test('theme is persisted to localStorage after toggle', async ({ page }) => {
-    const toggleBtn = visibleThemeToggle(page);
-    if ((await toggleBtn.count()) > 0) {
-      await expect(toggleBtn).toBeVisible();
-      await page.waitForTimeout(500);
-      await toggleBtn.click({ force: true });
+    await page.evaluate(() => {
+      const toggle = document.querySelector('less-theme-toggle');
+      const btn = toggle?.shadowRoot?.querySelector('button');
+      btn?.click();
+    });
 
-      // Check localStorage
-      const stored = await page.evaluate(() => {
-        return localStorage.getItem('less-theme');
-      });
-      expect(stored).toMatch(/^(light|dark)$/);
-    }
+    // Check localStorage
+    const stored = await page.evaluate(() => {
+      return localStorage.getItem('less-theme');
+    });
+    expect(stored).toMatch(/^(light|dark)$/);
   });
 
   test('default theme is dark when no preference set', async ({ page }) => {
-    // With no localStorage, the default should be dark
     const theme = await page.evaluate(() => {
       return document.documentElement.getAttribute('data-theme');
     });
@@ -85,27 +87,28 @@ test.describe('Theme Toggle', () => {
   });
 
   test('multiple toggles cycle between dark and light', async ({ page }) => {
-    const toggleBtn = visibleThemeToggle(page);
-    if ((await toggleBtn.count()) > 0) {
-      await expect(toggleBtn).toBeVisible();
-      // Wait for island JS to load + update() to complete event binding
-      await page.waitForTimeout(500);
-      // Toggle twice should return to original theme
-      const themeBefore = await page.evaluate(() => {
-        return document.documentElement.getAttribute('data-theme');
-      });
+    const themeBefore = await page.evaluate(() => {
+      return document.documentElement.getAttribute('data-theme');
+    });
 
-      await toggleBtn.click({ force: true });
-      const themeAfter1 = await page.evaluate(() => {
-        return document.documentElement.getAttribute('data-theme');
-      });
-      expect(themeAfter1).not.toBe(themeBefore);
+    await page.evaluate(() => {
+      const toggle = document.querySelector('less-theme-toggle');
+      const btn = toggle?.shadowRoot?.querySelector('button');
+      btn?.click();
+    });
+    const themeAfter1 = await page.evaluate(() => {
+      return document.documentElement.getAttribute('data-theme');
+    });
+    expect(themeAfter1).not.toBe(themeBefore);
 
-      await toggleBtn.click({ force: true });
-      const themeAfter2 = await page.evaluate(() => {
-        return document.documentElement.getAttribute('data-theme');
-      });
-      expect(themeAfter2).toBe(themeBefore);
-    }
+    await page.evaluate(() => {
+      const toggle = document.querySelector('less-theme-toggle');
+      const btn = toggle?.shadowRoot?.querySelector('button');
+      btn?.click();
+    });
+    const themeAfter2 = await page.evaluate(() => {
+      return document.documentElement.getAttribute('data-theme');
+    });
+    expect(themeAfter2).toBe(themeBefore);
   });
 });

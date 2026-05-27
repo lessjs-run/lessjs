@@ -197,6 +197,7 @@ export async function renderNestedCustomElements(
   collector?: DsdRenderCollector,
   maxDepth = 10,
   hooks?: RenderHooks,
+  visited: Set<string> = new Set(),
 ): Promise<RenderOutput> {
   if (!globalThis.customElements?.get) {
     return {
@@ -273,6 +274,14 @@ export async function renderNestedCustomElements(
     const tagName = ceNode.tagName;
     const Cls = globalThis.customElements!.get(tagName) as CustomElementConstructor;
     if (!Cls) continue;
+
+    // v0.23.1: Cycle detection - skip if this tagName+depth combo was already visited
+    const visitedKey = `${tagName}@${depth}`;
+    if (visited.has(visitedKey)) {
+      log.warn(`[render-nested] Cycle detected: <${tagName}> at depth ${depth}, skipping`);
+      continue;
+    }
+    visited.add(visitedKey);
 
     const props = parseAttrsToProps(ceNode.attrs);
     const dsdOpts = inferDsdOptions(tagName, Cls);

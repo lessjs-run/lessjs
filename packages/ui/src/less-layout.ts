@@ -538,7 +538,8 @@ export class LessLayout extends DsdElement {
       if (prop && Array.isArray(prop)) return prop as NavSection[];
       const raw = this.getAttribute('nav-items');
       return raw ? JSON.parse(raw) : [];
-    } catch {
+    } catch (e) {
+      console.warn('[less-layout] Failed to parse nav-items JSON:', e);
       return [];
     }
   }
@@ -550,7 +551,8 @@ export class LessLayout extends DsdElement {
       if (prop && Array.isArray(prop)) return prop as HeaderNavLink[];
       const raw = this.getAttribute('header-nav');
       return raw ? JSON.parse(raw) : [];
-    } catch {
+    } catch (e) {
+      console.warn('[less-layout] Failed to parse header-nav JSON:', e);
       return [];
     }
   }
@@ -565,12 +567,14 @@ export class LessLayout extends DsdElement {
       if (typeof raw === 'string') {
         try {
           return JSON.parse(raw);
-        } catch {
+        } catch (e) {
+          console.warn('[less-layout] Failed to parse locales JSON:', e);
           return ['en'];
         }
       }
       return ['en'];
-    } catch {
+    } catch (e) {
+      console.warn('[less-layout] Failed to parse locales:', e);
       return ['en'];
     }
   }
@@ -654,8 +658,10 @@ export class LessLayout extends DsdElement {
     const noSearch = this.hasAttribute('no-search');
     const logoText = this._esc(this._getStr('logo-text', 'LessJS'));
     const logoSub = this._esc(this._getStr('logo-sub', ''));
-    const footerText = this._getStr('footer-text',
-      'Built with LessJS Framework — Self-bootstrapped from JSR — LESS IS MORE');
+    const footerText = this._getStr(
+      'footer-text',
+      'Built with LessJS Framework — Self-bootstrapped from JSR — LESS IS MORE',
+    );
     const githubUrl = this._getStr('github-url', 'https://github.com/lessjs-run/LessJS');
     const editUrl = this.getAttribute('edit-url') || '';
     const locales = this._locales();
@@ -691,7 +697,9 @@ export class LessLayout extends DsdElement {
             <a class="logo" href="/">${logoText}<span class="logo-sub">${logoSub}</span></a>
             ${unsafeHTML(headerNavHtml)}
             <div class="header-right">
-              ${noSearch ? '' : html`<less-search></less-search>`}
+              ${noSearch ? '' : html`
+                <less-search></less-search>
+              `}
               <details class="mobile-menu">
                 <summary
                   class="mobile-menu-btn"
@@ -1025,7 +1033,8 @@ export class LessLayout extends DsdElement {
       }
 
       globalThis.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch {
+    } catch (e) {
+      console.warn('[less-layout] SPA navigation failed, reloading:', e);
       globalThis.location.reload();
     }
   }

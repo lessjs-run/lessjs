@@ -14,7 +14,10 @@ import { defineConfig } from 'vite';
 const _rawCSS = [...openPropsTokenSheet.cssRules].map((r) => r.cssText).join('\n');
 const rootCSS = _rawCSS
   .replace(/:host\s*\{/g, ':root, :host {')
-  .replace(/:host\(\[data-theme="dark"\]\)\s*\{/g, 'html[data-theme="dark"], :host([data-theme="dark"]) {');
+  .replace(
+    /:host\(\[data-theme="dark"\]\)\s*\{/g,
+    'html[data-theme="dark"], :host([data-theme="dark"]) {',
+  );
 const darkCSS = `
 [data-theme="dark"] body {
   background: #030507;

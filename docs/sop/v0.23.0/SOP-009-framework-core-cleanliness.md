@@ -1,8 +1,8 @@
 # SOP-009: Framework Core Cleanliness
 
-> Version: v0.23.0  
-> Priority: P1  
-> Status: IN PROGRESS  
+> Version: v0.23.0\
+> Priority: P1\
+> Status: IN PROGRESS\
 > Depends on: ADR-0039 (DsdElement), ADR-0050 (Package Architecture)
 
 ## Objective
@@ -13,13 +13,13 @@ Ensure the LessJS framework core is clean, consistent with its original spirit (
 
 From the v0.23.0 audit:
 
-| # | Problem | Severity | Status |
-|---|---------|----------|--------|
-| 1 | `_propagateTheme()` in less-layout should be a DsdElement capability | P1 | OPEN |
-| 2 | No explicit lifecycle hooks for DSD vs CSR paths | P1 | OPEN |
-| 3 | Island loading `visible` strategy limited to open shadow roots | P2 | DOCUMENTED |
-| 4 | `app` facade still imports `adapter-vite/build-context` | P1 | DEFERRED (ADR-0050) |
-| 5 | `less-layout` hardcoded www-specific icons/text in framework package | P2 | → SOP-008 |
+| # | Problem                                                              | Severity | Status              |
+| - | -------------------------------------------------------------------- | -------- | ------------------- |
+| 1 | `_propagateTheme()` in less-layout should be a DsdElement capability | P1       | OPEN                |
+| 2 | No explicit lifecycle hooks for DSD vs CSR paths                     | P1       | OPEN                |
+| 3 | Island loading `visible` strategy limited to open shadow roots       | P2       | DOCUMENTED          |
+| 4 | `app` facade still imports `adapter-vite/build-context`              | P1       | DEFERRED (ADR-0050) |
+| 5 | `less-layout` hardcoded www-specific icons/text in framework package | P2       | → SOP-008           |
 
 ## Procedure
 
@@ -33,6 +33,7 @@ From the v0.23.0 audit:
 - [ ] less-layout's `_propagateTheme()` keeps only the "walk into slotted content" logic (which requires knowledge of slot projection)
 
 **Acceptance:**
+
 - [ ] Theme toggle → all DsdElement components with `static themeable = true` receive `data-theme`
 - [ ] less-layout's theme propagation still works for slotted content
 - [ ] No performance regression (walk is O(n) as before)
@@ -48,7 +49,8 @@ From the v0.23.0 audit:
 - [ ] Deprecate pattern of calling `super.connectedCallback()` + `this.update()` in order-dependent way (see `less-theme-toggle`)
 
 **Acceptance:**
-- [ ] `less-theme-toggle` can use `onDsdHydrated()` instead of `connectedCallback() + update()`  
+
+- [ ] `less-theme-toggle` can use `onDsdHydrated()` instead of `connectedCallback() + update()`
 - [ ] Order of `super.connectedCallback()` relative to subclass code no longer matters for DSD hydration
 
 ### Step 3: Document island loading limitations
@@ -60,16 +62,17 @@ From the v0.23.0 audit:
 - [ ] Add note about `mode: 'closed'` being incompatible with island auto-detection
 
 **Acceptance:**
+
 - [ ] Documentation exists and is clear
 - [ ] No code changes needed (current behavior is correct for open shadow roots)
 
 ## Quality Gates
 
-| Gate | Criteria |
-|------|----------|
-| G1 | DsdElement.themeable opt-in mechanism exists and is documented |
-| G2 | onDsdHydrated / onCsrRendered hooks work correctly |
-| G3 | less-theme-toggle migrated to use onDsdHydrated |
-| G4 | Theme propagation no regression |
-| G5 | Island loading documentation updated |
-| G6 | All existing tests pass |
+| Gate | Criteria                                                       |
+| ---- | -------------------------------------------------------------- |
+| G1   | DsdElement.themeable opt-in mechanism exists and is documented |
+| G2   | onDsdHydrated / onCsrRendered hooks work correctly             |
+| G3   | less-theme-toggle migrated to use onDsdHydrated                |
+| G4   | Theme propagation no regression                                |
+| G5   | Island loading documentation updated                           |
+| G6   | All existing tests pass                                        |
