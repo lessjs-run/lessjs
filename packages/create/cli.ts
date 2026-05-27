@@ -119,6 +119,7 @@ node_modules/
 `,
     'deno.json': `{
   "imports": {
+    "alien-signals": "npm:alien-signals@^3.2.0",
     "@deno/vite-plugin": "npm:@deno/vite-plugin",
     "@lessjs/app": "jsr:@lessjs/app@^${v.app}",
     "@lessjs/runtime": "jsr:@lessjs/runtime@^${v.runtime}",

@@ -1,6 +1,6 @@
 # SOP-016: SSG Package Resolver — 补充 `runtime` 包解析
 
-> Version: v0.23.1
+> Version: v0.23.2
 > Priority: P0
 > Status: COMPLETED
 > Depends on: SOP-015（验证门禁）
@@ -116,8 +116,30 @@ done
 **涉及文件**：
 
 - `docs/sop/v0.23.x/` — 本文件（SOP-016）
-- `docs/release/0.23.1.md` — 版本 changelog
+- `docs/release/0.23.2.md` — 版本 changelog
 - `docs/sop/v0.23.x/README.md` — 索引更新
+
+### Step 4: Consumer 模板补 `alien-signals` 映射
+
+**目标**：SSG/SSR bundle 运行时 `import 'alien-signals'` 能通过 Deno
+import map 解析。
+
+**背景**：
+`@lessjs/signals` 内部依赖 `alien-signals`（经 `rewriteNpmSpecifiers`
+将 `npm:alien-signals@3.2.1` 还原为裸 `alien-signals`）。SSR bundle
+构建成功但运行时 Deno `import()` 查 consumer 的 import map → 找不到 →
+`ERR_MODULE_NOT_FOUND`。
+
+**涉及文件**：
+
+- `packages/create/cli.ts` — consumer 模板 `deno.json`
+
+**执行动作**：
+在模板 `deno.json` 的 `imports` 中新增：
+
+```json
+"alien-signals": "npm:alien-signals@^3.2.0"
+```
 
 ## Quality Gates
 
