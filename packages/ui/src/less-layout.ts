@@ -930,6 +930,10 @@ export class LessLayout extends DsdElement {
       while (newLayout.firstChild) this.appendChild(newLayout.firstChild);
       this.setAttribute('current-path', path);
 
+      // Sync locale from the fetched page so i18n content matches
+      const newLocale = newLayout.getAttribute('locale');
+      if (newLocale) this.setAttribute('locale', newLocale);
+
       // Ensure newly inserted components inherit current theme.
       // First propagation: sync theme to light DOM and shallow shadow DOM.
       // Second propagation (rAF): catch components whose connectedCallback fires
