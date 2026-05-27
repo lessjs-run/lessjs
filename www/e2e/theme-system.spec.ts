@@ -40,10 +40,13 @@ test.describe('Theme Toggle', () => {
       return document.documentElement.getAttribute('data-theme');
     });
 
-    // Click the toggle button inside the shadow DOM
+    // Click the toggle button inside the shadow DOM.
+    // DSD renders the button immediately but JS upgrade (event binding)
+    // may not have completed when `networkidle` fires.
     const toggleBtn = visibleThemeToggle(page);
     if ((await toggleBtn.count()) > 0) {
       await expect(toggleBtn).toBeVisible();
+      await page.waitForTimeout(200);
       await toggleBtn.click();
 
       // Theme should have changed
@@ -81,6 +84,8 @@ test.describe('Theme Toggle', () => {
     const toggleBtn = visibleThemeToggle(page);
     if ((await toggleBtn.count()) > 0) {
       await expect(toggleBtn).toBeVisible();
+      // Wait for JS upgrade to complete event binding
+      await page.waitForTimeout(200);
       // Toggle twice should return to original theme
       const themeBefore = await page.evaluate(() => {
         return document.documentElement.getAttribute('data-theme');
