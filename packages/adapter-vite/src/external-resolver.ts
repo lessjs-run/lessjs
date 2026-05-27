@@ -4,6 +4,10 @@
  * Eliminates ESM subpath leaks into Rolldown by having Deno resolve all
  * external package transitive dependencies before the bundler sees them.
  * Produces a complete specifier list so ssr.external needs no regex.
+ *
+ * ADR-0054: AST-based specifier resolution replaces manual regex patterns.
+ * For each external package, we parse its package.json exports field to
+ * auto-discover ALL subpath exports. No more regex maintenance.
  */
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
@@ -32,11 +36,171 @@ interface DenoInfoOutput {
   redirects?: Record<string, string>;
 }
 
-/** Fallback regex patterns for packages that are known to have subpath exports. */
-const FALLBACK_REGEX_MAP: Record<string, string> = {
-  parse5: '/^parse5(\\/|$)/',
-  entities: '/^entities(\\/|$)/',
-};
+/** Package.json minimal shape for exports parsing. */
+interface PkgJson {
+  exports?: unknown;
+  main?: string;
+}
+
+/**
+ * ADR-0054: Recursively walk a package.json exports field to extract all
+ * export subpaths as bare specifier strings.
+ *
+ * Handles:
+ *   "."          → "package-name"
+ *   "./sub"      → "package-name/sub"
+ *   "./sub/*"    → "package-name/sub/*" (wildcard, matches all sub-subpaths)
+ *   "./*"        → "package-name/*"
+ *   Conditional  → recurses into sub-conditions (import/require/default)
+ *
+ * Skips condition keys: import, require, node, default, types, browser,
+ * deno, worker, development, production, module.
+ */
+export function walkExports(
+  exports: unknown,
+  packageName: string,
+  prefix = '',
+): string[] {
+  const results: string[] = [];
+
+  if (typeof exports === 'string') {
+    // Leaf: e.g. ".": "./index.js" → package-name
+    // Strip "./" prefix to get subpath: "./sub" → "sub", "./*" → "*", "." → ""
+    const subpath = prefix.replace(/^\.\/?/, '');
+    results.push(subpath ? `${packageName}/${subpath}` : packageName);
+    return results;
+  }
+
+  if (exports === null || exports === undefined) {
+    return results;
+  }
+
+  if (Array.isArray(exports)) {
+    // Array fallback — take first valid
+    for (const item of exports) {
+      const sub = walkExports(item, packageName, prefix);
+      if (sub.length > 0) {
+        results.push(...sub);
+        break;
+      }
+    }
+    return results;
+  }
+
+  if (typeof exports === 'object') {
+    const obj = exports as Record<string, unknown>;
+
+    // Conditional keys to skip (not subpaths)
+    const conditionKeys = new Set([
+      'import',
+      'require',
+      'node',
+      'default',
+      'types',
+      'browser',
+      'deno',
+      'worker',
+      'development',
+      'production',
+      'module',
+    ]);
+
+    const hasSubpathKeys = Object.keys(obj).some((k) => !conditionKeys.has(k));
+    const hasConditionKeys = Object.keys(obj).some((k) => conditionKeys.has(k));
+
+    if (hasConditionKeys && !hasSubpathKeys) {
+      // Pure condition block: recurse into each condition
+      const seen = new Set<string>();
+      for (const key of Object.keys(obj)) {
+        if (conditionKeys.has(key)) {
+          const sub = walkExports(obj[key], packageName, prefix);
+          for (const s of sub) {
+            if (!seen.has(s)) {
+              seen.add(s);
+              results.push(s);
+            }
+          }
+        }
+      }
+    } else if (hasSubpathKeys) {
+      // Subpath mapping: each key is a subpath
+      for (const key of Object.keys(obj)) {
+        if (conditionKeys.has(key)) continue;
+        const newPrefix = key; // e.g. ".", "./secure-headers", "./*"
+        const sub = walkExports(obj[key], packageName, newPrefix);
+        results.push(...sub);
+      }
+    }
+  }
+
+  return results;
+}
+
+/**
+ * ADR-0054: Resolve a package's exports to a complete list of bare specifiers
+ * by reading its package.json from node_modules.
+ */
+export function resolvePackageExports(packageName: string, projectRoot: string): string[] {
+  // Try standard node_modules resolution first
+  const candidates = [
+    join(projectRoot, 'node_modules', packageName, 'package.json'),
+    join(
+      projectRoot,
+      'node_modules',
+      '.deno',
+      `${packageName}.node_modules`,
+      packageName,
+      'package.json',
+    ),
+  ];
+
+  for (const pkgPath of candidates) {
+    if (existsSync(pkgPath)) {
+      try {
+        const pkg: PkgJson = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+        if (pkg.exports) {
+          return walkExports(pkg.exports, packageName);
+        }
+        // No exports field — use main or default to package name
+        break;
+      } catch {
+        // corrupt package.json — skip
+      }
+    }
+  }
+
+  // Fallback: return just the main package name
+  return [packageName];
+}
+
+/**
+ * ADR-0054: Complete external specifier list by resolving each package's
+ * exports via AST (package.json exports walk).
+ */
+export function completeExternalSpecifiers(
+  baseSpecifiers: string[],
+  externalPackages: string[],
+  projectRoot: string,
+): string[] {
+  const seen = new Set(baseSpecifiers);
+  const result = [...baseSpecifiers];
+
+  for (const pkg of externalPackages) {
+    try {
+      const subpaths = resolvePackageExports(pkg, projectRoot);
+      for (const sp of subpaths) {
+        if (!seen.has(sp)) {
+          seen.add(sp);
+          result.push(sp);
+        }
+      }
+    } catch {
+      // Package not found or has no exports — keep base specifiers
+    }
+  }
+
+  return result.sort();
+}
 
 /**
  * Compute a stable hash of deno.lock for cache invalidation.
@@ -114,14 +278,16 @@ export function extractExternalSpecifiers(
 }
 
 /**
- * Build a fallback manifest using regex patterns (current behavior).
+ * Build a fallback manifest.
  * Used when Deno is unavailable or skipResolution is true.
+ *
+ * ADR-0054: Uses AST-based exports resolution instead of regex patterns.
  */
-export function buildFallbackManifest(externalPackages: string[]): ExternalManifest {
-  const specifiers = externalPackages.flatMap((pkg) => {
-    if (FALLBACK_REGEX_MAP[pkg]) return [pkg]; // regex handles subpaths
-    return [pkg];
-  });
+export function buildFallbackManifest(
+  externalPackages: string[],
+  projectRoot: string,
+): ExternalManifest {
+  const specifiers = completeExternalSpecifiers([], externalPackages, projectRoot);
 
   return {
     specifiers,
@@ -159,7 +325,8 @@ function buildImportMapFromRedirects(
  * Flow:
  * 1. Check cache (.less/external-manifest.json by deno.lock hash)
  * 2. If cache miss: write temp probe module, run `deno info --json`, parse
- * 3. Fallback to regex if Deno is unavailable
+ * 3. Supplement with AST-based exports resolution (ADR-0054)
+ * 4. Fallback to AST-only if Deno is unavailable
  */
 export async function resolveExternalManifest(
   externalPackages: string[],
@@ -175,7 +342,7 @@ export async function resolveExternalManifest(
   }
 
   if (skipResolution) {
-    return buildFallbackManifest(externalPackages);
+    return buildFallbackManifest(externalPackages, projectRoot);
   }
 
   // Try Deno pre-resolution
@@ -197,7 +364,13 @@ export async function resolveExternalManifest(
     unlinkSync(probePath);
     const output: DenoInfoOutput = JSON.parse(deno.toString());
 
-    const specifiers = extractExternalSpecifiers(output, externalPackages);
+    const baseSpecifiers = extractExternalSpecifiers(output, externalPackages);
+    // ADR-0054: Supplement with AST-based exports resolution
+    const specifiers = completeExternalSpecifiers(
+      baseSpecifiers,
+      externalPackages,
+      projectRoot,
+    );
     const importMap = buildImportMapFromRedirects(output, externalPackages);
 
     const manifest: ExternalManifest = {
@@ -210,8 +383,8 @@ export async function resolveExternalManifest(
     writeCachedManifest(projectRoot, manifest);
     return manifest;
   } catch (_err) {
-    // Deno not available or failed — fallback to regex
-    const fallback = buildFallbackManifest(externalPackages);
+    // Deno not available or failed — fallback to AST-based resolution
+    const fallback = buildFallbackManifest(externalPackages, projectRoot);
     return fallback;
   }
 }

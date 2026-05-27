@@ -62,6 +62,7 @@ architectural decision, its context, and consequences.
 | 0051 | Self-Built `html` Template System Strengthening | Proposed                                 |
 | 0052 | Signal-DOM Deep Integration                     | Proposed                                 |
 | 0053 | Unified Error Handling Architecture             | Proposed                                 |
+| 0054 | AST-Based External Specifier Resolution         | Accepted                                 |
 
 ## Superseded / Historical
 

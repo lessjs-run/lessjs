@@ -121,6 +121,8 @@ node_modules/
   "imports": {
     "alien-signals": "npm:alien-signals@^3.2.0",
     "@deno/vite-plugin": "npm:@deno/vite-plugin",
+    "hono": "npm:hono@^4",
+    "hono/": "npm:hono@^4/",
     "@lessjs/app": "jsr:@lessjs/app@^${v.app}",
     "@lessjs/runtime": "jsr:@lessjs/runtime@^${v.runtime}",
     "@lessjs/ui": "jsr:@lessjs/ui@^${v.ui}",

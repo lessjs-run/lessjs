@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/i18n",
-  "version": "0.23.2",
+  "version": "0.23.3",
   "exports": {
     ".": "./src/index.ts"
   },
