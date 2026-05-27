@@ -52,6 +52,7 @@ export function filterBlogNav(navSections: { section: string }[]): { section: st
 }
 
 // Legacy aliases — keep existing route imports working.
+// @deprecated Use filterDocsNav, filterArchitectureNav, filterHubNav instead.
 export const filterFrameworkNav = filterDocsNav;
 export const filterEngineNav = filterArchitectureNav;
 export const filterRegistryNav = filterHubNav;

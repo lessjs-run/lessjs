@@ -6,8 +6,15 @@ import { defineConfig } from 'vite';
 // The root deno.json workspace mapping resolves jsr:@lessjs/* -> local
 // packages/ during dev, and JSR tarballs in production.
 
-// v0.20.0: migrated from lessRootColorCSS (deleted) to openPropsTokenSheet
-const rootCSS = [...openPropsTokenSheet.cssRules].map((r) => r.cssText).join('\n');
+// v0.20.0: migrated from lessRootColorCSS (deleted) to openPropsTokenSheet.
+// v0.23.0: :host rules don't apply in global CSS context. Replace :host with
+//   :root so CSS custom properties (--gray-*, --text-*, --bg-*, etc.) are
+//   available to regular DOM elements outside shadow trees. Shadow DOM still
+//   inherits these from :root per CSS spec.
+const _rawCSS = [...openPropsTokenSheet.cssRules].map((r) => r.cssText).join('\n');
+const rootCSS = _rawCSS
+  .replace(/:host\s*\{/g, ':root, :host {')
+  .replace(/:host\(\[data-theme="dark"\]\)\s*\{/g, 'html[data-theme="dark"], :host([data-theme="dark"]) {');
 const darkCSS = `
 [data-theme="dark"] body {
   background: #030507;

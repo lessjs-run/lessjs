@@ -6,8 +6,6 @@ import { headerNav, navSections } from 'virtual:less-nav';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../components/page-styles.js';
-const pageSheet = new StyleSheet();
-pageSheet.replaceSync(pageStyles);
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
@@ -49,7 +47,7 @@ routeSheet.replaceSync(
 );
 
 export class ContributingPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, pageSheet, routeSheet];
+  static override styles = [openPropsTokenSheet, routeSheet];
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
