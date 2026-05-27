@@ -38,8 +38,7 @@ function findToggleInPage(): Element | null {
 async function waitForToggleReady(page: Page): Promise<void> {
   await page.waitForFunction(() => {
     const layout = document.querySelector('less-layout');
-    const toggle = layout?.shadowRoot?.querySelector('less-theme-toggle')
-      ?? document.querySelector('less-theme-toggle');
+    const toggle = layout?.shadowRoot?.querySelector('less-theme-toggle') ?? document.querySelector('less-theme-toggle');
     return toggle?.hasAttribute('data-theme') === true;
   }, { timeout: 10000 });
 }

@@ -50,9 +50,18 @@ architectural decision, its context, and consequences.
 | 0039 | DsdElement + Signals Reactive Architecture     | Accepted                                 |
 | 0040 | Streaming DSD                                  | Accepted                                 |
 | 0041 | ESM Module Graph First for JSR Consumer Builds | Accepted                                 |
+| 0042 | Import Map Universal Resolution                | Accepted                                 |
+| 0043 | SSG Phase 3 Dependency Strategy                | Accepted                                 |
+| 0044 | SSR Browser API Polyfill Strategy              | Accepted                                 |
+| 0045 | Native Web API First-Class                     | Accepted                                 |
+| 0046 | Phase 2 Import Map Resolution                  | Accepted                                 |
+| 0047 | Deno Pre-Resolution External Dependencies      | Accepted                                 |
 | 0048 | CI and Release Gate Separation                 | Accepted                                 |
 | 0049 | Architecture Debt First Roadmap Reset          | Accepted                                 |
 | 0050 | Layered Package Architecture                   | Accepted                                 |
+| 0051 | Self-Built `html` Template System Strengthening| Proposed                                 |
+| 0052 | Signal-DOM Deep Integration                    | Proposed                                 |
+| 0053 | Unified Error Handling Architecture            | Proposed                                 |
 
 ## Superseded / Historical
 
