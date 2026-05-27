@@ -158,7 +158,7 @@ export function disposeProps(instance: DsdElement): void {
 export function handlePropAttributeChange(
   instance: DsdElement,
   name: string,
-  oldValue: string | null,
+  _oldValue: string | null,
   newValue: string | null,
 ): void {
   // deno-lint-ignore no-explicit-any
@@ -274,7 +274,7 @@ function installPropAccessor(
   key: string | symbol,
   sigMap: PropSignalMap,
 ): void {
-  const proto = Object.getPrototypeOf(instance);
+  const _proto = Object.getPrototypeOf(instance);
   const sig = sigMap.signals.get(key)!;
 
   Object.defineProperty(instance, key, {

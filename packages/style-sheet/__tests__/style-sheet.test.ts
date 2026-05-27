@@ -1,7 +1,7 @@
 /**
  * @lessjs/style-sheet — tests (SOP-012)
  */
-import { assertEquals, assertThrows } from 'jsr:@std/assert@^1.0.0';
+import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { StyleSheet } from '../src/index.ts';
 
 Deno.test('StyleSheet', async (t) => {

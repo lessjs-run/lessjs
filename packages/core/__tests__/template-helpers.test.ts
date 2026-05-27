@@ -2,7 +2,7 @@
  * @lessjs/core — template helpers tests (SOP-012)
  * Tests for classMap, when, choose, repeat, ref added in SOP-009.
  */
-import { assert, assertEquals } from 'jsr:@std/assert@^1.0.0';
+import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { choose, classMap, html, ref, repeat, when } from '../src/template.ts';
 
 Deno.test('classMap', async (t) => {
@@ -89,9 +89,9 @@ Deno.test('repeat', async (t) => {
 
 Deno.test('ref', async (t) => {
   await t.step('creates RefDirective', () => {
-    let captured: Element | null = null;
+    let _captured: Element | null = null;
     const r = ref((el) => {
-      captured = el;
+      _captured = el;
     });
     assertEquals(r.kind, 'less:ref');
     assertEquals(typeof r.callback, 'function');

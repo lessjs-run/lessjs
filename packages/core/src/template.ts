@@ -272,7 +272,7 @@ export function repeat<T>(
     }
   }
 
-  const key = _keyFn ? items.map((item) => _keyFn(item)).join(',') : String(items.length);
+  const _key = _keyFn ? items.map((item) => _keyFn(item)).join(',') : String(items.length);
 
   return {
     kind: 'less:template-result',
