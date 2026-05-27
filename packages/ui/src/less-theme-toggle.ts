@@ -113,12 +113,17 @@ export class LessThemeToggle extends DsdElement {
 
     this.setAttribute('data-theme', this._theme.value);
 
-    // Ensure event bindings survive DSD parse-serialize round-trip:
-    // _bindCurrentRenderTemplate may fail to find data-less-event-N markers
-    // when parse5 re-serializes attributes. update() forces a fresh
-    // render + bind via _renderIntoShadowRoot, which sets innerHTML with
-    // runtimeMarkers and calls _bindTemplateRuntime synchronously.
-    this.update();
+    // Ensure event bindings survive DSD parse-serialize round-trip.
+    // _bindCurrentRenderTemplate may fail to find event markers because
+    // parse5 re-serialization can alter attribute ordering/encoding.
+    //
+    // We defer update() to the next animation frame so the browser
+    // finishes attaching the shadow DOM from the <template> DSD before
+    // _renderIntoShadowRoot replaces innerHTML with fresh runtimeMarkers
+    // and calls _bindTemplateRuntime to attach @click handlers.
+    requestAnimationFrame(() => {
+      if (this.isConnected) this.update();
+    });
   }
 
   override render(): string | TemplateResult {
