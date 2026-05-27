@@ -24,7 +24,6 @@ import type {
   LessDeclaration,
   LessElementExtensions,
 } from './types.js';
-import type { CompatibilityClassification, CompatibilityTier } from '@lessjs/compat-check';
 
 type CompatibilityTier = 'ssr-capable' | 'client-only' | 'rejected' | 'experimental-dom';
 
