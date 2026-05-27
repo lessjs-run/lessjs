@@ -12,14 +12,34 @@
 import { expect, type Page, test } from '@playwright/test';
 
 /**
+ * Find <less-theme-toggle> across shadow DOM boundaries.
+ * The toggle lives inside <less-layout>'s shadow DOM on most pages.
+ */
+function findToggleInPage(): Element | null {
+  // Primary: inside less-layout's shadow DOM
+  const layout = document.querySelector('less-layout');
+  if (layout?.shadowRoot) {
+    const toggle = layout.shadowRoot.querySelector('less-theme-toggle');
+    if (toggle) return toggle;
+  }
+  // Fallback: light DOM (for pages without less-layout)
+  return document.querySelector('less-theme-toggle');
+}
+
+/**
  * Wait for <less-theme-toggle> to be fully upgraded:
  * DSD hydration + _initTheme() must complete before clicks work.
  * We wait for the component to have a data-theme attribute,
  * which is set by _initTheme() during onDsdHydrated().
+ *
+ * NOTE: <less-theme-toggle> lives inside <less-layout>'s shadow DOM,
+ * so we must query through the shadow root to find it.
  */
 async function waitForToggleReady(page: Page): Promise<void> {
   await page.waitForFunction(() => {
-    const toggle = document.querySelector('less-theme-toggle');
+    const layout = document.querySelector('less-layout');
+    const toggle = layout?.shadowRoot?.querySelector('less-theme-toggle')
+      ?? document.querySelector('less-theme-toggle');
     return toggle?.hasAttribute('data-theme') === true;
   }, { timeout: 10000 });
 }
@@ -32,13 +52,16 @@ test.describe('Theme Toggle', () => {
   });
 
   test('theme toggle element exists', async ({ page }) => {
-    const toggle = page.locator('less-theme-toggle');
-    expect(await toggle.count()).toBeGreaterThan(0);
+    const exists = await page.evaluate(() => {
+      const toggle = findToggleInPage();
+      return toggle !== null;
+    });
+    expect(exists).toBe(true);
   });
 
   test('theme toggle has shadow root', async ({ page }) => {
     const hasShadowRoot = await page.evaluate(() => {
-      const toggle = document.querySelector('less-theme-toggle');
+      const toggle = findToggleInPage();
       return toggle?.shadowRoot !== null;
     });
     expect(hasShadowRoot).toBe(true);
@@ -52,7 +75,7 @@ test.describe('Theme Toggle', () => {
     // Click the toggle button via evaluate to guarantee the shadow DOM
     // button is clicked regardless of Playwright's shadow DOM piercing.
     await page.evaluate(() => {
-      const toggle = document.querySelector('less-theme-toggle');
+      const toggle = findToggleInPage();
       const btn = toggle?.shadowRoot?.querySelector('button');
       btn?.click();
     });
@@ -66,7 +89,7 @@ test.describe('Theme Toggle', () => {
 
   test('theme is persisted to localStorage after toggle', async ({ page }) => {
     await page.evaluate(() => {
-      const toggle = document.querySelector('less-theme-toggle');
+      const toggle = findToggleInPage();
       const btn = toggle?.shadowRoot?.querySelector('button');
       btn?.click();
     });
@@ -92,7 +115,7 @@ test.describe('Theme Toggle', () => {
     });
 
     await page.evaluate(() => {
-      const toggle = document.querySelector('less-theme-toggle');
+      const toggle = findToggleInPage();
       const btn = toggle?.shadowRoot?.querySelector('button');
       btn?.click();
     });
@@ -102,7 +125,7 @@ test.describe('Theme Toggle', () => {
     expect(themeAfter1).not.toBe(themeBefore);
 
     await page.evaluate(() => {
-      const toggle = document.querySelector('less-theme-toggle');
+      const toggle = findToggleInPage();
       const btn = toggle?.shadowRoot?.querySelector('button');
       btn?.click();
     });
