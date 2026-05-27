@@ -43,11 +43,14 @@ test.describe('Theme Toggle', () => {
     // Click the toggle button inside the shadow DOM.
     // DSD renders the button immediately but JS upgrade (event binding)
     // may not have completed when `networkidle` fires.
+    // v0.23.0: less-layout now renders <less-search> natively, adding
+    // one more async island to load. Increased wait to accommodate.
     const toggleBtn = visibleThemeToggle(page);
     if ((await toggleBtn.count()) > 0) {
       await expect(toggleBtn).toBeVisible();
-      await page.waitForTimeout(200);
-      await toggleBtn.click();
+      // Wait for island JS to load + update() to complete event binding
+      await page.waitForTimeout(500);
+      await toggleBtn.click({ force: true });
 
       // Theme should have changed
       const themeAfter = await page.evaluate(() => {
@@ -61,7 +64,8 @@ test.describe('Theme Toggle', () => {
     const toggleBtn = visibleThemeToggle(page);
     if ((await toggleBtn.count()) > 0) {
       await expect(toggleBtn).toBeVisible();
-      await toggleBtn.click();
+      await page.waitForTimeout(500);
+      await toggleBtn.click({ force: true });
 
       // Check localStorage
       const stored = await page.evaluate(() => {
@@ -84,20 +88,20 @@ test.describe('Theme Toggle', () => {
     const toggleBtn = visibleThemeToggle(page);
     if ((await toggleBtn.count()) > 0) {
       await expect(toggleBtn).toBeVisible();
-      // Wait for JS upgrade to complete event binding
-      await page.waitForTimeout(200);
+      // Wait for island JS to load + update() to complete event binding
+      await page.waitForTimeout(500);
       // Toggle twice should return to original theme
       const themeBefore = await page.evaluate(() => {
         return document.documentElement.getAttribute('data-theme');
       });
 
-      await toggleBtn.click();
+      await toggleBtn.click({ force: true });
       const themeAfter1 = await page.evaluate(() => {
         return document.documentElement.getAttribute('data-theme');
       });
       expect(themeAfter1).not.toBe(themeBefore);
 
-      await toggleBtn.click();
+      await toggleBtn.click({ force: true });
       const themeAfter2 = await page.evaluate(() => {
         return document.documentElement.getAttribute('data-theme');
       });
