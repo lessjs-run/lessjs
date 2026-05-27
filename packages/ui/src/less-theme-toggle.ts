@@ -113,17 +113,14 @@ export class LessThemeToggle extends DsdElement {
 
     this.setAttribute('data-theme', this._theme.value);
 
-    // Guard: _bindCurrentRenderTemplate (called by DsdElement.connectedCallback
-    // via _hydrateOrRender) uses applyRuntimeTemplateBindings to attach
-    // @click handlers by searching shadow DOM for data-less-event-N markers.
-    // If parse5 re-serialization dropped the markers, the button has no
-    // click handler. Detect and force a fresh render+bind.
-    if (
-      this.shadowRoot &&
-      !this.shadowRoot.querySelector('[data-less-event-2]')
-    ) {
-      this.update();
-    }
+    // Re-render to guarantee @click bindings regardless of DSD hydration.
+    // _bindCurrentRenderTemplate relies on data-less-event-N markers that
+    // parse5 re-serialization can silently drop. _renderIntoShadowRoot
+    // (called by update()) sets innerHTML with fresh runtimeMarkers and
+    // calls _bindTemplateRuntime, which is the well-tested CSR path.
+    // Called synchronously after super.connectedCallback finishes so the
+    // shadow root is guaranteed to exist.
+    this.update();
   }
 
   override render(): string | TemplateResult {
