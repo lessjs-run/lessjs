@@ -5,11 +5,11 @@
     ".": "./src/index.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.23.0",
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.23.0/logger",
-    "@lessjs/adapter-vite": "jsr:@lessjs/adapter-vite@^0.23.0",
-    "@lessjs/content": "jsr:@lessjs/content@^0.23.0",
-    "@lessjs/i18n": "jsr:@lessjs/i18n@^0.23.0",
+    "@lessjs/core": "jsr:@lessjs/core@^0.24.0",
+    "@lessjs/core/logger": "jsr:@lessjs/core@^0.24.0/logger",
+    "@lessjs/adapter-vite": "jsr:@lessjs/adapter-vite@^0.24.0",
+    "@lessjs/content": "jsr:@lessjs/content@^0.24.0",
+    "@lessjs/i18n": "jsr:@lessjs/i18n@^0.24.0",
     "vite": "npm:vite@8.0.10"
   },
   "publish": {
