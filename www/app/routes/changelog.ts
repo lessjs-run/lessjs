@@ -9,6 +9,7 @@ import { pageStyles } from '../components/page-styles.js';
 const pageSheet = new StyleSheet();
 pageSheet.replaceSync(pageStyles);
 import '@lessjs/ui/less-layout';
+import '../islands/less-search.js';
 
 const routeSheet = new StyleSheet();
 
@@ -115,6 +116,7 @@ export class ChangelogPage extends DsdElement {
         current-path="/changelog"
         home
       >
+        <less-search slot="header-actions"></less-search>
         <div class="container">
           <h1>更新日志</h1>
           <p class="subtitle">

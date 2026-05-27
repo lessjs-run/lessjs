@@ -74,6 +74,19 @@ indexSheet.replaceSync(`
     --home-info: #1769aa;
   }
 
+  :host([data-theme="dark"]) {
+    --home-ink: #f4f6fb;
+    --home-muted: #a7adbd;
+    --home-border: rgba(225, 231, 242, 0.16);
+    --home-panel: #11131a;
+    --home-soft: #171a23;
+    --home-accent: #9b93ff;
+    --home-success: #6bd7af;
+    --home-warning: #f2ba66;
+    --home-danger: #ff9b91;
+    --home-info: #8bc7ff;
+  }
+
   less-layout {
     min-height: 100vh;
     display: flex;
@@ -88,6 +101,11 @@ indexSheet.replaceSync(`
     background:
       linear-gradient(180deg, #fbfbfd 0%, #ffffff 46%, #f5f6f8 100%);
     color: var(--home-ink);
+  }
+
+  :host([data-theme="dark"]) .home-shell {
+    background:
+      linear-gradient(180deg, #080a10 0%, #0d1017 48%, #11131a 100%);
   }
 
   .hero {
@@ -215,6 +233,10 @@ indexSheet.replaceSync(`
     color: var(--home-ink);
   }
 
+  :host([data-theme="dark"]) .action.secondary {
+    background: rgba(255, 255, 255, 0.06);
+  }
+
   .artifact {
     border: 1px solid rgba(18, 19, 26, 0.14);
     border-radius: 8px;
@@ -231,6 +253,18 @@ indexSheet.replaceSync(`
     padding: 14px 16px;
     border-bottom: 1px solid var(--home-border);
     background: #fbfbfc;
+  }
+
+  :host([data-theme="dark"]) .artifact-top,
+  :host([data-theme="dark"]) .artifact-pane,
+  :host([data-theme="dark"]) .path-step,
+  :host([data-theme="dark"]) .layer,
+  :host([data-theme="dark"]) .owner-table,
+  :host([data-theme="dark"]) .owner-row,
+  :host([data-theme="dark"]) .status-card,
+  :host([data-theme="dark"]) .proof,
+  :host([data-theme="dark"]) .footer {
+    background: var(--home-panel);
   }
 
   .artifact-title {
@@ -620,6 +654,7 @@ export class DocsHome extends DsdElement {
         current-path="/"
         home
       >
+        <less-search slot="header-actions"></less-search>
         <div class="home-shell">
           <section class="hero">
             <div class="hero-inner">
@@ -644,8 +679,8 @@ export class DocsHome extends DsdElement {
                   <code>deno run -A jsr:@lessjs/create my-app</code>
                 </div>
                 <div class="actions">
-                  <a class="action primary" href="/guide/getting-started">Start building</a>
-                  <a class="action secondary" href="/engine/architecture/">Read architecture</a>
+                  <a class="action primary" href="/docs">Start building</a>
+                  <a class="action secondary" href="/architecture">Read architecture</a>
                   <a class="action secondary" href="/roadmap">Release truth</a>
                 </div>
               </div>
