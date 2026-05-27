@@ -1,1 +1,2 @@
-export { default } from '../../shared/section-renderer.js';
+import { createSectionRenderer } from '../../shared/section-renderer.js';
+export default createSectionRenderer('blog');
