@@ -20,7 +20,7 @@ Deno.test('errors', async (t) => {
     const err = new SsrRenderError('app/routes/index.ts', cause);
     assertEquals(err.code, ErrorCode.SSR_RENDER_ERROR);
     assertEquals(err.severity, 'error');
-    assertEquals(err.recoverable, true);
+    assertEquals(err.recoverable, false);
     assertEquals(err.sourceError, cause);
     assertEquals(err.componentPath, 'app/routes/index.ts');
   });
