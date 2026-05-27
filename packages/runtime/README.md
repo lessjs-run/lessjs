@@ -1,6 +1,6 @@
 # @lessjs/runtime
 
-Component authoring facade — the single import for writing LessJS components.
+Component authoring facade (v0.24) — the single import for writing LessJS components.
 
 `@lessjs/runtime` re-exports the complete authoring surface from the runtime
 kernel (`@lessjs/core`), signals engine (`@lessjs/signals`), and stylesheet
@@ -17,34 +17,57 @@ deno add jsr:@lessjs/runtime
 ## Usage
 
 ```ts
-import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
+import {
+  choose,
+  classMap,
+  DsdElement,
+  ErrorBoundary,
+  html,
+  prop,
+  type PropertyOptions,
+  ref,
+  repeat,
+  signal,
+  StyleSheet,
+  when,
+} from '@lessjs/runtime';
 
-export const tagName = 'my-component';
+class MyButton extends DsdElement {
+  @prop({ type: Boolean })
+  disabled = false;
 
-const styles = new StyleSheet();
-styles.replaceSync(`
-  :host { display: block; }
-  button { cursor: pointer; }
-`);
-
-export default class MyComponent extends DsdElement {
-  static override styles = styles;
-  count = signal(0);
-
-  override render() {
+  render() {
     return html`
-      <button @click="${() => this.count.value++}">
-        Count: ${this.count}
+      <button class="${classMap({ disabled: this.disabled })}">
+        <slot></slot>
       </button>
     `;
   }
 }
-
-if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
-  customElements.define(tagName, MyComponent);
-}
 ```
 
+export const tagName = 'my-component';
+
+const styles = new StyleSheet();
+styles.replaceSync(`:host { display: block; }
+  button { cursor: pointer; }`);
+
+export default class MyComponent extends DsdElement {
+static override styles = styles;
+count = signal(0);
+
+override render() {
+return html`<button @click="${() => this.count.value++}">
+        Count: ${this.count}
+      </button>`;
+}
+}
+
+if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
+customElements.define(tagName, MyComponent);
+}
+
+```
 ## Exports
 
 | Export                   | Source Package        | Description                                  |
@@ -83,3 +106,4 @@ The canonical owners remain:
 ## License
 
 MIT
+```

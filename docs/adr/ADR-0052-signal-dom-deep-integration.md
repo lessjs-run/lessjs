@@ -1,6 +1,6 @@
 # ADR-0052: Signal-DOM Deep Integration — Reactive Property Binding
 
-- Status: PROPOSED
+- Status: ACCEPTED (Implemented v0.24.0)
 - Date: 2026-05-27
 - Supercedes: Extends ADR-0039 (DsdElement + Signals Reactive)
 - Applies to: v0.24.0+

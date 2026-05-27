@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/content",
-  "version": "0.23.6",
+  "version": "0.24.0",
   "exports": {
     ".": "./src/index.ts",
     "./blog-data": "./src/blog/blog-data.ts",

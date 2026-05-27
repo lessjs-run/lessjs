@@ -1,11 +1,21 @@
 {
   "version": "5",
   "specifiers": {
-    "jsr:@std/assert@*": "1.0.14",
-    "jsr:@std/assert@1": "1.0.14",
+    "jsr:@lessjs/adapter-vite@0.23": "0.23.6",
+    "jsr:@lessjs/cem@0.23": "0.23.6",
+    "jsr:@lessjs/compat-check@0.23": "0.23.6",
+    "jsr:@lessjs/content@0.23": "0.23.6",
+    "jsr:@lessjs/core@0.23": "0.23.6",
+    "jsr:@lessjs/i18n@0.23": "0.23.6",
+    "jsr:@lessjs/protocols@0.23": "0.23.6",
+    "jsr:@lessjs/signals@0.23": "0.23.6",
+    "jsr:@lessjs/style-sheet@0.23": "0.23.6",
+    "jsr:@std/assert@*": "1.0.19",
+    "jsr:@std/assert@1": "1.0.19",
     "jsr:@std/internal@^1.0.10": "1.0.13",
-    "jsr:@std/internal@^1.0.12": "1.0.13",
-    "jsr:@std/path@1": "1.1.4",
+    "jsr:@std/internal@^1.0.12": "1.0.14",
+    "jsr:@std/internal@^1.0.14": "1.0.14",
+    "jsr:@std/path@1": "1.1.5",
     "npm:@hono/vite-dev-server@~0.25.3": "0.25.3_hono@4.12.22",
     "npm:@lit-labs/ssr-dom-shim@^1.5.0": "1.6.0",
     "npm:@lit/reactive-element@2": "2.1.2",
@@ -41,19 +51,80 @@
     "npm:ws@^8.20.1": "8.20.1"
   },
   "jsr": {
+    "@lessjs/adapter-vite@0.23.6": {
+      "integrity": "046e8cbc1435cda84530c29730d50534547fd2c81a2bf8350ab8cfb2894dce1e",
+      "dependencies": [
+        "jsr:@lessjs/content",
+        "jsr:@lessjs/core",
+        "jsr:@lessjs/protocols"
+      ]
+    },
+    "@lessjs/cem@0.23.6": {
+      "integrity": "ff28b467a262c3b08c17fbf93aab59b793e55b77c34152054767e8d8b68e8d68"
+    },
+    "@lessjs/compat-check@0.23.6": {
+      "integrity": "a109743a4c8ed044a6b4329d30cb049e40bff9135cc016cea39ac8d4fd5a54c6",
+      "dependencies": [
+        "jsr:@lessjs/cem"
+      ]
+    },
+    "@lessjs/content@0.23.6": {
+      "integrity": "09c2bdc267453d9670e6784c26ac452ecc6b354eedd5829b266b0f83bdaff917",
+      "dependencies": [
+        "jsr:@lessjs/core",
+        "jsr:@lessjs/protocols"
+      ]
+    },
+    "@lessjs/core@0.23.6": {
+      "integrity": "731b49fcfbd99aea8b09b06af202fd54424a4e699feefb03f4a1975db20a262d",
+      "dependencies": [
+        "jsr:@lessjs/style-sheet"
+      ]
+    },
+    "@lessjs/i18n@0.23.6": {
+      "integrity": "37b24744e24770ecd9b5ca283fa01d250ca2869907262084f0ca454364064d28",
+      "dependencies": [
+        "jsr:@lessjs/core",
+        "jsr:@lessjs/protocols"
+      ]
+    },
+    "@lessjs/protocols@0.23.6": {
+      "integrity": "84d948816ab1fa00da14eec7f47424a09b0f01f08b42282fb12add419b0ece9e"
+    },
+    "@lessjs/signals@0.23.6": {
+      "integrity": "4f98b8a39a7ea66c2a1c2431e119351747349f4a0cb16ac75052a8025ff70ec2"
+    },
+    "@lessjs/style-sheet@0.23.6": {
+      "integrity": "713dba953e30431fae8617779b0181607ad16441b3f2a2a8e2770c2f52526ad6"
+    },
     "@std/assert@1.0.14": {
       "integrity": "68d0d4a43b365abc927f45a9b85c639ea18a9fab96ad92281e493e4ed84abaa4",
       "dependencies": [
         "jsr:@std/internal@^1.0.10"
       ]
     },
+    "@std/assert@1.0.19": {
+      "integrity": "eaada96ee120cb980bc47e040f82814d786fe8162ecc53c91d8df60b8755991e",
+      "dependencies": [
+        "jsr:@std/internal@^1.0.12"
+      ]
+    },
     "@std/internal@1.0.13": {
       "integrity": "2f9546691d4ac2d32859c82dff284aaeac980ddeca38430d07941e7e288725c0"
+    },
+    "@std/internal@1.0.14": {
+      "integrity": "291516b3d4c35024d6ffbc0a9df5bf4c64116e05b50012cf846710152d2ffdf7"
     },
     "@std/path@1.1.4": {
       "integrity": "1d2d43f39efb1b42f0b1882a25486647cb851481862dc7313390b2bb044314b5",
       "dependencies": [
         "jsr:@std/internal@^1.0.12"
+      ]
+    },
+    "@std/path@1.1.5": {
+      "integrity": "ccea00982ea28c36becaf6e62f855406c76a8c32d462f66f415bbb7d83a271bc",
+      "dependencies": [
+        "jsr:@std/internal@^1.0.14"
       ]
     }
   },

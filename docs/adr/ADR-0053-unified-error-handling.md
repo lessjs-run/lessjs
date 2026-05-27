@@ -1,6 +1,6 @@
 # ADR-0053: Unified Error Handling Architecture
 
-- Status: PROPOSED
+- Status: ACCEPTED (Implemented v0.24.0)
 - Date: 2026-05-27
 - Applies to: v0.24.0+
 

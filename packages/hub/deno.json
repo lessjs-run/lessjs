@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/hub",
-  "version": "0.23.6",
+  "version": "0.24.0",
   "exports": {
     ".": "./mod.ts",
     "./schema": "./src/schema.ts",

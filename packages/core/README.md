@@ -1,11 +1,14 @@
 # @lessjs/core
 
-Pure LessJS runtime package.
+Pure LessJS runtime package (v0.24).
 
 `@lessjs/core` owns the platform-facing runtime primitives:
 
 - **DSD rendering** — `renderDSD()`, `renderDSDByName()`
 - **DsdElement** — zero-framework base class for DSD components
+- **@prop() decorator** — reactive property system (1-line declare, auto signal→DOM)
+- **html template** — classMap/when/choose/repeat/ref helpers
+- **Unified errors** — LessError hierarchy, ErrorBoundary, telemetry
 - **Island metadata** — island detection, strategy, hydration
 - **Navigation** — SPA helpers
 - **SSR context** — per-request context, escaping, structured errors
@@ -19,7 +22,45 @@ It does not contain Vite, CLI, or build orchestration logic.
 deno add jsr:@lessjs/core
 ```
 
-## Main Exports
+## Component Authoring
+
+```ts
+import { classMap, DsdElement, html, prop, signal, when } from '@lessjs/runtime';
+
+class MyButton extends DsdElement {
+  @prop({ type: Boolean })
+  disabled = false;
+  @prop()
+  variant: 'default' | 'primary' = 'default';
+  #clicks = signal(0);
+
+  render() {
+    return html`
+      <button
+        class="${classMap({
+          btn: true,
+          'btn-primary': this.variant === 'primary',
+          disabled: this.disabled,
+        })}"
+        @click="${() => this.#clicks.value++}"
+      >
+        Clicks: ${this.#clicks}
+      </button>
+    `;
+  }
+}
+```
+
+## Error Handling
+
+````ts
+import { ErrorBoundary, LessError } from '@lessjs/runtime';
+
+class MyBoundary extends ErrorBoundary {
+  onError(error: LessError) {
+    return html`<error-panel .message=${error.message}></error-panel>`;
+  }
+}
 
 ```ts
 import {
@@ -61,7 +102,7 @@ import type {
   SafeHtml,
   UnsafeHtml,
 } from '@lessjs/core';
-```
+````
 
 ## Ocean-Island Rendering Model
 
