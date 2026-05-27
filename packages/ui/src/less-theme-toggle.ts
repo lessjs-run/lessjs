@@ -121,9 +121,11 @@ export class LessThemeToggle extends DsdElement {
     // finishes attaching the shadow DOM from the <template> DSD before
     // _renderIntoShadowRoot replaces innerHTML with fresh runtimeMarkers
     // and calls _bindTemplateRuntime to attach @click handlers.
-    requestAnimationFrame(() => {
-      if (this.isConnected) this.update();
-    });
+    if (typeof requestAnimationFrame !== 'undefined') {
+      requestAnimationFrame(() => {
+        if (this.isConnected) this.update();
+      });
+    }
   }
 
   override render(): string | TemplateResult {
