@@ -463,44 +463,37 @@ docs/
 
 ### 7.2 是否值得继续投入？
 
-**值得**。理由：
+**值得，但需要诚实面对全栈目标**。理由：
 
 1. DSD-native 是真正的差异化赛道，没有其他 JS 框架在认真做这件事
-2. WC 标准正在成熟（Safari 16.4+ 支持 DSD，Chrome 111+ 支持），浏览器生态在向
-   LessJS 的方向靠拢
+2. WC 标准正在成熟（Safari 16.4+ 支持 DSD，Chrome 111+ 支持），浏览器生态在向 LessJS 的方向靠拢
 3. 代码质量在自研框架中是上乘的——架构决策有 ADR 记录，实施有 SOP 规范
 4. 17 个包的 monorepo 结构和分层清晰，说明作者有架构能力
-5. AI 辅助开发正在改变"生态为王"的规则——用户可以用 AI 生成 LessJS 组件
+5. AI 辅助开发正在改变"生态为王"的规则
 
-**但需要注意**：
+**全栈目标 vs 现状**：框架愿景是 Island + Serverless + Edge Runtime + ORM + KV。当前完成度约 30%。
 
-- 这不是一个"大众框架"。WC + SSG 的市场很小，商业化的 ROI 可能不高
-- 不要试图在"全栈能力"上与 Next.js 竞争——那是一个会耗尽资源的军备竞赛
-- 专注于 DSD-native + WC 组件市场，做这个细分领域的绝对王者
+| 能力           | 现状                                       | 差距                           |
+| -------------- | ------------------------------------------ | ------------------------------ |
+| Island 架构    | ✅                                         | —                              |
+| DSD 渲染       | ✅                                         | —                              |
+| Hono API Route | ✅                                         | —                              |
+| ISR            | ⚠️ MemoryIsrCache 框架已有，缺生产 handler | Deno Deploy/CF Workers adapter |
+| Edge Runtime   | ⚠️ core 可在任何 runtime 运行              | 缺 KV adapter                  |
+| ORM            | ❌                                         | 需 Drizzle 集成或代码生成      |
+| KV             | ❌                                         | Deno KV / CF KV adapter        |
 
-### 7.3 定位建议
+建议路线：v0.25 ISR handler → v0.26 KV 抽象 → v0.27 ORM → v0.28 Real-time。
 
-当前定位问题：试图做"全栈框架"，但在全栈能力上远不如 Next.js/Remix。
-建议重新定位：
+### 7.3 定位建议（修正）
 
-> **LessJS：The DSD-native Web Component SSG framework.**
->
-> 不为"全栈"竞争。只为"用 Web Components 构建静态站点"这个场景提供最佳体验。
-> DSD 是第一卖点，WC 兼容性是第二卖点，"零框架锁定"是第三卖点。
+> ~~之前建议收缩到 SSG 框架。撤回。~~
 
-战略三件事：
+修正后：
 
-1. **文档**（让开发者看得到）
-2. **@lessjs/ui 完整组件库**（让开发者用得上）
-3. **与 Shoelace/Spectrum 的 SSR 兼容指南**（让生态帮 LessJS 扩大可用范围）
+> **LessJS：The DSD-first full-stack Web Component framework.**
+> 目标：Next.js 级全栈 + DSD-native 渲染 + 零框架锁定。当前 30%，第一支柱已坚实。
 
-### 7.4 会推荐吗？
+### 7.4 会推荐吗？（修正）
 
-**会，但带条件**：
-
-> "如果你在 2026 年想用 Web Components 构建一个 SSG 站点，并且关心零 JS 渲染
-> 性能——LessJS 是目前唯一的选择。但有心理准备：文档不完善，社区几乎是你自己。
-> 如果你的团队是 WC 爱好者且愿意读源码，这是一个值得投注的框架。"
-
-我不会推荐给"只是想快速搭一个网站"的开发者——他们应该用 Astro。LessJS 的受众
-是那些**已经决定用 Web Components**且**需要在 SSR 阶段保持组件完整性**的开发者。
+> "如果你在 2026 年想用 Web Components 构建全栈应用——LessJS 是目前唯一在 DSD 上认真走的框架。它有全栈野心（Hono → ISR → ORM + KV），但坦白说现在只完成了 30%。适合愿意参与早期框架建设的技术团队。"
