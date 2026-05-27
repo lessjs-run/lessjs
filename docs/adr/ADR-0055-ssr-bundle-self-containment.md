@@ -1,6 +1,6 @@
 # ADR-0055: SSR Bundle Self-Containment
 
-- Status: ACCEPTED
+- Status: SUPERSEDED (by ADR-0056)
 - Date: 2026-05-27
 - Supersedes: Partially replaces the "externalize everything" assumption from ADR-0047
 - Applies to: v0.23.5+

@@ -63,6 +63,8 @@ architectural decision, its context, and consequences.
 | 0052 | Signal-DOM Deep Integration                     | Proposed                                 |
 | 0053 | Unified Error Handling Architecture             | Proposed                                 |
 | 0054 | AST-Based External Specifier Resolution         | Accepted                                 |
+| 0055 | SSR Bundle Self-Containment                     | SUPERSEDED by ADR-0056                    |
+| 0056 | External Dependencies — Consumer Import Map + AST| Accepted                                 |
 
 ## Superseded / Historical
 

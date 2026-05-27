@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/runtime",
-  "version": "0.23.5",
+  "version": "0.23.6",
   "exports": {
     ".": "./src/index.ts"
   },

@@ -119,10 +119,14 @@ node_modules/
 `,
     'deno.json': `{
   "imports": {
+    "alien-signals": "npm:alien-signals@^3.2.0",
     "@deno/vite-plugin": "npm:@deno/vite-plugin",
+    "entities": "npm:entities@^4.5.0",
+    "hono": "npm:hono@^4",
     "@lessjs/app": "jsr:@lessjs/app@^${v.app}",
     "@lessjs/runtime": "jsr:@lessjs/runtime@^${v.runtime}",
     "@lessjs/ui": "jsr:@lessjs/ui@^${v.ui}",
+    "parse5": "npm:parse5@^7.0.0",
     "vite": "npm:vite@8.0.10"
   },
   "nodeModulesDir": "auto",

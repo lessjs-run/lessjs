@@ -29,6 +29,7 @@ import { RESOLVED_NAV_ID, VIRTUAL_NAV_ID } from '@lessjs/protocols/virtual-ids';
 import { ssgRender } from './ssg-render.js';
 import { createLessJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
 import { generateSsrPolyfillBanner } from '../ssr-polyfills.js';
+import { resolveExternalManifest } from '../external-resolver.js';
 
 const log = createLogger('ssg');
 
@@ -281,15 +282,23 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
       /^@lit-labs\//,
     ];
 
-    // ADR-0055: SSR bundle self-containment.
-    // These packages are bundled inline into the SSR entry instead of being
-    // externalized. This eliminates all runtime ERR_MODULE_NOT_FOUND errors
-    // when buildSSG() executes import(entry.js) — the consumer's deno.json
-    // import map never needs to know about these transitive dependencies.
-    const ssrBundleInline = [/^parse5/, /^entities/, /^hono/];
+    // ADR-0047: External packages are externalized, not bundled.
+    // ADR-0054: AST-based exports resolution covers ALL subpath exports
+    // (parse5/lib/escape.js, entities/lib/escape.js, hono/secure-headers, etc.)
+    // so Rolldown externalizes them correctly via manifest.specifiers.
+    // Consumer template deno.json declares these packages so Deno can
+    // resolve them at runtime when buildSSG() executes import(entry.js).
+    const ssrExternalDefaults = ['parse5', 'entities', 'hono'];
+
+    // Step 0: Deno pre-resolution + AST subpath discovery (ADR-0047 + ADR-0054)
+    const manifest = await resolveExternalManifest(
+      ssrExternalDefaults,
+      root,
+      options.skipPreResolution || ctx.phase3?.skipPreResolution,
+    );
 
     const userNoExternal = options.ssr?.noExternal || [];
-    const allNoExternal = [...defaultNoExternal, ...ssrBundleInline, ...userNoExternal];
+    const allNoExternal = [...defaultNoExternal, ...userNoExternal];
 
     // Handle alias - prefer CLI options, then ctx from Phase 1
     const alias = metadataResolveAlias;
@@ -390,7 +399,7 @@ if (typeof globalThis.customElements === 'undefined') {
           },
         },
       },
-      ssr: { noExternal: allNoExternal },
+      ssr: { noExternal: allNoExternal, external: manifest.specifiers },
       // ADR 0008 Phase A: Inject headExtras via define instead of .less/head-extras.html
       // The generated entry code uses __LESS_HEAD_EXTRAS__ which gets replaced
       // at build time. This avoids the Vite SSR AsyncFunction syntax errors
