@@ -114,16 +114,16 @@ export class LessThemeToggle extends DsdElement {
     this.setAttribute('data-theme', this._theme.value);
 
     // Ensure event bindings survive DSD parse-serialize round-trip.
-    // _bindCurrentRenderTemplate may fail to find event markers because
-    // parse5 re-serialization can alter attribute ordering/encoding.
-    //
-    // setTimeout(0) guarantees the event loop drains after DSD hydration
-    // before _renderIntoShadowRoot replaces innerHTML with fresh
-    // runtimeMarkers and calls _bindTemplateRuntime.
-    if (typeof setTimeout !== 'undefined') {
-      setTimeout(() => {
+    // _bindCurrentRenderTemplate runs before DSD hydration is fully
+    // settled in some browsers. queueMicrotask defers update() until
+    // after the current event loop turn completes, letting the browser
+    // finish shadow DOM attachment. On the next microtask, update()
+    // calls _renderIntoShadowRoot which sets innerHTML with fresh
+    // runtimeMarkers and _bindTemplateRuntime attaches @click handlers.
+    if (typeof queueMicrotask !== 'undefined') {
+      queueMicrotask(() => {
         if (this.isConnected) this.update();
-      }, 0);
+      });
     }
   }
 
