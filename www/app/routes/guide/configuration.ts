@@ -3,13 +3,14 @@ import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 export class ConfigurationPage extends DsdElement {
   declare locale?: string;
 
-  static override styles = [pageStyles];
+  static override styles = [openPropsTokenSheet, pageStyles];
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }

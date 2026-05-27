@@ -210,6 +210,12 @@ export default class LessSearch extends DsdElement {
     }
   };
 
+  // Imperative click handler for the trigger button.
+  // Binds directly via addEventListener as a safety net alongside
+  // the template @click binding, because DSD hydration may fail to
+  // match the static SEARCH_DSD markup with the render() TemplateResult.
+  private _onTriggerClick = (): void => this._handleTriggerClick();
+
   override connectedCallback(): void {
     // Clean up orphaned overlays from previous SPA pages
     document.querySelectorAll('.less-search-overlay').forEach((el) => el.remove());
@@ -220,11 +226,17 @@ export default class LessSearch extends DsdElement {
     if (!document.adoptedStyleSheets.includes(overlaySheet)) {
       document.adoptedStyleSheets = [...document.adoptedStyleSheets, overlaySheet];
     }
+    // Imperative click binding: ensures the trigger button works even when
+    // DSD template hydration doesn't match SEARCH_DSD markup exactly.
+    const btn = this.shadowRoot?.querySelector('.search-trigger');
+    if (btn) btn.addEventListener('click', this._onTriggerClick);
     document.addEventListener('keydown', this._onKeydown);
   }
 
   override disconnectedCallback(): void {
     document.removeEventListener('keydown', this._onKeydown);
+    const btn = this.shadowRoot?.querySelector('.search-trigger');
+    if (btn) btn.removeEventListener('click', this._onTriggerClick);
     this._destroyOverlay();
     super.disconnectedCallback();
   }

@@ -642,7 +642,7 @@ export class LessLayout extends DsdElement {
     const mobileTabHtml = this._renderMobileTabBarHtml();
     const langSwitchHtml = locales.length > 1
       ? html`
-        <a class="lang-switch" href="${otherLocalePath}">${otherLocaleLabel}</a>
+        <a class="lang-switch" href="${otherLocalePath}" data-nav="${otherLocalePath}">${otherLocaleLabel}</a>
       `
       : '';
 
@@ -760,6 +760,12 @@ export class LessLayout extends DsdElement {
     const links = this._headerNav();
     if (links.length === 0) return '';
 
+    // v0.23.0: Limit mobile tab bar to 5 priority items to avoid crowding.
+    // Priority: Home, Docs, Examples, Components, Architecture|Hub (first 5).
+    // Remaining items stay accessible via hamburger menu.
+    const MOBILE_TAB_LIMIT = 5;
+    const mobileLinks = links.slice(0, MOBILE_TAB_LIMIT);
+
     const sectionRoot = (href: string): string => {
       const segs = href.split('/').filter(Boolean);
       const start = this._locales().length > 1 && this._locales().includes(segs[0]) ? 1 : 0;
@@ -775,7 +781,7 @@ export class LessLayout extends DsdElement {
       }
     }
 
-    const items = links.map((link) => {
+    const items = mobileLinks.map((link) => {
       const localized = this._localizePath(link.href);
       const isExternal = link.href.startsWith('http');
       const root = sectionRoot(link.href);
@@ -950,7 +956,7 @@ export class LessLayout extends DsdElement {
 
   /**
    * Recursively propagate data-theme to all custom element descendants,
-   * including those nested inside shadow DOM trees.
+   * including those nested inside shadow DOM trees and light DOM (slotted content).
    */
   private _propagateTheme(theme: string): void {
     const walk = (root: Element | ShadowRoot) => {
@@ -963,7 +969,12 @@ export class LessLayout extends DsdElement {
         }
       });
     };
+    // Walk light DOM children (slotted page components like docs-home, ui-showcase)
     walk(this);
+    // Walk shadow DOM content (internal layout elements)
+    if (this.shadowRoot) {
+      walk(this.shadowRoot);
+    }
   }
 
   private async _loadContent(path: string): Promise<void> {

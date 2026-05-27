@@ -9,6 +9,7 @@
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterBlogNav } from '../../utils/nav-filter.js';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
 import { posts, getPostBySlug } from 'virtual:less-blog-data';
@@ -50,7 +51,7 @@ routeSheet.replaceSync(pageStyles + `
 export default class BlogPostPage extends DsdElement {
   slug = '';
 
-  static override styles = [routeSheet];
+  static override styles = [openPropsTokenSheet, routeSheet];
 
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();

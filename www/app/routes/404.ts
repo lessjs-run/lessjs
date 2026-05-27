@@ -3,6 +3,7 @@
  */
 import { headerNav, navSections } from 'virtual:less-nav';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../components/page-styles.js';
 const pageSheet = new StyleSheet();
 pageSheet.replaceSync(pageStyles);
@@ -127,7 +128,7 @@ routeSheet.replaceSync(`
     `);
 
 export class NotFoundPage extends DsdElement {
-  static override styles = [routeSheet];
+  static override styles = [openPropsTokenSheet, routeSheet];
 
   private _onSearchKeydown(e: KeyboardEvent) {
     if (e.key === 'Enter') {

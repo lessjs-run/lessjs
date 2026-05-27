@@ -6,6 +6,7 @@
  */
 import { headerNav, navSections } from 'virtual:less-nav';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import { posts } from 'virtual:less-blog-data';
 
@@ -160,7 +161,7 @@ routeSheet.replaceSync(`
 export default class DecisionSlugPage extends DsdElement {
   slug = '';
 
-  static override styles = [routeSheet];
+  static override styles = [openPropsTokenSheet, routeSheet];
 
   override render() {
     const adrs = posts.filter((p) => p.frontmatter.type === 'adr');

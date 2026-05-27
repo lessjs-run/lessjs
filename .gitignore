@@ -73,3 +73,4 @@ hub-submission.json
 lighthouse-result*.json
 .deno-cache/
 www/.less/
+.codebuddy/settings.local.json

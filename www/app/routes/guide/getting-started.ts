@@ -3,6 +3,7 @@ export const meta = { section: 'Quick Start', label: 'Getting Started', order: 2
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterFrameworkNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
@@ -32,7 +33,7 @@ routeSheet.replaceSync(`
     `);
 
 export class GettingStartedPage extends DsdElement {
-  static override styles = [routeSheet];
+  static override styles = [openPropsTokenSheet, routeSheet];
 
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();

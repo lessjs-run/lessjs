@@ -4,6 +4,7 @@ import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
@@ -12,7 +13,7 @@ const baseStyle = pageStyles;
 export class PackageCompatibilityGuidePage extends DsdElement {
   declare locale?: string;
 
-  static override styles = [baseStyle];
+  static override styles = [openPropsTokenSheet, baseStyle];
 
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();

@@ -12,6 +12,7 @@
  */
 
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterRegistryNav } from '../../utils/nav-filter.js';
 import '@lessjs/ui/less-layout';
@@ -141,7 +142,7 @@ export default class DocsRegistryDetail extends DsdElement {
   private _record: HubPackageRecord | null = null;
   private _showValidation = false;
 
-  static override styles = [routeSheet];
+  static override styles = [openPropsTokenSheet, routeSheet];
 
   constructor() {
     super();

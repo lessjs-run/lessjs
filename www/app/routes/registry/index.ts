@@ -11,6 +11,7 @@
 export const meta = { section: 'Registry', label: 'Package Registry', order: 5 };
 
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterRegistryNav } from '../../utils/nav-filter.js';
 import '@lessjs/ui/less-layout';
@@ -339,7 +340,7 @@ export default class DocsRegistryHome extends DsdElement {
   private _sortBy: 'name' | 'tags' | 'compatibility' = 'name';
   private _loading = true;
 
-  static override styles = [routeSheet];
+  static override styles = [openPropsTokenSheet, routeSheet];
 
   // ─── Lifecycle ────────────────────────────────────────────────────────
   // Data is available at import time from hub-data.ts.

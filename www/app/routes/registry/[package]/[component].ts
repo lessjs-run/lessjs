@@ -15,6 +15,7 @@
 export const meta = { section: 'Registry', label: 'Component Detail', order: 6 };
 
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterRegistryNav } from '../../../utils/nav-filter.js';
 import '@lessjs/ui/less-layout';
@@ -272,7 +273,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
 
   private _record: HubPackageRecord | null = null;
 
-  static override styles = [routeSheet];
+  static override styles = [openPropsTokenSheet, routeSheet];
 
   constructor() {
     super();

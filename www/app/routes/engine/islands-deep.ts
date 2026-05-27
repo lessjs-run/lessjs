@@ -2,6 +2,7 @@ export const meta = { section: 'Principles', label: 'Island Deep Dive', order: 5
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
@@ -19,7 +20,7 @@ routeSheet.replaceSync(`
     `);
 
 export class IslandsDeepGuidePage extends DsdElement {
-  static override styles = [routeSheet];
+  static override styles = [openPropsTokenSheet, routeSheet];
   override render() {
     return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }

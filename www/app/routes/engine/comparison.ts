@@ -5,6 +5,7 @@
 import { headerNav, navSections } from 'virtual:less-nav';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 
 export const tagName = 'comparison-page';
@@ -126,7 +127,7 @@ routeSheet.replaceSync(`
     `);
 
 export default class ComparisonPage extends DsdElement {
-  static override styles = [routeSheet];
+  static override styles = [openPropsTokenSheet, routeSheet];
 
   override render() {
     return `
