@@ -208,7 +208,7 @@ jobs:
       - name: Install dependencies
         run: deno install --node-modules-dir
       - name: Install Playwright Chromium
-        run: npx -y playwright install chromium --with-deps
+        run: deno run -A npm:playwright@1.59.1 install chromium --with-deps
       - name: Hub scan (Playwright snapshots)
         run: deno task hub:scan
 
@@ -281,7 +281,7 @@ jobs:
       - name: Install dependencies
         run: deno install --node-modules-dir
       - name: Install Playwright Chromium
-        run: npx -y playwright install chromium --with-deps
+        run: deno run -A npm:playwright@1.59.1 install chromium --with-deps
       - name: Build www site
         run: deno task build:docs
       - name: Run E2E tests
