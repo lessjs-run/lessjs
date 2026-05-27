@@ -244,10 +244,36 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     if (this._dsdHydrated) {
       this._bindCurrentRenderTemplate();
       this._initialRenderDone = true;
+      this.onDsdHydrated();
     } else if (this.shadowRoot) {
       this._renderIntoShadowRoot();
+      this.onCsrRendered();
     }
   }
+
+  /**
+   * v0.23.0: Hook called after DSD hydration completes.
+   *
+   * Subclasses override this instead of relying on fragile
+   * `super.connectedCallback()` call order. At this point the
+   * shadow DOM is populated from DSD and declarative events
+   * (@click, @keydown) are bound.
+   *
+   * No-op by default.
+   */
+  protected onDsdHydrated(): void {}
+
+  /**
+   * v0.23.0: Hook called after CSR first render completes.
+   *
+   * Subclasses override this for post-render initialization
+   * that depends on the shadow DOM being populated. At this
+   * point render() has been called and declarative events
+   * are bound.
+   *
+   * No-op by default.
+   */
+  protected onCsrRendered(): void {}
 
   /**
    * Lifecycle: called when the element is disconnected from the DOM.

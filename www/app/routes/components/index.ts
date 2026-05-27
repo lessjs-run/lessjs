@@ -88,7 +88,7 @@ export class ComponentsPage extends DsdElement {
         nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/components"
-        home
+        full-width
       >
         <div class="shell">
           <h1>Components</h1>

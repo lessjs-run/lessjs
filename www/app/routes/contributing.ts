@@ -57,7 +57,7 @@ export class ContributingPage extends DsdElement {
       JSON.stringify(['en', 'zh'])
     }' nav-items='${JSON.stringify(navSections)}' header-nav='${
       JSON.stringify(headerNav)
-    }' current-path="/contributing" home><div class="container">
+    }' current-path="/contributing" full-width><div class="container">
     <h1>Contributing to LessJS</h1>
     <p class="subtitle">感谢你对 LessJS 框架的兴趣！</p>
     <h2>开发环境设置</h2>
@@ -81,7 +81,7 @@ deno task docs:dev</code></pre></less-code-block>
       JSON.stringify(['en', 'zh'])
     }' nav-items='${JSON.stringify(navSections)}' header-nav='${
       JSON.stringify(headerNav)
-    }' current-path="/en/contributing" home><div class="container">
+    }' current-path="/en/contributing" full-width><div class="container">
     <h1>Contributing to LessJS</h1>
     <p class="subtitle">Thank you for your interest in the LessJS framework!</p>
     <h2>Development Setup</h2>

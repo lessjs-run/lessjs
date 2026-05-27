@@ -257,7 +257,7 @@ export class RoadmapPage extends DsdElement {
         nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/roadmap"
-        home
+        full-width
       >
         <div class="shell"
           data-legacy-anchors="WC Package Protocol Six-Phase Vision No webpack Registry Hub"

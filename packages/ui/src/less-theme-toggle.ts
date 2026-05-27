@@ -83,6 +83,15 @@ export class LessThemeToggle extends DsdElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
+  }
+
+  /**
+   * v0.23.0: Theme initialization moved to onDsdHydrated() hook.
+   * This replaces the fragile order-dependent pattern of calling
+   * super.connectedCallback() + this.update() in connectedCallback().
+   */
+  protected override onDsdHydrated(): void {
+    super.onDsdHydrated();
 
     // Priority: theme attribute > document.documentElement > localStorage > prefers-color-scheme > default
     const themeAttr = this.getAttribute('theme');
@@ -118,8 +127,6 @@ export class LessThemeToggle extends DsdElement {
     // parse5 re-serialization can silently drop. _renderIntoShadowRoot
     // (called by update()) sets innerHTML with fresh runtimeMarkers and
     // calls _bindTemplateRuntime, which is the well-tested CSR path.
-    // Called synchronously after super.connectedCallback finishes so the
-    // shadow root is guaranteed to exist.
     this.update();
   }
 

@@ -82,12 +82,14 @@ sheet.replaceSync(`
     width: 100%;
   }
 
-  .app-layout[home] .layout-body {
+  .app-layout[home] .layout-body,
+  .app-layout[full-width] .layout-body {
     display: flex;
     flex-direction: column;
   }
 
-  .app-layout[home] .layout-main {
+  .app-layout[home] .layout-main,
+  .app-layout[full-width] .layout-main {
     flex: 1;
   }
 
@@ -264,7 +266,8 @@ sheet.replaceSync(`
     scrollbar-width: thin;
   }
 
-  :host([home]) .docs-sidebar {
+  :host([home]) .docs-sidebar,
+  :host([full-width]) .docs-sidebar {
     width: 0;
     min-width: 0;
     padding: 0;
@@ -366,7 +369,8 @@ sheet.replaceSync(`
       box-shadow: none;
     }
 
-    :host([home]) .docs-sidebar {
+    :host([home]) .docs-sidebar,
+  :host([full-width]) .docs-sidebar {
       width: min(300px, 80vw);
       min-width: auto;
       padding: var(--size-4) 0;
@@ -381,9 +385,12 @@ sheet.replaceSync(`
       box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
     }
 
-    :host([home][menu-open]) .docs-sidebar { transform: translateX(-101%); }
-    :host([home]) .mobile-menu { display: none; }
-    :host([home]) .mobile-backdrop { display: none; }
+    :host([home][menu-open]) .docs-sidebar,
+    :host([full-width][menu-open]) .docs-sidebar { transform: translateX(-101%); }
+    :host([home]) .mobile-menu,
+    :host([full-width]) .mobile-menu { display: none; }
+    :host([home]) .mobile-backdrop,
+    :host([full-width]) .mobile-backdrop { display: none; }
 
     :host([menu-open]) .mobile-backdrop { opacity: 1; pointer-events: auto; }
 
@@ -641,10 +648,14 @@ export class LessLayout extends DsdElement {
   // --- Main render ---
 
   private _renderLayout() {
-    const home = this._getBool('home');
+    // v0.23.0: full-width is the canonical attribute name.
+    // home is kept as backward-compatible alias.
+    const home = this._getBool('full-width') || this._getBool('home');
     const noSearch = this.hasAttribute('no-search');
     const logoText = this._esc(this._getStr('logo-text', 'LessJS'));
     const logoSub = this._esc(this._getStr('logo-sub', ''));
+    const footerText = this._getStr('footer-text',
+      'Built with LessJS Framework — Self-bootstrapped from JSR — LESS IS MORE');
     const githubUrl = this._getStr('github-url', 'https://github.com/lessjs-run/LessJS');
     const editUrl = this.getAttribute('edit-url') || '';
     const locales = this._locales();
@@ -668,12 +679,7 @@ export class LessLayout extends DsdElement {
               <a href="${editUrl}" target="_blank" rel="noopener" style="margin-right:0.75rem;"
               >Edit this page</a>
             `
-            : ''} Built with <a href="${githubUrl}" target="_blank" rel="noopener noreferrer"
-          >LessJS Framework</a>
-          <span class="divider"></span>
-          Self-bootstrapped from JSR
-          <span class="divider"></span>
-          LESS IS MORE
+            : ''} ${this._esc(footerText)}
         </p>
       </footer>
     `;

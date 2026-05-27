@@ -114,7 +114,7 @@ export class ChangelogPage extends DsdElement {
         nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/changelog"
-        home
+        full-width
       >
         <div class="container">
           <h1>更新日志</h1>

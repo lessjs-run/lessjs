@@ -652,7 +652,7 @@ export class DocsHome extends DsdElement {
         nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/"
-        home
+        full-width
       >
         <div class="home-shell">
           <section class="hero">

@@ -151,7 +151,7 @@ export class NotFoundPage extends DsdElement {
         locales='${JSON.stringify(['en'])}'
         nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
-        home
+        full-width
       >
         <div class="container">
           <div class="error-code">404</div>
