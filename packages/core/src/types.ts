@@ -650,11 +650,11 @@ export type RenderErrorSeverity = 'error' | 'warning';
  */
 export interface RenderError {
   /** Stable machine-readable error code */
-  code: RenderErrorCode;
+  code: string;
   /** Gate severity. Non-recoverable errors are always error severity. */
   severity: RenderErrorSeverity;
   /** Pipeline phase where the error occurred */
-  phase: RenderPhase;
+  phase: string;
   /** Tag name of the component that errored */
   tagName: string;
   /** Human-readable error message */

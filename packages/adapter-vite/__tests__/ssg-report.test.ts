@@ -128,7 +128,7 @@ Deno.test('SSG report: collects diagnostics from renderRoute', async (t) => {
         tagName: 'test-el',
         message: 'test error',
         recoverable: true,
-      },
+      } as unknown as RenderError,
     ],
     hydrationHints: [
       { tagName: 'test-el', layer: 'dsd-interactive' },
