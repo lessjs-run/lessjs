@@ -10,6 +10,7 @@
  *   _updateDOM() removed; signals auto-trigger re-render via _patchBindings().
  */
 import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
 export const tagName = 'less-toc';
 
@@ -67,7 +68,7 @@ styles.replaceSync(`
 `);
 
 export default class LessToc extends DsdElement {
-  static override styles = styles;
+  static override styles = [openPropsTokenSheet, styles];
 
   /** Reactive headings list. Signal writes trigger _patchBindings() → re-render. */
   #headings = signal<Array<{ level: number; id: string; text: string }>>([]);

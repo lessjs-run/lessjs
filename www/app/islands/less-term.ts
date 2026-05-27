@@ -13,6 +13,7 @@
  * Pure DsdElement - zero Lit dependency.
  */
 import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
 const styles = new StyleSheet();
 styles.replaceSync(`
@@ -75,7 +76,7 @@ styles.replaceSync(`
 `);
 
 export class LessTermDemo extends DsdElement {
-  static override styles = styles;
+  static override styles = [openPropsTokenSheet, styles];
 
   /** Command history (signal for consistency with reactive DSD pattern). */
   #cmdHistory = signal<string[]>([]);

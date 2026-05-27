@@ -10,6 +10,7 @@
  * Replaces Lit Island pattern with Ocean (DsdElement) reactivity.
  */
 import { computed, DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
 export const tagName = 'reactive-showcase';
 
@@ -78,7 +79,7 @@ const FRAMEWORKS = [
 ];
 
 export default class ReactiveShowcase extends DsdElement {
-  static override styles = showcaseStyles;
+  static override styles = [openPropsTokenSheet, showcaseStyles];
 
   #count = signal(0);
   #isDark = signal(false);
