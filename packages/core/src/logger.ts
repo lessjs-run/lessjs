@@ -42,7 +42,11 @@ export class LessLogger {
 
   logError(msg: string, err?: unknown): void {
     if (err instanceof LessError) {
-      console.error(`${this.prefix} ${msg}`, { code: err.code, statusCode: err.statusCode });
+      console.error(`${this.prefix} ${msg}`, {
+        code: err.code,
+        severity: err.severity,
+        phase: err.phase,
+      });
     } else if (err instanceof Error) {
       console.error(`${this.prefix} ${msg}`, err.message);
     } else {

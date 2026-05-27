@@ -24,6 +24,20 @@ export { DsdElement } from '@lessjs/core';
 // v0.24 (ADR-0052): @prop() reactive property decorator
 export { prop } from '@lessjs/core';
 export type { PropertyOptions } from '@lessjs/core';
+// v0.24 (ADR-0053): Error boundary + error types
+export { ErrorBoundary } from '@lessjs/core';
+export type {
+  BuildError,
+  ErrorCode,
+  ErrorPhase,
+  ErrorSeverity,
+  IslandRenderError,
+  LessError,
+  NavigationError,
+  PropValidationError,
+  RenderError,
+  SsrRenderError,
+} from '@lessjs/core';
 export {
   choose,
   // v0.24: Template helpers (ADR-0051, SOP-009)

@@ -26,7 +26,21 @@ export type {
   SsrContext,
 } from './types.js';
 
-export { LessError, SsrRenderError } from './errors.js';
+export {
+  BuildError,
+  ErrorCode,
+  IslandRenderError,
+  LessError,
+  NavigationError,
+  PropValidationError,
+  RenderError,
+  reportError,
+  setErrorTelemetryHook,
+  SsrErrorContext,
+  SsrRenderError,
+} from './errors.js';
+export type { ErrorPhase, ErrorSeverity, ErrorTelemetryHook, SsrErrorEntry } from './errors.js';
+export { ErrorBoundary } from './error-boundary.js';
 export { createSsrContext, extractParams, parseQuery } from './context.js';
 export { renderSsrError, wrapInDocument } from './html-escape.js';
 export type { LessApiContext } from './api.js';
@@ -91,7 +105,6 @@ export type {
   RegistryIndex,
   RegistryIndexEntry,
   RendererProtocol,
-  RenderError,
   RenderHooks,
   RenderInput,
   RenderOutput,
