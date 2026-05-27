@@ -139,6 +139,7 @@ export default defineConfig({
         nav: {
           routesDir: 'app/routes',
           headerNav: [
+            { href: '/', label: 'Home' },
             { href: '/docs', label: 'Docs' },
             { href: '/examples', label: 'Examples' },
             { href: '/components', label: 'Components' },

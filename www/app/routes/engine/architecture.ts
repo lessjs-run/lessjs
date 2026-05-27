@@ -7,7 +7,6 @@ import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
-import '../../islands/less-search.js';
 
 const pageSheet = new StyleSheet();
 pageSheet.replaceSync(`
@@ -321,7 +320,6 @@ export class ArchitecturePage extends DsdElement {
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/architecture"
       >
-        <less-search slot="header-actions"></less-search>
         <div class="shell">
           <section class="hero">
             <div>
