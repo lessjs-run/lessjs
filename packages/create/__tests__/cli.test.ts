@@ -91,15 +91,14 @@ Deno.test('create-less: deno.json maps LessJS package imports (v0.23 runtime fac
   const importKeys = Object.keys(denoJson.imports);
   assertEquals(
     importKeys.length,
-    8,
-    `Expected 8 imports, got ${importKeys.length}: ${importKeys.join(', ')}`,
+    7,
+    `Expected 7 imports, got ${importKeys.length}: ${importKeys.join(', ')}`,
   );
   // v0.23.2: alien-signals added for SSR runtime resolution of @lessjs/signals dependency
   assertEquals(denoJson.imports['alien-signals'], 'npm:alien-signals@^3.2.0');
   assertEquals(denoJson.imports['@deno/vite-plugin'], 'npm:@deno/vite-plugin');
-  // v0.23.3: hono + hono/ added for SSR runtime resolution of adapter-vite dependency
+  // v0.23.3: hono added for SSR runtime; subpaths resolve via node_modules
   assertEquals(denoJson.imports['hono'], 'npm:hono@^4');
-  assertEquals(denoJson.imports['hono/'], 'npm:hono@^4/');
   assertEquals(denoJson.imports['@lessjs/app'], 'jsr:@lessjs/app@^${v.app}');
   assertEquals(denoJson.imports['@lessjs/runtime'], 'jsr:@lessjs/runtime@^${v.runtime}');
   assertEquals(denoJson.imports['@lessjs/ui'], 'jsr:@lessjs/ui@^${v.ui}');
