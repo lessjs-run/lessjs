@@ -1,6 +1,7 @@
 # Security Posture Report — LessJS devbranch (HEAD: daea194)
 
 ## Meta
+
 - **Audit mode**: Comprehensive (all 14 phases)
 - **Date**: 2025-05-22T12:00:00Z
 - **Scope**: Full monorepo — 13 packages + www, CI/CD pipelines, dependencies, Hub ecosystem
@@ -18,6 +19,7 @@ LessJS devbranch has a **solid security foundation** with multiple evidence-base
 ## Findings
 
 ### [F-001] Hub scanner uses `deno run -A` (all permissions)
+
 - **Category**: STRIDE — Elevation of Privilege / OWASP A05 Security Misconfiguration
 - **Severity**: 🔴 Critical
 - **Confidence**: 9/10
@@ -38,6 +40,7 @@ LessJS devbranch has a **solid security foundation** with multiple evidence-base
 ---
 
 ### [F-002] Hub scanner imports Web Components from esm.sh CDN (supply chain)
+
 - **Category**: STRIDE — Tampering / OWASP A08 Software and Data Integrity Failures
 - **Severity**: 🔴 Critical
 - **Confidence**: 8/10
@@ -64,6 +67,7 @@ LessJS devbranch has a **solid security foundation** with multiple evidence-base
 ---
 
 ### [F-003] headExtras accepted as raw HTML without sanitization at rest
+
 - **Category**: OWASP A03 — Injection (XSS)
 - **Severity**: 🟠 High
 - **Confidence**: 9/10
@@ -88,13 +92,14 @@ LessJS devbranch has a **solid security foundation** with multiple evidence-base
 ---
 
 ### [F-004] less-layout.ts fetch() with unvalidated URL path (SSRF)
+
 - **Category**: OWASP A10 — Server-Side Request Forgery
 - **Severity**: 🟠 High
 - **Confidence**: 7/10
 - **Location**: `packages/ui/src/less-layout.ts:906`
 - **Description**: The `_loadContent(path)` method calls `fetch(path)` with a path string that originates from MPA navigation. The path is only validated to exist as a route match but the URL is not constrained to same-origin or relative paths. If an attacker can control the navigation path (e.g., via URL manipulation or stored XSS), they could induce the layout component to fetch from internal services.
 - **Exploit Scenario**:
-  1. Client-side MPA navigation triggers `fetch('/internal-service/admin')` 
+  1. Client-side MPA navigation triggers `fetch('/internal-service/admin')`
   2. In a deployment where the SSG site is co-located with internal services on the same origin, this could access internal endpoints
   3. More critically: if the `path` is fully qualified (e.g., `http://169.254.169.254/`), the browser's fetch would attempt to access cloud metadata services — though this would be blocked by CORS in the browser, it represents a confused deputy risk
 - **Reproduction Steps**:
@@ -109,6 +114,7 @@ LessJS devbranch has a **solid security foundation** with multiple evidence-base
 ---
 
 ### [F-005] Registry component sanitizer uses regex (bypassable)
+
 - **Category**: OWASP A03 — Injection (XSS)
 - **Severity**: 🟡 Medium
 - **Confidence**: 6/10
@@ -132,6 +138,7 @@ LessJS devbranch has a **solid security foundation** with multiple evidence-base
 ---
 
 ### [F-006] less-code-block uses innerHTML with Prism output
+
 - **Category**: OWASP A03 — Injection (XSS)
 - **Severity**: 🟡 Medium
 - **Confidence**: 6/10
@@ -149,6 +156,7 @@ LessJS devbranch has a **solid security foundation** with multiple evidence-base
 ---
 
 ### [F-007] Dynamic imports of user-specified packages (potential code injection via package manifests)
+
 - **Category**: STRIDE — Tampering / OWASP A08
 - **Severity**: 🟡 Medium
 - **Confidence**: 5/10
@@ -168,6 +176,7 @@ LessJS devbranch has a **solid security foundation** with multiple evidence-base
 ---
 
 ### [F-008] Deno.cwd() used for path construction in security-sensitive contexts
+
 - **Category**: OWASP A01 — Broken Access Control (path traversal defense)
 - **Severity**: 🟡 Medium
 - **Confidence**: 5/10
@@ -185,6 +194,7 @@ LessJS devbranch has a **solid security foundation** with multiple evidence-base
 ---
 
 ### [F-009] Hub CI auto-merges PRs without manual review
+
 - **Category**: STRIDE — Spoofing / OWASP A01 Broken Access Control
 - **Severity**: 🟡 Medium
 - **Confidence**: 5/10
@@ -206,6 +216,7 @@ LessJS devbranch has a **solid security foundation** with multiple evidence-base
 ---
 
 ### [F-010] No Subresource Integrity (SRI) for CDN imports
+
 - **Category**: OWASP A08 — Software and Data Integrity Failures
 - **Severity**: 🟡 Medium
 - **Confidence**: 4/10
@@ -219,6 +230,7 @@ LessJS devbranch has a **solid security foundation** with multiple evidence-base
 ---
 
 ### [F-011] Route param validation allows `@` in dynamic paths (potential normalization confusion)
+
 - **Category**: STRIDE — Tampering
 - **Severity**: 🟢 Low
 - **Confidence**: 4/10
@@ -231,6 +243,7 @@ LessJS devbranch has a **solid security foundation** with multiple evidence-base
 ---
 
 ### [F-012] Deno task permissions: `build` task uses `--allow-sys` unnecessarily
+
 - **Category**: OWASP A05 — Security Misconfiguration
 - **Severity**: 🟢 Low
 - **Confidence**: 3/10
@@ -243,13 +256,13 @@ LessJS devbranch has a **solid security foundation** with multiple evidence-base
 
 ## Security Posture Score
 
-| Severity | Count |
-|----------|-------|
-| 🔴 Critical | 2 |
-| 🟠 High | 2 |
-| 🟡 Medium | 5 |
-| 🟢 Low | 3 |
-| ℹ️ Info | 0 |
+| Severity    | Count                     |
+| ----------- | ------------------------- |
+| 🔴 Critical | 2                         |
+| 🟠 High     | 2                         |
+| 🟡 Medium   | 5                         |
+| 🟢 Low      | 3                         |
+| ℹ️ Info     | 0                         |
 | **Overall** | **B+** (Go with cautions) |
 
 **Overall Rating**: **B+** — Strong security fundamentals with specific actionable findings. The codebase shows evidence of security-conscious development (H-18 least-privilege, C-02 headExtras sanitization, H-03 basePath escaping, CORS tightening, CSP support, nonce-based CSP, snapshot sanitization). The two critical findings (deno -A and CDN supply chain) should be addressed before merging to main. The high findings are concerning but don't represent blocking issues for deployment of this specific commit.
@@ -258,52 +271,56 @@ LessJS devbranch has a **solid security foundation** with multiple evidence-base
 
 ## STRIDE Threat Model Matrix
 
-| Threat | Severity | Finding | Verified |
-|--------|----------|---------|----------|
-| **S**poofing | Medium | Hub submissions lack cryptographic verification (F-009) | Yes |
-| **T**ampering | Critical | esm.sh CDN is unauthenticated supply chain source (F-002) | Yes |
-| **T**ampering | Low | No SRI for importmap.js CDN references (F-010) | Yes |
-| **R**epudiation | Low | No audit trail for Hub submissions or build steps | Yes |
-| **I**nformation Disclosure | Low | Dev mode error pages show full stack traces (by design) | N/A |
-| **D**enial of Service | Low | No limits on route scanner directory recursion depth | Partial |
-| **E**levation of Privilege | Critical | `deno run -A` on Hub scan/validate tasks (F-001) | Yes |
-| **E**levation of Privilege | Low | `--allow-sys` on build task, broader than needed (F-012) | Yes |
+| Threat                     | Severity | Finding                                                   | Verified |
+| -------------------------- | -------- | --------------------------------------------------------- | -------- |
+| **S**poofing               | Medium   | Hub submissions lack cryptographic verification (F-009)   | Yes      |
+| **T**ampering              | Critical | esm.sh CDN is unauthenticated supply chain source (F-002) | Yes      |
+| **T**ampering              | Low      | No SRI for importmap.js CDN references (F-010)            | Yes      |
+| **R**epudiation            | Low      | No audit trail for Hub submissions or build steps         | Yes      |
+| **I**nformation Disclosure | Low      | Dev mode error pages show full stack traces (by design)   | N/A      |
+| **D**enial of Service      | Low      | No limits on route scanner directory recursion depth      | Partial  |
+| **E**levation of Privilege | Critical | `deno run -A` on Hub scan/validate tasks (F-001)          | Yes      |
+| **E**levation of Privilege | Low      | `--allow-sys` on build task, broader than needed (F-012)  | Yes      |
 
 ---
 
 ## OWASP Top 10 Checklist
 
-| Category | Status | Findings |
-|----------|--------|----------|
-| A01 Broken Access Control | ⚠️ Review | F-009 (auto-merge), route scanning |
-| A02 Cryptographic Failures | ✅ Acceptable | CSP nonce is crypto.randomUUID(), manifestHash SHA-256 |
-| A03 Injection | ⚠️ Review | F-003 (headExtras), F-005 (registry sanitizer), F-006 (innerHTML) |
-| A04 Insecure Design | ⚠️ Review | -A permissions pattern |
-| A05 Security Misconfiguration | ⚠️ Review | F-001 (-A), F-012 (--allow-sys) |
-| A06 Vulnerable Components | ✅ Acceptable | Dependencies are recent; deno audit runs in CI |
-| A07 Auth Failures | ✅ N/A | Framework doesn't include auth (by design) |
-| A08 Integrity Failures | ⚠️ Review | F-002 (esm.sh CDN), F-010 (no SRI) |
-| A09 Logging Failures | ✅ Acceptable | Logger exists, dev mode diagnostics sufficient |
-| A10 SSRF | ⚠️ Review | F-004 (less-layout fetch), F-002 (Playwright CDN loading) |
+| Category                      | Status        | Findings                                                          |
+| ----------------------------- | ------------- | ----------------------------------------------------------------- |
+| A01 Broken Access Control     | ⚠️ Review     | F-009 (auto-merge), route scanning                                |
+| A02 Cryptographic Failures    | ✅ Acceptable | CSP nonce is crypto.randomUUID(), manifestHash SHA-256            |
+| A03 Injection                 | ⚠️ Review     | F-003 (headExtras), F-005 (registry sanitizer), F-006 (innerHTML) |
+| A04 Insecure Design           | ⚠️ Review     | -A permissions pattern                                            |
+| A05 Security Misconfiguration | ⚠️ Review     | F-001 (-A), F-012 (--allow-sys)                                   |
+| A06 Vulnerable Components     | ✅ Acceptable | Dependencies are recent; deno audit runs in CI                    |
+| A07 Auth Failures             | ✅ N/A        | Framework doesn't include auth (by design)                        |
+| A08 Integrity Failures        | ⚠️ Review     | F-002 (esm.sh CDN), F-010 (no SRI)                                |
+| A09 Logging Failures          | ✅ Acceptable | Logger exists, dev mode diagnostics sufficient                    |
+| A10 SSRF                      | ⚠️ Review     | F-004 (less-layout fetch), F-002 (Playwright CDN loading)         |
 
 ---
 
 ## Remediation Roadmap
 
 ### Blocking (P0 — Must Fix Before Merge)
+
 1. **F-001**: Replace `deno run -A` with explicit permissions for `hub:scan` and `hub:validate`
 2. **F-002**: Pin esm.sh imports with version + integrity hashes; isolate Hub snapshot CI job
 
 ### This Sprint (P1)
+
 3. **F-003**: Add bypass-vector tests for headExtras regex sanitization; tighten regex
 4. **F-004**: Add same-origin URL validation in less-layout.ts `_loadContent()`
 
 ### Next Sprint (P2)
+
 5. **F-005**: Replace regex sanitization in registry component detail page with DOMParser-based sanitizer
 6. **F-009**: Require human review for ALL Hub submission PRs (remove auto-merge bypass)
 7. **F-007**: Add package name validation in scanPackageManifests()
 
 ### Backlog (P3)
+
 8. **F-006**: Replace innerHTML with safer DOM manipulation in less-code-block
 9. **F-008**: Resolve paths relative to import.meta.url instead of Deno.cwd()
 10. **F-010**: Add SRI hashes for CDN imports
@@ -319,6 +336,7 @@ LessJS devbranch has a **solid security foundation** with multiple evidence-base
 The LessJS devbranch demonstrates mature security practices with multiple documented security fixes (H-18, C-02, H-03). The critical findings (F-001, F-002) are real but represent pre-existing conditions that can be addressed post-merge with high-priority follow-up PRs. No finding represents a direct exploitable vulnerability in the deployed static site itself — the primary risks are in the build/CI infrastructure and Hub ecosystem, not in the generated output served to end users.
 
 **Conditions**:
+
 1. P0 items must be addressed within 1 week of merge
 2. P1 items must be addressed within the current sprint
 3. Hub snapshot HTML must continue to pass through the existing `sanitizeSnapshot()` filter when rendered inline

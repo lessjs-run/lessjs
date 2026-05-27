@@ -6,7 +6,6 @@
 (function () {
   if (typeof document === 'undefined') return;
   let saved;
-  let prefersDark = false;
   try {
     saved = localStorage.getItem('less-theme');
   } catch {
