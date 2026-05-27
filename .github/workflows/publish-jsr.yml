@@ -9,7 +9,7 @@ on:
       - 'packages/*/README.md'
       - 'packages/create/cli.ts'
       - 'deno.lock'
-      - '.github/workflows/publish.yml'
+      - '.github/workflows/publish-jsr.yml'
   workflow_dispatch:
 
 jobs:

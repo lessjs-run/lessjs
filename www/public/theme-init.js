@@ -17,7 +17,8 @@
   } catch {
     // matchMedia may be unavailable in old WebViews
   }
-  const theme = saved || (prefersDark ? 'dark' : 'light');
+  // Match less-theme-toggle default: dark when no preference saved
+  const theme = saved || 'dark';
   document.documentElement.setAttribute('data-theme', theme);
   // Add smooth theme transition (deferred to avoid FOUC)
   requestAnimationFrame(function () {

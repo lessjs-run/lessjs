@@ -930,11 +930,15 @@ export class LessLayout extends DsdElement {
       while (newLayout.firstChild) this.appendChild(newLayout.firstChild);
       this.setAttribute('current-path', path);
 
-      // Ensure newly inserted components inherit current theme
+      // Ensure newly inserted components inherit current theme.
+      // First propagation: sync theme to light DOM and shallow shadow DOM.
+      // Second propagation (rAF): catch components whose connectedCallback fires
+      // after the initial paint frame, e.g. lazily-upgraded custom elements.
       const currentTheme = this.getAttribute('data-theme') ||
         document.documentElement?.dataset?.theme;
       if (currentTheme) {
         this._propagateTheme(currentTheme);
+        requestAnimationFrame(() => this._propagateTheme(currentTheme));
       }
 
       globalThis.scrollTo({ top: 0, behavior: 'smooth' });

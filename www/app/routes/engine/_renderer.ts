@@ -7,6 +7,7 @@
  */
 
 import type { LessRenderer } from '@lessjs/runtime';
+import ../../islands/less-search.js;
 
 const GITHUB_EDIT_BASE = 'https://github.com/lessjs-run/lessjs/edit/main/www/app/routes';
 
