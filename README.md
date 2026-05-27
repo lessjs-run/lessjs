@@ -8,7 +8,7 @@ Island、Hono API Route 和早期 Registry Hub 组合在一起，让 Web Compone
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
 [![JSR](https://img.shields.io/badge/JSR-published-blue)](https://jsr.io/@lessjs/core)
-[![@lessjs/core](https://img.shields.io/badge/jsr-v0.23.0-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
+[![@lessjs/core](https://img.shields.io/badge/jsr-v0.24.0-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
 
 ## 海洋-岛屿架构
 
@@ -34,7 +34,16 @@ Island、Hono API Route 和早期 Registry Hub 组合在一起，让 Web Compone
 
 ## 当前状态
 
-项目线：**v0.23.x Layered Package Architecture**。
+项目线：**v0.24.0 DX Leap**。
+
+### v0.24.0 新增
+
+- **`@prop()` 装饰器** — 响应式属性声明从 10+ 行降到 1 行
+- **模板助手** — `classMap`/`when`/`choose`/`repeat`/`ref` + 模板缓存
+- **统一错误架构** — LessError 层级 + ErrorBoundary + telemetry
+- **单入口** — 所有组件作者从 `@lessjs/runtime` 一个包 import
+
+### 基础能力
 
 当前生产渲染模式是 **SSG + Declarative Shadow DOM**。`renderDSD()` 的架构设计允许
 未来在缓存过期时运行 ISR，或在请求时运行 SSR，但 ISR/SSR 仍是路线图能力，不应写成已发布保证。
