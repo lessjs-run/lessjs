@@ -8,6 +8,7 @@ import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { headerNav, navSections } from 'virtual:less-nav';
 import '@lessjs/ui/less-layout';
+import '../islands/less-search.js';
 
 const routeSheet = new StyleSheet();
 routeSheet.replaceSync(`
@@ -19,6 +20,21 @@ routeSheet.replaceSync(`
     --road-accent: #5148b8;
     --road-success: #13795b;
     --road-warning: #a05a00;
+  }
+
+  :host([data-theme="dark"]) {
+    --road-ink: #f4f6fb;
+    --road-muted: #a7adbd;
+    --road-border: rgba(225, 231, 242, 0.16);
+    --road-accent: #9b93ff;
+    --road-success: #6bd7af;
+    --road-warning: #f2ba66;
+  }
+
+  :host([data-theme="dark"]) .now,
+  :host([data-theme="dark"]) .phase,
+  :host([data-theme="dark"]) .truth {
+    background: #11131a;
   }
 
   .shell {
@@ -243,6 +259,7 @@ export class RoadmapPage extends DsdElement {
         current-path="/roadmap"
         home
       >
+        <less-search slot="header-actions"></less-search>
         <div class="shell"
           data-legacy-anchors="WC Package Protocol Six-Phase Vision No webpack Registry Hub"
         >

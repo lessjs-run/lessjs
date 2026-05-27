@@ -7,6 +7,7 @@ import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { filterEngineNav } from '../../utils/nav-filter.ts';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
+import '../../islands/less-search.js';
 
 const pageSheet = new StyleSheet();
 pageSheet.replaceSync(`
@@ -18,6 +19,16 @@ pageSheet.replaceSync(`
     --arch-soft: #f6f7f9;
     --arch-accent: #5148b8;
     --arch-success: #13795b;
+  }
+
+  :host([data-theme="dark"]) {
+    --arch-ink: #f4f6fb;
+    --arch-muted: #a7adbd;
+    --arch-border: rgba(225, 231, 242, 0.16);
+    --arch-panel: #11131a;
+    --arch-soft: #171a23;
+    --arch-accent: #9b93ff;
+    --arch-success: #6bd7af;
   }
 
   .shell {
@@ -310,6 +321,7 @@ export class ArchitecturePage extends DsdElement {
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/architecture"
       >
+        <less-search slot="header-actions"></less-search>
         <div class="shell">
           <section class="hero">
             <div>

@@ -150,7 +150,7 @@ jobs:
       - name: Build www site for Playwright
         run: deno task build
       - name: Install Playwright Chromium
-        run: npx -y playwright@1.59.1 install chromium --with-deps
+        run: deno run -A npm:playwright@1.59.1 install chromium --with-deps
       - name: Run E2E tests
         run: deno task test:e2e
 
