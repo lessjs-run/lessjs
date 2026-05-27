@@ -40,6 +40,8 @@ export type {
   IsrRouteConfig,
 } from './isr.js';
 export { DsdElement } from './dsd-element.js';
+export { prop } from './prop.js';
+export type { PropertyOptions } from './prop.js';
 export {
   createRenderDSDStreamMetrics,
   renderDSD,

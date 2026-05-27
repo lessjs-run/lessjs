@@ -21,6 +21,9 @@
 
 // Base class + templates
 export { DsdElement } from '@lessjs/core';
+// v0.24 (ADR-0052): @prop() reactive property decorator
+export { prop } from '@lessjs/core';
+export type { PropertyOptions } from '@lessjs/core';
 export {
   choose,
   // v0.24: Template helpers (ADR-0051, SOP-009)

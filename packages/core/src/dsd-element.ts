@@ -57,6 +57,7 @@ import {
   renderTemplateToString,
   type TemplateResult,
 } from './template.js';
+import { disposeProps, handlePropAttributeChange, initializeProps } from './prop.js';
 
 /**
  * Minimal SSR-safe HTMLElement stub for server environments (SOP-016).
@@ -210,6 +211,9 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   connectedCallback(): void {
     const ctor = this.constructor as typeof DsdElement;
 
+    // v0.24 (ADR-0052): Initialize @prop() signals and accessors
+    initializeProps(this);
+
     // Ensure shadow root exists and detect DSD pre-population
     if (!this.shadowRoot) {
       this.createRenderRoot();
@@ -282,6 +286,8 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   disconnectedCallback(): void {
     this._disposeTemplateRuntime();
     this._disposeSignalSubscriptions();
+    // v0.24 (ADR-0052): Clean up @prop() signal subscriptions
+    disposeProps(this);
   }
 
   /**
@@ -300,6 +306,8 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     _oldValue: string | null,
     _newValue: string | null,
   ): void {
+    // v0.24 (ADR-0052): Route to @prop() handler
+    handlePropAttributeChange(this, _name, _oldValue, _newValue);
     // Subclass override point - base implementation is intentionally empty.
   }
 
