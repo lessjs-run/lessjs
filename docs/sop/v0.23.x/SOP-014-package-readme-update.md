@@ -21,14 +21,14 @@
 
 ## Target Files
 
-| File | Action | 说明 |
-|------|--------|------|
-| `packages/core/README.md` | REWRITE | 更新 API 文档 |
-| `packages/signals/README.md` | REWRITE | 更新为 alien-signals API |
-| `packages/style-sheet/README.md` | REVIEW | 检查是否过时 |
-| `packages/ui/README.md` | REVIEW | 检查是否过时 |
-| `packages/app/README.md` | REVIEW | 检查是否过时 |
-| `packages/runtime/README.md` | REVIEW | 检查是否过时 |
+| File                             | Action  | 说明                     |
+| -------------------------------- | ------- | ------------------------ |
+| `packages/core/README.md`        | REWRITE | 更新 API 文档            |
+| `packages/signals/README.md`     | REWRITE | 更新为 alien-signals API |
+| `packages/style-sheet/README.md` | REVIEW  | 检查是否过时             |
+| `packages/ui/README.md`          | REVIEW  | 检查是否过时             |
+| `packages/app/README.md`         | REVIEW  | 检查是否过时             |
+| `packages/runtime/README.md`     | REVIEW  | 检查是否过时             |
 
 ## Procedure
 
@@ -160,15 +160,15 @@ rg 'hydrateEvents' packages/*/README.md
 
 ## Quality Gates
 
-| Gate | Criteria |
-|------|----------|
-| G1 | `@lessjs/signals` README 无 TC39/islandEffect 引用 |
-| G2 | `@lessjs/core` README 包含 classMap/when/choose/repeat/ref/@prop 文档 |
-| G3 | 所有 Package README 无 hydrateEvents 推荐用法 |
-| G4 | 示例代码可运行 |
+| Gate | Criteria                                                              |
+| ---- | --------------------------------------------------------------------- |
+| G1   | `@lessjs/signals` README 无 TC39/islandEffect 引用                    |
+| G2   | `@lessjs/core` README 包含 classMap/when/choose/repeat/ref/@prop 文档 |
+| G3   | 所有 Package README 无 hydrateEvents 推荐用法                         |
+| G4   | 示例代码可运行                                                        |
 
 ## Risk Assessment
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| 新增 API 文档与最终实现不一致 | 中 | 低 | SOP-009~011 完成后再写 README |
+| Risk                          | Likelihood | Impact | Mitigation                    |
+| ----------------------------- | ---------- | ------ | ----------------------------- |
+| 新增 API 文档与最终实现不一致 | 中         | 低     | SOP-009~011 完成后再写 README |

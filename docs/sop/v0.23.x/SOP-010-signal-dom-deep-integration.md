@@ -38,24 +38,24 @@ private _syncDOM() {
 
 ```ts
 // LessJS v0.23.x — 声明式，1 行
-@prop() variant: Variant = 'default';
-@prop({ type: Boolean }) disabled = false;
+variant: Variant = 'default';
+disabled = false;
 ```
 
 ## Target Files
 
-| File | Action | 说明 |
-|------|--------|------|
-| `packages/core/src/prop-decorator.ts` | CREATE | @prop() 装饰器实现 |
-| `packages/core/src/reactive-host.ts` | CREATE | ReactiveHost mixin + requestReactiveUpdate |
-| `packages/core/src/dsd-element.ts` | MODIFY | 集成 ReactiveHost + @prop() 基础设施 |
-| `packages/core/src/template.ts` | MODIFY | Signal 自动追踪 + DOM 补丁 |
-| `packages/core/src/mod.ts` | MODIFY | 导出 @prop / ReactiveHost |
-| `packages/ui/src/less-button.ts` | MODIFY | 迁移为 @prop() 示范 |
-| `packages/ui/src/less-theme-toggle.ts` | MODIFY | 迁移已有 Signal 为 @prop() |
-| `packages/core/__tests__/prop-decorator.test.ts` | CREATE | @prop() 单元测试 |
-| `packages/core/__tests__/reactive-host.test.ts` | CREATE | ReactiveHost 单元测试 |
-| `packages/ui/__tests__/less-button-reactive.test.ts` | CREATE | 组件迁移集成测试 |
+| File                                                 | Action | 说明                                       |
+| ---------------------------------------------------- | ------ | ------------------------------------------ |
+| `packages/core/src/prop-decorator.ts`                | CREATE | @prop() 装饰器实现                         |
+| `packages/core/src/reactive-host.ts`                 | CREATE | ReactiveHost mixin + requestReactiveUpdate |
+| `packages/core/src/dsd-element.ts`                   | MODIFY | 集成 ReactiveHost + @prop() 基础设施       |
+| `packages/core/src/template.ts`                      | MODIFY | Signal 自动追踪 + DOM 补丁                 |
+| `packages/core/src/mod.ts`                           | MODIFY | 导出 @prop / ReactiveHost                  |
+| `packages/ui/src/less-button.ts`                     | MODIFY | 迁移为 @prop() 示范                        |
+| `packages/ui/src/less-theme-toggle.ts`               | MODIFY | 迁移已有 Signal 为 @prop()                 |
+| `packages/core/__tests__/prop-decorator.test.ts`     | CREATE | @prop() 单元测试                           |
+| `packages/core/__tests__/reactive-host.test.ts`      | CREATE | ReactiveHost 单元测试                      |
+| `packages/ui/__tests__/less-button-reactive.test.ts` | CREATE | 组件迁移集成测试                           |
 
 ## Procedure
 
@@ -492,23 +492,23 @@ deno test packages/ui/__tests__/ --allow-read  # 全量 UI 测试
 
 ## Quality Gates
 
-| Gate | Criteria |
-|------|----------|
-| G1 | `@prop() variant = 'default'` 注册到 `_propMetadata` |
-| G2 | `this.variant = 'primary'` 自动触发 DOM 更新 |
-| G3 | `setAttribute('disabled', '')` → `this.disabled === true` |
-| G4 | `reflect: true` → property 变化同步到 attribute |
-| G5 | 微任务批处理：同块多次赋值只 1 次重渲染 |
-| G6 | `render(): string` 组件不受影响（opt-in） |
-| G7 | less-button 迁移后功能等价 |
-| G8 | `deno task typecheck && deno task test` 全通过 |
+| Gate | Criteria                                                  |
+| ---- | --------------------------------------------------------- |
+| G1   | `@prop() variant = 'default'` 注册到 `_propMetadata`      |
+| G2   | `this.variant = 'primary'` 自动触发 DOM 更新              |
+| G3   | `setAttribute('disabled', '')` → `this.disabled === true` |
+| G4   | `reflect: true` → property 变化同步到 attribute           |
+| G5   | 微任务批处理：同块多次赋值只 1 次重渲染                   |
+| G6   | `render(): string` 组件不受影响（opt-in）                 |
+| G7   | less-button 迁移后功能等价                                |
+| G8   | `deno task typecheck && deno task test` 全通过            |
 
 ## Risk Assessment
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| 装饰器与 Deno 不兼容 | 低 | 高 | 回退到 TS experimentalDecorators |
-| Object.defineProperty 与类字段初始值冲突 | 中 | 中 | _initializeProps 读取实例初始值 |
-| 细粒度补丁定位不到节点 | 中 | 低 | 回退到 innerHTML 全量重渲染 |
-| attributeChangedCallback 分发覆盖用户逻辑 | 低 | 中 | 保留 _userAttributeChangedCallback 回调 |
-| SSR 管线中 @prop() Signal 不可用 | 中 | 高 | SSR 路径跳过 Signal 创建，直接设置属性 |
+| Risk                                      | Likelihood | Impact | Mitigation                              |
+| ----------------------------------------- | ---------- | ------ | --------------------------------------- |
+| 装饰器与 Deno 不兼容                      | 低         | 高     | 回退到 TS experimentalDecorators        |
+| Object.defineProperty 与类字段初始值冲突  | 中         | 中     | _initializeProps 读取实例初始值         |
+| 细粒度补丁定位不到节点                    | 中         | 低     | 回退到 innerHTML 全量重渲染             |
+| attributeChangedCallback 分发覆盖用户逻辑 | 低         | 中     | 保留 _userAttributeChangedCallback 回调 |
+| SSR 管线中 @prop() Signal 不可用          | 中         | 高     | SSR 路径跳过 Signal 创建，直接设置属性  |

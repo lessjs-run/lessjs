@@ -24,14 +24,14 @@
 
 ## Target Files
 
-| File | Action | 说明 |
-|------|--------|------|
-| `packages/core/src/template.ts` | MODIFY | 添加 5 个原语 + 缓存 |
-| `packages/core/src/template-helpers.ts` | CREATE | classMap/when/choose/repeat/ref 实现 |
-| `packages/core/src/template-cache.ts` | CREATE | TemplateStringsArray 缓存 |
-| `packages/core/src/mod.ts` | MODIFY | 导出新原语 |
-| `packages/core/__tests__/template-helpers.test.ts` | CREATE | 原语单元测试 |
-| `packages/core/__tests__/template-cache.test.ts` | CREATE | 缓存单元测试 |
+| File                                               | Action | 说明                                 |
+| -------------------------------------------------- | ------ | ------------------------------------ |
+| `packages/core/src/template.ts`                    | MODIFY | 添加 5 个原语 + 缓存                 |
+| `packages/core/src/template-helpers.ts`            | CREATE | classMap/when/choose/repeat/ref 实现 |
+| `packages/core/src/template-cache.ts`              | CREATE | TemplateStringsArray 缓存            |
+| `packages/core/src/mod.ts`                         | MODIFY | 导出新原语                           |
+| `packages/core/__tests__/template-helpers.test.ts` | CREATE | 原语单元测试                         |
+| `packages/core/__tests__/template-cache.test.ts`   | CREATE | 缓存单元测试                         |
 
 ## Procedure
 
@@ -377,7 +377,9 @@ class MyComponent extends DsdElement {
   private _inputEl = ref<HTMLInputElement>();
 
   render() {
-    return html`<input ${ref(this._inputEl)} @input=${this._onInput}>`;
+    return html`
+      <input ${ref(this._inputEl)} @input="${this._onInput}">
+    `;
   }
 
   private _onInput() {
@@ -431,9 +433,9 @@ export type EventValue = EventListener | ((event: Event) => void);
 
 ```ts
 export { classMap } from './template-helpers.ts';
-export { when, choose } from './template-helpers.ts';
+export { choose, when } from './template-helpers.ts';
 export { repeat } from './template-helpers.ts';
-export { ref, Ref } from './template-helpers.ts';
+export { Ref, ref } from './template-helpers.ts';
 export { getCachedTemplate, setCachedTemplate } from './template-cache.ts';
 ```
 
@@ -457,22 +459,22 @@ deno task test
 
 ## Quality Gates
 
-| Gate | Criteria |
-|------|----------|
-| G1 | `classMap({ a: true, b: false })` → `"a"` |
-| G2 | `when(true, () => html`yes`)` → `<span data-less-b="N">yes</span>` |
-| G3 | `choose('b', [['a', () => 'A'], ['b', () => 'B']])` → `"B"` |
-| G4 | `repeat([1,2,3], (x) => html`<li>${x}</li>`)` 正确渲染列表 |
-| G5 | `ref()` 在客户端 DOM 挂载后自动设置 `.value` |
-| G6 | 模板缓存命中时跳过 `detectBinding()` |
-| G7 | 所有新增 API 从 `@lessjs/core` 可导入 |
-| G8 | `deno task typecheck && deno task test` 全通过 |
+| Gate | Criteria                                                           |
+| ---- | ------------------------------------------------------------------ |
+| G1   | `classMap({ a: true, b: false })` → `"a"`                          |
+| G2   | `when(true, () => html`yes`)` → `<span data-less-b="N">yes</span>` |
+| G3   | `choose('b', [['a', () => 'A'], ['b', () => 'B']])` → `"B"`        |
+| G4   | `repeat([1,2,3], (x) => html`<li>${x}</li>`)` 正确渲染列表         |
+| G5   | `ref()` 在客户端 DOM 挂载后自动设置 `.value`                       |
+| G6   | 模板缓存命中时跳过 `detectBinding()`                               |
+| G7   | 所有新增 API 从 `@lessjs/core` 可导入                              |
+| G8   | `deno task typecheck && deno task test` 全通过                     |
 
 ## Risk Assessment
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| classMap 空字符串产生 `class=""` | 中 | 低 | renderBinding 中检测空值 |
-| Ref symbol 与 TemplateValue 不兼容 | 低 | 中 | 增加 Ref 到联合类型 |
-| 模板缓存 WeakMap 在 Deno 中行为差异 | 低 | 低 | 回退到 Map + hash key |
-| repeat 未来需要 diff/patch 但接口不兼容 | 中 | 中 | v0.23.x 先留 keyFn 参数但不使用 |
+| Risk                                    | Likelihood | Impact | Mitigation                      |
+| --------------------------------------- | ---------- | ------ | ------------------------------- |
+| classMap 空字符串产生 `class=""`        | 中         | 低     | renderBinding 中检测空值        |
+| Ref symbol 与 TemplateValue 不兼容      | 低         | 中     | 增加 Ref 到联合类型             |
+| 模板缓存 WeakMap 在 Deno 中行为差异     | 低         | 低     | 回退到 Map + hash key           |
+| repeat 未来需要 diff/patch 但接口不兼容 | 中         | 中     | v0.23.x 先留 keyFn 参数但不使用 |

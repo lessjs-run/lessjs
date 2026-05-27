@@ -19,11 +19,11 @@
 
 ## Target Files
 
-| File | Action | 说明 |
-|------|--------|------|
-| `packages/core/src/types.ts` | SPLIT | 拆分为 5+ 个类型模块 |
-| 全局 | SEARCH | 找到所有 `any` 使用处 |
-| 多个文件 | MODIFY | 消除 `any` 类型 |
+| File                         | Action | 说明                  |
+| ---------------------------- | ------ | --------------------- |
+| `packages/core/src/types.ts` | SPLIT  | 拆分为 5+ 个类型模块  |
+| 全局                         | SEARCH | 找到所有 `any` 使用处 |
+| 多个文件                     | MODIFY | 消除 `any` 类型       |
 
 ## Procedure
 
@@ -76,22 +76,22 @@ rg '\bany\b' packages/ --type ts -c | awk -F: '{sum+=$2} END {print sum}'
 
 - [ ] 拆分方案：
 
-| 新文件 | 内容 | 预估行数 |
-|--------|------|---------|
-| `types/render.ts` | RenderOutput, RenderMetrics, RenderError, HydrationHint | ~300 |
-| `types/cem.ts` | CEM 包元数据类型 | ~200 |
-| `types/config.ts` | FrameworkOptions, SsgConfig, AdapterConfig | ~200 |
-| `types/build.ts` | BuildReport, BuildPhase types | ~300 |
-| `types/diagnostic.ts` | ValidationDiagnostic, DiagnosticSeverity | ~150 |
-| `types/shared.ts` | 共享基础类型 | ~100 |
-| `types.ts` | 重新导出（向后兼容） | ~50 |
+| 新文件                | 内容                                                    | 预估行数 |
+| --------------------- | ------------------------------------------------------- | -------- |
+| `types/render.ts`     | RenderOutput, RenderMetrics, RenderError, HydrationHint | ~300     |
+| `types/cem.ts`        | CEM 包元数据类型                                        | ~200     |
+| `types/config.ts`     | FrameworkOptions, SsgConfig, AdapterConfig              | ~200     |
+| `types/build.ts`      | BuildReport, BuildPhase types                           | ~300     |
+| `types/diagnostic.ts` | ValidationDiagnostic, DiagnosticSeverity                | ~150     |
+| `types/shared.ts`     | 共享基础类型                                            | ~100     |
+| `types.ts`            | 重新导出（向后兼容）                                    | ~50      |
 
 - [ ] `types.ts` 变为 barrel file：
 
 ```ts
 // types.ts — barrel re-export (backward compatible)
-export type { RenderOutput, RenderMetrics } from './types/render.ts';
-export type { CemPackage, CemModule } from './types/cem.ts';
+export type { RenderMetrics, RenderOutput } from './types/render.ts';
+export type { CemModule, CemPackage } from './types/cem.ts';
 // ... etc
 ```
 
@@ -176,17 +176,17 @@ rg '\bany\b' packages/ --type ts -c | awk -F: '{sum+=$2} END {print sum}'
 
 ## Quality Gates
 
-| Gate | Criteria |
-|------|----------|
-| G1 | `any` 使用处 < 10 |
-| G2 | `types.ts` < 100 行 |
-| G3 | 所有现有 import 路径向后兼容 |
-| G4 | `deno task typecheck && deno task test` 全通过 |
+| Gate | Criteria                                       |
+| ---- | ---------------------------------------------- |
+| G1   | `any` 使用处 < 10                              |
+| G2   | `types.ts` < 100 行                            |
+| G3   | 所有现有 import 路径向后兼容                   |
+| G4   | `deno task typecheck && deno task test` 全通过 |
 
 ## Risk Assessment
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| types.ts 拆分导致循环依赖 | 中 | 中 | 先拆无依赖模块 |
-| any 消除引入类型错误 | 中 | 低 | 逐步替换，每步跑 typecheck |
-| globalThis 类型声明与其他包冲突 | 低 | 低 | 使用局部声明 |
+| Risk                            | Likelihood | Impact | Mitigation                 |
+| ------------------------------- | ---------- | ------ | -------------------------- |
+| types.ts 拆分导致循环依赖       | 中         | 中     | 先拆无依赖模块             |
+| any 消除引入类型错误            | 中         | 低     | 逐步替换，每步跑 typecheck |
+| globalThis 类型声明与其他包冲突 | 低         | 低     | 使用局部声明               |

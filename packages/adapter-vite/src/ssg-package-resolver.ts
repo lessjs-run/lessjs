@@ -14,6 +14,7 @@ const DEFAULT_LESSJS_PACKAGES = new Set([
   'core',
   'hub',
   'rpc',
+  'runtime',
   'signals',
   'style-sheet',
   'ui',
@@ -57,6 +58,7 @@ const LESSJS_EXPORT_FILES: Record<string, Record<string, string>> = {
     'open-props-tokens': 'src/open-props-tokens.ts',
     'open-props-tokens.js': 'src/open-props-tokens.ts',
   },
+  runtime: { '.': 'src/index.ts' },
   signals: {
     '.': 'src/index.ts',
     framework: 'src/framework.ts',

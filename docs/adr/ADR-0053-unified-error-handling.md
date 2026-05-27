@@ -194,6 +194,7 @@ class LessCard extends DsdElement {
 ```
 
 Error boundary semantics:
+
 - A component with `isErrorBoundary = true` catches render errors from its
   subtree (children rendered via `renderNestedCustomElements`)
 - If no boundary exists, the error propagates to the root `renderDSD()` call
@@ -208,7 +209,7 @@ The SSR pipeline aggregates errors into structured output:
 ```ts
 interface RenderOutput {
   html: string;
-  errors: RenderError[];       // all errors from this render tree
+  errors: RenderError[]; // all errors from this render tree
   metrics: RenderMetrics;
   hydrationHints: HydrationHint[];
 }
@@ -218,13 +219,13 @@ async function renderNestedCustomElements(
   html: string,
   registry: ComponentRegistry,
   depth: number,
-  errors: RenderError[],  // NEW: shared error accumulator
+  errors: RenderError[], // NEW: shared error accumulator
 ): Promise<string> {
   // ... traverse AST, render each CE
   for (const ce of customElements) {
     try {
       const result = await renderDSD(ce.tagName, ce.attrs);
-      errors.push(...result.errors);  // collect child errors
+      errors.push(...result.errors); // collect child errors
     } catch (e) {
       errors.push(new RenderError(ce.tagName, e as Error));
       // Continue rendering siblings — one failure doesn't kill the page
@@ -239,8 +240,8 @@ Build pipeline integration:
 // ssg-render.ts
 const { html, errors } = await ssgRender(app, routes);
 if (errors.length > 0) {
-  const fatal = errors.filter(e => e.severity === 'fatal');
-  const recoverable = errors.filter(e => e.recoverable);
+  const fatal = errors.filter((e) => e.severity === 'fatal');
+  const recoverable = errors.filter((e) => e.recoverable);
   log.warn(`${recoverable.length} recoverable errors during SSG`);
   log.error(`${fatal.length} fatal errors during SSG`);
   // Write error report for CI
@@ -270,7 +271,7 @@ lessjs({
       sentry.captureException(error);
     }
   },
-})
+});
 ```
 
 ### SPA Navigation Error Recovery
@@ -333,6 +334,7 @@ async navigateTo(url: string): Promise<void> {
 
 The 2026-05-27 audit found 5 empty `catch {}` blocks. All 5 were symptoms of
 "there's no standard way to report errors." With this ADR:
+
 - Every catch produces a structured `LessError` subclass
 - The error flows to the `onError` telemetry hook
 - The component renders a defined fallback (bare tag or `onError()` override)

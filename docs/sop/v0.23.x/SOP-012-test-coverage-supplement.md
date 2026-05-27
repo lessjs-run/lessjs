@@ -21,20 +21,20 @@
 
 ## Target Files
 
-| File | Action | 说明 |
-|------|--------|------|
-| `packages/signals/__tests__/signals.test.ts` | CREATE | Signal 核心 API 测试 |
-| `packages/signals/__tests__/computed.test.ts` | CREATE | Computed Signal 测试 |
-| `packages/signals/__tests__/effect.test.ts` | CREATE | Effect 测试 |
-| `packages/signals/__tests__/batch.test.ts` | CREATE | 批处理测试 |
-| `packages/style-sheet/__tests__/shim-style-sheet.test.ts` | CREATE | ShimStyleSheet 测试 |
-| `packages/style-sheet/__tests__/css-parse.test.ts` | CREATE | CSS 解析测试 |
-| `packages/core/__tests__/template-helpers.test.ts` | CREATE | SOP-009 模板原语测试 |
-| `packages/core/__tests__/template-cache.test.ts` | CREATE | SOP-009 缓存测试 |
-| `packages/core/__tests__/prop-decorator.test.ts` | CREATE | SOP-010 @prop() 测试 |
-| `packages/core/__tests__/reactive-host.test.ts` | CREATE | SOP-010 ReactiveHost 测试 |
-| `packages/core/__tests__/errors-unified.test.ts` | CREATE | SOP-011 统一错误测试 |
-| `packages/core/__tests__/error-boundary.test.ts` | CREATE | SOP-011 错误边界测试 |
+| File                                                      | Action | 说明                      |
+| --------------------------------------------------------- | ------ | ------------------------- |
+| `packages/signals/__tests__/signals.test.ts`              | CREATE | Signal 核心 API 测试      |
+| `packages/signals/__tests__/computed.test.ts`             | CREATE | Computed Signal 测试      |
+| `packages/signals/__tests__/effect.test.ts`               | CREATE | Effect 测试               |
+| `packages/signals/__tests__/batch.test.ts`                | CREATE | 批处理测试                |
+| `packages/style-sheet/__tests__/shim-style-sheet.test.ts` | CREATE | ShimStyleSheet 测试       |
+| `packages/style-sheet/__tests__/css-parse.test.ts`        | CREATE | CSS 解析测试              |
+| `packages/core/__tests__/template-helpers.test.ts`        | CREATE | SOP-009 模板原语测试      |
+| `packages/core/__tests__/template-cache.test.ts`          | CREATE | SOP-009 缓存测试          |
+| `packages/core/__tests__/prop-decorator.test.ts`          | CREATE | SOP-010 @prop() 测试      |
+| `packages/core/__tests__/reactive-host.test.ts`           | CREATE | SOP-010 ReactiveHost 测试 |
+| `packages/core/__tests__/errors-unified.test.ts`          | CREATE | SOP-011 统一错误测试      |
+| `packages/core/__tests__/error-boundary.test.ts`          | CREATE | SOP-011 错误边界测试      |
 
 ## Procedure
 
@@ -296,18 +296,18 @@ deno test --coverage=coverage packages/ && deno coverage coverage --threshold=80
 
 ## Quality Gates
 
-| Gate | Criteria |
-|------|----------|
-| G1 | `@lessjs/signals` 测试文件存在且全通过 |
-| G2 | `@lessjs/style-sheet` 测试文件存在且全通过 |
-| G3 | SOP-009~011 所有验收测试通过 |
-| G4 | 整体行覆盖率 > 80% |
-| G5 | CI 覆盖率门禁生效 |
+| Gate | Criteria                                   |
+| ---- | ------------------------------------------ |
+| G1   | `@lessjs/signals` 测试文件存在且全通过     |
+| G2   | `@lessjs/style-sheet` 测试文件存在且全通过 |
+| G3   | SOP-009~011 所有验收测试通过               |
+| G4   | 整体行覆盖率 > 80%                         |
+| G5   | CI 覆盖率门禁生效                          |
 
 ## Risk Assessment
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| alien-signals API 与预期不同 | 中 | 低 | 先读源码确认实际 API |
-| Deno 覆盖率工具不稳定 | 中 | 低 | 先手动检查，CI 门槛后补 |
-| 新增测试与现有测试冲突 | 低 | 中 | 独立文件，不修改现有测试 |
+| Risk                         | Likelihood | Impact | Mitigation               |
+| ---------------------------- | ---------- | ------ | ------------------------ |
+| alien-signals API 与预期不同 | 中         | 低     | 先读源码确认实际 API     |
+| Deno 覆盖率工具不稳定        | 中         | 低     | 先手动检查，CI 门槛后补  |
+| 新增测试与现有测试冲突       | 低         | 中     | 独立文件，不修改现有测试 |

@@ -31,19 +31,19 @@ render() throws → renderDSD() catch → bare tag + RenderError in output.error
 
 ## Target Files
 
-| File | Action | 说明 |
-|------|--------|------|
-| `packages/core/src/errors.ts` | REWRITE | 统一错误类型层级 |
-| `packages/core/src/render-errors.ts` | MODIFY | 合并到统一系统，保留 classifyError |
-| `packages/core/src/dsd-element.ts` | MODIFY | 添加 onError() + isErrorBoundary |
-| `packages/core/src/render-dsd.ts` | MODIFY | 错误聚合到共享累加器 |
-| `packages/core/src/render-nested.ts` | MODIFY | 共享 errors[] 传递 |
-| `packages/core/src/ssg-render.ts` | MODIFY | 错误聚合 + 报告输出 |
-| `packages/ui/src/less-layout.ts` | MODIFY | SPA 导航重试 + 错误页面 |
-| `packages/app/src/index.ts` | MODIFY | onError 遥测 hook |
-| `packages/core/__tests__/errors-unified.test.ts` | CREATE | 统一错误系统测试 |
-| `packages/core/__tests__/error-boundary.test.ts` | CREATE | 错误边界测试 |
-| `packages/ui/__tests__/spa-navigation-error.test.ts` | CREATE | SPA 导航错误测试 |
+| File                                                 | Action  | 说明                               |
+| ---------------------------------------------------- | ------- | ---------------------------------- |
+| `packages/core/src/errors.ts`                        | REWRITE | 统一错误类型层级                   |
+| `packages/core/src/render-errors.ts`                 | MODIFY  | 合并到统一系统，保留 classifyError |
+| `packages/core/src/dsd-element.ts`                   | MODIFY  | 添加 onError() + isErrorBoundary   |
+| `packages/core/src/render-dsd.ts`                    | MODIFY  | 错误聚合到共享累加器               |
+| `packages/core/src/render-nested.ts`                 | MODIFY  | 共享 errors[] 传递                 |
+| `packages/core/src/ssg-render.ts`                    | MODIFY  | 错误聚合 + 报告输出                |
+| `packages/ui/src/less-layout.ts`                     | MODIFY  | SPA 导航重试 + 错误页面            |
+| `packages/app/src/index.ts`                          | MODIFY  | onError 遥测 hook                  |
+| `packages/core/__tests__/errors-unified.test.ts`     | CREATE  | 统一错误系统测试                   |
+| `packages/core/__tests__/error-boundary.test.ts`     | CREATE  | 错误边界测试                       |
+| `packages/ui/__tests__/spa-navigation-error.test.ts` | CREATE  | SPA 导航错误测试                   |
 
 ## Procedure
 
@@ -83,9 +83,13 @@ export class LessError extends Error {
 
   toJSON(): Record<string, unknown> {
     return {
-      code: this.code, severity: this.severity, phase: this.phase,
-      tagName: this.tagName, recoverable: this.recoverable,
-      message: this.message, details: this.details,
+      code: this.code,
+      severity: this.severity,
+      phase: this.phase,
+      tagName: this.tagName,
+      recoverable: this.recoverable,
+      message: this.message,
+      details: this.details,
     };
   }
 }
@@ -96,29 +100,42 @@ export class LessError extends Error {
 ```ts
 export class RenderError extends LessError {
   constructor(tagName: string, cause: Error) {
-    super(`Render failed: ${tagName}`, 'RENDER_FAILURE', 'error', 'render',
-      tagName, true, { causeMessage: cause.message, causeName: cause.name });
+    super(`Render failed: ${tagName}`, 'RENDER_FAILURE', 'error', 'render', tagName, true, {
+      causeMessage: cause.message,
+      causeName: cause.name,
+    });
   }
 }
 
 export class HydrateError extends LessError {
   constructor(tagName: string, eventName: string, cause: Error) {
-    super(`Hydration failed: ${tagName}.${eventName}`, 'HYDRATE_FAILURE', 'warning',
-      'hydrate', tagName, true, { eventName, causeMessage: cause.message });
+    super(
+      `Hydration failed: ${tagName}.${eventName}`,
+      'HYDRATE_FAILURE',
+      'warning',
+      'hydrate',
+      tagName,
+      true,
+      { eventName, causeMessage: cause.message },
+    );
   }
 }
 
 export class RouteError extends LessError {
   constructor(path: string, cause?: Error) {
-    super(`Route navigation failed: ${path}`, 'ROUTE_FAILURE', 'error', 'route',
-      undefined, true, { path, causeMessage: cause?.message });
+    super(`Route navigation failed: ${path}`, 'ROUTE_FAILURE', 'error', 'route', undefined, true, {
+      path,
+      causeMessage: cause?.message,
+    });
   }
 }
 
 export class BuildError extends LessError {
   constructor(phase: string, cause: Error) {
-    super(`Build phase ${phase} failed`, 'BUILD_FAILURE', 'fatal', 'build',
-      undefined, false, { buildPhase: phase, causeMessage: cause.message });
+    super(`Build phase ${phase} failed`, 'BUILD_FAILURE', 'fatal', 'build', undefined, false, {
+      buildPhase: phase,
+      causeMessage: cause.message,
+    });
   }
 }
 ```
@@ -175,8 +192,9 @@ class DsdElement extends HTMLElement {
 
   private _renderFallback(error: RenderError): void {
     if (this._devMode) {
-      this.shadowRoot!.innerHTML =
-        `<div class="less-error" role="alert"><code>${escapeHtml(error.code)}</code>: ${escapeHtml(error.message)}</div>`;
+      this.shadowRoot!.innerHTML = `<div class="less-error" role="alert"><code>${
+        escapeHtml(error.code)
+      }</code>: ${escapeHtml(error.message)}</div>`;
     }
   }
 }
@@ -248,12 +266,12 @@ async function renderNestedCustomElements(
   html: string,
   registry: ComponentRegistry,
   depth: number,
-  errors: LessError[],       // 共享累加器
+  errors: LessError[], // 共享累加器
 ): Promise<string> {
   for (const ce of customElements) {
     try {
       const result = await renderDSD(ce.tagName, ce.attrs);
-      errors.push(...result.errors);    // 收集子组件错误
+      errors.push(...result.errors); // 收集子组件错误
     } catch (e) {
       errors.push(new RenderError(ce.tagName, e as Error));
       // 兄弟组件继续渲染——一个失败不杀整页
@@ -267,11 +285,11 @@ async function renderNestedCustomElements(
 ```ts
 const { html, errors } = await ssgRender(app, routes);
 if (errors.length > 0) {
-  const fatal = errors.filter(e => e.severity === 'fatal');
-  const recoverable = errors.filter(e => e.recoverable);
+  const fatal = errors.filter((e) => e.severity === 'fatal');
+  const recoverable = errors.filter((e) => e.recoverable);
   console.warn(`${recoverable.length} recoverable errors during SSG`);
   console.error(`${fatal.length} fatal errors during SSG`);
-  await writeFile('dist/ssg-errors.json', JSON.stringify(errors.map(e => e.toJSON())));
+  await writeFile('dist/ssg-errors.json', JSON.stringify(errors.map((e) => e.toJSON())));
   if (fatal.length > 0) process.exit(1);
 }
 ```
@@ -465,23 +483,23 @@ deno task typecheck
 
 ## Quality Gates
 
-| Gate | Criteria |
-|------|----------|
-| G1 | 所有框架错误继承 `LessError`，含 code/severity/phase/recoverable |
-| G2 | `isErrorBoundary` + `onError()` 可捕获子组件渲染失败 |
-| G3 | SSR 管线错误聚合到 `RenderOutput.errors` |
-| G4 | `ssgRender()` 输出 `dist/ssg-errors.json` |
-| G5 | SPA 导航有重试 + 错误页面 |
-| G6 | `onError` 遥测 hook 可接入外部监控 |
-| G7 | 0 个空 `catch {}` 块 |
-| G8 | `deno task typecheck && deno task test` 全通过 |
+| Gate | Criteria                                                         |
+| ---- | ---------------------------------------------------------------- |
+| G1   | 所有框架错误继承 `LessError`，含 code/severity/phase/recoverable |
+| G2   | `isErrorBoundary` + `onError()` 可捕获子组件渲染失败             |
+| G3   | SSR 管线错误聚合到 `RenderOutput.errors`                         |
+| G4   | `ssgRender()` 输出 `dist/ssg-errors.json`                        |
+| G5   | SPA 导航有重试 + 错误页面                                        |
+| G6   | `onError` 遥测 hook 可接入外部监控                               |
+| G7   | 0 个空 `catch {}` 块                                             |
+| G8   | `deno task typecheck && deno task test` 全通过                   |
 
 ## Risk Assessment
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| 旧 RenderError interface 重命名导致大面积修改 | 中 | 中 | 使用过渡别名 |
-| Shadow DOM closed 阻止错误冒泡 | 低 | 中 | 改用 CustomEvent |
-| SSR 共享累加器并发竞态 | 低 | 中 | 改用不可变数组合并 |
-| SPA 重试增加延迟 | 低 | 低 | 限制最多 1 次重试 |
-| 遥测 hook 异常拖垮渲染 | 低 | 高 | try/catch 包裹 hook 调用 |
+| Risk                                          | Likelihood | Impact | Mitigation               |
+| --------------------------------------------- | ---------- | ------ | ------------------------ |
+| 旧 RenderError interface 重命名导致大面积修改 | 中         | 中     | 使用过渡别名             |
+| Shadow DOM closed 阻止错误冒泡                | 低         | 中     | 改用 CustomEvent         |
+| SSR 共享累加器并发竞态                        | 低         | 中     | 改用不可变数组合并       |
+| SPA 重试增加延迟                              | 低         | 低     | 限制最多 1 次重试        |
+| 遥测 hook 异常拖垮渲染                        | 低         | 高     | try/catch 包裹 hook 调用 |

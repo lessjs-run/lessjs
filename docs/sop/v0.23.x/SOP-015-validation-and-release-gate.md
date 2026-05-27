@@ -52,20 +52,20 @@ deno task fmt:check
 
 - [ ] 逐项验证 CI 门禁：
 
-| # | Gate | 命令/检查 |
-|---|------|---------|
-| 1 | fmt:check | `deno task fmt:check` |
-| 2 | lint | `deno task lint` |
-| 3 | typecheck | `deno task typecheck` |
-| 4 | audit | `deno task audit` |
-| 5 | test | `deno task test` |
-| 6 | build | `deno task build` |
-| 7 | dsd:check-report | `deno task dsd:check-report` |
-| 8 | hub:validate | `deno task hub:validate` |
-| 9 | hub:check-index | `deno task hub:check-index` |
+| #  | Gate                | 命令/检查                       |
+| -- | ------------------- | ------------------------------- |
+| 1  | fmt:check           | `deno task fmt:check`           |
+| 2  | lint                | `deno task lint`                |
+| 3  | typecheck           | `deno task typecheck`           |
+| 4  | audit               | `deno task audit`               |
+| 5  | test                | `deno task test`                |
+| 6  | build               | `deno task build`               |
+| 7  | dsd:check-report    | `deno task dsd:check-report`    |
+| 8  | hub:validate        | `deno task hub:validate`        |
+| 9  | hub:check-index     | `deno task hub:check-index`     |
 | 10 | docs:check-strategy | `deno task docs:check-strategy` |
-| 11 | graph:check | `deno task graph:check` |
-| 12 | test:e2e | `deno task test:e2e` |
+| 11 | graph:check         | `deno task graph:check`         |
+| 12 | test:e2e            | `deno task test:e2e`            |
 
 **通过标准**：
 
@@ -83,16 +83,16 @@ deno task fmt:check
 
 - [ ] 对照评估报告的 DX 维度逐项检查：
 
-| DX 维度 | v0.23.0 基线 | v0.23.x 目标 | 验证方式 |
-|---------|-------------|-------------|---------|
-| 属性声明 | 10+ 行/属性 | 1 行/属性 | less-button 代码行数 |
-| Signal 自动更新 | 不支持 | 支持 | `@prop()` 变化自动更新 DOM |
-| 模板原语 | 无 | classMap/when/choose/repeat/ref | 使用示例运行 |
-| 错误边界 | 无 | isErrorBoundary + onError | 测试通过 |
-| 错误遥测 | 无 | onError hook | 集成测试通过 |
-| 测试覆盖率 | Signals/StyleSheet 0% | > 80% | 覆盖率报告 |
-| 类型安全 | 50+ any | < 10 any | rg 计数 |
-| Package README | 5/10 | ≥ 8/10 | 人工审查 |
+| DX 维度         | v0.23.0 基线          | v0.23.x 目标                    | 验证方式                   |
+| --------------- | --------------------- | ------------------------------- | -------------------------- |
+| 属性声明        | 10+ 行/属性           | 1 行/属性                       | less-button 代码行数       |
+| Signal 自动更新 | 不支持                | 支持                            | `@prop()` 变化自动更新 DOM |
+| 模板原语        | 无                    | classMap/when/choose/repeat/ref | 使用示例运行               |
+| 错误边界        | 无                    | isErrorBoundary + onError       | 测试通过                   |
+| 错误遥测        | 无                    | onError hook                    | 集成测试通过               |
+| 测试覆盖率      | Signals/StyleSheet 0% | > 80%                           | 覆盖率报告                 |
+| 类型安全        | 50+ any               | < 10 any                        | rg 计数                    |
+| Package README  | 5/10                  | ≥ 8/10                          | 人工审查                   |
 
 - [ ] 计算综合 DX 评分
 
@@ -127,12 +127,12 @@ deno task fmt:check
 
 ## Quality Gates
 
-| Gate | Criteria |
-|------|----------|
-| G1 | 12/12 CI 门禁全绿 |
-| G2 | DX 评分 ≥ 7/10 |
-| G3 | JSR 发布成功 |
-| G4 | git tag 创建 |
+| Gate | Criteria          |
+| ---- | ----------------- |
+| G1   | 12/12 CI 门禁全绿 |
+| G2   | DX 评分 ≥ 7/10    |
+| G3   | JSR 发布成功      |
+| G4   | git tag 创建      |
 
 ## Exit Criteria
 

@@ -80,25 +80,30 @@ subscription — no manual `_syncDOM()` required.**
 ### `@prop()` Decorator API
 
 ```ts
-import { DsdElement, prop, html } from '@lessjs/runtime';
+import { DsdElement, html, prop } from '@lessjs/runtime';
 
 class LessButton extends DsdElement {
-  @prop() variant: 'default' | 'primary' | 'ghost' = 'default';
-  @prop({ type: Boolean }) disabled = false;
-  @prop({ attribute: 'aria-label' }) ariaLabel = '';
+  @prop()
+  variant: 'default' | 'primary' | 'ghost' = 'default';
+  @prop({ type: Boolean })
+  disabled = false;
+  @prop({ attribute: 'aria-label' })
+  ariaLabel = '';
 
   render() {
-    return html`<button
-      class=${classMap({
-        'btn-primary': this.variant === 'primary',
-        'btn-ghost': this.variant === 'ghost',
-      })}
-      ?disabled=${this.disabled}
-      aria-label=${this.ariaLabel}
-      @click=${this._onClick}
-    >
-      <slot></slot>
-    </button>`;
+    return html`
+      <button
+        class="${classMap({
+          'btn-primary': this.variant === 'primary',
+          'btn-ghost': this.variant === 'ghost',
+        })}"
+        ?disabled="${this.disabled}"
+        aria-label="${this.ariaLabel}"
+        @click="${this._onClick}"
+      >
+        <slot></slot>
+      </button>
+    `;
   }
 }
 ```
@@ -122,8 +127,12 @@ export interface PropOptions<T = unknown> {
   noAccessor?: boolean;
 }
 
-type PropType = StringConstructor | NumberConstructor | BooleanConstructor
-  | ArrayConstructor | ObjectConstructor;
+type PropType =
+  | StringConstructor
+  | NumberConstructor
+  | BooleanConstructor
+  | ArrayConstructor
+  | ObjectConstructor;
 ```
 
 ### Internal Implementation (within `dsd-element.ts`)
@@ -227,13 +236,13 @@ attributeChangedCallback(name, _old, value) {
 
 ## Comparison to Other Frameworks
 
-| Framework | Mechanism | Lines per property |
-|-----------|-----------|-------------------|
-| Lit | `@property()` decorator + `render()` | 1 |
-| FAST | `@attr` decorator + `html` | 1 |
-| Stencil | `@Prop()` decorator + JSX | 1 |
-| Vanilla WC | `observedAttributes` + `attributeChangedCallback` + manual DOM | 10+ |
-| **LessJS (proposed)** | `@prop()` decorator + `html` | **1** |
+| Framework             | Mechanism                                                      | Lines per property |
+| --------------------- | -------------------------------------------------------------- | ------------------ |
+| Lit                   | `@property()` decorator + `render()`                           | 1                  |
+| FAST                  | `@attr` decorator + `html`                                     | 1                  |
+| Stencil               | `@Prop()` decorator + JSX                                      | 1                  |
+| Vanilla WC            | `observedAttributes` + `attributeChangedCallback` + manual DOM | 10+                |
+| **LessJS (proposed)** | `@prop()` decorator + `html`                                   | **1**              |
 
 ## Related
 
