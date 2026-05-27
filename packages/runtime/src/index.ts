@@ -22,13 +22,31 @@
 // Base class + templates
 export { DsdElement } from '@lessjs/core';
 export {
+  choose,
+  // v0.24: Template helpers (ADR-0051, SOP-009)
+  classMap,
   html,
   isSignalLike,
   isTemplateResult,
+  ref,
   renderTemplateToString,
+  repeat,
   unsafeHTML,
+  when,
 } from '@lessjs/core';
-export type { SignalLike, TemplateResult, TemplateValue, UnsafeHtmlValue } from '@lessjs/core';
+export type {
+  AttrValue,
+  ChooseCase,
+  ClassMapInput,
+  ClassMapValue,
+  ContentValue,
+  EventValue,
+  RefDirective,
+  SignalLike,
+  TemplateResult,
+  TemplateValue,
+  UnsafeHtmlValue,
+} from '@lessjs/core';
 
 // HTML escaping utilities
 export { escapeAttr, escapeAttrValue, escapeHtml } from '@lessjs/core';

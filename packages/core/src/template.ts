@@ -4,18 +4,47 @@
  * A tiny TemplateResult implementation for DsdElement. It is intentionally
  * string-first for SSR and DSD, with runtime descriptors only for event and
  * property binding on the client.
+ *
+ * v0.24 (SOP-009): Template caching via WeakMap, type-narrowed
+ * template values, and directives (classMap/when/choose/repeat/ref).
  */
-
 import { escapeAttr, escapeHtml } from './html-escape.ts';
+
+// ─── Symbols ────────────────────────────────────────────────────────
 
 const TEMPLATE_RESULT = Symbol.for('lessjs.templateResult');
 const UNSAFE_HTML = Symbol.for('lessjs.unsafeHTML');
+const CLASS_MAP = Symbol.for('lessjs.classMap');
+
+// ─── Types ──────────────────────────────────────────────────────────
 
 export interface SignalLike<T = unknown> {
   readonly value: T;
   subscribe(fn: (value: T) => void): () => void;
 }
 
+/** Value usable in attribute position (class, id, style, etc.) */
+export type AttrValue = string | number | boolean | null | undefined | SignalLike;
+
+/** Value usable in text content / child position */
+export type ContentValue =
+  | string
+  | number
+  | boolean
+  | bigint
+  | null
+  | undefined
+  | TemplateResult
+  | UnsafeHtmlValue
+  | SignalLike
+  | ClassMapValue
+  | RefDirective
+  | ContentValue[];
+
+/** Value usable in event binding position (@click, @input, etc.) */
+export type EventValue = EventListener | ((event: Event) => void) | SignalLike<EventListener>;
+
+/** Union of all value types accepted by html`` template (backward compat) */
 export type TemplateValue =
   | string
   | number
@@ -26,6 +55,8 @@ export type TemplateValue =
   | TemplateResult
   | UnsafeHtmlValue
   | SignalLike
+  | ClassMapValue
+  | RefDirective
   | TemplateValue[]
   | EventListener
   | ((event: Event) => void);
@@ -41,6 +72,19 @@ export interface UnsafeHtmlValue {
   readonly kind: 'less:unsafe-html';
   readonly html: string;
   readonly [UNSAFE_HTML]: true;
+}
+
+/** Value produced by `classMap()`. Rendered as space-separated tokens. */
+export interface ClassMapValue {
+  readonly kind: 'less:class-map';
+  readonly tokens: ReadonlyMap<string, boolean>;
+  readonly [CLASS_MAP]: true;
+}
+
+/** Value produced by `ref()`. Directs the template engine to call a callback. */
+export interface RefDirective {
+  readonly kind: 'less:ref';
+  readonly callback: (element: Element) => void;
 }
 
 export interface RuntimeEventBinding {
@@ -66,6 +110,188 @@ interface BindingInfo {
   name: string;
   quoted: '"' | "'" | '';
 }
+
+// ─── Template Caching ────────────────────────────────────────────────
+
+/** Pre-parsed slot descriptors for static parts of a template. */
+interface ParsedSlot {
+  /** Index into the values array */
+  index: number;
+  /** Binding info if this slot is a directive (@, ., ?) */
+  binding?: BindingInfo;
+  /** The static text prefix before this slot */
+  prefix: string;
+  /** Whether this slot is a text content slot (not an attribute binding) */
+  isText: boolean;
+}
+
+interface ParsedTemplate {
+  /** Pre-parsed slots for each value position (in order) */
+  slots: ParsedSlot[];
+  /** Final static tail string after the last value */
+  tail: string;
+  /** Length of values array this parse was built for */
+  valueCount: number;
+}
+
+const templateCache = new WeakMap<TemplateStringsArray, ParsedTemplate>();
+
+function parseTemplate(strings: readonly string[], valueCount: number): ParsedTemplate {
+  const slots: ParsedSlot[] = [];
+  let stripNextQuote: '"' | "'" | '' = '';
+
+  for (let i = 0; i < valueCount; i++) {
+    let chunk = strings[i] ?? '';
+    if (stripNextQuote && chunk.startsWith(stripNextQuote)) {
+      chunk = chunk.slice(1);
+      stripNextQuote = '';
+    }
+
+    const binding = detectBinding(chunk);
+
+    if (binding) {
+      slots.push({
+        index: i,
+        binding,
+        prefix: binding.prefix,
+        isText: false,
+        ...(binding.quoted ? {} : {}),
+      });
+      stripNextQuote = binding.quoted;
+    } else {
+      slots.push({
+        index: i,
+        prefix: chunk,
+        isText: true,
+      });
+    }
+  }
+
+  let tail = strings[valueCount] ?? '';
+  if (stripNextQuote && tail.startsWith(stripNextQuote)) {
+    tail = tail.slice(1);
+  }
+
+  return { slots, tail, valueCount };
+}
+
+function getOrParseTemplate(result: TemplateResult): ParsedTemplate {
+  const strings = result.strings as TemplateStringsArray;
+  let parsed = templateCache.get(strings);
+  if (parsed && parsed.valueCount === result.values.length) {
+    return parsed;
+  }
+  parsed = parseTemplate(result.strings, result.values.length);
+  templateCache.set(strings, parsed);
+  return parsed;
+}
+
+// ─── ClassMap ────────────────────────────────────────────────────────
+
+export interface ClassMapInput {
+  [className: string]: boolean | undefined | null;
+}
+
+export function classMap(classes: ClassMapInput): ClassMapValue {
+  const entries: [string, boolean][] = [];
+  for (const key of Object.keys(classes)) {
+    const v = classes[key];
+    if (v != null) entries.push([key, Boolean(v)]);
+  }
+  return {
+    kind: 'less:class-map',
+    tokens: new Map(entries),
+    [CLASS_MAP]: true,
+  };
+}
+
+function renderClassMapValue(classes: ClassMapValue): string {
+  const active: string[] = [];
+  for (const [name, enabled] of classes.tokens) {
+    if (enabled) active.push(name);
+  }
+  return active.join(' ');
+}
+
+// ─── When / Choose ────────────────────────────────────────────────────
+
+export function when(
+  condition: unknown,
+  truthy: TemplateResult | (() => TemplateResult),
+  falsy?: TemplateResult | (() => TemplateResult),
+): TemplateResult {
+  const resolved = condition;
+  if (resolved) {
+    return typeof truthy === 'function' ? truthy() : truthy;
+  }
+  return falsy ? (typeof falsy === 'function' ? falsy() : falsy) : html`
+
+  `;
+}
+
+export type ChooseCase = readonly [key: string, template: () => TemplateResult];
+
+export function choose(
+  key: string,
+  cases: readonly ChooseCase[],
+  fallback?: () => TemplateResult,
+): TemplateResult {
+  for (const [caseKey, template] of cases) {
+    if (caseKey === key) return template();
+  }
+  return fallback ? fallback() : html`
+
+  `;
+}
+
+// ─── Repeat ───────────────────────────────────────────────────────────
+
+export function repeat<T>(
+  items: readonly T[],
+  keyFnOrTemplate: ((item: T) => string | number) | ((item: T, index: number) => TemplateResult),
+  templateFn?: (item: T, index: number) => TemplateResult,
+): TemplateResult {
+  // Overload resolution at runtime
+  const _keyFn: ((item: T) => string | number) | undefined = templateFn
+    ? (keyFnOrTemplate as (item: T) => string | number)
+    : undefined;
+  const _templateFn: (item: T, index: number) => TemplateResult = templateFn
+    ? templateFn
+    : (keyFnOrTemplate as (item: T, index: number) => TemplateResult);
+
+  const fragments: string[] = [];
+  const values: TemplateValue[] = [];
+
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    const result = _templateFn(item, i);
+    fragments.push(result.strings[0]);
+    for (let j = 0; j < result.values.length; j++) {
+      values.push(result.values[j]);
+      fragments.push(result.strings[j + 1]);
+    }
+  }
+
+  const key = _keyFn ? items.map((item) => _keyFn(item)).join(',') : String(items.length);
+
+  return {
+    kind: 'less:template-result',
+    strings: [fragments.join(''), ''],
+    values,
+    [TEMPLATE_RESULT]: true,
+  } as TemplateResult;
+}
+
+// ─── Ref ──────────────────────────────────────────────────────────────
+
+export function ref(callback: (element: Element) => void): RefDirective {
+  return {
+    kind: 'less:ref',
+    callback,
+  };
+}
+
+// ─── Core API ─────────────────────────────────────────────────────────
 
 export function html(
   strings: TemplateStringsArray | readonly string[],
@@ -103,6 +329,14 @@ export function isUnsafeHTML(value: unknown): value is UnsafeHtmlValue {
   );
 }
 
+export function isClassMapValue(value: unknown): value is ClassMapValue {
+  return Boolean(
+    value &&
+      typeof value === 'object' &&
+      (value as Record<PropertyKey, unknown>)[CLASS_MAP] === true,
+  );
+}
+
 export function isSignalLike(value: unknown): value is SignalLike {
   return Boolean(
     value &&
@@ -112,25 +346,29 @@ export function isSignalLike(value: unknown): value is SignalLike {
   );
 }
 
+// ─── SSR Rendering ────────────────────────────────────────────────────
+
 export function renderTemplateToString(
   result: TemplateResult,
   options: { runtimeMarkers?: boolean } = {},
 ): string {
+  const parsed = getOrParseTemplate(result);
   let output = '';
   let stripNextQuote: '"' | "'" | '' = '';
   let bindingIndex = 0;
 
-  for (let i = 0; i < result.values.length; i++) {
-    let chunk = result.strings[i] ?? '';
+  for (const slot of parsed.slots) {
+    let chunk = slot.prefix;
     if (stripNextQuote && chunk.startsWith(stripNextQuote)) {
       chunk = chunk.slice(1);
       stripNextQuote = '';
     }
 
-    const value = result.values[i];
-    const binding = detectBinding(chunk);
+    const value = result.values[slot.index];
+    const binding = slot.binding;
+
     if (binding) {
-      output += binding.prefix;
+      output += chunk;
       stripNextQuote = binding.quoted;
       output += renderBinding(bindingIndex, binding, value, options.runtimeMarkers === true);
       bindingIndex++;
@@ -138,21 +376,22 @@ export function renderTemplateToString(
     }
 
     output += chunk;
-    // v0.21: wrap signal text values in data-less-b markers for fine-grained patching
     if (options.runtimeMarkers && isSignalLike(value)) {
-      output += `<span data-less-b="${bindingIndex}">${renderValue(value, 'text')}</span>`;
+      output += `<span data-less-b="${bindingIndex}">${renderContent(value)}</span>`;
       bindingIndex++;
     } else {
-      output += renderValue(value, 'text');
+      output += renderContent(value);
     }
   }
 
-  let tail = result.strings[result.strings.length - 1] ?? '';
+  let tail = parsed.tail;
   if (stripNextQuote && tail.startsWith(stripNextQuote)) {
     tail = tail.slice(1);
   }
   return output + tail;
 }
+
+// ─── Client Runtime Bindings ──────────────────────────────────────────
 
 export function collectRuntimeTemplateBindings(result: TemplateResult): RuntimeTemplateBindings {
   const events: RuntimeEventBinding[] = [];
@@ -203,6 +442,8 @@ export function applyRuntimeTemplateBindings(
   }
 }
 
+// ─── Signal Collection ────────────────────────────────────────────────
+
 export function collectTemplateSignals(result: TemplateResult): SignalLike[] {
   const signals: SignalLike[] = [];
   const seen = new Set<SignalLike>();
@@ -226,6 +467,8 @@ export function collectTemplateSignals(result: TemplateResult): SignalLike[] {
   return signals;
 }
 
+// ─── Internal Helpers ─────────────────────────────────────────────────
+
 function renderBinding(
   index: number,
   binding: BindingInfo,
@@ -245,31 +488,53 @@ function renderBinding(
   }
 
   const resolved = resolveSignalValue(value);
+
+  // classMap in attribute position
+  if (binding.name === 'class' && isClassMapValue(resolved as TemplateValue)) {
+    const classes = renderClassMapValue(resolved as unknown as ClassMapValue);
+    return `class="${escapeAttr(classes)}"`;
+  }
+
   const escaped = binding.name === 'href' || binding.name === 'src' ||
       binding.name.endsWith(':href')
     ? escapeAttr(sanitizeUrl(String(resolved ?? '')))
-    : renderValue(resolved as TemplateValue, 'attribute');
+    : renderAttrValue(resolved as TemplateValue);
   return `${binding.name}="${escaped}"`;
 }
 
-function renderValue(value: TemplateValue, context: 'text' | 'attribute'): string {
+function renderContent(value: TemplateValue): string {
   const resolved = resolveSignalValue(value);
   if (resolved === null || resolved === undefined || typeof resolved === 'function') return '';
+  if (isClassMapValue(resolved as unknown)) {
+    return escapeHtml(renderClassMapValue(resolved as unknown as ClassMapValue));
+  }
   if (Array.isArray(resolved)) {
-    return resolved.map((item) => renderValue(item, context)).join('');
+    return resolved.map((item) => renderContent(item as TemplateValue)).join('');
   }
-  if (isTemplateResult(resolved)) {
-    return renderTemplateToString(resolved);
+  if (isTemplateResult(resolved as TemplateValue)) {
+    return renderTemplateToString(resolved as TemplateResult);
   }
-  if (isUnsafeHTML(resolved)) {
-    return context === 'attribute' ? escapeAttr(resolved.html) : resolved.html;
+  if (isUnsafeHTML(resolved as TemplateValue)) {
+    return (resolved as UnsafeHtmlValue).html;
   }
-  const str = String(resolved);
-  return context === 'attribute' ? escapeAttr(str) : escapeHtml(str);
+  return escapeHtml(String(resolved));
+}
+
+function renderAttrValue(value: TemplateValue): string {
+  const resolved = resolveSignalValue(value);
+  if (resolved === null || resolved === undefined || typeof resolved === 'function') return '';
+  if (isClassMapValue(resolved as unknown)) {
+    return escapeAttr(renderClassMapValue(resolved as unknown as ClassMapValue));
+  }
+  if (Array.isArray(resolved)) {
+    return resolved.map((item) => renderAttrValue(item as TemplateValue)).join(' ');
+  }
+  return escapeAttr(String(resolved));
 }
 
 function resolveSignalValue(value: TemplateValue): TemplateValue | unknown {
-  return isSignalLike(value) ? value.value : value;
+  if (isSignalLike(value)) return value.value;
+  return value;
 }
 
 function isTruthyTemplateValue(value: TemplateValue): boolean {
@@ -299,10 +564,7 @@ function sanitizeUrl(value: string): string {
     .join('')
     .trim();
   if (!trimmed) return '';
-  // Allowed protocols: http, https, mailto, tel, relative paths
   if (/^(https?:|mailto:|tel:|\/|\.\/|\.\.\/|#|\?)/i.test(trimmed)) return trimmed;
-  // Block all other protocols (javascript:, data:, vbscript:, etc.)
   if (/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) return '#';
-  // Non-protocol values (plain strings) are safe
   return trimmed;
 }
