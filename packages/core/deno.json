@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/core",
-  "version": "0.24.0",
+  "version": "0.24.1",
   "exports": {
     ".": "./src/index.ts",
     "./errors": "./src/errors.ts",
@@ -14,7 +14,9 @@
     "./render-errors": "./src/render-errors.ts",
     "./render-dsd-stream": "./src/render-dsd-stream.ts",
     "./types": "./src/types.ts",
-    "./dom-simulation": "./src/dom-simulation.ts"
+    "./dom-simulation": "./src/dom-simulation.ts",
+    "./jsx-runtime": "./src/jsx-runtime.ts",
+    "./jsx-dev-runtime": "./src/jsx-runtime.ts"
   },
   "imports": {
     "parse5": "npm:parse5@7.0.0",

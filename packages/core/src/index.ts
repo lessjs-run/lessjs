@@ -173,3 +173,29 @@ export {
 // Import from '@lessjs/core/dom-simulation' directly; requires happy-dom at runtime.
 
 // v0.23: Virtual module IDs live in @lessjs/protocols/virtual-ids.
+
+// v0.24.1 (ADR-0057): JSX + Signal component model
+// VNode & jsx-runtime
+export type { VNode } from './vnode.js';
+export { isVNode } from './vnode.js';
+export { Fragment, jsx, jsxDEV, jsxs } from './jsx-runtime.js';
+// Renderers
+export { renderToDOM } from './jsx-render-dom.js';
+export { renderToString } from './jsx-render-string.js';
+// static props runtime + Signal unwrap
+export {
+  disposeStaticProps,
+  handleStaticPropAttributeChange,
+  initializeStaticProps,
+  registerStaticObservedAttributes,
+  syncStaticPropsFromAttributes,
+  unwrap,
+} from './prop.js';
+// Type-inference utilities
+export type {
+  PropDecl,
+  PropDeclFull,
+  PropDeclShorthand,
+  PropsFrom,
+  PropType,
+} from './prop-types.js';

@@ -71,6 +71,8 @@ import { instantiationErrorHtml, wrongTypeErrorHtml } from './render-errors.js';
 import { classifyError } from './render-errors.js';
 import { serializeAttributes, wrapDsdOutput } from './render-serialize.js';
 import { isTemplateResult, renderTemplateToString } from './template.js';
+import { isVNode } from './vnode.js';
+import { renderToString as renderVNodeToString } from './jsx-render-string.js';
 
 const log = createLogger('core');
 const _textEncoder = new TextEncoder();
@@ -182,6 +184,9 @@ export async function renderDSD(
       content = '';
     } else if (typeof result === 'string') {
       content = result;
+    } else if (isVNode(result)) {
+      // v0.24.1 (SOP-003): JSX VNode path — convert VNode tree to HTML string
+      content = renderVNodeToString(result);
     } else if (isTemplateResult(result)) {
       content = renderTemplateToString(result, { runtimeMarkers: true });
     } else {

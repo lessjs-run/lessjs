@@ -58,6 +58,14 @@ import {
   type TemplateResult,
 } from './template.js';
 import { disposeProps, handlePropAttributeChange, initializeProps } from './prop.js';
+import {
+  disposeStaticProps,
+  handleStaticPropAttributeChange,
+  initializeStaticProps,
+  syncStaticPropsFromAttributes,
+} from './prop.js';
+import { isVNode, type VNode } from './vnode.js';
+import { renderToString } from './jsx-render-string.js';
 
 /**
  * Minimal SSR-safe HTMLElement stub for server environments (SOP-016).
@@ -214,6 +222,10 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     // v0.24 (ADR-0052): Initialize @prop() signals and accessors
     initializeProps(this);
 
+    // v0.24.1 (ADR-0057): Initialize static props signals and accessors
+    initializeStaticProps(this as unknown as Record<string, unknown>);
+    syncStaticPropsFromAttributes(this as unknown as Record<string, unknown>);
+
     // Ensure shadow root exists and detect DSD pre-population
     if (!this.shadowRoot) {
       this.createRenderRoot();
@@ -288,6 +300,8 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     this._disposeSignalSubscriptions();
     // v0.24 (ADR-0052): Clean up @prop() signal subscriptions
     disposeProps(this);
+    // v0.24.1 (ADR-0057): Clean up static props signal subscriptions
+    disposeStaticProps(this as unknown as Record<string, unknown>);
   }
 
   /**
@@ -308,6 +322,13 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   ): void {
     // v0.24 (ADR-0052): Route to @prop() handler
     handlePropAttributeChange(this, _name, _oldValue, _newValue);
+    // v0.24.1 (ADR-0057): Route to static props handler
+    handleStaticPropAttributeChange(
+      this as unknown as Record<string, unknown>,
+      _name,
+      _oldValue,
+      _newValue,
+    );
     // Subclass override point - base implementation is intentionally empty.
   }
 
@@ -367,7 +388,9 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     this._disposeSignalSubscriptions();
 
     const result = this.render();
-    if (isTemplateResult(result)) {
+    if (isVNode(result)) {
+      this.shadowRoot.innerHTML = renderToString(result);
+    } else if (isTemplateResult(result)) {
       this.shadowRoot.innerHTML = renderTemplateToString(result, { runtimeMarkers: true });
       this._bindTemplateRuntime(result);
       this._subscribeTemplateSignals(result);
@@ -423,7 +446,8 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     this._disposeSignalSubscriptions();
 
     const result = this.render();
-    if (!isTemplateResult(result) || !this.shadowRoot) return;
+    if (isVNode(result) || !this.shadowRoot) return; // JSX path: no runtime bindings needed for DSD
+    if (!isTemplateResult(result)) return;
     this._bindTemplateRuntime(result);
     this._subscribeTemplateSignals(result);
   }
@@ -493,16 +517,28 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   }
 
   /**
-   * Return Shadow DOM inner HTML as a string or safe TemplateResult.
+   * Return Shadow DOM inner HTML as a string, TemplateResult, or VNode.
    *
    * Subclasses MUST override this method. During SSR, rendered content is
    * wrapped in a <template shadowrootmode="open"> tag. During CSR, strings are
    * assigned to `shadowRoot.innerHTML`; TemplateResult values also get runtime
-   * event/property bindings and signal subscriptions.
+   * event/property bindings and signal subscriptions; VNode values are
+   * serialised to HTML via renderToString().
    *
-   * @returns HTML string or TemplateResult for the shadow DOM content.
+   * @returns HTML string, TemplateResult, or VNode for the shadow DOM content.
    */
-  render(): string | TemplateResult {
+  render(): string | TemplateResult | VNode {
     return '';
+  }
+
+  /**
+   * Resolve the output of render() to a plain HTML string.
+   * Handles string, TemplateResult, and VNode return types uniformly.
+   */
+  protected _resolveRenderOutput(result: string | TemplateResult | VNode): string {
+    if (typeof result === 'string') return result;
+    if (isVNode(result)) return renderToString(result);
+    if (isTemplateResult(result)) return renderTemplateToString(result, { runtimeMarkers: true });
+    return String(result);
   }
 }

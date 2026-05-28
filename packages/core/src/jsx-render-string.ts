@@ -1,0 +1,176 @@
+/**
+ * @lessjs/core - JSX → HTML string renderer.
+ *
+ * Converts a VNode tree to an HTML string for SSR/SSG output.
+ *
+ * Design (ADR-0057):
+ * - Pure string concatenation — zero DOM dependency, works in any runtime
+ * - Event handlers (onClick etc.) are silently ignored (CSR-only)
+ * - ref callbacks are silently ignored (DOM-only)
+ * - Completes in a single recursive pass
+ *
+ * @module @lessjs/core/jsx-render-string
+ */
+
+import { isVNode } from './vnode.ts';
+import { Fragment } from './jsx-runtime.ts';
+import { escapeAttr, escapeHtml } from './html-escape.ts';
+
+// ─── Void elements ───────────────────────────────────────────────────────────
+
+const VOID_ELEMENTS = new Set([
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
+]);
+
+// ─── Attribute serialisation ──────────────────────────────────────────────────
+
+/**
+ * Serialise a props object to an HTML attribute string (with leading space when non-empty).
+ *
+ * Rules:
+ * - `children` prop is skipped (handled as child nodes)
+ * - `ref` prop is skipped (DOM-only)
+ * - `key` prop is skipped (reconciliation hint only)
+ * - `on*` handlers are skipped (CSR-only, not serialised to HTML)
+ * - Function values are skipped
+ * - Boolean `true` emits the attribute with empty value; `false`/`null`/`undefined` omits it
+ * - `class` and `className` are both supported (className → class)
+ * - `htmlFor` → `for`
+ * - `style` object is serialised to a CSS string
+ * - All values are HTML-attribute-escaped
+ */
+function serializeAttrs(props: Record<string, unknown>): string {
+  let result = '';
+  for (const [key, value] of Object.entries(props)) {
+    // Skip non-attribute props
+    if (key === 'children' || key === 'ref' || key === 'key') continue;
+    // Skip event handlers
+    if (key.startsWith('on') && typeof value === 'function') continue;
+    // Skip all function values
+    if (typeof value === 'function') continue;
+    // Skip null / undefined
+    if (value == null) continue;
+
+    // Resolve attribute name
+    let attrName: string;
+    if (key === 'className') {
+      attrName = 'class';
+    } else if (key === 'htmlFor') {
+      attrName = 'for';
+    } else {
+      attrName = key;
+    }
+
+    // Boolean attributes
+    if (typeof value === 'boolean') {
+      if (value) result += ` ${attrName}`;
+      continue;
+    }
+
+    // Style object → inline CSS string
+    if (key === 'style' && typeof value === 'object') {
+      const css = styleObjectToString(value as Record<string, unknown>);
+      if (css) result += ` style="${escapeAttr(css)}"`;
+      continue;
+    }
+
+    // General attributes
+    result += ` ${attrName}="${escapeAttr(String(value))}"`;
+  }
+  return result;
+}
+
+function styleObjectToString(obj: Record<string, unknown>): string {
+  return Object.entries(obj)
+    .filter(([, v]) => v != null)
+    .map(([k, v]) => {
+      // camelCase → kebab-case
+      const prop = k.replace(/([A-Z])/g, (m) => `-${m.toLowerCase()}`);
+      return `${prop}: ${v}`;
+    })
+    .join('; ');
+}
+
+// ─── renderToString ───────────────────────────────────────────────────────────
+
+/**
+ * Render a VNode tree to an HTML string.
+ *
+ * @param node - VNode, string, number, boolean, null or undefined
+ * @returns HTML string (empty string for null/undefined/false)
+ */
+export function renderToString(node: unknown): string {
+  // Falsy / empty nodes
+  if (node == null || node === false) return '';
+  if (typeof node === 'string') return escapeHtml(node);
+  if (typeof node === 'number') return String(node);
+  if (typeof node === 'boolean') return '';
+
+  if (!isVNode(node)) {
+    // Unknown value — coerce to string
+    return escapeHtml(String(node));
+  }
+
+  const { tag, props, children } = node;
+
+  // ── Fragment ──────────────────────────────────────────────────────────────
+  if (tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(lessjs.fragment)')) {
+    return children.map((c) => renderToString(c)).join('');
+  }
+
+  // ── Component function / class ────────────────────────────────────────────
+  if (typeof tag === 'function') {
+    // DsdElement class: instantiate + call render() via renderToString recursion
+    // Function components: call directly
+    try {
+      // Check if it's a class (has a prototype.render)
+      if (tag.prototype && typeof tag.prototype.render === 'function') {
+        // DsdElement subclass — SSR: create instance, inject props, call render()
+        // This path is handled by render-dsd.ts; here we delegate to a simple fallback
+        const instance = new (tag as new (
+          ...args: unknown[]
+        ) => { render(): unknown })();
+        // Inject props as own properties
+        for (const [k, v] of Object.entries(props)) {
+          (instance as Record<string, unknown>)[k] = v;
+        }
+        const result = instance.render();
+        return renderToString(result);
+      } else {
+        // Function component
+        const result = (tag as (props: Record<string, unknown>) => unknown)({
+          ...props,
+          children,
+        });
+        return renderToString(result);
+      }
+    } catch {
+      return '';
+    }
+  }
+
+  // ── HTML element ──────────────────────────────────────────────────────────
+  const attrs = serializeAttrs(props);
+  const childHtml = children.map((c) => renderToString(c)).join('');
+
+  const tagStr = String(tag);
+
+  if (VOID_ELEMENTS.has(tagStr)) {
+    return `<${tagStr}${attrs}>`;
+  }
+
+  return `<${tagStr}${attrs}>${childHtml}</${tagStr}>`;
+}

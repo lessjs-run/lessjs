@@ -44,6 +44,7 @@ individual package versions may lag until a coordinated publish pass.
 | 8     | v0.22.x | Architecture Integrity       | Package boundaries, consumer surface, adapter cleanup, gates   | Done    |
 | 9     | v0.23.x | Layered Package Architecture | Protocols, runtime facade, graph gates, docs governance        | Current |
 | 10    | v0.24.x | Edge Full-Stack              | ISR handler, KV adapters, Showcase, deployment guides          | Planned |
+| 10.1  | v0.24.1 | JSX + Signal Component Model | JSX template, static props, Signal unwrap, DSD integration     | Planned |
 | 11    | v0.25.x | Ecosystem Hardening          | Hub trust policy, package evidence, compatibility growth       | Planned |
 | 12    | v1.0.x  | Stable Engine                | API/schema freeze and deterministic package guarantees         | Vision  |
 
@@ -219,6 +220,35 @@ Scope:
 - KvIsrCache adapters (CF Workers KV + Deno KV)
 - www Showcase pages (Reactive DSD demo, ISR stopwatch, serverless API)
 - Deployment guides (CF Workers, Deno Deploy, static-only)
+
+## Planned: v0.24.1 - JSX + Signal Component Model
+
+Goal: replace `html` tagged template + `@prop()` with JSX + `static props`,
+aligning LessJS's template layer with its strategic positioning — differentiating
+on DSD pipeline + Signal reactivity, not on template DSL.
+
+Governing ADR: ADR-0057 (v2)
+
+Scope:
+
+- jsx-runtime (VNode + renderToString + renderToDOM) — ~200 lines replacing ~570
+- `static props` declarative configuration replacing `@prop()` decorator
+- Signal auto-unwrap (valueOf / Symbol.toPrimitive + `unwrap()` utility)
+- VNode interface freeze clause (5 fields, no VDOM diff)
+- JSX event system (onClick → native addEventListener, no synthetic events)
+- DSD pipeline integration (renderDSD consumes VNode output)
+- Internal component migration (html → JSX, @prop → static props)
+- `html` tagged template marked `@deprecated`
+- TypeScript type inference for `static props` (PropsFrom\<T\> or MVP fallback)
+
+Non-goals:
+
+- VDOM diff, synthetic events, Portal/Suspense/Context
+- Removing `html` tagged template (moves to html-legacy in v0.28)
+- ISR handler or KV adapters (v0.24.x mainline)
+- Competing with Lit on tagged template (LessJS differentiates on DSD + Signal)
+
+See `docs/sop/v0.24.1/` for detailed step-by-step SOPs.
 
 ## Planned: v0.25.x - Ecosystem Hardening
 
