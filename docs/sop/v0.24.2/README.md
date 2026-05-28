@@ -95,7 +95,7 @@ deno task build:www   # 验证 www 构建
 ## Step 9: 写 changelog 和 release note
 
 - `CHANGELOG.md` 新增 v0.24.1 条目
-- `docs/releases/0.24.1.md` release note
+- `docs/release/0.24.1.md` release note
 
 ## Step 10: Commit + Push
 
