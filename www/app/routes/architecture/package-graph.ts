@@ -39,6 +39,7 @@ export class PackageGraphPage extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
 
   override render() {
+    const isZh = this._getLocale('zh') === 'zh';
     return `
       <less-layout
         locale="${this._getLocale('en')}"

@@ -739,12 +739,34 @@ export class DocsHome extends DsdElement {
             </div>
 
             <div class="proof-strip">
-              <div class="proof"><strong>DSD</strong><span>HTML includes declarative shadow roots before JavaScript runs.</span></div>
-              <div class="proof"><strong>Islands</strong><span>load, idle, visible, and only remain explicit upgrade choices.</span></div>
-              <div class="proof"><strong>SSG</strong><span>Static output is the production default; edge ISR is deferred.</span></div>
-              <div class="proof"><strong>Hono API</strong><span>API routes use the Fetch-native Hono substrate.</span></div>
-              <div class="proof"><strong>Protocols</strong><span>Build contracts do not live under adapter internals.</span></div>
-              <div class="proof"><strong>Hub</strong><span>Package evidence stays separate from marketplace claims.</span></div>
+              <div class="proof"><strong>DSD</strong><span>${
+      isZh
+        ? 'HTML 在 JavaScript 运行前就已包含声明式 Shadow DOM。'
+        : 'HTML includes declarative shadow roots before JavaScript runs.'
+    }</span></div>
+              <div class="proof"><strong>Islands</strong><span>${
+      isZh
+        ? 'load, idle, visible, only 是明确的升级策略选择。'
+        : 'load, idle, visible, and only remain explicit upgrade choices.'
+    }</span></div>
+              <div class="proof"><strong>SSG</strong><span>${
+      isZh
+        ? '静态输出是生产默认；Edge ISR 延迟到后续版本。'
+        : 'Static output is the production default; edge ISR is deferred.'
+    }</span></div>
+              <div class="proof"><strong>Hono API</strong><span>${
+      isZh
+        ? 'API routes 使用 Fetch 原生的 Hono 底层。'
+        : 'API routes use the Fetch-native Hono substrate.'
+    }</span></div>
+              <div class="proof"><strong>Protocols</strong><span>${
+      isZh
+        ? '构建合约不放在 adapter 内部实现中。'
+        : 'Build contracts do not live under adapter internals.'
+    }</span></div>
+              <div class="proof"><strong>Hub</strong><span>${
+      isZh ? '包证据与市场声明分离。' : 'Package evidence stays separate from marketplace claims.'
+    }</span></div>
             </div>
           </section>
 
@@ -752,22 +774,44 @@ export class DocsHome extends DsdElement {
             <div class="band-inner">
               <div class="section-head">
                 <div>
-                  <p class="section-kicker">build path</p>
-                  <h2 class="section-title">From command to artifact.</h2>
+                  <p class="section-kicker">${isZh ? '构建路径' : 'build path'}</p>
+                  <h2 class="section-title">${
+      isZh ? '从命令到产物。' : 'From command to artifact.'
+    }</h2>
                 </div>
-                <p class="section-copy">
-                  LessJS documentation should start from the thing a user can
-                  run, then show the generated files, rendered output, and the
-                  gates that prove the package graph.
-                </p>
+                <p class="section-copy">${
+      isZh
+        ? 'LessJS 文档应该从用户可以执行的命令开始，然后展示生成的文件、渲染输出、以及证明包图的门禁。'
+        : 'LessJS documentation should start from the thing a user can run, then show the generated files, rendered output, and the gates that prove the package graph.'
+    }</p>
               </div>
               <div class="path-grid">
-                <div class="path-step"><b>1</b><h3>Create</h3><p>Scaffold a project from the unified JSR package set.</p></div>
-                <div class="path-step"><b>2</b><h3>Author</h3><p>Write components from the runtime facade.</p></div>
-                <div class="path-step"><b>3</b><h3>Route</h3><p>Use file routes, islands, content, i18n, and Hono APIs.</p></div>
-                <div class="path-step"><b>4</b><h3>Build</h3><p>Emit DSD HTML, island chunks, sitemap, and reports.</p></div>
-                <div class="path-step"><b>5</b><h3>Inspect</h3><p>Read package graph output and DSD reports.</p></div>
-                <div class="path-step"><b>6</b><h3>Deploy</h3><p>Ship static output now; resume edge ISR in v0.24.</p></div>
+                <div class="path-step"><b>1</b><h3>Create</h3><p>${
+      isZh
+        ? '从统一的 JSR 包集合初始化项目。'
+        : 'Scaffold a project from the unified JSR package set.'
+    }</p></div>
+                <div class="path-step"><b>2</b><h3>Author</h3><p>${
+      isZh ? '从 runtime facade 编写组件。' : 'Write components from the runtime facade.'
+    }</p></div>
+                <div class="path-step"><b>3</b><h3>Route</h3><p>${
+      isZh
+        ? '使用文件路由、island、content、i18n 和 Hono API。'
+        : 'Use file routes, islands, content, i18n, and Hono APIs.'
+    }</p></div>
+                <div class="path-step"><b>4</b><h3>Build</h3><p>${
+      isZh
+        ? '输出 DSD HTML、island chunks、sitemap 和报告。'
+        : 'Emit DSD HTML, island chunks, sitemap, and reports.'
+    }</p></div>
+                <div class="path-step"><b>5</b><h3>Inspect</h3><p>${
+      isZh ? '读取包图输出和 DSD 报告。' : 'Read package graph output and DSD reports.'
+    }</p></div>
+                <div class="path-step"><b>6</b><h3>Deploy</h3><p>${
+      isZh
+        ? '立即部署静态产物；Edge ISR 在 v0.25 恢复。'
+        : 'Ship static output now; resume edge ISR in v0.25.'
+    }</p></div>
               </div>
             </div>
           </section>
@@ -776,30 +820,69 @@ export class DocsHome extends DsdElement {
             <div class="band-inner">
               <div class="section-head">
                 <div>
-                  <p class="section-kicker">architecture truth</p>
-                  <h2 class="section-title">Layers with owners.</h2>
+                  <p class="section-kicker">${isZh ? '架构事实' : 'architecture truth'}</p>
+                  <h2 class="section-title">${
+      isZh ? '由拥有者管理的分层架构。' : 'Layers with owners.'
+    }</h2>
                 </div>
-                <p class="section-copy">
-                  v0.23.0 is a package architecture release. It removes
-                  wrong-owner build contracts and makes facades explicit.
-                </p>
+                <p class="section-copy">${
+      isZh
+        ? 'v0.23.0 是一个包架构版本。它移除了归属错误的构建合约，使 facade 显式化。'
+        : 'v0.23.0 is a package architecture release. It removes wrong-owner build contracts and makes facades explicit.'
+    }</p>
               </div>
               <div class="architecture-grid">
                 <div class="layer-map">
-                  <div class="layer"><strong>tools and gates</strong><span>create, graph checker, publish workflow, smoke tests</span></div>
-                  <div class="layer"><strong>product facades</strong><span>@lessjs/app for config, @lessjs/runtime for authoring</span></div>
-                  <div class="layer"><strong>build adapters</strong><span>adapter-vite owns Vite and SSG implementation</span></div>
-                  <div class="layer"><strong>features</strong><span>content, i18n, hub, ui, cem, compat-check</span></div>
-                  <div class="layer"><strong>runtime kernel</strong><span>core owns DSD runtime, templates, navigation, logger</span></div>
-                  <div class="layer"><strong>protocols</strong><span>shared build contracts and virtual ids</span></div>
+                  <div class="layer"><strong>${
+      isZh ? '工具与门禁' : 'tools and gates'
+    }</strong><span>${
+      isZh
+        ? 'create、图检查器、发布工作流、冒烟测试'
+        : 'create, graph checker, publish workflow, smoke tests'
+    }</span></div>
+                  <div class="layer"><strong>${
+      isZh ? '产品外观' : 'product facades'
+    }</strong><span>${
+      isZh
+        ? '@lessjs/app 用于配置，@lessjs/runtime 用于组件编写'
+        : '@lessjs/app for config, @lessjs/runtime for authoring'
+    }</span></div>
+                  <div class="layer"><strong>${
+      isZh ? '构建适配器' : 'build adapters'
+    }</strong><span>${
+      isZh ? 'adapter-vite 拥有 Vite 和 SSG 实现' : 'adapter-vite owns Vite and SSG implementation'
+    }</span></div>
+                  <div class="layer"><strong>${
+      isZh ? '功能层' : 'features'
+    }</strong><span>content, i18n, hub, ui, cem, compat-check</span></div>
+                  <div class="layer"><strong>${
+      isZh ? '运行时内核' : 'runtime kernel'
+    }</strong><span>${
+      isZh
+        ? 'core 拥有 DSD 运行时、模板、导航、日志'
+        : 'core owns DSD runtime, templates, navigation, logger'
+    }</span></div>
+                  <div class="layer"><strong>${isZh ? '协议层' : 'protocols'}</strong><span>${
+      isZh ? '共享构建合约和虚拟 ID' : 'shared build contracts and virtual ids'
+    }</span></div>
                 </div>
                 <div class="owner-table">
-                  <div class="owner-row"><code>@lessjs/protocols</code><span>shared build contracts</span></div>
-                  <div class="owner-row"><code>@lessjs/runtime</code><span>component authoring facade</span></div>
-                  <div class="owner-row"><code>@lessjs/app</code><span>configuration facade</span></div>
+                  <div class="owner-row"><code>@lessjs/protocols</code><span>${
+      isZh ? '共享构建合约' : 'shared build contracts'
+    }</span></div>
+                  <div class="owner-row"><code>@lessjs/runtime</code><span>${
+      isZh ? '组件编写入口' : 'component authoring facade'
+    }</span></div>
+                  <div class="owner-row"><code>@lessjs/app</code><span>${
+      isZh ? '配置入口' : 'configuration facade'
+    }</span></div>
                   <div class="owner-row"><code>@lessjs/signals</code><span>alien-signals facade</span></div>
-                  <div class="owner-row"><code>@lessjs/core</code><span>small runtime kernel</span></div>
-                  <div class="owner-row"><code>@lessjs/create</code><span>generated project contract</span></div>
+                  <div class="owner-row"><code>@lessjs/core</code><span>${
+      isZh ? '精简运行时内核' : 'small runtime kernel'
+    }</span></div>
+                  <div class="owner-row"><code>@lessjs/create</code><span>${
+      isZh ? '生成的项目合约' : 'generated project contract'
+    }</span></div>
                 </div>
               </div>
             </div>
@@ -809,20 +892,46 @@ export class DocsHome extends DsdElement {
             <div class="band-inner">
               <div class="section-head">
                 <div>
-                  <p class="section-kicker">release truth</p>
-                  <h2 class="section-title">Shipped, current, deferred.</h2>
+                  <p class="section-kicker">${isZh ? '发布事实' : 'release truth'}</p>
+                  <h2 class="section-title">${
+      isZh ? '已发布、当前进行中、延迟。' : 'Shipped, current, deferred.'
+    }</h2>
                 </div>
-                <p class="section-copy">
-                  The site should not sell deferred capability as shipped. The
-                  current line is architecture integrity; edge full-stack work
-                  resumes after this package graph stays clean.
-                </p>
+                <p class="section-copy">${
+      isZh
+        ? '网站不应把延迟能力当成已发布来宣传。当前主线是架构完整性；Edge full-stack 在包图保持干净后恢复。'
+        : 'The site should not sell deferred capability as shipped. The current line is architecture integrity; edge full-stack work resumes after this package graph stays clean.'
+    }</p>
               </div>
               <div class="status-grid">
-                <div class="status-card"><span class="chip success">Done</span><h3>v0.21 Reactive DSD</h3><p>Safe templates, DsdElement reactivity, streaming DSD.</p></div>
-                <div class="status-card"><span class="chip success">Done</span><h3>v0.22 Architecture Integrity</h3><p>Consumer surface cleanup, adapter cleanup, release gates.</p></div>
-                <div class="status-card"><span class="chip current">Current</span><h3>v0.23 Layered Architecture</h3><p>Protocols, runtime facade, app facade, graph gate.</p></div>
-                <div class="status-card"><span class="chip">Deferred</span><h3>v0.24 Edge Full-Stack</h3><p>ISR handlers, KV adapters, deploy parity, showcase proof.</p></div>
+                <div class="status-card"><span class="chip success">Done</span><h3>${
+      isZh ? 'v0.21 响应式 DSD' : 'v0.21 Reactive DSD'
+    }</h3><p>${
+      isZh
+        ? '安全模板、DsdElement 响应式、流式 DSD。'
+        : 'Safe templates, DsdElement reactivity, streaming DSD.'
+    }</p></div>
+                <div class="status-card"><span class="chip success">Done</span><h3>${
+      isZh ? 'v0.22 架构完整性' : 'v0.22 Architecture Integrity'
+    }</h3><p>${
+      isZh
+        ? '消费者接口清理、适配器清理、发布门禁。'
+        : 'Consumer surface cleanup, adapter cleanup, release gates.'
+    }</p></div>
+                <div class="status-card"><span class="chip current">Current</span><h3>${
+      isZh ? 'v0.23 分层架构' : 'v0.23 Layered Architecture'
+    }</h3><p>${
+      isZh
+        ? '协议层、运行时入口、应用入口、图门禁。'
+        : 'Protocols, runtime facade, app facade, graph gate.'
+    }</p></div>
+                <div class="status-card"><span class="chip">Deferred</span><h3>${
+      isZh ? 'v0.24 Edge 全栈' : 'v0.24 Edge Full-Stack'
+    }</h3><p>${
+      isZh
+        ? 'ISR handler、KV adapter、部署一致性、showcase 验证。'
+        : 'ISR handlers, KV adapters, deploy parity, showcase proof.'
+    }</p></div>
               </div>
             </div>
           </section>

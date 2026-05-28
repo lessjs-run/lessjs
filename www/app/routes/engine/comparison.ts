@@ -130,6 +130,7 @@ export default class ComparisonPage extends DsdElement {
   static override styles = [openPropsTokenSheet, routeSheet];
 
   override render() {
+    const isZh = this._getLocale('zh') === 'zh';
     return `
       <less-layout
         locale="${this._getLocale('zh')}"

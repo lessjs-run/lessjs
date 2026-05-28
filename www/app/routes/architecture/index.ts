@@ -197,6 +197,7 @@ export class ArchitecturePage extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
 
   override render() {
+    const isZh = this._getLocale('zh') === 'zh';
     return `
       <less-layout
         locale="${this._getLocale('en')}"
@@ -213,7 +214,7 @@ export class ArchitecturePage extends DsdElement {
                 <span class="chip current">v0.23.0</span>
                 <span class="chip pass">graph gate passing</span>
               </div>
-              <h1>Layered Package Architecture</h1>
+              <h1>${isZh ? '分层包架构' : 'Layered Package Architecture'}</h1>
               <p class="lede">
                 LessJS is organized around explicit package ownership:
                 protocols own shared contracts, core stays the runtime kernel,
@@ -229,8 +230,10 @@ export class ArchitecturePage extends DsdElement {
           <section class="section">
             <div class="section-head">
               <div>
-                <p class="kicker">Layers</p>
-                <h2>Dependency direction is part of the API.</h2>
+                <p class="kicker">${isZh ? '分层' : 'Layers'}</p>
+                <h2>${
+      isZh ? '依赖方向是 API 的一部分。' : 'Dependency direction is part of the API.'
+    }</h2>
               </div>
               <p class="copy">
                 v0.23.0 makes package responsibility inspectable. Feature
@@ -263,8 +266,8 @@ export class ArchitecturePage extends DsdElement {
           <section class="section">
             <div class="section-head">
               <div>
-                <p class="kicker">Deep Dive</p>
-                <h2>Why each layer exists.</h2>
+                <p class="kicker">${isZh ? '深入解析' : 'Deep Dive'}</p>
+                <h2>${isZh ? '为什么每一层存在。' : 'Why each layer exists.'}</h2>
               </div>
               <p class="copy">
                 The framework can only grow if users, contributors, and CI agree
@@ -274,23 +277,43 @@ export class ArchitecturePage extends DsdElement {
             <div class="cards">
               <a class="card" href="/architecture/protocols">
                 <h3>Protocols</h3>
-                <p>Shared build contracts do not live under adapter internals. v0.23.0 moved them to their own package.</p>
+                <p>${
+      isZh
+        ? '共享构建合约不放在 adapter 内部。v0.23.0 已将其迁移到独立包。'
+        : 'Shared build contracts do not live under adapter internals. v0.23.0 moved them to their own package.'
+    }</p>
               </a>
               <a class="card" href="/architecture/runtime-kernel">
-                <h3>Runtime Kernel</h3>
-                <p>Core is a small kernel: DSD runtime, templates, renderDSD, islands, navigation, logger, errors.</p>
+                <h3>${isZh ? '运行时内核' : 'Runtime Kernel'}</h3>
+                <p>${
+      isZh
+        ? 'Core 是一个精简内核：DSD 运行时、模板、renderDSD、islands、导航、日志、错误。'
+        : 'Core is a small kernel: DSD runtime, templates, renderDSD, islands, navigation, logger, errors.'
+    }</p>
               </a>
               <a class="card" href="/architecture/adapter-vite">
                 <h3>Adapter-Vite</h3>
-                <p>Owns Vite plugin assembly, route scanning, SSG phases, generated entries, and build orchestration.</p>
+                <p>${
+      isZh
+        ? '拥有 Vite 插件组装、路由扫描、SSG 阶段、生成入口和构建编排。'
+        : 'Owns Vite plugin assembly, route scanning, SSG phases, generated entries, and build orchestration.'
+    }</p>
               </a>
               <a class="card" href="/architecture/package-graph">
-                <h3>Package Graph</h3>
-                <p>0 cycles, 18 packages, every @lessjs/* import declared in deno.json. Checked before publish.</p>
+                <h3>${isZh ? '包图' : 'Package Graph'}</h3>
+                <p>${
+      isZh
+        ? '0 循环、18 个包、每个 @lessjs/* 导入在 deno.json 中声明。发布前检查。'
+        : '0 cycles, 18 packages, every @lessjs/* import declared in deno.json. Checked before publish.'
+    }</p>
               </a>
               <a class="card" href="/architecture/release-gates">
-                <h3>Release Gates</h3>
-                <p>fmt, lint, typecheck, test, build, dsd check, hub validate, graph check: 8 mechanical gates.</p>
+                <h3>${isZh ? '发布门禁' : 'Release Gates'}</h3>
+                <p>${
+      isZh
+        ? '8 道机械门禁。'
+        : 'fmt, lint, typecheck, test, build, dsd check, hub validate, graph check: 8 mechanical gates.'
+    }</p>
               </a>
               <a class="card" href="/engine/architecture">
                 <span style="display:inline-flex;align-items:center;min-height:24px;margin-bottom:8px;padding:0 8px;border-radius:5px;font-size:11px;font-weight:750;color:var(--warning);border:1px solid rgba(160,90,0,0.22);background:rgba(160,90,0,0.06);">Legacy</span>
