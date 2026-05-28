@@ -45,6 +45,7 @@ LessJS 组件开发者
 | 6    | SOP-006 | P1       | static props TypeScript 类型推导（PropsFrom\<T\>）     | DX 优化              |
 | 7    | SOP-007 | P1       | html tagged template @deprecated + 文档更新            | v0.24.1 closure      |
 | 8    | SOP-008 | P0       | 验证 + 回归测试 + Release Gate                         | v0.24.1 发布         |
+| 9    | SOP-009 | P0       | 文档修复 + 新文档编写 + i18n 中文补充                  | v0.24.1 closure      |
 
 ## Entry Criteria
 
