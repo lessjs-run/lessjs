@@ -35,6 +35,12 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 600,
   },
+  // v0.24.1 (ADR-0057): Configure esbuild JSX transform to use LessJS automatic runtime.
+  // Must match root deno.json compilerOptions.jsx / jsxImportSource.
+  esbuild: {
+    jsx: 'automatic',
+    jsxImportSource: '@lessjs/core',
+  },
   plugins: [
     lessjs({
       routesDir: 'app/routes',
