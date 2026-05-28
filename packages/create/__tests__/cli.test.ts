@@ -167,15 +167,15 @@ Deno.test('create-less: route index imports DsdElement (v0.20 Ocean-Island)', ()
   assertEquals(routeIndex.includes('LitElement'), false);
 });
 
-Deno.test('create-less: island counter imports DsdElement and self-registers (v0.21)', () => {
-  const islandCounter = extractTemplate('app/islands/my-counter.ts');
+Deno.test('create-less: island counter uses JSX + static props (v0.24)', () => {
+  const islandCounter = extractTemplate('app/islands/my-counter.tsx');
   assert(islandCounter.includes('DsdElement'));
   assert(islandCounter.includes("from '@lessjs/runtime'"));
   assert(islandCounter.includes("tagName = 'my-counter'"));
-  assert(islandCounter.includes('signal(0)'));
-  assert(islandCounter.includes('return html'));
+  assert(islandCounter.includes('static props'));
+  assert(islandCounter.includes('@jsxImportSource @lessjs/core'));
   assert(islandCounter.includes('customElements.define'));
-  // Verify no Lit dependency in Ocean template
+  // Verify no Lit dependency in template
   assertEquals(islandCounter.includes("from 'lit'"), false);
   assertEquals(islandCounter.includes('LitElement'), false);
 });
