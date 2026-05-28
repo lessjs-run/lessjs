@@ -25,7 +25,7 @@ Deno.test('less-ui - index exports manifest (WC Package Protocol)', async () => 
 });
 
 Deno.test('less-ui - less-theme-toggle exports tagName', async () => {
-  const mod = await import('../src/less-theme-toggle.ts');
+  const mod = await import('../src/less-theme-toggle.tsx');
   assertEquals(mod.tagName, 'less-theme-toggle');
   assertExists(mod.LessThemeToggle, 'LessThemeToggle class should be exported');
 });
@@ -49,7 +49,7 @@ Deno.test('less-ui - all components export tagName', async () => {
     'less-theme-toggle',
   ];
   for (const name of components) {
-    const mod = await import(`../src/${name}.ts`);
+    const mod = await import(`../src/${name}.tsx`);
     assertExists(mod.tagName, `${name} should export tagName`);
   }
 });

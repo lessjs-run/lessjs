@@ -1,26 +1,31 @@
 {
   "name": "@lessjs/ui",
-  "version": "0.24.0",
+  "version": "0.24.2",
   "exports": {
     ".": "./src/index.ts",
-    "./less-button": "./src/less-button.ts",
-    "./less-card": "./src/less-card.ts",
-    "./less-input": "./src/less-input.ts",
-    "./less-code-block": "./src/less-code-block.ts",
-    "./less-layout": "./src/less-layout.ts",
-    "./less-theme-toggle": "./src/less-theme-toggle.ts",
-    "./less-hero-ping": "./src/less-hero-ping.ts",
-    "./less-dialog": "./src/less-dialog.ts",
-    "./less-callout": "./src/less-callout.ts",
-    "./less-step-card": "./src/less-step-card.ts",
+    "./less-button": "./src/less-button.tsx",
+    "./less-card": "./src/less-card.tsx",
+    "./less-input": "./src/less-input.tsx",
+    "./less-code-block": "./src/less-code-block.tsx",
+    "./less-layout": "./src/less-layout.tsx",
+    "./less-theme-toggle": "./src/less-theme-toggle.tsx",
+    "./less-hero-ping": "./src/less-hero-ping.tsx",
+    "./less-dialog": "./src/less-dialog.tsx",
+    "./less-callout": "./src/less-callout.tsx",
+    "./less-step-card": "./src/less-step-card.tsx",
     "./open-props-tokens": "./src/open-props-tokens.ts",
     "./open-props-tokens.js": "./src/open-props-tokens.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.24.0",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.24.0/navigation",
-    "@lessjs/signals": "jsr:@lessjs/signals@^0.24.0",
-    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.24.0"
+    "@lessjs/core": "jsr:@lessjs/core@^0.24.2",
+    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.24.2/navigation",
+    "@lessjs/signals": "jsr:@lessjs/signals@^0.24.2",
+    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.24.2"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@lessjs/core",
+    "skipLibCheck": true
   },
   "publish": {
     "include": [
@@ -29,9 +34,6 @@
       "README.md",
       "LICENSE"
     ]
-  },
-  "compilerOptions": {
-    "skipLibCheck": true
   },
   "include": [
     "src"

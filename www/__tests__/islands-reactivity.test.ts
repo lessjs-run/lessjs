@@ -11,7 +11,7 @@ const CASES = [
     'helloLoading',
     'helloError',
   ]],
-  ['./counter-island.ts', 'default', ['count']],
+  ['./counter-island.tsx', 'default', ['count']],
 ];
 
 for (const [path, exportName, props] of CASES) {

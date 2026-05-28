@@ -262,7 +262,7 @@ for (const [fileName, className, props] of REACTIVE_PROPERTY_CASES) {
 }
 
 Deno.test('less-layout: _navLink generates correct HTML', async () => {
-  const { LessLayout } = await import('../src/less-layout.ts');
+  const { LessLayout } = await import('../src/less-layout.tsx');
   const instance = new LessLayout();
   // _navLink is private, but we can test render output indirectly
   // Just instantiating and rendering covers _navLink via render()
@@ -271,14 +271,14 @@ Deno.test('less-layout: _navLink generates correct HTML', async () => {
 });
 
 Deno.test('less-theme-toggle: renders toggle button', async () => {
-  const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
+  const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
   const instance = new LessThemeToggle();
   const result = instance.render();
   assertExists(result);
 });
 
 Deno.test('less-theme-toggle: renders and handles theme', async () => {
-  const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
+  const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
   // Just test render() and property assignment (no DOM needed for render)
   const instance = new LessThemeToggle();
   instance.setAttribute('theme', 'light');
@@ -295,7 +295,7 @@ Deno.test('less-theme-toggle: renders and handles theme', async () => {
 });
 
 Deno.test('less-button: renders with properties', async () => {
-  const { LessButton } = await import('../src/less-button.ts');
+  const { LessButton } = await import('../src/less-button.tsx');
   const instance = new LessButton();
   instance.setAttribute('href', '#test');
   instance.setAttribute('variant', 'primary');
@@ -304,7 +304,7 @@ Deno.test('less-button: renders with properties', async () => {
 });
 
 Deno.test('less-input: renders with properties', async () => {
-  const { LessInput } = await import('../src/less-input.ts');
+  const { LessInput } = await import('../src/less-input.tsx');
   const instance = new LessInput();
   instance.setAttribute('type', 'text');
   instance.setAttribute('placeholder', 'Enter text');
@@ -313,7 +313,7 @@ Deno.test('less-input: renders with properties', async () => {
 });
 
 Deno.test('less-code-block: renders with properties', async () => {
-  const { LessCodeBlock } = await import('../src/less-code-block.ts');
+  const { LessCodeBlock } = await import('../src/less-code-block.tsx');
   const instance = new LessCodeBlock();
   // language is not a declared reactive property -set via any for test
   (instance as any).language = 'typescript';
@@ -370,7 +370,7 @@ Deno.test('less-code-block: _copy method success path', async () => {
 Deno.test('less-theme-toggle: _handleToggle switches theme from light to dark', async () => {
   const restore = setupDOMMocks();
   try {
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
+    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
     const instance = new LessThemeToggle();
     (instance as any)._theme.value = 'light';
 
@@ -396,7 +396,7 @@ Deno.test('less-code-block: _copy method success path', async () => {
     return; // Skip in Deno test -this is tested in browser E2E
   }
 
-  const { LessCodeBlock } = await import('../src/less-code-block.ts');
+  const { LessCodeBlock } = await import('../src/less-code-block.tsx');
   const instance = new LessCodeBlock();
 
   let clipboardText = '';
@@ -427,7 +427,7 @@ Deno.test('less-code-block: _copy method success path', async () => {
 Deno.test('less-code-block: _copy method failure path', async () => {
   const savedNavigator = (globalThis as any).navigator;
   try {
-    const { LessCodeBlock } = await import('../src/less-code-block.ts');
+    const { LessCodeBlock } = await import('../src/less-code-block.tsx');
     const instance = new LessCodeBlock();
 
     // Mock clipboard.writeText to throw
@@ -463,7 +463,7 @@ Deno.test('less-code-block: _copy method failure path', async () => {
 });
 
 Deno.test('less-input: _handleInput dispatches custom event', async () => {
-  const { LessInput } = await import('../src/less-input.ts');
+  const { LessInput } = await import('../src/less-input.tsx');
   const instance = new LessInput();
 
   let dispatchedEvent: any = null;
@@ -486,7 +486,7 @@ Deno.test('less-input: _handleInput dispatches custom event', async () => {
 });
 
 Deno.test('less-input: render with error message', async () => {
-  const { LessInput } = await import('../src/less-input.ts');
+  const { LessInput } = await import('../src/less-input.tsx');
   const instance = new LessInput();
   instance.setAttribute('label', 'Test Label');
   instance.setAttribute('required', '');
@@ -496,7 +496,7 @@ Deno.test('less-input: render with error message', async () => {
 });
 
 Deno.test('less-input: render without label', async () => {
-  const { LessInput } = await import('../src/less-input.ts');
+  const { LessInput } = await import('../src/less-input.tsx');
   const instance = new LessInput();
   instance.setAttribute('placeholder', 'Enter text');
   instance.removeAttribute('label');
@@ -507,7 +507,7 @@ Deno.test('less-input: render without label', async () => {
 // --- less-input Form Callbacks (coverage) ------------------
 
 Deno.test('less-input: connectedCallback sets internals', async () => {
-  const { LessInput } = await import('../src/less-input.ts');
+  const { LessInput } = await import('../src/less-input.tsx');
   const instance = new LessInput();
   // Mock attachInternals for Deno (not a real browser)
   let setFormValueCalled = false;
@@ -531,7 +531,7 @@ Deno.test('less-input: connectedCallback sets internals', async () => {
 });
 
 Deno.test('less-input: connectedCallback with existing value', async () => {
-  const { LessInput } = await import('../src/less-input.ts');
+  const { LessInput } = await import('../src/less-input.tsx');
   const instance = new LessInput();
   let capturedValue = '';
   (instance as any)._internals = {
@@ -545,7 +545,7 @@ Deno.test('less-input: connectedCallback with existing value', async () => {
 });
 
 Deno.test('less-input: formResetCallback resets state', async () => {
-  const { LessInput } = await import('../src/less-input.ts');
+  const { LessInput } = await import('../src/less-input.tsx');
   const instance = new LessInput();
   let setFormValueCalled = false;
   (instance as any)._internals = {
@@ -563,7 +563,7 @@ Deno.test('less-input: formResetCallback resets state', async () => {
 });
 
 Deno.test('less-input: formResetCallback handles missing internals', async () => {
-  const { LessInput } = await import('../src/less-input.ts');
+  const { LessInput } = await import('../src/less-input.tsx');
   const instance = new LessInput();
   (instance as any)._internals = undefined;
   instance.setAttribute('value', 'some value');
@@ -575,7 +575,7 @@ Deno.test('less-input: formResetCallback handles missing internals', async () =>
 });
 
 Deno.test('less-input: formDisabledCallback sets disabled', async () => {
-  const { LessInput } = await import('../src/less-input.ts');
+  const { LessInput } = await import('../src/less-input.tsx');
   const instance = new LessInput();
   assertEquals(instance.hasAttribute('disabled'), false);
   instance.formDisabledCallback(true);
@@ -585,7 +585,7 @@ Deno.test('less-input: formDisabledCallback sets disabled', async () => {
 });
 
 Deno.test('less-input: _handleInput event composed:false (I-constraint)', async () => {
-  const { LessInput } = await import('../src/less-input.ts');
+  const { LessInput } = await import('../src/less-input.tsx');
   const instance = new LessInput();
   let dispatchedEvent: any = null;
   instance.addEventListener('less-input', (e: Event) => {
@@ -599,7 +599,7 @@ Deno.test('less-input: _handleInput event composed:false (I-constraint)', async 
 });
 
 Deno.test('less-input: render with error includes aria attributes', async () => {
-  const { LessInput } = await import('../src/less-input.ts');
+  const { LessInput } = await import('../src/less-input.tsx');
   const instance = new LessInput();
   instance.setAttribute('error', 'Required field');
   const result = instance.render() as any;
@@ -610,7 +610,7 @@ Deno.test('less-input: render with error includes aria attributes', async () => 
 // --- less-code-block Enhanced Tests --------------------------
 
 Deno.test('less-code-block: render with _copyState=copied', async () => {
-  const { LessCodeBlock } = await import('../src/less-code-block.ts');
+  const { LessCodeBlock } = await import('../src/less-code-block.tsx');
   const instance = new LessCodeBlock();
   (instance as any)._copyState = 'copied';
   const result = instance.render();
@@ -618,7 +618,7 @@ Deno.test('less-code-block: render with _copyState=copied', async () => {
 });
 
 Deno.test('less-code-block: render with _copyState=failed', async () => {
-  const { LessCodeBlock } = await import('../src/less-code-block.ts');
+  const { LessCodeBlock } = await import('../src/less-code-block.tsx');
   const instance = new LessCodeBlock();
   (instance as any)._copyState = 'failed';
   const result = instance.render();
@@ -626,7 +626,7 @@ Deno.test('less-code-block: render with _copyState=failed', async () => {
 });
 
 Deno.test('less-code-block: render with _copyState=idle (default)', async () => {
-  const { LessCodeBlock } = await import('../src/less-code-block.ts');
+  const { LessCodeBlock } = await import('../src/less-code-block.tsx');
   const instance = new LessCodeBlock();
   assertEquals((instance as any)._copyState, 'idle');
   const result = instance.render();
@@ -634,7 +634,7 @@ Deno.test('less-code-block: render with _copyState=idle (default)', async () => 
 });
 
 Deno.test('less-code-block: _copy success path (mocked clipboard)', async () => {
-  const { LessCodeBlock } = await import('../src/less-code-block.ts');
+  const { LessCodeBlock } = await import('../src/less-code-block.tsx');
   const instance = new LessCodeBlock();
   // Mock clipboard -must be set before _copy is called
   let writtenText = '';
@@ -663,7 +663,7 @@ Deno.test('less-code-block: _copy success path (mocked clipboard)', async () => 
 });
 
 Deno.test('less-code-block: _copy failure path (mocked clipboard)', async () => {
-  const { LessCodeBlock } = await import('../src/less-code-block.ts');
+  const { LessCodeBlock } = await import('../src/less-code-block.tsx');
   const instance = new LessCodeBlock();
   (globalThis as any).navigator = {
     clipboard: {
@@ -689,7 +689,7 @@ Deno.test('less-code-block: _copy failure path (mocked clipboard)', async () => 
 // --- less-button Branch Coverage --------------------------
 
 Deno.test('less-button: renders as anchor with href', async () => {
-  const { LessButton } = await import('../src/less-button.ts');
+  const { LessButton } = await import('../src/less-button.tsx');
   const instance = new LessButton();
   instance.setAttribute('href', 'https://example.com');
   const result = instance.render();
@@ -697,7 +697,7 @@ Deno.test('less-button: renders as anchor with href', async () => {
 });
 
 Deno.test('less-button: renders anchor with target=_blank', async () => {
-  const { LessButton } = await import('../src/less-button.ts');
+  const { LessButton } = await import('../src/less-button.tsx');
   const instance = new LessButton();
   instance.setAttribute('href', 'https://example.com');
   instance.setAttribute('target', '_blank');
@@ -706,7 +706,7 @@ Deno.test('less-button: renders anchor with target=_blank', async () => {
 });
 
 Deno.test('less-button: disabled anchor removes href', async () => {
-  const { LessButton } = await import('../src/less-button.ts');
+  const { LessButton } = await import('../src/less-button.tsx');
   const instance = new LessButton();
   instance.setAttribute('href', 'https://example.com');
   instance.setAttribute('disabled', '');
@@ -716,7 +716,7 @@ Deno.test('less-button: disabled anchor removes href', async () => {
 });
 
 Deno.test('less-button: renders as button without href', async () => {
-  const { LessButton } = await import('../src/less-button.ts');
+  const { LessButton } = await import('../src/less-button.tsx');
   const instance = new LessButton();
   instance.setAttribute('type', 'submit');
   instance.setAttribute('disabled', '');
@@ -725,7 +725,7 @@ Deno.test('less-button: renders as button without href', async () => {
 });
 
 Deno.test('less-button: anchor with same-origin target', async () => {
-  const { LessButton } = await import('../src/less-button.ts');
+  const { LessButton } = await import('../src/less-button.tsx');
   const instance = new LessButton();
   instance.setAttribute('href', '/about');
   instance.setAttribute('target', '_self');
@@ -738,7 +738,7 @@ Deno.test('less-button: anchor with same-origin target', async () => {
 Deno.test('less-theme-toggle: connectedCallback with theme=light', async () => {
   const restore = setupDOMMocks();
   try {
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
+    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
     const instance = new LessThemeToggle();
     instance.setAttribute('theme', 'light');
     // Don't call connectedCallback (the test DOM is intentionally minimal).
@@ -755,7 +755,7 @@ Deno.test('less-theme-toggle: connectedCallback with theme=light', async () => {
 Deno.test('less-theme-toggle: connectedCallback with theme=dark', async () => {
   const restore = setupDOMMocks();
   try {
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
+    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
     const instance = new LessThemeToggle();
     instance.setAttribute('theme', 'dark');
     if (instance.getAttribute('theme') === 'dark') {
@@ -785,7 +785,7 @@ Deno.test('less-theme-toggle: connectedCallback reads document data-theme', asyn
         _data[key] = value;
       },
     };
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
+    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
     const instance = new LessThemeToggle();
     // Simulate the connectedCallback logic without actually calling it
     if (
@@ -810,7 +810,7 @@ Deno.test('less-theme-toggle: connectedCallback reads localStorage fallback', as
     querySelectorAll: () => [],
   };
   try {
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
+    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
     const instance = new LessThemeToggle();
     // Simulate localStorage fallback logic
     const saved = localStorage.getItem('less-theme');
@@ -834,7 +834,7 @@ Deno.test('less-theme-toggle: connectedCallback defaults to dark', async () => {
     querySelectorAll: () => [],
   };
   try {
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
+    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
     const instance = new LessThemeToggle();
     assertEquals((instance as any)._theme.value, 'dark');
   } finally {
@@ -854,7 +854,7 @@ Deno.test('less-theme-toggle: _handleToggle switches dark->light', async () => {
     querySelectorAll: () => [],
   };
   try {
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
+    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
     const instance = new LessThemeToggle();
     (instance as any)._theme.value = 'dark';
     (instance as any)._handleToggle();
@@ -886,7 +886,7 @@ Deno.test('less-theme-toggle: connectedCallback full path with theme=light', asy
       },
     };
     (globalThis as any).matchMedia = undefined;
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
+    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
     const instance = new LessThemeToggle();
     instance.setAttribute('theme', 'light');
 
@@ -917,7 +917,7 @@ Deno.test('less-theme-toggle: connectedCallback full path with theme=dark', asyn
       },
     };
     (globalThis as any).matchMedia = undefined;
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
+    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
     const instance = new LessThemeToggle();
     instance.setAttribute('theme', 'dark');
 
@@ -948,7 +948,7 @@ Deno.test('less-theme-toggle: connectedCallback reads document.documentElement.d
       },
     };
     (globalThis as any).matchMedia = undefined;
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
+    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
     const instance = new LessThemeToggle();
 
     (instance as any)._initTheme();
@@ -974,7 +974,7 @@ Deno.test('less-theme-toggle: connectedCallback reads localStorage fallback', as
     };
     (globalThis as any).localStorage = localStorage;
     (globalThis as any).matchMedia = undefined;
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
+    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
     const instance = new LessThemeToggle();
 
     (instance as any)._initTheme();
@@ -1003,7 +1003,7 @@ Deno.test('less-theme-toggle: connectedCallback defaults to dark theme', async (
     (globalThis as any).localStorage = localStorage;
     // Stub matchMedia to return dark preference (ensures deterministic default)
     (globalThis as any).matchMedia = () => ({ matches: false });
-    const { LessThemeToggle } = await import('../src/less-theme-toggle.ts');
+    const { LessThemeToggle } = await import('../src/less-theme-toggle.tsx');
     const instance = new LessThemeToggle();
 
     (instance as any)._initTheme();
@@ -1028,7 +1028,7 @@ Deno.test('less-input: connectedCallback with existing value', () => {
 });
 
 Deno.test('less-input: _handleInput syncs form value via internals', async () => {
-  const { LessInput } = await import('../src/less-input.ts');
+  const { LessInput } = await import('../src/less-input.tsx');
   const instance = new LessInput();
   let lastFormValue = '';
   (instance as any)._internals = {
@@ -1047,7 +1047,7 @@ Deno.test('less-input: _handleInput syncs form value via internals', async () =>
 // --- less-layout Branch Coverage --------------------------
 
 Deno.test('less-layout: _navLink with active and icon', async () => {
-  const { LessLayout } = await import('../src/less-layout.ts');
+  const { LessLayout } = await import('../src/less-layout.tsx');
   const instance = new LessLayout();
   // navItems expects NavSection[]: [{ section: string, items: NavItem[] }]
   instance.setAttribute(
@@ -1067,7 +1067,7 @@ Deno.test('less-layout: _navLink with active and icon', async () => {
 });
 
 Deno.test('less-layout: home=true renders home layout (no sidebar)', async () => {
-  const { LessLayout } = await import('../src/less-layout.ts');
+  const { LessLayout } = await import('../src/less-layout.tsx');
   const instance = new LessLayout();
   instance.setAttribute('home', '');
   const result = instance.render();
@@ -1076,7 +1076,7 @@ Deno.test('less-layout: home=true renders home layout (no sidebar)', async () =>
 });
 
 Deno.test('less-layout: currentPath highlights active nav link', async () => {
-  const { LessLayout } = await import('../src/less-layout.ts');
+  const { LessLayout } = await import('../src/less-layout.tsx');
   const instance = new LessLayout();
   instance.setAttribute('current-path', '');
   // Use default nav -/guide/getting-started exists in DEFAULT_NAV
@@ -1085,7 +1085,7 @@ Deno.test('less-layout: currentPath highlights active nav link', async () => {
 });
 
 Deno.test('less-layout: no hardcoded DEFAULT_NAV -nav is data-driven via navItems property', async () => {
-  const { LessLayout } = await import('../src/less-layout.ts');
+  const { LessLayout } = await import('../src/less-layout.tsx');
   // DEFAULT_NAV was removed -navItems must be passed via property
   // (supplied by @lessjs/content virtual:less-nav module)
   const instance = new LessLayout();
@@ -1095,7 +1095,7 @@ Deno.test('less-layout: no hardcoded DEFAULT_NAV -nav is data-driven via navItem
 });
 
 Deno.test('less-layout: custom headerNav renders custom links', async () => {
-  const { LessLayout } = await import('../src/less-layout.ts');
+  const { LessLayout } = await import('../src/less-layout.tsx');
   const instance = new LessLayout();
   instance.setAttribute(
     'header-nav',
@@ -1109,7 +1109,7 @@ Deno.test('less-layout: custom headerNav renders custom links', async () => {
 });
 
 Deno.test('less-layout: custom navItems override default nav', async () => {
-  const { LessLayout } = await import('../src/less-layout.ts');
+  const { LessLayout } = await import('../src/less-layout.tsx');
   const instance = new LessLayout();
   instance.setAttribute(
     'nav-items',
@@ -1122,7 +1122,7 @@ Deno.test('less-layout: custom navItems override default nav', async () => {
 });
 
 Deno.test('less-layout: custom logo text and github URL', async () => {
-  const { LessLayout } = await import('../src/less-layout.ts');
+  const { LessLayout } = await import('../src/less-layout.tsx');
   const instance = new LessLayout();
   instance.setAttribute('logo-text', 'MyApp');
   instance.setAttribute('logo-sub', 'v2');
