@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/style-sheet",
-  "version": "0.24.0",
+  "version": "0.24.2",
   "exports": {
     ".": "./src/index.ts"
   },
