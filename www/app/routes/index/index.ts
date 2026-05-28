@@ -25,14 +25,16 @@ const DSD_OUTPUT = `<home-page>
   </template>
 </home-page>`;
 
-const RUNTIME_SOURCE = `import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
+const RUNTIME_SOURCE = `import { DsdElement, signal, StyleSheet } from '@lessjs/runtime';
 
 export class MyCounter extends DsdElement {
   count = signal(0);
   render() {
-    return html\`<button @click=\${() => this.count.value++}>
-      Count \${this.count.value}
-    </button>\`;
+    return (
+      <button onClick={() => this.count.value++}>
+        Count {this.count}
+      </button>
+    );
   }
 }`;
 
