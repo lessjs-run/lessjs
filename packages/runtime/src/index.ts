@@ -23,6 +23,7 @@
 export { DsdElement } from '@lessjs/core';
 export { Fragment, jsx, jsxDEV, jsxs } from '@lessjs/core';
 export type { VNode } from '@lessjs/core';
+export type { LessRenderer } from '@lessjs/core';
 export { isVNode } from '@lessjs/core';
 
 // JSX rendering

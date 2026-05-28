@@ -5,7 +5,7 @@ import { headerNav, navSections } from 'virtual:less-nav';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
-import '../islands/less-search.js';
+import '../islands/less-search.tsx';
 
 const POPULAR_LINKS = [
   { href: '/guide/getting-started', label: 'Getting Started' },

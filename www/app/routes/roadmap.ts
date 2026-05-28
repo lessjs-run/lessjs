@@ -8,7 +8,7 @@ import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { headerNav, navSections } from 'virtual:less-nav';
 import '@lessjs/ui/less-layout';
-import '../islands/less-search.js';
+import '../islands/less-search.tsx';
 
 const routeSheet = new StyleSheet();
 routeSheet.replaceSync(`

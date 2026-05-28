@@ -148,7 +148,10 @@ export function resolveVirtualLessPackageRelative(id: string, importer: string):
     else resolved.push(part);
   }
 
-  return toVirtualLessPackageId(packageName, ensureTsExtension(resolved.join('/')));
+  return toVirtualLessPackageId(
+    packageName,
+    resolveSourcePathExtension(packageName, resolved.join('/')),
+  );
 }
 
 export function createLessJsrPackageResolverPlugin(
@@ -213,6 +216,18 @@ export function createLessJsrPackageResolverPlugin(
 function normalizeSubpath(subpath: string): string {
   if (subpath === '' || subpath === '.') return '.';
   return subpath.replace(/^\.\//, '');
+}
+
+function resolveSourcePathExtension(packageName: string, path: string): string {
+  const normalized = path.replace(/\.js$/, '');
+  const exports = LESSJS_EXPORT_FILES[packageName];
+  if (exports) {
+    const matched = Object.values(exports).find((file) =>
+      file.replace(/\.(tsx|ts)$/, '') === normalized
+    );
+    if (matched) return matched;
+  }
+  return ensureTsExtension(path);
 }
 
 function ensureTsExtension(path: string): string {
