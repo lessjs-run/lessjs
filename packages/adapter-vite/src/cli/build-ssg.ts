@@ -408,6 +408,10 @@ if (typeof globalThis.customElements === 'undefined') {
         ? { __LESS_HEAD_EXTRAS__: JSON.stringify(options.headExtras) }
         : { __LESS_HEAD_EXTRAS__: '""' },
       esbuild: {
+        // ADR-0057: JSX automatic runtime — same reason as build-client.ts.
+        // SSG build also processes .tsx island files for SSR rendering.
+        jsx: 'automatic',
+        jsxImportSource: '@lessjs/core',
         tsconfigRaw: {
           compilerOptions: {
             useDefineForClassFields: false,

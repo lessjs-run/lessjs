@@ -32,6 +32,8 @@ const LESSJS_EXPORT_FILES: Record<string, Record<string, string>> = {
     'dom-simulation': 'src/dom-simulation.ts',
     errors: 'src/errors.ts',
     isr: 'src/isr.ts',
+    'jsx-runtime': 'src/jsx-runtime.ts',
+    'jsx-dev-runtime': 'src/jsx-runtime.ts',
     'less-add': 'src/less-add.ts',
     logger: 'src/logger.ts',
     navigation: 'src/navigation.ts',

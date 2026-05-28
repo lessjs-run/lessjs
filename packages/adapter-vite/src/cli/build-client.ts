@@ -219,6 +219,15 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
     root,
     base: `${clientBase}client/`,
     logLevel: 'warn',
+    // ADR-0057: JSX automatic runtime must be configured in the internal
+    // viteBuild() call — configFile:false means user's vite.config.ts is
+    // NOT read. Without this, esbuild defaults to classic React.createElement
+    // transform, producing {type, props, $$typeof} objects that DsdElement
+    // does not recognize (causes [object Object] rendering).
+    esbuild: {
+      jsx: 'automatic',
+      jsxImportSource: '@lessjs/core',
+    },
     build: {
       outDir: clientOutDir,
       emptyOutDir: true,
