@@ -117,7 +117,7 @@ export default class HeroPing extends DsdElement {
     }
   };
 
-  override render() {
+  override render(): ReturnType<typeof DsdElement.prototype.render> {
     const dotClass = `dot ${this._state}`;
     const loading = this._state === 'loading';
     return (

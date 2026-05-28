@@ -83,7 +83,7 @@ export class LessStepCard extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['step', 'label', 'description', 'status'];
 
-  override render() {
+  override render(): ReturnType<typeof DsdElement.prototype.render> {
     const step = parseInt(this.getAttribute('step') || '1', 10);
     const label = this.getAttribute('label') || '';
     const description = this.getAttribute('description') || '';

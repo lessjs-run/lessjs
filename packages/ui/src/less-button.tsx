@@ -138,7 +138,7 @@ export class LessButton extends DsdElement {
   static override formAssociated = true;
   static override observedAttributes = ['variant', 'size', 'disabled', 'href', 'target', 'type'];
 
-  override render() {
+  override render(): ReturnType<typeof DsdElement.prototype.render> {
     const v = this.getAttribute('variant') || 'default';
     const s = this.getAttribute('size') || 'md';
     const d = this.hasAttribute('disabled');

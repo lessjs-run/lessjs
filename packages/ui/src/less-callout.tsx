@@ -91,7 +91,7 @@ export class LessCallout extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['type', 'label'];
 
-  override render() {
+  override render(): ReturnType<typeof DsdElement.prototype.render> {
     const type = this.getAttribute('type') || 'info';
     const label = this.getAttribute('label') || '';
     const config = TYPE_CONFIG[type] || TYPE_CONFIG.info;
