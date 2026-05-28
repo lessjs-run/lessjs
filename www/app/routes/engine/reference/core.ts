@@ -335,13 +335,43 @@ export default class ApiCorePage extends DsdElement {
               dsd-interactive, pure-island.
             </div>
 
-            <div class="fn-name">html() / unsafeHTML()</div>
+            <div class="fn-name">jsx() / jsxs() / Fragment</div>
             <div class="fn-sig">
-              html(strings, ...values): TemplateResult - unsafeHTML(value): UnsafeHtmlValue
+              jsx(tag, props, children?): VNode — jsxs(tag, props, children?): VNode — Fragment: symbol
             </div>
             <div class="fn-desc">
-              Reactive DSD template API. Dynamic text and attributes are escaped by default;
-              unsafeHTML is the explicit trust boundary for audited raw markup.
+              JSX factory functions returning VNode objects. Fragment groups children without a wrapper
+              DOM element. The automatic JSX runtime (<code>@lessjs/core/jsx-runtime</code>) is
+              configured via <code>deno.json</code> compilerOptions.
+            </div>
+
+            <div class="fn-name">renderToString()</div>
+            <div class="fn-sig">
+              renderToString(node: unknown): string
+            </div>
+            <div class="fn-desc">
+              Converts a VNode tree to an HTML string for SSR/SSG output. Event handlers (onClick etc.)
+              are silently ignored. Text content is HTML-escaped. Supports className → class,
+              htmlFor → for, and style object serialisation.
+            </div>
+
+            <div class="fn-name">renderToDOM()</div>
+            <div class="fn-sig">
+              renderToDOM(node: unknown, signal?: AbortSignal): Node
+            </div>
+            <div class="fn-desc">
+              Converts a VNode tree to real DOM nodes for CSR and hydration. Event handlers are wired
+              via native addEventListener with AbortSignal lifecycle. SVG elements are auto-detected
+              and created with createElementNS.
+            </div>
+
+            <div class="fn-name">VNode / isVNode()</div>
+            <div class="fn-sig">
+              VNode: { tag, props, children, key?, ref? } — isVNode(v: unknown): v is VNode
+            </div>
+            <div class="fn-desc">
+              5-field frozen interface for JSX element descriptions. isVNode is the type guard.
+              VNode is a pure data structure — no VDOM diff, no runtime tree.
             </div>
 
             <div class="fn-name">renderDSDStream()</div>

@@ -1,8 +1,8 @@
 # Current Architecture
 
 > Status: CURRENT\
-> Version line: v0.23.x\
-> Governing decision: ADR-0050 Layered Package Architecture
+> Version line: v0.24.1\
+> Governing decision: ADR-0057 JSX+Signal Component Model
 
 ## Architecture Center
 

@@ -1,10 +1,10 @@
-# JSX + @prop() + Signal 深度集成设计方案
+# JSX + static props + Signal 深度集成（v0.24.1 实现回顾）
 
-> 版本: v1.0 | 日期: 2026-05-28 | 作者: deep-integration-design
+> 版本: v2.0 | 日期: 2026-05-29 | 状态: IMPLEMENTED
+>
+> 前置分析于 v1.0 (2026-05-28)，v2.0 反映 v0.24.1 实际实现结果。
 
----
-
-## 前置分析：现有系统架构理解
+## 前置分析：html 模板系统局限
 
 ### template.ts 核心机制
 

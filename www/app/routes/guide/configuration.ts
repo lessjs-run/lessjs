@@ -35,6 +35,28 @@ export default defineConfig({ plugins: [lessjs()] });</code></pre></less-code-bl
       <tr><td>componentsDir</td><td>'app/components'</td><td>Shared server-rendered components.</td></tr>
       <tr><td>packageIslands</td><td>[]</td><td>Packages that export an islands metadata array.</td></tr>
     </tbody></table>
+    <h2>JSX 配置（v0.24.1）</h2>
+    <p>LessJS v0.24.1 使用 JSX + Signal 作为组件模型。需要配置 deno.json 和 vite.config.ts：</p>
+    <less-code-block><pre><code>// deno.json
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@lessjs/core"
+  },
+  "imports": {
+    "@lessjs/core/jsx-runtime": "jsr:@lessjs/core@^0.24.1/jsx-runtime",
+    "@lessjs/core/jsx-dev-runtime": "jsr:@lessjs/core@^0.24.1/jsx-runtime"
+  }
+}</code></pre></less-code-block>
+    <less-code-block><pre><code>// vite.config.ts
+export default defineConfig({
+  esbuild: {
+    jsx: 'automatic',
+    jsxImportSource: '@lessjs/core',
+  },
+  plugins: [lessjs({ ... })]
+});</code></pre></less-code-block>
+    <p><span class="inline-code">jsx: 'automatic'</span> 告诉 esbuild 使用 LessJS 的 jsx-runtime 而不是 React 的。Vite 的 SSR 和 client island 构建都会正确转换 <span class="inline-code">.tsx</span> 文件。</p>
     <h2>Document Metadata, Head Injection, Package Islands, Middleware, PWA</h2>
     <less-code-block><pre><code>lessjs({
   html: { lang: 'en', title: 'My App' },
@@ -78,6 +100,28 @@ export default defineConfig({ plugins: [lessjs()] });</code></pre></less-code-bl
       validation. Until then, third-party packages should be added explicitly and reviewed like any other
       dependency.
     </p>
+    <h2>JSX Configuration (v0.24.1)</h2>
+    <p>LessJS v0.24.1 uses JSX+Signal as the component model. Configure deno.json and vite.config.ts:</p>
+    <less-code-block><pre><code>// deno.json
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@lessjs/core"
+  },
+  "imports": {
+    "@lessjs/core/jsx-runtime": "jsr:@lessjs/core@^0.24.1/jsx-runtime",
+    "@lessjs/core/jsx-dev-runtime": "jsr:@lessjs/core@^0.24.1/jsx-runtime"
+  }
+}</code></pre></less-code-block>
+    <less-code-block><pre><code>// vite.config.ts
+export default defineConfig({
+  esbuild: {
+    jsx: 'automatic',
+    jsxImportSource: '@lessjs/core',
+  },
+  plugins: [lessjs({ ... })]
+});</code></pre></less-code-block>
+    <p><span class="inline-code">jsx: 'automatic'</span> tells esbuild to use LessJS's jsx-runtime instead of React's. Both Vite SSR and client island builds will correctly transform <span class="inline-code">.tsx</span> files.</p>
     <p>See <a href="/guide/api">API Reference</a> for the complete options table, or check the <a href="/guide/security-middleware">Security &amp; Middleware</a> guide for CSP and middleware configuration.</p>
     <div class="nav-row"><a href="/guide/api-design" class="nav-link">&larr; API Design</a><a href="/guide/security-middleware" class="nav-link">Security &amp; Middleware &rarr;</a></div>
   </div></less-layout>`;

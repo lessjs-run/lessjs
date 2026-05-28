@@ -1,3 +1,5 @@
+> 📦 **HISTORICAL** — applies to v0.21.x only. Superseded by ADR-0057 (JSX+Signal) in v0.24.1.
+
 # SOP-003: Streaming DSD
 
 > Version: v0.21.0

@@ -2,10 +2,14 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version Line: v0.23.x (Layered Package Architecture - IMPLEMENTED)
+## Current Version Line: v0.24.1 (JSX+Signal Component Model — IMPLEMENTED)
+
+v0.24.1 Status: **IMPLEMENTED.** JSX+Signal replaces `html` tagged template (ADR-0057).
+Core changes: jsx-runtime, VNode, renderToString, renderToDOM, static props,
+signal effect-driven VNode re-render. Old template API fully removed.
 
 v0.21.0 Status: **IMPLEMENTED.** Reactive DSD runtime, safe templates, streaming
-DSD.
+DSD. (Templates now HISTORICAL — replaced by JSX in v0.24.1.)
 
 v0.22.x Status: **IMPLEMENTED.** Architecture Integrity cleanup established
 package boundaries, consumer surface, adapter decomposition, validation

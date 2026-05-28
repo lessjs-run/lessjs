@@ -1,6 +1,9 @@
 # ADR-0052: Signal-DOM Deep Integration — Reactive Property Binding
 
-- Status: ACCEPTED (Implemented v0.24.0)
+> ⚠️ **SUPERSEDED** by [ADR-0057](../adr/0057-jsx-signal-component-model.md) (v0.24.1)
+> The `@prop()` decorator approach has been replaced by `static props` class fields.
+
+- Status: SUPERSEDED (Replaced by ADR-0057 in v0.24.1)
 - Date: 2026-05-27
 - Supercedes: Extends ADR-0039 (DsdElement + Signals Reactive)
 - Applies to: v0.24.0+

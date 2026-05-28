@@ -44,7 +44,7 @@ individual package versions may lag until a coordinated publish pass.
 | 8     | v0.22.x | Architecture Integrity       | Package boundaries, consumer surface, adapter cleanup, gates   | Done    |
 | 9     | v0.23.x | Layered Package Architecture | Protocols, runtime facade, graph gates, docs governance        | Current |
 | 10    | v0.24.x | Edge Full-Stack              | ISR handler, KV adapters, Showcase, deployment guides          | Planned |
-| 10.1  | v0.24.1 | JSX + Signal Component Model | JSX template, static props, Signal unwrap, DSD integration     | Planned |
+| 10.1  | v0.24.1 | JSX + Signal Component Model | JSX template, static props, Signal unwrap, DSD integration     | ✅ Done |
 | 11    | v0.25.x | Ecosystem Hardening          | Hub trust policy, package evidence, compatibility growth       | Planned |
 | 12    | v1.0.x  | Stable Engine                | API/schema freeze and deterministic package guarantees         | Vision  |
 
@@ -221,7 +221,7 @@ Scope:
 - www Showcase pages (Reactive DSD demo, ISR stopwatch, serverless API)
 - Deployment guides (CF Workers, Deno Deploy, static-only)
 
-## Planned: v0.24.1 - JSX + Signal Component Model
+## Completed: v0.24.1 - JSX + Signal Component Model ✅
 
 Goal: replace `html` tagged template + `@prop()` with JSX + `static props`,
 aligning LessJS's template layer with its strategic positioning — differentiating

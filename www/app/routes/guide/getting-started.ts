@@ -121,6 +121,27 @@ export const tagName = 'page-home';</code></pre></less-code-block>
 
           <h2>添加交互</h2>
           <p>
+            使用 JSX 和 Signal 编写响应式组件。Signal 变化时组件自动重新渲染。
+          </p>
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
+import { signal } from '@lessjs/runtime';
+
+export class CounterIsland extends DsdElement {
+  count = signal(0);
+
+  render() {
+    return (
+      &lt;button onClick={() =&gt; this.count.value++}&gt;
+        点击次数: {this.count}
+      &lt;/button&gt;
+    );
+  }
+}
+
+customElements.define('counter-island', CounterIsland);
+export default CounterIsland;
+export const tagName = 'counter-island';</code></pre></less-code-block>
+          <p>
             把需要客户端行为的组件放进 <span class="inline-code">app/islands</span>。 页面 HTML
             先输出，浏览器加载 island entry 后再升级组件。
           </p>
