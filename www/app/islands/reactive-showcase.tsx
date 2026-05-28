@@ -6,7 +6,7 @@
  *   2. Theme toggle with signal() — attribute/property binding
  *   3. Live filter with signal() — computed display
  *
- * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
  *
  * Zero framework runtime — pure DSD + Signals.
  * Replaces Lit Island pattern with Ocean (DsdElement) reactivity.

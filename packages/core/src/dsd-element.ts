@@ -398,7 +398,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       while (this.shadowRoot.firstChild) {
         this.shadowRoot.removeChild(this.shadowRoot.firstChild);
       }
-      // v0.24.2: Use renderToDOM so event handlers (onClick etc.) are wired via addEventListener
+      // v0.24.1: Use renderToDOM so event handlers (onClick etc.) are wired via addEventListener
       this._templateAbortController = new AbortController();
       const dom = renderToDOM(result, this._templateAbortController.signal);
       this.shadowRoot.appendChild(dom);
@@ -489,7 +489,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     const result = this.render();
     if (!this.shadowRoot) return;
     if (isVNode(result)) {
-      // v0.24.2: DSD hydration for VNode — re-render to DOM with event handlers
+      // v0.24.1: DSD hydration for VNode — re-render to DOM with event handlers
       // The pre-populated DSD DOM has correct structure but no event listeners.
       // renderToDOM wires onClick etc. via addEventListener on the same DOM structure.
       this._templateAbortController = new AbortController();

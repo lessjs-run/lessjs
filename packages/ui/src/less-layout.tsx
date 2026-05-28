@@ -10,7 +10,7 @@
  *   - @click bindings for mobile menu toggle
  *   - SPA navigation via Navigation API (navigate/fetch/swap) preserved
  *   - Event delegation at shadow root level for nav clicks
- * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
  *
  * @csspart container - The app-layout root div
  * @csspart header - The sticky header element
@@ -611,7 +611,7 @@ export class LessLayout extends DsdElement {
 
   // --- Icons ---
 
-  /** v0.24.2: SVG icon attributes shared across all mobile tab bar icons. */
+  /** v0.24.1: SVG icon attributes shared across all mobile tab bar icons. */
   private static _ICON_ATTRS = {
     viewBox: '0 0 20 20',
     fill: 'none',
@@ -621,7 +621,7 @@ export class LessLayout extends DsdElement {
     'stroke-linejoin': 'round' as const,
   };
 
-  /** v0.24.2: Render mobile tab icon as JSX SVG. Falls back to a generic shape. */
+  /** v0.24.1: Render mobile tab icon as JSX SVG. Falls back to a generic shape. */
   private _renderIcon(label: string) {
     const a = LessLayout._ICON_ATTRS;
     switch (label) {

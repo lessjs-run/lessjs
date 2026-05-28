@@ -5,7 +5,7 @@
  * Swiss International Style: Pure B&W, minimal.
  *
  * v0.21.0: Uses DsdElement + html templates + Signals.
- * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
  *
  * @csspart toggle -The button element
  * @csspart icon-sun -The sun SVG icon
@@ -150,7 +150,7 @@ export class LessThemeToggle extends DsdElement {
     this._initTheme();
 
     // Re-render to guarantee event bindings regardless of DSD hydration.
-    // v0.24.2: JSX VNode path now uses renderToDOM which wires event handlers.
+    // v0.24.1: JSX VNode path now uses renderToDOM which wires event handlers.
     this.update();
   }
 

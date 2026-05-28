@@ -7,7 +7,7 @@
  *   - Self-contained Prism highlighting injected into shadow root
  *   - Copy button uses ElementInternals :state(copied) for CSS feedback
  *   - DSD renders <slot> for SSR (no JS content fallback)
- * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
  *
  * @csspart copy - The copy button
  *

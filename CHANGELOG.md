@@ -1,90 +1,58 @@
-## v0.24.2 — Remove Old Component Model, Full JSX+Signal Migration (2026-05-28)
+## v0.24.1 — JSX+Signal Component Model + Remove Old Component Model (2026-05-28)
+
+> **ADR**: ADR-0057 | **Previous**: v0.23.0
+
+### ADR-0057: JSX+Signal Component Model
+
+- **jsx-runtime** (`packages/core/src/jsx-runtime.ts`): Implements `jsx()`, `jsxs()`, `jsxDEV()`, `Fragment` — React-compatible JSX transform interface
+- **VNode** (`packages/core/src/vnode.ts`): 5-field frozen interface (tag/props/children/key/ref), zero DOM dependency, no VDOM diff
+- **renderToString** (`packages/core/src/jsx-render-string.ts`): VNode → HTML string for SSR, skips `on*` event props, supports className/htmlFor/style objects
+- **renderToDOM** (`packages/core/src/jsx-render-dom.ts`): VNode → real DOM nodes for CSR, event binding via `addEventListener` with AbortSignal lifecycle, SVG namespace support (`createElementNS`)
+- **static props runtime** (`packages/core/src/prop.ts`): Replaces `@prop()` decorator with ES2022 `static` class fields
+- **Signal auto-unwrap**: `valueOf()` + `Symbol.toPrimitive` on PropSignal for implicit JSX `{}` unwrapping; `unwrap()` utility; `renderToString` / `renderToDOM` auto-unwrap Signal values
+- **Type inference** (`packages/core/src/prop-types.ts`): `PropDecl`, `PropType<D>`, `PropsFrom<P>` — TypeScript type deduction from `static props` declarations
+- **DSD pipeline integration** (`packages/core/src/render-dsd.ts`): VNode consumption path alongside existing TemplateResult path
+- **DsdElement** (`packages/core/src/dsd-element.ts`): `render()` return type `string | TemplateResult | VNode`; VNode path uses `renderToDOM` for event binding + `effect()` for signal-driven re-render
+- **ErrorBoundary** (`packages/core/src/error-boundary.ts`): `render()` return type expanded to include VNode
+- **JSX IntrinsicElements**: Global type declaration for TypeScript JSX type-checking
 
 ### Breaking Changes
 
 - **Removed `html` tagged template API**: `html`, `classMap`, `when`, `choose`, `repeat`, `ref`, `unsafeHTML` exports removed from `@lessjs/core`
 - **Removed `@prop()` decorator**: Use `static props = { name: Type }` instead
 - **Removed TemplateResult types**: `TemplateResult`, `isTemplateResult`, `TemplateValue`, `AttrValue`, `ContentValue`, `EventValue`, `ClassMapValue`, `UnsafeHtmlValue`, `RefDirective`, `ChooseCase`, `ClassMapInput` removed from public API
-- **Removed `PropertyOptions`**: No longer exported from `@lessjs/core`
-- **Removed `renderTemplateToString`**: Internal only; JSX uses `renderToString` / `renderToDOM`
+- **Removed `PropertyOptions` and `renderTemplateToString`**: Internal only; no longer exported
 - **File extensions**: All UI and island components changed from `.ts` to `.tsx`
-
-### Core Changes
-
-- **DsdElement VNode rendering fix**: `_renderIntoShadowRoot` now uses `renderToDOM` for VNode, properly wiring `onClick`/`onInput` etc. via `addEventListener` (previously used `renderToString` which silently dropped event handlers)
-- **Signal auto-unwrap in JSX**: `renderToString` now detects `SignalLike` values and auto-unwraps `.value` in JSX expressions `{}`
-- **JSX IntrinsicElements**: Global `JSX.IntrinsicElements` type declaration added to `jsx-runtime.ts` for TypeScript JSX type-checking
-- **isSignalLike retained**: Kept as the sole export from `template.ts`; used internally by DSD render pipeline and JSX string renderer
+- **`@lessjs/signals` new dependency of `@lessjs/core`**: Core now imports `effect()` for VNode signal tracking; publish order: signals(5) → core(6)
 
 ### Migration: `packages/ui/`
 
 All 10 UI components migrated from `html` tagged templates to JSX:
 
 - `less-button`, `less-card`, `less-callout`, `less-code-block`, `less-dialog`, `less-hero-ping`, `less-input`, `less-layout`, `less-step-card`, `less-theme-toggle`
-- Legacy template helpers (`@click`/`?disabled`/`.ariaInvalid`/`unsafeHTML`) replaced with JSX equivalents (`onClick`/`disabled`/`ariaInvalid`/inline SVG)
-- `less-layout`: SVG icons for mobile tab bar converted to JSX SVG elements
+- Legacy template helpers replaced with JSX equivalents (`onClick`/`disabled`/`ariaInvalid`/inline SVG)
 
 ### Migration: `www/app/islands/`
 
 6 island components migrated to JSX:
 
 - `counter-island`, `less-search`, `less-term`, `less-toc`, `reactive-showcase`, `shoelace-showcase`
-- `api-consumer` left unchanged (uses Lit's `html`, not LessJS's)
+- `api-consumer` left unchanged (uses Lit's `html`)
 
 ### Bug Fixes
 
-- **Island JSX `[object Object]` rendering**: `build-client.ts` and `build-ssg.ts` internal `viteBuild()` calls used `configFile: false`, ignoring the user's `vite.config.ts` esbuild JSX config. esbuild defaulted to classic `React.createElement` transform, producing `{type, props, $$typeof}` objects that `DsdElement` did not recognize. Fixed by adding explicit `esbuild: { jsx: 'automatic', jsxImportSource: '@lessjs/core' }` to both internal build configs.
-- **SVG icons disappearing after hydration**: `renderToDOM` in `jsx-render-dom.ts` used `document.createElement()` for all elements, which puts SVG elements (circle, line, path, svg, etc.) in the HTML namespace — browsers don't render them. Fixed by detecting SVG tags and using `document.createElementNS('http://www.w3.org/2000/svg', tag)`.
-- **VNode signal subscription missing**: `_renderIntoShadowRoot`'s VNode branch rendered DOM but never subscribed to signal changes. TemplateResult path called `_subscribeTemplateSignals()` for fine-grained patches; VNode path had no equivalent. Fixed by wrapping `render()` in an `effect()` that auto-tracks all signal accesses and re-renders DOM on changes. This caused theme toggle not switching and theme state being lost during page navigation.
-- **`ssg-package-resolver.ts`**: Added `jsx-runtime` and `jsx-dev-runtime` subpath exports for core package (required for JSR consumer SSG builds using JSX automatic runtime).
-
-### Version Bumps
-
-- All packages: `0.24.1` → `0.24.2`
-- Cross-package dependencies: `^0.24.1` → `^0.24.2`
-
-## v0.24.1 — JSX + Signal Component Model (2026-05-28)
-
-### Core Changes
-
-- **ADR-0057 IMPLEMENTED**: JSX + Signal new component model replaces `html` tagged template as the primary authoring surface
-- **jsx-runtime** (`packages/core/src/jsx-runtime.ts`): Implements `jsx()`, `jsxs()`, `jsxDEV()`, `Fragment` — React-compatible JSX transform interface
-- **VNode** (`packages/core/src/vnode.ts`): 5-field frozen interface (tag/props/children/key/ref), zero DOM dependency, no VDOM diff
-- **renderToString** (`packages/core/src/jsx-render-string.ts`): VNode → HTML string for SSR, skips `on*` event props, supports className/htmlFor/style objects
-- **renderToDOM** (`packages/core/src/jsx-render-dom.ts`): VNode → real DOM nodes for CSR, event binding via `addEventListener` with AbortSignal lifecycle
-- **static props runtime** (`packages/core/src/prop.ts`): `initializeStaticProps()`, `disposeStaticProps()`, `handleStaticPropAttributeChange()`, `syncStaticPropsFromAttributes()`, `registerStaticObservedAttributes()` — replaces `@prop()` decorator with ES2022 `static` class fields
-- **Signal auto-unwrap** (`packages/core/src/prop.ts`): `valueOf()` + `Symbol.toPrimitive` on PropSignal for implicit JSX `{}` unwrapping; explicit `unwrap()` utility for edge cases
-- **Type inference** (`packages/core/src/prop-types.ts`): `PropDecl`, `PropDeclShorthand`, `PropDeclFull`, `PropType<D>`, `PropsFrom<P>` — TypeScript type deduction from `static props` declarations
-- **DSD pipeline integration** (`packages/core/src/render-dsd.ts`): VNode consumption path added alongside existing TemplateResult path
-- **DsdElement** (`packages/core/src/dsd-element.ts`): `render()` return type expanded to `string | TemplateResult | VNode`; static props lifecycle hooks in connected/disconnected/attributeChanged callbacks
-- **ErrorBoundary** (`packages/core/src/error-boundary.ts`): `render()` return type expanded to include VNode
-
-### Deprecations (ADR-0057 §4)
-
-All `html` tagged template helpers are now `@deprecated` and will be moved to `@lessjs/core/html-legacy` in v0.28, removed in v1.0:
-
-- `html` → Use JSX syntax (`<div>...</div>`)
-- `classMap` → Use JSX className with template literals
-- `when` → Use JSX ternary or `&&` expressions
-- `choose` → Use JSX switch/object-lookup or ternary
-- `repeat` → Use JSX `Array.map()`
-- `ref` → Use JSX `ref` prop
-- `unsafeHTML` → Use JSX `innerHTML` prop
-- `@prop()` → Use `static props` class fields
+- **Island JSX `[object Object]` rendering**: `build-client.ts` and `build-ssg.ts` internal `viteBuild()` calls used `configFile: false`, ignoring the user's `vite.config.ts` esbuild JSX config. Fixed by adding explicit `esbuild: { jsx: 'automatic', jsxImportSource: '@lessjs/core' }` to both internal build configs.
+- **SVG icons disappearing**: `renderToDOM` used `document.createElement()` for SVG elements. Fixed by detecting SVG tags and using `document.createElementNS('http://www.w3.org/2000/svg', tag)`.
+- **VNode signal subscription**: `_renderIntoShadowRoot` VNode branch rendered DOM but never subscribed to signals. Fixed by wrapping `render()` in an `effect()` that auto-tracks signal accesses and re-renders DOM on changes.
+- **SSG package resolver**: Added `jsx-runtime` and `jsx-dev-runtime` subpath exports for core package.
 
 ### Configuration
 
 - Root `deno.json`: Added `jsx: "react-jsx"` and `jsxImportSource: "@lessjs/core"` compiler options
 - Root `deno.json`: Added `@lessjs/core/jsx-runtime` and `@lessjs/core/jsx-dev-runtime` import map entries
-- `packages/core/deno.json`: Added `./jsx-runtime` and `./jsx-dev-runtime` subpath exports
-- `packages/core/deno.json`: Version bumped to 0.24.1
-
-### Test Results
-
-- 933 tests passing
-- typecheck ✓
-- lint ✓
-- fmt ✓
+- `packages/core/deno.json`: Added `./jsx-runtime` and `./jsx-dev-runtime` subpath exports; `@lessjs/signals` dependency
+- `.github/workflows/publish-jsr.yml`: signals moved before core in publish order
+- All packages bumped to `0.24.1`; cross-package dependencies `^0.24.1`
 
 ## v0.23.0 — Layered Package Architecture (2026-05-26)
 
