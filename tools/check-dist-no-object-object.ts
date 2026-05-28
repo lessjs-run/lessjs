@@ -8,7 +8,7 @@
  * Usage: deno run --allow-read tools/check-dist-no-object-object.ts
  */
 
-const SCAN_GLOB = 'www/dist/**/*.html';
+const _SCAN_GLOB = 'www/dist/**/*.html';
 
 interface Match {
   file: string;

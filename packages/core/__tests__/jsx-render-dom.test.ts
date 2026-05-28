@@ -109,7 +109,7 @@ Deno.test('renderToDOM onClick stops after AbortController abort', () => {
 });
 
 Deno.test('renderToDOM Fragment returns DocumentFragment', () => {
-  const vnode = jsxs(Fragment, {
+  const vnode = jsxs(Fragment as typeof Fragment, {
     children: [
       jsx('span', { children: ['a'] }),
       jsx('span', { children: ['b'] }),
