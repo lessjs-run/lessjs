@@ -1,13 +1,13 @@
 {
   "name": "@lessjs/runtime",
-  "version": "0.24.1",
+  "version": "0.24.2",
   "exports": {
     ".": "./src/index.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.24.1",
-    "@lessjs/signals": "jsr:@lessjs/signals@^0.24.1",
-    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.24.1"
+    "@lessjs/core": "jsr:@lessjs/core@^0.24.2",
+    "@lessjs/signals": "jsr:@lessjs/signals@^0.24.2",
+    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.24.2"
   },
   "publish": {
     "include": [

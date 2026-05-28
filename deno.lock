@@ -972,29 +972,29 @@
     "members": {
       "packages/adapter-lit": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.24.1"
+          "jsr:@lessjs/core@~0.24.2"
         ]
       },
       "packages/adapter-react": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.24.1",
+          "jsr:@lessjs/core@~0.24.2",
           "npm:react-dom@19",
           "npm:react@19"
         ]
       },
       "packages/adapter-vanilla": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.24.1"
+          "jsr:@lessjs/core@~0.24.2"
         ]
       },
       "packages/adapter-vite": {
         "dependencies": [
-          "jsr:@lessjs/cem@~0.24.1",
-          "jsr:@lessjs/compat-check@~0.24.1",
-          "jsr:@lessjs/content@~0.24.1",
-          "jsr:@lessjs/core@~0.24.1",
-          "jsr:@lessjs/protocols@~0.24.1",
-          "jsr:@lessjs/style-sheet@~0.24.1",
+          "jsr:@lessjs/cem@~0.24.2",
+          "jsr:@lessjs/compat-check@~0.24.2",
+          "jsr:@lessjs/content@~0.24.2",
+          "jsr:@lessjs/core@~0.24.2",
+          "jsr:@lessjs/protocols@~0.24.2",
+          "jsr:@lessjs/style-sheet@~0.24.2",
           "npm:@hono/vite-dev-server@~0.25.3",
           "npm:esbuild@0.25",
           "npm:hono@4",
@@ -1003,23 +1003,23 @@
       },
       "packages/app": {
         "dependencies": [
-          "jsr:@lessjs/adapter-vite@~0.24.1",
-          "jsr:@lessjs/content@~0.24.1",
-          "jsr:@lessjs/core@~0.24.1",
-          "jsr:@lessjs/i18n@~0.24.1",
+          "jsr:@lessjs/adapter-vite@~0.24.2",
+          "jsr:@lessjs/content@~0.24.2",
+          "jsr:@lessjs/core@~0.24.2",
+          "jsr:@lessjs/i18n@~0.24.2",
           "npm:vite@8.0.10"
         ]
       },
       "packages/compat-check": {
         "dependencies": [
-          "jsr:@lessjs/cem@~0.24.1",
-          "jsr:@lessjs/core@~0.24.1"
+          "jsr:@lessjs/cem@~0.24.2",
+          "jsr:@lessjs/core@~0.24.2"
         ]
       },
       "packages/content": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.24.1",
-          "jsr:@lessjs/protocols@~0.24.1",
+          "jsr:@lessjs/core@~0.24.2",
+          "jsr:@lessjs/protocols@~0.24.2",
           "npm:@types/sanitize-html@2",
           "npm:gray-matter@^4.0.3",
           "npm:marked@15",
@@ -1030,30 +1030,30 @@
       },
       "packages/core": {
         "dependencies": [
-          "jsr:@lessjs/signals@~0.24.1",
-          "jsr:@lessjs/style-sheet@~0.24.1",
+          "jsr:@lessjs/signals@~0.24.2",
+          "jsr:@lessjs/style-sheet@~0.24.2",
           "npm:parse5@7.0.0"
         ]
       },
       "packages/hub": {
         "dependencies": [
-          "jsr:@lessjs/compat-check@~0.24.1",
-          "jsr:@lessjs/core@~0.24.1",
+          "jsr:@lessjs/compat-check@~0.24.2",
+          "jsr:@lessjs/core@~0.24.2",
           "npm:typescript@^5.9.0"
         ]
       },
       "packages/i18n": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.24.1",
-          "jsr:@lessjs/protocols@~0.24.1",
+          "jsr:@lessjs/core@~0.24.2",
+          "jsr:@lessjs/protocols@~0.24.2",
           "npm:vite@8.0.10"
         ]
       },
       "packages/runtime": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.24.1",
-          "jsr:@lessjs/signals@~0.24.1",
-          "jsr:@lessjs/style-sheet@~0.24.1"
+          "jsr:@lessjs/core@~0.24.2",
+          "jsr:@lessjs/signals@~0.24.2",
+          "jsr:@lessjs/style-sheet@~0.24.2"
         ]
       },
       "packages/signals": {
@@ -1063,9 +1063,9 @@
       },
       "packages/ui": {
         "dependencies": [
-          "jsr:@lessjs/core@~0.24.1",
-          "jsr:@lessjs/signals@~0.24.1",
-          "jsr:@lessjs/style-sheet@~0.24.1"
+          "jsr:@lessjs/core@~0.24.2",
+          "jsr:@lessjs/signals@~0.24.2",
+          "jsr:@lessjs/style-sheet@~0.24.2"
         ]
       }
     }
