@@ -6,8 +6,8 @@
  * signals engine, and stylesheet abstraction.
  *
  * Use this as your sole import for writing LessJS components:
- * ```ts
- * import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
+ * ```tsx
+ * import { DsdElement, signal, StyleSheet } from '@lessjs/runtime';
  * ```
  *
  * This package does not own any implementation — it is a pure
@@ -19,11 +19,18 @@
 
 // ─── @lessjs/core — Runtime kernel primitives ───────────────────
 
-// Base class + templates
+// Base class + JSX
 export { DsdElement } from '@lessjs/core';
-// v0.24 (ADR-0052): @prop() reactive property decorator
-export { prop } from '@lessjs/core';
-export type { PropertyOptions } from '@lessjs/core';
+export { Fragment, jsx, jsxDEV, jsxs } from '@lessjs/core';
+export type { VNode } from '@lessjs/core';
+export { isVNode } from '@lessjs/core';
+
+// JSX rendering
+export { renderToDOM, renderToString } from '@lessjs/core';
+
+// v0.24.2: static props
+export type { PropDecl, PropsFrom, PropType } from '@lessjs/core';
+
 // v0.24 (ADR-0053): Error boundary + error types
 export { ErrorBoundary } from '@lessjs/core';
 export type {
@@ -38,32 +45,10 @@ export type {
   RenderError,
   SsrRenderError,
 } from '@lessjs/core';
-export {
-  choose,
-  // v0.24: Template helpers (ADR-0051, SOP-009)
-  classMap,
-  html,
-  isSignalLike,
-  isTemplateResult,
-  ref,
-  renderTemplateToString,
-  repeat,
-  unsafeHTML,
-  when,
-} from '@lessjs/core';
-export type {
-  AttrValue,
-  ChooseCase,
-  ClassMapInput,
-  ClassMapValue,
-  ContentValue,
-  EventValue,
-  RefDirective,
-  SignalLike,
-  TemplateResult,
-  TemplateValue,
-  UnsafeHtmlValue,
-} from '@lessjs/core';
+
+// Signals utilities (v0.24.2: SignalLike kept, isSignalLike kept)
+export { isSignalLike } from '@lessjs/core';
+export type { SignalLike } from '@lessjs/core';
 
 // HTML escaping utilities
 export { escapeAttr, escapeAttrValue, escapeHtml } from '@lessjs/core';
