@@ -77,7 +77,7 @@ export default class ZhMigrationV024Page extends DsdElement {
             </thead>
             <tbody>
               <tr>
-                <td><code>html\`...\`</code></td>
+                <td><code>html`...`</code></td>
                 <td>JSX 语法：<code>&lt;div&gt;...&lt;/div&gt;</code></td>
                 <td>中</td>
               </tr>
@@ -159,19 +159,19 @@ export default defineConfig({
           </section>
 
           <section class="step">
-            <h2>第 2 步：替换 html\`...\` 标签模板</h2>
+            <h2>第 2 步：替换 html`...` 标签模板</h2>
 
             <h3>之前 (v0.23)</h3>
             <less-code-block><pre><code>import { html } from '@lessjs/runtime';
 
 class MyCard extends DsdElement {
   render() {
-    return html\`
+    return html`
       &lt;div class="card"&gt;
         &lt;h2&gt;\${this.title}&lt;/h2&gt;
         &lt;p&gt;\${this.description}&lt;/p&gt;
       &lt;/div&gt;
-    \`;
+    `;
   }
 }</code></pre></less-code-block>
 
@@ -225,7 +225,7 @@ class MyCounter extends DsdElement {
             <h2>第 4 步：更新事件绑定写法</h2>
 
             <h3>之前 (v0.23)</h3>
-            <less-code-block><pre><code>html\`&lt;button @click=\${this._handleClick}&gt;点击&lt;/button&gt;\`</code></pre></less-code-block>
+            <less-code-block><pre><code>html`&lt;button @click=\${this._handleClick}&gt;点击&lt;/button&gt;`</code></pre></less-code-block>
 
             <h3>之后 (v0.24.1)</h3>
             <less-code-block><pre><code>&lt;button onClick={this._handleClick}&gt;点击&lt;/button&gt;</code></pre></less-code-block>
@@ -239,7 +239,7 @@ class MyCounter extends DsdElement {
             <p><strong>之后：</strong><code>{this.visible.value && <div>...</div>}</code></p>
 
             <h3>列表渲染</h3>
-            <p><strong>之前：</strong><code>${repeat(this.items, (item) => html\`&lt;li&gt;\${item}&lt;/li&gt;\`)}</code></p>
+            <p><strong>之前：</strong><code>${repeat(this.items, (item) => html`&lt;li&gt;\${item}&lt;/li&gt;`)}</code></p>
             <p><strong>之后：</strong><code>{this.items.value.map(item => <li>{item}</li>)}</code></p>
 
             <h3>多分支</h3>
@@ -256,7 +256,7 @@ class MyCounter extends DsdElement {
             <h3>之前 (v0.23)</h3>
             <less-code-block><pre><code>#inputRef = ref();
 render() {
-  return html\`&lt;input \${this.#inputRef} /&gt;\`;
+  return html`&lt;input \${this.#inputRef} /&gt;`;
 }</code></pre></less-code-block>
 
             <h3>之后 (v0.24.1)</h3>
@@ -270,10 +270,10 @@ render() {
             <h2>第 7 步：更新 classMap</h2>
 
             <h3>之前 (v0.23)</h3>
-            <less-code-block><pre><code>html\`&lt;div class=\${classMap({ active: this.isActive, large: this.big })}&gt;\`</code></pre></less-code-block>
+            <less-code-block><pre><code>html`&lt;div class=\${classMap({ active: this.isActive, large: this.big })}&gt;`</code></pre></less-code-block>
 
             <h3>之后 (v0.24.1)</h3>
-            <less-code-block><pre><code>&lt;div className={\`card \${this.isActive.value ? 'active' : ''} \${this.big.value ? 'large' : ''}\`}&gt;</code></pre></less-code-block>
+            <less-code-block><pre><code>&lt;div className={`card \${this.isActive.value ? 'active' : ''} \${this.big.value ? 'large' : ''}`}&gt;</code></pre></less-code-block>
           </section>
 
           <section class="step">
@@ -307,7 +307,7 @@ if (isVNode(x)) { ... }</code></pre></less-code-block>
           <h2>迁移检查清单</h2>
           <ol>
             <li>✅ 配置 JSX 转换（<code>jsx: "automatic"</code> + <code>jsxImportSource: "@lessjs/core"</code>）</li>
-            <li>✅ 将所有 <code>html\`...\`</code> 标签模板替换为 JSX 语法</li>
+            <li>✅ 将所有 <code>html`...`</code> 标签模板替换为 JSX 语法</li>
             <li>✅ 将所有 <code>@prop()</code> 装饰器替换为 <code>static props = { ... }</code></li>
             <li>✅ 移除 <code>PropertyOptions</code> 导入，改用 <code>PropDecl</code>/<code>PropType</code>/<code>PropsFrom</code></li>
             <li>✅ 将 <code>@click=${fn}</code> 改为 <code>onClick={fn}</code></li>
