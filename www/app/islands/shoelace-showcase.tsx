@@ -5,14 +5,16 @@
  * Pure DsdElement - zero framework dependency at the wrapper level.
  * Shoelace itself uses Lit internally, but that's the library's choice.
  *
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ *
  * @lessjs/app island - Shoelace WCs need client DOM, but static wrapper renders via DSD.
  */
-import { DsdElement, html, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@shoelace-style/shoelace/dist/themes/light.css';
 
 // Explicit component imports to prevent Rolldown tree-shaking.
-// Shoelace ESM modules only export classes; they do NOT auto-register.
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js';
 import SlBadge from '@shoelace-style/shoelace/dist/components/badge/badge.js';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input.js';
@@ -62,22 +64,26 @@ export default class ShoelaceShowcase extends DsdElement {
   static override styles = [openPropsTokenSheet, styles];
 
   override render() {
-    return html`
-      <div class="sl-row">
-        <sl-button variant="primary" size="small">Primary</sl-button>
-        <sl-button variant="success" size="small">Success</sl-button>
-        <sl-button variant="neutral" size="small">Neutral</sl-button>
-        <sl-badge variant="danger" pill>DSD</sl-badge>
-      </div>
-      <div class="sl-row">
-        <sl-input placeholder="Type something..." size="small" style="width:200px"></sl-input>
-      </div>
-      <sl-alert variant="warning" open>
-        <sl-icon name="info-circle" slot="icon"></sl-icon>
-        <strong>Shoelace</strong> - Lit Web Components via @lessjs/adapter-lit DSD pipeline
-      </sl-alert>
-      <div class="sl-note">Shoelace (80+ components) renders natively through our Lit adapter</div>
-    `;
+    return (
+      <>
+        <div className='sl-row'>
+          <sl-button variant='primary' size='small'>Primary</sl-button>
+          <sl-button variant='success' size='small'>Success</sl-button>
+          <sl-button variant='neutral' size='small'>Neutral</sl-button>
+          <sl-badge variant='danger' pill>DSD</sl-badge>
+        </div>
+        <div className='sl-row'>
+          <sl-input placeholder='Type something...' size='small' style='width:200px'></sl-input>
+        </div>
+        <sl-alert variant='warning' open>
+          <sl-icon name='info-circle' slot='icon'></sl-icon>
+          <strong>Shoelace</strong> - Lit Web Components via @lessjs/adapter-lit DSD pipeline
+        </sl-alert>
+        <div className='sl-note'>
+          Shoelace (80+ components) renders natively through our Lit adapter
+        </div>
+      </>
+    );
   }
 }
 

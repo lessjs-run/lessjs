@@ -5,10 +5,12 @@
  * Pure DsdElement - zero Lit dependency. State changes are reflected
  * by re-rendering the shadow DOM and re-hydrating events.
  *
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ *
  * @csspart dot-static  - The static status dot
  * @csspart dot-animated - The animated ping button
  */
-import { DsdElement, html, type TemplateResult } from '@lessjs/core';
+import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
@@ -115,20 +117,28 @@ export default class HeroPing extends DsdElement {
     }
   };
 
-  override render(): string | TemplateResult {
+  override render() {
     const dotClass = `dot ${this._state}`;
     const loading = this._state === 'loading';
-    return html`
-      <span class="${dotClass}" part="dot-static"></span>
-      <button class="ping" part="dot-animated" ?disabled="${loading}" @click="${this._fetch}">
-        ${loading ? 'pinging...' : 'ping server'}
-      </button>
-      ${this._msg
-        ? html`
-          <span class="info"><span class="${this._state}">${this._msg}</span></span>
-        `
-        : ''}
-    `;
+    return (
+      <>
+        <span className={dotClass} part='dot-static'></span>
+        <button
+          type='button'
+          className='ping'
+          part='dot-animated'
+          disabled={loading}
+          onClick={this._fetch}
+        >
+          {loading ? 'pinging...' : 'ping server'}
+        </button>
+        {this._msg && (
+          <span className='info'>
+            <span className={this._state}>{this._msg}</span>
+          </span>
+        )}
+      </>
+    );
   }
 
   /** Re-render shadow DOM and re-hydrate click events. */

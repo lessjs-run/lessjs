@@ -54,8 +54,6 @@ export type {
   IsrRouteConfig,
 } from './isr.js';
 export { DsdElement } from './dsd-element.js';
-export { prop } from './prop.js';
-export type { PropertyOptions } from './prop.js';
 export {
   createRenderDSDStreamMetrics,
   renderDSD,
@@ -125,32 +123,10 @@ export {
   type UnsafeHtml,
 } from './html-escape.js';
 export {
-  choose,
-  // v0.24: Template helpers (ADR-0051, SOP-009)
-  classMap,
-  html,
+  // v0.24.2: Only isSignalLike retained; html/classMap/when/choose/repeat/ref/unsafeHTML removed
   isSignalLike,
-  isTemplateResult,
-  isUnsafeHTML,
-  ref,
-  renderTemplateToString,
-  repeat,
-  unsafeHTML,
-  when,
 } from './template.js';
-export type {
-  AttrValue,
-  ChooseCase,
-  ClassMapInput,
-  ClassMapValue,
-  ContentValue,
-  EventValue,
-  RefDirective,
-  SignalLike,
-  TemplateResult,
-  TemplateValue,
-  UnsafeHtmlValue,
-} from './template.js';
+export type { SignalLike } from './template.js';
 export { createLogger, LessLogger, LogLevel } from './logger.js';
 export { DANGEROUS_KEYS } from './security.js';
 export { getSSRProps, island, type IslandOptions, lessBind } from './island.js';

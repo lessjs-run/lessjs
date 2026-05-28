@@ -5,11 +5,12 @@
  * Swiss International Style: Pure B&W, minimal.
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
- *   - CSSStyleSheet replaces Lit css\`\`
+ *   - CSSStyleSheet replaces Lit css``
  *   - render() returns string
  *   - @click bindings for mobile menu toggle
  *   - SPA navigation via Navigation API (navigate/fetch/swap) preserved
  *   - Event delegation at shadow root level for nav clicks
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
  *
  * @csspart container - The app-layout root div
  * @csspart header - The sticky header element
@@ -27,7 +28,7 @@
  * ```
  */
 
-import { DsdElement, html, type TemplateResult, unsafeHTML } from '@lessjs/core';
+import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { navigate, onNavigate } from '@lessjs/core/navigation';
 import { openPropsTokenSheet } from './open-props-tokens.js';
@@ -299,7 +300,7 @@ sheet.replaceSync(`
   .nav-section summary::marker { content: ""; }
 
   .nav-section summary::before {
-    content: ";
+    content: "";
     font-size: 0.5rem;
     transition: transform 0.2s ease;
     display: inline-block;
@@ -504,12 +505,11 @@ export class LessLayout extends DsdElement {
   private _themeHandler?: (e: Event) => void;
   private _docClickCleanup?: () => void;
 
-  override render(): string | TemplateResult {
+  override render() {
     return this._renderLayout();
   }
 
   private _getStr(attr: string, def: string): string {
-    // JS property first (set by injectProps in SSR), then HTML attribute
     const camel = attr.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
     const prop = (this as Record<string, unknown>)[camel];
     if (prop !== undefined && prop !== null) return String(prop);
@@ -517,7 +517,6 @@ export class LessLayout extends DsdElement {
   }
 
   private _getBool(attr: string): boolean {
-    // JS property first (set by injectProps in SSR), then HTML attribute
     const camel = attr.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
     const prop = (this as Record<string, unknown>)[camel];
     if (typeof prop === 'boolean') return prop;
@@ -525,7 +524,6 @@ export class LessLayout extends DsdElement {
   }
 
   private _currentPath(): string {
-    // JS property first (set by injectProps in SSR), then HTML attributes
     let cp = (this as Record<string, unknown>).currentPath as string | undefined;
     if (!cp) cp = this.getAttribute('current-path') || this.getAttribute('currentpath') || '';
     return cp;
@@ -533,7 +531,6 @@ export class LessLayout extends DsdElement {
 
   private _navItems(): NavSection[] {
     try {
-      // JS property first (set by injectProps in SSR), then HTML attribute
       const prop = (this as Record<string, unknown>).navItems;
       if (prop && Array.isArray(prop)) return prop as NavSection[];
       const raw = this.getAttribute('nav-items');
@@ -546,7 +543,6 @@ export class LessLayout extends DsdElement {
 
   private _headerNav(): HeaderNavLink[] {
     try {
-      // JS property first (set by injectProps in SSR), then HTML attribute
       const prop = (this as Record<string, unknown>).headerNav;
       if (prop && Array.isArray(prop)) return prop as HeaderNavLink[];
       const raw = this.getAttribute('header-nav');
@@ -559,11 +555,9 @@ export class LessLayout extends DsdElement {
 
   private _locales(): string[] {
     try {
-      // Check JS property first (set by injectProps in SSR), then HTML attribute
       const raw = (this as Record<string, unknown>).locales || this.getAttribute('locales');
       if (!raw) return ['en'];
       if (Array.isArray(raw)) return raw as string[];
-      // String from HTML attribute - try JSON parse
       if (typeof raw === 'string') {
         try {
           return JSON.parse(raw);
@@ -584,8 +578,6 @@ export class LessLayout extends DsdElement {
     if (typeof prop === 'string') return prop;
     return this.getAttribute('locale') || 'en';
   }
-
-  // --- i18n helpers ---
 
   private _otherLocalePath(): string {
     const locales = this._locales();
@@ -619,41 +611,95 @@ export class LessLayout extends DsdElement {
 
   // --- Icons ---
 
-  private _icon(label: string): string {
-    const icons: Record<string, string> = {
-      Home:
-        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l7-7 7 7"/><path d="M5 8v9h3v-5h4v5h3V8"/></svg>`,
-      Docs:
-        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="14" height="16" rx="2"/><path d="M7 6h6M7 10h6M7 14h3"/></svg>`,
-      Examples:
-        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 7l6 3-6 3z"/></svg>`,
-      Components:
-        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="7" height="7" rx="1"/><rect x="11" y="2" width="7" height="7" rx="1"/><rect x="2" y="11" width="7" height="7" rx="1"/><rect x="11" y="11" width="7" height="7" rx="1"/></svg>`,
-      Architecture:
-        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="3"/><path d="M10 1v2M10 17v2M3.5 3.5l1.4 1.4M15.1 15.1l1.4 1.4M1 10h2M17 10h2M3.5 16.5l1.4-1.4M15.1 4.9l1.4-1.4"/></svg>`,
-      Hub:
-        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2l7 4v8l-7 4-7-4V6z"/><path d="M10 10l7-4M10 10v8M10 10L3 6"/></svg>`,
-      Roadmap:
-        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="4" cy="6" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="16" cy="14" r="1.5"/><path d="M5.5 6h10M11.5 10h5"/></svg>`,
-      // Keep legacy keys for compatibility
-      Framework:
-        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10M5 3v6h7M12 9v3M5 17h7"/></svg>`,
-      Engine:
-        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="3"/><path d="M10 1v2M10 17v2M3.5 3.5l1.4 1.4M15.1 15.1l1.4 1.4M1 10h2M17 10h2M3.5 16.5l1.4-1.4M15.1 4.9l1.4-1.4"/></svg>`,
-      RegistryHub:
-        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2l7 4v8l-7 4-7-4V6z"/><path d="M10 10l7-4M10 10v8M10 10L3 6"/></svg>`,
-      Blog:
-        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="14" height="16" rx="2"/><path d="M7 6h6M7 10h6M7 14h3"/></svg>`,
-    };
-    return icons[label] ||
-      `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="M6 6l3 5 5 3-3-5z"/></svg>`;
+  /** v0.24.2: SVG icon attributes shared across all mobile tab bar icons. */
+  private static _ICON_ATTRS = {
+    viewBox: '0 0 20 20',
+    fill: 'none',
+    stroke: 'currentColor',
+    'stroke-width': '1.5',
+    'stroke-linecap': 'round' as const,
+    'stroke-linejoin': 'round' as const,
+  };
+
+  /** v0.24.2: Render mobile tab icon as JSX SVG. Falls back to a generic shape. */
+  private _renderIcon(label: string) {
+    const a = LessLayout._ICON_ATTRS;
+    switch (label) {
+      case 'Home':
+        return (
+          <svg {...a}>
+            <path d='M3 10l7-7 7 7' />
+            <path d='M5 8v9h3v-5h4v5h3V8' />
+          </svg>
+        );
+      case 'Docs':
+      case 'Blog':
+        return (
+          <svg {...a}>
+            <rect x='3' y='2' width='14' height='16' rx='2' />
+            <path d='M7 6h6M7 10h6M7 14h3' />
+          </svg>
+        );
+      case 'Examples':
+        return (
+          <svg {...a}>
+            <rect x='3' y='3' width='14' height='14' rx='2' />
+            <path d='M7 7l6 3-6 3z' />
+          </svg>
+        );
+      case 'Components':
+        return (
+          <svg {...a}>
+            <rect x='2' y='2' width='7' height='7' rx='1' />
+            <rect x='11' y='2' width='7' height='7' rx='1' />
+            <rect x='2' y='11' width='7' height='7' rx='1' />
+            <rect x='11' y='11' width='7' height='7' rx='1' />
+          </svg>
+        );
+      case 'Architecture':
+      case 'Engine':
+        return (
+          <svg {...a}>
+            <circle cx='10' cy='10' r='3' />
+            <path d='M10 1v2M10 17v2M3.5 3.5l1.4 1.4M15.1 15.1l1.4 1.4M1 10h2M17 10h2M3.5 16.5l1.4-1.4M15.1 4.9l1.4-1.4' />
+          </svg>
+        );
+      case 'Hub':
+      case 'RegistryHub':
+        return (
+          <svg {...a}>
+            <path d='M10 2l7 4v8l-7 4-7-4V6z' />
+            <path d='M10 10l7-4M10 10v8M10 10L3 6' />
+          </svg>
+        );
+      case 'Roadmap':
+        return (
+          <svg {...a}>
+            <circle cx='4' cy='6' r='1.5' />
+            <circle cx='10' cy='10' r='1.5' />
+            <circle cx='16' cy='14' r='1.5' />
+            <path d='M5.5 6h10M11.5 10h5' />
+          </svg>
+        );
+      case 'Framework':
+        return (
+          <svg {...a}>
+            <path d='M5 3h10M5 3v6h7M12 9v3M5 17h7' />
+          </svg>
+        );
+      default:
+        return (
+          <svg {...a}>
+            <circle cx='10' cy='10' r='8' />
+            <path d='M6 6l3 5 5 3-3-5z' />
+          </svg>
+        );
+    }
   }
 
   // --- Main render ---
 
   private _renderLayout() {
-    // v0.23.0: full-width is the canonical attribute name.
-    // home is kept as backward-compatible alias.
     const home = this._getBool('full-width') || this._getBool('home');
     const noSearch = this.hasAttribute('no-search');
     const logoText = this._esc(this._getStr('logo-text', 'LessJS'));
@@ -668,129 +714,146 @@ export class LessLayout extends DsdElement {
     const otherLocaleLabel = locales.length > 1 ? this._esc(this._otherLocaleLabel()) : '';
     const otherLocalePath = locales.length > 1 ? this._otherLocalePath() : '';
 
-    const headerNavHtml = this._renderHeaderNavHtml();
-    const sidebarHtml = !home ? this._renderSidebarNavHtml() : '';
-    const mobileTabHtml = this._renderMobileTabBarHtml();
-    const langSwitchHtml = locales.length > 1
-      ? html`
-        <a class="lang-switch" href="${otherLocalePath}" data-nav="${otherLocalePath}">${otherLocaleLabel}</a>
-      `
-      : '';
-
-    const footerHtml = html`
-      <footer class="app-footer" part="footer">
-        <p>
-          ${editUrl
-            ? html`
-              <a href="${editUrl}" target="_blank" rel="noopener" style="margin-right:0.75rem;"
-              >Edit this page</a>
-            `
-            : ''} ${this._esc(footerText)}
-        </p>
-      </footer>
-    `;
-
-    return html`
-      <div class="app-layout" ${home ? ' home' : ''} part="container">
-        <header class="app-header" part="header">
-          <nav class="header-inner" aria-label="Primary navigation">
-            <a class="logo" href="/">${logoText}<span class="logo-sub">${logoSub}</span></a>
-            ${unsafeHTML(headerNavHtml)}
-            <div class="header-right">
-              ${noSearch ? '' : html`
-                <less-search></less-search>
-              `}
-              <details class="mobile-menu">
+    return (
+      <div className='app-layout' part='container' home={home || undefined}>
+        <header className='app-header' part='header'>
+          <nav className='header-inner' aria-label='Primary navigation'>
+            <a className='logo' href='/'>
+              {logoText}
+              <span className='logo-sub'>{logoSub}</span>
+            </a>
+            {this._renderHeaderNav()}
+            <div className='header-right'>
+              {!noSearch && <less-search></less-search>}
+              <details className='mobile-menu'>
                 <summary
-                  class="mobile-menu-btn"
-                  part="nav-toggle"
-                  aria-label="Toggle navigation"
-                  @click="${this._toggleMenu}"
+                  className='mobile-menu-btn'
+                  part='nav-toggle'
+                  aria-label='Toggle navigation'
+                  onClick={this._toggleMenu}
                 >
                   <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 18 18"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
+                    width='18'
+                    height='18'
+                    viewBox='0 0 18 18'
+                    fill='none'
+                    stroke='currentColor'
+                    stroke-width='1.5'
+                    stroke-linecap='round'
                   >
-                    <line x1="3" y1="4.5" x2="15" y2="4.5" />
-                    <line x1="3" y1="9" x2="15" y2="9" />
-                    <line x1="3" y1="13.5" x2="15" y2="13.5" />
+                    <line x1='3' y1='4.5' x2='15' y2='4.5' />
+                    <line x1='3' y1='9' x2='15' y2='9' />
+                    <line x1='3' y1='13.5' x2='15' y2='13.5' />
                   </svg>
                 </summary>
               </details>
               <less-theme-toggle></less-theme-toggle>
-              ${langSwitchHtml}
-              <a class="github-link" href="${githubUrl}" aria-label="GitHub repository">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                  <path
-                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
-                  />
+              {locales.length > 1 && (
+                <a
+                  className='lang-switch'
+                  href={otherLocalePath}
+                  data-nav={otherLocalePath}
+                >
+                  {otherLocaleLabel}
+                </a>
+              )}
+              <a className='github-link' href={githubUrl} aria-label='GitHub repository'>
+                <svg width='16' height='16' viewBox='0 0 16 16' fill='currentColor'>
+                  <path d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z' />
                 </svg>
-                <span class="github-text">GitHub</span>
+                <span className='github-text'>GitHub</span>
               </a>
             </div>
           </nav>
         </header>
-        <div class="mobile-backdrop"></div>
-        <div class="layout-body">
-          ${unsafeHTML(sidebarHtml)}
-          <main class="layout-main" part="main">
+        <div className='mobile-backdrop'></div>
+        <div className='layout-body'>
+          {!home && this._renderSidebarNav()}
+          <main className='layout-main' part='main'>
             <slot></slot>
           </main>
         </div>
-        ${footerHtml} ${unsafeHTML(mobileTabHtml)}
+        <footer className='app-footer' part='footer'>
+          <p>
+            {editUrl && (
+              <a
+                href={editUrl}
+                target='_blank'
+                rel='noopener'
+                style='margin-right:0.75rem;'
+              >
+                Edit this page
+              </a>
+            )} {this._esc(footerText)}
+          </p>
+        </footer>
+        {this._renderMobileTabBar()}
       </div>
-    `;
+    );
   }
 
-  private _renderHeaderNavHtml(): string {
+  private _renderHeaderNav() {
     const links = this._headerNav();
-    if (links.length === 0) return '';
-    const items = links.map((link) => {
-      const localized = this._localizePath(link.href);
-      const isExternal = link.href.startsWith('http');
-      return `<a href="${this._escAttr(localized)}" data-nav="${isExternal ? '' : localized}">${
-        this._esc(link.label)
-      }</a>`;
-    }).join('');
-    return `<nav class="header-nav" part="nav">${items}</nav>`;
+    if (links.length === 0) return null;
+    return (
+      <nav className='header-nav' part='nav'>
+        {links.map((link) => {
+          const localized = this._localizePath(link.href);
+          const isExternal = link.href.startsWith('http');
+          return (
+            <a
+              href={localized}
+              data-nav={isExternal ? '' : localized}
+            >
+              {this._esc(link.label)}
+            </a>
+          );
+        })}
+      </nav>
+    );
   }
 
-  private _renderSidebarNavHtml(): string {
+  private _renderSidebarNav() {
     const nav = this._navItems();
-    if (nav.length === 0) return '';
-    const sections = nav.map((section) => {
-      const items = section.items.map((item) => {
-        const href = item.href || item.path || '#';
-        const localized = this._localizePath(href);
-        const isExternal = href.startsWith('http');
-        const cp = this._currentPath();
-        const isActive = !isExternal && cp === localized;
-        return `<a href="${this._escAttr(localized)}"
-          class="${isActive ? 'active' : ''}"
-          aria-current="${isActive ? 'page' : ''}"
-          data-nav="${isExternal ? '' : localized}"
-        >${this._esc(item.label)}</a>`;
-      }).join('');
-      return `<details class="nav-section" open>
-        <summary class="nav-section-title">${this._esc(section.section)}</summary>
-        ${items}
-      </details>`;
-    }).join('');
-    return `<nav class="docs-sidebar" part="sidebar" aria-label="Documentation navigation">${sections}</nav>`;
+    if (nav.length === 0) return null;
+    return (
+      <nav
+        className='docs-sidebar'
+        part='sidebar'
+        aria-label='Documentation navigation'
+      >
+        {nav.map((section) => (
+          <details className='nav-section' open>
+            <summary className='nav-section-title'>
+              {this._esc(section.section)}
+            </summary>
+            {section.items.map((item) => {
+              const href = item.href || item.path || '#';
+              const localized = this._localizePath(href);
+              const isExternal = href.startsWith('http');
+              const cp = this._currentPath();
+              const isActive = !isExternal && cp === localized;
+              return (
+                <a
+                  href={localized}
+                  className={isActive ? 'active' : undefined}
+                  aria-current={isActive ? 'page' : undefined}
+                  data-nav={isExternal ? '' : localized}
+                >
+                  {this._esc(item.label)}
+                </a>
+              );
+            })}
+          </details>
+        ))}
+      </nav>
+    );
   }
 
-  private _renderMobileTabBarHtml(): string {
+  private _renderMobileTabBar() {
     const links = this._headerNav();
-    if (links.length === 0) return '';
+    if (links.length === 0) return null;
 
-    // v0.23.0: Limit mobile tab bar to 5 priority items to avoid crowding.
-    // Priority: Home, Docs, Examples, Components, Architecture|Hub (first 5).
-    // Remaining items stay accessible via hamburger menu.
     const MOBILE_TAB_LIMIT = 5;
     const mobileLinks = links.slice(0, MOBILE_TAB_LIMIT);
 
@@ -809,20 +872,28 @@ export class LessLayout extends DsdElement {
       }
     }
 
-    const items = mobileLinks.map((link) => {
-      const localized = this._localizePath(link.href);
-      const isExternal = link.href.startsWith('http');
-      const root = sectionRoot(link.href);
-      const isActive = !isExternal && (rawPath === root || rawPath.startsWith(root + '/'));
-      const icon = this._icon(link.label);
-      return `<a class="tab-item${isActive ? ' active' : ''}"
-        href="${this._escAttr(localized)}"
-        data-nav="${isExternal ? '' : localized}"
-        aria-current="${isActive ? 'page' : ''}"
-      >${icon}<span>${this._esc(link.label)}</span></a>`;
-    }).join('');
-
-    return `<nav class="mobile-tab-bar" aria-label="Quick navigation">${items}</nav>`;
+    return (
+      <nav className='mobile-tab-bar' aria-label='Quick navigation'>
+        {mobileLinks.map((link) => {
+          const localized = this._localizePath(link.href);
+          const isExternal = link.href.startsWith('http');
+          const root = sectionRoot(link.href);
+          const isActive = !isExternal &&
+            (rawPath === root || rawPath.startsWith(root + '/'));
+          return (
+            <a
+              className={`tab-item${isActive ? ' active' : ''}`}
+              href={localized}
+              data-nav={isExternal ? '' : localized}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {this._renderIcon(link.label)}
+              <span>{this._esc(link.label)}</span>
+            </a>
+          );
+        })}
+      </nav>
+    );
   }
 
   // --- Lifecycle ---
@@ -1022,9 +1093,6 @@ export class LessLayout extends DsdElement {
       if (newLocale) this.setAttribute('locale', newLocale);
 
       // Ensure newly inserted components inherit current theme.
-      // First propagation: sync theme to light DOM and shallow shadow DOM.
-      // Second propagation (rAF): catch components whose connectedCallback fires
-      // after the initial paint frame, e.g. lazily-upgraded custom elements.
       const currentTheme = this.getAttribute('data-theme') ||
         document.documentElement?.dataset?.theme;
       if (currentTheme) {

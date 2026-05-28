@@ -3,16 +3,17 @@
  *
  * Interactive terminal for the homepage. Features:
  * - DSD SSR for first paint (no JS needed)
- * - Client upgrade via DsdElement + html template @click/@keydown
+ * - Client upgrade via DsdElement + JSX onClick/onKeyDown
  * - Command history, local commands, API fallback
  * - Direct DOM manipulation for output (no full re-render)
  *
- * v0.21.0: Signal migration — _cmdHistory, _historyIdx → signals.
- *   render() is static (terminal shell); output is imperative DOM.
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
  *
  * Pure DsdElement - zero Lit dependency.
  */
-import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { signal } from '@lessjs/signals';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
 const styles = new StyleSheet();
@@ -91,22 +92,31 @@ export class LessTermDemo extends DsdElement {
   }
 
   override render() {
-    return html`
-      <div class="term">
-        <div class="term-bar">
-          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    return (
+      <div className='term'>
+        <div className='term-bar'>
+          <span className='dot r'></span>
+          <span className='dot y'></span>
+          <span className='dot g'></span>
         </div>
-        <div class="term-body" @click="${this._focusInput}">
-          <div class="output">
-            <div><span class="prompt">$</span> type <span class="hl">help</span> to get started</div>
+        <div className='term-body' onClick={this._focusInput}>
+          <div className='output'>
+            <div>
+              <span className='prompt'>$</span> type <span className='hl'>help</span> to get started
+            </div>
           </div>
-          <div class="input-line">
-            <span class="prompt">$</span>
-            <input type="text" autocomplete="off" spellcheck="false" @keydown="${this._onKey}">
+          <div className='input-line'>
+            <span className='prompt'>$</span>
+            <input
+              type='text'
+              autocomplete='off'
+              spellcheck='false'
+              onKeyDown={this._onKey}
+            />
           </div>
         </div>
       </div>
-    `;
+    );
   }
 
   private _focusInput(): void {

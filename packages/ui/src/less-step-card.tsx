@@ -5,6 +5,7 @@
  * Used in Quick Start sections and Getting Started guides.
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
  *
  * @csspart container -The step card wrapper
  * @csspart indicator -The step number circle
@@ -20,7 +21,7 @@
  * ```
  */
 
-import { DsdElement, html, type TemplateResult } from '@lessjs/core';
+import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc } from './shared/escape.js';
@@ -82,29 +83,30 @@ export class LessStepCard extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['step', 'label', 'description', 'status'];
 
-  override render(): string | TemplateResult {
+  override render() {
     const step = parseInt(this.getAttribute('step') || '1', 10);
     const label = this.getAttribute('label') || '';
     const description = this.getAttribute('description') || '';
 
-    return html`
-      <div class="step-card" part="container">
-        <div class="step-header">
-          <span class="step-number" part="indicator">${step}</span>
-          <span class="step-label" part="title">${this._esc(label)}</span>
+    return (
+      <div className='step-card' part='container'>
+        <div className='step-header'>
+          <span className='step-number' part='indicator'>{step}</span>
+          <span className='step-label' part='title'>{this._esc(label)}</span>
         </div>
-        ${description
-          ? html`
-            <p part="description" style="margin:0 0 10px;color:var(--gray-7);font-size:0.875rem;">
-              ${this._esc(description)}
-            </p>
-          `
-          : ''}
-        <div class="step-body" part="content">
+        {description && (
+          <p
+            part='description'
+            style='margin:0 0 10px;color:var(--gray-7);font-size:0.875rem;'
+          >
+            {this._esc(description)}
+          </p>
+        )}
+        <div className='step-body' part='content'>
           <slot></slot>
         </div>
       </div>
-    `;
+    );
   }
 
   override attributeChangedCallback(_name: string, old: string | null, val: string | null): void {

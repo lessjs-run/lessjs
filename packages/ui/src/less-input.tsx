@@ -5,6 +5,7 @@
  * Clean borders, subtle focus states.
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
  *
  * Features:
  * - Form-associated: participates in native <form> submission
@@ -27,7 +28,7 @@
  * ```
  */
 
-import { DsdElement, html, type TemplateResult } from '@lessjs/core';
+import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc, _escAttr } from './shared/escape.js';
@@ -120,7 +121,7 @@ export class LessInput extends DsdElement {
     'error',
   ];
 
-  override render(): string | TemplateResult {
+  override render() {
     const type = this.getAttribute('type') || 'text';
     const placeholder = this.getAttribute('placeholder') || '';
     const label = this.getAttribute('label') || '';
@@ -131,44 +132,39 @@ export class LessInput extends DsdElement {
     const error = this.getAttribute('error') || '';
     const errorClass = error ? ' input--error' : '';
 
-    const labelHtml = label
-      ? html`
-        <label for="input" part="label">${this._esc(label)}${r ? ' *' : ''}</label>
-      `
-      : '';
-
-    const errorHtml = error
-      ? html`
-        <small id="input-error" role="alert" class="error-message" part="error">${this._esc(
-          error,
-        )}</small>
-      `
-      : '';
-
-    return html`
-      <div class="input-wrapper" part="wrapper">
-        ${labelHtml}
+    return (
+      <div className='input-wrapper' part='wrapper'>
+        {label && (
+          <label htmlFor='input' part='label'>
+            {this._esc(label)}
+            {r ? ' *' : ''}
+          </label>
+        )}
         <input
-          id="input"
-          class="${`input${errorClass}`}"
-          part="control"
-          type="${type}"
-          placeholder="${placeholder}"
-          value="${value}"
-          name="${name}"
-          ?disabled="${d}"
-          ?required="${r}"
-          .ariaInvalid="${error ? 'true' : undefined}"
-          .ariaDescribedBy="${error ? 'input-error' : undefined}"
-          .ariaErrorMessage="${error ? 'input-error' : undefined}"
-          @input="${(e: Event) => this._handleInput(e)}"
-          @change="${(e: Event) => this._handleChange(e)}"
-          @focus="${() => this._handleFocus()}"
-          @blur="${() => this._handleBlur()}"
+          id='input'
+          className={`input${errorClass}`}
+          part='control'
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          name={name}
+          disabled={d}
+          required={r}
+          aria-invalid={error ? 'true' : undefined}
+          aria-describedby={error ? 'input-error' : undefined}
+          aria-errormessage={error ? 'input-error' : undefined}
+          onInput={(e: Event) => this._handleInput(e)}
+          onChange={(e: Event) => this._handleChange(e)}
+          onFocus={() => this._handleFocus()}
+          onBlur={() => this._handleBlur()}
         />
-        ${errorHtml}
+        {error && (
+          <small id='input-error' role='alert' className='error-message' part='error'>
+            {this._esc(error)}
+          </small>
+        )}
       </div>
-    `;
+    );
   }
 
   override attributeChangedCallback(name: string, old: string | null, val: string | null): void {

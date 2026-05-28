@@ -1,20 +1,66 @@
-import { assertEquals } from 'jsr:@std/assert@1';
-import { DsdElement, html, renderDSD, renderDSDStream, unsafeHTML } from '../src/index.ts';
+import { assertEquals, assertExists } from 'jsr:@std/assert@1';
+import {
+  DsdElement,
+  Fragment,
+  jsx,
+  jsxs,
+  renderDSD,
+  renderDSDStream,
+  renderToString,
+} from '../src/index.ts';
 
-Deno.test('core stable API exports v0.21 rendering and authoring primitives', () => {
+Deno.test('core stable API exports v0.24.2 JSX rendering primitives', () => {
   assertEquals(typeof renderDSD, 'function');
   assertEquals(typeof renderDSDStream, 'function');
   assertEquals(typeof DsdElement, 'function');
-  assertEquals(typeof html, 'function');
-  assertEquals(typeof unsafeHTML, 'function');
+  assertEquals(typeof jsx, 'function');
+  assertEquals(typeof jsxs, 'function');
+  assertEquals(typeof Fragment, 'symbol');
+  assertEquals(typeof renderToString, 'function');
 });
 
-Deno.test('core html authoring API keeps unsafeHTML explicit', () => {
-  const result = html`
-    <p>${unsafeHTML('<strong>trusted</strong>')}</p>
-  `;
-  const rawValue = result.values[0] as { kind?: string };
+Deno.test('core JSX to HTML string round-trip', () => {
+  // v0.24.2: jsx() creates VNode, renderToString serialises to HTML
+  const vnode = jsx('p', { className: 'greeting', children: 'hello' });
+  const html = renderToString(vnode);
+  assertEquals(html, '<p class="greeting">hello</p>');
+});
 
-  assertEquals(result.kind, 'less:template-result');
-  assertEquals(rawValue.kind, 'less:unsafe-html');
+Deno.test('core Fragment renders children without wrapper', () => {
+  const vnode = jsxs(Fragment, { children: ['a', 'b'] });
+  const html = renderToString(vnode);
+  assertEquals(html, 'ab');
+});
+
+Deno.test('core renderToString escapes HTML in text content', () => {
+  const vnode = jsx('div', { children: '<script>alert(1)</script>' });
+  const html = renderToString(vnode);
+  assertEquals(html, '<div>&lt;script&gt;alert(1)&lt;/script&gt;</div>');
+});
+
+Deno.test('core JSX boolean attributes', () => {
+  // Boolean true → attribute present without value
+  const vnode = jsx('input', { disabled: true, type: 'text' });
+  const html = renderToString(vnode);
+  assertEquals(html, '<input disabled type="text">');
+});
+
+Deno.test('core JSX boolean false omits attribute', () => {
+  const vnode = jsx('button', { disabled: false, type: 'button' });
+  const html = renderToString(vnode);
+  assertEquals(html, '<button type="button"></button>');
+});
+
+Deno.test('core JSX event handlers are excluded from SSR output', () => {
+  const handler = () => {};
+  const vnode = jsx('button', { onClick: handler, type: 'button', children: 'Click' });
+  const html = renderToString(vnode);
+  // onClick should not appear in the HTML string
+  assertEquals(html, '<button type="button">Click</button>');
+});
+
+Deno.test('core DsdElement and renderDSD are callable', () => {
+  assertExists(DsdElement);
+  assertExists(renderDSD);
+  assertExists(renderDSDStream);
 });

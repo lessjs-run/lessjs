@@ -65,6 +65,7 @@ import {
   syncStaticPropsFromAttributes,
 } from './prop.js';
 import { isVNode, type VNode } from './vnode.js';
+import { renderToDOM } from './jsx-render-dom.js';
 import { renderToString } from './jsx-render-string.js';
 
 /**
@@ -389,7 +390,14 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
 
     const result = this.render();
     if (isVNode(result)) {
-      this.shadowRoot.innerHTML = renderToString(result);
+      // Clear existing DOM
+      while (this.shadowRoot.firstChild) {
+        this.shadowRoot.removeChild(this.shadowRoot.firstChild);
+      }
+      // v0.24.2: Use renderToDOM so event handlers (onClick etc.) are wired via addEventListener
+      this._templateAbortController = new AbortController();
+      const dom = renderToDOM(result, this._templateAbortController.signal);
+      this.shadowRoot.appendChild(dom);
     } else if (isTemplateResult(result)) {
       this.shadowRoot.innerHTML = renderTemplateToString(result, { runtimeMarkers: true });
       this._bindTemplateRuntime(result);
@@ -446,7 +454,19 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     this._disposeSignalSubscriptions();
 
     const result = this.render();
-    if (isVNode(result) || !this.shadowRoot) return; // JSX path: no runtime bindings needed for DSD
+    if (!this.shadowRoot) return;
+    if (isVNode(result)) {
+      // v0.24.2: DSD hydration for VNode — re-render to DOM with event handlers
+      // The pre-populated DSD DOM has correct structure but no event listeners.
+      // renderToDOM wires onClick etc. via addEventListener on the same DOM structure.
+      this._templateAbortController = new AbortController();
+      while (this.shadowRoot.firstChild) {
+        this.shadowRoot.removeChild(this.shadowRoot.firstChild);
+      }
+      const dom = renderToDOM(result, this._templateAbortController.signal);
+      this.shadowRoot.appendChild(dom);
+      return;
+    }
     if (!isTemplateResult(result)) return;
     this._bindTemplateRuntime(result);
     this._subscribeTemplateSignals(result);

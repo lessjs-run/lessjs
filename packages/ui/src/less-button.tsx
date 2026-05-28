@@ -5,6 +5,7 @@
  * Pure B&W design with subtle hover states.
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
  *
  * Variants: default (outlined), primary (filled), ghost (no border), accent (gradient)
  * Sizes: sm, md (default), lg
@@ -19,7 +20,7 @@
  * ```
  */
 
-import { DsdElement, html, type TemplateResult } from '@lessjs/core';
+import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _escAttr } from './shared/escape.js';
@@ -137,7 +138,7 @@ export class LessButton extends DsdElement {
   static override formAssociated = true;
   static override observedAttributes = ['variant', 'size', 'disabled', 'href', 'target', 'type'];
 
-  override render(): string | TemplateResult {
+  override render() {
     const v = this.getAttribute('variant') || 'default';
     const s = this.getAttribute('size') || 'md';
     const d = this.hasAttribute('disabled');
@@ -147,35 +148,32 @@ export class LessButton extends DsdElement {
     const classes = `btn btn--${v} btn--${s}`;
 
     if (href) {
-      const hrefAttr = d ? '' : href;
-      const disabledAttr = d ? 'true' : '';
-      const targetAttr = target || '';
-      const relAttr = target === '_blank' ? 'noopener noreferrer' : '';
-      return html`
+      return (
         <a
-          class="${classes}"
-          part="control"
-          href="${hrefAttr}"
-          target="${targetAttr}"
-          aria-disabled="${disabledAttr}"
-          rel="${relAttr}"
-          @click="${this._handleClick}"
+          className={classes}
+          part='control'
+          href={d ? '' : href}
+          target={target || undefined}
+          aria-disabled={d ? 'true' : undefined}
+          rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+          onClick={this._handleClick}
         >
-          <slot></slot></a>
-      `;
+          <slot></slot>
+        </a>
+      );
     }
 
-    return html`
+    return (
       <button
-        class="${classes}"
-        part="control"
-        ?disabled="${d}"
-        type="${type}"
-        @click="${this._handleClick}"
+        className={classes}
+        part='control'
+        disabled={d}
+        type={type}
+        onClick={this._handleClick}
       >
         <slot></slot>
       </button>
-    `;
+    );
   }
 
   override attributeChangedCallback(name: string, old: string | null, val: string | null): void {

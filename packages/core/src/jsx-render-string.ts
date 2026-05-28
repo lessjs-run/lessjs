@@ -15,6 +15,7 @@
 import { isVNode } from './vnode.ts';
 import { Fragment } from './jsx-runtime.ts';
 import { escapeAttr, escapeHtml } from './html-escape.ts';
+import { isSignalLike } from './template.ts';
 
 // ─── Void elements ───────────────────────────────────────────────────────────
 
@@ -118,6 +119,11 @@ export function renderToString(node: unknown): string {
   if (typeof node === 'string') return escapeHtml(node);
   if (typeof node === 'number') return String(node);
   if (typeof node === 'boolean') return '';
+
+  // v0.24.2: Auto-unwrap Signal values in JSX expressions
+  if (isSignalLike(node)) {
+    return renderToString((node as { value: unknown }).value);
+  }
 
   if (!isVNode(node)) {
     // Unknown value — coerce to string

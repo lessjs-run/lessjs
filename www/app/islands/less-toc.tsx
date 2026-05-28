@@ -5,11 +5,13 @@
  * a right sidebar with IntersectionObserver for active tracking.
  * Pure DsdElement - zero Lit dependency.
  *
- * v0.21.0: Signal migration — _headings, _activeId → #headings, #activeId signals.
- *   render() uses html tagged template with @click bindings.
- *   _updateDOM() removed; signals auto-trigger re-render via _patchBindings().
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ *
+ * Reactive DSD: #headings and #activeId signals auto-trigger re-render.
  */
-import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { signal } from '@lessjs/signals';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
 export const tagName = 'less-toc';
@@ -70,7 +72,7 @@ styles.replaceSync(`
 export default class LessToc extends DsdElement {
   static override styles = [openPropsTokenSheet, styles];
 
-  /** Reactive headings list. Signal writes trigger _patchBindings() → re-render. */
+  /** Reactive headings list. Signal writes trigger re-render. */
   #headings = signal<Array<{ level: number; id: string; text: string }>>([]);
   /** Reactive active heading ID. Observer callback writes → re-render. */
   #activeId = signal('');
@@ -162,20 +164,27 @@ export default class LessToc extends DsdElement {
 
     if (headings.length < 2) return '';
 
-    return html`
-      <div class="toc-title">On this page</div>
-      <nav class="toc-list">
-        ${headings.map((h) => {
-          const cls = ['toc-link'];
-          if (h.level === 3) cls.push('h3');
-          if (activeId === h.id) cls.push('active');
-          return html`
-            <a class="${cls.join(' ')}" href="#${h.id}" @click="${(e: Event) =>
-              this._onClick(e, h.id)}">${h.text}</a>
-          `;
-        })}
-      </nav>
-    `;
+    return (
+      <>
+        <div className='toc-title'>On this page</div>
+        <nav className='toc-list'>
+          {headings.map((h) => {
+            const cls = ['toc-link'];
+            if (h.level === 3) cls.push('h3');
+            if (activeId === h.id) cls.push('active');
+            return (
+              <a
+                className={cls.join(' ')}
+                href={`#${h.id}`}
+                onClick={(e: Event) => this._onClick(e, h.id)}
+              >
+                {h.text}
+              </a>
+            );
+          })}
+        </nav>
+      </>
+    );
   }
 }
 
