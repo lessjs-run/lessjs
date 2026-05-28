@@ -234,7 +234,8 @@ function resolveSourcePathExtension(packageName: string, path: string): string {
 
 function ensureTsExtension(path: string): string {
   const withoutJs = path.replace(/\.js$/, '');
-  return withoutJs.endsWith('.ts') ? withoutJs : `${withoutJs}.ts`;
+  if (withoutJs.endsWith('.tsx') || withoutJs.endsWith('.ts')) return withoutJs;
+  return `${withoutJs}.ts`;
 }
 
 /**
