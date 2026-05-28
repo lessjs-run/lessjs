@@ -132,7 +132,7 @@ export class LessCodeBlock extends DsdElement {
   private _highlightRetries = 0;
   private static MAX_HIGHLIGHT_RETRIES = 40;
 
-  override render() {
+  override render(): ReturnType<typeof DsdElement.prototype.render> {
     return (
       <>
         <slot></slot>

@@ -162,7 +162,7 @@ export class LessThemeToggle extends DsdElement {
     this.update();
   }
 
-  override render() {
+  override render(): ReturnType<typeof DsdElement.prototype.render> {
     const lightClass = this._theme.value === 'light' ? ' is-light' : '';
     const title = this._theme.value === 'light' ? 'Switch to dark theme' : 'Switch to light theme';
 

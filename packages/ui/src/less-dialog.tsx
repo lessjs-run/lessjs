@@ -120,7 +120,7 @@ export class LessDialog extends DsdElement {
 
   private static _originalInertStates = new WeakMap<Element, boolean>();
 
-  override render() {
+  override render(): ReturnType<typeof DsdElement.prototype.render> {
     const label = this._esc(this.getAttribute('label') || '');
     return (
       <>

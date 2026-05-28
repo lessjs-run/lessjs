@@ -505,7 +505,7 @@ export class LessLayout extends DsdElement {
   private _themeHandler?: (e: Event) => void;
   private _docClickCleanup?: () => void;
 
-  override render() {
+  override render(): ReturnType<typeof DsdElement.prototype.render> {
     return this._renderLayout();
   }
 

@@ -80,7 +80,7 @@ export class LessCard extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['variant'];
 
-  override render() {
+  override render(): ReturnType<typeof DsdElement.prototype.render> {
     return (
       <article part='container'>
         <slot name='header'></slot>

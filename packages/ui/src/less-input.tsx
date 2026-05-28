@@ -121,7 +121,7 @@ export class LessInput extends DsdElement {
     'error',
   ];
 
-  override render() {
+  override render(): ReturnType<typeof DsdElement.prototype.render> {
     const type = this.getAttribute('type') || 'text';
     const placeholder = this.getAttribute('placeholder') || '';
     const label = this.getAttribute('label') || '';
