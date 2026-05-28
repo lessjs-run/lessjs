@@ -331,7 +331,7 @@ class Counter extends DsdElement {
               <tr>
                 <td>创建方式</td>
                 <td>构建时 JSX 转换</td>
-                <td><code>html\`...\`</code> 标签模板</td>
+                <td><code>html`...`</code> 标签模板</td>
               </tr>
               <tr>
                 <td>类型检查</td>

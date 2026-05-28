@@ -75,7 +75,7 @@ console.log(count.value); // 5</code></pre></less-code-block>
 
 const firstName = signal('张');
 const lastName = signal('三');
-const fullName = computed(() =&gt; \`\${firstName.value} \${lastName.value}\`);
+const fullName = computed(() =&gt; `\${firstName.value} \${lastName.value}`);
 console.log(fullName.value); // "张 三"</code></pre></less-code-block>
 
           <h2>effect()</h2>
@@ -85,7 +85,7 @@ console.log(fullName.value); // "张 三"</code></pre></less-code-block>
 const count = signal(0);
 
 const dispose = effect(() =&gt; {
-  console.log(\`count = \${count.value}\`);
+  console.log(`count = \${count.value}`);
 });
 
 count.value = 1;  // 日志: "count = 1"
@@ -173,7 +173,7 @@ this._vnodeEffectDispose = effect(() =&gt; {
                 <td>✅ 运算符触发 <code>valueOf()</code></td>
               </tr>
               <tr>
-                <td><code>\`\${this.count}\`</code></td>
+                <td><code>`\${this.count}`</code></td>
                 <td>✅ 模板字面量触发 <code>Symbol.toPrimitive('string')</code></td>
               </tr>
               <tr>
