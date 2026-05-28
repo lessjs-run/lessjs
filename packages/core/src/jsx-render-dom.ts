@@ -13,7 +13,7 @@
 
 import { isVNode, type VNode } from './vnode.ts';
 import { Fragment } from './jsx-runtime.ts';
-import { isSignalLike } from './template.ts';
+import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 
 // ─── SVG namespace support ────────────────────────────────────────────────────
 
@@ -124,9 +124,16 @@ export function applyProps(
 
     if (value == null) continue;
 
-    // style object
-    if (key === 'style' && typeof value === 'object') {
-      Object.assign((el as HTMLElement).style, value);
+    // v0.24.3: Unwrap Signal-like values before handling any attribute
+    const resolved = unwrapSignalLike(value);
+
+    // style object — unwrap nested signal values
+    if (key === 'style' && typeof resolved === 'object' && resolved !== null) {
+      const styleObj: Record<string, string> = {};
+      for (const [sk, sv] of Object.entries(resolved as Record<string, unknown>)) {
+        styleObj[sk] = String(unwrapSignalLike(sv));
+      }
+      Object.assign((el as HTMLElement).style, styleObj);
       continue;
     }
 
@@ -134,8 +141,8 @@ export function applyProps(
     const attrName = key === 'className' ? 'class' : key === 'htmlFor' ? 'for' : key;
 
     // Boolean attributes
-    if (typeof value === 'boolean') {
-      if (value) {
+    if (typeof resolved === 'boolean') {
+      if (resolved) {
         el.setAttribute(attrName, '');
       } else {
         el.removeAttribute(attrName);
@@ -144,7 +151,7 @@ export function applyProps(
     }
 
     // General
-    el.setAttribute(attrName, String(value));
+    el.setAttribute(attrName, String(resolved));
   }
 }
 

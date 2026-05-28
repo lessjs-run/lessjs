@@ -123,10 +123,11 @@ export {
   type UnsafeHtml,
 } from './html-escape.js';
 export {
-  // v0.24.1: Only isSignalLike retained; html/classMap/when/choose/repeat/ref/unsafeHTML removed
+  // v0.24.3: Neutral signal utilities — no template dependency
   isSignalLike,
-} from './template.js';
-export type { SignalLike } from './template.js';
+  type SignalLike,
+  unwrapSignalLike,
+} from './signal-like.js';
 export { createLogger, LessLogger, LogLevel } from './logger.js';
 export { DANGEROUS_KEYS } from './security.js';
 export { getSSRProps, island, type IslandOptions, lessBind } from './island.js';

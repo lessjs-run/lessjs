@@ -15,7 +15,7 @@
 import { isVNode } from './vnode.ts';
 import { Fragment } from './jsx-runtime.ts';
 import { escapeAttr, escapeHtml } from './html-escape.ts';
-import { isSignalLike } from './template.ts';
+import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 
 // ─── Void elements ───────────────────────────────────────────────────────────
 
@@ -75,21 +75,28 @@ function serializeAttrs(props: Record<string, unknown>): string {
       attrName = key;
     }
 
+    // v0.24.3: Unwrap Signal-like values before handling attributes
+    const resolved = unwrapSignalLike(value);
+
     // Boolean attributes
-    if (typeof value === 'boolean') {
-      if (value) result += ` ${attrName}`;
+    if (typeof resolved === 'boolean') {
+      if (resolved) result += ` ${attrName}`;
       continue;
     }
 
-    // Style object → inline CSS string
-    if (key === 'style' && typeof value === 'object') {
-      const css = styleObjectToString(value as Record<string, unknown>);
+    // Style object → inline CSS string (unwrap nested signal values)
+    if (key === 'style' && typeof resolved === 'object' && resolved !== null) {
+      const styleObj: Record<string, unknown> = {};
+      for (const [sk, sv] of Object.entries(resolved as Record<string, unknown>)) {
+        styleObj[sk] = unwrapSignalLike(sv);
+      }
+      const css = styleObjectToString(styleObj);
       if (css) result += ` style="${escapeAttr(css)}"`;
       continue;
     }
 
     // General attributes
-    result += ` ${attrName}="${escapeAttr(String(value))}"`;
+    result += ` ${attrName}="${escapeAttr(String(resolved))}"`;
   }
   return result;
 }
