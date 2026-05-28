@@ -647,6 +647,8 @@ export class DocsHome extends DsdElement {
   static override styles = [openPropsTokenSheet, indexSheet];
 
   override render() {
+    const isZh = this._getLocale('zh') === 'zh';
+    const ver = 'v0.24.3';
     return `
       <less-layout
         locale="${this._getLocale('en')}"
@@ -661,36 +663,42 @@ export class DocsHome extends DsdElement {
             <div class="hero-inner">
               <div>
                 <div class="eyebrow">
-                  <span class="chip current">v0.23.0 current</span>
+                  <span class="chip current">${ver} current</span>
                   <span class="chip success">graph gate passing</span>
                   <span class="chip">DSD-first</span>
                   <span class="chip">JSR unified release</span>
                 </div>
                 <h1>LessJS</h1>
-                <p class="definition">
-                  A DSD-first Web Components app framework with static output,
-                  progressive islands, Hono routes, and architecture gates that
-                  make package behavior deterministic.
-                </p>
+                <p class="definition">${
+      isZh
+        ? 'DSD-first Web Components 应用框架，静态输出 + 渐进式 Island + Hono routes + 确定性的包行为门禁。'
+        : 'A DSD-first Web Components app framework with static output, progressive islands, Hono routes, and architecture gates that make package behavior deterministic.'
+    }</p>
                 <div class="command">
                   <div class="command-head">
-                    <span>create a LessJS project</span>
-                    <span>0.23.0</span>
+                    <span>${isZh ? '创建 LessJS 项目' : 'create a LessJS project'}</span>
+                    <span>${ver}</span>
                   </div>
                   <code>deno run -A jsr:@lessjs/create my-app</code>
                 </div>
                 <div class="actions">
-                  <a class="action primary" href="/docs">Start building</a>
-                  <a class="action secondary" href="/architecture">Read architecture</a>
-                  <a class="action secondary" href="/roadmap">Release truth</a>
+                  <a class="action primary" href="/docs">${isZh ? '开始构建' : 'Start building'}</a>
+                  <a class="action secondary" href="/architecture">${
+      isZh ? '阅读架构' : 'Read architecture'
+    }</a>
+                  <a class="action secondary" href="/roadmap">${
+      isZh ? '发布路线' : 'Release truth'
+    }</a>
                 </div>
               </div>
 
               <div class="artifact" aria-label="LessJS release artifact console">
                 <div class="artifact-top">
                   <div class="artifact-title">
-                    <strong>Release Artifact Console</strong>
-                    <span>real surfaces from the framework contract</span>
+                    <strong>${isZh ? '发布产物控制台' : 'Release Artifact Console'}</strong>
+                    <span>${
+      isZh ? '框架合约的真实产出' : 'real surfaces from the framework contract'
+    }</span>
                   </div>
                   <div class="artifact-tabs">
                     <span class="tab active">DSD</span>
@@ -712,10 +720,18 @@ export class DocsHome extends DsdElement {
                     <p class="panel-label">gate result</p>
                     <pre><code>${escHtml(BUILD_REPORT)}</code></pre>
                     <div class="mini-report">
-                      <div class="metric"><strong>18 packages</strong><span>published in graph order</span></div>
-                      <div class="metric"><strong>0 cycles</strong><span>checked before publish</span></div>
-                      <div class="metric"><strong>@lessjs/runtime</strong><span>authoring facade</span></div>
-                      <div class="metric"><strong>@lessjs/protocols</strong><span>shared contracts</span></div>
+                      <div class="metric"><strong>18 packages</strong><span>${
+      isZh ? '按依赖顺序发布' : 'published in graph order'
+    }</span></div>
+                      <div class="metric"><strong>0 cycles</strong><span>${
+      isZh ? '发布前检查' : 'checked before publish'
+    }</span></div>
+                      <div class="metric"><strong>@lessjs/runtime</strong><span>${
+      isZh ? '作者入口' : 'authoring facade'
+    }</span></div>
+                      <div class="metric"><strong>@lessjs/protocols</strong><span>${
+      isZh ? '共享合约' : 'shared contracts'
+    }</span></div>
                     </div>
                   </div>
                 </div>
