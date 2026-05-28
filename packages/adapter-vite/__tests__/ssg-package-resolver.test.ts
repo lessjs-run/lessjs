@@ -34,7 +34,7 @@ Deno.test('parseLessPackageSpecifier parses JSR LessJS package ids', () => {
 Deno.test('resolveLessPackageExport maps public subpaths to source files', () => {
   assertEquals(resolveLessPackageExport('core', '.'), 'src/index.ts');
   assertEquals(resolveLessPackageExport('core', 'navigation'), 'src/navigation.ts');
-  assertEquals(resolveLessPackageExport('ui', 'less-card'), 'src/less-card.ts');
+  assertEquals(resolveLessPackageExport('ui', 'less-card'), 'src/less-card.tsx');
   assertEquals(resolveLessPackageExport('signals', 'framework'), 'src/framework.ts');
   assertEquals(resolveLessPackageExport('app', '.'), 'src/index.ts');
 });
@@ -79,7 +79,7 @@ Deno.test('createLessJsrPackageResolverPlugin resolves JSR and bare package ids'
 
   assertEquals(
     await resolveId('@lessjs/ui/less-card'),
-    toVirtualLessPackageId('ui', 'src/less-card.ts'),
+    toVirtualLessPackageId('ui', 'src/less-card.tsx'),
   );
   assertEquals(
     await resolveId('jsr:@lessjs/signals@^0.21/framework'),

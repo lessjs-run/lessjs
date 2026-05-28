@@ -138,7 +138,7 @@ node_modules/
     "build:ssg": "deno run --config deno.json -A jsr:@lessjs/adapter-vite@^${v.adapterVite}/cli/build-ssg",
     "preview": "deno run --config deno.json -A npm:vite preview"
   },
-  "compilerOptions": { "lib": ["ES2022", "DOM", "DOM.Iterable"] }
+  "compilerOptions": { "lib": ["ES2022", "DOM", "DOM.Iterable"], "jsx": "react-jsx", "jsxImportSource": "@lessjs/core" }
 }
 `,
     'vite.config.ts': `import { lessjs } from '@lessjs/app';
@@ -214,8 +214,8 @@ export default class HomePage extends DsdElement {
   }
 }
 `,
-    'app/islands/my-counter.ts':
-      `import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
+    'app/islands/my-counter.tsx': `/** @jsxImportSource @lessjs/core */
+import { DsdElement, signal, StyleSheet } from '@lessjs/runtime';
 
 export const tagName = 'my-counter';
 
@@ -228,12 +228,16 @@ styles.replaceSync(\`
 export default class MyCounter extends DsdElement {
   static override styles = styles;
 
-  count = signal(0);
+  static props = { count: Number };
 
   override render() {
-    return html\`<button @click=\${() => this.count.value--}>-</button>
-<span>\${this.count}</span>
-<button @click=\${() => this.count.value++}>+</button>\`;
+    return (
+      <>
+        <button onClick={() => this.count--}>-</button>
+        <span>{this.count}</span>
+        <button onClick={() => this.count++}>+</button>
+      </>
+    );
   }
 }
 
