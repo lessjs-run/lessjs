@@ -19,17 +19,17 @@
 
 ### 修改
 
-| 文件 | 变更 |
-|------|------|
-| `packages/core/src/dsd-element.ts` | 读取 `static props`，自动生成 observedAttributes + 创建 Signal |
-| `packages/core/src/prop.ts` | `createPropSignal` 增加 valueOf / Symbol.toPrimitive + `unwrap()` |
-| `packages/core/src/index.ts` | 导出 `unwrap` |
+| 文件                               | 变更                                                              |
+| ---------------------------------- | ----------------------------------------------------------------- |
+| `packages/core/src/dsd-element.ts` | 读取 `static props`，自动生成 observedAttributes + 创建 Signal    |
+| `packages/core/src/prop.ts`        | `createPropSignal` 增加 valueOf / Symbol.toPrimitive + `unwrap()` |
+| `packages/core/src/index.ts`       | 导出 `unwrap`                                                     |
 
 ### 新增
 
-| 文件 | 用途 |
-|------|------|
-| `packages/core/__tests__/static-props.test.ts` | static props 测试 |
+| 文件                                            | 用途                   |
+| ----------------------------------------------- | ---------------------- |
+| `packages/core/__tests__/static-props.test.ts`  | static props 测试      |
 | `packages/core/__tests__/signal-unwrap.test.ts` | 自动解包 + unwrap 测试 |
 
 ## Procedure
@@ -46,7 +46,9 @@ function createPropSignal<T>(initial: T, options?: { reflect?: boolean }) {
 
   const enhanced = Object.defineProperties(sig, {
     valueOf: {
-      value: function (this: Signal<T>) { return this.value; },
+      value: function (this: Signal<T>) {
+        return this.value;
+      },
       enumerable: false,
     },
     [Symbol.toPrimitive]: {
@@ -62,6 +64,7 @@ function createPropSignal<T>(initial: T, options?: { reflect?: boolean }) {
 ```
 
 **验证**：
+
 - [ ] `String(sig)` 调用 `Symbol.toPrimitive('string')` → 返回字符串
 - [ ] `Number(sig)` 调用 `valueOf()` → 返回数字
 - [ ] `sig > 5` 比较正确触发 valueOf
@@ -86,6 +89,7 @@ export function unwrap<T>(sig: Signal<T> | T): T {
 ```
 
 **验证**：
+
 - [ ] `unwrap(signal(42))` → `42`
 - [ ] `unwrap(42)` → `42`（非 Signal 值直接返回）
 - [ ] `unwrap(signal([1,2,3]))` → `[1,2,3]`
@@ -133,7 +137,9 @@ private _initProps(): void {
 **`normalizePropDecl` 辅助函数**：
 
 ```typescript
-function normalizePropDecl(decl: any): { type: FunctionConstructor; default: any; reflect: boolean } {
+function normalizePropDecl(
+  decl: any,
+): { type: FunctionConstructor; default: any; reflect: boolean } {
   // 简写: count: Number → { type: Number, default: 0, reflect: false }
   if (typeof decl === 'function') {
     const defaults: Record<string, any> = {
@@ -155,6 +161,7 @@ function normalizePropDecl(decl: any): { type: FunctionConstructor; default: any
 ```
 
 **验证**：
+
 - [ ] `static props = { count: Number }` → `this.count` 是 Signal\<number\>
 - [ ] `this.count` 默认值 0
 - [ ] `this.count = 5` → Signal 值更新为 5
@@ -198,6 +205,7 @@ override connectedCallback(): void {
 ```
 
 **验证**：
+
 - [ ] `<my-counter count="10">` → Signal 初始值为 10
 - [ ] `<my-card active>` → Boolean Signal 初始值为 true
 - [ ] 无 attribute → Signal 保持默认值
@@ -219,6 +227,7 @@ export function prop(options?: PropOptions) {
 ```
 
 **验证**：
+
 - [ ] IDE 显示 @prop() 的废弃提示
 - [ ] 现有使用 @prop() 的组件仍然工作
 
@@ -247,12 +256,14 @@ export function prop(options?: PropOptions) {
 4. 非解包场景的 `.value` 显式访问
 
 **验证**：
+
 - [ ] 全部测试通过
 - [ ] `deno task test` 无回归
 
 ## Rollback
 
 如果 static props 实现导致 DsdElement 初始化回归：
+
 1. 在 DsdElement 中加 feature flag `static USE_STATIC_PROPS = false`
 2. 默认走 @prop() 路径
 3. 在 v0.25.x 完成迁移后移除 feature flag

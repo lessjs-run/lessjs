@@ -1,3 +1,46 @@
+## v0.24.1 — JSX + Signal Component Model (2026-05-28)
+
+### Core Changes
+
+- **ADR-0057 IMPLEMENTED**: JSX + Signal new component model replaces `html` tagged template as the primary authoring surface
+- **jsx-runtime** (`packages/core/src/jsx-runtime.ts`): Implements `jsx()`, `jsxs()`, `jsxDEV()`, `Fragment` — React-compatible JSX transform interface
+- **VNode** (`packages/core/src/vnode.ts`): 5-field frozen interface (tag/props/children/key/ref), zero DOM dependency, no VDOM diff
+- **renderToString** (`packages/core/src/jsx-render-string.ts`): VNode → HTML string for SSR, skips `on*` event props, supports className/htmlFor/style objects
+- **renderToDOM** (`packages/core/src/jsx-render-dom.ts`): VNode → real DOM nodes for CSR, event binding via `addEventListener` with AbortSignal lifecycle
+- **static props runtime** (`packages/core/src/prop.ts`): `initializeStaticProps()`, `disposeStaticProps()`, `handleStaticPropAttributeChange()`, `syncStaticPropsFromAttributes()`, `registerStaticObservedAttributes()` — replaces `@prop()` decorator with ES2022 `static` class fields
+- **Signal auto-unwrap** (`packages/core/src/prop.ts`): `valueOf()` + `Symbol.toPrimitive` on PropSignal for implicit JSX `{}` unwrapping; explicit `unwrap()` utility for edge cases
+- **Type inference** (`packages/core/src/prop-types.ts`): `PropDecl`, `PropDeclShorthand`, `PropDeclFull`, `PropType<D>`, `PropsFrom<P>` — TypeScript type deduction from `static props` declarations
+- **DSD pipeline integration** (`packages/core/src/render-dsd.ts`): VNode consumption path added alongside existing TemplateResult path
+- **DsdElement** (`packages/core/src/dsd-element.ts`): `render()` return type expanded to `string | TemplateResult | VNode`; static props lifecycle hooks in connected/disconnected/attributeChanged callbacks
+- **ErrorBoundary** (`packages/core/src/error-boundary.ts`): `render()` return type expanded to include VNode
+
+### Deprecations (ADR-0057 §4)
+
+All `html` tagged template helpers are now `@deprecated` and will be moved to `@lessjs/core/html-legacy` in v0.28, removed in v1.0:
+
+- `html` → Use JSX syntax (`<div>...</div>`)
+- `classMap` → Use JSX className with template literals
+- `when` → Use JSX ternary or `&&` expressions
+- `choose` → Use JSX switch/object-lookup or ternary
+- `repeat` → Use JSX `Array.map()`
+- `ref` → Use JSX `ref` prop
+- `unsafeHTML` → Use JSX `innerHTML` prop
+- `@prop()` → Use `static props` class fields
+
+### Configuration
+
+- Root `deno.json`: Added `jsx: "react-jsx"` and `jsxImportSource: "@lessjs/core"` compiler options
+- Root `deno.json`: Added `@lessjs/core/jsx-runtime` and `@lessjs/core/jsx-dev-runtime` import map entries
+- `packages/core/deno.json`: Added `./jsx-runtime` and `./jsx-dev-runtime` subpath exports
+- `packages/core/deno.json`: Version bumped to 0.24.1
+
+### Test Results
+
+- 933 tests passing
+- typecheck ✓
+- lint ✓
+- fmt ✓
+
 ## v0.23.0 — Layered Package Architecture (2026-05-26)
 
 ### Core Changes

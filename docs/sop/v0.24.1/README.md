@@ -20,30 +20,30 @@ LessJS 组件开发者
 
 ## Scope Boundary
 
-| Included                                                    | Excluded in v0.24.1                        |
-| ----------------------------------------------------------- | ------------------------------------------- |
-| jsx-runtime 实现（VNode 创建 + renderToString + renderToDOM） | VDOM diff 引入                              |
-| static props 声明式配置替代 @prop() 装饰器                    | bind:value 双向绑定编译宏                    |
-| Signal 自动解包（valueOf + 边界声明 + unwrap()）             | Portal / Suspense / Context 抽象            |
-| VNode 接口冻结条款                                            | 运行时编译器                                |
-| static props TypeScript 类型推导（PropsFrom\<T\>）             | 完整的 JSX 组件函数式写法（v0.25+）          |
-| 内部组件迁移到 JSX                                            | html-legacy 子路径移除（v0.28）             |
-| html tagged template 标记 @deprecated                         | template.ts 完全删除（v1.0）                |
-| deno.json / vite.config.ts JSX 配置                           | ISR handler / KV adapters（v0.24.x 主线）    |
+| Included                                                      | Excluded in v0.24.1                       |
+| ------------------------------------------------------------- | ----------------------------------------- |
+| jsx-runtime 实现（VNode 创建 + renderToString + renderToDOM） | VDOM diff 引入                            |
+| static props 声明式配置替代 @prop() 装饰器                    | bind:value 双向绑定编译宏                 |
+| Signal 自动解包（valueOf + 边界声明 + unwrap()）              | Portal / Suspense / Context 抽象          |
+| VNode 接口冻结条款                                            | 运行时编译器                              |
+| static props TypeScript 类型推导（PropsFrom\<T\>）            | 完整的 JSX 组件函数式写法（v0.25+）       |
+| 内部组件迁移到 JSX                                            | html-legacy 子路径移除（v0.28）           |
+| html tagged template 标记 @deprecated                         | template.ts 完全删除（v1.0）              |
+| deno.json / vite.config.ts JSX 配置                           | ISR handler / KV adapters（v0.24.x 主线） |
 
 ## Release Order
 
-| Step | SOP       | Priority | Purpose                                       | Must Finish Before             |
-| ---- | --------- | -------- | --------------------------------------------- | ------------------------------ |
-| 0    | PREP      | P0       | ADR-0057 确认 + 现状盘点 + 依赖图梳理           | Any jsx-runtime 代码           |
-| 1    | SOP-001   | P0       | jsx-runtime 核心（VNode + renderToString）      | SSR 路径验证                   |
-| 2    | SOP-002   | P0       | static props + Signal 自动解包                   | 组件迁移                       |
-| 3    | SOP-003   | P0       | DSD 管线接入 JSX（renderDSD 适配）               | 内部组件迁移                   |
-| 4    | SOP-004   | P0       | JSX 事件系统（onClick → addEventListener）       | 内部组件迁移                   |
-| 5    | SOP-005   | P0       | internal 组件迁移（html → JSX + @prop → static props） | 废弃标记                     |
-| 6    | SOP-006   | P1       | static props TypeScript 类型推导（PropsFrom\<T\>）  | DX 优化                       |
-| 7    | SOP-007   | P1       | html tagged template @deprecated + 文档更新       | v0.24.1 closure               |
-| 8    | SOP-008   | P0       | 验证 + 回归测试 + Release Gate                   | v0.24.1 发布                   |
+| Step | SOP     | Priority | Purpose                                                | Must Finish Before   |
+| ---- | ------- | -------- | ------------------------------------------------------ | -------------------- |
+| 0    | PREP    | P0       | ADR-0057 确认 + 现状盘点 + 依赖图梳理                  | Any jsx-runtime 代码 |
+| 1    | SOP-001 | P0       | jsx-runtime 核心（VNode + renderToString）             | SSR 路径验证         |
+| 2    | SOP-002 | P0       | static props + Signal 自动解包                         | 组件迁移             |
+| 3    | SOP-003 | P0       | DSD 管线接入 JSX（renderDSD 适配）                     | 内部组件迁移         |
+| 4    | SOP-004 | P0       | JSX 事件系统（onClick → addEventListener）             | 内部组件迁移         |
+| 5    | SOP-005 | P0       | internal 组件迁移（html → JSX + @prop → static props） | 废弃标记             |
+| 6    | SOP-006 | P1       | static props TypeScript 类型推导（PropsFrom\<T\>）     | DX 优化              |
+| 7    | SOP-007 | P1       | html tagged template @deprecated + 文档更新            | v0.24.1 closure      |
+| 8    | SOP-008 | P0       | 验证 + 回归测试 + Release Gate                         | v0.24.1 发布         |
 
 ## Entry Criteria
 
@@ -79,13 +79,13 @@ LessJS 组件开发者
 
 ## Risk Register
 
-| 风险 | 可能性 | 影响 | 缓解措施 |
-|------|--------|------|---------|
-| VNode 逐步膨胀为 VDOM | 中 | 高 | 接口冻结条款 + 代码审查 |
-| static props 类型推导不完整 | 中 | 中 | MVP 用 Signal\<T\> 兜底 |
-| Signal 自动解包边界造成困惑 | 低 | 低 | 边界文档 + unwrap() |
-| DSD 管线与 JSX 输出不兼容 | 中 | 高 | SOP-003 专门做路径验证 |
-| html → JSX 迁移引入回归 | 中 | 高 | SOP-008 全量回归测试 |
+| 风险                        | 可能性 | 影响 | 缓解措施                |
+| --------------------------- | ------ | ---- | ----------------------- |
+| VNode 逐步膨胀为 VDOM       | 中     | 高   | 接口冻结条款 + 代码审查 |
+| static props 类型推导不完整 | 中     | 中   | MVP 用 Signal\<T\> 兜底 |
+| Signal 自动解包边界造成困惑 | 低     | 低   | 边界文档 + unwrap()     |
+| DSD 管线与 JSX 输出不兼容   | 中     | 高   | SOP-003 专门做路径验证  |
+| html → JSX 迁移引入回归     | 中     | 高   | SOP-008 全量回归测试    |
 
 ## Related
 

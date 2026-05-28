@@ -57,14 +57,20 @@ function getOrCreateMetadata(target: object): PropMetadataStore {
 /**
  * @prop() reactive property decorator.
  *
- * Declares a signal-backed reactive property on a DsdElement subclass.
+ * @deprecated Use `static props` instead. See ADR-0057.
+ * The `@prop()` decorator will be removed in v1.0.
+ * Migration: replace `@prop() count = 0` with `static props = { count: Number }`.
  *
  * @example
  * ```ts
+ * // Before (deprecated):
  * class MyButton extends DsdElement {
  *   @prop() count = 0;
- *   @prop({ type: Boolean }) disabled = false;
- *   @prop({ attribute: 'aria-label', reflect: true }) ariaLabel = '';
+ * }
+ *
+ * // After (preferred):
+ * class MyButton extends DsdElement {
+ *   static props = { count: Number };
  * }
  * ```
  */
@@ -244,16 +250,30 @@ function reflectToAttribute(
   }
 }
 
-interface PropSignal {
+export interface PropSignal {
   value: unknown;
   subscribe(fn: (v: unknown) => void): () => void;
 }
 
+/**
+ * Create a signal for a `static props` or `@prop()` property.
+ *
+ * Adds `valueOf()` and `Symbol.toPrimitive` for automatic value unwrapping
+ * inside JSX expressions `{}` — no explicit `.value` needed in common cases.
+ *
+ * Unwrapping boundary (ADR-0057 §3.1):
+ * - ✅ JSX expression `{this.count}` — auto-unwraps via valueOf
+ * - ✅ Arithmetic `this.count > 5` — triggers valueOf
+ * - ✅ Template literal `${this.count}` — triggers Symbol.toPrimitive('string')
+ * - ❌ `JSON.stringify(this.count)` — use `this.count.value` explicitly
+ * - ❌ `Array.isArray(this.items)` — use `Array.isArray(this.items.value)`
+ * - ❌ `typeof this.count` — returns "object", use `typeof this.count.value`
+ */
 function createPropSignal(initialValue: unknown): PropSignal {
   let _value = initialValue;
   const listeners = new Set<(v: unknown) => void>();
 
-  return {
+  const sig: PropSignal = {
     get value() {
       return _value;
     },
@@ -267,6 +287,296 @@ function createPropSignal(initialValue: unknown): PropSignal {
       return () => listeners.delete(fn);
     },
   };
+
+  // Automatic value unwrapping for JSX expressions and operators
+  Object.defineProperties(sig, {
+    valueOf: {
+      value() {
+        return _value;
+      },
+      enumerable: false,
+      configurable: true,
+    },
+    [Symbol.toPrimitive]: {
+      value(hint: string) {
+        return hint === 'string' ? String(_value) : _value;
+      },
+      enumerable: false,
+      configurable: true,
+    },
+  });
+
+  return sig;
+}
+
+// ─── unwrap() ─────────────────────────────────────────────────────────────────
+
+/**
+ * Explicitly unwrap a Signal value.
+ *
+ * Use when the automatic `valueOf` unwrapping is insufficient —
+ * e.g. `JSON.stringify`, `Array.isArray`, or `typeof` checks.
+ *
+ * @example
+ * ```ts
+ * Array.isArray(unwrap(this.items)); // true
+ * Array.isArray(this.items);         // false — Signal is not an Array
+ * ```
+ *
+ * Zero overhead — compiles to a simple property access.
+ */
+export function unwrap<T>(sig: { value: T } | T): T {
+  if (
+    sig !== null && typeof sig === 'object' && 'value' in (sig as object) &&
+    'subscribe' in (sig as object)
+  ) {
+    return (sig as { value: T }).value;
+  }
+  return sig as T;
+}
+
+// ─── normalizePropDecl ────────────────────────────────────────────────────────
+
+/** Internal shape returned by normalizePropDecl */
+export interface NormalizedPropDecl {
+  type:
+    | StringConstructor
+    | NumberConstructor
+    | BooleanConstructor
+    | ArrayConstructor
+    | ObjectConstructor;
+  default: unknown;
+  reflect: boolean;
+}
+
+const DEFAULT_VALUES: Record<string, unknown> = {
+  String: '',
+  Number: 0,
+  Boolean: false,
+  Array: () => [],
+  Object: () => ({}),
+};
+
+/**
+ * Normalise a `static props` entry to a consistent shape.
+ *
+ * Shorthand: `count: Number` → `{ type: Number, default: 0, reflect: false }`
+ * Full form: `{ type: Number, default: 5, reflect: true }` → returned as-is
+ */
+export function normalizePropDecl(decl: unknown): NormalizedPropDecl {
+  if (typeof decl === 'function') {
+    const ctor = decl as { name: string };
+    const def = DEFAULT_VALUES[ctor.name];
+    return {
+      type: decl as NormalizedPropDecl['type'],
+      default: typeof def === 'function' ? (def as () => unknown)() : def,
+      reflect: false,
+    };
+  }
+  if (decl !== null && typeof decl === 'object') {
+    const d = decl as { type: unknown; default?: unknown; reflect?: boolean };
+    const ctor = d.type as { name: string };
+    const defVal = d.default !== undefined
+      ? d.default
+      : DEFAULT_VALUES[ctor?.name ?? ''] !== undefined
+      ? (typeof DEFAULT_VALUES[ctor.name] === 'function'
+        ? (DEFAULT_VALUES[ctor.name] as () => unknown)()
+        : DEFAULT_VALUES[ctor.name])
+      : null;
+    return {
+      type: d.type as NormalizedPropDecl['type'],
+      default: defVal,
+      reflect: d.reflect ?? false,
+    };
+  }
+  return { type: String, default: '', reflect: false };
+}
+
+// ─── Static props runtime ─────────────────────────────────────────────────────
+
+const STATIC_PROP_SIGNALS = Symbol.for('lessjs.staticPropSignals');
+const STATIC_PROP_UNSUBS = Symbol.for('lessjs.staticPropUnsubs');
+
+/**
+ * Initialize `static props` on a DsdElement instance.
+ *
+ * Creates a PropSignal for each declared prop, installs a get/set accessor
+ * on the instance, and registers attribute observation.
+ *
+ * Called from DsdElement.connectedCallback() before initializeProps().
+ */
+export function initializeStaticProps(instance: Record<string, unknown>): void {
+  // deno-lint-ignore no-explicit-any
+  const ctor = instance.constructor as any;
+  const propsDef = ctor.props as Record<string, unknown> | undefined;
+  if (!propsDef || typeof propsDef !== 'object') return;
+
+  const sigMap = new Map<string, PropSignal>();
+  // deno-lint-ignore no-explicit-any
+  (instance as any)[STATIC_PROP_SIGNALS] = sigMap;
+
+  const unsubs: Array<() => void> = [];
+  // deno-lint-ignore no-explicit-any
+  (instance as any)[STATIC_PROP_UNSUBS] = unsubs;
+
+  for (const [name, decl] of Object.entries(propsDef)) {
+    const { default: defVal, reflect } = normalizePropDecl(decl);
+    const sig = createPropSignal(defVal);
+
+    sigMap.set(name, sig);
+
+    // Install accessor on instance
+    Object.defineProperty(instance, name, {
+      get() {
+        return sig;
+      },
+      set(v: unknown) {
+        sig.value = v;
+      },
+      enumerable: true,
+      configurable: true,
+    });
+
+    // Wire reflect → attribute
+    if (reflect) {
+      const unsub = sig.subscribe(() => {
+        const el = instance as unknown as Element & {
+          setAttribute(n: string, v: string): void;
+          removeAttribute(n: string): void;
+        };
+        const { type } = normalizePropDecl(decl);
+        if (type === Boolean) {
+          if (sig.value) {
+            el.setAttribute(name, '');
+          } else {
+            el.removeAttribute(name);
+          }
+        } else {
+          el.setAttribute(name, String(sig.value));
+        }
+      });
+      unsubs.push(unsub);
+    }
+  }
+
+  // Register observedAttributes from static props
+  registerStaticObservedAttributes(ctor, propsDef);
+}
+
+/**
+ * Dispose static props signal subscriptions.
+ * Called from DsdElement.disconnectedCallback().
+ */
+export function disposeStaticProps(instance: Record<string, unknown>): void {
+  // deno-lint-ignore no-explicit-any
+  const unsubs = (instance as any)[STATIC_PROP_UNSUBS] as Array<() => void> | undefined;
+  if (unsubs) {
+    for (const fn of unsubs.splice(0)) fn();
+  }
+}
+
+/**
+ * Handle attribute changes for `static props`.
+ * Called from DsdElement.attributeChangedCallback().
+ */
+export function handleStaticPropAttributeChange(
+  instance: Record<string, unknown>,
+  name: string,
+  _oldValue: string | null,
+  newValue: string | null,
+): void {
+  // deno-lint-ignore no-explicit-any
+  const sigMap = (instance as any)[STATIC_PROP_SIGNALS] as Map<string, PropSignal> | undefined;
+  if (!sigMap) return;
+
+  // deno-lint-ignore no-explicit-any
+  const ctor = instance.constructor as any;
+  const propsDef = ctor.props as Record<string, unknown> | undefined;
+  if (!propsDef) return;
+
+  // Find matching prop by lowercased name
+  for (const [propName, decl] of Object.entries(propsDef)) {
+    if (propName.toLowerCase() !== name.toLowerCase()) continue;
+    const sig = sigMap.get(propName);
+    if (!sig) continue;
+    const { type } = normalizePropDecl(decl);
+    if (newValue === null) {
+      sig.value = type === Boolean ? false : type === Number ? 0 : '';
+    } else if (type === Boolean) {
+      sig.value = true;
+    } else if (type === Number) {
+      const n = Number(newValue);
+      sig.value = Number.isNaN(n) ? 0 : n;
+    } else {
+      sig.value = newValue;
+    }
+    return;
+  }
+}
+
+/**
+ * Sync static props from HTML attributes when element is connected.
+ * Called from DsdElement.connectedCallback() after initializeStaticProps().
+ */
+export function syncStaticPropsFromAttributes(
+  instance: Record<string, unknown>,
+): void {
+  // deno-lint-ignore no-explicit-any
+  const ctor = instance.constructor as any;
+  const propsDef = ctor.props as Record<string, unknown> | undefined;
+  if (!propsDef) return;
+
+  // deno-lint-ignore no-explicit-any
+  const sigMap = (instance as any)[STATIC_PROP_SIGNALS] as Map<string, PropSignal> | undefined;
+  if (!sigMap) return;
+
+  const el = instance as unknown as {
+    getAttribute(n: string): string | null;
+    hasAttribute(n: string): boolean;
+  };
+  for (const [name, decl] of Object.entries(propsDef)) {
+    const { type } = normalizePropDecl(decl);
+    if (type === Boolean) {
+      if (el.hasAttribute(name)) {
+        const sig = sigMap.get(name);
+        if (sig) sig.value = true;
+      }
+    } else {
+      const attrVal = el.getAttribute(name);
+      if (attrVal !== null) {
+        const sig = sigMap.get(name);
+        if (!sig) continue;
+        if (type === Number) {
+          const n = Number(attrVal);
+          sig.value = Number.isNaN(n) ? 0 : n;
+        } else {
+          sig.value = attrVal;
+        }
+      }
+    }
+  }
+}
+
+export function registerStaticObservedAttributes(
+  ctor: { observedAttributes?: string[]; props?: Record<string, unknown> },
+  propsDef: Record<string, unknown>,
+): void {
+  const existing = ctor.observedAttributes ?? [];
+  const toAdd: string[] = [];
+  for (const name of Object.keys(propsDef)) {
+    const lower = name.toLowerCase();
+    if (!existing.includes(lower) && !toAdd.includes(lower)) {
+      toAdd.push(lower);
+    }
+  }
+  if (toAdd.length === 0) return;
+  const combined = [...existing, ...toAdd];
+  Object.defineProperty(ctor, 'observedAttributes', {
+    get(): string[] {
+      return combined;
+    },
+    configurable: true,
+  });
 }
 
 function installPropAccessor(

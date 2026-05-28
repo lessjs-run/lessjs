@@ -19,6 +19,7 @@
  */
 
 import { type TemplateResult } from './template.js';
+import { type VNode } from './vnode.js';
 import { DsdElement } from './dsd-element.js';
 import { ErrorCode, type ErrorSeverity, LessError } from './errors.js';
 
@@ -50,7 +51,7 @@ export abstract class ErrorBoundary extends DsdElement {
   /**
    * Wrap child render in try/catch.
    */
-  override render(): string | TemplateResult {
+  override render(): string | TemplateResult | VNode {
     if (this._error) {
       const result = this.onError(this._error);
       return result;

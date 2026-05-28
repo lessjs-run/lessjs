@@ -21,10 +21,10 @@
 
 ### 修改
 
-| 文件 | 变更 |
-|------|------|
+| 文件                               | 变更                                                                                                   |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | `packages/core/src/dsd-element.ts` | render() 返回值类型扩展为 `string \| VNode \| TemplateResult`；connectedCallback 中调用 renderToString |
-| `packages/core/src/render-dsd.ts` | 新增 VNode → DSD HTML 的消费路径（与现有 TemplateResult 路径并列） |
+| `packages/core/src/render-dsd.ts`  | 新增 VNode → DSD HTML 的消费路径（与现有 TemplateResult 路径并列）                                     |
 
 ## Procedure
 
@@ -42,6 +42,7 @@ abstract class DsdElement extends HTMLElement {
 ```
 
 **验证**：
+
 - [ ] TypeScript 编译通过
 - [ ] 现有返回 string / TemplateResult 的组件不受影响
 
@@ -63,6 +64,7 @@ private _resolveRenderOutput(result: string | TemplateResult | VNode): string {
 **关键**：无论 render() 返回什么，最终都转为字符串。DSD 管线只消费字符串。
 
 **验证**：
+
 - [ ] render() 返回 VNode → `_resolveRenderOutput()` 输出正确 HTML
 - [ ] render() 返回 string → 直接返回
 - [ ] render() 返回 TemplateResult → 走现有路径
@@ -86,6 +88,7 @@ function resolveTemplateContent(result: unknown): string {
 ```
 
 **验证**：
+
 - [ ] `renderDSD()` 对 VNode 组件输出与 string 组件结构一致的 DSD HTML
 - [ ] `<template shadowrootmode="open">` 内容正确包含 JSX 渲染的 HTML
 - [ ] 嵌套组件（render-nested.ts）正确处理 VNode 子组件
@@ -95,12 +98,14 @@ function resolveTemplateContent(result: unknown): string {
 **目标**：确认 JSX 路径的 DSD 输出与 html 路径的 DSD 输出在结构上等价。
 
 **方法**：
+
 1. 选择 3 个已有组件
 2. 分别用 html 和 JSX 编写 render()
 3. 对比 `renderDSD()` 的输出
 4. 允许空白差异，不允许结构差异
 
 **验证**：
+
 - [ ] 3 个组件的 SSR 输出等价性确认
 - [ ] `deno task dsd:check-report` 通过
 
@@ -109,6 +114,7 @@ function resolveTemplateContent(result: unknown): string {
 **文件**: `packages/core/src/dsd-element.ts`
 
 在 connectedCallback 的 DSD hydration 路径中：
+
 1. 现有逻辑：检测 `<template shadowrootmode>` 是否已存在
 2. JSX 适配：hydrate 时 render() 返回 VNode → `renderToDOM()` → 绑定事件 + Signal
 3. 不替换已有的 shadow DOM 内容（DSD 优先），只在需要时做定点更新
@@ -116,6 +122,7 @@ function resolveTemplateContent(result: unknown): string {
 **注意**：这是最敏感的部分。现有的 `_initialRenderDone` 合约必须被严格遵守。
 
 **验证**：
+
 - [ ] DSD 模式下 JSX 组件正确 hydrate
 - [ ] Signal 变化后定点更新正常
 - [ ] 事件监听不丢失（_initialRenderDone 合约验证）
@@ -124,6 +131,7 @@ function resolveTemplateContent(result: unknown): string {
 ## Rollback
 
 如果 DSD 管线与 JSX 的集成出现无法在 v0.24.1 内解决的问题：
+
 1. render() 返回类型扩展保留
 2. VNode 路径标记为 `@experimental`
 3. html tagged template 继续作为默认渲染路径

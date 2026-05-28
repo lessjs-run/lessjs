@@ -24,6 +24,7 @@ deno task test
 ```
 
 **关注点**：
+
 - 新增 jsx-runtime 测试全部通过
 - static-props 测试全部通过
 - signal-unwrap 测试全部通过
@@ -36,6 +37,7 @@ deno task typecheck
 ```
 
 **关注点**：
+
 - VNode 接口类型正确
 - static props 类型推导正确（或 MVP 兜底正确）
 - 无新增 any 类型泄漏
@@ -47,6 +49,7 @@ deno task dsd:check-report
 ```
 
 **关注点**：
+
 - JSX 组件的 DSD 输出与 html 组件结构等价
 - DSD gate 无新增 unknown 错误
 - known 错误数不增加
@@ -58,6 +61,7 @@ deno task build
 ```
 
 **关注点**：
+
 - jsx-runtime 正确打包
 - jsx-runtime 的 bundle size 增量 < 5KB gzip
 - 删除 template.ts 指令后净增量 < 3KB gzip
@@ -69,6 +73,7 @@ deno task test:e2e
 ```
 
 **关注点**：
+
 - www 中所有页面正常渲染
 - JSX 组件交互正常（事件、Signal 更新）
 - DSD 预渲染页面正常 hydrate
@@ -76,6 +81,7 @@ deno task test:e2e
 ### Step 6: SSR 输出对比
 
 **方法**：
+
 1. 选择 5 个已迁移组件
 2. 对比 v0.23.x 和 v0.24.1 的 SSG 输出 HTML
 3. 确认无结构性差异

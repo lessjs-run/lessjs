@@ -192,6 +192,11 @@ export interface ClassMapInput {
   [className: string]: boolean | undefined | null;
 }
 
+/**
+ * @deprecated Use JSX className with template literals instead. See ADR-0057.
+ * Migration: `classMap({ active: isActive })` → `` `${isActive ? 'active' : ''}` ``
+ * Will be moved to `@lessjs/core/html-legacy` in v0.28 and removed in v1.0.
+ */
 export function classMap(classes: ClassMapInput): ClassMapValue {
   const entries: [string, boolean][] = [];
   for (const key of Object.keys(classes)) {
@@ -215,6 +220,11 @@ function renderClassMapValue(classes: ClassMapValue): string {
 
 // ─── When / Choose ────────────────────────────────────────────────────
 
+/**
+ * @deprecated Use JSX ternary or `&&` expressions instead. See ADR-0057.
+ * Migration: `when(cond, () => html`...`, () => html`...`)` → `{cond ? <A /> : <B />}`
+ * Will be moved to `@lessjs/core/html-legacy` in v0.28 and removed in v1.0.
+ */
 export function when(
   condition: unknown,
   truthy: TemplateResult | (() => TemplateResult),
@@ -231,6 +241,11 @@ export function when(
 
 export type ChooseCase = readonly [key: string, template: () => TemplateResult];
 
+/**
+ * @deprecated Use JSX switch/object-lookup or ternary expressions instead. See ADR-0057.
+ * Migration: `choose(key, cases, fallback)` → `{map[key] ?? <Fallback />}`
+ * Will be moved to `@lessjs/core/html-legacy` in v0.28 and removed in v1.0.
+ */
 export function choose(
   key: string,
   cases: readonly ChooseCase[],
@@ -246,6 +261,11 @@ export function choose(
 
 // ─── Repeat ───────────────────────────────────────────────────────────
 
+/**
+ * @deprecated Use JSX `Array.map()` instead. See ADR-0057.
+ * Migration: `repeat(items, key, (item) => html`...`)` → `{items.map(item => <Item key={item.id} />)}`
+ * Will be moved to `@lessjs/core/html-legacy` in v0.28 and removed in v1.0.
+ */
 export function repeat<T>(
   items: readonly T[],
   keyFnOrTemplate: ((item: T) => string | number) | ((item: T, index: number) => TemplateResult),
@@ -284,6 +304,11 @@ export function repeat<T>(
 
 // ─── Ref ──────────────────────────────────────────────────────────────
 
+/**
+ * @deprecated Use JSX `ref` prop instead. See ADR-0057.
+ * Migration: `${ref(cb)}` → `<div ref={cb}>`
+ * Will be moved to `@lessjs/core/html-legacy` in v0.28 and removed in v1.0.
+ */
 export function ref(callback: (element: Element) => void): RefDirective {
   return {
     kind: 'less:ref',
@@ -293,6 +318,19 @@ export function ref(callback: (element: Element) => void): RefDirective {
 
 // ─── Core API ─────────────────────────────────────────────────────────
 
+/**
+ * @deprecated Use JSX syntax (`<div>...</div>`) instead. See ADR-0057.
+ * The `html` tagged template will be moved to `@lessjs/core/html-legacy` in v0.28
+ * and removed in v1.0.
+ *
+ * Migration guide: https://lessjs.run/guide/migration-html-to-jsx
+ *
+ * @example
+ * // Before:
+ * return html`<div class="${cls}">${content}</div>`;
+ * // After:
+ * return <div class={cls}>{content}</div>;
+ */
 export function html(
   strings: TemplateStringsArray | readonly string[],
   ...values: TemplateValue[]
@@ -305,6 +343,11 @@ export function html(
   };
 }
 
+/**
+ * @deprecated Use JSX `dangerouslySetInnerHTML` or `innerHTML` prop instead. See ADR-0057.
+ * Migration: `${unsafeHTML(str)}` → `<div innerHTML={str}>`
+ * Will be moved to `@lessjs/core/html-legacy` in v0.28 and removed in v1.0.
+ */
 export function unsafeHTML(value: string): UnsafeHtmlValue {
   return {
     kind: 'less:unsafe-html',

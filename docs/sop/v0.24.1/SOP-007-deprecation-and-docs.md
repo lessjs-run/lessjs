@@ -50,12 +50,14 @@ export function html(strings: TemplateStringsArray, ...values: any[]): TemplateR
 **文件**: `docs/guide/migration-html-to-jsx.md`
 
 内容：
+
 - html → JSX 语法对照表（复用 ADR-0057 的表格）
 - @prop() → static props 迁移说明
 - 常见问题和陷阱
 - 自动解包边界说明
 
 **验证**：
+
 - [ ] 所有 `@deprecated` 标记的 JSDoc 包含迁移路径
 - [ ] README 示例使用 JSX
 - [ ] 迁移指南存在且完整
@@ -63,5 +65,6 @@ export function html(strings: TemplateStringsArray, ...values: any[]): TemplateR
 ## Rollback
 
 无独立回退。如果 v0.24.1 发布时组件迁移未完成：
+
 - 推迟 @deprecated 标记到 v0.25.x
 - 文档中同时展示 html 和 JSX 两种写法

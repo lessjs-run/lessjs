@@ -58,27 +58,27 @@ override render() {
 
 **转换规则**：
 
-| 旧语法 | 新语法 |
-|--------|--------|
-| `html`...`` | JSX `<>...</>` |
-| `${classMap({ a: x })}` | `` `${x ? 'a' : ''}` `` |
-| `${when(cond, a, b)}` | `{cond ? <A /> : <B />}` 或 `{cond && <A />}` |
-| `${choose(key, map, fb)}` | `{map[key] ?? <Fallback />}` |
-| `${repeat(items, fn)}` | `{items.map(item => <Item />)}` |
-| `${ref(cb)}` | `<div ref={cb}>` |
-| `${unsafeHTML(str)}` | `<div innerHTML={str}>` |
-| `@click=${handler}` | `onClick={handler}` |
-| `.prop=${value}` | `prop={value}` |
-| `?attr=${bool}` | `attr={bool}` |
-| `<slot></slot>` | `<slot />` |
+| 旧语法                    | 新语法                                        |
+| ------------------------- | --------------------------------------------- |
+| `html`...``               | JSX `<>...</>`                                |
+| `${classMap({ a: x })}`   | `` `${x ? 'a' : ''}` ``                       |
+| `${when(cond, a, b)}`     | `{cond ? <A /> : <B />}` 或 `{cond && <A />}` |
+| `${choose(key, map, fb)}` | `{map[key] ?? <Fallback />}`                  |
+| `${repeat(items, fn)}`    | `{items.map(item => <Item />)}`               |
+| `${ref(cb)}`              | `<div ref={cb}>`                              |
+| `${unsafeHTML(str)}`      | `<div innerHTML={str}>`                       |
+| `@click=${handler}`       | `onClick={handler}`                           |
+| `.prop=${value}`          | `prop={value}`                                |
+| `?attr=${bool}`           | `attr={bool}`                                 |
+| `<slot></slot>`           | `<slot />`                                    |
 
 ### Step 2: 迁移属性声明
 
 从：
 
 ```typescript
-@prop() active = false;
-@prop() title = '';
+active = false;
+title = '';
 ```
 
 改为：
@@ -93,6 +93,7 @@ static props = {
 ### Step 3: 逐组件验证
 
 每个组件迁移后：
+
 1. 运行 `deno task test` — 确保单元测试通过
 2. 运行 `deno task dsd:check-report` — 确保 DSD conformance 不退化
 3. 视觉验证 — 在 www 开发服务器中确认组件外观不变
@@ -100,10 +101,12 @@ static props = {
 ### Step 4: 更新 import
 
 移除不再需要的 import：
+
 - `html`, `classMap`, `when`, `choose`, `repeat`, `ref`, `unsafeHTML` 从 `@lessjs/core`
 - `@prop` 从 `@lessjs/core`
 
 添加需要的 import：
+
 - 组件文件顶部添加 `/** @jsxImportSource @lessjs/core */`（如果未全局配置）
 
 ### Step 5: 删除 template.ts 中的指令实现
@@ -111,10 +114,12 @@ static props = {
 **仅当所有内部组件迁移完成后**：
 
 在 `packages/core/src/template.ts` 中：
+
 - 标记 `classMap`、`when`、`choose`、`repeat`、`ref` 为 `@deprecated`
 - 不删除实现（v0.28 才移入 html-legacy）
 
 **验证**：
+
 - [ ] 所有内部组件迁移完成
 - [ ] `deno task test` 通过
 - [ ] `deno task dsd:check-report` 通过
@@ -124,6 +129,7 @@ static props = {
 ## Rollback
 
 如果迁移导致不可接受的回归：
+
 1. 逐组件回退到 html 版本
 2. JSX 和 html 组件可以共存（DsdElement 支持两种返回类型）
 3. 不做全量回退，只回退问题组件
