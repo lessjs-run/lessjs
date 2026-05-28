@@ -13,6 +13,7 @@
 
 import { isVNode, type VNode } from './vnode.ts';
 import { Fragment } from './jsx-runtime.ts';
+import { isSignalLike } from './template.ts';
 
 // ─── applyProps ───────────────────────────────────────────────────────────────
 
@@ -93,6 +94,11 @@ export function renderToDOM(node: unknown, signal?: AbortSignal): Node {
   }
   if (typeof node === 'number' || typeof node === 'boolean') {
     return document.createTextNode(String(node));
+  }
+
+  // v0.24.2: Auto-unwrap Signal values in JSX children (CSR parity with renderToString)
+  if (isSignalLike(node)) {
+    return renderToDOM((node as { value: unknown }).value, signal);
   }
 
   if (!isVNode(node)) {
