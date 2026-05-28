@@ -67,6 +67,7 @@ import {
 import { isVNode, type VNode } from './vnode.js';
 import { renderToDOM } from './jsx-render-dom.js';
 import { renderToString } from './jsx-render-string.js';
+import { effect } from '@lessjs/signals';
 
 /**
  * Minimal SSR-safe HTMLElement stub for server environments (SOP-016).
@@ -152,6 +153,9 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
 
   /** Whether the first render has completed (used to switch from full replace to patch mode) */
   private _initialRenderDone = false;
+
+  /** v0.24.3: Effect dispose for VNode signal subscriptions. */
+  private _vnodeEffectDispose?: () => void;
 
   /** ElementInternals for form-associated custom elements */
   protected _internals?: ElementInternals;
@@ -398,6 +402,25 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       this._templateAbortController = new AbortController();
       const dom = renderToDOM(result, this._templateAbortController.signal);
       this.shadowRoot.appendChild(dom);
+      // v0.24.3: Set up reactive signal tracking via effect().
+      // Unlike TemplateResult's fine-grained patch, VNodes use full re-render
+      // driven by alien-signals effect. The effect tracks all signal accesses
+      // during render() and re-executes when any dependency changes.
+      this._vnodeEffectDispose = effect(() => {
+        const updated = this.render();
+        if (!isVNode(updated)) return;
+        // DOM update (without creating new effect)
+        if (this._templateAbortController) {
+          this._templateAbortController.abort();
+        }
+        this._templateAbortController = new AbortController();
+        while (this.shadowRoot!.firstChild) {
+          this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
+        }
+        this.shadowRoot!.appendChild(
+          renderToDOM(updated, this._templateAbortController.signal),
+        );
+      });
     } else if (isTemplateResult(result)) {
       this.shadowRoot.innerHTML = renderTemplateToString(result, { runtimeMarkers: true });
       this._bindTemplateRuntime(result);
@@ -525,6 +548,11 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   }
 
   private _disposeSignalSubscriptions(): void {
+    // v0.24.3: Dispose VNode effect tracking
+    if (this._vnodeEffectDispose) {
+      this._vnodeEffectDispose();
+      this._vnodeEffectDispose = undefined;
+    }
     for (const unsubscribe of this._signalUnsubscribers.splice(0)) {
       unsubscribe();
     }
