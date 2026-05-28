@@ -11,7 +11,7 @@ import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
-import '../../islands/less-search.js';
+import '../../islands/less-search.tsx';
 
 export const tagName = 'docs-home';
 

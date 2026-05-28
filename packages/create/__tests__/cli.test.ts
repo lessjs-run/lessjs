@@ -209,6 +209,12 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     denoJson.imports['@lessjs/core/navigation'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'navigation.ts'),
     ).href;
+    denoJson.imports['@lessjs/core/jsx-runtime'] = pathToFileURL(
+      join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts'),
+    ).href;
+    denoJson.imports['@lessjs/core/jsx-dev-runtime'] = pathToFileURL(
+      join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts'),
+    ).href;
     denoJson.imports['@lessjs/adapter-vite'] = pathToFileURL(
       join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts'),
     ).href;
@@ -280,6 +286,14 @@ Deno.test('create-less: generated project builds through the one-command pipelin
         replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'navigation.ts')),
       },
       {
+        find: '@lessjs/core/jsx-runtime',
+        replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts')),
+      },
+      {
+        find: '@lessjs/core/jsx-dev-runtime',
+        replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts')),
+      },
+      {
         find: '@lessjs/core',
         replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'index.ts')),
       },
@@ -309,35 +323,43 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       },
       {
         find: '@lessjs/ui/less-button',
-        replacement: vitePath(join(uiSrc, 'less-button.ts')),
+        replacement: vitePath(join(uiSrc, 'less-button.tsx')),
       },
       {
         find: '@lessjs/ui/less-card',
-        replacement: vitePath(join(uiSrc, 'less-card.ts')),
+        replacement: vitePath(join(uiSrc, 'less-card.tsx')),
       },
       {
         find: '@lessjs/ui/less-input',
-        replacement: vitePath(join(uiSrc, 'less-input.ts')),
+        replacement: vitePath(join(uiSrc, 'less-input.tsx')),
       },
       {
         find: '@lessjs/ui/less-code-block',
-        replacement: vitePath(join(uiSrc, 'less-code-block.ts')),
+        replacement: vitePath(join(uiSrc, 'less-code-block.tsx')),
+      },
+      {
+        find: '@lessjs/ui/less-callout',
+        replacement: vitePath(join(uiSrc, 'less-callout.tsx')),
       },
       {
         find: '@lessjs/ui/less-layout',
-        replacement: vitePath(join(uiSrc, 'less-layout.ts')),
+        replacement: vitePath(join(uiSrc, 'less-layout.tsx')),
+      },
+      {
+        find: '@lessjs/ui/less-step-card',
+        replacement: vitePath(join(uiSrc, 'less-step-card.tsx')),
       },
       {
         find: '@lessjs/ui/less-theme-toggle',
-        replacement: vitePath(join(uiSrc, 'less-theme-toggle.ts')),
+        replacement: vitePath(join(uiSrc, 'less-theme-toggle.tsx')),
       },
       {
         find: '@lessjs/ui/less-hero-ping',
-        replacement: vitePath(join(uiSrc, 'less-hero-ping.ts')),
+        replacement: vitePath(join(uiSrc, 'less-hero-ping.tsx')),
       },
       {
         find: '@lessjs/ui/less-dialog',
-        replacement: vitePath(join(uiSrc, 'less-dialog.ts')),
+        replacement: vitePath(join(uiSrc, 'less-dialog.tsx')),
       },
       // Parent @lessjs/ui alias MUST come after all @lessjs/ui/* subpath aliases.
       // Point to the source directory (not index.ts) so Rolldown can resolve

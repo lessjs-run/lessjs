@@ -7,12 +7,12 @@
  * Search is rendered by less-layout itself (see packages/ui/src/less-layout.ts).
  *
  * v0.23.0: Search DSD injection removed — less-layout now renders <less-search>
- *   directly. The import of less-search.js is kept for customElements registration
+ *   directly. The import of less-search.tsx is kept for customElements registration
  *   during SSR.
  */
 
 import type { LessRenderer } from '@lessjs/runtime';
-import '../islands/less-search.js';
+import '../islands/less-search.tsx';
 
 const GITHUB_EDIT_BASE = 'https://github.com/lessjs-run/lessjs/edit/main/www/app/routes';
 

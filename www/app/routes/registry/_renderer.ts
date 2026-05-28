@@ -7,7 +7,7 @@
  */
 
 import type { LessRenderer } from '@lessjs/runtime';
-import '../../islands/less-search.js';
+import '../../islands/less-search.tsx';
 
 const SEARCH_SCRIPT = `<script>
 // Registry Hub - vanilla JS search (Lit component never hydrates on SSG pages)
