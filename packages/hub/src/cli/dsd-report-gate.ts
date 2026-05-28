@@ -60,6 +60,10 @@ export const KNOWN_ERROR_PATTERNS: Array<{ pattern: RegExp; description: string 
     pattern: /this\.host\.childNodes is not iterable/,
     description: 'Shoelace component iterating host childNodes during SSR',
   },
+  {
+    pattern: /React SSR rendering failed/,
+    description: 'adapter-react SSR boundary — React islands render client-only',
+  },
 ];
 
 // v0.21: Bumped to 12 to accommodate Shoelace third-party demo components

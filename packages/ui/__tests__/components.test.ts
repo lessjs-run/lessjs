@@ -238,7 +238,7 @@ const REACTIVE_PROPERTY_CASES = [
 
 for (const [fileName, className] of COMPONENT_CLASSES) {
   Deno.test(`less-${fileName}: can be instantiated and render()`, async () => {
-    const mod = await import(`../src/${fileName}.ts`);
+    const mod = await import(`../src/${fileName}.tsx`);
     const Cls = mod[className as keyof typeof mod] as { new (): { render(): unknown } };
     const instance = new Cls();
     const result = instance.render();
@@ -248,7 +248,7 @@ for (const [fileName, className] of COMPONENT_CLASSES) {
 
 for (const [fileName, className, props] of REACTIVE_PROPERTY_CASES) {
   Deno.test(`less-${fileName}: reactive properties are not shadowed by class fields`, async () => {
-    const mod = await import(`../src/${fileName}.ts`);
+    const mod = await import(`../src/${fileName}.tsx`);
     const Cls = mod[className as keyof typeof mod] as { new (): object };
     const instance = new Cls() as Record<string, unknown>;
 
