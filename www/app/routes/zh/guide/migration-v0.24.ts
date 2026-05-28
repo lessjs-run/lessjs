@@ -235,7 +235,7 @@ class MyCounter extends DsdElement {
             <h2>第 5 步：更新控制流</h2>
 
             <h3>条件渲染</h3>
-            <p><strong>之前：</strong><code>${when(this.visible, () => html\`...\`)}</code></p>
+            <p><strong>之前：</strong><code>${when(this.visible, () => html`...`)}</code></p>
             <p><strong>之后：</strong><code>{this.visible.value && <div>...</div>}</code></p>
 
             <h3>列表渲染</h3>
