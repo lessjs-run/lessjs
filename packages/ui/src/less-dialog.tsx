@@ -5,7 +5,7 @@
  * Per WHATWG HTML Living Standard sections 4.11.4 (dialog) and 6.9.2 (popover).
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
- * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
  *
  * @csspart overlay - The dialog backdrop/element
  * @csspart header -The header bar

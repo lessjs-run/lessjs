@@ -9,7 +9,7 @@ import {
   renderToString,
 } from '../src/index.ts';
 
-Deno.test('core stable API exports v0.24.2 JSX rendering primitives', () => {
+Deno.test('core stable API exports v0.24.1 JSX rendering primitives', () => {
   assertEquals(typeof renderDSD, 'function');
   assertEquals(typeof renderDSDStream, 'function');
   assertEquals(typeof DsdElement, 'function');
@@ -20,7 +20,7 @@ Deno.test('core stable API exports v0.24.2 JSX rendering primitives', () => {
 });
 
 Deno.test('core JSX to HTML string round-trip', () => {
-  // v0.24.2: jsx() creates VNode, renderToString serialises to HTML
+  // v0.24.1: jsx() creates VNode, renderToString serialises to HTML
   const vnode = jsx('p', { className: 'greeting', children: 'hello' });
   const html = renderToString(vnode);
   assertEquals(html, '<p class="greeting">hello</p>');

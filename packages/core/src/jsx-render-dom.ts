@@ -168,7 +168,7 @@ export function renderToDOM(node: unknown, signal?: AbortSignal): Node {
     return document.createTextNode(String(node));
   }
 
-  // v0.24.2: Auto-unwrap Signal values in JSX children (CSR parity with renderToString)
+  // v0.24.1: Auto-unwrap Signal values in JSX children (CSR parity with renderToString)
   if (isSignalLike(node)) {
     return renderToDOM((node as { value: unknown }).value, signal);
   }

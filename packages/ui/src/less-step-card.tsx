@@ -5,7 +5,7 @@
  * Used in Quick Start sections and Getting Started guides.
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
- * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
  *
  * @csspart container -The step card wrapper
  * @csspart indicator -The step number circle

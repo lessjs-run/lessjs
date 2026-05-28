@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/cem",
-  "version": "0.24.2",
+  "version": "0.24.1",
   "exports": {
     ".": "./src/index.ts",
     "./types": "./src/types.ts"

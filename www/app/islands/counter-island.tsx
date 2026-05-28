@@ -4,7 +4,7 @@
  * The simplest possible Reactive DSD demo:
  * zero framework runtime, pure DSD + Signals.
  *
- * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
  *
  * Replaced LitElement with DsdElement:
  *   - Styles: StyleSheet (SSR-safe, adoptedStyleSheets)

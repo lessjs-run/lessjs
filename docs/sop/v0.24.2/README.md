@@ -1,6 +1,6 @@
-# SOP v0.24.2: 删除旧组件模型，全量迁移到新模型
+# SOP v0.24.1: 删除旧组件模型，全量迁移到新模型
 
-> **目标版本**: v0.24.2 | **状态**: IN_PROGRESS
+> **目标版本**: v0.24.1 | **状态**: IN_PROGRESS
 > **前置**: ADR-0057 (IMPLEMENTED), SOP v0.24.1 (COMPLETED)
 > **辩论**: docs/conversation/20260528/v0242-remove-old-component-model.md
 
@@ -80,8 +80,8 @@
 
 ## Step 7: 批量版本更新
 
-- 所有包 `deno.json` version: `0.24.1` → `0.24.2`
-- 跨包依赖引用 `^0.24.1` → `^0.24.2`
+- 所有包 `deno.json` version: `0.24.1` → `0.24.1`
+- 跨包依赖引用 `^0.24.1` → `^0.24.1`
 
 ## Step 8: 全量测试 + lint + fmt
 
@@ -94,14 +94,14 @@ deno task build:www   # 验证 www 构建
 
 ## Step 9: 写 changelog 和 release note
 
-- `CHANGELOG.md` 新增 v0.24.2 条目
-- `docs/releases/0.24.2.md` release note
+- `CHANGELOG.md` 新增 v0.24.1 条目
+- `docs/releases/0.24.1.md` release note
 
 ## Step 10: Commit + Push
 
 ```bash
 git add -A
-git commit -m "v0.24.2: remove old component model, full JSX+Signal migration"
+git commit -m "v0.24.1: remove old component model, full JSX+Signal migration"
 git push origin dev
 ```
 

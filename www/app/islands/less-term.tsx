@@ -7,7 +7,7 @@
  * - Command history, local commands, API fallback
  * - Direct DOM manipulation for output (no full re-render)
  *
- * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
  *
  * Pure DsdElement - zero Lit dependency.
  */

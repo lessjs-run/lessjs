@@ -5,7 +5,7 @@
  * Pure DsdElement - zero Lit dependency. State changes are reflected
  * by re-rendering the shadow DOM and re-hydrating events.
  *
- * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
  *
  * @csspart dot-static  - The static status dot
  * @csspart dot-animated - The animated ping button

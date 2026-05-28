@@ -5,7 +5,7 @@
  * Clean borders, subtle focus states.
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
- * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
  *
  * Features:
  * - Form-associated: participates in native <form> submission

@@ -7,7 +7,7 @@
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
  * v0.21.0: Signal migration — _open, _query, _results → #open, #query, #results signals.
- * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
  *
  * @csspart trigger -The search trigger button
  * @csspart icon -The search SVG icon

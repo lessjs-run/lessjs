@@ -5,7 +5,7 @@
  * a right sidebar with IntersectionObserver for active tracking.
  * Pure DsdElement - zero Lit dependency.
  *
- * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
  *
  * Reactive DSD: #headings and #activeId signals auto-trigger re-render.
  */

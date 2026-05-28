@@ -3,7 +3,7 @@
  *
  * ADR-0052 / SOP-010 / ADR-0057: static props + Signal model.
  *
- * The `@prop()` decorator was removed in v0.24.2.
+ * The `@prop()` decorator was removed in v0.24.1.
  * Use `static props = { name: String }` instead.
  *
  * Each declared prop creates a signal-backed accessor. When the property
@@ -22,7 +22,7 @@
 
 import type { DsdElement } from './dsd-element.js';
 
-// ─── Internal types (v0.24.2: `PropertyOptions` no longer exported) ────────
+// ─── Internal types (v0.24.1: `PropertyOptions` no longer exported) ────────
 
 interface PropertyOptions {
   /** Constructor for attribute↔property type conversion */

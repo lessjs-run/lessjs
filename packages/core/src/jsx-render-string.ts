@@ -120,7 +120,7 @@ export function renderToString(node: unknown): string {
   if (typeof node === 'number') return String(node);
   if (typeof node === 'boolean') return '';
 
-  // v0.24.2: Auto-unwrap Signal values in JSX expressions
+  // v0.24.1: Auto-unwrap Signal values in JSX expressions
   if (isSignalLike(node)) {
     return renderToString((node as { value: unknown }).value);
   }

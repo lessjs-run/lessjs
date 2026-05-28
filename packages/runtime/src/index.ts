@@ -29,7 +29,7 @@ export { isVNode } from '@lessjs/core';
 // JSX rendering
 export { renderToDOM, renderToString } from '@lessjs/core';
 
-// v0.24.2: static props
+// v0.24.1: static props
 export type { PropDecl, PropsFrom, PropType } from '@lessjs/core';
 
 // v0.24 (ADR-0053): Error boundary + error types
@@ -47,7 +47,7 @@ export type {
   SsrRenderError,
 } from '@lessjs/core';
 
-// Signals utilities (v0.24.2: SignalLike kept, isSignalLike kept)
+// Signals utilities (v0.24.1: SignalLike kept, isSignalLike kept)
 export { isSignalLike } from '@lessjs/core';
 export type { SignalLike } from '@lessjs/core';
 

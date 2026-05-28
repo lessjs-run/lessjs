@@ -123,7 +123,7 @@ export {
   type UnsafeHtml,
 } from './html-escape.js';
 export {
-  // v0.24.2: Only isSignalLike retained; html/classMap/when/choose/repeat/ref/unsafeHTML removed
+  // v0.24.1: Only isSignalLike retained; html/classMap/when/choose/repeat/ref/unsafeHTML removed
   isSignalLike,
 } from './template.js';
 export type { SignalLike } from './template.js';

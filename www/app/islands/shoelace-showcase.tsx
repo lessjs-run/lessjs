@@ -5,7 +5,7 @@
  * Pure DsdElement - zero framework dependency at the wrapper level.
  * Shoelace itself uses Lit internally, but that's the library's choice.
  *
- * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
  *
  * @lessjs/app island - Shoelace WCs need client DOM, but static wrapper renders via DSD.
  */
