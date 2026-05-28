@@ -12,6 +12,8 @@
  * @module @lessjs/core/jsx-runtime
  */
 
+/// <reference path="./jsx-types.d.ts" />
+
 import type { VNode } from './vnode.ts';
 
 // ─── Fragment ────────────────────────────────────────────────────────────────
@@ -105,11 +107,6 @@ export function jsxDEV(
 }
 
 // ─── JSX IntrinsicElements type declarations ──────────────────────────────────
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      [elemName: string]: Record<string, unknown>;
-    }
-  }
-}
+// v0.24.2: Moved to jsx-types.d.ts — JSR does not allow declare global
+// augmentations in published packages. The ambient declarations in
+// jsx-types.d.ts provide the same TypeScript JSX type-checking.
