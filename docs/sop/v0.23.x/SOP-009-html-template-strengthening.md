@@ -1,8 +1,9 @@
 # SOP-009: html 模板系统强化
 
+> ⚠️ **OBSOLETE** as of v0.24.1. The `html` tagged template has been removed. See SOP v0.24.1 for JSX+Signal model.
 > Version: v0.23.x
 > Priority: P1
-> Status: PLANNED
+> Status: OBSOLETE
 > Depends on: ADR-0051
 > Blocks: SOP-010（@prop() 需要 classMap）
 

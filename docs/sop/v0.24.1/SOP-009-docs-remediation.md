@@ -12,6 +12,7 @@
 **位置**: Line 338-344
 
 **当前状态**:
+
 ```
 html() / unsafeHTML()
 html(strings, ...values): TemplateResult
@@ -19,6 +20,7 @@ unsafeHTML(value): UnsafeHtmlValue
 ```
 
 **操作**:
+
 1. 删除 `html()` / `unsafeHTML()` 整个条目
 2. 替换为 JSX 运行时 API 参考：
 
@@ -60,31 +62,31 @@ Scope: @lessjs/core
 
 ## Stable Userland API
 
-| API | Role |
-|-----|------|
-| DsdElement | Zero-dependency custom element base for DSD and Reactive DSD |
-| jsx() / jsxs() / jsxDEV() | JSX factory functions — VNode creation |
-| Fragment | Symbol for grouping children |
-| renderToString(vnode) | VNode → HTML string (SSR) |
-| renderToDOM(vnode, signal?) | VNode → DOM nodes (CSR) |
-| VNode / isVNode() | 5-field interface + type guard |
-| static props | ES2022 class fields replacing @prop() decorator |
-| signal() / computed() / effect() | Re-exported from @lessjs/signals |
-| StyleSheet | SSR-safe stylesheet abstraction |
-| renderDSD() / renderDSDStream() | Component-to-DSD renderer entrypoints |
-| island() / lessBind() | Island declaration helpers |
-| MemoryIsrCache / createIsrCacheKey() | ISR contract |
+| API                                  | Role                                                         |
+| ------------------------------------ | ------------------------------------------------------------ |
+| DsdElement                           | Zero-dependency custom element base for DSD and Reactive DSD |
+| jsx() / jsxs() / jsxDEV()            | JSX factory functions — VNode creation                       |
+| Fragment                             | Symbol for grouping children                                 |
+| renderToString(vnode)                | VNode → HTML string (SSR)                                    |
+| renderToDOM(vnode, signal?)          | VNode → DOM nodes (CSR)                                      |
+| VNode / isVNode()                    | 5-field interface + type guard                               |
+| static props                         | ES2022 class fields replacing @prop() decorator              |
+| signal() / computed() / effect()     | Re-exported from @lessjs/signals                             |
+| StyleSheet                           | SSR-safe stylesheet abstraction                              |
+| renderDSD() / renderDSDStream()      | Component-to-DSD renderer entrypoints                        |
+| island() / lessBind()                | Island declaration helpers                                   |
+| MemoryIsrCache / createIsrCacheKey() | ISR contract                                                 |
 
 ## Removed in v0.24.1
 
-| API | Replacement |
-|-----|------------|
-| html() | JSX syntax: `<div>...</div>` |
-| unsafeHTML() | Inline JSX with trusted content |
-| classMap / when / choose / repeat / ref | JSX expressions |
-| @prop() decorator | static props class fields |
-| TemplateResult / isTemplateResult | VNode / isVNode() |
-| renderTemplateToString | renderToString() |
+| API                                     | Replacement                     |
+| --------------------------------------- | ------------------------------- |
+| html()                                  | JSX syntax: `<div>...</div>`    |
+| unsafeHTML()                            | Inline JSX with trusted content |
+| classMap / when / choose / repeat / ref | JSX expressions                 |
+| @prop() decorator                       | static props class fields       |
+| TemplateResult / isTemplateResult       | VNode / isVNode()               |
+| renderTemplateToString                  | renderToString()                |
 ```
 
 ---
@@ -92,11 +94,13 @@ Scope: @lessjs/core
 ## Step 3 (P0): 删除并替换 `docs/reference/template-reactive-contract.md`
 
 **操作**:
+
 1. 删除 `docs/reference/template-reactive-contract.md`
 2. 新建 `docs/reference/jsx-component-model.md`
 
 **新文件内容大纲**:
-```markdown
+
+````markdown
 # LessJS JSX Component Model
 
 Status: v0.24.1\
@@ -117,6 +121,7 @@ class CounterElement extends DsdElement {
   }
 }
 ```
+````
 
 ## VNode Interface
 
@@ -147,8 +152,8 @@ via createElementNS('http://www.w3.org/2000/svg', tag).
 
 effect() wraps render() in DsdElement._renderIntoShadowRoot().
 All signal accesses in render() are auto-tracked — DOM re-renders on change.
-```
 
+````
 ---
 
 ## Step 4 (P1): 更新 `www/app/routes/guide/getting-started.ts`
@@ -174,7 +179,7 @@ export class CounterElement extends DsdElement {
 
 customElements.define('my-counter', CounterElement);
 </code></pre></less-code-block>
-```
+````
 
 同时在配置段落增加 JSX 配置说明。
 
@@ -183,7 +188,8 @@ customElements.define('my-counter', CounterElement);
 ## Step 5 (P1): 审计并更新 `www/app/routes/guide/api.ts`
 
 **操作**:
-1. 通读全文，搜索 `html\`` / `@prop` / `TemplateResult` / `classMap`
+
+1. 通读全文，搜索 `html\` /``@prop`/`TemplateResult`/`classMap`
 2. 替换所有旧 API 引用为 JSX 等价写法
 3. 确保 API 列表与 core-api-surface.md 一致
 
@@ -192,7 +198,8 @@ customElements.define('my-counter', CounterElement);
 ## Step 6 (P1): 审计并更新 `www/app/routes/guide/islands.ts`
 
 **操作**:
-1. 搜索 `html\`` / `TemplateResult` 引用
+
+1. 搜索 `html\` /``TemplateResult` 引用
 2. Island 声明语法（`island()` / `lessBind()`）本身未变，但示例代码中的组件 render 方法需要展示 JSX
 
 ---
@@ -201,7 +208,7 @@ customElements.define('my-counter', CounterElement);
 
 **操作**: 新增小节
 
-```markdown
+````markdown
 ## JSX 配置
 
 ### deno.json
@@ -218,6 +225,7 @@ customElements.define('my-counter', CounterElement);
   }
 }
 ```
+````
 
 ### vite.config.ts
 
@@ -230,8 +238,8 @@ export default defineConfig({
   plugins: [lessjs({ ... })]
 });
 ```
-```
 
+````
 ---
 
 ## Step 8 (P1): 更新 `docs/arch/current-architecture.md`
@@ -382,7 +390,7 @@ export default defineConfig({
 ```markdown
 > ⚠️ **SUPERSEDED** by [ADR-0057](../adr/0057-jsx-signal-component-model.md)
 > @prop() decorator replaced by static props in v0.24.1
-```
+````
 
 ---
 
@@ -391,6 +399,7 @@ export default defineConfig({
 **文件**: `docs/sop/v0.23.x/SOP-009-html-template-strengthening.md`
 
 **操作**: 在文件头部增加：
+
 ```markdown
 > ⚠️ **OBSOLETE** as of v0.24.1
 > html tagged template has been removed. See SOP v0.24.1 for JSX+Signal model.
@@ -403,6 +412,7 @@ export default defineConfig({
 **文件**: `docs/sop/v0.21.0/` 目录下涉及 html template 的 SOP
 
 **操作**: 在每个涉及 html template + @prop 的 SOP 顶部增加：
+
 ```markdown
 > 📦 **HISTORICAL** — applies to v0.21.x only. Superseded by ADR-0057 (JSX+Signal) in v0.24.1.
 ```
@@ -413,7 +423,7 @@ export default defineConfig({
 
 ## Step 23 (P3): 审计 `docs/reference/web-component-compatibility.md`
 
-**操作**: 通读全文，搜索 `html\`` / `@prop` / `TemplateResult`，如有旧 API 引用则替换为 JSX 等价写法。
+**操作**: 通读全文，搜索 `html\` /``@prop`/`TemplateResult`，如有旧 API 引用则替换为 JSX 等价写法。
 
 ---
 
@@ -421,12 +431,12 @@ export default defineConfig({
 
 以下新页面需要同步创建中文版路由文件：
 
-| 英文文件 | 中文文件 |
-|---------|---------|
-| `www/app/routes/guide/jsx-components.ts` | `www/app/routes/zh/guide/jsx-components.ts` |
-| `www/app/routes/guide/static-props.ts` | `www/app/routes/zh/guide/static-props.ts` |
+| 英文文件                                    | 中文文件                                       |
+| ------------------------------------------- | ---------------------------------------------- |
+| `www/app/routes/guide/jsx-components.ts`    | `www/app/routes/zh/guide/jsx-components.ts`    |
+| `www/app/routes/guide/static-props.ts`      | `www/app/routes/zh/guide/static-props.ts`      |
 | `www/app/routes/guide/signal-reactivity.ts` | `www/app/routes/zh/guide/signal-reactivity.ts` |
-| `www/app/routes/guide/migration-v0.24.ts` | `www/app/routes/zh/guide/migration-v0.24.ts` |
+| `www/app/routes/guide/migration-v0.24.ts`   | `www/app/routes/zh/guide/migration-v0.24.ts`   |
 
 已存在的页面（Step 4-7）也需要审计对应中文版是否有同样的过时内容。
 
