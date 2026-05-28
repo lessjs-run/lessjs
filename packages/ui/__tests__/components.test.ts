@@ -120,7 +120,7 @@ const COMPONENT_FILES = [
 
 for (const name of COMPONENT_FILES) {
   Deno.test(`less-${name}: exports tagName`, async () => {
-    const mod = await import(`../src/${name}.ts`);
+    const mod = await import(`../src/${name}.tsx`);
     assertExists(mod.tagName, `${name} must export tagName`);
     assertEquals(typeof mod.tagName, 'string');
     // Custom Elements require hyphen in tag name
@@ -128,7 +128,7 @@ for (const name of COMPONENT_FILES) {
   });
 
   Deno.test(`less-${name}: exports DsdElement-compatible class`, async () => {
-    const mod = await import(`../src/${name}.ts`);
+    const mod = await import(`../src/${name}.tsx`);
     const className = Object.keys(mod).find((k) => k !== 'tagName' && typeof mod[k] === 'function');
     assertExists(className, `${name} should export a class`);
     const Cls = mod[className as keyof typeof mod];
