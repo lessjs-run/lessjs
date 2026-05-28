@@ -7,6 +7,7 @@
  *   - Self-contained Prism highlighting injected into shadow root
  *   - Copy button uses ElementInternals :state(copied) for CSS feedback
  *   - DSD renders <slot> for SSR (no JS content fallback)
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
  *
  * @csspart copy - The copy button
  *
@@ -18,7 +19,7 @@
  * ```
  */
 
-import { DsdElement, html, type TemplateResult } from '@lessjs/core';
+import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
@@ -131,11 +132,15 @@ export class LessCodeBlock extends DsdElement {
   private _highlightRetries = 0;
   private static MAX_HIGHLIGHT_RETRIES = 40;
 
-  override render(): string | TemplateResult {
-    return html`
-      <slot></slot>
-      <button class="copy-btn" part="copy" @click="${() => this._copy()}">Copy</button>
-    `;
+  override render() {
+    return (
+      <>
+        <slot></slot>
+        <button type='button' className='copy-btn' part='copy' onClick={() => this._copy()}>
+          Copy
+        </button>
+      </>
+    );
   }
 
   override connectedCallback(): void {

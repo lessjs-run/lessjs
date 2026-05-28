@@ -6,14 +6,8 @@
  * Triggered by Cmd+K or clicking the search icon.
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
- *   - Overlay styles use CSSStyleSheet injected into document.adoptedStyleSheets
- *   - Shadow DOM only renders the trigger button
- *   - Overlay is always appended to document.body
- *   - SPA-safe: state reset on connectedCallback, Cmd+K keyboard binding
- *
  * v0.21.0: Signal migration — _open, _query, _results → #open, #query, #results signals.
- *   - Overlay stays imperative (document.body, not shadow DOM).
- *   - render() only controls the trigger button.
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
  *
  * @csspart trigger -The search trigger button
  * @csspart icon -The search SVG icon
@@ -27,7 +21,9 @@
  * - Component state is reset on connectedCallback() for SPA navigation safety
  */
 
-import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { signal } from '@lessjs/signals';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
 interface SearchEntry {
@@ -180,24 +176,30 @@ export default class LessSearch extends DsdElement {
   private _inputEl: HTMLInputElement | null = null;
 
   override render() {
-    return html`
-      <button class="search-trigger" part="trigger" aria-label="Search" @click="${() =>
-        this._handleTriggerClick()}">
+    return (
+      <button
+        type='button'
+        className='search-trigger'
+        part='trigger'
+        aria-label='Search'
+        onClick={() => this._handleTriggerClick()}
+      >
         <svg
-          class="search-icon"
-          part="icon"
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"
+          className='search-icon'
+          part='icon'
+          viewBox='0 0 16 16'
+          fill='none'
+          stroke='currentColor'
+          stroke-width='1.5'
+          stroke-linecap='round'
         >
-          <circle cx="7" cy="7" r="4.5" />
-          <path d="M10.5 10.5L14 14" />
+          <circle cx='7' cy='7' r='4.5' />
+          <path d='M10.5 10.5L14 14' />
         </svg>
-        <span part="label">Search</span><kbd part="shortcut">\\u2318K</kbd>
+        <span part='label'>Search</span>
+        <kbd part='shortcut'>⌘K</kbd>
       </button>
-    `;
+    );
   }
 
   // Cmd+K handler (bound to document)

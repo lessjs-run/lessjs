@@ -1,10 +1,12 @@
 /**
- * @lessjs/core — @prop() reactive property decorator.
+ * @lessjs/core — Reactive property runtime.
  *
- * ADR-0052 / SOP-010: Reduces property declaration from 10+ lines
- * across 4 locations to a single `@prop() name = value`.
+ * ADR-0052 / SOP-010 / ADR-0057: static props + Signal model.
  *
- * Each @prop() creates a signal-backed accessor. When the property
+ * The `@prop()` decorator was removed in v0.24.2.
+ * Use `static props = { name: String }` instead.
+ *
+ * Each declared prop creates a signal-backed accessor. When the property
  * changes, the signal notifies the DsdElement's ReactiveHost, which
  * schedules a microtask-batched DOM patch.
  *
@@ -20,9 +22,9 @@
 
 import type { DsdElement } from './dsd-element.js';
 
-// ─── Property metadata ──────────────────────────────────────────────
+// ─── Internal types (v0.24.2: `PropertyOptions` no longer exported) ────────
 
-export interface PropertyOptions {
+interface PropertyOptions {
   /** Constructor for attribute↔property type conversion */
   type?: StringConstructor | NumberConstructor | BooleanConstructor;
   /** Custom HTML attribute name (default: lowercase property name) */
@@ -38,50 +40,13 @@ interface PropMetadata {
   options: PropertyOptions;
 }
 
-const PROP_METADATA = Symbol.for('lessjs.propMetadata');
-
 interface PropMetadataStore {
   props: PropMetadata[];
 }
 
-function getOrCreateMetadata(target: object): PropMetadataStore {
-  const ctor = target.constructor as unknown as Record<symbol, PropMetadataStore>;
-  if (!ctor[PROP_METADATA]) {
-    ctor[PROP_METADATA] = { props: [] };
-  }
-  return ctor[PROP_METADATA];
-}
+const PROP_METADATA = Symbol.for('lessjs.propMetadata');
 
-// ─── Decorator ──────────────────────────────────────────────────────
-
-/**
- * @prop() reactive property decorator.
- *
- * @deprecated Use `static props` instead. See ADR-0057.
- * The `@prop()` decorator will be removed in v1.0.
- * Migration: replace `@prop() count = 0` with `static props = { count: Number }`.
- *
- * @example
- * ```ts
- * // Before (deprecated):
- * class MyButton extends DsdElement {
- *   @prop() count = 0;
- * }
- *
- * // After (preferred):
- * class MyButton extends DsdElement {
- *   static props = { count: Number };
- * }
- * ```
- */
-export function prop(options: PropertyOptions = {}): PropertyDecorator {
-  return (target: object, propertyKey: string | symbol): void => {
-    const store = getOrCreateMetadata(target);
-    store.props.push({ key: propertyKey, options });
-  };
-}
-
-// ─── Runtime integration ────────────────────────────────────────────
+// ─── Runtime integration (v0.24: @prop() legacy runtime — kept for compat) ──
 
 /**
  * Internal: signal key for property signals stored on the element instance.

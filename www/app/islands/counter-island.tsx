@@ -4,13 +4,17 @@
  * The simplest possible Reactive DSD demo:
  * zero framework runtime, pure DSD + Signals.
  *
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ *
  * Replaced LitElement with DsdElement:
  *   - Styles: StyleSheet (SSR-safe, adoptedStyleSheets)
- *   - Template: html`...` from @lessjs/core
+ *   - Template: JSX from @lessjs/core
  *   - State: signal() from @lessjs/signals
- *   - Events: @click declarative bindings
+ *   - Events: onClick declarative bindings
  */
-import { DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { signal } from '@lessjs/signals';
+import { StyleSheet } from '@lessjs/style-sheet';
 
 export const tagName = 'counter-island';
 
@@ -71,12 +75,16 @@ export default class CounterIsland extends DsdElement {
   #count = signal(0);
 
   override render() {
-    return html`
-      <div class="counter">
-        <button aria-label="Decrease count" @click="${() => this.#count.value--}">−</button>
-        <span class="count">${this.#count}</span>
-        <button aria-label="Increase count" @click="${() => this.#count.value++}">+</button>
+    return (
+      <div className='counter'>
+        <button type='button' aria-label='Decrease count' onClick={() => this.#count.value--}>
+          −
+        </button>
+        <span className='count'>{this.#count}</span>
+        <button type='button' aria-label='Increase count' onClick={() => this.#count.value++}>
+          +
+        </button>
       </div>
-    `;
+    );
   }
 }

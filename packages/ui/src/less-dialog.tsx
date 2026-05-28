@@ -5,6 +5,7 @@
  * Per WHATWG HTML Living Standard sections 4.11.4 (dialog) and 6.9.2 (popover).
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
  *
  * @csspart overlay - The dialog backdrop/element
  * @csspart header -The header bar
@@ -21,7 +22,7 @@
  * ```
  */
 
-import { DsdElement, html, type TemplateResult } from '@lessjs/core';
+import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc, _escAttr } from './shared/escape.js';
@@ -119,28 +120,38 @@ export class LessDialog extends DsdElement {
 
   private static _originalInertStates = new WeakMap<Element, boolean>();
 
-  override render(): string | TemplateResult {
+  override render() {
     const label = this._esc(this.getAttribute('label') || '');
-    return html`
-      <slot name="trigger" @click="${() => this._handleTrigger()}"></slot>
-      <dialog aria-label="${this.getAttribute('label') || ''}" part="overlay" @cancel="${(
-        e: Event,
-      ) => this._handleCancel(e)}" @close="${() => this._handleClose()}">
-        <div class="dialog-header" part="header">
-          <h2 class="dialog-title">${label}</h2>
-          <button class="dialog-close" part="close" aria-label="Close" @click="${() =>
-            this._handleClose()}">
-            &times;
-          </button>
-        </div>
-        <div class="dialog-body" part="body">
-          <slot></slot>
-        </div>
-        <div class="dialog-footer" part="footer">
-          <slot name="footer"></slot>
-        </div>
-      </dialog>
-    `;
+    return (
+      <>
+        <slot name='trigger' onClick={() => this._handleTrigger()}></slot>
+        <dialog
+          aria-label={this.getAttribute('label') || ''}
+          part='overlay'
+          onCancel={(e: Event) => this._handleCancel(e)}
+          onClose={() => this._handleClose()}
+        >
+          <div className='dialog-header' part='header'>
+            <h2 className='dialog-title'>{label}</h2>
+            <button
+              type='button'
+              className='dialog-close'
+              part='close'
+              aria-label='Close'
+              onClick={() => this._handleClose()}
+            >
+              &times;
+            </button>
+          </div>
+          <div className='dialog-body' part='body'>
+            <slot></slot>
+          </div>
+          <div className='dialog-footer' part='footer'>
+            <slot name='footer'></slot>
+          </div>
+        </dialog>
+      </>
+    );
   }
 
   override attributeChangedCallback(name: string, old: string | null, val: string | null): void {

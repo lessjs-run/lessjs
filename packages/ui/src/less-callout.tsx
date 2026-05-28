@@ -5,6 +5,7 @@
  * Supports 4 types: info, warning, danger, tip.
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
  *
  * @csspart container -The callout wrapper
  * @csspart icon -The type icon span
@@ -18,7 +19,7 @@
  * ```
  */
 
-import { DsdElement, html, type TemplateResult } from '@lessjs/core';
+import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc } from './shared/escape.js';
@@ -90,29 +91,28 @@ export class LessCallout extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['type', 'label'];
 
-  override render(): string | TemplateResult {
+  override render() {
     const type = this.getAttribute('type') || 'info';
     const label = this.getAttribute('label') || '';
     const config = TYPE_CONFIG[type] || TYPE_CONFIG.info;
 
-    const header = label
-      ? html`
-        <div class="callout-header">
-          <span class="callout-icon" part="icon">${config.icon}</span>
-          <span class="callout-title">${this._esc(label)}</span>
-        </div>
-      `
-      : '';
-
-    return html`
-      <div class="callout" part="container" style="border-left-color:${config
-        .borderColor};background:${config.bgColor};">
-        ${header}
-        <div class="callout-body" part="content">
+    return (
+      <div
+        className='callout'
+        part='container'
+        style={`border-left-color:${config.borderColor};background:${config.bgColor};`}
+      >
+        {label && (
+          <div className='callout-header'>
+            <span className='callout-icon' part='icon'>{config.icon}</span>
+            <span className='callout-title'>{this._esc(label)}</span>
+          </div>
+        )}
+        <div className='callout-body' part='content'>
           <slot></slot>
         </div>
       </div>
-    `;
+    );
   }
 
   override attributeChangedCallback(_name: string, old: string | null, val: string | null): void {

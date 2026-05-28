@@ -6,10 +6,14 @@
  *   2. Theme toggle with signal() — attribute/property binding
  *   3. Live filter with signal() — computed display
  *
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
+ *
  * Zero framework runtime — pure DSD + Signals.
  * Replaces Lit Island pattern with Ocean (DsdElement) reactivity.
  */
-import { computed, DsdElement, html, signal, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { computed, signal } from '@lessjs/signals';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
 export const tagName = 'reactive-showcase';
@@ -89,53 +93,57 @@ export default class ReactiveShowcase extends DsdElement {
   );
 
   override render() {
-    return html`
-      <div class="showcase">
-        <!-- Counter: signal + fine-grained binding -->
-        <div class="card">
+    return (
+      <div className='showcase'>
+        {/* Counter: signal + fine-grained binding */}
+        <div className='card'>
           <h3>Signal Counter</h3>
-          <p>A single <code>signal(0)</code> drives this counter. No Lit, no React, no framework.</p>
-          <div class="counter-row">
-            <button @click="${() => this.#count.value--}">−</button>
-            <span>${this.#count}</span>
-            <button @click="${() => this.#count.value++}">+</button>
+          <p>
+            A single <code>signal(0)</code> drives this counter. No Lit, no React, no framework.
+          </p>
+          <div className='counter-row'>
+            <button type='button' onClick={() => this.#count.value--}>−</button>
+            <span>{this.#count}</span>
+            <button type='button' onClick={() => this.#count.value++}>+</button>
           </div>
         </div>
 
-        <!-- Theme: signal + conditional binding -->
-        <div class="card">
+        {/* Theme: signal + conditional binding */}
+        <div className='card'>
           <h3>Theme Preview</h3>
           <p>
-            One <code>signal(false)</code> controls the entire component theme. Reactive attribute
-            binding.
+            One <code>signal(false)</code>{' '}
+            controls the entire component theme. Reactive attribute binding.
           </p>
-          <div class="theme-preview ${this.#isDark}">
-            <p>Current theme: <strong>${this.#isDark}</strong></p>
-            <button @click="${() => this.#isDark.value = !this.#isDark.value}">
-              Toggle ${this.#isDark}
+          <div className={`theme-preview ${this.#isDark.value ? 'dark' : 'light'}`}>
+            <p>
+              Current theme: <strong>{this.#isDark.value ? 'dark' : 'light'}</strong>
+            </p>
+            <button type='button' onClick={() => this.#isDark.value = !this.#isDark.value}>
+              Toggle {this.#isDark.value ? 'light' : 'dark'}
             </button>
           </div>
         </div>
 
-        <!-- Filter: signal + computed -->
-        <div class="card">
-          <h3>Live Filter (<code>computed</code>)</h3>
-          <p>A <code>computed()</code> signal filters a list in real-time. Zero DOM diffing overhead.</p>
+        {/* Filter: signal + computed */}
+        <div className='card'>
+          <h3>
+            Live Filter (<code>computed</code>)
+          </h3>
+          <p>
+            A <code>computed()</code> signal filters a list in real-time. Zero DOM diffing overhead.
+          </p>
           <input
-            class="filter-input"
-            placeholder="Type to filter frameworks..."
-            .value="${this.#filter}"
-            @input="${(e) => this.#filter.value = e.target.value}"
-          >
-          <div class="item-list">
-            ${this.#filtered.value.map((f) =>
-              html`
-                <div>${f}</div>
-              `
-            )}
+            className='filter-input'
+            placeholder='Type to filter frameworks...'
+            value={this.#filter}
+            onInput={(e) => this.#filter.value = (e.target as HTMLInputElement).value}
+          />
+          <div className='item-list'>
+            {this.#filtered.value.map((f) => <div key={f}>{f}</div>)}
           </div>
         </div>
       </div>
-    `;
+    );
   }
 }

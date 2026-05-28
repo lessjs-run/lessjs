@@ -1,3 +1,41 @@
+## v0.24.2 — Remove Old Component Model, Full JSX+Signal Migration (2026-05-28)
+
+### Breaking Changes
+
+- **Removed `html` tagged template API**: `html`, `classMap`, `when`, `choose`, `repeat`, `ref`, `unsafeHTML` exports removed from `@lessjs/core`
+- **Removed `@prop()` decorator**: Use `static props = { name: Type }` instead
+- **Removed TemplateResult types**: `TemplateResult`, `isTemplateResult`, `TemplateValue`, `AttrValue`, `ContentValue`, `EventValue`, `ClassMapValue`, `UnsafeHtmlValue`, `RefDirective`, `ChooseCase`, `ClassMapInput` removed from public API
+- **Removed `PropertyOptions`**: No longer exported from `@lessjs/core`
+- **Removed `renderTemplateToString`**: Internal only; JSX uses `renderToString` / `renderToDOM`
+- **File extensions**: All UI and island components changed from `.ts` to `.tsx`
+
+### Core Changes
+
+- **DsdElement VNode rendering fix**: `_renderIntoShadowRoot` now uses `renderToDOM` for VNode, properly wiring `onClick`/`onInput` etc. via `addEventListener` (previously used `renderToString` which silently dropped event handlers)
+- **Signal auto-unwrap in JSX**: `renderToString` now detects `SignalLike` values and auto-unwraps `.value` in JSX expressions `{}`
+- **JSX IntrinsicElements**: Global `JSX.IntrinsicElements` type declaration added to `jsx-runtime.ts` for TypeScript JSX type-checking
+- **isSignalLike retained**: Kept as the sole export from `template.ts`; used internally by DSD render pipeline and JSX string renderer
+
+### Migration: `packages/ui/`
+
+All 10 UI components migrated from `html` tagged templates to JSX:
+
+- `less-button`, `less-card`, `less-callout`, `less-code-block`, `less-dialog`, `less-hero-ping`, `less-input`, `less-layout`, `less-step-card`, `less-theme-toggle`
+- Legacy template helpers (`@click`/`?disabled`/`.ariaInvalid`/`unsafeHTML`) replaced with JSX equivalents (`onClick`/`disabled`/`ariaInvalid`/inline SVG)
+- `less-layout`: SVG icons for mobile tab bar converted to JSX SVG elements
+
+### Migration: `www/app/islands/`
+
+6 island components migrated to JSX:
+
+- `counter-island`, `less-search`, `less-term`, `less-toc`, `reactive-showcase`, `shoelace-showcase`
+- `api-consumer` left unchanged (uses Lit's `html`, not LessJS's)
+
+### Version Bumps
+
+- All packages: `0.24.1` → `0.24.2`
+- Cross-package dependencies: `^0.24.1` → `^0.24.2`
+
 ## v0.24.1 — JSX + Signal Component Model (2026-05-28)
 
 ### Core Changes

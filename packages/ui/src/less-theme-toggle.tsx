@@ -5,6 +5,7 @@
  * Swiss International Style: Pure B&W, minimal.
  *
  * v0.21.0: Uses DsdElement + html templates + Signals.
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
  *
  * @csspart toggle -The button element
  * @csspart icon-sun -The sun SVG icon
@@ -16,7 +17,7 @@
  * ```
  */
 
-import { DsdElement, html, type TemplateResult, unsafeHTML } from '@lessjs/core';
+import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { signal } from '@lessjs/signals';
 import { openPropsTokenSheet } from './open-props-tokens.js';
@@ -148,11 +149,8 @@ export class LessThemeToggle extends DsdElement {
     super.onDsdHydrated();
     this._initTheme();
 
-    // Re-render to guarantee @click bindings regardless of DSD hydration.
-    // _bindCurrentRenderTemplate relies on data-less-event-N markers that
-    // parse5 re-serialization can silently drop. _renderIntoShadowRoot
-    // (called by update()) sets innerHTML with fresh runtimeMarkers and
-    // calls _bindTemplateRuntime, which is the well-tested CSR path.
+    // Re-render to guarantee event bindings regardless of DSD hydration.
+    // v0.24.2: JSX VNode path now uses renderToDOM which wires event handlers.
     this.update();
   }
 
@@ -164,36 +162,51 @@ export class LessThemeToggle extends DsdElement {
     this.update();
   }
 
-  override render(): string | TemplateResult {
+  override render() {
     const lightClass = this._theme.value === 'light' ? ' is-light' : '';
     const title = this._theme.value === 'light' ? 'Switch to dark theme' : 'Switch to light theme';
 
-    return html`
+    return (
       <button
-        class="${`theme-toggle${lightClass}`}"
-        part="toggle"
-        title="${title}"
-        aria-label="Toggle theme"
-        @click="${() => this._handleToggle()}"
+        type='button'
+        className={`theme-toggle${lightClass}`}
+        part='toggle'
+        title={title}
+        aria-label='Toggle theme'
+        onClick={() => this._handleToggle()}
       >
-        ${unsafeHTML(
-          `<svg class="icon-sun" part="icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
-        <circle cx="8" cy="8" r="3"/>
-        <line x1="8" y1="1" x2="8" y2="3"/>
-        <line x1="8" y1="13" x2="8" y2="15"/>
-        <line x1="1" y1="8" x2="3" y2="8"/>
-        <line x1="13" y1="8" x2="15" y2="8"/>
-        <line x1="3.05" y1="3.05" x2="4.46" y2="4.46"/>
-        <line x1="11.54" y1="11.54" x2="12.95" y2="12.95"/>
-        <line x1="3.05" y1="12.95" x2="4.46" y2="11.54"/>
-        <line x1="11.54" y1="4.46" x2="12.95" y2="3.05"/>
-      </svg>
-      <svg class="icon-moon" part="icon-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
-        <path d="M13.5 9.14A5.5 5.5 0 0 1 6.86 2.5 5.5 5.5 0 1 0 13.5 9.14Z"/>
-      </svg>`,
-        )}
+        <svg
+          className='icon-sun'
+          part='icon-sun'
+          viewBox='0 0 16 16'
+          fill='none'
+          stroke='currentColor'
+          stroke-width='1.2'
+          stroke-linecap='round'
+        >
+          <circle cx='8' cy='8' r='3' />
+          <line x1='8' y1='1' x2='8' y2='3' />
+          <line x1='8' y1='13' x2='8' y2='15' />
+          <line x1='1' y1='8' x2='3' y2='8' />
+          <line x1='13' y1='8' x2='15' y2='8' />
+          <line x1='3.05' y1='3.05' x2='4.46' y2='4.46' />
+          <line x1='11.54' y1='11.54' x2='12.95' y2='12.95' />
+          <line x1='3.05' y1='12.95' x2='4.46' y2='11.54' />
+          <line x1='11.54' y1='4.46' x2='12.95' y2='3.05' />
+        </svg>
+        <svg
+          className='icon-moon'
+          part='icon-moon'
+          viewBox='0 0 16 16'
+          fill='none'
+          stroke='currentColor'
+          stroke-width='1.2'
+          stroke-linecap='round'
+        >
+          <path d='M13.5 9.14A5.5 5.5 0 0 1 6.86 2.5 5.5 5.5 0 1 0 13.5 9.14Z' />
+        </svg>
       </button>
-    `;
+    );
   }
 
   private _handleToggle(): void {

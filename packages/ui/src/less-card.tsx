@@ -5,6 +5,7 @@
  * Swiss International Style: borders are whispers, not shouts.
  *
  * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
+ * v0.24.2: Migrated from html`` template to JSX (ADR-0057).
  *
  * @csspart container - The article wrapper
  * @csspart body - The card body content area
@@ -22,7 +23,7 @@
  * ```
  */
 
-import { DsdElement, html, type TemplateResult } from '@lessjs/core';
+import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 
@@ -79,16 +80,16 @@ export class LessCard extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['variant'];
 
-  override render(): string | TemplateResult {
-    return html`
-      <article part="container">
-        <slot name="header"></slot>
-        <div class="card-body" part="body">
+  override render() {
+    return (
+      <article part='container'>
+        <slot name='header'></slot>
+        <div className='card-body' part='body'>
           <slot></slot>
         </div>
-        <slot name="footer"></slot>
+        <slot name='footer'></slot>
       </article>
-    `;
+    );
   }
 }
 
