@@ -41,7 +41,7 @@ function normaliseChildren(raw: unknown): (VNode | string)[] {
 }
 
 // deno-lint-ignore ban-types
-type ComponentTag = string | Function;
+type ComponentTag = string | Function | symbol;
 
 function createVNode(
   tag: ComponentTag | typeof Fragment,

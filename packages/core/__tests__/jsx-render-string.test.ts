@@ -104,7 +104,7 @@ Deno.test('renderToString SVG stroke-width attribute', () => {
 });
 
 Deno.test('renderToString Fragment concatenates children', () => {
-  const vnode = jsxs(Fragment as typeof Fragment, {
+  const vnode = jsxs(Fragment, {
     children: [
       jsx('span', { children: ['a'] }),
       jsx('span', { children: ['b'] }),
