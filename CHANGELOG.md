@@ -31,6 +31,12 @@ All 10 UI components migrated from `html` tagged templates to JSX:
 - `counter-island`, `less-search`, `less-term`, `less-toc`, `reactive-showcase`, `shoelace-showcase`
 - `api-consumer` left unchanged (uses Lit's `html`, not LessJS's)
 
+### Bug Fixes
+
+- **Island JSX `[object Object]` rendering**: `build-client.ts` and `build-ssg.ts` internal `viteBuild()` calls used `configFile: false`, ignoring the user's `vite.config.ts` esbuild JSX config. esbuild defaulted to classic `React.createElement` transform, producing `{type, props, $$typeof}` objects that `DsdElement` did not recognize. Fixed by adding explicit `esbuild: { jsx: 'automatic', jsxImportSource: '@lessjs/core' }` to both internal build configs.
+- **SVG icons disappearing after hydration**: `renderToDOM` in `jsx-render-dom.ts` used `document.createElement()` for all elements, which puts SVG elements (circle, line, path, svg, etc.) in the HTML namespace — browsers don't render them. Fixed by detecting SVG tags and using `document.createElementNS('http://www.w3.org/2000/svg', tag)`.
+- **`ssg-package-resolver.ts`**: Added `jsx-runtime` and `jsx-dev-runtime` subpath exports for core package (required for JSR consumer SSG builds using JSX automatic runtime).
+
 ### Version Bumps
 
 - All packages: `0.24.1` → `0.24.2`

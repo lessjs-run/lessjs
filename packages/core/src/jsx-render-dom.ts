@@ -15,6 +15,78 @@ import { isVNode, type VNode } from './vnode.ts';
 import { Fragment } from './jsx-runtime.ts';
 import { isSignalLike } from './template.ts';
 
+// ─── SVG namespace support ────────────────────────────────────────────────────
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+/**
+ * Elements that MUST be created with createElementNS(SVG_NS, tag) to render
+ * correctly. Using createElement() puts them in the HTML namespace where
+ * browsers won't render them as SVG shapes.
+ */
+const SVG_TAGS = new Set([
+  'svg',
+  'circle',
+  'ellipse',
+  'line',
+  'path',
+  'polygon',
+  'polyline',
+  'rect',
+  'g',
+  'defs',
+  'clipPath',
+  'mask',
+  'pattern',
+  'use',
+  'symbol',
+  'image',
+  'text',
+  'tspan',
+  'textPath',
+  'linearGradient',
+  'radialGradient',
+  'stop',
+  'animate',
+  'animateTransform',
+  'animateMotion',
+  'foreignObject',
+  'title',
+  'desc',
+  'feBlend',
+  'feColorMatrix',
+  'feComponentTransfer',
+  'feComposite',
+  'feConvolveMatrix',
+  'feDiffuseLighting',
+  'feDisplacementMap',
+  'feDistantLight',
+  'feDropShadow',
+  'feFlood',
+  'feFuncA',
+  'feFuncB',
+  'feFuncG',
+  'feFuncR',
+  'feGaussianBlur',
+  'feImage',
+  'feMerge',
+  'feMergeNode',
+  'feMorphology',
+  'feOffset',
+  'fePointLight',
+  'feSpecularLighting',
+  'feSpotLight',
+  'feTile',
+  'feTurbulence',
+]);
+
+function createElementForTag(tag: string): Element {
+  if (SVG_TAGS.has(tag)) {
+    return document.createElementNS(SVG_NS, tag);
+  }
+  return document.createElement(tag);
+}
+
 // ─── applyProps ───────────────────────────────────────────────────────────────
 
 /**
@@ -143,8 +215,8 @@ export function renderToDOM(node: unknown, signal?: AbortSignal): Node {
     }
   }
 
-  // ── HTML element ──────────────────────────────────────────────────────────
-  const el = document.createElement(tag as string);
+  // ── HTML / SVG element ───────────────────────────────────────────────────
+  const el = createElementForTag(tag as string);
   applyProps(el, props, signal);
   for (const child of children) {
     el.appendChild(renderToDOM(child, signal));
