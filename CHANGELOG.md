@@ -35,6 +35,7 @@ All 10 UI components migrated from `html` tagged templates to JSX:
 
 - **Island JSX `[object Object]` rendering**: `build-client.ts` and `build-ssg.ts` internal `viteBuild()` calls used `configFile: false`, ignoring the user's `vite.config.ts` esbuild JSX config. esbuild defaulted to classic `React.createElement` transform, producing `{type, props, $$typeof}` objects that `DsdElement` did not recognize. Fixed by adding explicit `esbuild: { jsx: 'automatic', jsxImportSource: '@lessjs/core' }` to both internal build configs.
 - **SVG icons disappearing after hydration**: `renderToDOM` in `jsx-render-dom.ts` used `document.createElement()` for all elements, which puts SVG elements (circle, line, path, svg, etc.) in the HTML namespace — browsers don't render them. Fixed by detecting SVG tags and using `document.createElementNS('http://www.w3.org/2000/svg', tag)`.
+- **VNode signal subscription missing**: `_renderIntoShadowRoot`'s VNode branch rendered DOM but never subscribed to signal changes. TemplateResult path called `_subscribeTemplateSignals()` for fine-grained patches; VNode path had no equivalent. Fixed by wrapping `render()` in an `effect()` that auto-tracks all signal accesses and re-renders DOM on changes. This caused theme toggle not switching and theme state being lost during page navigation.
 - **`ssg-package-resolver.ts`**: Added `jsx-runtime` and `jsx-dev-runtime` subpath exports for core package (required for JSR consumer SSG builds using JSX automatic runtime).
 
 ### Version Bumps
