@@ -305,7 +305,7 @@ customElements.define('my-counter', CounterElement);</code></pre></less-code-blo
                 <td>通过 <code>valueOf()</code> 自动解包</td>
               </tr>
               <tr>
-                <td><code>`${this.count}`</code></td>
+                <td><code>&#96;&#36;{'{'}this.count{'}'}&#96;</code></td>
                 <td>通过 <code>Symbol.toPrimitive('string')</code></td>
               </tr>
               <tr>

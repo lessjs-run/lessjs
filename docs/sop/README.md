@@ -32,6 +32,7 @@ have one SOP with:
 | v0.21.0 | [v0.21.0/](./v0.21.0/)                                                                       | Done     | Reactive DSD + streaming           |
 | v0.22.0 | [v0.22.0/](./v0.22.0/)                                                                       | Planning | Architecture Integrity             |
 | v0.23.0 | [v0.23.0/](./v0.23.0/)                                                                       | Planning | Layered Package Architecture       |
+| v0.24.3 | [v0.24.3/](./v0.24.3/)                                                                       | Planning | Consolidation + legacy removal     |
 | v1.0.0  | [v1.0.0-general-purpose-engine.md](./v1.0.0-general-purpose-engine.md)                       | Vision   | API freeze                         |
 
 ## Operator Rules
