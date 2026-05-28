@@ -1,8 +1,8 @@
 # LessJS v0.24.1 — JSX + Signal 新组件模型
 
-> Status: PLANNED\
+> Status: COMPLETED\
 > Target: 用 JSX+Signal 替换 html tagged template，深化 DSD-first 护城河\
-> Governing ADR: ADR-0057 (v2)
+> Governing ADR: ADR-0057 (v2, IMPLEMENTED)
 
 ## Mission
 
@@ -28,8 +28,9 @@ LessJS 组件开发者
 | VNode 接口冻结条款                                            | 运行时编译器                              |
 | static props TypeScript 类型推导（PropsFrom\<T\>）            | 完整的 JSX 组件函数式写法（v0.25+）       |
 | 内部组件迁移到 JSX                                            | html-legacy 子路径移除（v0.28）           |
-| html tagged template 标记 @deprecated                         | template.ts 完全删除（v1.0）              |
+| html tagged template 完全删除                                 | template.ts 完全删除（v1.0）              |
 | deno.json / vite.config.ts JSX 配置                           | ISR handler / KV adapters（v0.24.x 主线） |
+| SVG namespace 渲染 + Signal effect 驱动                       | 🔧 v0.24.1 hotfix 追加                   |
 
 ## Release Order
 
@@ -86,6 +87,64 @@ LessJS 组件开发者
 | Signal 自动解包边界造成困惑 | 低     | 低   | 边界文档 + unwrap()     |
 | DSD 管线与 JSX 输出不兼容   | 中     | 高   | SOP-003 专门做路径验证  |
 | html → JSX 迁移引入回归     | 中     | 高   | SOP-008 全量回归测试    |
+
+## Documentation Audit — v0.24.1 Post-Implementation
+
+> 审计日期: 2026-05-29 | 对照: 实际代码 (commit 19202d14)
+
+### P0 — 紧急修改（展示已删除的 API / 核心参考文档 STALE）
+
+| # | 文件 | 问题 | 操作 |
+|---|------|------|------|
+| 1 | `www/app/routes/engine/reference/core.ts` (L338-344) | API 参考页仍在引用 `html()`, `unsafeHTML()`, `TemplateResult` — 这些已删除 | 🔄 替换为 `jsx()`, `jsxs()`, `Fragment`, `renderToString()`, `renderToDOM()`, `VNode` |
+| 2 | `docs/reference/core-api-surface.md` | 列 `html()`, `unsafeHTML()` 为 Stable Userland API；整体基于 v0.21.x | 🔄 完全重写为 v0.24.1 JSX API surface |
+| 3 | `docs/reference/template-reactive-contract.md` | 整个文档描述已删除的 html tagged template 模型 | ❌ 删除，替换为 `docs/reference/jsx-component-model.md` |
+
+### P1 — 应该更新（示例过时 / 版本标注落后）
+
+| # | 文件 | 问题 | 操作 |
+|---|------|------|------|
+| 4 | `www/app/routes/guide/getting-started.ts` | 入门示例使用 `render(): string` (仍有效但不展示新模型) | 🔄 增加 JSX 组件示例 + static props 示例 |
+| 5 | `www/app/routes/guide/api.ts` | 需检查是否有旧 API 引用 | 🔍 审计后更新 |
+| 6 | `www/app/routes/guide/islands.ts` | 需检查 island 声明示例是否过时 | 🔍 审计后更新 |
+| 7 | `www/app/routes/guide/configuration.ts` | 缺少 JSX 配置说明 (jsxImportSource, esbuild config) | ➕ 新增 JSX 配置段落 |
+| 8 | `docs/arch/current-architecture.md` | 标注 v0.23.x | 🔄 更新到 v0.24.1，加入 JSX+Signal 层 |
+| 9 | `docs/design/jsx-deep-integration.md` | 描述旧 html 模型为"前置分析"，非实际实现状态 | 🔄 重写为 v0.24.1 实现后回顾 |
+| 10 | `docs/status/STATUS.md` | 版本状态过期 | 🔄 更新到 v0.24.1 |
+| 11 | `docs/roadmap/ROADMAP.md` | ADR-0057 状态未更新 | 🔄 标记 ADR-0057 为 IMPLEMENTED |
+| 12 | `docs/guide/migrating-from-lit.md` | 可能引用 html 模板 API | 🔍 审计后更新 |
+
+### P2 — 新增文档（v0.24.1 新模型缺参考文档）
+
+| # | 文件 | 内容 | 操作 |
+|---|------|------|------|
+| 13 | `www/app/routes/guide/jsx-components.md` | JSX 组件编写指南：VNode、renderToString、renderToDOM、事件绑定 | ➕ 新建 |
+| 14 | `www/app/routes/guide/static-props.md` | static props 完整指南：类型声明、observedAttributes、PropsFrom\<T\> | ➕ 新建 |
+| 15 | `www/app/routes/guide/signal-reactivity.md` | Signal + JSX 响应式开发：effect()、自动解包、unwrap() | ➕ 新建 |
+| 16 | `www/app/routes/guide/migration-v0.24.md` | v0.23 → v0.24 迁移指南：html → JSX、@prop → static props | ➕ 新建 |
+| 17 | `docs/reference/jsx-component-model.md` | JSX 组件模型完整参考（替换 template-reactive-contract.md） | ➕ 新建 |
+| 18 | `docs/reference/static-props.md` | static props API 参考 | ➕ 新建 |
+| 19 | `docs/reference/signal-vnode-effect.md` | effect() 在 VNode 信号追踪中的使用 | ➕ 新建 |
+
+### P3 — 同步 / 清理
+
+| # | 文件 | 问题 | 操作 |
+|---|------|------|------|
+| 20 | `docs/adr/ADR-0052-*.md` | @prop() 装饰器已被 static props 替代 | 🏷️ 标记 SUPERSEDED by ADR-0057 |
+| 21 | `docs/sop/v0.23.x/SOP-009-html-template-strengthening.md` | html 模板已删除 | 🏷️ 标记 OBSOLETE |
+| 22 | `docs/sop/v0.21.0/` | 多个 SOP 涉及 html template + @prop | 🏷️ 标记历史归档状态 |
+| 23 | `docs/reference/web-component-compatibility.md` | 可能包含 html 模板引用 | 🔍 审计 |
+| 24 | `deno.lock` | 版本号已全局更新 | ✅ 已自动同步 (commit 75684552) |
+
+### 统计
+
+| 优先级 | 修改 | 新增 | 删除 | 审计 | 标记 |
+|--------|------|------|------|------|------|
+| P0 | 2 | 0 | 1 | 0 | 0 |
+| P1 | 5 | 1 | 0 | 3 | 0 |
+| P2 | 0 | 7 | 0 | 0 | 0 |
+| P3 | 0 | 0 | 0 | 1 | 3 |
+| **合计** | **7** | **8** | **1** | **4** | **3** |
 
 ## Related
 
