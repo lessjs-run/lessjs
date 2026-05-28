@@ -402,8 +402,18 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       this.shadowRoot.innerHTML = renderTemplateToString(result, { runtimeMarkers: true });
       this._bindTemplateRuntime(result);
       this._subscribeTemplateSignals(result);
-    } else {
+    } else if (typeof result === 'string') {
       this.shadowRoot.innerHTML = result;
+    } else {
+      // Defensive: render() returned an unexpected type (e.g. plain object from
+      // mis-configured JSX transform). Log a helpful warning instead of silently
+      // rendering "[object Object]".
+      console.warn(
+        `[DsdElement] <${this.tagName.toLowerCase()}>.render() returned unexpected type "${typeof result}". ` +
+          `Expected string, TemplateResult, or VNode. ` +
+          `If using JSX, ensure your build tool is configured with jsx: "automatic" and jsxImportSource: "@lessjs/core".`,
+      );
+      this.shadowRoot.innerHTML = '';
     }
   }
 
