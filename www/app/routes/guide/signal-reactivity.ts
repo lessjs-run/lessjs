@@ -17,9 +17,9 @@ export class SignalReactivityPage extends DsdElement {
     const nav = filterFrameworkNav(navSections);
     return (
       <less-layout
-        nav-items={JSON.stringify(nav)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path='/guide/signal-reactivity'
+        navItems={JSON.stringify(nav)}
+        headerNav={JSON.stringify(headerNav)}
+        currentPath='/guide/signal-reactivity'
       >
         <div class='container'>
           <h1>Signal Reactivity</h1>

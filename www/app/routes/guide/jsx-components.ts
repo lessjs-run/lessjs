@@ -17,9 +17,9 @@ export class JsxComponentsPage extends DsdElement {
     const nav = filterFrameworkNav(navSections);
     return (
       <less-layout
-        nav-items={JSON.stringify(nav)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path='/guide/jsx-components'
+        navItems={JSON.stringify(nav)}
+        headerNav={JSON.stringify(headerNav)}
+        currentPath='/guide/jsx-components'
       >
         <div class='container'>
           <h1>JSX Components</h1>
