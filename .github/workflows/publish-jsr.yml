@@ -64,9 +64,9 @@ jobs:
           publish_if_missing "@lessjs/protocols" "packages/protocols"
           publish_if_missing "@lessjs/style-sheet" "packages/style-sheet"
           publish_if_missing "@lessjs/create" "packages/create"
-          #   depend on core or low-level facades: signals, runtime, compat-check, cem, content, i18n, adapter-*, ui, hub
-          publish_if_missing "@lessjs/core" "packages/core"
+          # v0.24.3: @lessjs/signals is now a dependency of @lessjs/core (effect() for VNode signal tracking)
           publish_if_missing "@lessjs/signals" "packages/signals"
+          publish_if_missing "@lessjs/core" "packages/core"
           publish_if_missing "@lessjs/runtime" "packages/runtime"
           publish_if_missing "@lessjs/cem" "packages/cem"
           publish_if_missing "@lessjs/compat-check" "packages/compat-check"
