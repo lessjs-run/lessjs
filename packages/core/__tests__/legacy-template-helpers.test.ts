@@ -1,3 +1,6 @@
+// HISTORICAL: Tests legacy html template model removed in v0.24.1.
+// Kept as reference for migration validation. See jsx-render-*.test.ts for new model.
+
 /**
  * @lessjs/core — template helpers tests (SOP-012)
  * Tests for classMap, when, choose, repeat, ref added in SOP-009.

@@ -1,3 +1,6 @@
+// HISTORICAL: Tests legacy html template model removed in v0.24.1.
+// Kept as reference for migration validation. See jsx-render-*.test.ts for new model.
+
 import { assertEquals, assertFalse, assertStringIncludes } from 'jsr:@std/assert@1';
 import { html, renderTemplateToString, unsafeHTML } from '../src/template.ts';
 import { renderDSD, renderDSDStream } from '../src/render-dsd.ts';

@@ -1,6 +1,6 @@
 # @lessjs/runtime
 
-Component authoring facade (v0.24) — the single import for writing LessJS components.
+Component authoring facade (v0.24.3) — the single import for writing LessJS components.
 
 `@lessjs/runtime` re-exports the complete authoring surface from the runtime
 kernel (`@lessjs/core`), signals engine (`@lessjs/signals`), and stylesheet
@@ -16,94 +16,40 @@ deno add jsr:@lessjs/runtime
 
 ## Usage
 
-```ts
-import {
-  choose,
-  classMap,
-  DsdElement,
-  ErrorBoundary,
-  html,
-  prop,
-  type PropertyOptions,
-  ref,
-  repeat,
-  signal,
-  StyleSheet,
-  when,
-} from '@lessjs/runtime';
+```tsx
+import { DsdElement, signal, StyleSheet } from '@lessjs/runtime';
 
 class MyButton extends DsdElement {
-  @prop({ type: Boolean })
-  disabled = false;
+  static props = { disabled: Boolean };
+  #clicks = signal(0);
 
   render() {
-    return html`
-      <button class="${classMap({ disabled: this.disabled })}">
-        <slot></slot>
+    return (
+      <button
+        className='btn'
+        disabled={this.disabled}
+        onClick={() => this.#clicks.value++}
+      >
+        Clicks: {this.#clicks}
       </button>
-    `;
+    );
   }
 }
+
+export const tagName = 'my-button';
+customElements.define(tagName, MyButton);
 ```
 
-export const tagName = 'my-component';
-
-const styles = new StyleSheet();
-styles.replaceSync(`:host { display: block; }
-  button { cursor: pointer; }`);
-
-export default class MyComponent extends DsdElement {
-static override styles = styles;
-count = signal(0);
-
-override render() {
-return html`<button @click="${() => this.count.value++}">
-        Count: ${this.count}
-      </button>`;
-}
-}
-
-if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
-customElements.define(tagName, MyComponent);
-}
-
-```
 ## Exports
 
-| Export                   | Source Package        | Description                                  |
-| ------------------------ | --------------------- | -------------------------------------------- |
-| `DsdElement`             | `@lessjs/core`        | Zero-framework base class for DSD components |
-| `html`                   | `@lessjs/core`        | Safe HTML template interpolation             |
-| `unsafeHTML`             | `@lessjs/core`        | Mark a string as pre-sanitized HTML          |
-| `isSignalLike`           | `@lessjs/core`        | Type guard for signal-like objects           |
-| `isTemplateResult`       | `@lessjs/core`        | Type guard for template results              |
-| `renderTemplateToString` | `@lessjs/core`        | Render a template result to string           |
-| `escapeHtml`             | `@lessjs/core`        | Escape HTML special characters               |
-| `escapeAttr`             | `@lessjs/core`        | Escape attribute values                      |
-| `escapeAttrValue`        | `@lessjs/core`        | Escape attribute values (alias)              |
-| `signal`                 | `@lessjs/signals`     | Create a writable signal                     |
-| `computed`               | `@lessjs/signals`     | Create a computed (derived) signal           |
-| `effect`                 | `@lessjs/signals`     | Run a side-effect when signals change        |
-| `StyleSheet`             | `@lessjs/style-sheet` | Cross-environment CSSStyleSheet              |
-| `SignalLike`             | `@lessjs/core`        | Signal-like interface type                   |
-| `TemplateResult`         | `@lessjs/core`        | Template result type                         |
-| `TemplateValue`          | `@lessjs/core`        | Template value union type                    |
-| `UnsafeHtmlValue`        | `@lessjs/core`        | Unsafe HTML value type                       |
-| `SafeHtml`               | `@lessjs/core`        | Safe HTML type                               |
-| `UnsafeHtml`             | `@lessjs/core`        | Unsafe HTML type                             |
-| `StyleSheetLike`         | `@lessjs/style-sheet` | StyleSheet interface type                    |
-| `StyleSheetRule`         | `@lessjs/style-sheet` | StyleSheet rule type                         |
+From `@lessjs/core`: `DsdElement`, `jsx`, `jsxs`, `Fragment`, `VNode`, `isVNode`,
+`renderToString`, `renderToDOM`, `isSignalLike`, `unwrapSignalLike`,
+`ErrorBoundary`, `LessError`, `escapeHtml`, `escapeAttr`, `island`, `lessBind`.
 
-## Architecture
+From `@lessjs/signals`: `signal`, `computed`, `effect`.
 
-`@lessjs/runtime` is a pure re-export facade. It owns no implementation.
-The canonical owners remain:
-
-- `@lessjs/core` — runtime kernel
-- `@lessjs/signals` — signals facade over alien-signals
-- `@lessjs/style-sheet` — CSSStyleSheet abstraction
+From `@lessjs/style-sheet`: `StyleSheet`.
 
 ## License
 
 MIT
-```

@@ -8,7 +8,7 @@ Island、Hono API Route 和早期 Registry Hub 组合在一起，让 Web Compone
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
 [![JSR](https://img.shields.io/badge/JSR-published-blue)](https://jsr.io/@lessjs/core)
-[![@lessjs/core](https://img.shields.io/badge/jsr-v0.24.0-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
+[![@lessjs/core](https://img.shields.io/badge/jsr-v0.24.3-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
 
 ## 海洋-岛屿架构
 
@@ -34,23 +34,20 @@ Island、Hono API Route 和早期 Registry Hub 组合在一起，让 Web Compone
 
 ## 当前状态
 
-项目线：**v0.24.0 DX Leap**。
+项目线：**v0.24.3 Consolidation**。
 
-### v0.24.0 新增
+### v0.24.x 核心变更
 
-- **`@prop()` 装饰器** — 响应式属性声明从 10+ 行降到 1 行
-- **模板助手** — `classMap`/`when`/`choose`/`repeat`/`ref` + 模板缓存
-- **统一错误架构** — LessError 层级 + ErrorBoundary + telemetry
+- **JSX + Signal 组件模型** — `render()` 返回 JSX，Signal 驱动响应式渲染
+- **`static props` 声明式属性** — ES2022 class fields，零编译器开关
+- **全新文档** — JSX 组件指南、static props 指南、Signal 响应式指南、迁移指南
+- **渲染器硬化** — Signal 在属性和 style 中的自动解包，SVG namespace 支持
 - **单入口** — 所有组件作者从 `@lessjs/runtime` 一个包 import
 
-### 基础能力
+### 注意
 
-当前生产渲染模式是 **SSG + Declarative Shadow DOM**。`renderDSD()` 的架构设计允许
-未来在缓存过期时运行 ISR，或在请求时运行 SSR，但 ISR/SSR 仍是路线图能力，不应写成已发布保证。
-
-全部包已统一到 v0.23.0，确保 JSR 发布包解析为同一套版本。v0.21.x 硬化线已完成：Core API 收紧、DSD 证据补强、
-Adapter 架构清理、Hub trust gate 加固。CI 配备 11 道 SOP 门禁 + CodeQL 安全扫描 +
-3 个 Copilot 自定义 Agent。
+> 从 v0.24.1 起，旧版 tagged template 和 decorator 已从公开 API 中移除。
+> JSX + `static props` + Signal 是唯一支持的组件编写模型。
 
 ## 三个产品支柱
 

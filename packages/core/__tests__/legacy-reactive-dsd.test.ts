@@ -1,3 +1,6 @@
+// HISTORICAL: Tests legacy html template model removed in v0.24.1.
+// Kept as reference for migration validation. See jsx-render-*.test.ts for new model.
+
 import { assertEquals, assertExists, assertFalse } from 'jsr:@std/assert@1';
 import { Window } from 'happy-dom';
 
