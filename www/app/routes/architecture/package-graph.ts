@@ -50,25 +50,28 @@ export class PackageGraphPage extends DsdElement {
       >
         <div class="shell">
           <span class="chip">0 cycles</span>
-          <h1>Package Graph</h1>
+          <h1>${isZh ? '包依赖图' : 'Package Graph'}</h1>
           <p class="lede">
-            A mechanical check that runs before every publish. It verifies
-            that the 18 LessJS packages form an acyclic graph where every
-            @lessjs/* import is declared in the importing package's deno.json.
+            ${
+      isZh
+        ? '每次发布前运行的机械检查。验证 18 个 LessJS 包形成无环图，且每个 @lessjs/* 导入都在对应包的 deno.json 中声明。'
+        : "A mechanical check that runs before every publish. It verifies that the 18 LessJS packages form an acyclic graph where every @lessjs/* import is declared in the importing package's deno.json."
+    }
           </p>
 
           <section class="section">
-            <h2>Why it exists</h2>
+            <h2>${isZh ? '为什么需要它' : 'Why it exists'}</h2>
             <p>
-              Deno's root import map can hide missing dependency declarations
-              during local development. The graph gate checks package-local
-              truth: each package's deno.json must declare every @lessjs/*
-              subpath it imports in source code.
+              ${
+      isZh
+        ? 'Deno 的根 import map 可能在本地开发时隐藏丢失的依赖声明。图门禁检查包级真实情况：每个包的 deno.json 必须声明源码中导入的所有 @lessjs/* 子路径。'
+        : "Deno's root import map can hide missing dependency declarations during local development. The graph gate checks package-local truth: each package's deno.json must declare every @lessjs/* subpath it imports in source code."
+    }
             </p>
           </section>
 
           <section class="section">
-            <h2>Current gate result</h2>
+            <h2>${isZh ? '当前门禁结果' : 'Current gate result'}</h2>
             <div class="report">
               <div class="metric"><strong>18 packages</strong><span>all present in publish workflow</span></div>
               <div class="metric"><strong>0 cycles</strong><span>no circular @lessjs/* dependencies</span></div>
@@ -78,13 +81,14 @@ export class PackageGraphPage extends DsdElement {
           </section>
 
           <section class="section">
-            <h2>How to run</h2>
+            <h2>${isZh ? '如何运行' : 'How to run'}</h2>
             <pre><code>deno task graph:check</code></pre>
             <p>
-              This runs <code>tools/check-package-graph.ts</code>, which
-              scans every package's source for <code>@lessjs/*</code> imports
-              and cross-references them against deno.json dependency
-              declarations.
+              ${
+      isZh
+        ? '运行 <code>tools/check-package-graph.ts</code>，扫描每个包的源代码中的 <code>@lessjs/*</code> 导入，并与 deno.json 中的依赖声明进行交叉对比。'
+        : "This runs <code>tools/check-package-graph.ts</code>, which scans every package's source for <code>@lessjs/*</code> imports and cross-references them against deno.json dependency declarations."
+    }
             </p>
           </section>
 

@@ -49,12 +49,13 @@ export class ReleaseGatesPage extends DsdElement {
       >
         <div class="shell">
           <span class="chip">8 gates</span>
-          <h1>Release Gates</h1>
+          <h1>${isZh ? '发布门禁' : 'Release Gates'}</h1>
           <p class="lede">
-            Eight mechanical gates must pass before any LessJS version can be
-            published. They prevent regressions in formatting, types, tests,
-            build output, DSD conformance, Hub integrity, package graph, and
-            documentation.
+            ${
+      isZh
+        ? '八道机械门禁必须在发布前全部通过。它们防止格式、类型、测试、构建产物、DSD 合规性、Hub 完整性、包图和文档的回归。'
+        : 'Eight mechanical gates must pass before any LessJS version can be published. They prevent regressions in formatting, types, tests, build output, DSD conformance, Hub integrity, package graph, and documentation.'
+    }
           </p>
 
           <section class="section">

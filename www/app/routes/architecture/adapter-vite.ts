@@ -46,15 +46,17 @@ export class AdapterVitePage extends DsdElement {
       >
         <div class="shell">
           <span class="chip">v0.23.0</span>
-          <h1>Adapter-Vite</h1>
+          <h1>${isZh ? 'Vite 构建适配器' : 'Adapter-Vite'}</h1>
           <p class="lede">
-            @lessjs/adapter-vite owns the Vite plugin, SSG pipeline, route
-            scanning, generated entries, package resolution, and build
-            orchestration. After v0.23.0, shared contracts moved to protocols.
+            ${
+      isZh
+        ? 'adapter-vite 拥有 Vite 插件、SSG 管道、路由扫描、生成入口、包解析和构建编排。v0.23.0 后共享合约迁移至 protocols。'
+        : 'adapter-vite owns the Vite plugin, SSG pipeline, route scanning, generated entries, package resolution, and build orchestration. After v0.23.0, shared contracts moved to protocols.'
+    }
           </p>
 
           <section class="section">
-            <h2>What adapter-vite owns</h2>
+            <h2>${isZh ? 'adapter-vite 拥有的模块' : 'What adapter-vite owns'}</h2>
             <ul>
               <li><strong>Vite plugin</strong> — config resolution, alias injection, SSR module loading</li>
               <li><strong>Route scanner</strong> — static analysis of route files for tagName, meta, and exports</li>
@@ -65,13 +67,16 @@ export class AdapterVitePage extends DsdElement {
           </section>
 
           <section class="section">
-            <h2>What moved to protocols</h2>
+            <h2>${isZh ? '迁移至 protocols 的模块' : 'What moved to protocols'}</h2>
             <pre><code>// Moved to @lessjs/protocols in v0.23.0
 - build-types.ts     -> @lessjs/protocols/build-types
 - virtual-ids.ts     -> @lessjs/protocols/virtual-ids</code></pre>
             <p>
-              This separation means content, i18n, and hub no longer import
-              from adapter-vite just for type definitions.
+              ${
+      isZh
+        ? '这个分离意味着 content、i18n 和 hub 不再需要为了类型定义而依赖 adapter-vite。'
+        : 'This separation means content, i18n, and hub no longer import from adapter-vite just for type definitions.'
+    }
             </p>
           </section>
 

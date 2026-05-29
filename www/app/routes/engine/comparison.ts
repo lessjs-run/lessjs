@@ -140,7 +140,7 @@ export default class ComparisonPage extends DsdElement {
         current-path="/engine/comparison"
       >
         <div class="container">
-          <h1>LessJS vs Alternatives</h1>
+          <h1>${isZh ? 'LessJS 与竞品对比' : 'LessJS vs Alternatives'}</h1>
           <p class="subtitle">
             LessJS 当前是 DSD-first Web Components 应用框架。与同级框架的对比基于 DSD/WC 引擎、
             渐进 island 和 Registry evidence pipeline。

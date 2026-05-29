@@ -329,7 +329,7 @@ export class ArchitecturePage extends DsdElement {
                 <span class="chip current">v0.23.0</span>
                 <span class="chip pass">graph gate passing</span>
               </div>
-              <h1>Layered Package Architecture</h1>
+              <h1>${isZh ? '分层包架构' : 'Layered Package Architecture'}</h1>
               <p class="lede">
                 LessJS is now organized around explicit package ownership:
                 protocols own shared contracts, core stays the runtime kernel,
@@ -350,7 +350,9 @@ export class ArchitecturePage extends DsdElement {
             <div class="section-head">
               <div>
                 <p class="kicker">layers</p>
-                <h2>Dependency direction is part of the API.</h2>
+                <h2>${
+      isZh ? '依赖方向是 API 的一部分。' : 'Dependency direction is part of the API.'
+    }</h2>
               </div>
               <p class="section-copy">
                 v0.23.0 makes package responsibility inspectable. Feature
@@ -373,7 +375,7 @@ export class ArchitecturePage extends DsdElement {
             <div class="section-head">
               <div>
                 <p class="kicker">why it exists</p>
-                <h2>Small core, honest facades.</h2>
+                <h2>${isZh ? '精简核心，诚实的 facade。' : 'Small core, honest facades.'}</h2>
               </div>
               <p class="section-copy">
                 The framework can only grow if users, contributors, and release
@@ -382,15 +384,15 @@ export class ArchitecturePage extends DsdElement {
             </div>
             <div class="cards">
               <div class="card">
-                <h3>Why protocols?</h3>
+                <h3>${isZh ? '为什么需要 protocols？' : 'Why protocols?'}</h3>
                 <p>Content, i18n, and adapter-vite need shared build contracts. Those contracts are not Vite implementation and should not live under adapter-vite.</p>
               </div>
               <div class="card">
-                <h3>Why runtime?</h3>
+                <h3>${isZh ? '为什么需要 runtime？' : 'Why runtime?'}</h3>
                 <p>Generated components need a single authoring import. Runtime provides that without turning core into an all-purpose DX barrel.</p>
               </div>
               <div class="card">
-                <h3>Why signals facade?</h3>
+                <h3>${isZh ? '为什么需要 signals facade？' : 'Why signals facade?'}</h3>
                 <p>LessJS uses alien-signals as the engine. The public LessJS contract is .value, subscribe(), and DSD integration semantics.</p>
               </div>
             </div>
@@ -400,7 +402,9 @@ export class ArchitecturePage extends DsdElement {
             <div class="section-head">
               <div>
                 <p class="kicker">release gates</p>
-                <h2>The architecture is checked mechanically.</h2>
+                <h2>${
+      isZh ? '架构由机械检查保证。' : 'The architecture is checked mechanically.'
+    }</h2>
               </div>
               <p class="section-copy">
                 The root import map can hide missing dependencies during local

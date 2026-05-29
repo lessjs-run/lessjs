@@ -61,12 +61,13 @@ export class RuntimeKernelPage extends DsdElement {
       >
         <div class="shell">
           <span class="chip">Smaller after v0.23</span>
-          <h1>Runtime Kernel</h1>
+          <h1>${isZh ? '运行时内核' : 'Runtime Kernel'}</h1>
           <p class="lede">
-            @lessjs/core is no longer an all-purpose framework barrel. After
-            v0.23.0 surgery, it is a focused runtime kernel: DSD element base
-            class, template rendering, island registration, navigation, logging,
-            and error types.
+            ${
+      isZh
+        ? 'core 不再是全能框架筒仓。v0.23.0 手术后，它是专注的运行时内核：DSD element 基类、模板渲染、island 注册、导航、日志和错误类型。'
+        : 'core is no longer an all-purpose framework barrel. After v0.23.0 surgery, it is a focused runtime kernel: DSD element base class, template rendering, island registration, navigation, logging, and error types.'
+    }
           </p>
 
           <section class="section">

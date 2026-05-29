@@ -49,25 +49,26 @@ export class ProtocolsPage extends DsdElement {
           <span class="chip">v0.23.0</span>
           <h1>Protocols</h1>
           <p class="lede">
-            @lessjs/protocols is a zero-dependency shared contracts package.
-            It owns build types, virtual IDs, and type-level interfaces that
-            multiple feature packages need without routing through adapter-vite
-            internals.
+            ${
+      isZh
+        ? 'protocols 是一个零依赖共享合约包。它拥有构建类型、虚拟 ID 和类型级接口，多个功能包需要这些而不必经过 adapter-vite 内部。'
+        : 'protocols is a zero-dependency shared contracts package. It owns build types, virtual IDs, and type-level interfaces that multiple feature packages need without routing through adapter-vite internals.'
+    }
           </p>
 
           <section class="section">
-            <h2>Problem it solves</h2>
+            <h2>${isZh ? '它解决的问题' : 'Problem it solves'}</h2>
             <p>
-              Before v0.23.0, <code>build-types.ts</code> and <code>virtual-ids.ts</code>
-              lived inside <code>@lessjs/adapter-vite</code>. Content, i18n, and
-              hub all imported from adapter-vite just for type definitions. This
-              created a misleading dependency: feature packages appeared to depend
-              on the Vite build adapter when they only needed shared contracts.
+              ${
+      isZh
+        ? 'v0.23.0 之前，<code>build-types.ts</code> 和 <code>virtual-ids.ts</code> 位于 <code>adapter-vite</code> 内部。Content、i18n 和 hub 为了类型定义不得不依赖 adapter-vite。这造成了误导性的依赖关系：功能包看起来依赖了 Vite 构建适配器，而实际上只需要共享合约。'
+        : 'Before v0.23.0, <code>build-types.ts</code> and <code>virtual-ids.ts</code> lived inside <code>adapter-vite</code>. Content, i18n, and hub all imported from adapter-vite just for type definitions. This created a misleading dependency: feature packages appeared to depend on the Vite build adapter when they only needed shared contracts.'
+    }
             </p>
           </section>
 
           <section class="section">
-            <h2>What protocols owns</h2>
+            <h2>${isZh ? 'protocols 拥有的模块' : 'What protocols owns'}</h2>
             <ul>
               <li><strong>build-types</strong> — SSR route info, island metadata, manifest shapes</li>
               <li><strong>virtual-ids</strong> — standardized virtual module identifiers</li>
@@ -81,7 +82,7 @@ import type { RouteInfo } from '@lessjs/protocols/build-types';</code></pre>
           </section>
 
           <section class="section">
-            <h2>Design rules</h2>
+            <h2>${isZh ? '设计规则' : 'Design rules'}</h2>
             <ul>
               <li>Zero runtime dependencies — protocols is pure TypeScript types.</li>
               <li>Must not import from any @lessjs/* package.</li>
