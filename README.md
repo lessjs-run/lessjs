@@ -9,7 +9,7 @@ an early Registry Hub, making Web Components first-class citizens.
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
 [![JSR](https://img.shields.io/badge/JSR-published-blue)](https://jsr.io/@lessjs/core)
-[![@lessjs/core](https://img.shields.io/badge/jsr-v0.24.3-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
+[![@lessjs/core](https://img.shields.io/badge/jsr-v0.24.4-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
 
 ## Ocean-Island Architecture
 
@@ -36,21 +36,31 @@ Other frameworks have "bare HTML" oceans. LessJS has "encapsulated Web Component
 
 ## Current State
 
-Project line: **v0.24.3 Consolidation** — all gates green, architecture hardened.
+Project line: **v0.24.4 API Naming Consolidation** — all gates green, API unified to Web Platform style.
 
 ### v0.24.x Key Changes
 
 - **JSX + Signal component model** — `render(): string | VNode`, Signal-driven via `effect()`
 - **`static props`** — ES2022 class fields, zero compiler flags
 - **TemplateResult fully removed** — old `html` template DSL and `@prop()` are gone
-- **Cross-package type dedup** — 12 types canonicalized at `@lessjs/core`
+- **API naming unified** — `defineIsland()`, `bindEvents()`, `renderDsd()`, `renderToDom()`, `getSsrProps()`
 - **New docs** — JSX components guide, static props guide, Signal reactivity guide, migration guide
-- **Renderer hardening** — Signal auto-unwrap in attrs/style, SVG namespace support
-- **Architecture docs frozen** — `docs/arch/current-architecture.md` + `docs/reference/core-api-surface.md`
+- **Renderer hardening** — Signal auto-unwrap in attrs/style, SVG namespace, exponential backoff highlighting
+- **100+ files renamed** — SOP-001 naming convention applied across code, tests, docs
+
+### Roadmap
+
+| Version | Theme                                                                        | Status     |
+| ------- | ---------------------------------------------------------------------------- | ---------- |
+| v0.24.4 | API Naming Convention                                                        | ✅ Current |
+| v0.25.0 | Declarative DX (`lessPipeline`, route types, `static head`, `static client`) | 📋 Planned |
+| v0.26.0 | Reactive Pragmatic (`this.params`, `data-keep-alive`, `computed` docs)       | 📋 Planned |
+
+See [ROADMAP.md](docs/roadmap/ROADMAP.md) for details.
 
 ### Note
 
-> As of v0.24.3, JSX + `static props` + Signal is the only supported component model.
+> As of v0.24.4, JSX + `static props` + Signal is the only supported component model.
 > `render()` returns `string | VNode`. TemplateResult no longer exists.
 >
 > Previous v0.21 (Reactive DSD) and v0.22 (Architecture Integrity) lines are complete. See [CHANGELOG.md](./CHANGELOG.md).
@@ -67,7 +77,7 @@ LessJS
 |   +-- serverless-oriented deployment model
 |
 +-- 2. DSD/WC rendering engine
-|   +-- DsdElement, renderDSD(), JSX runtime
+|   +-- DsdElement, renderDsd(), JSX runtime
 |   +-- Declarative Shadow DOM output
 |   +-- Lit / React / Vanilla adapters
 |   +-- compatibility admission and dsd-report.json
@@ -91,8 +101,8 @@ LessJS
 
 ## What Is Next
 
-- **Declarative build pipeline** — v0.24.4: three-phase hardcoded → declarative BuildPipeline API
-- **Type-safe route parameters** — v0.24.4: build-time route type generation
+- **Declarative build pipeline** — v0.25.0: three-phase hardcoded → declarative BuildPipeline API
+- **Type-safe route parameters** — v0.25.0: build-time route type generation
 - **Edge Full-Stack** — ISR handler, KV adapters, deployment guides
 - **Hub growth** — more real WC packages and clearer compatibility badges
 
@@ -132,7 +142,7 @@ Requirements: Deno 2.7+ and a modern browser with Declarative Shadow DOM support
 
 ```text
 route component
-  -> renderDSD()
+  -> renderDsd()
   -> <template shadowrootmode="open">
   -> browser parses DSD
   -> custom element upgrade
