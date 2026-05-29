@@ -52,7 +52,7 @@ export class IslandsGuidePage extends DsdElement {
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
-        current-path="/${loc}/engine/islands"
+        current-path="/${loc}/architecture/islands"
       >
         <div class="container">
           <h1>Island Upgrade</h1>
@@ -151,8 +151,8 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);</co
             build，并引入页面级 island manifest，让每个页面只加载实际出现的 island。
           </p>
           <div class="nav-row">
-            <a href="/${loc}/engine/dsd" class="nav-link">&larr; DSD 渲染架构</a>
-            <a href="/${loc}/engine/islands-deep" class="nav-link">Island 深度指南 &rarr;</a>
+            <a href="/${loc}/architecture/dsd" class="nav-link">&larr; DSD 渲染架构</a>
+            <a href="/${loc}/architecture/islands-deep" class="nav-link">Island 深度指南 &rarr;</a>
           </div>
         </div>
       </less-layout>
@@ -167,7 +167,7 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);</co
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
-        current-path="/${loc}/engine/islands"
+        current-path="/${loc}/architecture/islands"
       >
         <div class="container">
           <h1>Island Upgrade</h1>
@@ -251,8 +251,8 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);</co
             behavior, LessJS should render it as static host markup or a pure island instead of guessing.
           </p>
           <div class="nav-row">
-            <a href="/${loc}/engine/dsd" class="nav-link">&larr; DSD Architecture</a>
-            <a href="/${loc}/engine/islands-deep" class="nav-link">Island Deep Guide &rarr;</a>
+            <a href="/${loc}/architecture/dsd" class="nav-link">&larr; DSD Architecture</a>
+            <a href="/${loc}/architecture/islands-deep" class="nav-link">Island Deep Guide &rarr;</a>
           </div>
         </div>
       </less-layout>

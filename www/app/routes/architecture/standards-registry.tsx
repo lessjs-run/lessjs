@@ -22,7 +22,7 @@ export class StandardsRegistryGuidePage extends DsdElement {
       <less-layout
         nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
-        current-path="/${loc}/engine/standards-registry"
+        current-path="/${loc}/architecture/standards-registry"
         locale="${loc}"
         locales='${JSON.stringify(['en', 'zh'])}'
       >
@@ -147,7 +147,7 @@ export class StandardsRegistryGuidePage extends DsdElement {
           </ol>
 
           <div class="nav-row">
-            <a href="/${loc}/engine/architecture" class="nav-link">&larr; Architecture</a>
+            <a href="/${loc}/architecture/architecture" class="nav-link">&larr; Architecture</a>
             <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
           </div>
         </div>
@@ -161,7 +161,7 @@ export class StandardsRegistryGuidePage extends DsdElement {
       <less-layout
         nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
-        current-path="/${loc}/engine/standards-registry"
+        current-path="/${loc}/architecture/standards-registry"
         locale="${loc}"
         locales='${JSON.stringify(['en', 'zh'])}'
       >
@@ -299,7 +299,7 @@ export class StandardsRegistryGuidePage extends DsdElement {
           </ol>
 
           <div class="nav-row">
-            <a href="/${loc}/engine/architecture" class="nav-link">&larr; Architecture</a>
+            <a href="/${loc}/architecture/architecture" class="nav-link">&larr; Architecture</a>
             <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
           </div>
         </div>

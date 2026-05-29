@@ -266,7 +266,7 @@ export class UIShowcase extends DsdElement {
         locales={JSON.stringify(['en', 'zh'])}
         navItems={JSON.stringify(nav)}
         headerNav={JSON.stringify(headerNav)}
-        currentPath={`/${loc}/engine/design-system`}
+        currentPath={`/${loc}/architecture/design-system`}
       >
         <div class='container'>
           <h1>设计系统</h1>
@@ -380,8 +380,8 @@ export class UIShowcase extends DsdElement {
             <p>Deno、Node、Bun。零配置。</p>
           </div>
           <div class='nav-row'>
-            <a href={`/${loc}/engine/architecture`} class='nav-link'>← Architecture</a>
-            <a href={`/${loc}/engine/reference/core`} class='nav-link'>API Reference →</a>
+            <a href={`/${loc}/architecture/architecture`} class='nav-link'>← Architecture</a>
+            <a href={`/${loc}/architecture/reference/core`} class='nav-link'>API Reference →</a>
           </div>
         </div>
       </less-layout>
@@ -397,7 +397,7 @@ export class UIShowcase extends DsdElement {
         locales={JSON.stringify(['en', 'zh'])}
         navItems={JSON.stringify(nav)}
         headerNav={JSON.stringify(headerNav)}
-        currentPath={`/${loc}/engine/design-system`}
+        currentPath={`/${loc}/architecture/design-system`}
       >
         <div class='container'>
           <h1>Design System</h1>
@@ -511,8 +511,8 @@ export class UIShowcase extends DsdElement {
             <p>Deno, Node, Bun. Zero config.</p>
           </div>
           <div class='nav-row'>
-            <a href={`/${loc}/engine/architecture`} class='nav-link'>← Architecture</a>
-            <a href={`/${loc}/engine/reference/core`} class='nav-link'>API Reference →</a>
+            <a href={`/${loc}/architecture/architecture`} class='nav-link'>← Architecture</a>
+            <a href={`/${loc}/architecture/reference/core`} class='nav-link'>API Reference →</a>
           </div>
         </div>
       </less-layout>

@@ -319,7 +319,7 @@ export class ArchitecturePage extends DsdElement {
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
-        current-path="/engine/architecture"
+        current-path="/architecture/architecture"
       >
         <div class="shell">
           <section class="hero">

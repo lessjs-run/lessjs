@@ -137,7 +137,7 @@ export default class ComparisonPage extends DsdElement {
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
-        current-path="/engine/comparison"
+        current-path="/architecture/comparison"
       >
         <div class="container">
           <h1>${isZh ? 'LessJS 与竞品对比' : 'LessJS vs Alternatives'}</h1>

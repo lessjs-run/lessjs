@@ -54,7 +54,7 @@ export class DsdGuidePage extends DsdElement {
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
-        current-path="/${loc}/engine/dsd"
+        current-path="/${loc}/architecture/dsd"
       >
         <div class="container">
           <h1>DSD 渲染架构</h1>
@@ -137,13 +137,13 @@ export class DsdGuidePage extends DsdElement {
           <reactive-showcase></reactive-showcase>
 
           <div class="nav-row">
-            <a href="/${loc}/engine/architecture" class="nav-link">&larr; ${
+            <a href="/${loc}/architecture/architecture" class="nav-link">&larr; ${
       loc === 'zh' ? '分层架构' : 'Architecture'
     }</a>
-            <a href="/${loc}/engine/islands" class="nav-link">${
+            <a href="/${loc}/architecture/islands" class="nav-link">${
       loc === 'zh' ? 'Island 升级' : 'Island Upgrade'
     } &rarr;</a>
-            <a href="/${loc}/engine/standards-registry" class="nav-link">${
+            <a href="/${loc}/architecture/standards-registry" class="nav-link">${
       loc === 'zh' ? '标准与注册表' : 'Standards &amp; Registry'
     } &rarr;</a>
           </div>
@@ -160,7 +160,7 @@ export class DsdGuidePage extends DsdElement {
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
-        current-path="/en/engine/dsd"
+        current-path="/en/architecture/dsd"
       >
         <div class="container">
           <h1>DSD Rendering Architecture</h1>
@@ -246,13 +246,13 @@ export class DsdGuidePage extends DsdElement {
           <reactive-showcase></reactive-showcase>
 
           <div class="nav-row">
-            <a href="/${loc}/engine/architecture" class="nav-link">&larr; ${
+            <a href="/${loc}/architecture/architecture" class="nav-link">&larr; ${
       loc === 'zh' ? '分层架构' : 'Architecture'
     }</a>
-            <a href="/${loc}/engine/islands" class="nav-link">${
+            <a href="/${loc}/architecture/islands" class="nav-link">${
       loc === 'zh' ? 'Island 升级' : 'Island Upgrade'
     } &rarr;</a>
-            <a href="/${loc}/engine/standards-registry" class="nav-link">${
+            <a href="/${loc}/architecture/standards-registry" class="nav-link">${
       loc === 'zh' ? '标准与注册表' : 'Standards &amp; Registry'
     } &rarr;</a>
           </div>

@@ -34,7 +34,7 @@ export class IslandsDeepGuidePage extends DsdElement {
         locales={JSON.stringify(['en', 'zh'])}
         navItems={JSON.stringify(nav)}
         headerNav={JSON.stringify(headerNav)}
-        currentPath={`/${loc}/engine/islands-deep`}
+        currentPath={`/${loc}/architecture/islands-deep`}
       >
         <div class='container'>
           <h1>Island 深度指南</h1>
@@ -48,7 +48,7 @@ export class IslandsDeepGuidePage extends DsdElement {
             <span class='inline-code'>&lt;my-counter&gt;</span>，稍后加载模块调用{' '}
             <span class='inline-code'>customElements.define()</span>，已有元素被升级--这就是 Island
             的全部原理。关于 DSD 渲染模型和为什么选择 DSD-first，参见{' '}
-            <a href={`/${loc}/engine/dsd`}>DSD 渲染架构</a>。
+            <a href={`/${loc}/architecture/dsd`}>DSD 渲染架构</a>。
           </p>
           <h2>三层 Island 架构</h2>
           <div class='layer-card'>
@@ -130,7 +130,7 @@ export class IslandsDeepGuidePage extends DsdElement {
             <br />6. DSD hydration 检测：在客户端 hydrate 时自动检测已有 shadow root，避免 DOM 重复渲染。
           </p>
           <div class='nav-row'>
-            <a href={`/${loc}/engine/dsd`} class='nav-link'>← DSD 渲染架构</a>
+            <a href={`/${loc}/architecture/dsd`} class='nav-link'>← DSD 渲染架构</a>
             <a href={`/${loc}/guide/rpc`} class='nav-link'>RPC 远程调用 →</a>
           </div>
         </div>
@@ -147,7 +147,7 @@ export class IslandsDeepGuidePage extends DsdElement {
         locales={JSON.stringify(['en', 'zh'])}
         navItems={JSON.stringify(nav)}
         headerNav={JSON.stringify(headerNav)}
-        currentPath={`/${loc}/engine/islands-deep`}
+        currentPath={`/${loc}/architecture/islands-deep`}
       >
         <div class='container'>
           <h1>Island Deep Dive</h1>
@@ -162,7 +162,7 @@ export class IslandsDeepGuidePage extends DsdElement {
             mechanism. The browser sees <span class='inline-code'>&lt;my-counter&gt;</span>{' '}
             during HTML parsing; later the module loads and calls{' '}
             <span class='inline-code'>customElements.define()</span>, upgrading the existing
-            element. See <a href={`/${loc}/engine/dsd`}>DSD Architecture</a>{' '}
+            element. See <a href={`/${loc}/architecture/dsd`}>DSD Architecture</a>{' '}
             for the rendering model.
           </p>
           <h2>Three-Layer Island Architecture</h2>
@@ -264,7 +264,7 @@ export class IslandsDeepGuidePage extends DsdElement {
             hydrate to avoid re-rendering DSD DOM.
           </p>
           <div class='nav-row'>
-            <a href={`/${loc}/engine/dsd`} class='nav-link'>← DSD Architecture</a>
+            <a href={`/${loc}/architecture/dsd`} class='nav-link'>← DSD Architecture</a>
             <a href={`/${loc}/guide/rpc`} class='nav-link'>RPC →</a>
           </div>
         </div>
