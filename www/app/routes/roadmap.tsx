@@ -301,7 +301,7 @@ export class RoadmapPage extends DsdElement {
               <span class="status planned">Planned</span>
             </div>
             <div class="phase">
-              <div class="version">v0.25.x</div>
+              <div class="version">v0.26.x</div>
               <div><h3>Ecosystem Hardening</h3><p>Hub trust policy, more real package evidence, compatibility growth, and package author guidance.</p></div>
               <span class="status planned">Planned</span>
             </div>

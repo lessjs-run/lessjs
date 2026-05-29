@@ -45,6 +45,7 @@ export class GettingStartedPage extends DsdElement {
         <div class="container">
           <h1>快速开始</h1>
           <p class="subtitle">
+            LessJS is a <strong>DSD-first</strong> Web Components framework.
             从一个最小项目开始：创建应用、启动开发服务器、构建静态产物，再理解每个目录负责什么。
           </p>
 

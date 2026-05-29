@@ -809,8 +809,8 @@ export class DocsHome extends DsdElement {
     }</p></div>
                 <div class="path-step"><b>6</b><h3>Deploy</h3><p>${
       isZh
-        ? '立即部署静态产物；Edge ISR 在 v0.25 恢复。'
-        : 'Ship static output now; resume edge ISR in v0.25.'
+        ? '立即部署静态产物；Edge ISR 在 v0.26 恢复。'
+        : 'Ship static output now; resume edge ISR in v0.26.'
     }</p></div>
               </div>
             </div>
