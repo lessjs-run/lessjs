@@ -704,7 +704,9 @@ export const posts: any[] = [
   },
 ];
 
+// deno-lint-ignore no-explicit-any
 export function getPostBySlug(slug: string): any {
+  // deno-lint-ignore no-explicit-any
   return posts.find((p: any) => p.slug === slug);
 }
 

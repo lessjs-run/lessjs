@@ -303,7 +303,7 @@ export async function renderDsd(
   // --- Collect DSD render metrics (if collector provided) -----
   const renderEnd = typeof performance !== 'undefined'
     ? performance.now()
-    : renderEnd_timeFallback();
+    : renderEndTimeFallback();
   const renderTimeMs = renderEnd - startTime;
 
   const metrics: DsdRenderMetrics = {
@@ -360,7 +360,7 @@ export async function renderDsd(
 /**
  * Fallback for renderEnd when performance is not available.
  */
-function renderEnd_timeFallback(): number {
+function renderEndTimeFallback(): number {
   return Date.now();
 }
 
