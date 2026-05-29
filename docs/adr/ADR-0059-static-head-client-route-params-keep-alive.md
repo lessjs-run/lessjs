@@ -87,11 +87,20 @@ class BlogPost extends DsdElement {
 - 匹配 tagName 相同的元素，preserve 现有 DOM node，patch attributes only
 - 适用场景：input focus 保持、CSS transition 不中断
 
+### Part 5: SignalContext — DOM-Tree-Based (v0.25.0 TG-05, P2 conditional)
+
+See ADR-0060 for the full decision. ~20 lines implementation:
+
+```typescript
+const themeCtx = createContext<Theme>(Symbol('theme'), 'light');
+provideContext(this, themeCtx, value); // provider
+const theme = consumeContext(this, themeCtx); // consumer → returns signal
+```
+
 ### 明确不做
 
 | 不做                    | 原因                                                                  |
 | ----------------------- | --------------------------------------------------------------------- |
-| SignalContext 跨组件    | `computed()` 当前 0 处生产使用，不需要跨组件状态                      |
 | `static data` SSG fetch | content system 已处理数据获取，不重复                                 |
 | `static middleware`     | 0 处使用，不加抽象                                                    |
 | SignalQuery             | Promise 风格已够用                                                    |
