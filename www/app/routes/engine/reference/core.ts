@@ -166,13 +166,13 @@ export default class ApiCorePage extends DsdElement {
             <div class="pkg-name">@lessjs/adapter-vite</div>
             <div class="pkg-import">import { lessPipeline } from '@lessjs/adapter-vite';</div>
             <p>
-              Vite 构建编排：路由、Island、SSG 三阶段管线。包含 <code>lessPipeline()</code> — <code>less()</code> 已标记 @deprecated 于 v0.25。
+              Vite 构建编排：路由、Island、SSG 三阶段管线。包含 <code>lessPipeline()</code>。
             </p>
 
             <div class="fn-name">lessPipeline()</div>
             <div class="fn-sig">lessPipeline(options?: FrameworkOptions, ctx?: LessBuildContext): Plugin[]</div>
             <div class="fn-desc">
-              声明式构建管线入口。替代旧 <code>less()</code>。处理路由扫描、Hono 入口生成、Island 转换、SSR 和 SSG。返回 7+ 个插件。
+              声明式构建管线入口。处理路由扫描、Hono 入口生成、Island 转换、SSR 和 SSG。返回 7+ 个插件。
             </div>
 
             <div class="fn-name">LessBuildContext</div>
@@ -503,7 +503,7 @@ export default class ApiCorePage extends DsdElement {
             <div class="pkg-name">@lessjs/app</div>
             <div class="pkg-import">import { lessjs } from '@lessjs/app';</div>
             <p>
-              Unified entry. Wraps lessPipeline()() + lessI18n() with shared ctx. <strong
+              Unified entry. Wraps lessPipeline() + lessContent() + lessI18n() with shared ctx. <strong
               >Recommended for all projects.</strong>
             </p>
 

@@ -1,5 +1,5 @@
 /**
- * PWA Support - via less() plugin (from @lessjs/adapter-vite)
+ * PWA Support - via lessPipeline() plugin (from @lessjs/adapter-vite)
  */
 export const meta = { section: 'Production', label: 'PWA Support', order: 60 };
 import { headerNav, navSections } from 'virtual:less-nav';
@@ -35,9 +35,9 @@ export class PwaPage extends DsdElement {
             的理想基座：页面预渲染、资源版本化哈希、API routes 可独立部署到 serverless 平台。
           </p>
           <h2>快速启用</h2>
-          <p>在 vite.config.ts 中给 less() 插件传入 pwa 选项即可：</p>
+          <p>在 vite.config.ts 中给 lessPipeline() 插件传入 pwa 选项即可：</p>
           <less-code-block>
-            <pre><code>less({'{'} pwa: {'{'} name: 'My App', shortName: 'LessJS', themeColor: '#000000', backgroundColor: '#ffffff' {'}'} {'}'})</code></pre>
+            <pre><code>lessPipeline({'{'} pwa: {'{'} name: 'My App', shortName: 'LessJS', themeColor: '#000000', backgroundColor: '#ffffff' {'}'} {'}'})</code></pre>
           </less-code-block>
           <h2>构建产物</h2>
           <p>
@@ -86,11 +86,11 @@ export class PwaPage extends DsdElement {
           <h2>Quick Setup</h2>
           <p>
             Pass the <span class='inline-code'>pwa</span> option to the{' '}
-            <span class='inline-code'>less()</span> plugin in{' '}
+            <span class='inline-code'>lessPipeline()</span> plugin in{' '}
             <span class='inline-code'>vite.config.ts</span>:
           </p>
           <less-code-block>
-            <pre><code>less({'{'} pwa: {'{'} name: 'My App', shortName: 'LessJS', themeColor: '#000000', backgroundColor: '#ffffff' {'}'} {'}'})</code></pre>
+            <pre><code>lessPipeline({'{'} pwa: {'{'} name: 'My App', shortName: 'LessJS', themeColor: '#000000', backgroundColor: '#ffffff' {'}'} {'}'})</code></pre>
           </less-code-block>
           <h2>Build Outputs</h2>
           <p>

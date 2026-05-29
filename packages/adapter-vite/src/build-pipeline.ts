@@ -1,9 +1,9 @@
 /**
  * @lessjs/adapter-vite - BuildPipeline declarative API.
  *
- * v0.25.0 (SOP-001): Declarative wrapper. lessPipeline() is a thin
- * wrapper around the existing less() function with a cleaner config shape.
- * Zero logic change — all existing build code is reused as-is.
+ * v0.25.0 (SOP-001): lessPipeline() is the sole public build pipeline entry.
+ * It wraps the internal plugin factory (less-plugin.ts) with a cleaner
+ * declarative config shape. All existing build code is reused as-is.
  *
  * @module @lessjs/adapter-vite/build-pipeline
  */
@@ -52,14 +52,3 @@ export function lessPipeline(config: PipelineConfig = {}): Plugin[] {
   return less(options);
 }
 
-// ─── Backward compatibility ────────────────────────────────────────
-
-/**
- * @deprecated since v0.25.0 — Use `lessPipeline()` instead.
- *
- * ```diff
- * - export default defineConfig({ plugins: [less({ ... })] });
- * + export default defineConfig({ plugins: [lessPipeline({ routes: { dir: 'app/routes' } })] });
- * ```
- */
-export const lessCompat = less;

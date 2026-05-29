@@ -1,8 +1,8 @@
 /**
  * @lessjs/adapter-vite - index.ts main entry tests (Deno)
  *
- * Tests that less() plugin factory returns a valid plugin array
- * with correct structure and re-exports.
+ * Tests that the public lessPipeline() entry and internal plugin factory
+ * return valid plugin arrays with correct structure and re-exports.
  */
 // deno-lint-ignore-file no-unused-vars ban-types
 import {
@@ -13,7 +13,7 @@ import {
   assertThrows,
 } from 'jsr:@std/assert@^1.0.0';
 import { join } from 'node:path';
-import { less } from '../src/index.ts';
+import { less } from '../src/less-plugin.ts';
 
 // Verify core re-exports work (imported via @lessjs/core subpaths)
 import { LessError, SsrRenderError } from '@lessjs/core/errors';

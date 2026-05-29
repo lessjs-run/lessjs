@@ -1,12 +1,9 @@
 /**
  * @lessjs/adapter-vite - less-plugin.ts tests (Deno)
  *
- * Focused tests for less() plugin factory internals:
- * - Plugin enforce values
- * - Option normalization defaults
- * - Plugin ordering
- * - Virtual entry ID handling
- * - Invalid option detection
+ * Focused tests for the internal plugin factory (less-plugin.ts):
+ * Tests the raw `less()` function which is NOT part of the public API —
+ * consumers should use `lessPipeline()` from the main entry.
  *
  * Complements index-plugin.test.ts which tests the public API surface.
  */
