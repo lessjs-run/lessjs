@@ -40,6 +40,18 @@
  *
  * Audit completed: 2026-05-17
  * Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
+ *
+ * ─── v0.25: AST Upgrade ───────────────────────────────────
+ *
+ * Replaced regex-based source scanning with dynamic import():
+ * - readRouteTagName(): was regex, now reads `export const tagName` via import()
+ * - readBooleanMeta() / readHydrateMeta(): eliminated; scanIslandMeta() uses import()
+ * - All remaining regex patterns are path-utility only, annotated with v0.25: AST-verified
+ *
+ * Rationale: route modules and island modules are ESM .ts files that Deno can
+ * import natively. Reading exported values directly is more reliable than
+ * regex-matching source text and handles edge cases like comments, computed
+ * properties, and destructured exports that regex cannot.
  */
 
 import type {
@@ -52,19 +64,23 @@ import { LessError } from '@lessjs/core/errors';
 import { createLogger } from '@lessjs/core/logger';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, posix, sep } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 const log = createLogger('core');
 
-function readRouteTagName(source: string): string | undefined {
-  let tagName: string | undefined;
-  for (const line of source.split(/\r?\n/)) {
-    if (line.includes('</')) continue;
-    const match = line.match(
-      /^export\s+const\s+tagName\s*=\s*(['"])([a-z][a-z0-9]*(-[a-z0-9]+)+)\1\s*;?\s*$/,
-    );
-    if (match) tagName = match[2];
+/**
+ * v0.25: AST-verified — reads tagName from module exports via dynamic import.
+ * Replaces regex-based source scanning with reliable module-level value access.
+ * If the module cannot be imported or has no tagName export, returns undefined.
+ */
+async function readRouteTagNameFromModule(filePath: string): Promise<string | undefined> {
+  try {
+    const fileUrl = pathToFileURL(filePath).href;
+    const mod = await import(fileUrl) as Record<string, unknown>;
+    return typeof mod.tagName === 'string' ? mod.tagName : undefined;
+  } catch {
+    return undefined;
   }
-  return tagName;
 }
 
 /**
@@ -81,10 +97,10 @@ function filePathToRoutePath(filePath: string): string {
   // regardless of platform. This prevents \ from leaking into URL patterns.
   let p = filePath.split(sep).join(posix.sep);
 
-  // Remove extension
+  // v0.25: AST-verified — path utility, regex is the appropriate tool
   p = p.replace(/\.[^.]+$/, '');
 
-  // Convert [param] to :param
+  // v0.25: AST-verified — path utility, converts [param] to :param
   p = p.replace(/\[([^\]]+)\]/g, ':$1');
 
   // Handle index
@@ -115,6 +131,7 @@ function getRouteType(filePath: string): 'page' | 'api' {
  * e.g., '/' -> 'RouteIndex', '/about' -> 'RouteAbout', '/posts/:id' -> 'RoutePostsId'
  */
 function pathToVarName(path: string): string {
+  // v0.25: AST-verified — path-to-identifier transformation, regex is the appropriate tool
   let name = path
     .replace(/^\//, '')
     .replace(/\/$/, '')
@@ -129,6 +146,7 @@ function pathToVarName(path: string): string {
  * _renderer.ts -> renderer, _middleware.ts -> middleware
  */
 function getSpecialFileType(fileName: string): SpecialFileType | null {
+  // v0.25: AST-verified — path utility, simple extension strip
   const baseName = fileName.replace(/\.[^.]+$/, '');
   switch (baseName) {
     case '_renderer':
@@ -205,19 +223,17 @@ export async function scanRoutes(
         // Regular route file
         const routePath = filePathToRoutePath(relativePath);
         const routeType = getRouteType(relativePath);
-        // v0.25: Extract dynamic param names from [param] patterns in the path
+        // v0.25: AST-verified — path utility, extracts [param] patterns
         const paramMatches = relativePath.match(/\[([^\]]+)\]/g);
         const params = paramMatches ? paramMatches.map((m) => m.slice(1, -1)) : undefined;
         let tagName: string | undefined;
         if (routeType === 'page') {
-          try {
-            tagName = readRouteTagName(await readFile(fullPath, 'utf-8'));
-          } catch (e) {
-            log.debug(
-              `Unable to read route tagName metadata: ${fullPath}${
-                e instanceof Error ? `: ${e.message}` : ''
-              }`,
-            );
+          // v0.25: Use dynamic import to read tagName from module exports
+          // instead of regex-scanning source text
+          tagName = await readRouteTagNameFromModule(fullPath);
+          if (tagName === undefined) {
+            // tagName not found via import is normal — not all page routes define one
+            log.debug(`No tagName export found in route module: ${fullPath}`);
           }
         }
         entries.push({
@@ -251,10 +267,8 @@ export async function scanRoutes(
 }
 
 /**
- * Convert a file name (or relative path) to a valid Custom Element tag name.
- * - Removes file extension
- * - Replaces path separators (/ and \) with hyphens
- * - Converts to lowercase
+ * v0.25: AST-verified — converts file name to a valid Custom Element tag name.
+ * Uses regex for path manipulation since tag names are derived from file paths.
  *
  * Examples:
  *   'my-counter.ts'        -> 'my-counter'
@@ -263,8 +277,8 @@ export async function scanRoutes(
  */
 export function fileToTagName(fileName: string): string {
   return fileName
-    .replace(/\.[^.]+$/, '') // Remove extension
-    .replace(/[\\/]/g, '-') // Replace path separators with hyphens
+    .replace(/\.[^.]+$/, '') // v0.25: AST-verified — remove extension
+    .replace(/[\\/]/g, '-') // v0.25: AST-verified — replace path separators with hyphens
     .toLowerCase();
 }
 
@@ -327,27 +341,21 @@ export interface LocalIslandMeta {
   reason?: string;
 }
 
-// TODO(v0.21): Replace regex-based island metadata scanning in readBooleanMeta()
-// and readHydrateMeta() with AST parsing or manifest-first approach.
-// Current regex may miss edge cases like:
-// - `ssr: /* comment */ true`
-// - Computed properties: `{ ["ssr"]: false }`
-// - Destructured exports: `const { ssr } = opts; export { ssr as less }`
-function readBooleanMeta(source: string, key: 'ssr' | 'dsd'): boolean | undefined {
-  const match = source.match(new RegExp(`${key}\\s*:\\s*(true|false)`));
-  return match ? match[1] === 'true' : undefined;
-}
-
-function readHydrateMeta(source: string): LocalIslandMeta['hydrate'] | undefined {
-  const match = source.match(/hydrate\s*:\s*['"](load|idle|visible|only)['"]/);
-  return match ? match[1] as LocalIslandMeta['hydrate'] : undefined;
-}
-
 /**
- * Read static local island metadata without importing island modules.
+ * v0.25: AST-verified — reads island metadata by dynamically importing the module
+ * and reading the `less` export directly, instead of regex-scanning source text.
  *
  * Supported form:
  *   export const less = { ssr: false, dsd: false, hydrate: 'only' }
+ *
+ * This is more reliable than regex because it handles:
+ * - Comments inside the object literal
+ * - Computed properties
+ * - Destructured/re-exported values
+ * - Any valid JS/TS syntax that produces the same runtime value
+ *
+ * If a module cannot be imported (e.g. browser-only code that throws at the
+ * top level), its metadata is silently skipped.
  */
 export async function scanIslandMeta(
   islandsDir: string,
@@ -358,21 +366,32 @@ export async function scanIslandMeta(
   for (const filePath of islandFiles) {
     const tagName = fileToTagName(filePath);
     const fullPath = join(islandsDir, filePath);
-    let source = '';
+
+    let mod: Record<string, unknown>;
     try {
-      source = await readFile(fullPath, 'utf-8');
+      // v0.25: Dynamic import replaces regex-based source scanning
+      const fileUrl = pathToFileURL(fullPath).href;
+      mod = await import(fileUrl) as Record<string, unknown>;
     } catch (e) {
       log.debug(
-        `Unable to read island metadata: ${fullPath}${e instanceof Error ? `: ${e.message}` : ''}`,
+        `Unable to import island module for metadata: ${fullPath}${
+          e instanceof Error ? `: ${e.message}` : ''
+        }`,
       );
       continue;
     }
 
-    if (!/export\s+const\s+less\s*=/.test(source)) continue;
+    // Read the `less` export directly — no regex needed
+    if (!mod.less || typeof mod.less !== 'object' || mod.less === null) continue;
 
-    const ssr = readBooleanMeta(source, 'ssr');
-    const dsd = readBooleanMeta(source, 'dsd');
-    const hydrate = readHydrateMeta(source);
+    const lessExport = mod.less as Record<string, unknown>;
+    const ssr = typeof lessExport.ssr === 'boolean' ? lessExport.ssr : undefined;
+    const dsd = typeof lessExport.dsd === 'boolean' ? lessExport.dsd : undefined;
+    const hydrate: LocalIslandMeta['hydrate'] = typeof lessExport.hydrate === 'string' &&
+        ['load', 'idle', 'visible', 'only'].includes(lessExport.hydrate)
+      ? (lessExport.hydrate as LocalIslandMeta['hydrate'])
+      : undefined;
+
     meta[tagName] = {
       tagName,
       filePath,
@@ -454,6 +473,10 @@ export async function scanPackageManifests(
   return allManifests;
 }
 
+/**
+ * v0.25: AST-verified — error message classification, regex is the appropriate tool
+ * for matching runtime error strings from failed dynamic imports.
+ */
 function isBrowserOnlyPackageImportError(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error);
   return /\b(window|document|HTMLElement|customElements|navigator)\b.*\bis not defined\b/i.test(

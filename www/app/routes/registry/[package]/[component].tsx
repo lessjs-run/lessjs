@@ -358,48 +358,54 @@ export default class DocsRegistryComponentDetail extends DsdElement {
     const pkgRoute = this.package?.replace('~', '/') || '';
 
     if (!pkg) {
-      return `
+      return (
         <less-layout
-          nav-items='${JSON.stringify(filterHubNav(navSections))}'
-          header-nav='${JSON.stringify(headerNav)}'
-          current-path="/registry/${pkgRoute}"
-          locale="en"
-          locales='${JSON.stringify(['en'])}'
+          navItems={JSON.stringify(filterHubNav(navSections))}
+          headerNav={JSON.stringify(headerNav)}
+          currentPath={`/registry/${pkgRoute}`}
+          locale='en'
+          locales={JSON.stringify(['en'])}
         >
-          <div class="container">
-            <div class="not-found">
+          <div class='container'>
+            <div class='not-found'>
               <h2>Component Not Found</h2>
-              <p>"${fullPkgName}" is not in the registry.</p>
-              <a href="/registry" style="color:var(--brand);font-size:0.875rem;"
-              >← Back to Registry</a>
+              <p>"{fullPkgName}" is not in the registry.</p>
+              <a href='/registry' style='color:var(--brand);font-size:0.875rem;'>
+                ← Back to Registry
+              </a>
             </div>
           </div>
         </less-layout>
-      `;
+      );
     }
 
     const tag = this._getTag(pkg);
     const tagName = this.component || 'unknown';
 
     if (!tag) {
-      return `
+      return (
         <less-layout
-          nav-items='${JSON.stringify(filterHubNav(navSections))}'
-          header-nav='${JSON.stringify(headerNav)}'
-          current-path="/registry/${pkgRoute}"
-          locale="en"
-          locales='${JSON.stringify(['en'])}'
+          navItems={JSON.stringify(filterHubNav(navSections))}
+          headerNav={JSON.stringify(headerNav)}
+          currentPath={`/registry/${pkgRoute}`}
+          locale='en'
+          locales={JSON.stringify(['en'])}
         >
-          <div class="container">
-            <div class="not-found">
+          <div class='container'>
+            <div class='not-found'>
               <h2>Component Not Found</h2>
-              <p>"&lt;${tagName}&gt;" is not in the ${fullPkgName} package.</p>
-              <a href="/registry" style="color:var(--brand);font-size:0.875rem;"
-              >← Back to Registry</a>
+              <p>
+                "{'<'}
+                {tagName}
+                {'>'}" is not in the {fullPkgName} package.
+              </p>
+              <a href='/registry' style='color:var(--brand);font-size:0.875rem;'>
+                ← Back to Registry
+              </a>
             </div>
           </div>
         </less-layout>
-      `;
+      );
     }
 
     const compatColor = COMPAT_COLORS[tag.compatibility] || '#888';
@@ -413,304 +419,294 @@ export default class DocsRegistryComponentDetail extends DsdElement {
 
     const usageSnippet = this._buildUsageSnippet(tagName, pkg);
 
-    return `
+    return (
       <less-layout
-        nav-items='${JSON.stringify(filterHubNav(navSections))}'
-        header-nav='${JSON.stringify(headerNav)}'
-        current-path="/registry/${pkgRoute}"
-        locale="en"
-        locales='${JSON.stringify(['en'])}'
+        navItems={JSON.stringify(filterHubNav(navSections))}
+        headerNav={JSON.stringify(headerNav)}
+        currentPath={`/registry/${pkgRoute}`}
+        locale='en'
+        locales={JSON.stringify(['en'])}
       >
-        <div class="container">
-          <a class="back-link" href="/registry/${this.package}">← Back to ${fullPkgName}</a>
-          <div class="breadcrumb">
-            <a href="/registry">Registry</a> /
-            <a href="/registry/${this.package}">${fullPkgName}</a> /
-            <span>${tagName}</span>
+        <div class='container'>
+          <a class='back-link' href={`/registry/${this.package}`}>
+            ← Back to {fullPkgName}
+          </a>
+          <div class='breadcrumb'>
+            <a href='/registry'>Registry</a> /{' '}
+            <a href={`/registry/${this.package}`}>{fullPkgName}</a> / <span>{tagName}</span>
           </div>
 
-          <!-- Header -->
-          <div class="detail-header">
-            <div class="tag-header">
-              <h1 class="tag-name">&lt;${tagName}&gt;</h1>
+          {/* Header */}
+          <div class='detail-header'>
+            <div class='tag-header'>
+              <h1 class='tag-name'>{'<'}{tagName}{'>'}</h1>
               <span
-                class="compat-badge"
-                style="background:${compatColor}15;border:0.5px solid ${compatColor}40;"
+                class='compat-badge'
+                style={`background:${compatColor}15;border:0.5px solid ${compatColor}40;`}
               >
-                <span class="compat-dot" style="background:${compatColor}"></span>${compatLabel}
+                <span class='compat-dot' style={`background:${compatColor}`}></span>
+                {compatLabel}
               </span>
-              ${
-      tag.validationErrors > 0
-        ? `
-                  <span style="color:#ef4444;font-size:0.8125rem;">${tag.validationErrors} error(s)</span>
-                `
-        : ''
-    } ${
-      tag.validationWarnings > 0
-        ? `
-                  <span style="color:#f59e0b;font-size:0.8125rem;">${tag.validationWarnings} warning(s)</span>
-                `
-        : ''
-    }
+              {tag.validationErrors > 0
+                ? (
+                  <span style='color:#ef4444;font-size:0.8125rem;'>
+                    {tag.validationErrors} error(s)
+                  </span>
+                )
+                : null}
+              {tag.validationWarnings > 0
+                ? (
+                  <span style='color:#f59e0b;font-size:0.8125rem;'>
+                    {tag.validationWarnings} warning(s)
+                  </span>
+                )
+                : null}
             </div>
           </div>
 
-          <!-- Preview -->
-          <div class="section">
-            <div class="section-title">Rendered Preview</div>
-            <div class="preview-label">Pre-rendered at build time</div>
-            <div class="preview-frame">
-              ${
-      tag.snapshotMeta
-        ? `
+          {/* Preview */}
+          <div class='section'>
+            <div class='section-title'>Rendered Preview</div>
+            <div class='preview-label'>Pre-rendered at build time</div>
+            <div class='preview-frame'>
+              {tag.snapshotMeta
+                ? (
                   <iframe
-                    class="preview-iframe"
-                    data-srcdoc=${btoa(this._buildSrcdoc(tag.snapshotMeta))}
-                  ></iframe>
-                `
-        : hasSnapshot
-        ? `
-                    <div style="width:100%;">${sanitizeSnapshot(tag.ssrSnapshot)}</div>
-                  `
-        : `
-                    <div class="preview-placeholder">
-                      <div style="font-size:0.875rem;margin-bottom:0.25rem;">&lt;${tagName}&gt;</div>
-                      <div>No preview snapshot available.</div>
-                      ${
-          tag.compatibility === 'client-only'
-            ? `
-                          <div style="margin-top:0.5rem;font-size:0.75rem;">
-                            Client-only components require a browser to render.
-                          </div>
-                        `
-            : ''
-        }
+                    class='preview-iframe'
+                    data-srcdoc={btoa(this._buildSrcdoc(tag.snapshotMeta))}
+                  >
+                  </iframe>
+                )
+                : hasSnapshot
+                ? (
+                  <div style='width:100%;' innerHTML={sanitizeSnapshot(tag.ssrSnapshot)}>
+                  </div>
+                )
+                : (
+                  <div class='preview-placeholder'>
+                    <div style='font-size:0.875rem;margin-bottom:0.25rem;'>
+                      {'<'}
+                      {tagName}
+                      {'>'}
                     </div>
-                  `
-    }
+                    <div>No preview snapshot available.</div>
+                    {tag.compatibility === 'client-only'
+                      ? (
+                        <div style='margin-top:0.5rem;font-size:0.75rem;'>
+                          Client-only components require a browser to render.
+                        </div>
+                      )
+                      : null}
+                  </div>
+                )}
             </div>
-            <div class="preview-note">
-              ${
-      tag.compatibility === 'ssr-capable'
-        ? 'SSR-rendered. This component is rendered at build time and available immediately.'
-        : 'Client-only. This component renders in the browser after JavaScript loads.'
-    }
+            <div class='preview-note'>
+              {tag.compatibility === 'ssr-capable'
+                ? 'SSR-rendered. This component is rendered at build time and available immediately.'
+                : 'Client-only. This component renders in the browser after JavaScript loads.'}
             </div>
           </div>
 
-          <!-- Usage -->
-          <div class="section">
-            <div class="section-title">Usage</div>
-            <div style="margin-bottom:0.5rem;font-size:0.8125rem;color:var(--text-secondary);">
+          {/* Usage */}
+          <div class='section'>
+            <div class='section-title'>Usage</div>
+            <div style='margin-bottom:0.5rem;font-size:0.8125rem;color:var(--text-secondary);'>
               Copy the code below into your LessJS route file.
             </div>
-            <div class="usage-block">${usageSnippet}</div>
+            <div class='usage-block'>{usageSnippet}</div>
           </div>
 
-          <!-- Compatibility -->
-          <div class="section">
-            <div class="section-title">Compatibility</div>
-            <table class="meta-table">
+          {/* Compatibility */}
+          <div class='section'>
+            <div class='section-title'>Compatibility</div>
+            <table class='meta-table'>
               <tr>
                 <th>Package</th>
-                <td><a href="/registry/${this.package}" style="color:var(--brand);">${fullPkgName}</a></td>
+                <td>
+                  <a href={`/registry/${this.package}`} style='color:var(--brand);'>
+                    {fullPkgName}
+                  </a>
+                </td>
               </tr>
               <tr>
                 <th>Version</th>
-                <td>v${pkg.version}</td>
+                <td>v{pkg.version}</td>
               </tr>
               <tr>
                 <th>Tag</th>
-                <td style="font-family:monospace;">${tagName}</td>
+                <td style='font-family:monospace;'>{tagName}</td>
               </tr>
               <tr>
                 <th>Tier</th>
                 <td>
                   <span
-                    class="compat-badge"
-                    style="background:${compatColor}15;border:0.5px solid ${compatColor}40;font-size:0.75rem;"
-                  ><span class="compat-dot" style="background:${compatColor}"></span>${compatLabel}</span>
+                    class='compat-badge'
+                    style={`background:${compatColor}15;border:0.5px solid ${compatColor}40;font-size:0.75rem;`}
+                  >
+                    <span class='compat-dot' style={`background:${compatColor}`}></span>
+                    {compatLabel}
+                  </span>
                 </td>
               </tr>
               <tr>
                 <th>Errors</th>
-                <td style="color:${
-      tag.validationErrors > 0 ? '#ef4444' : '#22c55e'
-    };">${tag.validationErrors}</td>
+                <td style={`color:${tag.validationErrors > 0 ? '#ef4444' : '#22c55e'};`}>
+                  {tag.validationErrors}
+                </td>
               </tr>
               <tr>
                 <th>Warnings</th>
-                <td style="color:${
-      tag.validationWarnings > 0 ? '#f59e0b' : '#22c55e'
-    };">${tag.validationWarnings}</td>
+                <td style={`color:${tag.validationWarnings > 0 ? '#f59e0b' : '#22c55e'};`}>
+                  {tag.validationWarnings}
+                </td>
               </tr>
               <tr>
                 <th>Source</th>
-                <td>${pkg.source}</td>
+                <td>{pkg.source}</td>
               </tr>
               <tr>
                 <th>Validator</th>
-                <td>@lessjs/core v${pkg.validatorVersion}</td>
+                <td>@lessjs/core v{pkg.validatorVersion}</td>
               </tr>
             </table>
           </div>
 
-          <!-- Snapshot info (when available) -->
-          ${
-      hasSnapshot
-        ? `
-              <div class="section">
-                <div class="section-title">Preview Details</div>
-                <div style="font-size:0.8125rem;color:var(--text-secondary);line-height:1.6;">
-                  This preview was generated during package validation and stored as a static HTML snapshot. The
-                  snapshot is pre-rendered at build time - no client-side rendering needed.
+          {/* Snapshot info (when available) */}
+          {hasSnapshot
+            ? (
+              <div class='section'>
+                <div class='section-title'>Preview Details</div>
+                <div style='font-size:0.8125rem;color:var(--text-secondary);line-height:1.6;'>
+                  This preview was generated during package validation and stored as a static HTML
+                  snapshot. The snapshot is pre-rendered at build time - no client-side rendering
+                  needed.
                 </div>
               </div>
-            `
-        : ''
-    }
+            )
+            : null}
 
-          <!-- API Reference (from CEM) -->
-          ${
-      tag.attributes && tag.attributes.length > 0
-        ? `
-              <div class="section">
-                <div class="section-title">Attributes</div>
-                <table class="meta-table">
+          {/* API Reference (from CEM) */}
+          {tag.attributes && tag.attributes.length > 0
+            ? (
+              <div class='section'>
+                <div class='section-title'>Attributes</div>
+                <table class='meta-table'>
                   <tr>
                     <th>Name</th>
                     <th>Type</th>
                     <th>Default</th>
                     <th>Description</th>
                   </tr>
-                  ${
-          tag.attributes.map((a) => `
-                      <tr>
-                        <td style="font-family:monospace;font-size:0.8125rem;">${a.name}</td>
-                        <td style="font-size:0.75rem;color:var(--text-muted);">${
-            a.type ||
-            '-'
-          }</td>
-                        <td style="font-size:0.75rem;color:var(--text-muted);">${
-            a
-              .default || '-'
-          }</td>
-                        <td style="font-size:0.8125rem;">${a.description || ''}</td>
-                      </tr>
-                    `)
-        }
+                  {tag.attributes.map((a) => (
+                    <tr>
+                      <td style='font-family:monospace;font-size:0.8125rem;'>{a.name}</td>
+                      <td style='font-size:0.75rem;color:var(--text-muted);'>
+                        {a.type || '-'}
+                      </td>
+                      <td style='font-size:0.75rem;color:var(--text-muted);'>
+                        {a.default || '-'}
+                      </td>
+                      <td style='font-size:0.8125rem;'>{a.description || ''}</td>
+                    </tr>
+                  ))}
                 </table>
               </div>
-            `
-        : ''
-    } ${
-      tag.events && tag.events.length > 0
-        ? `
-              <div class="section">
-                <div class="section-title">Events</div>
-                <table class="meta-table">
+            )
+            : null}
+
+          {/* Events */}
+          {tag.events && tag.events.length > 0
+            ? (
+              <div class='section'>
+                <div class='section-title'>Events</div>
+                <table class='meta-table'>
                   <tr>
                     <th>Name</th>
                     <th>Type</th>
                     <th>Description</th>
                   </tr>
-                  ${
-          tag.events.map((e) => `
-                      <tr>
-                        <td style="font-family:monospace;font-size:0.8125rem;">${e.name}</td>
-                        <td style="font-size:0.75rem;color:var(--text-muted);">${
-            e.type ||
-            '-'
-          }</td>
-                        <td style="font-size:0.8125rem;">${e.description || ''}</td>
-                      </tr>
-                    `)
-        }
+                  {tag.events.map((e) => (
+                    <tr>
+                      <td style='font-family:monospace;font-size:0.8125rem;'>{e.name}</td>
+                      <td style='font-size:0.75rem;color:var(--text-muted);'>
+                        {e.type || '-'}
+                      </td>
+                      <td style='font-size:0.8125rem;'>{e.description || ''}</td>
+                    </tr>
+                  ))}
                 </table>
               </div>
-            `
-        : ''
-    } ${
-      tag.slots && tag.slots.length > 0
-        ? `
-              <div class="section">
-                <div class="section-title">Slots</div>
-                <table class="meta-table">
+            )
+            : null}
+
+          {/* Slots */}
+          {tag.slots && tag.slots.length > 0
+            ? (
+              <div class='section'>
+                <div class='section-title'>Slots</div>
+                <table class='meta-table'>
                   <tr>
                     <th>Name</th>
                     <th>Description</th>
                   </tr>
-                  ${
-          tag.slots.map((s) => `
-                      <tr>
-                        <td style="font-family:monospace;font-size:0.8125rem;">${
-            s.name ||
-            '(default)'
-          }</td>
-                        <td style="font-size:0.8125rem;">${s.description || ''}</td>
-                      </tr>
-                    `)
-        }
+                  {tag.slots.map((s) => (
+                    <tr>
+                      <td style='font-family:monospace;font-size:0.8125rem;'>
+                        {s.name || '(default)'}
+                      </td>
+                      <td style='font-size:0.8125rem;'>{s.description || ''}</td>
+                    </tr>
+                  ))}
                 </table>
               </div>
-            `
-        : ''
-    }
+            )
+            : null}
 
-          <!-- Install -->
-          <div class="section">
-            <div class="section-title">Install</div>
-            <div style="margin-bottom:0.5rem;font-size:0.8125rem;">
+          {/* Install */}
+          <div class='section'>
+            <div class='section-title'>Install</div>
+            <div style='margin-bottom:0.5rem;font-size:0.8125rem;'>
               To use this component in your project:
             </div>
-            <div class="usage-block">less add ${fullPkgName}</div>
-            ${
-      pkg.installGuidance.warnings.length > 0
-        ? `
-                <div style="margin-top:0.75rem;font-size:0.8125rem;color:var(--text-secondary);">
-                  ${
-          pkg.installGuidance.warnings.map((w) => `
-                      <div style="padding:0.125rem 0;">⚠ ${w}</div>
-                    `)
-        }
+            <div class='usage-block'>less add {fullPkgName}</div>
+            {pkg.installGuidance.warnings.length > 0
+              ? (
+                <div style='margin-top:0.75rem;font-size:0.8125rem;color:var(--text-secondary);'>
+                  {pkg.installGuidance.warnings.map((w) => (
+                    <div style='padding:0.125rem 0;'>⚠ {w}</div>
+                  ))}
                 </div>
-              `
-        : ''
-    }
+              )
+              : null}
           </div>
 
-          <!-- Related components in the same package -->
-          ${
-      relatedComponents.length > 0
-        ? `
-              <div class="section">
-                <div class="section-title">Other Components in ${fullPkgName}</div>
-                <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
-                  ${
-          relatedComponents.map((t) => `
-                      <a
-                        href="/registry/${this.package}/${t.tagName}"
-                        style="display:inline-flex;align-items:center;gap:0.375rem;padding:0.375rem 0.625rem;background:var(--bg-code);border-radius:4px;font-size:0.8125rem;font-family:monospace;color:inherit;text-decoration:none;border:0.5px solid transparent;"
+          {/* Related components in the same package */}
+          {relatedComponents.length > 0
+            ? (
+              <div class='section'>
+                <div class='section-title'>Other Components in {fullPkgName}</div>
+                <div style='display:flex;flex-wrap:wrap;gap:0.5rem;'>
+                  {relatedComponents.map((t) => (
+                    <a
+                      href={`/registry/${this.package}/${t.tagName}`}
+                      style={`display:inline-flex;align-items:center;gap:0.375rem;padding:0.375rem 0.625rem;background:var(--bg-code);border-radius:4px;font-size:0.8125rem;font-family:monospace;color:inherit;text-decoration:none;border:0.5px solid transparent;`}
+                    >
+                      <span
+                        style={`width:6px;height:6px;border-radius:50%;display:inline-block;background:${
+                          COMPAT_COLORS[t.compatibility] || '#888'
+                        }`}
                       >
-                        <span
-                          style="width:6px;height:6px;border-radius:50%;display:inline-block;background:${
-            COMPAT_COLORS[
-              t.compatibility
-            ] || '#888'
-          }"
-                        ></span>
-                        ${t.tagName}
-                      </a>
-                    `)
-        }
+                      </span>
+                      {t.tagName}
+                    </a>
+                  ))}
                 </div>
               </div>
-            `
-        : ''
-    }
+            )
+            : null}
         </div>
       </less-layout>
-    `;
+    );
   }
 }
 

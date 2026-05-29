@@ -928,7 +928,7 @@ export class LessLayout extends DsdElement {
     };
     globalThis.addEventListener?.('less:theme-change', this._themeHandler);
 
-    if (this._dsdHydrated) {
+    if (this.shadowRoot && this.shadowRoot.childNodes.length > 0) {
       this._setupDetailsToggle();
     }
 

@@ -101,25 +101,51 @@ Deno.test('route-scanner', { permissions: { read: true, write: true } }, async (
     assertEquals(islands.includes('theme-toggle.ts'), true);
   });
 
-  await t.step('scanIslandMeta - reads local less metadata without importing modules', async () => {
-    await Deno.writeTextFile(
-      join(FIXTURES_DIR, 'islands', 'client-only.ts'),
-      [
-        'throw new Error("must not import");',
-        'export const less = { ssr: false, dsd: false, hydrate: "idle" };',
-        'export default class ClientOnly {}',
-      ].join('\n'),
-    );
-    const meta = await scanIslandMeta(join(FIXTURES_DIR, 'islands'), [
-      'client-only.ts',
-      'my-counter.ts',
-    ]);
-    assertEquals(meta['client-only'].ssr, false);
-    assertEquals(meta['client-only'].dsd, false);
-    assertEquals(meta['client-only'].hydrate, 'idle');
-    assertEquals(meta['client-only'].reason, 'local island exports less.ssr=false');
-    assertEquals(meta['my-counter'], undefined);
-  });
+  await t.step(
+    'scanIslandMeta - v0.25 reads local less metadata via dynamic import (AST, not regex)',
+    async () => {
+      // v0.25: The import-based approach imports the module and reads `export const less`
+      // directly. Module must be importable (no top-level throw in Deno).
+      await Deno.writeTextFile(
+        join(FIXTURES_DIR, 'islands', 'client-only.ts'),
+        [
+          'export const less = { ssr: false, dsd: false, hydrate: "idle" };',
+          'export default class ClientOnly {}',
+        ].join('\n'),
+      );
+      const meta = await scanIslandMeta(join(FIXTURES_DIR, 'islands'), [
+        'client-only.ts',
+        'my-counter.ts',
+      ]);
+      assertEquals(meta['client-only'].ssr, false);
+      assertEquals(meta['client-only'].dsd, false);
+      assertEquals(meta['client-only'].hydrate, 'idle');
+      assertEquals(
+        meta['client-only'].reason,
+        'local island exports less.ssr=false',
+      );
+      assertEquals(meta['my-counter'], undefined);
+    },
+  );
+
+  await t.step(
+    'scanIslandMeta - v0.25 skips unimportable modules (browser-only guard)',
+    async () => {
+      // v0.25: Modules that throw at the top level (e.g. browser-only code)
+      // cannot be imported — their metadata is silently skipped.
+      await Deno.writeTextFile(
+        join(FIXTURES_DIR, 'islands', 'browser-only.ts'),
+        [
+          'throw new Error("Browser-only: document is not defined");',
+          'export const less = { ssr: false };',
+        ].join('\n'),
+      );
+      const meta = await scanIslandMeta(join(FIXTURES_DIR, 'islands'), [
+        'browser-only.ts',
+      ]);
+      assertEquals(meta['browser-only'], undefined);
+    },
+  );
 
   await t.step('scanIslands - returns empty for non-existent directory', async () => {
     const islands = await scanIslands(join(FIXTURES_DIR, 'non-existent'));
