@@ -24,18 +24,18 @@ styles.replaceSync(`
     top: 5rem;
     max-height: calc(100vh - 8rem);
     overflow-y: auto;
-    font-size: 0.8125rem;
+    font-size: var(--font-size-0);
     scrollbar-width: thin;
-    padding-left: 1rem;
+    padding-left: var(--size-3);
   }
   .toc-title {
-    font-size: 0.6rem;
-    font-weight: 800;
+    font-size: var(--font-size-00);
+    font-weight: var(--font-weight-8);
     text-transform: uppercase;
-    letter-spacing: 0.22em;
-    color: var(--text-primary, #FFFFFF);
-    margin-bottom: 1rem;
-    padding-top: 0.25rem;
+    letter-spacing: var(--font-letterspacing-5);
+    color: var(--text-primary);
+    margin-bottom: var(--size-3);
+    padding-top: var(--size-1);
   }
   .toc-list {
     list-style: none;
@@ -44,26 +44,26 @@ styles.replaceSync(`
   }
   .toc-link {
     display: block;
-    padding: 0.3rem 0 0.3rem 0.75rem;
-    color: var(--text-muted, #515466);
+    padding: var(--size-1) 0 var(--size-1) var(--size-3);
+    color: var(--text-muted);
     text-decoration: none;
-    border-left: 2px solid transparent;
+    border-left: var(--border-size-2) solid transparent;
     transition: color 0.15s ease, border-color 0.15s ease;
-    line-height: 1.5;
-    font-size: 0.8125rem;
+    line-height: var(--font-lineheight-3);
+    font-size: var(--font-size-0);
   }
   .toc-link:hover {
-    color: var(--text-secondary, #8E92A2);
+    color: var(--text-secondary);
     border-left-color: rgba(124,111,245,0.3);
   }
   .toc-link.active {
-    color: var(--brand-neon, #7C6FF5);
-    border-left-color: var(--brand-neon, #7C6FF5);
-    font-weight: 600;
+    color: var(--brand-neon);
+    border-left-color: var(--brand-neon);
+    font-weight: var(--font-weight-6);
   }
   .toc-link.h3 {
-    padding-left: 1.5rem;
-    font-size: 0.75rem;
+    padding-left: var(--size-7);
+    font-size: var(--font-size-00);
   }
   @media (max-width: 1100px) {
     :host {

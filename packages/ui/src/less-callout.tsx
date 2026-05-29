@@ -28,7 +28,7 @@ export const tagName = 'less-callout';
 
 const TYPE_CONFIG: Record<string, { borderColor: string; bgColor: string; icon: string }> = {
   info: {
-    borderColor: 'var(--brand, #534AB7)',
+    borderColor: 'var(--brand)',
     bgColor: 'rgba(83,74,183,0.06)',
     icon: '\u2139\uFE0F',
   },
@@ -55,31 +55,31 @@ sheet.replaceSync(`
     display: block;
   }
   .callout {
-    padding: 1rem 1.25rem;
-    margin: 1rem 0;
-    border-left: 3px solid var(--brand, #534AB7);
+    padding: var(--size-3) var(--size-4);
+    margin: var(--size-3) 0;
+    border-left: var(--border-size-2) solid var(--brand);
     background: rgba(83,74,183,0.06);
-    border-radius: 0 var(--radius-2, 8px) var(--radius-2, 8px) 0;
+    border-radius: 0 var(--radius-2) var(--radius-2) 0;
   }
   .callout-header {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin-bottom: 4px;
+    gap: var(--size-1);
+    margin-bottom: var(--size-1);
   }
   .callout-icon {
-    font-size: 14px;
-    line-height: 1;
+    font-size: var(--font-size-0);
+    line-height: var(--font-lineheight-1);
     flex-shrink: 0;
   }
   .callout-title {
-    font-size: 0.8125rem;
-    font-weight: 600;
+    font-size: var(--font-size-0);
+    font-weight: var(--font-weight-6);
     color: var(--gray-9);
   }
   .callout-body {
-    font-size: 0.9375rem;
-    line-height: 1.75;
+    font-size: var(--font-size-1);
+    line-height: var(--font-lineheight-4);
     color: var(--gray-7);
   }
   .callout-body ::slotted(p) {

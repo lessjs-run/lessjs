@@ -22,37 +22,37 @@ styles.replaceSync(`
     display: block;
   }
   .term {
-    background: #09090b;
-    border-radius: 10px;
+    background: var(--gray-1);
+    border-radius: var(--radius-3);
     overflow: hidden;
-    border: 0.5px solid #27272a;
+    border: var(--border-size-1) solid var(--gray-3);
   }
   .term-bar {
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 10px 14px;
-    background: #18181b;
-    border-bottom: 0.5px solid #27272a;
+    gap: var(--size-1);
+    padding: var(--size-2) var(--size-3);
+    background: var(--gray-2);
+    border-bottom: var(--border-size-1) solid var(--gray-3);
   }
   .dot { width: 7px; height: 7px; border-radius: 50%; }
   .dot.r { background: #ef4444; }
   .dot.y { background: #eab308; }
   .dot.g { background: #22c55e; }
   .term-body {
-    padding: 16px;
-    font-family: "JetBrains Mono", "Fira Code", "SF Mono", Consolas, monospace;
-    font-size: 12px;
-    line-height: 1.9;
-    color: #a1a1aa;
+    padding: var(--size-3);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-00);
+    line-height: var(--font-lineheight-4);
+    color: var(--gray-7);
     max-height: 280px;
     overflow-y: auto;
     cursor: text;
     scrollbar-width: thin;
-    scrollbar-color: #3f3f46 transparent;
+    scrollbar-color: var(--gray-5) transparent;
   }
-  .term-body::-webkit-scrollbar { width: 4px; }
-  .term-body::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 2px; }
+  .term-body::-webkit-scrollbar { width: var(--size-1); }
+  .term-body::-webkit-scrollbar-thumb { background: var(--gray-5); border-radius: var(--size-1); }
   .term-body::-webkit-scrollbar-track { background: transparent; }
   .term-body .prompt { color: #fbbf24; }
   .term-body .hl { color: #7dd3fc; }
@@ -60,19 +60,19 @@ styles.replaceSync(`
   .input-line {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin-top: 6px;
+    gap: var(--size-1);
+    margin-top: var(--size-1);
   }
   .input-line input {
     flex: 1;
     background: transparent;
     border: none;
     outline: none;
-    color: #f4f4f5;
+    color: var(--text-primary);
     font-family: inherit;
     font-size: inherit;
     padding: 0;
-    caret-color: #f4f4f5;
+    caret-color: var(--text-primary);
   }
 `);
 

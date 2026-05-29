@@ -43,17 +43,17 @@ const REDIRECT_MAP: Record<string, string> = {
 const styles = new StyleSheet();
 styles.replaceSync(`
   :host { display: block; }
-  .container { max-width: 700px; margin: 4rem auto; text-align: center; }
-  h1 { font-size: 4rem; font-weight: 700; color: var(--text-primary); margin: 0; }
-  p { color: var(--text-muted); font-size: 1rem; margin: 1rem 0 2rem; }
-  .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+  .container { max-width: 700px; margin: var(--size-12) auto; text-align: center; }
+  h1 { font-size: 4rem; font-weight: var(--font-weight-7); color: var(--text-primary); margin: 0; }
+  p { color: var(--text-muted); font-size: var(--font-size-4); margin: var(--size-4) 0 var(--size-8); }
+  .links { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--size-3); }
   .links a {
-    padding: 0.5rem 1rem;
+    padding: var(--size-2) var(--size-4);
     border: 0.5px solid var(--border);
-    border-radius: 6px;
+    border-radius: var(--radius-2);
     color: var(--text-secondary);
     text-decoration: none;
-    font-size: 0.8125rem;
+    font-size: var(--font-size-1);
   }
   .links a:hover { border-color: var(--border-hover); color: var(--text-primary); }
 `);

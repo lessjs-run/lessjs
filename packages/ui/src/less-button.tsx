@@ -47,7 +47,7 @@ sheet.replaceSync(`
     border-radius: var(--radius-2);
     transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
     white-space: nowrap;
-    letter-spacing: 0.02em;
+    letter-spacing: var(--font-letterspacing-2);
   }
 
   /* Sizes */
@@ -97,8 +97,8 @@ sheet.replaceSync(`
   }
 
   .btn--accent {
-    background: linear-gradient(135deg, var(--brand, #534ab7), #7c3aed);
-    color: white;
+    background: linear-gradient(135deg, var(--brand, #534ab7), var(--brand-hover, var(--indigo-7)));
+    color: var(--text-primary);
     border-color: transparent;
   }
   .btn--accent:hover {

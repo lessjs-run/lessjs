@@ -50,7 +50,7 @@ sheet.replaceSync(`
     font-size: var(--font-size-0);
     font-weight: var(--font-weight-5);
     color: var(--gray-6);
-    letter-spacing: 0.02em;
+    letter-spacing: var(--font-letterspacing-2);
   }
 
   .input {
@@ -86,7 +86,7 @@ sheet.replaceSync(`
   }
 
   .input--error {
-    border-color: var(--error, #dc3545);
+    border-color: var(--error);
   }
 
   :host(:state(disabled)) .input {
@@ -96,12 +96,12 @@ sheet.replaceSync(`
   }
 
   :host(:state(invalid)) .input {
-    border-color: var(--error, #dc3545);
+    border-color: var(--error);
   }
 
   .error-message {
     font-size: var(--font-size-00);
-    color: var(--error, #dc3545);
+    color: var(--error);
   }
 `);
 

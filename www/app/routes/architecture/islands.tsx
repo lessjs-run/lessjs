@@ -11,13 +11,13 @@ routeSheet.replaceSync(`
       .comparison {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        margin: 1rem 0 1.5rem;
+        gap: var(--size-4);
+        margin: var(--size-4) 0 var(--size-6);
       }
       .comparison-item {
-        padding: 1rem 1.25rem;
+        padding: var(--size-4) var(--size-5);
         border: 1px solid var(--border);
-        border-radius: 8px;
+        border-radius: var(--radius-2);
         transition: border-color 0.2s, box-shadow 0.2s;
       }
       .comparison-item:hover {

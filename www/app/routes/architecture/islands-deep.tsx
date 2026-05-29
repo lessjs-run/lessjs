@@ -8,13 +8,13 @@ import '@lessjs/ui/less-code-block';
 const routeSheet = new StyleSheet();
 
 routeSheet.replaceSync(`
-      .layer-card { padding: 1.25rem 1.5rem; margin: 1rem 0; border-left: 2px solid var(--border-hover); background: var(--bg-surface); border-radius: 0 3px 3px 0; }
-      .layer-card .layer-tag { font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.25rem; }
-      .layer-card h3 { margin: 0 0 0.5rem; }
-      .strategy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0 1.5rem; }
-      .strategy-item { padding: 1rem 1.25rem; border: 0.5px solid var(--border); border-radius: 4px; background: var(--bg-surface); }
-      .strategy-item .strat-name { font-weight: 500; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 0.25rem; }
-      .strategy-item .strat-name code { font-size: 0.75rem; background: var(--bg-code); padding: 0.125rem 0.375rem; border-radius: 3px; }
+      .layer-card { padding: var(--size-5) var(--size-6); margin: var(--size-4) 0; border-left: 2px solid var(--border-hover); background: var(--bg-surface); border-radius: 0 3px 3px 0; }
+      .layer-card .layer-tag { font-size: 0.6875rem; font-weight: var(--font-weight-5); text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.25rem; }
+      .layer-card h3 { margin: 0 0 var(--size-2); }
+      .strategy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--size-4); margin: var(--size-4) 0 var(--size-6); }
+      .strategy-item { padding: var(--size-4) var(--size-5); border: 0.5px solid var(--border); border-radius: var(--radius-1); background: var(--bg-surface); }
+      .strategy-item .strat-name { font-weight: var(--font-weight-5); font-size: var(--font-size-2); color: var(--text-primary); margin-bottom: 0.25rem; }
+      .strategy-item .strat-name code { font-size: var(--font-size-0); background: var(--bg-code); padding: 0.125rem 0.375rem; border-radius: 3px; }
       @media (max-width: 720px) { .strategy-grid { grid-template-columns: 1fr; } }
     `);
 

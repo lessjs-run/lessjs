@@ -47,16 +47,16 @@ styles.replaceSync(`
   }
   .sl-row {
     display: flex;
-    gap: 8px;
+    gap: var(--size-2);
     flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: var(--size-2);
   }
   .sl-note {
-    color: #a1a1aa;
-    font-size: 11px;
-    margin-top: 6px;
-    line-height: 1.5;
+    color: var(--gray-7);
+    font-size: var(--font-size-00);
+    margin-top: var(--size-1);
+    line-height: var(--font-lineheight-3);
   }
 `);
 

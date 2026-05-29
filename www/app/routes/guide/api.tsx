@@ -11,11 +11,11 @@ routeSheet.replaceSync(
   pageStyles + `
 
       .principle {
-        padding: 1rem 1.25rem;
+        padding: var(--size-4) var(--size-5);
         background: var(--bg-surface);
         border-left: 2px solid var(--border-hover);
-        border-radius: 0 4px 4px 0;
-        margin: 1rem 0;
+        border-radius: 0 var(--radius-1) var(--radius-1) 0;
+        margin: var(--size-4) 0;
       }
     `,
 );

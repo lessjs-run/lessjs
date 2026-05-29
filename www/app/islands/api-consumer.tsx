@@ -14,29 +14,29 @@ styles.replaceSync(`
   :host { display: block; }
 
   .card {
-    border: 0.5px solid var(--border);
-    border-radius: 8px;
-    padding: 1.25rem;
+    border: var(--border-size-1) solid var(--border);
+    border-radius: var(--radius-3);
+    padding: var(--size-4);
     background: var(--bg-surface);
   }
   .card h3 {
-    font-size: 0.875rem;
-    font-weight: 700;
-    margin: 0 0 0.75rem;
+    font-size: var(--font-size-0);
+    font-weight: var(--font-weight-7);
+    margin: 0 0 var(--size-3);
     color: var(--text-primary);
   }
   .status-row {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8125rem;
+    gap: var(--size-2);
+    font-size: var(--font-size-0);
     color: var(--text-muted);
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--size-3);
   }
   .status-dot {
     width: 7px;
     height: 7px;
-    border-radius: 50%;
+    border-radius: var(--radius-round);
     display: inline-block;
   }
   .status-dot.loading { background: var(--brand-light); }
@@ -46,43 +46,43 @@ styles.replaceSync(`
   .data-grid {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 0.25rem 0.75rem;
-    font-size: 0.8125rem;
-    margin-bottom: 0.75rem;
+    gap: var(--size-1) var(--size-3);
+    font-size: var(--font-size-0);
+    margin-bottom: var(--size-3);
   }
   .data-grid .key {
     color: var(--text-muted);
-    font-family: monospace;
-    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-00);
   }
   .data-grid .val {
     color: var(--text-primary);
-    font-weight: 500;
+    font-weight: var(--font-weight-5);
   }
 
   .pre-box {
     background: var(--bg-code);
-    border: 0.5px solid var(--code-border);
-    border-radius: 6px;
-    padding: 0.75rem 1rem;
-    font-size: 0.75rem;
-    font-family: monospace;
+    border: var(--border-size-1) solid var(--code-border);
+    border-radius: var(--radius-2);
+    padding: var(--size-3) var(--size-3);
+    font-size: var(--font-size-00);
+    font-family: var(--font-mono);
     color: var(--text-secondary);
     overflow-x: auto;
-    margin: 0.75rem 0;
-    line-height: 1.6;
+    margin: var(--size-3) 0;
+    line-height: var(--font-lineheight-3);
   }
 
   .btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.4rem 0.85rem;
-    border: 0.5px solid var(--border);
-    border-radius: 6px;
+    gap: var(--size-1);
+    padding: var(--size-1) var(--size-3);
+    border: var(--border-size-1) solid var(--border);
+    border-radius: var(--radius-2);
     background: var(--bg-card);
     color: var(--text-secondary);
-    font-size: 0.8125rem;
+    font-size: var(--font-size-0);
     cursor: pointer;
     transition: all 0.15s;
   }
@@ -92,30 +92,30 @@ styles.replaceSync(`
   .btn.primary:hover { opacity: 0.85; }
   .btn.primary:disabled { opacity: 0.25; background: var(--text-muted); border-color: transparent; }
 
-  .divider { border: none; border-top: 0.5px solid var(--border); margin: 1.25rem 0; }
+  .divider { border: none; border-top: var(--border-size-1) solid var(--border); margin: var(--size-4) 0; }
 
-  .form-row { display: flex; gap: 0.5rem; align-items: center; margin: 0.75rem 0; }
+  .form-row { display: flex; gap: var(--size-2); align-items: center; margin: var(--size-3) 0; }
   .form-row input {
-    flex: 1; padding: 0.45rem 0.7rem;
-    border: 0.5px solid var(--border); border-radius: 6px;
+    flex: 1; padding: var(--size-1) var(--size-3);
+    border: var(--border-size-1) solid var(--border); border-radius: var(--radius-2);
     background: var(--bg-card); color: var(--text-primary);
-    font-size: 0.8125rem; outline: none;
+    font-size: var(--font-size-0); outline: none;
   }
   .form-row input:focus { border-color: var(--border-hover); }
 
   .greeting {
-    margin-top: 0.5rem; padding: 0.6rem 0.85rem;
-    border-radius: 6px; font-size: 0.9375rem; font-weight: 500;
+    margin-top: var(--size-2); padding: var(--size-2) var(--size-3);
+    border-radius: var(--radius-2); font-size: var(--font-size-1); font-weight: var(--font-weight-5);
     background: color-mix(in srgb, var(--brand) 6%, transparent);
-    border: 1px solid color-mix(in srgb, var(--brand) 15%, transparent);
+    border: var(--border-size-1) solid color-mix(in srgb, var(--brand) 15%, transparent);
     color: var(--text-primary);
     animation: fadeSlide 0.25s ease;
   }
   .err-msg {
-    margin-top: 0.5rem; padding: 0.6rem 0.85rem;
-    border-radius: 6px; font-size: 0.8125rem;
+    margin-top: var(--size-2); padding: var(--size-2) var(--size-3);
+    border-radius: var(--radius-2); font-size: var(--font-size-0);
     background: color-mix(in srgb, var(--error) 8%, transparent);
-    border: 1px solid color-mix(in srgb, var(--error) 20%, transparent);
+    border: var(--border-size-1) solid color-mix(in srgb, var(--error) 20%, transparent);
     color: var(--error);
     animation: fadeSlide 0.25s ease;
   }
@@ -246,9 +246,9 @@ export default class ApiConsumer extends DsdElement {
         <hr class='divider' />
 
         <h3>Say Hello</h3>
-        <p style='font-size:0.8125rem;color:var(--text-muted);margin:0 0 0.75rem;line-height:1.6'>
+        <p style='font-size:var(--font-size-0);color:var(--text-muted);margin:0 0 var(--size-3);line-height:var(--font-lineheight-3)'>
           Type your name and the serverless API will greet you back. Calls{' '}
-          <code style='font-size:0.75rem'>GET /api/hello/:name</code> on Deno Deploy.
+          <code style='font-size:var(--font-size-00)'>GET /api/hello/:name</code> on Deno Deploy.
         </p>
 
         <div class='form-row'>

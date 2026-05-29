@@ -82,8 +82,8 @@ sheet.replaceSync(`
     border: none;
     cursor: pointer;
     color: var(--gray-5);
-    font-size: 1.25rem;
-    line-height: 1;
+    font-size: var(--font-size-2);
+    line-height: var(--font-lineheight-1);
     padding: var(--size-1);
     border-radius: var(--radius-1);
     transition: color 0.15s ease;
@@ -97,7 +97,7 @@ sheet.replaceSync(`
   .dialog-body {
     font-size: var(--font-size-1);
     color: var(--gray-7);
-    line-height: 1.5;
+    line-height: var(--font-lineheight-3);
   }
 
   .dialog-footer {

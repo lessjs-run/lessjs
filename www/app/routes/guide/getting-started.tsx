@@ -11,7 +11,7 @@ const routeSheet = new StyleSheet();
 
 routeSheet.replaceSync(`
       .step {
-        margin: 1.5rem 0 2rem;
+        margin: var(--size-6) 0 var(--size-8);
       }
 
       .step h2 {
@@ -21,14 +21,14 @@ routeSheet.replaceSync(`
       .note {
         background: var(--bg-surface);
         border: 0.5px solid var(--border);
-        border-radius: 4px;
-        padding: 0.75rem 1rem;
-        margin: 1rem 0;
+        border-radius: var(--radius-1);
+        padding: var(--size-3) var(--size-4);
+        margin: var(--size-4) 0;
       }
 
       .nav-row {
-        margin-top: 2rem;
-        padding-top: 1rem;
+        margin-top: var(--size-8);
+        padding-top: var(--size-4);
         border-top: 0.5px solid var(--border);
         display: flex;
         justify-content: flex-end;
@@ -36,8 +36,8 @@ routeSheet.replaceSync(`
       .nav-link {
         color: var(--brand);
         text-decoration: none;
-        font-weight: 500;
-        font-size: 0.875rem;
+        font-weight: var(--font-weight-5);
+        font-size: var(--font-size-2);
       }
       .nav-link:hover { text-decoration: underline; }
 

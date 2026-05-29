@@ -11,14 +11,14 @@ routeSheet.replaceSync(
   pageStyles + `
 
       .error-hierarchy {
-        padding: 1rem;
+        padding: var(--size-4);
         background: var(--bg-surface);
         border-left: 2px solid var(--border-hover);
-        border-radius: 0 4px 4px 0;
-        margin: 1rem 0;
-        font-family: "SF Mono", monospace;
-        font-size: 0.8125rem;
-        line-height: 1.8;
+        border-radius: 0 var(--radius-1) var(--radius-1) 0;
+        margin: var(--size-4) 0;
+        font-family: var(--font-mono);
+        font-size: var(--font-size-1);
+        line-height: var(--font-lineheight-4);
         color: var(--text-secondary);
       }
     `,

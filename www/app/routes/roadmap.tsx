@@ -40,13 +40,13 @@ routeSheet.replaceSync(`
   .shell {
     max-width: 1080px;
     margin: 0 auto;
-    padding: 44px 24px 72px;
+    padding: 44px var(--size-6) 72px;
   }
 
   .hero {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 320px;
-    gap: 28px;
+    gap: var(--size-7);
     align-items: start;
     padding-bottom: 30px;
     border-bottom: 1px solid var(--road-border);
@@ -64,33 +64,33 @@ routeSheet.replaceSync(`
     max-width: 690px;
     margin: 18px 0 0;
     color: var(--road-muted);
-    font-size: 16px;
-    line-height: 1.75;
+    font-size: var(--font-size-4);
+    line-height: var(--font-lineheight-4);
   }
 
   .now {
     border: 1px solid var(--road-border);
-    border-radius: 8px;
+    border-radius: var(--radius-2);
     background: #fff;
-    padding: 16px;
+    padding: var(--size-4);
   }
 
   .now span,
   .chip {
     display: inline-flex;
     align-items: center;
-    min-height: 28px;
+    min-height: var(--size-7);
     padding: 0 10px;
     border: 1px solid rgba(81, 72, 184, 0.28);
-    border-radius: 6px;
+    border-radius: var(--radius-2);
     background: rgba(81, 72, 184, 0.08);
     color: var(--road-accent);
-    font-size: 12px;
+    font-size: var(--font-size-0);
     font-weight: 750;
   }
 
   .now h2 {
-    margin: 14px 0 8px;
+    margin: 14px 0 var(--size-2);
     color: var(--road-ink);
     font-size: 18px;
   }
@@ -98,43 +98,43 @@ routeSheet.replaceSync(`
   .now p {
     margin: 0;
     color: var(--road-muted);
-    font-size: 13px;
+    font-size: var(--font-size-1);
     line-height: 1.6;
   }
 
   .timeline {
-    margin-top: 32px;
+    margin-top: var(--size-8);
     display: grid;
-    gap: 12px;
+    gap: var(--size-3);
   }
 
   .phase {
     display: grid;
     grid-template-columns: 110px 1fr 140px;
-    gap: 16px;
+    gap: var(--size-4);
     align-items: start;
     border: 1px solid var(--road-border);
-    border-radius: 8px;
+    border-radius: var(--radius-2);
     background: #fff;
-    padding: 16px;
+    padding: var(--size-4);
   }
 
   .version {
     color: var(--road-accent);
-    font-size: 13px;
-    font-weight: 800;
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-8);
   }
 
   .phase h3 {
-    margin: 0 0 8px;
+    margin: 0 0 var(--size-2);
     color: var(--road-ink);
-    font-size: 16px;
+    font-size: var(--font-size-4);
   }
 
   .phase p {
     margin: 0;
     color: var(--road-muted);
-    font-size: 13px;
+    font-size: var(--font-size-1);
     line-height: 1.65;
   }
 
@@ -142,10 +142,10 @@ routeSheet.replaceSync(`
     justify-self: end;
     display: inline-flex;
     align-items: center;
-    min-height: 28px;
+    min-height: var(--size-7);
     padding: 0 10px;
-    border-radius: 6px;
-    font-size: 12px;
+    border-radius: var(--radius-2);
+    font-size: var(--font-size-0);
     font-weight: 750;
     border: 1px solid var(--road-border);
   }
@@ -172,26 +172,26 @@ routeSheet.replaceSync(`
     margin-top: 34px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: var(--size-3);
   }
 
   .truth {
     border: 1px solid var(--road-border);
-    border-radius: 8px;
+    border-radius: var(--radius-2);
     background: #fff;
-    padding: 16px;
+    padding: var(--size-4);
   }
 
   .truth h2 {
     margin: 0 0 10px;
     color: var(--road-ink);
-    font-size: 16px;
+    font-size: var(--font-size-4);
   }
 
   .truth p,
   .truth li {
     color: var(--road-muted);
-    font-size: 13px;
+    font-size: var(--font-size-1);
     line-height: 1.65;
   }
 
@@ -214,15 +214,15 @@ routeSheet.replaceSync(`
   .nav-link {
     display: inline-flex;
     align-items: center;
-    min-height: 40px;
+    min-height: var(--size-10);
     padding: 0 14px;
     border: 1px solid var(--road-border);
     border-radius: 7px;
     background: #fff;
     color: var(--road-ink);
     text-decoration: none;
-    font-size: 13px;
-    font-weight: 700;
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-7);
   }
 
   @media (max-width: 820px) {
@@ -239,7 +239,7 @@ routeSheet.replaceSync(`
 
   @media (max-width: 560px) {
     .shell {
-      padding: 32px 16px 56px;
+      padding: var(--size-8) var(--size-4) 56px;
     }
   }
 `);

@@ -16,10 +16,10 @@ import '@lessjs/ui/less-layout';
 const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host { display:block; }
-  .shell { max-width:900px; margin:0 auto; padding:44px 24px 72px; }
-  h1 { color:#14151d; font-size:clamp(2.2rem,6vw,4rem); line-height:0.95; }
-  p { color:#626676; font-size:16px; line-height:1.75; }
-  a { color:#5148b8; font-weight:700; }
+  .shell { max-width:900px; margin:0 auto; padding:44px var(--size-6) 72px; }
+  h1 { color:var(--text-primary); font-size:clamp(2.2rem,6vw,4rem); line-height:0.95; }
+  p { color:var(--text-secondary); font-size:var(--font-size-4); line-height:var(--font-lineheight-4); }
+  a { color:var(--brand); font-weight:var(--font-weight-7); }
 `);
 
 export class GuideArchitecturePage extends DsdElement {

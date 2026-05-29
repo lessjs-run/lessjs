@@ -34,46 +34,46 @@ sheet.replaceSync(`
   }
   .step-card {
     border: var(--border-size-1) solid var(--gray-3);
-    border-radius: var(--radius-2, 8px);
-    padding: 1.25rem;
+    border-radius: var(--radius-2);
+    padding: var(--size-4);
     background: var(--gray-1);
     position: relative;
-    border-top: 2px solid var(--brand, #534AB7);
+    border-top: var(--border-size-2) solid var(--brand);
   }
   .step-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: var(--size-2);
+    margin-bottom: var(--size-2);
   }
   .step-number {
     width: 28px;
     height: 28px;
     border-radius: var(--radius-round);
-    background: var(--brand, #534AB7);
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
+    background: var(--brand);
+    color: var(--text-primary);
+    font-size: var(--font-size-00);
+    font-weight: var(--font-weight-7);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
   }
   .step-label {
-    font-size: 11px;
-    font-weight: 600;
+    font-size: var(--font-size-00);
+    font-weight: var(--font-weight-6);
     color: var(--gray-5);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: var(--font-letterspacing-5);
   }
   .step-body {
-    font-size: 0.9375rem;
-    line-height: 1.6;
+    font-size: var(--font-size-1);
+    line-height: var(--font-lineheight-3);
     color: var(--gray-9);
   }
   .step-body ::slotted(code) {
-    font-family: var(--font-mono, "SF Mono", "Fira Code", Consolas, monospace);
-    font-size: 12.5px;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-00);
     color: var(--gray-9);
   }
 `);
@@ -96,7 +96,7 @@ export class LessStepCard extends DsdElement {
         {description && (
           <p
             part='description'
-            style='margin:0 0 10px;color:var(--gray-7);font-size:0.875rem;'
+            style='margin:0 0 var(--size-2);color:var(--gray-7);font-size:var(--font-size-0);'
           >
             {this._esc(description)}
           </p>

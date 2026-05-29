@@ -13,20 +13,20 @@ routeSheet.replaceSync(
       .platform-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-        gap: 0.75rem;
-        margin: 1rem 0 1.5rem;
+        gap: var(--size-3);
+        margin: var(--size-4) 0 var(--size-6);
       }
       .platform-card {
-        padding: 1rem;
+        padding: var(--size-4);
         border: 0.5px solid var(--border);
-        border-radius: 4px;
+        border-radius: var(--radius-1);
       }
       .platform-card h3 {
         margin: 0 0 0.4rem;
       }
       .platform-card p {
         margin: 0;
-        font-size: 0.8125rem;
+        font-size: var(--font-size-1);
       }
     `,
 );

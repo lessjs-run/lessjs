@@ -33,7 +33,7 @@ sheet.replaceSync(`
     display: block;
     background: var(--gray-0);
     border: var(--border-size-1) solid var(--gray-3);
-    border-radius: 6px;
+    border-radius: var(--radius-2);
     overflow: hidden;
     transition: box-shadow 0.2s ease, transform 0.2s ease;
   }

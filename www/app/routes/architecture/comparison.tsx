@@ -17,15 +17,15 @@ routeSheet.replaceSync(`
       .table-wrap {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
-        margin: 1.5rem 0 2.5rem;
+        margin: var(--size-6) 0 var(--size-10);
         border: 0.5px solid var(--border);
-        border-radius: 8px;
+        border-radius: var(--radius-2);
       }
 
       table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 0.8125rem;
+        font-size: var(--font-size-1);
         min-width: 640px;
       }
 
@@ -37,19 +37,19 @@ routeSheet.replaceSync(`
 
       th {
         background: var(--bg-surface, #f8f8f8);
-        font-weight: 500;
+        font-weight: var(--font-weight-5);
         color: var(--text-primary);
         text-align: left;
-        padding: 0.75rem 1rem;
+        padding: var(--size-3) var(--size-4);
         border-bottom: 0.5px solid var(--border);
         white-space: nowrap;
       }
 
       td {
-        padding: 0.625rem 1rem;
+        padding: 0.625rem var(--size-4);
         border-bottom: 0.5px solid var(--border);
         color: var(--text-secondary);
-        line-height: 1.5;
+        line-height: var(--font-lineheight-3);
       }
 
       tbody tr {
@@ -71,7 +71,7 @@ routeSheet.replaceSync(`
       }
 
       td:first-child {
-        font-weight: 500;
+        font-weight: var(--font-weight-5);
         color: var(--text-primary);
         white-space: nowrap;
       }
@@ -82,7 +82,7 @@ routeSheet.replaceSync(`
 
       .tag-yes {
         color: var(--brand, #534AB7);
-        font-weight: 500;
+        font-weight: var(--font-weight-5);
       }
 
       .tag-yes::before {
@@ -101,27 +101,27 @@ routeSheet.replaceSync(`
       /* LessJS column highlight */
       th.lessjs-col {
         color: var(--brand, #534AB7);
-        font-weight: 600;
+        font-weight: var(--font-weight-6);
       }
 
       td.lessjs-col {
         background: var(--brand-subtle, rgba(83,74,183,0.04));
-        font-weight: 500;
+        font-weight: var(--font-weight-5);
       }
 
       /* Prose lists */
       ul {
-        padding-left: 1.25rem;
+        padding-left: var(--size-5);
         color: var(--text-secondary);
-        line-height: 1.7;
-        font-size: 0.875rem;
+        line-height: var(--font-lineheight-4);
+        font-size: var(--font-size-2);
       }
       li {
-        margin: 0.5rem 0;
+        margin: var(--size-2) 0;
       }
       li strong {
         color: var(--text-primary);
-        font-weight: 500;
+        font-weight: var(--font-weight-5);
       }
     `);
 

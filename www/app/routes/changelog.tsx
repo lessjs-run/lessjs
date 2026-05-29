@@ -21,60 +21,60 @@ const routeSheet = new StyleSheet();
 
 routeSheet.replaceSync(`
       .changelog-content h2 {
-        font-size: 1.25rem;
-        font-weight: 700;
+        font-size: var(--font-size-5);
+        font-weight: var(--font-weight-7);
         color: var(--text-primary);
-        margin: 2rem 0 0 0;
-        padding: 1.5rem 1.5rem 0.25rem 1.5rem;
+        margin: var(--size-8) 0 0 0;
+        padding: var(--size-6) var(--size-6) 0.25rem var(--size-6);
         background: var(--bg-surface);
         border: 0.5px solid var(--border);
         border-bottom: none;
-        border-radius: 6px 6px 0 0;
+        border-radius: var(--radius-2) var(--radius-2) 0 0;
       }
       .changelog-content h2 + blockquote {
         margin: 0;
-        padding: 0 1.5rem 0.75rem 1.5rem;
+        padding: 0 var(--size-6) var(--size-3) var(--size-6);
         background: var(--bg-surface);
         border-left: 0.5px solid var(--border);
         border-right: 0.5px solid var(--border);
-        font-size: 0.75rem;
+        font-size: var(--font-size-0);
         color: var(--text-muted);
       }
       .changelog-content h3 {
-        font-size: 0.75rem;
-        font-weight: 600;
+        font-size: var(--font-size-0);
+        font-weight: var(--font-weight-6);
         text-transform: uppercase;
         letter-spacing: 0.08em;
         color: var(--brand);
         margin: 0;
-        padding: 0.75rem 1.5rem 0.25rem 1.5rem;
+        padding: var(--size-3) var(--size-6) 0.25rem var(--size-6);
         background: var(--bg-surface);
         border-left: 0.5px solid var(--border);
         border-right: 0.5px solid var(--border);
       }
       .changelog-content h4 {
-        font-size: 0.875rem;
-        font-weight: 600;
+        font-size: var(--font-size-2);
+        font-weight: var(--font-weight-6);
         color: var(--text-primary);
         margin: 0;
-        padding: 0.5rem 1.5rem 0 1.5rem;
+        padding: var(--size-2) var(--size-6) 0 var(--size-6);
         background: var(--bg-surface);
         border-left: 0.5px solid var(--border);
         border-right: 0.5px solid var(--border);
       }
       .changelog-content ul {
         list-style: none;
-        padding: 0.25rem 1.5rem 0.5rem 2.5rem;
+        padding: 0.25rem var(--size-6) var(--size-2) var(--size-10);
         margin: 0;
         background: var(--bg-surface);
         border-left: 0.5px solid var(--border);
         border-right: 0.5px solid var(--border);
       }
       .changelog-content li {
-        padding: 0.375rem 0 0.375rem 1.25rem;
+        padding: 0.375rem 0 0.375rem var(--size-5);
         position: relative;
         color: var(--text-secondary);
-        font-size: 0.875rem;
+        font-size: var(--font-size-2);
       }
       .changelog-content li::before {
         content: "•";
@@ -84,35 +84,35 @@ routeSheet.replaceSync(`
       }
       .changelog-content p {
         color: var(--text-secondary);
-        font-size: 0.875rem;
+        font-size: var(--font-size-2);
         margin: 0;
-        padding: 0.25rem 1.5rem;
+        padding: 0.25rem var(--size-6);
         background: var(--bg-surface);
         border-left: 0.5px solid var(--border);
         border-right: 0.5px solid var(--border);
       }
       .changelog-content blockquote {
         margin: 0;
-        padding: 0.5rem 1.5rem;
+        padding: var(--size-2) var(--size-6);
         border-left: 3px solid var(--brand);
         background: var(--bg-surface);
-        font-size: 0.875rem;
+        font-size: var(--font-size-2);
         color: var(--text-secondary);
       }
       .changelog-content code {
         font-family: var(--font-mono, monospace);
-        font-size: 0.8125rem;
+        font-size: var(--font-size-1);
         background: var(--bg-elevated);
         padding: 0.125rem 0.375rem;
         border-radius: 3px;
       }
       .changelog-content pre {
         background: var(--bg-elevated);
-        padding: 1rem;
-        border-radius: 6px;
+        padding: var(--size-4);
+        border-radius: var(--radius-2);
         overflow-x: auto;
-        font-size: 0.8125rem;
-        margin: 0.5rem 0;
+        font-size: var(--font-size-1);
+        margin: var(--size-2) 0;
       }
       .changelog-content pre code {
         background: none;
@@ -121,7 +121,7 @@ routeSheet.replaceSync(`
       .changelog-content hr {
         border: none;
         border-top: 0.5px solid var(--border);
-        margin: 1.5rem 0;
+        margin: var(--size-6) 0;
       }
       .changelog-content strong {
         color: var(--text-primary);
@@ -131,21 +131,21 @@ routeSheet.replaceSync(`
         border-left: 0.5px solid var(--border);
         border-right: 0.5px solid var(--border);
         border-bottom: 0.5px solid var(--border);
-        border-radius: 0 0 6px 6px;
-        padding: 0 1.5rem 1.5rem 1.5rem;
-        height: 1rem;
+        border-radius: 0 0 var(--radius-2) var(--radius-2);
+        padding: 0 var(--size-6) var(--size-6) var(--size-6);
+        height: var(--size-4);
       }
       .nav-row {
         display: flex;
         justify-content: space-between;
-        margin-top: 2rem;
-        padding-top: 1rem;
+        margin-top: var(--size-8);
+        padding-top: var(--size-4);
         border-top: 0.5px solid var(--border);
       }
       .nav-link {
         color: var(--brand);
         text-decoration: none;
-        font-size: 0.875rem;
+        font-size: var(--font-size-2);
       }
       .nav-link:hover {
         text-decoration: underline;
@@ -174,9 +174,9 @@ function renderChangelog(md: string): string {
       if (dashIdx > 0) {
         const ver = title.slice(0, dashIdx);
         const desc = title.slice(dashIdx + 3);
-        html += `<h2><span style="margin-right:0.75rem">${
+        html += `<h2><span style="margin-right:var(--size-3)">${
           esc(ver)
-        }</span><span style="font-weight:400;font-size:0.875rem;color:var(--text-muted)">${
+        }</span><span style="font-weight:var(--font-weight-4);font-size:var(--font-size-2);color:var(--text-muted)">${
           esc(desc)
         }</span></h2>\n`;
       } else {

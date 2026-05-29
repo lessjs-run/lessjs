@@ -25,7 +25,7 @@ sheet.replaceSync(`
   .shell {
     max-width: 1120px;
     margin: 0 auto;
-    padding: 44px 24px 72px;
+    padding: 44px var(--size-6) 72px;
   }
 
   h1 {
@@ -39,8 +39,8 @@ sheet.replaceSync(`
     max-width: 680px;
     margin: 18px 0 0;
     color: var(--muted);
-    font-size: 16px;
-    line-height: 1.75;
+    font-size: var(--font-size-4);
+    line-height: var(--font-lineheight-4);
   }
 
   .paths {
@@ -52,7 +52,7 @@ sheet.replaceSync(`
 
   .path {
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: var(--radius-2);
     background: #fff;
     padding: 22px;
     text-decoration: none;
@@ -64,7 +64,7 @@ sheet.replaceSync(`
   }
 
   .path h2 {
-    margin: 0 0 8px;
+    margin: 0 0 var(--size-2);
     color: var(--ink);
     font-size: 17px;
   }
@@ -72,7 +72,7 @@ sheet.replaceSync(`
   .path p {
     margin: 0;
     color: var(--muted);
-    font-size: 13px;
+    font-size: var(--font-size-1);
     line-height: 1.65;
   }
 
@@ -80,8 +80,8 @@ sheet.replaceSync(`
     display: inline-flex;
     align-items: center;
     min-height: 26px;
-    margin-bottom: 12px;
-    padding: 0 8px;
+    margin-bottom: var(--size-3);
+    padding: 0 var(--size-2);
     border-radius: 5px;
     font-size: 11px;
     font-weight: 750;
@@ -92,7 +92,7 @@ sheet.replaceSync(`
 
   @media (max-width: 680px) {
     .paths { grid-template-columns: 1fr; }
-    .shell { padding: 32px 16px 56px; }
+    .shell { padding: var(--size-8) var(--size-4) 56px; }
   }
 `);
 
