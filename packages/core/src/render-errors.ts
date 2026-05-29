@@ -116,9 +116,10 @@ export function renderErrorHtml(
   );
 
   // Cross-runtime environment detection
-  const _nodeProcess = (globalThis as unknown as { process?: { env?: Record<string, string | undefined> } }).process as
-    | { env?: Record<string, string | undefined> }
-    | undefined;
+  const _nodeProcess =
+    (globalThis as unknown as { process?: { env?: Record<string, string | undefined> } }).process as
+      | { env?: Record<string, string | undefined> }
+      | undefined;
   const _nodeIsDev = _nodeProcess?.env?.NODE_ENV !== 'production';
   const isDev = typeof Deno !== 'undefined'
     ? Deno.env?.get('LESSJS_ENV') !== 'production'

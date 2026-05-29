@@ -376,10 +376,11 @@ export function defineIsland<T extends CustomElementConstructor>(
         origConnected.call(this);
       }
       // Auto-bind SSR props on upgrade (idempotent - only once per element)
-      // deno-lint-ignore no-explicit-any
-      if (this.hasAttribute('data-ssr-props') && !(this as any).__bindEventsDone) {
-        // deno-lint-ignore no-explicit-any
-        (this as any).__bindEventsDone = true;
+      if (
+        this.hasAttribute('data-ssr-props') &&
+        !(this as unknown as { __bindEventsDone?: boolean }).__bindEventsDone
+      ) {
+        (this as unknown as { __bindEventsDone?: boolean }).__bindEventsDone = true;
         Promise.resolve().then(() => bindEvents(this));
       }
     } as unknown as typeof componentClass.prototype.connectedCallback;

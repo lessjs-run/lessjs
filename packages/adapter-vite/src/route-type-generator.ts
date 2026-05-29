@@ -11,6 +11,28 @@
 import type { RouteEntry } from '@lessjs/core';
 
 /**
+ * Convert a file path to a route path, preserving [param] bracket syntax.
+ * Unlike `filePathToRoutePath()` in route-scanner (which converts to `:param`
+ * for Hono/URLPattern), this preserves `[param]` to match the file-system
+ * convention that developers see in their route files.
+ *
+ * e.g., 'blog/[slug].ts' → '/blog/[slug]'
+ * e.g., 'index.ts' → '/'
+ */
+function filePathToBracketRoute(filePath: string): string {
+  let p = filePath.replace(/\.[^.]+$/, '');
+
+  if (p === 'index') return '/';
+  if (p.endsWith('/index')) {
+    p = p.slice(0, -6);
+    if (p === '') return '/';
+  }
+  if (!p.startsWith('/')) p = '/' + p;
+
+  return p;
+}
+
+/**
  * Escape a route path for use as a TypeScript property key.
  * Wraps in quotes to handle paths with special characters.
  */
@@ -78,7 +100,8 @@ export function generateRouteTypes(routes: RouteEntry[]): string {
 
   // Generate entries for each route with params
   const paramEntries = paramRoutes.map((r) => {
-    const path = escapeRoutePath(r.path);
+    const bracketPath = filePathToBracketRoute(r.filePath);
+    const path = escapeRoutePath(bracketPath);
     const type = generateParamsType(r.params!);
     return `    ${path}: ${type};`;
   });

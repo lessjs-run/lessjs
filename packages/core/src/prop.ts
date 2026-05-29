@@ -471,7 +471,9 @@ export function handleStaticPropAttributeChange(
   _oldValue: string | null,
   newValue: string | null,
 ): void {
-  const sigMap = (instance as unknown as _StaticPropSignalsAccessor)[STATIC_PROP_SIGNALS] as Map<string, PropSignal> | undefined;
+  const sigMap = (instance as unknown as _StaticPropSignalsAccessor)[STATIC_PROP_SIGNALS] as
+    | Map<string, PropSignal>
+    | undefined;
   if (!sigMap) return;
 
   const ctor = instance.constructor as unknown as _PropsCtor;
@@ -509,7 +511,9 @@ export function syncStaticPropsFromAttributes(
   const propsDef = ctor.props as Record<string, unknown> | undefined;
   if (!propsDef) return;
 
-  const sigMap = (instance as unknown as _StaticPropSignalsAccessor)[STATIC_PROP_SIGNALS] as Map<string, PropSignal> | undefined;
+  const sigMap = (instance as unknown as _StaticPropSignalsAccessor)[STATIC_PROP_SIGNALS] as
+    | Map<string, PropSignal>
+    | undefined;
   if (!sigMap) return;
 
   const el = instance as unknown as {

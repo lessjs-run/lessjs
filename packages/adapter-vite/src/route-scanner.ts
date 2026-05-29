@@ -207,9 +207,7 @@ export async function scanRoutes(
         const routeType = getRouteType(relativePath);
         // v0.25: Extract dynamic param names from [param] patterns in the path
         const paramMatches = relativePath.match(/\[([^\]]+)\]/g);
-        const params = paramMatches
-          ? paramMatches.map((m) => m.slice(1, -1))
-          : undefined;
+        const params = paramMatches ? paramMatches.map((m) => m.slice(1, -1)) : undefined;
         let tagName: string | undefined;
         if (routeType === 'page') {
           try {
