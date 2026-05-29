@@ -41,6 +41,7 @@ const LESSJS_EXPORT_FILES: Record<string, Record<string, string>> = {
     'render-errors': 'src/render-errors.ts',
     'render-instantiate': 'src/render-instantiate.ts',
     'render-serialize': 'src/render-serialize.ts',
+    'signal-context': 'src/signal-context.ts',
     'style-sheet': 'src/style-sheet.ts',
     types: 'src/types.ts',
     'validate-manifest': 'src/validate-manifest.ts',
