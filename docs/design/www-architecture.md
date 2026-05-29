@@ -96,7 +96,7 @@ lessjs.org
 ### Top Nav (headerNav)
 
 - Guide (/guide/getting-started) — tutorials
-- API (/api/reference) — API reference
+- API (/guide/reference) — API reference
 - Architecture (/architecture/architecture) — deep dives
 - Hub (/registry) — package registry
 - Blog (/blog) — blog
