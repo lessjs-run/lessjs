@@ -650,7 +650,7 @@ export class LessLayout extends DsdElement {
   private _renderLayout() {
     const home = this._getBool('full-width') || this._getBool('home');
     const noSearch = this.hasAttribute('no-search');
-    const logoText = this._esc(this._getStr('logo-text', 'LessJS'));
+    const logoText = this._esc(this._getStr('logo-text', 'LESSJS'));
     const logoSub = this._esc(this._getStr('logo-sub', ''));
     const footerText = this._getStr(
       'footer-text',
