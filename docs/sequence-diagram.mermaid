@@ -1,95 +1,62 @@
 sequenceDiagram
-    actor User
-    participant CLI as create/cli.ts
-    participant TPL as Template Builder
-    participant FS as Filesystem
-    participant Deno as deno task build
-    participant Vite as adapter-vite
-    participant Resolver as external-resolver.ts
+    title LessJS v0.26.0 — Dev:Fast 零 Bundler SSR 渲染流程
 
-    User->>CLI: deno run -A jsr:@lessjs/create my-app
-    CLI->>TPL: buildTemplates(v)
-    Note over TPL: deno.json now has ONLY: @lessjs/app, @lessjs/core, @lessjs/ui
-    CLI->>FS: write deno.json + vite.config.ts + routes/islands
-    FS-->>CLI: done
+    participant Browser as 🌐 Browser
+    participant Deno as 🦕 Deno.serve
+    participant Hono as 🔀 Hono Router
+    participant SSR as 🧩 SSR Middleware
+    participant NavData as 📋 @lessjs/content/nav
+    participant RouteModule as 📄 Route Module
+    participant RenderDSD as 🎨 render-dsd.ts
+    participant AdapterLit as 🔌 @lessjs/adapter-lit
 
-    User->>Deno: deno task build
-    Deno->>Vite: vite build (via lessjs() plugin)
-    Vite->>Resolver: resolve external deps (parse5, entities, hono)
-    Note over Resolver: ADR-0047 pre-resolution: injects sidecar import-map without consumer deno.json changes
-    Resolver-->>Vite: resolved deps
-    Vite->>FS: write dist/
-    FS-->>Deno: build success
+    Browser->>Deno: GET /docs/getting-started
+    Deno->>Hono: fetch(request)
 
----
-title: Package Boundary Repair — StyleSheet Resolution
+    alt 静态资源 (.js/.css/.svg/.png)
+        Hono->>Hono: serveStatic from public/
+        Hono-->>Browser: 文件内容 (304 Not Modified)
+    else SSR 路由
+        Hono->>SSR: 请求路径 /docs/getting-started
+        SSR->>SSR: isStaticAsset() → false
 
-sequenceDiagram
-    participant Core as @lessjs/core
-    participant SS as @lessjs/style-sheet
-    participant DSD as renderDSD()
-    participant UI as @lessjs/ui components
+        Note over SSR,NavData: SOP-001 成果：纯 ESM，零 virtual: 导入
+        SSR->>NavData: import { navTree } from '@lessjs/content/nav'
+        NavData-->>SSR: NavTree { groups, flatMap }
 
-    Note over Core,SS: Core re-exports from style-sheet
-    
-    DSD->>Core: import { StyleSheet } from '@lessjs/core'
-    Core->>SS: re-export { StyleSheet, StyleSheetLike, StyleSheetRule }
-    SS-->>Core: canonical impl (ShimStyleSheet | native CSSStyleSheet)
-    Core-->>DSD: StyleSheet constructor
-    
-    UI->>Core: import { StyleSheet } from '@lessjs/core'
-    Note over UI: Same resolution path — No duplicate implementation
+        SSR->>SSR: findNavItemInTree(navTree, path)
+        SSR->>SSR: resolveRouteModule() → modulePath
 
----
-title: adapter-vite Decomposition — Plugin Assembly
+        SSR->>RouteModule: dynamic import('www/routes/docs/getting-started.ts')
+        RouteModule-->>SSR: RouteModule { render(ctx) }
 
-sequenceDiagram
-    participant User as vite.config.ts
-    participant LP as less-plugin.ts
-    participant HI as head-injection.ts
-    participant SR as subpath-resolver.ts
-    participant OPS as optional-package-stubs.ts
-    participant PC as phase-context.ts
-    participant Vite as Vite Plugin System
+        SSR->>RouteModule: render({ path, query })
 
-    User->>LP: less(options)
-    LP->>PC: new LessBuildContext(options)
-    LP->>HI: normalizeHeadExtras(options)
-    HI-->>LP: resolvedOptions with safe headExtras
-    LP->>SR: createCoreResolvePlugin(metaUrl)
-    SR-->>LP: coreResolvePlugin
-    LP->>OPS: optionalPackageStubsPlugin()
-    OPS-->>LP: stubsPlugin
-    
-    LP->>LP: assemblePlugins(ctx)
-    Note over LP: Returns Plugin[]: [corePlugin, coreResolvePlugin, dispatchDataPlugin, stubsPlugin, virtualEntryPlugin, devServerPlugin, islandTransformPlugin, buildPlugin, devtoolsPlugin]
-    
-    LP-->>Vite: Plugin[]
-    Vite-->>User: configured vite
+        Note over RouteModule,RenderDSD: Lit SSR → DSD 渲染管线
+        RouteModule->>RenderDSD: JSX/Lit TemplateResult → HTML
+        RenderDSD->>AdapterLit: TemplateResult → string (SSR)
+        AdapterLit-->>RenderDSD: HTML with Declarative Shadow DOM
+        RenderDSD-->>RouteModule: DSD HTML string
 
----
-title: Signals Facade — Engine Swap
+        RouteModule-->>SSR: HTML string
 
-sequenceDiagram
-    participant User as user code
-    participant Facade as @lessjs/signals
-    participant Engine as SignalEngine
-    participant TC39 as Tc39Engine
-    participant Alien as AlienEngine (experiment)
+        SSR->>SSR: wrapDocument(html, { path })
+        Note over SSR: 注入 headExtras, PWA manifest, color tokens
 
-    User->>Facade: signal(0)
-    Facade->>Engine: createState(0)
-    
-    alt Default: TC39 polyfill
-        Engine->>TC39: new Signal.State(0)
-        TC39-->>Engine: state
-    else Experiment: alien-signals flag
-        Engine->>Alien: alienSignal(0)
-        Alien-->>Engine: state
+        SSR-->>Hono: 完整 HTML 文档
+        Hono-->>Deno: Response (200, text/html)
+        Deno-->>Browser: Full HTML with DSD
+
+        Note over Browser: Declarative Shadow DOM 自动升级
+        Note over Browser: Island hydration (eager/idle/visible)
+
+        Browser->>Deno: GET /islands/my-counter.js
+        Deno->>Hono: serveStatic dist/client/islands/
+        Hono-->>Browser: Island JS chunk
+        Note over Browser: customElements.define() → Island 激活
     end
-    
-    Engine-->>Facade: WritableSignal { .value, .subscribe }
-    Facade-->>User: signal instance
-    
-    User->>Facade: computed(() => signal.value * 2)
-    Note over Facade,Engine: Same flow; engine transparent
+
+    Note over Browser,AdapterLit: 零 Bundler 模式优势：
+    Note over Browser,AdapterLit: 1. 冷启动 < 1s（无 Vite 预构建）
+    Note over Browser,AdapterLit: 2. 纯 ESM import，Deno 原生模块图
+    Note over Browser,AdapterLit: 3. Source map 直接映射（无 Vite 转换层）
