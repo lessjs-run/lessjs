@@ -1,0 +1,38 @@
+/**
+ * @lessjs/core — Test utilities.
+ *
+ * v0.25.0 (SOP-009): Single re-export point for all core test imports.
+ * Tests import from './test-utils.ts' instead of '../src/xxx.ts'.
+ */
+
+// ── Core runtime ──────────────────────────────────────────────────
+export { DsdElement } from '../src/dsd-element.ts';
+export { ErrorBoundary } from '../src/error-boundary.ts';
+
+// ── JSX runtime ───────────────────────────────────────────────────
+export { Fragment, jsx, jsxDEV, jsxs } from '../src/jsx-runtime.ts';
+export { renderToDom } from '../src/jsx-render-dom.ts';
+export { renderToString } from '../src/jsx-render-string.ts';
+export { isVNode } from '../src/vnode.ts';
+export type { VNode } from '../src/vnode.ts';
+
+// ── Signals ───────────────────────────────────────────────────────
+export { isSignalLike, unwrapSignalLike } from '../src/signal-like.ts';
+export type { SignalLike } from '../src/signal-like.ts';
+
+// ── Island / SSR ──────────────────────────────────────────────────
+export { bindEvents, defineIsland, getSsrProps } from '../src/island.ts';
+export type { IslandOptions } from '../src/island.ts';
+
+// ── Rendering ─────────────────────────────────────────────────────
+export { renderDsd } from '../src/render-dsd.ts';
+export { renderDsdStream } from '../src/render-dsd-stream.ts';
+
+// ── Signal Context (v0.25) ────────────────────────────────────────
+export { consumeContext, createContext, provideContext } from '../src/signal-context.ts';
+export type { Context } from '../src/signal-context.ts';
+
+// ── Cross-package (signals, style-sheet) ───────────────────────────
+export { computed, effect, signal } from '../../signals/src/framework.ts';
+export { StyleSheet } from '../../style-sheet/src/style-sheet.ts';
+export type { StyleSheetLike } from '../../style-sheet/src/style-sheet.ts';
