@@ -124,7 +124,7 @@ export const pageStyles = `
 
   /* Code - dark theme */
   pre {
-    background: #1a1a2e;
+    background: var(--bg-terminal, #1a1a2e);
     color: #e0e0e0;
     padding: 1.25rem 1.5rem;
     border-radius: 8px;

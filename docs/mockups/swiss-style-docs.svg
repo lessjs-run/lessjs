@@ -1,0 +1,345 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="100%" height="100%">
+  <defs>
+    <!-- Styles -->
+    <style>.bg { fill: #FFFFFF; }
+      .grid-line { stroke: rgba(18, 19, 26, 0.03); stroke-width: 1; }
+      .text-primary { fill: #12131A; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+      .text-secondary { fill: #4A4D5A; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+      .text-muted { fill: #8E92A2; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+      .text-brand { fill: #5148B8; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+      .text-mono { font-family: "JetBrains Mono", "SF Mono", Consolas, monospace; }
+      
+      .border-sharp { stroke: rgba(18, 19, 26, 0.08); stroke-width: 1; }
+      .border-accent { stroke: #5148B8; stroke-width: 2; }
+      .border-active { stroke: #12131A; stroke-width: 2; }
+      
+      .sidebar-bg { fill: #F8F9FA; }
+      .code-bg { fill: #1A1A2E; }
+      .code-text { fill: #E0E0E0; font-family: "JetBrains Mono", "SF Mono", Consolas, monospace; }
+      .code-comment { fill: #6C757D; font-family: "JetBrains Mono", "SF Mono", Consolas, monospace; }
+      .code-keyword { fill: #FB7185; font-family: "JetBrains Mono", "SF Mono", Consolas, monospace; }
+      
+      .callout-bg { fill: #F8F9FA; }
+      .callout-border { stroke: #5148B8; stroke-width: 3; }</style>
+  </defs>
+
+  <!-- Background -->
+  <rect class="bg" width="1200" height="750" />
+
+  <!-- ==================== HEADER ==================== -->
+  <g transform="translate(0, 0)">
+    <rect width="1200" height="64" fill="#FFFFFF" />
+    <line x1="0" y1="64" x2="1200" y2="64" class="border-sharp" />
+
+    <!-- Logo -->
+    <text
+      x="40"
+      y="38"
+      class="text-primary"
+      font-weight="900"
+      font-size="20"
+      letter-spacing="-0.03em"
+    >LessJS</text>
+    <text x="110" y="38" class="text-muted" font-weight="500" font-size="13">docs</text>
+
+    <!-- Global Menu -->
+    <text x="240" y="37" class="text-primary" font-weight="700" font-size="13">Guide</text>
+    <text
+      x="320"
+      y="37"
+      class="text-secondary"
+      font-weight="600"
+      font-size="13"
+    >API Reference</text>
+    <text x="440" y="37" class="text-secondary" font-weight="600" font-size="13">Architecture</text>
+    <text x="560" y="37" class="text-secondary" font-weight="600" font-size="13">Registry Hub</text>
+
+    <!-- Theme Toggle (Clean SVG Moon) -->
+    <g transform="translate(1100, 24)">
+      <circle cx="12" cy="8" r="8" fill="none" stroke="#12131A" stroke-width="1.8" />
+      <path d="M12,0 A8,8 0 0,0 20,8 Z" fill="#12131A" />
+    </g>
+    <!-- Search Button Trigger (Beautified) -->
+    <g transform="translate(940, 18)">
+      <rect width="130" height="28" rx="4" fill="none" class="border-sharp" />
+      <text x="12" y="18" class="text-muted" font-size="11" font-weight="600">Search docs...</text>
+      <text x="104" y="18" class="text-muted" font-size="10" font-weight="700">⌘K</text>
+    </g>
+  </g>
+
+  <!-- ==================== LEFT SIDEBAR (Swiss Minimal List) ==================== -->
+  <g transform="translate(0, 64)">
+    <!-- Sidebar Area Background -->
+    <rect width="240" height="686" class="sidebar-bg" />
+    <line x1="240" y1="0" x2="240" y2="686" class="border-sharp" />
+
+    <!-- Navigation Items -->
+    <g transform="translate(40, 40)">
+      <!-- Section 1 -->
+      <text
+        x="0"
+        y="0"
+        class="text-muted"
+        font-weight="700"
+        font-size="10"
+        letter-spacing="0.12em"
+      >GETTING STARTED</text>
+
+      <!-- List Items -->
+      <text x="0" y="30" class="text-secondary" font-weight="600" font-size="13">Introduction</text>
+
+      <!-- Active Item with Swiss Active Line -->
+      <text x="0" y="60" class="text-brand" font-weight="700" font-size="13">Getting Started</text>
+      <line x1="-16" y1="48" x2="-16" y2="64" class="border-accent" />
+
+      <text
+        x="0"
+        y="90"
+        class="text-secondary"
+        font-weight="600"
+        font-size="13"
+      >Configuration</text>
+
+      <!-- Section 2 -->
+      <text
+        x="0"
+        y="150"
+        class="text-muted"
+        font-weight="700"
+        font-size="10"
+        letter-spacing="0.12em"
+      >CORE CONCEPTS</text>
+      <text
+        x="0"
+        y="180"
+        class="text-secondary"
+        font-weight="600"
+        font-size="13"
+      >Declarative Shadow DOM</text>
+      <text
+        x="0"
+        y="210"
+        class="text-secondary"
+        font-weight="600"
+        font-size="13"
+      >Island Hydration</text>
+      <text
+        x="0"
+        y="240"
+        class="text-secondary"
+        font-weight="600"
+        font-size="13"
+      >Signal Reactivity</text>
+
+      <!-- Section 3 -->
+      <text
+        x="0"
+        y="300"
+        class="text-muted"
+        font-weight="700"
+        font-size="10"
+        letter-spacing="0.12em"
+      >GUIDES</text>
+      <text
+        x="0"
+        y="330"
+        class="text-secondary"
+        font-weight="600"
+        font-size="13"
+      >Routing &amp; Data</text>
+      <text
+        x="0"
+        y="360"
+        class="text-secondary"
+        font-weight="600"
+        font-size="13"
+      >Server-Side Rendering</text>
+      <text x="0" y="390" class="text-secondary" font-weight="600" font-size="13">Deployment</text>
+    </g>
+  </g>
+
+  <!-- ==================== MAIN DOCUMENT CONTENT ==================== -->
+  <g transform="translate(280, 64)">
+    <!-- Container padding-top: 40, padding-left: 40 -->
+    <g transform="translate(40, 40)">
+      <!-- Breadcrumb -->
+      <text
+        x="0"
+        y="0"
+        class="text-brand"
+        font-weight="700"
+        font-size="10"
+        letter-spacing="0.1em"
+      >GUIDE / GETTING STARTED</text>
+
+      <!-- H1 Page Title -->
+      <text
+        x="0"
+        y="44"
+        class="text-primary"
+        font-weight="900"
+        font-size="42"
+        letter-spacing="-0.03em"
+      >Getting Started.</text>
+
+      <!-- Subtitle copy -->
+      <text x="0" y="80" class="text-secondary" font-size="15" line-height="1.6">
+        <tspan
+          x="0"
+          dy="0"
+        >Start building in less than a minute. LessJS is a lightweight, zero-dependency</tspan>
+        <tspan
+          x="0"
+          dy="24"
+        >DSD-first Web Components application compiler and runtime framework.</tspan>
+      </text>
+
+      <!-- H2 Section Title -->
+      <text
+        x="0"
+        y="165"
+        class="text-primary"
+        font-weight="700"
+        font-size="20"
+        letter-spacing="-0.01em"
+      >1. Scaffold a project</text>
+      <text x="0" y="192" class="text-secondary" font-size="13.5" line-height="1.5">
+        <tspan
+          x="0"
+          dy="0"
+        >Initialize your project contract using our standard Deno-first creation tool.</tspan>
+      </text>
+
+      <!-- Code block -->
+      <g transform="translate(0, 212)">
+        <rect width="600" height="84" rx="4" class="code-bg" />
+        <text
+          x="20"
+          y="32"
+          class="code-comment"
+          font-size="12"
+        ># Initialize a template project using JSR registry</text>
+        <text x="20" y="54" class="code-text" font-size="13">
+          <tspan class="code-keyword">deno</tspan> run -A jsr:@lessjs/create my-app
+        </text>
+      </g>
+
+      <!-- H2 Section Title 2 -->
+      <text
+        x="0"
+        y="340"
+        class="text-primary"
+        font-weight="700"
+        font-size="20"
+        letter-spacing="-0.01em"
+      >2. Directory Structure</text>
+      <text x="0" y="367" class="text-secondary" font-size="13.5" line-height="1.5">
+        <tspan
+          x="0"
+          dy="0"
+        >The generated project maintains an incredibly small footprint of five key parts:</tspan>
+      </text>
+
+      <!-- Callout (Swiss Minimal: left thick border, very clean background) -->
+      <g transform="translate(0, 395)">
+        <rect width="600" height="74" rx="2" class="callout-bg" />
+        <line x1="0" y1="0" x2="0" y2="74" class="callout-border" />
+
+        <text
+          x="20"
+          y="26"
+          class="text-primary"
+          font-weight="700"
+          font-size="12.5"
+        >DENO 2.7+ REQUIREMENT</text>
+        <text x="20" y="48" class="text-secondary" font-size="12">
+          LessJS is Deno-first. Dependencies are managed via your local <tspan
+            class="text-mono"
+            font-weight="600"
+          >deno.json</tspan> import map.
+        </text>
+      </g>
+
+      <!-- Bottom Nav Row -->
+      <g transform="translate(0, 520)">
+        <line x1="0" y1="0" x2="600" y2="0" class="border-sharp" />
+
+        <!-- Left Link -->
+        <text x="0" y="32" class="text-muted" font-size="11" font-weight="600">PREVIOUS</text>
+        <text
+          x="0"
+          y="52"
+          class="text-secondary"
+          font-weight="700"
+          font-size="13"
+        >← Introduction</text>
+
+        <!-- Right Link -->
+        <text
+          x="600"
+          y="32"
+          class="text-muted"
+          font-size="11"
+          font-weight="600"
+          text-anchor="end"
+        >NEXT SECTION</text>
+        <text
+          x="600"
+          y="52"
+          class="text-brand"
+          font-weight="700"
+          font-size="13"
+          text-anchor="end"
+        >Core Concepts →</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ==================== RIGHT TABLE OF CONTENTS (TOC - Floating Anchor) ==================== -->
+  <g transform="translate(960, 64)">
+    <line x1="0" y1="0" x2="0" y2="686" class="border-sharp" />
+
+    <g transform="translate(24, 40)">
+      <text
+        x="0"
+        y="0"
+        class="text-primary"
+        font-weight="700"
+        font-size="11"
+        letter-spacing="0.1em"
+      >ON THIS PAGE</text>
+
+      <!-- TOC Items -->
+      <text
+        x="0"
+        y="32"
+        class="text-brand"
+        font-weight="700"
+        font-size="12.5"
+      >1. Scaffold a project</text>
+      <line x1="-24" y1="21" x2="-24" y2="35" class="border-accent" />
+
+      <text
+        x="0"
+        y="62"
+        class="text-secondary"
+        font-weight="500"
+        font-size="12.5"
+      >2. Directory Structure</text>
+      <text
+        x="0"
+        y="92"
+        class="text-secondary"
+        font-weight="500"
+        font-size="12.5"
+      >3. Component Anatomy</text>
+      <text
+        x="0"
+        y="122"
+        class="text-secondary"
+        font-weight="500"
+        font-size="12.5"
+      >4. Build production static</text>
+    </g>
+  </g>
+</svg>

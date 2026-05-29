@@ -19,13 +19,37 @@ const rootCSS = _rawCSS
     'html[data-theme="dark"], :host([data-theme="dark"]) {',
   );
 const darkCSS = `
-[data-theme="dark"] body {
-  background: #030507;
-  color: #e9ecef;
+:root,
+html[data-theme="dark"],
+:host([data-theme="dark"]),
+:root[data-theme="dark"] {
+  --bg-obsidian: #040508;
+  --bg-panel: #090B11;
+  --bg-terminal: #010204;
+  --bg-surface: #090B11;
+  --bg-code: #010204;
+  --text-primary: #FFFFFF;
+  --text-secondary: #8E92A2;
+  --text-muted: #515466;
+  --brand-neon: #7C6FF5;
+  --brand-glow: rgba(124, 111, 245, 0.16);
+  --cyber-green: #00FF87;
+  --cyber-green-glow: rgba(0, 255, 135, 0.12);
+  --laser-cyan: #60EFFF;
+  --border: rgba(124, 111, 245, 0.16);
+  --border-futuristic: rgba(124, 111, 245, 0.16);
+  --border-bright: rgba(124, 111, 245, 0.4);
+  --gray-0: #040508;
+  --gray-1: #090B11;
+  --gray-9: #FFFFFF;
 }
-[data-theme="dark"] ::selection {
+body {
+  background: var(--bg-obsidian, #040508);
+  color: var(--text-primary, #FFFFFF);
+}
+::selection {
   background: rgba(124,111,245,0.3);
-  color: #f1f3f5;
+  color: #FFFFFF;
 }`;
 const colorTokensStyle =
   `<style>${rootCSS}body{margin:0;background:var(--gray-1);color:var(--gray-9);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}${darkCSS}</style>`;
@@ -64,8 +88,8 @@ export default defineConfig({
       pwa: {
         name: 'LessJS Framework - Less is More',
         shortName: 'LessJS',
-        themeColor: '#000000',
-        backgroundColor: '#ffffff',
+        themeColor: '#040508',
+        backgroundColor: '#040508',
       },
       viewTransition: true,
       speculation: true,
@@ -136,11 +160,11 @@ export default defineConfig({
           '<meta property="og:site_name" content="LessJS">',
           '<meta property="og:type" content="website">',
           '<meta property="og:title" content="LessJS - Less is More">',
-          '<meta property="og:description" content="DSD-first Web Standards framework. Zero-runtime core, SSG + Island architecture, Lit Web Components, Hono API routes.">',
-          '<meta property="og:url" content="https://lessjs.org">',
+          '<meta property="og:description" content="DSD-first Web Standards framework. Zero-runtime core, SSG + Island architecture, microsecond Signal reactivity.">',
+          '<meta property="og:url" content="https://lessjs.com">',
           '<meta property="og:image" content="https://lessjs.org/assets/og-image.svg">',
           '<meta name="twitter:card" content="summary_large_image">',
-          '<meta name="description" content="LessJS - Less is More. Web Standards-first Jamstack SSG with Island architecture. Zero-runtime core, DSD rendering, Lit Web Components, Hono API routes.">',
+          '<meta name="description" content="LessJS — Less is More. DSD-first Web Standards framework. Zero-runtime core, SSG + Island architecture, microsecond Signal reactivity.">',
           '<style id="less-anti-flash">html{visibility:hidden}</style>',
           '<link rel="icon" type="image/svg+xml" href="/assets/less-logo.svg" />',
           '<link rel="apple-touch-icon" href="/assets/less-logo.svg" />',
@@ -165,7 +189,7 @@ export default defineConfig({
           ],
         },
         sitemap: {
-          hostname: 'https://lessjs.org',
+          hostname: 'https://lessjs.com',
         },
       },
       i18n: {
