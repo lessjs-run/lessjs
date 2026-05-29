@@ -156,7 +156,7 @@ export default defineConfig({
           routesDir: 'app/routes',
           headerNav: [
             { href: '/guide/getting-started', label: 'Guide' },
-            { href: '/guide/reference', label: 'API' },
+            { href: '/guide/apilist', label: 'API' },
             { href: '/architecture/architecture', label: 'Architecture' },
             { href: '/registry', label: 'Hub' },
             { href: '/blog', label: 'Blog' },
