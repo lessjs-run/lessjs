@@ -1,9 +1,10 @@
-# LessJS v0.24.4 — Declarative Architecture & Type-Safe Routes
+# LessJS v0.25.0 — Declarative Architecture & Type-Safe Routes
 
 > **Status**: PLANNED\
-> **Target version**: v0.24.4\
+> **Target version**: v0.25.0 (原 v0.24.4 → scope 合并为 minor)\
 > **Release theme**: 将构建管线从脚本式转为声明式，引入类型安全路由参数\
-> **Depends on**: v0.24.3 (consolidation complete, all gates green)
+> **Depends on**: v0.24.3 (consolidation complete, all gates green)\
+> **See also**: `docs/conversation/20260629/v0.25.0-0.26.0-declarative-reactive-roadmap.md`
 
 ---
 
