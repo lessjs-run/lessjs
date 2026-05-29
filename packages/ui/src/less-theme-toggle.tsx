@@ -81,6 +81,7 @@ export class LessThemeToggle extends DsdElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
+    this._initTheme();
   }
 
   /**
@@ -144,8 +145,7 @@ export class LessThemeToggle extends DsdElement {
 
   protected override onCsrRendered(): void {
     super.onCsrRendered();
-    this._initTheme();
-    // v0.26: signal change auto-triggers re-render
+    // NO _initTheme() here — causes signal→effect→onCsrRendered→initTheme loop
   }
 
   override render(): ReturnType<typeof DsdElement.prototype.render> {
