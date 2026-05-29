@@ -380,7 +380,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     await viteBuild({
       configFile: false,
       root,
-      logLevel: 'warn',
+      logLevel: 'error',
       build: {
         ssr: true,
         outDir: ssrOutDir,
