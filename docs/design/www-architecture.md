@@ -119,17 +119,12 @@ export default class PageName extends DsdElement { ... }
 export const tagName = 'page-name';
 ```
 
-## Section Renderers
+### Edit URL
 
-Each section has `_renderer.ts`:
+`less-layout` auto-computes GitHub edit URL from `current-path` attribute.
+No external `_renderer.ts` or `section-renderer.ts` needed (removed in v0.26).
 
-```ts
-export default createSectionRenderer('section-name');
-```
-
-Used by SSG to inject edit-url and section-specific layout.
-
-## Anti-Patterns
+### Anti-Patterns
 
 - ❌ No internal developer docs in www/ (belongs in docs/adr/, docs/sop/)
 - ❌ No duplicate content across sections
