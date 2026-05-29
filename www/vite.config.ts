@@ -47,6 +47,45 @@ body {
   background: var(--bg-obsidian, #040508);
   color: var(--text-primary, #FFFFFF);
 }
+
+/* Light mode override — theme toggle adds [data-theme="light"] to html */
+[data-theme="light"] {
+  --bg-obsidian: #f6f7f9;
+  --bg-panel: #ffffff;
+  --bg-terminal: #f1f3f5;
+  --bg-surface: #ffffff;
+  --text-primary: #12131a;
+  --text-secondary: #626676;
+  --text-muted: #8E92A2;
+  --brand-neon: #5148b8;
+  --brand-glow: rgba(81,72,184,0.08);
+  --cyber-green: #13795b;
+  --laser-cyan: #1769aa;
+  --border: rgba(18,19,26,0.12);
+  --border-futuristic: rgba(18,19,26,0.12);
+  --border-bright: rgba(81,72,184,0.3);
+  --gray-0: #f6f7f9;
+  --gray-1: #ffffff;
+  --gray-9: #12131a;
+}
+[data-theme="light"] body {
+  background: var(--bg-obsidian, #f6f7f9);
+}
+[data-theme="light"] .app-header {
+  background: rgba(255,255,255,0.88);
+}
+[data-theme="light"] .app-footer {
+  border-top-color: rgba(18,19,26,0.12);
+}
+[data-theme="light"] .docs-sidebar {
+  border-right-color: rgba(18,19,26,0.12);
+}
+[data-theme="light"] .header-nav a {
+  color: #626676;
+}
+[data-theme="light"] .header-nav a:hover {
+  color: #12131a;
+}
 ::selection {
   background: rgba(124,111,245,0.3);
   color: #FFFFFF;
