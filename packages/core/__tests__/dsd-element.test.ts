@@ -7,7 +7,7 @@
  * and delegatesFocus.
  */
 
-import { assertEquals, assertExists, assertFalse, assertStrictEquals } from 'jsr:@std/assert@1';
+import { assertEquals, assertExists, assertStrictEquals } from 'jsr:@std/assert@1';
 import { DsdElement } from '../src/dsd-element.js';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 
