@@ -36,15 +36,15 @@ Other frameworks have "bare HTML" oceans. LessJS has "encapsulated Web Component
 
 ## Current State
 
-Project line: **v0.25.0 Declarative DX** — `lessPipeline()` entry, route types, SSG DSD restored, `less()` removed, 14 SOPs delivered.
+Project line: **v0.26.0 Framework Decoupling** — virtual modules removed from routes, island transform extracted, `dev:fast` zero-bundler, SSG robust.
 
-### v0.25.0 Key Changes
+### v0.26.0 Key Changes
 
-- **`lessPipeline()` declarative API** — single build entry replacing scripted 3-phase build
-- **Route type generation** — `.less/routes.d.ts` auto-generated from `[param]` patterns
-- **`static head` / `static client`** — type declarations on DsdElement
-- **`less()` removed** — zero backward compat, `lessPipeline()` is the only entry
-- **SSG DSD restored** — tagName detection fixed (regex source scan), smoke test always rebuilds
+- **Virtual modules removed** — 60 route files use `@lessjs/content/nav` instead of `virtual:less-nav`
+- **Island transform extracted** — `transformIslandSource()` in `@lessjs/core`, Vite plugin 69→36 lines
+- **`dev:fast` zero-bundler** — `deno serve` + Hono, ~100ms cold start, no Vite dependency
+- **SSG robustness** — adapter stubs use real class exports, react-showcase island guarded
+- **Data pipeline** — `_generated-*.ts` files written at build time, framework-owned exports
 - **SignalContext** (P2 conditional) — DOM-tree-based `createContext`/`provideContext`/`consumeContext`
 - **CSS token convergence** — 20→2 `openPropsTokenSheet` imports
 - **`as any` hardening** — 21→0 in core/src
@@ -53,10 +53,10 @@ Project line: **v0.25.0 Declarative DX** — `lessPipeline()` entry, route types
 
 ### Roadmap
 
-| Version | Theme                                                                  | Status     |
-| ------- | ---------------------------------------------------------------------- | ---------- |
-| v0.25.0 | Declarative DX (14 SOPs: pipeline, types, guards, cleanup, fixup)      | ✅ Current |
-| v0.26.0 | Reactive Pragmatic + Decoupling (`params`, `keep-alive`, zero virtual) | 📋 Planned |
+| Version | Theme                                                             | Status     |
+| ------- | ----------------------------------------------------------------- | ---------- |
+| v0.25.0 | Declarative DX (14 SOPs: pipeline, types, guards, cleanup, fixup) | ✅ Done    |
+| v0.26.0 | Framework Decoupling (virtual removal, dev:fast, SSG robustness)  | ✅ Current |
 
 See [ROADMAP.md](docs/roadmap/ROADMAP.md) for details.
 
@@ -173,7 +173,7 @@ Every component should reach one deterministic outcome:
 | v0.15-v0.22 | Renderer Kernel → Architecture Integrity                      | Done        |
 | v0.23       | Layered Package Architecture                                  | Done        |
 | v0.24       | Consolidation — JSX+Signal, TemplateResult removal, hardening | Done        |
-| v0.25       | Declarative DX — 14 SOPs: pipeline, types, guards, cleanup    | **Current** |
+| v0.26       | Framework Decoupling — virtual removal, dev:fast, SSG fixes   | **Current** |
 | v1.0        | Stable Engine contracts                                       | Vision      |
 
 See [ADR docs](docs/adr/), [SOP docs](docs/sop/), and
