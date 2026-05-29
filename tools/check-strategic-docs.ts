@@ -13,7 +13,7 @@ type Failure = {
 
 const publicDocs = [
   'README.md',
-  'README.en.md',
+  'README.zh.md',
   'docs/roadmap/ROADMAP.md',
   'docs/status/STATUS.md',
   'docs/changelog/README.md',
@@ -30,7 +30,7 @@ const publicDocs = [
 
 const currentDocs = [
   'README.md',
-  'README.en.md',
+  'README.zh.md',
   'docs/roadmap/ROADMAP.md',
   'docs/status/STATUS.md',
   'www/app/routes/index/index.ts',
@@ -53,7 +53,7 @@ const checks: Check[] = [
     name: 'v0.22 is the next framework credibility line',
     files: [
       'README.md',
-      'README.en.md',
+      'README.zh.md',
       'docs/roadmap/ROADMAP.md',
       'docs/status/STATUS.md',
       'www/app/routes/roadmap.ts',

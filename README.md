@@ -1,97 +1,102 @@
 # LessJS
 
-简体中文 | [English](./README.en.md)
+English | [简体中文](./README.zh.md)
 
-**DSD-first Web Components 应用框架** - LessJS 把标准优先的 DSD 渲染引擎、渐进式
-Island、Hono API Route 和早期 Registry Hub 组合在一起，让 Web Components 成为一等公民。
+**DSD-first Web Components application framework** — LessJS combines a
+standards-first DSD rendering engine, progressive islands, Hono API routes, and
+an early Registry Hub, making Web Components first-class citizens.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
 [![JSR](https://img.shields.io/badge/JSR-published-blue)](https://jsr.io/@lessjs/core)
 [![@lessjs/core](https://img.shields.io/badge/jsr-v0.24.3-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
 
-## 海洋-岛屿架构
+## Ocean-Island Architecture
 
 ```
 ┌──────────────────────────────────────────┐
-│               海洋（~80%）                 │
-│   DSD 组件 → SSR 渲染 Shadow DOM          │
-│   → 浏览器原生解析，零 JS 可见            │
-│   → DsdElement 水合：只绑事件，不动 DOM  │
-│   → 框架无关，纯原生 HTMLElement           │
+│              Ocean (~80%)                 │
+│   DSD components → SSR rendered          │
+│   → browser-native parsing, zero JS      │
+│   → DsdElement: bind events, never DOM   │
+│   → framework-agnostic, pure HTMLElement  │
 │                                            │
 │   ┌──────────────────────────────────┐    │
-│   │         岛屿（~20%）              │    │
-│   │  Pure Island → 客户端渲染         │    │
-│   │  → 需要 reactivity                │    │
-│   │  → 按需选框架: Lit/FAST/Preact   │    │
-│   │  → 策略: eager/lazy/visible/idle │    │
+│   │         Islands (~20%)           │    │
+│   │  Pure Island → client rendered   │    │
+│   │  → needs reactivity              │    │
+│   │  → pick by need: Lit/React/...   │    │
+│   │  → strategies: load/idle/visible │    │
 │   └──────────────────────────────────┘    │
 └──────────────────────────────────────────┘
 ```
 
-**核心理念**：海洋不需要 reactivity（DOM 已在 SSR 中渲染完毕），岛屿才需要。别的框架海洋是"裸 HTML"，LessJS 的海洋是"封装好的 Web Components"。
+**Core idea**: the ocean doesn't need reactivity (DOM is already rendered in SSR), islands do.
+Other frameworks have "bare HTML" oceans. LessJS has "encapsulated Web Components" oceans.
 
-## 当前状态
+## Current State
 
-项目线：**v0.24.3 Consolidation** — 全 gate 绿色，架构硬化完成。
+Project line: **v0.24.3 Consolidation** — all gates green, architecture hardened.
 
-### v0.24.x 核心变更
+### v0.24.x Key Changes
 
-- **JSX + Signal 组件模型** — `render(): string | VNode`，Signal 通过 `effect()` 驱动响应式
-- **`static props` 声明式属性** — ES2022 class fields，零编译器开关
-- **TemplateResult 完全移除** — 旧 `html` template DSL、`@prop()` decorator 不复存在
-- **跨包类型去重** — 12 个类型统一到 `@lessjs/core` 单一权威来源
-- **全新文档** — JSX 组件指南、static props 指南、Signal 响应式指南、迁移指南
-- **渲染器硬化** — Signal 在属性和 style 中自动解包，SVG namespace 支持
-- **架构文档冻结** — `docs/arch/current-architecture.md` + `docs/reference/core-api-surface.md`
+- **JSX + Signal component model** — `render(): string | VNode`, Signal-driven via `effect()`
+- **`static props`** — ES2022 class fields, zero compiler flags
+- **TemplateResult fully removed** — old `html` template DSL and `@prop()` are gone
+- **Cross-package type dedup** — 12 types canonicalized at `@lessjs/core`
+- **New docs** — JSX components guide, static props guide, Signal reactivity guide, migration guide
+- **Renderer hardening** — Signal auto-unwrap in attrs/style, SVG namespace support
+- **Architecture docs frozen** — `docs/arch/current-architecture.md` + `docs/reference/core-api-surface.md`
 
-### 注意
+### Note
 
-> v0.24.3 起，JSX + `static props` + Signal 是唯一支持的组件编写模型。
-> `render()` 返回 `string | VNode`。TemplateResult 已不复存在。
+> As of v0.24.3, JSX + `static props` + Signal is the only supported component model.
+> `render()` returns `string | VNode`. TemplateResult no longer exists.
+>
+> Previous v0.21 (Reactive DSD) and v0.22 (Architecture Integrity) lines are complete. See [CHANGELOG.md](./CHANGELOG.md).
 
-## 三个产品支柱
+## Three Product Pillars
 
 ```text
 LessJS
 |
-+-- 1. 应用框架
-|   +-- 文件约定路由
-|   +-- Hono API Route
-|   +-- Vite dev server 与 SSG build
-|   +-- 面向 serverless 的部署模型
++-- 1. Application framework
+|   +-- file-convention routes
+|   +-- Hono API routes
+|   +-- Vite dev server and SSG build
+|   +-- serverless-oriented deployment model
 |
-+-- 2. DSD/WC 渲染引擎
-|   +-- DsdElement, renderDSD(), StyleSheet
-|   +-- Declarative Shadow DOM 输出
-|   +-- Lit / React / Vanilla 适配器
-|   +-- 兼容性准入与 dsd-report.json
++-- 2. DSD/WC rendering engine
+|   +-- DsdElement, renderDSD(), JSX runtime
+|   +-- Declarative Shadow DOM output
+|   +-- Lit / React / Vanilla adapters
+|   +-- compatibility admission and dsd-report.json
 |
 +-- 3. Registry Hub
-    +-- 包发现
-    +-- 兼容性报告与快照
-    +-- validation-gated less add workflow
+    +-- package discovery
+    +-- compatibility reports and snapshots
+    +-- validation-gated `less add` workflow
 ```
 
-## 已发布能力
+## What Is Shipped
 
-- **DSD-first 渲染** - SSR-capable 组件输出 `<template shadowrootmode="open">`。
-- **DsdElement** - 零依赖 `HTMLElement` 基类，用于 DSD-native Web Components。
-- **SSR-safe StyleSheet** - 浏览器与 Deno/Node 构建都可用的样式表抽象。
-- **Ocean-Island UI 模型** - 大部分 UI 是 DSD-native ocean 组件，复杂交互保留在 island。
-- **Hono API Route** - 基础 API route 已接入应用路由树。
-- **Registry evidence pipeline** - Hub record、包验证、快照、`less add` 已形成早期基础设施。
-- **发布门禁** - fmt、lint、typecheck、test、build、e2e、audit、Hub 验证和 DSD report gate。
+- **DSD-first rendering** — SSR-capable components output `<template shadowrootmode="open">`.
+- **DsdElement** — zero-dependency `HTMLElement` base for DSD-native Web Components.
+- **SSR-safe StyleSheet** — cross-environment stylesheet abstraction for Deno/Node builds.
+- **Ocean-Island UI model** — most UI is DSD-native ocean; complex interactions stay in islands.
+- **Hydration strategies** — `client:load/idle/visible/only`.
+- **Hono API routes** — basic API routes integrated into the app route tree.
+- **Registry evidence pipeline** — Hub records, package validation, snapshots, `less add`.
+- **Release gates** — fmt, lint, typecheck, test, build, dsd-report, graph, docs-staleness.
 
-## 下一步
+## What Is Next
 
-- **声明式构建管线** — v0.24.4: 三阶段硬编码 → 声明式 BuildPipeline API
-- **类型安全路由参数** — v0.24.4: 构建时生成路由类型文件
-- **Edge Full-Stack** — ISR handler、KV adapters 和部署指南
-- **Hub 增长** — 更多真实 Web Component 包和更清晰的兼容性 badge
+- **Declarative build pipeline** — v0.24.4: three-phase hardcoded → declarative BuildPipeline API
+- **Type-safe route parameters** — v0.24.4: build-time route type generation
+- **Edge Full-Stack** — ISR handler, KV adapters, deployment guides
+- **Hub growth** — more real WC packages and clearer compatibility badges
 
-## 快速开始
+## Quick Start
 
 ```bash
 deno run -A jsr:@lessjs/create my-app
@@ -100,30 +105,30 @@ deno task dev
 deno task build
 ```
 
-要求：Deno 2.7+，以及支持 Declarative Shadow DOM 的现代浏览器。
+Requirements: Deno 2.7+ and a modern browser with Declarative Shadow DOM support.
 
-## 包
+## Packages
 
-| Package                   | 职责                                                                               |
+| Package                   | Role                                                                               |
 | ------------------------- | ---------------------------------------------------------------------------------- |
-| `@lessjs/core`            | DSD renderer、DsdElement、JSX runtime、islands、navigation、logger、error boundary |
-| `@lessjs/adapter-vite`    | Vite 编排、路由扫描、SSG 管线、island entry 生成                                   |
-| `@lessjs/adapter-lit`     | Lit adapter，主要保留给 island 和兼容路径                                          |
+| `@lessjs/core`            | DSD renderer, DsdElement, JSX runtime, islands, navigation, logger, error boundary |
+| `@lessjs/adapter-vite`    | Vite orchestration, route scanning, SSG pipeline, island entry generation          |
+| `@lessjs/adapter-lit`     | Lit adapter, retained mainly for island and compatibility paths                    |
 | `@lessjs/adapter-react`   | React adapter                                                                      |
 | `@lessjs/adapter-vanilla` | Vanilla Web Component adapter                                                      |
-| `@lessjs/app`             | 统一入口 `lessjs()`                                                                |
-| `@lessjs/content`         | Blog、nav、sitemap 构建插件                                                        |
-| `@lessjs/i18n`            | Locale 展开与路由辅助                                                              |
-| `@lessjs/ui`              | DSD-native Web Components 与 island 示例                                           |
-| `@lessjs/signals`         | Signals helpers 与 island effects                                                  |
-| `@lessjs/compat-check`    | SSR 兼容性分类器（独立可用）                                                       |
-| `@lessjs/cem`             | Custom Elements Manifest 解析器（独立可用）                                        |
-| `@lessjs/style-sheet`     | 跨环境 CSSStyleSheet 抽象（独立可用）                                              |
+| `@lessjs/app`             | Unified entry `lessjs()`                                                           |
+| `@lessjs/content`         | Blog, nav, and sitemap build plugins                                               |
+| `@lessjs/i18n`            | Locale expansion and route helpers                                                 |
+| `@lessjs/ui`              | DSD-native Web Components and island examples                                      |
+| `@lessjs/signals`         | Signal facade over `alien-signals`                                                 |
+| `@lessjs/compat-check`    | SSR compatibility classifier (standalone)                                          |
+| `@lessjs/cem`             | Custom Elements Manifest parser (standalone)                                       |
+| `@lessjs/style-sheet`     | Cross-environment CSSStyleSheet abstraction (standalone)                           |
 | `@lessjs/rpc`             | Fetch-based RPC controller                                                         |
-| `@lessjs/hub`             | Registry Hub schema、indexer、scanner、validator、snapshots                        |
-| `@lessjs/create`          | 项目脚手架 CLI                                                                     |
+| `@lessjs/hub`             | Registry Hub schema, indexer, scanner, validator, snapshots                        |
+| `@lessjs/create`          | Project scaffold CLI                                                               |
 
-## 渲染时机无关
+## Rendering Pipeline
 
 ```text
 route component
@@ -134,41 +139,35 @@ route component
   -> @click binding / island runtime only where needed
 ```
 
-| Mode | 状态   | 渲染时机      | 服务器要求                |
-| ---- | ------ | ------------- | ------------------------- |
-| SSG  | 已发布 | build time    | 构建后不需要              |
-| ISR  | v0.24+ | cache expiry  | edge/serverless function  |
-| SSR  | 后续   | every request | always-on request runtime |
+| Mode | State   | When          | Server requirement |
+| ---- | ------- | ------------- | ------------------ |
+| SSG  | shipped | build time    | none after build   |
+| ISR  | v0.24+  | cache expiry  | edge/serverless    |
+| SSR  | later   | every request | always-on runtime  |
 
-## 兼容性边界
+## Compatibility Boundary
 
-LessJS 不承诺任意 Web Component 都能自动 SSR。每个组件应该得到一个确定结果：
+LessJS does not promise universal automatic SSR for arbitrary Web Components.
+Every component should reach one deterministic outcome:
 
-- 通过声明 adapter 或验证过的包契约进入 SSR/SSG
-- 需要浏览器 API 时降级为 client-only
-- metadata 无效或不安全时在生成构建产物前拒绝
+- SSR/SSG through a declared adapter or validated package contract
+- client-only fallback when browser APIs are required
+- rejection before build output when metadata is invalid or unsafe
 
-## 路线图
+## Roadmap
 
-| 版本  | 目标                                                          | 状态        |
-| ----- | ------------------------------------------------------------- | ----------- |
-| v0.15 | Renderer Kernel Protocol                                      | Done        |
-| v0.16 | WC Package Protocol                                           | Done        |
-| v0.17 | Ecosystem Entry + SSR Boundary                                | Done        |
-| v0.18 | Universal WC Engine                                           | Done        |
-| v0.19 | Registry Hub + Component Browser                              | Done        |
-| v0.20 | Ocean-Island Architecture + DSD-native UI                     | Done        |
-| v0.21 | Reactive DSD + Hardening — Core API / DSD / Adapter / Hub     | Done        |
-| v0.22 | Architecture Integrity — boundaries / imports / gates         | Done        |
-| v0.23 | Layered Package Architecture                                  | Done        |
-| v0.24 | Consolidation — JSX+Signal, TemplateResult removal, hardening | **Current** |
-| v0.25 | Ecosystem Hardening                                           | Planned     |
-| v1.0  | Stable Engine contracts                                       | Vision      |
+| Version     | Target                                                        | Status      |
+| ----------- | ------------------------------------------------------------- | ----------- |
+| v0.15-v0.22 | Renderer Kernel → Architecture Integrity                      | Done        |
+| v0.23       | Layered Package Architecture                                  | Done        |
+| v0.24       | Consolidation — JSX+Signal, TemplateResult removal, hardening | **Current** |
+| v0.25       | Ecosystem Hardening                                           | Planned     |
+| v1.0        | Stable Engine contracts                                       | Vision      |
 
-详见 [ADR docs](docs/adr/)、[SOP docs](docs/sop/) 和
-[Roadmap](docs/roadmap/ROADMAP.md)。
+See [ADR docs](docs/adr/), [SOP docs](docs/sop/), and
+[Roadmap](docs/roadmap/ROADMAP.md).
 
-## 治理文档
+## Governance Docs
 
 ```text
 docs/
@@ -179,9 +178,9 @@ docs/
 +-- roadmap/    version planning
 ```
 
-## 贡献
+## Contributing
 
-参见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License
 
