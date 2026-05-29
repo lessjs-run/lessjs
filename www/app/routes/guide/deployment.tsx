@@ -130,16 +130,16 @@ export class DeploymentPage extends DsdElement {
             LessJS 支持 Progressive Web App。在 <code>public/</code> 目录放置 manifest 和 service worker，
             构建时会自动复制到输出目录。配置 CSP meta 和 view transition 元数据可通过 Vite 插件自动注入。
           </p>
-          <less-code-block><pre><code>// vite.config.ts
+<![CDATA[<less-code-block><pre><code>{`// vite.config.ts
 import { lessjs } from '@lessjs/app';
 
-export default {
-  plugins: [lessjs({'{'}
+export default defineConfig({
+  plugins: [lessjs({
     pwa: {
       injectManifest: true,
     },
   })],
-};</code></pre></less-code-block>
+});`}</code></pre></less-code-block>]]>
 
           <h2>Deployment Checklist</h2>
           <ul>
@@ -225,16 +225,16 @@ export default {
             <code>public/</code> directory — they're automatically copied to the output during build.
             CSP meta and view transition metadata can be auto-injected via the Vite plugin.
           </p>
-          <less-code-block><pre><code>// vite.config.ts
+<![CDATA[<less-code-block><pre><code>{`// vite.config.ts
 import { lessjs } from '@lessjs/app';
 
-export default {
-  plugins: [lessjs({'{'}
+export default defineConfig({
+  plugins: [lessjs({
     pwa: {
       injectManifest: true,
     },
   })],
-};</code></pre></less-code-block>
+});`}</code></pre></less-code-block>]]>
 
           <h2>Deployment Checklist</h2>
           <ul>
