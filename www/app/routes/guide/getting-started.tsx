@@ -27,6 +27,21 @@ routeSheet.replaceSync(`
         margin: 1rem 0;
       }
 
+      .nav-row {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 0.5px solid var(--border);
+        display: flex;
+        justify-content: flex-end;
+      }
+      .nav-link {
+        color: var(--brand);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.875rem;
+      }
+      .nav-link:hover { text-decoration: underline; }
+
       .note p {
         margin: 0;
       }

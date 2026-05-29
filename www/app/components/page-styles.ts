@@ -313,4 +313,20 @@ export const pageStyles = `
       transition: none;
     }
   }
+
+  /* v0.26: Bottom navigation links */
+  .nav-row {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 0.5px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+  }
+  .nav-link {
+    color: var(--brand);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+  .nav-link:hover { text-decoration: underline; }
 `;
