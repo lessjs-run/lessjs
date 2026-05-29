@@ -34,6 +34,7 @@ export const OPTIONAL_PACKAGE_STUBS: Record<string, string> = {
     'export function installReactAdapter() {}',
     'export function uninstallReactAdapter() {}',
     'export const DsdReactElement = undefined;',
+    'export const WithDsdHydration = undefined;',
     'export function renderReactToString() { return ""; }',
     'export function isReactElement() { return false; }',
   ].join('\n'),
