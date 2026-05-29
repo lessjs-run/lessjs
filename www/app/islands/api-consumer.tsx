@@ -234,7 +234,7 @@ export default class ApiConsumer extends DsdElement {
 
         {this.#apiError && <div class='pre-box' style='color:var(--error)'>{this.#apiError}</div>}
 
-        <button class='btn' onClick={() => this._fetchStatus()} disabled={this.#apiLoading}>
+        <button type='button' class='btn' onClick={() => this._fetchStatus()} disabled={this.#apiLoading}>
           ⟳ Refresh
         </button>
 
@@ -254,7 +254,7 @@ export default class ApiConsumer extends DsdElement {
             onInput={(e: Event) => this._onInput(e)}
             onKeyDown={(e: KeyboardEvent) => this._onKey(e)}
           />
-          <button
+          <button type='button' class='btn primary' onClick={() => this._sayHello()}
             class='btn primary'
             onClick={() => this._sayHello()}
             disabled={this.#helloLoading || !this.#name.trim()}
