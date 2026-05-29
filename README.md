@@ -9,11 +9,7 @@ an early Registry Hub, making Web Components first-class citizens.
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
 [![JSR](https://img.shields.io/badge/JSR-published-blue)](https://jsr.io/@lessjs/core)
-<<<<<<< HEAD
-[![@lessjs/core](https://img.shields.io/badge/jsr-v0.24.4-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
-=======
 [![@lessjs/core](https://img.shields.io/badge/jsr-v0.25.0-blue?label=@lessjs/core)](https://jsr.io/@lessjs/core)
->>>>>>> dev
 
 ## Ocean-Island Architecture
 
@@ -40,31 +36,10 @@ Other frameworks have "bare HTML" oceans. LessJS has "encapsulated Web Component
 
 ## Current State
 
-<<<<<<< HEAD
-Project line: **v0.24.4 API Naming Consolidation** — all gates green, API unified to Web Platform style.
-=======
 Project line: **v0.25.0 Declarative DX** — `lessPipeline()` entry, route types, SSG DSD restored, `less()` removed, 14 SOPs delivered.
->>>>>>> dev
 
 ### v0.25.0 Key Changes
 
-<<<<<<< HEAD
-- **JSX + Signal component model** — `render(): string | VNode`, Signal-driven via `effect()`
-- **`static props`** — ES2022 class fields, zero compiler flags
-- **TemplateResult fully removed** — old `html` template DSL and `@prop()` are gone
-- **API naming unified** — `defineIsland()`, `bindEvents()`, `renderDsd()`, `renderToDom()`, `getSsrProps()`
-- **New docs** — JSX components guide, static props guide, Signal reactivity guide, migration guide
-- **Renderer hardening** — Signal auto-unwrap in attrs/style, SVG namespace, exponential backoff highlighting
-- **100+ files renamed** — SOP-001 naming convention applied across code, tests, docs
-
-### Roadmap
-
-| Version | Theme                                                                        | Status     |
-| ------- | ---------------------------------------------------------------------------- | ---------- |
-| v0.24.4 | API Naming Convention                                                        | ✅ Current |
-| v0.25.0 | Declarative DX (`lessPipeline`, route types, `static head`, `static client`) | 📋 Planned |
-| v0.26.0 | Reactive Pragmatic (`this.params`, `data-keep-alive`, `computed` docs)       | 📋 Planned |
-=======
 - **`lessPipeline()` declarative API** — single build entry replacing scripted 3-phase build
 - **Route type generation** — `.less/routes.d.ts` auto-generated from `[param]` patterns
 - **`static head` / `static client`** — type declarations on DsdElement
@@ -82,17 +57,12 @@ Project line: **v0.25.0 Declarative DX** — `lessPipeline()` entry, route types
 | ------- | ----------------------------------------------------------------- | ---------- |
 | v0.25.0 | Declarative DX (14 SOPs: pipeline, types, guards, cleanup, fixup) | ✅ Current |
 | v0.26.0 | Reactive Pragmatic (`this.params`, `data-keep-alive`, `computed`) | 📋 Planned |
->>>>>>> dev
 
 See [ROADMAP.md](docs/roadmap/ROADMAP.md) for details.
 
 ### Note
 
-<<<<<<< HEAD
-> As of v0.24.4, JSX + `static props` + Signal is the only supported component model.
-=======
 > As of v0.25.0, JSX + `static props` + Signal is the only supported component model.
->>>>>>> dev
 > `render()` returns `string | VNode`. TemplateResult no longer exists.
 >
 > Previous v0.21 (Reactive DSD) and v0.22 (Architecture Integrity) lines are complete. See [CHANGELOG.md](./CHANGELOG.md).
