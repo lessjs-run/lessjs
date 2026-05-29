@@ -1108,7 +1108,7 @@ export class LessLayout extends DsdElement {
   }
 
   private _updateActiveNav(): void {
-    if (!this.shadowRoot || !this._dsdHydrated) return;
+    if (!this.shadowRoot) return;
     const cp = this._currentPath();
     const links = this.shadowRoot.querySelectorAll(
       '.docs-sidebar a[data-nav], .header-nav a[data-nav]',
