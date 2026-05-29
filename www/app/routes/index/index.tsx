@@ -5,11 +5,11 @@
  * Island architecture. Pure DsdElement + @lessjs/signals.
  */
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
-import { signal, effect } from '@lessjs/signals';
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '../../islands/less-search.tsx';
+import '../../islands/home-console.tsx';
 
 export const tagName = 'docs-home';
 
@@ -211,32 +211,30 @@ heroSheet.replaceSync(`
 export class DocsHome extends DsdElement {
   static override styles = [openPropsTokenSheet, heroSheet];
 
-  /** Signal-driven tab state. Effect auto-triggers update() on change. */
-  #activeTab = signal<'graph' | 'counter'>('graph');
-  /** Signal-driven counter. Each mutation triggers precise DOM update via effect. */
-  #count = signal(42);
-
   override connectedCallback() {
     super.connectedCallback();
-    // effect() auto-runs on signal change → calls this.update() to re-render
-    effect(() => {
-      void this.#activeTab.value; // track dependency
-      void this.#count.value;     // track dependency
-      this.update();
-    });
+    // Sync data-theme from document so CSS variables cascade into shadow DOM
+    this._syncTheme();
+    globalThis.addEventListener?.('less:theme-change', this._onThemeChange);
   }
 
-  private _switchTab(tab: 'graph' | 'counter') {
-    this.#activeTab.value = tab;
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    globalThis.removeEventListener?.('less:theme-change', this._onThemeChange);
   }
 
-  private _inc() { this.#count.value++; }
-  private _dec() { this.#count.value--; }
+  private _onThemeChange = (e: Event) => {
+    const theme = (e as CustomEvent).detail?.theme;
+    if (theme) this.setAttribute('data-theme', theme);
+  };
+
+  private _syncTheme() {
+    const t = document.documentElement?.dataset?.theme;
+    if (t) this.setAttribute('data-theme', t);
+  }
 
   override render() {
-    const activeTab = this.#activeTab.value;
-    const count = this.#count.value;
-    const isZh = (this.getAttribute('locale') || 'en') === 'zh';
+    const isZh = this._getLocale('en') === 'zh';
 
     return (
       <less-layout locale='en' locales='["en","zh"]' nav-items={JSON.stringify(navSections)} header-nav={JSON.stringify(headerNav)} current-path="/" full-width>
@@ -273,56 +271,8 @@ export class DocsHome extends DsdElement {
                 </div>
               </div>
 
-              {/* Right Panel: Signal-driven Graph/Counter */}
-              <div class='right-panel'>
-                <div class='rp-header'>
-                  <span class='rp-title'>{activeTab === 'graph' ? 'HYPER-GRAPH ENGINE' : 'LIVE COMPONENT PREVIEW'}</span>
-                  <div class='rp-tabs'>
-                    <span class={`rp-tab${activeTab === 'graph' ? ' active' : ''}`} onClick={() => this._switchTab('graph')}>LIVE MAP</span>
-                    <span class={`rp-tab${activeTab === 'counter' ? ' active' : ''}`} onClick={() => this._switchTab('counter')}>METRICS</span>
-                  </div>
-                </div>
-
-                <div class={`rp-graph${activeTab === 'graph' ? '' : ' hidden'}`}>
-                  <svg viewBox='0 0 432 220' xmlns='http://www.w3.org/2000/svg' style='display:block;width:100%;height:auto;border:0.5px solid rgba(124,111,245,0.16);border-radius:8px;background:#010204'>
-                    <rect width='432' height='220' rx='6' fill='#010204'/>
-                    <circle cx='216' cy='110' r='28' fill='none' stroke='#7C6FF5' stroke-width='2' opacity='0.9'/>
-                    <circle cx='216' cy='110' r='28' fill='rgba(124,111,245,0.12)'/>
-                    <text x='216' y='114' font-family='JetBrains Mono,monospace' font-weight='900' font-size='11' fill='#FFFFFF' text-anchor='middle'>@core</text>
-                    <circle cx='216' cy='110' r='75' fill='none' stroke='rgba(124,111,245,0.08)' stroke-width='1.5' stroke-dasharray='4 8'/>
-                    <circle cx='216' cy='35' r='16' fill='#05070B' stroke='#60EFFF' stroke-width='1.5'/>
-                    <text x='216' y='39' font-family='JetBrains Mono,monospace' font-weight='700' font-size='8.5' fill='#E9ECEF' text-anchor='middle'>rt</text>
-                    <line x1='216' y1='51' x2='216' y2='82' stroke='rgba(96,239,255,0.4)' stroke-width='1' stroke-dasharray='2 2'/>
-                    <circle cx='141' cy='110' r='16' fill='#05070B' stroke='#00FF87' stroke-width='1.5'/>
-                    <text x='141' y='114' font-family='JetBrains Mono,monospace' font-weight='700' font-size='8.5' fill='#E9ECEF' text-anchor='middle'>sig</text>
-                    <line x1='157' y1='110' x2='188' y2='110' stroke='rgba(0,255,135,0.4)' stroke-width='1'/>
-                    <circle cx='291' cy='110' r='16' fill='#05070B' stroke='#7C6FF5' stroke-width='1.5'/>
-                    <text x='291' y='114' font-family='JetBrains Mono,monospace' font-weight='700' font-size='8.5' fill='#E9ECEF' text-anchor='middle'>css</text>
-                    <line x1='275' y1='110' x2='244' y2='110' stroke='rgba(124,111,245,0.4)' stroke-width='1'/>
-                    <circle cx='216' cy='185' r='16' fill='#05070B' stroke='#FB7185' stroke-width='1.5'/>
-                    <text x='216' y='189' font-family='JetBrains Mono,monospace' font-weight='700' font-size='8.5' fill='#E9ECEF' text-anchor='middle'>vite</text>
-                    <line x1='216' y1='169' x2='216' y2='138' stroke='rgba(251,113,133,0.4)' stroke-width='1'/>
-                    <rect x='12' y='12' width='100' height='34' rx='4' fill='#05070B' fill-opacity='0.8' stroke='rgba(124,111,245,0.16)' stroke-width='1'/>
-                    <text x='20' y='24' font-family='JetBrains Mono,monospace' font-size='9' fill='#8E92A2'>GRAPH NODES</text>
-                    <text x='20' y='39' font-family='SF Pro Display,system-ui,sans-serif' font-weight='800' font-size='13' fill='#00FF87'>18 NODES</text>
-                    <rect x='320' y='12' width='100' height='34' rx='4' fill='#05070B' fill-opacity='0.8' stroke='rgba(124,111,245,0.16)' stroke-width='1'/>
-                    <text x='328' y='24' font-family='JetBrains Mono,monospace' font-size='9' fill='#8E92A2'>CYCLES GATE</text>
-                    <text x='328' y='39' font-family='SF Pro Display,system-ui,sans-serif' font-weight='800' font-size='13' fill='#00FF87'>0 CYCLES</text>
-                  </svg>
-                </div>
-
-                <div class={`counter-pane${activeTab === 'counter' ? '' : ' hidden'}`}>
-                  <div class='island-badge'><span class='island-dot'></span><span class='island-label'>ISLAND: ACTIVE</span></div>
-                  <div class='counter-body'>
-                    <div class='counter-box'>
-                      <button class='counter-btn' onClick={() => this._dec()}>−</button>
-                      <span class='counter-value'>{count}</span>
-                      <button class='counter-btn' onClick={() => this._inc()}>+</button>
-                    </div>
-                    <p class='counter-caption'>State mutated via <b>signal.value</b>. Renders: 1</p>
-                  </div>
-                </div>
-              </div>
+              {/* Right Panel: Island component — signal-driven via @lessjs/signals */}
+              <home-console></home-console>
             </div>
           </section>
 
