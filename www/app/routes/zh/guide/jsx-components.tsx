@@ -318,58 +318,6 @@ class Counter extends DsdElement {
             <li>AbortSignal 确保元素断连时自动清理</li>
           </ul>
 
-          <h2>与 TemplateResult 对比</h2>
-          <table>
-            <thead>
-              <tr>
-                <th></th>
-                <th>VNode (v0.24.1)</th>
-                <th>TemplateResult (已移除)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>创建方式</td>
-                <td>构建时 JSX 转换</td>
-                <td><code>html&#96;...&#96;</code> 标签模板</td>
-              </tr>
-              <tr>
-                <td>类型检查</td>
-                <td>TypeScript JSX IntrinsicElements</td>
-                <td>无</td>
-              </tr>
-              <tr>
-                <td>工具支持</td>
-                <td>IDE 自动补全、语法高亮</td>
-                <td>基础字符串高亮</td>
-              </tr>
-              <tr>
-                <td>事件绑定</td>
-                <td><code>onClick={fn}</code></td>
-                <td><code>@click=${fn}</code></td>
-              </tr>
-              <tr>
-                <td>信号追踪</td>
-                <td><code>effect()</code> 自动追踪</td>
-                <td><code>_subscribeTemplateSignals()</code></td>
-              </tr>
-              <tr>
-                <td>SSR</td>
-                <td><code>renderToString()</code></td>
-                <td><code>renderTemplateToString()</code></td>
-              </tr>
-              <tr>
-                <td>CSR</td>
-                <td><code>renderToDom()</code></td>
-                <td><code>_patchBindings()</code></td>
-              </tr>
-              <tr>
-                <td>接口</td>
-                <td>5 字段冻结 VNode</td>
-                <td>TemplateResult + values + markers</td>
-              </tr>
-            </tbody>
-          </table>
 
           <div class="nav-row">
             <a href="/zh/guide/getting-started" class="nav-link">&larr; 快速开始</a>

@@ -130,9 +130,8 @@ export default class ApiCorePage extends DsdElement {
               registerAdapter(adapter: RenderAdapter): void - getAdapter(): RenderAdapter | undefined
             </div>
             <div class="fn-desc">
-              SSR 渲染器插件接口（如 Lit TemplateResult -> DSD HTML 通过 @lessjs/adapter-lit）。
-              当前注册表存储一个活跃适配器。未来渲染器协议必须定义适配器身份、能力、错误、
-              Hydration 提示和 DSD 约束，然后多适配器行为才会被记录为稳定。
+              SSR 渲染器插件接口。当前注册表存储一个活跃适配器。未来渲染器协议必须定义适配器身份、
+              能力、错误、Hydration 提示和 DSD 约束，然后多适配器行为才会被记录为稳定。
             </div>
 
             <div class="fn-name">createSsrContext() / extractParams() / parseQuery()</div>
@@ -152,7 +151,7 @@ export default class ApiCorePage extends DsdElement {
 
             <div class="fn-name">renderSsrError() / wrapInDocument() / camelToKebab()</div>
             <div class="fn-desc">
-              SSR 错误页面渲染、文档包装器和 Lit 兼容属性名转换。
+              SSR 错误页面渲染、文档包装器和属性名转换。
             </div>
 
             <p class="fn-desc" style="margin-top:1rem">
@@ -249,21 +248,6 @@ export default class ApiCorePage extends DsdElement {
               SSG 的语言环境扩展 + 路由级辅助函数（i18nStaticPaths、switchLocale）。
             </div>
 
-            <!-- ─── @lessjs/adapter-lit ──────────────────────── -->
-            <div class="pkg-name">@lessjs/adapter-lit</div>
-            <div class="pkg-import">
-              import { installLitAdapter, WithDsdHydration, DsdLitElement } from '@lessjs/adapter-lit';
-            </div>
-
-            <div class="fn-name">installLitAdapter()</div>
-            <div class="fn-desc">
-              修补核心渲染管线以处理 Lit TemplateResult -> DSD HTML 转换。在 SSR bundle 入口调用一次。
-            </div>
-
-            <div class="fn-name">WithDsdHydration / DsdLitElement</div>
-            <div class="fn-desc">
-              DSD Hydration 的混入/基类。当 shadow root 已存在时跳过重新渲染；声明式绑定 hydrateEvents。
-            </div>
 
             <!-- ─── @lessjs/ui ───────────────────────────────── -->
             <div class="pkg-name">@lessjs/ui</div>
@@ -284,7 +268,7 @@ export default class ApiCorePage extends DsdElement {
             <div class="pkg-name">@lessjs/rpc</div>
             <div class="pkg-import">import { RpcController, RpcError } from '@lessjs/rpc';</div>
             <p>
-              基于 fetch 的 RPC Lit ReactiveController，支持自动重试、中止和加载/错误状态管理。
+              基于 fetch 的 RPC，支持自动重试、中止和加载/错误状态管理。
             </p>
 
             <!-- ─── @lessjs/create ───────────────────────────── -->
@@ -417,10 +401,9 @@ export default class ApiCorePage extends DsdElement {
               registerAdapter(adapter: RenderAdapter): void - getAdapter(): RenderAdapter | undefined
             </div>
             <div class="fn-desc">
-              Plugin interface for SSR renderers (e.g., Lit TemplateResult -> DSD HTML via
-              @lessjs/adapter-lit). The current registry stores one active adapter. A future renderer
-              protocol must define adapter identity, capabilities, errors, hydration hints, and DSD
-              constraints before multi-adapter behavior is documented as stable.
+              Plugin interface for SSR renderers. The current registry stores one active adapter. A future
+              renderer protocol must define adapter identity, capabilities, errors, hydration hints, and
+              DSD constraints before multi-adapter behavior is documented as stable.
             </div>
 
             <div class="fn-name">createSsrContext() / extractParams() / parseQuery()</div>
@@ -440,7 +423,7 @@ export default class ApiCorePage extends DsdElement {
 
             <div class="fn-name">renderSsrError() / wrapInDocument() / camelToKebab()</div>
             <div class="fn-desc">
-              SSR error page rendering, document wrapper, and Lit-compatible attribute name conversion.
+              SSR error page rendering, document wrapper, and attribute name conversion.
             </div>
 
             <p class="fn-desc" style="margin-top:1rem">
@@ -544,23 +527,6 @@ export default class ApiCorePage extends DsdElement {
               Locale expansion for SSG + route-level helpers (i18nStaticPaths, switchLocale).
             </div>
 
-            <!-- ─── @lessjs/adapter-lit ──────────────────────── -->
-            <div class="pkg-name">@lessjs/adapter-lit</div>
-            <div class="pkg-import">
-              import { installLitAdapter, WithDsdHydration, DsdLitElement } from '@lessjs/adapter-lit';
-            </div>
-
-            <div class="fn-name">installLitAdapter()</div>
-            <div class="fn-desc">
-              Patches core's render pipeline to handle Lit TemplateResult -> DSD HTML conversion. Call once
-              in SSR bundle entry.
-            </div>
-
-            <div class="fn-name">WithDsdHydration / DsdLitElement</div>
-            <div class="fn-desc">
-              Mixin/base class for DSD hydration. Skip re-render when shadow root already exists; bind
-              hydrateEvents declaratively.
-            </div>
 
             <!-- ─── @lessjs/ui ───────────────────────────────── -->
             <div class="pkg-name">@lessjs/ui</div>
@@ -582,8 +548,7 @@ export default class ApiCorePage extends DsdElement {
             <div class="pkg-name">@lessjs/rpc</div>
             <div class="pkg-import">import { RpcController, RpcError } from '@lessjs/rpc';</div>
             <p>
-              Lit ReactiveController for fetch-based RPC with auto-retry, abort, and loading/error state
-              management.
+              Fetch-based RPC with auto-retry, abort, and loading/error state management.
             </p>
 
             <!-- ─── @lessjs/create ───────────────────────────── -->

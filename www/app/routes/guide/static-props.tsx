@@ -219,25 +219,12 @@ function renderCard(props: UserCardProps) {
           <h2>Migration from @prop()</h2>
           <p>
             The old <code>@prop()</code>{' '}
-            decorator required TypeScript experimental decorators. The new <code>static props</code>
+            decorator has been replaced by <code>static props</code>
             {' '}
-            API uses standard class fields:
+            which uses standard ES2022 class fields — no decorator configuration needed:
           </p>
           <less-code-block>
             {this._code(`
-// Before (v0.23.x) — required experimentalDecorators in tsconfig
-class MyComp extends DsdElement {
-  @prop({ type: String })
-  name = '';
-
-  @prop({ type: Number })
-  count = 0;
-
-  @prop({ type: Boolean })
-  active = false;
-}
-
-// After (v0.24.1) — no decorator config needed
 class MyComp extends DsdElement {
   static props = {
     name: String,

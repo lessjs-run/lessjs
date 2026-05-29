@@ -258,7 +258,7 @@ export class ArchitecturePage extends DsdElement {
                 <div class="owner-row"><code>@lessjs/core</code><span>small runtime kernel</span></div>
                 <div class="owner-row"><code>@lessjs/create</code><span>generated project contract</span></div>
                 <div class="owner-row"><code>@lessjs/adapter-vite</code><span>Vite and SSG orchestration</span></div>
-                <div class="owner-row"><code>@lessjs/ui</code><span>Lit Web Components</span></div>
+                <div class="owner-row"><code>@lessjs/ui</code><span>Web Components</span></div>
               </div>
             </div>
           </section>

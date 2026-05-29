@@ -230,48 +230,6 @@ this.lastName.value = 'World';
             <li><strong>Dispose 吞掉清理错误</strong>：销毁 effect 时，清理函数和 alien-signals dispose 都会执行，各自吞掉错误</li>
           </ul>
 
-          <h2>完整 DOM 重新渲染 vs 细粒度 Patch</h2>
-          <table>
-            <thead>
-              <tr>
-                <th></th>
-                <th>完整重渲染（VNode + effect）</th>
-                <th>细粒度 Patch（TemplateResult）</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>信号追踪</td>
-                <td>自动（alien-signals push-pull）</td>
-                <td>手动（collect + subscribe）</td>
-              </tr>
-              <tr>
-                <td>订阅模型</td>
-                <td>隐式（函数内读取）</td>
-                <td>显式（ReactiveHost.subscribeTo）</td>
-              </tr>
-              <tr>
-                <td>更新策略</td>
-                <td>完整 DOM 重渲染</td>
-                <td>细粒度文本 patch</td>
-              </tr>
-              <tr>
-                <td>DOM 保留</td>
-                <td>❌ 每次清空</td>
-                <td>✅ 仅文本节点变更</td>
-              </tr>
-              <tr>
-                <td>依赖清理</td>
-                <td>自动（动态依赖追踪）</td>
-                <td>手动（unsubscribe 数组）</td>
-              </tr>
-              <tr>
-                <td>错误处理</td>
-                <td>吞掉清理错误，下次重试</td>
-                <td>patch 内错误 → 保留原 DOM</td>
-              </tr>
-            </tbody>
-          </table>
 
           <h2>性能考量</h2>
           <table>

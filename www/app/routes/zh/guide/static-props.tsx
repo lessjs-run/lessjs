@@ -319,33 +319,6 @@ customElements.define('my-counter', CounterElement);</code></pre></less-code-blo
             </tbody>
           </table>
 
-          <h2>从 @prop() 迁移</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>之前 (v0.23)</th>
-                <th>之后 (v0.24.1)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>@prop({ type: String }) name</code></td>
-                <td><code>static props = { name: String }</code></td>
-              </tr>
-              <tr>
-                <td><code>@prop({ type: Number }) count</code></td>
-                <td><code>static props = { count: Number }</code></td>
-              </tr>
-              <tr>
-                <td><code>@prop({ type: Boolean }) active</code></td>
-                <td><code>static props = { active: Boolean }</code></td>
-              </tr>
-              <tr>
-                <td><code>@prop({ type: Number, reflect: true, default: 5 }) x</code></td>
-                <td><code>static props = { x: { type: Number, default: 5, reflect: true } }</code></td>
-              </tr>
-            </tbody>
-          </table>
 
           <div class="nav-row">
             <a href="/zh/guide/jsx-components" class="nav-link">&larr; JSX 组件</a>

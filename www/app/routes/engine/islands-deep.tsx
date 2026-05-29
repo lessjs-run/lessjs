@@ -109,16 +109,16 @@ export class IslandsDeepGuidePage extends DsdElement {
             LessJS 在 SSG 后处理阶段生成 per-page island manifest，列出每个页面上实际出现的 island
             及其 chunk URL 和策略。运行时只加载当前页面用到的 island chunk。
           </p>
-          <h2>less:bind 声明式事件绑定</h2>
+          <h2>bindEvents() 声明式事件绑定</h2>
           <p>
-            Layer 2 组件使用 hydrateEvents 声明式绑定事件。DSD 已经渲染了 DOM，render() 返回
-            nothing。hydrateEvents 告诉适配器哪些 DOM 事件需要手动绑定。事件监听器通过
+            Layer 2 组件使用 bindEvents() 声明式绑定事件。DSD 已经渲染了 DOM，render() 返回
+            nothing。bindEvents() 告诉适配器哪些 DOM 事件需要手动绑定。事件监听器通过
             AbortController 管理，组件断开时自动清理。
           </p>
           <h2>data-ssr-props 机制</h2>
           <p>
             SSR 渲染时，组件的属性值被序列化为 JSON 并写入 data-ssr-props
-            属性。客户端升级时，less:bind 自动解析并恢复这些属性值，确保 SSR 和客户端状态一致。
+            属性。客户端升级时，bindEvents() 自动解析并恢复这些属性值，确保 SSR 和客户端状态一致。
           </p>
           <h2>最佳实践</h2>
           <p>
@@ -127,7 +127,7 @@ export class IslandsDeepGuidePage extends DsdElement {
             <br />3. 保持 Island 小且独立。多个小 Island 比一个大 Island 更容易理解和优化。
             <br />4. client:visible 策略优先于 client:idle。对于不在首屏的组件更精确。
             <br />5. 注意 data-ssr-props 大小。大型数据集应通过 fetch 在客户端获取。
-            <br />6. WithDsdHydration 的 render() 必须检查 _dsdHydrated，否则会导致 DOM 重复渲染。
+            <br />6. DSD hydration 检测：在客户端 hydrate 时自动检测已有 shadow root，避免 DOM 重复渲染。
           </p>
           <div class='nav-row'>
             <a href={`/${loc}/engine/dsd`} class='nav-link'>← DSD 渲染架构</a>
@@ -238,17 +238,17 @@ export class IslandsDeepGuidePage extends DsdElement {
             island present on each page, with chunk URLs and strategies. The runtime only loads
             islands actually used on the current page.
           </p>
-          <h2>less:bind Declarative Event Binding</h2>
+          <h2>bindEvents() Declarative Event Binding</h2>
           <p>
-            Layer 2 components use hydrateEvents for declarative event binding. Since DSD has
-            already rendered the DOM, render() returns nothing. hydrateEvents tells the adapter
+            Layer 2 components use bindEvents() for declarative event binding. Since DSD has
+            already rendered the DOM, render() returns nothing. bindEvents() tells the adapter
             which DOM events to wire up manually. Listeners are managed via AbortController and
             cleaned up on disconnect.
           </p>
           <h2>data-ssr-props Mechanism</h2>
           <p>
             During SSR, component property values are serialized to JSON and written to the
-            data-ssr-props attribute. On client upgrade, less:bind automatically parses and restores
+            data-ssr-props attribute. On client upgrade, bindEvents() automatically parses and restores
             these values, ensuring SSR and client state stay in sync.
           </p>
           <h2>Best Practices</h2>
@@ -260,8 +260,8 @@ export class IslandsDeepGuidePage extends DsdElement {
             understand and optimize than one large one.
             <br />4. Prefer client:visible over client:idle for below-the-fold components.
             <br />5. Keep data-ssr-props small. Large datasets should be fetched client-side.
-            <br />6. WithDsdHydration render() must check _dsdHydrated to avoid re-rendering the DSD
-            DOM.
+            <br />            6. DSD hydration detection: automatically detects existing shadow root on client
+            hydrate to avoid re-rendering DSD DOM.
           </p>
           <div class='nav-row'>
             <a href={`/${loc}/engine/dsd`} class='nav-link'>← DSD Architecture</a>
