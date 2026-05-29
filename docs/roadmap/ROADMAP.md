@@ -196,23 +196,25 @@ Goal: eliminate architecture debt, add type-safe routes, unify DX.
 
 Governing ADR: ADR-0058, ADR-0059, ADR-0060. See `docs/sop/v0.25.0/`.
 
-| Group | Task                               | Priority | Nature          |
-| ----- | ---------------------------------- | -------- | --------------- |
-| TG-01 | `lessPipeline()` declarative API   | P0       | Pure refactor   |
-| TG-02 | `RouteParams` type generation      | P0       | Code generation |
-| TG-03 | `static head` metadata             | P1       | Small feature   |
-| TG-04 | `static client` island declaration | P1       | Syntax sugar    |
-| TG-05 | SignalContext (DOM-tree)           | P2*      | ~20 lines       |
-| TG-06 | CSS token injection convergence    | P1       | Token dedup     |
-| TG-07 | route-scanner regex → AST          | P1       | TS AST upgrade  |
-| TG-08 | `as any` type hardening            | P1       | Type safety     |
-| TG-09 | Test path unification              | P2       | Test utils      |
-| TG-10 | `less()` @deprecated               | P2       | Docs            |
-| TG-11 | island.test.ts old name fix        | P2       | Docs            |
-| TG-12 | Full regression                    | P2       | Verification    |
+| Group | Task                               | Priority | Nature           |
+| ----- | ---------------------------------- | -------- | ---------------- |
+| TG-01 | `lessPipeline()` declarative API   | P0       | Pure refactor    |
+| TG-02 | `RouteParams` type generation      | P0       | Code generation  |
+| TG-03 | `static head` metadata             | P1       | Small feature    |
+| TG-04 | `static client` island declaration | P1       | Syntax sugar     |
+| TG-05 | SignalContext (DOM-tree)           | P2*      | ~20 lines        |
+| TG-06 | CSS token injection convergence    | P1       | Token dedup      |
+| TG-07 | route-scanner regex → AST          | P1       | TS AST upgrade   |
+| TG-08 | `as any` type hardening            | P1       | Type safety      |
+| TG-09 | Test path unification              | P2       | Test utils       |
+| TG-10 | `less()` @deprecated               | P2       | Docs             |
+| TG-11 | island.test.ts old name fix        | P2       | Docs             |
+| TG-12 | `_dsdHydrated` dual-path merge     | P1       | Runtime refactor |
+| TG-13 | 31 pages string → JSX migration    | P1       | Content refactor |
+| TG-14 | Full regression + docs             | P2       | Verification     |
 
 > *P2 conditional: requires `computed()` to have ≥1 real-world use first.
-> TG-06 through TG-11 are architecture debt from 2026-05-29 comprehensive audit.
+> TG-06 through TG-13 are architecture debt from 2026-05-29 comprehensive audit.
 
 ## Planned: v0.26.0 — Reactive Pragmatic
 
