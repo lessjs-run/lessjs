@@ -71,7 +71,7 @@ export default class HomePage extends DsdElement {
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md). Architecture decisions in [docs/adr/](./docs/adr/).
+See [CONTRIBUTING.md](./CONTRIBUTING.md). Architecture decisions in [docs/adr/](./docs/adr/). Target: **v1.0** stable engine freeze.
 
 ## License
 

@@ -71,7 +71,7 @@ export default class HomePage extends DsdElement {
 
 ## 参与贡献
 
-参见 [CONTRIBUTING.md](./CONTRIBUTING.md)。架构决策记录在 [docs/adr/](./docs/adr/)。
+参见 [CONTRIBUTING.md](./CONTRIBUTING.md)。架构决策记录在 [docs/adr/](./docs/adr/)。目标：**v1.0** 稳定引擎冻结。
 
 ## 许可证
 
