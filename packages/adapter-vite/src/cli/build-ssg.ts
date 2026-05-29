@@ -15,7 +15,7 @@
  */
 
 import { join, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { normalizePath } from 'vite';
 import process from 'node:process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -476,15 +476,21 @@ if (typeof globalThis.customElements === 'undefined') {
             // v0.26: Read generated file content for virtual module
             if (id === '\0less:gen-nav') {
               const p = resolve(root, 'www/app/data/_generated-nav.ts');
-              return existsSync(p) ? readFileSync(p, 'utf-8') : 'export const headerNav = []; export const navSections = [];';
+              return existsSync(p)
+                ? readFileSync(p, 'utf-8')
+                : 'export const headerNav = []; export const navSections = [];';
             }
             if (id === '\0less:gen-blog') {
               const p = resolve(root, 'www/app/data/_generated-blog-data.ts');
-              return existsSync(p) ? readFileSync(p, 'utf-8') : 'export const posts = []; export function getPostBySlug() {} export function getBlogOptions() { return {}; }';
+              return existsSync(p)
+                ? readFileSync(p, 'utf-8')
+                : 'export const posts = []; export function getPostBySlug() {} export function getBlogOptions() { return {}; }';
             }
             if (id === '\0less:gen-i18n') {
               const p = resolve(root, 'www/app/data/_generated-i18n-data.ts');
-              return existsSync(p) ? readFileSync(p, 'utf-8') : 'export const locales = []; export function getDefaultLocale() { return "en"; } export function getI18nOptions() { return null; }';
+              return existsSync(p)
+                ? readFileSync(p, 'utf-8')
+                : 'export const locales = []; export function getDefaultLocale() { return "en"; } export function getI18nOptions() { return null; }';
             }
             // ... rest of load handlers
             // Vite 8 Plugin.load type: function or {handler}

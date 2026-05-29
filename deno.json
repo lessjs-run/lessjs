@@ -165,7 +165,8 @@
     },
     "exclude": [
       ".deno_cache/",
-      "www/app/routes/"
+      "www/app/routes/",
+      "www/app/data/"
     ]
   },
   "compilerOptions": {

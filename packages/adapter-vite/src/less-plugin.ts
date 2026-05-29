@@ -372,7 +372,9 @@ export function less(
     resolveId(id) {
       const cwd = process.cwd();
       if (id === '@lessjs/content/nav') return join(cwd, 'www/app/data/_generated-nav.ts');
-      if (id === '@lessjs/content/blog-data') return join(cwd, 'www/app/data/_generated-blog-data.ts');
+      if (id === '@lessjs/content/blog-data') {
+        return join(cwd, 'www/app/data/_generated-blog-data.ts');
+      }
       if (id === '@lessjs/i18n/data') return join(cwd, 'www/app/data/_generated-i18n-data.ts');
       return null;
     },

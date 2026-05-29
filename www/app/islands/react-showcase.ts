@@ -125,7 +125,9 @@ function Alert({
 // SSR-safe base class: WithDsdHydration may be undefined in SSR bundles
 // when @lessjs/adapter-react is externalized. Fall back to HTMLElement or Object.
 const ReactShowcaseBase = typeof WithDsdHydration === 'function'
-  ? WithDsdHydration(typeof globalThis.HTMLElement !== 'undefined' ? globalThis.HTMLElement : Object)
+  ? WithDsdHydration(
+    typeof globalThis.HTMLElement !== 'undefined' ? globalThis.HTMLElement : Object,
+  )
   : (typeof globalThis.HTMLElement !== 'undefined' ? globalThis.HTMLElement : Object);
 
 export const tagName = 'react-showcase';
