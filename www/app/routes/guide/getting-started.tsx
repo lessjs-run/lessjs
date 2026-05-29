@@ -7,6 +7,7 @@ import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
 import '../../islands/less-toc.tsx';
+import '../../islands/less-toc.tsx';
 
 const routeSheet = new StyleSheet();
 
@@ -57,6 +58,7 @@ export class GettingStartedPage extends DsdElement {
   private _renderZh() {
     return `
       <less-layout locale="${this._getLocale('zh')}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(navSections)}' header-nav='${JSON.stringify(headerNav)}' current-path="/guide/getting-started">
+        <div class="content-grid">
         <div class="container">
           <h1>快速开始</h1>
           <p class="subtitle">
@@ -184,6 +186,7 @@ export const tagName = 'counter-island';</code></pre></less-code-block>
   private _renderEn() {
     return `
       <less-layout locale="${this._getLocale('en')}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(navSections)}' header-nav='${JSON.stringify(headerNav)}' current-path="/en/guide/getting-started">
+        <div class="content-grid">
         <div class="container">
           <h1>Getting Started</h1>
           <p class="subtitle">

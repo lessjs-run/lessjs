@@ -33,18 +33,15 @@ sheet.replaceSync(`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    border: var(--border-size-1) solid var(--border-futuristic);
+    width: 32px; height: 32px; padding: 0;
+    border: var(--border-size-2) solid var(--text-secondary);
+    border-radius: var(--radius-2);
     background: transparent;
     color: var(--text-secondary);
     cursor: pointer;
-    font-size: 0;
-    line-height: var(--font-lineheight-1);
-    transition: color var(--ease-2) var(--duration-2), border-color var(--ease-2) var(--duration-2), background var(--ease-2) var(--duration-2), transform var(--ease-2) var(--duration-2);
+    font-size: 0; line-height: var(--font-lineheight-1);
+    transition: all var(--ease-2) var(--duration-2);
   }
-
   .theme-toggle:hover {
     color: var(--text-primary);
     border-color: var(--brand-neon);
