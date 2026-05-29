@@ -130,7 +130,7 @@ export class LessCodeBlock extends DsdElement {
   private _highlightTimer: ReturnType<typeof setTimeout> | undefined;
   private _highlightedInShadow = false;
   private _highlightRetries = 0;
-  private static MAX_HIGHLIGHT_RETRIES = 40;
+  private static MAX_HIGHLIGHT_RETRIES = 120;
 
   override render(): ReturnType<typeof DsdElement.prototype.render> {
     return (
@@ -145,9 +145,16 @@ export class LessCodeBlock extends DsdElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    if (this._dsdHydrated) {
-      this._tryHighlight();
-    }
+  }
+
+  override onDsdHydrated(): void {
+    super.onDsdHydrated();
+    this._tryHighlight();
+  }
+
+  override onCsrRendered(): void {
+    super.onCsrRendered();
+    this._tryHighlight();
   }
 
   override disconnectedCallback(): void {
@@ -166,7 +173,9 @@ export class LessCodeBlock extends DsdElement {
     const p = (globalThis as unknown as Record<string, unknown>).Prism;
     if (typeof p === 'undefined') {
       if (this._highlightRetries++ < LessCodeBlock.MAX_HIGHLIGHT_RETRIES) {
-        this._highlightTimer = globalThis.setTimeout(() => this._tryHighlight(), 50);
+        // Exponential backoff: 10, 20, 40, 80, 160, 320, 500ms cap
+        const delay = Math.min(10 * Math.pow(2, Math.min(this._highlightRetries, 6)), 500);
+        this._highlightTimer = globalThis.setTimeout(() => this._tryHighlight(), delay);
       }
       return;
     }
@@ -192,7 +201,8 @@ export class LessCodeBlock extends DsdElement {
       | undefined;
     if (!grammar) {
       if (this._highlightRetries++ < LessCodeBlock.MAX_HIGHLIGHT_RETRIES) {
-        this._highlightTimer = globalThis.setTimeout(() => this._tryHighlight(), 100);
+        const delay = Math.min(20 * Math.pow(2, Math.min(this._highlightRetries, 6)), 1000);
+        this._highlightTimer = globalThis.setTimeout(() => this._tryHighlight(), delay);
       }
       return;
     }
