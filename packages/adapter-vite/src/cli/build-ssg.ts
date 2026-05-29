@@ -550,9 +550,9 @@ if (typeof globalThis.customElements === 'undefined') {
             )
             : {}),
           // v0.26: Generated data files — override workspace aliases
-          '@lessjs/content/nav': './app/data/_generated-nav.ts',
-          '@lessjs/content/blog-data': './app/data/_generated-blog-data.ts',
-          '@lessjs/i18n/data': './app/data/_generated-i18n-data.ts',
+          '@lessjs/content/nav': pathToFileURL(resolve(root, 'www/app/data/_generated-nav.ts')).href,
+          '@lessjs/content/blog-data': pathToFileURL(resolve(root, 'www/app/data/_generated-blog-data.ts')).href,
+          '@lessjs/i18n/data': pathToFileURL(resolve(root, 'www/app/data/_generated-i18n-data.ts')).href,
         },
       },
     });
