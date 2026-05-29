@@ -116,10 +116,8 @@ export class LessThemeToggle extends DsdElement {
             this._theme.value = 'dark';
             resolved = true;
           }
-        } catch (e) {
-          console.debug('[less-theme-toggle] localStorage unavailable:', e);
-        }
-        if (!resolved && typeof globalThis !== 'undefined' && globalThis.matchMedia) {
+        } catch { /* localStorage blocked */ }
+        if (!resolved && globalThis.matchMedia) {
           this._theme.value = globalThis.matchMedia('(prefers-color-scheme: light)').matches
             ? 'light'
             : 'dark';
@@ -127,21 +125,15 @@ export class LessThemeToggle extends DsdElement {
       }
     }
 
-    // Sync theme to component attribute, document root, and localStorage
+    // Sync to self only — never write to document here (causes cross-component cascade loop)
     this.setAttribute('data-theme', this._theme.value);
+    this._persistTheme(this._theme.value);
+  }
+
+  private _persistTheme(theme: 'dark' | 'light'): void {
     try {
-      document.documentElement.setAttribute('data-theme', this._theme.value);
-      if (document.documentElement.style) {
-        document.documentElement.style.colorScheme = this._theme.value;
-      }
-    } catch (e) {
-      console.debug('[less-theme-toggle] document.documentElement unavailable:', e);
-    }
-    try {
-      localStorage.setItem('less-theme', this._theme.value);
-    } catch (e) {
-      console.debug('[less-theme-toggle] localStorage.setItem unavailable:', e);
-    }
+      localStorage.setItem('less-theme', theme);
+    } catch { /* blocked */ }
   }
 
   protected override onDsdHydrated(): void {
