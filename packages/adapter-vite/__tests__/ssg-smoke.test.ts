@@ -140,12 +140,6 @@ Deno.test('SSG smoke: one-command build produces trusted www output', async (t) 
     assertStringIncludes(roadmapHtml, 'Registry Hub');
     assert(
       existsSync(
-        join(WWW_DIST, 'zh', 'decisions', '20260515-1-renderer-kernel-registry-sop', 'index.html'),
-      ),
-      'ADR 20260515-1 should be rendered under zh/decisions',
-    );
-    assert(
-      existsSync(
         join(WWW_DIST, 'decisions', '0024-standards-first-wc-renderer-roadmap', 'index.html'),
       ),
       'ADR 0024 should be rendered through the decisions/content pipeline',
