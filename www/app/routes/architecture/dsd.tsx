@@ -1,7 +1,6 @@
 export const meta = { section: 'Principles', label: 'DSD Rendering', order: 30 };
 
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { filterArchitectureNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -52,7 +51,7 @@ export class DsdGuidePage extends DsdElement {
       <less-layout
         locale="${loc}"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
+        nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/${loc}/architecture/dsd"
       >
@@ -158,7 +157,7 @@ export class DsdGuidePage extends DsdElement {
       <less-layout
         locale="${loc}"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
+        nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/en/architecture/dsd"
       >

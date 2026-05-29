@@ -6,7 +6,6 @@
  */
 export const meta = { section: 'Reference', label: 'Design System', order: 10 };
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { filterArchitectureNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
@@ -259,7 +258,7 @@ export class UIShowcase extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    const nav = filterArchitectureNav(navSections);
+    const nav = navSections;
     return (
       <less-layout
         locale={loc}
@@ -390,7 +389,7 @@ export class UIShowcase extends DsdElement {
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    const nav = filterArchitectureNav(navSections);
+    const nav = navSections;
     return (
       <less-layout
         locale={loc}

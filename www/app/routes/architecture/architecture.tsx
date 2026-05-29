@@ -4,7 +4,6 @@ export const tagName = 'engine-architecture';
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import { filterArchitectureNav } from '../../utils/nav-filter.ts';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
@@ -317,7 +316,7 @@ export class ArchitecturePage extends DsdElement {
       <less-layout
         locale="${this._getLocale('en')}"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
+        nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/architecture/architecture"
       >

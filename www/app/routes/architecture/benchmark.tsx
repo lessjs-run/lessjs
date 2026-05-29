@@ -7,7 +7,6 @@
 export const meta = { section: 'Reference', label: 'Performance', order: 100 };
 
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { filterArchitectureNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
@@ -26,7 +25,7 @@ export default class Benchmark extends DsdElement {
 
   _renderEn() {
     return (
-      <less-layout navItems={JSON.stringify(filterArchitectureNav(navSections))} headerNav={JSON.stringify(headerNav)} currentPath="/architecture/benchmark">
+      <less-layout navItems={JSON.stringify(navSections)} headerNav={JSON.stringify(headerNav)} currentPath="/architecture/benchmark">
         <div class='container'>
           <h1>Performance & Benchmarks</h1>
           <p class='subtitle'>Zero-noise. What we actually measure.</p>

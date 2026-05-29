@@ -1,7 +1,6 @@
 export const meta = { section: 'Production', label: 'Configuration', order: 10 };
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
-import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -17,7 +16,7 @@ export class ConfigurationPage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    const nav = JSON.stringify(filterDocsNav(navSections));
+    const nav = JSON.stringify(navSections);
     const hNav = JSON.stringify(headerNav);
     return (
       <less-layout
@@ -136,7 +135,7 @@ export default defineConfig({'{'}
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    const nav = JSON.stringify(filterDocsNav(navSections));
+    const nav = JSON.stringify(navSections);
     const hNav = JSON.stringify(headerNav);
     return (
       <less-layout

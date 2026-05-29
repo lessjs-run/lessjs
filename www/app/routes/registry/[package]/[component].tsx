@@ -17,7 +17,6 @@ export const meta = { section: 'Registry', label: 'Component Detail', order: 6 }
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { filterHubNav } from '../../../utils/nav-filter.js';
 import '@lessjs/ui/less-layout';
 import pkgRecords from '../../../data/registry/hub-data.ts';
 import type { HubPackageRecord } from '../../../data/registry/hub-data.ts';
@@ -401,7 +400,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
     if (!pkg) {
       return (
         <less-layout
-          navItems={JSON.stringify(filterHubNav(navSections))}
+          navItems={JSON.stringify(navSections)}
           headerNav={JSON.stringify(headerNav)}
           currentPath={`/registry/${pkgRoute}`}
           locale='en'
@@ -426,7 +425,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
     if (!tag) {
       return (
         <less-layout
-          navItems={JSON.stringify(filterHubNav(navSections))}
+          navItems={JSON.stringify(navSections)}
           headerNav={JSON.stringify(headerNav)}
           currentPath={`/registry/${pkgRoute}`}
           locale='en'
@@ -462,7 +461,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
 
     return (
       <less-layout
-        navItems={JSON.stringify(filterHubNav(navSections))}
+        navItems={JSON.stringify(navSections)}
         headerNav={JSON.stringify(headerNav)}
         currentPath={`/registry/${pkgRoute}`}
         locale='en'

@@ -1,6 +1,5 @@
 export const meta = { section: 'Principles', label: 'Island Deep Dive', order: 50 };
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { filterArchitectureNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -27,7 +26,7 @@ export class IslandsDeepGuidePage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    const nav = filterArchitectureNav(navSections);
+    const nav = navSections;
     return (
       <less-layout
         locale={loc}
@@ -140,7 +139,7 @@ export class IslandsDeepGuidePage extends DsdElement {
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    const nav = filterArchitectureNav(navSections);
+    const nav = navSections;
     return (
       <less-layout
         locale={loc}

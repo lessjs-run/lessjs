@@ -3,7 +3,6 @@
  */
 export const meta = { section: 'History', label: 'Blog', order: 10 };
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { filterBlogNav } from '../../utils/nav-filter.js';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -89,7 +88,7 @@ export class BlogIndexPage extends DsdElement {
       <less-layout
         locale="${this._getLocale('zh')}"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterBlogNav(navSections))}'
+        nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/blog"
       >
@@ -143,7 +142,7 @@ export class BlogIndexPage extends DsdElement {
       <less-layout
         locale="${this._getLocale('en')}"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterBlogNav(navSections))}'
+        nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/en/blog"
       >

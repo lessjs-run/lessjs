@@ -1,7 +1,6 @@
 // deno-fmt-ignore-file
 export const meta = { section: 'Quick Start', label: 'Getting Started', order: 1 };
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -56,7 +55,7 @@ export class GettingStartedPage extends DsdElement {
 
   private _renderZh() {
     return `
-      <less-layout locale="${this._getLocale('zh')}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(filterDocsNav(navSections))}' header-nav='${JSON.stringify(headerNav)}' current-path="/guide/getting-started">
+      <less-layout locale="${this._getLocale('zh')}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(navSections)}' header-nav='${JSON.stringify(headerNav)}' current-path="/guide/getting-started">
         <div class="container">
           <h1>快速开始</h1>
           <p class="subtitle">
@@ -182,7 +181,7 @@ export const tagName = 'counter-island';</code></pre></less-code-block>
 
   private _renderEn() {
     return `
-      <less-layout locale="${this._getLocale('en')}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(filterDocsNav(navSections))}' header-nav='${JSON.stringify(headerNav)}' current-path="/en/guide/getting-started">
+      <less-layout locale="${this._getLocale('en')}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(navSections)}' header-nav='${JSON.stringify(headerNav)}' current-path="/en/guide/getting-started">
         <div class="container">
           <h1>Getting Started</h1>
           <p class="subtitle">

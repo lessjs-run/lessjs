@@ -542,6 +542,29 @@ export class LessLayout extends DsdElement {
   }
 
   private _navItems(): NavSection[] {
+    const items = this._rawNavItems();
+    return this._filterByPath(items);
+  }
+
+  /** Auto-filter sidebar sections by current path prefix. */
+  private _filterByPath(items: NavSection[]): NavSection[] {
+    const path = this._currentPath();
+    const SECTION_MAP: Record<string, string[]> = {
+      '/guide': ['Quick Start', 'Core', 'Production'],
+      '/architecture': ['Principles', 'Compatibility', 'Reference'],
+      '/registry': ['Registry'],
+      '/hub': ['Registry'],
+      '/blog': ['History'],
+    };
+    for (const [prefix, sections] of Object.entries(SECTION_MAP)) {
+      if (path.startsWith(prefix)) {
+        return items.filter((s) => sections.includes(s.section));
+      }
+    }
+    return items;
+  }
+
+  private _rawNavItems(): NavSection[] {
     try {
       const prop = (this as Record<string, unknown>).navItems;
       if (prop && Array.isArray(prop)) return prop as NavSection[];

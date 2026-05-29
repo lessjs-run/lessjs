@@ -14,7 +14,6 @@
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { filterHubNav } from '../../utils/nav-filter.js';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import pkgRecords from '../../data/registry/hub-data.ts';
@@ -230,7 +229,7 @@ export default class DocsRegistryDetail extends DsdElement {
 
     if (!pkg) {
       return `
-        <less-layout nav-items='${JSON.stringify(filterHubNav(navSections))}' header-nav='${
+        <less-layout nav-items='${JSON.stringify(navSections)}' header-nav='${
         JSON.stringify(headerNav)
       }' current-path="/registry/${fullName}" locale="en" locales='${JSON.stringify(['en'])}'>
           <div class="container">
@@ -244,7 +243,7 @@ export default class DocsRegistryDetail extends DsdElement {
     const hasSnapshots = Object.keys(pkg.snapshotPaths).length > 0;
 
     return `
-      <less-layout nav-items='${JSON.stringify(filterHubNav(navSections))}' header-nav='${
+      <less-layout nav-items='${JSON.stringify(navSections)}' header-nav='${
       JSON.stringify(headerNav)
     }' current-path="/registry/${fullName}" locale="en" locales='${JSON.stringify(['en'])}'>
         <div class="container">

@@ -3,7 +3,6 @@
  */
 
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { filterArchitectureNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -135,7 +134,7 @@ export default class ComparisonPage extends DsdElement {
       <less-layout
         locale="${this._getLocale('zh')}"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
+        nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/architecture/comparison"
       >

@@ -2,7 +2,6 @@ export const meta = { section: 'Compatibility', label: 'Standards & Registry', o
 
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
-import { filterArchitectureNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -20,7 +19,7 @@ export class StandardsRegistryGuidePage extends DsdElement {
     const loc = this._getLocale('zh');
     return `
       <less-layout
-        nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
+        nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/${loc}/architecture/standards-registry"
         locale="${loc}"
@@ -159,7 +158,7 @@ export class StandardsRegistryGuidePage extends DsdElement {
     const loc = this._getLocale('en');
     return `
       <less-layout
-        nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
+        nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/${loc}/architecture/standards-registry"
         locale="${loc}"

@@ -1,7 +1,6 @@
 export const meta = { section: 'Core', label: 'Routing & Data', order: 3 };
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
-import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -19,7 +18,7 @@ export class RoutingDataPage extends DsdElement {
     return `
       <less-layout locale="${this._getLocale('zh')}" locales='${
       JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(filterDocsNav(navSections))}' header-nav='${
+    }' nav-items='${JSON.stringify(navSections)}' header-nav='${
       JSON.stringify(headerNav)
     }' current-path="/guide/routing-and-data">
         <div class="container">
@@ -156,7 +155,7 @@ customElements.define('page-blog-index', BlogIndex);</code></pre></less-code-blo
     return `
       <less-layout locale="${this._getLocale('en')}" locales='${
       JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(filterDocsNav(navSections))}' header-nav='${
+    }' nav-items='${JSON.stringify(navSections)}' header-nav='${
       JSON.stringify(headerNav)
     }' current-path="/en/guide/routing-and-data">
         <div class="container">

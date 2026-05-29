@@ -11,7 +11,6 @@ export const tagName = 'guide-architecture';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import { filterDocsNav } from '../../utils/nav-filter.ts';
 import '@lessjs/ui/less-layout';
 
 const sheet = new StyleSheet();
@@ -32,7 +31,7 @@ export class GuideArchitecturePage extends DsdElement {
       <less-layout
         locale="${this._getLocale('en')}"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterDocsNav(navSections))}'
+        nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/guide/architecture"
       >

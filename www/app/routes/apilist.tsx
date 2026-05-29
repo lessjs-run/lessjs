@@ -4,7 +4,6 @@
  * Organized by category: Components, Rendering, Islands, Signals, Build, SSR.
  */
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -43,7 +42,7 @@ export default class ApiCorePage extends DsdElement {
       <less-layout
         locale="zh"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterDocsNav(navSections))}'
+        nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/reference/core"
       >
@@ -148,7 +147,7 @@ export default class ApiCorePage extends DsdElement {
       <less-layout
         locale="en"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterDocsNav(navSections))}'
+        nav-items='${JSON.stringify(navSections)}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/reference/core"
       >

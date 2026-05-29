@@ -1,6 +1,5 @@
 export const meta = { section: 'Production', label: 'Error Handling', order: 30 };
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
@@ -33,7 +32,7 @@ export class ErrorHandlingPage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    const nav = JSON.stringify(filterDocsNav(navSections));
+    const nav = JSON.stringify(navSections);
     const hNav = JSON.stringify(headerNav);
     return (
       <less-layout
@@ -76,7 +75,7 @@ export class ErrorHandlingPage extends DsdElement {
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    const nav = JSON.stringify(filterDocsNav(navSections));
+    const nav = JSON.stringify(navSections);
     const hNav = JSON.stringify(headerNav);
     return (
       <less-layout

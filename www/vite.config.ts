@@ -154,9 +154,11 @@ export default defineConfig({
         },
         nav: {
           routesDir: 'app/routes',
+          // v0.26: Minimal headerNav — less-layout auto-filters sidebar.
+          // TODO(v0.27): derive from route meta scanning.
           headerNav: [
             { href: '/guide/getting-started', label: 'Guide' },
-            { href: '/guide/apilist', label: 'API' },
+            { href: '/apilist', label: 'API' },
             { href: '/architecture/architecture', label: 'Architecture' },
             { href: '/registry', label: 'Hub' },
             { href: '/blog', label: 'Blog' },
