@@ -1,7 +1,11 @@
 /**
  * Homepage — Neo-Swiss Hyper-Dark v0.26.
+ *
+ * Showcases LessJS framework: DSD rendering, Signal reactivity,
+ * Island architecture. Pure DsdElement + @lessjs/signals.
  */
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { signal, effect } from '@lessjs/signals';
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -9,7 +13,6 @@ import '../../islands/less-search.tsx';
 
 export const tagName = 'docs-home';
 
-/* ── SVG Dependency Graph (inline, no innerHTML) ── */
 const heroSheet = new StyleSheet();
 heroSheet.replaceSync(`
   .swiss-grid {
@@ -35,7 +38,7 @@ heroSheet.replaceSync(`
     color: var(--cyber-green, #00FF87); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 24px;
   }
   .giant-headline {
-    margin: 0; font-family: "SF Pro Display", -apple-system, system-ui, sans-serif;
+    margin: 0; font-family: "SF Pro Display", -apple-system, sans-serif;
     font-weight: 900; font-size: clamp(3.5rem, 8vw, 5.5rem); line-height: 0.92; letter-spacing: -0.05em; color: #FFFFFF;
   }
   .glow-line {
@@ -69,11 +72,9 @@ heroSheet.replaceSync(`
     margin-top: 6px; font-family: "JetBrains Mono", monospace;
     font-size: 0.6rem; color: var(--cyber-green, #00FF87); text-align: right;
   }
-  /* Terminal */
   .terminal {
-    margin-top: 28px; max-width: 520px;
-    border: 0.5px solid var(--border-futuristic, rgba(124,111,245,0.16));
-    border-radius: 8px; background: var(--bg-terminal, #010204); overflow: hidden;
+    margin-top: 28px; border: 0.5px solid var(--border-futuristic, rgba(124,111,245,0.16));
+    border-radius: 8px; background: var(--bg-terminal, #010204); overflow: hidden; max-width: 520px;
   }
   .terminal-head {
     display: flex; align-items: center; gap: 6px; padding: 10px 14px;
@@ -94,7 +95,6 @@ heroSheet.replaceSync(`
   .term-info { color: #8E92A2; }
   .term-ok { color: #00FF87; text-shadow: 0 0 6px rgba(0,255,135,0.3); }
   .term-gate { color: #60EFFF; }
-  /* Right panel */
   .right-panel {
     border: 0.5px solid var(--border-bright, rgba(124,111,245,0.4));
     border-radius: 10px; background: var(--bg-panel, #090B11); overflow: hidden;
@@ -112,20 +112,15 @@ heroSheet.replaceSync(`
     background: transparent; color: var(--brand-neon, #7C6FF5);
     font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
   }
-  .rp-tab.js-active {
+  .rp-tab.active {
     background: var(--brand-neon, #7C6FF5); color: #FFFFFF;
     border-color: var(--brand-neon, #7C6FF5); box-shadow: 0 0 12px rgba(124,111,245,0.3);
   }
-  .rp-tab:hover:not(.js-active) { border-color: var(--brand-neon, #7C6FF5); }
-  /* Graph pane */
-  .rp-graph { padding: 16px 20px; display: block; }
-  .rp-graph-svg {
-    border: 0.5px solid var(--border-futuristic, rgba(124,111,245,0.16));
-    border-radius: 8px; background: #010204;
-  }
-  .rp-graph-svg svg { display: block; width: 100%; height: auto; }
-  /* Counter pane */
-  .counter-pane { padding: 20px; display: none; }
+  .rp-tab:hover:not(.active) { border-color: var(--brand-neon, #7C6FF5); }
+  .rp-graph { padding: 16px 20px; }
+  .rp-graph.hidden { display: none; }
+  .counter-pane { padding: 20px; }
+  .counter-pane.hidden { display: none; }
   .island-badge {
     display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
     border-radius: 4px; border: 0.5px solid rgba(0,255,135,0.2);
@@ -143,9 +138,7 @@ heroSheet.replaceSync(`
     font-family: "JetBrains Mono", monospace; font-size: 0.6rem;
     font-weight: 700; color: var(--cyber-green, #00FF87);
   }
-  .counter-body {
-    display: flex; flex-direction: column; align-items: center; gap: 16px;
-  }
+  .counter-body { display: flex; flex-direction: column; align-items: center; gap: 16px; }
   .counter-box {
     display: inline-flex; align-items: center; gap: 0;
     border: 2px solid var(--brand-neon, #7C6FF5); border-radius: 30px;
@@ -167,7 +160,6 @@ heroSheet.replaceSync(`
     color: var(--text-muted, #515466); text-align: center;
   }
   .counter-caption b { color: var(--brand-neon, #7C6FF5); font-weight: 700; }
-  /* Features */
   .features { max-width: 1200px; margin: 0 auto; padding: 64px 80px 80px; position: relative; z-index: 1; }
   .features-head { margin-bottom: 32px; }
   .features-head p {
@@ -219,67 +211,39 @@ heroSheet.replaceSync(`
 export class DocsHome extends DsdElement {
   static override styles = [openPropsTokenSheet, heroSheet];
 
-  #count = 42;
+  /** Signal-driven tab state. Effect auto-triggers update() on change. */
+  #activeTab = signal<'graph' | 'counter'>('graph');
+  /** Signal-driven counter. Each mutation triggers precise DOM update via effect. */
+  #count = signal(42);
 
   override connectedCallback() {
     super.connectedCallback();
-    this._setupTabs();
-    this._setupCounter();
-  }
-
-  private _setupTabs() {
-    const root = this.shadowRoot;
-    if (!root) return;
-    const tabs = root.querySelectorAll('.rp-tab');
-    const graphPane = root.querySelector('.rp-graph') as HTMLElement;
-    const counterPane = root.querySelector('.counter-pane') as HTMLElement;
-    if (!graphPane || !counterPane) return;
-
-    const switchTo = (name: string) => {
-      tabs.forEach((t) => t.classList.toggle('js-active', t.getAttribute('data-tab') === name));
-      graphPane.style.display = name === 'graph' ? 'block' : 'none';
-      counterPane.style.display = name === 'counter' ? 'block' : 'none';
-      (root.querySelector('.rp-title') as HTMLElement).textContent =
-        name === 'graph' ? 'HYPER-GRAPH ENGINE' : 'LIVE COMPONENT PREVIEW';
-    };
-
-    tabs.forEach((tab) => {
-      tab.addEventListener('click', () => switchTo(tab.getAttribute('data-tab') || 'graph'));
-    });
-
-    // Init active
-    switchTo('graph');
-  }
-
-  private _setupCounter() {
-    const root = this.shadowRoot;
-    if (!root) return;
-    const val = root.querySelector('.counter-value') as HTMLElement;
-    if (!val) return;
-
-    root.querySelector('.counter-btn.dec')?.addEventListener('click', () => {
-      this.#count--;
-      val.textContent = String(this.#count);
-    });
-    root.querySelector('.counter-btn.inc')?.addEventListener('click', () => {
-      this.#count++;
-      val.textContent = String(this.#count);
+    // effect() auto-runs on signal change → calls this.update() to re-render
+    effect(() => {
+      void this.#activeTab.value; // track dependency
+      void this.#count.value;     // track dependency
+      this.update();
     });
   }
+
+  private _switchTab(tab: 'graph' | 'counter') {
+    this.#activeTab.value = tab;
+  }
+
+  private _inc() { this.#count.value++; }
+  private _dec() { this.#count.value--; }
 
   override render() {
+    const activeTab = this.#activeTab.value;
+    const count = this.#count.value;
     const isZh = (this.getAttribute('locale') || 'en') === 'zh';
+
     return (
-      <less-layout
-        locale='en' locales='["en","zh"]'
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path="/" full-width
-      >
+      <less-layout locale='en' locales='["en","zh"]' nav-items={JSON.stringify(navSections)} header-nav={JSON.stringify(headerNav)} current-path="/" full-width>
         <div class='swiss-grid'>
           <section class='hero'>
             <div class='hero-inner'>
-              {/* Left */}
+              {/* Left: Giant Typography */}
               <div class='hero-left'>
                 <p class='eyebrow'>[ DEEP RUNTIME ENGINE V0.26 ]</p>
                 <h1 class='giant-headline'>
@@ -288,12 +252,12 @@ export class DocsHome extends DsdElement {
                 </h1>
                 <p class='hero-desc'>
                   {isZh
-                    ? '高性能 Declarative Shadow DOM (DSD) 编译器。零 Virtual-DOM reconciliation。微秒级 Signal 响应式更新。通过形式化架构门禁验证的确定性编译。'
+                    ? '高性能 Declarative Shadow DOM 编译器。零 Virtual-DOM reconciliation。微秒级 Signal 响应式更新。通过形式化架构门禁验证的确定性编译。'
                     : 'High-performance Declarative Shadow DOM compiler. Zero Virtual-DOM reconciliation. Microsecond Signal reactive update. Deterministic compilation validated via formal architecture gates.'}
                 </p>
                 <div class='laser-line'><span class='laser-dot'></span></div>
                 <p class='laser-label'>SIGNAL CORRELATION: 99.82%</p>
-                {/* Terminal */}
+
                 <div class='terminal'>
                   <div class='terminal-head'>
                     <span class='term-dot r'></span><span class='term-dot y'></span><span class='term-dot g'></span>
@@ -301,58 +265,59 @@ export class DocsHome extends DsdElement {
                   </div>
                   <div class='terminal-body'>
                     <div class='term-line'><span class='term-prefix'>➜  less-app</span><span class='term-cmd'>  deno task build:docs</span></div>
-                    <div class='term-line'><span class='term-info'>[info]</span><span>   Scanning routes folder… 41 routes mapped.</span></div>
+                    <div class='term-line'><span class='term-info'>[info]</span><span>   Scanning routes folder… 35 routes mapped.</span></div>
                     <div class='term-line'><span class='term-info'>[info]</span><span>   i18n expansion active: [en, zh]</span></div>
                     <div class='term-line'><span class='term-ok'>[info]   DSD pre-render OK → dist/client/ in 43ms (budget: 100ms)</span></div>
                     <div class='term-line'><span class='term-gate'>[gate]  Package graph verified: 18 nodes, 0 cycles. [PASS]</span></div>
                   </div>
                 </div>
               </div>
-              {/* Right Panel */}
+
+              {/* Right Panel: Signal-driven Graph/Counter */}
               <div class='right-panel'>
                 <div class='rp-header'>
-                  <span class='rp-title'>HYPER-GRAPH ENGINE</span>
+                  <span class='rp-title'>{activeTab === 'graph' ? 'HYPER-GRAPH ENGINE' : 'LIVE COMPONENT PREVIEW'}</span>
                   <div class='rp-tabs'>
-                    <span class='rp-tab js-active' data-tab='graph'>LIVE MAP</span>
-                    <span class='rp-tab' data-tab='counter'>METRICS</span>
+                    <span class={`rp-tab${activeTab === 'graph' ? ' active' : ''}`} onClick={() => this._switchTab('graph')}>LIVE MAP</span>
+                    <span class={`rp-tab${activeTab === 'counter' ? ' active' : ''}`} onClick={() => this._switchTab('counter')}>METRICS</span>
                   </div>
                 </div>
-                <div class='rp-graph'>
-                  <div class='rp-graph-svg'>
-                    <svg viewBox='0 0 432 220' xmlns='http://www.w3.org/2000/svg'>
-                      <rect width='432' height='220' rx='6' fill='#010204'/>
-                      <circle cx='216' cy='110' r='28' fill='none' stroke='#7C6FF5' stroke-width='2' opacity='0.9'/>
-                      <circle cx='216' cy='110' r='28' fill='rgba(124,111,245,0.12)'/>
-                      <text x='216' y='114' font-family='JetBrains Mono,monospace' font-weight='900' font-size='11' fill='#FFFFFF' text-anchor='middle'>@core</text>
-                      <circle cx='216' cy='110' r='75' fill='none' stroke='rgba(124,111,245,0.08)' stroke-width='1.5' stroke-dasharray='4 8'/>
-                      <circle cx='216' cy='35' r='16' fill='#05070B' stroke='#60EFFF' stroke-width='1.5'/>
-                      <text x='216' y='39' font-family='JetBrains Mono,monospace' font-weight='700' font-size='8.5' fill='#E9ECEF' text-anchor='middle'>rt</text>
-                      <line x1='216' y1='51' x2='216' y2='82' stroke='rgba(96,239,255,0.4)' stroke-width='1' stroke-dasharray='2 2'/>
-                      <circle cx='141' cy='110' r='16' fill='#05070B' stroke='#00FF87' stroke-width='1.5'/>
-                      <text x='141' y='114' font-family='JetBrains Mono,monospace' font-weight='700' font-size='8.5' fill='#E9ECEF' text-anchor='middle'>sig</text>
-                      <line x1='157' y1='110' x2='188' y2='110' stroke='rgba(0,255,135,0.4)' stroke-width='1'/>
-                      <circle cx='291' cy='110' r='16' fill='#05070B' stroke='#7C6FF5' stroke-width='1.5'/>
-                      <text x='291' y='114' font-family='JetBrains Mono,monospace' font-weight='700' font-size='8.5' fill='#E9ECEF' text-anchor='middle'>css</text>
-                      <line x1='275' y1='110' x2='244' y2='110' stroke='rgba(124,111,245,0.4)' stroke-width='1'/>
-                      <circle cx='216' cy='185' r='16' fill='#05070B' stroke='#FB7185' stroke-width='1.5'/>
-                      <text x='216' y='189' font-family='JetBrains Mono,monospace' font-weight='700' font-size='8.5' fill='#E9ECEF' text-anchor='middle'>vite</text>
-                      <line x1='216' y1='169' x2='216' y2='138' stroke='rgba(251,113,133,0.4)' stroke-width='1'/>
-                      <rect x='12' y='12' width='100' height='34' rx='4' fill='#05070B' fill-opacity='0.8' stroke='rgba(124,111,245,0.16)' stroke-width='1'/>
-                      <text x='20' y='24' font-family='JetBrains Mono,monospace' font-size='9' fill='#8E92A2'>GRAPH NODES</text>
-                      <text x='20' y='39' font-family='SF Pro Display,system-ui,sans-serif' font-weight='800' font-size='13' fill='#00FF87'>18 NODES</text>
-                      <rect x='320' y='12' width='100' height='34' rx='4' fill='#05070B' fill-opacity='0.8' stroke='rgba(124,111,245,0.16)' stroke-width='1'/>
-                      <text x='328' y='24' font-family='JetBrains Mono,monospace' font-size='9' fill='#8E92A2'>CYCLES GATE</text>
-                      <text x='328' y='39' font-family='SF Pro Display,system-ui,sans-serif' font-weight='800' font-size='13' fill='#00FF87'>0 CYCLES</text>
-                    </svg>
-                  </div>
+
+                <div class={`rp-graph${activeTab === 'graph' ? '' : ' hidden'}`}>
+                  <svg viewBox='0 0 432 220' xmlns='http://www.w3.org/2000/svg' style='display:block;width:100%;height:auto;border:0.5px solid rgba(124,111,245,0.16);border-radius:8px;background:#010204'>
+                    <rect width='432' height='220' rx='6' fill='#010204'/>
+                    <circle cx='216' cy='110' r='28' fill='none' stroke='#7C6FF5' stroke-width='2' opacity='0.9'/>
+                    <circle cx='216' cy='110' r='28' fill='rgba(124,111,245,0.12)'/>
+                    <text x='216' y='114' font-family='JetBrains Mono,monospace' font-weight='900' font-size='11' fill='#FFFFFF' text-anchor='middle'>@core</text>
+                    <circle cx='216' cy='110' r='75' fill='none' stroke='rgba(124,111,245,0.08)' stroke-width='1.5' stroke-dasharray='4 8'/>
+                    <circle cx='216' cy='35' r='16' fill='#05070B' stroke='#60EFFF' stroke-width='1.5'/>
+                    <text x='216' y='39' font-family='JetBrains Mono,monospace' font-weight='700' font-size='8.5' fill='#E9ECEF' text-anchor='middle'>rt</text>
+                    <line x1='216' y1='51' x2='216' y2='82' stroke='rgba(96,239,255,0.4)' stroke-width='1' stroke-dasharray='2 2'/>
+                    <circle cx='141' cy='110' r='16' fill='#05070B' stroke='#00FF87' stroke-width='1.5'/>
+                    <text x='141' y='114' font-family='JetBrains Mono,monospace' font-weight='700' font-size='8.5' fill='#E9ECEF' text-anchor='middle'>sig</text>
+                    <line x1='157' y1='110' x2='188' y2='110' stroke='rgba(0,255,135,0.4)' stroke-width='1'/>
+                    <circle cx='291' cy='110' r='16' fill='#05070B' stroke='#7C6FF5' stroke-width='1.5'/>
+                    <text x='291' y='114' font-family='JetBrains Mono,monospace' font-weight='700' font-size='8.5' fill='#E9ECEF' text-anchor='middle'>css</text>
+                    <line x1='275' y1='110' x2='244' y2='110' stroke='rgba(124,111,245,0.4)' stroke-width='1'/>
+                    <circle cx='216' cy='185' r='16' fill='#05070B' stroke='#FB7185' stroke-width='1.5'/>
+                    <text x='216' y='189' font-family='JetBrains Mono,monospace' font-weight='700' font-size='8.5' fill='#E9ECEF' text-anchor='middle'>vite</text>
+                    <line x1='216' y1='169' x2='216' y2='138' stroke='rgba(251,113,133,0.4)' stroke-width='1'/>
+                    <rect x='12' y='12' width='100' height='34' rx='4' fill='#05070B' fill-opacity='0.8' stroke='rgba(124,111,245,0.16)' stroke-width='1'/>
+                    <text x='20' y='24' font-family='JetBrains Mono,monospace' font-size='9' fill='#8E92A2'>GRAPH NODES</text>
+                    <text x='20' y='39' font-family='SF Pro Display,system-ui,sans-serif' font-weight='800' font-size='13' fill='#00FF87'>18 NODES</text>
+                    <rect x='320' y='12' width='100' height='34' rx='4' fill='#05070B' fill-opacity='0.8' stroke='rgba(124,111,245,0.16)' stroke-width='1'/>
+                    <text x='328' y='24' font-family='JetBrains Mono,monospace' font-size='9' fill='#8E92A2'>CYCLES GATE</text>
+                    <text x='328' y='39' font-family='SF Pro Display,system-ui,sans-serif' font-weight='800' font-size='13' fill='#00FF87'>0 CYCLES</text>
+                  </svg>
                 </div>
-                <div class='counter-pane'>
+
+                <div class={`counter-pane${activeTab === 'counter' ? '' : ' hidden'}`}>
                   <div class='island-badge'><span class='island-dot'></span><span class='island-label'>ISLAND: ACTIVE</span></div>
                   <div class='counter-body'>
                     <div class='counter-box'>
-                      <button class='counter-btn dec'>−</button>
-                      <span class='counter-value'>42</span>
-                      <button class='counter-btn inc'>+</button>
+                      <button class='counter-btn' onClick={() => this._dec()}>−</button>
+                      <span class='counter-value'>{count}</span>
+                      <button class='counter-btn' onClick={() => this._inc()}>+</button>
                     </div>
                     <p class='counter-caption'>State mutated via <b>signal.value</b>. Renders: 1</p>
                   </div>
@@ -360,7 +325,7 @@ export class DocsHome extends DsdElement {
               </div>
             </div>
           </section>
-          {/* Features */}
+
           <section class='features'>
             <div class='features-head'>
               <p>{isZh ? '为什么选择 LESSJS' : 'Why LESSJS'}</p>
