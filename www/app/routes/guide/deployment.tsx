@@ -1,4 +1,4 @@
-export const meta = { section: 'Guide', label: 'Deployment', order: 5 };
+export const meta = { section: 'Production', label: 'Deployment', order: 5 };
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';

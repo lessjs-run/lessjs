@@ -1,4 +1,4 @@
-export const meta = { section: 'Guide', label: 'Core Concepts', order: 2 };
+export const meta = { section: 'Core', label: 'Core Concepts', order: 2 };
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterDocsNav } from '../../utils/nav-filter.ts';

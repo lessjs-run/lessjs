@@ -1,4 +1,4 @@
-export const meta = { section: 'Guide', label: 'Islands & SSR', order: 4 };
+export const meta = { section: 'Core', label: 'Islands & SSR', order: 4 };
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterDocsNav } from '../../utils/nav-filter.ts';

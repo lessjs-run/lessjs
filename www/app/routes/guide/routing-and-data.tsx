@@ -1,4 +1,4 @@
-export const meta = { section: 'Guide', label: 'Routing & Data', order: 3 };
+export const meta = { section: 'Core', label: 'Routing & Data', order: 3 };
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterDocsNav } from '../../utils/nav-filter.ts';

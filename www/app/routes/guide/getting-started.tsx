@@ -1,5 +1,5 @@
 // deno-fmt-ignore-file
-export const meta = { section: 'Guide', label: 'Getting Started', order: 1 };
+export const meta = { section: 'Quick Start', label: 'Getting Started', order: 1 };
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
