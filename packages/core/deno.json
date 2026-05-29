@@ -10,6 +10,8 @@
     "./isr": "./src/isr.ts",
     "./navigation": "./src/navigation.ts",
     "./render-serialize": "./src/render-serialize.ts",
+    "./signal-context": "./src/signal-context.ts",
+    "./style-sheet": "./src/style-sheet.ts",
     "./render-instantiate": "./src/render-instantiate.ts",
     "./render-errors": "./src/render-errors.ts",
     "./render-dsd-stream": "./src/render-dsd-stream.ts",

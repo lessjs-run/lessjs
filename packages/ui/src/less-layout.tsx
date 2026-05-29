@@ -32,11 +32,15 @@
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { navigate, onNavigate } from '@lessjs/core/navigation';
+import { createContext, provideContext } from '@lessjs/core/signal-context';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc, _escAttr } from './shared/escape.js';
 import './less-theme-toggle.js';
 
 export const tagName = 'less-layout';
+
+/** SignalContext key: theme state shared across all components */
+export const THEME_CTX = createContext<'dark' | 'light'>(Symbol('theme'), 'dark');
 
 export interface NavItem {
   path?: string;
@@ -865,12 +869,15 @@ export class LessLayout extends DsdElement {
     if (docTheme) {
       this.setAttribute('data-theme', docTheme);
     }
+    // SignalContext: provide theme state to all child components
+    provideContext(this, THEME_CTX, (docTheme as 'dark' | 'light') || 'dark');
 
     // Listen for theme change events from less-theme-toggle
     this._themeHandler = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       if (detail?.theme) {
         this.setAttribute('data-theme', detail.theme);
+        provideContext(this, THEME_CTX, detail.theme);
         this._propagateTheme(detail.theme);
       }
     };
