@@ -164,15 +164,15 @@ export default class ApiCorePage extends DsdElement {
 
             <!-- ─── @lessjs/adapter-vite ─────────────────────── -->
             <div class="pkg-name">@lessjs/adapter-vite</div>
-            <div class="pkg-import">import { less } from '@lessjs/adapter-vite';</div>
+            <div class="pkg-import">import { lessPipeline } from '@lessjs/adapter-vite';</div>
             <p>
-              Vite 构建编排：路由、Island、SSG 三阶段管线。包含 <code>less()</code>（v0.11 从 core 迁移）。
+              Vite 构建编排：路由、Island、SSG 三阶段管线。包含 <code>lessPipeline()</code> — <code>less()</code> 已标记 @deprecated 于 v0.25。
             </p>
 
-            <div class="fn-name">less()</div>
-            <div class="fn-sig">less(options?: FrameworkOptions, ctx?: LessBuildContext): Plugin[]</div>
+            <div class="fn-name">lessPipeline()</div>
+            <div class="fn-sig">lessPipeline(options?: FrameworkOptions, ctx?: LessBuildContext): Plugin[]</div>
             <div class="fn-desc">
-              创建 LessJS Vite 插件数组。处理路由扫描、Hono 入口生成、Island 转换、SSR 和 SSG。返回 7+ 个插件。
+              声明式构建管线入口。替代旧 <code>less()</code>。处理路由扫描、Hono 入口生成、Island 转换、SSR 和 SSG。返回 7+ 个插件。
             </div>
 
             <div class="fn-name">LessBuildContext</div>
@@ -211,7 +211,7 @@ export default class ApiCorePage extends DsdElement {
             <div class="pkg-name">@lessjs/app</div>
             <div class="pkg-import">import { lessjs } from '@lessjs/app';</div>
             <p>
-              统一入口。组合 less() + lessContent() + lessI18n()，共享 ctx。<strong
+              统一入口。组合 lessPipeline()() + lessI18n()，共享 ctx。<strong
               >推荐所有项目使用。</strong>
             </p>
 
@@ -452,14 +452,14 @@ export default class ApiCorePage extends DsdElement {
 
             <!-- ─── @lessjs/adapter-vite ─────────────────────── -->
             <div class="pkg-name">@lessjs/adapter-vite</div>
-            <div class="pkg-import">import { less } from '@lessjs/adapter-vite';</div>
+            <div class="pkg-import">import { lessPipeline } from '@lessjs/adapter-vite';</div>
             <p>
               Vite build orchestration: routes, islands, SSG 3-phase pipeline. Contains <code
-              >less()</code> (moved from core in v0.11).
+              >lessPipeline()</code>.
             </p>
 
-            <div class="fn-name">less()</div>
-            <div class="fn-sig">less(options?: FrameworkOptions, ctx?: LessBuildContext): Plugin[]</div>
+            <div class="fn-name">lessPipeline()</div>
+            <div class="fn-sig">lessPipeline(options?: FrameworkOptions, ctx?: LessBuildContext): Plugin[]</div>
             <div class="fn-desc">
               Creates the LessJS Vite plugin array. Handles route scanning, Hono entry generation, island
               transform, SSR SSR and SSG. Returns 7+ plugins.
@@ -503,7 +503,7 @@ export default class ApiCorePage extends DsdElement {
             <div class="pkg-name">@lessjs/app</div>
             <div class="pkg-import">import { lessjs } from '@lessjs/app';</div>
             <p>
-              Unified entry. Combines less() + lessContent() + lessI18n() with shared ctx. <strong
+              Unified entry. Wraps lessPipeline()() + lessI18n() with shared ctx. <strong
               >Recommended for all projects.</strong>
             </p>
 

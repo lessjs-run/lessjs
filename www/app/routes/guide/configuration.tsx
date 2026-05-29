@@ -43,7 +43,7 @@ export default defineConfig({'{'} plugins: [lessjs()] {'}'});</code></pre>
             使用 <span class='inline-code'>lessjs()</span>{' '}
             是推荐方式--它组合了核心插件、内容管线和
             i18n，一个调用包含所有功能。如果你只需要核心路由和 island 功能，也可以单独使用{' '}
-            <span class='inline-code'>less()</span> from{' '}
+            <span class='inline-code'>lessPipeline()</span> from{' '}
             <span class='inline-code'>@lessjs/adapter-vite</span>。
           </p>
           <h2>Main Options</h2>
@@ -162,7 +162,7 @@ export default defineConfig({'{'} plugins: [lessjs()] {'}'});</code></pre>
             Use <span class='inline-code'>lessjs()</span>{' '}
             as the recommended entry - it combines the core plugin, content pipeline, and i18n in a
             single call. If you only need core routing and island functionality, you can use{' '}
-            <span class='inline-code'>less()</span> from{' '}
+            <span class='inline-code'>lessPipeline()</span> from{' '}
             <span class='inline-code'>@lessjs/adapter-vite</span> directly.
           </p>
           <h2>Options Reference</h2>
