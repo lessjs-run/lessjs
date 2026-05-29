@@ -12,8 +12,8 @@
  * @module @lessjs/core/jsx-render-string
  */
 
-import { isVNode } from './vnode.ts';
-import { Fragment } from './jsx-runtime.ts';
+import { isVNode, type VNode } from './vnode.ts';
+import { For, Fragment, Show } from './jsx-runtime.ts';
 import { escapeAttr, escapeHtml } from './html-escape.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 
@@ -142,6 +142,33 @@ export function renderToString(node: unknown): string {
   // ── Fragment ──────────────────────────────────────────────────────────────
   if (tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(lessjs.fragment)')) {
     return children.map((c) => renderToString(c)).join('');
+  }
+
+  // ── Show (SSR: render truthy child as static snapshot) ────────────────────
+  if (tag === Show) {
+    const whenVal = isSignalLike(props?.when)
+      ? (props!.when as { value: unknown }).value
+      : props?.when;
+    const ch = children as VNode[];
+    const target = whenVal ? ch[0] : ch[1];
+    return target ? renderToString(target) : '';
+  }
+
+  // ── For (SSR: render each item statically) ────────────────────────────────
+  if (tag === For) {
+    const items = (isSignalLike(props?.each)
+      ? (props!.each as { value: unknown }).value
+      : props?.each) as unknown[];
+    if (!Array.isArray(items)) {
+      return '';
+    }
+    const renderFn = children[0] as unknown as ((item: unknown, idx: number) => unknown);
+    if (typeof renderFn !== 'function') {
+      return '';
+    }
+    return items.map((item, i) =>
+      renderToString(renderFn(item, i))
+    ).join('');
   }
 
   // ── Component function / class ────────────────────────────────────────────

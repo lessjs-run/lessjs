@@ -59,7 +59,7 @@ import {
 import { isVNode, type VNode } from './vnode.js';
 import { applyProps, renderToDom } from './jsx-render-dom.js';
 import { renderToString } from './jsx-render-string.js';
-import { effect, signal } from '@lessjs/signals';
+import { signal } from '@lessjs/signals';
 
 /**
  * Minimal SSR-safe HTMLElement stub for server environments (SOP-016).
@@ -145,9 +145,6 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
 
   /** Signal subscriptions from TemplateResult / VNode effects */
   private _signalUnsubscribers: Array<() => void> = [];
-
-  /** v0.24.3: Effect dispose for VNode signal subscriptions. */
-  private _vnodeEffectDispose?: () => void;
 
   /** Reactive route parameters Signal. Updates automatically on SPA navigation. */
   #params = signal<Record<string, string>>({});
@@ -268,18 +265,11 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
 
   /**
    * v0.25.0 (SOP-012): Unified render path.
-   *
-   * DSD path (shadow DOM pre-populated): preserve existing DOM,
-   * bind events via VNode tree walk, set up effect() signal tracking.
-   *
-   * CSR path (empty shadow DOM): full render from VNode.
-   *
-   * The _dsdHydrated flag and _bindCurrentRenderTemplate() are removed.
    */
   private _renderOrHydrate(): void {
     const isDsd = this.shadowRoot && this.shadowRoot.childNodes.length > 0;
     if (isDsd) {
-      // DSD: DOM already correct — bind events and set up signal tracking
+      // DSD: DOM already correct — bind events via VNode walk
       this._hyrateExistingDom();
       this.onDsdHydrated();
     } else if (this.shadowRoot) {
@@ -294,7 +284,11 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    *
    * Walks the existing shadow DOM tree and matches VNode structure to
    * wire event listeners (onClick etc.) without re-creating any elements.
-   * Also sets up effect() signal tracking for reactive updates.
+   *
+   * v0.26.1 (ADR-0058): Removed effect(() => render()) callback.
+   * Signal→DOM bindings are created by applyProps at initial render
+   * time and update individual DOM attributes directly — no full
+   * re-render needed.
    */
   private _hyrateExistingDom(): void {
     if (!this.shadowRoot) return;
@@ -302,24 +296,10 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     const result = this.render();
     if (!isVNode(result)) return;
 
-    // Walk shadow DOM and VNode tree in parallel, binding events
+    // Walk shadow DOM and VNode tree in parallel, binding events.
+    // applyProps will create signal→DOM effect bindings for any
+    // signal-valued props detected during the walk.
     this._walkAndBind(this.shadowRoot, result);
-
-    // Set up effect() for signal-driven re-render (same as CSR path)
-    this._vnodeEffectDispose = effect(() => {
-      const updated = this.render();
-      if (!isVNode(updated)) return;
-      if (this._templateAbortController) {
-        this._templateAbortController.abort();
-      }
-      this._templateAbortController = new AbortController();
-      while (this.shadowRoot!.firstChild) {
-        this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
-      }
-      this.shadowRoot!.appendChild(
-        renderToDom(updated, this._templateAbortController.signal),
-      );
-    });
   }
 
   /**
@@ -462,7 +442,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    * ReactiveHost: request a reactive update.
    *
    * Public entry point for signal-driven updates. Re-renders using
-   * the VNode path with effect() signal tracking.
+   * the VNode path.
    */
   requestReactiveUpdate(): void {
     if (!this.isConnected) return;
@@ -480,29 +460,12 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       while (this.shadowRoot.firstChild) {
         this.shadowRoot.removeChild(this.shadowRoot.firstChild);
       }
-      // v0.24.1: Use renderToDom so event handlers (onClick etc.) are wired via addEventListener
+      // v0.26.1 (ADR-0058): renderToDom → applyProps creates signal→DOM
+      // effect bindings for any signal-valued props. No effect(() => render())
+      // needed — each signal updates its bound DOM attribute independently.
       this._templateAbortController = new AbortController();
       const dom = renderToDom(result, this._templateAbortController.signal);
       this.shadowRoot.appendChild(dom);
-      // v0.24.3: Set up reactive signal tracking via effect().
-      // Unlike TemplateResult's fine-grained patch, VNodes use full re-render
-      // driven by alien-signals effect. The effect tracks all signal accesses
-      // during render() and re-executes when any dependency changes.
-      this._vnodeEffectDispose = effect(() => {
-        const updated = this.render();
-        if (!isVNode(updated)) return;
-        // DOM update (without creating new effect)
-        if (this._templateAbortController) {
-          this._templateAbortController.abort();
-        }
-        this._templateAbortController = new AbortController();
-        while (this.shadowRoot!.firstChild) {
-          this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
-        }
-        this.shadowRoot!.appendChild(
-          renderToDom(updated, this._templateAbortController.signal),
-        );
-      });
     } else if (typeof result === 'string') {
       this.shadowRoot.innerHTML = result;
     } else {
@@ -519,9 +482,10 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   }
 
   // v0.25.0 (SOP-012): Removed _bindCurrentRenderTemplate().
-  // DSD hydration now handled by _hyrateExistingDom() which walks
-  // the pre-populated DOM, binds events via applyProps, and sets
-  // up effect() signal tracking — without clearing/re-creating DOM.
+  // DSD hydration handled by _hyrateExistingDom() which walks
+  // the pre-populated DOM and binds events via applyProps.
+  // v0.26.1 (ADR-0058): Signal→DOM bindings are auto-created by
+  // applyProps during _walkAndBind — no effect(render) needed.
 
   private _disposeTemplateRuntime(): void {
     if (this._templateAbortController) {
@@ -531,11 +495,6 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   }
 
   private _disposeSignalSubscriptions(): void {
-    // v0.24.3: Dispose VNode effect tracking
-    if (this._vnodeEffectDispose) {
-      this._vnodeEffectDispose();
-      this._vnodeEffectDispose = undefined;
-    }
     for (const unsubscribe of this._signalUnsubscribers.splice(0)) {
       unsubscribe();
     }

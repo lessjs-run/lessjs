@@ -12,8 +12,9 @@
  */
 
 import { isVNode, type VNode } from './vnode.ts';
-import { Fragment } from './jsx-runtime.ts';
+import { For, Fragment, Show } from './jsx-runtime.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
+import { effect } from '@lessjs/signals';
 
 // ─── SVG namespace support ────────────────────────────────────────────────────
 
@@ -90,10 +91,46 @@ function createElementForTag(tag: string): Element {
 // ─── applyProps ───────────────────────────────────────────────────────────────
 
 /**
+ * Apply a single resolved (non-signal) prop value to a DOM element.
+ * Extracted from applyProps so it can be reused inside signal→DOM
+ * effect callbacks without unwrapping signals again.
+ */
+function applyStaticProp(el: Element, key: string, resolved: unknown): void {
+  if (resolved == null) return;
+
+  // style object — unwrap nested signal values
+  if (key === 'style' && typeof resolved === 'object' && resolved !== null) {
+    const styleObj: Record<string, string> = {};
+    for (const [sk, sv] of Object.entries(resolved as Record<string, unknown>)) {
+      styleObj[sk] = String(unwrapSignalLike(sv));
+    }
+    Object.assign((el as HTMLElement).style, styleObj);
+    return;
+  }
+
+  // Resolve attribute name
+  const attrName = key === 'className' ? 'class' : key === 'htmlFor' ? 'for' : key;
+
+  // Boolean attributes
+  if (typeof resolved === 'boolean') {
+    if (resolved) {
+      el.setAttribute(attrName, '');
+    } else {
+      el.removeAttribute(attrName);
+    }
+    return;
+  }
+
+  // General
+  el.setAttribute(attrName, String(resolved));
+}
+
+/**
  * Apply a props object to a real DOM element.
  *
  * - `on*` handlers → addEventListener
  * - `ref` → invoke callback with element
+ * - Signal values → create effect() binding (ADR-0058)
  * - `style` object → assign to element.style
  * - Boolean values → setAttribute / removeAttribute
  * - `className` → `class` attribute
@@ -124,34 +161,27 @@ export function applyProps(
 
     if (value == null) continue;
 
+    // v0.26.1 (ADR-0058): Signal→DOM direct binding.
+    // Instead of unwrapping the signal to a static value and calling
+    // it done, create an effect that binds the signal directly to the
+    // DOM attribute. When the signal changes, only that attribute/prop
+    // is updated — no full re-render, no VDOM diff, no lifecycle noise.
+    if (isSignalLike(value)) {
+      const dispose = effect(() => {
+        const resolved = unwrapSignalLike(value.value);
+        applyStaticProp(el, key, resolved);
+      });
+      // Dispose when the AbortSignal fires (component disconnect)
+      if (signal) {
+        signal.addEventListener('abort', dispose, { once: true });
+      }
+      continue;
+    }
+
     // v0.24.3: Unwrap Signal-like values before handling any attribute
     const resolved = unwrapSignalLike(value);
 
-    // style object — unwrap nested signal values
-    if (key === 'style' && typeof resolved === 'object' && resolved !== null) {
-      const styleObj: Record<string, string> = {};
-      for (const [sk, sv] of Object.entries(resolved as Record<string, unknown>)) {
-        styleObj[sk] = String(unwrapSignalLike(sv));
-      }
-      Object.assign((el as HTMLElement).style, styleObj);
-      continue;
-    }
-
-    // Resolve attribute name
-    const attrName = key === 'className' ? 'class' : key === 'htmlFor' ? 'for' : key;
-
-    // Boolean attributes
-    if (typeof resolved === 'boolean') {
-      if (resolved) {
-        el.setAttribute(attrName, '');
-      } else {
-        el.removeAttribute(attrName);
-      }
-      continue;
-    }
-
-    // General
-    el.setAttribute(attrName, String(resolved));
+    applyStaticProp(el, key, resolved);
   }
 }
 
@@ -175,9 +205,17 @@ export function renderToDom(node: unknown, signal?: AbortSignal): Node {
     return document.createTextNode(String(node));
   }
 
-  // v0.24.1: Auto-unwrap Signal values in JSX children (CSR parity with renderToString)
+  // v0.26.1 (ADR-0058/0059): Signal→TextNode reactive binding.
+  // Creates a TextNode that auto-updates when the signal changes,
+  // without requiring full re-render or VDOM diff.
   if (isSignalLike(node)) {
-    return renderToDom((node as { value: unknown }).value, signal);
+    const sig = node as { value: unknown };
+    const textNode = document.createTextNode(String(sig.value ?? ''));
+    const dispose = effect(() => {
+      textNode.textContent = String(sig.value ?? '');
+    });
+    if (signal) signal.addEventListener('abort', dispose, { once: true });
+    return textNode;
   }
 
   if (!isVNode(node)) {
@@ -193,6 +231,67 @@ export function renderToDom(node: unknown, signal?: AbortSignal): Node {
       frag.appendChild(renderToDom(child, signal));
     }
     return frag;
+  }
+
+  // ── Show (conditional rendering) ──────────────────────────────────────────
+  if (tag === Show) {
+    const whenSig = props?.when;
+    const ch = children as VNode[];
+    const truthy: unknown = ch[0];
+    const falsy: unknown = ch[1];
+    const marker = document.createComment('show');
+
+    let anchor: ChildNode | null = null;
+    const swap = () => {
+      const show = Boolean(
+        isSignalLike(whenSig) ? (whenSig as { value: unknown }).value : whenSig,
+      );
+      const target = show ? truthy : falsy;
+      if (anchor) anchor.remove();
+      if (target != null) {
+        anchor = renderToDom(target, signal) as ChildNode;
+        marker.parentNode?.insertBefore(anchor, marker.nextSibling);
+      } else {
+        anchor = null;
+      }
+    };
+    const dispose = effect(() => swap());
+    if (signal) signal.addEventListener('abort', dispose, { once: true });
+    // Initial render: run swap so anchor is created before marker is returned
+    swap();
+    return marker;
+  }
+
+  // ── For (list rendering) ──────────────────────────────────────────────────
+  if (tag === For) {
+    const eachSig = props?.each;
+    const renderFn = (children[0] as unknown as ((item: unknown, idx: number) => unknown)) ??
+      ((() => document.createTextNode('')) as unknown as (item: unknown, idx: number) => unknown);
+
+    const marker = document.createComment('for');
+    let anchors: ChildNode[] = [];
+
+    const reconcile = () => {
+      const items =
+        (isSignalLike(eachSig) ? (eachSig as { value: unknown }).value : eachSig) as unknown[];
+      if (!Array.isArray(items)) return;
+
+      // Remove old
+      for (const a of anchors) a.remove();
+      anchors = [];
+
+      // Render new
+      for (let i = 0; i < items.length; i++) {
+        const vn = renderFn(items[i], i);
+        const dom = renderToDom(vn, signal) as ChildNode;
+        marker.parentNode?.insertBefore(dom, marker.nextSibling);
+        anchors.push(dom);
+      }
+    };
+    const dispose = effect(() => reconcile());
+    if (signal) signal.addEventListener('abort', dispose, { once: true });
+    reconcile();
+    return marker;
   }
 
   // ── Component function / class ────────────────────────────────────────────
