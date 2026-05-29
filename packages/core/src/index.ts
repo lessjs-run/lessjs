@@ -131,9 +131,12 @@ export {
 } from './signal-like.js';
 export { consumeContext, type Context, createContext, provideContext } from './signal-context.js';
 export { createLogger, LessLogger, LogLevel } from './logger.js';
+/** @internal — use @lessjs/core/security subpath */
 export { DANGEROUS_KEYS } from './security.js';
 export { isValidTagName } from './tag-utils.js';
 export { bindEvents, defineIsland, getSsrProps, type IslandOptions } from './island.js';
+export { transformIslandSource } from './island-transform.js';
+export type { IslandTransformOptions, IslandTransformResult } from './island-transform.js';
 export { hasNavigationApi, matchRoute, navigate, onNavigate } from './navigation.js';
 export type { NavigationCallback } from './navigation.js';
 

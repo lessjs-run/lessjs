@@ -34,8 +34,11 @@
 import type { Plugin } from 'vite';
 import type { LessI18nOptions } from './types.ts';
 import type { LessBuildContextLike } from '@lessjs/protocols/build-types';
-import { loadI18nData } from './i18n-data.ts';
+import { loadI18nData, writeI18nDataModule } from './i18n-data.ts';
 import { createLogger } from '@lessjs/core/logger';
+import process from 'node:process';
+import { join } from 'node:path';
+import { mkdirSync, writeFileSync } from 'node:fs';
 
 const log = createLogger('i18n');
 
@@ -43,6 +46,7 @@ const log = createLogger('i18n');
 
 export type { LessI18nOptions } from './types.ts';
 export { loadI18nData } from './i18n-data.ts';
+export { writeI18nDataModule } from './i18n-data.ts';
 export { i18nStaticPaths, switchLocale } from './routes.ts';
 
 // ─── Main Plugin ────────────────────────────────────────────────
@@ -75,6 +79,21 @@ export function lessI18n(
         // Lives here (not in adapter-vite) to avoid circular deps
         const { createI18nDataPlugin } = await import('./i18n-data-plugin.ts');
         ctx.plugins.i18nDataPlugin = createI18nDataPlugin(ctx);
+      }
+
+      // SOP-001: Write generated i18n data module to disk
+      try {
+        const dataDir = join(process.cwd(), 'app', 'data');
+        mkdirSync(dataDir, { recursive: true });
+        const i18nModule = writeI18nDataModule(i18nData.locales, i18nData.defaultLocale);
+        writeFileSync(join(dataDir, '_generated-i18n-data.ts'), i18nModule, 'utf-8');
+        log.info(`I18n: wrote _generated-i18n-data.ts (${i18nData.locales.join(', ')})`);
+      } catch (err) {
+        log.warn(
+          `Failed to write _generated-i18n-data.ts: ${
+            err instanceof Error ? err.message : String(err)
+          }`,
+        );
       }
 
       log.info(`${options.locales.join(', ')} (default: ${options.defaultLocale})`);

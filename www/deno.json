@@ -1,4 +1,9 @@
 {
+  "imports": {
+    "@lessjs/content/nav": "./app/data/_generated-nav.ts",
+    "@lessjs/content/blog-data": "./app/data/_generated-blog-data.ts",
+    "@lessjs/i18n/data": "./app/data/_generated-i18n-data.ts"
+  },
   "compilerOptions": {
     "skipLibCheck": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable", "deno.ns"]

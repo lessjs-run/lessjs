@@ -19,13 +19,13 @@ const publicDocs = [
   'docs/changelog/README.md',
   'docs/changelog/v0.20.0.md',
   'docs/changelog/v0.21.0.md',
-  'www/app/routes/index/index.ts',
-  'www/app/routes/roadmap.ts',
-  'www/app/routes/guide/positioning.ts',
-  'www/app/routes/engine/architecture.ts',
-  'www/app/routes/engine/comparison.ts',
-  'www/app/routes/engine/dsd.ts',
-  'www/app/routes/engine/islands.ts',
+  'www/app/routes/index/index.tsx',
+  'www/app/routes/roadmap.tsx',
+  'www/app/routes/guide/getting-started.tsx',
+  'www/app/routes/architecture/architecture.tsx',
+  'www/app/routes/architecture/comparison.tsx',
+  'www/app/routes/architecture/dsd.tsx',
+  'www/app/routes/architecture/islands.tsx',
 ];
 
 const currentDocs = [
@@ -33,9 +33,9 @@ const currentDocs = [
   'README.zh.md',
   'docs/roadmap/ROADMAP.md',
   'docs/status/STATUS.md',
-  'www/app/routes/index/index.ts',
-  'www/app/routes/roadmap.ts',
-  'www/app/routes/guide/positioning.ts',
+  'www/app/routes/index/index.tsx',
+  'www/app/routes/roadmap.tsx',
+  'www/app/routes/guide/getting-started.tsx',
 ];
 
 const checks: Check[] = [
@@ -45,20 +45,20 @@ const checks: Check[] = [
     required: ['DSD-first'],
   },
   {
-    name: 'v0.21.0 is the current public line',
+    name: 'v0.26.0 is the current public line',
     files: currentDocs,
-    required: ['v0.21'],
+    required: ['v0.26'],
   },
   {
-    name: 'v0.22 is the next framework credibility line',
+    name: 'v1.0 is the stable engine target',
     files: [
       'README.md',
       'README.zh.md',
       'docs/roadmap/ROADMAP.md',
       'docs/status/STATUS.md',
-      'www/app/routes/roadmap.ts',
+      'www/app/routes/roadmap.tsx',
     ],
-    required: ['v0.22'],
+    required: ['v1.0'],
   },
   {
     name: 'stale version and stale roadmap claims are absent',

@@ -1,6 +1,5 @@
-export const meta = { section: 'Production', label: 'Deployment', order: 50 };
-import { headerNav, navSections } from 'virtual:less-nav';
-import { filterDocsNav } from '../../utils/nav-filter.ts';
+export const meta = { section: 'Production', label: 'Deployment', order: 5 };
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
@@ -41,7 +40,7 @@ export class DeploymentPage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    const nav = JSON.stringify(filterDocsNav(navSections));
+    const nav = JSON.stringify(navSections);
     const hNav = JSON.stringify(headerNav);
     return (
       <less-layout
@@ -125,6 +124,22 @@ export class DeploymentPage extends DsdElement {
             LessJS 主路径不需要长期运行的生产 SSR 服务器。静态页面应保持静态；动态行为应为显式 API
             或未来的 ISR。这使托管便宜、可缓存、运维轻量。
           </p>
+          <h2>PWA 支持</h2>
+          <p>
+            LessJS 支持 Progressive Web App。在 <code>public/</code> 目录放置 manifest 和 service worker，
+            构建时会自动复制到输出目录。配置 CSP meta 和 view transition 元数据可通过 Vite 插件自动注入。
+          </p>
+          <less-code-block><pre><code>{`// vite.config.ts
+import { lessjs } from '@lessjs/app';
+
+export default defineConfig({
+  plugins: [lessjs({
+    pwa: {
+      injectManifest: true,
+    },
+  })],
+});`}</code></pre></less-code-block>
+
           <h2>Deployment Checklist</h2>
           <ul>
             <li>在本地或 CI 中运行 deno task build。</li>
@@ -134,7 +149,7 @@ export class DeploymentPage extends DsdElement {
             <li>如果 island 调用运行时端点，单独部署 API 路由。</li>
           </ul>
           <div class='nav-row'>
-            <a href='/guide/testing' class='nav-link'>← 测试</a>
+            <a href='/guide/islands-and-ssr' class='nav-link'>← Islands 与 SSR</a>
             <a href='/roadmap' class='nav-link'>开发计划 →</a>
           </div>
         </div>
@@ -144,7 +159,7 @@ export class DeploymentPage extends DsdElement {
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    const nav = JSON.stringify(filterDocsNav(navSections));
+    const nav = JSON.stringify(navSections);
     const hNav = JSON.stringify(headerNav);
     return (
       <less-layout
@@ -203,6 +218,23 @@ export class DeploymentPage extends DsdElement {
             static; dynamic behavior should be explicit API or future ISR. This keeps hosting cheap,
             cacheable, and operationally lightweight.
           </p>
+          <h2>PWA Support</h2>
+          <p>
+            LessJS supports Progressive Web Apps. Place your manifest and service worker in the
+            <code>public/</code> directory — they're automatically copied to the output during build.
+            CSP meta and view transition metadata can be auto-injected via the Vite plugin.
+          </p>
+          <less-code-block><pre><code>{`// vite.config.ts
+import { lessjs } from '@lessjs/app';
+
+export default defineConfig({
+  plugins: [lessjs({
+    pwa: {
+      injectManifest: true,
+    },
+  })],
+});`}</code></pre></less-code-block>
+
           <h2>Deployment Checklist</h2>
           <ul>
             <li>
@@ -216,7 +248,7 @@ export class DeploymentPage extends DsdElement {
             <li>If islands call runtime endpoints, deploy API routes separately.</li>
           </ul>
           <div class='nav-row'>
-            <a href='/guide/testing' class='nav-link'>← Testing</a>
+            <a href='/guide/islands-and-ssr' class='nav-link'>← Islands &amp; SSR</a>
             <a href='/roadmap' class='nav-link'>Roadmap →</a>
           </div>
         </div>

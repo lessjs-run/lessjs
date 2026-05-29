@@ -553,21 +553,9 @@ export type StrategySource = 'directive' | 'island-options' | 'manifest' | 'defa
 /**
  * Declarative event binding descriptor.
  *
- * @deprecated Removed in v0.21.0. Use `@click` / `@keydown` etc. in `html` tagged templates.
- * See ADR-0039 and SOP-006 for migration.
- *
- * @example
- * ```ts
- * // Before (hydrateEvents — removed in v0.21.0):
- * // static hydrateEvents = [
- * //   { selector: 'button', event: 'click', method: '_handleToggle' },
- * // ];
- *
- * // After (html + @click):
- * // render() {
- * //   return html`<button @click=${this._handleToggle}>Toggle</button>`;
- * // }
- * ```
+ * @deprecated Still used by adapter-lit/adapter-react/adapter-vanilla dsd-hydration.
+ * Scheduled for removal in v0.27 when adapters migrate to `@click` binding.
+ * See ADR-0039.
  */
 export interface HydrateEventDescriptor {
   /** CSS selector within shadow root to find the target element */

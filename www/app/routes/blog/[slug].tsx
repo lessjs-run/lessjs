@@ -5,13 +5,12 @@
  * The `slug` param is set by LessJS dynamic routing: /blog/:slug
  * ADR 0018: Data comes from virtual module, not @lessjs/content module state.
  */
-import { headerNav, navSections } from 'virtual:less-nav';
-import { filterBlogNav } from '../../utils/nav-filter.js';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import { getPostBySlug, posts } from 'virtual:less-blog-data';
+import { getPostBySlug, posts } from '@lessjs/content/blog-data';
 
 export const tagName = 'page-blog-slug';
 
@@ -61,7 +60,7 @@ export default class BlogPostPage extends DsdElement {
   private _renderZh() {
     const loc = this._getLocale('zh');
     const post = getPostBySlug(this.slug);
-    const nav = filterBlogNav(navSections);
+    const nav = navSections;
     if (!post) {
       return (
         <less-layout
@@ -114,7 +113,7 @@ export default class BlogPostPage extends DsdElement {
   private _renderEn() {
     const loc = this._getLocale('en');
     const post = getPostBySlug(this.slug);
-    const nav = filterBlogNav(navSections);
+    const nav = navSections;
     if (!post) {
       return (
         <less-layout

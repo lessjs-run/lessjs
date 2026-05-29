@@ -1,7 +1,6 @@
 export const meta = { section: 'Production', label: 'Testing', order: 40 };
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
-import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -15,7 +14,7 @@ export class TestingPage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    const nav = filterDocsNav(navSections);
+    const nav = navSections;
     return (
       <less-layout
         locale={loc}
@@ -53,7 +52,7 @@ export class TestingPage extends DsdElement {
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    const nav = filterDocsNav(navSections);
+    const nav = navSections;
     return (
       <less-layout
         locale={loc}

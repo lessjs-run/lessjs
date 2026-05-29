@@ -1,3 +1,60 @@
+## v0.26.0 — Framework Decoupling + SSG Robustness (2026-05-29)
+
+> **Previous**: v0.25.0 | **SOPs**: 5 | **ADR**: ADR-0061
+
+### Virtual Modules Removed from Route Files
+
+60 route files no longer import from `virtual:less-nav` or `virtual:less-blog-data`.
+Data now flows through `@lessjs/content/nav`, `@lessjs/content/blog-data`, and
+`@lessjs/i18n/data` — framework-owned ESM exports, not Vite virtual modules.
+
+```diff
+- import { headerNav, navSections } from 'virtual:less-nav';
++ import { headerNav, navSections } from '@lessjs/content/nav';
+```
+
+- `@lessjs/content` now exports `./nav-data`, `./blog-data` writer utilities
+- `@lessjs/i18n` now exports `./data` writer
+- `buildStart()` hooks write `_generated-nav.ts`, `_generated-blog-data.ts`, `_generated-i18n-data.ts`
+- SSG bundle keeps virtual modules internally; route files use new paths
+
+### Island Transform Extraction
+
+- `@lessjs/core/island-transform`: `transformIslandSource()` pure function, zero Vite
+- `@lessjs/adapter-vite` island-transform: 69 → 36 lines (−48%)
+- 18 tests pass (6 core + 12 adapter)
+
+### Dev Server Zero Bundler
+
+```bash
+deno task dev:fast  # ~100ms cold start
+```
+
+- `www/app/dev-server.ts`: Deno.serve + Hono, no Vite dependency
+- `www/app/middleware/dev-static.ts`: static asset serving
+- Vite HMR dev server (`deno task dev`) preserved as optional enhancement
+
+### SSG Robustness Fixes
+
+- **adapter stubs**: `DsdReactElement`/`DsdLitElement`/`DsdVanillaElement` stubs changed
+  from `undefined` to real class stubs — prevents `(void 0) is not a function` in SSR
+- **react-showcase island**: `typeof WithDsdHydration === 'function'` guard for
+  externalized adapter imports
+- **adapter-react stub**: `WithDsdHydration` added to SSG stub
+
+### Verification
+
+```
+fmt       ✅ 666 files
+lint      ✅ 269 files
+typecheck ✅
+graph     ✅ 18 packages, 0 cycles
+test      ✅ 943 passed
+build:docs ✅ 0 FAILED, sitemap 478 URLs
+```
+
+---
+
 ## v0.25.0 — Declarative DX (2026-05-29)
 
 > **Previous**: v0.24.4 | **SOPs**: 14 | **ADR**: ADR-0058/0059/0060

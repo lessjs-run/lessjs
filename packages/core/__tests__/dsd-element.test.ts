@@ -278,3 +278,58 @@ Deno.test('DsdElement: DSD path does not overwrite existing shadow DOM', () => {
 
   document.body.removeChild(el);
 });
+
+// TG-01: this.params SPA-reactive
+
+Deno.test('DsdElement: this.params is reactive', () => {
+  if (!hasDOM) return;
+
+  const tagName = `test-params-${Math.random().toString(36).slice(2, 7)}`;
+  class ParamsElement extends DsdElement {
+    override render(): string {
+      const p = this.params;
+      return `<span>slug=${p.slug || 'none'}</span>`;
+    }
+  }
+  customElements.define(tagName, ParamsElement);
+
+  const el = document.createElement(tagName) as DsdElement;
+  document.body.appendChild(el);
+
+  // Initial state: params defaults to {}
+  assertEquals(el.shadowRoot!.innerHTML, '<span>slug=none</span>');
+
+  // Set params and re-render
+  el.params = { slug: 'hello-world' };
+  el.update();
+  assertEquals(el.shadowRoot!.innerHTML, '<span>slug=hello-world</span>');
+
+  // Update params again
+  el.params = { slug: 'another-post' };
+  el.update();
+  assertEquals(el.shadowRoot!.innerHTML, '<span>slug=another-post</span>');
+
+  document.body.removeChild(el);
+});
+
+Deno.test('DsdElement: this.params default empty object', () => {
+  if (!hasDOM) return;
+
+  const tagName = `test-params-default-${Math.random().toString(36).slice(2, 7)}`;
+  class DefaultParamsElement extends DsdElement {
+    override render(): string {
+      const keys = Object.keys(this.params);
+      return `<span>keys=${keys.length}</span>`;
+    }
+  }
+  customElements.define(tagName, DefaultParamsElement);
+
+  const el = document.createElement(tagName) as DsdElement;
+  document.body.appendChild(el);
+
+  // Default params should be an empty object
+  assertEquals(el.shadowRoot!.innerHTML, '<span>keys=0</span>');
+  assertEquals(el.params, {});
+
+  document.body.removeChild(el);
+});

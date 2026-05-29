@@ -529,7 +529,42 @@ export class LessLayout extends DsdElement {
     return cp;
   }
 
+  /** Compute GitHub edit URL from current path. */
+  private _computeEditUrl(): string {
+    const path = this._currentPath();
+    if (!path || path === '/') return '';
+    const EDIT_BASE = 'https://github.com/lessjs-run/lessjs/edit/main/www/app/routes';
+    const clean = path.replace(/\/$/, '').split('/').filter(Boolean);
+    // Remove locale prefix if present (en/, zh/)
+    if (['en', 'zh'].includes(clean[0])) clean.shift();
+    const filePath = clean.length === 0 ? 'index/index' : clean.join('/');
+    return `${EDIT_BASE}/${filePath}.tsx`;
+  }
+
   private _navItems(): NavSection[] {
+    const items = this._rawNavItems();
+    return this._filterByPath(items);
+  }
+
+  /** Auto-filter sidebar sections by current path prefix. */
+  private _filterByPath(items: NavSection[]): NavSection[] {
+    const path = this._currentPath();
+    const SECTION_MAP: Record<string, string[]> = {
+      '/guide': ['Quick Start', 'Core', 'Production'],
+      '/architecture': ['Principles', 'Compatibility', 'Reference'],
+      '/registry': ['Registry'],
+      '/hub': ['Registry'],
+      '/blog': ['History'],
+    };
+    for (const [prefix, sections] of Object.entries(SECTION_MAP)) {
+      if (path.startsWith(prefix)) {
+        return items.filter((s) => sections.includes(s.section));
+      }
+    }
+    return items;
+  }
+
+  private _rawNavItems(): NavSection[] {
     try {
       const prop = (this as Record<string, unknown>).navItems;
       if (prop && Array.isArray(prop)) return prop as NavSection[];
@@ -709,7 +744,7 @@ export class LessLayout extends DsdElement {
       'Built with LessJS Framework — Self-bootstrapped from JSR — LESS IS MORE',
     );
     const githubUrl = this._getStr('github-url', 'https://github.com/lessjs-run/LessJS');
-    const editUrl = this.getAttribute('edit-url') || '';
+    const editUrl = this.getAttribute('edit-url') || this._computeEditUrl();
     const locales = this._locales();
     const otherLocaleLabel = locales.length > 1 ? this._esc(this._otherLocaleLabel()) : '';
     const otherLocalePath = locales.length > 1 ? this._otherLocalePath() : '';

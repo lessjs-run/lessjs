@@ -1,7 +1,6 @@
 export const meta = { section: 'Production', label: 'Configuration', order: 10 };
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
-import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -17,7 +16,7 @@ export class ConfigurationPage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    const nav = JSON.stringify(filterDocsNav(navSections));
+    const nav = JSON.stringify(navSections);
     const hNav = JSON.stringify(headerNav);
     return (
       <less-layout
@@ -126,8 +125,8 @@ export default defineConfig({'{'}
 {'}'});</code></pre>
           </less-code-block>
           <div class='nav-row'>
-            <a href='/guide/api-design' class='nav-link'>← API Design</a>
-            <a href='/guide/security-middleware' class='nav-link'>Security &amp; Middleware →</a>
+            <a href='/api/reference' class='nav-link'>← API Design</a>
+            <a href='/guide/error-handling' class='nav-link'>Security &amp; Middleware →</a>
           </div>
         </div>
       </less-layout>
@@ -136,7 +135,7 @@ export default defineConfig({'{'}
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    const nav = JSON.stringify(filterDocsNav(navSections));
+    const nav = JSON.stringify(navSections);
     const hNav = JSON.stringify(headerNav);
     return (
       <less-layout
@@ -257,12 +256,12 @@ export default defineConfig({'{'}
           <p>
             See <a href='/guide/api'>API Reference</a> for the complete options table, or check the
             {' '}
-            <a href='/guide/security-middleware'>Security &amp; Middleware</a>{' '}
+            <a href='/guide/error-handling'>Security &amp; Middleware</a>{' '}
             guide for CSP and middleware configuration.
           </p>
           <div class='nav-row'>
-            <a href='/guide/api-design' class='nav-link'>← API Design</a>
-            <a href='/guide/security-middleware' class='nav-link'>Security &amp; Middleware →</a>
+            <a href='/api/reference' class='nav-link'>← API Design</a>
+            <a href='/guide/error-handling' class='nav-link'>Security &amp; Middleware →</a>
           </div>
         </div>
       </less-layout>

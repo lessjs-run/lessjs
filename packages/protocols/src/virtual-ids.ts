@@ -16,6 +16,3 @@ export const RESOLVED_I18N_DATA_ID = '\0' + VIRTUAL_I18N_DATA_ID;
 
 export const VIRTUAL_NAV_ID = 'virtual:less-nav';
 export const RESOLVED_NAV_ID = '\0' + VIRTUAL_NAV_ID;
-
-export const VIRTUAL_PAGE_DATA_ID = 'virtual:less-page-data';
-export const RESOLVED_PAGE_DATA_ID = '\0' + VIRTUAL_PAGE_DATA_ID;

@@ -7,8 +7,16 @@
 
 import { join, resolve } from 'node:path';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import type { NavItem, NavOptions, NavSection, RouteMeta } from '../types.ts';
+import type { HeaderNavLink, NavItem, NavOptions, NavSection, RouteMeta } from '../types.ts';
 import { createLogger } from '@lessjs/core/logger';
+
+/** Aggregated navigation data ready for module generation */
+export interface NavData {
+  /** Header navigation links (manually configured) */
+  headerNav: HeaderNavLink[];
+  /** Navigation sections with items */
+  navSections: NavSection[];
+}
 
 const log = createLogger('content:nav');
 

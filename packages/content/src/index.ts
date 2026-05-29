@@ -37,10 +37,13 @@ import {
   RESOLVED_NAV_ID,
   VIRTUAL_NAV_ID,
 } from '@lessjs/protocols/virtual-ids';
-import { loadBlogData } from './blog/blog-data.ts';
+import { loadBlogData, writeBlogDataModule } from './blog/blog-data.ts';
 import { scanNavData } from './nav/scanner.ts';
+import { writeNavModule } from './nav/writer.ts';
 import { createLogger } from '@lessjs/core/logger';
-import { relative, resolve } from 'node:path';
+import process from 'node:process';
+import { join, relative, resolve } from 'node:path';
+import { mkdirSync, writeFileSync } from 'node:fs';
 
 const log = createLogger('content');
 
@@ -116,6 +119,21 @@ export function lessContent(
           const { createBlogDataPlugin } = await import('./blog-data-plugin.ts');
           ctx.plugins.blogDataPlugin = createBlogDataPlugin(ctx);
         }
+
+        // SOP-001: Write generated blog data module to disk
+        try {
+          const dataDir = join(process.cwd(), 'app', 'data');
+          mkdirSync(dataDir, { recursive: true });
+          const blogModule = writeBlogDataModule(result.posts);
+          writeFileSync(join(dataDir, '_generated-blog-data.ts'), blogModule, 'utf-8');
+          log.info(`Blog: wrote _generated-blog-data.ts (${result.posts.length} post(s))`);
+        } catch (err) {
+          log.warn(
+            `Failed to write _generated-blog-data.ts: ${
+              err instanceof Error ? err.message : String(err)
+            }`,
+          );
+        }
       }
 
       // ─── Nav module ─────────────────────────────────────
@@ -124,12 +142,29 @@ export function lessContent(
           ...navOpts,
           routesDir: navOpts.routesDir ?? 'app/routes',
         };
+        const navSections = scanNavData(resolvedNavOpts);
+        const headerNav = resolvedNavOpts.headerNav || [];
         if (ctx) {
-          ctx.plugins.navSections = scanNavData(resolvedNavOpts);
-          ctx.plugins.headerNav = resolvedNavOpts.headerNav || [];
+          ctx.plugins.navSections = navSections;
+          ctx.plugins.headerNav = headerNav;
         }
 
-        log.info(`Nav: ${ctx?.plugins.navSections.length ?? 0} section(s) configured`);
+        // SOP-001: Write generated nav data module to disk
+        try {
+          const dataDir = join(process.cwd(), 'app', 'data');
+          mkdirSync(dataDir, { recursive: true });
+          const navModule = writeNavModule({ headerNav, navSections });
+          writeFileSync(join(dataDir, '_generated-nav.ts'), navModule, 'utf-8');
+          log.info(`Nav: wrote _generated-nav.ts (${navSections.length} section(s))`);
+        } catch (err) {
+          log.warn(
+            `Failed to write _generated-nav.ts: ${
+              err instanceof Error ? err.message : String(err)
+            }`,
+          );
+        }
+
+        log.info(`Nav: ${navSections.length} section(s) configured`);
       }
 
       // ─── Sitemap module ──────────────────────────────────

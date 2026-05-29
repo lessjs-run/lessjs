@@ -162,7 +162,7 @@ LessJS 不承诺任意 Web Component 都能自动 SSR。每个组件应该得到
 | v0.22 | Architecture Integrity — boundaries / imports / gates         | Done        |
 | v0.23 | Layered Package Architecture                                  | Done        |
 | v0.24 | Consolidation — JSX+Signal, TemplateResult removal, hardening | **Current** |
-| v0.25 | Ecosystem Hardening                                           | Planned     |
+| v0.26 | Framework Decoupling                                          | Planned     |
 | v1.0  | Stable Engine contracts                                       | Vision      |
 
 详见 [ADR docs](docs/adr/)、[SOP docs](docs/sop/) 和

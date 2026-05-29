@@ -60,20 +60,24 @@ function getLocalLessjsPackageRoot(metaUrl: string): string | null {
 function optionalPackageStubsPlugin(): import('vite').Plugin {
   const stubs: Record<string, string> = {
     '@lessjs/adapter-lit': [
+      'class DsdLitElement extends (globalThis.HTMLElement || class{}) {}',
+      'export { DsdLitElement };',
       'export function installLitAdapter() {}',
       'export function uninstallLitAdapter() {}',
-      'export const DsdLitElement = undefined;',
       'export const WithDsdHydration = undefined;',
     ].join('\n'),
     '@lessjs/adapter-vanilla': [
+      'class DsdVanillaElement extends (globalThis.HTMLElement || class{}) {}',
+      'export { DsdVanillaElement };',
       'export function installVanillaAdapter() {}',
       'export function uninstallVanillaAdapter() {}',
-      'export const DsdVanillaElement = undefined;',
     ].join('\n'),
     '@lessjs/adapter-react': [
+      'class DsdReactElement extends (globalThis.HTMLElement || class{}) {}',
+      'export { DsdReactElement };',
       'export function installReactAdapter() {}',
       'export function uninstallReactAdapter() {}',
-      'export const DsdReactElement = undefined;',
+      'export const WithDsdHydration = undefined;',
       'export function renderReactToString() { return ""; }',
       'export function isReactElement() { return false; }',
     ].join('\n'),
@@ -376,6 +380,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     await viteBuild({
       configFile: false,
       root,
+      logLevel: 'error',
       build: {
         ssr: true,
         outDir: ssrOutDir,
@@ -460,10 +465,35 @@ if (typeof globalThis.customElements === 'undefined') {
           name: 'less:ssg-data-dispatch',
           enforce: 'pre',
           resolveId(id) {
+            // v0.26: Generated data files — return virtual IDs so load()
+            // can read file content. This bypasses workspace alias conflicts.
+            if (id === '@lessjs/content/nav') return '\0less:gen-nav';
+            if (id === '@lessjs/content/blog-data') return '\0less:gen-blog';
+            if (id === '@lessjs/i18n/data') return '\0less:gen-i18n';
             if (id === 'virtual:less-blog-data') return '\0virtual:less-blog-data';
             if (id === 'virtual:less-i18n-data') return '\0virtual:less-i18n-data';
           },
           load(id) {
+            // v0.26: Read generated file content for virtual module
+            if (id === '\0less:gen-nav') {
+              const p = resolve(root, 'www/app/data/_generated-nav.ts');
+              return existsSync(p)
+                ? readFileSync(p, 'utf-8')
+                : 'export const headerNav = []; export const navSections = [];';
+            }
+            if (id === '\0less:gen-blog') {
+              const p = resolve(root, 'www/app/data/_generated-blog-data.ts');
+              return existsSync(p)
+                ? readFileSync(p, 'utf-8')
+                : 'export const posts = []; export function getPostBySlug() {} export function getBlogOptions() { return {}; }';
+            }
+            if (id === '\0less:gen-i18n') {
+              const p = resolve(root, 'www/app/data/_generated-i18n-data.ts');
+              return existsSync(p)
+                ? readFileSync(p, 'utf-8')
+                : 'export const locales = []; export function getDefaultLocale() { return "en"; } export function getI18nOptions() { return null; }';
+            }
+            // ... rest of load handlers
             // Vite 8 Plugin.load type: function or {handler}
             function callLoad(p: Plugin | null, moduleId: string): string | null | undefined {
               if (!p?.load) return undefined;
@@ -530,24 +560,20 @@ if (typeof globalThis.customElements === 'undefined') {
       resolve: {
         preserveSymlinks: true,
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
-        // Normalize alias replacements to absolute paths for rolldown.
-        // Relative paths can cause subpath ENOTDIR errors when rolldown
-        // continues resolution after a parent alias match.
-        alias: alias
-          ? (Array.isArray(alias)
-            ? alias.map((a) => ({
-              find: a.find,
-              replacement: a.replacement.startsWith('/') || /^[A-Za-z]:/.test(a.replacement)
-                ? a.replacement
-                : resolve(root, a.replacement),
-            }))
-            : Object.fromEntries(
+        alias: {
+          ...(alias && !Array.isArray(alias)
+            ? Object.fromEntries(
               Object.entries(alias).map(([k, v]) => [
                 k,
                 v.startsWith('/') || /^[A-Za-z]:/.test(v) ? v : resolve(root, v),
               ]),
-            ))
-          : undefined,
+            )
+            : {}),
+          // v0.26: Generated data files override workspace aliases
+          '@lessjs/content/nav': './app/data/_generated-nav.ts',
+          '@lessjs/content/blog-data': './app/data/_generated-blog-data.ts',
+          '@lessjs/i18n/data': './app/data/_generated-i18n-data.ts',
+        },
       },
     });
     log.info('SSR bundle built successfully');

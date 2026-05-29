@@ -1,6 +1,5 @@
 export const meta = { section: 'Core', label: 'API Routes', order: 60 };
-import { headerNav, navSections } from 'virtual:less-nav';
-import { filterDocsNav } from '../../utils/nav-filter.ts';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
@@ -29,7 +28,7 @@ export class ApiPage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    const nav = JSON.stringify(filterDocsNav(navSections));
+    const nav = JSON.stringify(navSections);
     const hNav = JSON.stringify(headerNav);
     return (
       <less-layout
@@ -63,7 +62,7 @@ export class ApiPage extends DsdElement {
           <h2>Type-Safe RPC</h2>
           <p>
             @lessjs/rpc 提供类型安全的客户端/服务端调用约定。详见{' '}
-            <a href='/guide/rpc'>RPC 远程调用</a>。
+            <a href='/api/reference'>RPC 远程调用</a>。
           </p>
           <h2>Static Build Boundary</h2>
           <p>
@@ -72,7 +71,7 @@ export class ApiPage extends DsdElement {
             或平台函数部署 API routes。
           </p>
           <div class='nav-row'>
-            <a href='/guide/rpc' class='nav-link'>← RPC 远程调用</a>
+            <a href='/api/reference' class='nav-link'>← RPC 远程调用</a>
             <a href='/guide/configuration' class='nav-link'>Configuration →</a>
           </div>
         </div>
@@ -82,7 +81,7 @@ export class ApiPage extends DsdElement {
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    const nav = JSON.stringify(filterDocsNav(navSections));
+    const nav = JSON.stringify(navSections);
     const hNav = JSON.stringify(headerNav);
     return (
       <less-layout
@@ -147,7 +146,7 @@ export default function GET(ctx: LessApiContext) {'{'}
           <p>
             <span class='inline-code'>@lessjs/rpc</span>{' '}
             provides type-safe client/server calling conventions. See{' '}
-            <a href='/guide/rpc'>RPC Guide</a>.
+            <a href='/api/reference'>RPC Guide</a>.
           </p>
           <h2>Static Build Boundary</h2>
           <p>
@@ -156,7 +155,7 @@ export default function GET(ctx: LessApiContext) {'{'}
             functions when runtime behavior is needed.
           </p>
           <div class='nav-row'>
-            <a href='/guide/rpc' class='nav-link'>← RPC</a>
+            <a href='/api/reference' class='nav-link'>← RPC</a>
             <a href='/guide/configuration' class='nav-link'>Configuration →</a>
           </div>
         </div>

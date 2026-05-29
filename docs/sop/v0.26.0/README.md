@@ -33,21 +33,21 @@
 
 ### Framework Decoupling (ADR-0061)
 
-| SOP | 主题                  | 优先级 | 预估  | 依赖        |
-| --- | --------------------- | ------ | ----- | ----------- |
-| 001 | Virtual Modules 移除  | P0     | 8h    | —           |
-| 002 | Entry Renderer 清理   | P0     | 3h    | SOP-001     |
-| 003 | Island Transform 提取 | P1     | 3.5h  | SOP-001     |
-| 004 | Dev Server 零 Bundler | P1     | 5h    | SOP-001     |
-| 005 | Adapter 清理 + 验证   | P1     | 4h    | SOP-001→004 |
+| SOP | 主题                  | 优先级 | 预估 | 依赖        |
+| --- | --------------------- | ------ | ---- | ----------- |
+| 001 | Virtual Modules 移除  | P0     | 8h   | —           |
+| 002 | Entry Renderer 清理   | P0     | 3h   | SOP-001     |
+| 003 | Island Transform 提取 | P1     | 3.5h | SOP-001     |
+| 004 | Dev Server 零 Bundler | P1     | 5h   | SOP-001     |
+| 005 | Adapter 清理 + 验证   | P1     | 4h   | SOP-001→004 |
 
 ### Reactive Pragmatic (ADR-0059)
 
-| ID    | 主题                          | 优先级 | 预估 | 依赖 |
-| ----- | ----------------------------- | ------ | ---- | ---- |
-| TG-01 | `this.params` SPA-reactive    | P0     | 6h   | —    |
-| TG-02 | `data-keep-alive` DOM 保留    | P1     | 3h   | —    |
-| TG-03 | `computed()` 文档             | P2     | 2h   | —    |
+| ID    | 主题                       | 优先级 | 预估 | 依赖 |
+| ----- | -------------------------- | ------ | ---- | ---- |
+| TG-01 | `this.params` SPA-reactive | P0     | 6h   | —    |
+| TG-02 | `data-keep-alive` DOM 保留 | P1     | 3h   | —    |
+| TG-03 | `computed()` 文档          | P2     | 2h   | —    |
 
 ## 依赖关系
 

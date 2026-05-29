@@ -2,17 +2,22 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version Line: v0.24.3 (Consolidation — IMPLEMENTED)
+## Current Version Line: v0.26.0 (Framework Decoupling — IMPLEMENTED)
 
-v0.24.3 Status: **IMPLEMENTED.** Consolidation release. TemplateResult fully
-removed (ADR-0058), cross-package type deduplication complete (SOP-002),
-CLI/data organization cleaned (SOP-003), architecture docs hardened.
+v0.26.0 Status: **IMPLEMENTED.** Virtual module coupling removed from 60 route files,
+island transform extracted to @lessjs/core, zero-bundler dev:fast server (~100ms),
+SSG rendering robustness fixes, www/ documentation overhaul.
 
-v0.24.1 Status: **IMPLEMENTED.** JSX+Signal Component Model replaces `html`
-tagged template (ADR-0057). DsdElement render() returns `string | VNode`.
-All 10 UI components migrated to JSX.
+v0.25.0 Status: **IMPLEMENTED.** Declarative DX. lessPipeline(), 14 SOPs, route types.
 
-v0.21.0-v0.23.x: **HISTORICAL.** See docs/adr/ and docs/sop/ for reference.
+v0.24.x Status: **IMPLEMENTED.** JSX+Signal component model, TemplateResult removal.
+
+v0.23.x and earlier: **HISTORICAL.**
+
+## Next Target: v1.0 Stable Engine
+
+v1.0 will freeze: DsdElement, renderDsd(), adapter protocol, manifest schema,
+compatibility boundary. Ecosystem layers (DB adapters, KV, ISR) are post-v1.0.
 
 ## Current Product Center
 

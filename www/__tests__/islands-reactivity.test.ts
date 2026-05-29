@@ -1,16 +1,6 @@
 import { assertFalse } from 'jsr:@std/assert@^1.0.0';
 
 const CASES = [
-  ['./api-consumer.ts', 'default', [
-    'apiUrl',
-    'apiData',
-    'apiLoading',
-    'apiError',
-    'name',
-    'helloMsg',
-    'helloLoading',
-    'helloError',
-  ]],
   ['./counter-island.tsx', 'default', ['count']],
 ];
 

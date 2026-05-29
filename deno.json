@@ -99,6 +99,7 @@
     // Note: --allow-ffi is required for rolldown native bindings (.node files)
     // Must cd into www/ so process.cwd() matches Vite root for route scanning
     "dev": "cd www && deno run --allow-read --allow-write --allow-net --allow-env --allow-ffi --allow-sys npm:vite --config vite.config.ts",
+    "dev:fast": "cd www && deno run --allow-read --allow-net --allow-env --allow-ffi --allow-sys --config ../deno.json app/dev-server.ts",
     "build": "cd www && deno run --config ../deno.json --allow-read --allow-write --allow-net --allow-env --allow-ffi --allow-sys ../packages/adapter-vite/src/cli/build.ts",
     "preview": "cd www && deno run --allow-read --allow-write --allow-net --allow-env --allow-ffi npm:vite preview --config vite.config.ts",
     "build:docs": "deno task build",
@@ -151,6 +152,7 @@
     "exclude": [
       "deliverables/",
       "www/content/blog/",
+      "www/app/routes/",
       "custom-dist/",
       "dist-test-ssg-render/",
       ".deno_cache/"
@@ -162,7 +164,9 @@
       "exclude": ["no-sloppy-imports"]
     },
     "exclude": [
-      ".deno_cache/"
+      ".deno_cache/",
+      "www/app/routes/",
+      "www/app/data/"
     ]
   },
   "compilerOptions": {

@@ -363,8 +363,26 @@ export function less(
     injectClientScript: true,
   }) as unknown as Plugin;
 
+  // v0.26: Resolve generated data paths to actual files.
+  // Workspace aliases map @lessjs/content/nav → scanner, but we need
+  // the generated data file. This plugin (enforce: 'pre') takes priority.
+  const generatedDataPlugin: Plugin = {
+    name: 'less:generated-data',
+    enforce: 'pre',
+    resolveId(id) {
+      const cwd = process.cwd();
+      if (id === '@lessjs/content/nav') return join(cwd, 'www/app/data/_generated-nav.ts');
+      if (id === '@lessjs/content/blog-data') {
+        return join(cwd, 'www/app/data/_generated-blog-data.ts');
+      }
+      if (id === '@lessjs/i18n/data') return join(cwd, 'www/app/data/_generated-i18n-data.ts');
+      return null;
+    },
+  };
+
   return [
     corePlugin,
+    generatedDataPlugin,
     createCoreResolvePlugin(metaUrl),
     // ADR 0021: Blog/i18n data plugins registered lazily by @lessjs/content
     // and @lessjs/i18n during buildStart(). We dispatch resolve/load to
