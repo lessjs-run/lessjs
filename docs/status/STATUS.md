@@ -79,6 +79,12 @@ Key outcomes:
 
 See `docs/sop/v0.24.4/README.md`.
 
+## Historical Versions
+
+- **v0.22.0** — Architecture Integrity: package boundaries, consumer surface, adapter decomposition, validation ownership, release gates.
+- **v0.21.0** — Reactive DSD, safe templates, streaming DSD, unified event model.
+- **v0.23.0** — Layered Package Architecture, protocols, runtime/app facades, package graph gates.
+
 ## Key Decisions
 
 - **TemplateResult removed.** JSX+Signal is the only component model. `render()` returns `string | VNode`.

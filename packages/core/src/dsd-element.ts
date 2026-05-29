@@ -49,7 +49,6 @@
 
 import type { ReactiveHost } from './types.js';
 import type { StyleSheetLike } from '@lessjs/style-sheet';
-import { isSignalLike } from './signal-like.js';
 import { disposeProps, handlePropAttributeChange, initializeProps } from './prop.js';
 import {
   disposeStaticProps,

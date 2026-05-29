@@ -103,7 +103,7 @@ export function less(
   // compatibility is 'client-only'. This ensures Shoelace/Media Chrome
   // tags are in __LESS_CLIENT_ONLY_TAGS__ without requiring CEM manifests.
   let _cachedHubClientOnlyTags: string[] | null = null;
-  async function discoverHubClientOnlyTags(root: string, routesDir: string): Promise<string[]> {
+  async function discoverHubClientOnlyTags(root: string, _routesDir: string): Promise<string[]> {
     if (_cachedHubClientOnlyTags !== null) return _cachedHubClientOnlyTags;
     try {
       const { readFileSync } = await import('node:fs');
