@@ -83,7 +83,7 @@ export default defineConfig({'{'} plugins: [lessjs()] {'}'});</code></pre>
             LessJS v0.24.1 使用 JSX + Signal 作为组件模型。需要配置 deno.json 和 vite.config.ts：
           </p>
           <less-code-block>
-            <pre><code>// deno.json
+            <pre><code>{'// deno.json'}
 {'{'}
   "compilerOptions": {'{'}
     "jsx": "react-jsx",
@@ -96,7 +96,7 @@ export default defineConfig({'{'} plugins: [lessjs()] {'}'});</code></pre>
 {'}'}</code></pre>
           </less-code-block>
           <less-code-block>
-            <pre><code>// vite.config.ts
+            <pre><code>{'// vite.config.ts'}
 export default defineConfig({'{'}
   esbuild: {'{'}
     jsx: 'automatic',
@@ -212,7 +212,7 @@ export default defineConfig({'{'} plugins: [lessjs()] {'}'});</code></pre>
             vite.config.ts:
           </p>
           <less-code-block>
-            <pre><code>// deno.json
+            <pre><code>{'// deno.json'}
 {'{'}
   "compilerOptions": {'{'}
     "jsx": "react-jsx",
@@ -225,7 +225,7 @@ export default defineConfig({'{'} plugins: [lessjs()] {'}'});</code></pre>
 {'}'}</code></pre>
           </less-code-block>
           <less-code-block>
-            <pre><code>// vite.config.ts
+            <pre><code>{'// vite.config.ts'}
 export default defineConfig({'{'}
   esbuild: {'{'}
     jsx: 'automatic',

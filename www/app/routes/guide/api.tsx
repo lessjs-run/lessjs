@@ -123,7 +123,7 @@ export class ApiPage extends DsdElement {
             <span class='inline-code'>platform</span>.
           </p>
           <less-code-block>
-            <pre><code>// app/routes/api/posts.ts
+            <pre><code>{'// app/routes/api/posts.ts'}
 import {'{'} Hono {'}'} from 'hono';
 const app = new Hono();
 app.get('/', (c) =&gt; c.json([{'{'} id: 1, title: 'Hello' {'}'}]));
@@ -131,7 +131,7 @@ app.post('/', async (c) =&gt; {'{'} const body = await c.req.json(); return c.js
 export default app;</code></pre>
           </less-code-block>
           <less-code-block>
-            <pre><code>// app/routes/api/health.ts — simple endpoint, no Hono needed
+            <pre><code>{'// app/routes/api/health.ts — simple endpoint, no Hono needed'}
 import type {'{'} LessApiContext {'}'} from '@lessjs/core/api';
 
 export default function GET(ctx: LessApiContext) {'{'}

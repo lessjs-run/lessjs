@@ -94,11 +94,9 @@ export function initializeProps(instance: DsdElement): void {
   if (!store?.props.length) return;
 
   const sigMap: PropSignalMap = { signals: new Map() };
-  // deno-lint-ignore no-explicit-any
   (instance as unknown as _PropSignalsAccessor)[PROP_SIGNALS] = sigMap;
 
   const unsubscribers: Array<() => void> = [];
-  // deno-lint-ignore no-explicit-any
   (instance as unknown as _PropSignalsAccessor)[PROP_UNSUBSCRIBERS] = unsubscribers;
 
   for (const { key, options } of store.props) {
@@ -141,7 +139,6 @@ export function initializeProps(instance: DsdElement): void {
  * Clean up @prop() signal subscriptions. Called from disconnectedCallback().
  */
 export function disposeProps(instance: DsdElement): void {
-  // deno-lint-ignore no-explicit-any
   const unsubs = (instance as unknown as _PropSignalsAccessor)[PROP_UNSUBSCRIBERS];
   if (unsubs) {
     for (const fn of unsubs.splice(0)) fn();
@@ -157,7 +154,6 @@ export function handlePropAttributeChange(
   _oldValue: string | null,
   newValue: string | null,
 ): void {
-  // deno-lint-ignore no-explicit-any
   const sigMap = (instance as unknown as _PropSignalsAccessor)[PROP_SIGNALS];
   if (!sigMap) return;
 

@@ -97,7 +97,7 @@ export default class BlogPostPage extends DsdElement {
           {tags.length > 0
             ? (
               <div class='blog-tags'>
-                {tags.map((tag: string) => <span class='blog-tag'>{tag}</span>)}
+                {tags.map((tag: string) => <span key={tag} class='blog-tag'>{tag}</span>)}
               </div>
             )
             : null}
@@ -150,7 +150,7 @@ export default class BlogPostPage extends DsdElement {
           {tags.length > 0
             ? (
               <div class='blog-tags'>
-                {tags.map((tag: string) => <span class='blog-tag'>{tag}</span>)}
+                {tags.map((tag: string) => <span key={tag} class='blog-tag'>{tag}</span>)}
               </div>
             )
             : null}

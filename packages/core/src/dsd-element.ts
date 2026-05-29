@@ -307,6 +307,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   private _walkAndBind(
     parent: Element | ShadowRoot,
     vnode: {
+      // deno-lint-ignore ban-types
       tag?: string | symbol | Function;
       props?: Record<string, unknown>;
       children?: unknown[];

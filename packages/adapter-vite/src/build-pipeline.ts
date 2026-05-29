@@ -51,4 +51,3 @@ export function lessPipeline(config: PipelineConfig = {}): Plugin[] {
   };
   return less(options);
 }
-
