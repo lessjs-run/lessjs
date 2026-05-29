@@ -1,10 +1,8 @@
 /**
- * @lessjs/docs - API Reference: All Packages
+ * @lessjs/docs - API Reference
  *
- * v0.14.9 API surface - organized by package.
- * Only public exports are listed.
+ * Organized by category: Components, Rendering, Islands, Signals, Build, SSR.
  */
-
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { filterArchitectureNav } from '../../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
@@ -12,51 +10,28 @@ import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 
 export const tagName = 'api-core-page';
-
 export const meta = { section: 'Reference', label: 'API Reference', order: 5 };
 
 const routeSheet = new StyleSheet();
 
 routeSheet.replaceSync(`
-      .api-section {
-        margin-bottom: 2.5rem;
-      }
-      .pkg-name {
-        font-size: 1.125rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin: 2rem 0 0.5rem;
-      }
-      .pkg-import {
-        font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        margin-bottom: 1rem;
-      }
-      .fn-name {
-        font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
+      .api-category { margin-bottom: 2rem; }
+      .api-category h2 { margin-top: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+      .api-entry { margin: 1rem 0 0.75rem; }
+      .api-sig {
+        font-family: "JetBrains Mono", "SF Mono", "Consolas", monospace;
         font-size: 0.8125rem;
         color: var(--text-primary);
-        margin: 1.25rem 0 0.25rem;
+        margin-bottom: 0.25rem;
       }
-      .fn-sig {
-        font-family: "JetBrains Mono", "SF Mono", "Fira Code", "Consolas", monospace;
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        margin-bottom: 0.5rem;
-        line-height: 1.5;
-      }
-      .fn-desc {
+      .api-desc {
         font-size: 0.875rem;
-        line-height: 1.7;
-        color: var(--text-secondary);
-        margin-bottom: 0.5rem;
+        color: var(--text-muted);
+        line-height: 1.6;
       }
     `);
 
 export default class ApiCorePage extends DsdElement {
-  declare locale?: string;
-
   static override styles = [openPropsTokenSheet, routeSheet];
 
   override render() {
@@ -74,209 +49,94 @@ export default class ApiCorePage extends DsdElement {
       >
         <div class="container">
           <h1>API 参考</h1>
-          <p class="subtitle">所有 LessJS 包的公开 API 接口 (v0.14.9)。</p>
+          <p class="subtitle">LessJS 公开 API — 按类别分组。</p>
 
-          <p>
-            当前 API 中包的 Island 支持故意保持精简：包导出一个
-            <code>islands</code> 数组，包含 <code>tagName</code>、<code>modulePath</code>
-            和可选的 <code>strategy</code>。一键安装、自动注册、自动渲染和自动
-            Hydration 是路线图特性，需要先完成与 Custom Elements Manifest 兼容的包协议。
-          </p>
-
-          <div class="api-section">
-            <!-- ─── @lessjs/core ───────────────────────────── -->
-            <div class="pkg-name">@lessjs/core</div>
-            <div class="pkg-import">import { ... } from '@lessjs/runtime';</div>
-            <p>纯运行时。零 Vite/Node 依赖。支持 Deno、Node、Bun、Edge。</p>
-
-            <div class="fn-name">renderDsd()</div>
-            <div class="fn-sig">
-              renderDsd(tagName, componentClass, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;
+          <div class="api-category">
+            <h2>组件</h2>
+            <div class="api-entry">
+              <div class="api-sig">class DsdElement extends HTMLElement</div>
+              <div class="api-desc">所有 LessJS 组件的基类。提供 render()、static props、signal 管理和 DSD 集成。</div>
             </div>
-            <div class="fn-desc">
-              服务端渲染 Custom Element 为 DSD HTML。支持三层：dsd-static、dsd-interactive、pure-island。
+            <div class="api-entry">
+              <div class="api-sig">override render(): VNode | string</div>
+              <div class="api-desc">返回组件内容。返回 JSX/VNode 获取响应式，返回字符串获取静态 DSD 输出。</div>
             </div>
-
-            <div class="fn-name">renderDSDByName()</div>
-            <div class="fn-sig">
-              renderDSDByName(tagName, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;
+            <div class="api-entry">
+              <div class="api-sig">static props: Record&lt;string, typeof String | Number | Boolean&gt;</div>
+              <div class="api-desc">声明类型化组件属性。键自动注册为 observedAttributes 并转换为 kebab-case。</div>
             </div>
-            <div class="fn-desc">
-              类似 renderDsd，但通过 tag name 从 customElements 注册表查找组件类。
+          </div>
+
+          <div class="api-category">
+            <h2>渲染</h2>
+            <div class="api-entry">
+              <div class="api-sig">renderDsd(tagName, componentClass, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;</div>
+              <div class="api-desc">将 Custom Element 服务端渲染为 DSD HTML。支持三层：dsd-static、dsd-interactive、pure-island。</div>
             </div>
-
-            <div class="fn-name">escapeHtml() / escapeAttr() / escapeAttrValue()</div>
-            <div class="fn-sig">
-              escapeHtml(str): string - escapeAttrValue(value): string - escapeAttr(attr): string
+            <div class="api-entry">
+              <div class="api-sig">renderDsdStream(components, options?): ReadableStream&lt;Uint8Array&gt;</div>
+              <div class="api-desc">流式输出文档外壳和 DSD 组件块，通过 Web Streams 逐块传输。</div>
             </div>
-            <div class="fn-desc">
-              HTML/属性转义，使用 SafeHtml/UnsafeHtml 品牌类型防止双重转义。
+            <div class="api-entry">
+              <div class="api-sig">renderToDom(node: unknown, signal?: AbortSignal): Node</div>
+              <div class="api-desc">将 VNode 树转换为真实 DOM 节点。事件处理器通过原生 addEventListener 绑定。</div>
             </div>
-
-            <div class="fn-name">defineIsland()</div>
-            <div class="fn-sig">defineIsland(componentClass, options?): CustomElementConstructor</div>
-            <div class="fn-desc">
-              为 CE 类包装 Island 升级逻辑。支持 4 种策略：load、idle、visible、only。
+            <div class="api-entry">
+              <div class="api-sig">renderToString(node: unknown): string</div>
+              <div class="api-desc">将 VNode 树转换为 HTML 字符串，用于 SSR/SSG 输出。文本内容自动 HTML 转义。</div>
             </div>
+          </div>
 
-            <div class="fn-name">syncState() / getProps()</div>
-            <div class="fn-sig">
-              syncState(element, props): void - getProps(element): Record&lt;string, unknown&gt;
+          <div class="api-category">
+            <h2>Islands</h2>
+            <div class="api-entry">
+              <div class="api-sig">defineIsland(componentClass, options?: { strategy?: 'load' | 'idle' | 'visible' | 'only' }): CustomElementConstructor</div>
+              <div class="api-desc">为 Custom Element 类包装 Island 升级逻辑。支持四种 hydration 策略。</div>
             </div>
-            <div class="fn-desc">框架无关的 SSR 属性绑定和反序列化。</div>
-
-            <div class="fn-name">registerAdapter() / getAdapter()</div>
-            <div class="fn-sig">
-              registerAdapter(adapter: RenderAdapter): void - getAdapter(): RenderAdapter | undefined
+            <div class="api-entry">
+              <div class="api-sig">bindEvents(element: HTMLElement, events: Record&lt;string, Function&gt;): void</div>
+              <div class="api-desc">将事件处理器重新绑定到已升级的 Island 组件上。</div>
             </div>
-            <div class="fn-desc">
-              SSR 渲染器插件接口。当前注册表存储一个活跃适配器。未来渲染器协议必须定义适配器身份、
-              能力、错误、Hydration 提示和 DSD 约束，然后多适配器行为才会被记录为稳定。
+          </div>
+
+          <div class="api-category">
+            <h2>Signals</h2>
+            <div class="api-entry">
+              <div class="api-sig">signal&lt;T&gt;(initial: T): Signal&lt;T&gt;</div>
+              <div class="api-desc">创建包含初始值的响应式容器。通过 .value 读写。JSX 内自动展开。</div>
             </div>
-
-            <div class="fn-name">createSsrContext() / extractParams() / parseQuery()</div>
-            <div class="fn-sig">
-              createSsrContext(opts): SsrContext - extractParams(ctx, keys): Record - parseQuery(ctx):
-              Record
+            <div class="api-entry">
+              <div class="api-sig">computed&lt;T&gt;(fn: () => T): Signal&lt;T&gt;</div>
+              <div class="api-desc">创建从其他 signal 派生的只读 signal。惰性求值，自动追踪依赖，结果缓存。</div>
             </div>
-            <div class="fn-desc">
-              服务端渲染上下文，包含请求、参数和查询解析。
+            <div class="api-entry">
+              <div class="api-sig">effect(fn: () => void): () => void</div>
+              <div class="api-desc">依赖 signal 变化时自动执行回调。返回 dispose 函数用于停止追踪。</div>
             </div>
+          </div>
 
-            <div class="fn-name">LessError / SsrRenderError</div>
-            <div class="fn-sig">extends Error</div>
-            <div class="fn-desc">
-              结构化错误类，包含 code、statusCode、isOperational 和 toJSON()。
+          <div class="api-category">
+            <h2>构建</h2>
+            <div class="api-entry">
+              <div class="api-sig">lessPipeline(options?: FrameworkOptions, ctx?: LessBuildContext): Plugin[]</div>
+              <div class="api-desc">创建 LessJS Vite 插件数组。处理路由扫描、Hono entry 生成、Island 转换、SSR 和 SSG。</div>
             </div>
-
-            <div class="fn-name">renderSsrError() / wrapInDocument() / camelToKebab()</div>
-            <div class="fn-desc">
-              SSR 错误页面渲染、文档包装器和属性名转换。
+            <div class="api-entry">
+              <div class="api-sig">interface PipelineConfig { routes?: string; islands?: string; ssr?: boolean; ssg?: boolean; ... }</div>
+              <div class="api-desc">lessPipeline() 的配置选项，控制构建管线的各个阶段。</div>
             </div>
+          </div>
 
-            <p class="fn-desc" style="margin-top:1rem">
-              <strong>子路径导出：</strong> <code>@lessjs/core/logger</code> (createLogger)、<code
-              >@lessjs/core/errors</code>、<code>@lessjs/core/context</code>、<code
-              >@lessjs/core/navigation</code> (navigate/onNavigate/matchRoute)、<code
-              >@lessjs/core/constants</code>。
-            </p>
-
-            <!-- ─── @lessjs/adapter-vite ─────────────────────── -->
-            <div class="pkg-name">@lessjs/adapter-vite</div>
-            <div class="pkg-import">import { lessPipeline } from '@lessjs/adapter-vite';</div>
-            <p>
-              Vite 构建编排：路由、Island、SSG 三阶段管线。包含 <code>lessPipeline()</code>。
-            </p>
-
-            <div class="fn-name">lessPipeline()</div>
-            <div class="fn-sig">lessPipeline(options?: FrameworkOptions, ctx?: LessBuildContext): Plugin[]</div>
-            <div class="fn-desc">
-              声明式构建管线入口。处理路由扫描、Hono 入口生成、Island 转换、SSR 和 SSG。返回 7+ 个插件。
+          <div class="api-category">
+            <h2>SSR</h2>
+            <div class="api-entry">
+              <div class="api-sig">getSsrProps(element: HTMLElement): Record&lt;string, unknown&gt;</div>
+              <div class="api-desc">从元素属性中提取和反序列化 SSR 传递的数据。</div>
             </div>
-
-            <div class="fn-name">LessBuildContext</div>
-            <div class="fn-sig">class LessBuildContext(options)</div>
-            <div class="fn-desc">
-              跨阶段状态容器。阶段 1 写入路由/Island，阶段 2 写入客户端清单，阶段 3 读取所有内容进行 SSG 渲染。
+            <div class="api-entry">
+              <div class="api-sig">renderDsdByName(tagName: string, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;</div>
+              <div class="api-desc">通过 tag name 从 customElements 注册表查找组件类并进行 SSR 渲染。</div>
             </div>
-
-            <div class="fn-name">构建工具函数</div>
-            <div class="fn-desc">
-              <code>printBuildManifest()</code>、<code>scanClientBuild()</code>、<code
-              >scanSSGOutput()</code>、<code>buildIslandChunkMap()</code>、<code
-              >buildSpeculationRulesJson()</code>、<br>
-              <code>injectClientScript()</code>、<code>injectCspMeta()</code>、<code
-              >injectDsdPolyfill()</code>、<code>injectSpeculationRules()</code>、<code
-              >injectViewTransitionMeta()</code>、<br>
-              <code>extractCustomElementTags()</code>、<code>generateIslandManifests()</code>、<code
-              >writeIslandManifests()</code>
-            </div>
-
-            <div class="fn-name">包 Island 和未来清单</div>
-            <div class="fn-desc">
-              <code>packageIslands</code> 当前扫描导出 <code>islands</code>
-              元数据数组的包。未来 WC 包协议将添加 CEM 兼容字段，包括标签、模块、导出、属性、
-              事件、插槽、CSS 部件、CSS 自定义属性、自定义状态、<code>ssr</code>、<code>dsd</code>、
-              <code>hydrate</code> 和诊断。在该协议发布前，Registry Hub 和 <code>less add</code>
-              行为仍为路线图项目。
-            </div>
-
-            <p class="fn-desc" style="margin-top:1rem">
-              <strong>子路径导出：</strong> <code>@lessjs/adapter-vite/build-context</code>、<code
-              >@lessjs/adapter-vite/virtual-ids</code>
-            </p>
-
-            <!-- ─── @lessjs/app ─────────────────────────────── -->
-            <div class="pkg-name">@lessjs/app</div>
-            <div class="pkg-import">import { lessjs } from '@lessjs/app';</div>
-            <p>
-              统一入口。组合 lessPipeline()() + lessI18n()，共享 ctx。<strong
-              >推荐所有项目使用。</strong>
-            </p>
-
-            <div class="fn-name">lessjs()</div>
-            <div class="fn-sig">lessjs(options: LessjsOptions): Plugin[]</div>
-            <div class="fn-desc">
-              接受核心选项 + content + i18n 嵌套配置。创建共享 LessBuildContext 并传递给所有子插件。
-            </div>
-
-            <!-- ─── @lessjs/content ──────────────────────────── -->
-            <div class="pkg-name">@lessjs/content</div>
-            <div class="pkg-import">import { lessContent } from '@lessjs/content';</div>
-            <p>
-              构建时内容插件：博客 + 导航 + Sitemap。数据通过虚拟模块流转（ADR 0018）。
-            </p>
-
-            <div class="fn-name">lessContent()</div>
-            <div class="fn-sig">lessContent(options: LessContentOptions &amp; { ctx? }): Plugin[]</div>
-            <div class="fn-desc">
-              创建内容插件。模块：blog（md frontmatter）、nav（路由元数据扫描）、sitemap（SSG 输出扫描）。
-            </div>
-
-            <p class="fn-desc" style="margin-top:1rem">
-              <strong>子路径导出：</strong> <code>@lessjs/content/blog-data</code>、<code
-              >@lessjs/content/nav</code>、<code>@lessjs/content/sitemap</code>
-            </p>
-
-            <!-- ─── @lessjs/i18n ─────────────────────────────── -->
-            <div class="pkg-name">@lessjs/i18n</div>
-            <div class="pkg-import">import { lessI18n } from '@lessjs/i18n';</div>
-
-            <div class="fn-name">lessI18n()</div>
-            <div class="fn-sig">lessI18n(options: LessI18nOptions &amp; { ctx? }): Plugin</div>
-            <div class="fn-desc">
-              SSG 的语言环境扩展 + 路由级辅助函数（i18nStaticPaths、switchLocale）。
-            </div>
-
-
-            <!-- ─── @lessjs/ui ───────────────────────────────── -->
-            <div class="pkg-name">@lessjs/ui</div>
-            <div class="pkg-import">import { ... } from '@lessjs/ui';</div>
-            <p>
-              8 个 Web Components：less-button、less-input、less-card、less-code-block、less-layout、
-              less-theme-toggle、less-hero-ping、less-dialog。
-            </p>
-
-            <!-- ─── @lessjs/signals ───────────────────────────── -->
-            <div class="pkg-name">@lessjs/signals</div>
-            <div class="pkg-import">import { signal, computed, effect } from '@lessjs/signals';</div>
-            <p>
-              TC39 Signals polyfill。还导出：batch、untracked、channel、islandEffect、themeSignal、isNativeSignal。
-            </p>
-
-            <!-- ─── @lessjs/rpc ──────────────────────────────── -->
-            <div class="pkg-name">@lessjs/rpc</div>
-            <div class="pkg-import">import { RpcController, RpcError } from '@lessjs/rpc';</div>
-            <p>
-              基于 fetch 的 RPC，支持自动重试、中止和加载/错误状态管理。
-            </p>
-
-            <!-- ─── @lessjs/create ───────────────────────────── -->
-            <div class="pkg-name">@lessjs/create</div>
-            <div class="pkg-import">deno run -A jsr:@lessjs/create my-app</div>
-            <p>
-              CLI 脚手架。生成包含 Deno 配置、Vite 配置、路由、Island 和示例组件的新 LessJS 项目。
-            </p>
           </div>
         </div>
       </less-layout>
@@ -294,270 +154,94 @@ export default class ApiCorePage extends DsdElement {
       >
         <div class="container">
           <h1>API Reference</h1>
-          <p class="subtitle">Public API surface of all LessJS packages (v0.14.9).</p>
+          <p class="subtitle">LessJS public API — grouped by category.</p>
 
-          <p>
-            Package island support is intentionally small in the current API: packages export an
-            <code>islands</code> array with <code>tagName</code>, <code>modulePath</code>, and optional
-            <code>strategy</code>. One-command install, automatic registration, automatic rendering, and
-            automatic hydration are roadmap features that require a Custom Elements Manifest-compatible
-            package protocol first.
-          </p>
-
-          <div class="api-section">
-            <!-- ─── @lessjs/core ───────────────────────────── -->
-            <div class="pkg-name">@lessjs/core</div>
-            <div class="pkg-import">import { ... } from '@lessjs/runtime';</div>
-            <p>Pure runtime. Zero Vite/Node dependencies. Works in Deno, Node, Bun, Edge.</p>
-
-            <div class="fn-name">renderDsd()</div>
-            <div class="fn-sig">
-              renderDsd(tagName, componentClass, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;
+          <div class="api-category">
+            <h2>Components</h2>
+            <div class="api-entry">
+              <div class="api-sig">class DsdElement extends HTMLElement</div>
+              <div class="api-desc">Base class for all LessJS components. Provides render(), static props, signal management, and DSD integration.</div>
             </div>
-            <div class="fn-desc">
-              Server-side renders a Custom Element as DSD HTML. Supports all three layers: dsd-static,
-              dsd-interactive, pure-island.
+            <div class="api-entry">
+              <div class="api-sig">override render(): VNode | string</div>
+              <div class="api-desc">Returns component content. Return JSX/VNode for reactivity, string for static DSD output.</div>
             </div>
-
-            <div class="fn-name">jsx() / jsxs() / Fragment</div>
-            <div class="fn-sig">
-              jsx(tag, props, children?): VNode — jsxs(tag, props, children?): VNode — Fragment: symbol
+            <div class="api-entry">
+              <div class="api-sig">static props: Record&lt;string, typeof String | Number | Boolean&gt;</div>
+              <div class="api-desc">Declare typed component properties. Keys auto-register as observedAttributes and convert to kebab-case.</div>
             </div>
-            <div class="fn-desc">
-              JSX factory functions returning VNode objects. Fragment groups children without a wrapper
-              DOM element. The automatic JSX runtime (<code>@lessjs/core/jsx-runtime</code>) is
-              configured via <code>deno.json</code> compilerOptions.
+          </div>
+
+          <div class="api-category">
+            <h2>Rendering</h2>
+            <div class="api-entry">
+              <div class="api-sig">renderDsd(tagName, componentClass, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;</div>
+              <div class="api-desc">Server-side renders a Custom Element as DSD HTML. Supports three layers: dsd-static, dsd-interactive, pure-island.</div>
             </div>
-
-            <div class="fn-name">renderToString()</div>
-            <div class="fn-sig">
-              renderToString(node: unknown): string
+            <div class="api-entry">
+              <div class="api-sig">renderDsdStream(components, options?): ReadableStream&lt;Uint8Array&gt;</div>
+              <div class="api-desc">Streams document shell and DSD component chunks via Web Streams for progressive delivery.</div>
             </div>
-            <div class="fn-desc">
-              Converts a VNode tree to an HTML string for SSR/SSG output. Event handlers (onClick etc.)
-              are silently ignored. Text content is HTML-escaped. Supports className → class,
-              htmlFor → for, and style object serialisation.
+            <div class="api-entry">
+              <div class="api-sig">renderToDom(node: unknown, signal?: AbortSignal): Node</div>
+              <div class="api-desc">Converts a VNode tree to real DOM nodes. Event handlers wired via native addEventListener.</div>
             </div>
-
-            <div class="fn-name">renderToDom()</div>
-            <div class="fn-sig">
-              renderToDom(node: unknown, signal?: AbortSignal): Node
+            <div class="api-entry">
+              <div class="api-sig">renderToString(node: unknown): string</div>
+              <div class="api-desc">Converts a VNode tree to an HTML string for SSR/SSG output. Text content is HTML-escaped.</div>
             </div>
-            <div class="fn-desc">
-              Converts a VNode tree to real DOM nodes for CSR and hydration. Event handlers are wired
-              via native addEventListener with AbortSignal lifecycle. SVG elements are auto-detected
-              and created with createElementNS.
+          </div>
+
+          <div class="api-category">
+            <h2>Islands</h2>
+            <div class="api-entry">
+              <div class="api-sig">defineIsland(componentClass, options?: { strategy?: 'load' | 'idle' | 'visible' | 'only' }): CustomElementConstructor</div>
+              <div class="api-desc">Wraps a Custom Element class with island upgrade logic. Supports four hydration strategies.</div>
             </div>
-
-            <div class="fn-name">VNode / isVNode()</div>
-            <div class="fn-sig">
-              VNode: { tag, props, children, key?, ref? } — isVNode(v: unknown): v is VNode
+            <div class="api-entry">
+              <div class="api-sig">bindEvents(element: HTMLElement, events: Record&lt;string, Function&gt;): void</div>
+              <div class="api-desc">Re-binds event handlers to an upgraded island component.</div>
             </div>
-            <div class="fn-desc">
-              5-field frozen interface for JSX element descriptions. isVNode is the type guard.
-              VNode is a pure data structure — no VDOM diff, no runtime tree.
+          </div>
+
+          <div class="api-category">
+            <h2>Signals</h2>
+            <div class="api-entry">
+              <div class="api-sig">signal&lt;T&gt;(initial: T): Signal&lt;T&gt;</div>
+              <div class="api-desc">Creates a reactive container with an initial value. Read/write via .value. Auto-unwraps in JSX.</div>
             </div>
-
-            <div class="fn-name">renderDSDStream()</div>
-            <div class="fn-sig">
-              renderDSDStream(components, options?): ReadableStream&lt;Uint8Array&gt;
+            <div class="api-entry">
+              <div class="api-sig">computed&lt;T&gt;(fn: () => T): Signal&lt;T&gt;</div>
+              <div class="api-desc">Creates a read-only signal derived from other signals. Lazy, auto-tracking, memoized.</div>
             </div>
-            <div class="fn-desc">
-              Streams a document shell, DSD component chunks, and footer using Web Streams so
-              request-time handlers can return new Response(stream).
+            <div class="api-entry">
+              <div class="api-sig">effect(fn: () => void): () => void</div>
+              <div class="api-desc">Runs a callback automatically when tracked signals change. Returns a dispose function.</div>
             </div>
+          </div>
 
-            <div class="fn-name">renderDSDByName()</div>
-            <div class="fn-sig">
-              renderDSDByName(tagName, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;
+          <div class="api-category">
+            <h2>Build</h2>
+            <div class="api-entry">
+              <div class="api-sig">lessPipeline(options?: FrameworkOptions, ctx?: LessBuildContext): Plugin[]</div>
+              <div class="api-desc">Creates the LessJS Vite plugin array. Handles route scanning, Hono entry generation, island transform, SSR, and SSG.</div>
             </div>
-            <div class="fn-desc">
-              Like renderDsd but looks up the component class from customElements registry by tag name.
+            <div class="api-entry">
+              <div class="api-sig">interface PipelineConfig { routes?: string; islands?: string; ssr?: boolean; ssg?: boolean; ... }</div>
+              <div class="api-desc">Configuration options for lessPipeline(), controlling each phase of the build pipeline.</div>
             </div>
+          </div>
 
-            <div class="fn-name">escapeHtml() / escapeAttr() / escapeAttrValue()</div>
-            <div class="fn-sig">
-              escapeHtml(str): string - escapeAttrValue(value): string - escapeAttr(attr): string
+          <div class="api-category">
+            <h2>SSR</h2>
+            <div class="api-entry">
+              <div class="api-sig">getSsrProps(element: HTMLElement): Record&lt;string, unknown&gt;</div>
+              <div class="api-desc">Extracts and deserializes SSR-passed data from element attributes.</div>
             </div>
-            <div class="fn-desc">
-              HTML/attribute escaping with SafeHtml/UnsafeHtml branded types for double-escape prevention.
+            <div class="api-entry">
+              <div class="api-sig">renderDsdByName(tagName: string, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;</div>
+              <div class="api-desc">Looks up a component class from the customElements registry by tag name and SSR-renders it.</div>
             </div>
-
-            <div class="fn-name">defineIsland()</div>
-            <div class="fn-sig">defineIsland(componentClass, options?): CustomElementConstructor</div>
-            <div class="fn-desc">
-              Wraps a CE class with island upgrade logic. Supports 4 strategies: load, idle,
-              visible, only.
-            </div>
-
-            <div class="fn-name">syncState() / getProps()</div>
-            <div class="fn-sig">
-              syncState(element, props): void - getProps(element): Record&lt;string, unknown&gt;
-            </div>
-            <div class="fn-desc">Framework-agnostic SSR prop binding and deserialization.</div>
-
-            <div class="fn-name">registerAdapter() / getAdapter()</div>
-            <div class="fn-sig">
-              registerAdapter(adapter: RenderAdapter): void - getAdapter(): RenderAdapter | undefined
-            </div>
-            <div class="fn-desc">
-              Plugin interface for SSR renderers. The current registry stores one active adapter. A future
-              renderer protocol must define adapter identity, capabilities, errors, hydration hints, and
-              DSD constraints before multi-adapter behavior is documented as stable.
-            </div>
-
-            <div class="fn-name">createSsrContext() / extractParams() / parseQuery()</div>
-            <div class="fn-sig">
-              createSsrContext(opts): SsrContext - extractParams(ctx, keys): Record - parseQuery(ctx):
-              Record
-            </div>
-            <div class="fn-desc">
-              Server-side rendering context with request, params, and query parsing.
-            </div>
-
-            <div class="fn-name">LessError / SsrRenderError</div>
-            <div class="fn-sig">extends Error</div>
-            <div class="fn-desc">
-              Structured error classes with code, statusCode, isOperational, and toJSON().
-            </div>
-
-            <div class="fn-name">renderSsrError() / wrapInDocument() / camelToKebab()</div>
-            <div class="fn-desc">
-              SSR error page rendering, document wrapper, and attribute name conversion.
-            </div>
-
-            <p class="fn-desc" style="margin-top:1rem">
-              <strong>Subpath exports:</strong> <code>@lessjs/core/logger</code> (createLogger), <code
-              >@lessjs/core/errors</code>, <code>@lessjs/core/context</code>, <code
-              >@lessjs/core/navigation</code> (navigate/onNavigate/matchRoute), <code
-              >@lessjs/core/constants</code>.
-            </p>
-
-            <!-- ─── @lessjs/adapter-vite ─────────────────────── -->
-            <div class="pkg-name">@lessjs/adapter-vite</div>
-            <div class="pkg-import">import { lessPipeline } from '@lessjs/adapter-vite';</div>
-            <p>
-              Vite build orchestration: routes, islands, SSG 3-phase pipeline. Contains <code
-              >lessPipeline()</code>.
-            </p>
-
-            <div class="fn-name">lessPipeline()</div>
-            <div class="fn-sig">lessPipeline(options?: FrameworkOptions, ctx?: LessBuildContext): Plugin[]</div>
-            <div class="fn-desc">
-              Creates the LessJS Vite plugin array. Handles route scanning, Hono entry generation, island
-              transform, SSR SSR and SSG. Returns 7+ plugins.
-            </div>
-
-            <div class="fn-name">LessBuildContext</div>
-            <div class="fn-sig">class LessBuildContext(options)</div>
-            <div class="fn-desc">
-              Cross-phase state container. Phase 1 writes routes/islands, Phase 2 writes client manifests,
-              Phase 3 reads all for SSG rendering.
-            </div>
-
-            <div class="fn-name">Build utilities</div>
-            <div class="fn-desc">
-              <code>printBuildManifest()</code>, <code>scanClientBuild()</code>, <code
-              >scanSSGOutput()</code>, <code>buildIslandChunkMap()</code>, <code
-              >buildSpeculationRulesJson()</code>,<br>
-              <code>injectClientScript()</code>, <code>injectCspMeta()</code>, <code
-              >injectDsdPolyfill()</code>, <code>injectSpeculationRules()</code>, <code
-              >injectViewTransitionMeta()</code>,<br>
-              <code>extractCustomElementTags()</code>, <code>generateIslandManifests()</code>, <code
-              >writeIslandManifests()</code>
-            </div>
-
-            <div class="fn-name">Package islands and future manifests</div>
-            <div class="fn-desc">
-              <code>packageIslands</code> currently scans packages that export an <code>islands</code>
-              metadata array. The future WC package protocol will add CEM-compatible fields for tags,
-              modules, exports, attributes, properties, events, slots, CSS parts, CSS custom properties,
-              custom states, <code>ssr</code>, <code>dsd</code>, <code>hydrate</code>, and diagnostics.
-              Until that protocol ships, registry hub and <code>less add</code> behavior remain roadmap
-              items.
-            </div>
-
-            <p class="fn-desc" style="margin-top:1rem">
-              <strong>Subpath exports:</strong> <code>@lessjs/adapter-vite/build-context</code>, <code
-              >@lessjs/adapter-vite/virtual-ids</code>
-            </p>
-
-            <!-- ─── @lessjs/app ─────────────────────────────── -->
-            <div class="pkg-name">@lessjs/app</div>
-            <div class="pkg-import">import { lessjs } from '@lessjs/app';</div>
-            <p>
-              Unified entry. Wraps lessPipeline() + lessContent() + lessI18n() with shared ctx. <strong
-              >Recommended for all projects.</strong>
-            </p>
-
-            <div class="fn-name">lessjs()</div>
-            <div class="fn-sig">lessjs(options: LessjsOptions): Plugin[]</div>
-            <div class="fn-desc">
-              Accepts core options + content + i18n nested configs. Creates shared LessBuildContext and
-              passes to all sub-plugins.
-            </div>
-
-            <!-- ─── @lessjs/content ──────────────────────────── -->
-            <div class="pkg-name">@lessjs/content</div>
-            <div class="pkg-import">import { lessContent } from '@lessjs/content';</div>
-            <p>
-              Build-time content plugin: Blog + Nav + Sitemap. Data flows through virtual modules (ADR
-              0018).
-            </p>
-
-            <div class="fn-name">lessContent()</div>
-            <div class="fn-sig">lessContent(options: LessContentOptions &amp; { ctx? }): Plugin[]</div>
-            <div class="fn-desc">
-              Creates content plugins. Modules: blog (md frontmatter), nav (route meta scanning), sitemap
-              (SSG output scan).
-            </div>
-
-            <p class="fn-desc" style="margin-top:1rem">
-              <strong>Subpath exports:</strong> <code>@lessjs/content/blog-data</code>, <code
-              >@lessjs/content/nav</code>, <code>@lessjs/content/sitemap</code>
-            </p>
-
-            <!-- ─── @lessjs/i18n ─────────────────────────────── -->
-            <div class="pkg-name">@lessjs/i18n</div>
-            <div class="pkg-import">import { lessI18n } from '@lessjs/i18n';</div>
-
-            <div class="fn-name">lessI18n()</div>
-            <div class="fn-sig">lessI18n(options: LessI18nOptions &amp; { ctx? }): Plugin</div>
-            <div class="fn-desc">
-              Locale expansion for SSG + route-level helpers (i18nStaticPaths, switchLocale).
-            </div>
-
-
-            <!-- ─── @lessjs/ui ───────────────────────────────── -->
-            <div class="pkg-name">@lessjs/ui</div>
-            <div class="pkg-import">import { ... } from '@lessjs/ui';</div>
-            <p>
-              8 Web Components: less-button, less-input, less-card, less-code-block, less-layout,
-              less-theme-toggle, less-hero-ping, less-dialog.
-            </p>
-
-            <!-- ─── @lessjs/signals ───────────────────────────── -->
-            <div class="pkg-name">@lessjs/signals</div>
-            <div class="pkg-import">import { signal, computed, effect } from '@lessjs/signals';</div>
-            <p>
-              TC39 Signals polyfill. Also exports: batch, untracked, channel, islandEffect, themeSignal,
-              isNativeSignal.
-            </p>
-
-            <!-- ─── @lessjs/rpc ──────────────────────────────── -->
-            <div class="pkg-name">@lessjs/rpc</div>
-            <div class="pkg-import">import { RpcController, RpcError } from '@lessjs/rpc';</div>
-            <p>
-              Fetch-based RPC with auto-retry, abort, and loading/error state management.
-            </p>
-
-            <!-- ─── @lessjs/create ───────────────────────────── -->
-            <div class="pkg-name">@lessjs/create</div>
-            <div class="pkg-import">deno run -A jsr:@lessjs/create my-app</div>
-            <p>
-              CLI scaffold. Generates a new LessJS project with Deno config, Vite config, routes, islands,
-              and example component.
-            </p>
           </div>
         </div>
       </less-layout>

@@ -1,5 +1,5 @@
 // deno-fmt-ignore-file
-export const meta = { section: 'Quick Start', label: 'Getting Started', order: 20 };
+export const meta = { section: 'Guide', label: 'Getting Started', order: 1 };
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
@@ -149,14 +149,15 @@ export const tagName = 'counter-island';</code></pre></less-code-block>
 
           <div class="note">
             <p>
-              下一步建议先读 <a href="/engine/architecture">架构</a>， 再读 <a href="/guide/routing">路由</a>、<a href="/guide/ssg">渲染与 SSG</a>
-              和 <a href="/engine/islands">Island Upgrade</a>。
+              下一步建议先读 <a href="/guide/core-concepts">核心概念</a>，
+              再读 <a href="/guide/routing-and-data">路由与数据</a>、
+              <a href="/guide/islands-and-ssr">Islands 与 SSR</a>
+              和 <a href="/guide/deployment">部署</a>。
             </p>
           </div>
 
           <div class="nav-row">
-            <a href="/guide/positioning" class="nav-link">&larr; 框架定位</a>
-            <a href="/engine/architecture" class="nav-link">设计哲学 &rarr;</a>
+            <a href="/guide/core-concepts" class="nav-link">核心概念 &rarr;</a>
           </div>
         </div>
       </less-layout>
@@ -259,16 +260,15 @@ export const tagName = 'page-home';</code></pre></less-code-block>
 
           <div class="note">
             <p>
-              Next steps: <a href="/engine/architecture">Architecture</a>,
-              <a href="/guide/routing">Routing</a>,
-              <a href="/guide/ssg">Rendering &amp; SSG</a>, and
-              <a href="/engine/islands">Island Upgrade</a>.
+              Next steps: <a href="/guide/core-concepts">Core Concepts</a>,
+              <a href="/guide/routing-and-data">Routing &amp; Data</a>,
+              <a href="/guide/islands-and-ssr">Islands &amp; SSR</a>, and
+              <a href="/guide/deployment">Deployment</a>.
             </p>
           </div>
 
           <div class="nav-row">
-            <a href="/guide/positioning" class="nav-link">&larr; Framework Positioning</a>
-            <a href="/engine/architecture" class="nav-link">Design Philosophy &rarr;</a>
+            <a href="/guide/core-concepts" class="nav-link">Core Concepts &rarr;</a>
           </div>
         </div>
       </less-layout>
