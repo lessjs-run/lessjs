@@ -47,13 +47,14 @@ export class DsdGuidePage extends DsdElement {
   }
 
   private _renderZh() {
+    const loc = this._getLocale('zh');
     return `
       <less-layout
-        locale="${this._getLocale('zh')}"
+        locale="${loc}"
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(filterEngineNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
-        current-path="/engine/dsd"
+        current-path="/${loc}/engine/dsd"
       >
         <div class="container">
           <h1>DSD 渲染架构</h1>
@@ -136,9 +137,15 @@ export class DsdGuidePage extends DsdElement {
           <reactive-showcase></reactive-showcase>
 
           <div class="nav-row">
-            <a href="/engine/architecture" class="nav-link">&larr; Architecture</a>
-            <a href="/engine/islands" class="nav-link">Island Upgrade &rarr;</a>
-            <a href="/engine/standards-registry" class="nav-link">Standards &amp; Registry &rarr;</a>
+            <a href="/${loc}/engine/architecture" class="nav-link">&larr; ${
+      loc === 'zh' ? '分层架构' : 'Architecture'
+    }</a>
+            <a href="/${loc}/engine/islands" class="nav-link">${
+      loc === 'zh' ? 'Island 升级' : 'Island Upgrade'
+    } &rarr;</a>
+            <a href="/${loc}/engine/standards-registry" class="nav-link">${
+      loc === 'zh' ? '标准与注册表' : 'Standards &amp; Registry'
+    } &rarr;</a>
           </div>
         </div>
       </less-layout>
@@ -146,9 +153,10 @@ export class DsdGuidePage extends DsdElement {
   }
 
   private _renderEn() {
+    const loc = this._getLocale('en');
     return `
       <less-layout
-        locale="${this._getLocale('en')}"
+        locale="${loc}"
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(filterEngineNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
@@ -238,9 +246,15 @@ export class DsdGuidePage extends DsdElement {
           <reactive-showcase></reactive-showcase>
 
           <div class="nav-row">
-            <a href="/engine/architecture" class="nav-link">&larr; Architecture</a>
-            <a href="/engine/islands" class="nav-link">Island Upgrade &rarr;</a>
-            <a href="/engine/standards-registry" class="nav-link">Standards &amp; Registry &rarr;</a>
+            <a href="/${loc}/engine/architecture" class="nav-link">&larr; ${
+      loc === 'zh' ? '分层架构' : 'Architecture'
+    }</a>
+            <a href="/${loc}/engine/islands" class="nav-link">${
+      loc === 'zh' ? 'Island 升级' : 'Island Upgrade'
+    } &rarr;</a>
+            <a href="/${loc}/engine/standards-registry" class="nav-link">${
+      loc === 'zh' ? '标准与注册表' : 'Standards &amp; Registry'
+    } &rarr;</a>
           </div>
         </div>
       </less-layout>
