@@ -1,116 +1,248 @@
 classDiagram
-    class PublicSignalAPI {
-        <<interface>>
-        +signal~T~(initial: T): WritableSignal~T~
-        +computed~T~(fn: () => T): ReadonlySignal~T~
-        +effect(fn: () => void): Unsubscribe
-    }
-    
-    class SignalEngine {
-        <<interface>>
-        +createState~T~(initial: T): EngineState~T~
-        +createComputed~T~(fn: () => T): EngineComputed~T~
-        +createEffect(fn: () => void): () => void
-    }
-    
-    class WritableSignal~T~ {
-        +get value(): T
-        +set value(v: T)
-        +subscribe(fn: (v: T) => void): Unsubscribe
-    }
-    
-    class ReadonlySignal~T~ {
-        +get value(): T
-        +subscribe(fn: (v: T) => void): Unsubscribe
-    }
-    
-    class Tc39Engine {
-        -states: Map~symbol, Signal.State~
-        +createState(initial): EngineState
-        +createComputed(fn): EngineComputed
-        +createEffect(fn): () => void
-    }
-    
-    class AlienEngine {
-        -signals: Map~symbol, AlienSignal~
-        +createState(initial): EngineState
-        +createComputed(fn): EngineComputed
-        +createEffect(fn): () => void
+    title LessJS v0.26.0 — 数据层解耦架构（SOP-001~005）
+
+    %% === 数据层 — 纯 ESM，零构建工具依赖 ===
+
+    class NavTree {
+        +NavGroup[] groups
+        +Record~string,string~ flatMap
+        +string generatedAt
     }
 
-    PublicSignalAPI ..> SignalEngine : uses
-    SignalEngine <|.. Tc39Engine : implements
-    SignalEngine <|.. AlienEngine : implements
-    PublicSignalAPI ..> WritableSignal : creates
-    PublicSignalAPI ..> ReadonlySignal : creates
-
-    class LessPlugin {
-        +less(options: FrameworkOptions, ctx?: LessBuildContext): Plugin[]
-        -normalizeOptions(options): ResolvedOptions
-        -assemblePlugins(ctx): Plugin[]
-    }
-    
-    class HeadInjection {
-        +assertNoScriptTags(html: string, context: string): void
-        +validateSafeUrl(url: string, context: string): string
-        +buildInjectFragments(inject: InjectConfig): string
-        +escapeAttr(value: string): string
-    }
-    
-    class SubpathResolver {
-        +createCoreResolvePlugin(metaUrl: string): Plugin
-        -VIRTUAL_CORE_PREFIX: string
-        -CORE_SUBPATHS: Record~string, string~
-        -fetchAndCompile(url: string): Promise~string~
-        -jsrSourceCache: Map~string, string~
-    }
-    
-    class OptionalPackageStubs {
-        +optionalPackageStubsPlugin(): Plugin
-        -OPTIONAL_PACKAGE_STUBS: Record~string, string~
-    }
-    
-    class PhaseContext {
-        +Phase1Data
-        +Phase2Data
-        +Phase3Data
-        -routeEntries: RouteEntry[]
-        -islandTagNames: string[]
-        -ssrAdmissionPlan: AdmissionPlan
-        -buildManifest: BuildManifest
+    class NavItem {
+        +string href
+        +string label
+        +int order
+        +NavItem[] children
+        +boolean external
+        +string i18nKey
     }
 
-    LessPlugin --> HeadInjection : uses
-    LessPlugin --> SubpathResolver : uses
-    LessPlugin --> OptionalPackageStubs : uses
-    LessPlugin --> PhaseContext : owns
+    class NavGroup {
+        +string id
+        +string label
+        +NavItem[] items
+    }
 
-    class LessBlogOptions {
-        +contentDir?: string
-        +basePath?: string
+    class NavDataModule {
+        +NavTree navTree
+        +findNavItem(href) NavItem
+        +getAllRoutePaths() string[]
     }
-    class LessPluginMeta {
-        +blogOptions: LessBlogOptions | null
-        +navSections: LessNavSection[]
-        +headerNav: LessHeaderNavLink[]
-        +i18nOptions: LessI18nContextOptions | null
-        +[key: string]: unknown
+
+    class NavDataWriter {
+        +generateNavDataModule(NavTree) string
+        +writeNavData(NavTree, string) Promise~void~
     }
-    class LessBuildContextLike {
-        +plugins: LessPluginMeta
+
+    class BlogData {
+        +BlogPost[] posts
+        +Record~string,number~ tags
+        +Record~string,BlogPost~ bySlug
+        +BlogPost[] published
+        +string generatedAt
     }
-    class VirtualIds {
-        +VIRTUAL_BLOG_DATA_ID: string
-        +VIRTUAL_I18N_DATA_ID: string
-        +VIRTUAL_NAV_ID: string
-        +VIRTUAL_PAGE_DATA_ID: string
+
+    class BlogPost {
+        +string slug
+        +string title
+        +string description
+        +string date
+        +string updated
+        +string[] tags
+        +boolean draft
+        +string html
+        +int readingTime
     }
-    class StyleSheetLike {
-        +replaceSync(text: string): void
-        +cssRules: StyleSheetRule[]
+
+    class BlogDataModule {
+        +BlogData blogData
+        +getPostsByTag(tag) BlogPost[]
+        +getRecentPosts(n) BlogPost[]
+        +getAllTags() string[]
     }
-    class HtmlEscape {
-        +escapeHtml(str: string): string
-        +escapeAttr(value: string): string
-        +escapeAttrValue(value: unknown): string
+
+    class BlogDataWriter {
+        +generateBlogDataModule(BlogData) string
+        +writeBlogData(BlogData, string) Promise~void~
     }
+
+    class I18nData {
+        +I18nConfig config
+        +TranslationMap translations
+        +string generatedAt
+    }
+
+    class I18nDataModule {
+        +I18nData i18nData
+        +t(locale, key) string
+        +getLocalePrefix(locale) string
+    }
+
+    class I18nDataWriter {
+        +generateI18nDataModule(I18nData) string
+        +writeI18nData(I18nData, string) Promise~void~
+    }
+
+    %% === Island Transform ===
+
+    class IslandTransformCore {
+        +transformIslandSource(source, IslandTransformOptions) IslandTransformResult
+        -extractImports(source) ImportInfo[]
+        -extractIslands(source, options) IslandInfo[]
+        -generateHydratorCode(islands, options) string
+        -assembleOutput(source, imports, islands, hydrator, options) string
+    }
+
+    class IslandInfo {
+        +string name
+        +string tagName
+        +string strategy
+        +string[] deps
+        +boolean clientOnly
+        +int line
+        +int column
+    }
+
+    class IslandTransformVitePlugin {
+        +islandTransform(options) Plugin
+        -Map~string,IslandInfo[]~ islandRegistry
+        +transform(code, id) TransformResult
+        +generateBundle(opts, bundle) void
+    }
+
+    %% === Entry Renderer ===
+
+    class EntryRenderer {
+        +generateEntryRenderer(routes, NavTree, BlogData, I18nData) string
+    }
+
+    class RouteInfo {
+        +buildRouteInfo(NavTree, options) RouteInfo[]
+        +generateRouteInfoExport(RouteInfo[]) string
+        +ROUTE_INFO_TYPE_DEF string
+    }
+
+    class RouteInfoEntry {
+        +string path
+        +string label
+        +string[] staticPaths
+        +string locale
+    }
+
+    %% === Dev Server ===
+
+    class DevServer {
+        +createDevServer(DevServerOptions) DevServerInstance
+        +app Hono
+        +start() void
+    }
+
+    class SSRMiddleware {
+        +ssrMiddleware(options) Middleware
+        -isStaticAsset(path) boolean
+        -resolveRouteModule(path, root) Promise~RouteModule~
+        -wrapDocument(content, opts) string
+    }
+
+    class StaticMiddleware {
+        +staticMiddleware(root) Middleware
+    }
+
+    class HMREnhancement {
+        +hmrMiddleware(options) Middleware
+    }
+
+    %% === I/O Utils ===
+
+    class IOUtils {
+        +readJsonFile~T~(filePath) Promise~T~
+        +readJsonFileSync~T~(filePath) T
+        +readTextFile(filePath) Promise~string~
+        +writeTextFile(filePath, content) Promise~void~
+        +readWorkspaceConfig(rootDir) Promise~DenoWorkspaceConfig~
+        +readWorkspaceConfigSync(rootDir) DenoWorkspaceConfig
+    }
+
+    %% === Build Context ===
+
+    class BuildContext {
+        +NavTree navTree
+        +BlogData blogData
+        +I18nData i18nData
+        +string routesDir
+        +string contentDir
+    }
+
+    %% === Vite Plugins ===
+
+    class LessContentPlugin {
+        +lessContent() Plugin
+        +configResolved(config) void
+        +buildStart() Promise~void~
+    }
+
+    class LessCorePlugin {
+        +less(options) Plugin[]
+        +config(userConfig, env) UserConfig
+    }
+
+    %% === 关系 ===
+
+    NavDataModule --> NavTree : exports
+    NavTree "1" --> "*" NavGroup : groups
+    NavGroup "1" --> "*" NavItem : items
+    NavItem "1" --> "*" NavItem : children
+
+    NavDataWriter --> NavTree : generates
+    NavDataWriter ..> NavDataModule : writes file
+
+    BlogDataModule --> BlogData : exports
+    BlogData "1" --> "*" BlogPost : posts
+
+    BlogDataWriter --> BlogData : generates
+    BlogDataWriter ..> BlogDataModule : writes file
+
+    I18nDataModule --> I18nData : exports
+
+    IslandTransformVitePlugin --> IslandTransformCore : delegates
+    IslandTransformCore --> IslandInfo : produces
+
+    EntryRenderer --> RouteInfo : uses
+    EntryRenderer --> NavDataModule : imports
+    EntryRenderer --> BlogDataModule : imports
+    EntryRenderer --> I18nDataModule : imports
+    RouteInfo --> RouteInfoEntry : produces
+
+    DevServer --> SSRMiddleware : uses
+    DevServer --> StaticMiddleware : uses
+    DevServer ..> HMREnhancement : optional
+
+    SSRMiddleware --> NavDataModule : imports
+    SSRMiddleware --> RouteModule : resolves
+
+    LessContentPlugin --> NavDataWriter : calls buildStart
+    LessContentPlugin --> BlogDataWriter : calls buildStart
+    LessCorePlugin --> IOUtils : uses
+    LessCorePlugin --> BuildContext : populates
+
+    BuildContext --> NavTree : stores
+    BuildContext --> BlogData : stores
+    BuildContext --> I18nData : stores
+
+    %% 样式标注
+    style NavDataModule fill:#e8f5e9,stroke:#2e7d32
+    style BlogDataModule fill:#e8f5e9,stroke:#2e7d32
+    style I18nDataModule fill:#e8f5e9,stroke:#2e7d32
+    style IslandTransformCore fill:#e3f2fd,stroke:#1565c0
+    style RouteInfo fill:#fff3e0,stroke:#e65100
+    style DevServer fill:#f3e5f5,stroke:#7b1fa2
+    style IOUtils fill:#fce4ec,stroke:#c62828
+
+    note for NavDataModule "SOP-001: 替代 virtual:less-nav"
+    note for BlogDataModule "SOP-001: 替代 virtual:less-blog-data"
+    note for I18nDataModule "SOP-001: 替代 virtual:less-i18n-data"
+    note for IslandTransformCore "SOP-003: 零 Vite 依赖"
+    note for RouteInfo "SOP-002: 独立 routeInfo 构建"
+    note for DevServer "SOP-004: 零 Bundler Dev"
+    note for IOUtils "SOP-005: Deno I/O 薄抽象"
