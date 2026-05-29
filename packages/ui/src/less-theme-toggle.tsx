@@ -77,6 +77,7 @@ export class LessThemeToggle extends DsdElement {
   static override observedAttributes = ['theme'];
 
   private _theme = signal<'dark' | 'light'>('dark');
+  private _initDone = false;
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -91,6 +92,8 @@ export class LessThemeToggle extends DsdElement {
    * > localStorage > prefers-color-scheme > default 'dark'.
    */
   private _initTheme(): void {
+    if (this._initDone) return;
+    this._initDone = true;
     const themeAttr = this.getAttribute('theme');
     if (themeAttr === 'light') {
       this._theme.value = 'light';
