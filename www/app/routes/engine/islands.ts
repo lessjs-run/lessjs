@@ -45,13 +45,14 @@ export class IslandsGuidePage extends DsdElement {
   }
 
   private _renderZh() {
+    const loc = this._getLocale('zh');
     return `
       <less-layout
-        locale="${this._getLocale('zh')}"
+        locale="${loc}"
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(filterEngineNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
-        current-path="/engine/islands"
+        current-path="/${loc}/engine/islands"
       >
         <div class="container">
           <h1>Island Upgrade</h1>
@@ -150,8 +151,8 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);</co
             build，并引入页面级 island manifest，让每个页面只加载实际出现的 island。
           </p>
           <div class="nav-row">
-            <a href="/engine/dsd" class="nav-link">&larr; DSD 渲染架构</a>
-            <a href="/engine/islands-deep" class="nav-link">Island 深度指南 &rarr;</a>
+            <a href="/${loc}/engine/dsd" class="nav-link">&larr; DSD 渲染架构</a>
+            <a href="/${loc}/engine/islands-deep" class="nav-link">Island 深度指南 &rarr;</a>
           </div>
         </div>
       </less-layout>
@@ -159,13 +160,14 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);</co
   }
 
   private _renderEn() {
+    const loc = this._getLocale('en');
     return `
       <less-layout
-        locale="${this._getLocale('en')}"
+        locale="${loc}"
         locales='${JSON.stringify(['en', 'zh'])}'
         nav-items='${JSON.stringify(filterEngineNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
-        current-path="/en/engine/islands"
+        current-path="/${loc}/engine/islands"
       >
         <div class="container">
           <h1>Island Upgrade</h1>
@@ -249,8 +251,8 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);</co
             behavior, LessJS should render it as static host markup or a pure island instead of guessing.
           </p>
           <div class="nav-row">
-            <a href="/engine/dsd" class="nav-link">&larr; DSD Architecture</a>
-            <a href="/engine/islands-deep" class="nav-link">Island Deep Guide &rarr;</a>
+            <a href="/${loc}/engine/dsd" class="nav-link">&larr; DSD Architecture</a>
+            <a href="/${loc}/engine/islands-deep" class="nav-link">Island Deep Guide &rarr;</a>
           </div>
         </div>
       </less-layout>

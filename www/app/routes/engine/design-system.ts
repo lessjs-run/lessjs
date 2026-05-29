@@ -257,7 +257,7 @@ export class UIShowcase extends DsdElement {
       JSON.stringify(['en', 'zh'])
     }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)
-    }' current-path="/engine/design-system"><div class="container">
+    }' current-path="/${loc}/engine/design-system"><div class="container">
     <h1>设计系统</h1>
     <p class="subtitle"><strong>双色板。零噪音。</strong><br>深色和浅色。没有别的。</p>
     <div class="section"><div class="section-title">色板</div><div class="palette-row">
@@ -267,7 +267,7 @@ export class UIShowcase extends DsdElement {
     <div class="section"><div class="section-title">按钮</div><div class="preview-card"><div class="preview-header"><span class="preview-title">变体</span><span class="preview-badge">可用</span></div><div class="preview-body"><less-button variant="primary">主要按钮</less-button><less-button>默认按钮</less-button><less-button variant="ghost">幽灵按钮</less-button></div></div></div>
     <div class="section"><div class="section-title">输入框</div><div class="preview-card"><div class="preview-header"><span class="preview-title">文本输入</span><span class="preview-badge">可用</span></div><div class="preview-body" style="flex-direction:column;gap:0.75rem"><less-input placeholder="输入邮箱..." label="邮箱"></less-input><less-input type="password" placeholder="密码" label="密码" required></less-input><less-input value="hello@lessjs.org" label="只读" disabled></less-input></div></div></div>
     <div class="install-section"><h3>安装 @lessjs/ui</h3><div class="install-cmd"><span class="prompt">$</span> deno add jsr:@lessjs/ui</div><p>Deno、Node、Bun。零配置。</p></div>
-    <div class="nav-row"><a href="/engine/architecture" class="nav-link">&larr; Architecture</a><a href="/engine/reference/core" class="nav-link">API Reference &rarr;</a></div>
+    <div class="nav-row"><a href="/${loc}/engine/architecture" class="nav-link">&larr; Architecture</a><a href="/${loc}/engine/reference/core" class="nav-link">API Reference &rarr;</a></div>
   </div></less-layout>`;
   }
 
@@ -276,7 +276,7 @@ export class UIShowcase extends DsdElement {
       JSON.stringify(['en', 'zh'])
     }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)
-    }' current-path="/en/engine/design-system"><div class="container">
+    }' current-path="/${loc}/engine/design-system"><div class="container">
     <h1>Design System</h1>
     <p class="subtitle"><strong>Two plates. Zero noise.</strong><br>Dark and light. Nothing else.</p>
     <div class="section"><div class="section-title">Palettes</div><div class="palette-row">
@@ -286,7 +286,7 @@ export class UIShowcase extends DsdElement {
     <div class="section"><div class="section-title">Buttons</div><div class="preview-card"><div class="preview-header"><span class="preview-title">Variants</span><span class="preview-badge">Ready</span></div><div class="preview-body"><less-button variant="primary">Primary</less-button><less-button>Default</less-button><less-button variant="ghost">Ghost</less-button></div></div></div>
     <div class="section"><div class="section-title">Inputs</div><div class="preview-card"><div class="preview-header"><span class="preview-title">Text Input</span><span class="preview-badge">Ready</span></div><div class="preview-body" style="flex-direction:column;gap:0.75rem"><less-input placeholder="Enter email..." label="Email"></less-input><less-input type="password" placeholder="Password" label="Password" required></less-input><less-input value="hello@lessjs.org" label="Read-only" disabled></less-input></div></div></div>
     <div class="install-section"><h3>Install @lessjs/ui</h3><div class="install-cmd"><span class="prompt">$</span> deno add jsr:@lessjs/ui</div><p>Deno, Node, Bun. Zero config.</p></div>
-    <div class="nav-row"><a href="/engine/architecture" class="nav-link">&larr; Architecture</a><a href="/engine/reference/core" class="nav-link">API Reference &rarr;</a></div>
+    <div class="nav-row"><a href="/${loc}/engine/architecture" class="nav-link">&larr; Architecture</a><a href="/${loc}/engine/reference/core" class="nav-link">API Reference &rarr;</a></div>
   </div></less-layout>`;
   }
 }

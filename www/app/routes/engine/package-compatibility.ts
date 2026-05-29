@@ -24,7 +24,7 @@ export class PackageCompatibilityGuidePage extends DsdElement {
       <less-layout
         nav-items='${JSON.stringify(filterEngineNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
-        current-path="/engine/package-compatibility"
+        current-path="/${loc}/engine/package-compatibility"
         locale="${this._getLocale('zh')}"
         locales='${JSON.stringify(['en', 'zh'])}'
       >
@@ -174,8 +174,8 @@ for (const pkg of node_modules) {
           </ul>
 
           <nav class="nav-row">
-            <a class="nav-link" href="/engine/architecture">← Architecture</a>
-            <a class="nav-link" href="/engine/standards-registry">Standards &amp; Registry -></a>
+            <a class="nav-link" href="/${loc}/engine/architecture">← Architecture</a>
+            <a class="nav-link" href="/${loc}/engine/standards-registry">Standards &amp; Registry -></a>
           </nav>
         </div>
       </less-layout>
@@ -187,7 +187,7 @@ for (const pkg of node_modules) {
       <less-layout
         nav-items='${JSON.stringify(filterEngineNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
-        current-path="/en/engine/package-compatibility"
+        current-path="/${loc}/engine/package-compatibility"
         locale="${this._getLocale('en')}"
         locales='${JSON.stringify(['en', 'zh'])}'
       >
@@ -343,8 +343,8 @@ for (const pkg of node_modules) {
           </ul>
 
           <nav class="nav-row">
-            <a class="nav-link" href="/engine/architecture">← Architecture</a>
-            <a class="nav-link" href="/engine/standards-registry">Standards &amp; Registry -></a>
+            <a class="nav-link" href="/${loc}/engine/architecture">← Architecture</a>
+            <a class="nav-link" href="/${loc}/engine/standards-registry">Standards &amp; Registry -></a>
           </nav>
         </div>
       </less-layout>

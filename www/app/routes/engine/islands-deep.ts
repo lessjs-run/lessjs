@@ -30,11 +30,11 @@ export class IslandsDeepGuidePage extends DsdElement {
       JSON.stringify(['en', 'zh'])
     }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)
-    }' current-path="/engine/islands-deep"><div class="container">
+    }' current-path="/${loc}/engine/islands-deep"><div class="container">
     <h1>Island 深度指南</h1>
     <p class="subtitle">Island 是 LessJS 中唯一允许的客户端 JavaScript 单元。本页深入讲解 Island 的三层架构、升级策略、声明式事件绑定和数据传递机制。</p>
     <h2>Island 架构原理</h2>
-    <p>LessJS 的 Island 是对 Custom Element Upgrade 机制的诚实利用。浏览器解析 HTML 时看到 <span class="inline-code">&lt;my-counter&gt;</span>，稍后加载模块调用 <span class="inline-code">customElements.define()</span>，已有元素被升级--这就是 Island 的全部原理。关于 DSD 渲染模型和为什么选择 DSD-first，参见 <a href="/engine/dsd">DSD 渲染架构</a>。</p>
+    <p>LessJS 的 Island 是对 Custom Element Upgrade 机制的诚实利用。浏览器解析 HTML 时看到 <span class="inline-code">&lt;my-counter&gt;</span>，稍后加载模块调用 <span class="inline-code">customElements.define()</span>，已有元素被升级--这就是 Island 的全部原理。关于 DSD 渲染模型和为什么选择 DSD-first，参见 <a href="/${loc}/engine/dsd">DSD 渲染架构</a>。</p>
     <h2>三层 Island 架构</h2>
     <div class="layer-card"><div class="layer-tag">Layer 1 - dsd-static</div><h3>无 JS，纯 DSD</h3><p>导航栏、文章内容、页脚等纯展示组件。SSG 输出完整 DSD HTML，客户端不加载任何 JavaScript。组件即使永远不会被 customElements.define() 升级，内容也始终可见且样式完整。</p></div>
     <div class="layer-card"><div class="layer-tag">Layer 2 - dsd-interactive</div><h3>DSD + 事件绑定</h3><p>需要交互但状态简单的组件。SSR 输出完整 DSD（首屏可见），客户端加载模块后检测已有 shadow root，跳过 render()，只绑定声明的事件处理器。</p></div>
@@ -54,7 +54,7 @@ export class IslandsDeepGuidePage extends DsdElement {
     <p>SSR 渲染时，组件的属性值被序列化为 JSON 并写入 data-ssr-props 属性。客户端升级时，less:bind 自动解析并恢复这些属性值，确保 SSR 和客户端状态一致。</p>
     <h2>最佳实践</h2>
     <p>1. 从 Layer 1 开始。大部分展示性组件永远不需要离开 Layer 1。<br>2. 用 CSS 优先于 JavaScript。hover、focus、响应式布局等 CSS 就能解决。<br>3. 保持 Island 小且独立。多个小 Island 比一个大 Island 更容易理解和优化。<br>4. client:visible 策略优先于 client:idle。对于不在首屏的组件更精确。<br>5. 注意 data-ssr-props 大小。大型数据集应通过 fetch 在客户端获取。<br>6. WithDsdHydration 的 render() 必须检查 _dsdHydrated，否则会导致 DOM 重复渲染。</p>
-    <div class="nav-row"><a href="/engine/dsd" class="nav-link">&larr; DSD 渲染架构</a><a href="/guide/rpc" class="nav-link">RPC 远程调用 &rarr;</a></div>
+    <div class="nav-row"><a href="/${loc}/engine/dsd" class="nav-link">&larr; DSD 渲染架构</a><a href="/${loc}/guide/rpc" class="nav-link">RPC 远程调用 &rarr;</a></div>
   </div></less-layout>`;
   }
 
@@ -63,11 +63,11 @@ export class IslandsDeepGuidePage extends DsdElement {
       JSON.stringify(['en', 'zh'])
     }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)
-    }' current-path="/en/engine/islands-deep"><div class="container">
+    }' current-path="/${loc}/engine/islands-deep"><div class="container">
     <h1>Island Deep Dive</h1>
     <p class="subtitle">Islands are the only allowed client-side JavaScript units in LessJS. This page covers the three-layer architecture, upgrade strategies, declarative event binding, and data passing mechanisms.</p>
     <h2>Island Architecture</h2>
-    <p>LessJS islands are a straightforward exploitation of the Custom Element Upgrade mechanism. The browser sees <span class="inline-code">&lt;my-counter&gt;</span> during HTML parsing; later the module loads and calls <span class="inline-code">customElements.define()</span>, upgrading the existing element. See <a href="/engine/dsd">DSD Architecture</a> for the rendering model.</p>
+    <p>LessJS islands are a straightforward exploitation of the Custom Element Upgrade mechanism. The browser sees <span class="inline-code">&lt;my-counter&gt;</span> during HTML parsing; later the module loads and calls <span class="inline-code">customElements.define()</span>, upgrading the existing element. See <a href="/${loc}/engine/dsd">DSD Architecture</a> for the rendering model.</p>
     <h2>Three-Layer Island Architecture</h2>
     <div class="layer-card"><div class="layer-tag">Layer 1 - dsd-static</div><h3>No JS, Pure DSD</h3><p>Purely presentational components: nav, article content, footer. SSG outputs full DSD HTML; the client loads zero JavaScript. Content remains visible and styled even if customElements.define() is never called.</p></div>
     <div class="layer-card"><div class="layer-tag">Layer 2 - dsd-interactive</div><h3>DSD + Event Binding</h3><p>Components needing simple interactivity. SSR outputs full DSD (visible on first paint); after the client module loads, it detects the existing shadow root, skips render(), and binds only the declared event handlers.</p></div>
@@ -87,7 +87,7 @@ export class IslandsDeepGuidePage extends DsdElement {
     <p>During SSR, component property values are serialized to JSON and written to the data-ssr-props attribute. On client upgrade, less:bind automatically parses and restores these values, ensuring SSR and client state stay in sync.</p>
     <h2>Best Practices</h2>
     <p>1. Start with Layer 1. Most presentational components never need to leave Layer 1.<br>2. Prefer CSS over JavaScript. Hover, focus, responsive layouts can be done with CSS alone.<br>3. Keep islands small and independent. Multiple small islands are easier to understand and optimize than one large one.<br>4. Prefer client:visible over client:idle for below-the-fold components.<br>5. Keep data-ssr-props small. Large datasets should be fetched client-side.<br>6. WithDsdHydration render() must check _dsdHydrated to avoid re-rendering the DSD DOM.</p>
-    <div class="nav-row"><a href="/engine/dsd" class="nav-link">&larr; DSD Architecture</a><a href="/guide/rpc" class="nav-link">RPC &rarr;</a></div>
+    <div class="nav-row"><a href="/${loc}/engine/dsd" class="nav-link">&larr; DSD Architecture</a><a href="/${loc}/guide/rpc" class="nav-link">RPC &rarr;</a></div>
   </div></less-layout>`;
   }
 }
