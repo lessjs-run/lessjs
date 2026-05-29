@@ -20,33 +20,30 @@ outrunning the architecture.
 
 | Area                      | State                                                 |
 | ------------------------- | ----------------------------------------------------- |
-| Project line              | v0.23.x Layered Package Architecture                  |
+| Project line              | v0.24.4 API Naming Consolidation                      |
 | Current rendering mode    | SSG + Declarative Shadow DOM                          |
+| Component model           | JSX + static props + Signal (ADR-0057)                |
+| Public API naming         | Web Platform style: verbNoun, PascalCase acronyms     |
 | Current DSD base          | `DsdElement` + SSR-safe `StyleSheet`                  |
 | Current framework surface | file routes, Hono API routes, dev/build pipeline      |
 | Current Hub surface       | early Registry Hub, validation, snapshots, `less add` |
-| Next milestone            | v0.24.x Edge Full-Stack                               |
-
-Package publishing is staggered. The roadmap tracks the project line, while
-individual package versions may lag until a coordinated publish pass.
+| Next milestone            | v0.25.0 Declarative DX                                |
 
 ## Phase Overview
 
-| Phase | Version | Name                         | Goal                                                           | Status  |
-| ----- | ------- | ---------------------------- | -------------------------------------------------------------- | ------- |
-| 1     | v0.15.x | Renderer Kernel              | Structured render output, hooks, build report                  | Done    |
-| 2     | v0.16.x | WC Package Protocol          | Manifest + local registry                                      | Done    |
-| 3     | v0.17.x | Ecosystem Entry              | Manifest-native pipeline and multi-adapter boundary            | Done    |
-| 4     | v0.18.x | Universal WC Engine          | CEM parser, compatibility tiers, validation CLI, safe add flow | Done    |
-| 5     | v0.19.x | Registry Hub MVP             | Searchable validated package index with reports and snapshots  | Done    |
-| 6     | v0.20.x | Ocean-Island Architecture    | DsdElement, DSD-native UI, CSS Parts, cleanup gates            | Done    |
-| 7     | v0.21.x | Reactive DSD                 | DsdElement + Signals, safe templates, streaming DSD            | Done    |
-| 8     | v0.22.x | Architecture Integrity       | Package boundaries, consumer surface, adapter cleanup, gates   | Done    |
-| 9     | v0.23.x | Layered Package Architecture | Protocols, runtime facade, graph gates, docs governance        | Current |
-| 10    | v0.24.x | Edge Full-Stack              | ISR handler, KV adapters, Showcase, deployment guides          | Planned |
-| 10.1  | v0.24.1 | JSX + Signal Component Model | JSX template, static props, Signal unwrap, DSD integration     | ✅ Done |
-| 11    | v0.25.x | Ecosystem Hardening          | Hub trust policy, package evidence, compatibility growth       | Planned |
-| 12    | v1.0.x  | Stable Engine                | API/schema freeze and deterministic package guarantees         | Vision  |
+| Phase | Version     | Name                         | Goal                                                           | Status  |
+| ----- | ----------- | ---------------------------- | -------------------------------------------------------------- | ------- |
+| 1–6   | v0.15–v0.20 | Ocean-Island Architecture    | DSD-first rendering, CEM, Hub, gates                           | ✅ Done |
+| 7     | v0.21.x     | Reactive DSD                 | DsdElement + Signals, safe templates, streaming DSD            | ✅ Done |
+| 8     | v0.22.x     | Architecture Integrity       | Package boundaries, consumer surface, adapter cleanup, gates   | ✅ Done |
+| 9     | v0.23.x     | Layered Package Architecture | Protocols, runtime facade, graph gates, docs governance        | ✅ Done |
+| 10    | v0.24.1     | JSX + Signal Component Model | JSX, static props, Signal unwrap, DSD integration (ADR-0057)   | ✅ Done |
+| 10.1  | v0.24.2     | Remove Old Component Model   | html/@prop removal, renderer hardening, docs truth convergence | ✅ Done |
+| 10.2  | v0.24.3     | Consolidation                | TemplateResult removal, TemplateRunner dedup, gate hardening   | ✅ Done |
+| 10.3  | v0.24.4     | API Naming Convention        | verbNoun, PascalCase acronyms, brand prefix removal            | ✅ Done |
+| 11    | v0.25.0     | Declarative DX               | BuildPipeline, route types, static head, static client         | Planned |
+| 12    | v0.26.0     | Reactive Pragmatic           | Route params, data-keep-alive, computed docs                   | Planned |
+| 13    | v1.0.x      | Stable Engine                | API/schema freeze and deterministic package guarantees         | Vision  |
 
 ## Compatibility Admission Model
 
@@ -161,139 +158,83 @@ Scope:
 
 See `docs/sop/v0.21.0/` for detailed SOPs.
 
-## Completed: v0.22.x - Architecture Integrity
+## Completed: v0.22–v0.24 — Architecture Integrity through API Consolidation ✅
 
-Goal: pay down the architecture and engineering debt exposed by the 2026-05-26
-review set before adding more public framework surface.
+### v0.22.x - Architecture Integrity
 
-Scope:
+Package boundaries, consumer surface, adapter cleanup, release gates.
+See `docs/sop/v0.22.0/`. ADR-0049 is the governing decision.
 
-- Consumer `deno.json` simplification and internal dependency hiding
-- `@lessjs/core` package boundary cleanup
-- Real ownership for extracted packages such as `@lessjs/style-sheet`
-- `adapter-vite` decomposition into smaller testable modules
-- Signals facade / engine boundary hardening
-- Hub, CEM, package manifest, and validation type unification
-- Coverage artifacts, generated-consumer E2E proof, Playwright trace, cache
-  fallback, and docs/status/roadmap consistency gates
+### v0.23.x - Layered Package Architecture
 
-See `docs/sop/v0.22.0/` for detailed SOPs. ADR-0049 is the governing decision.
+Protocols, runtime facade, app facade, graph gates, docs governance.
+See `docs/sop/v0.23.0/`. ADR-0050 is the governing decision.
 
-Non-goals:
+### v0.24.1 — JSX + Signal Component Model (ADR-0057)
 
-- shipping the ISR production handler in v0.22
-- shipping CF Workers KV or Deno KV adapters in v0.22
-- expanding `@lessjs/ui` from 10 components to 20 components
-- adding auth, ORM, database, or generic Node server abstractions
-- deleting public imports such as `@lessjs/signals` without a deprecation window
+JSX template, static props, Signal unwrap, DSD integration.
+See `docs/sop/v0.24.1/`. ADR-0057 (v2) is the governing decision.
 
-## Current: v0.23.x - Layered Package Architecture
+### v0.24.2 — Remove Old Component Model
 
-Goal: turn the v0.22 cleanup line into a durable package architecture before
-Edge work resumes.
+html/@prop removal, renderer hardening, docs truth convergence.
+See `docs/sop/v0.24.3/`.
 
-Scope:
+### v0.24.3 — Consolidation
 
-- contracts/protocols ownership for shared build/runtime types
-- `@lessjs/core` as runtime kernel, not all-purpose DX barrel
-- `@lessjs/runtime` authoring facade versus `@lessjs/app` configuration facade
-- `adapter-vite` build-module ownership and shared contract extraction
-- package graph, publish order, and generated-consumer gates
-- docs/status/roadmap/changelog consistency checks
+TemplateResult removal, type dedup, gate hardening.
+See `docs/sop/v0.24.3/`.
 
-See `docs/sop/v0.23.0/` for detailed SOPs. ADR-0050 is the governing decision.
+### v0.24.4 — API Naming Convention (SOP-001)
 
-Non-goals:
+verbNoun, PascalCase acronyms, brand prefix removal across 100+ files.
+See `docs/sop/v0.24.4/`, `docs/release/0.24.4.md`.
 
-- shipping ISR production handler in v0.23
-- shipping KV adapters in v0.23
-- expanding Hub marketplace claims in v0.23
-- freezing v1.0 APIs
+## Planned: v0.25.0 — Declarative DX
 
-## Planned: v0.24.x - Edge Full-Stack
+Goal: eliminate the largest architecture debt (scripted 3-phase build), add
+type-safe routes, and unify DX with `static head` + `static client`.
 
-Goal: resume ADR-0038 after architecture cleanup exits.
+Governing ADR: ADR-0058, ADR-0059. See `docs/sop/v0.25.0/`.
 
-Scope:
+| Group | Task                               | Priority | Nature          |
+| ----- | ---------------------------------- | -------- | --------------- |
+| TG-01 | `lessPipeline()` declarative API   | P0       | Pure refactor   |
+| TG-02 | `RouteParams` type generation      | P0       | Code generation |
+| TG-03 | `static head` metadata             | P1       | Small feature   |
+| TG-04 | `static client` island declaration | P1       | Syntax sugar    |
 
-- ISR production handler (CF Workers / Deno Deploy)
-- KvIsrCache adapters (CF Workers KV + Deno KV)
-- www Showcase pages (Reactive DSD demo, ISR stopwatch, serverless API)
-- Deployment guides (CF Workers, Deno Deploy, static-only)
+## Planned: v0.26.0 — Reactive Pragmatic
 
-## Completed: v0.24.1 - JSX + Signal Component Model ✅
+Goal: SPA navigation-aware params + input focus preservation + computed docs.
 
-Goal: replace `html` tagged template + `@prop()` with JSX + `static props`,
-aligning LessJS's template layer with its strategic positioning — differentiating
-on DSD pipeline + Signal reactivity, not on template DSL.
+Governing ADR: ADR-0059. See `docs/sop/v0.26.0/`.
 
-Governing ADR: ADR-0057 (v2)
+| Group | Task                               | Priority | Nature      |
+| ----- | ---------------------------------- | -------- | ----------- |
+| TG-01 | `this.params` SPA-reactive         | P0       | New feature |
+| TG-02 | `data-keep-alive` DOM preservation | P1       | Bug fix     |
+| TG-03 | `computed()` documentation         | P2       | Docs        |
 
-Scope:
+## Explicitly Excluded
 
-- jsx-runtime (VNode + renderToString + renderToDom) — ~200 lines replacing ~570
-- `static props` declarative configuration replacing `@prop()` decorator
-- Signal auto-unwrap (valueOf / Symbol.toPrimitive + `unwrap()` utility)
-- VNode interface freeze clause (5 fields, no VDOM diff)
-- JSX event system (onClick → native addEventListener, no synthetic events)
-- DSD pipeline integration (renderDsd consumes VNode output)
-- Internal component migration (html → JSX, @prop → static props)
-- `html` tagged template marked `@deprecated`
-- TypeScript type inference for `static props` (PropsFrom\<T\> or MVP fallback)
-
-Non-goals:
-
-- VDOM diff, synthetic events, Portal/Suspense/Context
-- Removing `html` tagged template (moves to html-legacy in v0.28)
-- ISR handler or KV adapters (v0.24.x mainline)
-- Competing with Lit on tagged template (LessJS differentiates on DSD + Signal)
-
-See `docs/sop/v0.24.1/` for detailed step-by-step SOPs.
-
-## Planned: v0.25.x - Ecosystem Hardening
-
-Goal: move from a proof-of-concept Hub index to useful package discovery and
-trust evidence.
-
-Exit criteria:
-
-- At least 10 real packages indexed.
-- Compatibility badges distinguish SSR-capable, client-only, rejected, and
-  snapshot-verified packages.
-- Submission trust policy is stricter than schema-shape validation.
-- Author-facing Hub submission guide exists.
+| Excluded                            | Reason                                 |
+| ----------------------------------- | -------------------------------------- |
+| SignalContext cross-component state | `computed()` current 0 production uses |
+| `static data` SSG fetch             | Content system already handles data    |
+| `static middleware`                 | 0 file uses                            |
+| SignalQuery                         | Promise-style RPC sufficient           |
+| Edge Full-Stack (ISR, KV)           | Deferred until architecture clean      |
 
 ## Vision: v1.0 Stable Engine
 
-v1.0 should freeze:
+v1.0 should freeze: `DsdElement`, `renderDsd()`, adapter protocol, manifest and
+compatibility schema, `dsd-report.json`, `less validate-manifest`, `less add`,
+client-only fallback behavior.
 
-- `DsdElement`
-- `renderDsd()`
-- adapter protocol
-- manifest and compatibility schema
-- `dsd-report.json`
-- `less validate-manifest`
-- `less add`
-- client-only fallback behavior
-
-v1.0 should not promise:
-
-- SSR for every CEM package
-- browser-equivalent DOM simulation
-- automatic safe execution of arbitrary package code
-- a mature public marketplace
-
-## Cross-Phase Concerns
-
-| Concern                      | Current state                                       | Target                                                       |
-| ---------------------------- | --------------------------------------------------- | ------------------------------------------------------------ |
-| Third-party UI compatibility | Known SSR errors are classified and gated           | More packages with explicit compatibility badges             |
-| Full-stack capabilities      | routing, SSG, Hono API routes, ISR metadata         | runtime ISR adapters, deployment parity                      |
-| Islands hydration            | `client:*` user-facing strategies                   | richer diagnostics and runtime coverage                      |
-| Documentation sync           | SOP-015 governs public docs                         | release checklist blocks stale current-version claims        |
-| Test coverage                | strong core/build/e2e base, uneven package coverage | targeted coverage for UI, i18n, create, adapters             |
-| Hub scale                    | early index                                         | at least 10 useful packages before stronger market claims    |
-| Security                     | audit and admission checks                          | package trust policy, hermetic snapshots, signed submissions |
+v1.0 should not promise: SSR for every CEM package, browser-equivalent DOM
+simulation, automatic safe execution of arbitrary package code, a mature
+public marketplace.
 
 ## Document Cross-Reference
 
@@ -304,3 +245,4 @@ v1.0 should not promise:
 | Changelog     | per patch                               | `docs/changelog/`       |
 | Status        | always current                          | `docs/status/STATUS.md` |
 | Roadmap       | this document + per-minor pages         | `docs/roadmap/`         |
+| Release Note  | per version                             | `docs/release/`         |
