@@ -11,8 +11,9 @@
  * - LessJS package manifest types (LessPackageManifest, LessDeclaration, etc.)
  */
 
-export type ComponentLayer = 'dsd-static' | 'dsd-interactive' | 'pure-island';
-export type HydrationStrategy = 'load' | 'idle' | 'visible' | 'only';
+import type { ComponentLayer, HydrationStrategy } from '@lessjs/core';
+
+export type { ComponentLayer, HydrationStrategy };
 
 // ─── WC Package Protocol (v0.16+) ───────────────────────────────────
 

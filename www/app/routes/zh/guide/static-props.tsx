@@ -1,7 +1,7 @@
 // deno-fmt-ignore-file
 export const meta = { section: 'Guide', label: 'Static Props', order: 8 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterFrameworkNav } from '../../../utils/nav-filter.ts';
+import { filterDocsNav } from '../../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -43,7 +43,7 @@ export default class ZhStaticPropsPage extends DsdElement {
       <less-layout
         locale="zh"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterFrameworkNav(navSections))}'
+        nav-items='${JSON.stringify(filterDocsNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/zh/guide/static-props"
       >

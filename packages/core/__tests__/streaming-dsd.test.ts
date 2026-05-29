@@ -10,7 +10,6 @@ import {
   renderDSDStream,
   type RenderDSDStreamComponent,
 } from '../src/render-dsd.ts';
-import { html } from '../src/template.ts';
 
 /** Helper: create a simple component class that renders a string. */
 function makeComponent(body: () => string): CustomElementConstructor {
@@ -128,12 +127,10 @@ Deno.test('renderDSDStream: failing component outputs fallback and stream contin
   assertStringIncludes(body, 'still here');
 });
 
-Deno.test('renderDSDStream: TemplateResult output is escaped', async () => {
+Deno.test('renderDSDStream: string output is rendered', async () => {
   class TemplateComp {
-    render() {
-      return html`
-        <p>${'<script>alert(1)</script>'}</p>
-      `;
+    render(): string {
+      return '<p>&lt;script&gt;alert(1)&lt;/script&gt;</p>';
     }
   }
 

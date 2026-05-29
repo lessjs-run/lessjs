@@ -5,7 +5,7 @@
  * v0.19.0: One-command package installation for LessJS projects.
  *
  * Usage:
- *   deno run -A packages/hub/src/cli/less-add.ts <package-name> [options]
+ *   deno run -A packages/hub/src/cli/less-install-guide.ts <package-name> [options]
  *
  * Options:
  *   --apply      Actually update project config (default: dry-run)

@@ -1,7 +1,7 @@
 // deno-fmt-ignore-file
 export const meta = { section: 'Guide', label: 'v0.24 迁移指南', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterFrameworkNav } from '../../../utils/nav-filter.ts';
+import { filterDocsNav } from '../../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -49,7 +49,7 @@ export default class ZhMigrationV024Page extends DsdElement {
       <less-layout
         locale="zh"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterFrameworkNav(navSections))}'
+        nav-items='${JSON.stringify(filterDocsNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/zh/guide/migration-v0.24"
       >

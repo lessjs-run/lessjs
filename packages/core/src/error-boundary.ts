@@ -18,7 +18,6 @@
  * ```
  */
 
-import { type TemplateResult } from './template.js';
 import { type VNode } from './vnode.js';
 import { DsdElement } from './dsd-element.js';
 import { ErrorCode, type ErrorSeverity, LessError } from './errors.js';
@@ -38,7 +37,7 @@ export abstract class ErrorBoundary extends DsdElement {
    * Render fallback UI when a child component's render() throws.
    * Subclasses MUST override this.
    */
-  abstract onError(error: LessError): TemplateResult;
+  abstract onError(error: LessError): VNode;
 
   /**
    * Capture and reset error state on re-render.
@@ -51,7 +50,7 @@ export abstract class ErrorBoundary extends DsdElement {
   /**
    * Wrap child render in try/catch.
    */
-  override render(): string | TemplateResult | VNode {
+  override render(): string | VNode {
     if (this._error) {
       const result = this.onError(this._error);
       return result;

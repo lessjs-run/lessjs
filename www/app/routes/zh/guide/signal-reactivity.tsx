@@ -1,7 +1,7 @@
 // deno-fmt-ignore-file
 export const meta = { section: 'Guide', label: 'Signal 响应式', order: 9 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterFrameworkNav } from '../../../utils/nav-filter.ts';
+import { filterDocsNav } from '../../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -43,7 +43,7 @@ export default class ZhSignalReactivityPage extends DsdElement {
       <less-layout
         locale="zh"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterFrameworkNav(navSections))}'
+        nav-items='${JSON.stringify(filterDocsNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/zh/guide/signal-reactivity"
       >

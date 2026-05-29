@@ -107,7 +107,7 @@ export function less(
     if (_cachedHubClientOnlyTags !== null) return _cachedHubClientOnlyTags;
     try {
       const { readFileSync } = await import('node:fs');
-      const hubDataPath = join(root, routesDir, 'registry', '_hub-data-full.ts');
+      const hubDataPath = join(root, 'app', 'data', 'registry', 'hub-data.ts');
       const content = readFileSync(hubDataPath, 'utf-8');
       const tags: string[] = [];
       // Simple regex extraction - look for pairs of:

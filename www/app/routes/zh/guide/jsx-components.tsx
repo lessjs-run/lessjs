@@ -1,7 +1,7 @@
 // deno-fmt-ignore-file
 export const meta = { section: 'Guide', label: 'JSX 组件', order: 7 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterFrameworkNav } from '../../../utils/nav-filter.ts';
+import { filterDocsNav } from '../../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -63,7 +63,7 @@ export default class ZhJsxComponentsPage extends DsdElement {
       <less-layout
         locale="zh"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterFrameworkNav(navSections))}'
+        nav-items='${JSON.stringify(filterDocsNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/zh/guide/jsx-components"
       >

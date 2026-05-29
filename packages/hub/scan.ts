@@ -30,8 +30,8 @@ console.log(`\n  Writing to www/public/hub/...`);
 await writeScanOutput(PUBLIC_DIR, result);
 
 // Write TypeScript module for SSR import (route modules can import this directly)
-console.log(`\n  Writing www/app/routes/registry/_hub-data.ts...`);
-await writeIndexTs(result, `${Deno.cwd()}/www/app/routes/registry/_hub-data.ts`);
+console.log(`\n  Writing www/app/data/registry/hub-index.ts...`);
+await writeIndexTs(result, `${Deno.cwd()}/www/app/data/registry/hub-index.ts`);
 
 // Write TypeScript module with full package records for detail page SSR
 console.log(`  Writing www/app/routes/registry/_hub-data-full.ts...`);

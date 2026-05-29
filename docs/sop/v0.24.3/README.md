@@ -7,6 +7,13 @@
 >
 > - `docs/conversation/20260629/lessjs-v0.24.1-audit.md`
 > - `docs/conversation/20260629/lessjs-v0.24.1-strategy-architecture-report.md`
+> - `docs/conversation/20260529/lessjs-v0.24.3-duplicate-code-audit.md`
+>
+> **Active SOPs**:
+>
+> - `SOP-002-deduplicate-shared-types.md` ✅ — 跨包共享类型去重与内部冗余清理
+> - `SOP-003-cli-and-data-organization.md` ✅ — CLI 入口重命名与数据文件组织
+> - `SOP-004-remove-templateresult-render-path.md` — 移除 TemplateResult 渲染路径
 
 ## Mission
 
@@ -45,16 +52,19 @@ v0.24.3 只做收敛，不做扩张。
 
 ## Task Groups
 
-| Group | Priority | Name                          | Outcome                                                              |
-| ----- | -------- | ----------------------------- | -------------------------------------------------------------------- |
-| TG-01 | P0       | Gate Recovery                 | `fmt:check`、`lint`、`typecheck`、`test`、`build` 全部恢复可信       |
-| TG-02 | P0       | Legacy Runtime Removal        | `html` / template helpers / `@prop()` 不再作为可用组件模型存在       |
-| TG-03 | P0       | Docs Truth Convergence        | release、README、package README、website、architecture docs 事实一致 |
-| TG-04 | P1       | JSX Renderer Hardening        | SSR/CSR Signal unwrap、SVG namespace、event cleanup 直接测试覆盖     |
-| TG-05 | P1       | Public API Surface Lockdown   | `@lessjs/core` / `@lessjs/runtime` 只暴露新模型与必要 kernel API     |
-| TG-06 | P1       | Build Output Cleanliness      | `[object Object]` runtime pollution 有上下文 gate 和 allowlist       |
-| TG-07 | P1       | Release/Publish Consistency   | root publish task、workflow、graph gate、package list/order 一致     |
-| TG-08 | P2       | Architecture Narrative Update | roadmap/status/current architecture/ADR/SOP 都指向 v0.24.3 新状态    |
+| Group | Priority | Name                          | Outcome                                                                       |
+| ----- | -------- | ----------------------------- | ----------------------------------------------------------------------------- |
+| TG-01 | P0       | Gate Recovery                 | `fmt:check`、`lint`、`typecheck`、`test`、`build` 全部恢复可信                |
+| TG-02 | P0       | Legacy Runtime Removal        | `html` / template helpers / `@prop()` 不再作为可用组件模型存在                |
+| TG-03 | P0       | Docs Truth Convergence        | release、README、package README、website、architecture docs 事实一致          |
+| TG-04 | P1       | JSX Renderer Hardening        | SSR/CSR Signal unwrap、SVG namespace、event cleanup 直接测试覆盖              |
+| TG-05 | P1       | Public API Surface Lockdown   | `@lessjs/core` / `@lessjs/runtime` 只暴露新模型与必要 kernel API              |
+| TG-06 | P1       | Build Output Cleanliness      | `[object Object]` runtime pollution 有上下文 gate 和 allowlist                |
+| TG-07 | P1       | Release/Publish Consistency   | root publish task、workflow、graph gate、package list/order 一致              |
+| TG-08 | P2       | Architecture Narrative Update | roadmap/status/current architecture/ADR/SOP 都指向 v0.24.3 新状态             |
+| TG-09 | P1       | Shared Type Deduplication     | core/cem/compat-check/adapter-vite 跨包类型去重 → **SOP-002 ✅ COMPLETED**    |
+| TG-10 | P1       | CLI & Data Organization       | less-add 重命名，hub-data 搬迁，changelog 双写消除 → **SOP-003 ✅ COMPLETED** |
+| TG-11 | P0       | TemplateResult Removal        | DsdElement 仅留 VNode + string → **SOP-004** (ADR-0058)                       |
 
 ## Entry Criteria
 

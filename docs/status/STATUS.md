@@ -2,130 +2,94 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version Line: v0.24.1 (JSX+Signal Component Model — IMPLEMENTED)
+## Current Version Line: v0.24.3 (Consolidation — IMPLEMENTED)
 
-v0.24.1 Status: **IMPLEMENTED.** JSX+Signal replaces `html` tagged template (ADR-0057).
-Core changes: jsx-runtime, VNode, renderToString, renderToDOM, static props,
-signal effect-driven VNode re-render. Old template API fully removed.
+v0.24.3 Status: **IMPLEMENTED.** Consolidation release. TemplateResult fully
+removed (ADR-0058), cross-package type deduplication complete (SOP-002),
+CLI/data organization cleaned (SOP-003), architecture docs hardened.
 
-v0.21.0 Status: **IMPLEMENTED.** Reactive DSD runtime, safe templates, streaming
-DSD. (Templates now HISTORICAL — replaced by JSX in v0.24.1.)
+v0.24.1 Status: **IMPLEMENTED.** JSX+Signal Component Model replaces `html`
+tagged template (ADR-0057). DsdElement render() returns `string | VNode`.
+All 10 UI components migrated to JSX.
 
-v0.22.x Status: **IMPLEMENTED.** Architecture Integrity cleanup established
-package boundaries, consumer surface, adapter decomposition, validation
-ownership, and release gates.
+v0.21.0-v0.23.x: **HISTORICAL.** See docs/adr/ and docs/sop/ for reference.
 
-v0.23.x Status: **IMPLEMENTED.** Layered Package Architecture is the active
-line: protocols ownership, runtime/app facade split, package graph gates, and
-docs governance.
-
-The current product center is:
+## Current Product Center
 
 > DSD-first Web Components application framework with SSG, progressive islands,
-> `client:*` hydration strategies, Hono API routes, Reactive DSD, and ISR cache
-> contract.
-
-See [ADR-0037](../adr/0037-dsd-first-strategic-boundary.md) for positioning,
-[ADR-0049](../adr/ADR-0049-architecture-debt-first-roadmap-reset.md) for the
-v0.22 cleanup reset, and
-[ADR-0050](../adr/ADR-0050-layered-package-architecture.md) for the v0.23
-layered package architecture decision.
+> `client:*` hydration strategies, JSX+Signal component model, Hono API routes,
+> and 18-package monorepo.
 
 ## Current Rendering Mode
 
-| Mode                 | State   | Notes                                                 |
-| -------------------- | ------- | ----------------------------------------------------- |
-| SSG                  | shipped | default production rendering mode                     |
-| DSD                  | shipped | `renderDSD()` outputs declarative shadow roots        |
-| Island upgrade       | shipped | binary SSR/client-only boundary exists                |
-| Hydration strategies | shipped | `client:load/idle/visible/only` verified              |
-| ISR contract         | shipped | `IsrCache`, `MemoryIsrCache`, manifest                |
-| API route (Hono)     | shipped | Hono as primary engine, `LessApiContext` type-only    |
-| Reactive DSD         | shipped | `DsdElement` + Signals, safe templates, streaming     |
-| Architecture cleanup | v0.22   | Package boundaries, consumer surface, adapter cleanup |
-| Layered architecture | v0.23   | contracts, runtime facade, package graph gates        |
-| ISR production       | v0.24+  | Edge handler + KV adapters (CF Workers, Deno)         |
-| www self-hosting     | v0.24+  | Showcase pages, ISR demo, serverless API proof        |
+| Mode                  | State   | Notes                                                 |
+| --------------------- | ------- | ----------------------------------------------------- |
+| SSG                   | shipped | default production rendering                          |
+| DSD                   | shipped | `renderDSD()` outputs declarative shadow roots        |
+| JSX+Signal            | shipped | `render(): string \| VNode`, effect() signal tracking |
+| Island upgrade        | shipped | binary SSR/client-only boundary                       |
+| Hydration strategies  | shipped | `client:load/idle/visible/only`                       |
+| ISR contract          | shipped | `IsrCache`, `MemoryIsrCache`, manifest                |
+| API route (Hono)      | shipped | Hono primary engine                                   |
+| Architecture hardened | v0.24.3 | API surface + arch docs frozen                        |
 
 ## Package Version State
 
-All packages are aligned to **v0.23.0**. Patch releases stay unified across the
+All 18 packages aligned to **v0.24.3**. Patch releases stay unified across the
 workspace so published JSR packages resolve a coherent version set.
 
 ## Architecture Positioning
 
-Three pillars:
+1. **Application framework** — file routes, dev server, build pipeline, Hono API routes.
+2. **DSD/WC rendering engine** — DsdElement, renderDSD(), JSX runtime, adapters, compatibility.
+3. **Registry Hub** — discovery, validation, `less add`.
 
-1. **Application framework** - file routes, dev server, build pipeline, Hono API routes.
-2. **DSD/WC rendering engine** - `DsdElement`, `renderDSD()`, adapters, compatibility.
-3. **Registry Hub** - discovery, validation, `less add`.
+## v0.24.3 — Consolidation (4 SOPs, 1 ADR)
 
-## v0.21.0 - Reactive DSD (10 SOPs)
+| SOP | Title                     | Priority | Status       |
+| --- | ------------------------- | -------- | ------------ |
+| 002 | Shared Type Deduplication | P1       | ✅ COMPLETED |
+| 003 | CLI & Data Organization   | P2       | ✅ COMPLETED |
+| 004 | TemplateResult Removal    | P0       | ✅ COMPLETED |
 
-| SOP | Title                                               | Priority |
-| --- | --------------------------------------------------- | -------- |
-| 001 | DsdElement + Signals Integration                    | P0       |
-| 002 | Safe Templates                                      | P0       |
-| 003 | Streaming DSD                                       | P1       |
-| 004 | Integration Depth + DX                              | P0       |
-| 005 | Verification + Release Gate                         | P0       |
-| 006 | Unified Event Model — hydrateEvents Retirement      | P0       |
-| 007 | Core Package Split — compat-check, cem, style-sheet | P0       |
-| 008 | ReactiveHost Protocol — explicit Signal integration | P0       |
-| 009 | Closure & Remediation — fix all review gaps         | P0       |
-| 010 | Architect Review Remediation — code quality fixes   | P1       |
+| ADR  | Title                             | Status      |
+| ---- | --------------------------------- | ----------- |
+| 0057 | JSX + Signal Component Model      | IMPLEMENTED |
+| 0058 | Remove TemplateResult Render Path | IMPLEMENTED |
 
-See `docs/sop/v0.21.0/README.md`. Key ADRs: 0039 (Signals), 0040 (Streaming).
+Key outcomes:
 
-## v0.22.0 - Architecture Integrity (5 SOPs)
+- `template.ts` (602L) deleted. DsdElement.render() → `string | VNode`.
+- 12 duplicated types canonicalized at `@lessjs/core`.
+- 50+ nav-filter alias usages renamed.
+- CLI `less-add` vs `less-install-guide` disambiguated.
+- Changelog page reads `CHANGELOG.md` at build time.
+- Architecture and API docs hardened.
 
-| SOP | Title                                     | Priority |
-| --- | ----------------------------------------- | -------- |
-| 001 | Consumer Surface Cleanup                  | P0       |
-| 002 | Package Boundary Repair                   | P0       |
-| 003 | adapter-vite Decomposition                | P0       |
-| 004 | Signals, Schema, and Validation Hardening | P1       |
-| 005 | Quality Gates and Release Closure         | P0       |
+## v0.24.4 — Declarative Architecture (PLANNED)
 
-See `docs/sop/v0.22.0/README.md`. Key ADR: 0049 (Architecture Debt First
-Roadmap Reset). ADR-0038 (ISR + Edge KV) remains accepted but is deferred to
-v0.24 or later.
+| Task Group | Title                         | Priority |
+| ---------- | ----------------------------- | -------- |
+| TG-01      | Declarative BuildPipeline API | P0       |
+| TG-02      | Route Type Code Generation    | P0       |
+| TG-03      | Route Scanner Enhancement     | P1       |
+| TG-04      | Entry Renderer Adaptation     | P1       |
+| TG-05      | Docs & Migration Guide        | P1       |
+| TG-06      | Full Regression Gates         | P2       |
 
-## v0.23.0 - Layered Package Architecture (6 SOPs)
-
-| SOP | Title                                       | Priority |
-| --- | ------------------------------------------- | -------- |
-| 001 | Contracts and Protocols Package             | P0       |
-| 002 | Core Runtime Kernel Boundary                | P0       |
-| 003 | Runtime and App Facades                     | P0       |
-| 004 | adapter-vite Build Modularity               | P0       |
-| 005 | Package Graph and Consumer Gates            | P0       |
-| 006 | Docs Governance and Open Source Positioning | P1       |
-
-See `docs/sop/v0.23.0/README.md`. Key ADR: 0050 (Layered Package
-Architecture). Edge Full-Stack moves to v0.24 or later.
+See `docs/sop/v0.24.4/README.md`.
 
 ## Key Decisions
 
-- **Redis adapter removed from core.** TCP is not available on CF Workers.
-- **Hono is the API engine.** `LessApiHandler` and `createLessApiContext` are deleted.
-- **Signals in DsdElement.** Zero-framework reactivity for Ocean components.
-- **No DOM diff in v0.21.** Signal writes rerender the component locally; complex subtrees stay in Islands.
-- **Streaming DSD.** Progressive page delivery via Response-compatible Web Streams.
-- **Unified event model.** `@click` in `html` templates is the sole event binding mechanism; `hydrateEvents` removed.
-- **ReactiveHost protocol.** Explicit `subscribeTo()` / `requestReactiveUpdate()` contract replaces Duck Typing.
-- **Core package split.** `@lessjs/compat-check`, `@lessjs/cem`, `@lessjs/style-sheet` extracted as independent packages.
-- **Fine-grained DOM patching.** `_patchBindings()` with `data-less-b` markers preserves focus/scroll/CSS transitions.
-- **Architecture cleanup before feature expansion.** v0.22 covers package
-  boundaries, consumer surface, adapter decomposition, validation ownership, and
-  stronger gates before Edge Full-Stack work resumes.
-- **Layered package architecture before Edge Full-Stack.** v0.23 covers
-  contracts, core/runtime/app facade boundaries, adapter modularity, package
-  graph gates, and docs governance before Edge work resumes.
+- **TemplateResult removed.** JSX+Signal is the only component model. `render()` returns `string | VNode`.
+- **Signals in DsdElement via effect().** Signal→VNode re-render uses `effect()` from `@lessjs/signals`.
+- **DSD-first architecture.** Declarative Shadow DOM is the primary output, zero JS by default.
+- **No DOM diff.** Signal writes trigger full re-render; complex subtrees stay in Islands.
+- **Package graph gate.** `graph:check` verifies zero cycles, unified versions, declared imports.
+- **Cross-package types canonical.** `@lessjs/core` is the single source of truth for shared types.
+- **API surface hardened.** `docs/reference/core-api-surface.md` defines HARDENED vs STABLE levels.
 
-## Last Completed Line: v0.23.0
+## Last Completed Line: v0.24.3
 
-Delivered: `@lessjs/protocols` for shared build contracts, `@lessjs/runtime`
-for authoring imports, `@lessjs/app` as configuration facade, package-local
-direct import declarations, complete 18-package publish order, and a stricter
-package graph gate. Edge Full-Stack remains deferred to v0.24+.
+All 4 SOPs completed. All gates green. Architecture and API docs hardened.
+Next: v0.24.4 declarative pipeline + type-safe routes.

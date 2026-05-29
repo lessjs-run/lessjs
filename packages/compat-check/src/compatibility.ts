@@ -19,6 +19,9 @@ import type {
   LessElementExtensions,
   LessPackageManifest,
 } from '@lessjs/cem';
+import { isValidTagName } from '@lessjs/core';
+
+export { isValidTagName };
 
 // ─── Known Adapters ─────────────────────────────────────────────────────
 
@@ -420,26 +423,7 @@ export function mergeClassifications(
 
 // ─── Utility Functions ─────────────────────────────────────────────────
 
-/** Valid tag name regex per HTML spec: must contain a hyphen, can't start/end with hyphen */
-const TAG_NAME_REGEX = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/;
-
-/**
- * Check if a tag name is valid per HTML spec.
- *
- * Requirements:
- * - Must start with an ASCII letter (lowercase)
- * - Must contain at least one hyphen
- * - Hyphens cannot be at the start or end
- * - Only lowercase letters, digits, and hyphens allowed
- */
-export function isValidTagName(tagName: string): boolean {
-  // Check format first
-  if (!TAG_NAME_REGEX.test(tagName)) {
-    return false;
-  }
-  // Must contain at least one hyphen
-  return tagName.includes('-');
-}
+// isValidTagName — imported from @lessjs/core/tag-utils
 
 /**
  * Check if a superclass is known to be SSR-capable.

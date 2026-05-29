@@ -1010,6 +1010,11 @@
           "npm:vite@8.0.10"
         ]
       },
+      "packages/cem": {
+        "dependencies": [
+          "jsr:@lessjs/core@~0.24.3"
+        ]
+      },
       "packages/compat-check": {
         "dependencies": [
           "jsr:@lessjs/cem@~0.24.3",

@@ -34,20 +34,22 @@ Island、Hono API Route 和早期 Registry Hub 组合在一起，让 Web Compone
 
 ## 当前状态
 
-项目线：**v0.24.3 Consolidation**。
+项目线：**v0.24.3 Consolidation** — 全 gate 绿色，架构硬化完成。
 
 ### v0.24.x 核心变更
 
-- **JSX + Signal 组件模型** — `render()` 返回 JSX，Signal 驱动响应式渲染
+- **JSX + Signal 组件模型** — `render(): string | VNode`，Signal 通过 `effect()` 驱动响应式
 - **`static props` 声明式属性** — ES2022 class fields，零编译器开关
+- **TemplateResult 完全移除** — 旧 `html` template DSL、`@prop()` decorator 不复存在
+- **跨包类型去重** — 12 个类型统一到 `@lessjs/core` 单一权威来源
 - **全新文档** — JSX 组件指南、static props 指南、Signal 响应式指南、迁移指南
-- **渲染器硬化** — Signal 在属性和 style 中的自动解包，SVG namespace 支持
-- **单入口** — 所有组件作者从 `@lessjs/runtime` 一个包 import
+- **渲染器硬化** — Signal 在属性和 style 中自动解包，SVG namespace 支持
+- **架构文档冻结** — `docs/arch/current-architecture.md` + `docs/reference/core-api-surface.md`
 
 ### 注意
 
-> 从 v0.24.1 起，旧版 tagged template 和 decorator 已从公开 API 中移除。
-> JSX + `static props` + Signal 是唯一支持的组件编写模型。
+> v0.24.3 起，JSX + `static props` + Signal 是唯一支持的组件编写模型。
+> `render()` 返回 `string | VNode`。TemplateResult 已不复存在。
 
 ## 三个产品支柱
 
@@ -84,11 +86,10 @@ LessJS
 
 ## 下一步
 
-- **Architecture Integrity** - 清理消费者 import surface、包边界、adapter-vite 拆分和质量门禁。
-- **Signals facade** - 保留 LessJS 自有 API，隔离底层 signal engine。
-- **Validation ownership** - 统一 Hub、CEM、manifest 和 submission gate 的类型与诊断边界。
-- **Edge Full-Stack after cleanup** - ISR handler、KV adapters 和部署指南顺延到架构清偿之后。
-- **Hub 增长** - 更多真实 Web Component 包和更清晰的兼容性 badge。
+- **声明式构建管线** — v0.24.4: 三阶段硬编码 → 声明式 BuildPipeline API
+- **类型安全路由参数** — v0.24.4: 构建时生成路由类型文件
+- **Edge Full-Stack** — ISR handler、KV adapters 和部署指南
+- **Hub 增长** — 更多真实 Web Component 包和更清晰的兼容性 badge
 
 ## 快速开始
 
@@ -103,24 +104,24 @@ deno task build
 
 ## 包
 
-| Package                   | 职责                                                                                          |
-| ------------------------- | --------------------------------------------------------------------------------------------- |
-| `@lessjs/core`            | DSD renderer、DsdElement、StyleSheet、renderer protocol、CEM parser、compatibility classifier |
-| `@lessjs/adapter-vite`    | Vite 编排、路由扫描、SSG 管线、island entry 生成                                              |
-| `@lessjs/adapter-lit`     | Lit adapter，主要保留给 island 和兼容路径                                                     |
-| `@lessjs/adapter-react`   | React adapter                                                                                 |
-| `@lessjs/adapter-vanilla` | Vanilla Web Component adapter                                                                 |
-| `@lessjs/app`             | 统一入口 `lessjs()`                                                                           |
-| `@lessjs/content`         | Blog、nav、sitemap 构建插件                                                                   |
-| `@lessjs/i18n`            | Locale 展开与路由辅助                                                                         |
-| `@lessjs/ui`              | DSD-native Web Components 与 island 示例                                                      |
-| `@lessjs/signals`         | Signals helpers 与 island effects                                                             |
-| `@lessjs/compat-check`    | SSR 兼容性分类器（独立可用）                                                                  |
-| `@lessjs/cem`             | Custom Elements Manifest 解析器（独立可用）                                                   |
-| `@lessjs/style-sheet`     | 跨环境 CSSStyleSheet 抽象（独立可用）                                                         |
-| `@lessjs/rpc`             | Fetch-based RPC controller                                                                    |
-| `@lessjs/hub`             | Registry Hub schema、indexer、scanner、validator、snapshots                                   |
-| `@lessjs/create`          | 项目脚手架 CLI                                                                                |
+| Package                   | 职责                                                                               |
+| ------------------------- | ---------------------------------------------------------------------------------- |
+| `@lessjs/core`            | DSD renderer、DsdElement、JSX runtime、islands、navigation、logger、error boundary |
+| `@lessjs/adapter-vite`    | Vite 编排、路由扫描、SSG 管线、island entry 生成                                   |
+| `@lessjs/adapter-lit`     | Lit adapter，主要保留给 island 和兼容路径                                          |
+| `@lessjs/adapter-react`   | React adapter                                                                      |
+| `@lessjs/adapter-vanilla` | Vanilla Web Component adapter                                                      |
+| `@lessjs/app`             | 统一入口 `lessjs()`                                                                |
+| `@lessjs/content`         | Blog、nav、sitemap 构建插件                                                        |
+| `@lessjs/i18n`            | Locale 展开与路由辅助                                                              |
+| `@lessjs/ui`              | DSD-native Web Components 与 island 示例                                           |
+| `@lessjs/signals`         | Signals helpers 与 island effects                                                  |
+| `@lessjs/compat-check`    | SSR 兼容性分类器（独立可用）                                                       |
+| `@lessjs/cem`             | Custom Elements Manifest 解析器（独立可用）                                        |
+| `@lessjs/style-sheet`     | 跨环境 CSSStyleSheet 抽象（独立可用）                                              |
+| `@lessjs/rpc`             | Fetch-based RPC controller                                                         |
+| `@lessjs/hub`             | Registry Hub schema、indexer、scanner、validator、snapshots                        |
+| `@lessjs/create`          | 项目脚手架 CLI                                                                     |
 
 ## 渲染时机无关
 
@@ -149,20 +150,20 @@ LessJS 不承诺任意 Web Component 都能自动 SSR。每个组件应该得到
 
 ## 路线图
 
-| 版本  | 目标                                                      | 状态    |
-| ----- | --------------------------------------------------------- | ------- |
-| v0.15 | Renderer Kernel Protocol                                  | Done    |
-| v0.16 | WC Package Protocol                                       | Done    |
-| v0.17 | Ecosystem Entry + SSR Boundary                            | Done    |
-| v0.18 | Universal WC Engine                                       | Done    |
-| v0.19 | Registry Hub + Component Browser                          | Done    |
-| v0.20 | Ocean-Island Architecture + DSD-native UI                 | Done    |
-| v0.21 | Reactive DSD + Hardening — Core API / DSD / Adapter / Hub | Done    |
-| v0.22 | Architecture Integrity — boundaries / imports / gates     | Done    |
-| v0.23 | Layered Package Architecture                              | Current |
-| v0.24 | Edge Full-Stack — ISR + KV adapters + Deploy              | Planned |
-| v0.25 | Ecosystem Hardening                                       | Planned |
-| v1.0  | Stable Engine contracts                                   | Vision  |
+| 版本  | 目标                                                          | 状态        |
+| ----- | ------------------------------------------------------------- | ----------- |
+| v0.15 | Renderer Kernel Protocol                                      | Done        |
+| v0.16 | WC Package Protocol                                           | Done        |
+| v0.17 | Ecosystem Entry + SSR Boundary                                | Done        |
+| v0.18 | Universal WC Engine                                           | Done        |
+| v0.19 | Registry Hub + Component Browser                              | Done        |
+| v0.20 | Ocean-Island Architecture + DSD-native UI                     | Done        |
+| v0.21 | Reactive DSD + Hardening — Core API / DSD / Adapter / Hub     | Done        |
+| v0.22 | Architecture Integrity — boundaries / imports / gates         | Done        |
+| v0.23 | Layered Package Architecture                                  | Done        |
+| v0.24 | Consolidation — JSX+Signal, TemplateResult removal, hardening | **Current** |
+| v0.25 | Ecosystem Hardening                                           | Planned     |
+| v1.0  | Stable Engine contracts                                       | Vision      |
 
 详见 [ADR docs](docs/adr/)、[SOP docs](docs/sop/) 和
 [Roadmap](docs/roadmap/ROADMAP.md)。

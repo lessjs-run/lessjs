@@ -5,9 +5,7 @@
  * Zero DOM interaction - cannot interfere with DSD rendering.
  */
 
-import type { HydrationStrategy } from '@lessjs/core';
-
-export type StrategySource = 'directive' | 'island-options' | 'manifest' | 'default';
+import type { HydrationStrategy, StrategySource } from '@lessjs/core';
 
 export interface ClientIslandEntry {
   tagName: string;

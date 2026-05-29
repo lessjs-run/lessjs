@@ -5,7 +5,9 @@
     ".": "./src/index.ts",
     "./types": "./src/types.ts"
   },
-  "imports": {},
+  "imports": {
+    "@lessjs/core": "jsr:@lessjs/core@^0.24.3"
+  },
   "publish": {
     "include": [
       "src/**",

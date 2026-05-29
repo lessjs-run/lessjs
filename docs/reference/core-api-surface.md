@@ -1,114 +1,151 @@
-# LessJS Core API Surface
+# LessJS Core API Surface — v0.24.3 (HARDENED)
 
-Status: v0.24.1\
-Scope: `@lessjs/core`
+> Status: **HARDENED**\
+> Version: v0.24.3\
+> Scope: `@lessjs/core` public exports\
+> Last hardened: 2026-05-29
 
-This page classifies the public surface of `@lessjs/core` after the v0.24.1 JSX+Signal migration (ADR-0057). The `html` tagged template DSL, `@prop()` decorator, and TemplateResult types have been removed.
+This page is the **authoritative API surface reference**. Any API listed here
+must not be removed or changed in signature without an ADR. Any API not listed
+here is either internal or removed.
 
-## Stable Userland API
+---
 
-These APIs are safe for application and component authors.
+## Component Authoring
 
-| API                                      | Role                                                     | Stability rule                                           |
-| ---------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------- |
-| `DsdElement`                             | Zero-dependency custom element base for DSD              | Breaking lifecycle changes require migration notes.      |
-| `jsx()` / `jsxs()` / `jsxDEV()`          | JSX factory functions — VNode creation                   | Return shape is frozen VNode interface.                  |
-| `Fragment`                               | Symbol for grouping children without wrapper DOM         | Equivalent to `<>...</>` in JSX.                         |
-| `VNode` / `isVNode()`                    | 5-field interface + type guard                           | tag/props/children/key/ref frozen until v1.0.            |
-| `renderToString(vnode)`                  | VNode → HTML string for SSR/SSG                          | Skips `on*` event props; escapes text content.           |
-| `renderToDOM(vnode, signal?)`            | VNode → real DOM nodes for CSR/hydration                 | Events via addEventListener; SVG via createElementNS.    |
-| `static props`                           | ES2022 class fields replacing `@prop()` decorator        | `static props = { name: Type }` in DsdElement.           |
-| `renderDSD()`                            | Synchronous component → DSD HTML entrypoint              | Output shape remains `RenderOutput`.                     |
-| `renderDSDStream()`                      | Streaming DSD renderer entrypoint                        | Streaming chunks remain explicit.                        |
-| `signal()` / `computed()` / `effect()`   | Reactive primitives (re-exported from `@lessjs/signals`) | `effect()` used by DsdElement for VNode signal tracking. |
-| `StyleSheet`                             | SSR-safe stylesheet abstraction                          | May delegate to native `CSSStyleSheet` in browsers.      |
-| `island()` / `lessBind()`                | Island declaration helpers                               | Strategy vocabulary: `load`, `idle`, `visible`, `only`.  |
-| `MemoryIsrCache` / `createIsrCacheKey()` | ISR contract and local cache                             | Production KV adapters are v0.25 work.                   |
+| API                     | Signature                              | Stability                         |
+| ----------------------- | -------------------------------------- | --------------------------------- |
+| `DsdElement`            | `class DsdElement extends HTMLElement` | HARDENED                          |
+| `render()`              | `(): string \| VNode`                  | HARDENED — TemplateResult removed |
+| `static props`          | `static props = { name: PropDecl }`    | HARDENED                          |
+| `_getLocale(fallback?)` | `(fallback?: string): string`          | STABLE                            |
+| `onDsdHydrated()`       | `(): void`                             | STABLE                            |
+| `onCsrRendered()`       | `(): void`                             | STABLE                            |
 
-## Stable Data Contracts
+## JSX Runtime
 
-| API                   | Role                                                                    | Stability rule                                                     |
-| --------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| `RenderOutput`        | `renderDSD()` result with `html`, `errors`, `metrics`, `hydrationHints` | Fields are additive unless versioned.                              |
-| `RenderError`         | Machine-readable render error                                           | `code`, `severity`, `phase`, `recoverable` are gate-facing fields. |
-| `DsdBuildReport`      | Build-time DSD evidence                                                 | Used by `dsd:check-report`; thresholds must be finite.             |
-| `LessPackageManifest` | LessJS package metadata                                                 | Schema changes need versioned migration.                           |
-| `RegistryIndex`       | Package registry output                                                 | Deterministic output required for Hub checks.                      |
+| API                               | Signature                            | Stability                 |
+| --------------------------------- | ------------------------------------ | ------------------------- |
+| `jsx(tag, props, ...children)`    | `(tag, props?, ...children): VNode`  | HARDENED                  |
+| `jsxs(tag, props, children)`      | `(tag, props, children): VNode`      | HARDENED                  |
+| `jsxDEV(tag, props, ...children)` | `(tag, props?, ...children): VNode`  | HARDENED                  |
+| `Fragment`                        | `unique symbol`                      | HARDENED                  |
+| `VNode`                           | `{ tag, props, children, key, ref }` | HARDENED — 5-field frozen |
+| `isVNode(value)`                  | `(unknown): value is VNode`          | HARDENED                  |
+| `renderToString(vnode)`           | `(VNode): string`                    | HARDENED                  |
+| `renderToDOM(vnode, signal?)`     | `(VNode, AbortSignal?): Node`        | HARDENED                  |
 
-## Removed in v0.24.1
+## Signal Utilities
 
-| Removed API                           | Replacement                                    |
-| ------------------------------------- | ---------------------------------------------- |
-| `html()`                              | JSX syntax: `<div>...</div>`                   |
-| `unsafeHTML()`                        | Inline JSX with trusted content                |
-| `classMap()`                          | JSX className with template literals / ternary |
-| `when()`                              | JSX ternary or `&&` expressions                |
-| `choose()`                            | JSX switch/object-lookup or ternary            |
-| `repeat()`                            | JSX `Array.map()`                              |
-| `ref()`                               | JSX `ref` prop                                 |
-| `@prop()` decorator                   | `static props = { name: Type }` class fields   |
-| `TemplateResult` / `isTemplateResult` | `VNode` / `isVNode()`                          |
-| `PropertyOptions`                     | `PropDecl` / `PropType<D>` / `PropsFrom<P>`    |
-| `renderTemplateToString`              | `renderToString()`                             |
-| `TemplateValue` / `AttrValue` / etc.  | Not needed — JSX handles these natively        |
+| API                       | Signature                                          | Stability |
+| ------------------------- | -------------------------------------------------- | --------- |
+| `SignalLike<T>`           | `{ readonly value: T; subscribe(fn): () => void }` | HARDENED  |
+| `isSignalLike(value)`     | `(unknown): value is SignalLike`                   | HARDENED  |
+| `unwrapSignalLike(value)` | `<T>(T): T extends SignalLike<infer V> ? V : T`    | HARDENED  |
 
-## Experimental Framework API
+## DSD Rendering
 
-These are real contracts, but still mostly for framework or adapter authors.
+| API                                     | Signature                                                         | Stability |
+| --------------------------------------- | ----------------------------------------------------------------- | --------- |
+| `renderDSD(components, options?)`       | `(RenderDSDComponent[], RenderDSDOptions?): RenderOutput`         | HARDENED  |
+| `renderDSDStream(components, options?)` | `(RenderDSDComponent[], RenderDSDStreamOptions?): ReadableStream` | STABLE    |
 
-| API                                                              | Role                                                         | Constraint                                            |
-| ---------------------------------------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------- |
-| `RendererProtocol`                                               | Adapter bridge for non-native template results               | Keep small: `isTemplate`, `render`, `extractStyles`.  |
-| `registerAdapter()` / `getAdapter()` / `getRegisteredAdapters()` | Adapter registry                                             | Do not expose build orchestration through core.       |
-| `ReactiveHost`                                                   | Protocol implemented by `DsdElement` for signal subscription | Framework protocol, not a general reactive runtime.   |
-| CEM parser/classifier APIs                                       | Package metadata ingestion                                   | Prefer CEM-compatible data over proprietary metadata. |
-| `generateAddPlan()`                                              | Less Add planning helper                                     | CLI and Hub integration surface.                      |
+## Islands
 
-## Internal Or Build-Time API
+| API                                | Signature                                            | Stability |
+| ---------------------------------- | ---------------------------------------------------- | --------- |
+| `island(tagName, Class, options?)` | `(string, Constructor, IslandOptions?): Constructor` | HARDENED  |
+| `lessBind(host)`                   | `(HTMLElement): LessBindResult`                      | STABLE    |
+| `getSSRProps(el)`                  | `(HTMLElement): Record<string, unknown>`             | STABLE    |
 
-These are exported for monorepo package coordination and should not be taught as first-line user APIs.
+## Navigation
 
-| API                                   | Role                                             | Constraint                                                             |
-| ------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------- |
-| virtual module IDs                    | Shared IDs for adapter/content/i18n coordination | Keep stable inside monorepo packages.                                  |
-| build types                           | Avoid adapter/content circular dependencies      | Do not expand into a broad build framework.                            |
-| `PropDecl` / `PropType` / `PropsFrom` | static props type system                         | TypeScript type deduction; exported for component authors who need it. |
+| API                         | Signature                                          | Stability |
+| --------------------------- | -------------------------------------------------- | --------- |
+| `navigate(url, options?)`   | `(string, NavigateOptions?): Promise<void>`        | STABLE    |
+| `onNavigate(callback)`      | `(fn: (url: string) => void): () => void`          | STABLE    |
+| `matchRoute(pattern, path)` | `(string, string): Record<string, string> \| null` | STABLE    |
+| `hasNavigationApi()`        | `(): boolean`                                      | STABLE    |
 
-## JSX Authoring Model (v0.24.1)
+## Error Handling
 
-```tsx
-import { DsdElement } from '@lessjs/runtime';
-import { signal } from '@lessjs/runtime';
+| API                   | Signature                                 | Stability |
+| --------------------- | ----------------------------------------- | --------- |
+| `ErrorBoundary`       | `abstract class extends DsdElement`       | STABLE    |
+| `LessError`           | `{ code, severity, phase, message, ... }` | STABLE    |
+| `RenderError`         | `extends LessError`                       | STABLE    |
+| `SsrRenderError`      | `extends LessError`                       | STABLE    |
+| `BuildError`          | `extends LessError`                       | STABLE    |
+| `IslandRenderError`   | `extends LessError`                       | STABLE    |
+| `NavigationError`     | `extends LessError`                       | STABLE    |
+| `PropValidationError` | `extends LessError`                       | STABLE    |
 
-class CounterElement extends DsdElement {
-  count = signal(0);
+## HTML Escaping
 
-  render() {
-    return (
-      <button onClick={() => this.count.value++}>
-        Count: {this.count}
-      </button>
-    );
-  }
-}
+| API                      | Signature           | Stability |
+| ------------------------ | ------------------- | --------- |
+| `escapeHtml(str)`        | `(string): string`  | HARDENED  |
+| `escapeAttr(value)`      | `(string): string`  | HARDENED  |
+| `escapeAttrValue(value)` | `(unknown): string` | HARDENED  |
 
-customElements.define('my-counter', CounterElement);
-```
+## Tag Validation
 
-- JSX `{}` expressions auto-unwrap Signal values via `valueOf()` + `Symbol.toPrimitive`.
-- Use `unwrap(signal)` for explicit unwrapping in edge cases (e.g., passing signal to non-JSX code).
-- Event handlers (`onClick`, `onInput`) are bound via native `addEventListener` with `AbortSignal` cleanup.
-- `effect()` wraps `render()` in `DsdElement._renderIntoShadowRoot()` for auto-reactive re-render.
+| API                    | Signature           | Stability                               |
+| ---------------------- | ------------------- | --------------------------------------- |
+| `isValidTagName(name)` | `(string): boolean` | HARDENED — includes reserved name check |
 
-## Core Design Decision
+## Logging
 
-v0.24.1 keeps `@lessjs/core` focused on:
+| API                  | Signature                      | Stability |
+| -------------------- | ------------------------------ | --------- |
+| `createLogger(name)` | `(string): LessLogger`         | STABLE    |
+| `LessLogger`         | `{ info, warn, error, debug }` | STABLE    |
+| `LogLevel`           | `enum`                         | STABLE    |
 
-- DSD rendering (VNode + TemplateResult paths in parallel)
-- JSX component authoring (VNode creation + SSR/CSR rendering)
-- Reactive DSD host protocol (signal → effect → DOM re-render)
-- Island admission evidence
-- Package metadata contracts
-- ISR cache key and local cache contract
+## Data Contracts (Types)
 
-It deliberately excludes auth, ORM, sessions, permissions, RPC, and deployment runtime policy.
+| API                        | Role                                                         | Stability |
+| -------------------------- | ------------------------------------------------------------ | --------- |
+| `RenderOutput`             | `renderDSD()` result                                         | HARDENED  |
+| `RenderError`              | Machine-readable error                                       | HARDENED  |
+| `DsdBuildReport`           | Build-time DSD evidence                                      | HARDENED  |
+| `LessPackageManifest`      | Package metadata                                             | HARDENED  |
+| `ComponentLayer`           | `'dsd-static' \| 'dsd-interactive' \| 'pure-island'`         | HARDENED  |
+| `HydrationStrategy`        | `'load' \| 'idle' \| 'visible' \| 'only'`                    | HARDENED  |
+| `StrategySource`           | `'directive' \| 'island-options' \| 'manifest' \| 'default'` | HARDENED  |
+| `ManifestDecision`         | SSR admission decision                                       | HARDENED  |
+| `SsrAdmissionDecision`     | Per-tag SSR decision                                         | HARDENED  |
+| `ValidationResult`         | Manifest validation result                                   | HARDENED  |
+| `ValidationError`          | Validation error                                             | HARDENED  |
+| `ValidationWarning`        | Validation warning                                           | HARDENED  |
+| `ValidationDiagnostic`     | Single diagnostic                                            | HARDENED  |
+| `ValidatedTag`             | Per-tag validation                                           | HARDENED  |
+| `ManifestValidationReport` | Full validation report                                       | HARDENED  |
+
+## Removed in v0.24.x
+
+| Removed                     | In      | Replacement              |
+| --------------------------- | ------- | ------------------------ |
+| `html()`                    | v0.24.1 | JSX `<div>...</div>`     |
+| `unsafeHTML()`              | v0.24.1 | Inline JSX               |
+| `classMap()`                | v0.24.1 | JSX className ternary    |
+| `when()`                    | v0.24.1 | JSX ternary / `&&`       |
+| `choose()`                  | v0.24.1 | JSX switch/object-lookup |
+| `repeat()`                  | v0.24.1 | JSX `Array.map()`        |
+| `ref()` (template DSL)      | v0.24.1 | JSX `ref` prop           |
+| `@prop()` decorator         | v0.24.1 | `static props`           |
+| `TemplateResult`            | v0.24.3 | `VNode`                  |
+| `isTemplateResult`          | v0.24.3 | `isVNode()`              |
+| `renderTemplateToString`    | v0.24.3 | `renderToString()`       |
+| `template.ts` (entire file) | v0.24.3 | —                        |
+| `filterFrameworkNav`        | v0.24.3 | `filterDocsNav`          |
+| `filterEngineNav`           | v0.24.3 | `filterArchitectureNav`  |
+| `filterRegistryNav`         | v0.24.3 | `filterHubNav`           |
+
+## Stability Levels
+
+| Level        | Meaning                                                            |
+| ------------ | ------------------------------------------------------------------ |
+| **HARDENED** | Will not change signature or behavior without ADR + migration path |
+| **STABLE**   | May add optional params; breaking changes require release notes    |
+| **INTERNAL** | Not listed here; may change at any time                            |

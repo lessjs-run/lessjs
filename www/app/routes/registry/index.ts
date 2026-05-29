@@ -13,7 +13,7 @@ export const meta = { section: 'Registry', label: 'Package Registry', order: 5 }
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterRegistryNav } from '../../utils/nav-filter.js';
+import { filterHubNav } from '../../utils/nav-filter.js';
 import '@lessjs/ui/less-layout';
 
 // ─── Data ────────────────────────────────────────────────────────────────
@@ -21,8 +21,8 @@ import '@lessjs/ui/less-layout';
 // During SSR/SSG: the full data is inlined into the TS module.
 // During dev: the same import works because the file exists.
 
-import hubData from './_hub-data.ts';
-import type { HubIndexData, HubIndexEntry } from './_hub-data.ts';
+import hubData from '../../data/registry/hub-index.ts';
+import type { HubIndexData, HubIndexEntry } from '../../data/registry/hub-index.ts';
 
 export const tagName = 'docs-registry-home';
 
@@ -421,7 +421,7 @@ export default class DocsRegistryHome extends DsdElement {
   override render() {
     return `
       <less-layout
-        nav-items='${JSON.stringify(filterRegistryNav(navSections))}'
+        nav-items='${JSON.stringify(filterHubNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/registry"
         locale="en"

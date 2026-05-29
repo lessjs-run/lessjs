@@ -1,6 +1,6 @@
 export const meta = { section: 'Principles', label: 'Island Upgrade', order: 40 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterEngineNav } from '../../utils/nav-filter.ts';
+import { filterArchitectureNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -50,7 +50,7 @@ export class IslandsGuidePage extends DsdElement {
       <less-layout
         locale="${loc}"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/${loc}/engine/islands"
       >
@@ -165,7 +165,7 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);</co
       <less-layout
         locale="${loc}"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/${loc}/engine/islands"
       >

@@ -40,6 +40,7 @@ import type {
   HydrationStrategy,
   LessPackageManifest,
   RouteEntry,
+  SsrAdmissionDecision,
 } from '@lessjs/core';
 import { fileToTagName } from './route-scanner.js';
 
@@ -146,14 +147,7 @@ export interface IslandDecl {
   reason?: string;
 }
 
-/** One resolved SSR admission decision for an island/custom element tag. */
-export interface SsrAdmissionDecision {
-  tagName: string;
-  modulePath: string;
-  source: 'local' | 'package' | 'nested';
-  renderPath: 'ssr+client' | 'client-only' | 'rejected';
-  reason: string;
-}
+// imported from @lessjs/core
 
 /** Build-time plan that decides which tags may enter the SSR bundle. */
 export interface SsrAdmissionPlan {

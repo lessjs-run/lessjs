@@ -3,7 +3,7 @@ export const meta = { section: 'Guide', label: 'JSX Components', order: 7 };
 
 import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
-import { filterFrameworkNav } from '../../utils/nav-filter.ts';
+import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -14,7 +14,7 @@ export class JsxComponentsPage extends DsdElement {
   static override styles = [openPropsTokenSheet, pageStyles];
 
   override render() {
-    const nav = filterFrameworkNav(navSections);
+    const nav = filterDocsNav(navSections);
     return (
       <less-layout
         navItems={JSON.stringify(nav)}

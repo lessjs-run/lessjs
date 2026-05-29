@@ -6,7 +6,7 @@
  */
 
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterEngineNav } from '../../../utils/nav-filter.ts';
+import { filterArchitectureNav } from '../../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -68,7 +68,7 @@ export default class ApiCorePage extends DsdElement {
       <less-layout
         locale="zh"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/reference/core"
       >
@@ -304,7 +304,7 @@ export default class ApiCorePage extends DsdElement {
       <less-layout
         locale="en"
         locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(filterEngineNav(navSections))}'
+        nav-items='${JSON.stringify(filterArchitectureNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/engine/reference/core"
       >

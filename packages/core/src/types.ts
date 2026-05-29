@@ -1,4 +1,4 @@
-import type { TemplateResult } from './template.js';
+import type { VNode } from './vnode.js';
 
 /**
  * @lessjs/core - Public types.
@@ -726,10 +726,8 @@ export interface RenderOutput {
  * Interface that components must implement to be DSD-renderable.
  * Works with any Custom Element class that has render() and connectedCallback().
  *
- * v0.21 canonical authoring uses `html` tagged templates and returns a
- * TemplateResult. String output remains supported for static and legacy
- * components. Other template objects require a registered RendererProtocol
- * adapter.
+ * v0.24.3 (ADR-0058): TemplateResult removed. Components return string or VNode.
+ * Works with any Custom Element class that has render() and connectedCallback().
  *
  * v0.6.2: Added `layer` property for three-layer component model.
  *   - 'dsd-static' (default): static content, no hydration needed
@@ -737,8 +735,8 @@ export interface RenderOutput {
  *   - 'pure-island': no DSD, framework fully owns shadow root
  */
 export interface DsdComponent {
-  /** Return Shadow DOM inner HTML as a string or LessJS TemplateResult */
-  render(): string | TemplateResult | unknown;
+  /** Return Shadow DOM inner HTML as a string or VNode */
+  render(): string | VNode | unknown;
 
   /** Optional: called after setting props, before render() */
   connectedCallback?(): void;

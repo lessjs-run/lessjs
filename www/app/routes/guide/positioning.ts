@@ -1,7 +1,7 @@
 export const meta = { section: 'Quick Start', label: 'Framework Positioning', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
-import { filterFrameworkNav } from '../../utils/nav-filter.ts';
+import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -19,7 +19,7 @@ export class PositioningPage extends DsdElement {
   private _renderZh() {
     return `
       <less-layout
-        nav-items='${JSON.stringify(filterFrameworkNav(navSections))}'
+        nav-items='${JSON.stringify(filterDocsNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/guide/positioning"
         locale="zh"
@@ -230,7 +230,7 @@ export class PositioningPage extends DsdElement {
   private _renderEn() {
     return `
       <less-layout
-        nav-items='${JSON.stringify(filterFrameworkNav(navSections))}'
+        nav-items='${JSON.stringify(filterDocsNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/en/guide/positioning"
         locale="en"

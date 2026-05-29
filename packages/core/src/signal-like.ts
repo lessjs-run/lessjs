@@ -10,7 +10,7 @@
 
 /** Duck-type: any object with { value, subscribe } is treated as Signal. */
 export interface SignalLike<T = unknown> {
-  value: T;
+  readonly value: T;
   subscribe(fn: (value: T) => void): () => void;
 }
 

@@ -1,6 +1,6 @@
 export const meta = { section: 'Production', label: 'Security & Middleware', order: 20 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterFrameworkNav } from '../../utils/nav-filter.ts';
+import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
@@ -35,7 +35,7 @@ export class SecurityMiddlewarePage extends DsdElement {
   private _renderZh() {
     return `<less-layout locale="${this._getLocale('zh')}" locales='${
       JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+    }' nav-items='${JSON.stringify(filterDocsNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)
     }' current-path="/guide/security-middleware"><div class="container">
     <h1>安全与 Middleware</h1>
@@ -59,7 +59,7 @@ export class SecurityMiddlewarePage extends DsdElement {
   private _renderEn() {
     return `<less-layout locale="${this._getLocale('en')}" locales='${
       JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+    }' nav-items='${JSON.stringify(filterDocsNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)
     }' current-path="/en/guide/security-middleware"><div class="container">
     <h1>Security &amp; Middleware</h1>

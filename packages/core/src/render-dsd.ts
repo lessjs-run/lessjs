@@ -70,7 +70,6 @@ import { injectProps, instantiateComponent } from './render-instantiate.js';
 import { instantiationErrorHtml, wrongTypeErrorHtml } from './render-errors.js';
 import { classifyError } from './render-errors.js';
 import { serializeAttributes, wrapDsdOutput } from './render-serialize.js';
-import { isTemplateResult, renderTemplateToString } from './template.js';
 import { isVNode } from './vnode.js';
 import { renderToString as renderVNodeToString } from './jsx-render-string.js';
 
@@ -187,8 +186,6 @@ export async function renderDSD(
     } else if (isVNode(result)) {
       // v0.24.1 (SOP-003): JSX VNode path — convert VNode tree to HTML string
       content = renderVNodeToString(result);
-    } else if (isTemplateResult(result)) {
-      content = renderTemplateToString(result, { runtimeMarkers: true });
     } else {
       // v0.17.3: Multi-adapter dispatch - try all registered adapters
       // until one claims the result via isTemplate(). This allows Lit,
@@ -202,9 +199,8 @@ export async function renderDSD(
         }
       }
       if (!rendered) {
-        const errDetail = isLitTemplateResultHeuristic(result)
-          ? 'This looks like a Lit TemplateResult - install @lessjs/adapter-lit to handle it.'
-          : `Components must return a string from render(), got ${typeof result}.`;
+        const errDetail =
+          `Components must return a string or VNode from render(), got ${typeof result}.`;
         const err = classifyError('render', tagName, errDetail, true);
         collectedErrors.push(err);
         hooks?.onError?.(err);
@@ -366,19 +362,6 @@ export async function renderDSD(
  */
 function renderEnd_timeFallback(): number {
   return Date.now();
-}
-
-/**
- * Heuristic check for Lit TemplateResult without importing Lit.
- * Checks for the _$litType$ marker that Lit uses internally.
- * This is only used for error messaging - actual rendering goes through adapters.
- */
-function isLitTemplateResultHeuristic(value: unknown): boolean {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    '_$litType$' in (value as Record<string, unknown>)
-  );
 }
 
 /**

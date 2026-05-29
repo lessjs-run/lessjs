@@ -108,6 +108,7 @@ export type {
   RenderOutput,
   RenderPhase,
   SsrAdmissionDecision,
+  StrategySource,
   Unsubscribe,
   ValidatedTag,
   ValidationDiagnostic,
@@ -130,6 +131,7 @@ export {
 } from './signal-like.js';
 export { createLogger, LessLogger, LogLevel } from './logger.js';
 export { DANGEROUS_KEYS } from './security.js';
+export { isValidTagName } from './tag-utils.js';
 export { getSSRProps, island, type IslandOptions, lessBind } from './island.js';
 export { hasNavigationApi, matchRoute, navigate, onNavigate } from './navigation.js';
 export type { NavigationCallback } from './navigation.js';

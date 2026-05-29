@@ -50,9 +50,3 @@ export function filterHubNav(navSections: { section: string }[]): { section: str
 export function filterBlogNav(navSections: { section: string }[]): { section: string }[] {
   return navSections.filter((s) => BLOG_SECTIONS.includes(s.section));
 }
-
-// Legacy aliases — keep existing route imports working.
-// @deprecated Use filterDocsNav, filterArchitectureNav, filterHubNav instead.
-export const filterFrameworkNav = filterDocsNav;
-export const filterEngineNav = filterArchitectureNav;
-export const filterRegistryNav = filterHubNav;

@@ -1,6 +1,6 @@
 export const meta = { section: 'Production', label: 'Error Handling', order: 30 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterFrameworkNav } from '../../utils/nav-filter.ts';
+import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
@@ -34,7 +34,7 @@ export class ErrorHandlingPage extends DsdElement {
   private _renderZh() {
     return `<less-layout locale="${this._getLocale('zh')}" locales='${
       JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+    }' nav-items='${JSON.stringify(filterDocsNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)
     }' current-path="/guide/error-handling"><div class="container">
     <h1>错误处理</h1>
@@ -52,7 +52,7 @@ export class ErrorHandlingPage extends DsdElement {
   private _renderEn() {
     return `<less-layout locale="${this._getLocale('en')}" locales='${
       JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+    }' nav-items='${JSON.stringify(filterDocsNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)
     }' current-path="/en/guide/error-handling"><div class="container">
     <h1>Error Handling</h1>

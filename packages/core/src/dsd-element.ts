@@ -49,14 +49,7 @@
 
 import type { ReactiveHost } from './types.js';
 import type { StyleSheetLike } from '@lessjs/style-sheet';
-import {
-  applyRuntimeTemplateBindings,
-  collectTemplateSignals,
-  isSignalLike,
-  isTemplateResult,
-  renderTemplateToString,
-  type TemplateResult,
-} from './template.js';
+import { isSignalLike } from './signal-like.js';
 import { disposeProps, handlePropAttributeChange, initializeProps } from './prop.js';
 import {
   disposeStaticProps,
@@ -142,17 +135,11 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    */
   protected _dsdHydrated = false;
 
-  /** AbortController for html`...` runtime event listener cleanup */
+  /** AbortController for VNode render event listener lifecycle */
   private _templateAbortController?: AbortController;
 
-  /** Signal subscriptions collected from the latest TemplateResult */
+  /** Signal subscriptions from TemplateResult / VNode effects */
   private _signalUnsubscribers: Array<() => void> = [];
-
-  /** Microtask batching guard for signal-driven updates */
-  private _reactiveUpdateQueued = false;
-
-  /** Whether the first render has completed (used to switch from full replace to patch mode) */
-  private _initialRenderDone = false;
 
   /** v0.24.3: Effect dispose for VNode signal subscriptions. */
   private _vnodeEffectDispose?: () => void;
@@ -257,14 +244,12 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   /**
    * Dispatch between DSD event binding (existing DOM) and CSR full render.
    *
-   * DSD path: bind events/signals against pre-populated DOM, mark
-   * _initialRenderDone so signal-driven updates use _patchBindings.
+   * DSD path: bind events/signals against pre-populated DOM.
    * CSR path: populate shadow DOM from render().
    */
   private _hydrateOrRender(): void {
     if (this._dsdHydrated) {
       this._bindCurrentRenderTemplate();
-      this._initialRenderDone = true;
       this.onDsdHydrated();
     } else if (this.shadowRoot) {
       this._renderIntoShadowRoot();
@@ -381,10 +366,12 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   /**
    * ReactiveHost: request a reactive update.
    *
-   * Public entry point for external signal libraries. Batched via microtask.
+   * Public entry point for signal-driven updates. Re-renders using
+   * the VNode path with effect() signal tracking.
    */
   requestReactiveUpdate(): void {
-    this._scheduleReactiveUpdate();
+    if (!this.isConnected) return;
+    this._renderIntoShadowRoot();
   }
 
   private _renderIntoShadowRoot(): void {
@@ -421,10 +408,6 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
           renderToDOM(updated, this._templateAbortController.signal),
         );
       });
-    } else if (isTemplateResult(result)) {
-      this.shadowRoot.innerHTML = renderTemplateToString(result, { runtimeMarkers: true });
-      this._bindTemplateRuntime(result);
-      this._subscribeTemplateSignals(result);
     } else if (typeof result === 'string') {
       this.shadowRoot.innerHTML = result;
     } else {
@@ -433,52 +416,10 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       // rendering "[object Object]".
       console.warn(
         `[DsdElement] <${this.tagName.toLowerCase()}>.render() returned unexpected type "${typeof result}". ` +
-          `Expected string, TemplateResult, or VNode. ` +
+          `Expected string or VNode. ` +
           `If using JSX, ensure your build tool is configured with jsx: "automatic" and jsxImportSource: "@lessjs/core".`,
       );
       this.shadowRoot.innerHTML = '';
-    }
-  }
-
-  /**
-   * v0.21: Fine-grained DOM patching for reactive signal updates.
-   *
-   * Instead of replacing the entire shadowRoot.innerHTML, this method
-   * queries for [data-less-b="N"] markers and patches only those nodes.
-   * Events (@click) and properties (.value) use existing markers
-   * (data-less-event-N / data-less-prop-N).
-   *
-   * Preserves focus, scroll, CSS transitions, and input state.
-   */
-  private _patchBindings(): void {
-    if (!this.shadowRoot) return;
-    try {
-      this._disposeTemplateRuntime();
-      this._disposeSignalSubscriptions();
-
-      const result = this.render();
-      if (!isTemplateResult(result)) return;
-
-      // Re-bind event handlers and property bindings
-      this._bindTemplateRuntime(result);
-      this._subscribeTemplateSignals(result);
-
-      // Patch signal text values using data-less-b markers
-      const values = result.values;
-      for (let i = 0; i < values.length; i++) {
-        const value = values[i];
-        if (!isSignalLike(value)) continue;
-        const el = this.shadowRoot.querySelector(`[data-less-b="${i}"]`);
-        if (!el) continue;
-        const raw = (value as { value: unknown }).value;
-        el.textContent = raw == null ? '' : String(raw);
-      }
-    } catch (err) {
-      console.warn(
-        `[DsdElement] _patchBindings failed for <${this.tagName.toLowerCase()}>:`,
-        err,
-      );
-      // Leave last good DOM in place
     }
   }
 
@@ -500,44 +441,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       this.shadowRoot.appendChild(dom);
       return;
     }
-    if (!isTemplateResult(result)) return;
-    this._bindTemplateRuntime(result);
-    this._subscribeTemplateSignals(result);
-  }
-
-  private _bindTemplateRuntime(result: TemplateResult): void {
-    if (!this.shadowRoot) return;
-    this._templateAbortController = new AbortController();
-    applyRuntimeTemplateBindings(
-      this.shadowRoot,
-      result,
-      this,
-      this._templateAbortController.signal,
-    );
-  }
-
-  private _subscribeTemplateSignals(result: TemplateResult): void {
-    for (const signal of collectTemplateSignals(result)) {
-      // Use ReactiveHost.subscribeTo() protocol instead of Duck Typing
-      const unsubscribe = this.subscribeTo(signal);
-      this._signalUnsubscribers.push(unsubscribe);
-    }
-  }
-
-  private _scheduleReactiveUpdate(): void {
-    if (this._reactiveUpdateQueued) return;
-    this._reactiveUpdateQueued = true;
-    queueMicrotask(() => {
-      this._reactiveUpdateQueued = false;
-      if (!this.isConnected) return;
-      // v0.21: initial render uses full innerHTML, subsequent updates use fine-grained patch
-      if (this._initialRenderDone) {
-        this._patchBindings();
-      } else {
-        this._renderIntoShadowRoot();
-        this._initialRenderDone = true;
-      }
-    });
+    // string fallback: nothing to hydrate
   }
 
   private _disposeTemplateRuntime(): void {
@@ -575,28 +479,26 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   }
 
   /**
-   * Return Shadow DOM inner HTML as a string, TemplateResult, or VNode.
+   * Return Shadow DOM inner HTML as a string or VNode.
    *
    * Subclasses MUST override this method. During SSR, rendered content is
    * wrapped in a <template shadowrootmode="open"> tag. During CSR, strings are
-   * assigned to `shadowRoot.innerHTML`; TemplateResult values also get runtime
-   * event/property bindings and signal subscriptions; VNode values are
-   * serialised to HTML via renderToString().
+   * assigned to `shadowRoot.innerHTML`; VNode values are rendered via
+   * renderToDOM() with event binding and signal tracking.
    *
-   * @returns HTML string, TemplateResult, or VNode for the shadow DOM content.
+   * @returns HTML string or VNode for the shadow DOM content.
    */
-  render(): string | TemplateResult | VNode {
+  render(): string | VNode {
     return '';
   }
 
   /**
    * Resolve the output of render() to a plain HTML string.
-   * Handles string, TemplateResult, and VNode return types uniformly.
+   * Handles string and VNode return types uniformly.
    */
-  protected _resolveRenderOutput(result: string | TemplateResult | VNode): string {
+  protected _resolveRenderOutput(result: string | VNode): string {
     if (typeof result === 'string') return result;
     if (isVNode(result)) return renderToString(result);
-    if (isTemplateResult(result)) return renderTemplateToString(result, { runtimeMarkers: true });
     return String(result);
   }
 }

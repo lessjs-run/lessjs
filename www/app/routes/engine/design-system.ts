@@ -6,7 +6,7 @@
  */
 export const meta = { section: 'Reference', label: 'Design System', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterEngineNav } from '../../utils/nav-filter.ts';
+import { filterArchitectureNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
@@ -254,9 +254,9 @@ export class UIShowcase extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    return `<less-layout locale="${loc}" locales='${
-      JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
+    return `<less-layout locale="${loc}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${
+      JSON.stringify(filterArchitectureNav(navSections))
+    }' header-nav='${
       JSON.stringify(headerNav)
     }' current-path="/${loc}/engine/design-system"><div class="container">
     <h1>设计系统</h1>
@@ -274,9 +274,9 @@ export class UIShowcase extends DsdElement {
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    return `<less-layout locale="${loc}" locales='${
-      JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
+    return `<less-layout locale="${loc}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${
+      JSON.stringify(filterArchitectureNav(navSections))
+    }' header-nav='${
       JSON.stringify(headerNav)
     }' current-path="/${loc}/engine/design-system"><div class="container">
     <h1>Design System</h1>

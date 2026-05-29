@@ -53,8 +53,8 @@ export const KNOWN_ERROR_PATTERNS: Array<{ pattern: RegExp; description: string 
     description: 'Shoelace component setting property on undefined during SSR',
   },
   {
-    pattern: /Components must return a string from render\(\)/,
-    description: 'Shoelace component returning non-string from render()',
+    pattern: /Components must return a (string|string or VNode) from render\(\)/,
+    description: 'Components returning non-string/non-VNode from render()',
   },
   {
     pattern: /this\.host\.childNodes is not iterable/,

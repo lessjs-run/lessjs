@@ -54,6 +54,70 @@ All 10 UI components migrated from `html` tagged templates to JSX:
 - `.github/workflows/publish-jsr.yml`: signals moved before core in publish order
 - All packages bumped to `0.24.1`; cross-package dependencies `^0.24.1`
 
+## v0.24.3 — Shared Type Deduplication & Nav Alias Cleanup (2026-05-29)
+
+> **SOP**: SOP-002 | **Previous**: v0.24.1
+
+### TG-09: Shared Type Deduplication
+
+12 types/utilities were duplicated across 2–3 packages. Every copy is now canonical at `@lessjs/core`.
+
+| Type                                                                                                                           | Previously duplicated in                                                       | Now                            |
+| ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------ |
+| `SignalLike`, `isSignalLike`                                                                                                   | `core/template.ts` + `core/signal-like.ts`                                     | Canonical in `signal-like.ts`  |
+| `ManifestDecision`, `SsrAdmissionDecision`                                                                                     | `core/types.ts` + `compat-check/types.ts` + `adapter-vite/entry-descriptor.ts` | Canonical in `core/types.ts`   |
+| `ValidationResult`, `ValidationError`, `ValidationWarning`, `ValidationDiagnostic`, `ValidatedTag`, `ManifestValidationReport` | `core/types.ts` + `compat-check/types.ts`                                      | Canonical in `core/types.ts`   |
+| `ComponentLayer`, `HydrationStrategy`                                                                                          | `core/types.ts` + `cem/types.ts` + `compat-check/types.ts`                     | Canonical in `core/types.ts`   |
+| `StrategySource`                                                                                                               | `core/types.ts` + `compat-check/types.ts` + `adapter-vite/entry-generators.ts` | Canonical in `core/types.ts`   |
+| `CompatibilityTier`                                                                                                            | `core/types.ts` + `cem/cem-parser.ts` (local)                                  | Canonical in `core/types.ts`   |
+| `isValidTagName`                                                                                                               | `cem/cem-parser.ts` + `compat-check/compatibility.ts` (different impls)        | Unified in `core/tag-utils.ts` |
+
+### Nav Alias Cleanup
+
+- Replaced 50+ usages of deprecated aliases across 34 route files:
+  - `filterFrameworkNav` → `filterDocsNav` (22 files in `guide/` + `zh/guide/`)
+  - `filterEngineNav` → `filterArchitectureNav` (9 files in `engine/`)
+  - `filterRegistryNav` → `filterHubNav` (3 files in `registry/`)
+- Removed legacy aliases from `www/app/utils/nav-filter.ts`
+
+### CLI Organization (SOP-003)
+
+- **Rename**: `hub/src/cli/less-add.ts` → `hub/src/cli/less-install-guide.ts` — eliminates naming collision with `compat-check/src/cli/less-add.ts`
+- **Data relocation**: `_hub-data-full.ts` (3867L) moved from `routes/registry/` to `app/data/registry/hub-data.ts`
+- **Changelog**: `changelog.ts` (was 1956L inline HTML) now reads `CHANGELOG.md` at build time. Single source of truth; self-contained renderer, zero external deps.
+
+### Dependencies Changed
+
+- `@lessjs/cem` now has 1 internal dependency (`@lessjs/core`, was 0): eliminates `ComponentLayer`/`HydrationStrategy`/`CompatibilityTier`/`isValidTagName` duplication
+
+### Files Changed
+
+- `packages/core/src/signal-like.ts` — `SignalLike.value` changed to `readonly` for consistency
+- `packages/core/src/template.ts` — removed local `SignalLike`/`isSignalLike`, import from `signal-like.js`
+- `packages/core/src/dsd-element.ts` — `isSignalLike` import moved to `signal-like.js`
+- `packages/core/src/index.ts` — added `StrategySource`, `isValidTagName` exports
+- `packages/core/src/tag-utils.ts` — new file: canonical `isValidTagName()` with reserved-name check
+- `packages/compat-check/src/types.ts` — 12 local types replaced with `export type { ... } from '@lessjs/core'`
+- `packages/compat-check/src/compatibility.ts` — `isValidTagName` imported from `@lessjs/core`
+- `packages/cem/deno.json` — added `@lessjs/core` dependency
+- `packages/cem/src/types.ts` — `ComponentLayer`/`HydrationStrategy` imported from `@lessjs/core`
+- `packages/cem/src/cem-parser.ts` — `isValidTagName`/`CompatibilityTier` imported from `@lessjs/core`
+- `packages/adapter-vite/src/entry-descriptor.ts` — `SsrAdmissionDecision` imported from `@lessjs/core`
+- `packages/adapter-vite/src/entry-generators.ts` — `StrategySource` imported from `@lessjs/core`
+- `www/app/utils/nav-filter.ts` — removed 3 deprecated aliases
+- 34 route files in `www/app/routes/` — alias renames
+
+### Gates
+
+| Gate               | Result                                 |
+| ------------------ | -------------------------------------- |
+| `typecheck`        | ✅ PASS                                |
+| `test`             | ✅ 972/977 (5 localStorage, unchanged) |
+| `lint`             | ✅ PASS                                |
+| `fmt:check`        | ✅ PASS                                |
+| `graph:check`      | ✅ PASS, zero cycles, 18 packages      |
+| `dsd:check-report` | ✅ PASS, 0 unknown errors              |
+
 ## v0.23.0 — Layered Package Architecture (2026-05-26)
 
 ### Core Changes

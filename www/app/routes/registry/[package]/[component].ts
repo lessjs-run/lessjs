@@ -17,10 +17,10 @@ export const meta = { section: 'Registry', label: 'Component Detail', order: 6 }
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterRegistryNav } from '../../../utils/nav-filter.js';
+import { filterHubNav } from '../../../utils/nav-filter.js';
 import '@lessjs/ui/less-layout';
-import pkgRecords from '../_hub-data-full.ts';
-import type { HubPackageRecord } from '../_hub-data-full.ts';
+import pkgRecords from '../../../data/registry/hub-data.ts';
+import type { HubPackageRecord } from '../../../data/registry/hub-data.ts';
 
 // ─── Snapshot Sanitizer ──────────────────────────────────────────────────
 // Strip dangerous elements and attributes from snapshot HTML before
@@ -360,7 +360,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
     if (!pkg) {
       return `
         <less-layout
-          nav-items='${JSON.stringify(filterRegistryNav(navSections))}'
+          nav-items='${JSON.stringify(filterHubNav(navSections))}'
           header-nav='${JSON.stringify(headerNav)}'
           current-path="/registry/${pkgRoute}"
           locale="en"
@@ -384,7 +384,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
     if (!tag) {
       return `
         <less-layout
-          nav-items='${JSON.stringify(filterRegistryNav(navSections))}'
+          nav-items='${JSON.stringify(filterHubNav(navSections))}'
           header-nav='${JSON.stringify(headerNav)}'
           current-path="/registry/${pkgRoute}"
           locale="en"
@@ -415,7 +415,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
 
     return `
       <less-layout
-        nav-items='${JSON.stringify(filterRegistryNav(navSections))}'
+        nav-items='${JSON.stringify(filterHubNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/registry/${pkgRoute}"
         locale="en"

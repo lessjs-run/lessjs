@@ -2,7 +2,7 @@ export const meta = { section: 'Guide', label: 'Migration (v0.24)', order: 10 };
 
 import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
-import { filterFrameworkNav } from '../../utils/nav-filter.ts';
+import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -13,7 +13,7 @@ export class MigrationV024Page extends DsdElement {
   static override styles = [openPropsTokenSheet, pageStyles];
 
   override render() {
-    const nav = JSON.stringify(filterFrameworkNav(navSections));
+    const nav = JSON.stringify(filterDocsNav(navSections));
     const hNav = JSON.stringify(headerNav);
     return "<less-layout nav-items='" + nav + "' header-nav='" + hNav +
       '\' current-path="/guide/migration-v0.24">' +

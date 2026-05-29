@@ -1,7 +1,7 @@
 export const meta = { section: 'Core', label: 'Routing', order: 10 };
 import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
-import { filterFrameworkNav } from '../../utils/nav-filter.ts';
+import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -18,7 +18,7 @@ export class RoutingGuidePage extends DsdElement {
     return `
       <less-layout locale="${this._getLocale('zh')}" locales='${
       JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+    }' nav-items='${JSON.stringify(filterDocsNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)
     }' current-path="/guide/routing">
         <div class="container">
@@ -102,7 +102,7 @@ export const tagName = 'page-about';</code></pre></less-code-block>
     return `
       <less-layout locale="${this._getLocale('en')}" locales='${
       JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(filterFrameworkNav(navSections))}' header-nav='${
+    }' nav-items='${JSON.stringify(filterDocsNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)
     }' current-path="/en/guide/routing">
         <div class="container">

@@ -1,6 +1,6 @@
 export const meta = { section: 'Principles', label: 'Island Deep Dive', order: 50 };
 import { headerNav, navSections } from 'virtual:less-nav';
-import { filterEngineNav } from '../../utils/nav-filter.ts';
+import { filterArchitectureNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -27,9 +27,9 @@ export class IslandsDeepGuidePage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    return `<less-layout locale="${loc}" locales='${
-      JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
+    return `<less-layout locale="${loc}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${
+      JSON.stringify(filterArchitectureNav(navSections))
+    }' header-nav='${
       JSON.stringify(headerNav)
     }' current-path="/${loc}/engine/islands-deep"><div class="container">
     <h1>Island 深度指南</h1>
@@ -61,9 +61,9 @@ export class IslandsDeepGuidePage extends DsdElement {
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    return `<less-layout locale="${loc}" locales='${
-      JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
+    return `<less-layout locale="${loc}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${
+      JSON.stringify(filterArchitectureNav(navSections))
+    }' header-nav='${
       JSON.stringify(headerNav)
     }' current-path="/${loc}/engine/islands-deep"><div class="container">
     <h1>Island Deep Dive</h1>

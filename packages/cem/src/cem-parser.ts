@@ -24,8 +24,8 @@ import type {
   LessDeclaration,
   LessElementExtensions,
 } from './types.js';
-
-type CompatibilityTier = 'ssr-capable' | 'client-only' | 'rejected' | 'experimental-dom';
+import { isValidTagName } from '@lessjs/core';
+import type { CompatibilityTier } from '@lessjs/core';
 
 interface CompatibilityClassification {
   tagName: string;
@@ -39,14 +39,6 @@ interface CompatibilityClassification {
 }
 
 // ─── Validators ─────────────────────────────────────────────────────────
-
-/** Valid tag name regex per HTML spec: must contain a hyphen */
-const TAG_NAME_REGEX = /^[a-z][a-z0-9]*-[a-z0-9-]*$/;
-
-/** Validate a custom element tag name */
-function isValidTagName(tagName: string): boolean {
-  return TAG_NAME_REGEX.test(tagName);
-}
 
 /** Validate module path (must be relative path, not absolute or URL) */
 function isValidModulePath(path: string): boolean {

@@ -5,7 +5,7 @@ export const meta = { section: 'Core', label: 'Islands & Hydration', order: 25 }
 
 import { headerNav, navSections } from 'virtual:less-nav';
 import { pageStyles } from '../../components/page-styles.js';
-import { filterFrameworkNav } from '../../utils/nav-filter.ts';
+import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
@@ -37,7 +37,7 @@ export class IslandsGuidePage extends DsdElement {
       <less-layout locale="${this._getLocale('zh')}" locales='${
       JSON.stringify(['zh', 'en'])
     }' headerNav='${this._escape(JSON.stringify(headerNav))}' navSections='${
-      this._escape(JSON.stringify(filterFrameworkNav(navSections)))
+      this._escape(JSON.stringify(filterDocsNav(navSections)))
     }'>
         <h1>Ocean 响应式（DsdElement + Signals）</h1>
         <p>v0.21 的核心能力：Ocean 组件不再需要 Lit 或 React 来实现响应式。<code>signal()</code> + <code>html</code> 模板 + <code>@click</code> 事件绑定 = 零框架运行时。</p>
@@ -70,7 +70,7 @@ export class IslandsGuidePage extends DsdElement {
     return `
       <less-layout locale="en" locales='${JSON.stringify(['zh', 'en'])}' headerNav='${
       this._escape(JSON.stringify(headerNav))
-    }' navSections='${this._escape(JSON.stringify(filterFrameworkNav(navSections)))}'>
+    }' navSections='${this._escape(JSON.stringify(filterDocsNav(navSections)))}'>
         <h1>Reactive DSD (DsdElement + Signals)</h1>
         <p>v0.21's signature: Ocean components no longer need Lit or React for reactivity. <code>signal()</code> + <code>html</code> template + <code>@click</code> bindings = zero framework runtime.</p>
         <reactive-showcase></reactive-showcase>
