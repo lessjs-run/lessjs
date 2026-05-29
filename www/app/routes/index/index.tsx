@@ -7,6 +7,8 @@
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { consumeContext } from '@lessjs/core/signal-context';
+import { THEME_CTX } from '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-layout';
 import '../../islands/less-search.tsx';
 import '../../islands/home-console.tsx';
@@ -161,24 +163,10 @@ export class DocsHome extends DsdElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    // Sync data-theme from document so CSS variables cascade into shadow DOM
-    this._syncTheme();
-    globalThis.addEventListener?.('less:theme-change', this._onThemeChange);
-  }
-
-  override disconnectedCallback() {
-    super.disconnectedCallback();
-    globalThis.removeEventListener?.('less:theme-change', this._onThemeChange);
-  }
-
-  private _onThemeChange = (e: Event) => {
-    const theme = (e as CustomEvent).detail?.theme;
-    if (theme) this.setAttribute('data-theme', theme);
-  };
-
-  private _syncTheme() {
-    const t = document.documentElement?.dataset?.theme;
-    if (t) this.setAttribute('data-theme', t);
+    // SignalContext: auto-tracks theme from less-layout provider
+    const theme = consumeContext(this, THEME_CTX);
+    this.setAttribute('data-theme', theme.value);
+    theme.subscribe((t) => this.setAttribute('data-theme', t));
   }
 
   override render() {

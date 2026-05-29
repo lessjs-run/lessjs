@@ -7,6 +7,8 @@
 import { DsdElement } from '@lessjs/core';
 import { effect, signal } from '@lessjs/signals';
 import { StyleSheet } from '@lessjs/style-sheet';
+import { consumeContext } from '@lessjs/core/signal-context';
+import { THEME_CTX } from '@lessjs/ui/less-layout';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
 export const tagName = 'home-console';
@@ -116,6 +118,11 @@ export default class HomeConsole extends DsdElement {
 
   override connectedCallback() {
     super.connectedCallback();
+    // SignalContext: auto-sync theme from less-layout provider
+    const theme = consumeContext(this, THEME_CTX);
+    this.setAttribute('data-theme', theme.value);
+    theme.subscribe((t) => this.setAttribute('data-theme', t));
+
     effect(() => {
       void this.#activeTab.value;
       void this.#count.value;
