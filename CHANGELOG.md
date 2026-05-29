@@ -1,3 +1,96 @@
+## v0.25.0 — Declarative DX (2026-05-29)
+
+> **Previous**: v0.24.4 | **SOPs**: 14 | **ADR**: ADR-0058/0059/0060
+
+### Breaking: less() Removed
+
+`less()` fully removed from `@lessjs/adapter-vite`. `lessPipeline()` is the
+only public build entry. Zero backward compatibility.
+
+```diff
+- import { less } from '@lessjs/adapter-vite';
++ import { lessPipeline } from '@lessjs/adapter-vite';
+```
+
+### 14 SOPs Delivered
+
+| SOP | Feature                                  |
+| --- | ---------------------------------------- |
+| 001 | `lessPipeline()` declarative entry       |
+| 002 | `.less/routes.d.ts` type generation      |
+| 003 | `static head` metadata                   |
+| 004 | `static client` declaration              |
+| 005 | SignalContext (DOM-tree context)         |
+| 006 | CSS token convergence (20→2 imports)     |
+| 007 | Scanner AST hardening                    |
+| 008 | `as any` hardening (21→0 in core/src)    |
+| 009 | test-utils.ts infrastructure             |
+| 010 | `less()` full removal (not @deprecated)  |
+| 011 | island.test.ts old name cleanup          |
+| 012 | `_dsdHydrated` removal, unified render   |
+| 013 | 14 pages string→JSX                      |
+| 014 | Full regression (943 tests)              |
+
+### Critical Fixes
+
+- **SSG DSD regression**: `import()` tagName detection silently failed for
+  all 55 routes → SSG produced empty DSD. Fixed with regex source scan.
+- **customElements guard**: 4 island components now idempotent in SSR.
+
+### Verification
+
+```
+✅ fmt (689), lint (331), typecheck, graph (18/0)
+✅ test: 943 passed, 0 failed
+✅ SSG smoke: 4/4 steps, DSD preserved
+```
+
+---
+
+## v0.24.4 — API Cleanup Line Endpoint (2026-05-29)
+
+> **Previous**: v0.24.3 | **SOP**: 14 SOPs (v0.25.0 prep)
+
+### API Naming Convention
+
+- **verbNoun**: `island()` → `defineIsland()`, `lessBind()` → `bindEvents()`
+- **PascalCase acronyms**: `renderDSD()` → `renderDsd()`, `renderToDOM()` → `renderToDom()`, `getSSRProps()` → `getSsrProps()`
+- **No backward compatibility** — old names removed entirely
+
+### less() Public API Removal
+
+- `less()` removed from `@lessjs/adapter-vite` public exports
+- `lessPipeline()` is the sole build pipeline entry
+- `lessCompat` removed, `@deprecated` aliases removed
+- `less-plugin.ts` marked `@internal`
+
+### SSG Robustness
+
+- **tagName detection**: Reverted from `import()` to regex source scan — `import()` failed for routes with Vite virtual module dependencies
+- **SSG smoke test**: Always rebuild (no stale cache skip)
+- **DSD output**: Restored from 3→5 DSD markers in generated pages
+- **customElements guard**: Added `get()` guard to 4 island components preventing SSR duplicate registration
+
+### TypeScript & Lint
+
+- **`_dsdHydrated` removal**: Unified `_renderOrHydrate()` path, removed from tests
+- **JSX lint compliance**: `jsx-no-comment-text-nodes`, `jsx-key` fixes
+- **Unused lint directives**: Cleaned up `ban-unused-ignore` in prop.ts
+- **`Function` type**: Added `ban-types` suppress for VNode internal
+
+### Verification
+
+```
+✅ fmt — 689 files
+✅ lint — 331 files
+✅ typecheck
+✅ graph:check — 18 packages, 0 cycles
+✅ test — 943 passed, 0 failed
+✅ SSG smoke — 4/4 steps, DSD preserved
+```
+
+---
+
 ## v0.24.1 — JSX+Signal Component Model + Remove Old Component Model (2026-05-28)
 
 > **ADR**: ADR-0057 | **Previous**: v0.23.0
