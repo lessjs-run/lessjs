@@ -89,9 +89,9 @@ export default class ApiCorePage extends DsdElement {
             <div class="pkg-import">import { ... } from '@lessjs/runtime';</div>
             <p>纯运行时。零 Vite/Node 依赖。支持 Deno、Node、Bun、Edge。</p>
 
-            <div class="fn-name">renderDSD()</div>
+            <div class="fn-name">renderDsd()</div>
             <div class="fn-sig">
-              renderDSD(tagName, componentClass, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;
+              renderDsd(tagName, componentClass, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;
             </div>
             <div class="fn-desc">
               服务端渲染 Custom Element 为 DSD HTML。支持三层：dsd-static、dsd-interactive、pure-island。
@@ -102,7 +102,7 @@ export default class ApiCorePage extends DsdElement {
               renderDSDByName(tagName, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;
             </div>
             <div class="fn-desc">
-              类似 renderDSD，但通过 tag name 从 customElements 注册表查找组件类。
+              类似 renderDsd，但通过 tag name 从 customElements 注册表查找组件类。
             </div>
 
             <div class="fn-name">escapeHtml() / escapeAttr() / escapeAttrValue()</div>
@@ -326,9 +326,9 @@ export default class ApiCorePage extends DsdElement {
             <div class="pkg-import">import { ... } from '@lessjs/runtime';</div>
             <p>Pure runtime. Zero Vite/Node dependencies. Works in Deno, Node, Bun, Edge.</p>
 
-            <div class="fn-name">renderDSD()</div>
+            <div class="fn-name">renderDsd()</div>
             <div class="fn-sig">
-              renderDSD(tagName, componentClass, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;
+              renderDsd(tagName, componentClass, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;
             </div>
             <div class="fn-desc">
               Server-side renders a Custom Element as DSD HTML. Supports all three layers: dsd-static,
@@ -388,7 +388,7 @@ export default class ApiCorePage extends DsdElement {
               renderDSDByName(tagName, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;
             </div>
             <div class="fn-desc">
-              Like renderDSD but looks up the component class from customElements registry by tag name.
+              Like renderDsd but looks up the component class from customElements registry by tag name.
             </div>
 
             <div class="fn-name">escapeHtml() / escapeAttr() / escapeAttrValue()</div>

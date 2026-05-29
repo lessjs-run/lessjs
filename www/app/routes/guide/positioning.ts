@@ -39,7 +39,7 @@ export class PositioningPage extends DsdElement {
             <h3>全栈框架</h3>
             <p>
               文件约定路由 + Hono API Route + Serverless 部署。SSG/ISR/SSR 同一套渲染引擎--<strong>不是 SSG 框架</strong>，
-              SSG 只是渲染引擎的当前使用模式。renderDSD() 是渲染时机无关的，build-time / ISR / request-time 都用同一套引擎。
+              SSG 只是渲染引擎的当前使用模式。renderDsd() 是渲染时机无关的，build-time / ISR / request-time 都用同一套引擎。
             </p>
           </div>
 
@@ -77,7 +77,7 @@ export class PositioningPage extends DsdElement {
             <div class="num">Principle 02</div>
             <h3>Rendering-Timing-Agnostic</h3>
             <p>
-              renderDSD() 不关心什么时候被调用--build-time (SSG)、cache-expiry-time (ISR)、
+              renderDsd() 不关心什么时候被调用--build-time (SSG)、cache-expiry-time (ISR)、
               request-time (SSR) 用同一套引擎。SSG 是当前默认模式，不是框架身份。
             </p>
           </div>
@@ -251,7 +251,7 @@ export class PositioningPage extends DsdElement {
             <p>
               File-convention routing + Hono API routes + serverless deployment. SSG/ISR/SSR - same rendering engine.
               <strong>Not an SSG framework</strong> - SSG is one mode of the rendering engine, not the framework's identity.
-              renderDSD() is rendering-timing-agnostic: build-time, ISR, or request-time, same engine.
+              renderDsd() is rendering-timing-agnostic: build-time, ISR, or request-time, same engine.
             </p>
           </div>
 
@@ -290,7 +290,7 @@ export class PositioningPage extends DsdElement {
             <div class="num">Principle 02</div>
             <h3>Rendering-Timing-Agnostic</h3>
             <p>
-              renderDSD() doesn't care when it's called - build-time (SSG), cache-expiry-time (ISR),
+              renderDsd() doesn't care when it's called - build-time (SSG), cache-expiry-time (ISR),
               request-time (SSR), same engine. SSG is the current default mode, not the framework's identity.
             </p>
           </div>
