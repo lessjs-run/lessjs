@@ -5,7 +5,7 @@ export const headerNav = [
     'label': 'Guide',
   },
   {
-    'href': '/api/reference',
+    'href': '/apilist',
     'label': 'API',
   },
   {
@@ -26,7 +26,7 @@ export const navSections = [
     'section': 'Reference',
     'items': [
       {
-        'path': '/api/reference',
+        'path': '/apilist',
         'label': 'API Reference',
         'order': 5,
       },
