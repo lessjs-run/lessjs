@@ -15,7 +15,7 @@
  */
 
 import { join, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { normalizePath } from 'vite';
 import process from 'node:process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -74,6 +74,7 @@ function optionalPackageStubsPlugin(): import('vite').Plugin {
       'export function installReactAdapter() {}',
       'export function uninstallReactAdapter() {}',
       'export const DsdReactElement = undefined;',
+      'export const WithDsdHydration = undefined;',
       'export function renderReactToString() { return ""; }',
       'export function isReactElement() { return false; }',
     ].join('\n'),
@@ -550,9 +551,9 @@ if (typeof globalThis.customElements === 'undefined') {
             )
             : {}),
           // v0.26: Generated data files — override workspace aliases
-          '@lessjs/content/nav': pathToFileURL(resolve(root, 'www/app/data/_generated-nav.ts')).href,
-          '@lessjs/content/blog-data': pathToFileURL(resolve(root, 'www/app/data/_generated-blog-data.ts')).href,
-          '@lessjs/i18n/data': pathToFileURL(resolve(root, 'www/app/data/_generated-i18n-data.ts')).href,
+          '@lessjs/content/nav': './app/data/_generated-nav.ts',
+          '@lessjs/content/blog-data': './app/data/_generated-blog-data.ts',
+          '@lessjs/i18n/data': './app/data/_generated-i18n-data.ts',
         },
       },
     });
