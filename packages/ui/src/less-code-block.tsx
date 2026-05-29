@@ -21,8 +21,6 @@
 
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from './open-props-tokens.js';
-
 export const tagName = 'less-code-block';
 
 const sheet: StyleSheetLike = new StyleSheet();
@@ -123,7 +121,7 @@ sheet.replaceSync(`
 `);
 
 export class LessCodeBlock extends DsdElement {
-  static override styles = [openPropsTokenSheet, sheet];
+  static override styles = [sheet];
 
   private _copyState: 'idle' | 'copied' | 'failed' = 'idle';
   private _copyTimer: ReturnType<typeof setTimeout> | undefined;

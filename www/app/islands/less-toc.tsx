@@ -188,4 +188,4 @@ export default class LessToc extends DsdElement {
   }
 }
 
-customElements.define(tagName, LessToc);
+if (!customElements.get(tagName)) customElements.define(tagName, LessToc);

@@ -1,14 +1,12 @@
 /**
- * @lessjs/adapter-vite — less() Vite plugin factory.
+ * @lessjs/adapter-vite — Internal plugin factory.
  *
  * Extracted from index.ts in v0.22 (SOP-004: adapter-vite decomposition).
  *
- * Provides the `less()` function that assembles the complete Vite plugin
- * array for LessJS: route scanning, virtual Hono entry, dev server,
- * island transforms, SSG build pipeline, and sub-plugin dispatch.
+ * This is the core build plugin implementation. It is NOT part of the
+ * public API. Use `lessPipeline()` from the main entry instead.
  *
- * This is the primary public API of @lessjs/adapter-vite.
- * Re-exported from index.ts for backward compatibility.
+ * Internal only: called by lessPipeline() and the @lessjs/app umbrella.
  */
 
 import type { Plugin } from 'vite';
@@ -46,13 +44,17 @@ import {
 import { createCoreResolvePlugin } from './subpath-resolver.js';
 
 /**
- * LessJS Framework Vite plugin.
- * Jamstack: M=SSG+DSD, A=API Routes, J=Islands.
+ * LessJS Framework Vite plugin — internal plugin factory.
  *
- * less() handles dev mode plus Phase 1 metadata for production builds.
+ * This is the core build plugin implementation. It is NOT part of the
+ * public API. Use `lessPipeline()` from @lessjs/adapter-vite instead.
+ *
+ * Internal only: called by lessPipeline() and the @lessjs/app umbrella.
+ * Jamstack: M=SSG+DSD, A=API Routes, J=Islands.
  *
  * @param options - Framework options
  * @param externalCtx - Optional shared LessBuildContext (used by lessjs() umbrella)
+ * @internal
  */
 export function less(
   options: FrameworkOptions = {},

@@ -1,7 +1,7 @@
 /**
  * @lessjs/app - Unified LessJS Vite plugin entry.
  *
- * Single entry point that combines less() + lessContent() + lessI18n()
+ * Single entry point that combines lessPipeline() + lessContent() + lessI18n()
  * with a shared LessBuildContext. Explicit ctx passing - no globalThis needed.
  *
  * Usage:
@@ -23,7 +23,10 @@ import type { FrameworkOptions } from '@lessjs/core';
 import type { LessContentOptions } from '@lessjs/content';
 import type { LessI18nOptions } from '@lessjs/i18n';
 
-import { less, LessBuildContext as LessBuildContextClass } from '@lessjs/adapter-vite';
+import { LessBuildContext as LessBuildContextClass } from '@lessjs/adapter-vite';
+// Internal: less() is the raw plugin factory, not part of the public API.
+// lessPipeline() wraps it — use that for consumer-facing code.
+import { less } from '@lessjs/adapter-vite/less-plugin';
 import { lessContent } from '@lessjs/content';
 import { lessI18n } from '@lessjs/i18n';
 import { createLogger } from '@lessjs/core/logger';
@@ -41,7 +44,7 @@ export interface LessjsOptions extends FrameworkOptions {
 /**
  * Unified LessJS Vite plugin - single entry point for all LessJS features.
  *
- * Combines less() + lessContent() + lessI18n() under one call with a
+ * Combines lessPipeline() + lessContent() + lessI18n() under one call with a
  * shared LessBuildContext. ctx is explicitly passed to sub-plugins,
  * eliminating the need for globalThis discovery.
  *

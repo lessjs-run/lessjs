@@ -241,5 +241,5 @@ export class LessTermDemo extends DsdElement {
   }
 }
 
-customElements.define('less-term-demo', LessTermDemo);
+if (!customElements.get('less-term-demo')) customElements.define('less-term-demo', LessTermDemo);
 export default LessTermDemo;

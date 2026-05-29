@@ -1,7 +1,7 @@
 /**
  * @lessjs/adapter-vite - Vite build orchestration adapter.
  *
- * Provides the `less()` Vite plugin that handles:
+ * Provides the `lessPipeline()` Vite plugin that handles:
  * - Route scanning and virtual Hono entry generation
  * - Dev server integration via @hono/vite-dev-server
  * - Island marking transform
@@ -15,7 +15,7 @@
  *
  * v0.22 (SOP-004): Decomposed into 5 focused modules:
  *   head-injection.ts      — HTML fragment validation & serialization
- *   less-plugin.ts         — less() plugin factory
+ *   less-plugin.ts         — Internal plugin factory (used by lessPipeline)
  *   subpath-resolver.ts    — JSR remote resolution (ADR 0016)
  *   optional-package-stubs.ts — No-op stubs for optional adapters
  *   phase-context.ts       — Sub-plugin dispatch layer
@@ -24,7 +24,7 @@
  */
 
 // ─── Primary public API ──────────────────────────────────────────
-export { less } from './less-plugin.js';
+export { lessPipeline, type PipelineConfig } from './build-pipeline.js';
 
 // ─── Build context ───────────────────────────────────────────────
 export { LessBuildContext } from './build-context.js';
@@ -71,4 +71,4 @@ export type { HeadExtrasResult } from './head-injection.js';
 export { OPTIONAL_PACKAGE_STUBS } from './optional-package-stubs.js';
 
 // ─── Default export ──────────────────────────────────────────────
-export { less as default } from './less-plugin.js';
+export { lessPipeline as default } from './build-pipeline.js';

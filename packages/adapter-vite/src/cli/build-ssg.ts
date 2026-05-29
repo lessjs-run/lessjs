@@ -18,7 +18,7 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { normalizePath } from 'vite';
 import process from 'node:process';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import type { Plugin } from 'vite';
 import type { FrameworkOptions, HydrationStrategy, LessPackageManifest } from '@lessjs/core';
 import type { LessBuildContext } from '../build-context.js';
@@ -194,6 +194,15 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
   const { generateHonoEntryCode } = await import('../hono-entry.js');
 
   const routes = await scanRoutes(routesDir);
+
+  // v0.25.0: Generate type-safe route parameter declarations for `virtual:less-routes`
+  const { generateRouteTypes } = await import('../route-type-generator.js');
+  const routeTypeDts = generateRouteTypes(routes);
+  const dotLessDir = join(root, '.less');
+  mkdirSync(dotLessDir, { recursive: true });
+  writeFileSync(join(dotLessDir, 'routes.d.ts'), routeTypeDts, 'utf-8');
+  log.info(`Route types generated -> .less/routes.d.ts`);
+
   const islandsRoot = join(root, islandsDir);
   const ssgIslandFiles = await scanIslands(islandsRoot);
   const ssgIslandTagNames = islandTagNames.length > 0

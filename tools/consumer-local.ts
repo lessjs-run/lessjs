@@ -200,19 +200,19 @@ let viteConfig = readFileSync(viteConfigPath, 'utf-8');
 
 viteConfig = viteConfig.replace(
   "import { lessjs } from '@lessjs/app';",
-  `import { less } from ${
+  `import { lessPipeline } from ${
     JSON.stringify(
       pathToFileURL(join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts')).href,
     )
   };`,
 );
-viteConfig = viteConfig.replace('lessjs({', 'less({');
+viteConfig = viteConfig.replace('lessjs({', 'lessPipeline({');
 viteConfig = viteConfig.replace(
   "packageIslands: ['@lessjs/ui'],",
   `packageIslands: [${JSON.stringify(pathToFileURL(join(uiSrc, 'index.ts')).href)}],`,
 );
 viteConfig = viteConfig.replace(
-  'plugins: [less',
+  'plugins: [lessPipeline',
   `resolve: { alias: ${JSON.stringify(aliases, null, 4)} },\n  plugins: [less`,
 );
 writeFileSync(viteConfigPath, viteConfig);

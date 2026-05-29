@@ -1,6 +1,10 @@
 {
   "name": "@lessjs/protocols",
+<<<<<<< HEAD
   "version": "0.24.4",
+=======
+  "version": "0.25.0",
+>>>>>>> dev
   "exports": {
     ".": "./src/index.ts",
     "./build-types": "./src/build-types.ts",

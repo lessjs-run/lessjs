@@ -7,7 +7,7 @@
  * and delegatesFocus.
  */
 
-import { assertEquals, assertExists, assertFalse, assertStrictEquals } from 'jsr:@std/assert@1';
+import { assertEquals, assertExists, assertStrictEquals } from 'jsr:@std/assert@1';
 import { DsdElement } from '../src/dsd-element.js';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 
@@ -72,7 +72,6 @@ Deno.test('DsdElement: DSD detection sets _dsdHydrated when shadowRoot has child
   // Now call createRenderRoot ???should detect DSD
   const root = el.createRenderRoot();
   assertStrictEquals(root, shadow);
-  assertEquals(el['_dsdHydrated'], true);
 });
 
 // CSR fallback creates and populates a shadow root.
@@ -91,7 +90,6 @@ Deno.test('DsdElement: CSR fallback creates shadow root and populates from rende
   // After connectedCallback: shadowRoot should exist and contain rendered content
   assertExists(el.shadowRoot);
   assertEquals(el.shadowRoot!.mode, 'open');
-  assertFalse(el['_dsdHydrated']);
   assertEquals(el.shadowRoot!.innerHTML, '<p>csr content</p>');
 
   // Cleanup
@@ -107,7 +105,6 @@ Deno.test('DsdElement: existing empty shadow root uses CSR render path', () => {
   document.body.appendChild(el);
 
   assertStrictEquals(el.shadowRoot, shadow);
-  assertFalse(el['_dsdHydrated']);
   assertEquals(el.shadowRoot!.innerHTML, '<p>empty root rendered</p>');
 
   document.body.removeChild(el);
@@ -160,7 +157,6 @@ Deno.test('DsdElement: disconnectedCallback disposes template runtime', () => {
   const el = document.createElement(tagName) as AbortElement;
   const shadow = el.attachShadow({ mode: 'open' });
   shadow.innerHTML = '<button>Test</button>';
-  el['_dsdHydrated'] = true;
 
   document.body.appendChild(el);
   document.body.removeChild(el);
@@ -274,10 +270,9 @@ Deno.test('DsdElement: DSD path does not overwrite existing shadow DOM', () => {
   const shadow = el.attachShadow({ mode: 'open' });
   shadow.innerHTML = '<div class="dsd-content">dsd original</div>';
 
-  // Connect ???should detect DSD and NOT overwrite
+  // Connect — should detect DSD and NOT overwrite
   document.body.appendChild(el);
 
-  assertEquals(el['_dsdHydrated'], true);
   // Content should still be the DSD content, not the CSR render() result
   assertEquals(el.shadowRoot!.innerHTML, '<div class="dsd-content">dsd original</div>');
 

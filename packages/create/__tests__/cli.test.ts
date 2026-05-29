@@ -380,7 +380,7 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       "import { lessjs } from '@lessjs/app';",
       `import { less } from ${
         JSON.stringify(
-          pathToFileURL(join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts')).href,
+          pathToFileURL(join(repoRoot, 'packages', 'adapter-vite', 'src', 'less-plugin.ts')).href,
         )
       };`,
     );

@@ -129,6 +129,7 @@ export {
   type SignalLike,
   unwrapSignalLike,
 } from './signal-like.js';
+export { consumeContext, type Context, createContext, provideContext } from './signal-context.js';
 export { createLogger, LessLogger, LogLevel } from './logger.js';
 export { DANGEROUS_KEYS } from './security.js';
 export { isValidTagName } from './tag-utils.js';

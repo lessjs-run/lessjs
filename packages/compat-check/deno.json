@@ -1,13 +1,23 @@
 {
   "name": "@lessjs/compat-check",
+<<<<<<< HEAD
   "version": "0.24.4",
+=======
+  "version": "0.25.0",
+>>>>>>> dev
   "exports": {
     ".": "./src/index.ts"
   },
   "imports": {
+<<<<<<< HEAD
     "@lessjs/core": "jsr:@lessjs/core@^0.24.4",
     "@lessjs/core/types": "jsr:@lessjs/core@^0.24.4/types",
     "@lessjs/cem": "jsr:@lessjs/cem@^0.24.4"
+=======
+    "@lessjs/core": "jsr:@lessjs/core@^0.25.0",
+    "@lessjs/core/types": "jsr:@lessjs/core@^0.25.0/types",
+    "@lessjs/cem": "jsr:@lessjs/cem@^0.25.0"
+>>>>>>> dev
   },
   "publish": {
     "include": [

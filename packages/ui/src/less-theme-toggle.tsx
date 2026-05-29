@@ -20,8 +20,6 @@
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { signal } from '@lessjs/signals';
-import { openPropsTokenSheet } from './open-props-tokens.js';
-
 export const tagName = 'less-theme-toggle';
 
 const sheet: StyleSheetLike = new StyleSheet();
@@ -76,7 +74,7 @@ sheet.replaceSync(`
 `);
 
 export class LessThemeToggle extends DsdElement {
-  static override styles = [openPropsTokenSheet, sheet];
+  static override styles = [sheet];
   static override delegatesFocus = true;
   static override observedAttributes = ['theme'];
 

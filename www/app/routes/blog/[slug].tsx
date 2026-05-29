@@ -1,4 +1,3 @@
-// deno-fmt-ignore-file
 /**
  * Blog Post Page - Dynamic Route
  *
@@ -12,7 +11,7 @@ import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
-import { posts, getPostBySlug } from 'virtual:less-blog-data';
+import { getPostBySlug, posts } from 'virtual:less-blog-data';
 
 export const tagName = 'page-blog-slug';
 
@@ -21,7 +20,8 @@ export function getStaticPaths(): Array<Record<string, string>> {
 }
 
 const routeSheet = new StyleSheet();
-routeSheet.replaceSync(pageStyles + `
+routeSheet.replaceSync(
+  pageStyles + `
 
     .blog-back { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; display: inline-block; }
     .blog-date { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2rem; }
@@ -46,7 +46,8 @@ routeSheet.replaceSync(pageStyles + `
     .blog-content blockquote { border-left: 2px solid var(--brand); padding-left: 1rem; margin: 1rem 0; color: var(--text-muted); }
     .not-found { text-align: center; padding: 4rem 1rem; color: var(--text-muted); }
     .nav-row { margin-top: 3rem; }
-  `);
+  `,
+);
 
 export default class BlogPostPage extends DsdElement {
   slug = '';
@@ -58,45 +59,109 @@ export default class BlogPostPage extends DsdElement {
   }
 
   private _renderZh() {
+    const loc = this._getLocale('zh');
     const post = getPostBySlug(this.slug);
+    const nav = filterBlogNav(navSections);
     if (!post) {
-      return `<less-layout locale="${this._getLocale('zh')}" locales='${JSON.stringify(['en','zh'])}' nav-items='${JSON.stringify(filterBlogNav(navSections))}' header-nav='${JSON.stringify(headerNav)}' current-path="/blog"><div class="container"><div class="not-found"><h1>404</h1><p>文章未找到: ${this.slug}</p><a href="/blog">← 返回博客</a></div></div></less-layout>`;
+      return (
+        <less-layout
+          locale={loc}
+          locales={JSON.stringify(['en', 'zh'])}
+          navItems={JSON.stringify(nav)}
+          headerNav={JSON.stringify(headerNav)}
+          currentPath='/blog'
+        >
+          <div class='container'>
+            <div class='not-found'>
+              <h1>404</h1>
+              <p>文章未找到: {this.slug}</p>
+              <a href='/blog'>← 返回博客</a>
+            </div>
+          </div>
+        </less-layout>
+      );
     }
     const tags = post.frontmatter.tags ?? [];
-    return `
-      <less-layout locale="${this._getLocale('zh')}" locales='${JSON.stringify(['en','zh'])}' nav-items='${JSON.stringify(filterBlogNav(navSections))}' header-nav='${JSON.stringify(headerNav)}' current-path="/blog">
-        <div class="container">
-          <a href="/blog" class="blog-back">&larr; 博客</a>
-          <h1>${post.frontmatter.title}</h1>
-          <p class="subtitle">${post.frontmatter.excerpt ?? ''}</p>
-          ${tags.length > 0 ? `<div class="blog-tags">${tags.map(tag => `<span class="blog-tag">${tag}</span>`)}</div>` : ''}
-          <p class="blog-date">${post.frontmatter.date}</p>
-          <div class="blog-content">${post.html}</div>
-          <div class="nav-row"><a href="/blog" class="nav-link">&larr; 返回博客</a></div>
+    return (
+      <less-layout
+        locale={loc}
+        locales={JSON.stringify(['en', 'zh'])}
+        navItems={JSON.stringify(nav)}
+        headerNav={JSON.stringify(headerNav)}
+        currentPath='/blog'
+      >
+        <div class='container'>
+          <a href='/blog' class='blog-back'>← 博客</a>
+          <h1>{post.frontmatter.title}</h1>
+          <p class='subtitle'>{post.frontmatter.excerpt ?? ''}</p>
+          {tags.length > 0
+            ? (
+              <div class='blog-tags'>
+                {tags.map((tag: string) => <span key={tag} class='blog-tag'>{tag}</span>)}
+              </div>
+            )
+            : null}
+          <p class='blog-date'>{post.frontmatter.date}</p>
+          <div class='blog-content' innerHTML={post.html}></div>
+          <div class='nav-row'>
+            <a href='/blog' class='nav-link'>← 返回博客</a>
+          </div>
         </div>
       </less-layout>
-    `;
+    );
   }
 
   private _renderEn() {
+    const loc = this._getLocale('en');
     const post = getPostBySlug(this.slug);
+    const nav = filterBlogNav(navSections);
     if (!post) {
-      return `<less-layout locale="${this._getLocale('en')}" locales='${JSON.stringify(['en','zh'])}' nav-items='${JSON.stringify(filterBlogNav(navSections))}' header-nav='${JSON.stringify(headerNav)}' current-path="/en/blog"><div class="container"><div class="not-found"><h1>404</h1><p>Post not found: ${this.slug}</p><a href="/en/blog">← Back to Blog</a></div></div></less-layout>`;
+      return (
+        <less-layout
+          locale={loc}
+          locales={JSON.stringify(['en', 'zh'])}
+          navItems={JSON.stringify(nav)}
+          headerNav={JSON.stringify(headerNav)}
+          currentPath='/en/blog'
+        >
+          <div class='container'>
+            <div class='not-found'>
+              <h1>404</h1>
+              <p>Post not found: {this.slug}</p>
+              <a href='/en/blog'>← Back to Blog</a>
+            </div>
+          </div>
+        </less-layout>
+      );
     }
     const tags = post.frontmatter.tags ?? [];
-    return `
-      <less-layout locale="${this._getLocale('en')}" locales='${JSON.stringify(['en','zh'])}' nav-items='${JSON.stringify(filterBlogNav(navSections))}' header-nav='${JSON.stringify(headerNav)}' current-path="/en/blog">
-        <div class="container">
-          <a href="/blog" class="blog-back">&larr; Blog</a>
-          <h1>${post.frontmatter.title}</h1>
-          <p class="subtitle">${post.frontmatter.excerpt ?? ''}</p>
-          ${tags.length > 0 ? `<div class="blog-tags">${tags.map(tag => `<span class="blog-tag">${tag}</span>`)}</div>` : ''}
-          <p class="blog-date">${post.frontmatter.date}</p>
-          <div class="blog-content">${post.html}</div>
-          <div class="nav-row"><a href="/blog" class="nav-link">&larr; Back to Blog</a></div>
+    return (
+      <less-layout
+        locale={loc}
+        locales={JSON.stringify(['en', 'zh'])}
+        navItems={JSON.stringify(nav)}
+        headerNav={JSON.stringify(headerNav)}
+        currentPath='/en/blog'
+      >
+        <div class='container'>
+          <a href='/blog' class='blog-back'>← Blog</a>
+          <h1>{post.frontmatter.title}</h1>
+          <p class='subtitle'>{post.frontmatter.excerpt ?? ''}</p>
+          {tags.length > 0
+            ? (
+              <div class='blog-tags'>
+                {tags.map((tag: string) => <span key={tag} class='blog-tag'>{tag}</span>)}
+              </div>
+            )
+            : null}
+          <p class='blog-date'>{post.frontmatter.date}</p>
+          <div class='blog-content' innerHTML={post.html}></div>
+          <div class='nav-row'>
+            <a href='/blog' class='nav-link'>← Back to Blog</a>
+          </div>
         </div>
       </less-layout>
-    `;
+    );
   }
 }
 

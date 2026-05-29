@@ -46,6 +46,32 @@ interface PropMetadataStore {
 
 const PROP_METADATA = Symbol.for('lessjs.propMetadata');
 
+// ─── Internal type helpers for symbol-keyed internals ───────────
+// DsdElement / Record<string,unknown> instances store prop runtime
+// state under well-known symbols. TypeScript does not natively model
+// symbol-keyed properties on arbitrary objects, so we define narrow
+// accessor types and cast through `unknown` (type-safe) rather than `any`.
+
+/** Typed access to @prop() signal state on DsdElement instances */
+type _PropSignalsAccessor = {
+  [PROP_SIGNALS]?: PropSignalMap;
+  [PROP_UNSUBSCRIBERS]?: Array<() => void>;
+};
+
+/** Typed access to @prop() metadata on constructors */
+type _PropMetadataAccessor = {
+  [PROP_METADATA]?: PropMetadataStore;
+};
+
+/** Typed access to static props signal state on Record<string,unknown> instances */
+type _StaticPropSignalsAccessor = {
+  [STATIC_PROP_SIGNALS]?: Map<string, PropSignal>;
+  [STATIC_PROP_UNSUBS]?: Array<() => void>;
+};
+
+/** Typed access to a constructor that may have static props */
+type _PropsCtor = { props?: Record<string, unknown> };
+
 // ─── Runtime integration (v0.24: @prop() legacy runtime — kept for compat) ──
 
 /**
@@ -63,18 +89,15 @@ interface PropSignalMap {
  * Called once from connectedCallback().
  */
 export function initializeProps(instance: DsdElement): void {
-  // deno-lint-ignore no-explicit-any
-  const ctor = instance.constructor as any as Record<symbol, PropMetadataStore>;
+  const ctor = instance.constructor as unknown as _PropMetadataAccessor;
   const store = ctor[PROP_METADATA];
   if (!store?.props.length) return;
 
   const sigMap: PropSignalMap = { signals: new Map() };
-  // deno-lint-ignore no-explicit-any
-  (instance as any as Record<symbol, PropSignalMap>)[PROP_SIGNALS] = sigMap;
+  (instance as unknown as _PropSignalsAccessor)[PROP_SIGNALS] = sigMap;
 
   const unsubscribers: Array<() => void> = [];
-  // deno-lint-ignore no-explicit-any
-  (instance as any as Record<symbol, Array<() => void>>)[PROP_UNSUBSCRIBERS] = unsubscribers;
+  (instance as unknown as _PropSignalsAccessor)[PROP_UNSUBSCRIBERS] = unsubscribers;
 
   for (const { key, options } of store.props) {
     const attrName = resolveAttrName(key, options);
@@ -116,8 +139,7 @@ export function initializeProps(instance: DsdElement): void {
  * Clean up @prop() signal subscriptions. Called from disconnectedCallback().
  */
 export function disposeProps(instance: DsdElement): void {
-  // deno-lint-ignore no-explicit-any
-  const unsubs = (instance as any as Record<symbol, Array<() => void>>)[PROP_UNSUBSCRIBERS];
+  const unsubs = (instance as unknown as _PropSignalsAccessor)[PROP_UNSUBSCRIBERS];
   if (unsubs) {
     for (const fn of unsubs.splice(0)) fn();
   }
@@ -132,13 +154,11 @@ export function handlePropAttributeChange(
   _oldValue: string | null,
   newValue: string | null,
 ): void {
-  // deno-lint-ignore no-explicit-any
-  const sigMap = (instance as any as Record<symbol, PropSignalMap>)[PROP_SIGNALS];
+  const sigMap = (instance as unknown as _PropSignalsAccessor)[PROP_SIGNALS];
   if (!sigMap) return;
 
   // Find which prop maps to this attribute
-  // deno-lint-ignore no-explicit-any
-  const ctor = instance.constructor as any as Record<symbol, PropMetadataStore>;
+  const ctor = instance.constructor as unknown as _PropMetadataAccessor;
   const store = ctor[PROP_METADATA];
   if (!store) return;
 
@@ -170,8 +190,7 @@ function getInitialValue(
   options: PropertyOptions,
 ): unknown {
   // Check instance own property first (class field initializer)
-  // deno-lint-ignore no-explicit-any
-  const own = (instance as any as Record<PropertyKey, unknown>)[key];
+  const own = (instance as unknown as Record<PropertyKey, unknown>)[key];
   if (own !== undefined) return own;
 
   // Check HTML attribute
@@ -371,18 +390,15 @@ const STATIC_PROP_UNSUBS = Symbol.for('lessjs.staticPropUnsubs');
  * Called from DsdElement.connectedCallback() before initializeProps().
  */
 export function initializeStaticProps(instance: Record<string, unknown>): void {
-  // deno-lint-ignore no-explicit-any
-  const ctor = instance.constructor as any;
+  const ctor = instance.constructor as unknown as _PropsCtor;
   const propsDef = ctor.props as Record<string, unknown> | undefined;
   if (!propsDef || typeof propsDef !== 'object') return;
 
   const sigMap = new Map<string, PropSignal>();
-  // deno-lint-ignore no-explicit-any
-  (instance as any)[STATIC_PROP_SIGNALS] = sigMap;
+  (instance as unknown as _StaticPropSignalsAccessor)[STATIC_PROP_SIGNALS] = sigMap;
 
   const unsubs: Array<() => void> = [];
-  // deno-lint-ignore no-explicit-any
-  (instance as any)[STATIC_PROP_UNSUBS] = unsubs;
+  (instance as unknown as _StaticPropSignalsAccessor)[STATIC_PROP_UNSUBS] = unsubs;
 
   for (const [name, decl] of Object.entries(propsDef)) {
     const { default: defVal, reflect } = normalizePropDecl(decl);
@@ -433,8 +449,9 @@ export function initializeStaticProps(instance: Record<string, unknown>): void {
  * Called from DsdElement.disconnectedCallback().
  */
 export function disposeStaticProps(instance: Record<string, unknown>): void {
-  // deno-lint-ignore no-explicit-any
-  const unsubs = (instance as any)[STATIC_PROP_UNSUBS] as Array<() => void> | undefined;
+  const unsubs = (instance as unknown as _StaticPropSignalsAccessor)[STATIC_PROP_UNSUBS] as
+    | Array<() => void>
+    | undefined;
   if (unsubs) {
     for (const fn of unsubs.splice(0)) fn();
   }
@@ -450,12 +467,12 @@ export function handleStaticPropAttributeChange(
   _oldValue: string | null,
   newValue: string | null,
 ): void {
-  // deno-lint-ignore no-explicit-any
-  const sigMap = (instance as any)[STATIC_PROP_SIGNALS] as Map<string, PropSignal> | undefined;
+  const sigMap = (instance as unknown as _StaticPropSignalsAccessor)[STATIC_PROP_SIGNALS] as
+    | Map<string, PropSignal>
+    | undefined;
   if (!sigMap) return;
 
-  // deno-lint-ignore no-explicit-any
-  const ctor = instance.constructor as any;
+  const ctor = instance.constructor as unknown as _PropsCtor;
   const propsDef = ctor.props as Record<string, unknown> | undefined;
   if (!propsDef) return;
 
@@ -486,13 +503,13 @@ export function handleStaticPropAttributeChange(
 export function syncStaticPropsFromAttributes(
   instance: Record<string, unknown>,
 ): void {
-  // deno-lint-ignore no-explicit-any
-  const ctor = instance.constructor as any;
+  const ctor = instance.constructor as unknown as _PropsCtor;
   const propsDef = ctor.props as Record<string, unknown> | undefined;
   if (!propsDef) return;
 
-  // deno-lint-ignore no-explicit-any
-  const sigMap = (instance as any)[STATIC_PROP_SIGNALS] as Map<string, PropSignal> | undefined;
+  const sigMap = (instance as unknown as _StaticPropSignalsAccessor)[STATIC_PROP_SIGNALS] as
+    | Map<string, PropSignal>
+    | undefined;
   if (!sigMap) return;
 
   const el = instance as unknown as {

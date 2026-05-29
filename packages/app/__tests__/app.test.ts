@@ -1,7 +1,7 @@
 /**
  * @lessjs/app - Unified entry tests
  *
- * Tests that lessjs() correctly combines less() + lessContent() + lessI18n()
+ * Tests that lessjs() correctly combines lessPipeline() + lessContent() + lessI18n()
  * with a shared LessBuildContext. This is the primary user-facing API.
  */
 import { assertArrayIncludes, assertEquals, assertExists } from 'jsr:@std/assert@^1.0.0';

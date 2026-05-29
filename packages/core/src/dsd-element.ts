@@ -57,7 +57,11 @@ import {
   syncStaticPropsFromAttributes,
 } from './prop.js';
 import { isVNode, type VNode } from './vnode.js';
+<<<<<<< HEAD
 import { renderToDom } from './jsx-render-dom.js';
+=======
+import { applyProps, renderToDom } from './jsx-render-dom.js';
+>>>>>>> dev
 import { renderToString } from './jsx-render-string.js';
 import { effect } from '@lessjs/signals';
 
@@ -109,6 +113,12 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   /** Component stylesheets (SSR-safe - StyleSheet delegates to native CSSStyleSheet in browser). */
   static styles?: StyleSheetLike | StyleSheetLike[];
 
+  /** v0.25.0: Page head metadata. SSG reads this to inject <title> and <meta> tags. */
+  static head?: { title?: string; description?: string; ogImage?: string };
+
+  /** v0.25.0: Client island strategy declaration. @deprecated in favor of lessPipeline(). */
+  static client?: { strategy?: 'load' | 'idle' | 'visible' | 'only' };
+
   /**
    * Attributes that trigger attributeChangedCallback.
    * Subclasses override this to declare reactive attributes.
@@ -132,7 +142,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    * When true, render() does not need to produce DOM content on the client;
    * only event hydration (if any) is performed.
    */
-  protected _dsdHydrated = false;
+  /** v0.25.0 (SOP-012): Removed — detection now inline in _renderOrHydrate(). */
 
   /** AbortController for VNode render event listener lifecycle */
   private _templateAbortController?: AbortController;
@@ -162,9 +172,6 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   createRenderRoot(): ShadowRoot {
     // DSD pre-populated shadow root detection
     if (this.shadowRoot) {
-      if (this.shadowRoot.childNodes.length > 0) {
-        this._dsdHydrated = true;
-      }
       this._applyStyles(this.constructor as typeof DsdElement, this.shadowRoot);
       return this.shadowRoot;
     }
@@ -190,8 +197,8 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     const sheets = Array.isArray(ctor.styles) ? ctor.styles : [ctor.styles];
     if (sheets.length > 0) {
       // StyleSheet delegates to native CSSStyleSheet in browser
-      // deno-lint-ignore no-explicit-any
-      (target as any).adoptedStyleSheets = sheets;
+      // type-escape: adoptedStyleSheets may not be in the configured DOM lib
+      (target as unknown as { adoptedStyleSheets: typeof sheets }).adoptedStyleSheets = sheets;
     }
   }
 
@@ -221,7 +228,6 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     if (!this.shadowRoot) {
       this.createRenderRoot();
     } else {
-      if (this.shadowRoot.childNodes.length > 0) this._dsdHydrated = true;
       this._applyStyles(ctor);
     }
 
@@ -231,8 +237,11 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       this.setAttribute('data-theme', docTheme);
     }
 
-    // Dispatch: DSD bindings vs CSR full render
-    this._hydrateOrRender();
+    // v0.25.0 (SOP-012): Unified render path — DSD and CSR both go through
+    // _renderOrHydrate(). The _dsdHydrated flag and _bindCurrentRenderTemplate()
+    // are removed. DSD pre-populated DOM is preserved; only events and signal
+    // subscriptions are added.
+    this._renderOrHydrate();
 
     // Attach ElementInternals for form-associated custom elements
     if (ctor.formAssociated && typeof this.attachInternals === 'function') {
@@ -241,18 +250,88 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   }
 
   /**
-   * Dispatch between DSD event binding (existing DOM) and CSR full render.
+   * v0.25.0 (SOP-012): Unified render path.
    *
-   * DSD path: bind events/signals against pre-populated DOM.
-   * CSR path: populate shadow DOM from render().
+   * DSD path (shadow DOM pre-populated): preserve existing DOM,
+   * bind events via VNode tree walk, set up effect() signal tracking.
+   *
+   * CSR path (empty shadow DOM): full render from VNode.
+   *
+   * The _dsdHydrated flag and _bindCurrentRenderTemplate() are removed.
    */
-  private _hydrateOrRender(): void {
-    if (this._dsdHydrated) {
-      this._bindCurrentRenderTemplate();
+  private _renderOrHydrate(): void {
+    const isDsd = this.shadowRoot && this.shadowRoot.childNodes.length > 0;
+    if (isDsd) {
+      // DSD: DOM already correct — bind events and set up signal tracking
+      this._hyrateExistingDom();
       this.onDsdHydrated();
     } else if (this.shadowRoot) {
+      // CSR: full render from VNode
       this._renderIntoShadowRoot();
       this.onCsrRendered();
+    }
+  }
+
+  /**
+   * v0.25.0 (SOP-012): Hydrate DSD-pre-populated shadow DOM.
+   *
+   * Walks the existing shadow DOM tree and matches VNode structure to
+   * wire event listeners (onClick etc.) without re-creating any elements.
+   * Also sets up effect() signal tracking for reactive updates.
+   */
+  private _hyrateExistingDom(): void {
+    if (!this.shadowRoot) return;
+
+    const result = this.render();
+    if (!isVNode(result)) return;
+
+    // Walk shadow DOM and VNode tree in parallel, binding events
+    this._walkAndBind(this.shadowRoot, result);
+
+    // Set up effect() for signal-driven re-render (same as CSR path)
+    this._vnodeEffectDispose = effect(() => {
+      const updated = this.render();
+      if (!isVNode(updated)) return;
+      if (this._templateAbortController) {
+        this._templateAbortController.abort();
+      }
+      this._templateAbortController = new AbortController();
+      while (this.shadowRoot!.firstChild) {
+        this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
+      }
+      this.shadowRoot!.appendChild(
+        renderToDom(updated, this._templateAbortController.signal),
+      );
+    });
+  }
+
+  /**
+   * Walk shadow DOM elements and VNode tree in parallel, binding events.
+   */
+  private _walkAndBind(
+    parent: Element | ShadowRoot,
+    vnode: {
+      // deno-lint-ignore ban-types
+      tag?: string | symbol | Function;
+      props?: Record<string, unknown>;
+      children?: unknown[];
+    },
+  ): void {
+    const vChildren = vnode
+      .children as (string | { tag?: string; props?: Record<string, unknown> })[];
+    if (!vChildren) return;
+
+    const domChildren = Array.from(parent.children);
+    for (let i = 0; i < Math.min(domChildren.length, vChildren.length); i++) {
+      const domChild = domChildren[i];
+      const vChild = vChildren[i];
+      if (typeof vChild === 'object' && vChild !== null && 'props' in vChild) {
+        applyProps(domChild, vChild.props as Record<string, unknown>);
+        this._walkAndBind(
+          domChild,
+          vChild as { tag?: string; props?: Record<string, unknown>; children?: unknown[] },
+        );
+      }
     }
   }
 
@@ -422,6 +501,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     }
   }
 
+<<<<<<< HEAD
   private _bindCurrentRenderTemplate(): void {
     this._disposeTemplateRuntime();
     this._disposeSignalSubscriptions();
@@ -442,6 +522,12 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     }
     // string fallback: nothing to hydrate
   }
+=======
+  // v0.25.0 (SOP-012): Removed _bindCurrentRenderTemplate().
+  // DSD hydration now handled by _hyrateExistingDom() which walks
+  // the pre-populated DOM, binds events via applyProps, and sets
+  // up effect() signal tracking — without clearing/re-creating DOM.
+>>>>>>> dev
 
   private _disposeTemplateRuntime(): void {
     if (this._templateAbortController) {

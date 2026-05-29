@@ -36,26 +36,6 @@ function hasIslandChunk(prefix: string): boolean {
   return readdirSync(islandsDir).some((file) => file.startsWith(prefix) && file.endsWith('.js'));
 }
 
-function hasRoadmapAdrOutput(): boolean {
-  return existsSync(
-    join(WWW_DIST, 'decisions', '0024-standards-first-wc-renderer-roadmap', 'index.html'),
-  );
-}
-
-function hasRendererSopOutput(): boolean {
-  return existsSync(
-    join(WWW_DIST, 'zh', 'decisions', '20260515-1-renderer-kernel-registry-sop', 'index.html'),
-  );
-}
-
-function hasHardenedServiceWorker(): boolean {
-  const swPath = join(WWW_DIST, 'sw.js');
-  if (!existsSync(swPath)) return false;
-  const sw = readFileSync(swPath, 'utf-8');
-  return sw.includes("if (e.request.method !== 'GET') return;") &&
-    sw.includes("e.request.headers.has('authorization')");
-}
-
 function findHtmlFiles(dir: string): string[] {
   const results: string[] = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -73,15 +53,7 @@ function findHtmlFiles(dir: string): string[] {
 }
 
 async function ensureDocsBuild(): Promise<void> {
-  if (
-    hasSsrBundle() && hasServerEntry() && hasRoadmapAdrOutput() &&
-    hasRendererSopOutput() &&
-    hasHardenedServiceWorker() &&
-    existsSync(join(WWW_DIST, 'index.html'))
-  ) {
-    return;
-  }
-
+  // Always do a fresh build — caching across CI runs hides regressions
   const command = new Deno.Command(Deno.execPath(), {
     args: ['task', 'build'],
     cwd: ROOT,

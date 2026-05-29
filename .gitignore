@@ -74,4 +74,5 @@ lighthouse-result*.json
 .deno-cache/
 .deno_cache/
 www/.less/
+.less/
 .codebuddy/settings.local.json
