@@ -19,13 +19,13 @@ const publicDocs = [
   'docs/changelog/README.md',
   'docs/changelog/v0.20.0.md',
   'docs/changelog/v0.21.0.md',
-  'www/app/routes/index/index.ts',
-  'www/app/routes/roadmap.ts',
-  'www/app/routes/guide/positioning.ts',
-  'www/app/routes/engine/architecture.ts',
-  'www/app/routes/engine/comparison.ts',
-  'www/app/routes/engine/dsd.ts',
-  'www/app/routes/engine/islands.ts',
+  'www/app/routes/index/index.tsx',
+  'www/app/routes/roadmap.tsx',
+  'www/app/routes/guide/positioning.tsx',
+  'www/app/routes/engine/architecture.tsx',
+  'www/app/routes/engine/comparison.tsx',
+  'www/app/routes/engine/dsd.tsx',
+  'www/app/routes/engine/islands.tsx',
 ];
 
 const currentDocs = [
@@ -33,9 +33,9 @@ const currentDocs = [
   'README.zh.md',
   'docs/roadmap/ROADMAP.md',
   'docs/status/STATUS.md',
-  'www/app/routes/index/index.ts',
-  'www/app/routes/roadmap.ts',
-  'www/app/routes/guide/positioning.ts',
+  'www/app/routes/index/index.tsx',
+  'www/app/routes/roadmap.tsx',
+  'www/app/routes/guide/positioning.tsx',
 ];
 
 const checks: Check[] = [
@@ -56,7 +56,7 @@ const checks: Check[] = [
       'README.zh.md',
       'docs/roadmap/ROADMAP.md',
       'docs/status/STATUS.md',
-      'www/app/routes/roadmap.ts',
+      'www/app/routes/roadmap.tsx',
     ],
     required: ['v0.22'],
   },

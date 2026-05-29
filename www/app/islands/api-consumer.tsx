@@ -263,8 +263,6 @@ export default class ApiConsumer extends DsdElement {
             type='button'
             class='btn primary'
             onClick={() => this._sayHello()}
-            class='btn primary'
-            onClick={() => this._sayHello()}
             disabled={this.#helloLoading || !this.#name.trim()}
           >
             {this.#helloLoading ? 'Sending...' : 'Say Hello →'}
