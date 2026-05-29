@@ -664,7 +664,7 @@ export interface RenderError {
 }
 
 /**
- * Input to a single renderDSD() call.
+ * Input to a single renderDsd() call.
  */
 export interface RenderInput {
   /** Custom element tag name */
@@ -707,7 +707,7 @@ export interface RenderHooks {
 }
 
 /**
- * Structured output from renderDSD().
+ * Structured output from renderDsd().
  *
  * Provides errors, metrics, and hydration hints alongside the HTML.
  */

@@ -1,7 +1,7 @@
-# LessJS Core API Surface — v0.24.3 (HARDENED)
+# LessJS Core API Surface — v0.24.4 (HARDENED)
 
 > Status: **HARDENED**\
-> Version: v0.24.3\
+> Version: v0.24.4\
 > Scope: `@lessjs/core` public exports\
 > Last hardened: 2026-05-29
 
@@ -47,16 +47,27 @@ here is either internal or removed.
 
 | API                                     | Signature                                                         | Stability |
 | --------------------------------------- | ----------------------------------------------------------------- | --------- |
-| `renderDsd(components, options?)`       | `(RenderDSDComponent[], RenderDSDOptions?): RenderOutput`         | HARDENED  |
-| `renderDSDStream(components, options?)` | `(RenderDSDComponent[], RenderDSDStreamOptions?): ReadableStream` | STABLE    |
+| `renderDsd(components, options?)`       | `(RenderDsdComponent[], RenderDsdOptions?): RenderOutput`         | HARDENED  |
+| `renderDsdStream(components, options?)` | `(RenderDsdComponent[], RenderDsdStreamOptions?): ReadableStream` | STABLE    |
+| `renderDsdByName(tagNames, options?)`   | `(string[], RenderDsdOptions?): RenderOutput`                     | STABLE    |
 
 ## Islands
 
-| API                                | Signature                                            | Stability |
-| ---------------------------------- | ---------------------------------------------------- | --------- |
-| `island(tagName, Class, options?)` | `(string, Constructor, IslandOptions?): Constructor` | HARDENED  |
-| `bindEvents(host)`                 | `(HTMLElement): LessBindResult`                      | STABLE    |
-| `getSsrProps(el)`                  | `(HTMLElement): Record<string, unknown>`             | STABLE    |
+| API                                      | Signature                                            | Stability |
+| ---------------------------------------- | ---------------------------------------------------- | --------- |
+| `defineIsland(tagName, Class, options?)` | `(string, Constructor, IslandOptions?): Constructor` | HARDENED  |
+| `bindEvents(host)`                       | `(HTMLElement): void`                                | STABLE    |
+| `getSsrProps(el)`                        | `(HTMLElement): Record<string, unknown> \| null`     | STABLE    |
+
+## Prop Declarations (Types)
+
+| API                 | Signature                                                      | Stability |
+| ------------------- | -------------------------------------------------------------- | --------- |
+| `PropDecl`          | `PropDeclShorthand \| PropDeclFull`                            | HARDENED  |
+| `PropDeclShorthand` | `NumberConstructor \| StringConstructor \| BooleanConstructor` | HARDENED  |
+| `PropDeclFull`      | `{ type, attribute?, reflect? }`                               | HARDENED  |
+| `PropType<T>`       | Conditional type mapping                                       | HARDENED  |
+| `PropsFrom<T>`      | Derived prop object type                                       | STABLE    |
 
 ## Navigation
 
@@ -122,6 +133,18 @@ here is either internal or removed.
 | `ValidatedTag`             | Per-tag validation                                           | HARDENED  |
 | `ManifestValidationReport` | Full validation report                                       | HARDENED  |
 
+## Renamed in v0.24.4
+
+| Old Name            | New Name            | Notes               |
+| ------------------- | ------------------- | ------------------- |
+| `renderDSD()`       | `renderDsd()`       | PascalCase acronym  |
+| `renderDSDStream()` | `renderDsdStream()` | PascalCase acronym  |
+| `renderDSDByName()` | `renderDsdByName()` | PascalCase acronym  |
+| `renderToDOM()`     | `renderToDom()`     | PascalCase acronym  |
+| `getSSRProps()`     | `getSsrProps()`     | PascalCase acronym  |
+| `island()`          | `defineIsland()`    | verbNoun convention |
+| `lessBind()`        | `bindEvents()`      | No brand prefix     |
+
 ## Removed in v0.24.x
 
 | Removed                     | In      | Replacement              |
@@ -138,9 +161,6 @@ here is either internal or removed.
 | `isTemplateResult`          | v0.24.3 | `isVNode()`              |
 | `renderTemplateToString`    | v0.24.3 | `renderToString()`       |
 | `template.ts` (entire file) | v0.24.3 | —                        |
-| `filterFrameworkNav`        | v0.24.3 | `filterDocsNav`          |
-| `filterEngineNav`           | v0.24.3 | `filterArchitectureNav`  |
-| `filterRegistryNav`         | v0.24.3 | `filterHubNav`           |
 
 ## Stability Levels
 

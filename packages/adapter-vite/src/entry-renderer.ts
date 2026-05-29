@@ -606,7 +606,7 @@ export function renderEntry(desc: EntryDescriptor): string {
 
     // ── ADR 0014: renderRoute() - DSD-first rendering API ───────
     // The SSR bundle owns all rendering knowledge (tagName -> component
-    // mapping, customElements registry, renderDSD, wrapInDocument).
+    // mapping, customElements registry, renderDsd, wrapInDocument).
     // build-ssg.ts only calls renderRoute() and getStaticPaths() -
     // no globalThis access, no source file regex, no direct renderDsd().
     lines.push('');

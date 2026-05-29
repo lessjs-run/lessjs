@@ -8,7 +8,7 @@
  * - SSG build pipeline (Phase 1/2/3)
  * - Core subpath resolution (ADR 0016)
  *
- * Runtime code (renderDSD, island, escapeHtml, etc.) lives in @lessjs/core.
+ * Runtime code (renderDsd, defineIsland, escapeHtml, etc.) lives in @lessjs/core.
  * This package only contains Vite-specific build orchestration.
  *
  * For the unified lessjs() entry, use @lessjs/app instead.
