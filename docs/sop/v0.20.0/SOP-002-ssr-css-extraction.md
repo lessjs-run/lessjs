@@ -9,7 +9,7 @@
 
 ## Objective
 
-Add native CSSStyleSheet extraction to `renderDSD()` so that DsdElement components' `static styles` are automatically serialized into `<style>` tags within DSD output — without needing any adapter.
+Add native CSSStyleSheet extraction to `renderDsd()` so that DsdElement components' `static styles` are automatically serialized into `<style>` tags within DSD output — without needing any adapter.
 
 ---
 
@@ -95,7 +95,7 @@ customElements.define('test-el', TestEl);
 Then verify:
 
 ```typescript
-const output = await renderDSD('test-el', TestEl, {});
+const output = await renderDsd('test-el', TestEl, {});
 // output.html should contain:
 // <style>.foo { color: red; }</style>
 ```
@@ -117,8 +117,8 @@ const output = await renderDSD('test-el', TestEl, {});
 
 ## Verification Checklist
 
-- [ ] `renderDSD()` output for DsdElement component includes `<style>` tag
-- [ ] `renderDSD()` output for existing Lit component unchanged (falls through to adapter)
+- [ ] `renderDsd()` output for DsdElement component includes `<style>` tag
+- [ ] `renderDsd()` output for existing Lit component unchanged (falls through to adapter)
 - [ ] Multiple CSSStyleSheets merge correctly
 - [ ] Empty sheet → no `<style>` tag
 - [ ] No regression in existing SSG build output (compare before/after)

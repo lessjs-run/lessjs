@@ -29,7 +29,7 @@ JSR publish cycles and accidental transitive dependencies.
 
 - `DsdElement`;
 - `html`, `unsafeHTML`, template rendering and escaping;
-- `renderDSD()` and streaming primitives;
+- `renderDsd()` and streaming primitives;
 - runtime island contracts;
 - navigation helpers;
 - runtime logger and errors;

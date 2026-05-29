@@ -289,7 +289,7 @@ sequenceDiagram
 sequenceDiagram
     participant Core as @lessjs/core
     participant SS as @lessjs/style-sheet
-    participant DSD as renderDSD()
+    participant DSD as renderDsd()
     participant UI as @lessjs/ui components
 
     Note over Core,SS: Core re-exports from style-sheet
@@ -467,7 +467,7 @@ sequenceDiagram
 
 1. **Move build-types.ts to adapter-vite**: Copy file, update all imports in content/i18n. Verify no circular dep via `deno info`. If circular dep risk exists, keep in core but add `@deprecated` comment marking adapter-vite as owner.
 2. **virtual-ids.ts ownership**: Constants are consumed by content, i18n, adapter-vite. If moving to adapter-vite creates circular dep with content/i18n, keep in core with clear ownership note.
-3. **StyleSheet canonical**: `@lessjs/style-sheet` is the canonical implementation. Core's `style-sheet.ts` becomes a re-export. Verify `DsdElement` and `renderDSD()` still typecheck.
+3. **StyleSheet canonical**: `@lessjs/style-sheet` is the canonical implementation. Core's `style-sheet.ts` becomes a re-export. Verify `DsdElement` and `renderDsd()` still typecheck.
 4. **UI _esc helpers**: Extract to `packages/ui/src/shared/html-escape.ts`. All 6 UI components import from shared. Functions: `escHtml(text: string): string` and `escAttr(text: string): string` (thin wrappers around `@lessjs/core` `escapeHtml`/`escapeAttr`).
 5. **Hub scanner null! fix**: Replace `records.push(null!)` with typed partial object construction, then fill in the remaining fields. Avoid type assertions.
 
@@ -538,7 +538,7 @@ sequenceDiagram
 # Cross-cutting Rules for Engineer (齐活林)
 
 ## Import Rules
-- @lessjs/core public API: runtime-only (DsdElement, renderDSD, escapeHtml, StyleSheet re-export)
+- @lessjs/core public API: runtime-only (DsdElement, renderDsd, escapeHtml, StyleSheet re-export)
 - @lessjs/adapter-vite: build-only, never imported by runtime code
 - @lessjs/signals public paths: "@lessjs/signals" and "@lessjs/signals/framework" — MUST NOT be removed
 - parse5, entities, hono: NEVER appear in consumer deno.json

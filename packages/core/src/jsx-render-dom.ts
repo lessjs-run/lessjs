@@ -155,7 +155,7 @@ export function applyProps(
   }
 }
 
-// ─── renderToDOM ──────────────────────────────────────────────────────────────
+// ─── renderToDom ──────────────────────────────────────────────────────────────
 
 /**
  * Render a VNode tree to a real DOM node.
@@ -164,7 +164,7 @@ export function applyProps(
  * @param signal - Optional AbortSignal for automatic event listener cleanup
  * @returns DOM Node (Element, Text, or DocumentFragment)
  */
-export function renderToDOM(node: unknown, signal?: AbortSignal): Node {
+export function renderToDom(node: unknown, signal?: AbortSignal): Node {
   if (node == null || node === false) {
     return document.createTextNode('');
   }
@@ -177,7 +177,7 @@ export function renderToDOM(node: unknown, signal?: AbortSignal): Node {
 
   // v0.24.1: Auto-unwrap Signal values in JSX children (CSR parity with renderToString)
   if (isSignalLike(node)) {
-    return renderToDOM((node as { value: unknown }).value, signal);
+    return renderToDom((node as { value: unknown }).value, signal);
   }
 
   if (!isVNode(node)) {
@@ -190,7 +190,7 @@ export function renderToDOM(node: unknown, signal?: AbortSignal): Node {
   if (tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(lessjs.fragment)')) {
     const frag = document.createDocumentFragment();
     for (const child of children) {
-      frag.appendChild(renderToDOM(child, signal));
+      frag.appendChild(renderToDom(child, signal));
     }
     return frag;
   }
@@ -208,14 +208,14 @@ export function renderToDOM(node: unknown, signal?: AbortSignal): Node {
           (instance as Record<string, unknown>)[k] = v;
         }
         const result = instance.render();
-        return renderToDOM(result, signal);
+        return renderToDom(result, signal);
       } else {
         // Function component
         const result = (tag as (props: Record<string, unknown>) => unknown)({
           ...props,
           children,
         });
-        return renderToDOM(result, signal);
+        return renderToDom(result, signal);
       }
     } catch {
       return document.createTextNode('');
@@ -226,7 +226,7 @@ export function renderToDOM(node: unknown, signal?: AbortSignal): Node {
   const el = createElementForTag(tag as string);
   applyProps(el, props, signal);
   for (const child of children) {
-    el.appendChild(renderToDOM(child, signal));
+    el.appendChild(renderToDom(child, signal));
   }
 
   return el;

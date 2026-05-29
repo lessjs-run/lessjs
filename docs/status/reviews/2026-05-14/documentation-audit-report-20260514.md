@@ -160,7 +160,7 @@ deno task build
 Current `@lessjs/core/README.md`:
 
 ```ts
-import { escapeAttr, escapeAttrValue, escapeHtml, renderDSD, renderDSDByName } from '@lessjs/core';
+import { escapeAttr, escapeAttrValue, escapeHtml, renderDsd, renderDSDByName } from '@lessjs/core';
 ```
 
 **Should include:**
@@ -172,7 +172,7 @@ import { escapeAttr, escapeAttrValue, escapeHtml, renderDSD, renderDSDByName } f
  * @param props - Optional props to pass to component
  * @returns DSD HTML string with inline <template shadowrootmode="open">
  */
-renderDSD(component: CustomElementConstructor, props?: Record<string, unknown>): string;
+renderDsd(component: CustomElementConstructor, props?: Record<string, unknown>): string;
 ```
 
 **Verdict:** Package READMEs are **inconsistent and incomplete**. Need standardized API documentation format.

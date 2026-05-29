@@ -139,7 +139,7 @@ function startsWithCustomElement(html: string): boolean {
  *   Output: `<style>...</style>\n<counter-island>`
  *
  * This ensures nested CEs become real DOM elements in the parent's shadow DOM,
- * which `renderDSD.renderNestedCustomElements()` can then process for proper DSD wrapping.
+ * which `renderDsd.renderNestedCustomElements()` can then process for proper DSD wrapping.
  */
 function unwrapDsdForNestedCe(html: string): string {
   const trimmed = html.trimStart();
@@ -168,7 +168,7 @@ function unwrapDsdForNestedCe(html: string): string {
  * v0.6 FIX: Nested custom elements in Lit templates must NOT be rendered
  * as DSD text content inside the parent's shadow DOM. Instead, we extract
  * the shadow DOM content so nested CEs become real DOM nodes that can be
- * processed by renderDSD's renderNestedCustomElements().
+ * processed by renderDsd's renderNestedCustomElements().
  *
  * This fixes the "island appearing as raw HTML/text in shadow DOM" bug
  * where <counter-island> DSD was rendered as text inside <less-layout>'s
@@ -438,7 +438,7 @@ export function renderLitToString(
 // ─── Adapter Installation ─────────────────────────────────────
 
 /**
- * Install the Lit SSR adapter into @lessjs/core's renderDSD.
+ * Install the Lit SSR adapter into @lessjs/core's renderDsd.
  *
  * This patches the DSD renderer so that when a component's render()
  * returns a Lit TemplateResult, it's automatically converted to string
@@ -486,7 +486,7 @@ export function installLitAdapter(): void {
 /**
  * Uninstall the Lit SSR adapter.
  *
- * Resets the adapter so core's renderDSD reverts to its
+ * Resets the adapter so core's renderDsd reverts to its
  * default behavior (only accepting string from render()).
  */
 export function uninstallLitAdapter(): void {

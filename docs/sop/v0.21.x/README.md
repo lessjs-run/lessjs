@@ -60,7 +60,7 @@ The v0.21.x line must classify every exported `@lessjs/core` symbol into one of 
 
 The first pass must cover:
 
-- `renderDSD()` and `renderDSDStream()`
+- `renderDsd()` and `renderDSDStream()`
 - `DsdElement`
 - `html()` and `unsafeHTML()`
 - `ReactiveHost`

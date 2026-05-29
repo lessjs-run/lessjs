@@ -302,7 +302,7 @@ packages/
 
 ### 6.1 运行时性能
 
-**SSR 渲染性能**：`renderDSD()` 返回 `Promise<RenderOutput>`，其中包含 `metrics` 字段。`ssg-render.ts` 的 `SsgPageOutput` 接口记录了每页的 `componentCount` 和 `renderTimeMs`。从 `dsd-report.json` 的设计来看，框架具备完整的渲染性能可观测性。
+**SSR 渲染性能**：`renderDsd()` 返回 `Promise<RenderOutput>`，其中包含 `metrics` 字段。`ssg-render.ts` 的 `SsgPageOutput` 接口记录了每页的 `componentCount` 和 `renderTimeMs`。从 `dsd-report.json` 的设计来看，框架具备完整的渲染性能可观测性。
 
 **嵌套渲染优化**：从 O(n²) 正则方案升级到 O(n·d) parse5 AST 方案，这是一个显著的性能改进。parse5 是成熟的 HTML 解析器，解析速度远超正则匹配。
 

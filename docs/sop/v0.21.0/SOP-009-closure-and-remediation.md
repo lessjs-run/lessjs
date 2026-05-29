@@ -220,7 +220,7 @@ _handleTriggerClick() {
 **Action**:
 
 - [ ] Extract `renderDSDStream()` and related types into `render-dsd-stream.ts` (~50 lines)
-- [ ] Keep `renderDSD()`, `renderDSDByName()` in `render-dsd.ts`
+- [ ] Keep `renderDsd()`, `renderDSDByName()` in `render-dsd.ts`
 
 **Files**: `packages/core/src/render-dsd.ts`, `packages/core/src/render-dsd-stream.ts` (new)
 

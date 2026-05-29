@@ -82,9 +82,9 @@ The 5-field interface is **frozen** until v1.0. Any new field requires an ADR.
 - `className` → `class`, `htmlFor` → `for`.
 - `style` objects are serialised to inline CSS strings.
 
-## CSR: renderToDOM()
+## CSR: renderToDom()
 
-`renderToDOM(vnode, signal?)` converts a VNode tree to real DOM nodes:
+`renderToDom(vnode, signal?)` converts a VNode tree to real DOM nodes:
 
 - Event handlers bound via native `addEventListener(type, fn, { signal })`.
 - `ref` callbacks invoked with the created DOM element.
@@ -99,12 +99,12 @@ SVG elements (`circle`, `line`, `path`, `svg`, `rect`, etc.) are auto-detected a
 
 When `DsdElement._renderIntoShadowRoot()` processes a VNode-returning `render()`:
 
-1. Initial DOM is created via `renderToDOM()`.
+1. Initial DOM is created via `renderToDom()`.
 2. An alien-signals `effect()` is created that wraps `this.render()`.
 3. All signal accesses inside `render()` are auto-tracked by the effect.
 4. When any tracked signal changes, the effect re-executes:
    - Old DOM is cleared (old AbortController aborted).
-   - New DOM is created via `renderToDOM()` with a fresh AbortController.
+   - New DOM is created via `renderToDom()` with a fresh AbortController.
 5. The effect is disposed via `_vnodeEffectDispose` in `_disposeSignalSubscriptions()`.
 
 This replaces the old TemplateResult fine-grained patch model (`_subscribeTemplateSignals` + `_patchBindings`). The trade-off is full DOM re-render instead of targeted patches — simpler, more predictable, and sufficient for component-level rendering.
@@ -134,5 +134,5 @@ render() {
 | Event binding   | `onClick={fn}`                     | `@click=${fn}`                    |
 | Signal tracking | `effect()` auto-tracking           | `_subscribeTemplateSignals()`     |
 | SSR             | `renderToString()`                 | `renderTemplateToString()`        |
-| CSR             | `renderToDOM()`                    | `_patchBindings()`                |
+| CSR             | `renderToDom()`                    | `_patchBindings()`                |
 | Interface       | 5-field frozen VNode               | TemplateResult + values + markers |

@@ -7,7 +7,7 @@
  * Architecture:
  *   1. Build: SSG produces static HTML + isr-manifest.json
  *   2. Runtime: Edge handler checks cache before serving static
- *   3. Regeneration: miss → renderDSD() → cache → serve
+ *   3. Regeneration: miss → renderDsd() → cache → serve
  *   4. Stale: serve cached HTML + async background regeneration
  *
  * The IsrCache interface is platform-agnostic. Production adapters

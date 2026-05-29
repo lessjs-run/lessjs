@@ -42,7 +42,7 @@ protocols / contracts
   stable shared types, build contracts, virtual ids, diagnostics
 
 runtime kernel
-  DsdElement, html templates, renderDSD, island runtime, navigation, logging
+  DsdElement, html templates, renderDsd, island runtime, navigation, logging
 
 implementation packages
   signal facade over alien-signals, StyleSheet implementation, CEM parser,

@@ -60,8 +60,8 @@ docs/reference/core-api-surface.md
 
 ## API Design Rules
 
-- `renderDSD()` must remain the simple, synchronous renderer entrypoint.
-- `renderDSDStream()` must remain an explicit streaming entrypoint and must not silently change `renderDSD()` behavior.
+- `renderDsd()` must remain the simple, synchronous renderer entrypoint.
+- `renderDSDStream()` must remain an explicit streaming entrypoint and must not silently change `renderDsd()` behavior.
 - `DsdElement.render()` must have one clear authoring contract. Prefer `TemplateResult` through `html` as the first-class path; string support may remain compatibility behavior if it is documented.
 - `html()` escapes by default.
 - `unsafeHTML()` must remain visibly unsafe and opt-in.

@@ -1,7 +1,7 @@
 /**
- * @lessjs/core - island() wrapper
+ * @lessjs/core - defineIsland() wrapper
  *
- * v0.6.2: island() wraps any Custom Element class to provide:
+ * v0.6.2: defineIsland() wraps any Custom Element class to provide:
  *   - Automatic registration via customElements.define()
  *   - Hydration strategy support (load, idle, visible, only)
  *   - __island / __tagName / __layer metadata markers
@@ -9,7 +9,7 @@
  *   - DSD opt-out via `dsd: false` (Pure Island / Layer 3)
  *
  * Framework-agnostic: works with Lit, vanilla Custom Elements,
- * FAST, or any Web Component library. lessBind() sets props
+ * FAST, or any Web Component library. bindEvents() sets props
  * directly; adapters handle framework-specific update triggers.
  *
  * Usage:
@@ -94,14 +94,14 @@ export interface IslandOptions {
  * ```ts
  * connectedCallback() {
  *   super.connectedCallback();
- *   const props = getSSRProps(this);
+ *   const props = getSsrProps(this);
  *   if (props) {
  *     this.count = props.count ?? 0;
  *   }
  * }
  * ```
  */
-export function getSSRProps(el: HTMLElement): Record<string, unknown> | null {
+export function getSsrProps(el: HTMLElement): Record<string, unknown> | null {
   const raw = el.getAttribute('data-ssr-props');
   if (!raw) return null;
   try {
@@ -135,8 +135,8 @@ export function getSSRProps(el: HTMLElement): Record<string, unknown> | null {
  */
 import { DANGEROUS_KEYS } from './security.js';
 
-export function lessBind(el: HTMLElement): void {
-  const props = getSSRProps(el);
+export function bindEvents(el: HTMLElement): void {
+  const props = getSsrProps(el);
   if (!props) return;
 
   for (const [key, value] of Object.entries(props)) {
@@ -265,7 +265,7 @@ function createIdleStrategy(registerFn: () => void): void {
   }
 }
 
-// ─── Main island() wrapper ──────────────────────────────────────
+// ─── Main defineIsland() wrapper ──────────────────────────────────────
 
 /**
  * Wrap a component class as a LessJS Island.
@@ -301,7 +301,7 @@ function createIdleStrategy(registerFn: () => void): void {
  * export default island('my-counter', MyCounter, { strategy: 'load' });
  * ```
  */
-export function island<T extends CustomElementConstructor>(
+export function defineIsland<T extends CustomElementConstructor>(
   tagName: string,
   componentClass: T,
   options: IslandOptions = {},
@@ -319,7 +319,7 @@ export function island<T extends CustomElementConstructor>(
   // https://html.spec.whatwg.org/multipage/custom-elements.html#valid-custom-element-name
   if (!tagName || !tagName.includes('-')) {
     throw new Error(
-      `[LessJS] island() requires a hyphenated tag name, got "${tagName}". ` +
+      `[LessJS] defineIsland() requires a hyphenated tag name, got "${tagName}". ` +
         'Custom Element names must contain a hyphen per the HTML spec.',
     );
   }
@@ -327,7 +327,7 @@ export function island<T extends CustomElementConstructor>(
   // must not start with a reserved prefix, no uppercase
   if (!/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(tagName)) {
     throw new Error(
-      `[LessJS] island() tag name "${tagName}" is not a valid custom element name. ` +
+      `[LessJS] defineIsland() tag name "${tagName}" is not a valid custom element name. ` +
         'Must start with a lowercase ASCII letter, contain only lowercase ASCII ' +
         'letters, digits, and hyphens, and not use reserved names.',
     );
@@ -343,7 +343,7 @@ export function island<T extends CustomElementConstructor>(
   for (const prefix of reservedPrefixes) {
     if (tagName.startsWith(prefix)) {
       throw new Error(
-        `[LessJS] island() tag name "${tagName}" uses a reserved prefix "${prefix}".`,
+        `[LessJS] defineIsland() tag name "${tagName}" uses a reserved prefix "${prefix}".`,
       );
     }
   }
@@ -362,11 +362,11 @@ export function island<T extends CustomElementConstructor>(
   // This is safer than monkey-patching because it doesn't interfere
   // with Lit's own connectedCallback chain.
   //
-  // v0.14.3: Added __lessBindDone idempotency guard to prevent
-  // double lessBind() calls when a subclass island inherits from a
-  // parent island (both registered via island()). Without this guard,
+  // v0.14.3: Added __bindEventsDone idempotency guard to prevent
+  // double bindEvents() calls when a subclass island inherits from a
+  // parent island (both registered via defineIsland()). Without this guard,
   // the parent's wrapped connectedCallback and the subclass's both
-  // call lessBind on the same element.
+  // call bindEvents on the same element.
   const origConnected = componentClass.prototype.connectedCallback;
   if (!componentClass.prototype.__lessIslandWrapped) {
     componentClass.prototype.__lessIslandWrapped = true;
@@ -377,10 +377,10 @@ export function island<T extends CustomElementConstructor>(
       }
       // Auto-bind SSR props on upgrade (idempotent - only once per element)
       // deno-lint-ignore no-explicit-any
-      if (this.hasAttribute('data-ssr-props') && !(this as any).__lessBindDone) {
+      if (this.hasAttribute('data-ssr-props') && !(this as any).__bindEventsDone) {
         // deno-lint-ignore no-explicit-any
-        (this as any).__lessBindDone = true;
-        Promise.resolve().then(() => lessBind(this));
+        (this as any).__bindEventsDone = true;
+        Promise.resolve().then(() => bindEvents(this));
       }
     } as unknown as typeof componentClass.prototype.connectedCallback;
   }
@@ -436,4 +436,4 @@ export function island<T extends CustomElementConstructor>(
  * Exports the `island` function as default for convenience imports.
  * Tree-shakable: bundlers can eliminate unused named exports from the same module.
  */
-export default island;
+export default defineIsland;

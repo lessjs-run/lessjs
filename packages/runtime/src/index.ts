@@ -27,7 +27,7 @@ export type { LessRenderer } from '@lessjs/core';
 export { isVNode } from '@lessjs/core';
 
 // JSX rendering
-export { renderToDOM, renderToString } from '@lessjs/core';
+export { renderToDom, renderToString } from '@lessjs/core';
 
 // v0.24.1: static props
 export type { PropDecl, PropsFrom, PropType } from '@lessjs/core';
@@ -56,7 +56,7 @@ export { escapeAttr, escapeAttrValue, escapeHtml } from '@lessjs/core';
 export type { SafeHtml, UnsafeHtml } from '@lessjs/core';
 
 // Island authoring helpers
-export { getSSRProps, island, lessBind } from '@lessjs/core';
+export { bindEvents, defineIsland, getSsrProps } from '@lessjs/core';
 export type { IslandOptions } from '@lessjs/core';
 
 // ─── @lessjs/signals — Reactive primitives ──────────────────────

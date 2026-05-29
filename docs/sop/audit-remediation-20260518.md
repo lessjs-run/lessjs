@@ -104,7 +104,7 @@
 
 ---
 
-### A-3: 修正 STATUS.md "renderDSD() rendering-timing-agnostic" 声称
+### A-3: 修正 STATUS.md "renderDsd() rendering-timing-agnostic" 声称
 
 **来源**：thefullreview 问题 #3（🔴严重）、thefullreview ROADMAP 问题 #2（🟡中等）、文件A 二/技术审计
 **问题**：当前只有 SSG 实现，ISR/SSR 未实现，但文档声称"渲染时机无关"
@@ -114,23 +114,23 @@
 1. 打开 `docs/status/STATUS.md`
 2. 找到：
    ```
-   `renderDSD()` is rendering-timing-agnostic — works at build-time (SSG),
+   `renderDsd()` is rendering-timing-agnostic — works at build-time (SSG),
    cache-expiry-time (ISR), or request-time (SSR).
    ```
 3. 改为：
    ```
-   `renderDSD()` is designed to be rendering-timing-agnostic.
+   `renderDsd()` is designed to be rendering-timing-agnostic.
    **Current implementation**: build-time (SSG) only.
    ISR and SSR are planned — see ROADMAP Phase 6/7.
    ```
 4. 同样修正 `docs/roadmap/ROADMAP.md` Phase 6 中的措辞：
    ```
    # 原
-   `renderDSD()` is rendering-timing-agnostic: build-time (SSG), ISR, or
+   `renderDsd()` is rendering-timing-agnostic: build-time (SSG), ISR, or
    request-time (SSR) — same engine, different invocation timing.
 
    # 改为
-   `renderDSD()` is **architecturally** rendering-timing-agnostic:
+   `renderDsd()` is **architecturally** rendering-timing-agnostic:
    the same engine can be invoked at build-time (SSG), cache-expiry-time (ISR),
    or request-time (SSR). **Current implementation**: SSG only.
    ISR and SSR are Phase 6/7 planned work.
@@ -272,7 +272,7 @@
 
 - [ ] `deno task test` 输出的数字与 STATUS.md 一致
 - [ ] STATUS.md Tags 表格中的每个 tag 都存在于 `git tag -l`
-- [ ] "renderDSD() rendering-timing-agnostic" 所有出现都有 "Current: SSG only" 限定
+- [ ] "renderDsd() rendering-timing-agnostic" 所有出现都有 "Current: SSG only" 限定
 - [ ] Full-Stack Framework 完成度 ≤ 50%，有计算依据
 - [ ] Branch Status 与标题无矛盾
 - [ ] ROADMAP hub:scan 数字与实际运行结果一致
@@ -930,7 +930,7 @@
 
    Goal: evolve @lessjs/ui from Lit-based to DSD-native:
    - Pure CSS + CSS Parts (no Lit runtime)
-   - Streaming SSR via renderDSD()
+   - Streaming SSR via renderDsd()
    - Zero-JS initial paint for static UI
 
    Prerequisite: Hydration strategies (Phase 6) must ship first.
@@ -991,32 +991,32 @@
 
 ---
 
-### E-4: 修正 renderDSD() 的对外描述
+### E-4: 修正 renderDsd() 的对外描述
 
 **来源**：文件A 二/技术审计
-**问题**：对外描述中 "renderDSD() 本质上是 HTML 模板引擎" 不准确
+**问题**：对外描述中 "renderDsd() 本质上是 HTML 模板引擎" 不准确
 
 **步骤**：
 
-1. 搜索所有对 renderDSD() 的描述
+1. 搜索所有对 renderDsd() 的描述
 2. 统一为准确表述：
    ```
    # 改前（如果存在类似）
-   renderDSD() is an HTML template engine
+   renderDsd() is an HTML template engine
 
    # 改后
-   renderDSD() is a declarative component renderer that outputs pure HTML
+   renderDsd() is a declarative component renderer that outputs pure HTML
    strings with Declarative Shadow DOM. It handles component instantiation,
    recursive nested custom elements, and adapter dispatch — all without
    requiring a DOM environment.
    ```
 3. 明确边界：
    ```
-   renderDSD() solves "first-paint HTML output", not "component logic".
+   renderDsd() solves "first-paint HTML output", not "component logic".
    All interactive capabilities still require client-side JS hydration.
    ```
 
-**验证**：无文件将 renderDSD() 描述为 "template engine"（在 Mustache/Handlebars 语义下）
+**验证**：无文件将 renderDsd() 描述为 "template engine"（在 Mustache/Handlebars 语义下）
 
 ---
 
@@ -1099,7 +1099,7 @@
 - [ ] 无文件将 @lessjs/ui 描述为 "DSD-native"（不含限定语）
 - [ ] README 无 "cannot match" 类过强措辞
 - [ ] "Full-Stack Framework" 描述包含成熟度警告
-- [ ] renderDSD() 描述为 "declarative component renderer" 而非 "template engine"
+- [ ] renderDsd() 描述为 "declarative component renderer" 而非 "template engine"
 - [ ] WWW 导航结构决策记录存在
 - [ ] Hub 页面标注 "early access"
 
@@ -1277,14 +1277,14 @@
 | -- | ------------- | ------ | ----------------------------------------- | -------------------- | ---- |
 | 1  | thefullreview | 🔴     | STATUS.md 测试数 715→729                  | A-1                  | ⬜   |
 | 2  | thefullreview | 🔴     | STATUS.md git tag 不存在                  | A-2, B-1             | ⬜   |
-| 3  | thefullreview | 🔴     | renderDSD() 渲染时机无关声称              | A-3                  | ⬜   |
+| 3  | thefullreview | 🔴     | renderDsd() 渲染时机无关声称              | A-3                  | ⬜   |
 | 4  | thefullreview | 🟡     | 全栈框架完成度 60% 偏高                   | A-4                  | ⬜   |
 | 5  | thefullreview | 🟡     | STATUS.md Phase 2 active 矛盾             | A-5                  | ⬜   |
 | 6  | thefullreview | 🟢     | v0.19.0 DOM Simulation 归属               | A-6 参考             | ⬜   |
 | 7  | thefullreview | 🟢     | dsd-report 72 错误未入 Known Issues       | A-8                  | ⬜   |
 | 8  | thefullreview | 🟢     | v0.19.0 Version Ladder 重复行             | A-7                  | ⬜   |
 | 9  | thefullreview | 🟡     | ROADMAP hub:scan 52/53 vs 47/48           | A-6                  | ⬜   |
-| 10 | thefullreview | 🟡     | ROADMAP renderDSD() 误导                  | A-3                  | ⬜   |
+| 10 | thefullreview | 🟡     | ROADMAP renderDsd() 误导                  | A-3                  | ⬜   |
 | 11 | thefullreview | 🟢     | ROADMAP 未提及 dsd-report 对 Phase 6 影响 | A-8 关联             | ⬜   |
 | 12 | 文件A         | 🔴     | 未提及 dsd-report 72 错误                 | C-3                  | ⬜   |
 | 13 | 文件A         | 🔴     | 未提及 less-add 未导出                    | C-1                  | ⬜   |

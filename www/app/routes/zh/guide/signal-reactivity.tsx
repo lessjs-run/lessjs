@@ -140,7 +140,7 @@ this._vnodeEffectDispose = effect(() =&gt; {
   }
   // 创建新 DOM
   this.shadowRoot.appendChild(
-    renderToDOM(updated, this._templateAbortController.signal),
+    renderToDom(updated, this._templateAbortController.signal),
   );
 });</code></pre></less-code-block>
 
@@ -150,7 +150,7 @@ this._vnodeEffectDispose = effect(() =&gt; {
             <li>中止上一个 <code>AbortController</code> → 移除旧事件监听器</li>
             <li>创建新 <code>AbortController</code> 用于新事件监听器</li>
             <li>清除旧 DOM</li>
-            <li>通过 <code>renderToDOM()</code> 创建并挂载新 DOM</li>
+            <li>通过 <code>renderToDom()</code> 创建并挂载新 DOM</li>
           </ol>
 
           <h2>信号自动解包</h2>
@@ -226,7 +226,7 @@ this.lastName.value = 'World';
           <p>alien-signals effect 包装器包含清理安全的错误处理：</p>
           <ul>
             <li><strong>清理错误被吞掉</strong>：旧 effect 清理抛错不会阻止新 effect 启动</li>
-            <li><strong>Effect 错误会传播</strong>：<code>render()</code> 或 <code>renderToDOM()</code> 在 effect 中抛错会传播到 alien-signals。Effect 不会被销毁——后续信号变化会重试</li>
+            <li><strong>Effect 错误会传播</strong>：<code>render()</code> 或 <code>renderToDom()</code> 在 effect 中抛错会传播到 alien-signals。Effect 不会被销毁——后续信号变化会重试</li>
             <li><strong>Dispose 吞掉清理错误</strong>：销毁 effect 时，清理函数和 alien-signals dispose 都会执行，各自吞掉错误</li>
           </ul>
 

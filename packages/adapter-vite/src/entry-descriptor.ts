@@ -26,7 +26,7 @@
  *    - NOT imported in SSR entry (package islands registered client-side only)
  *
  * 3. Nested custom element (from rendered HTML):
- *    - Detected during `renderDSD()` in core/src/render-dsd.ts
+ *    - Detected during `renderDsd()` in core/src/render-dsd.ts
  *    - Checked against `ssrAdmissionPlan.clientOnlyTags`
  *    - Skipped if in clientOnlyTags (see core/src/render-nested.ts)
  *
@@ -298,7 +298,7 @@ export function buildEntryDescriptor(
   // @lessjs/core is a pure runtime with zero Vite/Hono dependencies.
   imports.push({
     from: '@lessjs/core',
-    names: ['renderDSD', 'renderDSDByName', 'escapeHtml'],
+    names: ['renderDsd', 'renderDsdByName', 'escapeHtml'],
   });
 
   // Conditional middleware imports

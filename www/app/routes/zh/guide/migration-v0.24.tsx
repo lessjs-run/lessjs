@@ -336,7 +336,7 @@ if (isVNode(x)) { ... }</code></pre></less-code-block>
           <p>可以。旧 <code>@prop()</code> 装饰器和新的 <code>static props</code> 在 <code>DsdElement</code> 中可以共存，支持渐进迁移。两者在 <code>attributeChangedCallback</code> 中都有一一对应的处理路径。</p>
 
           <h3>Q: 组件事件监听器需要手动清理吗？</h3>
-          <p>不需要。VNode 路径的 <code>renderToDOM()</code> 通过 <code>addEventListener(type, fn, { signal })</code> 绑定事件，<code>AbortController</code> 在组件断连或重新渲染时自动 abort，事件监听器被自动移除。</p>
+          <p>不需要。VNode 路径的 <code>renderToDom()</code> 通过 <code>addEventListener(type, fn, { signal })</code> 绑定事件，<code>AbortController</code> 在组件断连或重新渲染时自动 abort，事件监听器被自动移除。</p>
 
           <h3>Q: 迁移后 SSR 能正常工作吗？</h3>
           <p>可以。<code>renderToString()</code> 正确处理 VNode 树，跳过事件处理器和 ref，生成标准 HTML 字符串。DSD 渲染管道同时支持 VNode 和 TemplateResult 路径。</p>

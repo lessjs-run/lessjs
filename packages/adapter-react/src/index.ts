@@ -5,7 +5,7 @@
  * Uses ReactDOMServer.renderToStaticMarkup() for string conversion.
  *
  * Architecture:
- *   @lessjs/core          renderDSD() accepts render(): string
+ *   @lessjs/core          renderDsd() accepts render(): string
  *   @lessjs/adapter-react converts React elements to HTML strings
  *   DsdReactElement       wraps React components as Web Components
  *

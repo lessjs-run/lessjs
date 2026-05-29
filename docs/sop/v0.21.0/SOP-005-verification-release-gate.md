@@ -56,7 +56,7 @@ deno task test:e2e
 
 - [ ] Static `render(): string` path unchanged.
 - [ ] `render(): TemplateResult` works in CSR fallback.
-- [ ] `renderDSD()` handles TemplateResult initial output.
+- [ ] `renderDsd()` handles TemplateResult initial output.
 - [ ] Signal writes schedule microtask-batched component-local rerendering.
 - [ ] Attribute, boolean, property, and event bindings work.
 - [ ] Microtask batching coalesces multiple signal writes.

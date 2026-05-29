@@ -15,7 +15,7 @@ Create `DsdElement` — a zero-dependency native `HTMLElement` base class in `@l
 
 ## Pre-requisites
 
-- [x] `renderDSD()` already supports `render(): string` (line 177-181)
+- [x] `renderDsd()` already supports `render(): string` (line 177-181)
 - [x] `HydrateEventDescriptor` type already exists in `types.ts`
 - [x] Current `createRenderRoot()` DSD detection pattern in `dsd-hydration.ts` is proven
 

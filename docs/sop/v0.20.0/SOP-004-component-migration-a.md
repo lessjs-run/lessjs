@@ -16,7 +16,7 @@ Migrate the three **pure display** components (no interactivity, no events) from
 ## Pre-requisites
 
 - [ ] SOP-001: `DsdElement` base class exists in `@lessjs/core`
-- [ ] SOP-002: `renderDSD()` extracts CSSStyleSheet
+- [ ] SOP-002: `renderDsd()` extracts CSSStyleSheet
 - [ ] SOP-003: Open Props token sheet available
 
 ---

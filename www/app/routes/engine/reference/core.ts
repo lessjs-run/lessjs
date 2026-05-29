@@ -113,15 +113,15 @@ export default class ApiCorePage extends DsdElement {
               HTML/属性转义，使用 SafeHtml/UnsafeHtml 品牌类型防止双重转义。
             </div>
 
-            <div class="fn-name">island()</div>
-            <div class="fn-sig">island(componentClass, options?): CustomElementConstructor</div>
+            <div class="fn-name">defineIsland()</div>
+            <div class="fn-sig">defineIsland(componentClass, options?): CustomElementConstructor</div>
             <div class="fn-desc">
               为 CE 类包装 Island 升级逻辑。支持 4 种策略：load、idle、visible、only。
             </div>
 
-            <div class="fn-name">lessBind() / getSSRProps()</div>
+            <div class="fn-name">syncState() / getProps()</div>
             <div class="fn-sig">
-              lessBind(element, props): void - getSSRProps(element): Record&lt;string, unknown&gt;
+              syncState(element, props): void - getProps(element): Record&lt;string, unknown&gt;
             </div>
             <div class="fn-desc">框架无关的 SSR 属性绑定和反序列化。</div>
 
@@ -355,9 +355,9 @@ export default class ApiCorePage extends DsdElement {
               htmlFor → for, and style object serialisation.
             </div>
 
-            <div class="fn-name">renderToDOM()</div>
+            <div class="fn-name">renderToDom()</div>
             <div class="fn-sig">
-              renderToDOM(node: unknown, signal?: AbortSignal): Node
+              renderToDom(node: unknown, signal?: AbortSignal): Node
             </div>
             <div class="fn-desc">
               Converts a VNode tree to real DOM nodes for CSR and hydration. Event handlers are wired
@@ -399,16 +399,16 @@ export default class ApiCorePage extends DsdElement {
               HTML/attribute escaping with SafeHtml/UnsafeHtml branded types for double-escape prevention.
             </div>
 
-            <div class="fn-name">island()</div>
-            <div class="fn-sig">island(componentClass, options?): CustomElementConstructor</div>
+            <div class="fn-name">defineIsland()</div>
+            <div class="fn-sig">defineIsland(componentClass, options?): CustomElementConstructor</div>
             <div class="fn-desc">
               Wraps a CE class with island upgrade logic. Supports 4 strategies: load, idle,
               visible, only.
             </div>
 
-            <div class="fn-name">lessBind() / getSSRProps()</div>
+            <div class="fn-name">syncState() / getProps()</div>
             <div class="fn-sig">
-              lessBind(element, props): void - getSSRProps(element): Record&lt;string, unknown&gt;
+              syncState(element, props): void - getProps(element): Record&lt;string, unknown&gt;
             </div>
             <div class="fn-desc">Framework-agnostic SSR prop binding and deserialization.</div>
 

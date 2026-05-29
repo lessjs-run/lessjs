@@ -2,7 +2,7 @@
  * v0.21 Demo: client:idle strategy.
  * Defers hydration until the browser is idle (requestIdleCallback).
  */
-import { island } from '@lessjs/runtime';
+import { defineIsland } from '@lessjs/runtime';
 
 class DemoIdle extends HTMLElement {
   constructor() {
@@ -22,4 +22,4 @@ class DemoIdle extends HTMLElement {
   }
 }
 
-export default island('demo-idle', DemoIdle, { strategy: 'idle' });
+export default defineIsland('demo-idle', DemoIdle, { strategy: 'idle' });

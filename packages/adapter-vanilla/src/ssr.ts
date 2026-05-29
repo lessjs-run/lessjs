@@ -7,7 +7,7 @@
  *
  * How it works:
  *   - isTemplate(): vanilla components always return strings, so we
- *     return false - core's renderDSD() handles string output directly.
+ *     return false - core's renderDsd() handles string output directly.
  *   - render(): passthrough - called only if isTemplate returns true.
  *   - extractStyles(): reads the static `styles` property (string or
  *     string array) from the component class.
@@ -61,7 +61,7 @@ export function extractVanillaStyles(
 let _installed = false;
 
 /**
- * Install the vanilla SSR adapter into @lessjs/core's renderDSD.
+ * Install the vanilla SSR adapter into @lessjs/core's renderDsd.
  *
  * The vanilla adapter handles plain Web Components whose render()
  * returns a string directly. It provides style extraction from the
@@ -75,7 +75,7 @@ export function installVanillaAdapter(): void {
   registerAdapter({
     name: 'vanilla',
     // Vanilla components always return strings - no template detection needed.
-    // core's renderDSD handles string output directly.
+    // core's renderDsd handles string output directly.
     isTemplate: (_value: unknown): boolean => false,
     render: (value: unknown, _tagName: string): Promise<string> => {
       return Promise.resolve(String(value));
@@ -92,7 +92,7 @@ export function installVanillaAdapter(): void {
 /**
  * Uninstall the vanilla SSR adapter.
  *
- * Resets the adapter so core's renderDSD reverts to its default behavior.
+ * Resets the adapter so core's renderDsd reverts to its default behavior.
  */
 export function uninstallVanillaAdapter(): void {
   registerAdapter(undefined);

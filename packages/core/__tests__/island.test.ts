@@ -3,7 +3,7 @@
  *
  * Tests cover:
  * - island() registration and metadata markers
- * - getSSRProps / lessBind
+ * - getSsrProps / bindEvents
  * - Strategy implementations (load, idle, visible, only)
  * - Tag name validation
  * - DSD opt-out (dsd: false -> pure-island layer)
@@ -15,7 +15,12 @@
  */
 
 import { assertEquals, assertStringIncludes, assertThrows } from 'jsr:@std/assert@^1.0.0';
-import { _clearAllVisibilityTimeouts, getSSRProps, island, lessBind } from '../src/island.ts';
+import {
+  _clearAllVisibilityTimeouts,
+  bindEvents,
+  defineIsland,
+  getSsrProps,
+} from '../src/island.ts';
 
 // ─── Mock infrastructure ─────────────────────────────────────────
 
@@ -114,7 +119,7 @@ function createMockElementClass(): CustomElementConstructor {
 Deno.test('island: throws on tag name without hyphen', () => {
   const Cls = createMockElementClass();
   try {
-    island('nohyphen', Cls);
+    defineIsland('nohyphen', Cls);
   } catch (e) {
     assertStringIncludes((e as Error).message, 'hyphenated tag name');
     return;
@@ -125,7 +130,7 @@ Deno.test('island: throws on tag name without hyphen', () => {
 Deno.test('island: throws on empty tag name', () => {
   const Cls = createMockElementClass();
   try {
-    island('', Cls);
+    defineIsland('', Cls);
   } catch (e) {
     assertStringIncludes((e as Error).message, 'hyphenated tag name');
     return;
@@ -139,7 +144,7 @@ Deno.test('island: sets __island marker on class', () => {
   setupMocks();
   try {
     const Cls = createMockElementClass();
-    island('meta-island-test', Cls);
+    defineIsland('meta-island-test', Cls);
     assertEquals((Cls as unknown as Record<string, unknown>).__island, true);
   } finally {
     teardownMocks();
@@ -150,7 +155,7 @@ Deno.test('island: sets __tagName marker on class', () => {
   setupMocks();
   try {
     const Cls = createMockElementClass();
-    island('meta-tagname-test', Cls);
+    defineIsland('meta-tagname-test', Cls);
     assertEquals((Cls as unknown as Record<string, unknown>).__tagName, 'meta-tagname-test');
   } finally {
     teardownMocks();
@@ -161,7 +166,7 @@ Deno.test('island: sets __layer to dsd-interactive by default (dsd: true)', () =
   setupMocks();
   try {
     const Cls = createMockElementClass();
-    island('meta-dsd-default', Cls);
+    defineIsland('meta-dsd-default', Cls);
     assertEquals((Cls as unknown as Record<string, unknown>).__layer, 'dsd-interactive');
   } finally {
     teardownMocks();
@@ -172,7 +177,7 @@ Deno.test('island: sets __layer to pure-island when dsd: false', () => {
   setupMocks();
   try {
     const Cls = createMockElementClass();
-    island('meta-pure-island', Cls, { dsd: false });
+    defineIsland('meta-pure-island', Cls, { dsd: false });
     assertEquals((Cls as unknown as Record<string, unknown>).__layer, 'pure-island');
   } finally {
     teardownMocks();
@@ -183,7 +188,7 @@ Deno.test('island: sets __layer to dsd-interactive when dsd explicitly true', ()
   setupMocks();
   try {
     const Cls = createMockElementClass();
-    island('meta-dsd-explicit', Cls, { dsd: true });
+    defineIsland('meta-dsd-explicit', Cls, { dsd: true });
     assertEquals((Cls as unknown as Record<string, unknown>).__layer, 'dsd-interactive');
   } finally {
     teardownMocks();
@@ -197,7 +202,7 @@ Deno.test('island: load strategy registers immediately', () => {
   try {
     const tag = `load-reg-${Date.now()}`;
     const Cls = createMockElementClass();
-    island(tag, Cls, { strategy: 'load' });
+    defineIsland(tag, Cls, { strategy: 'load' });
     assertEquals(mockRegistry.get(tag), Cls);
   } finally {
     teardownMocks();
@@ -209,7 +214,7 @@ Deno.test('island: default strategy is idle (uses requestIdleCallback)', () => {
   try {
     const tag = `idle-default-${Date.now()}`;
     const Cls = createMockElementClass();
-    const result = island(tag, Cls);
+    const result = defineIsland(tag, Cls);
     // With mock RIC (immediate), the element should be registered
     assertEquals(result, Cls);
     assertEquals(mockRegistry.get(tag), Cls);
@@ -223,7 +228,7 @@ Deno.test('island: idle strategy defers to requestIdleCallback', () => {
   try {
     const tag = `idle-alias-${Date.now()}`;
     const Cls = createMockElementClass();
-    const result = island(tag, Cls, { strategy: 'idle' });
+    const result = defineIsland(tag, Cls, { strategy: 'idle' });
     assertEquals(result, Cls);
     // With mock RIC (immediate), the element should be registered
     assertEquals(mockRegistry.get(tag), Cls);
@@ -239,7 +244,7 @@ Deno.test('island: unknown strategy throws', () => {
     const Cls = createMockElementClass();
     assertThrows(
       // @ts-expect-error testing invalid strategy value
-      () => island(tag, Cls, { strategy: 'bogus' }),
+      () => defineIsland(tag, Cls, { strategy: 'bogus' }),
       Error,
       'Invalid island hydration strategy',
     );
@@ -296,7 +301,7 @@ Deno.test('island: visible strategy does not crash (IntersectionObserver + Mutat
   try {
     const Cls = createMockElementClass();
     // Should not throw
-    island('visible-strat-test', Cls, { strategy: 'visible' });
+    defineIsland('visible-strat-test', Cls, { strategy: 'visible' });
   } finally {
     (globalThis as unknown as Record<string, unknown>).IntersectionObserver = origIO;
     (globalThis as unknown as Record<string, unknown>).MutationObserver = origMO;
@@ -314,11 +319,11 @@ Deno.test('island: does not re-register already defined element', () => {
     const Cls1 = createMockElementClass();
     const Cls2 = createMockElementClass();
 
-    island(tag, Cls1, { strategy: 'load' });
+    defineIsland(tag, Cls1, { strategy: 'load' });
     const first = mockRegistry.get(tag);
 
     // Second registration should not replace
-    island(tag, Cls2, { strategy: 'load' });
+    defineIsland(tag, Cls2, { strategy: 'load' });
     assertEquals(mockRegistry.get(tag), first);
   } finally {
     teardownMocks();
@@ -332,7 +337,7 @@ Deno.test('island: wraps connectedCallback for SSR prop binding', () => {
   try {
     const tag = `cb-wrap-${Date.now()}`;
     const Cls = createMockElementClass();
-    island(tag, Cls, { strategy: 'load' });
+    defineIsland(tag, Cls, { strategy: 'load' });
 
     // The prototype's connectedCallback should be a function
     const proto = (Cls as unknown as { prototype: { connectedCallback?: () => void } }).prototype;
@@ -347,7 +352,7 @@ Deno.test('island: marks prototype as __lessIslandWrapped', () => {
   try {
     const tag = `wrap-marker-${Date.now()}`;
     const Cls = createMockElementClass();
-    island(tag, Cls, { strategy: 'load' });
+    defineIsland(tag, Cls, { strategy: 'load' });
 
     const proto = (Cls as unknown as { prototype: Record<string, unknown> }).prototype;
     assertEquals(proto.__lessIslandWrapped, true);
@@ -362,12 +367,12 @@ Deno.test('island: does not double-wrap connectedCallback', () => {
     const tag = `no-double-wrap-${Date.now()}`;
     const Cls = createMockElementClass();
 
-    island(tag, Cls, { strategy: 'load' });
+    defineIsland(tag, Cls, { strategy: 'load' });
     const proto = (Cls as unknown as { prototype: Record<string, unknown> }).prototype;
     const firstWrap = proto.__lessIslandWrapped;
 
     // Call island again with same class (should not double-wrap)
-    island(tag, Cls, { strategy: 'load' });
+    defineIsland(tag, Cls, { strategy: 'load' });
     assertEquals(firstWrap, true);
     assertEquals(proto.__lessIslandWrapped, true);
   } finally {
@@ -381,63 +386,63 @@ Deno.test('island: returns the original class for chaining/re-export', () => {
   setupMocks();
   try {
     const Cls = createMockElementClass();
-    const result = island('return-class-test', Cls);
+    const result = defineIsland('return-class-test', Cls);
     assertEquals(result, Cls);
   } finally {
     teardownMocks();
   }
 });
 
-// ─── getSSRProps ───────────────────────────────────────────────
+// ─── getSsrProps ───────────────────────────────────────────────
 
-Deno.test('getSSRProps: returns null when no data-ssr-props attribute', () => {
+Deno.test('getSsrProps: returns null when no data-ssr-props attribute', () => {
   const el = { getAttribute: () => null, tagName: 'DIV' } as unknown as HTMLElement;
-  assertEquals(getSSRProps(el), null);
+  assertEquals(getSsrProps(el), null);
 });
 
-Deno.test('getSSRProps: parses valid JSON from data-ssr-props', () => {
+Deno.test('getSsrProps: parses valid JSON from data-ssr-props', () => {
   const el = {
     getAttribute: (name: string) =>
       name === 'data-ssr-props' ? JSON.stringify({ count: 5, label: 'test' }) : null,
     tagName: 'DIV',
   } as unknown as HTMLElement;
-  const props = getSSRProps(el);
+  const props = getSsrProps(el);
   assertEquals(props?.count, 5);
   assertEquals(props?.label, 'test');
 });
 
-Deno.test('getSSRProps: returns null for invalid JSON', () => {
+Deno.test('getSsrProps: returns null for invalid JSON', () => {
   const el = {
     getAttribute: (name: string) => name === 'data-ssr-props' ? 'not-json' : null,
     tagName: 'DIV',
   } as unknown as HTMLElement;
-  const props = getSSRProps(el);
+  const props = getSsrProps(el);
   assertEquals(props, null);
 });
 
-Deno.test('getSSRProps: returns empty object for empty JSON object', () => {
+Deno.test('getSsrProps: returns empty object for empty JSON object', () => {
   const el = {
     getAttribute: (name: string) => name === 'data-ssr-props' ? '{}' : null,
     tagName: 'DIV',
   } as unknown as HTMLElement;
-  const props = getSSRProps(el);
+  const props = getSsrProps(el);
   assertEquals(props, {});
 });
 
-Deno.test('getSSRProps: handles complex nested JSON', () => {
+Deno.test('getSsrProps: handles complex nested JSON', () => {
   const data = { items: [1, 2, 3], nested: { a: true } };
   const el = {
     getAttribute: (name: string) => name === 'data-ssr-props' ? JSON.stringify(data) : null,
     tagName: 'DIV',
   } as unknown as HTMLElement;
-  const props = getSSRProps(el);
+  const props = getSsrProps(el);
   assertEquals(props?.items, [1, 2, 3]);
   assertEquals((props?.nested as Record<string, unknown>)?.a, true);
 });
 
-// ─── lessBind ──────────────────────────────────────────────────
+// ─── bindEvents ──────────────────────────────────────────────────
 
-Deno.test('lessBind: sets properties from data-ssr-props', () => {
+Deno.test('bindEvents: sets properties from data-ssr-props', () => {
   const data: Record<string, unknown> = { count: 0, label: '' };
   const el = {
     getAttribute: (name: string) =>
@@ -459,12 +464,12 @@ Deno.test('lessBind: sets properties from data-ssr-props', () => {
     },
   } as unknown as HTMLElement;
 
-  lessBind(el);
+  bindEvents(el);
   assertEquals(data.count, 42);
   assertEquals(data.label, 'hello');
 });
 
-Deno.test('lessBind: does nothing when no data-ssr-props', () => {
+Deno.test('bindEvents: does nothing when no data-ssr-props', () => {
   const el = {
     getAttribute: () => null,
     tagName: 'DIV',
@@ -472,10 +477,10 @@ Deno.test('lessBind: does nothing when no data-ssr-props', () => {
   } as unknown as HTMLElement;
 
   // Should not throw
-  lessBind(el);
+  bindEvents(el);
 });
 
-Deno.test('lessBind: skips read-only properties gracefully', () => {
+Deno.test('bindEvents: skips read-only properties gracefully', () => {
   const el = {
     getAttribute: (name: string) =>
       name === 'data-ssr-props' ? JSON.stringify({ readonly: 'changed' }) : null,
@@ -490,11 +495,11 @@ Deno.test('lessBind: skips read-only properties gracefully', () => {
   });
 
   // Should not throw
-  lessBind(el);
+  bindEvents(el);
   assertEquals((el as unknown as Record<string, unknown>).readonly, 'fixed');
 });
 
-Deno.test('lessBind: handles empty object in data-ssr-props', () => {
+Deno.test('bindEvents: handles empty object in data-ssr-props', () => {
   const el = {
     getAttribute: (name: string) => name === 'data-ssr-props' ? '{}' : null,
     tagName: 'DIV',
@@ -502,7 +507,7 @@ Deno.test('lessBind: handles empty object in data-ssr-props', () => {
   } as unknown as HTMLElement;
 
   // Should not throw
-  lessBind(el);
+  bindEvents(el);
 });
 
 // ─── island() - dsd option ─────────────────────────────────────
@@ -511,7 +516,7 @@ Deno.test('island: dsd default is true (dsd-interactive layer)', () => {
   setupMocks();
   try {
     const Cls = createMockElementClass();
-    island('dsd-default-test', Cls);
+    defineIsland('dsd-default-test', Cls);
     assertEquals((Cls as unknown as Record<string, unknown>).__layer, 'dsd-interactive');
   } finally {
     teardownMocks();
@@ -522,7 +527,7 @@ Deno.test('island: dsd: false sets pure-island layer', () => {
   setupMocks();
   try {
     const Cls = createMockElementClass();
-    island('dsd-false-test', Cls, { dsd: false });
+    defineIsland('dsd-false-test', Cls, { dsd: false });
     assertEquals((Cls as unknown as Record<string, unknown>).__layer, 'pure-island');
   } finally {
     teardownMocks();
@@ -536,7 +541,7 @@ Deno.test('island: tagName option in IslandOptions does not override first argum
   try {
     const Cls = createMockElementClass();
     // The first argument is used as the tag name regardless of options.tagName
-    island('primary-tag', Cls);
+    defineIsland('primary-tag', Cls);
     assertEquals((Cls as unknown as Record<string, unknown>).__tagName, 'primary-tag');
   } finally {
     teardownMocks();

@@ -309,8 +309,8 @@ class Counter extends DsdElement {
             <li><code>style</code> 对象序列化为内联 CSS 字符串</li>
           </ul>
 
-          <h2>CSR: renderToDOM()</h2>
-          <p><code>renderToDOM(vnode, signal?)</code> 将 VNode 树转换为真实 DOM 节点：</p>
+          <h2>CSR: renderToDom()</h2>
+          <p><code>renderToDom(vnode, signal?)</code> 将 VNode 树转换为真实 DOM 节点：</p>
           <ul>
             <li>事件处理器通过 <code>addEventListener(type, fn, { signal })</code> 绑定</li>
             <li><code>ref</code> 回调接收创建的 DOM 元素</li>
@@ -360,7 +360,7 @@ class Counter extends DsdElement {
               </tr>
               <tr>
                 <td>CSR</td>
-                <td><code>renderToDOM()</code></td>
+                <td><code>renderToDom()</code></td>
                 <td><code>_patchBindings()</code></td>
               </tr>
               <tr>

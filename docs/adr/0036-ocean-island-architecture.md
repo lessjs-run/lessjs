@@ -47,7 +47,7 @@ Result:
 | ③ | Lit 6KB gzip wasted                                    | DSD never uses Lit's core     |
 | ④ | Can't use FAST/Preact for DSD components               | Locked into Lit               |
 | ⑤ | 3 CSS approaches (Lit css + inline cssText + CSS vars) | Inconsistent                  |
-| ⑥ | `render(): string` already supported by `renderDSD()`  | Pipeline ready                |
+| ⑥ | `render(): string` already supported by `renderDsd()`  | Pipeline ready                |
 
 ---
 
@@ -92,8 +92,8 @@ We adopt a **two-layer component model**:
 
 | ID | Decision                                              | Rationale                                                                         |
 | -- | ----------------------------------------------------- | --------------------------------------------------------------------------------- |
-| D1 | `DsdElement` in `@lessjs/core`                        | Zero deps, co-located with `renderDSD()`                                          |
-| D2 | `render(): string`                                    | Already supported by `renderDSD()` line 177-181                                   |
+| D1 | `DsdElement` in `@lessjs/core`                        | Zero deps, co-located with `renderDsd()`                                          |
+| D2 | `render(): string`                                    | Already supported by `renderDsd()` line 177-181                                   |
 | D3 | `StyleSheet` for styles (SSR-safe CSSStyleSheet shim) | Native API in browser, shim in Deno/Node                                          |
 | D4 | Open Props for tokens                                 | Replace ~100 lines of custom token code                                           |
 | D5 | `hydrateEvents` preserved → **DEPRECATED v0.21.0**    | Superseded by `@click` in `html` templates (ADR-0039). See SOP-006 for migration. |
@@ -115,7 +115,7 @@ We adopt a **two-layer component model**:
 
 ### 2.4 What Stays the Same
 
-- `renderDSD()` and `wrapDsdOutput()` — already support `render(): string`
+- `renderDsd()` and `wrapDsdOutput()` — already support `render(): string`
 - `hydrateEvents` protocol — **deprecated in v0.21.0**, replaced by `@click` in `html` templates (ADR-0039, SOP-006)
 - `adapter-registry` — same multi-adapter dispatch
 - `@lessjs/adapter-lit` — retained for Pure Island SSR
@@ -159,7 +159,7 @@ export class DsdElement extends HTMLElement {
 
 ```
 DsdElement.render(): string
-  → renderDSD() line 177-181: `typeof result === 'string'` → content
+  → renderDsd() line 177-181: `typeof result === 'string'` → content
   → NEW: CSSStyleSheet extraction (static styles → cssRules → styleCss)
   → wrapDsdOutput(): <template shadowrootmode="open"><style>...</style>...content</template>
   → Client: browser parses DSD → Shadow DOM auto-attached → hydrateEvents()

@@ -9,14 +9,14 @@
 | Section                       | v0.15 Delivered | v0.16 Planned | Notes                                                                                     |
 | ----------------------------- | --------------- | ------------- | ----------------------------------------------------------------------------------------- |
 | §1 RendererProtocol           | ✅              | —             | `RenderAdapter` fully removed                                                             |
-| §2 renderDSD() → RenderOutput | ❌ Types only   | ✅            | Return type still `Promise<string>`; `RenderOutput` type defined + exported               |
+| §2 renderDsd() → RenderOutput | ❌ Types only   | ✅            | Return type still `Promise<string>`; `RenderOutput` type defined + exported               |
 | §3 Module split               | ✅              | —             | 4 files as specified                                                                      |
 | §4 DSD report output          | ❌              | ✅            | `DsdRenderCollector` works, `getReport()` works, but `dsd-report.json` not written by SSG |
 | §5 Named adapters             | ✅              | —             | `registerAdapter` + `getAdapter` + `getRegisteredAdapters`                                |
 | §6 create CLI                 | ✅              | —             | JSR resolution + project name validation                                                  |
 | §7 customElementRegistry      | ✅              | —             | Type simplified to `boolean`                                                              |
 | RenderHooks                   | ❌ Types only   | ✅            | Interface defined but not wired into pipeline                                             |
-| RenderInput                   | ✅ Types only   | ✅            | Type defined + exported; not used as renderDSD() parameter                                |
+| RenderInput                   | ✅ Types only   | ✅            | Type defined + exported; not used as renderDsd() parameter                                |
 
 ## Context
 
@@ -37,12 +37,12 @@ interface RenderAdapter {
 
 Problems:
 
-1. **No output contract** — `renderDSD()` returns a bare string. Errors,
+1. **No output contract** — `renderDsd()` returns a bare string. Errors,
    metrics, and hydration hints are lost or handled via side channels (collector
    mutation, console logs, HTML comments).
 2. **No error classification** — instantiation failures, render crashes,
    nested CE errors, and style extraction failures are all handled ad-hoc inside
-   a 360-line `renderDSD()` function.
+   a 360-line `renderDsd()` function.
 3. **No lifecycle hooks** — adapters cannot observe or intervene in the
    render pipeline (before render, after render, on error).
 4. **Single adapter only** — `adapter-registry.ts` stores one module-level
@@ -73,7 +73,7 @@ interface HydrationHint {
   strategy?: IslandUpgradeStrategy;
 }
 
-/** Structured output from renderDSD() */
+/** Structured output from renderDsd() */
 interface RenderOutput {
   html: string;
   errors: RenderError[];
@@ -100,7 +100,7 @@ interface RenderHooks {
   onError?(error: RenderError): void | Promise<void>;
 }
 
-/** Input to a single renderDSD() call */
+/** Input to a single renderDsd() call */
 interface RenderInput {
   tagName: string;
   componentClass: CustomElementConstructor;
@@ -110,10 +110,10 @@ interface RenderInput {
 }
 ```
 
-### 2. `renderDSD()` returns `RenderOutput` (DEFERRED to v0.16)
+### 2. `renderDsd()` returns `RenderOutput` (DEFERRED to v0.16)
 
 > **v0.15 status**: Types (`RenderOutput`, `RenderError`, `HydrationHint`) are defined
-> and exported from `@lessjs/core`, but `renderDSD()` still returns `Promise<string>`.
+> and exported from `@lessjs/core`, but `renderDsd()` still returns `Promise<string>`.
 > The return type change is deferred to v0.16 so it can be done together with
 > `RenderHooks` integration — avoiding two consecutive breaking changes to the same
 > function signature.
@@ -121,13 +121,13 @@ interface RenderInput {
 The function signature changes from:
 
 ```ts
-renderDSD(...): Promise<string>
+renderDsd(...): Promise<string>
 ```
 
 to:
 
 ```ts
-renderDSD(...): Promise<RenderOutput>
+renderDsd(...): Promise<RenderOutput>
 ```
 
 No backward-compatible wrapper is provided — LessJS is pre-1.0 and breaks are
@@ -183,7 +183,7 @@ attribute with no value.
 - Structured output enables tooling (diff reports, CI gates on error count,
   hydration optimization).
 - Error taxonomy makes debugging SSR failures systematic.
-- Module split makes `renderDSD()` maintainable and testable.
+- Module split makes `renderDsd()` maintainable and testable.
 - DSD report gives build-time visibility into rendering performance.
 - Named adapters unblock future multi-adapter support without committing to it
   now.
@@ -191,7 +191,7 @@ attribute with no value.
 
 ### Negative
 
-- Breaking change to `renderDSD()` return type.
+- Breaking change to `renderDsd()` return type.
 - Breaking change: `RenderAdapter` removed entirely — all adapters must
   implement `RendererProtocol` (add `name: string`).
 - Breaking change: `DsdOptions.customElementRegistry` no longer accepts strings.
@@ -207,7 +207,7 @@ attribute with no value.
 
 - [x] All existing tests pass after refactoring (54 tests, v0.15)
 - [x] Types for `RenderOutput`, `RenderError`, `HydrationHint`, `RenderInput` defined and exported
-- [ ] `renderDSD()` returns `RenderOutput` instead of `string` (v0.16)
+- [ ] `renderDsd()` returns `RenderOutput` instead of `string` (v0.16)
 - [ ] `dsd-report.json` is generated during `deno task build:ssg` (v0.16)
 - [ ] `RenderHooks` wired into render pipeline (v0.16)
 - [x] `deno run -A jsr:@lessjs/create test-app` produces a working scaffold

@@ -57,7 +57,7 @@ import {
   syncStaticPropsFromAttributes,
 } from './prop.js';
 import { isVNode, type VNode } from './vnode.js';
-import { renderToDOM } from './jsx-render-dom.js';
+import { renderToDom } from './jsx-render-dom.js';
 import { renderToString } from './jsx-render-string.js';
 import { effect } from '@lessjs/signals';
 
@@ -384,9 +384,9 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       while (this.shadowRoot.firstChild) {
         this.shadowRoot.removeChild(this.shadowRoot.firstChild);
       }
-      // v0.24.1: Use renderToDOM so event handlers (onClick etc.) are wired via addEventListener
+      // v0.24.1: Use renderToDom so event handlers (onClick etc.) are wired via addEventListener
       this._templateAbortController = new AbortController();
-      const dom = renderToDOM(result, this._templateAbortController.signal);
+      const dom = renderToDom(result, this._templateAbortController.signal);
       this.shadowRoot.appendChild(dom);
       // v0.24.3: Set up reactive signal tracking via effect().
       // Unlike TemplateResult's fine-grained patch, VNodes use full re-render
@@ -404,7 +404,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
           this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
         }
         this.shadowRoot!.appendChild(
-          renderToDOM(updated, this._templateAbortController.signal),
+          renderToDom(updated, this._templateAbortController.signal),
         );
       });
     } else if (typeof result === 'string') {
@@ -431,12 +431,12 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     if (isVNode(result)) {
       // v0.24.1: DSD hydration for VNode — re-render to DOM with event handlers
       // The pre-populated DSD DOM has correct structure but no event listeners.
-      // renderToDOM wires onClick etc. via addEventListener on the same DOM structure.
+      // renderToDom wires onClick etc. via addEventListener on the same DOM structure.
       this._templateAbortController = new AbortController();
       while (this.shadowRoot.firstChild) {
         this.shadowRoot.removeChild(this.shadowRoot.firstChild);
       }
-      const dom = renderToDOM(result, this._templateAbortController.signal);
+      const dom = renderToDom(result, this._templateAbortController.signal);
       this.shadowRoot.appendChild(dom);
       return;
     }
@@ -483,7 +483,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    * Subclasses MUST override this method. During SSR, rendered content is
    * wrapped in a <template shadowrootmode="open"> tag. During CSR, strings are
    * assigned to `shadowRoot.innerHTML`; VNode values are rendered via
-   * renderToDOM() with event binding and signal tracking.
+   * renderToDom() with event binding and signal tracking.
    *
    * @returns HTML string or VNode for the shadow DOM content.
    */

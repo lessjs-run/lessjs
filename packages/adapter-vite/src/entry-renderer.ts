@@ -33,7 +33,7 @@
 //    - See: `packages/adapter-vite/src/plugin.ts` for client entry generation
 //
 // 3. Nested custom elements (from rendered HTML):
-//    - Handled by `renderDSD()` in core/src/render-dsd.ts
+//    - Handled by `renderDsd()` in core/src/render-dsd.ts
 //    - Filtered by `ssrAdmissionPlan.clientOnlyTags`
 //    - See: core/src/render-nested.ts for nested rendering guard
 //
@@ -250,7 +250,7 @@ function renderPageRoute(
   lines.push(`  try {`);
   lines.push(`    const tag = ${tagNameExpr}`);
   // v0.5.0: DSD renderer - no <!--lit-part--> markers, no old upgrade marker.
-  // __ssr() uses renderDSD() which outputs standard DSD HTML.
+  // __ssr() uses renderDsd() which outputs standard DSD HTML.
   // Components receive route params as props for SSR-time data access.
   // v0.6: Pass route/source context for error visibility.
   // H-02 fix: Use JSON.stringify to escape route path and file path
@@ -378,7 +378,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   // v0.17.3: Multi-adapter support - install Lit, Vanilla, and React adapters.
   // With viteBuild(ssr:true, noExternal), adapters are inlined into the bundle.
   // Installing at module load time ensures registerAdapter() runs before any
-  // renderDSD() call. Each try/catch makes missing adapters a no-op.
+  // renderDsd() call. Each try/catch makes missing adapters a no-op.
   // Both SSG and dev mode need adapters to render framework-specific results.
   {
     lines.push('// v0.17.3: Auto-install all available SSR adapters');
@@ -409,7 +409,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   }
 
   // --- Register page components in SSR customElements registry ---
-  // This is essential for renderDSD() to find and render Shadow DOM.
+  // This is essential for renderDsd() to find and render Shadow DOM.
   // Each SSR route module exports { default: ComponentClass, tagName: string }.
   // ADR 0014: Patch customElements.define to be idempotent in SSR -
   // must apply in BOTH dev and SSG modes because island modules call
@@ -447,7 +447,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('');
 
   // --- Register island components in SSR customElements registry ---
-  // Islands need to be registered so renderDSD() can produce DSD.
+  // Islands need to be registered so renderDsd() can produce DSD.
   // Uses a static import per island module (known at build time).
   // Package islands are imported by the client entry for browser upgrade.
   // SSR only imports local app islands, which avoids forcing Vite to resolve
@@ -523,7 +523,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('    log.warn("<" + tag + "> not registered - rendering empty")');
   lines.push('    return "<" + tag + "></" + tag + ">"');
   lines.push('  }');
-  lines.push('  const out = await renderDSD(tag, Cls, props, sourceInfo)');
+  lines.push('  const out = await renderDsd(tag, Cls, props, sourceInfo)');
   lines.push('  return out.html');
   lines.push('}');
   lines.push('');
@@ -587,7 +587,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     );
     lines.push('');
     lines.push(
-      'export { renderDSD, renderDSDByName, wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core"',
+      'export { renderDsd, renderDsdByName, wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core"',
     );
     lines.push(
       'export { installLitAdapter, uninstallLitAdapter } from "@lessjs/adapter-lit"',
@@ -608,7 +608,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     // The SSR bundle owns all rendering knowledge (tagName -> component
     // mapping, customElements registry, renderDSD, wrapInDocument).
     // build-ssg.ts only calls renderRoute() and getStaticPaths() -
-    // no globalThis access, no source file regex, no direct renderDSD().
+    // no globalThis access, no source file regex, no direct renderDsd().
     lines.push('');
     lines.push(
       '// ── ADR 0014: DSD-first rendering API ──────────────────────',
@@ -683,7 +683,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('  const props = { ...params };');
     lines.push('  if (locale) props.locale = locale;');
     lines.push(
-      '  const dsdOutput = await renderDSDByName(info.tagName, props, { route: routePath, source: info.tagName });',
+      '  const dsdOutput = await renderDsdByName(info.tagName, props, { route: routePath, source: info.tagName });',
     );
     lines.push('  const html = dsdOutput.html;');
     lines.push('  let content = html;');

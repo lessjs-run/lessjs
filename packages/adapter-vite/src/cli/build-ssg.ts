@@ -382,7 +382,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
           output: {
             format: 'esm',
             // ADR-0044: customElements polyfill must run before ESM imports.
-            // Uses Map-backed define()/get() — renderDSDByName() looks up
+            // Uses Map-backed define()/get() — renderDsdByName() looks up
             // components via customElements.get(tagName) during SSG rendering.
             // SOP-016: HTMLElement stub is self-contained in @lessjs/core/dsd-element.ts.
             banner: `\

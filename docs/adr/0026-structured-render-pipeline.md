@@ -11,10 +11,10 @@ ADR-0025 defined the Renderer Protocol and was partially delivered in v0.15:
 - **Delivered**: `RendererProtocol` interface, named adapters, module split, type
   definitions (`RenderOutput`, `RenderError`, `HydrationHint`, `RenderInput`,
   `RenderHooks`), `customElementRegistry` simplification.
-- **Deferred**: `renderDSD()` return type change, `dsd-report.json` writing,
+- **Deferred**: `renderDsd()` return type change, `dsd-report.json` writing,
   `RenderHooks` integration.
 
-These were deferred for good reason: changing `renderDSD()` return type is a
+These were deferred for good reason: changing `renderDsd()` return type is a
 breaking change that should happen once, together with `RenderHooks` integration,
 rather than as two separate breaking changes.
 
@@ -22,24 +22,24 @@ Now is the time to complete the pipeline.
 
 ## Decision
 
-### 1. Change `renderDSD()` return type to `Promise<RenderOutput>`
+### 1. Change `renderDsd()` return type to `Promise<RenderOutput>`
 
 Current:
 
 ```ts
-export async function renderDSD(...): Promise<string>
+export async function renderDsd(...): Promise<string>
 ```
 
 New:
 
 ```ts
-export async function renderDSD(...): Promise<RenderOutput>
+export async function renderDsd(...): Promise<RenderOutput>
 ```
 
 All callers must destructure:
 
 ```ts
-const { html, errors, metrics, hydrationHints } = await renderDSD(...)
+const { html, errors, metrics, hydrationHints } = await renderDsd(...)
 ```
 
 No backward-compatible wrapper. Pre-1.0, breaks are acceptable.
@@ -54,10 +54,10 @@ No backward-compatible wrapper. Pre-1.0, breaks are acceptable.
 
 ### 2. Wire `RenderHooks` into the render pipeline
 
-Add optional `hooks?: RenderHooks` parameter to `renderDSD()`:
+Add optional `hooks?: RenderHooks` parameter to `renderDsd()`:
 
 ```ts
-export async function renderDSD(
+export async function renderDsd(
   tagName: string,
   componentClass: CustomElementConstructor,
   props: Record<string, unknown> = {},
@@ -96,7 +96,7 @@ This enables CI gates: `if (report.totalErrors > 0) process.exit(1)`.
 ### 4. Package islands SSR registration via `beforeRender` hook
 
 Current limitation: package islands (e.g., `@lessjs/ui` components) are not
-registered in SSR's `customElements` registry, so `renderDSD()` cannot
+registered in SSR's `customElements` registry, so `renderDsd()` cannot
 instantiate them.
 
 With `RenderHooks`, `adapter-vite` can provide a `beforeRender` hook that
@@ -137,7 +137,7 @@ Set up `@playwright/test` in the monorepo for browser-level validation:
 
 ### Positive
 
-- `renderDSD()` output is fully structured — errors, metrics, hints are
+- `renderDsd()` output is fully structured — errors, metrics, hints are
   machine-readable and can drive CI gates, tooling, and hydration optimization.
 - `RenderHooks` enable adapter-level intervention without modifying core pipeline.
 - `dsd-report.json` gives SSG builds visibility into rendering performance.
@@ -147,20 +147,20 @@ Set up `@playwright/test` in the monorepo for browser-level validation:
 
 ### Negative
 
-- Breaking change to `renderDSD()` return type (second and final — combined with
+- Breaking change to `renderDsd()` return type (second and final — combined with
   hooks, no further signature changes expected).
 - Playwright adds CI time and a new dependency.
 - `dsd-report.json` format is v1 — may need to evolve.
 
 ### Neutral
 
-- `RenderHooks.onError` replaces ad-hoc error handling inside `renderDSD()`.
+- `RenderHooks.onError` replaces ad-hoc error handling inside `renderDsd()`.
 - The `collector?: DsdRenderCollector` parameter may be removed in a future
   version since `RenderOutput.metrics` subsumes it.
 
 ## Validation
 
-- [ ] `renderDSD()` returns `Promise<RenderOutput>` and all callers updated
+- [ ] `renderDsd()` returns `Promise<RenderOutput>` and all callers updated
 - [ ] `RenderHooks.beforeRender` / `afterRender` / `onError` fire correctly
 - [ ] `dsd-report.json` is written after SSG build
 - [ ] Package island renders in SSR via `beforeRender` hook

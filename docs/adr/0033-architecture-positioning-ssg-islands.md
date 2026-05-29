@@ -41,7 +41,7 @@ LessJS 三支柱
 │   └── 请求上下文（auth / env / DB client）— TODO
 │
 ├── 2. 通用WC渲染引擎 (Universal WC SSR/SSG Rendering Engine)
-│   ├── DSD字符串渲染（renderDSD — pure string concatenation）
+│   ├── DSD字符串渲染（renderDsd — pure string concatenation）
 │   ├── 多框架适配器（Lit / React / Vanilla → Vue）
 │   ├── Tier 1/2 渲染策略（DSD预渲染 vs 标签输出）
 │   ├── Hydration策略（client:load/idle/visible/only）— TODO
@@ -84,7 +84,7 @@ Pillar 2（WC渲染引擎）和 Pillar 3（Hub），不在框架层本身。
 **关键认知：渲染引擎与渲染时机无关。**
 
 ```
-renderDSD(component, props) → DSD HTML string
+renderDsd(component, props) → DSD HTML string
 
 这个函数不关心什么时候被调用：
 ├── Build-time（当前SSG）→ deno task build 时调用
@@ -99,7 +99,7 @@ renderDSD(component, props) → DSD HTML string
 
 | 能力             | 状态                                                       |
 | ---------------- | ---------------------------------------------------------- |
-| DSD字符串渲染    | ✅ `renderDSD()` — 纯字符串拼接                            |
+| DSD字符串渲染    | ✅ `renderDsd()` — 纯字符串拼接                            |
 | 命名适配器协议   | ✅ `registerAdapter()` + `RendererProtocol`                |
 | Lit adapter      | ✅ 完整 SSR + hydration                                    |
 | React adapter    | ✅ `renderToStaticMarkup()` + `DsdReactElement`            |
@@ -113,13 +113,13 @@ renderDSD(component, props) → DSD HTML string
 
 **ISR vs SSR vs SSG — 引擎视角**：
 
-| 模式        | 何时调用 renderDSD() | 数据新鲜度        | 需要服务器   |
+| 模式        | 何时调用 renderDsd() | 数据新鲜度        | 需要服务器   |
 | ----------- | -------------------- | ----------------- | ------------ |
 | SSG（当前） | build 时             | 构建时快照        | ❌           |
 | ISR         | 缓存过期时           | 可配置 stale 时间 | ✅ edge fn   |
 | SSR         | 每次请求             | 实时              | ✅ always-on |
 
-**决策**：ISR 是最自然的下一步，因为 `renderDSD()` 是纯字符串拼接
+**决策**：ISR 是最自然的下一步，因为 `renderDsd()` 是纯字符串拼接
 （~1-5ms），ISR 的 99% 缓存命中 / 1% 重新渲染模式非常匹配。
 
 ### Pillar 3: Registry Hub

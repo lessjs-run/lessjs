@@ -231,12 +231,12 @@ Governing ADR: ADR-0057 (v2)
 
 Scope:
 
-- jsx-runtime (VNode + renderToString + renderToDOM) — ~200 lines replacing ~570
+- jsx-runtime (VNode + renderToString + renderToDom) — ~200 lines replacing ~570
 - `static props` declarative configuration replacing `@prop()` decorator
 - Signal auto-unwrap (valueOf / Symbol.toPrimitive + `unwrap()` utility)
 - VNode interface freeze clause (5 fields, no VDOM diff)
 - JSX event system (onClick → native addEventListener, no synthetic events)
-- DSD pipeline integration (renderDSD consumes VNode output)
+- DSD pipeline integration (renderDsd consumes VNode output)
 - Internal component migration (html → JSX, @prop → static props)
 - `html` tagged template marked `@deprecated`
 - TypeScript type inference for `static props` (PropsFrom\<T\> or MVP fallback)
@@ -268,7 +268,7 @@ Exit criteria:
 v1.0 should freeze:
 
 - `DsdElement`
-- `renderDSD()`
+- `renderDsd()`
 - adapter protocol
 - manifest and compatibility schema
 - `dsd-report.json`

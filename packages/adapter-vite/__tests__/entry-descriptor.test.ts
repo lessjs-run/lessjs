@@ -131,7 +131,7 @@ Deno.test('renderEntry: produces valid module code', () => {
   assertStringIncludes(code, "import { Hono } from 'hono'");
   assertStringIncludes(
     code,
-    "import { renderDSD, renderDSDByName, escapeHtml } from '@lessjs/core'",
+    "import { renderDsd, renderDsdByName, escapeHtml } from '@lessjs/core'",
   );
   assertStringIncludes(code, 'export default app');
   assertStringIncludes(code, 'const app = new Hono()');

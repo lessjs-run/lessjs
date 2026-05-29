@@ -13,7 +13,7 @@ turns the existing ADR/SOP decisions into repository checks and cleanup.
 ## Scope
 
 1. Confirm `DsdElement` exists as real public API in `@lessjs/core`.
-2. Confirm `renderDSD()` extracts native `StyleSheet`/DsdElement styles before
+2. Confirm `renderDsd()` extracts native `StyleSheet`/DsdElement styles before
    falling back to framework adapters.
 3. Confirm `@lessjs/ui` components use `DsdElement` for Ocean components.
 4. Remove or update stale public examples that still teach Lit as the default

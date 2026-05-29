@@ -43,7 +43,7 @@ Build writes isr-manifest.json
 Edge handler (CF Worker / Deno)
         ↓
 IsrCache.get(cacheKey)
-   ├─ miss  → renderDSD(tagName, component, props)
+   ├─ miss  → renderDsd(tagName, component, props)
    │          → cache.set(key, { html, revalidate: 60 })
    │          → return fresh HTML
    ├─ hit   → return cached HTML
@@ -51,7 +51,7 @@ IsrCache.get(cacheKey)
    └─ error → return last good HTML or 500
 ```
 
-The key insight from ADR-0033: `renderDSD()` is timing-independent. Whether called at
+The key insight from ADR-0033: `renderDsd()` is timing-independent. Whether called at
 build time (SSG) or request time (ISR regeneration), the output is identical. ISR is
 not "adding SSR" — it is reusing the same renderer behind an HTTP endpoint.
 
@@ -84,7 +84,7 @@ A community-maintained `RedisIsrCache` can exist as an optional adapter.
 
 ## Related
 
-- ADR-0033: Renderer Kernel — timing-independent `renderDSD()`
+- ADR-0033: Renderer Kernel — timing-independent `renderDsd()`
 - ADR-0035: SSG Admission — client-only island exclusion (v0.20)
 - ADR-0036: Ocean-Island Architecture (v0.20)
 - ADR-0037: DSD-First Strategic Boundary (v0.20)

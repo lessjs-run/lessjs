@@ -35,7 +35,7 @@ Current error flow (simplified):
 ```
 render() throws Error
     ↓
-renderDSD() catch → bare tag + RenderError in output.errors[]
+renderDsd() catch → bare tag + RenderError in output.errors[]
     ↓
 ssgRender() ignores errors[] (no aggregation)
     ↓
@@ -197,7 +197,7 @@ Error boundary semantics:
 
 - A component with `isErrorBoundary = true` catches render errors from its
   subtree (children rendered via `renderNestedCustomElements`)
-- If no boundary exists, the error propagates to the root `renderDSD()` call
+- If no boundary exists, the error propagates to the root `renderDsd()` call
   which falls back to a bare tag
 - Client-side: an error in a DSD-hydrated component's `render()` (during
   signal-triggered re-render) is caught by the nearest boundary
@@ -224,7 +224,7 @@ async function renderNestedCustomElements(
   // ... traverse AST, render each CE
   for (const ce of customElements) {
     try {
-      const result = await renderDSD(ce.tagName, ce.attrs);
+      const result = await renderDsd(ce.tagName, ce.attrs);
       errors.push(...result.errors); // collect child errors
     } catch (e) {
       errors.push(new RenderError(ce.tagName, e as Error));

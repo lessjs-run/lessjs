@@ -4,14 +4,14 @@ import {
   Fragment,
   jsx,
   jsxs,
-  renderDSD,
-  renderDSDStream,
+  renderDsd,
+  renderDsdStream,
   renderToString,
 } from '../src/index.ts';
 
 Deno.test('core stable API exports v0.24.1 JSX rendering primitives', () => {
-  assertEquals(typeof renderDSD, 'function');
-  assertEquals(typeof renderDSDStream, 'function');
+  assertEquals(typeof renderDsd, 'function');
+  assertEquals(typeof renderDsdStream, 'function');
   assertEquals(typeof DsdElement, 'function');
   assertEquals(typeof jsx, 'function');
   assertEquals(typeof jsxs, 'function');
@@ -59,8 +59,8 @@ Deno.test('core JSX event handlers are excluded from SSR output', () => {
   assertEquals(html, '<button type="button">Click</button>');
 });
 
-Deno.test('core DsdElement and renderDSD are callable', () => {
+Deno.test('core DsdElement and renderDsd are callable', () => {
   assertExists(DsdElement);
-  assertExists(renderDSD);
-  assertExists(renderDSDStream);
+  assertExists(renderDsd);
+  assertExists(renderDsdStream);
 });
