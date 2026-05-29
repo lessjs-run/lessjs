@@ -263,6 +263,47 @@ routeSheet.replaceSync(`
       .back-link:hover {
         text-decoration: underline;
       }
+
+      /* Migrated inline styles */
+      .not-found-link { color: var(--brand); font-size: 0.875rem; }
+      .validation-error { color: #ef4444; font-size: 0.8125rem; }
+      .validation-warning { color: #f59e0b; font-size: 0.8125rem; }
+      .preview-full-width { width: 100%; }
+      .preview-tag-name { font-size: 0.875rem; margin-bottom: 0.25rem; }
+      .client-only-note { margin-top: 0.5rem; font-size: 0.75rem; }
+      .usage-hint { margin-bottom: 0.5rem; font-size: 0.8125rem; color: var(--text-secondary); }
+      .pkg-link { color: var(--brand); }
+      .mono-text-sm { font-family: monospace; font-size: 0.8125rem; }
+      .meta-muted-sm { font-size: 0.75rem; color: var(--text-muted); }
+      .meta-text-sm { font-size: 0.8125rem; }
+      .preview-details-text { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.6; }
+      .install-hint { margin-bottom: 0.5rem; font-size: 0.8125rem; }
+      .install-warnings { margin-top: 0.75rem; font-size: 0.8125rem; color: var(--text-secondary); }
+      .warning-item { padding: 0.125rem 0; }
+      .related-container { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+      .related-link { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.625rem; background: var(--bg-code); border-radius: 4px; font-size: 0.8125rem; font-family: monospace; color: inherit; text-decoration: none; border: 0.5px solid transparent; }
+      .related-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+      .text-error { color: #ef4444; }
+      .text-success { color: #22c55e; }
+
+      /* Compat color classes */
+      .compat-dot-ssr-capable { background: #22c55e; }
+      .compat-dot-client-only { background: #f59e0b; }
+      .compat-dot-rejected { background: #ef4444; }
+      .compat-dot-experimental-dom { background: #8b5cf6; }
+      .compat-dot-default { background: #888; }
+
+      .compat-badge-ssr-capable { background: #22c55e15; border: 0.5px solid #22c55e40; }
+      .compat-badge-client-only { background: #f59e0b15; border: 0.5px solid #f59e0b40; }
+      .compat-badge-rejected { background: #ef444415; border: 0.5px solid #ef444440; }
+      .compat-badge-experimental-dom { background: #8b5cf615; border: 0.5px solid #8b5cf640; }
+      .compat-badge-default { background: #88888815; border: 0.5px solid #88888840; }
+
+      .compat-badge-sm-ssr-capable { background: #22c55e15; border: 0.5px solid #22c55e40; font-size: 0.75rem; }
+      .compat-badge-sm-client-only { background: #f59e0b15; border: 0.5px solid #f59e0b40; font-size: 0.75rem; }
+      .compat-badge-sm-rejected { background: #ef444415; border: 0.5px solid #ef444440; font-size: 0.75rem; }
+      .compat-badge-sm-experimental-dom { background: #8b5cf615; border: 0.5px solid #8b5cf640; font-size: 0.75rem; }
+      .compat-badge-sm-default { background: #88888815; border: 0.5px solid #88888840; font-size: 0.75rem; }
     `);
 
 export default class DocsRegistryComponentDetail extends DsdElement {
@@ -370,7 +411,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
             <div class='not-found'>
               <h2>Component Not Found</h2>
               <p>"{fullPkgName}" is not in the registry.</p>
-              <a href='/registry' style='color:var(--brand);font-size:0.875rem;'>
+              <a href='/registry' class='not-found-link'>
                 ← Back to Registry
               </a>
             </div>
@@ -399,7 +440,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
                 {tagName}
                 {'>'}" is not in the {fullPkgName} package.
               </p>
-              <a href='/registry' style='color:var(--brand);font-size:0.875rem;'>
+              <a href='/registry' class='not-found-link'>
                 ← Back to Registry
               </a>
             </div>
@@ -408,7 +449,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
       );
     }
 
-    const compatColor = COMPAT_COLORS[tag.compatibility] || '#888';
+    const compatSuffix = COMPAT_COLORS[tag.compatibility] ? tag.compatibility : 'default';
     const compatLabel = COMPAT_LABELS[tag.compatibility] || tag.compatibility;
     const hasSnapshot = !!tag.ssrSnapshot;
 
@@ -440,23 +481,20 @@ export default class DocsRegistryComponentDetail extends DsdElement {
           <div class='detail-header'>
             <div class='tag-header'>
               <h1 class='tag-name'>{'<'}{tagName}{'>'}</h1>
-              <span
-                class='compat-badge'
-                style={`background:${compatColor}15;border:0.5px solid ${compatColor}40;`}
-              >
-                <span class='compat-dot' style={`background:${compatColor}`}></span>
+              <span class={`compat-badge compat-badge-${compatSuffix}`}>
+                <span class={`compat-dot compat-dot-${compatSuffix}`}></span>
                 {compatLabel}
               </span>
               {tag.validationErrors > 0
                 ? (
-                  <span style='color:#ef4444;font-size:0.8125rem;'>
+                  <span class='validation-error'>
                     {tag.validationErrors} error(s)
                   </span>
                 )
                 : null}
               {tag.validationWarnings > 0
                 ? (
-                  <span style='color:#f59e0b;font-size:0.8125rem;'>
+                  <span class='validation-warning'>
                     {tag.validationWarnings} warning(s)
                   </span>
                 )
@@ -479,12 +517,12 @@ export default class DocsRegistryComponentDetail extends DsdElement {
                 )
                 : hasSnapshot
                 ? (
-                  <div style='width:100%;' innerHTML={sanitizeSnapshot(tag.ssrSnapshot)}>
+                  <div class='preview-full-width' innerHTML={sanitizeSnapshot(tag.ssrSnapshot)}>
                   </div>
                 )
                 : (
                   <div class='preview-placeholder'>
-                    <div style='font-size:0.875rem;margin-bottom:0.25rem;'>
+                    <div class='preview-tag-name'>
                       {'<'}
                       {tagName}
                       {'>'}
@@ -492,7 +530,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
                     <div>No preview snapshot available.</div>
                     {tag.compatibility === 'client-only'
                       ? (
-                        <div style='margin-top:0.5rem;font-size:0.75rem;'>
+                        <div class='client-only-note'>
                           Client-only components require a browser to render.
                         </div>
                       )
@@ -510,7 +548,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
           {/* Usage */}
           <div class='section'>
             <div class='section-title'>Usage</div>
-            <div style='margin-bottom:0.5rem;font-size:0.8125rem;color:var(--text-secondary);'>
+            <div class='usage-hint'>
               Copy the code below into your LessJS route file.
             </div>
             <div class='usage-block'>{usageSnippet}</div>
@@ -523,7 +561,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
               <tr>
                 <th>Package</th>
                 <td>
-                  <a href={`/registry/${this.package}`} style='color:var(--brand);'>
+                  <a href={`/registry/${this.package}`} class='pkg-link'>
                     {fullPkgName}
                   </a>
                 </td>
@@ -534,29 +572,28 @@ export default class DocsRegistryComponentDetail extends DsdElement {
               </tr>
               <tr>
                 <th>Tag</th>
-                <td style='font-family:monospace;'>{tagName}</td>
+                <td class='mono-text-sm'>{tagName}</td>
               </tr>
               <tr>
                 <th>Tier</th>
                 <td>
                   <span
-                    class='compat-badge'
-                    style={`background:${compatColor}15;border:0.5px solid ${compatColor}40;font-size:0.75rem;`}
+                    class={`compat-badge compat-badge-sm-${compatSuffix}`}
                   >
-                    <span class='compat-dot' style={`background:${compatColor}`}></span>
+                    <span class={`compat-dot compat-dot-${compatSuffix}`}></span>
                     {compatLabel}
                   </span>
                 </td>
               </tr>
               <tr>
                 <th>Errors</th>
-                <td style={`color:${tag.validationErrors > 0 ? '#ef4444' : '#22c55e'};`}>
+                <td class={tag.validationErrors > 0 ? 'text-error' : 'text-success'}>
                   {tag.validationErrors}
                 </td>
               </tr>
               <tr>
                 <th>Warnings</th>
-                <td style={`color:${tag.validationWarnings > 0 ? '#f59e0b' : '#22c55e'};`}>
+                <td class={tag.validationWarnings > 0 ? 'validation-warning' : 'text-success'}>
                   {tag.validationWarnings}
                 </td>
               </tr>
@@ -576,7 +613,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
             ? (
               <div class='section'>
                 <div class='section-title'>Preview Details</div>
-                <div style='font-size:0.8125rem;color:var(--text-secondary);line-height:1.6;'>
+                <div class='preview-details-text'>
                   This preview was generated during package validation and stored as a static HTML
                   snapshot. The snapshot is pre-rendered at build time - no client-side rendering
                   needed.
@@ -599,14 +636,14 @@ export default class DocsRegistryComponentDetail extends DsdElement {
                   </tr>
                   {tag.attributes.map((a) => (
                     <tr>
-                      <td style='font-family:monospace;font-size:0.8125rem;'>{a.name}</td>
-                      <td style='font-size:0.75rem;color:var(--text-muted);'>
+                      <td class='mono-text-sm'>{a.name}</td>
+                      <td class='meta-muted-sm'>
                         {a.type || '-'}
                       </td>
-                      <td style='font-size:0.75rem;color:var(--text-muted);'>
+                      <td class='meta-muted-sm'>
                         {a.default || '-'}
                       </td>
-                      <td style='font-size:0.8125rem;'>{a.description || ''}</td>
+                      <td class='meta-text-sm'>{a.description || ''}</td>
                     </tr>
                   ))}
                 </table>
@@ -627,11 +664,11 @@ export default class DocsRegistryComponentDetail extends DsdElement {
                   </tr>
                   {tag.events.map((e) => (
                     <tr>
-                      <td style='font-family:monospace;font-size:0.8125rem;'>{e.name}</td>
-                      <td style='font-size:0.75rem;color:var(--text-muted);'>
+                      <td class='mono-text-sm'>{e.name}</td>
+                      <td class='meta-muted-sm'>
                         {e.type || '-'}
                       </td>
-                      <td style='font-size:0.8125rem;'>{e.description || ''}</td>
+                      <td class='meta-text-sm'>{e.description || ''}</td>
                     </tr>
                   ))}
                 </table>
@@ -651,10 +688,10 @@ export default class DocsRegistryComponentDetail extends DsdElement {
                   </tr>
                   {tag.slots.map((s) => (
                     <tr>
-                      <td style='font-family:monospace;font-size:0.8125rem;'>
+                      <td class='mono-text-sm'>
                         {s.name || '(default)'}
                       </td>
-                      <td style='font-size:0.8125rem;'>{s.description || ''}</td>
+                      <td class='meta-text-sm'>{s.description || ''}</td>
                     </tr>
                   ))}
                 </table>
@@ -665,15 +702,15 @@ export default class DocsRegistryComponentDetail extends DsdElement {
           {/* Install */}
           <div class='section'>
             <div class='section-title'>Install</div>
-            <div style='margin-bottom:0.5rem;font-size:0.8125rem;'>
+            <div class='install-hint'>
               To use this component in your project:
             </div>
             <div class='usage-block'>less add {fullPkgName}</div>
             {pkg.installGuidance.warnings.length > 0
               ? (
-                <div style='margin-top:0.75rem;font-size:0.8125rem;color:var(--text-secondary);'>
+                <div class='install-warnings'>
                   {pkg.installGuidance.warnings.map((w) => (
-                    <div style='padding:0.125rem 0;'>⚠ {w}</div>
+                    <div class='warning-item'>⚠ {w}</div>
                   ))}
                 </div>
               )
@@ -685,17 +722,13 @@ export default class DocsRegistryComponentDetail extends DsdElement {
             ? (
               <div class='section'>
                 <div class='section-title'>Other Components in {fullPkgName}</div>
-                <div style='display:flex;flex-wrap:wrap;gap:0.5rem;'>
+                <div class='related-container'>
                   {relatedComponents.map((t) => (
                     <a
                       href={`/registry/${this.package}/${t.tagName}`}
-                      style={`display:inline-flex;align-items:center;gap:0.375rem;padding:0.375rem 0.625rem;background:var(--bg-code);border-radius:4px;font-size:0.8125rem;font-family:monospace;color:inherit;text-decoration:none;border:0.5px solid transparent;`}
+                      class='related-link'
                     >
-                      <span
-                        style={`width:6px;height:6px;border-radius:50%;display:inline-block;background:${
-                          COMPAT_COLORS[t.compatibility] || '#888'
-                        }`}
-                      >
+                      <span class={`related-dot compat-dot-${COMPAT_COLORS[t.compatibility] ? t.compatibility : 'default'}`}>
                       </span>
                       {t.tagName}
                     </a>

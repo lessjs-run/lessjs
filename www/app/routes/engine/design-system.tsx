@@ -176,6 +176,11 @@ routeSheet.replaceSync(
         flex-wrap: wrap;
         align-items: flex-start;
       }
+      .preview-body-col {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
       .cards-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -359,7 +364,7 @@ export class UIShowcase extends DsdElement {
                 <span class='preview-title'>文本输入</span>
                 <span class='preview-badge'>可用</span>
               </div>
-              <div class='preview-body' style='flex-direction:column;gap:0.75rem'>
+              <div class='preview-body preview-body-col'>
                 <less-input placeholder='输入邮箱...' label='邮箱'></less-input>
                 <less-input type='password' placeholder='密码' label='密码' required>
                 </less-input>
@@ -490,7 +495,7 @@ export class UIShowcase extends DsdElement {
                 <span class='preview-title'>Text Input</span>
                 <span class='preview-badge'>Ready</span>
               </div>
-              <div class='preview-body' style='flex-direction:column;gap:0.75rem'>
+              <div class='preview-body preview-body-col'>
                 <less-input placeholder='Enter email...' label='Email'></less-input>
                 <less-input type='password' placeholder='Password' label='Password' required>
                 </less-input>
