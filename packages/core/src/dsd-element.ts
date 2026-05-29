@@ -112,7 +112,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   /** v0.25.0: Page head metadata. SSG reads this to inject <title> and <meta> tags. */
   static head?: { title?: string; description?: string; ogImage?: string };
 
-  /** v0.25.0: Client island strategy declaration. @deprecated in favor of lessPipeline(). */
+  /** @internal — use lessPipeline({ island: { upgradeStrategy } }) instead */
   static client?: { strategy?: 'load' | 'idle' | 'visible' | 'only' };
 
   /**

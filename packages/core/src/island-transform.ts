@@ -45,10 +45,15 @@ export function transformIslandSource(
     return { code: source, islands: [] };
   }
 
-  // Extract tag name from file name (last path segment, strip extension)
-  const parts = normalizedPath.split('/');
-  const fileName = parts[parts.length - 1];
-  const tagName = fileName.replace(/\.(tsx?|jsx?)$/, '').toLowerCase();
+  // Extract tag name from file path: replace path separators with hyphens
+  // matching route-scanner.ts fileToTagName() behavior.
+  // e.g. "nested/my-widget.tsx" → "my-widget", "my-widget.tsx" → "my-widget"
+  const relativePath = normalizedPath.split(`/${islandsDir}/`)[1] ??
+    normalizedPath.split('/').pop()!;
+  const tagName = relativePath
+    .replace(/\.(tsx?|jsx?)$/, '')
+    .replace(/[/\\]/g, '-')
+    .toLowerCase();
 
   // Validate tag name (must contain a hyphen for Custom Elements)
   if (!tagName.includes('-')) {
