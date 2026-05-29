@@ -36,7 +36,7 @@
  *    - Package islands are client-side only
  *
  * 3. Nested custom elements (from rendered HTML):
- *    - Detected during `renderDSD()` -> `renderComponent()`
+ *    - Detected during `renderDsd()` -> `renderComponent()`
  *    - Calls `detectNestedCustomElements()` (lines 178-215)
  *    - Each nested tag checked against `ssrAdmissionPlan.clientOnlyTags`
  *    - If in clientOnlyTags -> skipped (outputs empty custom element)
@@ -82,7 +82,7 @@ const _textEncoder = new TextEncoder();
  * Render a single component to DSD HTML as structured RenderOutput.
  *
  * v0.15.2: Returns `Promise<RenderOutput>` instead of `Promise<string>`.
- * Callers should destructure: `const { html, errors, metrics, hydrationHints } = await renderDSD(...)`
+ * Callers should destructure: `const { html, errors, metrics, hydrationHints } = await renderDsd(...)`
  *
  * v0.15.2: Accepts optional `RenderHooks` for pipeline observation.
  * Hooks are optional and do not change behavior when omitted.
@@ -97,7 +97,7 @@ const _textEncoder = new TextEncoder();
  * @param hooks - Optional render pipeline hooks (beforeRender, afterRender, onError)
  * @returns Structured render output (html + errors + metrics + hydrationHints)
  */
-export async function renderDSD(
+export async function renderDsd(
   tagName: string,
   componentClass: CustomElementConstructor,
   props: Record<string, unknown> = {},
@@ -377,7 +377,7 @@ function renderEnd_timeFallback(): number {
  * @param hooks - Optional render pipeline hooks
  * @returns Structured render output
  */
-export async function renderDSDByName(
+export async function renderDsdByName(
   tagName: string,
   props: Record<string, unknown> = {},
   sourceInfo?: { route?: string; source?: string },
@@ -405,7 +405,7 @@ export async function renderDSDByName(
     };
   }
 
-  return await renderDSD(
+  return await renderDsd(
     tagName,
     cls as CustomElementConstructor,
     props,
@@ -419,10 +419,10 @@ export async function renderDSDByName(
 
 // v0.21.0: Streaming types and functions moved to render-dsd-stream.ts.
 // Re-exported here for backward compatibility.
-export { createRenderDSDStreamMetrics, renderDSDStream } from './render-dsd-stream.js';
+export { createRenderDsdStreamMetrics, renderDsdStream } from './render-dsd-stream.js';
 export type {
-  RenderDSDStreamChunk,
-  RenderDSDStreamComponent,
-  RenderDSDStreamMetrics,
-  RenderDSDStreamOptions,
+  RenderDsdStreamChunk,
+  RenderDsdStreamComponent,
+  RenderDsdStreamMetrics,
+  RenderDsdStreamOptions,
 } from './render-dsd-stream.js';

@@ -50,7 +50,7 @@ Stabilize:
    - adapter resolution issue;
    - streaming interruption.
 3. Give every error a stable code, severity, package owner, and suggested remediation.
-4. Make `renderDSD()` and `renderDSDStream()` report compatible metadata where possible.
+4. Make `renderDsd()` and `renderDSDStream()` report compatible metadata where possible.
 5. Decide which report fields are public and which are adapter-internal.
 6. Add tests that snapshot representative error output without overfitting entire JSON files.
 7. Update `dsd:check-report` thresholds so known errors are intentional, documented, and finite.
@@ -65,7 +65,7 @@ Stabilize:
 
 ## Acceptance Criteria
 
-- `renderDSD()` and `renderDSDStream()` have a documented output contract.
+- `renderDsd()` and `renderDSDStream()` have a documented output contract.
 - `dsd:check-report` fails on real regressions instead of accepting unlimited known errors.
 - Build reports explain route, component, severity, and next action.
 - At least one test covers a streaming error path.

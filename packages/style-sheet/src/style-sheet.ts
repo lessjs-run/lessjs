@@ -4,7 +4,7 @@
  * In the browser this delegates to the native CSSStyleSheet API at zero
  * cost.  In Deno / Node / Bun (where the CSSOM is not available) it falls
  * back to a minimal in-memory implementation that satisfies the same
- * contract needed by `renderDSD()` and `DsdElement`.
+ * contract needed by `renderDsd()` and `DsdElement`.
  *
  * Public contract (subset of `CSSStyleSheet`):
  *   new StyleSheet()

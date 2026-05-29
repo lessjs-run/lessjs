@@ -22,7 +22,7 @@ This was a **fine-grained patch model**: track each signal, patch only the affec
 When v0.24.1 introduced JSX + VNode (replacing `html` + `TemplateResult`), the fine-grained patch model could not apply:
 
 - VNodes are a **pure data tree** — no binding markers, no `data-less-b` attributes.
-- `renderToDOM()` creates **real DOM nodes** with `addEventListener` for event handlers.
+- `renderToDom()` creates **real DOM nodes** with `addEventListener` for event handlers.
 - There is no `values` array to enumerate signals from.
 
 Initial v0.24.1 through v0.24.2 rendered VNodes once (on `connectedCallback`) but had **no reactive re-render**. Signal changes inside `render()` were invisible to the framework.
@@ -44,7 +44,7 @@ this._vnodeEffectDispose = effect(() => {
     this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
   }
   this.shadowRoot!.appendChild(
-    renderToDOM(updated, this._templateAbortController.signal),
+    renderToDom(updated, this._templateAbortController.signal),
   );
 });
 ```
@@ -101,12 +101,12 @@ _renderIntoShadowRoot()
   │     │
   │     ├─ 4b. Initial DOM render
   │     │      this._templateAbortController = new AbortController()
-  │     │      dom = renderToDOM(result, signal)
+  │     │      dom = renderToDom(result, signal)
   │     │      shadowRoot.appendChild(dom)
   │     │
   │     └─ 4c. Create reactive effect
   │            this._vnodeEffectDispose = effect(() => {
-  │              // Same clear + renderToDOM pattern for each change
+  │              // Same clear + renderToDom pattern for each change
   │            })
   │
   ├─ 5. else if (isTemplateResult(result))
@@ -126,17 +126,17 @@ while (this.shadowRoot.firstChild) {
 }
 ```
 
-Removes all existing child nodes. This includes the previous `renderToDOM()` output and any user-added DOM. Rationale: full re-render is simpler and more predictable than diffing.
+Removes all existing child nodes. This includes the previous `renderToDom()` output and any user-added DOM. Rationale: full re-render is simpler and more predictable than diffing.
 
 #### Step 4b: Initial DOM render
 
 ```ts
 this._templateAbortController = new AbortController();
-const dom = renderToDOM(result, this._templateAbortController.signal);
+const dom = renderToDom(result, this._templateAbortController.signal);
 this.shadowRoot.appendChild(dom);
 ```
 
-`renderToDOM()` creates real DOM nodes:
+`renderToDom()` creates real DOM nodes:
 
 - HTML elements via `document.createElement()`.
 - SVG elements via `document.createElementNS()`.
@@ -159,7 +159,7 @@ this._vnodeEffectDispose = effect(() => {
     this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
   }
   this.shadowRoot!.appendChild(
-    renderToDOM(updated, this._templateAbortController.signal),
+    renderToDom(updated, this._templateAbortController.signal),
   );
 });
 ```
@@ -170,7 +170,7 @@ The effect closure:
 2. Aborts the previous `AbortController` → removes old event listeners.
 3. Creates a new `AbortController` for new event listeners.
 4. Clears old DOM.
-5. Creates and appends new DOM via `renderToDOM()`.
+5. Creates and appends new DOM via `renderToDom()`.
 
 ## _vnodeEffectDispose Lifecycle
 
@@ -246,7 +246,7 @@ The full re-render approach was chosen for VNodes because:
 
 1. **Components are the unit of rendering**. LessJS components tend to be small (a counter, a card, a form field). Full re-render of a small shadow DOM is fast.
 
-2. **JSX trees are pure data**. There are no binding markers to query-and-patch, and retrofitting them into `renderToDOM()` output would require either a virtual DOM diff or marker injection — both of which add complexity.
+2. **JSX trees are pure data**. There are no binding markers to query-and-patch, and retrofitting them into `renderToDom()` output would require either a virtual DOM diff or marker injection — both of which add complexity.
 
 3. **Simplicity wins for correctness**. Full re-render guarantees the DOM exactly matches `render()` output. No stale nodes, no missed updates, no "patch didn't cover this edge case" bugs.
 
@@ -278,7 +278,7 @@ Key behaviours:
 
 1. **Cleanup errors are swallowed**. If the previous effect's cleanup (`AbortController.abort()` or similar) throws, it doesn't prevent the new effect from starting.
 
-2. **Effect errors propagate**. If `this.render()` or `renderToDOM()` throws inside the effect, the error propagates to alien-signals. The effect is not disposed — subsequent signal changes will retry.
+2. **Effect errors propagate**. If `this.render()` or `renderToDom()` throws inside the effect, the error propagates to alien-signals. The effect is not disposed — subsequent signal changes will retry.
 
 3. **Dispose swallows cleanup errors**. When disposing the effect (via `_vnodeEffectDispose()`), both the cleanup function and the alien-signals dispose are called, each with error swallowing.
 
@@ -366,7 +366,7 @@ The `VNode.key` field (`key?: string | number`) is reserved for future keyed rec
 </ul>;
 ```
 
-This is **not yet implemented** in v0.24.3. The `key` field is currently ignored by `renderToDOM()` and `renderToString()`.
+This is **not yet implemented** in v0.24.3. The `key` field is currently ignored by `renderToDom()` and `renderToString()`.
 
 ## Comparison: effect() vs _subscribeTemplateSignals()
 

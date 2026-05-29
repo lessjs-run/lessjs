@@ -93,7 +93,7 @@ export const islandConfig = {
   framework: 'preact',
 };
 
-// SSR: renderDSD() outputs empty <less-data-grid></less-data-grid>
+// SSR: renderDsd() outputs empty <less-data-grid></less-data-grid>
 // Client: Preact mounts when IntersectionObserver triggers
 ```
 
@@ -107,7 +107,7 @@ This is out of scope for v0.20 but the architecture supports it.
 LitElement.render(): TemplateResult
   → @lessjs/adapter-lit claims it (adapter.isTemplate() = true)
   → adapter.render(TemplateResult) → HTML string
-  → renderDSD() wraps in DSD template
+  → renderDsd() wraps in DSD template
   → Client: LitElement upgrade → render() → reactive cycle starts
 ```
 

@@ -55,16 +55,16 @@ export type {
 } from './isr.js';
 export { DsdElement } from './dsd-element.js';
 export {
-  createRenderDSDStreamMetrics,
-  renderDSD,
-  renderDSDByName,
-  renderDSDStream,
+  createRenderDsdStreamMetrics,
+  renderDsd,
+  renderDsdByName,
+  renderDsdStream,
 } from './render-dsd.js';
 export type {
-  RenderDSDStreamChunk,
-  RenderDSDStreamComponent,
-  RenderDSDStreamMetrics,
-  RenderDSDStreamOptions,
+  RenderDsdStreamChunk,
+  RenderDsdStreamComponent,
+  RenderDsdStreamMetrics,
+  RenderDsdStreamOptions,
 } from './render-dsd-stream.js';
 export { camelToKebab } from './render-serialize.js';
 export { getAdapter, getRegisteredAdapters, registerAdapter } from './adapter-registry.js';
@@ -132,7 +132,7 @@ export {
 export { createLogger, LessLogger, LogLevel } from './logger.js';
 export { DANGEROUS_KEYS } from './security.js';
 export { isValidTagName } from './tag-utils.js';
-export { getSSRProps, island, type IslandOptions, lessBind } from './island.js';
+export { bindEvents, defineIsland, getSsrProps, type IslandOptions } from './island.js';
 export { hasNavigationApi, matchRoute, navigate, onNavigate } from './navigation.js';
 export type { NavigationCallback } from './navigation.js';
 
@@ -159,7 +159,7 @@ export type { VNode } from './vnode.js';
 export { isVNode } from './vnode.js';
 export { Fragment, jsx, jsxDEV, jsxs } from './jsx-runtime.js';
 // Renderers
-export { renderToDOM } from './jsx-render-dom.js';
+export { renderToDom } from './jsx-render-dom.js';
 export { renderToString } from './jsx-render-string.js';
 // static props runtime + Signal unwrap
 export {

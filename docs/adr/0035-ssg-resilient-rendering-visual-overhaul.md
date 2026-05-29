@@ -27,14 +27,14 @@ client-only. The `entry-descriptor.ts` admission plan classifies them correctly,
 runtime `__LESS_CLIENT_ONLY_TAGS__` set isn't populated for Shoelace because Shoelace
 components are loaded as external npm dependencies, not as LessJS islands.
 
-Additionally, `renderDSD()` (in `packages/core/src/render-dsd.ts`) instantiates the
+Additionally, `renderDsd()` (in `packages/core/src/render-dsd.ts`) instantiates the
 component class and calls `render()`. If instantiation or render throws (e.g., Shoelace
 calls `querySelector`), the error is caught and recorded, but the component's shadow DOM
 is left empty — producing broken output rather than a graceful fallback.
 
 **Key insight**: The infrastructure to skip client-only components **already exists** in
 `render-nested.ts`. The bug is that Shoelace tags aren't in the `__LESS_CLIENT_ONLY_TAGS__`
-set at SSG runtime. And even for tags that ARE in the set, if `renderDSD()` is called
+set at SSG runtime. And even for tags that ARE in the set, if `renderDsd()` is called
 directly (not via `renderNestedCustomElements`), there's no try/catch guard.
 
 ### Problem B: Visual Quality
@@ -67,9 +67,9 @@ in the route's island scan. Shoelace components used in `hub-data-full.ts` snaps
 not islands — they're static data. The fix: the admission plan must also include tags from
 the Hub scanner's `WC_PACKAGES` list that have `compatibility: 'client-only'`.
 
-**A2. Add try/catch fallback in `renderDSD()`**
+**A2. Add try/catch fallback in `renderDsd()`**
 
-When `renderDSD()` catches an instantiation or render error, instead of recording the
+When `renderDsd()` catches an instantiation or render error, instead of recording the
 error and producing broken output, it should fall back to **bare-tag output** — output
 just the custom element tag with its attributes and light DOM content, without any
 shadow DOM:
@@ -177,7 +177,7 @@ Changes:
 ## Implementation Order
 
 ```
-A1 (SSG client-only enforcement) → A2 (renderDSD fallback) → A3 (iframe previews)
+A1 (SSG client-only enforcement) → A2 (renderDsd fallback) → A3 (iframe previews)
                                                                     ↓
 B1 (foundation CSS) → B2 (components) → B3 (pages) → B4 (polish)
 ```

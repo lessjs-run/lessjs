@@ -45,7 +45,7 @@ The runtime should:
 - Do not add DOM diffing.
 - Do not add JSX, a compiler, or a build-time template transform.
 - Do not make every component reactive by default.
-- Do not change `renderDSD()` callers that already handle string output.
+- Do not change `renderDsd()` callers that already handle string output.
 - Do not make `DsdElement` depend on Lit or React.
 
 ## Target Files
@@ -166,7 +166,7 @@ Acceptance:
 
 - [ ] Existing static component tests pass unchanged.
 - [ ] A TemplateResult component renders in CSR fallback.
-- [ ] `renderDSD()` can render a component returning TemplateResult.
+- [ ] `renderDsd()` can render a component returning TemplateResult.
 
 ### Step 4: Add Binding Records
 
@@ -281,7 +281,7 @@ Required test cases:
 
 - [ ] Static `render(): string` path unchanged.
 - [ ] `render(): TemplateResult` works in CSR.
-- [ ] `renderDSD()` handles TemplateResult.
+- [ ] `renderDsd()` handles TemplateResult.
 - [ ] Signal text binding updates through a microtask-batched local rerender.
 - [ ] Attribute, boolean, property, and event bindings work.
 - [ ] Microtask batching coalesces multiple writes.

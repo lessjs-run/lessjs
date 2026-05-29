@@ -4,10 +4,10 @@ Pure LessJS runtime package (v0.24.3).
 
 `@lessjs/core` owns the platform-facing runtime primitives:
 
-- **JSX + Signal component model** — `jsx()`, `jsxs()`, `VNode`, `renderToString()`, `renderToDOM()`
+- **JSX + Signal component model** — `jsx()`, `jsxs()`, `VNode`, `renderToString()`, `renderToDom()`
 - **DsdElement** — zero-framework base class for DSD components
 - **static props** — ES2022 class fields for reactive properties
-- **DSD rendering** — `renderDSD()`, `renderDSDByName()`, `renderDSDStream()`
+- **DSD rendering** — `renderDsd()`, `renderDsdByName()`, `renderDsdStream()`
 - **Unified errors** — LessError hierarchy, ErrorBoundary, telemetry
 - **Signal utilities** — `isSignalLike()`, `unwrapSignalLike()`
 - **Island metadata** — island detection, strategy, hydration
@@ -49,21 +49,21 @@ class MyButton extends DsdElement {
 
 ```ts
 import {
+  bindEvents,
+  defineIsland,
   DsdElement,
   ErrorBoundary,
   Fragment,
-  getSSRProps,
-  island,
+  getSsrProps,
   isSignalLike,
   isVNode,
   jsx,
   jsxs,
-  lessBind,
   LessError,
-  renderDSD,
-  renderDSDByName,
-  renderDSDStream,
-  renderToDOM,
+  renderDsd,
+  renderDsdByName,
+  renderDsdStream,
+  renderToDom,
   renderToString,
   SsrRenderError,
   unwrapSignalLike,

@@ -8,13 +8,13 @@
  * Uses plain class mocks - no browser HTMLElement needed.
  */
 import { assertEquals, assertFalse, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
-import { renderDSD, renderDSDByName } from '../src/render-dsd.ts';
+import { renderDsd, renderDsdByName } from '../src/render-dsd.ts';
 import { escapeAttr, escapeAttrValue, escapeHtml } from '../src/html-escape.ts';
 import { registerAdapter, type RendererProtocol } from '../src/adapter-registry.ts';
 
 // ─── Mock Component Classes ──────────────────────────────────
 //
-// renderDSD() takes CustomElementConstructor but only uses new() + render().
+// renderDsd() takes CustomElementConstructor but only uses new() + render().
 // We create plain classes that satisfy the DsdComponent interface without
 // needing browser HTMLElement (not available in Deno runtime).
 
@@ -70,7 +70,7 @@ function createMockClass(
   return cls as unknown as new () => MockComponent;
 }
 
-/** Cast mock class to CustomElementConstructor for renderDSD */
+/** Cast mock class to CustomElementConstructor for renderDsd */
 function asCtor(cls: new () => MockComponent): CustomElementConstructor {
   return cls as unknown as CustomElementConstructor;
 }
@@ -186,12 +186,12 @@ Deno.test('escapeHtml', async (t) => {
   });
 });
 
-// ─── renderDSD - Basic rendering ─────────────────────────────
+// ─── renderDsd - Basic rendering ─────────────────────────────
 
-Deno.test('renderDSD - basic rendering', async (t) => {
+Deno.test('renderDsd - basic rendering', async (t) => {
   await t.step('renders a simple component with DSD template', async () => {
     const cls = createMockClass('<p>Hello</p>');
-    const output = await renderDSD('test-comp-1', asCtor(cls), {});
+    const output = await renderDsd('test-comp-1', asCtor(cls), {});
     assertStringIncludes(output.html, '<test-comp-1>');
     assertStringIncludes(output.html, '<template shadowrootmode="open">');
     assertStringIncludes(output.html, '<p>Hello</p>');
@@ -201,26 +201,26 @@ Deno.test('renderDSD - basic rendering', async (t) => {
 
   await t.step('renders component with props as attributes', async () => {
     const cls = createMockClass('<span>content</span>');
-    const output = await renderDSD('my-el-1', asCtor(cls), { variant: 'primary', count: 5 });
+    const output = await renderDsd('my-el-1', asCtor(cls), { variant: 'primary', count: 5 });
     assertStringIncludes(output.html, 'variant="primary"');
     assertStringIncludes(output.html, 'count="5"');
   });
 
   await t.step('includes data-ssr-props when props are provided', async () => {
     const cls = createMockClass('<div>x</div>');
-    const output = await renderDSD('test-el-1', asCtor(cls), { name: 'test' });
+    const output = await renderDsd('test-el-1', asCtor(cls), { name: 'test' });
     assertStringIncludes(output.html, 'data-ssr-props=');
   });
 
   await t.step('does not include data-ssr-props when no props', async () => {
     const cls = createMockClass('<div>x</div>');
-    const output = await renderDSD('test-el-2', asCtor(cls), {});
+    const output = await renderDsd('test-el-2', asCtor(cls), {});
     assertFalse(output.html.includes('data-ssr-props'));
   });
 
   await t.step('skips false/null/undefined props in attributes', async () => {
     const cls = createMockClass('<div>x</div>');
-    const output = await renderDSD('test-el-3', asCtor(cls), {
+    const output = await renderDsd('test-el-3', asCtor(cls), {
       active: false,
       missing: null,
       gone: undefined,
@@ -232,25 +232,25 @@ Deno.test('renderDSD - basic rendering', async (t) => {
 
   await t.step('renders boolean true as bare attribute', async () => {
     const cls = createMockClass('<div>x</div>');
-    const output = await renderDSD('test-el-4', asCtor(cls), { disabled: true });
+    const output = await renderDsd('test-el-4', asCtor(cls), { disabled: true });
     assertStringIncludes(output.html, 'disabled');
     assertFalse(output.html.includes('disabled="true"'));
   });
 
   await t.step('serializes object props as JSON in attribute', async () => {
     const cls = createMockClass('<div>x</div>');
-    const output = await renderDSD('test-el-5', asCtor(cls), { items: ['a', 'b'] });
+    const output = await renderDsd('test-el-5', asCtor(cls), { items: ['a', 'b'] });
     assertStringIncludes(output.html, 'items="');
     assertStringIncludes(output.html, '[');
   });
 });
 
-// ─── renderDSD - Error handling ──────────────────────────────
+// ─── renderDsd - Error handling ──────────────────────────────
 
-Deno.test('renderDSD - error handling', async (t) => {
+Deno.test('renderDsd - error handling', async (t) => {
   await t.step('handles component that throws on instantiation', async () => {
     const cls = createMockClass('', { throwOnConstruct: true });
-    const output = await renderDSD('broken-el-1', asCtor(cls), {});
+    const output = await renderDsd('broken-el-1', asCtor(cls), {});
     // v0.19.1: Bare-tag fallback - no shadow DOM, no error comments in HTML
     assertStringIncludes(output.html, '<broken-el-1>');
     assertStringIncludes(output.html, '</broken-el-1>');
@@ -262,7 +262,7 @@ Deno.test('renderDSD - error handling', async (t) => {
 
   await t.step('handles render() that throws', async () => {
     const cls = createMockClass('', { throwOnRender: true });
-    const output = await renderDSD('error-el-1', asCtor(cls), {});
+    const output = await renderDsd('error-el-1', asCtor(cls), {});
     // v0.19.1: Bare-tag fallback - no shadow DOM, no error comments in HTML
     assertStringIncludes(output.html, '<error-el-1>');
     assertStringIncludes(output.html, '</error-el-1>');
@@ -274,7 +274,7 @@ Deno.test('renderDSD - error handling', async (t) => {
 
   await t.step('handles render() that returns null', async () => {
     const cls = createMockClass('', { renderValue: null });
-    const output = await renderDSD('null-el-1', asCtor(cls), {});
+    const output = await renderDsd('null-el-1', asCtor(cls), {});
     assertStringIncludes(output.html, '<null-el-1>');
     assertStringIncludes(output.html, '<template shadowrootmode="open">');
     assertStringIncludes(output.html, '</template>');
@@ -283,19 +283,19 @@ Deno.test('renderDSD - error handling', async (t) => {
   await t.step('handles render() that returns non-string without adapter', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('', { renderValue: { notAString: true } });
-    const output = await renderDSD('obj-el-1', asCtor(cls), {});
+    const output = await renderDsd('obj-el-1', asCtor(cls), {});
     assertStringIncludes(output.html, '<obj-el-1>');
     assertStringIncludes(output.html, 'LessJS ERROR');
   });
 });
 
-// ─── renderDSD - DSD Options ─────────────────────────────────
+// ─── renderDsd - DSD Options ─────────────────────────────────
 
-Deno.test('renderDSD - DSD options', async (t) => {
+Deno.test('renderDsd - DSD options', async (t) => {
   await t.step('adds shadowrootdelegatesfocus when delegatesFocus=true', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<button>Click</button>');
-    const output = await renderDSD('focus-el-1', asCtor(cls), {}, undefined, {
+    const output = await renderDsd('focus-el-1', asCtor(cls), {}, undefined, {
       delegatesFocus: true,
     });
     assertStringIncludes(output.html, 'shadowrootdelegatesfocus');
@@ -304,7 +304,7 @@ Deno.test('renderDSD - DSD options', async (t) => {
   await t.step('adds shadowrootserializable when serializable=true', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<span>data</span>');
-    const output = await renderDSD('serial-el-1', asCtor(cls), {}, undefined, {
+    const output = await renderDsd('serial-el-1', asCtor(cls), {}, undefined, {
       serializable: true,
     });
     assertStringIncludes(output.html, 'shadowrootserializable');
@@ -313,14 +313,14 @@ Deno.test('renderDSD - DSD options', async (t) => {
   await t.step('adds shadowrootclonable when clonable=true', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<span>clone me</span>');
-    const output = await renderDSD('clone-el-1', asCtor(cls), {}, undefined, { clonable: true });
+    const output = await renderDsd('clone-el-1', asCtor(cls), {}, undefined, { clonable: true });
     assertStringIncludes(output.html, 'shadowrootclonable');
   });
 
   await t.step('adds shadowrootslotassignment when slotAssignment=manual', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<slot></slot>');
-    const output = await renderDSD('slot-el-1', asCtor(cls), {}, undefined, {
+    const output = await renderDsd('slot-el-1', asCtor(cls), {}, undefined, {
       slotAssignment: 'manual',
     });
     assertStringIncludes(output.html, 'shadowrootslotassignment="manual"');
@@ -329,7 +329,7 @@ Deno.test('renderDSD - DSD options', async (t) => {
   await t.step('adds boolean shadowrootcustomelementregistry when enabled', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<slot></slot>');
-    const output = await renderDSD('registry-el-1', asCtor(cls), {}, undefined, {
+    const output = await renderDsd('registry-el-1', asCtor(cls), {}, undefined, {
       customElementRegistry: true,
     });
     assertStringIncludes(output.html, 'shadowrootcustomelementregistry');
@@ -339,7 +339,7 @@ Deno.test('renderDSD - DSD options', async (t) => {
   await t.step('omits DSD attrs when options are not set', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<div>x</div>');
-    const output = await renderDSD('plain-el-1', asCtor(cls), {}, undefined, {});
+    const output = await renderDsd('plain-el-1', asCtor(cls), {}, undefined, {});
     assertFalse(output.html.includes('shadowrootdelegatesfocus'));
     assertFalse(output.html.includes('shadowrootclonable'));
     assertFalse(output.html.includes('shadowrootserializable'));
@@ -350,7 +350,7 @@ Deno.test('renderDSD - DSD options', async (t) => {
   await t.step('includes multiple DSD attrs at once', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<input />');
-    const output = await renderDSD('multi-el-1', asCtor(cls), {}, undefined, {
+    const output = await renderDsd('multi-el-1', asCtor(cls), {}, undefined, {
       delegatesFocus: true,
       clonable: true,
       serializable: true,
@@ -361,13 +361,13 @@ Deno.test('renderDSD - DSD options', async (t) => {
   });
 });
 
-// ─── renderDSD - Pure Island layer ──────────────────────────
+// ─── renderDsd - Pure Island layer ──────────────────────────
 
-Deno.test('renderDSD - pure-island layer', async (t) => {
+Deno.test('renderDsd - pure-island layer', async (t) => {
   await t.step('skips DSD template for pure-island layer', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<div>island</div>');
-    const output = await renderDSD('island-el-1', asCtor(cls), {}, undefined, {
+    const output = await renderDsd('island-el-1', asCtor(cls), {}, undefined, {
       layer: 'pure-island',
     });
     assertFalse(output.html.includes('<template shadowrootmode'));
@@ -376,7 +376,7 @@ Deno.test('renderDSD - pure-island layer', async (t) => {
   await t.step('pure-island includes data-ssr-props for hydration', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<div>island</div>');
-    const output = await renderDSD('island-el-2', asCtor(cls), { count: 3 }, undefined, {
+    const output = await renderDsd('island-el-2', asCtor(cls), { count: 3 }, undefined, {
       layer: 'pure-island',
     });
     assertStringIncludes(output.html, 'data-ssr-props=');
@@ -385,7 +385,7 @@ Deno.test('renderDSD - pure-island layer', async (t) => {
   await t.step('pure-island includes attributes from props', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<div>island</div>');
-    const output = await renderDSD('island-el-3', asCtor(cls), { name: 'test' }, undefined, {
+    const output = await renderDsd('island-el-3', asCtor(cls), { name: 'test' }, undefined, {
       layer: 'pure-island',
     });
     assertStringIncludes(output.html, 'name="test"');
@@ -394,19 +394,19 @@ Deno.test('renderDSD - pure-island layer', async (t) => {
   await t.step('pure-island respects instance.layer property', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<div>island</div>', { layer: 'pure-island' });
-    const output = await renderDSD('island-el-4', asCtor(cls), {});
+    const output = await renderDsd('island-el-4', asCtor(cls), {});
     assertFalse(output.html.includes('<template shadowrootmode'));
   });
 });
 
-// ─── renderDSD - Source info ─────────────────────────────────
+// ─── renderDsd - Source info ─────────────────────────────────
 // v0.19.1: Instantiation errors now produce bare-tag fallback without
 // source info attributes. Source info is still recorded in the errors array.
 
-Deno.test('renderDSD - source info', async (t) => {
+Deno.test('renderDsd - source info', async (t) => {
   await t.step('instantiation error is recorded with route info', async () => {
     const cls = createMockClass('', { throwOnConstruct: true });
-    const output = await renderDSD('err-el-1', asCtor(cls), {}, { route: '/about' });
+    const output = await renderDsd('err-el-1', asCtor(cls), {}, { route: '/about' });
     // Bare-tag output doesn't include route/source attrs
     assertStringIncludes(output.html, '<err-el-1>');
     // But error metadata is preserved
@@ -415,14 +415,14 @@ Deno.test('renderDSD - source info', async (t) => {
 
   await t.step('instantiation error is recorded with source file info', async () => {
     const cls = createMockClass('', { throwOnConstruct: true });
-    const output = await renderDSD('err-el-2', asCtor(cls), {}, { source: 'app/routes/about.ts' });
+    const output = await renderDsd('err-el-2', asCtor(cls), {}, { source: 'app/routes/about.ts' });
     assertStringIncludes(output.html, '<err-el-2>');
     assertEquals(output.errors.length, 1);
   });
 
   await t.step('both route and source recorded in errors', async () => {
     const cls = createMockClass('', { throwOnConstruct: true });
-    const output = await renderDSD('err-el-3', asCtor(cls), {}, {
+    const output = await renderDsd('err-el-3', asCtor(cls), {}, {
       route: '/test',
       source: 'test.ts',
     });
@@ -431,11 +431,11 @@ Deno.test('renderDSD - source info', async (t) => {
   });
 });
 
-// ─── renderDSDByName ─────────────────────────────────────────
+// ─── renderDsdByName ─────────────────────────────────────────
 
-Deno.test('renderDSDByName', async (t) => {
+Deno.test('renderDsdByName', async (t) => {
   await t.step('renders void element for unregistered tag', async () => {
-    const output = await renderDSDByName('nonexistent-tag-xyz', {});
+    const output = await renderDsdByName('nonexistent-tag-xyz', {});
     assertStringIncludes(output.html, '<nonexistent-tag-xyz');
     assertStringIncludes(output.html, '</nonexistent-tag-xyz>');
     assertFalse(output.html.includes('shadowrootmode'));
@@ -444,7 +444,7 @@ Deno.test('renderDSDByName', async (t) => {
 
 // ─── Adapter protocol ────────────────────────────────────────
 
-Deno.test('renderDSD - adapter protocol', async (t) => {
+Deno.test('renderDsd - adapter protocol', async (t) => {
   await t.step('uses adapter to render non-string template results', async () => {
     const fakeTemplate = { _$litType$: 1, __brand: 'TemplateResult' };
     let renderCalled = false;
@@ -463,7 +463,7 @@ Deno.test('renderDSD - adapter protocol', async (t) => {
     registerAdapter(adapter);
 
     const cls = createMockClass('', { renderValue: fakeTemplate });
-    const output = await renderDSD('adapter-el-1', asCtor(cls), {});
+    const output = await renderDsd('adapter-el-1', asCtor(cls), {});
     assertStringIncludes(output.html, '<p>adapted</p>');
     assertEquals(renderCalled, true);
 
@@ -479,7 +479,7 @@ Deno.test('renderDSD - adapter protocol', async (t) => {
     registerAdapter(adapter);
 
     const cls = createMockClass('<div>styled</div>');
-    const output = await renderDSD('styled-el-1', asCtor(cls), {});
+    const output = await renderDsd('styled-el-1', asCtor(cls), {});
     assertStringIncludes(output.html, '<style>');
     assertStringIncludes(output.html, ':host { display: block; }');
 
@@ -497,7 +497,7 @@ Deno.test('renderDSD - adapter protocol', async (t) => {
     registerAdapter(adapter);
 
     const cls = createMockClass('<div>no-style</div>');
-    const output = await renderDSD('no-style-el-1', asCtor(cls), {});
+    const output = await renderDsd('no-style-el-1', asCtor(cls), {});
     assertStringIncludes(output.html, '<div>no-style</div>');
     assertFalse(output.html.includes('<style>'));
 
@@ -507,11 +507,11 @@ Deno.test('renderDSD - adapter protocol', async (t) => {
 
 // ─── Edge cases ──────────────────────────────────────────────
 
-Deno.test('renderDSD - edge cases', async (t) => {
+Deno.test('renderDsd - edge cases', async (t) => {
   await t.step('handles empty render output', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('');
-    const output = await renderDSD('empty-el-1', asCtor(cls), {});
+    const output = await renderDsd('empty-el-1', asCtor(cls), {});
     assertStringIncludes(output.html, '<empty-el-1>');
     assertStringIncludes(output.html, '<template shadowrootmode="open">');
   });
@@ -520,7 +520,7 @@ Deno.test('renderDSD - edge cases', async (t) => {
     registerAdapter(undefined);
     const cls = createMockClass('<div>test</div>', { readOnlyProp: 'frozenProp' });
     // Should not throw when trying to set read-only property
-    const output = await renderDSD('readonly-el-1', asCtor(cls), { frozenProp: 'newval' });
+    const output = await renderDsd('readonly-el-1', asCtor(cls), { frozenProp: 'newval' });
     // Component should render even if a property is read-only
     assertStringIncludes(output.html, 'shadowrootmode="open"');
     assertStringIncludes(output.html, '<div>test</div>');
@@ -529,7 +529,7 @@ Deno.test('renderDSD - edge cases', async (t) => {
   await t.step('handles props with special characters in values', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<div>x</div>');
-    const output = await renderDSD('special-el-1', asCtor(cls), {
+    const output = await renderDsd('special-el-1', asCtor(cls), {
       text: '<script>alert("xss")</script>',
     });
     assertStringIncludes(output.html, '&lt;script&gt;');
@@ -539,7 +539,7 @@ Deno.test('renderDSD - edge cases', async (t) => {
     registerAdapter(undefined);
     const deepContent = '<div><section><article><p><span>deep</span></p></article></section></div>';
     const cls = createMockClass(deepContent);
-    const output = await renderDSD('deep-el-1', asCtor(cls), {});
+    const output = await renderDsd('deep-el-1', asCtor(cls), {});
     assertStringIncludes(output.html, deepContent);
   });
 
@@ -565,7 +565,7 @@ Deno.test('renderDSD - edge cases', async (t) => {
 
     try {
       const parentCls = createMockClass('<div><child-widget></child-widget></div>');
-      const output = await renderDSD('parent-widget', asCtor(parentCls), {});
+      const output = await renderDsd('parent-widget', asCtor(parentCls), {});
       assertStringIncludes(output.html, '<child-widget></child-widget>');
       assertFalse(output.html.includes('should-not-render'));
     } finally {
@@ -583,7 +583,7 @@ Deno.test('renderDSD - edge cases', async (t) => {
     registerAdapter(undefined);
     const cls = createMockClass('<div>x</div>');
     const largeVal = 'a'.repeat(10000);
-    const output = await renderDSD('large-el-1', asCtor(cls), { data: largeVal });
+    const output = await renderDsd('large-el-1', asCtor(cls), { data: largeVal });
     assertStringIncludes(output.html, '<template shadowrootmode="open">');
     assertStringIncludes(output.html, '</large-el-1>');
     assertEquals(output.html.length > 10000, true);
@@ -592,7 +592,7 @@ Deno.test('renderDSD - edge cases', async (t) => {
   await t.step('dsd-interactive layer still emits DSD template', async () => {
     registerAdapter(undefined);
     const cls = createMockClass('<button>Click me</button>', { layer: 'dsd-interactive' });
-    const output = await renderDSD('interactive-el-1', asCtor(cls), {});
+    const output = await renderDsd('interactive-el-1', asCtor(cls), {});
     assertStringIncludes(output.html, '<template shadowrootmode="open">');
   });
 });

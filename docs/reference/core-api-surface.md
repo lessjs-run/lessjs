@@ -33,7 +33,7 @@ here is either internal or removed.
 | `VNode`                           | `{ tag, props, children, key, ref }` | HARDENED — 5-field frozen |
 | `isVNode(value)`                  | `(unknown): value is VNode`          | HARDENED                  |
 | `renderToString(vnode)`           | `(VNode): string`                    | HARDENED                  |
-| `renderToDOM(vnode, signal?)`     | `(VNode, AbortSignal?): Node`        | HARDENED                  |
+| `renderToDom(vnode, signal?)`     | `(VNode, AbortSignal?): Node`        | HARDENED                  |
 
 ## Signal Utilities
 
@@ -47,7 +47,7 @@ here is either internal or removed.
 
 | API                                     | Signature                                                         | Stability |
 | --------------------------------------- | ----------------------------------------------------------------- | --------- |
-| `renderDSD(components, options?)`       | `(RenderDSDComponent[], RenderDSDOptions?): RenderOutput`         | HARDENED  |
+| `renderDsd(components, options?)`       | `(RenderDSDComponent[], RenderDSDOptions?): RenderOutput`         | HARDENED  |
 | `renderDSDStream(components, options?)` | `(RenderDSDComponent[], RenderDSDStreamOptions?): ReadableStream` | STABLE    |
 
 ## Islands
@@ -55,8 +55,8 @@ here is either internal or removed.
 | API                                | Signature                                            | Stability |
 | ---------------------------------- | ---------------------------------------------------- | --------- |
 | `island(tagName, Class, options?)` | `(string, Constructor, IslandOptions?): Constructor` | HARDENED  |
-| `lessBind(host)`                   | `(HTMLElement): LessBindResult`                      | STABLE    |
-| `getSSRProps(el)`                  | `(HTMLElement): Record<string, unknown>`             | STABLE    |
+| `bindEvents(host)`                 | `(HTMLElement): LessBindResult`                      | STABLE    |
+| `getSsrProps(el)`                  | `(HTMLElement): Record<string, unknown>`             | STABLE    |
 
 ## Navigation
 
@@ -106,7 +106,7 @@ here is either internal or removed.
 
 | API                        | Role                                                         | Stability |
 | -------------------------- | ------------------------------------------------------------ | --------- |
-| `RenderOutput`             | `renderDSD()` result                                         | HARDENED  |
+| `RenderOutput`             | `renderDsd()` result                                         | HARDENED  |
 | `RenderError`              | Machine-readable error                                       | HARDENED  |
 | `DsdBuildReport`           | Build-time DSD evidence                                      | HARDENED  |
 | `LessPackageManifest`      | Package metadata                                             | HARDENED  |

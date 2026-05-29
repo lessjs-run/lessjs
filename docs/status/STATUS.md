@@ -25,7 +25,7 @@ v0.21.0-v0.23.x: **HISTORICAL.** See docs/adr/ and docs/sop/ for reference.
 | Mode                  | State   | Notes                                                 |
 | --------------------- | ------- | ----------------------------------------------------- |
 | SSG                   | shipped | default production rendering                          |
-| DSD                   | shipped | `renderDSD()` outputs declarative shadow roots        |
+| DSD                   | shipped | `renderDsd()` outputs declarative shadow roots        |
 | JSX+Signal            | shipped | `render(): string \| VNode`, effect() signal tracking |
 | Island upgrade        | shipped | binary SSR/client-only boundary                       |
 | Hydration strategies  | shipped | `client:load/idle/visible/only`                       |
@@ -41,7 +41,7 @@ workspace so published JSR packages resolve a coherent version set.
 ## Architecture Positioning
 
 1. **Application framework** — file routes, dev server, build pipeline, Hono API routes.
-2. **DSD/WC rendering engine** — DsdElement, renderDSD(), JSX runtime, adapters, compatibility.
+2. **DSD/WC rendering engine** — DsdElement, renderDsd(), JSX runtime, adapters, compatibility.
 3. **Registry Hub** — discovery, validation, `less add`.
 
 ## v0.24.3 — Consolidation (4 SOPs, 1 ADR)

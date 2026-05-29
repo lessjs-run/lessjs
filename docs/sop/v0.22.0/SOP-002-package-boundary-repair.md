@@ -46,7 +46,7 @@ Acceptance:
 Acceptance:
 
 - [ ] No identical implementation is maintained in two packages.
-- [ ] `DsdElement` and `renderDSD()` still typecheck.
+- [ ] `DsdElement` and `renderDsd()` still typecheck.
 
 ### Step 3: Move Build Contracts Out of Core
 

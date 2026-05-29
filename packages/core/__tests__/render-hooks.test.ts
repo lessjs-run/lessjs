@@ -5,7 +5,7 @@
  * Covers success, failure, and undefined hooks scenarios.
  */
 import { assertEquals, assertFalse, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
-import { renderDSD } from '../src/render-dsd.ts';
+import { renderDsd } from '../src/render-dsd.ts';
 import { registerAdapter } from '../src/adapter-registry.ts';
 import type { RenderError, RenderHooks, RenderInput, RenderOutput } from '../src/types.ts';
 
@@ -51,7 +51,7 @@ function createMockClass(
   return cls as unknown as new () => MockComponent;
 }
 
-/** Cast mock class to CustomElementConstructor for renderDSD */
+/** Cast mock class to CustomElementConstructor for renderDsd */
 function asCtor(cls: new () => MockComponent): CustomElementConstructor {
   return cls as unknown as CustomElementConstructor;
 }
@@ -73,7 +73,7 @@ Deno.test('RenderHooks - beforeRender', async (t) => {
       },
     };
 
-    await renderDSD('hook-test-1', asCtor(cls), {}, undefined, undefined, undefined, 0, hooks);
+    await renderDsd('hook-test-1', asCtor(cls), {}, undefined, undefined, undefined, 0, hooks);
 
     assertEquals(callOrder, ['beforeRender', 'afterRender']);
   });
@@ -89,7 +89,7 @@ Deno.test('RenderHooks - beforeRender', async (t) => {
       },
     };
 
-    await renderDSD(
+    await renderDsd(
       'hook-test-2',
       asCtor(cls),
       { name: 'test' },
@@ -116,7 +116,7 @@ Deno.test('RenderHooks - beforeRender', async (t) => {
     };
 
     // Should not throw - hook errors are caught silently
-    const output = await renderDSD(
+    const output = await renderDsd(
       'hook-test-3',
       asCtor(cls),
       {},
@@ -144,7 +144,7 @@ Deno.test('RenderHooks - afterRender', async (t) => {
       },
     };
 
-    await renderDSD('hook-test-4', asCtor(cls), {}, undefined, undefined, undefined, 0, hooks);
+    await renderDsd('hook-test-4', asCtor(cls), {}, undefined, undefined, undefined, 0, hooks);
 
     assertEquals(receivedOutput!.errors.length, 0);
     assertStringIncludes(receivedOutput!.html, '<p>World</p>');
@@ -163,7 +163,7 @@ Deno.test('RenderHooks - afterRender', async (t) => {
       },
     };
 
-    await renderDSD('hook-test-5', asCtor(cls), {}, undefined, undefined, undefined, 0, hooks);
+    await renderDsd('hook-test-5', asCtor(cls), {}, undefined, undefined, undefined, 0, hooks);
 
     assertEquals(receivedOutput!.errors.length > 0, true);
     assertEquals(receivedOutput!.errors[0].phase, 'render');
@@ -181,7 +181,7 @@ Deno.test('RenderHooks - afterRender', async (t) => {
       },
     };
 
-    await renderDSD('hook-test-6', asCtor(cls), {}, undefined, undefined, undefined, 0, hooks);
+    await renderDsd('hook-test-6', asCtor(cls), {}, undefined, undefined, undefined, 0, hooks);
 
     assertEquals(receivedOutput!.errors.length > 0, true);
     assertEquals(receivedOutput!.errors[0].phase, 'instantiate');
@@ -203,7 +203,7 @@ Deno.test('RenderHooks - onError', async (t) => {
       },
     };
 
-    await renderDSD('hook-test-7', asCtor(cls), {}, undefined, undefined, undefined, 0, hooks);
+    await renderDsd('hook-test-7', asCtor(cls), {}, undefined, undefined, undefined, 0, hooks);
 
     assertEquals(receivedErrors.length, 1);
     assertEquals(receivedErrors[0].phase, 'instantiate');
@@ -222,7 +222,7 @@ Deno.test('RenderHooks - onError', async (t) => {
       },
     };
 
-    await renderDSD('hook-test-8', asCtor(cls), {}, undefined, undefined, undefined, 0, hooks);
+    await renderDsd('hook-test-8', asCtor(cls), {}, undefined, undefined, undefined, 0, hooks);
 
     assertEquals(receivedErrors.length, 1);
     assertEquals(receivedErrors[0].phase, 'render');
@@ -240,7 +240,7 @@ Deno.test('RenderHooks - onError', async (t) => {
       },
     };
 
-    await renderDSD('hook-test-9', asCtor(cls), {}, undefined, undefined, undefined, 0, hooks);
+    await renderDsd('hook-test-9', asCtor(cls), {}, undefined, undefined, undefined, 0, hooks);
 
     assertEquals(receivedErrors.length, 1);
     assertEquals(receivedErrors[0].phase, 'render');
@@ -254,7 +254,7 @@ Deno.test('RenderHooks - optional (undefined)', async (t) => {
     registerAdapter(undefined);
     const cls = createMockClass('<p>No hooks</p>');
 
-    const output = await renderDSD(
+    const output = await renderDsd(
       'hook-test-10',
       asCtor(cls),
       {},
@@ -273,7 +273,7 @@ Deno.test('RenderHooks - optional (undefined)', async (t) => {
     registerAdapter(undefined);
     const cls = createMockClass('<p>Empty hooks</p>');
 
-    const output = await renderDSD(
+    const output = await renderDsd(
       'hook-test-11',
       asCtor(cls),
       {},
@@ -292,7 +292,7 @@ Deno.test('RenderHooks - optional (undefined)', async (t) => {
     registerAdapter(undefined);
     const cls = createMockClass('<p>Same behavior</p>');
 
-    const withHooks = await renderDSD(
+    const withHooks = await renderDsd(
       'hook-test-12a',
       asCtor(cls),
       {},
@@ -302,7 +302,7 @@ Deno.test('RenderHooks - optional (undefined)', async (t) => {
       0,
       {},
     );
-    const withoutHooks = await renderDSD(
+    const withoutHooks = await renderDsd(
       'hook-test-12b',
       asCtor(cls),
       {},
@@ -328,7 +328,7 @@ Deno.test('RenderOutput - structured output', async (t) => {
       registerAdapter(undefined);
       const cls = createMockClass('<p>Full output</p>');
 
-      const output = await renderDSD('output-test-1', asCtor(cls), { name: 'test' });
+      const output = await renderDsd('output-test-1', asCtor(cls), { name: 'test' });
 
       // html
       assertStringIncludes(output.html, 'output-test-1');
@@ -354,7 +354,7 @@ Deno.test('RenderOutput - structured output', async (t) => {
     registerAdapter(undefined);
     const cls = createMockClass('', { throwOnRender: true });
 
-    const output = await renderDSD('output-test-2', asCtor(cls), {});
+    const output = await renderDsd('output-test-2', asCtor(cls), {});
 
     // v0.19.1: Bare-tag fallback - no error comments in HTML
     assertStringIncludes(output.html, '<output-test-2>');

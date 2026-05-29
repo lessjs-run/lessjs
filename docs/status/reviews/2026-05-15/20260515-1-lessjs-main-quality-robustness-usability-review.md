@@ -7,7 +7,7 @@ Reviewer focus: code quality, robustness, scaffold usability, release readiness,
 
 ## Executive judgement
 
-LessJS main is not a toy prototype anymore. The current codebase has real architectural substance: a split runtime/build adapter boundary, DSD rendering, nested custom element rendering through `parse5`, SSG through a self-contained SSR bundle, route metadata, i18n/content virtual modules, and broad unit coverage. The strongest technical asset is the DSD-first render path centered on `renderDSD()`, `renderNestedCustomElements()`, `RenderAdapter`, `renderRoute()`, and `PackageIslandMeta`.
+LessJS main is not a toy prototype anymore. The current codebase has real architectural substance: a split runtime/build adapter boundary, DSD rendering, nested custom element rendering through `parse5`, SSG through a self-contained SSR bundle, route metadata, i18n/content virtual modules, and broad unit coverage. The strongest technical asset is the DSD-first render path centered on `renderDsd()`, `renderNestedCustomElements()`, `RenderAdapter`, `renderRoute()`, and `PackageIslandMeta`.
 
 The neutral assessment is also clear: the current `0.14.6` source tree is ahead of its release and scaffold guarantees. It is plausible as a framework foundation, but it is not yet reliable enough to market as "install any WC package and auto render it" or as a public webcomponents.org replacement. The next milestone should close release parity, package SSR registration, per-page island manifests, and CLI truthfulness before expanding the hub story.
 

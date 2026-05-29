@@ -68,7 +68,7 @@
   ]);
   ```
 
-### C-04. 原型污染: `render-dsd.ts` 属性赋值无任何过滤 / No Filtering in `renderDSD()` Property Assignment
+### C-04. 原型污染: `render-dsd.ts` 属性赋值无任何过滤 / No Filtering in `renderDsd()` Property Assignment
 
 - **文件 / File**: `packages/core/src/render-dsd.ts:140`
 - **代码 / Code**: `(instance as Record<string, unknown>)[key] = value;`
@@ -176,7 +176,7 @@
 - **问题 / Problem**: SSR 环境中 `history` 不存在直接报错。/ Direct `history` access in SSR throws `ReferenceError`.
 - **修复 / Fix**: 添加 `typeof globalThis.history !== 'undefined'` 守卫。
 
-### H-10. `renderDSD()` 使用 `performance.now()` 无 SSR 守卫 / `performance.now()` Without SSR Guard
+### H-10. `renderDsd()` 使用 `performance.now()` 无 SSR 守卫 / `performance.now()` Without SSR Guard
 
 - **文件 / File**: `packages/core/src/render-dsd.ts:112`
 - **问题 / Problem**: 部分 SSR 环境无 `performance` 对象。/ Some SSR environments lack `performance` object.

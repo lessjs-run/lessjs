@@ -23,7 +23,7 @@
 当前错误流：
 
 ```
-render() throws → renderDSD() catch → bare tag + RenderError in output.errors[]
+render() throws → renderDsd() catch → bare tag + RenderError in output.errors[]
 → ssgRender() ignores errors[] → 用户看到降级页面，无错误报告
 ```
 
@@ -238,7 +238,7 @@ deno test packages/core/__tests__/error-boundary.test.ts --allow-read
 **通过标准**：
 
 - [ ] 子组件 `render()` 抛异常 → 最近 `isErrorBoundary = true` 的祖先的 `onError()` 被调用
-- [ ] 无错误边界 → 错误传播到 `renderDSD()` 的裸标签回退
+- [ ] 无错误边界 → 错误传播到 `renderDsd()` 的裸标签回退
 - [ ] dev 模式显示错误详情
 - [ ] 生产模式显示裸标签（无信息泄漏）
 - [ ] 错误边界组件可以渲染自定义降级 UI
@@ -270,7 +270,7 @@ async function renderNestedCustomElements(
 ): Promise<string> {
   for (const ce of customElements) {
     try {
-      const result = await renderDSD(ce.tagName, ce.attrs);
+      const result = await renderDsd(ce.tagName, ce.attrs);
       errors.push(...result.errors); // 收集子组件错误
     } catch (e) {
       errors.push(new RenderError(ce.tagName, e as Error));

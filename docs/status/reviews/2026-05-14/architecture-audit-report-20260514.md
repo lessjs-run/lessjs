@@ -52,7 +52,7 @@ The framework introduces an innovative **three-layer component model**:
 Route Module (Web Component / LitElement)
   ↓ render()
 String / TemplateResult
-  ↓ renderDSD() (DSD nesting via parse5 AST)
+  ↓ renderDsd() (DSD nesting via parse5 AST)
 L2 Nested DSD HTML
   ↓ SSG Output
 Static HTML + inline <template shadowrootmode>
@@ -730,7 +730,7 @@ if (adapter?.isTemplate?.(result)) {
 
 **Potential Bottlenecks:**
 
-1. **DSD Nesting Depth:** Deeply nested components may have slow `renderDSD()` performance (`parse5` AST recursion)
+1. **DSD Nesting Depth:** Deeply nested components may have slow `renderDsd()` performance (`parse5` AST recursion)
 2. **Build Time:** Three-phase build may be slow for large sites
 3. **Island Chunk Size:** Need to verify code splitting effectiveness
 

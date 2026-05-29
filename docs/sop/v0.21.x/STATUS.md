@@ -12,7 +12,7 @@ evidence, route-entry generation, Hub trust gates, and reference documentation.
 Key changes:
 
 - Core API surface is documented and tested around `DsdElement`, `html`,
-  `unsafeHTML()`, `renderDSD()`, and `renderDSDStream()`.
+  `unsafeHTML()`, `renderDsd()`, and `renderDSDStream()`.
 - `RenderError` diagnostics now carry stable `code` and `severity` fields for
   downstream reports and gates.
 - DSD output has focused conformance tests for host/template shape,

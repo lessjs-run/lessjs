@@ -7,7 +7,7 @@
 
 ## Context
 
-`renderDSD()` in v0.20 is synchronous: it renders all components into a single
+`renderDsd()` in v0.20 is synchronous: it renders all components into a single
 HTML string, then returns. For large pages (50+ components), this means:
 
 1. Time-To-First-Byte = render time of the entire page
@@ -66,7 +66,7 @@ Priority is determined by:
 
 ## Error Handling
 
-Unlike the synchronous `renderDSD()` which fails the entire page on any error,
+Unlike the synchronous `renderDsd()` which fails the entire page on any error,
 streaming mode isolates failures:
 
 ```ts
@@ -113,6 +113,6 @@ chunked` works on HTTP/1.1, HTTP/2, and HTTP/3 without protocol-specific APIs.
 
 ## Related
 
-- ADR-0033: Renderer Kernel (timing-independent `renderDSD`)
+- ADR-0033: Renderer Kernel (timing-independent `renderDsd`)
 - ADR-0039: DsdElement + Signals
-- `renderDSD()` in `@lessjs/core`
+- `renderDsd()` in `@lessjs/core`

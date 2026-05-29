@@ -6,13 +6,13 @@
  * Produces clean DSD HTML without Lit SSR marker comments.
  *
  * Architecture:
- *   @lessjs/core        renderDSD() only accepts render(): string
+ *   @lessjs/core        renderDsd() only accepts render(): string
  *   @lessjs/adapter-lit converts TemplateResult to string at build time
  *   @lessjs/ui          LitElement components (Lit + OpenProps)
  *
  * Usage (in vite.config.ts or build config):
  *   import { installLitAdapter } from '@lessjs/adapter-lit';
- *   installLitAdapter(); // patches renderDSD to handle Lit TemplateResult
+ *   installLitAdapter(); // patches renderDsd to handle Lit TemplateResult
  *
  * Usage (for DSD Interactive components):
  *   import { DsdLitElement } from '@lessjs/adapter-lit';

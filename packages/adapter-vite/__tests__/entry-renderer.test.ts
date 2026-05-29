@@ -299,7 +299,7 @@ Deno.test('renderEntry: imports Hono and DSD renderer', () => {
 
   assertStringIncludes(code, "import { Hono } from 'hono'");
   // v0.5.0: DSD renderer replaces @lit-labs/ssr
-  assertStringIncludes(code, 'renderDSD');
+  assertStringIncludes(code, 'renderDsd');
 });
 
 Deno.test('renderEntry: SSG mode includes no DOM shim (DSD renderer)', () => {

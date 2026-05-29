@@ -115,7 +115,7 @@ export async function renderReactToString(
 let _installed = false;
 
 /**
- * Install the React SSR adapter into @lessjs/core's renderDSD.
+ * Install the React SSR adapter into @lessjs/core's renderDsd.
  *
  * This patches the DSD renderer so that when a component's render()
  * returns a React element, it's automatically converted to an HTML
@@ -153,7 +153,7 @@ export function installReactAdapter(): void {
 /**
  * Uninstall the React SSR adapter.
  *
- * Resets the adapter so core's renderDSD reverts to its default behavior.
+ * Resets the adapter so core's renderDsd reverts to its default behavior.
  */
 export function uninstallReactAdapter(): void {
   registerAdapter(undefined);

@@ -91,7 +91,7 @@ export function wrapDsdOutput(params: {
   const attrs = serializeAttributes(props);
   // NOTE: Object-type props are intentionally serialized TWICE:
   //   1. In HTML attributes via serializeAttributes() - used by SSR rendering
-  //   2. In data-ssr-props - used by client-side lessBind() for hydration
+  //   2. In data-ssr-props - used by client-side bindEvents() for hydration
   const ssrPropsAttr = Object.keys(props).length > 0
     ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
     : '';

@@ -24,7 +24,7 @@ import {
   type RenderHooks,
   type RenderOutput,
 } from './types.js';
-import { renderDSD } from './render-dsd.js';
+import { renderDsd } from './render-dsd.js';
 import { createLogger } from './logger.js';
 
 const log = createLogger('core');
@@ -62,7 +62,7 @@ function parseAttrsToProps(attrs: Array<{ name: string; value: string }>): Recor
       const camelKey = kebabToCamel(key);
       // Try to parse as JSON for array/object values from SSR property bindings.
       // The Lit SSR adapter converts .navItems="${arr}" -> nav-items="[{...}]"
-      // so we need to parse the JSON back to a JS value for renderDSD().
+      // so we need to parse the JSON back to a JS value for renderDsd().
       // v0.14.5: Quick structural checks to avoid unnecessary JSON.parse exceptions
       if (value.startsWith('[') || value.startsWith('{')) {
         // Fast check: JSON must end with matching bracket
@@ -287,7 +287,7 @@ export async function renderNestedCustomElements(
     const dsdOpts = inferDsdOptions(tagName, Cls);
 
     // Render DSD for this component - now returns RenderOutput
-    const dsdResult = await renderDSD(
+    const dsdResult = await renderDsd(
       tagName,
       Cls,
       props,
@@ -321,7 +321,7 @@ export async function renderNestedCustomElements(
     );
 
     // Merge attributes from DSD CE onto the existing CE node
-    // (e.g. data-ssr-props, source, route attrs added by renderDSD)
+    // (e.g. data-ssr-props, source, route attrs added by renderDsd)
     if (dsdCeElement) {
       for (const attr of dsdCeElement.attrs) {
         // Only add attrs that don't already exist on the CE node
@@ -340,10 +340,10 @@ export async function renderNestedCustomElements(
     // Clear the CE node and repopulate with DSD content + light DOM
     ceNode.childNodes = [];
 
-    // v0.14.5: Graceful degradation when renderDSD returns unexpected content
+    // v0.14.5: Graceful degradation when renderDsd returns unexpected content
     if (!dsdCeElement) {
       log.warn(
-        `renderDSD() for <${tagName}> returned unexpected content - ` +
+        `renderDsd() for <${tagName}> returned unexpected content - ` +
           'DSD element not found in rendered output. Falling back to raw fragment.',
       );
     }
@@ -371,7 +371,7 @@ export async function renderNestedCustomElements(
     }
 
     // v0.20.1: After inserting DSD children, scan the shadow DOM content
-    // for any nested Custom Elements that renderDSD may have generated
+    // for any nested Custom Elements that renderDsd may have generated
     // (e.g. <less-theme-toggle> inside <less-layout>'s render() output).
     // These weren't present in the original HTML, so the initial collectCustomElements
     // pass missed them. We scan the dsdChildren (the <template> and its contents)
@@ -391,7 +391,7 @@ export async function renderNestedCustomElements(
         const nestedProps = parseAttrsToProps(nestedCe.attrs);
         const nestedDsdOpts = inferDsdOptions(nestedTagName, nestedCls);
 
-        const nestedResult = await renderDSD(
+        const nestedResult = await renderDsd(
           nestedTagName,
           nestedCls,
           nestedProps,

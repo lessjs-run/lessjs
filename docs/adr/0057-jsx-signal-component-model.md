@@ -126,8 +126,8 @@ export const Fragment: unique symbol;
 **设计原则**：
 
 - `jsx()`/`jsxs()` 返回 **纯 JavaScript 对象**（`VNode`），零 DOM 依赖，零 runtime 绑定——保持 runtime 无关
-- SSR 路径：`renderToString(vnode)` 遍历 VNode 树拼 HTML 字符串，复用现有的 `renderDSD()` 外层逻辑
-- CSR 路径：`renderToDOM(vnode)` 创建真实 DOM，events 直接绑定 `addEventListener`（不使用合成事件）
+- SSR 路径：`renderToString(vnode)` 遍历 VNode 树拼 HTML 字符串，复用现有的 `renderDsd()` 外层逻辑
+- CSR 路径：`renderToDom(vnode)` 创建真实 DOM，events 直接绑定 `addEventListener`（不使用合成事件）
 - **不使用 Virtual DOM diff**。VNode 树仅作为声明式描述——SSR 一次性消费，CSR 在 Signal 驱动下定点更新（复用现有 `_patchBindings`）
 
 #### 1.1 VNode 接口冻结条款（防膨胀保护）
@@ -352,7 +352,7 @@ abstract class DsdElement<P extends Record<string, PropDecl> = {}> extends HTMLE
 
 2. **TypeScript 编译时类型检查覆盖全部模板层**。属性拼写、标签名、事件类型全部编译时验证。消除了 `template.ts` 的运行时校验需求。
 
-3. **代码净减 ~370 行**。删除 template.ts 约 570 行（parseTemplate + detectBinding + binding rendering + 指令），替换为 jsx-runtime 约 200 行（jsx/jsxs + renderToString + renderToDOM）。
+3. **代码净减 ~370 行**。删除 template.ts 约 570 行（parseTemplate + detectBinding + binding rendering + 指令），替换为 jsx-runtime 约 200 行（jsx/jsxs + renderToString + renderToDom）。
 
 4. **控制流回归标准 JavaScript**。不需要学习 `when()`/`choose()`/`repeat()` 的 DSL 语义——`?`/`switch`/`.map()` 是通用知识。降低用户学习成本。
 

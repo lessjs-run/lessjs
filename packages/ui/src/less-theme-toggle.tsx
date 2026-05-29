@@ -150,7 +150,7 @@ export class LessThemeToggle extends DsdElement {
     this._initTheme();
 
     // Re-render to guarantee event bindings regardless of DSD hydration.
-    // v0.24.1: JSX VNode path now uses renderToDOM which wires event handlers.
+    // v0.24.1: JSX VNode path now uses renderToDom which wires event handlers.
     this.update();
   }
 

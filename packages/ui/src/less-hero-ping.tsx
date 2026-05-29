@@ -99,7 +99,7 @@ export default class HeroPing extends DsdElement {
     this._abortController = new AbortController();
     this._state = 'loading';
     this._msg = '';
-    this._renderToDOM();
+    this._renderToDom();
     try {
       const url = this.apiUrl || 'https://less-demo-api.sisyphuszheng.deno.net/api';
       const r = await fetch(url, { signal: this._abortController.signal });
@@ -113,7 +113,7 @@ export default class HeroPing extends DsdElement {
       this._state = 'err';
       this._msg = String(e).includes('HTTP') ? err.message : 'connection failed';
     } finally {
-      this._renderToDOM();
+      this._renderToDom();
     }
   };
 
@@ -142,7 +142,7 @@ export default class HeroPing extends DsdElement {
   }
 
   /** Re-render shadow DOM and re-hydrate click events. */
-  private _renderToDOM(): void {
+  private _renderToDom(): void {
     if (!this.shadowRoot) return;
     this.update();
   }

@@ -15,7 +15,7 @@ LessJS has accumulated three valid but differently mature product claims:
 
 After v0.20.0, the strongest delivered capability is not generic full-stack
 parity with mature React/Vue frameworks. It is the DSD-first Web Components
-engine: `DsdElement`, SSR-safe `StyleSheet`, `renderDSD()`, CSS Parts,
+engine: `DsdElement`, SSR-safe `StyleSheet`, `renderDsd()`, CSS Parts,
 compatibility reports, and enforceable DSD quality gates.
 
 The public docs still described v0.18 or v0.19 as the current milestone in
@@ -87,7 +87,7 @@ v0.22.x becomes the Edge Full-Stack line:
 v1.0 freezes the contracts that are already proven:
 
 - `DsdElement`
-- `renderDSD()`
+- `renderDsd()`
 - adapter protocol
 - manifest schema
 - `dsd-report.json`

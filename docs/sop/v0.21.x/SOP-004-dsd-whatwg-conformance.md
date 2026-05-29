@@ -53,7 +53,7 @@ Build a focused DSD conformance suite around:
    - expected rendered HTML fragment;
    - expected browser-parsed shadow root behavior;
    - expected report metrics.
-3. Run the fixture through `renderDSD()` and the adapter build path.
+3. Run the fixture through `renderDsd()` and the adapter build path.
 4. Parse representative output in a real browser via Playwright.
 5. Compare browser-observed structure with the expected structure.
 6. Update docs if a limitation is intentional.

@@ -45,7 +45,7 @@ implementation packages
   signals (facade over alien-signals), style-sheet (cross-env CSSStyleSheet)
 
 runtime kernel
-  core: DsdElement, JSX runtime, renderDSD, islands, navigation, logger,
+  core: DsdElement, JSX runtime, renderDsd, islands, navigation, logger,
   static props, error boundary, signal-like utilities, tag validation
 
 protocols
@@ -111,7 +111,7 @@ render() → string | VNode
     │                    │
   string              VNode
     │                    │
-  innerHTML          renderToDOM()
+  innerHTML          renderToDom()
   (platform)         (JSX→DOM, events, SVG ns)
                          │
                     effect() for signal tracking
@@ -126,7 +126,7 @@ and future diagnostic shapes.
 
 ## Why `@lessjs/core` Must Stay Small
 
-Core owns: DsdElement, JSX runtime, renderDSD, islands, navigation, logger,
+Core owns: DsdElement, JSX runtime, renderDsd, islands, navigation, logger,
 static props, error boundary, signal-like utilities.
 
 Core must NOT own: Vite build contracts, virtual module ids, signal engine

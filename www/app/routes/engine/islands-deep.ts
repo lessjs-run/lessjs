@@ -41,7 +41,7 @@ export class IslandsDeepGuidePage extends DsdElement {
     <div class="layer-card"><div class="layer-tag">Layer 2 - dsd-interactive</div><h3>DSD + 事件绑定</h3><p>需要交互但状态简单的组件。SSR 输出完整 DSD（首屏可见），客户端加载模块后检测已有 shadow root，跳过 render()，只绑定声明的事件处理器。</p></div>
     <div class="layer-card"><div class="layer-tag">Layer 3 - pure-island</div><h3>框架完全拥有 Shadow Root</h3><p>需要完整框架响应性的组件：本地状态、定时器、轮询、WebSocket。SSR 只输出标签和 data-ssr-props，不输出 DSD 模板。客户端框架创建 shadow root 并完全控制渲染。</p></div>
     <h2>升级策略</h2>
-    <p>Island 的 strategy 控制客户端模块何时加载并注册。策略在 island() 调用时声明，构建器通过 island manifest 传递到客户端 entry。</p>
+    <p>Island 的 strategy 控制客户端模块何时加载并注册。策略在 defineIsland() 调用时声明，构建器通过 island manifest 传递到客户端 entry。</p>
     <div class="strategy-grid">
       <div class="strategy-item"><div class="strat-name"><code>client:load</code></div><p>客户端入口加载后立即导入模块。适用于首屏交互组件（导航、主题切换）。</p></div>
       <div class="strategy-item"><div class="strat-name"><code>client:idle</code></div><p>延迟到 requestIdleCallback 注册。默认策略，适用于非紧急交互组件。</p></div>

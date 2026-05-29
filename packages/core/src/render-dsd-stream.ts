@@ -1,44 +1,44 @@
 /**
- * @lessjs/core - Streaming DSD Renderer.
+ * @lessjs/core - Streaming Dsd Renderer.
  *
- * Progressive DSD delivery via Web Streams (ReadableStream<Uint8Array>).
+ * Progressive Dsd delivery via Web Streams (ReadableStream<Uint8Array>).
  * Extracted from render-dsd.ts in v0.21.0 (SOP-003).
  *
  * Provides:
- *   - renderDSDStream() — stream components as they render
- *   - createRenderDSDStreamMetrics() — metrics collector factory
- *   - RenderDSDStreamChunk, RenderDSDStreamComponent,
- *     RenderDSDStreamMetrics, RenderDSDStreamOptions types
+ *   - renderDsdStream() — stream components as they render
+ *   - createRenderDsdStreamMetrics() — metrics collector factory
+ *   - RenderDsdStreamChunk, RenderDsdStreamComponent,
+ *     RenderDsdStreamMetrics, RenderDsdStreamOptions types
  *
  * @module @lessjs/core/render-dsd-stream
  */
 
-import { renderDSD } from './render-dsd.js';
+import { renderDsd } from './render-dsd.js';
 import type { RenderError, RenderOutput } from './types.js';
 
 // --- Streaming types -------------------------------------------
 
-export interface RenderDSDStreamChunk {
+export interface RenderDsdStreamChunk {
   html: string;
   output: RenderOutput;
 }
 
-export interface RenderDSDStreamMetrics {
+export interface RenderDsdStreamMetrics {
   chunkCount: number;
   errorCount: number;
   startedAt: number;
   endedAt?: number;
 }
 
-export interface RenderDSDStreamOptions {
+export interface RenderDsdStreamOptions {
   shell?: string | (() => string | Promise<string>);
   footer?: string | (() => string | Promise<string>);
-  onChunk?: (chunk: RenderDSDStreamChunk) => void;
+  onChunk?: (chunk: RenderDsdStreamChunk) => void;
   onError?: (error: RenderError, tagName: string) => void;
-  metrics?: RenderDSDStreamMetrics;
+  metrics?: RenderDsdStreamMetrics;
 }
 
-export interface RenderDSDStreamComponent {
+export interface RenderDsdStreamComponent {
   tagName: string;
   componentClass: CustomElementConstructor;
   props?: Record<string, unknown>;
@@ -60,9 +60,9 @@ async function resolveStreamPart(
 }
 
 /**
- * Create a fresh metrics collector for streaming DSD.
+ * Create a fresh metrics collector for streaming Dsd.
  */
-export function createRenderDSDStreamMetrics(): RenderDSDStreamMetrics {
+export function createRenderDsdStreamMetrics(): RenderDsdStreamMetrics {
   return {
     chunkCount: 0,
     errorCount: 0,
@@ -71,11 +71,11 @@ export function createRenderDSDStreamMetrics(): RenderDSDStreamMetrics {
 }
 
 /**
- * Render components as a streaming DSD response.
+ * Render components as a streaming Dsd response.
  *
  * Returns a ReadableStream<Uint8Array> that emits:
  *   1. Shell (opening HTML)
- *   2. Each component's DSD output, in order
+ *   2. Each component's Dsd output, in order
  *   3. Footer (closing HTML)
  *
  * Failed components emit a bare-tag fallback and the stream continues.
@@ -83,13 +83,13 @@ export function createRenderDSDStreamMetrics(): RenderDSDStreamMetrics {
  *
  * @param components - Iterable of components to render
  * @param options - Stream options (shell, footer, callbacks, metrics)
- * @returns ReadableStream of encoded DSD HTML chunks
+ * @returns ReadableStream of encoded Dsd HTML chunks
  */
-export function renderDSDStream(
-  components: Iterable<RenderDSDStreamComponent>,
-  options: RenderDSDStreamOptions = {},
+export function renderDsdStream(
+  components: Iterable<RenderDsdStreamComponent>,
+  options: RenderDsdStreamOptions = {},
 ): ReadableStream<Uint8Array> {
-  const encoderMetrics = options.metrics ?? createRenderDSDStreamMetrics();
+  const encoderMetrics = options.metrics ?? createRenderDsdStreamMetrics();
 
   return new ReadableStream<Uint8Array>({
     async start(controller) {
@@ -101,7 +101,7 @@ export function renderDSDStream(
         }
 
         for (const component of components) {
-          const output = await renderDSD(
+          const output = await renderDsd(
             component.tagName,
             component.componentClass,
             component.props ?? {},

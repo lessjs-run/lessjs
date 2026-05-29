@@ -59,7 +59,7 @@ graph TB
 sequenceDiagram
     participant RM as Route Module
     participant R as render()
-    participant RDSD as renderDSD()
+    participant RDSD as renderDsd()
     participant RN as renderNested()
     participant AD as Adapter (Lit)
     participant P5 as parse5 AST
@@ -75,7 +75,7 @@ sequenceDiagram
     RDSD->>RN: renderNestedCustomElements()
     RN->>P5: parse5.parseFragment()
     P5->>P5: 自底向上扫描 CE 节点
-    P5->>RDSD: 递归 renderDSD()
+    P5->>RDSD: 递归 renderDsd()
     RDSD-->>RN: 嵌套 DSD HTML
     RN->>P5: parse5.serialize()
     RN-->>RDSD: 完整 DSD HTML
@@ -211,7 +211,7 @@ sequenceDiagram
 
 ### 4.1 DSD 渲染管线
 
-**设计**：`render() → string/TemplateResult → renderDSD() → parse5 AST 递归 → DSD HTML`
+**设计**：`render() → string/TemplateResult → renderDsd() → parse5 AST 递归 → DSD HTML`
 
 **优点**：
 
@@ -225,7 +225,7 @@ sequenceDiagram
 
 | #     | 问题                                | 风险  | 说明                                                                                                                                     |
 | ----- | ----------------------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| DSD-1 | renderDSD 是 async 但同步路径不需要 | Minor | `renderDSD()` 返回 `Promise<string>`，但同步字符串拼接不需要异步。仅在调用 adapter.render() 和 renderNestedCustomElements() 时需要 await |
+| DSD-1 | renderDsd 是 async 但同步路径不需要 | Minor | `renderDsd()` 返回 `Promise<string>`，但同步字符串拼接不需要异步。仅在调用 adapter.render() 和 renderNestedCustomElements() 时需要 await |
 | DSD-2 | adapter-registry 是模块级单例       | Minor | `_adapter` 变量是模块级单例，在 SSR bundle 中可以，但如果同一进程需要多个 adapter 实例则无法支持                                         |
 | DSD-3 | unwrapDsdForNestedCe 正则可能误匹配 | Minor | `ssr.ts` 中的 `unwrapDsdForNestedCe()` 使用正则替换 DSD 包装，对于极端嵌套情况可能失败                                                   |
 
@@ -255,7 +255,7 @@ sequenceDiagram
 
 - 基于标准 Web API（IntersectionObserver、requestIdleCallback）
 - `island()` 包装器框架无关，不绑定 Lit
-- `lessBind()` 自动绑定 SSR props，保证客户端一致性
+- `bindEvents()` 自动绑定 SSR props，保证客户端一致性
 - `WithDsdHydration` Mixin 使用 AbortController 清理事件监听
 - `data-ssr-props` JSON 序列化传递服务端数据
 
@@ -353,7 +353,7 @@ sequenceDiagram
 - `escapeAttr()`：转义 `&`、`"`、`'`、`<`、`>`
 - `escapeAttrValue()`：类型安全的属性值转义
 - `SafeHtml` / `UnsafeHtml` 品牌类型区分安全/不安全内容
-- `renderDSD()` 中所有动态值都经过转义
+- `renderDsd()` 中所有动态值都经过转义
 - 错误消息使用 `escapeHtml()` 包装，防止错误信息 XSS
 
 ### 6.2 CSP 策略
@@ -459,7 +459,7 @@ sequenceDiagram
 | MIN-3  | `DsdComponent` 索引签名过宽                        | `core/src/types.ts`                | 考虑使用更精确的类型或条件索引签名                                |
 | MIN-4  | `LessMiddleware` 参数类型为 `any`                  | `core/src/types.ts`                | 定义最小化的 Context 接口替代 any                                 |
 | MIN-5  | `dispatchDataPlugin` 使用 `(fn as any)`            | `adapter-vite/src/index.ts`        | 提取类型安全的插件分发接口                                        |
-| MIN-6  | `renderDSD()` 为 async 但同步路径不需要            | `core/src/render-dsd.ts`           | 考虑提供同步版本 `renderDSDSync()`，或将 async 限制在需要的位置   |
+| MIN-6  | `renderDsd()` 为 async 但同步路径不需要            | `core/src/render-dsd.ts`           | 考虑提供同步版本 `renderDSDSync()`，或将 async 限制在需要的位置   |
 | MIN-7  | `islandEffect` 的 30s setInterval                  | `signals/src/sugar.ts`             | 考虑使用 `requestAnimationFrame` 或在 disconnect 时清理 interval  |
 | MIN-8  | `unwrapDsdForNestedCe` 正则复杂                    | `adapter-lit/src/ssr.ts`           | 考虑使用 parse5 AST 替代正则，与 core 保持一致                    |
 | MIN-9  | `validateSafeUrl` 只检查 `javascript:` 和 `data:`  | `adapter-vite/src/index.ts`        | 添加 `vbscript:` 协议检查和 URL 编码规范化                        |
@@ -486,7 +486,7 @@ sequenceDiagram
 
 ### P2 - 中期优化
 
-5. **renderDSD 同步优化**（MIN-6）：分析是否可以将 `renderDSD()` 拆分为同步/异步两个版本，减少不必要的 Promise 开销。
+5. **renderDsd 同步优化**（MIN-6）：分析是否可以将 `renderDsd()` 拆分为同步/异步两个版本，减少不必要的 Promise 开销。
 
 6. **adapter-lit AST 一致性**（MIN-8）：将 `unwrapDsdForNestedCe()` 从正则替换迁移到 parse5 AST 操作，与 core 的 render-nested.ts 保持一致的解析策略。
 
