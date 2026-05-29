@@ -73,15 +73,7 @@ function findHtmlFiles(dir: string): string[] {
 }
 
 async function ensureDocsBuild(): Promise<void> {
-  if (
-    hasSsrBundle() && hasServerEntry() && hasRoadmapAdrOutput() &&
-    hasRendererSopOutput() &&
-    hasHardenedServiceWorker() &&
-    existsSync(join(WWW_DIST, 'index.html'))
-  ) {
-    return;
-  }
-
+  // Always do a fresh build — caching across CI runs hides regressions
   const command = new Deno.Command(Deno.execPath(), {
     args: ['task', 'build'],
     cwd: ROOT,

@@ -44,7 +44,7 @@
  * ─── v0.25: AST Upgrade ───────────────────────────────────
  *
  * Replaced regex-based source scanning with dynamic import():
- * - readRouteTagName(): was regex, now reads `export const tagName` via import()
+ * - readRouteTagNameFromModule(): regex source scan (no module execution)
  * - readBooleanMeta() / readHydrateMeta(): eliminated; scanIslandMeta() uses import()
  * - All remaining regex patterns are path-utility only, annotated with v0.25: AST-verified
  *
@@ -69,15 +69,25 @@ import { pathToFileURL } from 'node:url';
 const log = createLogger('core');
 
 /**
- * v0.25: AST-verified — reads tagName from module exports via dynamic import.
- * Replaces regex-based source scanning with reliable module-level value access.
- * If the module cannot be imported or has no tagName export, returns undefined.
+ * Read `export const tagName = '...'` from source text via regex.
+ * This avoids importing the module (which can fail for modules that
+ * depend on Vite virtual modules like `virtual:less-nav`).
+ */
+function readRouteTagName(source: string): string | undefined {
+  const match = source.match(
+    /^export\s+const\s+tagName\s*=\s*(['"])([\w-]+)\1\s*;?\s*$/m,
+  );
+  return match ? match[2] : undefined;
+}
+
+/**
+ * Read tagName from a route file. Uses regex-based source scanning
+ * (no import() execution) to avoid dependency resolution failures.
  */
 async function readRouteTagNameFromModule(filePath: string): Promise<string | undefined> {
   try {
-    const fileUrl = pathToFileURL(filePath).href;
-    const mod = await import(fileUrl) as Record<string, unknown>;
-    return typeof mod.tagName === 'string' ? mod.tagName : undefined;
+    const source = await readFile(filePath, 'utf-8');
+    return readRouteTagName(source);
   } catch {
     return undefined;
   }
@@ -228,11 +238,11 @@ export async function scanRoutes(
         const params = paramMatches ? paramMatches.map((m) => m.slice(1, -1)) : undefined;
         let tagName: string | undefined;
         if (routeType === 'page') {
-          // v0.25: Use dynamic import to read tagName from module exports
-          // instead of regex-scanning source text
+          // v0.25.1: Regex-based source scanning — reads `export const tagName`
+          // without executing the module (avoids virtual module resolution failures)
           tagName = await readRouteTagNameFromModule(fullPath);
           if (tagName === undefined) {
-            // tagName not found via import is normal — not all page routes define one
+            // tagName not found is normal — not all page routes define one
             log.debug(`No tagName export found in route module: ${fullPath}`);
           }
         }
