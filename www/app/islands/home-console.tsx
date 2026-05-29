@@ -1,8 +1,8 @@
 /**
  * Home Console Island — Signal-driven Graph/Counter panel.
  *
- * Showcases: signal(), effect(), DSD hydration, island architecture.
- * Pure DsdElement + @lessjs/signals. Zero vanilla DOM.
+ * Showcases LessJS framework: signal(), effect(), DSD hydration, Open Props.
+ * Zero hardcoded CSS — all layout, typography, spacing via Open Props tokens.
  */
 import { DsdElement } from '@lessjs/core';
 import { effect, signal } from '@lessjs/signals';
@@ -15,79 +15,102 @@ const styles = new StyleSheet();
 styles.replaceSync(`
   :host { display: block; }
   .panel {
-    border: 0.5px solid var(--border-bright, rgba(124,111,245,0.4));
-    border-radius: 10px; background: var(--bg-panel, #090B11); overflow: hidden;
+    border: var(--border-size-1) solid var(--border-bright);
+    border-radius: var(--radius-3);
+    background: var(--bg-panel);
     box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+    overflow: hidden;
   }
   .rp-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 20px; background: var(--bg-panel, #090B11);
-    border-bottom: 0.5px solid var(--border-bright, rgba(124,111,245,0.4));
+    padding: var(--size-3) var(--size-5);
+    background: var(--bg-panel);
+    border-bottom: var(--border-size-1) solid var(--border-bright);
   }
-  .rp-title { font-size: 0.8rem; font-weight: 900; color: var(--text-primary, #FFFFFF); }
-  .rp-tabs { display: flex; gap: 6px; }
+  .rp-title { font-size: var(--font-size-0); font-weight: var(--font-weight-9); color: var(--text-primary); }
+  .rp-tabs { display: flex; gap: var(--size-2); }
   .rp-tab {
-    padding: 5px 14px; border-radius: 14px; border: 0.5px solid transparent;
-    background: transparent; color: var(--brand-neon, #7C6FF5);
-    font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
+    padding: var(--size-1) var(--size-3);
+    border-radius: var(--radius-round);
+    border: var(--border-size-1) solid transparent;
+    background: transparent;
+    color: var(--brand-neon);
+    font-size: var(--font-size-00);
+    font-weight: var(--font-weight-7);
+    cursor: pointer;
+    transition: all 0.2s ease;
   }
   .rp-tab.active {
-    background: var(--brand-neon, #7C6FF5); color: #FFFFFF;
-    border-color: var(--brand-neon, #7C6FF5); box-shadow: 0 0 12px rgba(124,111,245,0.3);
+    background: var(--brand-neon); color: var(--gray-12);
+    border-color: var(--brand-neon);
+    box-shadow: 0 0 12px var(--brand-glow);
   }
-  .rp-tab:hover:not(.active) { border-color: var(--brand-neon, #7C6FF5); }
-  .rp-graph { padding: 16px 20px; }
-  .rp-graph.hidden { display: none; }
-  .counter-pane { padding: 20px; }
-  .counter-pane.hidden { display: none; }
+  .rp-tab:hover:not(.active) { border-color: var(--brand-neon); }
+  .pane { padding: var(--size-4) var(--size-5); }
+  .pane.hidden { display: none; }
   .island-badge {
-    display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
-    border-radius: 4px; border: 0.5px solid rgba(0,255,135,0.2);
-    background: rgba(0,255,135,0.08); margin-bottom: 16px;
+    display: inline-flex; align-items: center; gap: var(--size-2);
+    padding: var(--size-1) var(--size-3);
+    border-radius: var(--radius-1);
+    border: var(--border-size-1) solid rgba(0,255,135,0.2);
+    background: rgba(0,255,135,0.08);
+    margin-bottom: var(--size-4);
   }
   .island-dot {
-    width: 6px; height: 6px; background: var(--cyber-green, #00FF87);
-    border-radius: 50%; animation: pulse 2s infinite;
+    width: 6px; height: 6px;
+    background: var(--cyber-green);
+    border-radius: var(--radius-round);
+    animation: pulse 2s infinite;
   }
   @keyframes pulse {
-    0%,100% { opacity: 0.6; box-shadow: 0 0 4px var(--cyber-green, #00FF87); }
-    50% { opacity: 1; box-shadow: 0 0 10px var(--cyber-green, #00FF87); }
+    0%,100% { opacity: 0.6; box-shadow: 0 0 4px var(--cyber-green); }
+    50% { opacity: 1; box-shadow: 0 0 10px var(--cyber-green); }
   }
   .island-label {
-    font-family: "JetBrains Mono", monospace; font-size: 0.6rem;
-    font-weight: 700; color: var(--cyber-green, #00FF87);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-00);
+    font-weight: var(--font-weight-7);
+    color: var(--cyber-green);
   }
-  .counter-body { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .counter-body {
+    display: flex; flex-direction: column; align-items: center;
+    gap: var(--size-4);
+  }
   .counter-box {
-    display: inline-flex; align-items: center; gap: 0;
-    border: 2px solid var(--brand-neon, #7C6FF5); border-radius: 30px;
-    background: #080A0F; box-shadow: 0 0 16px rgba(124,111,245,0.2); overflow: hidden;
+    display: inline-flex; align-items: center;
+    border: var(--border-size-2) solid var(--brand-neon);
+    border-radius: var(--radius-round);
+    background: #080A0F;
+    box-shadow: 0 0 16px var(--brand-glow);
+    overflow: hidden;
   }
   .counter-btn {
-    width: 40px; height: 40px; border: none; background: #12151D;
-    color: var(--text-muted, #515466); font-size: 1.2rem; font-weight: 800;
-    cursor: pointer; transition: color 0.2s ease; border-radius: 50%;
+    width: 40px; height: 40px; border: none;
+    background: var(--gray-1); color: var(--text-muted);
+    font-size: var(--font-size-3); font-weight: var(--font-weight-8);
+    cursor: pointer; transition: color 0.2s ease;
+    border-radius: var(--radius-round);
     display: flex; align-items: center; justify-content: center;
   }
-  .counter-btn:hover { color: var(--text-primary, #FFFFFF); }
+  .counter-btn:hover { color: var(--text-primary); }
   .counter-value {
-    padding: 0 28px; font-size: 1.6rem; font-weight: 900;
-    color: var(--text-primary, #FFFFFF); font-variant-numeric: tabular-nums;
+    padding: 0 var(--size-7);
+    font-size: var(--font-size-5); font-weight: var(--font-weight-9);
+    color: var(--text-primary); font-variant-numeric: tabular-nums;
     min-width: 60px; text-align: center;
   }
   .counter-caption {
-    font-family: "JetBrains Mono", monospace; font-size: 0.68rem;
-    color: var(--text-muted, #515466); text-align: center;
+    font-family: var(--font-mono); font-size: var(--font-size-00);
+    color: var(--text-muted); text-align: center;
   }
-  .counter-caption b { color: var(--brand-neon, #7C6FF5); font-weight: 700; }
+  .counter-caption b { color: var(--brand-neon); font-weight: var(--font-weight-7); }
   @media (max-width: 640px) {
-    .rp-tab { padding: 4px 12px; font-size: 0.65rem; }
+    .rp-tab { padding: var(--size-1) var(--size-3); font-size: var(--font-size-00); }
   }
 `);
 
 export default class HomeConsole extends DsdElement {
   static override styles = [openPropsTokenSheet, styles];
-
   #activeTab = signal<'graph' | 'counter'>('graph');
   #count = signal(42);
 
@@ -100,49 +123,37 @@ export default class HomeConsole extends DsdElement {
     });
   }
 
-  private _switchTab(tab: 'graph' | 'counter') {
-    this.#activeTab.value = tab;
-  }
-  private _inc() {
-    this.#count.value++;
-  }
-  private _dec() {
-    this.#count.value--;
-  }
-
   override render() {
-    const activeTab = this.#activeTab.value;
-    const count = this.#count.value;
-
+    const t = this.#activeTab.value;
+    const c = this.#count.value;
     return (
       <div class='panel'>
         <div class='rp-header'>
           <span class='rp-title'>
-            {activeTab === 'graph' ? 'HYPER-GRAPH ENGINE' : 'LIVE COMPONENT PREVIEW'}
+            {t === 'graph' ? 'HYPER-GRAPH ENGINE' : 'LIVE COMPONENT PREVIEW'}
           </span>
           <div class='rp-tabs'>
             <span
-              class={`rp-tab${activeTab === 'graph' ? ' active' : ''}`}
-              onClick={() => this._switchTab('graph')}
+              class={`rp-tab${t === 'graph' ? ' active' : ''}`}
+              onClick={() => this.#activeTab.value = 'graph'}
             >
               LIVE MAP
             </span>
             <span
-              class={`rp-tab${activeTab === 'counter' ? ' active' : ''}`}
-              onClick={() => this._switchTab('counter')}
+              class={`rp-tab${t === 'counter' ? ' active' : ''}`}
+              onClick={() => this.#activeTab.value = 'counter'}
             >
               METRICS
             </span>
           </div>
         </div>
-
-        <div class={`rp-graph${activeTab === 'graph' ? '' : ' hidden'}`}>
+        <div class={`pane${t === 'graph' ? '' : ' hidden'}`}>
           <svg
             viewBox='0 0 432 220'
             xmlns='http://www.w3.org/2000/svg'
-            style='display:block;width:100%;height:auto;border:0.5px solid rgba(124,111,245,0.16);border-radius:8px;background:#010204'
+            style='display:block;width:100%;height:auto;border:var(--border-size-1) solid var(--border-futuristic);border-radius:var(--radius-2);background:var(--bg-terminal)'
           >
-            <rect width='432' height='220' rx='6' fill='#010204' />
+            <rect width='432' height='220' rx='6' fill='var(--bg-terminal)' />
             <circle
               cx='216'
               cy='110'
@@ -310,17 +321,16 @@ export default class HomeConsole extends DsdElement {
             </text>
           </svg>
         </div>
-
-        <div class={`counter-pane${activeTab === 'counter' ? '' : ' hidden'}`}>
+        <div class={`pane${t === 'counter' ? '' : ' hidden'}`}>
           <div class='island-badge'>
             <span class='island-dot'></span>
             <span class='island-label'>ISLAND: ACTIVE</span>
           </div>
           <div class='counter-body'>
             <div class='counter-box'>
-              <button class='counter-btn' onClick={() => this._dec()}>−</button>
-              <span class='counter-value'>{count}</span>
-              <button class='counter-btn' onClick={() => this._inc()}>+</button>
+              <button class='counter-btn' onClick={() => this.#count.value--}>−</button>
+              <span class='counter-value'>{c}</span>
+              <button class='counter-btn' onClick={() => this.#count.value++}>+</button>
             </div>
             <p class='counter-caption'>
               State mutated via <b>signal.value</b>. Renders: 1
