@@ -15,7 +15,7 @@
  */
 
 import { join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { normalizePath } from 'vite';
 import process from 'node:process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -461,18 +461,29 @@ if (typeof globalThis.customElements === 'undefined') {
           name: 'less:ssg-data-dispatch',
           enforce: 'pre',
           resolveId(id) {
-            // v0.26: Generated data files — resolve to actual files on disk.
-            // Workspace aliases would resolve these to writer modules,
-            // but we need the generated data files. Return absolute path
-            // (not file:// URL) for rolldown compatibility.
-            const dataDir = resolve(root, 'www/app/data');
-            if (id === '@lessjs/content/nav') return resolve(dataDir, '_generated-nav.ts');
-            if (id === '@lessjs/content/blog-data') return resolve(dataDir, '_generated-blog-data.ts');
-            if (id === '@lessjs/i18n/data') return resolve(dataDir, '_generated-i18n-data.ts');
+            // v0.26: Generated data files — return virtual IDs so load()
+            // can read file content. This bypasses workspace alias conflicts.
+            if (id === '@lessjs/content/nav') return '\0less:gen-nav';
+            if (id === '@lessjs/content/blog-data') return '\0less:gen-blog';
+            if (id === '@lessjs/i18n/data') return '\0less:gen-i18n';
             if (id === 'virtual:less-blog-data') return '\0virtual:less-blog-data';
             if (id === 'virtual:less-i18n-data') return '\0virtual:less-i18n-data';
           },
           load(id) {
+            // v0.26: Read generated file content for virtual module
+            if (id === '\0less:gen-nav') {
+              const p = resolve(root, 'www/app/data/_generated-nav.ts');
+              return existsSync(p) ? readFileSync(p, 'utf-8') : 'export const headerNav = []; export const navSections = [];';
+            }
+            if (id === '\0less:gen-blog') {
+              const p = resolve(root, 'www/app/data/_generated-blog-data.ts');
+              return existsSync(p) ? readFileSync(p, 'utf-8') : 'export const posts = []; export function getPostBySlug() {} export function getBlogOptions() { return {}; }';
+            }
+            if (id === '\0less:gen-i18n') {
+              const p = resolve(root, 'www/app/data/_generated-i18n-data.ts');
+              return existsSync(p) ? readFileSync(p, 'utf-8') : 'export const locales = []; export function getDefaultLocale() { return "en"; } export function getI18nOptions() { return null; }';
+            }
+            // ... rest of load handlers
             // Vite 8 Plugin.load type: function or {handler}
             function callLoad(p: Plugin | null, moduleId: string): string | null | undefined {
               if (!p?.load) return undefined;
@@ -539,8 +550,6 @@ if (typeof globalThis.customElements === 'undefined') {
       resolve: {
         preserveSymlinks: true,
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
-        // v0.26: Generated data aliases — placed FIRST so exact-match
-        // takes priority over parent @lessjs/content workspace alias.
         alias: {
           ...(alias && !Array.isArray(alias)
             ? Object.fromEntries(
@@ -550,7 +559,7 @@ if (typeof globalThis.customElements === 'undefined') {
               ]),
             )
             : {}),
-          // v0.26: Generated data files — override workspace aliases
+          // v0.26: Generated data files override workspace aliases
           '@lessjs/content/nav': './app/data/_generated-nav.ts',
           '@lessjs/content/blog-data': './app/data/_generated-blog-data.ts',
           '@lessjs/i18n/data': './app/data/_generated-i18n-data.ts',
