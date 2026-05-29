@@ -81,7 +81,8 @@ export class LessThemeToggle extends DsdElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this._initTheme();
+    // raf breaks signal→island-reconstruct→connectedCallback synchronous loop
+    requestAnimationFrame(() => this._initTheme());
   }
 
   /**
@@ -139,8 +140,7 @@ export class LessThemeToggle extends DsdElement {
 
   protected override onDsdHydrated(): void {
     super.onDsdHydrated();
-    this._initTheme();
-    // v0.26: signal change auto-triggers re-render — no manual update() needed
+    requestAnimationFrame(() => this._initTheme());
   }
 
   protected override onCsrRendered(): void {
