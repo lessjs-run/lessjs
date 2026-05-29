@@ -14,22 +14,22 @@ only public build entry. Zero backward compatibility.
 
 ### 14 SOPs Delivered
 
-| SOP | Feature                                  |
-| --- | ---------------------------------------- |
-| 001 | `lessPipeline()` declarative entry       |
-| 002 | `.less/routes.d.ts` type generation      |
-| 003 | `static head` metadata                   |
-| 004 | `static client` declaration              |
-| 005 | SignalContext (DOM-tree context)         |
-| 006 | CSS token convergence (20→2 imports)     |
-| 007 | Scanner AST hardening                    |
-| 008 | `as any` hardening (21→0 in core/src)    |
-| 009 | test-utils.ts infrastructure             |
-| 010 | `less()` full removal (not @deprecated)  |
-| 011 | island.test.ts old name cleanup          |
-| 012 | `_dsdHydrated` removal, unified render   |
-| 013 | 14 pages string→JSX                      |
-| 014 | Full regression (943 tests)              |
+| SOP | Feature                                 |
+| --- | --------------------------------------- |
+| 001 | `lessPipeline()` declarative entry      |
+| 002 | `.less/routes.d.ts` type generation     |
+| 003 | `static head` metadata                  |
+| 004 | `static client` declaration             |
+| 005 | SignalContext (DOM-tree context)        |
+| 006 | CSS token convergence (20→2 imports)    |
+| 007 | Scanner AST hardening                   |
+| 008 | `as any` hardening (21→0 in core/src)   |
+| 009 | test-utils.ts infrastructure            |
+| 010 | `less()` full removal (not @deprecated) |
+| 011 | island.test.ts old name cleanup         |
+| 012 | `_dsdHydrated` removal, unified render  |
+| 013 | 14 pages string→JSX                     |
+| 014 | Full regression (943 tests)             |
 
 ### Critical Fixes
 
