@@ -22,44 +22,53 @@ const { renderToDom } = await import('../src/jsx-render-dom.ts');
 const { isVNode } = await import('../src/vnode.ts');
 const { signal } = await import('../../signals/src/framework.ts');
 
-Deno.test('renderToDom renders text node', () => {
+const test = (name: string, fn: () => void | Promise<void>) => {
+  Deno.test({
+    name,
+    sanitizeOps: false,
+    sanitizeResources: false,
+    fn,
+  });
+};
+
+test('renderToDom renders text node', () => {
   const node = renderToDom('hello');
   assertEquals(node.nodeType, 3);
   assertEquals(node.textContent, 'hello');
 });
 
-Deno.test('renderToDom renders number', () => {
+test('renderToDom renders number', () => {
   assertEquals(renderToDom(42).textContent, '42');
 });
 
-Deno.test('renderToDom unwraps Signal children', () => {
+test('renderToDom unwraps Signal children', () => {
   const s = signal('hello');
   assertEquals(renderToDom(s).textContent, 'hello');
 });
 
-Deno.test('renderToDom null returns empty text', () => {
+test('renderToDom null returns empty text', () => {
   assertEquals(renderToDom(null).textContent, '');
 });
 
-Deno.test('renderToDom creates HTML element', () => {
+test('renderToDom creates HTML element', () => {
   const vnode = jsx('div', { id: 'test' });
   const el = renderToDom(vnode) as Element;
   assertEquals(el.tagName, 'DIV');
   assertEquals(el.getAttribute('id'), 'test');
 });
 
-Deno.test('renderToDom element with text child', () => {
+test('renderToDom element with text child', () => {
   const vnode = jsx('span', { children: ['hello'] });
   assertEquals((renderToDom(vnode) as Element).textContent, 'hello');
 });
 
-Deno.test('renderToDom element with Signal child', () => {
+test('renderToDom element with Signal child', () => {
   const s = signal('world');
   const vnode = jsx('span', { children: [s as unknown as string] });
   assertEquals((renderToDom(vnode) as Element).textContent, 'world');
 });
 
-Deno.test('renderToDom SVG namespace', () => {
+test('renderToDom SVG namespace', () => {
   const vnode = jsx('svg', {
     viewBox: '0 0 16 16',
     children: [
@@ -72,13 +81,13 @@ Deno.test('renderToDom SVG namespace', () => {
   assertEquals(circle.namespaceURI, 'http://www.w3.org/2000/svg');
 });
 
-Deno.test('renderToDom SVG path namespace', () => {
+test('renderToDom SVG path namespace', () => {
   const vnode = jsx('svg', { children: [jsx('path', { d: 'M0 0 L10 10' })] });
   const path = (renderToDom(vnode) as Element).firstElementChild!;
   assertEquals(path.namespaceURI, 'http://www.w3.org/2000/svg');
 });
 
-Deno.test('renderToDom onClick via addEventListener', () => {
+test('renderToDom onClick via addEventListener', () => {
   let clicked = false;
   const vnode = jsx('button', {
     onClick: () => {
@@ -91,7 +100,7 @@ Deno.test('renderToDom onClick via addEventListener', () => {
   assertEquals(clicked, true);
 });
 
-Deno.test('renderToDom onClick stops after AbortController abort', () => {
+test('renderToDom onClick stops after AbortController abort', () => {
   const controller = new AbortController();
   let count = 0;
   const vnode = jsx('button', {
@@ -108,7 +117,7 @@ Deno.test('renderToDom onClick stops after AbortController abort', () => {
   assertEquals(count, 1);
 });
 
-Deno.test('renderToDom Fragment returns DocumentFragment', () => {
+test('renderToDom Fragment returns DocumentFragment', () => {
   const vnode = jsxs(Fragment, {
     children: [
       jsx('span', { children: ['a'] }),
@@ -120,7 +129,7 @@ Deno.test('renderToDom Fragment returns DocumentFragment', () => {
   assertEquals(frag.childNodes.length, 2);
 });
 
-Deno.test('renderToDom Signal in attribute (current behavior)', () => {
+test('renderToDom Signal in attribute (current behavior)', () => {
   // Step 4 (v0.24.3 hardening) will add auto-unwrap for attr values.
   // For now, users must explicitly use .value in attributes.
   const s = signal('tooltip text');
@@ -129,12 +138,12 @@ Deno.test('renderToDom Signal in attribute (current behavior)', () => {
   assertEquals(el.getAttribute('title'), 'tooltip text');
 });
 
-Deno.test('renderToDom className → class', () => {
+test('renderToDom className → class', () => {
   const vnode = jsx('div', { className: 'foo bar' });
   assertEquals((renderToDom(vnode) as Element).getAttribute('class'), 'foo bar');
 });
 
-Deno.test('renderToDom multiple children', () => {
+test('renderToDom multiple children', () => {
   const vnode = jsx('ul', {
     children: [
       jsx('li', { children: ['a'] }),
@@ -145,7 +154,7 @@ Deno.test('renderToDom multiple children', () => {
   assertEquals((renderToDom(vnode) as Element).children.length, 3);
 });
 
-Deno.test('renderToDom nested SVG children namespace', () => {
+test('renderToDom nested SVG children namespace', () => {
   const vnode = jsx('svg', {
     children: [
       jsx('g', { children: [jsx('rect', { width: '10', height: '10' })] }),
@@ -157,7 +166,7 @@ Deno.test('renderToDom nested SVG children namespace', () => {
   assertEquals(g.firstElementChild!.namespaceURI, 'http://www.w3.org/2000/svg');
 });
 
-Deno.test('renderToDom isVNode type guard', () => {
+test('renderToDom isVNode type guard', () => {
   assert(isVNode(jsx('div', {})));
   assert(!isVNode('string'));
   assert(!isVNode(null));

@@ -14,7 +14,7 @@
  *
  * Usage:
  * ```ts
- * import { island } from '@lessjs/core';
+ * import { defineIsland } from '@lessjs/core';
  *
  * class MyCounter extends LitElement {
  *   static properties = { count: { type: Number } };
@@ -24,10 +24,10 @@
  * }
  *
  * // Register with load strategy (DSD enabled by default)
- * export default island('my-counter', MyCounter, { strategy: 'load' });
+ * export default defineIsland('my-counter', MyCounter, { strategy: 'load' });
  *
  * // Pure Island - no DSD, full framework reactivity
- * export default island('my-counter', MyCounter, { strategy: 'only' });
+ * export default defineIsland('my-counter', MyCounter, { strategy: 'only' });
  * ```
  *
  * Web Standards alignment:
@@ -289,16 +289,16 @@ function createIdleStrategy(registerFn: () => void): void {
  * @example
  * ```ts
  * // Basic usage (DSD enabled by default)
- * export default island('my-counter', MyCounter);
+ * export default defineIsland('my-counter', MyCounter);
  *
  * // Pure Island - no DSD, full framework reactivity
- * export default island('my-counter', MyCounter, { dsd: false });
+ * export default defineIsland('my-counter', MyCounter, { dsd: false });
  *
  * // With visible strategy (IntersectionObserver)
- * export default island('my-counter', MyCounter, { strategy: 'visible' });
+ * export default defineIsland('my-counter', MyCounter, { strategy: 'visible' });
  *
  * // With load strategy (immediate upgrade)
- * export default island('my-counter', MyCounter, { strategy: 'load' });
+ * export default defineIsland('my-counter', MyCounter, { strategy: 'load' });
  * ```
  */
 export function defineIsland<T extends CustomElementConstructor>(
