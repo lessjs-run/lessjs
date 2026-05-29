@@ -104,7 +104,7 @@ export default class RendererKernelRegistrySopDecision extends DsdElement {
 
           <h2>Context</h2>
           <p>
-            LessJS 已经具备 <code>renderDSD()</code>、<code>renderNestedCustomElements()</code>、
+            LessJS 已经具备 <code>renderDsd()</code>、<code>renderNestedCustomElements()</code>、
             <code>RenderAdapter</code>、<code>renderRoute()</code>、SSG pipeline 和
             <code>PackageIslandMeta</code>。这些能力足够支撑一个 Web Components-first 的渲染内核。
           </p>
@@ -269,7 +269,7 @@ export default class RendererKernelRegistrySopDecision extends DsdElement {
 
           <h2>Context</h2>
           <p>
-            LessJS already has <code>renderDSD()</code>, <code>renderNestedCustomElements()</code>,
+            LessJS already has <code>renderDsd()</code>, <code>renderNestedCustomElements()</code>,
             <code>RenderAdapter</code>, <code>renderRoute()</code>, the SSG pipeline, and
             <code>PackageIslandMeta</code>. These are enough to support a Web Components-first rendering
             kernel.

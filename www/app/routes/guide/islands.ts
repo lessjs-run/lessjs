@@ -10,7 +10,7 @@ import { DsdElement } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 
-// Side-effect imports: island() registers custom elements for SSR rendering.
+// Side-effect imports: defineIsland() registers custom elements for SSR rendering.
 // During SSR the strategy scheduling (IntersectionObserver etc.) is skipped
 // via the SSR guard in island.ts — only customElements.define() runs.
 import '../../islands/demo-load.js';

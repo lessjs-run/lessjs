@@ -366,7 +366,7 @@ export class ArchitecturePage extends DsdElement {
               <div class="layer"><strong>product facades</strong><span>@lessjs/runtime, @lessjs/app</span><p>Separate authoring imports from configuration assembly.</p></div>
               <div class="layer"><strong>build adapters</strong><span>@lessjs/adapter-vite</span><p>Own Vite plugin assembly, route scanning, SSG phases, and generated entries.</p></div>
               <div class="layer"><strong>feature packages</strong><span>content, i18n, hub, ui, cem, compat-check</span><p>Own product features and evidence surfaces without routing through core.</p></div>
-              <div class="layer"><strong>runtime kernel</strong><span>@lessjs/core</span><p>Own DSD runtime, templates, renderDSD, islands, navigation, logger, and errors.</p></div>
+              <div class="layer"><strong>runtime kernel</strong><span>@lessjs/core</span><p>Own DSD runtime, templates, renderDsd, islands, navigation, logger, and errors.</p></div>
               <div class="layer"><strong>protocols</strong><span>@lessjs/protocols</span><p>Own dependency-light shared build contracts and virtual ids.</p></div>
             </div>
           </section>

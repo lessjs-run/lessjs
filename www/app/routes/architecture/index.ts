@@ -287,8 +287,8 @@ export class ArchitecturePage extends DsdElement {
                 <h3>${isZh ? '运行时内核' : 'Runtime Kernel'}</h3>
                 <p>${
       isZh
-        ? 'Core 是一个精简内核：DSD 运行时、模板、renderDSD、islands、导航、日志、错误。'
-        : 'Core is a small kernel: DSD runtime, templates, renderDSD, islands, navigation, logger, errors.'
+        ? 'Core 是一个精简内核：DSD 运行时、模板、renderDsd、islands、导航、日志、错误。'
+        : 'Core is a small kernel: DSD runtime, templates, renderDsd, islands, navigation, logger, errors.'
     }</p>
               </a>
               <a class="card" href="/architecture/adapter-vite">
