@@ -36,20 +36,19 @@ sheet.replaceSync(`
     width: 32px;
     height: 32px;
     padding: 0;
-    border: 0.5px solid var(--border-futuristic, rgba(124,111,245,0.16));
-    border-radius: 4px;
+    border: var(--border-size-1) solid var(--border-futuristic);
     background: transparent;
-    color: var(--text-muted, #515466);
+    color: var(--text-secondary);
     cursor: pointer;
     font-size: 0;
-    line-height: 1;
-    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.4s ease;
+    line-height: var(--font-lineheight-1);
+    transition: color var(--ease-2) var(--duration-2), border-color var(--ease-2) var(--duration-2), background var(--ease-2) var(--duration-2), transform var(--ease-2) var(--duration-2);
   }
 
   .theme-toggle:hover {
-    color: var(--text-primary, #FFFFFF);
-    border-color: var(--brand-neon, #7C6FF5);
-    background: rgba(124,111,245,0.08);
+    color: var(--text-primary);
+    border-color: var(--brand-neon);
+    background: var(--brand-glow);
     transform: rotate(45deg);
   }
 

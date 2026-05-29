@@ -6,6 +6,7 @@ import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
+import '../../islands/less-toc.tsx';
 
 const routeSheet = new StyleSheet();
 
@@ -175,6 +176,7 @@ export const tagName = 'counter-island';</code></pre></less-code-block>
             <a href="/guide/core-concepts" class="nav-link">核心概念 &rarr;</a>
           </div>
         </div>
+        <less-toc></less-toc>
       </less-layout>
     `;
   }
@@ -286,6 +288,7 @@ export const tagName = 'page-home';</code></pre></less-code-block>
             <a href="/guide/core-concepts" class="nav-link">Core Concepts &rarr;</a>
           </div>
         </div>
+        <less-toc></less-toc>
       </less-layout>
     `;
   }
