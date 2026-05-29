@@ -26,37 +26,40 @@ styles.replaceSync(`
     overflow-y: auto;
     font-size: 0.8125rem;
     scrollbar-width: thin;
+    padding-left: 1rem;
   }
   .toc-title {
-    font-size: 0.6875rem;
-    font-weight: 500;
+    font-size: 0.6rem;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-    margin-bottom: 0.75rem;
+    letter-spacing: 0.22em;
+    color: var(--text-primary, #FFFFFF);
+    margin-bottom: 1rem;
+    padding-top: 0.25rem;
   }
   .toc-list {
     list-style: none;
     margin: 0;
     padding: 0;
-    border-left: 0.5px solid var(--border);
   }
   .toc-link {
     display: block;
-    padding: 0.25rem 0.75rem;
-    color: var(--text-muted);
+    padding: 0.3rem 0 0.3rem 0.75rem;
+    color: var(--text-muted, #515466);
     text-decoration: none;
-    border-left: 1px solid transparent;
-    margin-left: -1px;
-    transition: color 0.15s, border-color 0.15s;
+    border-left: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
     line-height: 1.5;
+    font-size: 0.8125rem;
   }
   .toc-link:hover {
-    color: var(--text-primary);
+    color: var(--text-secondary, #8E92A2);
+    border-left-color: rgba(124,111,245,0.3);
   }
   .toc-link.active {
-    color: var(--text-primary);
-    border-left-color: var(--text-primary);
+    color: var(--brand-neon, #7C6FF5);
+    border-left-color: var(--brand-neon, #7C6FF5);
+    font-weight: 600;
   }
   .toc-link.h3 {
     padding-left: 1.5rem;

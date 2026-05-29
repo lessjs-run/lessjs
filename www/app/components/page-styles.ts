@@ -329,4 +329,25 @@ export const pageStyles = `
     font-size: 0.875rem;
   }
   .nav-link:hover { text-decoration: underline; }
+
+  /* v0.26: TOC + content two-column grid */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    gap: 2rem;
+    align-items: start;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--size-6) var(--size-4);
+  }
+  .content-grid .container {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+  @media (max-width: 1100px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
+  }
 `;

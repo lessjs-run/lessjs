@@ -34,16 +34,16 @@ sheet.replaceSync(`
   pre {
     margin: 0;
     padding: var(--size-5);
-    background: #1a1a2e;
-    border: var(--border-size-1) solid rgba(255, 255, 255, 0.08);
-    border-radius: 6px;
+    background: var(--bg-terminal, #010204);
+    border: 0.5px solid var(--border-futuristic, rgba(124,111,245,0.16));
+    border-radius: 8px;
     overflow-x: auto;
-    font-family: var(--font-mono);
+    font-family: "JetBrains Mono", var(--font-mono);
     font-size: var(--font-size-0);
     line-height: 1.7;
-    color: #e0e0e0;
+    color: #e9ecef;
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+    scrollbar-color: rgba(124,111,245,0.2) transparent;
     white-space: pre-wrap;
     word-break: break-word;
   }
@@ -51,54 +51,58 @@ sheet.replaceSync(`
   ::slotted(pre) {
     margin: 0;
     padding: var(--size-5);
-    background: #1a1a2e;
-    border: var(--border-size-1) solid rgba(255, 255, 255, 0.08);
-    border-radius: 6px;
+    background: var(--bg-terminal, #010204);
+    border: 0.5px solid var(--border-futuristic, rgba(124,111,245,0.16));
+    border-radius: 8px;
     overflow-x: auto;
-    font-family: var(--font-mono);
+    font-family: "JetBrains Mono", var(--font-mono);
     font-size: var(--font-size-0);
     line-height: 1.7;
-    color: #e0e0e0;
+    color: #e9ecef;
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+    scrollbar-color: rgba(124,111,245,0.2) transparent;
   }
 
   .lang-badge {
     position: absolute;
-    top: var(--size-2);
-    left: var(--size-3);
+    top: 0.5rem;
+    left: 0.75rem;
     font-size: 10px;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.35);
+    letter-spacing: 0.1em;
+    color: var(--text-muted, #515466);
     pointer-events: none;
   }
 
   .copy-btn {
     position: absolute;
-    top: var(--size-2);
-    right: var(--size-2);
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.5);
-    border: var(--border-size-1) solid rgba(255, 255, 255, 0.12);
-    padding: var(--size-1) var(--size-3);
-    font-size: var(--font-size-00);
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(124,111,245,0.08);
+    color: var(--text-muted, #515466);
+    border: 0.5px solid var(--border-futuristic, rgba(124,111,245,0.16));
+    padding: 0.25rem 0.75rem;
+    font-size: 0.6875rem;
     font-family: var(--font-sans);
+    font-weight: 600;
     cursor: pointer;
     border-radius: 4px;
-    transition: color 0.2s ease, background 0.2s ease;
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
     z-index: 1;
+    letter-spacing: 0.04em;
   }
 
   .copy-btn:hover {
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-primary, #FFFFFF);
+    background: rgba(124,111,245,0.15);
+    border-color: var(--brand-neon, #7C6FF5);
   }
 
   :host(:state(copied)) .copy-btn {
-    color: #4ade80;
-    border-color: rgba(74, 222, 128, 0.3);
+    color: var(--cyber-green, #00FF87);
+    border-color: rgba(0,255,135,0.3);
+    background: rgba(0,255,135,0.08);
   }
 
   :host(:state(failed)) .copy-btn {
