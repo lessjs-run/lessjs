@@ -95,10 +95,11 @@ lessjs.org
 
 ### Top Nav (headerNav)
 
-- Framework (/) → guide/getting-started
-- Engine (architecture/) → architecture/architecture
-- RegistryHub (registry/) → registry/
-- Blog (blog/) → blog/
+- Guide (/guide/getting-started) — tutorials
+- API (/api/reference) — API reference
+- Architecture (/architecture/architecture) — deep dives
+- Hub (/registry) — package registry
+- Blog (/blog) — blog
 
 ### Sidebar Sections (navSections)
 

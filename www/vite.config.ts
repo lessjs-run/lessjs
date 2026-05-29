@@ -155,13 +155,11 @@ export default defineConfig({
         nav: {
           routesDir: 'app/routes',
           headerNav: [
-            { href: '/', label: 'Home' },
             { href: '/guide/getting-started', label: 'Guide' },
             { href: '/api/reference', label: 'API' },
-            { href: '/architecture', label: 'Architecture' },
+            { href: '/architecture/architecture', label: 'Architecture' },
             { href: '/registry', label: 'Hub' },
             { href: '/blog', label: 'Blog' },
-            { href: '/roadmap', label: 'Roadmap' },
           ],
         },
         sitemap: {
