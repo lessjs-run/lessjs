@@ -5,7 +5,7 @@
  * Zero hardcoded CSS — all layout, typography, spacing via Open Props tokens.
  */
 import { DsdElement } from '@lessjs/core';
-import { effect, signal } from '@lessjs/signals';
+import { computed, signal } from '@lessjs/signals';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { consumeContext } from '@lessjs/core/signal-context';
 import { THEME_CTX } from '@lessjs/ui/less-layout';
@@ -116,45 +116,55 @@ export default class HomeConsole extends DsdElement {
   #activeTab = signal<'graph' | 'counter'>('graph');
   #count = signal(42);
 
+  // v0.26.1 (ADR-0058/0059): Computed signals replace effect()+update().
+  // applyProps detects signal-valued props; renderToDom binds signal children.
+  #graphPaneClass = computed(() =>
+    `pane${this.#activeTab.value === 'graph' ? '' : ' hidden'}`
+  );
+  #counterPaneClass = computed(() =>
+    `pane${this.#activeTab.value === 'counter' ? '' : ' hidden'}`
+  );
+  #graphTabClass = computed(() =>
+    `rp-tab${this.#activeTab.value === 'graph' ? ' active' : ''}`
+  );
+  #counterTabClass = computed(() =>
+    `rp-tab${this.#activeTab.value === 'counter' ? ' active' : ''}`
+  );
+  #tabTitle = computed(() =>
+    this.#activeTab.value === 'graph' ? 'HYPER-GRAPH ENGINE' : 'LIVE COMPONENT PREVIEW'
+  );
+
   override connectedCallback() {
     super.connectedCallback();
     // SignalContext: auto-sync theme from less-layout provider
     const theme = consumeContext(this, THEME_CTX);
     this.setAttribute('data-theme', theme.value);
     theme.subscribe((t) => this.setAttribute('data-theme', t));
-
-    effect(() => {
-      void this.#activeTab.value;
-      void this.#count.value;
-      this.update();
-    });
+    // v0.26.1: effect()+update() removed — computed signals handled by
+    // applyProps (class) + renderToDom (text children) auto-binding.
   }
 
   override render() {
-    const t = this.#activeTab.value;
-    const c = this.#count.value;
     return (
       <div class='panel'>
         <div class='rp-header'>
-          <span class='rp-title'>
-            {t === 'graph' ? 'HYPER-GRAPH ENGINE' : 'LIVE COMPONENT PREVIEW'}
-          </span>
+          <span class='rp-title'>{this.#tabTitle}</span>
           <div class='rp-tabs'>
             <span
-              class={`rp-tab${t === 'graph' ? ' active' : ''}`}
+              class={this.#graphTabClass}
               onClick={() => this.#activeTab.value = 'graph'}
             >
               LIVE MAP
             </span>
             <span
-              class={`rp-tab${t === 'counter' ? ' active' : ''}`}
+              class={this.#counterTabClass}
               onClick={() => this.#activeTab.value = 'counter'}
             >
               METRICS
             </span>
           </div>
         </div>
-        <div class={`pane${t === 'graph' ? '' : ' hidden'}`}>
+        <div class={this.#graphPaneClass}>
           <svg
             viewBox='0 0 432 220'
             xmlns='http://www.w3.org/2000/svg'
@@ -328,7 +338,7 @@ export default class HomeConsole extends DsdElement {
             </text>
           </svg>
         </div>
-        <div class={`pane${t === 'counter' ? '' : ' hidden'}`}>
+        <div class={this.#counterPaneClass}>
           <div class='island-badge'>
             <span class='island-dot'></span>
             <span class='island-label'>ISLAND: ACTIVE</span>
@@ -336,7 +346,7 @@ export default class HomeConsole extends DsdElement {
           <div class='counter-body'>
             <div class='counter-box'>
               <button class='counter-btn' onClick={() => this.#count.value--}>−</button>
-              <span class='counter-value'>{c}</span>
+              <span class='counter-value'>{this.#count}</span>
               <button class='counter-btn' onClick={() => this.#count.value++}>+</button>
             </div>
             <p class='counter-caption'>

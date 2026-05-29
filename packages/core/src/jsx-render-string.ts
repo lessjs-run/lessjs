@@ -13,7 +13,7 @@
  */
 
 import { isVNode, type VNode } from './vnode.ts';
-import { For, Fragment, Show } from './jsx-runtime.ts';
+import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { escapeAttr, escapeHtml } from './html-escape.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 
@@ -145,7 +145,7 @@ export function renderToString(node: unknown): string {
   }
 
   // ── Show (SSR: render truthy child as static snapshot) ────────────────────
-  if (tag === Show) {
+  if (tag === SHOW_TAG || tag === 'show') {
     const whenVal = isSignalLike(props?.when)
       ? (props!.when as { value: unknown }).value
       : props?.when;
@@ -155,7 +155,7 @@ export function renderToString(node: unknown): string {
   }
 
   // ── For (SSR: render each item statically) ────────────────────────────────
-  if (tag === For) {
+  if (tag === FOR_TAG || tag === 'fore') {
     const items = (isSignalLike(props?.each)
       ? (props!.each as { value: unknown }).value
       : props?.each) as unknown[];

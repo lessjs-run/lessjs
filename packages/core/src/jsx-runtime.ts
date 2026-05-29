@@ -26,27 +26,32 @@ import type { VNode } from './vnode.ts';
  */
 export const Fragment: unique symbol = Symbol.for('lessjs.fragment');
 
-/**
- * v0.26.1 (ADR-0059): Show — conditional rendering control flow.
- *
- * Renders the first child when `when` prop is truthy, the second child otherwise.
- * Creates an effect() binding that swaps DOM children when the signal changes.
- *
- * Usage in TSX:
- *   return <Show when={this._loading}><Spinner/><Content/></Show>;
- */
-export const Show: unique symbol = Symbol.for('lessjs.show');
+/** @internal Symbol for <Show> tag matching in renderToDom */
+export const SHOW_TAG: unique symbol = Symbol.for('lessjs.show');
+/** @internal Symbol for <For> tag matching in renderToDom */
+export const FOR_TAG: unique symbol = Symbol.for('lessjs.for');
 
 /**
- * v0.26.1 (ADR-0059): For — list rendering control flow.
+ * v0.26.1 (ADR-0059): Show — conditional rendering factory.
  *
- * Maps each item in the `each` prop (a Signal<Array>) through a render function
- * child. Creates an effect() binding that reconciles DOM children on change.
+ * Returns a VNode with the internal SHOW_TAG symbol so renderToDom
+ * can intercept it as a control flow directive. Exported as a
+ * function (not a Symbol) for TypeScript JSX compatibility.
  *
- * Usage in TSX:
- *   return <For each={this._items}>{(item) => <li>{item.name}</li>}</For>;
+ * Usage: <Show when={this.#loading}><Spinner/><Content/></Show>
  */
-export const For: unique symbol = Symbol.for('lessjs.for');
+export function Show(props: { when: unknown; children?: unknown }): VNode {
+  return createVNode(SHOW_TAG, props as Record<string, unknown>);
+}
+
+/**
+ * v0.26.1 (ADR-0059): For — list rendering factory.
+ *
+ * Usage: <For each={this.#items}>{(item) => <li>{item.name}</li>}</For>
+ */
+export function For(props: { each: unknown; children?: unknown }): VNode {
+  return createVNode(FOR_TAG, props as Record<string, unknown>);
+}
 
 // ─── Internal helper ─────────────────────────────────────────────────────────
 

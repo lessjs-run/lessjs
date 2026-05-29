@@ -89,7 +89,7 @@ export default class ApiCorePage extends DsdElement {
               <div class="api-desc">条件渲染控制流组件。when prop 为 truthy 时渲染第一个子节点，否则渲染第二个。基于 effect() 自动响应 signal 变化。</div>
             </div>
             <div class="api-entry">
-              <div class="api-sig">&lt;For each=signal&gt;(item): VNode&lt;/For&gt; (v0.26.1)</div>
+              <div class="api-sig">&lt;fore each=signal&gt;(item): VNode&lt;/fore&gt; (v0.26.1)</div>
               <div class="api-desc">列表渲染控制流组件。each prop 接受 Signal&lt;Array&gt;，子节点为 render function。基于 effect() 自动响应 signal 变化。</div>
             </div>
           </div>

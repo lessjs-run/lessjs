@@ -12,7 +12,7 @@
  */
 
 import { isVNode, type VNode } from './vnode.ts';
-import { For, Fragment, Show } from './jsx-runtime.ts';
+import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 import { effect } from '@lessjs/signals';
 
@@ -234,7 +234,7 @@ export function renderToDom(node: unknown, signal?: AbortSignal): Node {
   }
 
   // ── Show (conditional rendering) ──────────────────────────────────────────
-  if (tag === Show) {
+  if (tag === SHOW_TAG || tag === 'show') {
     const whenSig = props?.when;
     const ch = children as VNode[];
     const truthy: unknown = ch[0];
@@ -263,7 +263,7 @@ export function renderToDom(node: unknown, signal?: AbortSignal): Node {
   }
 
   // ── For (list rendering) ──────────────────────────────────────────────────
-  if (tag === For) {
+  if (tag === FOR_TAG || tag === 'fore') {
     const eachSig = props?.each;
     const renderFn = (children[0] as unknown as ((item: unknown, idx: number) => unknown)) ??
       ((() => document.createTextNode('')) as unknown as (item: unknown, idx: number) => unknown);
