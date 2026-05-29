@@ -62,39 +62,46 @@ lessjs.org
 ## Section Rules
 
 ### guide/
+
 - Target: framework users learning LessJS
 - Tone: tutorial, step-by-step, code-first
 - Must: show working examples, link to next/prev page
 - Must not: discuss internal implementation details
 
 ### api/
+
 - Target: developers looking up API signatures
 - Tone: reference, terse, type-signature-first
 - Must: group by category, show signature + one-liner
 
 ### architecture/
+
 - Target: advanced users and framework authors
 - Tone: explanatory, principled, comparison-heavy
 - Must: explain "why", not just "how"
 - May: reference ADRs and SOPs
 
 ### blog/
+
 - Target: community, releases, case studies
 - Content: auto-generated from `content/blog/`
 
 ### registry/ + hub/
+
 - Target: package consumers
 - Content: auto-generated from hub data
 
 ## Navigation
 
 ### Top Nav (headerNav)
+
 - Framework (/) → guide/getting-started
 - Engine (architecture/) → architecture/architecture
 - RegistryHub (registry/) → registry/
 - Blog (blog/) → blog/
 
 ### Sidebar Sections (navSections)
+
 - **Quick Start, Core, Production** → guide/ sidebar (filterDocsNav)
 - **Principles, Compatibility, Reference** → architecture/ sidebar (filterArchitectureNav)
 - **Registry** → registry/ + hub/ sidebar (filterHubNav)
@@ -103,6 +110,7 @@ lessjs.org
 ## Page Template
 
 Every page:
+
 ```tsx
 export const meta = { section: 'Section', label: 'Label', order: N };
 
@@ -113,6 +121,7 @@ export const tagName = 'page-name';
 ## Section Renderers
 
 Each section has `_renderer.ts`:
+
 ```ts
 export default createSectionRenderer('section-name');
 ```

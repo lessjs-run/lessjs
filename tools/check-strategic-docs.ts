@@ -22,10 +22,10 @@ const publicDocs = [
   'www/app/routes/index/index.tsx',
   'www/app/routes/roadmap.tsx',
   'www/app/routes/guide/getting-started.tsx',
-  'www/app/routes/engine/architecture.tsx',
-  'www/app/routes/engine/comparison.tsx',
-  'www/app/routes/engine/dsd.tsx',
-  'www/app/routes/engine/islands.tsx',
+  'www/app/routes/architecture/architecture.tsx',
+  'www/app/routes/architecture/comparison.tsx',
+  'www/app/routes/architecture/dsd.tsx',
+  'www/app/routes/architecture/islands.tsx',
 ];
 
 const currentDocs = [

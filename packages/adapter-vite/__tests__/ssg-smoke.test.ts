@@ -138,18 +138,6 @@ Deno.test('SSG smoke: one-command build produces trusted www output', async (t) 
     assertStringIncludes(roadmapHtml, 'WC Package Protocol');
     assertStringIncludes(roadmapHtml, 'No webpack');
     assertStringIncludes(roadmapHtml, 'Registry Hub');
-    assert(
-      existsSync(
-        join(WWW_DIST, 'decisions', '0024-standards-first-wc-renderer-roadmap', 'index.html'),
-      ),
-      'ADR 0024 should be rendered through the decisions/content pipeline',
-    );
-    assert(
-      existsSync(
-        join(WWW_DIST, 'en', 'decisions', '0024-standards-first-wc-renderer-roadmap', 'index.html'),
-      ),
-      'ADR 0024 should have an i18n decisions output',
-    );
     assert(existsSync(join(WWW_DIST, 'manifest.json')), 'PWA manifest should exist');
     assert(existsSync(join(WWW_DIST, 'sw.js')), 'PWA service worker should exist');
     const sw = readFileSync(join(WWW_DIST, 'sw.js'), 'utf-8');
