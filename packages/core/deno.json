@@ -1,10 +1,6 @@
 {
   "name": "@lessjs/core",
-<<<<<<< HEAD
-  "version": "0.24.4",
-=======
   "version": "0.25.0",
->>>>>>> dev
   "exports": {
     ".": "./src/index.ts",
     "./errors": "./src/errors.ts",
@@ -24,13 +20,8 @@
   },
   "imports": {
     "parse5": "npm:parse5@7.0.0",
-<<<<<<< HEAD
-    "@lessjs/signals": "jsr:@lessjs/signals@^0.24.4",
-    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.24.4"
-=======
     "@lessjs/signals": "jsr:@lessjs/signals@^0.25.0",
     "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.25.0"
->>>>>>> dev
   },
   "publish": {
     "include": [

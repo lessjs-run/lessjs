@@ -1,10 +1,6 @@
 {
   "name": "@lessjs/adapter-vite",
-<<<<<<< HEAD
-  "version": "0.24.4",
-=======
   "version": "0.25.0",
->>>>>>> dev
   "exports": {
     ".": "./src/index.ts",
     "./build-context": "./src/build-context.ts",
@@ -18,19 +14,6 @@
     "./cli/build-ssg": "./src/cli/build-ssg.ts"
   },
   "imports": {
-<<<<<<< HEAD
-    "@lessjs/core": "jsr:@lessjs/core@^0.24.4",
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.24.4/logger",
-    "@lessjs/core/errors": "jsr:@lessjs/core@^0.24.4/errors",
-    "@lessjs/core/context": "jsr:@lessjs/core@^0.24.4/context",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.24.4/navigation",
-    "@lessjs/protocols/build-types": "jsr:@lessjs/protocols@^0.24.4/build-types",
-    "@lessjs/protocols/virtual-ids": "jsr:@lessjs/protocols@^0.24.4/virtual-ids",
-    "@lessjs/cem": "jsr:@lessjs/cem@^0.24.4",
-    "@lessjs/compat-check": "jsr:@lessjs/compat-check@^0.24.4",
-    "@lessjs/content/sitemap": "jsr:@lessjs/content@^0.24.4/sitemap",
-    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.24.4",
-=======
     "@lessjs/core": "jsr:@lessjs/core@^0.25.0",
     "@lessjs/core/logger": "jsr:@lessjs/core@^0.25.0/logger",
     "@lessjs/core/errors": "jsr:@lessjs/core@^0.25.0/errors",
@@ -42,7 +25,6 @@
     "@lessjs/compat-check": "jsr:@lessjs/compat-check@^0.25.0",
     "@lessjs/content/sitemap": "jsr:@lessjs/content@^0.25.0/sitemap",
     "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.25.0",
->>>>>>> dev
     "esbuild": "npm:esbuild@^0.25",
     "hono": "npm:hono@^4",
     "@hono/vite-dev-server": "npm:@hono/vite-dev-server@^0.25.3",

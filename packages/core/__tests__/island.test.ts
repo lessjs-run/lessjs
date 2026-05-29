@@ -2,11 +2,7 @@
  * Unit tests for island.ts - the Island registration and upgrade system (321 lines, previously zero coverage).
  *
  * Tests cover:
-<<<<<<< HEAD
- * - island() registration and metadata markers
-=======
  * - defineIsland() registration and metadata markers
->>>>>>> dev
  * - getSsrProps / bindEvents
  * - Strategy implementations (load, idle, visible, only)
  * - Tag name validation

@@ -1,23 +1,13 @@
 {
   "name": "@lessjs/runtime",
-<<<<<<< HEAD
-  "version": "0.24.4",
-=======
   "version": "0.25.0",
->>>>>>> dev
   "exports": {
     ".": "./src/index.ts"
   },
   "imports": {
-<<<<<<< HEAD
-    "@lessjs/core": "jsr:@lessjs/core@^0.24.4",
-    "@lessjs/signals": "jsr:@lessjs/signals@^0.24.4",
-    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.24.4"
-=======
     "@lessjs/core": "jsr:@lessjs/core@^0.25.0",
     "@lessjs/signals": "jsr:@lessjs/signals@^0.25.0",
     "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.25.0"
->>>>>>> dev
   },
   "publish": {
     "include": [

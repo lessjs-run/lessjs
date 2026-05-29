@@ -1,23 +1,13 @@
 {
   "name": "@lessjs/i18n",
-<<<<<<< HEAD
-  "version": "0.24.4",
-=======
   "version": "0.25.0",
->>>>>>> dev
   "exports": {
     ".": "./src/index.ts"
   },
   "imports": {
-<<<<<<< HEAD
-    "@lessjs/core/logger": "jsr:@lessjs/core@^0.24.4/logger",
-    "@lessjs/protocols/build-types": "jsr:@lessjs/protocols@^0.24.4/build-types",
-    "@lessjs/protocols/virtual-ids": "jsr:@lessjs/protocols@^0.24.4/virtual-ids",
-=======
     "@lessjs/core/logger": "jsr:@lessjs/core@^0.25.0/logger",
     "@lessjs/protocols/build-types": "jsr:@lessjs/protocols@^0.25.0/build-types",
     "@lessjs/protocols/virtual-ids": "jsr:@lessjs/protocols@^0.25.0/virtual-ids",
->>>>>>> dev
     "vite": "npm:vite@8.0.10"
   },
   "publish": {

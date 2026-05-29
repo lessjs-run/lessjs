@@ -28,13 +28,10 @@ export { isVNode } from '@lessjs/core';
 
 // JSX rendering
 export { renderToDom, renderToString } from '@lessjs/core';
-<<<<<<< HEAD
-=======
 
 // v0.25.0: SignalContext
 export { consumeContext, createContext, provideContext } from '@lessjs/core';
 export type { Context } from '@lessjs/core';
->>>>>>> dev
 
 // v0.24.1: static props
 export type { PropDecl, PropsFrom, PropType } from '@lessjs/core';

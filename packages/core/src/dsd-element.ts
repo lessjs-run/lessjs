@@ -57,11 +57,7 @@ import {
   syncStaticPropsFromAttributes,
 } from './prop.js';
 import { isVNode, type VNode } from './vnode.js';
-<<<<<<< HEAD
-import { renderToDom } from './jsx-render-dom.js';
-=======
 import { applyProps, renderToDom } from './jsx-render-dom.js';
->>>>>>> dev
 import { renderToString } from './jsx-render-string.js';
 import { effect } from '@lessjs/signals';
 
@@ -501,33 +497,10 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     }
   }
 
-<<<<<<< HEAD
-  private _bindCurrentRenderTemplate(): void {
-    this._disposeTemplateRuntime();
-    this._disposeSignalSubscriptions();
-
-    const result = this.render();
-    if (!this.shadowRoot) return;
-    if (isVNode(result)) {
-      // v0.24.1: DSD hydration for VNode — re-render to DOM with event handlers
-      // The pre-populated DSD DOM has correct structure but no event listeners.
-      // renderToDom wires onClick etc. via addEventListener on the same DOM structure.
-      this._templateAbortController = new AbortController();
-      while (this.shadowRoot.firstChild) {
-        this.shadowRoot.removeChild(this.shadowRoot.firstChild);
-      }
-      const dom = renderToDom(result, this._templateAbortController.signal);
-      this.shadowRoot.appendChild(dom);
-      return;
-    }
-    // string fallback: nothing to hydrate
-  }
-=======
   // v0.25.0 (SOP-012): Removed _bindCurrentRenderTemplate().
   // DSD hydration now handled by _hyrateExistingDom() which walks
   // the pre-populated DOM, binds events via applyProps, and sets
   // up effect() signal tracking — without clearing/re-creating DOM.
->>>>>>> dev
 
   private _disposeTemplateRuntime(): void {
     if (this._templateAbortController) {
