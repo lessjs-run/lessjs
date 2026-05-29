@@ -69,4 +69,4 @@ export default class ScrollReveal extends DsdElement {
   }
 }
 
-customElements.define(tagName, ScrollReveal);
+if (!customElements.get(tagName)) customElements.define(tagName, ScrollReveal);

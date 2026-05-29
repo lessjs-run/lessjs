@@ -373,4 +373,4 @@ export default class LessSearch extends DsdElement {
   }
 }
 
-customElements.define(tagName, LessSearch);
+if (!customElements.get(tagName)) customElements.define(tagName, LessSearch);
