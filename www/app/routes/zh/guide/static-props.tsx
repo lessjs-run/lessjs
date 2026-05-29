@@ -1,6 +1,6 @@
 // deno-fmt-ignore-file
 export const meta = { section: 'Guide', label: 'Static Props', order: 8 };
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { filterDocsNav } from '../../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';

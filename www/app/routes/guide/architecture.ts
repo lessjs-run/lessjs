@@ -9,7 +9,7 @@ export const meta = { section: 'Quick Start', label: 'Architecture', order: 10 }
 export const tagName = 'guide-architecture';
 
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { filterDocsNav } from '../../utils/nav-filter.ts';
 import '@lessjs/ui/less-layout';

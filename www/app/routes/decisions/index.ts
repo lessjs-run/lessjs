@@ -4,10 +4,10 @@
  * Displays all ADRs (posts with type === 'adr') in a card layout.
  */
 export const meta = { section: '', label: 'Architecture Decisions', order: 20 };
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import { posts } from 'virtual:less-blog-data';
+import { posts } from '@lessjs/content/blog-data';
 import '@lessjs/ui/less-layout';
 
 /** Extract status from ADR content: ## Status\n\n**TEXT** */

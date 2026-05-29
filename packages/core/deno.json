@@ -16,7 +16,8 @@
     "./types": "./src/types.ts",
     "./dom-simulation": "./src/dom-simulation.ts",
     "./jsx-runtime": "./src/jsx-runtime.ts",
-    "./jsx-dev-runtime": "./src/jsx-runtime.ts"
+    "./jsx-dev-runtime": "./src/jsx-runtime.ts",
+    "./island-transform": "./src/island-transform.ts"
   },
   "imports": {
     "parse5": "npm:parse5@7.0.0",

@@ -4,11 +4,11 @@
  * Renders individual ADR pages (posts with type === 'adr').
  * The slug is derived from the ADR filename (e.g. 0001-keep-hono-vite-dev-server).
  */
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
-import { posts } from 'virtual:less-blog-data';
+import { posts } from '@lessjs/content/blog-data';
 
 export const tagName = 'page-decision-slug';
 

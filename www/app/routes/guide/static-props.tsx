@@ -1,7 +1,7 @@
 export const tagName = 'static-props-page';
 export const meta = { section: 'Guide', label: 'Static Props', order: 8 };
 
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';

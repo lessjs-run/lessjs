@@ -1,5 +1,5 @@
 export const meta = { section: 'Core', label: 'SSG/ISR/SSR Rendering', order: 20 };
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';

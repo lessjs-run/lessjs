@@ -16,7 +16,7 @@ export const meta = { section: 'Registry', label: 'Component Detail', order: 6 }
 
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { filterHubNav } from '../../../utils/nav-filter.js';
 import '@lessjs/ui/less-layout';
 import pkgRecords from '../../../data/registry/hub-data.ts';

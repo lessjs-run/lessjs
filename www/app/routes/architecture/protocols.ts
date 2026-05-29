@@ -7,7 +7,7 @@ export const meta = { section: 'Principles', label: 'Protocols', order: 1 };
 export const tagName = 'arch-protocols';
 
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { filterArchitectureNav } from '../../utils/nav-filter.ts';
 import '@lessjs/ui/less-layout';

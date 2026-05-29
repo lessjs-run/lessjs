@@ -2,7 +2,7 @@
  * PWA Support - via lessPipeline() plugin (from @lessjs/adapter-vite)
  */
 export const meta = { section: 'Production', label: 'PWA Support', order: 60 };
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';

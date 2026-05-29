@@ -1,0 +1,78 @@
+/**
+ * @lessjs/core — Island transform core logic.
+ *
+ * Pure function: injects island metadata markers into source code.
+ * Zero Vite dependency. Usable with any build tool.
+ */
+
+export interface IslandTransformOptions {
+  /** Directory containing island files (e.g. "app/islands") */
+  islandsDir: string;
+  /** Absolute or relative file path of the source being processed */
+  filePath: string;
+}
+
+export interface IslandTransformResult {
+  /** Transformed source code with markers */
+  code: string;
+  /** Detected island entries */
+  islands: Array<{ tagName: string; filePath: string }>;
+  /** Optional source map */
+  map?: string;
+}
+
+/**
+ * Inject island metadata markers into source code.
+ *
+ * Only transforms files inside the islands directory.
+ * Tag names must be lowercase + hyphens (Custom Elements spec).
+ * Unsafe characters cause a thrown error.
+ */
+export function transformIslandSource(
+  source: string,
+  options: IslandTransformOptions,
+): IslandTransformResult {
+  const { islandsDir, filePath } = options;
+  // Normalize to forward slashes and ensure leading slash for reliable matching
+  let normalizedPath = filePath.replace(/\\/g, '/');
+  if (!normalizedPath.startsWith('/')) {
+    normalizedPath = '/' + normalizedPath;
+  }
+  const normalizedIslandsDir = islandsDir.replace(/\\/g, '/');
+
+  // Only transform files in the islands directory
+  if (!normalizedPath.includes(`/${normalizedIslandsDir}/`)) {
+    return { code: source, islands: [] };
+  }
+
+  // Extract tag name from file name (last path segment, strip extension)
+  const parts = normalizedPath.split('/');
+  const fileName = parts[parts.length - 1];
+  const tagName = fileName.replace(/\.(tsx?|jsx?)$/, '').toLowerCase();
+
+  // Validate tag name (must contain a hyphen for Custom Elements)
+  if (!tagName.includes('-')) {
+    return { code: source, islands: [] };
+  }
+
+  // Security: only allow lowercase letters, digits, and hyphens
+  if (!/^[a-z0-9-]+$/.test(tagName)) {
+    throw new Error(
+      `Island tag name "${tagName}" contains unsafe characters. ` +
+        `Only lowercase letters, digits, and hyphens are allowed.`,
+    );
+  }
+
+  // Inject metadata markers
+  const injected = `
+// --- LessJS Island Markers (auto-injected by @lessjs/core) ---
+export const __island = true;
+export const __tagName = '${tagName}';
+// --- End LessJS Island Markers ---
+`;
+
+  return {
+    code: source + '\n' + injected,
+    islands: [{ tagName, filePath }],
+  };
+}

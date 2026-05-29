@@ -7,7 +7,7 @@ export const meta = { section: 'Principles', label: 'Adapter-Vite', order: 3 };
 export const tagName = 'arch-adapter-vite';
 
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { filterArchitectureNav } from '../../utils/nav-filter.ts';
 import '@lessjs/ui/less-layout';

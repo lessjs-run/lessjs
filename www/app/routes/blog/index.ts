@@ -2,12 +2,12 @@
  * Blog Index Page - Data-driven rendering via virtual:less-blog-data
  */
 export const meta = { section: 'History', label: 'Blog', order: 10 };
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { filterBlogNav } from '../../utils/nav-filter.js';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
-import { posts } from 'virtual:less-blog-data';
+import { posts } from '@lessjs/content/blog-data';
 
 const routeSheet = new StyleSheet();
 

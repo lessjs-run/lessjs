@@ -2,7 +2,7 @@
  * Content System - @lessjs/content feature guide
  */
 export const meta = { section: 'Core', label: 'Content System', order: 40 };
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterDocsNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';
@@ -48,7 +48,7 @@ export class ContentSystemPage extends DsdElement {
           <h2>API 参考</h2>
           <p>
             路由组件通过虚拟模块导入数据：<span class='inline-code'>
-              import {'{'} posts, getPostBySlug {'}'} from 'virtual:less-blog-data'
+              import {'{'} posts, getPostBySlug {'}'} from '@lessjs/content/blog-data'
             </span>。底层工具函数：<span class='inline-code'>
               parseMarkdownFile()
             </span>、<span class='inline-code'>slugFromFilename()</span>。

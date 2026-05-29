@@ -53,9 +53,9 @@ Project line: **v0.25.0 Declarative DX** — `lessPipeline()` entry, route types
 
 ### Roadmap
 
-| Version | Theme                                                             | Status     |
-| ------- | ----------------------------------------------------------------- | ---------- |
-| v0.25.0 | Declarative DX (14 SOPs: pipeline, types, guards, cleanup, fixup) | ✅ Current |
+| Version | Theme                                                                  | Status     |
+| ------- | ---------------------------------------------------------------------- | ---------- |
+| v0.25.0 | Declarative DX (14 SOPs: pipeline, types, guards, cleanup, fixup)      | ✅ Current |
 | v0.26.0 | Reactive Pragmatic + Decoupling (`params`, `keep-alive`, zero virtual) | 📋 Planned |
 
 See [ROADMAP.md](docs/roadmap/ROADMAP.md) for details.

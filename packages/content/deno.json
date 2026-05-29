@@ -5,6 +5,7 @@
     ".": "./src/index.ts",
     "./blog-data": "./src/blog/blog-data.ts",
     "./nav": "./src/nav/index.ts",
+    "./nav-data": "./src/nav/writer.ts",
     "./sitemap": "./src/sitemap/index.ts"
   },
   "imports": {

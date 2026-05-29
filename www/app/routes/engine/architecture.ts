@@ -1,7 +1,7 @@
 export const meta = { section: 'Principles', label: 'Architecture', order: 10 };
 export const tagName = 'engine-architecture';
 
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { filterArchitectureNav } from '../../utils/nav-filter.ts';

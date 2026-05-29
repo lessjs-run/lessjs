@@ -6,7 +6,7 @@ export const tagName = 'page-roadmap';
 
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import '@lessjs/ui/less-layout';
 import '../islands/less-search.tsx';
 

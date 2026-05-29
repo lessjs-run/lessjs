@@ -15,7 +15,7 @@
  */
 
 import { join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { normalizePath } from 'vite';
 import process from 'node:process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -460,6 +460,14 @@ if (typeof globalThis.customElements === 'undefined') {
           name: 'less:ssg-data-dispatch',
           enforce: 'pre',
           resolveId(id) {
+            // v0.26: Generated data files — resolve to actual files on disk.
+            // Workspace aliases would resolve these to writer modules,
+            // but we need the generated data files. Return absolute path
+            // (not file:// URL) for rolldown compatibility.
+            const dataDir = resolve(root, 'www/app/data');
+            if (id === '@lessjs/content/nav') return resolve(dataDir, '_generated-nav.ts');
+            if (id === '@lessjs/content/blog-data') return resolve(dataDir, '_generated-blog-data.ts');
+            if (id === '@lessjs/i18n/data') return resolve(dataDir, '_generated-i18n-data.ts');
             if (id === 'virtual:less-blog-data') return '\0virtual:less-blog-data';
             if (id === 'virtual:less-i18n-data') return '\0virtual:less-i18n-data';
           },
@@ -530,24 +538,22 @@ if (typeof globalThis.customElements === 'undefined') {
       resolve: {
         preserveSymlinks: true,
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
-        // Normalize alias replacements to absolute paths for rolldown.
-        // Relative paths can cause subpath ENOTDIR errors when rolldown
-        // continues resolution after a parent alias match.
-        alias: alias
-          ? (Array.isArray(alias)
-            ? alias.map((a) => ({
-              find: a.find,
-              replacement: a.replacement.startsWith('/') || /^[A-Za-z]:/.test(a.replacement)
-                ? a.replacement
-                : resolve(root, a.replacement),
-            }))
-            : Object.fromEntries(
+        // v0.26: Generated data aliases — placed FIRST so exact-match
+        // takes priority over parent @lessjs/content workspace alias.
+        alias: {
+          ...(alias && !Array.isArray(alias)
+            ? Object.fromEntries(
               Object.entries(alias).map(([k, v]) => [
                 k,
                 v.startsWith('/') || /^[A-Za-z]:/.test(v) ? v : resolve(root, v),
               ]),
-            ))
-          : undefined,
+            )
+            : {}),
+          // v0.26: Generated data files — override workspace aliases
+          '@lessjs/content/nav': './app/data/_generated-nav.ts',
+          '@lessjs/content/blog-data': './app/data/_generated-blog-data.ts',
+          '@lessjs/i18n/data': './app/data/_generated-i18n-data.ts',
+        },
       },
     });
     log.info('SSR bundle built successfully');

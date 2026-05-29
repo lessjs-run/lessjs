@@ -2,7 +2,8 @@
   "name": "@lessjs/i18n",
   "version": "0.25.0",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./data": "./src/i18n-data.ts"
   },
   "imports": {
     "@lessjs/core/logger": "jsr:@lessjs/core@^0.25.0/logger",

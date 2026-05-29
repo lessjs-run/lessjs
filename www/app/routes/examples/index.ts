@@ -7,7 +7,7 @@ export const meta = { section: 'Quick Start', label: 'Examples', order: 1 };
 export const tagName = 'page-examples';
 
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';

@@ -1,6 +1,6 @@
 export const meta = { section: 'Compatibility', label: 'Package Compatibility', order: 10 };
 
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterArchitectureNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';

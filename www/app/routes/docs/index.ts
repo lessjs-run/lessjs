@@ -7,7 +7,7 @@ export const meta = { section: 'Quick Start', label: 'Docs', order: 0 };
 export const tagName = 'page-docs';
 
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { filterDocsNav } from '../../utils/nav-filter.ts';
 import '@lessjs/ui/less-layout';

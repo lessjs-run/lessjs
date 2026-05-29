@@ -1,6 +1,6 @@
 export const meta = { section: 'Compatibility', label: 'Standards & Registry', order: 20 };
 
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { filterArchitectureNav } from '../../utils/nav-filter.ts';
 import { DsdElement } from '@lessjs/runtime';

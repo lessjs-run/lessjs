@@ -7,7 +7,7 @@ export const meta = { section: 'Registry', label: 'Hub', order: 0 };
 export const tagName = 'page-hub';
 
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { filterHubNav } from '../../utils/nav-filter.ts';
 import '@lessjs/ui/less-layout';

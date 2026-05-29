@@ -59,7 +59,7 @@ import {
 import { isVNode, type VNode } from './vnode.js';
 import { applyProps, renderToDom } from './jsx-render-dom.js';
 import { renderToString } from './jsx-render-string.js';
-import { effect } from '@lessjs/signals';
+import { effect, signal } from '@lessjs/signals';
 
 /**
  * Minimal SSR-safe HTMLElement stub for server environments (SOP-016).
@@ -149,6 +149,18 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   /** v0.24.3: Effect dispose for VNode signal subscriptions. */
   private _vnodeEffectDispose?: () => void;
 
+  /** Reactive route parameters Signal. Updates automatically on SPA navigation. */
+  #params = signal<Record<string, string>>({});
+
+  /** Reactive route parameters. Updates automatically on SPA navigation. */
+  get params(): Record<string, string> {
+    return this.#params.value;
+  }
+
+  set params(value: Record<string, string>) {
+    this.#params.value = { ...value };
+  }
+
   /** ElementInternals for form-associated custom elements */
   protected _internals?: ElementInternals;
 
@@ -231,6 +243,15 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     const docTheme = document.documentElement?.dataset?.theme;
     if (docTheme && !this.hasAttribute('data-theme')) {
       this.setAttribute('data-theme', docTheme);
+    }
+
+    // v0.26 (TG-01): Read route params from attribute if present
+    // (SSR/SSG injects params as JS property via injectProps — setter handles it)
+    const attrParams = this.getAttribute('params');
+    if (attrParams) {
+      try {
+        this.#params.value = JSON.parse(attrParams);
+      } catch { /* ignore malformed JSON */ }
     }
 
     // v0.25.0 (SOP-012): Unified render path — DSD and CSR both go through

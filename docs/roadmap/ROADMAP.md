@@ -222,16 +222,16 @@ Goal: SPA navigation-aware params + keep-alive + framework-Vite decoupling (zero
 
 Governing ADR: ADR-0059, ADR-0061. See `docs/sop/v0.26.0/`.
 
-| Group | Task                               | Priority | Nature         |
-| ----- | ---------------------------------- | -------- | -------------- |
-| TG-01 | `this.params` SPA-reactive         | P0       | New feature    |
-| TG-02 | `data-keep-alive` DOM preservation | P1       | Bug fix        |
-| TG-03 | `computed()` documentation         | P2       | Docs           |
-| TG-04 | Virtual modules removal (SOP-001)  | P0       | Refactor       |
-| TG-05 | Entry renderer cleanup (SOP-002)   | P0       | Refactor       |
-| TG-06 | Island transform extraction (003)  | P1       | Refactor       |
-| TG-07 | Dev server zero bundler (SOP-004)  | P1       | New feature    |
-| TG-08 | Adapter cleanup + regression (005) | P1       | Verification   |
+| Group | Task                               | Priority | Nature       |
+| ----- | ---------------------------------- | -------- | ------------ |
+| TG-01 | `this.params` SPA-reactive         | P0       | New feature  |
+| TG-02 | `data-keep-alive` DOM preservation | P1       | Bug fix      |
+| TG-03 | `computed()` documentation         | P2       | Docs         |
+| TG-04 | Virtual modules removal (SOP-001)  | P0       | Refactor     |
+| TG-05 | Entry renderer cleanup (SOP-002)   | P0       | Refactor     |
+| TG-06 | Island transform extraction (003)  | P1       | Refactor     |
+| TG-07 | Dev server zero bundler (SOP-004)  | P1       | New feature  |
+| TG-08 | Adapter cleanup + regression (005) | P1       | Verification |
 
 ## Explicitly Excluded
 

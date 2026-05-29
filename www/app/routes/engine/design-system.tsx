@@ -5,7 +5,7 @@
  * Dogfooding: uses real less-button, less-card, less-input components.
  */
 export const meta = { section: 'Reference', label: 'Design System', order: 10 };
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { filterArchitectureNav } from '../../utils/nav-filter.ts';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';

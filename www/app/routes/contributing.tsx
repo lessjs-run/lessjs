@@ -2,7 +2,7 @@
  * Contributing Page - LessJS Framework Contribution Guide
  */
 export const meta = { section: '', label: 'Contributing', order: 30 };
-import { headerNav, navSections } from 'virtual:less-nav';
+import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement, StyleSheet } from '@lessjs/runtime';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../components/page-styles.js';
