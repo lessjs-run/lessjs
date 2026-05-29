@@ -139,7 +139,7 @@ export default defineConfig({
       injectManifest: true,
     },
   })],
-});`}</code></pre></less-code-block>]]>
+});`}</code></pre></less-code-block>
 
           <h2>Deployment Checklist</h2>
           <ul>
@@ -234,7 +234,7 @@ export default defineConfig({
       injectManifest: true,
     },
   })],
-});`}</code></pre></less-code-block>]]>
+});`}</code></pre></less-code-block>
 
           <h2>Deployment Checklist</h2>
           <ul>
