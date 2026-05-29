@@ -20,12 +20,13 @@ export class PackageCompatibilityGuidePage extends DsdElement {
   }
 
   private _renderZh() {
+    const loc = this._getLocale('zh');
     return `
       <less-layout
         nav-items='${JSON.stringify(filterEngineNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/${loc}/engine/package-compatibility"
-        locale="${this._getLocale('zh')}"
+        locale="${loc}"
         locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">
@@ -183,12 +184,13 @@ for (const pkg of node_modules) {
   }
 
   private _renderEn() {
+    const loc = this._getLocale('en');
     return `
       <less-layout
         nav-items='${JSON.stringify(filterEngineNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/${loc}/engine/package-compatibility"
-        locale="${this._getLocale('en')}"
+        locale="${loc}"
         locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">

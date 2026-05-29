@@ -26,7 +26,8 @@ export class IslandsDeepGuidePage extends DsdElement {
   }
 
   private _renderZh() {
-    return `<less-layout locale="${this._getLocale('zh')}" locales='${
+    const loc = this._getLocale('zh');
+    return `<less-layout locale="${loc}" locales='${
       JSON.stringify(['en', 'zh'])
     }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)
@@ -59,7 +60,8 @@ export class IslandsDeepGuidePage extends DsdElement {
   }
 
   private _renderEn() {
-    return `<less-layout locale="${this._getLocale('en')}" locales='${
+    const loc = this._getLocale('en');
+    return `<less-layout locale="${loc}" locales='${
       JSON.stringify(['en', 'zh'])
     }' nav-items='${JSON.stringify(filterEngineNav(navSections))}' header-nav='${
       JSON.stringify(headerNav)

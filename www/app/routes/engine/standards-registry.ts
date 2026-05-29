@@ -17,12 +17,13 @@ export class StandardsRegistryGuidePage extends DsdElement {
   }
 
   private _renderZh() {
+    const loc = this._getLocale('zh');
     return `
       <less-layout
         nav-items='${JSON.stringify(filterEngineNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/${loc}/engine/standards-registry"
-        locale="zh"
+        locale="${loc}"
         locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">
@@ -155,12 +156,13 @@ export class StandardsRegistryGuidePage extends DsdElement {
   }
 
   private _renderEn() {
+    const loc = this._getLocale('en');
     return `
       <less-layout
         nav-items='${JSON.stringify(filterEngineNav(navSections))}'
         header-nav='${JSON.stringify(headerNav)}'
         current-path="/${loc}/engine/standards-registry"
-        locale="en"
+        locale="${loc}"
         locales='${JSON.stringify(['en', 'zh'])}'
       >
         <div class="container">
