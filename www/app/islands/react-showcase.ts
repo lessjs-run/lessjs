@@ -122,13 +122,11 @@ function Alert({
   );
 }
 
-// SSR-safe base class: WithDsdHydration(HTMLElement) requires HTMLElement
-// to be defined. In SSR dev mode, @lit-labs/ssr-dom-shim provides it.
-// But the SSR module runner may evaluate this module before the shim is loaded.
-// Fallback to a plain class to avoid "Class extends value undefined" crash.
-const ReactShowcaseBase = typeof globalThis.HTMLElement !== 'undefined'
-  ? WithDsdHydration(globalThis.HTMLElement)
-  : class {};
+// SSR-safe base class: WithDsdHydration may be undefined in SSR bundles
+// when @lessjs/adapter-react is externalized. Fall back to HTMLElement or Object.
+const ReactShowcaseBase = typeof WithDsdHydration === 'function'
+  ? WithDsdHydration(typeof globalThis.HTMLElement !== 'undefined' ? globalThis.HTMLElement : Object)
+  : (typeof globalThis.HTMLElement !== 'undefined' ? globalThis.HTMLElement : Object);
 
 export const tagName = 'react-showcase';
 

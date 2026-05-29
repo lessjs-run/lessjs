@@ -20,20 +20,23 @@ import type { Plugin } from 'vite';
  */
 export const OPTIONAL_PACKAGE_STUBS: Record<string, string> = {
   '@lessjs/adapter-lit': [
+    'class DsdLitElement extends (globalThis.HTMLElement || class{}) {}',
+    'export { DsdLitElement };',
     'export function installLitAdapter() {}',
     'export function uninstallLitAdapter() {}',
-    'export const DsdLitElement = undefined;',
     'export const WithDsdHydration = undefined;',
   ].join('\n'),
   '@lessjs/adapter-vanilla': [
+    'class DsdVanillaElement extends (globalThis.HTMLElement || class{}) {}',
+    'export { DsdVanillaElement };',
     'export function installVanillaAdapter() {}',
     'export function uninstallVanillaAdapter() {}',
-    'export const DsdVanillaElement = undefined;',
   ].join('\n'),
   '@lessjs/adapter-react': [
+    'class DsdReactElement extends (globalThis.HTMLElement || class{}) {}',
+    'export { DsdReactElement };',
     'export function installReactAdapter() {}',
     'export function uninstallReactAdapter() {}',
-    'export const DsdReactElement = undefined;',
     'export const WithDsdHydration = undefined;',
     'export function renderReactToString() { return ""; }',
     'export function isReactElement() { return false; }',
