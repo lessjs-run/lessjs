@@ -134,7 +134,7 @@ export class DeploymentPage extends DsdElement {
 import { lessjs } from '@lessjs/app';
 
 export default {
-  plugins: [lessjs({
+  plugins: [lessjs({'{'}
     pwa: {
       injectManifest: true,
     },
@@ -229,7 +229,7 @@ export default {
 import { lessjs } from '@lessjs/app';
 
 export default {
-  plugins: [lessjs({
+  plugins: [lessjs({'{'}
     pwa: {
       injectManifest: true,
     },
