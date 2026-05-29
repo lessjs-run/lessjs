@@ -116,8 +116,7 @@ export function renderErrorHtml(
   );
 
   // Cross-runtime environment detection
-  // deno-lint-ignore no-explicit-any
-  const _nodeProcess = (globalThis as any).process as
+  const _nodeProcess = (globalThis as unknown as { process?: { env?: Record<string, string | undefined> } }).process as
     | { env?: Record<string, string | undefined> }
     | undefined;
   const _nodeIsDev = _nodeProcess?.env?.NODE_ENV !== 'production';

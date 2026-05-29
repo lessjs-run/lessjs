@@ -49,6 +49,7 @@ import { createCoreResolvePlugin } from './subpath-resolver.js';
  * LessJS Framework Vite plugin.
  * Jamstack: M=SSG+DSD, A=API Routes, J=Islands.
  *
+ * @deprecated since v0.25.0 — Use `lessPipeline()` instead.
  * less() handles dev mode plus Phase 1 metadata for production builds.
  *
  * @param options - Framework options

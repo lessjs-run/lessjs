@@ -533,6 +533,8 @@ export interface RouteEntry {
   special?: SpecialFileType;
   /** v0.21 ISR: revalidation interval in seconds. 0 = always, missing = static. */
   revalidate?: number;
+  /** v0.25: Dynamic route parameter names extracted from path (e.g., ['slug'] from `/blog/[slug]`) */
+  params?: string[];
 }
 
 export type { SsrContext } from './context.js';

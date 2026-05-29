@@ -25,6 +25,7 @@
 
 // ─── Primary public API ──────────────────────────────────────────
 export { less } from './less-plugin.js';
+export { lessPipeline, type PipelineConfig } from './build-pipeline.js';
 
 // ─── Build context ───────────────────────────────────────────────
 export { LessBuildContext } from './build-context.js';

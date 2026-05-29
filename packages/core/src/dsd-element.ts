@@ -109,6 +109,12 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   /** Component stylesheets (SSR-safe - StyleSheet delegates to native CSSStyleSheet in browser). */
   static styles?: StyleSheetLike | StyleSheetLike[];
 
+  /** v0.25.0: Page head metadata. SSG reads this to inject <title> and <meta> tags. */
+  static head?: { title?: string; description?: string; ogImage?: string };
+
+  /** v0.25.0: Client island strategy declaration. @deprecated in favor of lessPipeline(). */
+  static client?: { strategy?: 'load' | 'idle' | 'visible' | 'only' };
+
   /**
    * Attributes that trigger attributeChangedCallback.
    * Subclasses override this to declare reactive attributes.
@@ -190,8 +196,8 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     const sheets = Array.isArray(ctor.styles) ? ctor.styles : [ctor.styles];
     if (sheets.length > 0) {
       // StyleSheet delegates to native CSSStyleSheet in browser
-      // deno-lint-ignore no-explicit-any
-      (target as any).adoptedStyleSheets = sheets;
+      // type-escape: adoptedStyleSheets may not be in the configured DOM lib
+      (target as unknown as { adoptedStyleSheets: typeof sheets }).adoptedStyleSheets = sheets;
     }
   }
 

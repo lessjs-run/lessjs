@@ -2,7 +2,7 @@
  * Unit tests for island.ts - the Island registration and upgrade system (321 lines, previously zero coverage).
  *
  * Tests cover:
- * - island() registration and metadata markers
+ * - defineIsland() registration and metadata markers
  * - getSsrProps / bindEvents
  * - Strategy implementations (load, idle, visible, only)
  * - Tag name validation
@@ -114,7 +114,7 @@ function createMockElementClass(): CustomElementConstructor {
   return MockElement as unknown as CustomElementConstructor;
 }
 
-// ─── island() - tag name validation ────────────────────────────
+// ─── defineIsland() - tag name validation ────────────────────────────
 
 Deno.test('island: throws on tag name without hyphen', () => {
   const Cls = createMockElementClass();
@@ -124,7 +124,7 @@ Deno.test('island: throws on tag name without hyphen', () => {
     assertStringIncludes((e as Error).message, 'hyphenated tag name');
     return;
   }
-  throw new Error('Expected island() to throw for tag name without hyphen');
+  throw new Error('Expected defineIsland() to throw for tag name without hyphen');
 });
 
 Deno.test('island: throws on empty tag name', () => {
@@ -135,10 +135,10 @@ Deno.test('island: throws on empty tag name', () => {
     assertStringIncludes((e as Error).message, 'hyphenated tag name');
     return;
   }
-  throw new Error('Expected island() to throw for empty tag name');
+  throw new Error('Expected defineIsland() to throw for empty tag name');
 });
 
-// ─── island() - metadata markers ───────────────────────────────
+// ─── defineIsland() - metadata markers ───────────────────────────────
 
 Deno.test('island: sets __island marker on class', () => {
   setupMocks();
@@ -195,7 +195,7 @@ Deno.test('island: sets __layer to dsd-interactive when dsd explicitly true', ()
   }
 });
 
-// ─── island() - strategy ───────────────────────────────────────
+// ─── defineIsland() - strategy ───────────────────────────────────────
 
 Deno.test('island: load strategy registers immediately', () => {
   setupMocks();
@@ -310,7 +310,7 @@ Deno.test('island: visible strategy does not crash (IntersectionObserver + Mutat
   }
 });
 
-// ─── island() - idempotent registration ────────────────────────
+// ─── defineIsland() - idempotent registration ────────────────────────
 
 Deno.test('island: does not re-register already defined element', () => {
   setupMocks();
@@ -330,7 +330,7 @@ Deno.test('island: does not re-register already defined element', () => {
   }
 });
 
-// ─── island() - connectedCallback wrapping ─────────────────────
+// ─── defineIsland() - connectedCallback wrapping ─────────────────────
 
 Deno.test('island: wraps connectedCallback for SSR prop binding', () => {
   setupMocks();
@@ -380,7 +380,7 @@ Deno.test('island: does not double-wrap connectedCallback', () => {
   }
 });
 
-// ─── island() - return value ───────────────────────────────────
+// ─── defineIsland() - return value ───────────────────────────────────
 
 Deno.test('island: returns the original class for chaining/re-export', () => {
   setupMocks();
@@ -510,7 +510,7 @@ Deno.test('bindEvents: handles empty object in data-ssr-props', () => {
   bindEvents(el);
 });
 
-// ─── island() - dsd option ─────────────────────────────────────
+// ─── defineIsland() - dsd option ─────────────────────────────────────
 
 Deno.test('island: dsd default is true (dsd-interactive layer)', () => {
   setupMocks();
@@ -534,7 +534,7 @@ Deno.test('island: dsd: false sets pure-island layer', () => {
   }
 });
 
-// ─── island() - tagName option ──────────────────────────────────
+// ─── defineIsland() - tagName option ──────────────────────────────────
 
 Deno.test('island: tagName option in IslandOptions does not override first argument', () => {
   setupMocks();

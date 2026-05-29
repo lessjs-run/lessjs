@@ -205,6 +205,11 @@ export async function scanRoutes(
         // Regular route file
         const routePath = filePathToRoutePath(relativePath);
         const routeType = getRouteType(relativePath);
+        // v0.25: Extract dynamic param names from [param] patterns in the path
+        const paramMatches = relativePath.match(/\[([^\]]+)\]/g);
+        const params = paramMatches
+          ? paramMatches.map((m) => m.slice(1, -1))
+          : undefined;
         let tagName: string | undefined;
         if (routeType === 'page') {
           try {
@@ -223,6 +228,7 @@ export async function scanRoutes(
           type: routeType,
           varName: pathToVarName(routePath),
           tagName,
+          params,
         });
       }
       // Other _-prefixed files (not _renderer/_middleware) are silently skipped

@@ -21,7 +21,6 @@
 
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc } from './shared/escape.js';
 
 export const tagName = 'less-callout';
@@ -88,7 +87,7 @@ sheet.replaceSync(`
 `);
 
 export class LessCallout extends DsdElement {
-  static override styles = [openPropsTokenSheet, sheet];
+  static override styles = [sheet];
   static override observedAttributes = ['type', 'label'];
 
   override render(): ReturnType<typeof DsdElement.prototype.render> {
