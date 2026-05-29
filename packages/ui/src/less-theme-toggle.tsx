@@ -147,18 +147,13 @@ export class LessThemeToggle extends DsdElement {
   protected override onDsdHydrated(): void {
     super.onDsdHydrated();
     this._initTheme();
-
-    // Re-render to guarantee event bindings regardless of DSD hydration.
-    // v0.24.1: JSX VNode path now uses renderToDom which wires event handlers.
-    this.update();
+    // v0.26: signal change auto-triggers re-render — no manual update() needed
   }
 
   protected override onCsrRendered(): void {
     super.onCsrRendered();
     this._initTheme();
-
-    // Re-render with the resolved theme (first render used signal default 'dark')
-    this.update();
+    // v0.26: signal change auto-triggers re-render
   }
 
   override render(): ReturnType<typeof DsdElement.prototype.render> {
