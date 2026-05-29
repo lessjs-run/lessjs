@@ -22,6 +22,7 @@ After v0.25.0
   RouteParams['/blog/[slug]'] 编译期类型推导
   static head = { title, description } 自动注入
   static client = { strategy: 'visible' } 声明式 island
+  createContext() / consumeContext() DOM-tree SignalContext
 ```
 
 ## Task Groups
@@ -32,8 +33,11 @@ After v0.25.0
 | TG-02 | 路由类型代码生成            | P0       | 纯生成     | 1d   |
 | TG-03 | `static head` 元数据        | P1       | 小 feature | 1d   |
 | TG-04 | `static client` Island 声明 | P1       | 语法糖     | 0.5d |
-| TG-05 | `less()` 标记 @deprecated   | P2       | 文档       | 0.5d |
-| TG-06 | 全量回归 + docs             | P2       | 验证       | 1d   |
+| TG-05 | SignalContext (DOM-tree)    | P2*      | ~20 lines  | 0.5d |
+| TG-06 | `less()` 标记 @deprecated   | P2       | 文档       | 0.5d |
+| TG-07 | 全量回归 + docs             | P2       | 验证       | 1d   |
+
+> *P2 conditional: requires `computed()` to have ≥1 real-world use first.
 
 ## Execution Order
 
@@ -42,11 +46,11 @@ TG-01 + TG-02 (并行，独立模块)
     ↓
 TG-03 (依赖 TG-01，BuildPipeline 需要先完成)
     ↓
-TG-04 (独立，语法糖)
+TG-04 + TG-05 (独立，可并行)
     ↓
-TG-05 (文档 + 兼容标记)
+TG-06 (文档 + 兼容标记)
     ↓
-TG-06 (全量 gate)
+TG-07 (全量 gate)
 ```
 
 ## Step-by-Step
@@ -118,12 +122,28 @@ deno task fmt:check && deno task lint && deno task typecheck && deno task graph:
 - [ ] `static client = { strategy: 'visible' }` 声明的组件正确生成 client chunk
 - [ ] `island()` 调用仍可工作
 
-### Step 6: TG-05 less() deprecation
+### Step 6: TG-05 SignalContext (Conditional)
+
+1. 创建 `packages/core/src/signal-context.ts`
+   - `createContext(key, defaultValue)` → `{ key, defaultValue }`
+   - `provideContext(host, ctx, value)` — 在 host 上暴露 symbolic 属性
+   - `consumeContext(host, ctx)` — 沿 DOM 树向上查找，返回 signal
+2. 在 `DsdElement` 基类添加便捷方法 `this.useContext(ctx)`
+3. 测试：ThemeContext + theme-toggle 场景验证
+4. **前提条件**：`computed()` 有 ≥1 处生产使用
+
+**Acceptance**:
+
+- [ ] Consumer 能通过 `consumeContext()` 获取 provider 暴露的 signal 值
+- [ ] 沿 shadow DOM 边界正确遍历
+- [ ] ~20 lines 实现，零新依赖
+
+### Step 7: TG-06 less() deprecation
 
 1. 在 `less()` 函数加 `@deprecated` JSDoc，指向 `lessPipeline()`
 2. 更新 docs 和示例
 
-### Step 7: TG-06 Full Regression
+### Step 8: TG-07 Full Regression
 
 ```bash
 deno task fmt:check
@@ -136,11 +156,12 @@ deno task build
 
 ## Quality Gates
 
-| Gate | Criteria                                               |
-| ---- | ------------------------------------------------------ |
-| G1   | `lessPipeline()` 替代三阶段硬编码调用                  |
-| G2   | 现有 `less()` 调用仍可工作（兼容）                     |
-| G3   | `[param]` 路由在 RouteParams 中有对应类型              |
-| G4   | `static head` 声明的页面 title/meta 正确注入 dist HTML |
-| G5   | `static client` 声明的 island 正确生成 client chunk    |
-| G6   | 全量 gate 通过                                         |
+| Gate | Criteria                                                  |
+| ---- | --------------------------------------------------------- |
+| G1   | `lessPipeline()` 替代三阶段硬编码调用                     |
+| G2   | 现有 `less()` 调用仍可工作（兼容）                        |
+| G3   | `[param]` 路由在 RouteParams 中有对应类型                 |
+| G4   | `static head` 声明的页面 title/meta 正确注入 dist HTML    |
+| G5   | `static client` 声明的 island 正确生成 client chunk       |
+| G6   | `consumeContext()` 跨 shadow DOM 边界获取 provider signal |
+| G7   | 全量 gate 通过                                            |

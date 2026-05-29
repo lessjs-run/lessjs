@@ -203,6 +203,9 @@ Governing ADR: ADR-0058, ADR-0059. See `docs/sop/v0.25.0/`.
 | TG-02 | `RouteParams` type generation      | P0       | Code generation |
 | TG-03 | `static head` metadata             | P1       | Small feature   |
 | TG-04 | `static client` island declaration | P1       | Syntax sugar    |
+| TG-05 | SignalContext (DOM-tree)           | P2*      | ~20 lines       |
+
+> *P2 conditional: requires `computed()` to have ≥1 real-world use first.
 
 ## Planned: v0.26.0 — Reactive Pragmatic
 
@@ -218,13 +221,12 @@ Governing ADR: ADR-0059. See `docs/sop/v0.26.0/`.
 
 ## Explicitly Excluded
 
-| Excluded                            | Reason                                 |
-| ----------------------------------- | -------------------------------------- |
-| SignalContext cross-component state | `computed()` current 0 production uses |
-| `static data` SSG fetch             | Content system already handles data    |
-| `static middleware`                 | 0 file uses                            |
-| SignalQuery                         | Promise-style RPC sufficient           |
-| Edge Full-Stack (ISR, KV)           | Deferred until architecture clean      |
+| Excluded                  | Reason                              |
+| ------------------------- | ----------------------------------- |
+| `static data` SSG fetch   | Content system already handles data |
+| `static middleware`       | 0 file uses                         |
+| SignalQuery               | Promise-style RPC sufficient        |
+| Edge Full-Stack (ISR, KV) | Deferred until architecture clean   |
 
 ## Vision: v1.0 Stable Engine
 
