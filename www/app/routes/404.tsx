@@ -9,182 +9,69 @@ import '../islands/less-search.tsx';
 
 const POPULAR_LINKS = [
   { href: '/guide/getting-started', label: 'Getting Started' },
-  { href: '/engine/architecture', label: 'Architecture Overview' },
-  { href: '/guide/routing', label: 'Routing' },
-  { href: '/engine/dsd', label: 'DSD Rendering' },
-  { href: '/engine/islands', label: 'Island Upgrade' },
-  { href: '/guide/ssg', label: 'Rendering & SSG' },
-  { href: '/engine/design-system', label: 'Design System (UI)' },
+  { href: '/guide/core-concepts', label: 'Core Concepts' },
+  { href: '/architecture/dsd', label: 'DSD Rendering' },
+  { href: '/api/reference', label: 'API Reference' },
+  { href: '/architecture/architecture', label: 'Architecture' },
+  { href: '/architecture/comparison', label: 'Framework Comparison' },
   { href: '/roadmap', label: 'Roadmap' },
 ];
 
 /** Mapping of old URLs to new URLs for client-side redirects. */
 const REDIRECT_MAP: Record<string, string> = {
-  '/guide/architecture': '/engine/architecture',
-  '/guide/dsd': '/engine/dsd',
-  '/guide/islands': '/engine/islands',
-  '/guide/islands-deep': '/engine/islands-deep',
-  '/guide/package-compatibility': '/engine/package-compatibility',
-  '/guide/standards-registry': '/engine/standards-registry',
-  '/guide/comparison': '/engine/comparison',
-  '/reference/core': '/engine/reference/core',
-  '/ui': '/engine/design-system',
-  '/styling/web-awesome': '/engine/design-system',
-  '/community': '/',
+  '/engine/architecture': '/architecture/architecture',
+  '/engine/dsd': '/architecture/dsd',
+  '/engine/islands': '/architecture/islands',
+  '/engine/islands-deep': '/architecture/islands-deep',
+  '/engine/design-system': '/architecture/design-system',
+  '/engine/comparison': '/architecture/comparison',
+  '/engine/package-compatibility': '/architecture/package-compatibility',
+  '/engine/standards-registry': '/architecture/standards-registry',
+  '/engine/reference/core': '/api/reference',
+  '/guide/migration-v0.24': '/guide/getting-started',
+  '/guide/positioning': '/architecture/architecture',
+  '/guide/rpc': '/api/reference',
+  '/guide/security-middleware': '/guide/error-handling',
+  '/guide/content-system': '/guide/routing-and-data',
+  '/guide/pwa': '/guide/deployment',
+  '/examples': '/architecture/comparison',
+  '/components': '/architecture/design-system',
+  '/decisions': '/blog',
+  '/zh/decisions': '/blog',
 };
 
-const routeSheet = new StyleSheet();
-
-routeSheet.replaceSync(`
-      :host {
-        display: block;
-      }
-      .container {
-        max-width: 560px;
-        margin: 0 auto;
-        padding: 4rem 1.5rem;
-        text-align: center;
-      }
-      .error-code {
-        font-size: 4rem;
-        font-weight: 800;
-        letter-spacing: -0.06em;
-        color: var(--text-primary);
-        margin: 0 0 0.25rem;
-        line-height: 1;
-      }
-      .error-message {
-        color: var(--text-muted);
-        font-size: 0.9375rem;
-        margin: 0 0 1.5rem;
-      }
-      .search-box {
-        width: 100%;
-        max-width: 400px;
-        padding: 0.625rem 0.875rem;
-        border: 0.5px solid var(--border);
-        border-radius: 6px;
-        background: var(--bg-surface);
-        color: var(--text-primary);
-        font-size: 0.875rem;
-        outline: none;
-        box-sizing: border-box;
-        transition: border-color 0.15s;
-      }
-      .search-box:focus {
-        border-color: var(--text-primary);
-      }
-      .search-box::placeholder {
-        color: var(--text-muted);
-      }
-      .links {
-        margin-top: 2rem;
-      }
-      .links-title {
-        font-size: 0.75rem;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: var(--text-muted);
-        margin-bottom: 0.75rem;
-      }
-      .link-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 0.5rem;
-        text-align: left;
-      }
-      .link-grid a {
-        display: block;
-        padding: 0.5rem 0.75rem;
-        border: 0.5px solid var(--border);
-        border-radius: 4px;
-        color: var(--text-primary);
-        text-decoration: none;
-        font-size: 0.8125rem;
-        transition: border-color 0.15s, background 0.15s;
-      }
-      .link-grid a:hover {
-        border-color: var(--border-hover);
-        background: var(--bg-surface);
-      }
-      .home-link {
-        display: inline-block;
-        margin-top: 2rem;
-        padding: 0.5rem 1.25rem;
-        border: 0.5px solid var(--border);
-        border-radius: 4px;
-        color: var(--text-primary);
-        text-decoration: none;
-        font-size: 0.8125rem;
-        transition: border-color 0.15s;
-      }
-      .home-link:hover {
-        border-color: var(--text-primary);
-      }
-    `);
-
-export class NotFoundPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, routeSheet];
-
-  private _onSearchKeydown(e: KeyboardEvent) {
-    if (e.key === 'Enter') {
-      const q = (e.target as HTMLInputElement).value.trim();
-      if (q) globalThis.location.href = `/search?q=${encodeURIComponent(q)}`;
-    }
+const styles = new StyleSheet();
+styles.replaceSync(`
+  :host { display: block; }
+  .container { max-width: 700px; margin: 4rem auto; text-align: center; }
+  h1 { font-size: 4rem; font-weight: 700; color: var(--text-primary); margin: 0; }
+  p { color: var(--text-muted); font-size: 1rem; margin: 1rem 0 2rem; }
+  .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+  .links a {
+    padding: 0.5rem 1rem;
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.8125rem;
   }
+  .links a:hover { border-color: var(--border-hover); color: var(--text-primary); }
+`);
 
-  override connectedCallback() {
-    super.connectedCallback();
-    // Check if the current path matches an old URL that should redirect
-    const pathname = globalThis.location?.pathname || '';
-    const newPath = REDIRECT_MAP[pathname];
-    if (newPath) {
-      globalThis.location.replace(newPath);
-    }
-  }
-
+export default class Page404 extends DsdElement {
+  static styles = [openPropsTokenSheet, styles];
   override render() {
     return `
-      <less-layout
-        locale="en"
-        locales='${JSON.stringify(['en'])}'
-        nav-items='${JSON.stringify(navSections)}'
-        header-nav='${JSON.stringify(headerNav)}'
-        full-width
-      >
-        <div class="container">
-          <div class="error-code">404</div>
-          <p class="error-message">This page does not exist - or has moved to a different route.</p>
-
-          <input
-            class="search-box"
-            type="text"
-            placeholder="Search documentation..."
-            @keydown="${this._onSearchKeydown}"
-            aria-label="Search documentation"
-          >
-
-          <div class="links">
-            <div class="links-title">Popular Pages</div>
-            <div class="link-grid">
-              ${
-      POPULAR_LINKS.map(
-        (l) => `
-                    <a href="${l.href}">${l.label}</a>
-                  `,
-      )
-    }
-            </div>
-          </div>
-
-          <a href="/" class="home-link">&larr; Back to home</a>
+      <div class="container">
+        <h1>404</h1>
+        <p>Page not found. Here are some helpful links:</p>
+        <div class="links">
+          ${POPULAR_LINKS.map((l) => `<a href="${l.href}">${l.label}</a>`).join('\n')}
         </div>
-      </less-layout>
+      </div>
     `;
   }
 }
 
-customElements.define('page-not-found', NotFoundPage);
-export default NotFoundPage;
-export const tagName = 'page-not-found';
+customElements.define('page-404', Page404);
+export const tagName = 'page-404';

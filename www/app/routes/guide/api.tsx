@@ -63,7 +63,7 @@ export class ApiPage extends DsdElement {
           <h2>Type-Safe RPC</h2>
           <p>
             @lessjs/rpc 提供类型安全的客户端/服务端调用约定。详见{' '}
-            <a href='/guide/rpc'>RPC 远程调用</a>。
+            <a href='/api/reference'>RPC 远程调用</a>。
           </p>
           <h2>Static Build Boundary</h2>
           <p>
@@ -72,7 +72,7 @@ export class ApiPage extends DsdElement {
             或平台函数部署 API routes。
           </p>
           <div class='nav-row'>
-            <a href='/guide/rpc' class='nav-link'>← RPC 远程调用</a>
+            <a href='/api/reference' class='nav-link'>← RPC 远程调用</a>
             <a href='/guide/configuration' class='nav-link'>Configuration →</a>
           </div>
         </div>
@@ -147,7 +147,7 @@ export default function GET(ctx: LessApiContext) {'{'}
           <p>
             <span class='inline-code'>@lessjs/rpc</span>{' '}
             provides type-safe client/server calling conventions. See{' '}
-            <a href='/guide/rpc'>RPC Guide</a>.
+            <a href='/api/reference'>RPC Guide</a>.
           </p>
           <h2>Static Build Boundary</h2>
           <p>
@@ -156,7 +156,7 @@ export default function GET(ctx: LessApiContext) {'{'}
             functions when runtime behavior is needed.
           </p>
           <div class='nav-row'>
-            <a href='/guide/rpc' class='nav-link'>← RPC</a>
+            <a href='/api/reference' class='nav-link'>← RPC</a>
             <a href='/guide/configuration' class='nav-link'>Configuration →</a>
           </div>
         </div>

@@ -131,7 +131,7 @@ export class IslandsDeepGuidePage extends DsdElement {
           </p>
           <div class='nav-row'>
             <a href={`/${loc}/architecture/dsd`} class='nav-link'>← DSD 渲染架构</a>
-            <a href={`/${loc}/guide/rpc`} class='nav-link'>RPC 远程调用 →</a>
+            <a href={`/${loc}/api/reference`} class='nav-link'>RPC 远程调用 →</a>
           </div>
         </div>
       </less-layout>
@@ -265,7 +265,7 @@ export class IslandsDeepGuidePage extends DsdElement {
           </p>
           <div class='nav-row'>
             <a href={`/${loc}/architecture/dsd`} class='nav-link'>← DSD Architecture</a>
-            <a href={`/${loc}/guide/rpc`} class='nav-link'>RPC →</a>
+            <a href={`/${loc}/api/reference`} class='nav-link'>RPC →</a>
           </div>
         </div>
       </less-layout>

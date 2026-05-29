@@ -105,12 +105,12 @@ export class HubPage extends DsdElement {
               <h2>Package Index</h2>
               <p>Browse registered Web Components with compatibility tiers and DSD conformance status.</p>
             </a>
-            <a class="card" href="/engine/package-compatibility">
+            <a class="card" href="/architecture/package-compatibility">
               <span class="chip">Validate</span>
               <h2>Compatibility Check</h2>
               <p>Understand SSR, DSD, island, and client-only classifications for third-party components.</p>
             </a>
-            <a class="card" href="/engine/standards-registry">
+            <a class="card" href="/architecture/standards-registry">
               <span class="chip">Policy</span>
               <h2>Trust Policy</h2>
               <p>Manifest hash verification, artifact integrity, and submission trust gates.</p>

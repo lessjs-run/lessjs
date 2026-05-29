@@ -121,12 +121,12 @@ export class DocsPage extends DsdElement {
               <h2>Build an app</h2>
               <p>Create a project, write DSD components, add routes, islands, content, i18n, and deploy.</p>
             </a>
-            <a class="path" href="/engine/dsd">
+            <a class="path" href="/architecture/dsd">
               <span class="chip">Concepts</span>
               <h2>Learn the engine</h2>
               <p>Understand DSD rendering, island architecture, Hono API routes, and the SSG build pipeline.</p>
             </a>
-            <a class="path" href="/engine/package-compatibility">
+            <a class="path" href="/architecture/package-compatibility">
               <span class="chip">Integrate</span>
               <h2>Integrate packages</h2>
               <p>Publish Web Components to the Hub. Prove compatibility, DSD conformance, and runtime behavior.</p>

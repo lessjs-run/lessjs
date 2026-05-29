@@ -338,7 +338,7 @@ export class RoadmapPage extends DsdElement {
           </div>
 
           <nav class="nav-row">
-            <a class="nav-link" href="/engine/architecture/">Architecture -></a>
+            <a class="nav-link" href="/architecture/architecture">Architecture -></a>
             <a class="nav-link" href="/changelog">Changelog -></a>
             <a class="nav-link" href="/guide/deployment">Deployment -></a>
           </nav>
