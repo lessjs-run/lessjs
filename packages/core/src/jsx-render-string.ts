@@ -220,9 +220,13 @@ export function renderToString(node: unknown): string {
   // innerHTML prop: render as raw HTML content (build-time sanitized, ADR-0064)
   const innerHTML = props?.innerHTML as string | undefined;
   // textContent prop: render signal/dynamic value as escaped child content (v0.27)
+  // Signal identity is preserved for hydration via the parent element's data-less-s attribute.
   const textContent = props?.textContent !== undefined
     ? escapeHtml(String(unwrapSignalLike(props.textContent)))
     : undefined;
+  // v0.27 (ADR-0065): Emit data-less-s when textContent is signal-bound.
+  const hasSignalText = textContent !== undefined && isSignalLike(props!.textContent);
+  const sigAttr = hasSignalText ? ' data-less-s' : '';
   const childHtml = innerHTML !== undefined
     ? innerHTML
     : textContent !== undefined
@@ -232,8 +236,8 @@ export function renderToString(node: unknown): string {
   const tagStr = String(tag);
 
   if (VOID_ELEMENTS.has(tagStr)) {
-    return `<${tagStr}${attrs}>`;
+    return `<${tagStr}${attrs}${sigAttr}>`;
   }
 
-  return `<${tagStr}${attrs}>${childHtml}</${tagStr}>`;
+  return `<${tagStr}${attrs}${sigAttr}>${childHtml}</${tagStr}>`;
 }

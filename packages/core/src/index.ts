@@ -137,8 +137,6 @@ export { isValidTagName } from './tag-utils.js';
 export { bindEvents, defineIsland, getSsrProps, type IslandOptions } from './island.js';
 export { transformIslandSource } from './island-transform.js';
 export type { IslandTransformOptions, IslandTransformResult } from './island-transform.js';
-export { hasNavigationApi, matchRoute, navigate, onNavigate } from './navigation.js';
-export type { NavigationCallback } from './navigation.js';
 
 // v0.23: Build-time shared types live in @lessjs/protocols/build-types.
 

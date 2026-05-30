@@ -59,7 +59,7 @@ import {
 import { isVNode, type VNode } from './vnode.js';
 import { applyProps, renderToDom } from './jsx-render-dom.js';
 import { renderToString } from './jsx-render-string.js';
-import { effect, effectScope, signal } from '@lessjs/signals';
+import { effect, effectScope, type Signal, signal } from '@lessjs/signals';
 import { isSignalLike } from './signal-like.js';
 
 /**
@@ -143,6 +143,21 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
 
   /** v0.26.1: effectScope dispose — one call cleans up all effects. */
   private _scopeDispose?: () => void;
+
+  /**
+   * v0.27 (ADR-0065): Signal registry for attribute-based hydration.
+   * Maps signal names → signal objects. Built by _registerSignal()
+   * in component constructors, consumed by _hydrateSignals().
+   */
+  private _signalRegistry: Map<string, Signal<unknown>> = new Map();
+
+  /**
+   * Register a signal for hydration by name.
+   * Call in constructor: this._registerSignal('count', this.#count);
+   */
+  protected _registerSignal(name: string, sig: Signal<unknown>): void {
+    this._signalRegistry.set(name, sig);
+  }
 
   /** Reactive route parameters Signal. Updates automatically on SPA navigation. */
   #params = signal<Record<string, string>>({});
@@ -285,6 +300,10 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    * All effects created during hydration (applyProps signal→DOM,
    * text node bindings, Show/For) are captured by effectScope.
    * One call to _scopeDispose() on disconnect cleans them all up.
+   *
+   * v0.27 (ADR-0065): _layoutWorkaroundReRender DELETED.
+   * Chromium DSD layout bug fixed with requestAnimationFrame
+   * force-layout — no DOM rebuild, no effect destruction.
    */
   private _hyrateExistingDom(): void {
     if (!this.shadowRoot) return;
@@ -301,23 +320,14 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       // and creating per-prop signal→DOM effect bindings
       this._walkAndBind(this.shadowRoot!, result);
 
-      // One-time DOM replacement for Chromium DSD layout bug
-      this._layoutWorkaroundReRender();
+      // v0.27 (ADR-0065): Fix Chromium DSD layout bug without DOM rebuild.
+      // requestAnimationFrame forces a layout computation. The browser
+      // recalculates bounding rects for DSD content without destroying
+      // existing DOM nodes or their effect bindings.
+      requestAnimationFrame(() => {
+        void this.shadowRoot!.offsetHeight; // Force layout
+      });
     });
-  }
-
-  /**
-   * v0.26.1: One-time DOM replacement for Chromium DSD layout bug.
-   * Clears and rebuilds shadow root — the only mechanism that
-   * forces Chromium to compute correct bounding rects for DSD content.
-   */
-  private _layoutWorkaroundReRender(): void {
-    const updated = this.render();
-    if (!isVNode(updated)) return;
-    while (this.shadowRoot!.firstChild) {
-      this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
-    }
-    this.shadowRoot!.appendChild(renderToDom(updated));
   }
 
   /**

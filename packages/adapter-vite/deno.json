@@ -18,7 +18,6 @@
     "@lessjs/core/logger": "jsr:@lessjs/core@^0.27.0/logger",
     "@lessjs/core/errors": "jsr:@lessjs/core@^0.27.0/errors",
     "@lessjs/core/context": "jsr:@lessjs/core@^0.27.0/context",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.27.0/navigation",
     "@lessjs/protocols/build-types": "jsr:@lessjs/protocols@^0.27.0/build-types",
     "@lessjs/protocols/virtual-ids": "jsr:@lessjs/protocols@^0.27.0/virtual-ids",
     "@lessjs/cem": "jsr:@lessjs/cem@^0.27.0",

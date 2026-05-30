@@ -18,7 +18,6 @@
   },
   "imports": {
     "@lessjs/core": "jsr:@lessjs/core@^0.27.0",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.27.0/navigation",
     "@lessjs/signals": "jsr:@lessjs/signals@^0.27.0",
     "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.27.0",
     "@lessjs/router": "jsr:@lessjs/router@^0.27.0",

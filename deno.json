@@ -29,7 +29,6 @@
     "@lessjs/core/api": "./packages/core/src/api.ts",
     "@lessjs/core/isr": "./packages/core/src/isr.ts",
     "@lessjs/core/logger": "./packages/core/src/logger.ts",
-    "@lessjs/core/navigation": "./packages/core/src/navigation.ts",
     "@lessjs/core/types": "./packages/core/src/types.ts",
     "@lessjs/core/jsx-runtime": "./packages/core/src/jsx-runtime.ts",
     "@lessjs/core/jsx-dev-runtime": "./packages/core/src/jsx-runtime.ts",

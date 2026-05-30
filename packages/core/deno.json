@@ -8,7 +8,6 @@
     "./logger": "./src/logger.ts",
     "./api": "./src/api.ts",
     "./isr": "./src/isr.ts",
-    "./navigation": "./src/navigation.ts",
     "./render-serialize": "./src/render-serialize.ts",
     "./signal-context": "./src/signal-context.ts",
     "./render-instantiate": "./src/render-instantiate.ts",

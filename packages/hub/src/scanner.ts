@@ -306,7 +306,7 @@ function buildSnapshotMeta(pkg: KnownWcPackage, tag: string): HubSnapshotMeta {
   // Determine import URL based on source
   // IMPORTANT: For local/JSR packages (like @lessjs/ui), use per-component
   // subpath imports instead of the full package bundle, because importing the
-  // full @lessjs/ui pulls in less-layout which depends on @lessjs/core/navigation
+  // full @lessjs/ui pulls in less-layout which has complex dependencies
   // and can fail in iframe srcdoc contexts. For npm packages (like Shoelace),
   // the full bundle import works fine in iframes.
   let importUrl = '';
