@@ -5,7 +5,7 @@
  * IntersectionObserver. Pure DsdElement - zero Lit dependency.
  */
 import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 
 export const tagName = 'scroll-reveal';
 
