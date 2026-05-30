@@ -61,6 +61,8 @@ function createTokenSheet(): StyleSheetLike {
   const sheet: StyleSheetLike = new StyleSheet();
   sheet.replaceSync(`:host {
   display: block;
+  min-height: 1px;        /* Safety net: ensures at least 1px even if layout calc fails */
+  contain: layout style;  /* ADR-0062: isolate host layout, force re-layout on style change */
 
   /* ═══════════════════════════════════════════════
      Open Props Native Tokens

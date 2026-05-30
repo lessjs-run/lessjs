@@ -59,7 +59,7 @@ import {
 import { isVNode, type VNode } from './vnode.js';
 import { applyProps, renderToDom } from './jsx-render-dom.js';
 import { renderToString } from './jsx-render-string.js';
-import { effect, signal } from '@lessjs/signals';
+import { signal } from '@lessjs/signals';
 
 /**
  * Minimal SSR-safe HTMLElement stub for server environments (SOP-016).
@@ -145,9 +145,6 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
 
   /** Signal subscriptions from TemplateResult / VNode effects */
   private _signalUnsubscribers: Array<() => void> = [];
-
-  /** v0.24.3: Effect dispose for VNode signal subscriptions. */
-  private _vnodeEffectDispose?: () => void;
 
   /** Reactive route parameters Signal. Updates automatically on SPA navigation. */
   #params = signal<Record<string, string>>({});
@@ -237,9 +234,6 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       this.createRenderRoot();
     } else {
       // DSD path: shadow root already populated.
-      // Force display:block via inline style. Custom elements default to
-      // display:inline, and adoptedStyleSheets may not apply in time to
-      // prevent the host from collapsing to 0×0.
       this.style.display = 'block';
       this._applyStyles(ctor);
     }
@@ -309,35 +303,39 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     // signal-valued props detected during the walk.
     this._walkAndBind(this.shadowRoot, result);
 
-    // v0.26.1 hotfix: Restore effect(() => render()) for signal-driven
-    // re-rendering. ADR-0058 removed this assuming applyProps signal→DOM
-    // bindings sufficed, but:
-    // 
-    // 1. Per-prop bindings handle attribute-level changes (class, style)
-    //    but cannot handle structural VNode changes (theme → different
-    //    element tree, locale → different text nodes).
-    // 
-    // 2. DSD content renders correctly in terms of DOM, but the browser
-    //    layout engine does not properly calculate heights for DSD-created
-    //    shadow DOM — the CSR re-render produces correct layout.
-    // 
-    // ⚠️ long-term (post-ADR-0058): implement structural signal bindings
-    //    (reactive slots, signal-driven Show/For, CSS toggling) to replace
-    //    this full VNode re-render with fine-grained updates.
-    this._vnodeEffectDispose = effect(() => {
-      const updated = this.render();
-      if (!isVNode(updated)) return;
-      if (this._templateAbortController) {
-        this._templateAbortController.abort();
-      }
-      this._templateAbortController = new AbortController();
-      while (this.shadowRoot!.firstChild) {
-        this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
-      }
-      this.shadowRoot!.appendChild(
-        renderToDom(updated, this._templateAbortController.signal),
-      );
-    });
+    // ⚠️ Chromium DSD layout workaround: DSD shadow DOM renders with
+    // correct content but 0×0 host rect. No reflow method (offsetHeight,
+    // innerHTML self-replace, detach-reattach) fixes it — only full
+    // renderToDom replacement produces correct layout.
+    //
+    // This runs ONCE per lifecycle (in connectedCallback). Per-prop
+    // signal→DOM bindings from _walkAndBind handle subsequent updates
+    // without re-render. Theme-toggle, counter-island, and home-console
+    // are migrated to attribute-only signal access (ADR-0062).
+    //
+    // TODO: File a Chromium bug. Until fixed, this is necessary.
+    this._layoutWorkaroundReRender();
+  }
+
+  /**
+   * v0.26.1 (ADR-0062): One-time DOM replacement to fix DSD layout.
+   * Uses renderToDom which creates fresh DOM nodes — Chromium then
+   * computes correct layout. Subsequent signal changes use per-prop
+   * bindings from _walkAndBind.
+   */
+  private _layoutWorkaroundReRender(): void {
+    if (this._templateAbortController) {
+      this._templateAbortController.abort();
+    }
+    this._templateAbortController = new AbortController();
+    const updated = this.render();
+    if (!isVNode(updated)) return;
+    while (this.shadowRoot!.firstChild) {
+      this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
+    }
+    this.shadowRoot!.appendChild(
+      renderToDom(updated, this._templateAbortController.signal),
+    );
   }
 
   /**
@@ -533,11 +531,6 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   }
 
   private _disposeSignalSubscriptions(): void {
-    // v0.24.3: Dispose VNode effect tracking
-    if (this._vnodeEffectDispose) {
-      this._vnodeEffectDispose();
-      this._vnodeEffectDispose = undefined;
-    }
     for (const unsubscribe of this._signalUnsubscribers.splice(0)) {
       unsubscribe();
     }

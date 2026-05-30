@@ -62,11 +62,11 @@ sheet.replaceSync(`
     display: none;
   }
 
-  .theme-toggle.is-light .icon-sun {
+  .theme-toggle[data-theme="light"] .icon-sun {
     display: none;
   }
 
-  .theme-toggle.is-light .icon-moon {
+  .theme-toggle[data-theme="light"] .icon-moon {
     display: block;
   }
 `);
@@ -149,15 +149,16 @@ export class LessThemeToggle extends DsdElement {
   }
 
   override render(): ReturnType<typeof DsdElement.prototype.render> {
-    const lightClass = this._theme.value === 'light' ? ' is-light' : '';
-    const title = this._theme.value === 'light' ? 'Switch to dark theme' : 'Switch to light theme';
-
+    // v0.26.1 (ADR-0062): Zero signal.value reads in render().
+    // data-theme is passed as a signal prop → applyProps creates
+    // effect binding that updates the attribute when theme changes.
+    // CSS selectors ([data-theme="light"]) handle icon visibility.
     return (
       <button
         type='button'
-        className={`theme-toggle${lightClass}`}
+        className='theme-toggle'
         part='toggle'
-        title={title}
+        data-theme={this._theme}
         aria-label='Toggle theme'
         onClick={() => this._handleToggle()}
       >
