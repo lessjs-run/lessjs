@@ -119,7 +119,9 @@ export class IslandsGuidePage extends DsdElement {
             entry，并在静态 HTML 中注入 entry script。
           </p>
           <less-code-block><pre><code>// app/islands/my-counter.ts
-import { DsdElement, StyleSheet, html, signal } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
+import { signal } from '@lessjs/signals';
 
 export const tagName = 'my-counter';
 
