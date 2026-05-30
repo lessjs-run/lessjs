@@ -326,7 +326,7 @@ export class ArchitecturePage extends DsdElement {
                 <strong>package graph sketch</strong>
                 <span>source imports declared per package</span>
               </div>
-              <pre><code>{GRAPH}</code></pre>
+              <pre><code>{`{GRAPH}`}</code></pre>
             </div>
           </section>
 

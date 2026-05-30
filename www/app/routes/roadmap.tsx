@@ -236,12 +236,12 @@ export class RoadmapPage extends DsdElement {
   static override styles = [openPropsTokenSheet, routeSheet];
 
   override render() {
-    return `
+    return (
       <less-layout
-        locale="${this._getLocale('en')}"
-        locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(navSections)}'
-        header-nav='${JSON.stringify(headerNav)}'
+        locale={this._getLocale('en')}
+        locales={JSON.stringify(['en', 'zh'])}
+        nav-items={JSON.stringify(navSections)}
+        header-nav={JSON.stringify(headerNav)}
         current-path="/roadmap"
         full-width
       >
@@ -324,13 +324,13 @@ export class RoadmapPage extends DsdElement {
           </div>
 
           <nav class="nav-row">
-            <a class="nav-link" href="/architecture/architecture">Architecture -></a>
-            <a class="nav-link" href="/changelog">Changelog -></a>
-            <a class="nav-link" href="/guide/deployment">Deployment -></a>
+            <a class="nav-link" href="/architecture/architecture">Architecture {'->'}</a>
+            <a class="nav-link" href="/changelog">Changelog {'->'}</a>
+            <a class="nav-link" href="/guide/deployment">Deployment {'->'}</a>
           </nav>
         </div>
       </less-layout>
-    `;
+    );
   }
 }
 

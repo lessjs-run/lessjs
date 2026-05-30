@@ -46,13 +46,13 @@ export class IslandsGuidePage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    return `
+    return (
       <less-layout
-        locale="${loc}"
-        locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(navSections)}'
-        header-nav='${JSON.stringify(headerNav)}'
-        current-path="/${loc}/architecture/islands"
+        locale={loc}
+        locales={JSON.stringify(['en', 'zh'])}
+        nav-items={JSON.stringify(navSections)}
+        header-nav={JSON.stringify(headerNav)}
+        current-path={`/{loc}/architecture/islands`}
       >
         <div class="container">
           <h1>Island Upgrade</h1>
@@ -118,7 +118,7 @@ export class IslandsGuidePage extends DsdElement {
             本地 island 放在 <span class="inline-code">app/islands</span>。构建器会扫描它，生成 client
             entry，并在静态 HTML 中注入 entry script。
           </p>
-          <less-code-block><pre><code>// app/islands/my-counter.ts
+          <less-code-block><pre><code>{`// app/islands/my-counter.ts
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { signal } from '@lessjs/signals';
@@ -133,15 +133,15 @@ export default class MyCounter extends DsdElement {
   static override styles = sheet;
 
   override render() {
-    return html\`
-      &lt;button @click=\${() => this.count.value--}&gt;-&lt;/button&gt;
-      &lt;span&gt;\${this.count}&lt;/span&gt;
-      &lt;button @click=\${() => this.count.value++}&gt;+&lt;/button&gt;
-    \`;
+    return html\\\`
+      &lt;button @click=\{() => this.count.value--}&gt;-&lt;/button&gt;
+      &lt;span&gt;\{this.count}&lt;/span&gt;
+      &lt;button @click=\{() => this.count.value++}&gt;+&lt;/button&gt;
+    \\\`;
   }
 }
 
-if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);</code></pre></less-code-block>
+if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);`}</code></pre></less-code-block>
           <h2>Package Islands</h2>
           <p>
             可复用包可以导出 island metadata，LessJS 在构建时读取这些信息，用于 SSR 注册和 client entry
@@ -153,23 +153,23 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);</co
             build，并引入页面级 island manifest，让每个页面只加载实际出现的 island。
           </p>
           <div class="nav-row">
-            <a href="/${loc}/architecture/dsd" class="nav-link">&larr; DSD 渲染架构</a>
-            <a href="/${loc}/architecture/islands-deep" class="nav-link">Island 深度指南 &rarr;</a>
+            <a href={`/{loc}/architecture/dsd`} class="nav-link">&larr; DSD 渲染架构</a>
+            <a href={`/{loc}/architecture/islands-deep`} class="nav-link">Island 深度指南 &rarr;</a>
           </div>
         </div>
       </less-layout>
-    `;
+    );
   }
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    return `
+    return (
       <less-layout
-        locale="${loc}"
-        locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(navSections)}'
-        header-nav='${JSON.stringify(headerNav)}'
-        current-path="/${loc}/architecture/islands"
+        locale={loc}
+        locales={JSON.stringify(['en', 'zh'])}
+        nav-items={JSON.stringify(navSections)}
+        header-nav={JSON.stringify(headerNav)}
+        current-path={`/{loc}/architecture/islands`}
       >
         <div class="container">
           <h1>Island Upgrade</h1>
@@ -253,12 +253,12 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);</co
             behavior, LessJS should render it as static host markup or a pure island instead of guessing.
           </p>
           <div class="nav-row">
-            <a href="/${loc}/architecture/dsd" class="nav-link">&larr; DSD Architecture</a>
-            <a href="/${loc}/architecture/islands-deep" class="nav-link">Island Deep Guide &rarr;</a>
+            <a href={`/{loc}/architecture/dsd`} class="nav-link">&larr; DSD Architecture</a>
+            <a href={`/{loc}/architecture/islands-deep`} class="nav-link">Island Deep Guide &rarr;</a>
           </div>
         </div>
       </less-layout>
-    `;
+    );
   }
 }
 

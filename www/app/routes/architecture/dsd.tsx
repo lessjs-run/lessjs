@@ -48,13 +48,13 @@ export class DsdGuidePage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    return `
+    return (
       <less-layout
-        locale="${loc}"
-        locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(navSections)}'
-        header-nav='${JSON.stringify(headerNav)}'
-        current-path="/${loc}/architecture/dsd"
+        locale={loc}
+        locales={JSON.stringify(['en', 'zh'])}
+        nav-items={JSON.stringify(navSections)}
+        header-nav={JSON.stringify(headerNav)}
+        current-path={`/${loc}/architecture/dsd`}
       >
         <div class="container">
           <h1>DSD 渲染架构</h1>
@@ -69,12 +69,12 @@ export class DsdGuidePage extends DsdElement {
             DSD 是 WHATWG HTML 中的 template 语义，核心属性是 <code>shadowrootmode</code>。它允许 HTML
             直接携带 shadow root 内容，使服务端渲染的 Web Components 在 JS 加载前已经可见。
           </p>
-          <less-code-block><pre><code>&lt;my-card&gt;
+          <less-code-block><pre><code>{`&lt;my-card&gt;
   &lt;template shadowrootmode="open"&gt;
     &lt;style&gt;:host { display: block; }&lt;/style&gt;
     &lt;p&gt;内容在 JavaScript 加载前可见。&lt;/p&gt;
   &lt;/template&gt;
-&lt;/my-card&gt;</code></pre></less-code-block>
+&lt;/my-card&gt;`}</code></pre></less-code-block>
 
           <h2>为什么 LessJS 选择 DSD</h2>
           <div class="comparison">
@@ -137,29 +137,23 @@ export class DsdGuidePage extends DsdElement {
           <reactive-showcase></reactive-showcase>
 
           <div class="nav-row">
-            <a href="/${loc}/architecture/architecture" class="nav-link">&larr; ${
-      loc === 'zh' ? '分层架构' : 'Architecture'
-    }</a>
-            <a href="/${loc}/architecture/islands" class="nav-link">${
-      loc === 'zh' ? 'Island 升级' : 'Island Upgrade'
-    } &rarr;</a>
-            <a href="/${loc}/architecture/standards-registry" class="nav-link">${
-      loc === 'zh' ? '标准与注册表' : 'Standards &amp; Registry'
-    } &rarr;</a>
+            <a href={`/${loc}/architecture/architecture`} class="nav-link">&larr; {loc === 'zh' ? '分层架构' : 'Architecture'}</a>
+            <a href={`/${loc}/architecture/islands`} class="nav-link">{loc === 'zh' ? 'Island 升级' : 'Island Upgrade'} &rarr;</a>
+            <a href={`/${loc}/architecture/standards-registry`} class="nav-link">{loc === 'zh' ? '标准与注册表' : 'Standards & Registry'} &rarr;</a>
           </div>
         </div>
       </less-layout>
-    `;
+    );
   }
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    return `
+    return (
       <less-layout
-        locale="${loc}"
-        locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(navSections)}'
-        header-nav='${JSON.stringify(headerNav)}'
+        locale={loc}
+        locales={JSON.stringify(['en', 'zh'])}
+        nav-items={JSON.stringify(navSections)}
+        header-nav={JSON.stringify(headerNav)}
         current-path="/en/architecture/dsd"
       >
         <div class="container">
@@ -176,12 +170,12 @@ export class DsdGuidePage extends DsdElement {
             <code>shadowrootmode</code>. It lets HTML carry shadow root content so server-rendered Web
             Components are visible before their JavaScript implementation loads.
           </p>
-          <less-code-block><pre><code>&lt;my-card&gt;
+          <less-code-block><pre><code>{`&lt;my-card&gt;
   &lt;template shadowrootmode="open"&gt;
     &lt;style&gt;:host { display: block; }&lt;/style&gt;
     &lt;p&gt;Content is visible before JavaScript loads.&lt;/p&gt;
   &lt;/template&gt;
-&lt;/my-card&gt;</code></pre></less-code-block>
+&lt;/my-card&gt;`}</code></pre></less-code-block>
 
           <h2>Why LessJS Uses DSD</h2>
           <div class="comparison">
@@ -246,19 +240,13 @@ export class DsdGuidePage extends DsdElement {
           <reactive-showcase></reactive-showcase>
 
           <div class="nav-row">
-            <a href="/${loc}/architecture/architecture" class="nav-link">&larr; ${
-      loc === 'zh' ? '分层架构' : 'Architecture'
-    }</a>
-            <a href="/${loc}/architecture/islands" class="nav-link">${
-      loc === 'zh' ? 'Island 升级' : 'Island Upgrade'
-    } &rarr;</a>
-            <a href="/${loc}/architecture/standards-registry" class="nav-link">${
-      loc === 'zh' ? '标准与注册表' : 'Standards &amp; Registry'
-    } &rarr;</a>
+            <a href={`/${loc}/architecture/architecture`} class="nav-link">&larr; {loc === 'zh' ? '分层架构' : 'Architecture'}</a>
+            <a href={`/${loc}/architecture/islands`} class="nav-link">{loc === 'zh' ? 'Island 升级' : 'Island Upgrade'} &rarr;</a>
+            <a href={`/${loc}/architecture/standards-registry`} class="nav-link">{loc === 'zh' ? '标准与注册表' : 'Standards & Registry'} &rarr;</a>
           </div>
         </div>
       </less-layout>
-    `;
+    );
   }
 }
 

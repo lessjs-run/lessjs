@@ -17,13 +17,13 @@ export class StandardsRegistryGuidePage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    return `
+    return (
       <less-layout
-        nav-items='${JSON.stringify(navSections)}'
-        header-nav='${JSON.stringify(headerNav)}'
-        current-path="/${loc}/architecture/standards-registry"
-        locale="${loc}"
-        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items={JSON.stringify(navSections)}
+        header-nav={JSON.stringify(headerNav)}
+        current-path={`/{loc}/architecture/standards-registry`}
+        locale={loc}
+        locales={JSON.stringify(['en', 'zh'])}
       >
         <div class="container">
           <h1>标准与 Registry 策略</h1>
@@ -146,26 +146,26 @@ export class StandardsRegistryGuidePage extends DsdElement {
           </ol>
 
           <div class="nav-row">
-            <a href="/${loc}/architecture/architecture" class="nav-link">&larr; Architecture</a>
+            <a href={`/{loc}/architecture/architecture`} class="nav-link">&larr; Architecture</a>
             <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
           </div>
         </div>
       </less-layout>
-    `;
+    );
   }
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    return `
+    return (
       <less-layout
-        nav-items='${JSON.stringify(navSections)}'
-        header-nav='${JSON.stringify(headerNav)}'
-        current-path="/${loc}/architecture/standards-registry"
-        locale="${loc}"
-        locales='${JSON.stringify(['en', 'zh'])}'
+        nav-items={JSON.stringify(navSections)}
+        header-nav={JSON.stringify(headerNav)}
+        current-path={`/{loc}/architecture/standards-registry`}
+        locale={loc}
+        locales={JSON.stringify(['en', 'zh'])}
       >
         <div class="container">
-          <h1>Standards &amp; Registry Strategy</h1>
+          <h1>Standards & Registry Strategy</h1>
           <p class="subtitle">
             The long-term LessJS direction is a WC SSR/SSG rendering kernel and component package
             protocol. A public registry hub should follow local indexing, manifests, validation artifacts,
@@ -298,12 +298,12 @@ export class StandardsRegistryGuidePage extends DsdElement {
           </ol>
 
           <div class="nav-row">
-            <a href="/${loc}/architecture/architecture" class="nav-link">&larr; Architecture</a>
+            <a href={`/{loc}/architecture/architecture`} class="nav-link">&larr; Architecture</a>
             <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
           </div>
         </div>
       </less-layout>
-    `;
+    );
   }
 }
 
