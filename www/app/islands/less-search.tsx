@@ -10,7 +10,6 @@
  *   - Search results driven by signals, not innerHTML string concatenation
  *   - Styles live in shadow DOM, not document.adoptedStyleSheets
  *   - Cmd+K listener managed through DsdElement lifecycle
- *   - escapeHtml imported from @lessjs/core/html-escape
  *
  * @csspart trigger - The search trigger button
  * @csspart icon - The search SVG icon
@@ -22,7 +21,6 @@ import { DsdElement } from '@lessjs/core';
 import { signal } from '@lessjs/signals';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import { escapeHtml } from '@lessjs/core/html-escape';
 
 interface SearchEntry {
   path: string;
