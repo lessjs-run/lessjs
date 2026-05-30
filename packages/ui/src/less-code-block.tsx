@@ -34,16 +34,16 @@ sheet.replaceSync(`
   pre {
     margin: 0;
     padding: var(--size-5);
-    background: var(--bg-terminal);
-    border: var(--border-size-1) solid var(--border-futuristic);
+    background: var(--bg-code);
+    border: var(--border-size-1) solid var(--code-border);
     border-radius: var(--radius-3);
     overflow-x: auto;
     font-family: var(--font-mono);
     font-size: var(--font-size-0);
     line-height: var(--font-lineheight-4);
-    color: var(--gray-2);
+    color: var(--text-secondary);
     scrollbar-width: thin;
-    scrollbar-color: rgba(124,111,245,0.2) transparent;
+    scrollbar-color: var(--brand-subtle) transparent;
     white-space: pre-wrap;
     word-break: break-word;
   }
@@ -51,16 +51,16 @@ sheet.replaceSync(`
   ::slotted(pre) {
     margin: 0;
     padding: var(--size-5);
-    background: var(--bg-terminal);
-    border: var(--border-size-1) solid var(--border-futuristic);
+    background: var(--bg-code);
+    border: var(--border-size-1) solid var(--code-border);
     border-radius: var(--radius-3);
     overflow-x: auto;
     font-family: var(--font-mono);
     font-size: var(--font-size-0);
     line-height: var(--font-lineheight-4);
-    color: var(--gray-2);
+    color: var(--text-secondary);
     scrollbar-width: thin;
-    scrollbar-color: rgba(124,111,245,0.2) transparent;
+    scrollbar-color: var(--brand-subtle) transparent;
   }
 
   .lang-badge {
@@ -79,34 +79,35 @@ sheet.replaceSync(`
     position: absolute;
     top: var(--size-2);
     right: var(--size-2);
-    background: rgba(124,111,245,0.08);
+    background: var(--brand-subtle);
     color: var(--text-muted);
     padding: var(--size-1) var(--size-3);
     font-size: var(--font-size-00);
     font-family: var(--font-sans);
     font-weight: var(--font-weight-6);
+    border: 0.5px solid transparent;
     cursor: pointer;
     border-radius: var(--radius-1);
-    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    transition: all var(--ease-2) var(--duration-2);
     z-index: 1;
     letter-spacing: var(--font-letterspacing-4);
   }
 
   .copy-btn:hover {
     color: var(--text-primary);
-    background: rgba(124,111,245,0.15);
-    border-color: var(--brand-neon);
+    background: var(--brand-glow);
+    border-color: var(--brand);
   }
 
   :host(:state(copied)) .copy-btn {
-    color: var(--cyber-green);
-    border-color: rgba(0,255,135,0.3);
-    background: rgba(0,255,135,0.08);
+    color: #22c55e;
+    border-color: rgba(34,197,94,0.3);
+    background: rgba(34,197,94,0.08);
   }
 
   :host(:state(failed)) .copy-btn {
-    color: #e55;
-    border-color: #e55;
+    color: var(--error);
+    border-color: var(--error);
   }
 
   /* Prism token colors (dark theme) */

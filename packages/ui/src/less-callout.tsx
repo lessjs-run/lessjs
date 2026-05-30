@@ -4,13 +4,7 @@
  *
  * Callout/notice box for inline documentation alerts.
  * Supports 4 types: info, warning, danger, tip.
- *
- * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
- * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
- *
- * @csspart container -The callout wrapper
- * @csspart icon -The type icon span
- * @csspart content -The body content area
+ * v0.26.1: All colors use semantic tokens, theme-responsive.
  *
  * Usage:
  * ```html
@@ -26,65 +20,40 @@ import { _esc } from './shared/escape.js';
 
 export const tagName = 'less-callout';
 
-const TYPE_CONFIG: Record<string, { borderColor: string; bgColor: string; icon: string }> = {
-  info: {
-    borderColor: 'var(--brand)',
-    bgColor: 'rgba(83,74,183,0.06)',
-    icon: '\u2139\uFE0F',
-  },
-  warning: {
-    borderColor: '#F59E0B',
-    bgColor: 'rgba(245,158,11,0.06)',
-    icon: '\u26A0',
-  },
-  danger: {
-    borderColor: '#EF4444',
-    bgColor: 'rgba(239,68,68,0.06)',
-    icon: '\u2715',
-  },
-  tip: {
-    borderColor: '#22C55E',
-    bgColor: 'rgba(34,197,94,0.06)',
-    icon: '\u2713',
-  },
+const TYPE_CONFIG: Record<string, { icon: string; cls: string }> = {
+  info: { icon: '\u2139\uFE0F', cls: 'callout--info' },
+  warning: { icon: '\u26A0', cls: 'callout--warn' },
+  danger: { icon: '\u2715', cls: 'callout--danger' },
+  tip: { icon: '\u2713', cls: 'callout--tip' },
 };
 
 const sheet: StyleSheetLike = new StyleSheet();
 sheet.replaceSync(`
-  :host {
-    display: block;
-  }
+  :host { display: block; }
   .callout {
     padding: var(--size-3) var(--size-4);
     margin: var(--size-3) 0;
     border-left: var(--border-size-2) solid var(--brand);
-    background: rgba(83,74,183,0.06);
+    background: var(--brand-subtle);
     border-radius: 0 var(--radius-2) var(--radius-2) 0;
   }
+  .callout--warn { border-left-color: #f59e0b; background: rgba(245,158,11,0.08); }
+  .callout--danger { border-left-color: #ef4444; background: rgba(239,68,68,0.08); }
+  .callout--tip { border-left-color: #22c55e; background: rgba(34,197,94,0.08); }
+  :host([data-theme="light"]) .callout--warn { background: rgba(245,158,11,0.06); }
+  :host([data-theme="light"]) .callout--danger { background: rgba(239,68,68,0.06); }
+  :host([data-theme="light"]) .callout--tip { background: rgba(34,197,94,0.06); }
   .callout-header {
-    display: flex;
-    align-items: center;
-    gap: var(--size-1);
-    margin-bottom: var(--size-1);
+    display: flex; align-items: center; gap: var(--size-1); margin-bottom: var(--size-1);
   }
-  .callout-icon {
-    font-size: var(--font-size-0);
-    line-height: var(--font-lineheight-1);
-    flex-shrink: 0;
-  }
+  .callout-icon { font-size: var(--font-size-0); line-height: 1; flex-shrink: 0; }
   .callout-title {
-    font-size: var(--font-size-0);
-    font-weight: var(--font-weight-6);
-    color: var(--gray-9);
+    font-size: var(--font-size-0); font-weight: var(--font-weight-6); color: var(--text-primary);
   }
   .callout-body {
-    font-size: var(--font-size-1);
-    line-height: var(--font-lineheight-4);
-    color: var(--gray-7);
+    font-size: var(--font-size-1); line-height: var(--font-lineheight-4); color: var(--text-secondary);
   }
-  .callout-body ::slotted(p) {
-    margin: 0;
-  }
+  .callout-body ::slotted(p) { margin: 0; }
 `);
 
 export class LessCallout extends DsdElement {
@@ -97,11 +66,7 @@ export class LessCallout extends DsdElement {
     const config = TYPE_CONFIG[type] || TYPE_CONFIG.info;
 
     return (
-      <div
-        className='callout'
-        part='container'
-        style={`border-left-color:${config.borderColor};background:${config.bgColor};`}
-      >
+      <div className={`callout ${config.cls}`} part='container'>
         {label && (
           <div className='callout-header'>
             <span className='callout-icon' part='icon'>{config.icon}</span>
@@ -123,13 +88,11 @@ export class LessCallout extends DsdElement {
   private _syncDOM(): void {
     this.update();
   }
-
   private _esc = _esc;
 }
 
 export default LessCallout;
 
-// Guard: idempotent across SSR paths
 if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
   customElements.define(tagName, LessCallout);
 }

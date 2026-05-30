@@ -57,16 +57,16 @@ styles.replaceSync(`
     background: var(--gray-5);
     animation: pulse 0.8s ease-in-out infinite alternate;
   }
-  .dot.ok { background: #2ecc40; }
-  .dot.err { background: #e74c3c; }
+  .dot.ok { background: #22c55e; }
+  .dot.err { background: var(--error); }
   .info {
     font-family: var(--font-mono);
     font-size: var(--font-size-00);
-    color: var(--gray-6);
+    color: var(--text-muted);
     white-space: nowrap;
   }
-  .info .ok { color: #2ecc40; }
-  .info .err { color: #e74c3c; }
+  .info .ok { color: #22c55e; }
+  .info .err { color: var(--error); }
   @keyframes pulse {
     from { opacity: 0.4; }
     to { opacity: 1; }
