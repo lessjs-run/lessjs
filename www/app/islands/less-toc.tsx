@@ -21,7 +21,7 @@ styles.replaceSync(`
   :host {
     display: block;
     position: sticky;
-    top: 5rem;
+    top: var(--header-offset, 5rem);
     max-height: calc(100vh - 8rem);
     overflow-y: auto;
     font-size: var(--font-size-0);
@@ -54,7 +54,7 @@ styles.replaceSync(`
   }
   .toc-link:hover {
     color: var(--text-secondary);
-    border-left-color: rgba(124,111,245,0.3);
+    border-left-color: color-mix(in srgb, var(--brand-neon) 30%, transparent);
   }
   .toc-link.active {
     color: var(--brand-neon);

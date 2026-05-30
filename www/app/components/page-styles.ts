@@ -6,12 +6,27 @@
  * - h1-h6 hierarchy aligned to heading roles
  * - body text font-size-1 (16px), dense content font-size-0
  * - All line-heights use var(--font-lineheight-N)
+ * - Zero hardcoded values — all dimensions driven by custom properties
+ *
+ * Custom properties (project-level tokens):
+ *   --content-width:     720px   (default prose width)
+ *   --content-max-width: 1100px  (max page width with TOC)
+ *   --toc-width:         220px   (right sidebar TOC column)
+ *   --underline-offset:  3px     (link underline distance)
+ *   --border-hairline:   0.5px   (hairline border width)
  */
 export const pageStyles = `
-  :host { display: block; }
+  :host {
+    display: block;
+    --content-width: 720px;
+    --content-max-width: 1100px;
+    --toc-width: 220px;
+    --underline-offset: 3px;
+    --border-hairline: 0.5px;
+  }
 
   .container {
-    max-width: 720px;
+    max-width: var(--content-width);
     margin: 0 auto;
     padding: var(--size-10) var(--size-6) var(--size-16);
     overflow-wrap: break-word;
@@ -42,7 +57,7 @@ export const pageStyles = `
     margin: var(--size-10) 0 var(--size-4);
     color: var(--text-primary);
     padding-bottom: var(--size-2);
-    border-bottom: 0.5px solid var(--border);
+    border-bottom: var(--border-hairline) solid var(--border);
     line-height: var(--font-lineheight-1);
   }
 
@@ -99,9 +114,9 @@ export const pageStyles = `
   a {
     color: var(--brand);
     text-decoration: underline;
-    text-underline-offset: 3px;
+    text-underline-offset: var(--underline-offset);
     text-decoration-color: var(--brand);
-    text-decoration-thickness: 0.5px;
+    text-decoration-thickness: var(--border-size-1);
     transition: color var(--ease-2) var(--duration-2);
   }
   a:hover { color: var(--brand-hover); }
@@ -112,7 +127,7 @@ export const pageStyles = `
     font-weight: var(--font-weight-6);
     color: var(--brand);
     text-transform: uppercase;
-    letter-spacing: 0.14em;
+    letter-spacing: var(--font-letterspacing-5);
     margin-bottom: var(--size-3);
   }
 
@@ -134,7 +149,7 @@ export const pageStyles = `
     font-size: var(--font-size-0);
     line-height: var(--font-lineheight-4);
     margin: var(--size-4) 0;
-    border: 0.5px solid var(--code-border);
+    border: var(--border-hairline) solid var(--code-border);
     box-shadow: var(--shadow-1);
   }
 
@@ -146,7 +161,7 @@ export const pageStyles = `
     border-radius: var(--radius-1);
     font-size: var(--font-size-00);
     color: var(--text-secondary);
-    border: 0.5px solid var(--code-border);
+    border: var(--border-hairline) solid var(--code-border);
   }
 
   /* ─── Tables ─── */
@@ -157,7 +172,7 @@ export const pageStyles = `
     font-size: var(--font-size-0);
   }
   th, td {
-    border: 0.5px solid var(--border);
+    border: var(--border-hairline) solid var(--border);
     padding: var(--size-2) var(--size-3);
     text-align: left;
   }
@@ -184,7 +199,7 @@ export const pageStyles = `
     font-size: var(--font-size-00);
     font-weight: var(--font-weight-5);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: var(--font-letterspacing-3);
     color: var(--brand);
     margin-bottom: var(--size-1);
   }
@@ -193,7 +208,7 @@ export const pageStyles = `
   .hard-constraint {
     display: inline-block;
     background: var(--bg-code);
-    border: 0.5px solid var(--border-hover);
+    border: var(--border-hairline) solid var(--border-hover);
     padding: var(--size-1) var(--size-2);
     border-radius: var(--radius-1);
     font-size: var(--font-size-00);
@@ -213,7 +228,7 @@ export const pageStyles = `
   .nav-row {
     margin-top: var(--size-10);
     padding-top: var(--size-4);
-    border-top: 0.5px solid var(--border);
+    border-top: var(--border-hairline) solid var(--border);
     display: flex;
     justify-content: space-between;
   }
@@ -223,7 +238,7 @@ export const pageStyles = `
     font-weight: var(--font-weight-5);
     font-size: var(--font-size-1);
     padding: var(--size-2) var(--size-4);
-    border: 0.5px solid var(--border);
+    border: var(--border-hairline) solid var(--border);
     border-radius: var(--radius-2);
     transition: all var(--ease-2) var(--duration-2);
   }
@@ -236,10 +251,10 @@ export const pageStyles = `
   /* ─── Content grid (TOC + content) ─── */
   .content-grid {
     display: grid;
-    grid-template-columns: 1fr 220px;
+    grid-template-columns: 1fr var(--toc-width);
     gap: var(--size-8);
     align-items: start;
-    max-width: 1100px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
     padding: var(--size-6) var(--size-4);
   }

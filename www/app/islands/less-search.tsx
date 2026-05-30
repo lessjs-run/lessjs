@@ -5,26 +5,24 @@
  * Loads a pre-built search index JSON and performs client-side search.
  * Triggered by Cmd+K or clicking the search icon.
  *
- * v0.20.0: Migrated from DsdLitElement to DsdElement (Ocean component).
- * v0.21.0: Signal migration — _open, _query, _results → #open, #query, #results signals.
- * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
+ * v0.27: Complete rewrite — zero hand-written DOM. JSX + signals drive everything.
+ *   - Overlay rendered via JSX in shadow DOM, not document.createElement
+ *   - Search results driven by signals, not innerHTML string concatenation
+ *   - Styles live in shadow DOM, not document.adoptedStyleSheets
+ *   - Cmd+K listener managed through DsdElement lifecycle
+ *   - escapeHtml imported from @lessjs/core/html-escape
  *
- * @csspart trigger -The search trigger button
- * @csspart icon -The search SVG icon
- * @csspart label -The "Search" text span
- * @csspart shortcut -The keyboard shortcut kbd
- *
- * Architecture (DsdElement, SPA-safe):
- * - DSD renders only the trigger button via render()
- * - Overlay created imperatively in document.body
- * - All overlay logic is imperative (not reactive)
- * - Component state is reset on connectedCallback() for SPA navigation safety
+ * @csspart trigger - The search trigger button
+ * @csspart icon - The search SVG icon
+ * @csspart label - The "Search" text span
+ * @csspart shortcut - The keyboard shortcut kbd
  */
 
 import { DsdElement } from '@lessjs/core';
 import { signal } from '@lessjs/signals';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { escapeHtml } from '@lessjs/core/html-escape';
 
 interface SearchEntry {
   path: string;
@@ -35,7 +33,7 @@ interface SearchEntry {
 
 export const tagName = 'less-search';
 
-// -- Shadow DOM styles (trigger button) --
+// -- Shadow DOM styles (trigger button + overlay) --
 const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host { display: inline-flex; align-items: center; }
@@ -68,20 +66,14 @@ sheet.replaceSync(`
     font-size: var(--font-size-00);
     margin-left: var(--size-1);
   }
-  .search-icon { display: none; width: 16px; height: 16px; }
+  .search-icon { display: none; width: var(--size-4); height: var(--size-4); }
   @media (max-width: 640px) {
     .search-trigger span, .search-trigger kbd { display: none; }
     .search-icon { display: inline-block; }
   }
-`);
 
-// -- Overlay styles (document-level, injected into document.adoptedStyleSheets) --
-let _overlaySheet: CSSStyleSheet | null = null;
-function getOverlaySheet(): CSSStyleSheet {
-  if (!_overlaySheet) {
-    _overlaySheet = new CSSStyleSheet();
-    _overlaySheet.replaceSync(`
-  .less-search-overlay {
+  /* -- Overlay — rendered in shadow DOM, position:fixed covers viewport -- */
+  .overlay {
     position: fixed;
     top: 0; right: 0; bottom: 0; left: 0;
     z-index: 9999;
@@ -92,11 +84,11 @@ function getOverlaySheet(): CSSStyleSheet {
     padding-top: 15vh;
     box-sizing: border-box;
   }
-  .less-search-panel {
+  .panel {
     width: 100%;
     max-width: 560px;
     max-height: 70vh;
-    margin: 0 1rem;
+    margin: 0 var(--size-4);
     background: var(--bg-elevated);
     border: 0.5px solid var(--border);
     border-radius: var(--radius-2);
@@ -105,7 +97,7 @@ function getOverlaySheet(): CSSStyleSheet {
     flex-direction: column;
     overflow: hidden;
   }
-  .less-search-input {
+  .search-input {
     width: 100%;
     padding: var(--size-3) var(--size-3);
     border: none;
@@ -117,12 +109,12 @@ function getOverlaySheet(): CSSStyleSheet {
     box-sizing: border-box;
     font-family: inherit;
   }
-  .less-search-results {
+  .results {
     flex: 1;
     overflow-y: auto;
     padding: var(--size-3) 0;
   }
-  .less-search-item {
+  .item {
     display: block;
     padding: var(--size-3) var(--size-3);
     text-decoration: none;
@@ -130,21 +122,21 @@ function getOverlaySheet(): CSSStyleSheet {
     transition: background var(--ease-2) var(--duration-2);
     cursor: pointer;
   }
-  .less-search-item:hover { background: var(--bg-hover); }
-  .less-search-section {
+  .item:hover { background: var(--bg-hover); }
+  .item-section {
     font-size: var(--font-size-00);
     text-transform: uppercase;
     letter-spacing: var(--font-letterspacing-5);
     color: var(--text-muted);
     margin-bottom: var(--size-1);
   }
-  .less-search-title {
+  .item-title {
     font-size: var(--font-size-0);
     font-weight: var(--font-weight-5);
     color: var(--text-primary);
     margin-bottom: var(--size-1);
   }
-  .less-search-text {
+  .item-text {
     font-size: var(--font-size-0);
     color: var(--text-secondary);
     line-height: var(--font-lineheight-3);
@@ -153,16 +145,13 @@ function getOverlaySheet(): CSSStyleSheet {
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  .less-search-empty {
+  .empty {
     padding: var(--size-9) var(--size-3);
     text-align: center;
     color: var(--gray-5);
     font-size: var(--font-size-0);
   }
 `);
-  }
-  return _overlaySheet;
-}
 
 export default class LessSearch extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
@@ -172,126 +161,43 @@ export default class LessSearch extends DsdElement {
   #query = signal('');
   #results = signal<SearchEntry[]>([]);
 
-  // Internal data/state (non-reactive — not used in render())
+  // Internal data (non-reactive)
   private _index: unknown = null;
   private _entries: SearchEntry[] = [];
   private _loaded = false;
-  private _overlayEl: HTMLDivElement | null = null;
-  private _inputEl: HTMLInputElement | null = null;
+  private _inputRef: HTMLInputElement | null = null;
 
-  override render() {
-    return (
-      <button
-        type='button'
-        className='search-trigger'
-        part='trigger'
-        aria-label='Search'
-        onClick={() => this._handleTriggerClick()}
-      >
-        <svg
-          className='search-icon'
-          part='icon'
-          viewBox='0 0 16 16'
-          fill='none'
-          stroke='currentColor'
-          stroke-width='1.5'
-          stroke-linecap='round'
-        >
-          <circle cx='7' cy='7' r='4.5' />
-          <path d='M10.5 10.5L14 14' />
-        </svg>
-        <span part='label'>Search</span>
-        <kbd part='shortcut'>⌘K</kbd>
-      </button>
-    );
-  }
-
-  // Cmd+K handler (bound to document)
+  // Cmd+K handler — bound/cleaned in lifecycle
   private _onKeydown = (e: KeyboardEvent) => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
       e.preventDefault();
-      this.#open.value ? this._closeOverlay() : this._handleTriggerClick();
+      this.#open.value ? this._close() : this._open();
     } else if (e.key === 'Escape' && this.#open.value) {
-      this._closeOverlay();
+      this._close();
     }
   };
 
   override connectedCallback(): void {
-    // Clean up orphaned overlays from previous SPA pages
-    document.querySelectorAll('.less-search-overlay').forEach((el) => el.remove());
-    this._resetState();
     super.connectedCallback();
-    // Inject overlay stylesheet into document
-    const overlaySheet = getOverlaySheet();
-    if (!document.adoptedStyleSheets.includes(overlaySheet)) {
-      document.adoptedStyleSheets = [...document.adoptedStyleSheets, overlaySheet];
-    }
-    document.addEventListener('keydown', this._onKeydown);
+    globalThis.addEventListener('keydown', this._onKeydown);
   }
 
   override disconnectedCallback(): void {
-    document.removeEventListener('keydown', this._onKeydown);
-    this._destroyOverlay();
     super.disconnectedCallback();
+    globalThis.removeEventListener('keydown', this._onKeydown);
   }
 
-  private _resetState(): void {
+  private _open(): void {
+    this.#open.value = true;
+    this._loadIndex();
+    requestAnimationFrame(() => this._inputRef?.focus());
+  }
+
+  private _close(): void {
     this.#open.value = false;
     this.#query.value = '';
     this.#results.value = [];
-    this._overlayEl = null;
-    this._inputEl = null;
-  }
-
-  private _handleTriggerClick(): void {
-    this.#open.value = true;
-    this._loadIndex();
-    this._createOverlay();
-    requestAnimationFrame(() => {
-      this._inputEl?.focus();
-    });
-  }
-
-  private _closeOverlay(): void {
-    this.#open.value = false;
-    this._destroyOverlay();
-  }
-
-  /** Create overlay in document.body */
-  private _createOverlay(): void {
-    if (this._overlayEl) return;
-
-    const overlay = document.createElement('div');
-    overlay.className = 'less-search-overlay';
-    overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) this._closeOverlay();
-    });
-
-    const panel = document.createElement('div');
-    panel.className = 'less-search-panel';
-
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.className = 'less-search-input';
-    input.placeholder = 'Search documentation...';
-    input.addEventListener('input', (e) => this._onInput(e));
-    this._inputEl = input;
-
-    const results = document.createElement('div');
-    results.className = 'less-search-results';
-    results.innerHTML = this._getResultsHtml();
-
-    panel.appendChild(input);
-    panel.appendChild(results);
-    overlay.appendChild(panel);
-    document.body.appendChild(overlay);
-    this._overlayEl = overlay;
-  }
-
-  private _destroyOverlay(): void {
-    this._overlayEl?.remove();
-    this._overlayEl = null;
-    this._inputEl = null;
+    this._inputRef = null;
   }
 
   private _onInput(e: Event): void {
@@ -310,46 +216,6 @@ export default class LessSearch extends DsdElement {
       }
       this.#results.value = this._entries.filter((entry) => paths.has(entry.path)).slice(0, 10);
     }
-    this._updateResults();
-  }
-
-  /** Update search results DOM imperatively (overlay lives in document.body, not shadow DOM). */
-  private _updateResults(): void {
-    const resultsDiv = this._overlayEl?.querySelector('.less-search-results');
-    if (resultsDiv) {
-      resultsDiv.innerHTML = this._getResultsHtml();
-      resultsDiv.querySelectorAll('a').forEach((a) => {
-        a.addEventListener('click', () => this._closeOverlay());
-      });
-    }
-  }
-
-  private _getResultsHtml(): string {
-    if (this.#results.value.length > 0) {
-      return this.#results.value.map((r) =>
-        `<a href="${this._escapeAttr(r.path)}" class="less-search-item" data-path="${
-          this._escapeAttr(r.path)
-        }">` +
-        `<div class="less-search-section">${this._escapeHtml(r.section)}</div>` +
-        `<div class="less-search-title">${this._escapeHtml(r.title)}</div>` +
-        `<div class="less-search-text">${this._escapeHtml(r.text)}</div>` +
-        `</a>`
-      ).join('');
-    }
-    if (this.#query.value.length >= 2) {
-      return `<div class="less-search-empty">No results found for "${
-        this._escapeHtml(this.#query.value)
-      }"</div>`;
-    }
-    return `<div class="less-search-empty">Type at least 2 characters to search</div>`;
-  }
-
-  private _escapeHtml(str: string): string {
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  private _escapeAttr(str: string): string {
-    return str.replace(/"/g, '&quot;');
   }
 
   private async _loadIndex(): Promise<void> {
@@ -358,22 +224,94 @@ export default class LessSearch extends DsdElement {
     try {
       const [res, FlexSearchModule] = await Promise.all([
         fetch('/search-index.json'),
-        // deno-lint-ignore no-explicit-any
-        import('flexsearch') as Promise<any>,
+        import('flexsearch') as Promise<{ default: unknown }>,
       ]);
-      const FlexSearch = FlexSearchModule.default || FlexSearchModule;
+      const FlexSearch = (FlexSearchModule as { default?: unknown }).default || FlexSearchModule;
       this._entries = await res.json() as SearchEntry[];
-      this._index = new FlexSearch.Document({
+      this._index = new (FlexSearch as new (opts: Record<string, unknown>) => unknown).Document({
         document: { id: 'path', index: ['title', 'section', 'text'] },
         tokenize: 'forward',
       });
       for (const entry of this._entries) {
-        // deno-lint-ignore no-explicit-any
-        (this._index as any).add(entry);
+        (this._index as Record<string, (entry: SearchEntry) => void>).add(entry);
       }
     } catch {
       this._loaded = false;
     }
+  }
+
+  // --- Signal-driven search results (JSX, no innerHTML) ---
+  private _renderResults() {
+    const results = this.#results.value;
+    if (results.length > 0) {
+      return results.map((r) => (
+        <a href={r.path} class='item' onClick={() => this._close()}>
+          <div class='item-section'>{r.section}</div>
+          <div class='item-title'>{r.title}</div>
+          <div class='item-text'>{r.text}</div>
+        </a>
+      ));
+    }
+    if (this.#query.value.length >= 2) {
+      return <div class='empty'>No results found for &ldquo;{this.#query.value}&rdquo;</div>;
+    }
+    return <div class='empty'>Type at least 2 characters to search</div>;
+  }
+
+  override render() {
+    return (
+      <>
+        {/* Trigger button — always visible */}
+        <button
+          type='button'
+          class='search-trigger'
+          part='trigger'
+          aria-label='Search'
+          onClick={() => this._open()}
+        >
+          <svg
+            class='search-icon'
+            part='icon'
+            viewBox='0 0 16 16'
+            fill='none'
+            stroke='currentColor'
+            stroke-width='1.5'
+            stroke-linecap='round'
+          >
+            <circle cx='7' cy='7' r='4.5' />
+            <path d='M10.5 10.5L14 14' />
+          </svg>
+          <span part='label'>Search</span>
+          <kbd part='shortcut'>&#x2318;K</kbd>
+        </button>
+
+        {/* Overlay — signal-driven, rendered in shadow DOM */}
+        {this.#open.value && (
+          <div
+            class='overlay'
+            onClick={(e: Event) => {
+              if (e.target === e.currentTarget) this._close();
+            }}
+          >
+            <div class='panel'>
+              <input
+                type='text'
+                class='search-input'
+                placeholder='Search documentation...'
+                value={this.#query.value}
+                onInput={(e: Event) => this._onInput(e)}
+                ref={(el: HTMLInputElement) => {
+                  this._inputRef = el;
+                }}
+              />
+              <div class='results'>
+                {this._renderResults()}
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    );
   }
 }
 
