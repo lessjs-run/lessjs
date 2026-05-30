@@ -529,7 +529,8 @@ export async function ssgRender(
   // ── Build manifest ──────────────────────────────────────────
   // ── PWA files ──────────────────────────────────────────────
   const pwa = options.pwa;
-  if (pwa) {
+  // Temporary: disable SW generation to avoid stale cache blank-screen until root cause fixed
+  if (pwa && false) {
     const manifest = {
       name: pwa.name || 'LessJS',
       short_name: pwa.shortName || 'LessJS',
