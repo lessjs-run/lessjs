@@ -9,7 +9,8 @@
  */
 export const meta = { section: '', label: 'Changelog', order: 20 };
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../components/page-styles.js';
 const pageSheet = new StyleSheet();

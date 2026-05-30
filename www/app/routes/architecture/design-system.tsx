@@ -6,7 +6,8 @@
  */
 export const meta = { section: 'Reference', label: 'Design System', order: 10 };
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';

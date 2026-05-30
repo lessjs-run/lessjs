@@ -13,6 +13,7 @@
  */
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { openPropsTokenSheet } from './open-props-tokens.js';
 export const tagName = 'less-hero-ping';
 
 const styles: StyleSheetLike = new StyleSheet();
@@ -74,7 +75,7 @@ styles.replaceSync(`
 `);
 
 export default class HeroPing extends DsdElement {
-  static override styles = [styles];
+  static override styles = [openPropsTokenSheet, styles];
 
   apiUrl = '';
   _state: 'idle' | 'loading' | 'ok' | 'err' = 'idle';

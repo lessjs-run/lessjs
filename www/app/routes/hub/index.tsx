@@ -6,7 +6,8 @@
 export const meta = { section: 'Registry', label: 'Hub', order: 0 };
 export const tagName = 'page-hub';
 
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';

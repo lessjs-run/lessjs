@@ -31,6 +31,7 @@
 
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc, _escAttr } from './shared/escape.js';
 
 export const tagName = 'less-input';
@@ -107,7 +108,7 @@ sheet.replaceSync(`
 `);
 
 export class LessInput extends DsdElement {
-  static override styles = [sheet];
+  static override styles = [openPropsTokenSheet, sheet];
   static override formAssociated = true;
   static override delegatesFocus = true;
   static override observedAttributes = [

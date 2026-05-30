@@ -8,7 +8,8 @@
 export const meta = { section: 'Quick Start', label: 'Architecture', order: 10 };
 export const tagName = 'guide-architecture';
 
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';

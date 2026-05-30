@@ -4,7 +4,8 @@
  * Showcases LessJS framework: DSD rendering, Signal reactivity,
  * Island architecture. Pure DsdElement + @lessjs/signals.
  */
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { consumeContext } from '@lessjs/core/signal-context';

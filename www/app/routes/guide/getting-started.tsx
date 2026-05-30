@@ -1,7 +1,8 @@
 // deno-fmt-ignore-file
 export const meta = { section: 'Quick Start', label: 'Getting Started', order: 1 };
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
@@ -124,7 +125,7 @@ cd my-app</code></pre></less-code-block>
             页面是一个 Web Component。SSR 会把它渲染成 Declarative Shadow DOM， 所以内容在 JavaScript
             运行前就已经可见。
           </p>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
 export class HomePage extends DsdElement {
   override render(): string {
@@ -140,8 +141,8 @@ export const tagName = 'page-home';</code></pre></less-code-block>
           <p>
             使用 JSX 和 Signal 编写响应式组件。Signal 变化时组件自动重新渲染。
           </p>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
-import { signal } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+import { signal } from '@lessjs/core';
 
 export class CounterIsland extends DsdElement {
   count = signal(0);
@@ -257,7 +258,7 @@ cd my-app</code></pre></less-code-block>
             A page is a Web Component. SSR renders it into Declarative Shadow DOM, so content
             is visible before JavaScript runs.
           </p>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
 export class HomePage extends DsdElement {
   override render(): string {

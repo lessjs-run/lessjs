@@ -2,7 +2,8 @@
  * 404 Not Found Page - with search, helpful links, and old URL redirects
  */
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '../islands/less-search.tsx';

@@ -4,7 +4,8 @@ export const tagName = 'page-roadmap';
 // ADR-0037 anchors: DSD-first. Version: v0.21, v0.22, v0.23.
 // Legacy smoke anchors: WC Package Protocol, Six-Phase Vision, Registry Hub, No webpack.
 
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { headerNav, navSections } from '@lessjs/content/nav';
 import '@lessjs/ui/less-layout';
@@ -306,7 +307,7 @@ export class RoadmapPage extends DsdElement {
               <h2>Current</h2>
               <ul>
                 <li>@lessjs/protocols</li>
-                <li>@lessjs/runtime</li>
+                <li>@lessjs/core</li>
                 <li>package graph gate</li>
                 <li>docs architecture truth</li>
               </ul>

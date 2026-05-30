@@ -2,7 +2,8 @@ export const meta = { section: 'Principles', label: 'Architecture', order: 10 };
 export const tagName = 'engine-architecture';
 
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
@@ -346,7 +347,7 @@ export class ArchitecturePage extends DsdElement {
             </div>
             <div class="layer-map">
               <div class="layer"><strong>tools and gates</strong><span>create, graph checker, publish workflow, smoke tests</span><p>Prove generated users, release order, and docs truth.</p></div>
-              <div class="layer"><strong>product facades</strong><span>@lessjs/runtime, @lessjs/app</span><p>Separate authoring imports from configuration assembly.</p></div>
+              <div class="layer"><strong>product facades</strong><span>@lessjs/core, @lessjs/app</span><p>Separate authoring imports from configuration assembly.</p></div>
               <div class="layer"><strong>build adapters</strong><span>@lessjs/adapter-vite</span><p>Own Vite plugin assembly, route scanning, SSG phases, and generated entries.</p></div>
               <div class="layer"><strong>feature packages</strong><span>content, i18n, hub, ui, cem, compat-check</span><p>Own product features and evidence surfaces without routing through core.</p></div>
               <div class="layer"><strong>runtime kernel</strong><span>@lessjs/core</span><p>Own DSD runtime, templates, renderDsd, islands, navigation, logger, and errors.</p></div>

@@ -1,7 +1,7 @@
 export const meta = { section: 'Core', label: 'Islands & SSR', order: 4 };
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
-import { DsdElement } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
@@ -77,7 +77,7 @@ export class IslandsSsrPage extends DsdElement {
           <p>
             通过 <code>defineIsland()</code> API 声明 island，支持四种 hydration 策略：
           </p>
-          <less-code-block><pre><code>import { defineIsland } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { defineIsland } from '@lessjs/core';
 
 export class MyChart extends DsdElement { /* ... */ }
 
@@ -106,7 +106,7 @@ defineIsland(MyChart, { strategy: 'only' });</code></pre></less-code-block>
           <h2>创建 Island</h2>
           <p>将需要客户端行为的组件放在 <code>app/islands/</code> 目录：</p>
           <less-code-block><pre><code>// app/islands/counter.ts
-import { DsdElement, signal } from '@lessjs/runtime';
+import { DsdElement, signal } from '@lessjs/core';
 
 export class Counter extends DsdElement {
   #count = signal(0);
@@ -221,7 +221,7 @@ customElements.define('my-counter', Counter);</code></pre></less-code-block>
           <p>
             Declare islands via <code>defineIsland()</code> API with four hydration strategies:
           </p>
-          <less-code-block><pre><code>import { defineIsland } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { defineIsland } from '@lessjs/core';
 
 export class MyChart extends DsdElement { /* ... */ }
 
@@ -250,7 +250,7 @@ defineIsland(MyChart, { strategy: 'only' });</code></pre></less-code-block>
           <h2>Creating an Island</h2>
           <p>Place components that need client-side behavior in the <code>app/islands/</code> directory:</p>
           <less-code-block><pre><code>// app/islands/counter.ts
-import { DsdElement, signal } from '@lessjs/runtime';
+import { DsdElement, signal } from '@lessjs/core';
 
 export class Counter extends DsdElement {
   #count = signal(0);
