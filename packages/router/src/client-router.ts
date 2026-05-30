@@ -83,15 +83,20 @@ export class Router {
 
   /** Parse current URL via URLPattern — SSR-safe: falls back to element attribute */
   #parseUrl(): { locale: string; path: string } {
+    // SSR path: no globalThis.location (Deno build) → use element attributes
+    if (typeof globalThis.location === 'undefined') {
+      const locale = this.#el.getAttribute('locale') || 'en';
+      const path = this.#el.getAttribute('current-path') || '/';
+      return { locale, path };
+    }
     try {
       const pattern = new URLPattern({ pathname: '/:locale?/:page*' });
-      const m = pattern.exec(globalThis.location?.pathname ?? '/')?.pathname?.groups;
+      const m = pattern.exec(globalThis.location.pathname)?.pathname?.groups;
       return {
         locale: m?.locale || 'en',
         path: '/' + (m?.page || ''),
       };
     } catch {
-      // URLPattern not available (SSR) — fallback
       return { locale: 'en', path: '/' };
     }
   }

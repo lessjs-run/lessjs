@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/ui",
-  "version": "0.26.1",
+  "version": "0.27.0",
   "exports": {
     ".": "./src/index.ts",
     "./less-button": "./src/less-button.tsx",
@@ -17,10 +17,12 @@
     "./open-props-tokens.js": "./src/open-props-tokens.ts"
   },
   "imports": {
-    "@lessjs/core": "jsr:@lessjs/core@^0.26.0",
-    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.26.0/navigation",
-    "@lessjs/signals": "jsr:@lessjs/signals@^0.26.0",
-    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.26.0"
+    "@lessjs/core": "jsr:@lessjs/core@^0.27.0",
+    "@lessjs/core/navigation": "jsr:@lessjs/core@^0.27.0/navigation",
+    "@lessjs/signals": "jsr:@lessjs/signals@^0.27.0",
+    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.27.0",
+    "@lessjs/router": "jsr:@lessjs/router@^0.27.0",
+    "@lessjs/router/client-router": "jsr:@lessjs/router@^0.27.0/client-router"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
