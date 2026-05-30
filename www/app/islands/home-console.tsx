@@ -59,9 +59,9 @@ export default class HomeConsole extends DsdElement {
         </div>
         <div class='pane'>
           <div class='counter-row'>
-            <button class='counter-btn' onClick={() => this.#count.value--}>-</button>
+            <button type='button' class='counter-btn' onClick={() => this.#count.value--}>-</button>
             <span class='counter-value'>{this.#count}</span>
-            <button class='counter-btn' onClick={() => this.#count.value++}>+</button>
+            <button type='button' class='counter-btn' onClick={() => this.#count.value++}>+</button>
           </div>
           <p class='counter-caption'>
             <b>METRICS</b> — packages verified: <b>{this.#count}</b>
