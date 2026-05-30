@@ -16,7 +16,7 @@ CSS  = visual state (data-* + CSS selectors)
 JS   = data + atomic DOM updates + cross-component communication
 ```
 
-This is the **DSD-first Real DOM (RDOM)** approach. LessJS is uniquely positioned—DSD provides zero-JS first paint, so the framework only handles *reactive updates after hydration*. This is a simpler problem than what Solid/Svelte solve (they must handle initial render too).
+This is the **DSD-first Real DOM (RDOM)** approach. LessJS is uniquely positioned—DSD provides zero-JS first paint, so the framework only handles _reactive updates after hydration_. This is a simpler problem than what Solid/Svelte solve (they must handle initial render too).
 
 ---
 
@@ -26,20 +26,20 @@ LessJS uses [alien-signals](https://github.com/stackblitz/alien-signals) (1.6KB)
 
 ### Primitives exposed via @lessjs/signals
 
-| Primitive | API | Usage |
-|-----------|-----|-------|
-| `signal` | `signal<T>(v)` → `{ value: T, subscribe }` | Mutable reactive value |
-| `computed` | `computed<T>(fn)` → `{ value: T, subscribe }` | Derived reactive value |
-| `effect` | `effect(fn)` → `() => void` | Reactive side effect (auto-tracks deps) |
+| Primitive  | API                                           | Usage                                   |
+| ---------- | --------------------------------------------- | --------------------------------------- |
+| `signal`   | `signal<T>(v)` → `{ value: T, subscribe }`    | Mutable reactive value                  |
+| `computed` | `computed<T>(fn)` → `{ value: T, subscribe }` | Derived reactive value                  |
+| `effect`   | `effect(fn)` → `() => void`                   | Reactive side effect (auto-tracks deps) |
 
 ### Primitives available in alien-signals but not yet exposed (P2)
 
-| Primitive | Purpose |
-|-----------|---------|
-| `effectScope` | Grouped effect cleanup (replaces manual AbortController) |
-| `startBatch` / `endBatch` | Atomic multi-signal updates |
-| `untrack` | Read signal without creating dependency |
-| `onCleanup` | Run cleanup when effect re-runs or disposes |
+| Primitive                 | Purpose                                                  |
+| ------------------------- | -------------------------------------------------------- |
+| `effectScope`             | Grouped effect cleanup (replaces manual AbortController) |
+| `startBatch` / `endBatch` | Atomic multi-signal updates                              |
+| `untrack`                 | Read signal without creating dependency                  |
+| `onCleanup`               | Run cleanup when effect re-runs or disposes              |
 
 ---
 
@@ -76,18 +76,19 @@ applyProps(el, props, signal?) {
 ```
 
 Key properties:
+
 - **Atomic**: One effect = one attribute. No VNode comparison.
 - **Cleanup**: AbortSignal passed from component lifecycle → all effects disposed on disconnect.
 - **CSR + DSD**: Works identically in both paths (signal passed through `_walkAndBind`).
 
 ### Component Contract (ADR-0062)
 
-| Rule | Rationale |
-|------|-----------|
-| `render()` accesses NO signal `.value` | Prevents structural signal access invisible to applyProps |
-| Signal-driven state passed as `prop={signal}` | applyProps creates effect binding |
-| Visual variants use `data-*` + CSS | Zero JS for visual state changes |
-| Structural changes use `<Show>`/`<For>` (CSR) | Declarative control flow |
+| Rule                                          | Rationale                                                 |
+| --------------------------------------------- | --------------------------------------------------------- |
+| `render()` accesses NO signal `.value`        | Prevents structural signal access invisible to applyProps |
+| Signal-driven state passed as `prop={signal}` | applyProps creates effect binding                         |
+| Visual variants use `data-*` + CSS            | Zero JS for visual state changes                          |
+| Structural changes use `<Show>`/`<For>` (CSR) | Declarative control flow                                  |
 
 ```tsx
 // ❌ BAD — signal.value in render() body
@@ -158,14 +159,14 @@ consumeContext(host, ctx)               // returns Map signal directly
 
 ## 6. Framework Comparison
 
-| Framework | Signal→DOM | Context | Effect Cleanup | Batch | VNode? |
-|-----------|-----------|---------|---------------|-------|--------|
-| **LessJS** | Runtime `applyProps` per-prop effects | SignalContext Map (source ref) | AbortSignal chain | P2 (alien-signals) | No (DSD + one-time workaround) |
-| SolidJS | Compile-time JSX→cloneNode + effects | Owner-tree Context (getter ref) | createRoot/onCleanup | batch() | No |
-| Svelte 5 | Compile-time $state→DOM operations | setContext/getContext | $effect return fn | Built-in | No |
-| Vue Vapor | Compile template→DOM + alien-signals | provide/inject | effectScope | Built-in | No |
-| Preact Signals | JSX text→signal.value, else VDOM | Similar to React Context | effect return fn | batch() | Partial |
-| Lit | @property → requestUpdate → render() | DOM-event Context protocol | ReactiveController | None | No (template) |
+| Framework      | Signal→DOM                            | Context                         | Effect Cleanup       | Batch              | VNode?                         |
+| -------------- | ------------------------------------- | ------------------------------- | -------------------- | ------------------ | ------------------------------ |
+| **LessJS**     | Runtime `applyProps` per-prop effects | SignalContext Map (source ref)  | AbortSignal chain    | P2 (alien-signals) | No (DSD + one-time workaround) |
+| SolidJS        | Compile-time JSX→cloneNode + effects  | Owner-tree Context (getter ref) | createRoot/onCleanup | batch()            | No                             |
+| Svelte 5       | Compile-time $state→DOM operations    | setContext/getContext           | $effect return fn    | Built-in           | No                             |
+| Vue Vapor      | Compile template→DOM + alien-signals  | provide/inject                  | effectScope          | Built-in           | No                             |
+| Preact Signals | JSX text→signal.value, else VDOM      | Similar to React Context        | effect return fn     | batch()            | Partial                        |
+| Lit            | @property → requestUpdate → render()  | DOM-event Context protocol      | ReactiveController   | None               | No (template)                  |
 
 **LessJS's advantage**: DSD provides free SSR. Other frameworks must hydrate or CSR. LessJS starts with correct DOM and only adds reactivity.
 
@@ -173,32 +174,32 @@ consumeContext(host, ctx)               // returns Map signal directly
 
 ## 7. Gap Status
 
-| # | Gap | Severity | Status |
-|---|-----|----------|--------|
-| G1 | Effect memory leak | P0 | ✅ Fixed — AbortSignal passed through `_walkAndBind` → `applyProps` |
-| G2 | consumeContext dead copy | P0 | ✅ Fixed — returns source signal from Map |
-| G3 | DSD text node binding | P1 | ⚠️ `_walkAndBind` skips text children; counter/home-console text CSR-reactive only |
-| G4 | Show/For DSD hydration | P2 | ⚠️ CSR-only `renderToDom` constructs; DSD path needs comment-marker hydration |
-| G5 | batch/expose more alien-signals | P2 | ⚠️ `effectScope`, `batch`, `untrack` available in alien-signals but not re-exported |
-| G6 | No component-level effectScope | P2 | ⚠️ Manual AbortController; `effectScope` would be cleaner |
+| #  | Gap                             | Severity | Status                                                                              |
+| -- | ------------------------------- | -------- | ----------------------------------------------------------------------------------- |
+| G1 | Effect memory leak              | P0       | ✅ Fixed — AbortSignal passed through `_walkAndBind` → `applyProps`                 |
+| G2 | consumeContext dead copy        | P0       | ✅ Fixed — returns source signal from Map                                           |
+| G3 | DSD text node binding           | P1       | ⚠️ `_walkAndBind` skips text children; counter/home-console text CSR-reactive only  |
+| G4 | Show/For DSD hydration          | P2       | ⚠️ CSR-only `renderToDom` constructs; DSD path needs comment-marker hydration       |
+| G5 | batch/expose more alien-signals | P2       | ⚠️ `effectScope`, `batch`, `untrack` available in alien-signals but not re-exported |
+| G6 | No component-level effectScope  | P2       | ⚠️ Manual AbortController; `effectScope` would be cleaner                           |
 
 ---
 
 ## 8. File Reference
 
-| File | Role |
-|------|------|
-| `packages/signals/src/alien-engine.ts` | alien-signals adapter |
-| `packages/signals/src/framework.ts` | Public API: `signal`, `computed`, `effect` |
-| `packages/core/src/signal-like.ts` | Duck-type detection: `isSignalLike()` |
-| `packages/core/src/signal-context.ts` | Context API: `createContext`, `provideContext`, `consumeContext` |
-| `packages/core/src/jsx-render-dom.ts` | `applyProps` (signal→DOM), `renderToDom` (CSR) |
-| `packages/core/src/jsx-runtime.ts` | JSX factory, Fragment, Show, For |
-| `packages/core/src/dsd-element.ts` | `connectedCallback`, `_hyrateExistingDom`, `_walkAndBind`, `_layoutWorkaroundReRender` |
-| `packages/core/src/jsx-types.d.ts` | JSX type declarations |
-| `packages/ui/src/less-theme-toggle.tsx` | Example: CSS-driven signal (zero signal.value in render) |
-| `packages/ui/src/less-layout.tsx` | Example: no signals in render (attribute-driven) |
-| `www/app/islands/home-console.tsx` | Example: attribute-only computed signals |
+| File                                    | Role                                                                                   |
+| --------------------------------------- | -------------------------------------------------------------------------------------- |
+| `packages/signals/src/alien-engine.ts`  | alien-signals adapter                                                                  |
+| `packages/signals/src/framework.ts`     | Public API: `signal`, `computed`, `effect`                                             |
+| `packages/core/src/signal-like.ts`      | Duck-type detection: `isSignalLike()`                                                  |
+| `packages/core/src/signal-context.ts`   | Context API: `createContext`, `provideContext`, `consumeContext`                       |
+| `packages/core/src/jsx-render-dom.ts`   | `applyProps` (signal→DOM), `renderToDom` (CSR)                                         |
+| `packages/core/src/jsx-runtime.ts`      | JSX factory, Fragment, Show, For                                                       |
+| `packages/core/src/dsd-element.ts`      | `connectedCallback`, `_hyrateExistingDom`, `_walkAndBind`, `_layoutWorkaroundReRender` |
+| `packages/core/src/jsx-types.d.ts`      | JSX type declarations                                                                  |
+| `packages/ui/src/less-theme-toggle.tsx` | Example: CSS-driven signal (zero signal.value in render)                               |
+| `packages/ui/src/less-layout.tsx`       | Example: no signals in render (attribute-driven)                                       |
+| `www/app/islands/home-console.tsx`      | Example: attribute-only computed signals                                               |
 
 ---
 

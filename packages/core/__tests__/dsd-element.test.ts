@@ -160,8 +160,8 @@ Deno.test('DsdElement: disconnectedCallback disposes template runtime', () => {
 
   document.body.appendChild(el);
   document.body.removeChild(el);
-  // After disconnect, _templateAbortController should be cleaned up
-  assertEquals(el['_templateAbortController'], undefined);
+  // After disconnect, _scopeDispose should be cleaned up
+  assertEquals(el['_scopeDispose'], undefined);
 });
 
 // M-17 guard removed — _hydrateEvents has been removed in v0.21.0.

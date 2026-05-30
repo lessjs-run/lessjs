@@ -36,10 +36,10 @@ docs-home / less-layout collapse → 白屏
 
 ### Two separate failure modes
 
-| # | Failure | Mechanism |
-|---|---------|-----------|
-| 1 | Structural Signal Gap | `render()` 中 signal 决定 VNode *树结构*，per-prop 绑定只能更新属性，不能增删子树 |
-| 2 | Browser Layout Quirk | DSD shadow DOM 内容（正确的 DOM 树）→ host `getBoundingClientRect()` 返回 0×0。只有 CSR 重渲（appendChild）触发正确 layout |
+| # | Failure               | Mechanism                                                                                                                  |
+| - | --------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| 1 | Structural Signal Gap | `render()` 中 signal 决定 VNode _树结构_，per-prop 绑定只能更新属性，不能增删子树                                          |
+| 2 | Browser Layout Quirk  | DSD shadow DOM 内容（正确的 DOM 树）→ host `getBoundingClientRect()` 返回 0×0。只有 CSR 重渲（appendChild）触发正确 layout |
 
 ---
 
@@ -62,22 +62,23 @@ JS   = data + atomic updates + communication (signal→DOM attribute)
 per-prop signal→DOM 绑定（`applyProps` 中 `effect(() => setAttribute(...))`）已经存在且工作正常。问题不在于缺少机制，而在于**组件作者在 `render()` 中把 signal 用于结构性决策**，迫使框架必须做全量重渲。
 
 修复不在于框架层，在于组件层：
+
 - 不要在 `render()` 里用 `theme === 'dark' ? <Dark/> : <Light/>`——用 `data-theme={signal}` + CSS
 - 不要在 `render()` 里 `.map()` signal 数组——用 `<For each={signal}>`
 - 不要在 `render()` 里 `{locale === 'zh' ? '指南' : 'Guide'}`——用 reactive text node
 
 ### Framework comparison
 
-| Framework | Render mechanism | Reactive updates | VNode? |
-|-----------|-----------------|------------------|--------|
-| **LessJS (current)** | `effect(() => render() + replace)` | Full re-render | Yes |
-| **LessJS (target)** | `render()` once → DSD/SSG | Per-prop effect bindings | No |
-| SolidJS | Compile-time DOM bindings | Per-node effect + DOM API | No |
-| Lit | `render()` via tagged template | Lit directive + effect | Partial |
-| Svelte 5 | Compile-time `$state` | Compile-time DOM bindings | No |
-| Vue Vapor | Compile-time elimination | Compile-time DOM bindings | No |
+| Framework            | Render mechanism                   | Reactive updates          | VNode?  |
+| -------------------- | ---------------------------------- | ------------------------- | ------- |
+| **LessJS (current)** | `effect(() => render() + replace)` | Full re-render            | Yes     |
+| **LessJS (target)**  | `render()` once → DSD/SSG          | Per-prop effect bindings  | No      |
+| SolidJS              | Compile-time DOM bindings          | Per-node effect + DOM API | No      |
+| Lit                  | `render()` via tagged template     | Lit directive + effect    | Partial |
+| Svelte 5             | Compile-time `$state`              | Compile-time DOM bindings | No      |
+| Vue Vapor            | Compile-time elimination           | Compile-time DOM bindings | No      |
 
-LessJS is uniquely positioned: **DSD gives zero-JS first paint**, so the framework only needs to handle *reactive updates after hydration*. This is a simpler problem than what Solid/Svelte solve (they must handle initial render too).
+LessJS is uniquely positioned: **DSD gives zero-JS first paint**, so the framework only needs to handle _reactive updates after hydration_. This is a simpler problem than what Solid/Svelte solve (they must handle initial render too).
 
 ---
 

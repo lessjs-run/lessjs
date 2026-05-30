@@ -327,6 +327,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   private _walkAndBind(
     parent: Element | ShadowRoot,
     vnode: {
+      // deno-lint-ignore ban-types
       tag?: string | symbol | Function;
       props?: Record<string, unknown>;
       children?: unknown[];
@@ -346,7 +347,9 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
         const existingText = domChild.childNodes[0];
         if (existingText && existingText.nodeType === 3) {
           // Bind existing DSD text node to signal
-          effect(() => { existingText.textContent = String(sig.value ?? ''); });
+          effect(() => {
+            existingText.textContent = String(sig.value ?? '');
+          });
         }
         continue;
       }

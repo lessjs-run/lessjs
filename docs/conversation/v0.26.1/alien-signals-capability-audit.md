@@ -1,7 +1,7 @@
 # alien-signals Capability Audit (v0.26.1)
 
-> **Author**: general-purpose-2 (Framework Architect)  
-> **Date**: 2026-05-30  
+> **Author**: general-purpose-2 (Framework Architect)\
+> **Date**: 2026-05-30\
 > **Scope**: alien-signals v3.2.1 + @lessjs/signals + @lessjs/core integration
 
 ---
@@ -12,45 +12,46 @@ alien-signals v3.2.1 (located at `node_modules/.deno/alien-signals@3.2.1/`) is a
 
 ### 1.1 Public API (`index.mjs`)
 
-| Export | Signature | Description |
-|---|---|---|
-| `signal<T>(initialValue: T)` | `{ (): T; (value: T): void }` | Reactive state cell. Read with `s()`, write with `s(newValue)`. Equality check before propagation. |
-| `computed<T>(getter: (prev?: T) => T)` | `() => T` | Lazy derived computation. Receives previous value. Auto-tracks dependencies. Dirty-flag + lazy eval. |
-| `effect(fn: () => void \| (() => void))` | `() => void` | Side effect. Runs immediately, auto-tracks deps. Return value treated as cleanup (runs on re-run or dispose). Returns dispose function. |
-| `effectScope(fn: () => void)` | `() => void` | Creates an "effect container" that groups child effects. Disposing the scope disposes all child effects at once. Returns dispose function. |
-| `trigger(fn: () => void)` | `void` | Creates a temporary subscriber (`flags: Watching(2)`), runs `fn()` to track all signal reads, then walks collected deps and propagates changes. Useful for async patterns or manual flush. |
-| `startBatch()` / `endBatch()` | `void` / `void` | Transaction batching. `startBatch()` increments depth; `endBatch()` decrements and flushes queue at depth 0. Writes during batch defer notification. |
-| `getBatchDepth()` | `number` | Returns current batch nesting depth. |
-| `getActiveSub()` | `ReactiveNode \| undefined` | Returns the currently tracking subscriber (effect/computed being evaluated). |
-| `setActiveSub(sub?: ReactiveNode)` | `ReactiveNode \| undefined` | Sets the active subscriber. Returns previous value. Enables custom tracking contexts. |
-| `isSignal(fn)` | `boolean` | Checks if `fn` is a bound `signalOper`. Structural check via `fn.name === 'bound signalOper'`. |
-| `isComputed(fn)` | `boolean` | Checks if `fn` is a bound `computedOper`. |
-| `isEffect(fn)` | `boolean` | Checks if `fn` is a bound `effectOper`. |
-| `isEffectScope(fn)` | `boolean` | Checks if `fn` is a bound `effectScopeOper`. |
+| Export                                   | Signature                     | Description                                                                                                                                                                                |
+| ---------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `signal<T>(initialValue: T)`             | `{ (): T; (value: T): void }` | Reactive state cell. Read with `s()`, write with `s(newValue)`. Equality check before propagation.                                                                                         |
+| `computed<T>(getter: (prev?: T) => T)`   | `() => T`                     | Lazy derived computation. Receives previous value. Auto-tracks dependencies. Dirty-flag + lazy eval.                                                                                       |
+| `effect(fn: () => void \| (() => void))` | `() => void`                  | Side effect. Runs immediately, auto-tracks deps. Return value treated as cleanup (runs on re-run or dispose). Returns dispose function.                                                    |
+| `effectScope(fn: () => void)`            | `() => void`                  | Creates an "effect container" that groups child effects. Disposing the scope disposes all child effects at once. Returns dispose function.                                                 |
+| `trigger(fn: () => void)`                | `void`                        | Creates a temporary subscriber (`flags: Watching(2)`), runs `fn()` to track all signal reads, then walks collected deps and propagates changes. Useful for async patterns or manual flush. |
+| `startBatch()` / `endBatch()`            | `void` / `void`               | Transaction batching. `startBatch()` increments depth; `endBatch()` decrements and flushes queue at depth 0. Writes during batch defer notification.                                       |
+| `getBatchDepth()`                        | `number`                      | Returns current batch nesting depth.                                                                                                                                                       |
+| `getActiveSub()`                         | `ReactiveNode \| undefined`   | Returns the currently tracking subscriber (effect/computed being evaluated).                                                                                                               |
+| `setActiveSub(sub?: ReactiveNode)`       | `ReactiveNode \| undefined`   | Sets the active subscriber. Returns previous value. Enables custom tracking contexts.                                                                                                      |
+| `isSignal(fn)`                           | `boolean`                     | Checks if `fn` is a bound `signalOper`. Structural check via `fn.name === 'bound signalOper'`.                                                                                             |
+| `isComputed(fn)`                         | `boolean`                     | Checks if `fn` is a bound `computedOper`.                                                                                                                                                  |
+| `isEffect(fn)`                           | `boolean`                     | Checks if `fn` is a bound `effectOper`.                                                                                                                                                    |
+| `isEffectScope(fn)`                      | `boolean`                     | Checks if `fn` is a bound `effectScopeOper`.                                                                                                                                               |
 
 ### 1.2 Internal System (`system.mjs` / `system.d.ts`)
 
 ```ts
 export const enum ReactiveFlags {
-  None        = 0,
-  Mutable     = 1,   // Node is alive / mutable
-  Watching    = 2,   // Is tracking (effect/trigger)
+  None = 0,
+  Mutable = 1, // Node is alive / mutable
+  Watching = 2, // Is tracking (effect/trigger)
   RecursedCheck = 4, // Currently recomputing
-  Recursed    = 8,   // Was recursed during inner write
-  Dirty       = 16,  // Needs recomputation
-  Pending     = 32,  // Pending notification
+  Recursed = 8, // Was recursed during inner write
+  Dirty = 16, // Needs recomputation
+  Pending = 32, // Pending notification
 }
 // HasChildEffect = 64 — used internally
 ```
 
-| Export | Description |
-|---|---|
+| Export                                                | Description                                                                              |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | `createReactiveSystem({ update, notify, unwatched })` | Core graph factory. Returns `{ link, unlink, propagate, checkDirty, shallowPropagate }`. |
-| `ReactiveNode` | Interface: `{ deps?, depsTail?, subs?, subsTail?, flags: ReactiveFlags }` |
-| `Link` | Doubly-linked edge: `{ version, dep, sub, prevSub, nextSub, prevDep, nextDep }` |
-| `ReactiveFlags` | Enum (see above) |
+| `ReactiveNode`                                        | Interface: `{ deps?, depsTail?, subs?, subsTail?, flags: ReactiveFlags }`                |
+| `Link`                                                | Doubly-linked edge: `{ version, dep, sub, prevSub, nextSub, prevDep, nextDep }`          |
+| `ReactiveFlags`                                       | Enum (see above)                                                                         |
 
 **Core algorithms:**
+
 - `link(dep, sub, version)` — connects producer→consumer with dedup (same dep/sub/version skips)
 - `unlink(link, sub)` — removes one edge, calls `unwatched(dep)` when last subscriber dropped
 - `propagate(link, innerWrite)` — marks downstream dirty (depth-first, iterative)
@@ -58,6 +59,7 @@ export const enum ReactiveFlags {
 - `shallowPropagate(link)` — notifies direct dependent effects (synchronous, no recursion)
 
 **Evaluation flow (write → propagate → flush):**
+
 ```
 signal(s, newValue)
   → propagate(s.subs, innerWrite)   // mark dirty downstream
@@ -84,28 +86,28 @@ signal(s, newValue)
 
 ### 2.2 What IS Exposed
 
-| Export | alien-signals mapping | Notes |
-|---|---|---|
-| `signal<T>(v)` → `{get value():T, set value(v), subscribe(fn)}` | `alienSig.signal(v)` → `{ ():T, (v):void }` | Uses `.value` getter/setter syntax. Calls alien `signalOper` on each access. |
-| `computed<T>(fn)` → `{readonly value:T, subscribe(fn)}` | `alienSig.computed(fn)` → `() => T` | Same adaptor pattern. |
-| `effect(fn)` → `Unsubscribe` | `alienSig.effect(fn)` → `() => void` | Wraps fn return as cleanup. Disposes alien effect + runs cleanup. |
-| `createAlienEngine(mod)` | Direct adapter factory | Takes an `AlienSignalsModule` shape. |
-| `createDefaultEngine()` | Uses `{signal:_s, computed:_c, effect:_e}` | Standard LessJS engine. |
-| Types: `Signal`, `WritableSignal`, `ReadonlySignal`, `SignalEngine`, `Unsubscribe` | — | Shared protocol types. |
+| Export                                                                             | alien-signals mapping                       | Notes                                                                        |
+| ---------------------------------------------------------------------------------- | ------------------------------------------- | ---------------------------------------------------------------------------- |
+| `signal<T>(v)` → `{get value():T, set value(v), subscribe(fn)}`                    | `alienSig.signal(v)` → `{ ():T, (v):void }` | Uses `.value` getter/setter syntax. Calls alien `signalOper` on each access. |
+| `computed<T>(fn)` → `{readonly value:T, subscribe(fn)}`                            | `alienSig.computed(fn)` → `() => T`         | Same adaptor pattern.                                                        |
+| `effect(fn)` → `Unsubscribe`                                                       | `alienSig.effect(fn)` → `() => void`        | Wraps fn return as cleanup. Disposes alien effect + runs cleanup.            |
+| `createAlienEngine(mod)`                                                           | Direct adapter factory                      | Takes an `AlienSignalsModule` shape.                                         |
+| `createDefaultEngine()`                                                            | Uses `{signal:_s, computed:_c, effect:_e}`  | Standard LessJS engine.                                                      |
+| Types: `Signal`, `WritableSignal`, `ReadonlySignal`, `SignalEngine`, `Unsubscribe` | —                                           | Shared protocol types.                                                       |
 
 ### 2.3 What is NOT Exposed (Hidden from LessJS users)
 
-| alien-signals primitive | Status in @lessjs/signals | Impact |
-|---|---|---|
-| `effectScope` / `createRoot` | **NOT exposed** | No grouped-effect lifecycle management |
-| `getOwner` / `runWithOwner` | **NOT exposed** | No effect ownership context |
-| `startBatch` / `endBatch` | **NOT exposed** | No transaction batching |
-| `getBatchDepth` | **NOT exposed** | Cannot check batch state |
-| `trigger` | **NOT exposed** | No manual tracking/flush |
-| `getActiveSub` / `setActiveSub` | **NOT exposed** | Cannot implement `untrack` or custom contexts |
-| `isSignal` / `isComputed` / `isEffect` | **NOT exposed** | `isSignalLike` uses duck-typing instead |
-| `update(node)` / `notify(node)` / `unwatched(dep)` callbacks | Internal to alien only | No custom primitive building |
-| `ReactiveNode` / `Link` | Type present in engine.ts only | Not in public API |
+| alien-signals primitive                                      | Status in @lessjs/signals      | Impact                                        |
+| ------------------------------------------------------------ | ------------------------------ | --------------------------------------------- |
+| `effectScope` / `createRoot`                                 | **NOT exposed**                | No grouped-effect lifecycle management        |
+| `getOwner` / `runWithOwner`                                  | **NOT exposed**                | No effect ownership context                   |
+| `startBatch` / `endBatch`                                    | **NOT exposed**                | No transaction batching                       |
+| `getBatchDepth`                                              | **NOT exposed**                | Cannot check batch state                      |
+| `trigger`                                                    | **NOT exposed**                | No manual tracking/flush                      |
+| `getActiveSub` / `setActiveSub`                              | **NOT exposed**                | Cannot implement `untrack` or custom contexts |
+| `isSignal` / `isComputed` / `isEffect`                       | **NOT exposed**                | `isSignalLike` uses duck-typing instead       |
+| `update(node)` / `notify(node)` / `unwatched(dep)` callbacks | Internal to alien only         | No custom primitive building                  |
+| `ReactiveNode` / `Link`                                      | Type present in engine.ts only | Not in public API                             |
 
 ### 2.4 Key Architectural Details
 
@@ -130,6 +132,7 @@ This means every subscriber (used by `isSignalLike` duck-type check) creates a f
 **File**: `packages/core/src/jsx-render-dom.ts:140-186`
 
 **Flow:**
+
 ```
 applyProps(el, props, signal?)
   → for each (key, value) in props:
@@ -143,11 +146,13 @@ applyProps(el, props, signal?)
 ```
 
 **What it does well:**
+
 - Fine-grained updates: only the bound attribute is touched on signal change
 - `applyStaticProp` handles: style objects, className→class, htmlFor→for, booleans, strings
 - No full re-render needed
 
 **Problems:**
+
 - Effect disposal tied to `AbortSignal` only — no scope-based cleanup
 - `applyStaticProp` also calls `unwrapSignalLike` on style sub-values (line 105) — reads signals but doesn NOT create reactive bindings for them
 
@@ -158,7 +163,9 @@ applyProps(el, props, signal?)
 ```ts
 if (isSignalLike(node)) {
   const textNode = document.createTextNode(String(sig.value ?? ''));
-  const dispose = effect(() => { textNode.textContent = String(sig.value ?? ''); });
+  const dispose = effect(() => {
+    textNode.textContent = String(sig.value ?? '');
+  });
   if (signal) signal.addEventListener('abort', dispose, { once: true });
   return textNode;
 }
@@ -177,6 +184,7 @@ Both `<show when={sig}>` and `<for each={sig}>` use `effect(swap)` + `effect(rec
 **File**: `packages/core/src/signal-context.ts`
 
 **Architecture:**
+
 - Global `Map<symbol, signal>` holds the "source of truth" signal per context key
 - `provideContext(host, ctx, value)` writes to:
   1. The central signal (line 34-35)
@@ -205,6 +213,7 @@ private _walkAndBind(parent, vnode): void {
 ```
 
 **Problems:**
+
 1. **No AbortSignal context** (line 362): `applyProps(domChild, vChild.props)` is called without the third argument → effects from signal props cannot be cleaned up
 2. **Text children skipped**: DSD text nodes with signal content get no reactive binding
 
@@ -213,6 +222,7 @@ private _walkAndBind(parent, vnode): void {
 **File**: `packages/core/src/dsd-element.ts:326-339`
 
 After `_walkAndBind`, this replaces the entire shadow DOM with fresh DOM from `renderToDom()`. This:
+
 - Creates a new `AbortController` for the fresh render (effects created here CAN be cleaned up)
 - **Leaks** all effects created by the preceding `_walkAndBind` (from line 304)
 
@@ -220,13 +230,13 @@ After `_walkAndBind`, this replaces the entire shadow DOM with fresh DOM from `r
 
 **File**: `packages/core/src/dsd-element.ts`
 
-| Method | What it does |
-|---|---|
-| `_disposeTemplateRuntime()` | Aborts `_templateAbortController` → cleans up effects from `_renderIntoShadowRoot` |
-| `_disposeSignalSubscriptions()` | Empties `_signalUnsubscribers[]` — **array is never populated by core code** |
-| `subscribeTo(source)` | ReactiveHost protocol: subscribes to external signal, triggers full re-render on change |
-| `requestReactiveUpdate()` | Full re-render via `_renderIntoShadowRoot()` |
-| `#params` | Route params signal (always active, never disposed) |
+| Method                          | What it does                                                                            |
+| ------------------------------- | --------------------------------------------------------------------------------------- |
+| `_disposeTemplateRuntime()`     | Aborts `_templateAbortController` → cleans up effects from `_renderIntoShadowRoot`      |
+| `_disposeSignalSubscriptions()` | Empties `_signalUnsubscribers[]` — **array is never populated by core code**            |
+| `subscribeTo(source)`           | ReactiveHost protocol: subscribes to external signal, triggers full re-render on change |
+| `requestReactiveUpdate()`       | Full re-render via `_renderIntoShadowRoot()`                                            |
+| `#params`                       | Route params signal (always active, never disposed)                                     |
 
 ---
 
@@ -237,6 +247,7 @@ After `_walkAndBind`, this replaces the entire shadow DOM with fresh DOM from `r
 **Location**: `dsd-element.ts:304, 344-369`
 
 The DSD hydration path creates effects via `_walkAndBind` → `applyProps(domChild, vChild.props)` **without** an AbortSignal. These effects:
+
 - Track signal changes forever (until page unload)
 - Are never disposed on component disconnect
 - Duplicate effects after each render cycle (prev _walkAndBind effects + fresh _layoutWorkaroundReRender effects)
@@ -254,6 +265,7 @@ The DSD hydration path creates effects via `_walkAndBind` → `applyProps(domChi
 When `provideContext()` writes `(s as { value: T }).value = value` (line 35), it updates the central Map signal. But consumers each have their own independent signal copy — they never see the update.
 
 **Fix options:**
+
 1. Return the central signal directly instead of creating a copy (but consumers could `.value =` it)
 2. Create a `computed(() => centralSignal.value)` so consumers track the provider reactively
 3. Don't use a signal at all — return a read-only getter that walks DOM on each access
@@ -279,11 +291,13 @@ If a VNode child is a signal (detected by `isSignalLike`), the text content won'
 **Location**: `@lessjs/signals` (framework layer)
 
 alien-signals `effectScope()` groups child effects for batch disposal. LessJS doesn't expose this. Each component currently relies on:
+
 - `AbortSignal` listeners (brittle, optional parameter)
 - `_signalUnsubscribers[]` array (unused by core)
 - `_templateAbortController` (only covers `_renderIntoShadowRoot` effects)
 
 An effect scope per component instance would:
+
 - Automatically track all effects created during `render()` / `_walkAndBind`
 - Dispose all effects on `disconnectedCallback()` with a single `scope()`
 - Eliminate manual tracking
@@ -295,10 +309,11 @@ An effect scope per component instance would:
 When multiple signal-valued props change in the same synchronous block, each triggers its own `effect()` execution + DOM update immediately. alien-signals `startBatch()`/`endBatch()` defer notifications until the batch ends.
 
 **Example problem:**
+
 ```ts
 // Two effects fire separately, two DOM writes
-props.signalA.value = 1;  // effect fires → setAttribute("data-a", "1")
-props.signalB.value = 2;  // effect fires → setAttribute("data-b", "2")
+props.signalA.value = 1; // effect fires → setAttribute("data-a", "1")
+props.signalB.value = 2; // effect fires → setAttribute("data-b", "2")
 ```
 
 With batching, both DOM writes would be batched into one flush.
@@ -320,8 +335,8 @@ LessJS's `engine.ts:44-45` defines `untrack` in the `SignalEngineNamespace.subtl
 ```ts
 // alien-signals
 const dispose = effectScope(() => {
-  effect(() => { /* child 1 */ });
-  effect(() => { /* child 2 */ });
+  effect(() => {/* child 1 */});
+  effect(() => {/* child 2 */});
   // ...
 });
 dispose(); // disposes both effects
@@ -333,9 +348,9 @@ dispose(); // disposes both effects
 
 ```ts
 startBatch();
-signalA.value = newA;  // deferred
-signalB.value = newB;  // deferred
-signalC.value = newC;  // deferred
+signalA.value = newA; // deferred
+signalB.value = newB; // deferred
+signalC.value = newC; // deferred
 endBatch(); // flush all at once
 ```
 
@@ -391,13 +406,14 @@ The internal system exports `{link, unlink, propagate, checkDirty, shallowPropag
 
 ## Summary
 
-| Category | Count | Severity |
-|---|---|---|
-| Bugs found (G1-G3) | 3 | CRITICAL: G1 memory leak, G2 dead context, G3 missing DSD text binding |
-| Design gaps (G4-G6) | 3 | MEDIUM: scope-based cleanup, batching, untrack |
-| Unused primitives | 8 | LOW-HIGH: effectScope, batching = high; guards = low |
+| Category            | Count | Severity                                                               |
+| ------------------- | ----- | ---------------------------------------------------------------------- |
+| Bugs found (G1-G3)  | 3     | CRITICAL: G1 memory leak, G2 dead context, G3 missing DSD text binding |
+| Design gaps (G4-G6) | 3     | MEDIUM: scope-based cleanup, batching, untrack                         |
+| Unused primitives   | 8     | LOW-HIGH: effectScope, batching = high; guards = low                   |
 
 **Top 3 Action Items:**
+
 1. **Fix G1** — Add AbortSignal/effectScope to `_walkAndBind` cleanup path
 2. **Fix G2** — Change `consumeContext` to return a live signal (computed or central signal)
 3. **Fix G3** — Handle text/signal children in `_walkAndBind` with reactive TextNode binding

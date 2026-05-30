@@ -115,9 +115,13 @@ export default class ReactiveShowcase extends DsdElement {
             One <code>signal(false)</code>{' '}
             controls the entire component theme. Reactive attribute binding.
           </p>
-          <div class="theme-preview" data-theme={computed(() => this.#isDark.value ? 'dark' : 'light')}>
+          <div
+            class='theme-preview'
+            data-theme={computed(() => this.#isDark.value ? 'dark' : 'light')}
+          >
             <p>
-              Current theme: <strong>{computed(() => this.#isDark.value ? 'dark' : 'light')}</strong>
+              Current theme:{' '}
+              <strong>{computed(() => this.#isDark.value ? 'dark' : 'light')}</strong>
             </p>
             <button type='button' onClick={() => this.#isDark.value = !this.#isDark.value}>
               Toggle {computed(() => this.#isDark.value ? 'light' : 'dark')}

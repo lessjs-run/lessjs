@@ -4,11 +4,11 @@ DSD (Declarative Shadow DOM) shadow root content renders with correct DOM tree b
 
 ## Timeline
 
-| Commit | Date | What |
-|--------|------|------|
-| adcf064c | before | status quo -- effect(() => render()) for both DSD hydration and CSR updates |
-| 7989e8e8 | 2026-05-30 | ADR-0058: removed effect from DSD path, replaced with per-prop signal-to-DOM bindings. Broke the page -- white screen on dev.lessjs.pages.dev |
-| 3b69bb5a | 2026-05-30 | Hotfix: restored effect in _hyrateExistingDom(). Page visible but nav unclickable, continuous re-render degrades performance |
+| Commit   | Date       | What                                                                                                                                                  |
+| -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| adcf064c | before     | status quo -- effect(() => render()) for both DSD hydration and CSR updates                                                                           |
+| 7989e8e8 | 2026-05-30 | ADR-0058: removed effect from DSD path, replaced with per-prop signal-to-DOM bindings. Broke the page -- white screen on dev.lessjs.pages.dev         |
+| 3b69bb5a | 2026-05-30 | Hotfix: restored effect in _hyrateExistingDom(). Page visible but nav unclickable, continuous re-render degrades performance                          |
 | bf2a34c3 | 2026-05-30 | SOP-002: replaced continuous effect with one-time _layoutWorkaroundReRender(). Per-prop bindings handle all subsequent updates. Page fully functional |
 
 ## Root Cause
@@ -27,17 +27,18 @@ Only full DOM replacement (clear all children, append new nodes via renderToDom)
 
 All LessJS components now satisfy the RDOM contract (zero signal.value reads in render()):
 
-| Component | Signal type | Status |
-|-----------|------------|--------|
-| less-layout | none | OK -- never accessed signals in render() |
-| home-console | attribute-only (computed-class) | OK -- applyProps handles |
-| home-console | text child | CSR-reactive, DSD dead (P1) |
-| counter-island | text child | CSR-reactive, DSD dead (P1) |
-| less-theme-toggle | structural (was signal.value) | FIXED -- data-theme={signal} + CSS |
+| Component         | Signal type                     | Status                                   |
+| ----------------- | ------------------------------- | ---------------------------------------- |
+| less-layout       | none                            | OK -- never accessed signals in render() |
+| home-console      | attribute-only (computed-class) | OK -- applyProps handles                 |
+| home-console      | text child                      | CSR-reactive, DSD dead (P1)              |
+| counter-island    | text child                      | CSR-reactive, DSD dead (P1)              |
+| less-theme-toggle | structural (was signal.value)   | FIXED -- data-theme={signal} + CSS       |
 
 ## Current Fix
 
 _layoutWorkaroundReRender() in packages/core/src/dsd-element.ts:
+
 - Called ONCE per lifecycle (in connectedCallback() DSD path)
 - Clears shadow root and rebuilds via renderToDom
 - After this initial render, all subsequent signal-driven updates use per-prop applyProps bindings -- zero full re-renders
