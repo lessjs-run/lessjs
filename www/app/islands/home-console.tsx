@@ -56,11 +56,7 @@ export default class HomeConsole extends DsdElement {
     // the counter textContent updates when the signal changes.
     effect(() => {
       const el = this.shadowRoot?.querySelector('.counter-value');
-      if (el) {
-        const v = String(this.#count.value);
-        console.log('[home-console] effect fired, count=', v);
-        (el as HTMLElement).textContent = v;
-      }
+      if (el) (el as HTMLElement).textContent = String(this.#count.value);
     });
   }
 
