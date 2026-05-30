@@ -168,7 +168,7 @@ export function injectCspMeta(
  * This polyfill attaches Shadow Roots manually via attachShadow().
  */
 const DSD_POLYFILL = `
-<style>html{visibility:visible!important;}body{background:#040508;color:#fff;}</style>
+<style>html{visibility:visible!important;}body{background:#040508;color:#fff;}docs-home{display:block}</style>
 <script>
 // DSD Polyfill (Firefox, older browsers)
 (function() {
