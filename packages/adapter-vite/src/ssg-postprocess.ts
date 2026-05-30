@@ -204,7 +204,7 @@ const DSD_POLYFILL = `
   // into light DOM so content is still visible even if attachShadow failed.
   const fallbackRender = () => {
     document.querySelectorAll('template[shadowrootmode]').forEach((tpl) => {
-      const parent = tpl.parentNode as HTMLElement | null;
+      const parent = tpl.parentNode;
       if (!parent || parent.shadowRoot) return;
       const frag = tpl.content.cloneNode(true);
       parent.appendChild(frag);
