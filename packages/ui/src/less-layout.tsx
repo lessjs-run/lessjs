@@ -1022,13 +1022,24 @@ export class LessLayout extends DsdElement {
       const tmp = new DOMParser().parseFromString(html, 'text/html').body;
       const newLayout = this._findLessLayout(tmp);
       if (!newLayout) throw new Error('No less-layout found');
-      while (this.firstChild) this.removeChild(this.firstChild);
-      while (newLayout.firstChild) this.appendChild(newLayout.firstChild);
 
-      // v0.27: Router._navigateNow already sets locale/current-path + updateSwitch().
-      // Here we only handle theme propagation + scroll.
+      // v0.27: Use innerHTML for atomic content swap.
+      // innerHTML parses + inserts in one step, triggers customElements.upgrade(),
+      // and avoids cross-document node migration issues with DOMParser.
+      this.innerHTML = newLayout.innerHTML;
 
-      // Ensure newly inserted components inherit current theme.
+      // Ensure newly inserted custom elements are upgraded.
+      // innerHTML insertion schedules upgrade — force upgrade for sync rendering.
+      const shadowWalker = (el: Element) => {
+        customElements.upgrade(el);
+        if (el.shadowRoot) {
+          for (const child of el.shadowRoot.children) shadowWalker(child);
+        }
+        for (const child of el.children) shadowWalker(child);
+      };
+      for (const child of this.children) shadowWalker(child);
+
+      // Propagate theme to newly inserted components.
       const currentTheme = this.getAttribute('data-theme') ||
         document.documentElement?.dataset?.theme;
       if (currentTheme) {
