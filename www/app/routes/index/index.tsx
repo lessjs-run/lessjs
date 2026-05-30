@@ -17,6 +17,7 @@ export const tagName = 'docs-home';
 
 const heroSheet = new StyleSheet();
 heroSheet.replaceSync(`
+  :host { display: block; }
   .swiss-grid {
     min-height: 100vh;
     background: linear-gradient(180deg, var(--gray-0) 0%, var(--gray-1) 100%);
