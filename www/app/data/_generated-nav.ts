@@ -30,6 +30,61 @@ export const navSections = [
         'label': 'API Reference',
         'order': 5,
       },
+      {
+        'path': '/architecture/design-system',
+        'label': 'Design System',
+        'order': 10,
+      },
+      {
+        'path': '/architecture/benchmark',
+        'label': 'Performance',
+        'order': 100,
+      },
+    ],
+  },
+  {
+    'section': 'Principles',
+    'items': [
+      {
+        'path': '/architecture/architecture',
+        'label': 'Architecture',
+        'order': 10,
+      },
+      {
+        'path': '/architecture/comparison',
+        'label': 'Comparison',
+        'order': 20,
+      },
+      {
+        'path': '/architecture/dsd',
+        'label': 'DSD Rendering',
+        'order': 30,
+      },
+      {
+        'path': '/architecture/islands',
+        'label': 'Island Upgrade',
+        'order': 40,
+      },
+      {
+        'path': '/architecture/islands-deep',
+        'label': 'Island Deep Dive',
+        'order': 50,
+      },
+    ],
+  },
+  {
+    'section': 'Compatibility',
+    'items': [
+      {
+        'path': '/architecture/package-compatibility',
+        'label': 'Package Compatibility',
+        'order': 10,
+      },
+      {
+        'path': '/architecture/standards-registry',
+        'label': 'Standards & Registry',
+        'order': 20,
+      },
     ],
   },
   {
@@ -51,9 +106,64 @@ export const navSections = [
         'order': 0,
       },
       {
+        'path': '/guide/getting-started',
+        'label': 'Getting Started',
+        'order': 1,
+      },
+      {
         'path': '/guide/architecture',
         'label': 'Architecture',
         'order': 10,
+      },
+    ],
+  },
+  {
+    'section': 'Core',
+    'items': [
+      {
+        'path': '/guide/core-concepts',
+        'label': 'Core Concepts',
+        'order': 2,
+      },
+      {
+        'path': '/guide/routing-and-data',
+        'label': 'Routing & Data',
+        'order': 3,
+      },
+      {
+        'path': '/guide/islands-and-ssr',
+        'label': 'Islands & SSR',
+        'order': 4,
+      },
+      {
+        'path': '/guide/api',
+        'label': 'API Routes',
+        'order': 60,
+      },
+    ],
+  },
+  {
+    'section': 'Production',
+    'items': [
+      {
+        'path': '/guide/deployment',
+        'label': 'Deployment',
+        'order': 5,
+      },
+      {
+        'path': '/guide/configuration',
+        'label': 'Configuration',
+        'order': 10,
+      },
+      {
+        'path': '/guide/error-handling',
+        'label': 'Error Handling',
+        'order': 30,
+      },
+      {
+        'path': '/guide/testing',
+        'label': 'Testing',
+        'order': 40,
       },
     ],
   },
