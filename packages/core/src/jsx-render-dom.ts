@@ -133,6 +133,7 @@ function applyStaticProp(el: Element, key: string, resolved: unknown): void {
  * - Signal values → create effect() binding (ADR-0058)
  * - `style` object → assign to element.style
  * - Boolean values → setAttribute / removeAttribute
+ * - `innerHTML` → set element.innerHTML (for sanitized HTML content)
  * - `className` → `class` attribute
  * - `htmlFor` → `for` attribute
  * - Other values → setAttribute
@@ -160,6 +161,12 @@ export function applyProps(
     }
 
     if (value == null) continue;
+
+    // innerHTML: set DOM property directly (for sanitized blog content etc.)
+    if (key === 'innerHTML') {
+      (el as HTMLElement).innerHTML = String(value);
+      continue;
+    }
 
     // v0.26.1 (ADR-0058): Signal→DOM direct binding.
     // Instead of unwrapping the signal to a static value and calling
