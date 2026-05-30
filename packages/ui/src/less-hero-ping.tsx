@@ -1,3 +1,4 @@
+/** @jsxImportSource @lessjs/core */
 /**
  * Hero Ping - Ocean component (v0.20.0 Ocean-Island).
  *

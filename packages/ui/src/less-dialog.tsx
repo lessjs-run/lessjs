@@ -1,3 +1,4 @@
+/** @jsxImportSource @lessjs/core */
 /**
  * @lessjs/ui - less-dialog
  *
