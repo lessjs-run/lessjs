@@ -45,7 +45,7 @@ heroSheet.replaceSync(`
   .giant-headline {
     margin: 0; font-family: var(--font-sans);
     font-weight: var(--font-weight-9); font-size: clamp(3.5rem, 8vw, 5.5rem);
-    line-height: var(--font-lineheight-00); letter-spacing: var(--font-letterspacing-0); color: var(--text-primary);
+    line-height: var(--font-lineheight-1); letter-spacing: var(--font-letterspacing-0); color: var(--text-primary);
   }
   .glow-line {
     background: linear-gradient(135deg, var(--brand), var(--brand-light));

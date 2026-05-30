@@ -484,7 +484,7 @@ export class LessLayout extends DsdElement {
 
   // _routeParams(), _locale(), _locales(), _switchPath(),
   // _switchLabel(), _updateSwitch(), _localize()
-  // → all delegated to this._r (Router instance)
+  // → all delegated to this.routing (Router instance)
 
   private _currentPath(): string {
     return this.routing.path;
@@ -842,7 +842,7 @@ export class LessLayout extends DsdElement {
 
     const locales = this.routing.locales;
     if (locales.length > 1) {
-      const { locale } = this._r;
+      const { locale } = this.routing;
       if (locales.includes(locale)) {
         this.setAttribute('locale', locale);
       }
@@ -1028,7 +1028,7 @@ export class LessLayout extends DsdElement {
       this.setAttribute('current-path', path);
 
       // Sync locale using URLPattern instead of reading from fetched page
-      const { locale: newLocale } = this._r;
+      const { locale: newLocale } = this.routing;
       if (newLocale && this.routing.locales.includes(newLocale)) {
         this.setAttribute('locale', newLocale);
         // Update lang-switch label + href reactively
