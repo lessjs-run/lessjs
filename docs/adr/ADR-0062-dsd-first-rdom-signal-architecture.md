@@ -116,25 +116,41 @@ Show/For are currently CSR-only (`renderToDom` constructs DOM from scratch). DSD
 
 ## Consequences
 
+### Bugs found and fixed (v0.26.1)
+
+| Bug | Discovery | Root cause | Fix |
+|-----|-----------|-----------|-----|
+| **G1**: Effect memory leak | Per-prop signal→DOM effects created during DSD hydration never disposed | `_walkAndBind` called `applyProps(el, props)` without AbortSignal; effects lived forever after disconnect | Pass AbortSignal through `_walkAndBind` → `applyProps`; abort on disconnect via `_templateAbortController` |
+| **G2**: consumeContext dead copy | `consumeContext` returned `signal(value)` — a new independent signal. Provider updates invisible to consumers | Central `contexts` Map stores the source signal; consumer received a copy | Return the source signal from `contexts` Map directly |
+| **B1**: `Unexpected identifier 'as'` | JS error on every page load, traced via CDP to `index.html:40` | DSD polyfill template literal (TypeScript) contained `tpl.parentNode as HTMLElement` — injected as inline `<script>` into HTML | Remove TypeScript `as` assertion from polyfill string |
+| **B2**: SignalContext subpath build failure | CI client build: `@lessjs/core/signal-context` → `packages/core/src/index.ts/signal-context` (ENOTDIR) | Rolldown resolves `@lessjs/core` to file path then appends `/signal-context` | Import from `@lessjs/core` main entry (which re-exports signal-context) |
+
+### Gap status
+
+| # | Gap | Severity | Status |
+|---|-----|----------|--------|
+| G1 | Effect memory leak | P0 | ✅ Fixed — AbortSignal chain through `_walkAndBind` |
+| G2 | consumeContext dead copy | P0 | ✅ Fixed — returns source signal from Map |
+| G3 | DSD text node binding | P1 | ⚠️ `_walkAndBind` skips text children; counter/home-console text only CSR-reactive |
+| G4 | Show/For DSD hydration | P2 | ⚠️ CSR-only `renderToDom` constructs |
+| G5 | Batch/effectScope exposure | P2 | ⚠️ alien-signals has `effectScope`/`batch`/`untrack`; `@lessjs/signals` facade doesn't re-export |
+| G6 | JSX element type | Done | ✅ `JSX.Element.children` aligned with `VNode.children` |
+
 ### Positive
 
-- Zero full re-renders — `render()` is called once per lifecycle
-- DSD content preserved through hydration — no DOM identity loss
-- Browser correctly computes layout via forced reflow
-- CSS-driven theme switching with zero JS
-- Migration scope is 2 signal accesses (theme-toggle), not a full rewrite
+- Zero full re-renders after hydration — `render()` called once, per-prop bindings handle updates
+- Reactive context — `provideContext` + `consumeContext` form a live signal chain
+- Effect lifecycle — all signal→DOM effects auto-disposed on component disconnect
+- No JS errors — `as` assertion removed from DSD polyfill
+- CSS-driven theme switching with zero JS (`data-theme={signal}` + CSS selectors)
+- Migration scope small — 2 signal accesses (theme-toggle), ~10 line rewrite
 
 ### Negative
 
-- `less-theme-toggle` needs ~10 line rewrite
-- DSD text binding mechanism needs ~20 lines of new code (if used without CSR fallback)
-- Browser layout quirk requires explicit reflow — a web platform workaround
-- Until Show/For DSD hydration (P2), structural Show/For in DSD path requires CSR fallback
-
-### Risk
-
-- Forced reflow (`void this.offsetHeight`) is a micro-optimization anti-pattern but necessary for DSD layout
-- Mitigation: the reflow only fires once per component lifecycle (in `connectedCallback`), not in hot paths
+- `_layoutWorkaroundReRender()` required for Chromium DSD layout bug (one-time DOM replacement)
+- DSD text binding mechanism needs ~20 lines (G3, P1)
+- Show/For DSD hydration needs ~50 lines (G4, P2)
+- alien-signals `effectScope` not yet exposed through `@lessjs/signals` (G5, P2)
 
 ## Related
 
@@ -142,4 +158,9 @@ Show/For are currently CSR-only (`renderToDom` constructs DOM from scratch). DSD
 - ADR-0059: Show/For Control Flow (needs DSD hydration path)
 - ADR-0057: JSX+Signal Component Model
 - ADR-0060: SignalContext
+- SOP-002: Signal-to-CSS-Driven Visual Migration
+- [Signal Architecture Comprehensive](../conversation/v0.26.1/signal-architecture-comprehensive.md)
 - [Signal→DOM Architecture Research](../conversation/v0.26.1/signal-rdom-architecture-research.md)
+- [Framework Signal Comparison](../conversation/v0.26.1/framework-signal-comparison.md)
+- [alien-signals Capability Audit](../conversation/v0.26.1/alien-signals-capability-audit.md)
+- [GitHub Issue #28](https://github.com/lessjs-run/lessjs/issues/28) — Chromium DSD layout bug
