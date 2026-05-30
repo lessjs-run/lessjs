@@ -43,14 +43,14 @@ sheet.replaceSync(`
     margin-top: 38px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
+    gap: var(--size-4);
   }
 
   .path {
     border: 1px solid var(--border);
     border-radius: var(--radius-2);
-    background: #fff;
-    padding: 22px;
+    background: var(--bg-card);
+    padding: var(--size-5);
     text-decoration: none;
     color: inherit;
   }
@@ -69,7 +69,7 @@ sheet.replaceSync(`
     margin: 0;
     color: var(--text-muted);
     font-size: var(--font-size-1);
-    line-height: 1.65;
+    line-height: var(--font-lineheight-4);
   }
 
   .path .chip {
@@ -78,7 +78,7 @@ sheet.replaceSync(`
     min-height: 26px;
     margin-bottom: var(--size-3);
     padding: 0 var(--size-2);
-    border-radius: 5px;
+    border-radius: var(--radius-1);
     font-size: 11px;
     font-weight: 750;
     color: var(--brand);

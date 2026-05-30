@@ -33,7 +33,7 @@ styles.replaceSync(`
     cursor: pointer;
     letter-spacing: var(--font-letterspacing-5);
     text-transform: uppercase;
-    transition: all 0.15s;
+    transition: all var(--ease-2) var(--duration-2);
     font-family: inherit;
     white-space: nowrap;
   }

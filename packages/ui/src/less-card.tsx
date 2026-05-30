@@ -37,7 +37,7 @@ sheet.replaceSync(`
     border: var(--border-size-1) solid var(--gray-3);
     border-radius: var(--radius-2);
     overflow: hidden;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    transition: box-shadow var(--ease-3) var(--duration-2), transform var(--ease-3) var(--duration-2);
   }
 
   :host([variant="elevated"]) {

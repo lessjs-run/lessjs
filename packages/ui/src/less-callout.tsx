@@ -38,9 +38,9 @@ sheet.replaceSync(`
     background: var(--brand-subtle);
     border-radius: 0 var(--radius-2) var(--radius-2) 0;
   }
-  .callout--warn { border-left-color: #f59e0b; background: rgba(245,158,11,0.08); }
-  .callout--danger { border-left-color: #ef4444; background: rgba(239,68,68,0.08); }
-  .callout--tip { border-left-color: #22c55e; background: rgba(34,197,94,0.08); }
+  .callout--warn { border-left-color: var(--warning); background: var(--warning-subtle); }
+  .callout--danger { border-left-color: var(--error); background: var(--error-subtle); }
+  .callout--tip { border-left-color: var(--success); background: var(--success-subtle); }
   :host([data-theme="light"]) .callout--warn { background: rgba(245,158,11,0.06); }
   :host([data-theme="light"]) .callout--danger { background: rgba(239,68,68,0.06); }
   :host([data-theme="light"]) .callout--tip { background: rgba(34,197,94,0.06); }

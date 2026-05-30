@@ -48,7 +48,7 @@ styles.replaceSync(`
     color: var(--text-muted);
     text-decoration: none;
     border-left: var(--border-size-2) solid transparent;
-    transition: color 0.15s ease, border-color 0.15s ease;
+    transition: color var(--ease-2) var(--duration-2), border-color var(--ease-2) var(--duration-2);
     line-height: var(--font-lineheight-3);
     font-size: var(--font-size-0);
   }

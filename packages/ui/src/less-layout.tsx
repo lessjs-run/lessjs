@@ -332,7 +332,7 @@ sheet.replaceSync(`
     font-size: 0.85rem;
     padding: 0.35rem 1.5rem;
     border-left: 2px solid transparent;
-    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    transition: color var(--ease-2) var(--duration-2), border-color var(--ease-2) var(--duration-2), background var(--ease-2) var(--duration-2);
   }
   .docs-sidebar a:hover {
     color: var(--text-secondary);
@@ -381,7 +381,7 @@ sheet.replaceSync(`
   /* ─── Responsive ─── */
   @media (max-width: 900px) {
     .mobile-menu { display: block; }
-    .header-inner { padding: 0 1rem; gap: 0.75rem; }
+    .header-inner { padding: 0 1rem; gap: var(--size-3); }
     .header-nav { display: none; }
     .github-text { display: none; }
     .header-right { gap: 0.5rem; }
@@ -403,7 +403,7 @@ sheet.replaceSync(`
     }
     :host([menu-open]) .mobile-backdrop { opacity: 1; pointer-events: auto; }
     .nav-section { margin-bottom: 0.5rem; }
-    .nav-section summary { padding: 0.5rem 1rem; }
+    .nav-section summary { padding: var(--size-2) var(--size-4); }
     .docs-sidebar a { padding: 0.5rem 1rem 0.5rem 2rem; }
     .layout-main { width: 100%; }
     .app-footer { padding: 2rem 1rem; padding-bottom: calc(2rem + 56px); }
@@ -423,7 +423,7 @@ sheet.replaceSync(`
       align-items: center; justify-content: center; gap: 2px;
       color: var(--text-muted);
       text-decoration: none; font-size: 10px; font-weight: 600;
-      letter-spacing: 0.04em; transition: color 0.2s ease;
+      letter-spacing: 0.04em; transition: color var(--ease-3) var(--duration-2);
       -webkit-tap-highlight-color: transparent; padding: 4px 0;
     }
     .tab-item svg { width: 20px; height: 20px; flex-shrink: 0; }
@@ -437,7 +437,7 @@ sheet.replaceSync(`
   }
   @media (max-width: 480px) {
     .logo-sub { display: none; }
-    .github-link { padding: 0.5rem; border: none; }
+    .github-link { padding: var(--size-2); border: none; }
     .github-link .github-text { display: none; }
     .header-inner { padding: 0 0.75rem; gap: 0.5rem; }
   }

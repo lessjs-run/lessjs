@@ -15,19 +15,19 @@ export const meta = { section: 'Reference', label: 'API Reference', order: 5 };
 const routeSheet = new StyleSheet();
 
 routeSheet.replaceSync(`
-      .api-category { margin-bottom: 2rem; }
+      .api-category { margin-bottom: var(--size-8); }
       .api-category h2 { margin-top: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
-      .api-entry { margin: 1rem 0 0.75rem; }
+      .api-entry { margin: var(--size-4) 0 var(--size-3); }
       .api-sig {
-        font-family: "JetBrains Mono", "SF Mono", "Consolas", monospace;
-        font-size: 0.8125rem;
+        font-family: var(--font-mono);
+        font-size: var(--font-size-00);
         color: var(--text-primary);
         margin-bottom: 0.25rem;
       }
       .api-desc {
-        font-size: 0.875rem;
+        font-size: var(--font-size-0);
         color: var(--text-muted);
-        line-height: 1.6;
+        line-height: var(--font-lineheight-3);
       }
     `);
 

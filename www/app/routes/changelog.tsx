@@ -45,7 +45,7 @@ routeSheet.replaceSync(`
         font-size: var(--font-size-0);
         font-weight: var(--font-weight-6);
         text-transform: uppercase;
-        letter-spacing: 0.08em;
+        letter-spacing: var(--font-letterspacing-5);
         color: var(--brand);
         margin: 0;
         padding: var(--size-3) var(--size-6) 0.25rem var(--size-6);
@@ -65,14 +65,14 @@ routeSheet.replaceSync(`
       }
       .changelog-content ul {
         list-style: none;
-        padding: 0.25rem var(--size-6) var(--size-2) var(--size-10);
+        padding: var(--size-1) var(--size-6) var(--size-2) var(--size-10);
         margin: 0;
         background: var(--bg-surface);
         border-left: 0.5px solid var(--border);
         border-right: 0.5px solid var(--border);
       }
       .changelog-content li {
-        padding: 0.375rem 0 0.375rem var(--size-5);
+        padding: var(--size-2) 0 var(--size-2) var(--size-5);
         position: relative;
         color: var(--text-secondary);
         font-size: var(--font-size-2);
@@ -87,7 +87,7 @@ routeSheet.replaceSync(`
         color: var(--text-secondary);
         font-size: var(--font-size-2);
         margin: 0;
-        padding: 0.25rem var(--size-6);
+        padding: var(--size-1) var(--size-6);
         background: var(--bg-surface);
         border-left: 0.5px solid var(--border);
         border-right: 0.5px solid var(--border);
@@ -104,8 +104,8 @@ routeSheet.replaceSync(`
         font-family: var(--font-mono, monospace);
         font-size: var(--font-size-1);
         background: var(--bg-elevated);
-        padding: 0.125rem 0.375rem;
-        border-radius: 3px;
+        padding: var(--size-1) var(--size-2);
+        border-radius: var(--radius-1);
       }
       .changelog-content pre {
         background: var(--bg-elevated);

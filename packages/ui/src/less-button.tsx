@@ -47,7 +47,7 @@ sheet.replaceSync(`
     background: transparent;
     color: var(--gray-9);
     border-radius: var(--radius-2);
-    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    transition: color var(--ease-3) var(--duration-2), border-color var(--ease-3) var(--duration-2), background var(--ease-3) var(--duration-2);
     white-space: nowrap;
     letter-spacing: var(--font-letterspacing-2);
   }

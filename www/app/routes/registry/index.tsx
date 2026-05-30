@@ -34,9 +34,9 @@ const COMPAT_LABELS: Record<string, string> = {
 };
 
 const COMPAT_COLORS: Record<string, string> = {
-  'ssr-capable': '#22c55e',
-  'client-only': '#f59e0b',
-  'rejected': '#ef4444',
+  'ssr-capable': '#16a34a',
+  'client-only': '#d97706',
+  'rejected': '#dc3545',
   'experimental-dom': '#8b5cf6',
 };
 
@@ -44,12 +44,12 @@ const routeSheet = new StyleSheet();
 
 routeSheet.replaceSync(`
       .registry-header {
-        margin-bottom: 2rem;
+        margin-bottom: var(--size-8);
       }
 
       .registry-header h1 {
-        font-size: 2rem;
-        font-weight: 700;
+        font-size: var(--font-size-4);
+        font-weight: var(--font-weight-7);
         margin: 0 0 0.5rem;
       }
 
@@ -62,11 +62,11 @@ routeSheet.replaceSync(`
       .badge-early-access {
         display: inline-block;
         font-size: 0.625rem;
-        font-weight: 600;
+        font-weight: var(--font-weight-6);
         text-transform: uppercase;
         letter-spacing: 0.05em;
         padding: 0.15em 0.5em;
-        border-radius: 4px;
+        border-radius: var(--radius-1);
         background: var(--brand-subtle);
         color: var(--brand);
         vertical-align: middle;
@@ -87,9 +87,9 @@ routeSheet.replaceSync(`
       /* Controls */
       .controls {
         display: flex;
-        gap: 1rem;
+        gap: var(--size-4);
         align-items: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: var(--size-6);
         flex-wrap: wrap;
       }
 
@@ -101,7 +101,7 @@ routeSheet.replaceSync(`
         border-radius: 6px;
         background: var(--bg-surface);
         color: var(--text-primary);
-        font-size: 0.875rem;
+        font-size: var(--font-size-0);
         outline: none;
         transition: border-color 0.15s;
       }
@@ -127,7 +127,7 @@ routeSheet.replaceSync(`
         border-radius: 14px;
         background: transparent;
         color: var(--text-secondary);
-        font-size: 0.75rem;
+        font-size: var(--font-size-00);
         cursor: pointer;
       }
 
@@ -137,7 +137,7 @@ routeSheet.replaceSync(`
         border-radius: 14px;
         background: transparent;
         color: var(--text-secondary);
-        font-size: 0.75rem;
+        font-size: var(--font-size-00);
         cursor: pointer;
         transition: all 0.15s;
         white-space: nowrap;
@@ -151,28 +151,28 @@ routeSheet.replaceSync(`
       .filter-btn.active {
         background: var(--brand);
         border-color: var(--brand);
-        color: #fff;
+        color: white;
       }
 
       /* Stats */
       .stats {
         font-size: 0.8125rem;
         color: var(--text-muted);
-        margin-bottom: 1rem;
+        margin-bottom: var(--size-4);
       }
 
       /* Package List - grid layout (v0.19.1 Phase 6, ADR-0035 B3) */
       .package-list {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 1rem;
+        gap: var(--size-4);
       }
 
       .package-card {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-        padding: 1.25rem;
+        padding: var(--size-5);
         border: 1px solid var(--border);
         border-radius: 10px;
         background: var(--bg-surface);
@@ -195,8 +195,8 @@ routeSheet.replaceSync(`
       }
 
       .package-name {
-        font-size: 1rem;
-        font-weight: 600;
+        font-size: var(--font-size-1);
+        font-weight: var(--font-weight-6);
         margin: 0 0 0.25rem;
         display: flex;
         align-items: center;
@@ -205,16 +205,16 @@ routeSheet.replaceSync(`
       }
 
       .package-name code {
-        font-size: 0.875rem;
+        font-size: var(--font-size-0);
         background: var(--bg-code);
         padding: 0.125rem 0.375rem;
         border-radius: 3px;
       }
 
       .package-version {
-        font-size: 0.75rem;
+        font-size: var(--font-size-00);
         color: var(--text-muted);
-        font-weight: 400;
+        font-weight: var(--font-weight-4);
       }
 
       .package-desc {
@@ -243,7 +243,7 @@ routeSheet.replaceSync(`
         padding: 0.125rem 0.5rem;
         border-radius: 10px;
         font-size: 0.6875rem;
-        font-weight: 500;
+        font-weight: var(--font-weight-5);
         white-space: nowrap;
       }
 
@@ -273,13 +273,13 @@ routeSheet.replaceSync(`
       }
 
       .install-safe {
-        background: rgba(34, 197, 94, 0.1);
-        color: #22c55e;
+        background: var(--success-subtle);
+        color: var(--success);
       }
 
       .install-unsafe {
-        background: rgba(239, 68, 68, 0.1);
-        color: #ef4444;
+        background: var(--error-subtle);
+        color: var(--error);
       }
 
       .new-badge {
@@ -287,11 +287,11 @@ routeSheet.replaceSync(`
         align-items: center;
         gap: 0.25rem;
         font-size: 0.625rem;
-        font-weight: 600;
+        font-weight: var(--font-weight-6);
         padding: 0.0625rem 0.375rem;
         border-radius: 6px;
-        background: rgba(99, 102, 241, 0.1);
-        color: #6366f1;
+        background: var(--info-subtle);
+        color: var(--info);
         text-transform: uppercase;
         letter-spacing: 0.025em;
       }
@@ -319,7 +319,7 @@ routeSheet.replaceSync(`
 
       .empty-state {
         text-align: center;
-        padding: 3rem 1rem;
+        padding: var(--size-12) var(--size-4);
         color: var(--text-muted);
         font-size: 0.9375rem;
       }
@@ -560,7 +560,7 @@ export default class DocsRegistryHome extends DsdElement {
               ssrCount > 0
                 ? `
                                 <span class="breakdown-segment">
-                                  <span class="breakdown-dot" style="background:#22c55e"></span>${ssrCount} SSR
+                                  <span class="breakdown-dot" style="background:var(--success)"></span>${ssrCount} SSR
                                 </span>
                               `
                 : ''
@@ -568,7 +568,7 @@ export default class DocsRegistryHome extends DsdElement {
               clientCount > 0
                 ? `
                                 <span class="breakdown-segment">
-                                  <span class="breakdown-dot" style="background:#f59e0b"></span>${clientCount} client
+                                  <span class="breakdown-dot" style="background:var(--warning)"></span>${clientCount} client
                                 </span>
                               `
                 : ''

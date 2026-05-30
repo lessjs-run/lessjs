@@ -64,9 +64,11 @@ function createTokenSheet(): StyleSheetLike {
   --font-weight-4: 400; --font-weight-5: 500;
   --font-weight-6: 600; --font-weight-7: 700;
   --font-weight-8: 800; --font-weight-9: 900;
+  --font-letterspacing-0: -0.02em;
   --font-letterspacing-4: 0.04em;
   --font-letterspacing-5: 0.08em;
   --font-lineheight-1: 0.95;
+  --font-lineheight-3: 1.5;
   --font-lineheight-4: 1.75;
 
   /* ═══════════════════════════════════════════════
@@ -103,6 +105,14 @@ function createTokenSheet(): StyleSheetLike {
   --border-hover: var(--gray-4);
   --code-border: rgba(255,255,255,0.06);
   --error: #dc3545;
+  --error-subtle: rgba(220,53,69,0.1);
+  --success: #16a34a;
+  --success-subtle: rgba(22,163,74,0.1);
+  --warning: #d97706;
+  --warning-subtle: rgba(217,119,6,0.1);
+  --info: #2563eb;
+  --info-subtle: rgba(37,99,235,0.1);
+  --overlay: rgba(0,0,0,0.4);
 }
 
 /* ═══════════════════════════════════════════════
@@ -130,7 +140,16 @@ function createTokenSheet(): StyleSheetLike {
   --border: var(--gray-3);
   --border-hover: var(--gray-4);
   --code-border: rgba(255,255,255,.08);
-  --error: #f06565;
+  --code-border: rgba(255,255,255,.08);
+  --error: #f87171;
+  --error-subtle: rgba(248,113,113,.15);
+  --success: #4ade80;
+  --success-subtle: rgba(74,222,128,.1);
+  --warning: #fbbf24;
+  --warning-subtle: rgba(251,191,36,.1);
+  --info: #60a5fa;
+  --info-subtle: rgba(96,165,250,.1);
+  --overlay: rgba(0,0,0,.6);
 }
 `);
   return sheet;

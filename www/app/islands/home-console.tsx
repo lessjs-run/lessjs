@@ -40,7 +40,7 @@ styles.replaceSync(`
     font-size: var(--font-size-00);
     font-weight: var(--font-weight-7);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--ease-3) var(--duration-2);
   }
   .rp-tab.active {
     background: var(--brand-neon); color: var(--gray-12);
@@ -90,7 +90,7 @@ styles.replaceSync(`
     width: 40px; height: 40px; border: none;
     background: var(--gray-1); color: var(--text-muted);
     font-size: var(--font-size-3); font-weight: var(--font-weight-8);
-    cursor: pointer; transition: color 0.2s ease;
+    cursor: pointer; transition: color var(--ease-3) var(--duration-2);
     border-radius: var(--radius-round);
     display: flex; align-items: center; justify-content: center;
   }
