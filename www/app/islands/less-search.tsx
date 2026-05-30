@@ -45,17 +45,21 @@ sheet.replaceSync(`
     align-items: center;
     gap: var(--size-2);
     padding: var(--size-2) var(--size-3);
-    border: var(--border-size-1) solid var(--gray-3);
+    border: 0.5px solid var(--border);
     border-radius: var(--radius-2);
     background: transparent;
-    color: var(--gray-5);
+    color: var(--text-muted);
     font-size: var(--font-size-00);
-    font-weight: var(--font-weight-5);
-    letter-spacing: var(--font-letterspacing-2);
+    font-weight: var(--font-weight-6);
+    letter-spacing: 0.04em;
     cursor: pointer;
-    transition: color 0.2s ease, border-color 0.2s ease;
+    transition: all var(--ease-2) var(--duration-2);
   }
-  .search-trigger:hover { color: var(--gray-7); border-color: var(--gray-5); }
+  .search-trigger:hover {
+    color: var(--text-primary);
+    border-color: var(--brand);
+    background: var(--bg-surface);
+  }
   .search-trigger kbd {
     font-family: inherit;
     padding: var(--size-1) var(--size-1);
@@ -93,10 +97,10 @@ function getOverlaySheet(): CSSStyleSheet {
     max-width: 560px;
     max-height: 70vh;
     margin: 0 1rem;
-    background: var(--gray-0);
-    border: var(--border-size-1) solid var(--gray-3);
+    background: var(--bg-elevated);
+    border: 0.5px solid var(--border);
     border-radius: var(--radius-2);
-    box-shadow: var(--shadow-3);
+    box-shadow: var(--shadow-1);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -105,9 +109,9 @@ function getOverlaySheet(): CSSStyleSheet {
     width: 100%;
     padding: var(--size-3) var(--size-3);
     border: none;
-    border-bottom: var(--border-size-1) solid var(--gray-3);
+    border-bottom: 0.5px solid var(--border);
     background: transparent;
-    color: var(--gray-9);
+    color: var(--text-primary);
     font-size: var(--font-size-1);
     outline: none;
     box-sizing: border-box;
@@ -123,26 +127,26 @@ function getOverlaySheet(): CSSStyleSheet {
     padding: var(--size-3) var(--size-3);
     text-decoration: none;
     color: inherit;
-    transition: background 0.1s;
+    transition: background var(--ease-2) var(--duration-2);
     cursor: pointer;
   }
-  .less-search-item:hover { background: var(--gray-1); }
+  .less-search-item:hover { background: var(--bg-hover); }
   .less-search-section {
     font-size: var(--font-size-00);
     text-transform: uppercase;
     letter-spacing: var(--font-letterspacing-5);
-    color: var(--gray-5);
+    color: var(--text-muted);
     margin-bottom: var(--size-1);
   }
   .less-search-title {
     font-size: var(--font-size-0);
     font-weight: var(--font-weight-5);
-    color: var(--gray-9);
+    color: var(--text-primary);
     margin-bottom: var(--size-1);
   }
   .less-search-text {
     font-size: var(--font-size-0);
-    color: var(--gray-7);
+    color: var(--text-secondary);
     line-height: var(--font-lineheight-3);
     display: -webkit-box;
     -webkit-line-clamp: 2;
