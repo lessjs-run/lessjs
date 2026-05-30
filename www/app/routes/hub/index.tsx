@@ -15,20 +15,13 @@ const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;
-    --ink: #14151d;
-    --muted: #626676;
-    --border: rgba(20,24,36,0.12);
-    --accent: #5148b8;
-    --success: #13795b;
-    --warning: #a05a00;
-    --danger: #b42318;
   }
 
-  .shell { max-width: 1120px; margin: 0 auto; padding: 44px 24px 72px; }
+  .shell { max-width: 1120px; margin: 0 auto; padding: 44px var(--size-6) 72px; }
 
   h1 {
     margin: 0;
-    color: var(--ink);
+    color: var(--text-primary);
     font-size: clamp(2.5rem, 7vw, 5rem);
     line-height: 0.95;
   }
@@ -36,7 +29,7 @@ sheet.replaceSync(`
   .lede {
     max-width: 680px;
     margin: 18px 0 0;
-    color: var(--muted);
+    color: var(--text-muted);
     font-size: 16px;
     line-height: 1.75;
   }
@@ -58,8 +51,8 @@ sheet.replaceSync(`
   }
 
   .card:hover { border-color: rgba(81,72,184,0.28); }
-  .card h2 { margin: 0 0 8px; color: var(--ink); font-size: 17px; }
-  .card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
+  .card h2 { margin: 0 0 var(--size-2); color: var(--text-primary); font-size: var(--font-size-2); }
+  .card p { margin: 0; color: var(--text-muted); font-size: var(--font-size-00); line-height: var(--font-lineheight-4); }
 
   .chip {
     display: inline-flex;
@@ -70,7 +63,7 @@ sheet.replaceSync(`
     border-radius: 5px;
     font-size: 11px;
     font-weight: 750;
-    color: var(--accent);
+    color: var(--brand);
     border: 1px solid rgba(81,72,184,0.22);
     background: rgba(81,72,184,0.06);
   }

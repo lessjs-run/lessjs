@@ -15,11 +15,6 @@ const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host {
     display: block;
-    --ink: #14151d;
-    --muted: #626676;
-    --border: rgba(20,24,36,0.12);
-    --accent: #5148b8;
-    --success: #13795b;
   }
 
   .shell {
@@ -30,7 +25,7 @@ sheet.replaceSync(`
 
   h1 {
     margin: 0;
-    color: var(--ink);
+    color: var(--text-primary);
     font-size: clamp(2.5rem, 7vw, 5rem);
     line-height: 0.95;
   }
@@ -38,7 +33,7 @@ sheet.replaceSync(`
   .lede {
     max-width: 680px;
     margin: 18px 0 0;
-    color: var(--muted);
+    color: var(--text-muted);
     font-size: var(--font-size-4);
     line-height: var(--font-lineheight-4);
   }
@@ -65,13 +60,13 @@ sheet.replaceSync(`
 
   .path h2 {
     margin: 0 0 var(--size-2);
-    color: var(--ink);
+    color: var(--text-primary);
     font-size: 17px;
   }
 
   .path p {
     margin: 0;
-    color: var(--muted);
+    color: var(--text-muted);
     font-size: var(--font-size-1);
     line-height: 1.65;
   }
@@ -85,7 +80,7 @@ sheet.replaceSync(`
     border-radius: 5px;
     font-size: 11px;
     font-weight: 750;
-    color: var(--accent);
+    color: var(--brand);
     border: 1px solid rgba(81,72,184,0.22);
     background: rgba(81,72,184,0.06);
   }
