@@ -59,7 +59,7 @@ import {
 import { isVNode, type VNode } from './vnode.js';
 import { applyProps, renderToDom } from './jsx-render-dom.js';
 import { renderToString } from './jsx-render-string.js';
-import { signal } from '@lessjs/signals';
+import { effect, signal } from '@lessjs/signals';
 
 /**
  * Minimal SSR-safe HTMLElement stub for server environments (SOP-016).
@@ -145,6 +145,9 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
 
   /** Signal subscriptions from TemplateResult / VNode effects */
   private _signalUnsubscribers: Array<() => void> = [];
+
+  /** v0.24.3: Effect dispose for VNode signal subscriptions. */
+  private _vnodeEffectDispose?: () => void;
 
   /** Reactive route parameters Signal. Updates automatically on SPA navigation. */
   #params = signal<Record<string, string>>({});
@@ -305,6 +308,26 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     // applyProps will create signal→DOM effect bindings for any
     // signal-valued props detected during the walk.
     this._walkAndBind(this.shadowRoot, result);
+
+    // v0.26.1 hotfix: Restore effect(() => render()) for signal-driven
+    // re-rendering. ADR-0058 removed this assuming applyProps signal→DOM
+    // bindings sufficed, but the initial render pass during DSD hydration
+    // does not create effects for all signal-valued props, causing the
+    // host element to collapse when signals change after hydration.
+    this._vnodeEffectDispose = effect(() => {
+      const updated = this.render();
+      if (!isVNode(updated)) return;
+      if (this._templateAbortController) {
+        this._templateAbortController.abort();
+      }
+      this._templateAbortController = new AbortController();
+      while (this.shadowRoot!.firstChild) {
+        this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
+      }
+      this.shadowRoot!.appendChild(
+        renderToDom(updated, this._templateAbortController.signal),
+      );
+    });
   }
 
   /**
@@ -500,6 +523,11 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   }
 
   private _disposeSignalSubscriptions(): void {
+    // v0.24.3: Dispose VNode effect tracking
+    if (this._vnodeEffectDispose) {
+      this._vnodeEffectDispose();
+      this._vnodeEffectDispose = undefined;
+    }
     for (const unsubscribe of this._signalUnsubscribers.splice(0)) {
       unsubscribe();
     }
