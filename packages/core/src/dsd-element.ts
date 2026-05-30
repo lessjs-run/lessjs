@@ -298,22 +298,16 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     const result = this.render();
     if (!isVNode(result)) return;
 
-    // Walk shadow DOM and VNode tree in parallel, binding events.
-    // applyProps will create signal→DOM effect bindings for any
-    // signal-valued props detected during the walk.
-    this._walkAndBind(this.shadowRoot, result);
+    // Create AbortController for effect cleanup. Effects created by
+    // applyProps during _walkAndBind share this signal — when the
+    // component disconnects, all per-prop signal effects are disposed.
+    this._templateAbortController = new AbortController();
 
-    // ⚠️ Chromium DSD layout workaround: DSD shadow DOM renders with
-    // correct content but 0×0 host rect. No reflow method (offsetHeight,
-    // innerHTML self-replace, detach-reattach) fixes it — only full
-    // renderToDom replacement produces correct layout.
-    //
-    // This runs ONCE per lifecycle (in connectedCallback). Per-prop
-    // signal→DOM bindings from _walkAndBind handle subsequent updates
-    // without re-render. Theme-toggle, counter-island, and home-console
-    // are migrated to attribute-only signal access (ADR-0062).
-    //
-    // TODO: File a Chromium bug. Until fixed, this is necessary.
+    // Walk shadow DOM and VNode tree in parallel, binding events.
+    // Pass the AbortSignal so applyProps can attach effect cleanup.
+    this._walkAndBind(this.shadowRoot, result, this._templateAbortController.signal);
+
+    // ⚠️ Chromium DSD layout workaround — see _layoutWorkaroundReRender().
     this._layoutWorkaroundReRender();
   }
 
@@ -349,6 +343,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       props?: Record<string, unknown>;
       children?: unknown[];
     },
+    signal?: AbortSignal,
   ): void {
     const vChildren = vnode
       .children as (string | { tag?: string; props?: Record<string, unknown> })[];
@@ -359,10 +354,11 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       const domChild = domChildren[i];
       const vChild = vChildren[i];
       if (typeof vChild === 'object' && vChild !== null && 'props' in vChild) {
-        applyProps(domChild, vChild.props as Record<string, unknown>);
+        applyProps(domChild, vChild.props as Record<string, unknown>, signal);
         this._walkAndBind(
           domChild,
           vChild as { tag?: string; props?: Record<string, unknown>; children?: unknown[] },
+          signal,
         );
       }
     }
