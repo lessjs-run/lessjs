@@ -311,9 +311,19 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
 
     // v0.26.1 hotfix: Restore effect(() => render()) for signal-driven
     // re-rendering. ADR-0058 removed this assuming applyProps signal→DOM
-    // bindings sufficed, but the initial render pass during DSD hydration
-    // does not create effects for all signal-valued props, causing the
-    // host element to collapse when signals change after hydration.
+    // bindings sufficed, but:
+    // 
+    // 1. Per-prop bindings handle attribute-level changes (class, style)
+    //    but cannot handle structural VNode changes (theme → different
+    //    element tree, locale → different text nodes).
+    // 
+    // 2. DSD content renders correctly in terms of DOM, but the browser
+    //    layout engine does not properly calculate heights for DSD-created
+    //    shadow DOM — the CSR re-render produces correct layout.
+    // 
+    // ⚠️ long-term (post-ADR-0058): implement structural signal bindings
+    //    (reactive slots, signal-driven Show/For, CSS toggling) to replace
+    //    this full VNode re-render with fine-grained updates.
     this._vnodeEffectDispose = effect(() => {
       const updated = this.render();
       if (!isVNode(updated)) return;
