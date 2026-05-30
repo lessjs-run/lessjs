@@ -204,6 +204,7 @@ export default defineConfig({
           '<meta property="og:image" content="https://lessjs.org/assets/og-image.svg">',
           '<meta name="twitter:card" content="summary_large_image">',
           '<meta name="description" content="LessJS — Less is More. DSD-first Web Standards framework. Zero-runtime core, SSG + Island architecture, microsecond Signal reactivity.">',
+          '<style>html{visibility:visible!important;}body{background:#040508;color:#fff;}</style>',
           '<link rel="icon" type="image/svg+xml" href="/assets/less-logo.svg" />',
           '<link rel="apple-touch-icon" href="/assets/less-logo.svg" />',
           colorTokensStyle,
