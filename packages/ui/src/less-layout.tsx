@@ -1023,21 +1023,14 @@ export class LessLayout extends DsdElement {
       const newLayout = this._findLessLayout(tmp);
       if (!newLayout) throw new Error('No less-layout found');
 
-      // v0.27: Use innerHTML for atomic content swap.
-      // innerHTML parses + inserts in one step, triggers customElements.upgrade(),
-      // and avoids cross-document node migration issues with DOMParser.
-      this.innerHTML = newLayout.innerHTML;
-
-      // Ensure newly inserted custom elements are upgraded.
-      // innerHTML insertion schedules upgrade — force upgrade for sync rendering.
-      const shadowWalker = (el: Element) => {
-        customElements.upgrade(el);
-        if (el.shadowRoot) {
-          for (const child of el.shadowRoot.children) shadowWalker(child);
-        }
-        for (const child of el.children) shadowWalker(child);
-      };
-      for (const child of this.children) shadowWalker(child);
+      // v0.27: adopt + move — proper DOM API, no innerHTML hack.
+      // DOMParser nodes belong to a different document. adoptNode()
+      // transfers ownership so appendChild works without errors.
+      while (this.firstChild) this.removeChild(this.firstChild);
+      const children = Array.from(newLayout.children);
+      for (const child of children) {
+        this.appendChild(document.adoptNode(child));
+      }
 
       // Propagate theme to newly inserted components.
       const currentTheme = this.getAttribute('data-theme') ||
