@@ -32,7 +32,7 @@
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { navigate, onNavigate } from '@lessjs/core/navigation';
-import { createContext, provideContext } from '@lessjs/core';
+import { type Context, createContext, provideContext } from '@lessjs/core';
 import { Router } from '@lessjs/router/client-router';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc, _escAttr } from './shared/escape.js';
@@ -41,7 +41,10 @@ import './less-theme-toggle.js';
 export const tagName = 'less-layout';
 
 /** SignalContext key: theme state shared across all components */
-export const THEME_CTX = createContext<'dark' | 'light'>(Symbol('theme'), 'dark');
+export const THEME_CTX: Context<'dark' | 'light'> = createContext<'dark' | 'light'>(
+  Symbol('theme'),
+  'dark',
+);
 
 export interface NavItem {
   path?: string;
