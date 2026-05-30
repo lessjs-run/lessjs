@@ -1,6 +1,6 @@
 # LessJS Architecture — DSD-Native SSR/SSG Framework
 
-> **Version**: v0.28.0 (target)
+> **Version**: v0.27.0 (target)
 > **Status**: Architecture Definition
 > **Date**: 2026-05-31
 > **Author**: LessJS Architecture Team
@@ -731,7 +731,7 @@ Alien-signals is chosen for: smallest bundle size, Vue core author pedigree, TC3
 
 ## 13. Implementation Roadmap
 
-### Phase 1: Hydration Rewrite (v0.28.0)
+### Phase 1: Hydration Rewrite (v0.27.0)
 
 | Step | Task | Files | Lines |
 |---|---|---|---|

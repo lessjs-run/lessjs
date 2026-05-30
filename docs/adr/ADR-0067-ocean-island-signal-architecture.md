@@ -5,7 +5,7 @@
 > **Author**: Zhi (Architect), Qi (Delivery Director)
 > **Supersedes**: ADR-0058 (Signal→DOM binding), ADR-0062 (DSD-first RDOM), ADR-0065 (Unified VNode), ADR-0066 (Signal-Native Hydration)
 > **Architecture Doc**: [lessjs-architecture.md](../architecture/lessjs-architecture.md)
-> **Target**: v0.28.0
+> **Target**: v0.27.0
 
 ---
 
