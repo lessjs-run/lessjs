@@ -66,7 +66,7 @@ export default class HomeConsole extends DsdElement {
             >
               -
             </button>
-            <span class='counter-value'>{this.#count}</span>
+            <span class='counter-value' textContent={this.#count}></span>
             <button
               type='button'
               class='counter-btn'
@@ -76,7 +76,7 @@ export default class HomeConsole extends DsdElement {
             </button>
           </div>
           <p class='counter-caption'>
-            <b>METRICS</b> — packages verified: <b>{this.#count}</b>
+            <b>METRICS</b> — packages verified: <b textContent={this.#count}></b>
           </p>
         </div>
       </div>

@@ -103,7 +103,7 @@ export default class ReactiveShowcase extends DsdElement {
           </p>
           <div className='counter-row'>
             <button type='button' onClick={() => this.#count.value--}>−</button>
-            <span>{this.#count}</span>
+            <span textContent={this.#count}></span>
             <button type='button' onClick={() => this.#count.value++}>+</button>
           </div>
         </div>
@@ -121,10 +121,13 @@ export default class ReactiveShowcase extends DsdElement {
           >
             <p>
               Current theme:{' '}
-              <strong>{computed(() => this.#isDark.value ? 'dark' : 'light')}</strong>
+              <strong textContent={computed(() => this.#isDark.value ? 'dark' : 'light')}></strong>
             </p>
-            <button type='button' onClick={() => this.#isDark.value = !this.#isDark.value}>
-              Toggle {computed(() => this.#isDark.value ? 'light' : 'dark')}
+            <button
+              type='button'
+              onClick={() => this.#isDark.value = !this.#isDark.value}
+              textContent={computed(() => `Toggle ${this.#isDark.value ? 'light' : 'dark'}`)}
+            >
             </button>
           </div>
         </div>

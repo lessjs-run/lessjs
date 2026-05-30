@@ -69,6 +69,9 @@ function serializeAttrs(props: Record<string, unknown>): string {
     // Content is rendered as raw children in the caller.
     if (key === 'innerHTML') continue;
 
+    // textContent is a DOM property — rendered as child content, not as an HTML attribute.
+    if (key === 'textContent') continue;
+
     // Resolve attribute name
     let attrName: string;
     if (key === 'className') {
@@ -216,8 +219,14 @@ export function renderToString(node: unknown): string {
   const attrs = serializeAttrs(props);
   // innerHTML prop: render as raw HTML content (build-time sanitized, ADR-0064)
   const innerHTML = props?.innerHTML as string | undefined;
+  // textContent prop: render signal/dynamic value as escaped child content (v0.27)
+  const textContent = props?.textContent !== undefined
+    ? escapeHtml(String(unwrapSignalLike(props.textContent)))
+    : undefined;
   const childHtml = innerHTML !== undefined
     ? innerHTML
+    : textContent !== undefined
+    ? textContent
     : children.map((c) => renderToString(c)).join('');
 
   const tagStr = String(tag);
