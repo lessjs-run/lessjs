@@ -441,7 +441,7 @@ sheet.replaceSync(`
 `);
 
 export class LessLayout extends DsdElement {
-  #router = new Router(this);
+  private routing = new Router(this);
 
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = [
@@ -484,7 +484,7 @@ export class LessLayout extends DsdElement {
   // → all delegated to this._r (Router instance)
 
   private _currentPath(): string {
-    return this.#router.path;
+    return this.routing.path;
   }
 
   /** Compute GitHub edit URL from current path. */
@@ -647,9 +647,9 @@ export class LessLayout extends DsdElement {
     );
     const githubUrl = this._getStr('github-url', 'https://github.com/lessjs-run/LessJS');
     const editUrl = this.getAttribute('edit-url') || this._computeEditUrl();
-    const locales = this.#router.locales;
-    const switchLabel = locales.length > 1 ? this._esc(this.#router.switchLabel()) : '';
-    const switchPath = locales.length > 1 ? this.#router.switchPath() : '';
+    const locales = this.routing.locales;
+    const switchLabel = locales.length > 1 ? this._esc(this.routing.switchLabel()) : '';
+    const switchPath = locales.length > 1 ? this.routing.switchPath() : '';
 
     return (
       <div className='app-layout' part='container' home={home || undefined}>
@@ -736,7 +736,7 @@ export class LessLayout extends DsdElement {
     return (
       <nav className='header-nav' part='nav'>
         {links.map((link) => {
-          const localized = this.#router.localize(link.href);
+          const localized = this.routing.localize(link.href);
           const isExternal = link.href.startsWith('http');
           const isCurrent = !isExternal &&
             (cp === link.href || cp === localized || cp.startsWith(localized + '/'));
@@ -770,7 +770,7 @@ export class LessLayout extends DsdElement {
             </summary>
             {section.items.map((item) => {
               const href = item.href || item.path || '#';
-              const localized = this.#router.localize(href);
+              const localized = this.routing.localize(href);
               const isExternal = href.startsWith('http');
               const cp = this._currentPath();
               const isActive = !isExternal && cp === localized;
@@ -800,18 +800,18 @@ export class LessLayout extends DsdElement {
 
     const sectionRoot = (href: string): string => {
       const segs = href.split('/').filter(Boolean);
-      const start = this.#router.locales.length > 1 && this.#router.locales.includes(segs[0])
+      const start = this.routing.locales.length > 1 && this.routing.locales.includes(segs[0])
         ? 1
         : 0;
       return segs.length > start + 1 ? '/' + segs[start] : href;
     };
 
-    const rawPath = this.#router.path;
+    const rawPath = this.routing.path;
 
     return (
       <nav className='mobile-tab-bar' aria-label='Quick navigation'>
         {mobileLinks.map((link) => {
-          const localized = this.#router.localize(link.href);
+          const localized = this.routing.localize(link.href);
           const isExternal = link.href.startsWith('http');
           const root = sectionRoot(link.href);
           const isActive = !isExternal &&
@@ -837,7 +837,7 @@ export class LessLayout extends DsdElement {
   override connectedCallback(): void {
     super.connectedCallback();
 
-    const locales = this.#router.locales;
+    const locales = this.routing.locales;
     if (locales.length > 1) {
       const { locale } = this._r;
       if (locales.includes(locale)) {
@@ -1026,10 +1026,10 @@ export class LessLayout extends DsdElement {
 
       // Sync locale using URLPattern instead of reading from fetched page
       const { locale: newLocale } = this._r;
-      if (newLocale && this.#router.locales.includes(newLocale)) {
+      if (newLocale && this.routing.locales.includes(newLocale)) {
         this.setAttribute('locale', newLocale);
         // Update lang-switch label + href reactively
-        this.#router.updateSwitch(this.shadowRoot!);
+        this.routing.updateSwitch(this.shadowRoot!);
       }
 
       // Ensure newly inserted components inherit current theme.

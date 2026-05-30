@@ -24,11 +24,11 @@ const LOCALE_LABELS: Record<string, string> = {
  * Instantiated by less-layout — no signal dependencies.
  */
 export class Router {
-  #element: HTMLElement;
+  #el: HTMLElement;
   #locales: string[];
 
   constructor(element: HTMLElement) {
-    this.#element = element;
+    this.#el = element;
     this.#locales = this.#parseLocales();
   }
 
@@ -39,9 +39,9 @@ export class Router {
 
   /** Current locale from attribute or URL */
   get locale(): string {
-    const prop = (this.#element as unknown as Record<string, unknown>).locale;
+    const prop = (this.el as unknown as Record<string, unknown>).locale;
     if (typeof prop === 'string') return prop;
-    const attr = this.#element.getAttribute('locale');
+    const attr = this.#el.getAttribute('locale');
     if (attr) return attr;
     return this.#parseUrl().locale;
   }
@@ -101,8 +101,8 @@ export class Router {
   /** Parse locales from element attribute or prop */
   #parseLocales(): string[] {
     try {
-      const el = this.#element as unknown as Record<string, unknown>;
-      const raw = el.locales || this.#element.getAttribute('locales');
+      const el = this.el as unknown as Record<string, unknown>;
+      const raw = el.locales || this.#el.getAttribute('locales');
       if (!raw) return ['en'];
       if (Array.isArray(raw)) return raw as string[];
       if (typeof raw === 'string') {
