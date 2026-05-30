@@ -2,143 +2,144 @@
 
 > Status: PROPOSED\
 > Date: 2026-05-30\
-> Target: v0.27.0\
+> Target: v0.26.1 (layout + theme-toggle) → v0.27 (text binding + Show/For DSD)\
 > Revises: ADR-0058 (SOP-001) — Real DOM Signal Binding\
-> Relates: ADR-0057 (JSX+Signal), ADR-0059 (Show/For), ADR-0060 (SignalContext)
+> Relates: ADR-0057 (JSX+Signal), ADR-0059 (Show/For), ADR-0060 (SignalContext)\
+> Research: [signal-rdom-architecture-research.md](../conversation/v0.26.1/signal-rdom-architecture-research.md)
 
 ## Context
 
-### What happened
+### What happened (2026-05-30)
 
-On 2026-05-30, `dev.lessjs.pages.dev` went blank. Git bisect traced the regression to commit `7989e8e8` (ADR-0058: Real DOM Signal Binding), which removed `effect(() => render())` from `_hyrateExistingDom()`. Restoring it fixed the page.
+`dev.lessjs.pages.dev` went blank. Git bisect traced to commit `7989e8e8` (ADR-0058), which removed `effect(() => render())` from `_hyrateExistingDom()`. Restoring it fixed the page, but raised the question: is the VDOM approach correct, or should LessJS adopt RDOM (Real DOM)?
 
-The removal was correct in principle — per-prop signal→DOM bindings via `applyProps` are more efficient than full VNode re-render — but the implementation was incomplete. Two failure modes emerged:
+Deep architecture research revealed two independent failure modes:
 
-1. **Structural signal gap**: `less-layout.render()` accesses `theme`, `locale`, `nav-items` signals to determine VNode *structure*, not just attribute values. `applyProps` binds `class="xxx"` but cannot add/remove entire subtrees.
+### Failure Mode 1: Browser Layout Bug (primary cause of blank screen)
 
-2. **Browser layout quirk**: DSD-pre-populated shadow DOM content renders with correct DOM tree but Chromium's layout engine produces `0×0` host bounding rect. Only a CSR re-render (`renderToDom → appendChild`) triggers correct layout computation.
+| Step | What happens |
+|------|-------------|
+| t0 | Browser parses HTML, encounters `<docs-home>` |
+| t1 | Browser attaches shadow root from DSD template |
+| t2 | Browser performs first layout: `<docs-home>` is `display:inline` → 0×0 |
+| t3 | Script loads, `customElements.define()` triggers upgrade |
+| t4 | `connectedCallback()`: `this.style.display = 'block'` + `_applyStyles()` |
+| t5 | CSS rules apply, but **browser caches layout from t2** — host stays 0×0 |
 
-### Current architecture (post-hotfix)
+The `effect(() => render())` "fixed" this accidentally: clearing shadow root + re-appending DOM forced layout invalidation. The actual fix is much simpler: **force synchronous reflow** after style application.
 
+### Failure Mode 2: Structural Signal Access (only 1 component)
+
+ADR-0058 assumed all components use per-prop signal bindings. Research found only 2 structural signal accesses, both in `less-theme-toggle.tsx`:
+
+```tsx
+// reads signal.value in render() — invisible to applyProps
+className={this._theme.value === 'light' ? ' is-light' : ''}
+title={this._theme.value === 'light' ? 'Switch to dark theme' : 'Switch to light theme'}
 ```
-DSD template (SSG) → shadow root populated
-  ↓
-client.js defines custom element
-  ↓
-connectedCallback() → _applyStyles() + _renderOrHydrate()
-  ↓
-_hyrateExistingDom():
-  1. _walkAndBind() — bind events to DSD DOM
-  2. effect(() => render()) — FULL re-render via CSR
-     (clears shadow root, rebuilds via renderToDom)
-```
 
-The `effect(() => render())` step *replaces* the DSD DOM with CSR DOM. This is the VDOM approach that SOP-001 tried to eliminate.
+**`less-layout` has ZERO signals in `render()`** — it was never the cause. All its state comes from attributes.
 
-### Why SOP-001 (ADR-0058) didn't work
+### Component taxonomy
 
-SOP-001 correctly identified the goal: replace `effect(() => render())` with per-prop signal→DOM bindings. But it missed two preconditions:
-
-| Precondition                                            | SOP-001 status       |
-| ------------------------------------------------------- | -------------------- |
-| All signal access in `render()` is attribute-only       | ❌ Not true          |
-| DSD shadow DOM produces correct browser layout          | ❌ Not true          |
-| `Show`/`For` work in DSD hydration path                 | ❌ CSR-only          |
-| Components have `:host { display: block }` in DSD CSS   | ❌ Missing           |
+| Component | Signal type | Count | Status |
+|-----------|------------|-------|--------|
+| home-console | attribute-only (computed→class) | 4 | ✅ already RDOM |
+| home-console | text child (signal→text) | 2 | ⚠️ CSR-reactive, DSD dead |
+| counter-island | text child (signal→text) | 1 | ⚠️ CSR-reactive, DSD dead |
+| less-theme-toggle | structural (signal.value in render) | 2 | ❌ needs rewrite |
+| less-layout | none | 0 | ✅ no signal access |
 
 ## Decision
 
 ### Architecture principle
 
 ```
-HTML = skeleton (generated once by SSG/DSD, never rebuilt)
-CSS  = visual state (attribute-driven, zero JS for visual changes)
-JS   = data + atomic updates + communication (signal → DOM attribute)
+HTML = skeleton (DSD once, never rebuilt)
+CSS  = visual state (data-* + CSS selectors)
+JS   = data + atomic DOM updates + cross-component communication
 ```
 
-This is the **Real DOM (RDOM)** approach — same philosophy as SolidJS, Svelte 5, Vue Vapor.
+### Implementation plan
 
-### Key rules
+#### P0: Layout fix (v0.26.1)
 
-1. **`render()` is initialization-only**. Called once per component lifecycle to produce the initial VNode. Signal changes after hydration update DOM attributes in-place — never trigger full re-render.
+Replace `effect(() => render())` with a **forced reflow** after `_applyStyles`:
 
-2. **All visual state is CSS-driven**. Theme, responsive breakpoints, loading states — all controlled by CSS via `data-*` attributes and CSS custom properties. JS only sets/removes attributes.
+```typescript
+// In connectedCallback(), after _applyStyles(ctor):
+if (this.shadowRoot && this.shadowRoot.childNodes.length > 0) {
+  void this.offsetHeight; // Force browser to recalculate layout
+}
+```
 
-3. **Signal→DOM is attribute-level**. `applyProps` already creates `effect(() => setAttribute())` for signal-valued props. This is the sole mechanism for reactive DOM updates.
+Plus CSS safety net in `openPropsTokenSheet`:
+```css
+:host { display: block; min-height: 1px; contain: layout style; }
+```
 
-4. **Structural changes use `Show`/`For`**. The ADR-0059 control flow components (`<Show>`, `<For>`) handle conditional rendering and list rendering. They must work in the DSD hydration path.
+#### P0: Theme-toggle CSS rewrite (v0.26.1)
 
-5. **`effect(() => render())` is forbidden**. Marked `@deprecated`, removed in v0.27.0.
+Replace signal.value reads with CSS-driven visual state:
+
+```tsx
+// Before (broken)
+className={this._theme.value === 'light' ? ' is-light' : ''}
+
+// After (CSS-driven)
+data-theme={this._theme} // signal passed as prop → applyProps binds effect
+```
+```css
+.theme-toggle[data-theme="light"] .icon-sun { display: none; }
+.theme-toggle[data-theme="light"] .icon-moon { display: block; }
+```
+
+#### P1: DSD text node binding (v0.26.1 → v0.27)
+
+Add reactive TextNode binding in `_walkAndBind` for DSD-hydrated text children. Counter and home-console count/title text currently work via CSR only (`renderToDom` signal→TextNode effect). DSD path needs the same.
+
+#### P2: Show/For DSD hydration (v0.27)
+
+Show/For are currently CSR-only (`renderToDom` constructs DOM from scratch). DSD hydration requires either:
+- **A. SSR expansion**: resolve Show/For at SSR time, emit resolved branch in DSD template
+- **B. Comment-marker hydration**: SSR emits `<!--show-->` markers, `_walkAndBind` finds and wires them
 
 ### Component contract
 
-Every component must satisfy:
-
-- `render()` accesses signals ONLY to compute attribute values, never to choose between different element trees
-- Visual state variants (dark/light, loading/loaded, mobile/desktop) are expressed via `data-theme`, `data-state`, `data-breakpoint` attributes + CSS
-- Content variants (locale strings, dynamic text) use `Show`/`For` or reactive text nodes
-
-## Migration plan
-
-### Phase 1: Fix DSD layout (v0.26.1)
-
-| Task                                           | File                                           |
-| ---------------------------------------------- | ---------------------------------------------- |
-| Add `:host { display: block }` to all DSD CSS  | `open-props-tokens.ts`, index page `heroSheet` |
-| Inject `docs-home { display: block }` globally | `ssg-postprocess.ts` (DSD_POLYFILL CSS)        |
-| Keep `effect(() => render())` as temporary fix | `dsd-element.ts`                               |
-
-### Phase 2: Convert components to attribute-only (v0.26.1 → v0.27)
-
-| Component           | Signal            | Current (structural)         | Target (attribute-only)                |
-| ------------------- | ----------------- | ---------------------------- | -------------------------------------- |
-| `less-layout`       | theme             | `{theme==='dark'?<Dark>:<Light>}` | `data-theme={themeSignal}` + CSS       |
-| `less-layout`       | locale            | Conditional text in render() | Reactive text node / `Show`           |
-| `less-layout`       | nav-items         | `.map()` in render()         | `<For each={navSignal}>`               |
-| `less-theme-toggle` | theme             | Conditional class            | ✅ Already attribute-only              |
-| `home-console`      | count, loading    | Conditional children         | `<Show when={loading}>` / CSS opacity  |
-| `counter-island`    | count             | `count.value` in text        | Reactive text node (already works)     |
-
-### Phase 3: Delete effect (v0.27)
-
-Remove `effect(() => render())` from `_hyrateExistingDom()`, `requestReactiveUpdate()`, and `_renderIntoShadowRoot()`. Remove `_vnodeEffectDispose` field.
-
-Make `Show`/`For` work in DSD hydration path (walk existing DOM, match markers).
-
-### Phase 4: Verify & document (v0.27)
-
-- Run full CI gate (typecheck, test, lint, dsd:check-report, e2e)
-- Verify dev.lessjs.pages.dev renders correctly with zero `effect(() => render())` calls
-- Update component author guide to forbid structural signal access in `render()`
+| Rule | Rationale |
+|------|-----------|
+| `render()` accesses NO signal `.value` | Prevents structural signal access |
+| All signal-driven state is passed as **prop={signalObject}** | `applyProps` can create effect bindings |
+| Visual variants use `data-*` attributes + CSS | Zero JS for visual changes |
+| Structural changes use `<Show>`/`<For>` | Declarative control flow |
+| Text content from signals uses reactive TextNode | Fine-grained text update |
 
 ## Consequences
 
 ### Positive
 
-- Zero full re-renders after hydration → no FOUC, no layout thrash
-- DSD content preserved → no identity loss, no `connectedCallback` re-entry
-- Per-prop bindings → predictable performance (O(changed attributes), not O(tree size))
-- CSS-driven visual state → works without JS (SSG), seamless upgrade
+- Zero full re-renders — `render()` is called once per lifecycle
+- DSD content preserved through hydration — no DOM identity loss
+- Browser correctly computes layout via forced reflow
+- CSS-driven theme switching with zero JS
+- Migration scope is 2 signal accesses (theme-toggle), not a full rewrite
 
 ### Negative
 
-- Component authors must follow the attribute-only contract
-- `Show`/`For` must handle DSD hydration (not just CSR)
-- `data-*` attributes pollute the DOM (acceptable trade-off for zero-JS visual state)
-- Migration effort for existing components (3-4 components, ~50-100 lines each)
+- `less-theme-toggle` needs ~10 line rewrite
+- DSD text binding mechanism needs ~20 lines of new code (if used without CSR fallback)
+- Browser layout quirk requires explicit reflow — a web platform workaround
+- Until Show/For DSD hydration (P2), structural Show/For in DSD path requires CSR fallback
 
 ### Risk
 
-- The "browser layout quirk" (DSD shadow DOM → 0×0 host rect) may recur if any component
-  accidentally uses structural signal access after migration
-- Mitigation: add integration test that checks `getBoundingClientRect().height > 0` for
-  all hydrated components
+- Forced reflow (`void this.offsetHeight`) is a micro-optimization anti-pattern but necessary for DSD layout
+- Mitigation: the reflow only fires once per component lifecycle (in `connectedCallback`), not in hot paths
 
 ## Related
 
-- ADR-0058: Real DOM Signal Binding (attempted, incomplete)
-- ADR-0059: Show/For Control Flow
+- ADR-0058: Real DOM Signal Binding (attempted, incomplete — missing layout fix + theme-toggle migration)
+- ADR-0059: Show/For Control Flow (needs DSD hydration path)
 - ADR-0057: JSX+Signal Component Model
-- ADR-0060: SignalContext (theme sharing via DOM tree)
-- SOP-001: Real DOM Signal Binding implementation (superseded by this ADR)
-- SOP-002: Signal-to-CSS-driven-visual migration (implements this ADR)
+- ADR-0060: SignalContext
+- [Signal→DOM Architecture Research](../conversation/v0.26.1/signal-rdom-architecture-research.md)
