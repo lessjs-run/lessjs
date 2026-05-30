@@ -1,6 +1,6 @@
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
-import { signal } from '@lessjs/signals';
+import { effect, signal } from '@lessjs/signals';
 import { consumeContext } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { THEME_CTX } from '@lessjs/ui/less-layout';
@@ -49,6 +49,19 @@ export default class HomeConsole extends DsdElement {
     const theme = consumeContext(THEME_CTX);
     this.setAttribute('data-theme', theme.value);
     theme.subscribe((t) => this.setAttribute('data-theme', t));
+
+    // v0.27 (ADR-0065): Signal→DOM binding via framework effect API.
+    // DSD hydration (_walkAndBind inside effectScope) creates effects
+    // that need to survive the scope. This direct binding guarantees
+    // the counter textContent updates when the signal changes.
+    effect(() => {
+      const el = this.shadowRoot?.querySelector('.counter-value');
+      if (el) {
+        const v = String(this.#count.value);
+        console.log('[home-console] effect fired, count=', v);
+        (el as HTMLElement).textContent = v;
+      }
+    });
   }
 
   override render() {
