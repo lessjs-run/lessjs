@@ -45,7 +45,6 @@ export function provideContext<T>(
  * auto-tracks → DOM updates. No DOM walking needed.
  */
 export function consumeContext<T>(
-  _host: HTMLElement,
   ctx: Context<T>,
 ): { value: T; subscribe(fn: (v: T) => void): () => void } {
   const s = contexts.get(ctx.key);

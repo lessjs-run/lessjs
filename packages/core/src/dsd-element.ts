@@ -59,8 +59,7 @@ import {
 import { isVNode, type VNode } from './vnode.js';
 import { applyProps, renderToDom } from './jsx-render-dom.js';
 import { renderToString } from './jsx-render-string.js';
-import { signal, effectScope } from '@lessjs/signals';
-import { effect } from '@lessjs/signals';
+import { effect, effectScope, signal } from '@lessjs/signals';
 import { isSignalLike } from './signal-like.js';
 
 /**

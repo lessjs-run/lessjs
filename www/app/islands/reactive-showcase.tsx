@@ -45,14 +45,14 @@ showcaseStyles.replaceSync(`
   .theme-preview {
     padding: var(--size-4); border-radius: var(--radius-2); transition: 0.3s;
   }
-  .theme-preview.light { background: var(--gray-0); color: var(--gray-9); border: var(--border-size-1) solid var(--gray-3); }
-  .theme-preview.dark  { background: var(--gray-12); color: var(--gray-2); border: var(--border-size-1) solid var(--gray-10); }
+  .theme-preview[data-theme="light"] { background: var(--gray-0); color: var(--gray-9); border: var(--border-size-1) solid var(--gray-3); }
+  .theme-preview[data-theme="dark"]  { background: var(--gray-12); color: var(--gray-2); border: var(--border-size-1) solid var(--gray-10); }
   .theme-preview button {
     padding: var(--size-1) var(--size-3); border: none; border-radius: var(--radius-1);
     cursor: pointer; font-size: var(--font-size-00); font-weight: var(--font-weight-6);
   }
-  .theme-preview.light button { background: var(--gray-9); color: var(--gray-0); }
-  .theme-preview.dark  button { background: var(--gray-2); color: var(--gray-9); }
+  .theme-preview[data-theme="light"] button { background: var(--gray-9); color: var(--gray-0); }
+  .theme-preview[data-theme="dark"]  button { background: var(--gray-2); color: var(--gray-9); }
 
   /* Filter */
   .filter-input {
@@ -115,12 +115,12 @@ export default class ReactiveShowcase extends DsdElement {
             One <code>signal(false)</code>{' '}
             controls the entire component theme. Reactive attribute binding.
           </p>
-          <div className={`theme-preview ${this.#isDark.value ? 'dark' : 'light'}`}>
+          <div class="theme-preview" data-theme={computed(() => this.#isDark.value ? 'dark' : 'light')}>
             <p>
-              Current theme: <strong>{this.#isDark.value ? 'dark' : 'light'}</strong>
+              Current theme: <strong>{computed(() => this.#isDark.value ? 'dark' : 'light')}</strong>
             </p>
             <button type='button' onClick={() => this.#isDark.value = !this.#isDark.value}>
-              Toggle {this.#isDark.value ? 'light' : 'dark'}
+              Toggle {computed(() => this.#isDark.value ? 'light' : 'dark')}
             </button>
           </div>
         </div>

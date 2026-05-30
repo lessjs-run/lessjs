@@ -165,7 +165,7 @@ export class DocsHome extends DsdElement {
   override connectedCallback() {
     super.connectedCallback();
     // SignalContext: auto-tracks theme from less-layout provider
-    const theme = consumeContext(this, THEME_CTX);
+    const theme = consumeContext(THEME_CTX);
     this.setAttribute('data-theme', theme.value);
     theme.subscribe((t) => this.setAttribute('data-theme', t));
   }
