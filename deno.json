@@ -19,6 +19,7 @@
     "./packages/cem",
     "./packages/protocols",
     "./packages/runtime",
+    "./packages/router",
     "./www"
   ],
   "imports": {
@@ -58,6 +59,11 @@
     "@lessjs/ui/less-callout": "./packages/ui/src/less-callout.tsx",
     "@lessjs/ui/less-step-card": "./packages/ui/src/less-step-card.tsx",
     "@lessjs/ui/open-props-tokens": "./packages/ui/src/open-props-tokens.ts",
+    "@lessjs/router": "./packages/router/src/mod.ts",
+    "@lessjs/router/define-routes": "./packages/router/src/define-routes.ts",
+    "@lessjs/router/pattern-translate": "./packages/router/src/pattern-translate.ts",
+    "@lessjs/router/client-router": "./packages/router/src/client-router.ts",
+    "@lessjs/router/page-loader": "./packages/router/src/page-loader.ts",
     "@lessjs/adapter-lit": "./packages/adapter-lit/src/index.ts",
     "@lessjs/adapter-vanilla": "./packages/adapter-vanilla/src/index.ts",
     "@lessjs/adapter-react": "./packages/adapter-react/src/index.ts",
