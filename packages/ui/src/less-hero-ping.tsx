@@ -58,7 +58,7 @@ styles.replaceSync(`
     background: var(--gray-5);
     animation: pulse 0.8s ease-in-out infinite alternate;
   }
-  .dot.ok { background: #22c55e; }
+  .dot.ok { background: var(--success); }
   .dot.err { background: var(--error); }
   .info {
     font-family: var(--font-mono);
@@ -66,7 +66,7 @@ styles.replaceSync(`
     color: var(--text-muted);
     white-space: nowrap;
   }
-  .info .ok { color: #22c55e; }
+  .info .ok { color: var(--success); }
   .info .err { color: var(--error); }
   @keyframes pulse {
     from { opacity: 0.4; }

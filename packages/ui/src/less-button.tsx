@@ -73,9 +73,9 @@ sheet.replaceSync(`
 
   /* Variants */
   .btn--default:hover {
-    color: var(--gray-9);
-    border-color: var(--gray-5);
-    background: rgba(83,74,183,0.06);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+    background: var(--brand-subtle);
   }
 
   .btn--primary {
@@ -94,7 +94,7 @@ sheet.replaceSync(`
   }
 
   .btn--ghost:hover {
-    background: rgba(83,74,183,0.06);
+    background: var(--brand-subtle);
     border-color: transparent;
   }
 

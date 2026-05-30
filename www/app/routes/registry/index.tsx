@@ -34,10 +34,10 @@ const COMPAT_LABELS: Record<string, string> = {
 };
 
 const COMPAT_COLORS: Record<string, string> = {
-  'ssr-capable': '#16a34a',
-  'client-only': '#d97706',
-  'rejected': '#dc3545',
-  'experimental-dom': '#8b5cf6',
+  'ssr-capable': 'var(--success)',
+  'client-only': 'var(--warning)',
+  'rejected': 'var(--error)',
+  'experimental-dom': 'var(--info)',
 };
 
 const routeSheet = new StyleSheet();

@@ -92,10 +92,10 @@ const COMPAT_LABELS: Record<string, string> = {
 };
 
 const COMPAT_COLORS: Record<string, string> = {
-  'ssr-capable': '#16a34a',
-  'client-only': '#d97706',
-  'rejected': '#dc3545',
-  'experimental-dom': '#8b5cf6',
+  'ssr-capable': 'var(--success)',
+  'client-only': 'var(--warning)',
+  'rejected': 'var(--error)',
+  'experimental-dom': 'var(--info)',
 };
 
 const routeSheet = new StyleSheet();
@@ -158,16 +158,16 @@ routeSheet.replaceSync(`
       .preview-text { font-size: var(--font-size-0); color: var(--text-secondary); }
 
       /* Compat color classes */
-      .compat-dot-ssr-capable { background: #16a34a; }
-      .compat-dot-client-only { background: #d97706; }
-      .compat-dot-rejected { background: #dc3545; }
-      .compat-dot-experimental-dom { background: #8b5cf6; }
-      .compat-dot-default { background: #888; }
-      .compat-badge-lg-ssr-capable { background: #16a34a15; border: 0.5px solid #16a34a40; }
-      .compat-badge-lg-client-only { background: #d9770615; border: 0.5px solid #d9770640; }
-      .compat-badge-lg-rejected { background: #dc354515; border: 0.5px solid #dc354540; }
-      .compat-badge-lg-experimental-dom { background: #8b5cf615; border: 0.5px solid #8b5cf640; }
-      .compat-badge-lg-default { background: #88888815; border: 0.5px solid #88888840; }
+      .compat-dot-ssr-capable { background: var(--success); }
+      .compat-dot-client-only { background: var(--warning); }
+      .compat-dot-rejected { background: var(--error); }
+      .compat-dot-experimental-dom { background: var(--info); }
+      .compat-dot-default { background: var(--text-muted); }
+      .compat-badge-lg-ssr-capable { background: var(--success-subtle); border: 0.5px solid var(--success); }
+      .compat-badge-lg-client-only { background: var(--warning-subtle); border: 0.5px solid var(--warning); }
+      .compat-badge-lg-rejected { background: var(--error-subtle); border: 0.5px solid var(--error); }
+      .compat-badge-lg-experimental-dom { background: var(--info-subtle); border: 0.5px solid var(--info); }
+      .compat-badge-lg-default { background: var(--bg-surface); border: 0.5px solid var(--border); }
 
       .config-list { margin: 0.25rem 0 0; padding-left: 1.25rem; }
       .compat-badge-wrap { margin-bottom: 0.75rem; }
