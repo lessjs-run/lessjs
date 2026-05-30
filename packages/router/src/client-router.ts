@@ -52,21 +52,21 @@ export class Router {
   }
 
   /** Path to switch to the other locale */
-  otherLocalePath(): string {
+  switchPath(): string {
     const { locale, path } = this.#parseUrl();
     const target = this.#locales.find((l) => l !== locale) || this.#locales[0];
     return `/${target}${path}`;
   }
 
   /** Label for the other locale (e.g. "中文" or "EN") */
-  otherLocaleLabel(): string {
+  switchLabel(): string {
     const { locale } = this.#parseUrl();
     const target = this.#locales.find((l) => l !== locale) || this.#locales[0];
     return LOCALE_LABELS[target] || target.toUpperCase();
   }
 
   /** Add locale prefix to a path if needed */
-  localizePath(path: string): string {
+  localize(path: string): string {
     if (this.#locales.length <= 1) return path;
     if (path.startsWith('http')) return path;
     for (const loc of this.#locales) {
@@ -76,11 +76,11 @@ export class Router {
   }
 
   /** Update lang-switch DOM element (for SPA navigation) */
-  updateLangSwitch(shadowRoot: ShadowRoot): void {
+  updateSwitch(shadowRoot: ShadowRoot): void {
     const link = shadowRoot.querySelector('.lang-switch') as HTMLAnchorElement | null;
     if (!link) return;
-    link.textContent = this.otherLocaleLabel();
-    link.setAttribute('href', this.otherLocalePath());
+    link.textContent = this.switchLabel();
+    link.setAttribute('href', this.switchPath());
   }
 
   /** Parse current URL via URLPattern */
