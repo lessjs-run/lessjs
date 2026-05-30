@@ -287,12 +287,31 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
   try {
     const { build: viteBuild } = await import('vite');
 
-    // Only bundle LessJS framework code + Lit ecosystem
+    // SSR noExternal: packages that MUST be inlined into the SSR bundle.
+    // Without these, the SSR bundle contains bare specifier imports (e.g.
+    // `import { signal } from "alien-signals"`) that cannot be resolved
+    // in non-workspace environments (e.g. CF Pages), causing import(entry.js)
+    // to fail and the entire SSG pipeline to produce empty HTML.
     const defaultNoExternal = [
       /^@lessjs\//,
       /^lit/,
       /^@lit/,
       /^@lit-labs\//,
+      // v0.26.1 FIX: alien-signals is a hard dependency of @lessjs/signals.
+      // Without noExternal, it leaks as a bare import that Deno can resolve
+      // locally (via workspace import map) but CF Pages cannot.
+      'alien-signals',
+      // v0.26.1 FIX: React is used by adapter-react islands for SSR rendering.
+      // Must be inlined so the SSR bundle is self-contained.
+      'react',
+      'react-dom',
+      'react/jsx-runtime',
+      'react/jsx-dev-runtime',
+      // NOTE: Shoelace (@shoelace-style/shoelace) is NOT added here because
+      // its transitive deps (@shoelace-style/localize, etc.) cannot be resolved
+      // by Rolldown in Deno's nodeModulesDir:"manual" layout. Shoelace components
+      // are browser-only and should stay as bare imports resolved by Deno at
+      // import(entry.js) time, same as hono/parse5.
     ];
 
     // ADR-0047: External packages are externalized, not bundled.
@@ -301,7 +320,14 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     // so Rolldown externalizes them correctly via manifest.specifiers.
     // Consumer template deno.json declares these packages so Deno can
     // resolve them at runtime when buildSSG() executes import(entry.js).
-    const ssrExternalDefaults = ['parse5', 'entities', 'hono'];
+    // v0.26.1: Added @shoelace-style/shoelace + @shoelace-style/localize
+    // since they cannot be inlined (Rolldown resolution failure) but must
+    // be resolvable at import(entry.js) time.
+    // NOTE: React is NOT here — it's in noExternal (inlined instead).
+    const ssrExternalDefaults = [
+      'parse5', 'entities', 'hono',
+      '@shoelace-style/shoelace', '@shoelace-style/localize',
+    ];
 
     // Step 0: Deno pre-resolution + AST subpath discovery (ADR-0047 + ADR-0054)
     const manifest = await resolveExternalManifest(

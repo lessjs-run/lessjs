@@ -197,7 +197,13 @@ export function renderToString(node: unknown): string {
         });
         return renderToString(result);
       }
-    } catch {
+    } catch (err) {
+      // v0.26.1 FIX: Previously this silently returned '', making SSR failures
+      // invisible. Now we log the error so it's visible in build logs (e.g. CF Pages).
+      console.error(
+        `[LessJS/SSR] renderToString() failed for <${String(tag)}>:`,
+        err instanceof Error ? err.message : String(err),
+      );
       return '';
     }
   }
