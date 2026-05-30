@@ -31,12 +31,12 @@ connectedCallback → _renderIntoShadowRoot → effect(() => render() + clear+re
 
 ### 为什么之前的绕过方案都无效
 
-| 尝试 | 为什么失败 |
-|------|-----------|
-| `_initDone` guard | 实例级 guard。元素重建后是新实例，guard 重置 |
-| `requestAnimationFrame` | 把同步循环变成异步循环，不消除重建 |
+| 尝试                                   | 为什么失败                                                                 |
+| -------------------------------------- | -------------------------------------------------------------------------- |
+| `_initDone` guard                      | 实例级 guard。元素重建后是新实例，guard 重置                               |
+| `requestAnimationFrame`                | 把同步循环变成异步循环，不消除重建                                         |
 | 移除 `onCsrRendered` 中的 `_initTheme` | 仍有 `connectedCallback` 中的 `rAF(() => _initTheme())`，最终都要设 signal |
-| `_patchChildren` (方案 A) | 避免重建但仍是 VDOM diff，每次 signal 变化全量 render |
+| `_patchChildren` (方案 A)              | 避免重建但仍是 VDOM diff，每次 signal 变化全量 render                      |
 
 全部失败因为它们都在绕 symptom，没有动根因：**不应该有 `effect(() => render())`**。
 
@@ -54,13 +54,13 @@ connectedCallback → _renderIntoShadowRoot → effect(() => render() + clear+re
 
 ### 模型对比
 
-| | 旧模型 (ADR-0057 实现) | 新模型 (ADR-0058) |
-|---|---|---|
-| signal 变化后 | `effect(render)` → VNode → diff/patch DOM | `effect(el.attr = val)` → DOM |
-| render 执行次数 | 初始 + 每次 signal 变化 | 仅初始一次 |
-| VNode 的角色 | 每次变化都生成新 VNode | 仅首次 render 生成 VNode |
-| DOM 更新粒度 | 全量（需要 diff 或 clear+rebuild） | 单属性级 |
-| 与 Real DOM 一致性 | ❌ 隐含 VDOM | ✅ 细粒度绑定 |
+|                    | 旧模型 (ADR-0057 实现)                    | 新模型 (ADR-0058)             |
+| ------------------ | ----------------------------------------- | ----------------------------- |
+| signal 变化后      | `effect(render)` → VNode → diff/patch DOM | `effect(el.attr = val)` → DOM |
+| render 执行次数    | 初始 + 每次 signal 变化                   | 仅初始一次                    |
+| VNode 的角色       | 每次变化都生成新 VNode                    | 仅首次 render 生成 VNode      |
+| DOM 更新粒度       | 全量（需要 diff 或 clear+rebuild）        | 单属性级                      |
+| 与 Real DOM 一致性 | ❌ 隐含 VDOM                              | ✅ 细粒度绑定                 |
 
 ### API 影响
 
@@ -87,6 +87,7 @@ override render() {
 JSX 中的条件表达式 `{dark ? <MoonIcon/> : <SunIcon/>}` 在 render 阶段求值，需要 render 重跑才能反映 signal 变化。ADR-0058 MVP 阶段**不处理条件渲染**。
 
 应对策略：
+
 1. 用 CSS 替代条件渲染（`display:none` / CSS class toggle）
 2. 后续 ADR 引入 `<Show when={signal}>` / `<For each={signal}>` 控制流组件（参照 SolidJS）
 

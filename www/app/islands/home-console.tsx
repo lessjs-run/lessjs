@@ -118,15 +118,9 @@ export default class HomeConsole extends DsdElement {
 
   // v0.26.1 (ADR-0058/0059): Computed signals replace effect()+update().
   // applyProps detects signal-valued props; renderToDom binds signal children.
-  #graphPaneClass = computed(() =>
-    `pane${this.#activeTab.value === 'graph' ? '' : ' hidden'}`
-  );
-  #counterPaneClass = computed(() =>
-    `pane${this.#activeTab.value === 'counter' ? '' : ' hidden'}`
-  );
-  #graphTabClass = computed(() =>
-    `rp-tab${this.#activeTab.value === 'graph' ? ' active' : ''}`
-  );
+  #graphPaneClass = computed(() => `pane${this.#activeTab.value === 'graph' ? '' : ' hidden'}`);
+  #counterPaneClass = computed(() => `pane${this.#activeTab.value === 'counter' ? '' : ' hidden'}`);
+  #graphTabClass = computed(() => `rp-tab${this.#activeTab.value === 'graph' ? ' active' : ''}`);
   #counterTabClass = computed(() =>
     `rp-tab${this.#activeTab.value === 'counter' ? ' active' : ''}`
   );
@@ -345,9 +339,13 @@ export default class HomeConsole extends DsdElement {
           </div>
           <div class='counter-body'>
             <div class='counter-box'>
-              <button class='counter-btn' onClick={() => this.#count.value--}>−</button>
+              <button type='button' class='counter-btn' onClick={() => this.#count.value--}>
+                −
+              </button>
               <span class='counter-value'>{this.#count}</span>
-              <button class='counter-btn' onClick={() => this.#count.value++}>+</button>
+              <button type='button' class='counter-btn' onClick={() => this.#count.value++}>
+                +
+              </button>
             </div>
             <p class='counter-caption'>
               State mutated via <b>signal.value</b>. Renders: 1

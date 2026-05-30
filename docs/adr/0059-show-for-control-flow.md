@@ -31,18 +31,18 @@ react-jsx transform 在 JSX 构建时将 children 中的表达式求值为静态
 ```typescript
 // Before (static — signal identity lost):
 if (isSignalLike(node)) {
-    return renderToDom((node as { value: unknown }).value, signal);
+  return renderToDom((node as { value: unknown }).value, signal);
 }
 
 // After (reactive — TextNode + effect):
 if (isSignalLike(node)) {
-    const sig = node as SignalLike;
-    const textNode = document.createTextNode(String(sig.value));
-    const dispose = effect(() => {
-        textNode.textContent = String(sig.value);
-    });
-    if (signal) signal.addEventListener('abort', dispose, { once: true });
-    return textNode;
+  const sig = node as SignalLike;
+  const textNode = document.createTextNode(String(sig.value));
+  const dispose = effect(() => {
+    textNode.textContent = String(sig.value);
+  });
+  if (signal) signal.addEventListener('abort', dispose, { once: true });
+  return textNode;
 }
 ```
 
@@ -61,15 +61,18 @@ Semantic：第一个 child 是 truthy 分支，第二个 child 是 falsy 分支�
 ## Consequences
 
 ### 正面
+
 - Children 层 signal 响应式完整——动态文本、条件、列表全覆盖
 - 不换 JSX transform，所有逻辑在 DOM renderer 层
 - 组件 API 不退化：`{sig}` 继续在 JSX 中直接使用
 
 ### 负面
+
 - `<Show>` / `<For>` 是 `Symbol`-based 内置组件，用户不能自定义同名组件
 - SSR 路径（`renderToString`）需要对应的控制流处理
 
 ### 中性
+
 - `<Show>` / `<For>` 对标 SolidJS 同名组件，迁移路径清晰
 - alien-signals 的 `effect()` 已是核心依赖
 

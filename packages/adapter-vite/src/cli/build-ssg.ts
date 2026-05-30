@@ -325,8 +325,11 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     // be resolvable at import(entry.js) time.
     // NOTE: React is NOT here — it's in noExternal (inlined instead).
     const ssrExternalDefaults = [
-      'parse5', 'entities', 'hono',
-      '@shoelace-style/shoelace', '@shoelace-style/localize',
+      'parse5',
+      'entities',
+      'hono',
+      '@shoelace-style/shoelace',
+      '@shoelace-style/localize',
     ];
 
     // Step 0: Deno pre-resolution + AST subpath discovery (ADR-0047 + ADR-0054)

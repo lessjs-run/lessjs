@@ -19,13 +19,13 @@ ADR-0058 消灭了 `effect(() => render())` VDOM 循环，实现了 props 层的
 react-jsx transform 的语义：
 
 ```jsx
-<div>Count: {count.value}</div>
+<div>Count: {count.value}</div>;
 ```
 
 编译为：
 
 ```js
-jsx("div", null, "Count: ", count.value)
+jsx('div', null, 'Count: ', count.value);
 //                                  ↑ 此时已求值，signal 身份丢失
 ```
 
@@ -37,8 +37,8 @@ jsx("div", null, "Count: ", count.value)
 
 ```typescript
 if (isSignalLike(node)) {
-    return renderToDom((node as { value: unknown }).value, signal);
-    // ↑ 展开后不再追踪 signal 变化
+  return renderToDom((node as { value: unknown }).value, signal);
+  // ↑ 展开后不再追踪 signal 变化
 }
 ```
 
@@ -56,12 +56,12 @@ if (isSignalLike(node)) {
 
 ```typescript
 if (isSignalLike(node)) {
-    const textNode = document.createTextNode(String(node.value));
-    const dispose = effect(() => {
-        textNode.textContent = String(node.value);
-    });
-    if (signal) signal.addEventListener('abort', dispose, { once: true });
-    return textNode;
+  const textNode = document.createTextNode(String(node.value));
+  const dispose = effect(() => {
+    textNode.textContent = String(node.value);
+  });
+  if (signal) signal.addEventListener('abort', dispose, { once: true });
+  return textNode;
 }
 ```
 
@@ -73,13 +73,13 @@ if (isSignalLike(node)) {
 
 ```typescript
 if (tag === Show) {
-    const container = document.createComment('show');
-    const dispose = effect(() => {
-        const child = props.when ? children[0] : children[1];
-        // replace container's nextSibling with rendered child
-    });
-    if (signal) signal.addEventListener('abort', dispose, { once: true });
-    return container;
+  const container = document.createComment('show');
+  const dispose = effect(() => {
+    const child = props.when ? children[0] : children[1];
+    // replace container's nextSibling with rendered child
+  });
+  if (signal) signal.addEventListener('abort', dispose, { once: true });
+  return container;
 }
 ```
 
@@ -87,22 +87,22 @@ if (tag === Show) {
 
 ```jsx
 <Show when={this._loading}>
-    <Spinner/>
-    <Content/>
-</Show>
+  <Spinner />
+  <Content />
+</Show>;
 ```
 
 ### 3. `<For each={signal}>` 列表渲染
 
 ```typescript
 if (tag === For) {
-    const container = document.createComment('for');
-    const dispose = effect(() => {
-        const items = props.each;
-        // reconcile children with item array
-    });
-    if (signal) signal.addEventListener('abort', dispose, { once: true });
-    return container;
+  const container = document.createComment('for');
+  const dispose = effect(() => {
+    const items = props.each;
+    // reconcile children with item array
+  });
+  if (signal) signal.addEventListener('abort', dispose, { once: true });
+  return container;
 }
 ```
 
@@ -118,13 +118,13 @@ if (tag === For) {
 
 ## 与 SolidJS 的对比
 
-| | SolidJS | LessJS ADR-0058 后 | 本次补全后 |
-|---|---|---|---|
-| 属性绑定 | compile-time effect | ✅ ADR-0058 | ✅ |
-| 动态文本 | compile-time effect | ❌ | ✅ renderToDom |
-| 条件渲染 | compile-time `<Show>` | ❌ | ✅ VNode `<Show>` |
-| 列表渲染 | compile-time `<For>` | ❌ | ✅ VNode `<For>` |
-| 实现方式 | Babel plugin | DOM renderer 特判 | DOM renderer 特判 |
+|          | SolidJS               | LessJS ADR-0058 后 | 本次补全后        |
+| -------- | --------------------- | ------------------ | ----------------- |
+| 属性绑定 | compile-time effect   | ✅ ADR-0058        | ✅                |
+| 动态文本 | compile-time effect   | ❌                 | ✅ renderToDom    |
+| 条件渲染 | compile-time `<Show>` | ❌                 | ✅ VNode `<Show>` |
+| 列表渲染 | compile-time `<For>`  | ❌                 | ✅ VNode `<For>`  |
+| 实现方式 | Babel plugin          | DOM renderer 特判  | DOM renderer 特判 |
 
 **SolidJS 用编译器做，LessJS 用 VNode renderer 做。殊途同归。**
 

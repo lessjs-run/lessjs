@@ -9,13 +9,20 @@
  */
 
 declare namespace JSX {
-  /** JSX expression result — VNode objects from jsx-runtime */
+  /**
+   * JSX expression result — structurally compatible with VNode.
+   *
+   * children must match VNode.children: (VNode | string)[] to satisfy
+   * TypeScript's structural assignability check when a JSX expression
+   * (this Element) is returned from DsdElement.render(): string | VNode.
+   */
   interface Element {
+    // deno-lint-ignore ban-types
     tag: string | Function | symbol;
     props: Record<string, unknown>;
-    children: unknown[];
+    children: (string | import('./vnode.ts').VNode)[];
     key?: string | number;
-    ref?: (el: Element) => void;
+    ref?: (el: globalThis.Element) => void;
   }
 
   interface ElementClass {
