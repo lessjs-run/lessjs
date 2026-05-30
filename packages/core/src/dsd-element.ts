@@ -325,7 +325,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       // recalculates bounding rects for DSD content without destroying
       // existing DOM nodes or their effect bindings.
       requestAnimationFrame(() => {
-        void this.shadowRoot!.offsetHeight; // Force layout
+        void (this as HTMLElement).offsetHeight; // Force layout on host element
       });
     });
   }
