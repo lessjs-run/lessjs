@@ -218,7 +218,7 @@ export class DocsHome extends DsdElement {
               <h2>{isZh ? '零运行时 DSD。微秒级信号。无包循环。' : 'Zero-runtime DSD. Microsecond signals. No package cycles.'}</h2>
             </div>
             <div class='feature-grid'>
-              <div class='ft-card'><span class='ft-icon'>⚡</span><h3>DSD-First</h3><p>{isZh ? '声明式 Shadow DOM 在 HTML 中序列化，浏览器原生解析，零 JS 成本。' : 'Declarative Shadow DOM in HTML. Browser-native parsing. Zero JS cost.'}</p></div>
+              <div class='ft-card'><span class='ft-icon'>⚡</span><h3>DSD-first</h3><p>{isZh ? '声明式 Shadow DOM 在 HTML 中序列化，浏览器原生解析，零 JS 成本。' : 'Declarative Shadow DOM in HTML. Browser-native parsing. Zero JS cost.'}</p></div>
               <div class='ft-card'><span class='ft-icon'>🏝️</span><h3>Island Architecture</h3><p>{isZh ? 'load, idle, visible, only — 四种升级策略，精确控制 JS 交付。' : 'load, idle, visible, only — four upgrade strategies. Precise JS delivery control.'}</p></div>
               <div class='ft-card'><span class='ft-icon'>📡</span><h3>Signal Reactivity</h3><p>{isZh ? 'alien-signals 驱动，微秒级 DOM 更新。自动依赖追踪，零订阅模板。' : 'alien-signals powered. Microsecond DOM updates. Auto dependency tracking.'}</p></div>
               <div class='ft-card'><span class='ft-icon'>📦</span><h3>18 Packages, 0 Cycles</h3><p>{isZh ? '图门禁在每次发布前验证。零循环依赖，确定性构建顺序。' : 'Graph gate validates before every publish. Zero cycles. Deterministic build order.'}</p></div>

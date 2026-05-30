@@ -32,7 +32,7 @@
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { navigate, onNavigate } from '@lessjs/core/navigation';
-import { createContext, provideContext } from '@lessjs/core/signal-context';
+import { createContext, provideContext } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc, _escAttr } from './shared/escape.js';
 import './less-theme-toggle.js';
