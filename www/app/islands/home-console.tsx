@@ -1,6 +1,6 @@
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
-import { signal } from '@lessjs/signals';
+import { effect, signal } from '@lessjs/signals';
 import { consumeContext } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { THEME_CTX } from '@lessjs/ui/less-layout';
@@ -49,6 +49,14 @@ export default class HomeConsole extends DsdElement {
     const theme = consumeContext(THEME_CTX);
     this.setAttribute('data-theme', theme.value);
     theme.subscribe((t) => this.setAttribute('data-theme', t));
+
+    // v0.27: Direct signal→DOM binding.
+    // DSD hydration path (_walkAndBind + _layoutWorkaroundReRender) may
+    // lose signal bindings. Explicit effect() guarantees DOM updates.
+    effect(() => {
+      const el = this.shadowRoot?.querySelector('.counter-value');
+      if (el) (el as HTMLElement).textContent = String(this.#count.value);
+    });
   }
 
   override render() {

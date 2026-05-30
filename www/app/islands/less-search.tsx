@@ -18,7 +18,7 @@
  */
 
 import { DsdElement } from '@lessjs/core';
-import { signal } from '@lessjs/signals';
+import { effect, signal } from '@lessjs/signals';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
@@ -76,11 +76,14 @@ sheet.replaceSync(`
     top: 0; right: 0; bottom: 0; left: 0;
     z-index: 9999;
     background: rgba(0,0,0,0.4);
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: flex-start;
     padding-top: 15vh;
     box-sizing: border-box;
+  }
+  .overlay.open {
+    display: flex;
   }
   .panel {
     width: 100%;
@@ -178,6 +181,24 @@ export default class LessSearch extends DsdElement {
   override connectedCallback(): void {
     super.connectedCallback();
     globalThis.addEventListener('keydown', this._onKeydown);
+
+    // Effect: toggle overlay visibility
+    // DsdElement render() is static — signal-driven UI needs manual effect bindings.
+    effect(() => {
+      const overlay = this.shadowRoot?.querySelector('.overlay');
+      if (overlay) overlay.classList.toggle('open', this.#open.value);
+    });
+
+    // Effect: update results when query or results signal changes
+    effect(() => {
+      this.#query.value; // subscribe
+      this.#results.value; // subscribe
+      const resultsDiv = this.shadowRoot?.querySelector('.results');
+      if (resultsDiv) {
+        resultsDiv.innerHTML = '';
+        this._renderResultsTo(resultsDiv);
+      }
+    });
   }
 
   override disconnectedCallback(): void {
@@ -238,28 +259,41 @@ export default class LessSearch extends DsdElement {
     }
   }
 
-  // --- Signal-driven search results (JSX, no innerHTML) ---
-  private _renderResults() {
+  // --- Signal-driven DOM updates (DsdElement render() is static) ---
+
+  /** Render search results into a container element. Called from effect. */
+  private _renderResultsTo(container: Element): void {
     const results = this.#results.value;
     if (results.length > 0) {
-      return results.map((r) => (
-        <a href={r.path} class='item' onClick={() => this._close()}>
-          <div class='item-section'>{r.section}</div>
-          <div class='item-title'>{r.title}</div>
-          <div class='item-text'>{r.text}</div>
-        </a>
-      ));
+      for (const r of results) {
+        const a = document.createElement('a');
+        a.href = r.path;
+        a.className = 'item';
+        a.addEventListener('click', () => this._close());
+        a.innerHTML = `<div class="item-section">${this._esc(r.section)}</div>` +
+          `<div class="item-title">${this._esc(r.title)}</div>` +
+          `<div class="item-text">${this._esc(r.text)}</div>`;
+        container.appendChild(a);
+      }
+    } else if (this.#query.value.length >= 2) {
+      container.innerHTML = `<div class="empty">No results found for &ldquo;${
+        this._esc(this.#query.value)
+      }&rdquo;</div>`;
+    } else {
+      container.innerHTML = `<div class="empty">Type at least 2 characters to search</div>`;
     }
-    if (this.#query.value.length >= 2) {
-      return <div class='empty'>No results found for &ldquo;{this.#query.value}&rdquo;</div>;
-    }
-    return <div class='empty'>Type at least 2 characters to search</div>;
+  }
+
+  private _esc(s: string): string {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(
+      /"/g,
+      '&quot;',
+    );
   }
 
   override render() {
     return (
       <>
-        {/* Trigger button — always visible */}
         <button
           type='button'
           class='search-trigger'
@@ -283,31 +317,26 @@ export default class LessSearch extends DsdElement {
           <kbd part='shortcut'>&#x2318;K</kbd>
         </button>
 
-        {/* Overlay — signal-driven, rendered in shadow DOM */}
-        {this.#open.value && (
-          <div
-            class='overlay'
-            onClick={(e: Event) => {
-              if (e.target === e.currentTarget) this._close();
-            }}
-          >
-            <div class='panel'>
-              <input
-                type='text'
-                class='search-input'
-                placeholder='Search documentation...'
-                value={this.#query.value}
-                onInput={(e: Event) => this._onInput(e)}
-                ref={(el: HTMLInputElement) => {
-                  this._inputRef = el;
-                }}
-              />
-              <div class='results'>
-                {this._renderResults()}
-              </div>
-            </div>
+        {/* Overlay — always rendered, CSS display:none by default, toggled by effect */}
+        <div
+          class='overlay'
+          onClick={(e: Event) => {
+            if (e.target === e.currentTarget) this._close();
+          }}
+        >
+          <div class='panel'>
+            <input
+              type='text'
+              class='search-input'
+              placeholder='Search documentation...'
+              onInput={(e: Event) => this._onInput(e)}
+              ref={(el: HTMLInputElement) => {
+                this._inputRef = el;
+              }}
+            />
+            <div class='results'></div>
           </div>
-        )}
+        </div>
       </>
     );
   }
