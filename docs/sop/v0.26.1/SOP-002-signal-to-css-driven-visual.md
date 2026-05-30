@@ -219,3 +219,38 @@ CSS:
 1. `git revert` Phase 3 提交，恢复 `effect(() => render())`
 2. 不改动 Phase 1/2 的迁移代码（它们本身是改进）
 3. 重新评估哪些组件需要结构性 signal，逐个解决后重新删除 effect
+
+---
+
+## Gap Status (v0.26.1)
+
+| # | Gap | 修复方案 | 状态 |
+|---|-----|---------|------|
+| G1 | Effect 内存泄漏 | effectScope 自动捕获 → `_scopeDispose()` 一键清理 | ✅ |
+| G2 | consumeContext 死拷贝 | 返回 contexts Map 源 signal，不建副本 | ✅ |
+| G3 | DSD 文本节点 | `_walkAndBind` 检测 signal 子节点 → `effect(() => textNode.textContent)` | ✅ |
+| G4 | Show/For DSD | SSR 展开或 comment-marker hydration | ⚠️ P2 |
+| G5 | effectScope 暴露 + AbortController 清理 | alien-signals → `@lessjs/signals` facade；`dsd-element.ts` 删除 `_templateAbortController`/`_signalUnsubscribers` | ✅ |
+| G6 | JSX.Element 类型 | `children: unknown[]` → `(string \| VNode)[]` | ✅ |
+
+### G5 重构对比
+
+```
+之前:
+  _templateAbortController = new AbortController()
+  _walkAndBind(root, vnode, abortController.signal)
+  _signalUnsubscribers.push(unsubscribe)
+  disconnectedCallback:
+    _disposeTemplateRuntime()  // abort
+    _disposeSignalSubscriptions()  // iterate unsubscribe
+
+现在:
+  _scopeDispose = effectScope(() => {
+    _walkAndBind(root, vnode)   // effects auto-captured
+    _layoutWorkaroundReRender() // renderToDom effects also captured
+  })
+  disconnectedCallback:
+    _scopeDispose()  // one call → all effects cleaned up
+```
+
+净减少 ~40 行代码，逻辑从手动跟踪变成框架原生能力。
