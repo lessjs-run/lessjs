@@ -69,8 +69,8 @@ sheet.replaceSync(`
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background: var(--bg-obsidian, #040508);
-    color: var(--text-primary, #FFFFFF);
+    background: var(--bg-base);
+    color: var(--text-primary);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -106,20 +106,20 @@ sheet.replaceSync(`
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(9, 11, 17, 0.88);
+    background: var(--bg-base);
     backdrop-filter: blur(12px) saturate(180%);
     -webkit-backdrop-filter: blur(12px) saturate(180%);
-    border-bottom: 0.5px solid var(--border-futuristic, rgba(124,111,245,0.16));
+    border-bottom: 0.5px solid var(--border);
   }
 
   .header-inner {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 64px;
+    padding: 0 var(--size-16);
     display: flex;
     align-items: center;
     height: 64px;
-    gap: 32px;
+    gap: var(--size-8);
   }
 
   .mobile-menu { display: none; }
@@ -129,49 +129,49 @@ sheet.replaceSync(`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    border: 0.5px solid rgba(124,111,245,0.16);
-    border-radius: 4px;
+    width: var(--size-8);
+    height: var(--size-8);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-2);
     background: transparent;
-    color: var(--text-secondary, #8E92A2);
+    color: var(--text-muted);
     cursor: pointer;
     padding: 0;
     list-style: none;
-    transition: color 0.2s ease, border-color 0.2s ease;
+    transition: all var(--ease-2) var(--duration-2);
   }
   .mobile-menu-btn::-webkit-details-marker { display: none; }
   .mobile-menu-btn::marker { content: ""; }
   .mobile-menu-btn:hover, .mobile-menu-btn:focus-visible {
-    color: var(--brand-neon, #7C6FF5);
-    border-color: var(--brand-neon, #7C6FF5);
+    color: var(--brand);
+    border-color: var(--brand);
   }
   .mobile-menu[open] .mobile-menu-btn {
-    color: var(--brand-neon, #7C6FF5);
-    border-color: var(--brand-neon, #7C6FF5);
+    color: var(--brand);
+    border-color: var(--brand);
   }
 
   /* ─── Logo — Swiss uppercase ─── */
   .logo {
-    font-size: 1.5rem;
-    font-weight: 900;
+    font-size: var(--font-size-7);
+    font-weight: var(--font-weight-9);
     color: transparent;
-    background: linear-gradient(135deg, var(--brand-neon, #7C6FF5), #B166FA);
+    background: linear-gradient(135deg, var(--brand), var(--brand-light));
     -webkit-background-clip: text;
     background-clip: text;
     text-decoration: none;
     letter-spacing: -0.04em;
     text-transform: none;
-    transition: opacity 0.2s ease;
+    transition: opacity var(--ease-2) var(--duration-2);
     white-space: nowrap;
   }
   .logo:hover { opacity: 0.75; }
 
   .logo-sub {
-    font-size: 0.65rem;
-    font-weight: 500;
-    color: var(--cyber-green, #00FF87);
-    margin-left: 0.5rem;
+    font-size: var(--font-size-00);
+    font-weight: var(--font-weight-5);
+    color: var(--brand);
+    margin-left: var(--size-2);
     letter-spacing: 0.2em;
     text-transform: uppercase;
   }
@@ -179,28 +179,47 @@ sheet.replaceSync(`
   /* ─── Header Nav ─── */
   .header-nav {
     display: flex;
-    gap: 0;
+    gap: var(--size-1);
     flex: 1;
   }
   .header-nav a {
-    color: var(--text-muted, #515466);
+    color: var(--text-muted);
     text-decoration: none;
-    font-size: 0.8rem;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
+    font-size: var(--font-size-0);
+    font-weight: var(--font-weight-6);
+    padding: var(--size-2) var(--size-4);
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    transition: color 0.2s ease;
-    border-radius: 4px;
+    border-radius: var(--radius-2);
+    transition: all var(--ease-2) var(--duration-2);
+    position: relative;
   }
-  .header-nav a:hover {
-    color: var(--text-primary, #FFFFFF);
+  .header-nav a:hover,
+  .header-nav a[aria-current="page"] {
+    color: var(--text-primary);
+    background: var(--bg-surface);
+  }
+  .header-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 40%;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 1px;
+    transition: transform var(--ease-2) var(--duration-2);
+  }
+  .header-nav a:hover::after,
+  .header-nav a[aria-current="page"]::after {
+    transform: translateX(-50%) scaleX(1);
   }
 
   .header-right {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--size-3);
     margin-left: auto;
   }
 
@@ -208,20 +227,21 @@ sheet.replaceSync(`
   .github-link {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    color: var(--text-muted, #515466);
+    gap: var(--size-2);
+    color: var(--text-muted);
     text-decoration: none;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: var(--font-size-00);
+    font-weight: var(--font-weight-6);
     letter-spacing: 0.04em;
-    padding: 0.5rem 0.75rem;
-    border: 0.5px solid rgba(124,111,245,0.16);
-    border-radius: 4px;
-    transition: color 0.2s ease, border-color 0.2s ease;
+    padding: var(--size-2) var(--size-3);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-2);
+    transition: all var(--ease-2) var(--duration-2);
   }
   .github-link:hover {
-    color: var(--text-primary, #FFFFFF);
-    border-color: var(--brand-neon, #7C6FF5);
+    color: var(--text-primary);
+    border-color: var(--brand);
+    background: var(--bg-surface);
   }
   .github-link svg { flex-shrink: 0; }
 
@@ -231,28 +251,29 @@ sheet.replaceSync(`
     justify-content: center;
     min-width: 32px;
     height: 24px;
-    padding: 0 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-muted, #515466);
-    border: 0.5px solid rgba(124,111,245,0.16);
-    border-radius: 4px;
+    padding: 0 var(--size-2);
+    font-size: var(--font-size-00);
+    font-weight: var(--font-weight-6);
+    color: var(--text-muted);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-2);
     background: transparent;
     cursor: pointer;
     text-decoration: none;
     letter-spacing: 0.04em;
-    transition: color 0.2s ease, border-color 0.2s ease;
+    transition: all var(--ease-2) var(--duration-2);
   }
   .lang-switch:hover {
-    color: var(--text-primary, #FFFFFF);
-    border-color: var(--brand-neon, #7C6FF5);
+    color: var(--text-primary);
+    border-color: var(--brand);
+    background: var(--bg-surface);
   }
 
   /* ─── Sidebar — Swiss vertical indicator ─── */
   .docs-sidebar {
     width: clamp(200px, 20vw, 260px);
     flex-shrink: 0;
-    border-right: 0.5px solid rgba(124,111,245,0.08);
+    border-right: 0.5px solid var(--border);
     padding: 2rem 0;
     overflow-y: auto;
     height: calc(100vh - 64px);
@@ -272,7 +293,7 @@ sheet.replaceSync(`
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.22em;
-    color: var(--text-muted, #515466);
+    color: var(--text-muted);
     padding: 0 1.5rem;
     margin-bottom: 0.5rem;
     cursor: pointer;
@@ -284,11 +305,11 @@ sheet.replaceSync(`
   }
   .nav-section summary::-webkit-details-marker { display: none; }
   .nav-section summary::marker { content: ""; }
-  .nav-section summary:hover { color: var(--text-secondary, #8E92A2); }
+  .nav-section summary:hover { color: var(--text-secondary); }
 
   .docs-sidebar a {
     display: block;
-    color: var(--text-muted, #515466);
+    color: var(--text-muted);
     text-decoration: none;
     font-size: 0.85rem;
     padding: 0.35rem 1.5rem;
@@ -296,36 +317,36 @@ sheet.replaceSync(`
     transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
   }
   .docs-sidebar a:hover {
-    color: var(--text-secondary, #8E92A2);
-    background: rgba(124,111,245,0.04);
+    color: var(--text-secondary);
+    background: var(--bg-surface);
   }
   .docs-sidebar a.active,
   .docs-sidebar a[aria-current="page"] {
-    color: var(--brand-neon, #7C6FF5);
-    border-left-color: var(--brand-neon, #7C6FF5);
-    background: rgba(124,111,245,0.08);
+    color: var(--brand);
+    border-left-color: var(--brand);
+    background: var(--bg-surface);
     font-weight: 600;
   }
 
   /* ─── Footer ─── */
   .app-footer {
     padding: 3rem;
-    border-top: 0.5px solid rgba(124,111,245,0.08);
+    border-top: 0.5px solid var(--border);
     text-align: center;
-    color: var(--text-muted, #515466);
+    color: var(--text-muted);
     font-size: 0.75rem;
     letter-spacing: 0.04em;
     background: transparent;
   }
   .app-footer p { margin: 0.25rem 0; }
-  .app-footer a { color: var(--text-secondary, #8E92A2); transition: color 0.2s ease; }
-  .app-footer a:hover { color: var(--brand-neon, #7C6FF5); }
+  .app-footer a { color: var(--text-secondary); transition: color 0.2s ease; }
+  .app-footer a:hover { color: var(--brand); }
 
   .app-footer .divider {
     display: inline-block;
     width: 1px;
     height: 8px;
-    background: var(--text-muted, #515466);
+    background: var(--text-muted);
     vertical-align: middle;
     margin: 0 1rem;
   }
@@ -350,8 +371,8 @@ sheet.replaceSync(`
       position: fixed; top: 64px; left: 0;
       width: min(280px, 80vw);
       height: calc(100vh - 64px); z-index: 90;
-      background: var(--bg-panel, #090B11);
-      border-right: 0.5px solid var(--border-futuristic, rgba(124,111,245,0.16));
+      background: var(--bg-base);
+      border-right: 0.5px solid var(--border);
       padding: 1rem 0; overflow-y: auto;
       transform: translateX(-101%);
       transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
@@ -374,21 +395,21 @@ sheet.replaceSync(`
       background: rgba(9,11,17,0.92);
       backdrop-filter: blur(12px) saturate(180%);
       -webkit-backdrop-filter: blur(12px) saturate(180%);
-      border-top: 0.5px solid var(--border-futuristic, rgba(124,111,245,0.16));
+      border-top: 0.5px solid var(--border);
       padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
       padding-bottom: env(safe-area-inset-bottom);
     }
     .tab-item {
       flex: 1; display: flex; flex-direction: column;
       align-items: center; justify-content: center; gap: 2px;
-      color: var(--text-muted, #515466);
+      color: var(--text-muted);
       text-decoration: none; font-size: 10px; font-weight: 600;
       letter-spacing: 0.04em; transition: color 0.2s ease;
       -webkit-tap-highlight-color: transparent; padding: 4px 0;
     }
     .tab-item svg { width: 20px; height: 20px; flex-shrink: 0; }
-    .tab-item:hover { color: var(--text-secondary, #8E92A2); }
-    .tab-item.active { color: var(--brand-neon, #7C6FF5); }
+    .tab-item:hover { color: var(--text-secondary); }
+    .tab-item.active { color: var(--brand); }
   }
 
   @media (max-width: 640px) {
@@ -747,15 +768,19 @@ export class LessLayout extends DsdElement {
   private _renderHeaderNav() {
     const links = this._headerNav();
     if (links.length === 0) return null;
+    const cp = this._currentPath();
     return (
       <nav className='header-nav' part='nav'>
         {links.map((link) => {
           const localized = this._localizePath(link.href);
           const isExternal = link.href.startsWith('http');
+          const isCurrent = !isExternal &&
+            (cp === link.href || cp === localized || cp.startsWith(localized + '/'));
           return (
             <a
               href={localized}
               data-nav={isExternal ? '' : localized}
+              aria-current={isCurrent ? 'page' : undefined}
             >
               {this._esc(link.label)}
             </a>
