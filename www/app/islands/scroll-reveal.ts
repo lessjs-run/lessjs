@@ -4,8 +4,8 @@
  * Wraps slotted content with a reveal animation triggered by
  * IntersectionObserver. Pure DsdElement - zero Lit dependency.
  */
-import { DsdElement } from '@lessjs/runtime';
-import { StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/core';
 
 export const tagName = 'scroll-reveal';
 

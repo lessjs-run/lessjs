@@ -65,6 +65,10 @@ function serializeAttrs(props: Record<string, unknown>): string {
     // Skip null / undefined
     if (value == null) continue;
 
+    // innerHTML is a DOM-only prop — skip during SSR attribute serialization.
+    // Content is rendered as raw children in the caller.
+    if (key === 'innerHTML') continue;
+
     // Resolve attribute name
     let attrName: string;
     if (key === 'className') {
