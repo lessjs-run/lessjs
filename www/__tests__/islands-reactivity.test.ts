@@ -1,7 +1,7 @@
 import { assertFalse } from 'jsr:@std/assert@^1.0.0';
 
-const CASES = [
-  ['./counter-island.tsx', 'default', ['count']],
+const CASES: Array<[string, string, string[]]> = [
+  // counter-island.tsx deleted in v0.27.0
 ];
 
 for (const [path, exportName, props] of CASES) {

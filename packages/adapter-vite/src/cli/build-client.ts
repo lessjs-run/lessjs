@@ -157,9 +157,9 @@ async function buildClient(ctx: LessBuildContext): Promise<void> {
       find: '@lessjs/style-sheet',
       replacement: join(WORKSPACE_ROOT, 'packages', 'style-sheet', 'src', 'index.ts'),
     });
-    serializedAlias.push({
-      find: '@lessjs/router/client-router',
-      replacement: join(WORKSPACE_ROOT, 'packages', 'router', 'src', 'client-router.ts'),
+    (serializedAlias as Array<{ find: string | RegExp; replacement: string }>).push({
+      find: /^@lessjs\/router/,
+      replacement: join(WORKSPACE_ROOT, 'packages', 'router', 'src'),
     });
   }
 
