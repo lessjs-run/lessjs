@@ -14,21 +14,6 @@ const routeSheet = new StyleSheet();
 routeSheet.replaceSync(`
   :host {
     display: block;
-    --road-ink: #14151d;
-    --road-muted: #626676;
-    --road-border: rgba(20, 24, 36, 0.12);
-    --road-accent: #5148b8;
-    --road-success: #13795b;
-    --road-warning: #a05a00;
-  }
-
-  :host([data-theme="dark"]) {
-    --road-ink: #f4f6fb;
-    --road-muted: #a7adbd;
-    --road-border: rgba(225, 231, 242, 0.16);
-    --road-accent: #9b93ff;
-    --road-success: #6bd7af;
-    --road-warning: #f2ba66;
   }
 
   :host([data-theme="dark"]) .now,
@@ -49,12 +34,12 @@ routeSheet.replaceSync(`
     gap: var(--size-7);
     align-items: start;
     padding-bottom: 30px;
-    border-bottom: 1px solid var(--road-border);
+    border-bottom: 1px solid var(--border);
   }
 
   h1 {
     margin: 0;
-    color: var(--road-ink);
+    color: var(--text-primary);
     font-size: clamp(2.6rem, 7vw, 5rem);
     line-height: 0.95;
     letter-spacing: 0;
@@ -63,13 +48,13 @@ routeSheet.replaceSync(`
   .subtitle {
     max-width: 690px;
     margin: 18px 0 0;
-    color: var(--road-muted);
+    color: var(--text-muted);
     font-size: var(--font-size-4);
     line-height: var(--font-lineheight-4);
   }
 
   .now {
-    border: 1px solid var(--road-border);
+    border: 1px solid var(--border);
     border-radius: var(--radius-2);
     background: #fff;
     padding: var(--size-4);
@@ -84,20 +69,20 @@ routeSheet.replaceSync(`
     border: 1px solid rgba(81, 72, 184, 0.28);
     border-radius: var(--radius-2);
     background: rgba(81, 72, 184, 0.08);
-    color: var(--road-accent);
+    color: var(--brand);
     font-size: var(--font-size-0);
     font-weight: 750;
   }
 
   .now h2 {
     margin: 14px 0 var(--size-2);
-    color: var(--road-ink);
+    color: var(--text-primary);
     font-size: 18px;
   }
 
   .now p {
     margin: 0;
-    color: var(--road-muted);
+    color: var(--text-muted);
     font-size: var(--font-size-1);
     line-height: 1.6;
   }
@@ -113,27 +98,27 @@ routeSheet.replaceSync(`
     grid-template-columns: 110px 1fr 140px;
     gap: var(--size-4);
     align-items: start;
-    border: 1px solid var(--road-border);
+    border: 1px solid var(--border);
     border-radius: var(--radius-2);
     background: #fff;
     padding: var(--size-4);
   }
 
   .version {
-    color: var(--road-accent);
+    color: var(--brand);
     font-size: var(--font-size-1);
     font-weight: var(--font-weight-8);
   }
 
   .phase h3 {
     margin: 0 0 var(--size-2);
-    color: var(--road-ink);
+    color: var(--text-primary);
     font-size: var(--font-size-4);
   }
 
   .phase p {
     margin: 0;
-    color: var(--road-muted);
+    color: var(--text-muted);
     font-size: var(--font-size-1);
     line-height: 1.65;
   }
@@ -147,23 +132,23 @@ routeSheet.replaceSync(`
     border-radius: var(--radius-2);
     font-size: var(--font-size-0);
     font-weight: 750;
-    border: 1px solid var(--road-border);
+    border: 1px solid var(--border);
   }
 
   .done {
-    color: var(--road-success);
+    color: var(--brand-deep);
     border-color: rgba(19, 121, 91, 0.26);
     background: rgba(19, 121, 91, 0.08);
   }
 
   .current {
-    color: var(--road-accent);
+    color: var(--brand);
     border-color: rgba(81, 72, 184, 0.28);
     background: rgba(81, 72, 184, 0.08);
   }
 
   .planned {
-    color: var(--road-warning);
+    color: var(--brand-deep);
     border-color: rgba(160, 90, 0, 0.24);
     background: rgba(160, 90, 0, 0.08);
   }
@@ -176,7 +161,7 @@ routeSheet.replaceSync(`
   }
 
   .truth {
-    border: 1px solid var(--road-border);
+    border: 1px solid var(--border);
     border-radius: var(--radius-2);
     background: #fff;
     padding: var(--size-4);
@@ -184,13 +169,13 @@ routeSheet.replaceSync(`
 
   .truth h2 {
     margin: 0 0 10px;
-    color: var(--road-ink);
+    color: var(--text-primary);
     font-size: var(--font-size-4);
   }
 
   .truth p,
   .truth li {
-    color: var(--road-muted);
+    color: var(--text-muted);
     font-size: var(--font-size-1);
     line-height: 1.65;
   }
@@ -216,10 +201,10 @@ routeSheet.replaceSync(`
     align-items: center;
     min-height: var(--size-10);
     padding: 0 14px;
-    border: 1px solid var(--road-border);
+    border: 1px solid var(--border);
     border-radius: 7px;
     background: #fff;
-    color: var(--road-ink);
+    color: var(--text-primary);
     text-decoration: none;
     font-size: var(--font-size-1);
     font-weight: var(--font-weight-7);

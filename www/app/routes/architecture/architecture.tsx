@@ -11,22 +11,6 @@ const pageSheet = new StyleSheet();
 pageSheet.replaceSync(`
   :host {
     display: block;
-    --arch-ink: #14151d;
-    --arch-muted: #626676;
-    --arch-border: rgba(20, 24, 36, 0.12);
-    --arch-soft: #f6f7f9;
-    --arch-accent: #5148b8;
-    --arch-success: #13795b;
-  }
-
-  :host([data-theme="dark"]) {
-    --arch-ink: #f4f6fb;
-    --arch-muted: #a7adbd;
-    --arch-border: rgba(225, 231, 242, 0.16);
-    --arch-panel: #11131a;
-    --arch-soft: #171a23;
-    --arch-accent: #9b93ff;
-    --arch-success: #6bd7af;
   }
 
   .shell {
@@ -41,7 +25,7 @@ pageSheet.replaceSync(`
     gap: var(--size-7);
     align-items: start;
     padding-bottom: var(--size-8);
-    border-bottom: 1px solid var(--arch-border);
+    border-bottom: 1px solid var(--border);
   }
 
   .eyebrow {
@@ -56,29 +40,29 @@ pageSheet.replaceSync(`
     align-items: center;
     min-height: var(--size-7);
     padding: 0 var(--size-3);
-    border: var(--border-size-1) solid var(--arch-border);
+    border: var(--border-size-1) solid var(--border);
     border-radius: var(--radius-2);
     background: var(--gray-1);
-    color: var(--arch-muted);
+    color: var(--text-muted);
     font-size: var(--font-size-0);
     font-weight: var(--font-weight-7);
   }
 
   .chip.current {
-    color: var(--arch-accent);
+    color: var(--brand);
     border-color: rgba(81, 72, 184, 0.28);
     background: rgba(81, 72, 184, 0.08);
   }
 
   .chip.pass {
-    color: var(--arch-success);
+    color: var(--brand-deep);
     border-color: rgba(19, 121, 91, 0.26);
     background: rgba(19, 121, 91, 0.08);
   }
 
   h1 {
     margin: 0;
-    color: var(--arch-ink);
+    color: var(--text-primary);
     font-size: clamp(2.5rem, 7vw, 5rem);
     line-height: 0.95;
     letter-spacing: 0;
@@ -86,14 +70,14 @@ pageSheet.replaceSync(`
 
   .lede {
     margin: var(--size-5) 0 0;
-    color: var(--arch-muted);
+    color: var(--text-muted);
     font-size: var(--font-size-4);
     line-height: var(--font-lineheight-4);
     max-width: 650px;
   }
 
   .artifact {
-    border: var(--border-size-1) solid var(--arch-border);
+    border: var(--border-size-1) solid var(--border);
     border-radius: var(--radius-2);
     overflow: hidden;
     background: var(--gray-1);
@@ -105,10 +89,10 @@ pageSheet.replaceSync(`
     justify-content: space-between;
     gap: var(--size-3);
     padding: 14px var(--size-4);
-    border-bottom: 1px solid var(--arch-border);
+    border-bottom: 1px solid var(--border);
     background: var(--gray-1);
     font-size: var(--font-size-0);
-    color: var(--arch-muted);
+    color: var(--text-muted);
   }
 
   pre {
@@ -138,7 +122,7 @@ pageSheet.replaceSync(`
 
   .kicker {
     margin: 0 0 var(--size-2);
-    color: var(--arch-accent);
+    color: var(--brand);
     font-size: var(--font-size-0);
     font-weight: var(--font-weight-8);
     text-transform: uppercase;
@@ -146,7 +130,7 @@ pageSheet.replaceSync(`
 
   h2 {
     margin: 0;
-    color: var(--arch-ink);
+    color: var(--text-primary);
     font-size: clamp(1.6rem, 4vw, 2.6rem);
     line-height: 1.08;
     letter-spacing: 0;
@@ -155,13 +139,13 @@ pageSheet.replaceSync(`
   .section-copy {
     max-width: 460px;
     margin: 0;
-    color: var(--arch-muted);
+    color: var(--text-muted);
     font-size: var(--font-size-2);
     line-height: var(--font-lineheight-4);
   }
 
   .layer-map {
-    border: var(--border-size-1) solid var(--arch-border);
+    border: var(--border-size-1) solid var(--border);
     border-radius: var(--radius-2);
     background: var(--gray-1);
     overflow: hidden;
@@ -172,7 +156,7 @@ pageSheet.replaceSync(`
     grid-template-columns: 170px 1fr 180px;
     gap: var(--size-4);
     padding: 14px var(--size-4);
-    border-bottom: 1px solid var(--arch-border);
+    border-bottom: 1px solid var(--border);
     align-items: start;
   }
 
@@ -181,14 +165,14 @@ pageSheet.replaceSync(`
   }
 
   .layer strong {
-    color: var(--arch-ink);
+    color: var(--text-primary);
     font-size: var(--font-size-1);
   }
 
   .layer span,
   .layer p {
     margin: 0;
-    color: var(--arch-muted);
+    color: var(--text-muted);
     font-size: var(--font-size-0);
     line-height: 1.55;
   }
@@ -200,7 +184,7 @@ pageSheet.replaceSync(`
   }
 
   .card {
-    border: var(--border-size-1) solid var(--arch-border);
+    border: var(--border-size-1) solid var(--border);
     border-radius: var(--radius-2);
     background: var(--gray-1);
     padding: var(--size-4);
@@ -208,13 +192,13 @@ pageSheet.replaceSync(`
 
   .card h3 {
     margin: 0 0 var(--size-2);
-    color: var(--arch-ink);
+    color: var(--text-primary);
     font-size: var(--font-size-3);
   }
 
   .card p {
     margin: 0;
-    color: var(--arch-muted);
+    color: var(--text-muted);
     font-size: var(--font-size-1);
     line-height: 1.65;
   }
@@ -231,18 +215,18 @@ pageSheet.replaceSync(`
     gap: var(--size-3);
     align-items: start;
     padding: var(--size-4);
-    border: var(--border-size-1) solid var(--arch-border);
+    border: var(--border-size-1) solid var(--border);
     border-radius: var(--radius-2);
     background: var(--gray-1);
   }
 
   .gate strong {
-    color: var(--arch-success);
+    color: var(--brand-deep);
     font-size: var(--font-size-1);
   }
 
   .gate span {
-    color: var(--arch-muted);
+    color: var(--text-muted);
     font-size: var(--font-size-0);
     line-height: 1.55;
   }
@@ -259,10 +243,10 @@ pageSheet.replaceSync(`
     align-items: center;
     min-height: var(--size-10);
     padding: 0 14px;
-    border: var(--border-size-1) solid var(--arch-border);
+    border: var(--border-size-1) solid var(--border);
     border-radius: var(--radius-2);
     background: var(--gray-1);
-    color: var(--arch-ink);
+    color: var(--text-primary);
     text-decoration: none;
     font-size: var(--font-size-1);
     font-weight: var(--font-weight-7);

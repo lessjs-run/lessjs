@@ -150,14 +150,16 @@ function createTokenSheet(): StyleSheetLike {
 
   /* ═══════════════════════════════════════════════
      UI Semantic Tokens
+     v0.26.1: Theme-aware tokens delegated to :root[data-theme]
+     via SSG global CSS injection. Shadow DOM inherits from :root.
      ═══════════════════════════════════════════════ */
 
-  /* ─── Text ─── */
+  /* ─── Text (light defaults) ─── */
   --text-primary: var(--gray-9);
   --text-secondary: var(--gray-6);
   --text-muted: var(--gray-5);
 
-  /* ─── Background ─── */
+  /* ─── Background (light defaults) ─── */
   --bg-base: var(--gray-0);
   --bg-surface: var(--gray-1);
   --bg-card: var(--gray-0);

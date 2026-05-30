@@ -127,8 +127,19 @@ export class LessThemeToggle extends DsdElement {
       }
     }
 
-    // Sync to self only — never write to document here (causes cross-component cascade loop)
+    // Sync to self, document, and parent layout — critical for :root[data-theme]
     this.setAttribute('data-theme', this._theme.value);
+    document.documentElement.setAttribute('data-theme', this._theme.value);
+    if (document.documentElement.style) {
+      document.documentElement.style.colorScheme = this._theme.value;
+    }
+    // Propagate to parent less-layout
+    try {
+      const root = this.getRootNode();
+      if (root instanceof ShadowRoot && root.host) {
+        root.host.setAttribute('data-theme', this._theme.value);
+      }
+    } catch { /* not in shadow DOM */ }
     this._persistTheme(this._theme.value);
   }
 

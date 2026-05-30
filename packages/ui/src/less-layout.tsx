@@ -64,6 +64,19 @@ sheet.replaceSync(`
     display: block;
   }
 
+  /* ─── Global font stack ─── */
+  * { font-family: var(--font-sans); }
+
+  /* ─── Keyframes ─── */
+  @keyframes nav-pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+  @keyframes logo-breathe {
+    0%, 100% { filter: brightness(1) drop-shadow(0 0 4px var(--brand-glow)); }
+    50% { filter: brightness(1.15) drop-shadow(0 0 12px var(--brand-glow)); }
+  }
+
   /* ─── Base ─── */
   .app-layout {
     display: flex;
@@ -164,8 +177,11 @@ sheet.replaceSync(`
     text-transform: none;
     transition: opacity var(--ease-2) var(--duration-2);
     white-space: nowrap;
+    animation: logo-breathe 4s ease-in-out infinite;
   }
-  .logo:hover { opacity: 0.75; }
+  .logo:hover { opacity: 0.75; animation: none; }
+    animation: logo-breathe 4s ease-in-out infinite;
+  }
 
   .logo-sub {
     font-size: var(--font-size-00);
