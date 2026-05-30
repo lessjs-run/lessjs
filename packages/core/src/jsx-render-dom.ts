@@ -148,6 +148,8 @@ export function applyProps(
   el: Element,
   props: Record<string, unknown>,
   signal?: AbortSignal,
+  /** v0.27: Collect effect dispose fns for batch cleanup. */
+  disposers?: Set<() => void>,
 ): void {
   for (const [key, value] of Object.entries(props)) {
     if (key === 'children' || key === 'key') continue;
@@ -188,6 +190,8 @@ export function applyProps(
       if (signal) {
         signal.addEventListener('abort', dispose, { once: true });
       }
+      // v0.27: Track for batch cleanup in DsdElement lifecycle
+      disposers?.add(dispose);
       continue;
     }
 
@@ -205,9 +209,14 @@ export function applyProps(
  *
  * @param node - VNode, string, number, or null/undefined
  * @param signal - Optional AbortSignal for automatic event listener cleanup
+ * @param disposers - v0.27: Optional Set to collect effect dispose fns for batch cleanup
  * @returns DOM Node (Element, Text, or DocumentFragment)
  */
-export function renderToDom(node: unknown, signal?: AbortSignal): Node {
+export function renderToDom(
+  node: unknown,
+  signal?: AbortSignal,
+  disposers?: Set<() => void>,
+): Node {
   if (node == null || node === false) {
     return document.createTextNode('');
   }
@@ -241,7 +250,7 @@ export function renderToDom(node: unknown, signal?: AbortSignal): Node {
   if (tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(lessjs.fragment)')) {
     const frag = document.createDocumentFragment();
     for (const child of children) {
-      frag.appendChild(renderToDom(child, signal));
+      frag.appendChild(renderToDom(child, signal, disposers));
     }
     return frag;
   }
@@ -262,7 +271,7 @@ export function renderToDom(node: unknown, signal?: AbortSignal): Node {
       const target = show ? truthy : falsy;
       if (anchor) anchor.remove();
       if (target != null) {
-        anchor = renderToDom(target, signal) as ChildNode;
+        anchor = renderToDom(target, signal, disposers) as ChildNode;
         marker.parentNode?.insertBefore(anchor, marker.nextSibling);
       } else {
         anchor = null;
@@ -296,7 +305,7 @@ export function renderToDom(node: unknown, signal?: AbortSignal): Node {
       // Render new
       for (let i = 0; i < items.length; i++) {
         const vn = renderFn(items[i], i);
-        const dom = renderToDom(vn, signal) as ChildNode;
+        const dom = renderToDom(vn, signal, disposers) as ChildNode;
         marker.parentNode?.insertBefore(dom, marker.nextSibling);
         anchors.push(dom);
       }
@@ -320,14 +329,14 @@ export function renderToDom(node: unknown, signal?: AbortSignal): Node {
           (instance as Record<string, unknown>)[k] = v;
         }
         const result = instance.render();
-        return renderToDom(result, signal);
+        return renderToDom(result, signal, disposers);
       } else {
         // Function component
         const result = (tag as (props: Record<string, unknown>) => unknown)({
           ...props,
           children,
         });
-        return renderToDom(result, signal);
+        return renderToDom(result, signal, disposers);
       }
     } catch (err) {
       // v0.26.1 FIX: Previously this silently returned empty TextNode,
@@ -342,9 +351,9 @@ export function renderToDom(node: unknown, signal?: AbortSignal): Node {
 
   // ── HTML / SVG element ───────────────────────────────────────────────────
   const el = createElementForTag(tag as string);
-  applyProps(el, props, signal);
+  applyProps(el, props, signal, disposers);
   for (const child of children) {
-    el.appendChild(renderToDom(child, signal));
+    el.appendChild(renderToDom(child, signal, disposers));
   }
 
   return el;

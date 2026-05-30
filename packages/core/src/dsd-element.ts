@@ -59,7 +59,7 @@ import {
 import { isVNode, type VNode } from './vnode.js';
 import { applyProps, renderToDom } from './jsx-render-dom.js';
 import { renderToString } from './jsx-render-string.js';
-import { effect, effectScope, type Signal, signal } from '@lessjs/signals';
+import { effect, type Signal, signal } from '@lessjs/signals';
 import { isSignalLike } from './signal-like.js';
 
 /**
@@ -141,8 +141,13 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    */
   /** v0.25.0 (SOP-012): Removed — detection now inline in _renderOrHydrate(). */
 
-  /** v0.26.1: effectScope dispose — one call cleans up all effects. */
-  private _scopeDispose?: () => void;
+  /**
+   * v0.27 (ADR-0065): Effect dispose tracking.
+   * Replaces effectScope() — effects are created at top level
+   * so they fire on signal changes. Disposed as a batch in
+   * disconnectedCallback.
+   */
+  #effectDisposers: Set<() => void> = new Set();
 
   /**
    * v0.27 (ADR-0065): Signal registry for attribute-based hydration.
@@ -295,15 +300,15 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   }
 
   /**
-   * v0.26.1 (ADR-0062): Hydrate DSD DOM with signal bindings.
+   * Hydrate DSD DOM with signal bindings.
    *
-   * All effects created during hydration (applyProps signal→DOM,
-   * text node bindings, Show/For) are captured by effectScope.
-   * One call to _scopeDispose() on disconnect cleans them all up.
+   * v0.27 (ADR-0065): Replaces effectScope() with Set-based
+   * dispose tracking. Alien-signals effectScope does not allow
+   * nested effects to fire on signal changes after scope closure.
+   * Plain effects created here fire correctly — the framework
+   * owns the bind/dispose lifecycle natively.
    *
-   * v0.27 (ADR-0065): _layoutWorkaroundReRender DELETED.
-   * Chromium DSD layout bug fixed with requestAnimationFrame
-   * force-layout — no DOM rebuild, no effect destruction.
+   * @module internal
    */
   private _hyrateExistingDom(): void {
     if (!this.shadowRoot) return;
@@ -311,22 +316,18 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     const result = this.render();
     if (!isVNode(result)) return;
 
-    // Dispose previous scope before creating new one
-    this._scopeDispose?.();
+    // Dispose previous effects before creating new ones
+    for (const d of this.#effectDisposers) d();
+    this.#effectDisposers.clear();
 
-    // All effects created inside this scope are auto-captured
-    this._scopeDispose = effectScope(() => {
-      // Walk DSD DOM and VNode tree in parallel, binding events
-      // and creating per-prop signal→DOM effect bindings
-      this._walkAndBind(this.shadowRoot!, result);
+    // Walk DSD DOM and VNode tree in parallel, binding events
+    // and creating per-prop signal→DOM effect bindings.
+    // Effects run at top level — signal changes always trigger.
+    this._walkAndBind(this.shadowRoot!, result);
 
-      // v0.27 (ADR-0065): Fix Chromium DSD layout bug without DOM rebuild.
-      // requestAnimationFrame forces a layout computation. The browser
-      // recalculates bounding rects for DSD content without destroying
-      // existing DOM nodes or their effect bindings.
-      requestAnimationFrame(() => {
-        void (this as HTMLElement).offsetHeight;
-      });
+    // v0.27 (ADR-0065): Fix Chromium DSD layout bug without DOM rebuild.
+    requestAnimationFrame(() => {
+      void (this as HTMLElement).offsetHeight;
     });
   }
 
@@ -409,7 +410,12 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       if (
         typeof vChild === 'object' && vChild !== null && 'props' in vChild && domNode.nodeType === 1
       ) {
-        applyProps(domNode as Element, vChild.props as Record<string, unknown>);
+        applyProps(
+          domNode as Element,
+          vChild.props as Record<string, unknown>,
+          undefined,
+          this.#effectDisposers,
+        );
         this._walkAndBind(
           domNode as Element,
           vChild as { tag?: string; props?: Record<string, unknown>; children?: unknown[] },
@@ -452,15 +458,14 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    * Aborts all hydration event listeners for cleanup.
    */
   disconnectedCallback(): void {
-    this._scopeDispose?.();
-    this._scopeDispose = undefined;
+    for (const d of this.#effectDisposers) d();
+    this.#effectDisposers.clear();
     disposeProps(this);
     disposeStaticProps(this as unknown as Record<string, unknown>);
   }
 
-  // v0.26.1: effectScope replaces _disposeTemplateRuntime + _disposeSignalSubscriptions.
-  // One _scopeDispose() call cleans up all effects created during
-  // _hyrateExistingDom, _renderIntoShadowRoot, and _walkAndBind.
+  // v0.27 (ADR-0065): Effect lifecycle managed by Set<dispose>.
+  // Replaces effectScope() — alien-signals scope blocks nested effect firing.
 
   /**
    * Lifecycle: called when an observed attribute changes.
@@ -544,25 +549,26 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
 
   private _renderIntoShadowRoot(): void {
     if (!this.shadowRoot) return;
-    this._scopeDispose?.();
 
-    this._scopeDispose = effectScope(() => {
-      const result = this.render();
-      if (isVNode(result)) {
-        while (this.shadowRoot!.firstChild) {
-          this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
-        }
-        this.shadowRoot!.appendChild(renderToDom(result));
-      } else if (typeof result === 'string') {
-        this.shadowRoot!.innerHTML = result;
-      } else {
-        console.warn(
-          `[DsdElement] <${this.tagName.toLowerCase()}>.render() returned unexpected type "${typeof result}". ` +
-            `Expected string or VNode.`,
-        );
-        this.shadowRoot!.innerHTML = '';
+    // Dispose previous effects
+    for (const d of this.#effectDisposers) d();
+    this.#effectDisposers.clear();
+
+    const result = this.render();
+    if (isVNode(result)) {
+      while (this.shadowRoot!.firstChild) {
+        this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
       }
-    });
+      this.shadowRoot!.appendChild(renderToDom(result, undefined, this.#effectDisposers));
+    } else if (typeof result === 'string') {
+      this.shadowRoot!.innerHTML = result;
+    } else {
+      console.warn(
+        `[DsdElement] <${this.tagName.toLowerCase()}>.render() returned unexpected type "${typeof result}". ` +
+          `Expected string or VNode.`,
+      );
+      this.shadowRoot!.innerHTML = '';
+    }
   }
 
   /**
