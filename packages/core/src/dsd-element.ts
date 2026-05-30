@@ -59,7 +59,9 @@ import {
 import { isVNode, type VNode } from './vnode.js';
 import { applyProps, renderToDom } from './jsx-render-dom.js';
 import { renderToString } from './jsx-render-string.js';
-import { signal } from '@lessjs/signals';
+import { signal, effectScope } from '@lessjs/signals';
+import { effect } from '@lessjs/signals';
+import { isSignalLike } from './signal-like.js';
 
 /**
  * Minimal SSR-safe HTMLElement stub for server environments (SOP-016).
@@ -140,11 +142,8 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    */
   /** v0.25.0 (SOP-012): Removed — detection now inline in _renderOrHydrate(). */
 
-  /** AbortController for VNode render event listener lifecycle */
-  private _templateAbortController?: AbortController;
-
-  /** Signal subscriptions from TemplateResult / VNode effects */
-  private _signalUnsubscribers: Array<() => void> = [];
+  /** v0.26.1: effectScope dispose — one call cleans up all effects. */
+  private _scopeDispose?: () => void;
 
   /** Reactive route parameters Signal. Updates automatically on SPA navigation. */
   #params = signal<Record<string, string>>({});
@@ -282,15 +281,11 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   }
 
   /**
-   * v0.25.0 (SOP-012): Hydrate DSD-pre-populated shadow DOM.
+   * v0.26.1 (ADR-0062): Hydrate DSD DOM with signal bindings.
    *
-   * Walks the existing shadow DOM tree and matches VNode structure to
-   * wire event listeners (onClick etc.) without re-creating any elements.
-   *
-   * v0.26.1 (ADR-0058): Removed effect(() => render()) callback.
-   * Signal→DOM bindings are created by applyProps at initial render
-   * time and update individual DOM attributes directly — no full
-   * re-render needed.
+   * All effects created during hydration (applyProps signal→DOM,
+   * text node bindings, Show/For) are captured by effectScope.
+   * One call to _scopeDispose() on disconnect cleans them all up.
    */
   private _hyrateExistingDom(): void {
     if (!this.shadowRoot) return;
@@ -298,67 +293,70 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     const result = this.render();
     if (!isVNode(result)) return;
 
-    // Create AbortController for effect cleanup. Effects created by
-    // applyProps during _walkAndBind share this signal — when the
-    // component disconnects, all per-prop signal effects are disposed.
-    this._templateAbortController = new AbortController();
+    // Dispose previous scope before creating new one
+    this._scopeDispose?.();
 
-    // Walk shadow DOM and VNode tree in parallel, binding events.
-    // Pass the AbortSignal so applyProps can attach effect cleanup.
-    this._walkAndBind(this.shadowRoot, result, this._templateAbortController.signal);
+    // All effects created inside this scope are auto-captured
+    this._scopeDispose = effectScope(() => {
+      // Walk DSD DOM and VNode tree in parallel, binding events
+      // and creating per-prop signal→DOM effect bindings
+      this._walkAndBind(this.shadowRoot!, result);
 
-    // ⚠️ Chromium DSD layout workaround — see _layoutWorkaroundReRender().
-    this._layoutWorkaroundReRender();
+      // One-time DOM replacement for Chromium DSD layout bug
+      this._layoutWorkaroundReRender();
+    });
   }
 
   /**
-   * v0.26.1 (ADR-0062): One-time DOM replacement to fix DSD layout.
-   * Uses renderToDom which creates fresh DOM nodes — Chromium then
-   * computes correct layout. Subsequent signal changes use per-prop
-   * bindings from _walkAndBind.
+   * v0.26.1: One-time DOM replacement for Chromium DSD layout bug.
+   * Clears and rebuilds shadow root — the only mechanism that
+   * forces Chromium to compute correct bounding rects for DSD content.
    */
   private _layoutWorkaroundReRender(): void {
-    if (this._templateAbortController) {
-      this._templateAbortController.abort();
-    }
-    this._templateAbortController = new AbortController();
     const updated = this.render();
     if (!isVNode(updated)) return;
     while (this.shadowRoot!.firstChild) {
       this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
     }
-    this.shadowRoot!.appendChild(
-      renderToDom(updated, this._templateAbortController.signal),
-    );
+    this.shadowRoot!.appendChild(renderToDom(updated));
   }
 
   /**
-   * Walk shadow DOM elements and VNode tree in parallel, binding events.
+   * Walk shadow DOM elements and VNode tree in parallel, binding events
+   * and creating signal text bindings for reactive text children.
    */
   private _walkAndBind(
     parent: Element | ShadowRoot,
     vnode: {
-      // deno-lint-ignore ban-types
       tag?: string | symbol | Function;
       props?: Record<string, unknown>;
       children?: unknown[];
     },
-    signal?: AbortSignal,
   ): void {
-    const vChildren = vnode
-      .children as (string | { tag?: string; props?: Record<string, unknown> })[];
+    const vChildren = vnode.children as (string | Record<string, unknown>)[];
     if (!vChildren) return;
 
     const domChildren = Array.from(parent.children);
     for (let i = 0; i < Math.min(domChildren.length, vChildren.length); i++) {
       const domChild = domChildren[i];
       const vChild = vChildren[i];
+
+      // G3 fix: reactive text children from signals
+      if (isSignalLike(vChild)) {
+        const sig = vChild as { value: unknown };
+        const existingText = domChild.childNodes[0];
+        if (existingText && existingText.nodeType === 3) {
+          // Bind existing DSD text node to signal
+          effect(() => { existingText.textContent = String(sig.value ?? ''); });
+        }
+        continue;
+      }
+
       if (typeof vChild === 'object' && vChild !== null && 'props' in vChild) {
-        applyProps(domChild, vChild.props as Record<string, unknown>, signal);
+        applyProps(domChild, vChild.props as Record<string, unknown>);
         this._walkAndBind(
           domChild,
           vChild as { tag?: string; props?: Record<string, unknown>; children?: unknown[] },
-          signal,
         );
       }
     }
@@ -393,13 +391,15 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    * Aborts all hydration event listeners for cleanup.
    */
   disconnectedCallback(): void {
-    this._disposeTemplateRuntime();
-    this._disposeSignalSubscriptions();
-    // v0.24 (ADR-0052): Clean up @prop() signal subscriptions
+    this._scopeDispose?.();
+    this._scopeDispose = undefined;
     disposeProps(this);
-    // v0.24.1 (ADR-0057): Clean up static props signal subscriptions
     disposeStaticProps(this as unknown as Record<string, unknown>);
   }
+
+  // v0.26.1: effectScope replaces _disposeTemplateRuntime + _disposeSignalSubscriptions.
+  // One _scopeDispose() call cleans up all effects created during
+  // _hyrateExistingDom, _renderIntoShadowRoot, and _walkAndBind.
 
   /**
    * Lifecycle: called when an observed attribute changes.
@@ -483,53 +483,25 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
 
   private _renderIntoShadowRoot(): void {
     if (!this.shadowRoot) return;
-    this._disposeTemplateRuntime();
-    this._disposeSignalSubscriptions();
+    this._scopeDispose?.();
 
-    const result = this.render();
-    if (isVNode(result)) {
-      // Clear existing DOM
-      while (this.shadowRoot.firstChild) {
-        this.shadowRoot.removeChild(this.shadowRoot.firstChild);
+    this._scopeDispose = effectScope(() => {
+      const result = this.render();
+      if (isVNode(result)) {
+        while (this.shadowRoot!.firstChild) {
+          this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
+        }
+        this.shadowRoot!.appendChild(renderToDom(result));
+      } else if (typeof result === 'string') {
+        this.shadowRoot!.innerHTML = result;
+      } else {
+        console.warn(
+          `[DsdElement] <${this.tagName.toLowerCase()}>.render() returned unexpected type "${typeof result}". ` +
+            `Expected string or VNode.`,
+        );
+        this.shadowRoot!.innerHTML = '';
       }
-      // v0.26.1 (ADR-0058): renderToDom → applyProps creates signal→DOM
-      // effect bindings for any signal-valued props. No effect(() => render())
-      // needed — each signal updates its bound DOM attribute independently.
-      this._templateAbortController = new AbortController();
-      const dom = renderToDom(result, this._templateAbortController.signal);
-      this.shadowRoot.appendChild(dom);
-    } else if (typeof result === 'string') {
-      this.shadowRoot.innerHTML = result;
-    } else {
-      // Defensive: render() returned an unexpected type (e.g. plain object from
-      // mis-configured JSX transform). Log a helpful warning instead of silently
-      // rendering "[object Object]".
-      console.warn(
-        `[DsdElement] <${this.tagName.toLowerCase()}>.render() returned unexpected type "${typeof result}". ` +
-          `Expected string or VNode. ` +
-          `If using JSX, ensure your build tool is configured with jsx: "automatic" and jsxImportSource: "@lessjs/core".`,
-      );
-      this.shadowRoot.innerHTML = '';
-    }
-  }
-
-  // v0.25.0 (SOP-012): Removed _bindCurrentRenderTemplate().
-  // DSD hydration handled by _hyrateExistingDom() which walks
-  // the pre-populated DOM and binds events via applyProps.
-  // v0.26.1 (ADR-0058): Signal→DOM bindings are auto-created by
-  // applyProps during _walkAndBind — no effect(render) needed.
-
-  private _disposeTemplateRuntime(): void {
-    if (this._templateAbortController) {
-      this._templateAbortController.abort();
-      this._templateAbortController = undefined;
-    }
-  }
-
-  private _disposeSignalSubscriptions(): void {
-    for (const unsubscribe of this._signalUnsubscribers.splice(0)) {
-      unsubscribe();
-    }
+    });
   }
 
   /**
