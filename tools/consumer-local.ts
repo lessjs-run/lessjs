@@ -57,9 +57,6 @@ denoJson.imports['@lessjs/core'] = pathToFileURL(
 denoJson.imports['@lessjs/core/logger'] = pathToFileURL(
   join(repoRoot, 'packages', 'core', 'src', 'logger.ts'),
 ).href;
-denoJson.imports['@lessjs/core/navigation'] = pathToFileURL(
-  join(repoRoot, 'packages', 'core', 'src', 'navigation.ts'),
-).href;
 denoJson.imports['@lessjs/adapter-vite/build-context'] = pathToFileURL(
   join(repoRoot, 'packages', 'adapter-vite', 'src', 'build-context.ts'),
 ).href;
@@ -127,10 +124,6 @@ const aliases = [
   {
     find: '@lessjs/core/logger',
     replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'logger.ts')),
-  },
-  {
-    find: '@lessjs/core/navigation',
-    replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'navigation.ts')),
   },
   {
     find: '@lessjs/core',

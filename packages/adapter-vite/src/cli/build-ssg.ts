@@ -555,16 +555,16 @@ if (typeof globalThis.customElements === 'undefined') {
             const normalized = normalizePath(id.split('?')[0]);
             if (!clientOnlyIslandIds.has(normalized)) return;
             const tagName = clientOnlyTagMap.get(normalized) || 'less-client-only-stub';
-            // v0.21: Preserve original tag name with data-less-client-only marker.
-            // SSR outputs <tag-name data-less-client-only="true"></tag-name>
+            // v0.27: Client-only stub marker — unbranded attribute.
+            // SSR outputs <tag-name data-client-only="true"></tag-name>
             // Client runtime imports the real module and upgrades the element.
             return [
               `export const tagName = ${JSON.stringify(tagName)};`,
               'export const less = { ssr: false };',
               `export default class LessClientOnlyStub extends HTMLElement {
   connectedCallback() {
-    if (!this.hasAttribute('data-less-client-only')) {
-      this.setAttribute('data-less-client-only', 'true');
+    if (!this.hasAttribute('data-client-only')) {
+      this.setAttribute('data-client-only', 'true');
     }
   }
 }`,

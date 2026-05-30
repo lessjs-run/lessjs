@@ -41,13 +41,13 @@ _layoutWorkaroundReRender:
 
 ### Two Renderers, Divergent Behavior
 
-| | renderToString | renderToDom |
-|---|---|---|
-| Signal→value | `renderToString(signal.value)` → dead string | `effect(el.textContent = signal.value)` |
-| textContent={signal} | strips attribute, sets child content | `el.textContent = signal.value` (via applyStaticProp) |
-| Boolean attrs | emits bare attribute or omits | setAttribute/removeAttribute |
-| Style objects | inline CSS string | Object.assign(el.style) |
-| Show/FOR | static snapshot | signal-driven reconcile |
+|                      | renderToString                               | renderToDom                                           |
+| -------------------- | -------------------------------------------- | ----------------------------------------------------- |
+| Signal→value         | `renderToString(signal.value)` → dead string | `effect(el.textContent = signal.value)`               |
+| textContent={signal} | strips attribute, sets child content         | `el.textContent = signal.value` (via applyStaticProp) |
+| Boolean attrs        | emits bare attribute or omits                | setAttribute/removeAttribute                          |
+| Style objects        | inline CSS string                            | Object.assign(el.style)                               |
+| Show/FOR             | static snapshot                              | signal-driven reconcile                               |
 
 These divergences are the source of hydration mismatches.
 
@@ -107,61 +107,61 @@ LessJS has neither. `renderToString` strips signal identity. `_walkAndBind` gues
 
 ### Core Principle
 
-**Signal is the one true source of truth.** VNode is the one intermediate representation. SSR is VNode→HTML serialization. CSR is VNode→DOM instantiation. SSR HTML carries signal metadata via `data-less-s` attributes.
+**Signal is the one true source of truth.** VNode is the one intermediate representation. SSR is VNode→HTML serialization. CSR is VNode→DOM instantiation. SSR HTML carries signal metadata via `data-signal` attributes.
 
 ```
 render() → VNode (ONE representation)
               │
               ├── SSR: VNode → HTML
-              │         signal → data-less-s="signalName" attribute on element
-              │         <span data-less-s="count">42</span>
+              │         signal → data-signal="signalName" attribute on element
+              │         <span data-signal="count">42</span>
               │         └── signal identity preserved in HTML
               │
               └── CSR: VNode → DOM
                         signal → effect(el.prop = signal.value)
                         direct binding, no position guess
 
-hydration: querySelectorAll('[data-less-s]')
+hydration: querySelectorAll('[data-signal]')
             → read attribute → find signal → effect() bind
             └── zero traversal matching, zero position guessing
 ```
 
 ### What Gets Deleted
 
-| Current | Reason |
-|---|---|
-| `_layoutWorkaroundReRender` | Hack. Replaced by `requestAnimationFrame(() => void shadowRoot.offsetHeight)` |
-| `_walkAndBind` traversal logic | Replaced by `querySelectorAll('[data-less-s]')` |
-| `renderToString` signal unwrapping | Signal identity preserved as HTML attributes |
-| `parent.children` / `parent.childNodes` filtering | Not needed — no parallel traversal |
-| Index alignment, comment filtering | Not needed — attribute-based lookup, position-irrelevant |
+| Current                                           | Reason                                                                        |
+| ------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `_layoutWorkaroundReRender`                       | Hack. Replaced by `requestAnimationFrame(() => void shadowRoot.offsetHeight)` |
+| `_walkAndBind` traversal logic                    | Replaced by `querySelectorAll('[data-signal]')`                               |
+| `renderToString` signal unwrapping                | Signal identity preserved as HTML attributes                                  |
+| `parent.children` / `parent.childNodes` filtering | Not needed — no parallel traversal                                            |
+| Index alignment, comment filtering                | Not needed — attribute-based lookup, position-irrelevant                      |
 
 ### What Gets Added
 
-| New | Purpose |
-|---|---|
-| `data-less-s="signalName"` in SSR HTML | Preserves signal identity across SSR→hydration boundary |
-| `data-less-on="click:handlerName"` in SSR HTML | Preserves event bindings |
-| `signalRegistry` on DsdElement | Maps signal names to signal objects for hydration lookup |
-| `hydrateSignals(root)` | `querySelectorAll('[data-less-s]')` + create effects |
-| `hydrateEvents(root)` | `querySelectorAll('[data-less-on]')` + addEventListeners |
+| New                                            | Purpose                                                  |
+| ---------------------------------------------- | -------------------------------------------------------- |
+| `data-signal="signalName"` in SSR HTML         | Preserves signal identity across SSR→hydration boundary  |
+| `data-less-on="click:handlerName"` in SSR HTML | Preserves event bindings                                 |
+| `signalRegistry` on DsdElement                 | Maps signal names to signal objects for hydration lookup |
+| `hydrateSignals(root)`                         | `querySelectorAll('[data-signal]')` + create effects     |
+| `hydrateEvents(root)`                          | `querySelectorAll('[data-less-on]')` + addEventListeners |
 
 ### What Stays
 
-| Component | Status |
-|---|---|
-| VNode type (`types.ts`, `vnode.ts`) | ✅ Stays — becomes the one intermediate representation |
-| `renderToDom` | ✅ Stays — simplifies: doesn't need VNode→DOM with signal identity, just VNode→DOM |
-| `applyProps` | ✅ Stays — signal→effect binding remains valid |
-| `renderToString` | ✅ Stays but simplified — adds `data-less-s` attribute generation |
-| `DsdElement` | ✅ Core stays — hydration path simplified |
-| JSX runtime (`<Show>`, `<For>`, etc.) | ✅ Stays |
+| Component                             | Status                                                                             |
+| ------------------------------------- | ---------------------------------------------------------------------------------- |
+| VNode type (`types.ts`, `vnode.ts`)   | ✅ Stays — becomes the one intermediate representation                             |
+| `renderToDom`                         | ✅ Stays — simplifies: doesn't need VNode→DOM with signal identity, just VNode→DOM |
+| `applyProps`                          | ✅ Stays — signal→effect binding remains valid                                     |
+| `renderToString`                      | ✅ Stays but simplified — adds `data-signal` attribute generation                  |
+| `DsdElement`                          | ✅ Core stays — hydration path simplified                                          |
+| JSX runtime (`<Show>`, `<For>`, etc.) | ✅ Stays                                                                           |
 
 ## Expected Outcomes
 
 1. **Zero hydration mismatches**: No position guessing. Attribute-based lookup is position-independent.
 2. **No DOM rebuild**: `_layoutWorkaroundReRender` deleted. DSD DOM preserved.
-3. **Counter works**: `data-less-s="count"` → `effect(el.textContent = signal.value)` — one line, no traversal.
+3. **Counter works**: `data-signal="count"` → `effect(el.textContent = signal.value)` — one line, no traversal.
 4. **Conditional rendering works**: Signal tracking + VNode diff (future phase) enables `{signal && <div>}`.
 5. **Effect cleanup guaranteed**: One `effectScope` capture, one `dispose` call.
 

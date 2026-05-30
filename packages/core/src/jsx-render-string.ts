@@ -220,13 +220,13 @@ export function renderToString(node: unknown): string {
   // innerHTML prop: render as raw HTML content (build-time sanitized, ADR-0064)
   const innerHTML = props?.innerHTML as string | undefined;
   // textContent prop: render signal/dynamic value as escaped child content (v0.27)
-  // Signal identity is preserved for hydration via the parent element's data-less-s attribute.
+  // Signal identity preserved via data-signal attribute for hydration.
   const textContent = props?.textContent !== undefined
     ? escapeHtml(String(unwrapSignalLike(props.textContent)))
     : undefined;
-  // v0.27 (ADR-0065): Emit data-less-s when textContent is signal-bound.
+  // v0.27 (ADR-0065): Emit data-signal when textContent is signal-bound.
   const hasSignalText = textContent !== undefined && isSignalLike(props!.textContent);
-  const sigAttr = hasSignalText ? ' data-less-s' : '';
+  const sigAttr = hasSignalText ? ' data-signal' : '';
   const childHtml = innerHTML !== undefined
     ? innerHTML
     : textContent !== undefined

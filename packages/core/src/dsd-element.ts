@@ -6,7 +6,7 @@
  *   - Client-Side Rendering (CSR) fallback when no DSD content exists
  *   - StyleSheet (SSR-safe CSSStyleSheet) via adoptedStyleSheets
  *   - Declarative event binding via html template @click / @keydown etc.
- *   - Signal-driven fine-grained DOM patching via data-less-b markers
+ *   - Signal-driven fine-grained DOM patching via data-signal markers
  *   - AbortController cleanup on disconnect
  *   - formAssociated + delegatesFocus support
  *   - ReactiveHost protocol for explicit Signal integration
@@ -146,17 +146,17 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
 
   /**
    * v0.27 (ADR-0065): Signal registry for attribute-based hydration.
-   * Maps signal names → signal objects. Built by _registerSignal()
-   * in component constructors, consumed by _hydrateSignals().
+   * Maps signal names → signal objects. Built by registerSignal()
+   * in component constructors, consumed during hydration.
    */
-  private _signalRegistry: Map<string, Signal<unknown>> = new Map();
+  private signalRegistry: Map<string, Signal<unknown>> = new Map();
 
   /**
    * Register a signal for hydration by name.
-   * Call in constructor: this._registerSignal('count', this.#count);
+   * Call in constructor: this.registerSignal('count', this.#count);
    */
-  protected _registerSignal(name: string, sig: Signal<unknown>): void {
-    this._signalRegistry.set(name, sig);
+  protected registerSignal(name: string, sig: Signal<unknown>): void {
+    this.signalRegistry.set(name, sig);
   }
 
   /** Reactive route parameters Signal. Updates automatically on SPA navigation. */

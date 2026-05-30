@@ -206,8 +206,8 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     denoJson.imports['@lessjs/core/logger'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'logger.ts'),
     ).href;
-    denoJson.imports['@lessjs/core/navigation'] = pathToFileURL(
-      join(repoRoot, 'packages', 'core', 'src', 'navigation.ts'),
+    denoJson.imports['@lessjs/core/render-instantiate'] = pathToFileURL(
+      join(repoRoot, 'packages', 'core', 'src', 'render-instantiate.ts'),
     ).href;
     denoJson.imports['@lessjs/core/jsx-runtime'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts'),
@@ -282,8 +282,8 @@ Deno.test('create-less: generated project builds through the one-command pipelin
         replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'logger.ts')),
       },
       {
-        find: '@lessjs/core/navigation',
-        replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'navigation.ts')),
+        find: '@lessjs/core/render-instantiate',
+        replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'render-instantiate.ts')),
       },
       {
         find: '@lessjs/core/jsx-runtime',
