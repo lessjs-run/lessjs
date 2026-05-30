@@ -35,19 +35,17 @@ sheet.replaceSync(`
     align-items: center;
     justify-content: center;
     width: 32px; height: 32px; padding: 0;
-    border: var(--border-size-2) solid var(--text-secondary);
+    border: 0.5px solid var(--border);
     border-radius: var(--radius-2);
     background: transparent;
-    color: var(--text-secondary);
+    color: var(--text-muted);
     cursor: pointer;
-    font-size: 0; line-height: var(--font-lineheight-1);
     transition: all var(--ease-2) var(--duration-2);
   }
   .theme-toggle:hover {
     color: var(--text-primary);
-    border-color: var(--brand-neon);
-    background: var(--brand-glow);
-    transform: rotate(45deg);
+    border-color: var(--brand);
+    background: var(--bg-surface);
   }
 
   .theme-toggle svg {
