@@ -60,6 +60,8 @@ export const openPropsTokenSheet: StyleSheetLike = createTokenSheet();
 function createTokenSheet(): StyleSheetLike {
   const sheet: StyleSheetLike = new StyleSheet();
   sheet.replaceSync(`:host {
+  display: block;
+
   /* ═══════════════════════════════════════════════
      Open Props Native Tokens
      ═══════════════════════════════════════════════ */
