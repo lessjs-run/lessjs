@@ -1,18 +1,17 @@
 /**
  * LessJS Docs - Shared Page Styles
  *
- * v0.26.1 Complete overhaul:
- * - All sizing → Open Props var(--size-N) / var(--font-size-N)
- * - All colors → Open Props var(--text-*) / var(--gray-*) / var(--brand*)
- * - Light/dark contrast via [data-theme] selectors
- * - Removed duplicate .nav-row
- * - Improved typography for readability
+ * v0.27.0 Typography overhaul:
+ * - Unified type scale per docs/design/typography.md
+ * - h1-h6 hierarchy aligned to heading roles
+ * - body text font-size-1 (16px), dense content font-size-0
+ * - All line-heights use var(--font-lineheight-N)
  */
 export const pageStyles = `
   :host { display: block; }
 
   .container {
-    max-width: var(--size-content-3, 800px);
+    max-width: 720px;
     margin: 0 auto;
     padding: var(--size-10) var(--size-6) var(--size-16);
     overflow-wrap: break-word;
@@ -27,45 +26,70 @@ export const pageStyles = `
     margin: var(--size-4) 0;
   }
 
-  /* ─── Headings ─── */
+  /* ─── Headings — per docs/design/typography.md ─── */
   h1 {
-    font-size: var(--font-size-8);
-    font-weight: var(--font-weight-7);
-    letter-spacing: -0.025em;
+    font-size: var(--font-size-7);
+    font-weight: var(--font-weight-9);
+    letter-spacing: var(--font-letterspacing-0);
     margin: 0 0 var(--size-3);
     color: var(--text-primary);
-    line-height: var(--font-lineheight-0);
+    line-height: var(--font-lineheight-1);
+  }
+
+  h2 {
+    font-size: var(--font-size-5);
+    font-weight: var(--font-weight-8);
+    margin: var(--size-10) 0 var(--size-4);
+    color: var(--text-primary);
+    padding-bottom: var(--size-2);
+    border-bottom: 0.5px solid var(--border);
+    line-height: var(--font-lineheight-1);
+  }
+
+  h3 {
+    font-size: var(--font-size-4);
+    font-weight: var(--font-weight-7);
+    margin: var(--size-6) 0 var(--size-2);
+    color: var(--text-primary);
+    line-height: var(--font-lineheight-3);
+  }
+
+  h4 {
+    font-size: var(--font-size-3);
+    font-weight: var(--font-weight-6);
+    margin: var(--size-4) 0 var(--size-2);
+    color: var(--text-primary);
+    line-height: var(--font-lineheight-3);
+  }
+
+  h5 {
+    font-size: var(--font-size-2);
+    font-weight: var(--font-weight-6);
+    margin: var(--size-3) 0 var(--size-1);
+    color: var(--text-primary);
+    line-height: var(--font-lineheight-4);
+  }
+
+  h6 {
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-6);
+    margin: var(--size-2) 0 var(--size-1);
+    color: var(--text-secondary);
+    line-height: var(--font-lineheight-4);
   }
 
   .subtitle {
     color: var(--text-muted);
     margin-bottom: var(--size-12);
-    font-size: var(--font-size-3);
-    line-height: var(--font-lineheight-4);
-  }
-
-  h2 {
-    font-size: var(--font-size-6);
-    font-weight: var(--font-weight-6);
-    margin: var(--size-10) 0 var(--size-4);
-    color: var(--text-primary);
-    letter-spacing: -0.01em;
-    padding-bottom: var(--size-2);
-    border-bottom: 0.5px solid var(--border);
-  }
-
-  h3 {
-    font-size: var(--font-size-4);
-    font-weight: var(--font-weight-6);
-    margin: var(--size-6) 0 var(--size-2);
-    color: var(--text-primary);
+    font-size: var(--font-size-2);
+    line-height: var(--font-lineheight-3);
   }
 
   p {
     line-height: var(--font-lineheight-4);
     margin: var(--size-2) 0;
-    color: var(--text-secondary);
-    font-size: var(--font-size-2);
+    color: var(--text-primary);
+    font-size: var(--font-size-1);
   }
 
   strong { color: var(--text-primary); font-weight: var(--font-weight-6); }
@@ -153,7 +177,8 @@ export const pageStyles = `
     background: var(--bg-surface);
     border-radius: 0 var(--radius-3) var(--radius-3) 0;
   }
-  .callout.warn { border-left-color: var(--brand-deep); }
+  .callout.warn { border-left-color: var(--warning); }
+  .callout.info { border-left-color: var(--info); }
 
   .pillar .num {
     font-size: var(--font-size-00);
@@ -180,6 +205,7 @@ export const pageStyles = `
     padding-left: var(--size-5);
     color: var(--text-secondary);
     line-height: var(--font-lineheight-4);
+    font-size: var(--font-size-1);
   }
   li { margin: var(--size-1) 0; }
 
@@ -229,20 +255,20 @@ export const pageStyles = `
   @media (max-width: 1100px) { .content-grid { grid-template-columns: 1fr; } }
   @media (max-width: 900px) {
     .container { padding: var(--size-8) var(--size-5) var(--size-12); }
-    h1 { font-size: var(--font-size-7); }
-    h2 { font-size: var(--font-size-5); }
-    .subtitle { margin-bottom: var(--size-8); }
+    h1 { font-size: var(--font-size-6); }
+    h2 { font-size: var(--font-size-4); }
+    .subtitle { margin-bottom: var(--size-8); font-size: var(--font-size-1); }
+    p { font-size: var(--font-size-0); }
     pre { padding: var(--size-4) var(--size-5); font-size: var(--font-size-00); }
     .nav-row { flex-direction: column; gap: var(--size-3); }
   }
   @media (max-width: 480px) {
     .container { padding: var(--size-6) var(--size-4) var(--size-10); }
-    h1 { font-size: var(--font-size-6); }
-    .subtitle { font-size: var(--font-size-0); margin-bottom: var(--size-6); }
-    h2 { font-size: var(--font-size-4); }
+    h1 { font-size: var(--font-size-5); }
+    h2 { font-size: var(--font-size-3); }
     p { font-size: var(--font-size-0); }
     pre { padding: var(--size-3) var(--size-4); font-size: var(--font-size-00); }
-    ul, ol { padding-left: var(--size-4); }
+    ul, ol { padding-left: var(--size-4); font-size: var(--font-size-0); }
   }
 
   :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }

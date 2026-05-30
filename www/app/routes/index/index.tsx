@@ -76,7 +76,7 @@ heroSheet.replaceSync(`
   }
   .laser-label {
     margin-top: var(--size-2);
-    font-family: var(--font-mono); font-size: var(--font-size-00); color: var(--cyber-green); text-align: right;
+    font-family: var(--font-mono); font-size: var(--font-size-00); color: var(--brand); text-align: right;
   }
   .terminal {
     margin-top: var(--size-7);
@@ -105,7 +105,7 @@ heroSheet.replaceSync(`
   .features { max-width: 1200px; margin: 0 auto; padding: var(--size-10) var(--size-10) var(--size-10); position: relative; z-index: 1; }
   .features-head { margin-bottom: var(--size-8); }
   .features-head p {
-    font-size: var(--font-size-00); font-weight: var(--font-weight-8); color: var(--cyber-green);
+    font-size: var(--font-size-00); font-weight: var(--font-weight-8); color: var(--brand);
     text-transform: uppercase; letter-spacing: var(--font-letterspacing-5); margin: 0 0 var(--size-2);
   }
   .features-head h2 {
