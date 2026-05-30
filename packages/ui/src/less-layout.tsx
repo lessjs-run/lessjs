@@ -868,8 +868,6 @@ export class LessLayout extends DsdElement {
       this._setupDetailsToggle();
     }
 
-    // v0.27: Router.start() replaces _setupNavDelegation + navigate + onNavigate.
-    // Router handles: click delegation, Navigation API intercept, locale sync.
     this.routing.start({
       contentLoader: async (path: string) => {
         await this._loadContent(path);
@@ -995,13 +993,34 @@ export class LessLayout extends DsdElement {
     }
   }
 
+  /**
+   * Recursively search for less-layout in parsed DOM, including
+   * inside <template shadowrootmode="open"> (DSD content).
+   *
+   * querySelector does not traverse template content, but SSG pages
+   * wrap page output in a page component whose shadow root contains
+   * the <less-layout>.
+   */
+  private _findLessLayout(root: Element | DocumentFragment): HTMLElement | null {
+    for (const child of Array.from(root.children)) {
+      if (child.tagName.toLowerCase() === 'less-layout') return child as HTMLElement;
+      if (child.tagName === 'TEMPLATE') {
+        const found = this._findLessLayout((child as HTMLTemplateElement).content);
+        if (found) return found;
+      }
+      const found = this._findLessLayout(child);
+      if (found) return found;
+    }
+    return null;
+  }
+
   private async _loadContent(path: string): Promise<void> {
     try {
       const resp = await fetch(path);
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const html = await resp.text();
       const tmp = new DOMParser().parseFromString(html, 'text/html').body;
-      const newLayout = tmp.querySelector<HTMLElement>('less-layout');
+      const newLayout = this._findLessLayout(tmp);
       if (!newLayout) throw new Error('No less-layout found');
       while (this.firstChild) this.removeChild(this.firstChild);
       while (newLayout.firstChild) this.appendChild(newLayout.firstChild);
