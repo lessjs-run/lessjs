@@ -15,12 +15,8 @@ export class IslandsSsrPage extends DsdElement {
   }
 
   private _renderZh() {
-    return `
-      <less-layout locale="${this._getLocale('zh')}" locales='${
-      JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(navSections)}' header-nav='${
-      JSON.stringify(headerNav)
-    }' current-path="/guide/islands-and-ssr">
+    return (
+      <less-layout locale={this._getLocale('zh')} locales={JSON.stringify(['en', 'zh'])} nav-items={JSON.stringify(navSections)} header-nav={JSON.stringify(headerNav)} current-path="/guide/islands-and-ssr">
         <div class="container">
           <h1>Islands 与 SSR</h1>
           <p class="subtitle">
@@ -56,12 +52,12 @@ export class IslandsSsrPage extends DsdElement {
             Declarative Shadow DOM 让服务端渲染的 Web Components 在 HTML 解析阶段就有 shadow root。
             用户看到内容的那一刻，不需要任何 JavaScript。
           </p>
-          <less-code-block><pre><code>&lt;my-card&gt;
+          <less-code-block><pre><code>{`&lt;my-card&gt;
   &lt;template shadowrootmode="open"&gt;
     &lt;style&gt;:host { display: block; }&lt;/style&gt;
     &lt;p&gt;内容在 JavaScript 加载前即可见。&lt;/p&gt;
   &lt;/template&gt;
-&lt;/my-card&gt;</code></pre></less-code-block>
+&lt;/my-card&gt;`}</code></pre></less-code-block>
 
           <h2>三层组件模型</h2>
           <table>
@@ -77,7 +73,7 @@ export class IslandsSsrPage extends DsdElement {
           <p>
             通过 <code>defineIsland()</code> API 声明 island，支持四种 hydration 策略：
           </p>
-          <less-code-block><pre><code>import { defineIsland } from '@lessjs/core';
+          <less-code-block><pre><code>{`import { defineIsland } from '@lessjs/core';
 
 export class MyChart extends DsdElement { /* ... */ }
 
@@ -91,7 +87,7 @@ defineIsland(MyChart, { strategy: 'idle' });
 defineIsland(MyChart, { strategy: 'visible' });
 
 // 纯客户端渲染（无 DSD，无 SSR）
-defineIsland(MyChart, { strategy: 'only' });</code></pre></less-code-block>
+defineIsland(MyChart, { strategy: 'only' });`}</code></pre></less-code-block>
 
           <table>
             <thead><tr><th>策略</th><th>触发条件</th><th>推荐用途</th></tr></thead>
@@ -105,7 +101,7 @@ defineIsland(MyChart, { strategy: 'only' });</code></pre></less-code-block>
 
           <h2>创建 Island</h2>
           <p>将需要客户端行为的组件放在 <code>app/islands/</code> 目录：</p>
-          <less-code-block><pre><code>// app/islands/counter.ts
+          <less-code-block><pre><code>{`// app/islands/counter.ts
 import { DsdElement, signal } from '@lessjs/core';
 
 export class Counter extends DsdElement {
@@ -122,7 +118,7 @@ export class Counter extends DsdElement {
   }
 }
 
-customElements.define('my-counter', Counter);</code></pre></less-code-block>
+customElements.define('my-counter', Counter);`}</code></pre></less-code-block>
           <p>在页面中使用：</p>
           <less-code-block><pre><code>&lt;my-counter&gt;&lt;/my-counter&gt;</code></pre></less-code-block>
           <p>
@@ -153,18 +149,14 @@ customElements.define('my-counter', Counter);</code></pre></less-code-block>
           </div>
         </div>
       </less-layout>
-    `;
+    );
   }
 
   private _renderEn() {
-    return `
-      <less-layout locale="${this._getLocale('en')}" locales='${
-      JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(navSections)}' header-nav='${
-      JSON.stringify(headerNav)
-    }' current-path="/en/guide/islands-and-ssr">
+    return (
+      <less-layout locale={this._getLocale('en')} locales={JSON.stringify(['en', 'zh'])} nav-items={JSON.stringify(navSections)} header-nav={JSON.stringify(headerNav)} current-path="/en/guide/islands-and-ssr">
         <div class="container">
-          <h1>Islands &amp; SSR</h1>
+          <h1>Islands & SSR</h1>
           <p class="subtitle">
             LessJS's Ocean/Island model: server pre-renders content via DSD, client upgrades interactive
             components on demand.
@@ -200,12 +192,12 @@ customElements.define('my-counter', Counter);</code></pre></less-code-block>
             Declarative Shadow DOM lets server-rendered Web Components have their shadow root during
             HTML parsing. Users see content immediately — no JavaScript required.
           </p>
-          <less-code-block><pre><code>&lt;my-card&gt;
+          <less-code-block><pre><code>{`&lt;my-card&gt;
   &lt;template shadowrootmode="open"&gt;
     &lt;style&gt;:host { display: block; }&lt;/style&gt;
     &lt;p&gt;Content is visible before JavaScript loads.&lt;/p&gt;
   &lt;/template&gt;
-&lt;/my-card&gt;</code></pre></less-code-block>
+&lt;/my-card&gt;`}</code></pre></less-code-block>
 
           <h2>Three-Layer Component Model</h2>
           <table>
@@ -221,7 +213,7 @@ customElements.define('my-counter', Counter);</code></pre></less-code-block>
           <p>
             Declare islands via <code>defineIsland()</code> API with four hydration strategies:
           </p>
-          <less-code-block><pre><code>import { defineIsland } from '@lessjs/core';
+          <less-code-block><pre><code>{`import { defineIsland } from '@lessjs/core';
 
 export class MyChart extends DsdElement { /* ... */ }
 
@@ -235,7 +227,7 @@ defineIsland(MyChart, { strategy: 'idle' });
 defineIsland(MyChart, { strategy: 'visible' });
 
 // Client-only render (no DSD, no SSR)
-defineIsland(MyChart, { strategy: 'only' });</code></pre></less-code-block>
+defineIsland(MyChart, { strategy: 'only' });`}</code></pre></less-code-block>
 
           <table>
             <thead><tr><th>Strategy</th><th>Trigger</th><th>Recommended Use</th></tr></thead>
@@ -249,7 +241,7 @@ defineIsland(MyChart, { strategy: 'only' });</code></pre></less-code-block>
 
           <h2>Creating an Island</h2>
           <p>Place components that need client-side behavior in the <code>app/islands/</code> directory:</p>
-          <less-code-block><pre><code>// app/islands/counter.ts
+          <less-code-block><pre><code>{`// app/islands/counter.ts
 import { DsdElement, signal } from '@lessjs/core';
 
 export class Counter extends DsdElement {
@@ -266,7 +258,7 @@ export class Counter extends DsdElement {
   }
 }
 
-customElements.define('my-counter', Counter);</code></pre></less-code-block>
+customElements.define('my-counter', Counter);`}</code></pre></less-code-block>
           <p>Usage in pages:</p>
           <less-code-block><pre><code>&lt;my-counter&gt;&lt;/my-counter&gt;</code></pre></less-code-block>
           <p>
@@ -294,12 +286,12 @@ customElements.define('my-counter', Counter);</code></pre></less-code-block>
           </less-callout>
 
           <div class="nav-row">
-            <a href="/guide/routing-and-data" class="nav-link">&larr; Routing &amp; Data</a>
+            <a href="/guide/routing-and-data" class="nav-link">&larr; Routing & Data</a>
             <a href="/guide/deployment" class="nav-link">Deployment &rarr;</a>
           </div>
         </div>
       </less-layout>
-    `;
+    );
   }
 }
 

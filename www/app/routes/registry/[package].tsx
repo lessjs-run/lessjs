@@ -229,43 +229,43 @@ export default class DocsRegistryDetail extends DsdElement {
     const compatSuffix = pkg && COMPAT_COLORS[pkg.compatibility] ? pkg.compatibility : 'default';
 
     if (!pkg) {
-      return `
-        <less-layout nav-items='${JSON.stringify(navSections)}' header-nav='${
+      return (
+        <less-layout nav-items={JSON.stringify(navSections)} header-nav='${
         JSON.stringify(headerNav)
-      }' current-path="/registry/${fullName}" locale="en" locales='${JSON.stringify(['en'])}'>
+      }' current-path="/registry/{fullName}" locale="en" locales={JSON.stringify(['en'])}>
           <div class="container">
-            <div class="not-found"><h2>Package Not Found</h2><p>"${fullName}" is not in the registry.</p>
+            <div class="not-found"><h2>Package Not Found</h2><p>"{fullName}" is not in the registry.</p>
             <a href="/registry" class="not-found-link">← Back to Registry</a></div>
           </div>
         </less-layout>
-      `;
+      );
     }
 
     const hasSnapshots = Object.keys(pkg.snapshotPaths).length > 0;
 
-    return `
-      <less-layout nav-items='${JSON.stringify(navSections)}' header-nav='${
+    return (
+      <less-layout nav-items={JSON.stringify(navSections)} header-nav='${
       JSON.stringify(headerNav)
-    }' current-path="/registry/${fullName}" locale="en" locales='${JSON.stringify(['en'])}'>
+    }' current-path="/registry/{fullName}" locale="en" locales={JSON.stringify(['en'])}>
         <div class="container">
-          <div class="breadcrumb"><a href="/registry">Registry</a> / <span>${fullName}</span></div>
+          <div class="breadcrumb"><a href="/registry">Registry</a> / <span>{fullName}</span></div>
 
           <div class="detail-header">
             <div class="pkg-title">
-              <code>${fullName}</code>
-              <span class="pkg-version">v${pkg.version}</span>
-              <span class="compat-badge-lg compat-badge-lg-${compatSuffix}">
-                <span class="compat-dot compat-dot-${compatSuffix}"></span>${compatLabel}
+              <code>{fullName}</code>
+              <span class="pkg-version">v{pkg.version}</span>
+              <span class={`compat-badge-lg compat-badge-lg-${compatSuffix}`}>
+                <span class={`compat-dot compat-dot-${compatSuffix}`}></span>${compatLabel}
               </span>
             </div>
             ${pkg.description ? `<p class="pkg-desc">${pkg.description}</p>` : ''}
             <div class="pkg-links">
               ${
-      pkg.repository ? `<a href="${pkg.repository}" target="_blank">Repository -></a>` : ''
+      pkg.repository ? `<a href="${pkg.repository}" target="_blank">Repository {'->'}</a>` : ''
     }
-              ${pkg.homepage ? `<a href="${pkg.homepage}" target="_blank">Homepage -></a>` : ''}
-              <span>Source: ${pkg.source}</span>
-              <span>Validated: ${new Date(pkg.submittedAt).toLocaleDateString()}</span>
+              ${pkg.homepage ? `<a href="${pkg.homepage}" target="_blank">Homepage {'->'}</a>` : ''}
+              <span>Source: {pkg.source}</span>
+              <span>Validated: {new Date(pkg.submittedAt).toLocaleDateString()}</span>
             </div>
           </div>
 
@@ -275,14 +275,14 @@ export default class DocsRegistryDetail extends DsdElement {
       pkg.installGuidance.safeToInstall ? 'install-safe' : 'install-unsafe'
     }">
               <div class="install-title">
-                ${pkg.installGuidance.safeToInstall ? 'Safe to install' : 'Not installable'}
+                {pkg.installGuidance.safeToInstall ? 'Safe to install' : 'Not installable'}
               </div>
               <div class="install-info">
                 ${
       pkg.installGuidance.ssrCapable ? 'SSR-capable. Server-rendered.' : 'Client-only rendering.'
     }
               </div>
-              <div class="install-cmd">${pkg.installGuidance.command}</div>
+              <div class="install-cmd">{pkg.installGuidance.command}</div>
               ${
       pkg.installGuidance.configChanges.length > 0
         ? `
@@ -312,36 +312,36 @@ export default class DocsRegistryDetail extends DsdElement {
           <div class="section">
             <div class="section-title">🔍 Compatibility</div>
             <div class="compat-badge-wrap">
-              <span class="compat-badge-lg compat-badge-lg-${compatSuffix}">
-                <span class="compat-dot compat-dot-${compatSuffix}"></span>${compatLabel}
+              <span class={`compat-badge-lg compat-badge-lg-${compatSuffix}`}>
+                <span class={`compat-dot compat-dot-${compatSuffix}`}></span>${compatLabel}
               </span>
             </div>
-            <p class="justification-text">${pkg.compatibilityJustification}</p>
+            <p class="justification-text">{pkg.compatibilityJustification}</p>
             <table class="meta-table">
-              <tr><th>Validator</th><td>@lessjs/core v${pkg.validatorVersion}</td></tr>
-              <tr><th>Manifest hash</th><td class="mono-sm">${pkg.manifestHash}</td></tr>
-              <tr><th>Submitted by</th><td>${pkg.submittedBy || '-'}</td></tr>
+              <tr><th>Validator</th><td>@lessjs/core v{pkg.validatorVersion}</td></tr>
+              <tr><th>Manifest hash</th><td class="mono-sm">{pkg.manifestHash}</td></tr>
+              <tr><th>Submitted by</th><td>{pkg.submittedBy || '-'}</td></tr>
             </table>
           </div>
 
-          <!-- Usage -->
+          {/* Usage */}
           <div class="section">
             <div class="section-title">Usage</div>
             <div class="usage-hint">
               Add this package to your LessJS project:
             </div>
-            <div class="install-cmd">${pkg.installGuidance.command}</div>
+            <div class="install-cmd">{pkg.installGuidance.command}</div>
             <div class="import-hint">
               Then import it in your route:
             </div>
-            <div class="install-cmd import-cmd">import '${fullName}';</div>
+            <div class="install-cmd import-cmd">import '{fullName}';</div>
             <div class="click-hint">
               Click a component below for usage examples and rendered previews.
             </div>
           </div>
 
           <div class="section">
-            <div class="section-title">Components (${pkg.tags.length})</div>
+            <div class="section-title">Components ({pkg.tags.length})</div>
             <div class="components-subtitle">
               Click a component to see its rendered preview, usage example, and compatibility details.
             </div>
@@ -353,12 +353,12 @@ export default class DocsRegistryDetail extends DsdElement {
           : tag.compatibility === 'ssr-capable'
           ? 'ssr'
           : 'warn';
-        return `
+        return (
                   <a class="tag-item tag-item-link" href="${
           this._componentLink(tag.tagName)
         }">
-                    <span class="tag-status tag-dot-${tagDotClass}"></span>
-                    &lt;${tag.tagName}&gt;
+                    <span class={`tag-status tag-dot-${tagDotClass}`}></span>
+                    &lt;{tag.tagName}&gt;
                     ${
           tag.validationErrors > 0
             ? `<span class="validation-errors">(${tag.validationErrors} err)</span>`
@@ -369,9 +369,9 @@ export default class DocsRegistryDetail extends DsdElement {
             ? `<span class="validation-warnings">(${tag.validationWarnings} warn)</span>`
             : ''
         }
-                    <span class="tag-arrow">-></span>
+                    <span class="tag-arrow">{'->'}</span>
                   </a>
-                `;
+                );
       })
     }
             </div>
@@ -390,18 +390,12 @@ export default class DocsRegistryDetail extends DsdElement {
 
           <div class="section">
             <div class="section-title">Validation Report</div>
-            <button class="accordion-toggle" @click="${this._toggleValidation}">${
-      this._showValidation ? 'Hide' : 'Show'
-    } validation details</button>
-            ${
-      this._showValidation
-        ? `<div class="accordion-content">${this._formatJson(pkg.reports.validation)}</div>`
-        : ''
-    }
+            <button class="accordion-toggle" onClick={this._toggleValidation}>{this._showValidation ? 'Hide' : 'Show'} validation details</button>
+            {this._showValidation && <div class="accordion-content">{this._formatJson(pkg.reports.validation)}</div>}
           </div>
         </div>
       </less-layout>
-    `;
+    );
   }
 }
 

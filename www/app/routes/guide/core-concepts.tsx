@@ -15,12 +15,8 @@ export class CoreConceptsPage extends DsdElement {
   }
 
   private _renderZh() {
-    return `
-      <less-layout locale="${this._getLocale('zh')}" locales='${
-      JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(navSections)}' header-nav='${
-      JSON.stringify(headerNav)
-    }' current-path="/guide/core-concepts">
+    return (
+      <less-layout locale={this._getLocale('zh')} locales={JSON.stringify(['en', 'zh'])} nav-items={JSON.stringify(navSections)} header-nav={JSON.stringify(headerNav)} current-path="/guide/core-concepts">
         <div class="container">
           <h1>核心概念</h1>
           <p class="subtitle">
@@ -31,7 +27,7 @@ export class CoreConceptsPage extends DsdElement {
           <p>
             LessJS 组件是原生 Web Components，继承自 <code>DsdElement</code>。JSX 提供带类型安全的模板语法，编译为 VNode 树，SSR 时输出 Declarative Shadow DOM。
           </p>
-          <less-code-block><pre><code>import { DsdElement, signal } from '@lessjs/core';
+          <less-code-block><pre><code>{`import { DsdElement, signal } from '@lessjs/core';
 
 export class GreetingCard extends DsdElement {
   #name = signal('LessJS');
@@ -46,11 +42,11 @@ export class GreetingCard extends DsdElement {
   }
 }
 
-customElements.define('greeting-card', GreetingCard);</code></pre></less-code-block>
+customElements.define('greeting-card', GreetingCard);`}</code></pre></less-code-block>
           <p>关键点：</p>
           <ul>
             <li>组件继承 <code>DsdElement</code>，覆写 <code>render()</code> 方法</li>
-            <li>JSX 中 <code>{...}</code> 内的 Signal 自动展开，不需要 <code>.value</code></li>
+            <li>JSX 中 <code>{'{...}'}</code> 内的 Signal 自动展开，不需要 <code>.value</code></li>
             <li>事件绑定使用标准 camelCase：<code>onClick</code>、<code>onInput</code>、<code>onSubmit</code></li>
           </ul>
 
@@ -60,17 +56,17 @@ customElements.define('greeting-card', GreetingCard);</code></pre></less-code-bl
           </less-callout>
 
           <h3>条件渲染</h3>
-          <less-code-block><pre><code>// 三元表达式
+          <less-code-block><pre><code>{`// 三元表达式
 {isLoggedIn ? &lt;Dashboard /&gt; : &lt;Login /&gt;}
 
 // 逻辑与
 {error && &lt;ErrorBanner message={error} /&gt;}
 
 // 空值合并
-{username ?? 'Anonymous'}</code></pre></less-code-block>
+{username ?? 'Anonymous'}`}</code></pre></less-code-block>
 
           <h3>列表渲染</h3>
-          <less-code-block><pre><code>const todos = signal([
+          <less-code-block><pre><code>{`const todos = signal([
   { id: 1, text: 'Learn LessJS', done: false },
   { id: 2, text: 'Build an app', done: false },
 ]);
@@ -84,14 +80,14 @@ return (
       &lt;/li&gt;
     ))}
   &lt;/ul&gt;
-);</code></pre></less-code-block>
+);`}</code></pre></less-code-block>
 
           <h2>属性声明：static props</h2>
           <p>
             使用 <code>static props</code> 声明组件属性，自动注册为 <code>observedAttributes</code>。
             属性名自动转换为 kebab-case 作为 HTML 属性名。
           </p>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+          <less-code-block><pre><code>{`import { DsdElement } from '@lessjs/core';
 
 export class ProductCard extends DsdElement {
   static props = {
@@ -104,7 +100,7 @@ export class ProductCard extends DsdElement {
     return (
       &lt;div class="product-card"&gt;
         &lt;h3&gt;{this.title}&lt;/h3&gt;
-        &lt;p&gt;${this.price.toFixed(2)}&lt;/p&gt;
+        &lt;p&gt;{this.price.toFixed(2)}&lt;/p&gt;
         {this.inStock
           ? &lt;span class="in-stock"&gt;有货&lt;/span&gt;
           : &lt;span class="out-of-stock"&gt;缺货&lt;/span&gt;
@@ -114,7 +110,7 @@ export class ProductCard extends DsdElement {
   }
 }
 
-customElements.define('product-card', ProductCard);</code></pre></less-code-block>
+customElements.define('product-card', ProductCard);`}</code></pre></less-code-block>
           <p>使用方法：</p>
           <less-code-block><pre><code>&lt;product-card title="Widget" price="19.99" in-stock&gt;&lt;/product-card&gt;
 &lt;product-card title="Gadget" price="29.99"&gt;&lt;/product-card&gt;</code></pre></less-code-block>
@@ -134,7 +130,7 @@ customElements.define('product-card', ProductCard);</code></pre></less-code-bloc
           </p>
 
           <h3>signal() — 可变的响应式值</h3>
-          <less-code-block><pre><code>import { signal } from '@lessjs/core';
+          <less-code-block><pre><code>{`import { signal } from '@lessjs/core';
 
 const count = signal(0);
 
@@ -143,16 +139,16 @@ console.log(count.value);  // 0
 
 // 写入
 count.value = 1;
-count.value++;</code></pre></less-code-block>
+count.value++;`}</code></pre></less-code-block>
 
           <less-callout type="warning" label="JSX 外部使用 .value">
-            在 JSX <code>{...}</code> 之外读写 Signal 时，必须使用 <code>.value</code>。
+            在 JSX <code>{'{...}'}</code> 之外读写 Signal 时，必须使用 <code>.value</code>。
             JSX 内的自动展开是通过 <code>Symbol.toPrimitive</code> 和 <code>valueOf()</code> 实现的。
           </less-callout>
 
           <h3>computed() — 派生状态</h3>
           <p>从其他 Signal 派生只读值，自动追踪依赖并惰性求值：</p>
-          <less-code-block><pre><code>import { signal, computed } from '@lessjs/core';
+          <less-code-block><pre><code>{`import { signal, computed } from '@lessjs/core';
 
 const firstName = signal('Jane');
 const lastName = signal('Doe');
@@ -160,11 +156,11 @@ const fullName = computed(() => firstName.value + ' ' + lastName.value);
 
 console.log(fullName.value);  // 'Jane Doe'
 firstName.value = 'John';
-console.log(fullName.value);  // 'John Doe'（自动更新）</code></pre></less-code-block>
+console.log(fullName.value);  // 'John Doe'（自动更新）`}</code></pre></less-code-block>
 
           <h3>effect() — 副作用</h3>
           <p>Signal 变化时自动执行回调，用于 DOM 操作、日志、同步外部状态等：</p>
-          <less-code-block><pre><code>import { signal, effect } from '@lessjs/core';
+          <less-code-block><pre><code>{`import { signal, effect } from '@lessjs/core';
 
 const theme = signal('light');
 const dispose = effect(() => {
@@ -172,11 +168,11 @@ const dispose = effect(() => {
 });
 
 theme.value = 'dark';  // effect 自动执行
-dispose();  // 停止追踪</code></pre></less-code-block>
+dispose();  // 停止追踪`}</code></pre></less-code-block>
 
           <h2>完整示例：计数器</h2>
           <p>结合 DsdElement、static props 和 Signals 的完整组件：</p>
-          <less-code-block><pre><code>import { DsdElement, signal, computed } from '@lessjs/core';
+          <less-code-block><pre><code>{`import { DsdElement, signal, computed } from '@lessjs/core';
 
 export class Counter extends DsdElement {
   static props = {
@@ -211,7 +207,7 @@ export class Counter extends DsdElement {
   }
 }
 
-customElements.define('my-counter', Counter);</code></pre></less-code-block>
+customElements.define('my-counter', Counter);`}</code></pre></less-code-block>
           <p>使用方式：</p>
           <less-code-block><pre><code>&lt;my-counter step="2" label="步进计数器"&gt;&lt;/my-counter&gt;</code></pre></less-code-block>
 
@@ -230,16 +226,12 @@ customElements.define('my-counter', Counter);</code></pre></less-code-block>
           </div>
         </div>
       </less-layout>
-    `;
+    );
   }
 
   private _renderEn() {
-    return `
-      <less-layout locale="${this._getLocale('en')}" locales='${
-      JSON.stringify(['en', 'zh'])
-    }' nav-items='${JSON.stringify(navSections)}' header-nav='${
-      JSON.stringify(headerNav)
-    }' current-path="/en/guide/core-concepts">
+    return (
+      <less-layout locale={this._getLocale('en')} locales={JSON.stringify(['en', 'zh'])} nav-items={JSON.stringify(navSections)} header-nav={JSON.stringify(headerNav)} current-path="/en/guide/core-concepts">
         <div class="container">
           <h1>Core Concepts</h1>
           <p class="subtitle">
@@ -252,7 +244,7 @@ customElements.define('my-counter', Counter);</code></pre></less-code-block>
             LessJS components are native Web Components extending <code>DsdElement</code>. JSX provides
             type-safe templates that compile to VNode trees, outputting Declarative Shadow DOM during SSR.
           </p>
-          <less-code-block><pre><code>import { DsdElement, signal } from '@lessjs/core';
+          <less-code-block><pre><code>{`import { DsdElement, signal } from '@lessjs/core';
 
 export class GreetingCard extends DsdElement {
   #name = signal('LessJS');
@@ -267,11 +259,11 @@ export class GreetingCard extends DsdElement {
   }
 }
 
-customElements.define('greeting-card', GreetingCard);</code></pre></less-code-block>
+customElements.define('greeting-card', GreetingCard);`}</code></pre></less-code-block>
           <p>Key points:</p>
           <ul>
             <li>Components extend <code>DsdElement</code> and override <code>render()</code></li>
-            <li>Signals auto-unwrap inside JSX <code>{...}</code> — no <code>.value</code> needed</li>
+            <li>Signals auto-unwrap inside JSX <code>{'{...}'}</code> — no <code>.value</code> needed</li>
             <li>Events use standard camelCase: <code>onClick</code>, <code>onInput</code>, <code>onSubmit</code></li>
           </ul>
 
@@ -282,17 +274,17 @@ customElements.define('greeting-card', GreetingCard);</code></pre></less-code-bl
           </less-callout>
 
           <h3>Conditional Rendering</h3>
-          <less-code-block><pre><code>// Ternary
+          <less-code-block><pre><code>{`// Ternary
 {isLoggedIn ? &lt;Dashboard /&gt; : &lt;Login /&gt;}
 
 // Logical AND
 {error && &lt;ErrorBanner message={error} /&gt;}
 
 // Null coalescing
-{username ?? 'Anonymous'}</code></pre></less-code-block>
+{username ?? 'Anonymous'}`}</code></pre></less-code-block>
 
           <h3>List Rendering</h3>
-          <less-code-block><pre><code>const todos = signal([
+          <less-code-block><pre><code>{`const todos = signal([
   { id: 1, text: 'Learn LessJS', done: false },
   { id: 2, text: 'Build an app', done: false },
 ]);
@@ -306,14 +298,14 @@ return (
       &lt;/li&gt;
     ))}
   &lt;/ul&gt;
-);</code></pre></less-code-block>
+);`}</code></pre></less-code-block>
 
           <h2>Property Declaration: static props</h2>
           <p>
             Declare component properties using <code>static props</code>. Keys are auto-registered as
             <code>observedAttributes</code> and converted to kebab-case for HTML attributes.
           </p>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+          <less-code-block><pre><code>{`import { DsdElement } from '@lessjs/core';
 
 export class ProductCard extends DsdElement {
   static props = {
@@ -326,7 +318,7 @@ export class ProductCard extends DsdElement {
     return (
       &lt;div class="product-card"&gt;
         &lt;h3&gt;{this.title}&lt;/h3&gt;
-        &lt;p&gt;${this.price.toFixed(2)}&lt;/p&gt;
+        &lt;p&gt;{this.price.toFixed(2)}&lt;/p&gt;
         {this.inStock
           ? &lt;span class="in-stock"&gt;In Stock&lt;/span&gt;
           : &lt;span class="out-of-stock"&gt;Out of Stock&lt;/span&gt;
@@ -336,7 +328,7 @@ export class ProductCard extends DsdElement {
   }
 }
 
-customElements.define('product-card', ProductCard);</code></pre></less-code-block>
+customElements.define('product-card', ProductCard);`}</code></pre></less-code-block>
           <p>Usage:</p>
           <less-code-block><pre><code>&lt;product-card title="Widget" price="19.99" in-stock&gt;&lt;/product-card&gt;
 &lt;product-card title="Gadget" price="29.99"&gt;&lt;/product-card&gt;</code></pre></less-code-block>
@@ -357,7 +349,7 @@ customElements.define('product-card', ProductCard);</code></pre></less-code-bloc
           </p>
 
           <h3>signal() — Mutable Reactive Values</h3>
-          <less-code-block><pre><code>import { signal } from '@lessjs/core';
+          <less-code-block><pre><code>{`import { signal } from '@lessjs/core';
 
 const count = signal(0);
 
@@ -366,16 +358,16 @@ console.log(count.value);  // 0
 
 // Write
 count.value = 1;
-count.value++;</code></pre></less-code-block>
+count.value++;`}</code></pre></less-code-block>
 
           <less-callout type="warning" label="Use .value Outside JSX">
-            When reading or writing a signal outside JSX <code>{...}</code>, you must use <code>.value</code>.
+            When reading or writing a signal outside JSX <code>{'{...}'}</code>, you must use <code>.value</code>.
             Auto-unwrap inside JSX is provided by <code>Symbol.toPrimitive</code> and <code>valueOf()</code>.
           </less-callout>
 
           <h3>computed() — Derived State</h3>
           <p>Derived read-only values that auto-track dependencies and evaluate lazily:</p>
-          <less-code-block><pre><code>import { signal, computed } from '@lessjs/core';
+          <less-code-block><pre><code>{`import { signal, computed } from '@lessjs/core';
 
 const firstName = signal('Jane');
 const lastName = signal('Doe');
@@ -383,11 +375,11 @@ const fullName = computed(() => firstName.value + ' ' + lastName.value);
 
 console.log(fullName.value);  // 'Jane Doe'
 firstName.value = 'John';
-console.log(fullName.value);  // 'John Doe' (auto-updated)</code></pre></less-code-block>
+console.log(fullName.value);  // 'John Doe' (auto-updated)`}</code></pre></less-code-block>
 
           <h3>effect() — Side Effects</h3>
           <p>Run a callback automatically when tracked signals change. Use for DOM manipulation, logging, external sync:</p>
-          <less-code-block><pre><code>import { signal, effect } from '@lessjs/core';
+          <less-code-block><pre><code>{`import { signal, effect } from '@lessjs/core';
 
 const theme = signal('light');
 const dispose = effect(() => {
@@ -395,11 +387,11 @@ const dispose = effect(() => {
 });
 
 theme.value = 'dark';  // effect runs automatically
-dispose();  // stop tracking</code></pre></less-code-block>
+dispose();  // stop tracking`}</code></pre></less-code-block>
 
           <h2>Complete Example: Counter</h2>
           <p>A component combining DsdElement, static props, and Signals:</p>
-          <less-code-block><pre><code>import { DsdElement, signal, computed } from '@lessjs/core';
+          <less-code-block><pre><code>{`import { DsdElement, signal, computed } from '@lessjs/core';
 
 export class Counter extends DsdElement {
   static props = {
@@ -434,7 +426,7 @@ export class Counter extends DsdElement {
   }
 }
 
-customElements.define('my-counter', Counter);</code></pre></less-code-block>
+customElements.define('my-counter', Counter);`}</code></pre></less-code-block>
           <p>Usage:</p>
           <less-code-block><pre><code>&lt;my-counter step="2" label="Stepped Counter"&gt;&lt;/my-counter&gt;</code></pre></less-code-block>
 
@@ -449,11 +441,11 @@ customElements.define('my-counter', Counter);</code></pre></less-code-block>
 
           <div class="nav-row">
             <a href="/guide/getting-started" class="nav-link">&larr; Getting Started</a>
-            <a href="/guide/routing-and-data" class="nav-link">Routing &amp; Data &rarr;</a>
+            <a href="/guide/routing-and-data" class="nav-link">Routing & Data &rarr;</a>
           </div>
         </div>
       </less-layout>
-    `;
+    );
   }
 }
 
