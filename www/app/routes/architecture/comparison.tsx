@@ -131,16 +131,16 @@ export default class ComparisonPage extends DsdElement {
 
   override render() {
     const isZh = this._getLocale('zh') === 'zh';
-    return `
+    return (
       <less-layout
-        locale="${this._getLocale('zh')}"
-        locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(navSections)}'
-        header-nav='${JSON.stringify(headerNav)}'
+        locale={this._getLocale('zh')}
+        locales={JSON.stringify(['en', 'zh'])}
+        nav-items={JSON.stringify(navSections)}
+        header-nav={JSON.stringify(headerNav)}
         current-path="/architecture/comparison"
       >
         <div class="container">
-          <h1>${isZh ? 'LessJS 与竞品对比' : 'LessJS vs Alternatives'}</h1>
+          <h1>{isZh ? 'LessJS 与竞品对比' : 'LessJS vs Alternatives'}</h1>
           <p class="subtitle">
             LessJS 当前是 DSD-first Web Components 应用框架。与同级框架的对比基于 DSD/WC 引擎、
             渐进 island 和 Registry evidence pipeline。
@@ -261,7 +261,7 @@ export default class ComparisonPage extends DsdElement {
           </ul>
         </div>
       </less-layout>
-    `;
+    );
   }
 }
 

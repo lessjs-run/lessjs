@@ -173,7 +173,7 @@ export const pageStyles = `
   .callout, .pillar {
     padding: var(--size-4) var(--size-5);
     margin: var(--size-4) 0;
-    border-left: 3px solid var(--brand);
+    border-left: var(--border-size-3) solid var(--brand);
     background: var(--bg-surface);
     border-radius: 0 var(--radius-3) var(--radius-3) 0;
   }

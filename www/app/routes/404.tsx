@@ -62,15 +62,15 @@ styles.replaceSync(`
 export default class Page404 extends DsdElement {
   static styles = [openPropsTokenSheet, styles];
   override render() {
-    return `
-      <div class="container">
+    return (
+      <div class='container'>
         <h1>404</h1>
         <p>Page not found. Here are some helpful links:</p>
-        <div class="links">
-          ${POPULAR_LINKS.map((l) => `<a href="${l.href}">${l.label}</a>`).join('\n')}
+        <div class='links'>
+          {POPULAR_LINKS.map((l) => <a href={l.href}>{l.label}</a>)}
         </div>
       </div>
-    `;
+    );
   }
 }
 

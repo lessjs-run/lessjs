@@ -2,79 +2,69 @@
  * E2E: Islands Reactivity
  *
  * Verifies that interactive island components work correctly:
- *   - Counter island responds to clicks
+ *   - home-console counter responds to clicks
+ *   - reactive-showcase signals update the DOM
  *   - Island scripts are loaded
  *   - Shadow DOM encapsulation is maintained
  */
 
 import { expect, test } from '@playwright/test';
 
-test.describe('Counter Island', () => {
+test.describe('Home Counter (home-console)', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to a page that has the counter island
-    await page.goto('/guide/getting-started');
+    await page.goto('/');
     await page.waitForLoadState('networkidle');
-    // Wait for island upgrade
     await page.waitForTimeout(2000);
   });
 
-  test('counter island element exists in DOM', async ({ page }) => {
-    const counter = page.locator('counter-island');
-    // The counter may not exist on every page, but on getting-started it should
-    if ((await counter.count()) > 0) {
-      expect(await counter.count()).toBeGreaterThan(0);
-    }
+  test('counter element exists in DOM', async ({ page }) => {
+    const counter = page.locator('home-console');
+    expect(await counter.count()).toBeGreaterThan(0);
   });
 
-  test('counter island has shadow root after upgrade', async ({ page }) => {
+  test('counter has shadow root after upgrade', async ({ page }) => {
     const hasShadowRoot = await page.evaluate(() => {
-      const counter = document.querySelector('counter-island');
+      const counter = document.querySelector('home-console');
       return counter?.shadowRoot !== null;
     });
-
-    // Only check if counter exists
-    const counterExists = await page.locator('counter-island').count();
-    if (counterExists > 0) {
-      expect(hasShadowRoot).toBe(true);
-    }
+    expect(hasShadowRoot).toBe(true);
   });
 
   test('counter increments on plus button click', async ({ page }) => {
-    const counter = page.locator('counter-island');
-    if ((await counter.count()) > 0) {
-      // Get initial count value
-      const countBefore = await counter.locator('.count').textContent();
-      const initialCount = parseInt(countBefore?.trim() ?? '0', 10);
+    const counter = page.locator('home-console');
+    const countEl = counter.locator('.counter-value');
+    const countBefore = await countEl.textContent();
+    const initialCount = parseInt(countBefore?.trim() ?? '0', 10);
 
-      // Click the plus button
-      const plusBtn = counter.locator('button').last();
-      await plusBtn.click();
+    // Click the plus button (second button = +)
+    const plusBtn = counter.locator('button').nth(1);
+    await plusBtn.click();
+    await page.waitForTimeout(100);
 
-      // Count should have incremented
-      const countAfter = await counter.locator('.count').textContent();
-      const newCount = parseInt(countAfter?.trim() ?? '0', 10);
-      expect(newCount).toBe(initialCount + 1);
-    }
+    const countAfter = await countEl.textContent();
+    const newCount = parseInt(countAfter?.trim() ?? '0', 10);
+    expect(newCount).toBe(initialCount + 1);
   });
 
   test('counter decrements on minus button click', async ({ page }) => {
-    const counter = page.locator('counter-island');
-    if ((await counter.count()) > 0) {
-      // Click plus first to ensure count > 0
-      const plusBtn = counter.locator('button').last();
-      await plusBtn.click();
+    const counter = page.locator('home-console');
+    // Click plus first to ensure count > initial
+    const plusBtn = counter.locator('button').nth(1);
+    await plusBtn.click();
+    await page.waitForTimeout(100);
 
-      const countBefore = await counter.locator('.count').textContent();
-      const initialCount = parseInt(countBefore?.trim() ?? '0', 10);
+    const countEl = counter.locator('.counter-value');
+    const countBefore = await countEl.textContent();
+    const initialCount = parseInt(countBefore?.trim() ?? '0', 10);
 
-      // Click the minus button
-      const minusBtn = counter.locator('button').first();
-      await minusBtn.click();
+    // Click minus
+    const minusBtn = counter.locator('button').first();
+    await minusBtn.click();
+    await page.waitForTimeout(100);
 
-      const countAfter = await counter.locator('.count').textContent();
-      const newCount = parseInt(countAfter?.trim() ?? '0', 10);
-      expect(newCount).toBe(initialCount - 1);
-    }
+    const countAfter = await countEl.textContent();
+    const newCount = parseInt(countAfter?.trim() ?? '0', 10);
+    expect(newCount).toBe(initialCount - 1);
   });
 });
 
@@ -84,7 +74,6 @@ test.describe('Island Script Loading', () => {
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
-    // Check that the client script was injected
     const hasClientScript = await page.evaluate(() => {
       const scripts = Array.from(document.querySelectorAll('script[type="module"]'));
       return scripts.some(
@@ -99,7 +88,6 @@ test.describe('Island Script Loading', () => {
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
-    // Check that some custom elements have been upgraded
     const upgradedCount = await page.evaluate(() => {
       let count = 0;
       const all = document.querySelectorAll('*');

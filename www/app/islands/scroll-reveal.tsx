@@ -3,9 +3,12 @@
  *
  * Wraps slotted content with a reveal animation triggered by
  * IntersectionObserver. Pure DsdElement - zero Lit dependency.
+ *
+ * v0.27: Migrated render() from string to JSX.
  */
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
+import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
 export const tagName = 'scroll-reveal';
 
@@ -17,7 +20,7 @@ styles.replaceSync(`
   .reveal {
     opacity: 0;
     transform: translateY(16px);
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    transition: opacity var(--duration-4) var(--ease-3), transform var(--duration-4) var(--ease-3);
   }
   .reveal.visible {
     opacity: 1;
@@ -33,7 +36,7 @@ styles.replaceSync(`
 `);
 
 export default class ScrollReveal extends DsdElement {
-  static override styles = styles;
+  static override styles = [openPropsTokenSheet, styles];
 
   private _observer: IntersectionObserver | null = null;
 
@@ -64,8 +67,12 @@ export default class ScrollReveal extends DsdElement {
     super.disconnectedCallback();
   }
 
-  override render(): string {
-    return '<div class="reveal"><slot></slot></div>';
+  override render() {
+    return (
+      <div class='reveal'>
+        <slot></slot>
+      </div>
+    );
   }
 }
 
