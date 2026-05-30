@@ -6,6 +6,20 @@
 (function () {
   if (typeof document === 'undefined') return;
 
+  // Kill any stale service workers/caches that could serve old blank HTML
+  try {
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.getRegistrations().then((regs) => {
+        regs.forEach((r) => r.unregister().catch(() => {}));
+      }).catch(() => {});
+    }
+    if (globalThis.caches?.keys) {
+      caches.keys().then((keys) => {
+        keys.filter((k) => k.startsWith('less-')).forEach((k) => caches.delete(k).catch(() => {}));
+      }).catch(() => {});
+    }
+  } catch { /* ignore */ }
+
   // --- Helpers -----------------------------------------------------------
   const uncloak = () => {
     // Make sure page is visible even if theme detection fails
