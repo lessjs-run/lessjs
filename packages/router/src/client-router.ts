@@ -101,8 +101,8 @@ export class Router {
   /** Parse locales from element attribute or prop */
   #parseLocales(): string[] {
     try {
-      const el = this.el as unknown as Record<string, unknown>;
-      const raw = el.locales || this.#el.getAttribute('locales');
+      const raw = ((this.#el as unknown as Record<string, unknown>).locales) ||
+        this.#el.getAttribute('locales');
       if (!raw) return ['en'];
       if (Array.isArray(raw)) return raw as string[];
       if (typeof raw === 'string') {
