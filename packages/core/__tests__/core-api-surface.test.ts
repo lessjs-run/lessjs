@@ -55,8 +55,11 @@ Deno.test('core JSX event handlers are excluded from SSR output', () => {
   const handler = () => {};
   const vnode = jsx('button', { onClick: handler, type: 'button', children: 'Click' });
   const html = renderToString(vnode);
-  // onClick should not appear in the HTML string
-  assertEquals(html, '<button type="button">Click</button>');
+  // onClick must NOT appear as a raw HTML attribute name
+  assertEquals(html.includes('onClick="'), false);
+  // v0.27 (ADR-0067): data-on-click marker emitted for hydration
+  assertEquals(html.includes('data-on-click="handler"'), true);
+  assertEquals(html.includes('<button type="button"'), true);
 });
 
 Deno.test('core DsdElement and renderDsd are callable', () => {

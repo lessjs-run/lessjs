@@ -341,7 +341,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
         if (!methodName) continue;
         const handler = (this as Record<string, unknown>)[methodName];
         if (typeof handler === 'function') {
-          const bound = (handler as Function).bind(this);
+          const bound = (handler as (...args: unknown[]) => unknown).bind(this);
           el.addEventListener(eventType, bound as EventListener);
           this.#eventCleanups.push(() => el.removeEventListener(eventType, bound as EventListener));
         }

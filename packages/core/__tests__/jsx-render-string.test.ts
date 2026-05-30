@@ -46,10 +46,12 @@ Deno.test('renderToString element with Signal child', () => {
 Deno.test('renderToString excludes onClick handler', () => {
   const vnode = jsx('button', { onClick: () => {}, children: ['Click'] });
   const html = renderToString(vnode);
-  assertStringIncludes(html, '<button>');
-  // onClick must not appear in HTML
-  assertEquals(html.includes('onClick'), false);
-  assertEquals(html.includes('onclick'), false);
+  assertStringIncludes(html, '<button');
+  // onClick must not appear as an HTML attribute name
+  assertEquals(html.includes('onClick="'), false);
+  assertEquals(html.includes('onclick="'), false);
+  // v0.27 (ADR-0067): data-on-click marker emitted for hydration
+  assertStringIncludes(html, 'data-on-click="onClick"');
 });
 
 Deno.test('renderToString className maps to class', () => {
