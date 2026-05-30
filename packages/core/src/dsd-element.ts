@@ -233,6 +233,11 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     if (!this.shadowRoot) {
       this.createRenderRoot();
     } else {
+      // DSD path: shadow root already populated.
+      // Force display:block via inline style. Custom elements default to
+      // display:inline, and adoptedStyleSheets may not apply in time to
+      // prevent the host from collapsing to 0×0.
+      this.style.display = 'block';
       this._applyStyles(ctor);
     }
 
