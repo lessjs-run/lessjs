@@ -180,8 +180,6 @@ sheet.replaceSync(`
     animation: logo-breathe 4s ease-in-out infinite;
   }
   .logo:hover { opacity: 0.75; animation: none; }
-    animation: logo-breathe 4s ease-in-out infinite;
-  }
 
   .logo-sub {
     font-size: var(--font-size-00);
@@ -346,17 +344,18 @@ sheet.replaceSync(`
 
   /* ─── Footer ─── */
   .app-footer {
-    padding: 3rem;
+    padding: var(--size-12);
     border-top: 0.5px solid var(--border);
     text-align: center;
     color: var(--text-muted);
-    font-size: 0.75rem;
+    font-size: var(--font-size-00);
     letter-spacing: 0.04em;
     background: transparent;
   }
   .app-footer p { margin: 0.25rem 0; }
-  .app-footer a { color: var(--text-secondary); transition: color 0.2s ease; }
+  .app-footer a { color: var(--text-secondary); transition: color var(--ease-2) var(--duration-2); }
   .app-footer a:hover { color: var(--brand); }
+  .edit-link { margin-right: var(--size-3); }
 
   .app-footer .divider {
     display: inline-block;
@@ -769,7 +768,7 @@ export class LessLayout extends DsdElement {
                 href={editUrl}
                 target='_blank'
                 rel='noopener'
-                style='margin-right:0.75rem;'
+                className='edit-link'
               >
                 Edit this page
               </a>
