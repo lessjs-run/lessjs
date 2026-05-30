@@ -13,6 +13,7 @@ const DEFAULT_LESSJS_PACKAGES = new Set([
   'compat-check',
   'core',
   'hub',
+  'router',
   'rpc',
   'runtime',
   'signals',
@@ -86,6 +87,13 @@ const LESSJS_EXPORT_FILES: Record<string, Record<string, string>> = {
     schema: 'src/schema.ts',
     snapshot: 'src/snapshot.ts',
     submitter: 'src/submitter.ts',
+  },
+  router: {
+    '.': 'src/mod.ts',
+    'client-router': 'src/client-router.ts',
+    'define-routes': 'src/define-routes.ts',
+    'page-loader': 'src/page-loader.ts',
+    'pattern-translate': 'src/pattern-translate.ts',
   },
 };
 

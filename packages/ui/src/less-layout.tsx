@@ -33,6 +33,7 @@ import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { navigate, onNavigate } from '@lessjs/core/navigation';
 import { createContext, provideContext } from '@lessjs/core';
+import { Router } from '@lessjs/router/client-router';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc, _escAttr } from './shared/escape.js';
 import './less-theme-toggle.js';
@@ -440,6 +441,8 @@ sheet.replaceSync(`
 `);
 
 export class LessLayout extends DsdElement {
+  private _r = new Router(this);
+
   static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = [
     'current-path',
@@ -476,18 +479,12 @@ export class LessLayout extends DsdElement {
     return this.hasAttribute(attr);
   }
 
-  private _routeParams(): { locale: string; path: string } {
-    const pattern = new URLPattern({ pathname: '/:locale?/:page*' });
-    const m = pattern.exec(location.pathname)?.pathname?.groups;
-    const locales = this._locales();
-    return {
-      locale: m?.locale || locales[0] || 'en',
-      path: '/' + (m?.page || ''),
-    };
-  }
+  // _routeParams(), _locale(), _locales(), _otherLocalePath(),
+  // _otherLocaleLabel(), _updateLangSwitch(), _localizePath()
+  // → all delegated to this._r (Router instance)
 
   private _currentPath(): string {
-    return this._routeParams().path;
+    return this._r.path;
   }
 
   /** Compute GitHub edit URL from current path. */
@@ -547,70 +544,6 @@ export class LessLayout extends DsdElement {
       console.warn('[less-layout] Failed to parse header-nav JSON:', e);
       return [];
     }
-  }
-
-  private _locales(): string[] {
-    try {
-      const raw = (this as Record<string, unknown>).locales || this.getAttribute('locales');
-      if (!raw) return ['en'];
-      if (Array.isArray(raw)) return raw as string[];
-      if (typeof raw === 'string') {
-        try {
-          return JSON.parse(raw);
-        } catch (e) {
-          console.warn('[less-layout] Failed to parse locales JSON:', e);
-          return ['en'];
-        }
-      }
-      return ['en'];
-    } catch (e) {
-      console.warn('[less-layout] Failed to parse locales:', e);
-      return ['en'];
-    }
-  }
-
-  private _locale(): string {
-    const prop = (this as Record<string, unknown>).locale;
-    if (typeof prop === 'string') return prop;
-    const attr = this.getAttribute('locale');
-    if (attr) return attr;
-    return this._routeParams().locale;
-  }
-
-  private _otherLocalePath(): string {
-    const { locale, path } = this._routeParams();
-    const locales = this._locales();
-    const target = locales.find((l) => l !== locale) || locales[0];
-    return `/${target}${path}`;
-  }
-
-  private _otherLocaleLabel(): string {
-    const { locale } = this._routeParams();
-    const locales = this._locales();
-    const target = locales.find((l) => l !== locale) || locales[0];
-    return target === 'zh' ? '\u4E2D\u6587' : 'EN';
-  }
-
-  /** Update lang-switch label + href after locale change (SPA nav) */
-  private _updateLangSwitch(): void {
-    if (!this.shadowRoot) return;
-    const link = this.shadowRoot.querySelector('.lang-switch') as HTMLAnchorElement | null;
-    if (!link) return;
-    const { locale, path } = this._routeParams();
-    const locales = this._locales();
-    const target = locales.find((l) => l !== locale) || locales[0];
-    link.textContent = target === 'zh' ? '\u4E2D\u6587' : 'EN';
-    link.setAttribute('href', `/${target}${path}`);
-  }
-
-  private _localizePath(path: string): string {
-    const locales = this._locales();
-    if (locales.length <= 1) return path;
-    if (path.startsWith('http')) return path;
-    for (const loc of locales) {
-      if (path === `/${loc}` || path.startsWith(`/${loc}/`)) return path;
-    }
-    return `/${this._routeParams().locale}${path}`;
   }
 
   // --- Icons ---
@@ -714,9 +647,9 @@ export class LessLayout extends DsdElement {
     );
     const githubUrl = this._getStr('github-url', 'https://github.com/lessjs-run/LessJS');
     const editUrl = this.getAttribute('edit-url') || this._computeEditUrl();
-    const locales = this._locales();
-    const otherLocaleLabel = locales.length > 1 ? this._esc(this._otherLocaleLabel()) : '';
-    const otherLocalePath = locales.length > 1 ? this._otherLocalePath() : '';
+    const locales = this._r.locales;
+    const otherLocaleLabel = locales.length > 1 ? this._esc(this._r.otherLocaleLabel()) : '';
+    const otherLocalePath = locales.length > 1 ? this._r.otherLocalePath() : '';
 
     return (
       <div className='app-layout' part='container' home={home || undefined}>
@@ -803,7 +736,7 @@ export class LessLayout extends DsdElement {
     return (
       <nav className='header-nav' part='nav'>
         {links.map((link) => {
-          const localized = this._localizePath(link.href);
+          const localized = this._r.localizePath(link.href);
           const isExternal = link.href.startsWith('http');
           const isCurrent = !isExternal &&
             (cp === link.href || cp === localized || cp.startsWith(localized + '/'));
@@ -837,7 +770,7 @@ export class LessLayout extends DsdElement {
             </summary>
             {section.items.map((item) => {
               const href = item.href || item.path || '#';
-              const localized = this._localizePath(href);
+              const localized = this._r.localizePath(href);
               const isExternal = href.startsWith('http');
               const cp = this._currentPath();
               const isActive = !isExternal && cp === localized;
@@ -867,16 +800,16 @@ export class LessLayout extends DsdElement {
 
     const sectionRoot = (href: string): string => {
       const segs = href.split('/').filter(Boolean);
-      const start = this._locales().length > 1 && this._locales().includes(segs[0]) ? 1 : 0;
+      const start = this._r.locales.length > 1 && this._r.locales.includes(segs[0]) ? 1 : 0;
       return segs.length > start + 1 ? '/' + segs[start] : href;
     };
 
-    const rawPath = this._routeParams().path;
+    const rawPath = this._r.path;
 
     return (
       <nav className='mobile-tab-bar' aria-label='Quick navigation'>
         {mobileLinks.map((link) => {
-          const localized = this._localizePath(link.href);
+          const localized = this._r.localizePath(link.href);
           const isExternal = link.href.startsWith('http');
           const root = sectionRoot(link.href);
           const isActive = !isExternal &&
@@ -902,9 +835,9 @@ export class LessLayout extends DsdElement {
   override connectedCallback(): void {
     super.connectedCallback();
 
-    const locales = this._locales();
+    const locales = this._r.locales;
     if (locales.length > 1) {
-      const { locale } = this._routeParams();
+      const { locale } = this._r;
       if (locales.includes(locale)) {
         this.setAttribute('locale', locale);
       }
@@ -1090,11 +1023,11 @@ export class LessLayout extends DsdElement {
       this.setAttribute('current-path', path);
 
       // Sync locale using URLPattern instead of reading from fetched page
-      const { locale: newLocale } = this._routeParams();
-      if (newLocale && this._locales().includes(newLocale)) {
+      const { locale: newLocale } = this._r;
+      if (newLocale && this._r.locales.includes(newLocale)) {
         this.setAttribute('locale', newLocale);
         // Update lang-switch label + href reactively
-        this._updateLangSwitch();
+        this._r.updateLangSwitch(this.shadowRoot!);
       }
 
       // Ensure newly inserted components inherit current theme.
