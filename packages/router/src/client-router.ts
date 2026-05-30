@@ -216,7 +216,9 @@ export class Router {
       navigation.addEventListener('navigate', onNav);
       const prev = this.#cleanup;
       this.#cleanup = () => {
-        try { navigation.removeEventListener('navigate', onNav); } catch { /* */ }
+        try {
+          navigation.removeEventListener('navigate', onNav);
+        } catch { /* */ }
         prev?.();
       };
     } catch {
@@ -228,10 +230,10 @@ export class Router {
     const handler = () => {
       this.#navigateNow(location.pathname);
     };
-    window.addEventListener('popstate', handler);
+    globalThis.addEventListener('popstate', handler);
     const prev = this.#cleanup;
     this.#cleanup = () => {
-      window.removeEventListener('popstate', handler);
+      globalThis.removeEventListener('popstate', handler);
       prev?.();
     };
   }

@@ -373,7 +373,9 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
         if (domNode.nodeType === 3) {
           textNode = domNode as Text;
           di++;
-        } else if (domNode.nodeType === 1 && di + 1 < domNodes.length && domNodes[di + 1].nodeType === 3) {
+        } else if (
+          domNode.nodeType === 1 && di + 1 < domNodes.length && domNodes[di + 1].nodeType === 3
+        ) {
           // Signal child before an element → next DOM node is the text
           textNode = domNodes[di + 1] as Text;
           di += 2;
@@ -394,7 +396,9 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       }
 
       // VNode element child → apply props + recurse
-      if (typeof vChild === 'object' && vChild !== null && 'props' in vChild && domNode.nodeType === 1) {
+      if (
+        typeof vChild === 'object' && vChild !== null && 'props' in vChild && domNode.nodeType === 1
+      ) {
         applyProps(domNode as Element, vChild.props as Record<string, unknown>);
         this._walkAndBind(
           domNode as Element,

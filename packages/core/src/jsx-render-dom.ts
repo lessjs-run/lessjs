@@ -108,12 +108,6 @@ function applyStaticProp(el: Element, key: string, resolved: unknown): void {
     return;
   }
 
-  // DOM properties that are NOT HTML attributes
-  if (key === 'textContent') {
-    (el as HTMLElement).textContent = String(resolved);
-    return;
-  }
-
   // Resolve attribute name
   const attrName = key === 'className' ? 'class' : key === 'htmlFor' ? 'for' : key;
 
