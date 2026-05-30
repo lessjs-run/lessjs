@@ -214,7 +214,11 @@ export function renderToString(node: unknown): string {
 
   // ── HTML element ──────────────────────────────────────────────────────────
   const attrs = serializeAttrs(props);
-  const childHtml = children.map((c) => renderToString(c)).join('');
+  // innerHTML prop: render as raw HTML content (build-time sanitized, ADR-0064)
+  const innerHTML = props?.innerHTML as string | undefined;
+  const childHtml = innerHTML !== undefined
+    ? innerHTML
+    : children.map((c) => renderToString(c)).join('');
 
   const tagStr = String(tag);
 

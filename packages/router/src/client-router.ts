@@ -39,7 +39,7 @@ export class Router {
 
   /** Current locale from attribute or URL */
   get locale(): string {
-    const prop = (this.el as unknown as Record<string, unknown>).locale;
+    const prop = (this.#el as unknown as Record<string, unknown>).locale;
     if (typeof prop === 'string') return prop;
     const attr = this.#el.getAttribute('locale');
     if (attr) return attr;
