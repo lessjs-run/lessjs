@@ -32,6 +32,7 @@
     "@lessjs/core/types": "./packages/core/src/types.ts",
     "@lessjs/core/jsx-runtime": "./packages/core/src/jsx-runtime.ts",
     "@lessjs/core/jsx-dev-runtime": "./packages/core/src/jsx-runtime.ts",
+    "@lessjs/core/signal-context": "./packages/core/src/signal-context.ts",
     "@lessjs/rpc": "./packages/rpc/src/index.ts",
     "@lessjs/protocols": "./packages/protocols/src/index.ts",
     "@lessjs/protocols/build-types": "./packages/protocols/src/build-types.ts",
