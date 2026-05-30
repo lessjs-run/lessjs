@@ -39,12 +39,12 @@ export default class ApiCorePage extends DsdElement {
   }
 
   private _renderZh() {
-    return `
+    return (
       <less-layout
         locale="zh"
-        locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(navSections)}'
-        header-nav='${JSON.stringify(headerNav)}'
+        locales={JSON.stringify(['en', 'zh'])}
+        nav-items={JSON.stringify(navSections)}
+        header-nav={JSON.stringify(headerNav)}
         current-path="/engine/reference/core"
       >
         <div class="container">
@@ -98,7 +98,7 @@ export default class ApiCorePage extends DsdElement {
           <div class="api-category">
             <h2>Islands</h2>
             <div class="api-entry">
-              <div class="api-sig">defineIsland(componentClass, options?: { strategy?: 'load' | 'idle' | 'visible' | 'only' }): CustomElementConstructor</div>
+              <div class="api-sig">{`defineIsland(componentClass, options?: { strategy?: 'load' | 'idle' | 'visible' | 'only' }): CustomElementConstructor`}</div>
               <div class="api-desc">为 Custom Element 类包装 Island 升级逻辑。支持四种 hydration 策略。</div>
             </div>
             <div class="api-entry">
@@ -114,11 +114,11 @@ export default class ApiCorePage extends DsdElement {
               <div class="api-desc">创建包含初始值的响应式容器。通过 .value 读写。JSX 内自动展开。</div>
             </div>
             <div class="api-entry">
-              <div class="api-sig">computed&lt;T&gt;(fn: () => T): Signal&lt;T&gt;</div>
+              <div class="api-sig">{`computed&lt;T&gt;(fn: () => T): Signal&lt;T&gt;`}</div>
               <div class="api-desc">创建从其他 signal 派生的只读 signal。惰性求值，自动追踪依赖，结果缓存。</div>
             </div>
             <div class="api-entry">
-              <div class="api-sig">effect(fn: () => void): () => void</div>
+              <div class="api-sig">{`effect(fn: () => void): () => void`}</div>
               <div class="api-desc">依赖 signal 变化时自动执行回调。返回 dispose 函数用于停止追踪。</div>
             </div>
           </div>
@@ -130,7 +130,7 @@ export default class ApiCorePage extends DsdElement {
               <div class="api-desc">创建 LessJS Vite 插件数组。处理路由扫描、Hono entry 生成、Island 转换、SSR 和 SSG。</div>
             </div>
             <div class="api-entry">
-              <div class="api-sig">interface PipelineConfig { routes?: string; islands?: string; ssr?: boolean; ssg?: boolean; ... }</div>
+              <div class="api-sig">{`interface PipelineConfig { routes?: string; islands?: string; ssr?: boolean; ssg?: boolean; ... }`}</div>
               <div class="api-desc">lessPipeline() 的配置选项，控制构建管线的各个阶段。</div>
             </div>
           </div>
@@ -148,16 +148,16 @@ export default class ApiCorePage extends DsdElement {
           </div>
         </div>
       </less-layout>
-    `;
+    );
   }
 
   private _renderEn() {
-    return `
+    return (
       <less-layout
         locale="en"
-        locales='${JSON.stringify(['en', 'zh'])}'
-        nav-items='${JSON.stringify(navSections)}'
-        header-nav='${JSON.stringify(headerNav)}'
+        locales={JSON.stringify(['en', 'zh'])}
+        nav-items={JSON.stringify(navSections)}
+        header-nav={JSON.stringify(headerNav)}
         current-path="/engine/reference/core"
       >
         <div class="container">
@@ -203,7 +203,7 @@ export default class ApiCorePage extends DsdElement {
           <div class="api-category">
             <h2>Islands</h2>
             <div class="api-entry">
-              <div class="api-sig">defineIsland(componentClass, options?: { strategy?: 'load' | 'idle' | 'visible' | 'only' }): CustomElementConstructor</div>
+              <div class="api-sig">{`defineIsland(componentClass, options?: { strategy?: 'load' | 'idle' | 'visible' | 'only' }): CustomElementConstructor`}</div>
               <div class="api-desc">Wraps a Custom Element class with island upgrade logic. Supports four hydration strategies.</div>
             </div>
             <div class="api-entry">
@@ -219,11 +219,11 @@ export default class ApiCorePage extends DsdElement {
               <div class="api-desc">Creates a reactive container with an initial value. Read/write via .value. Auto-unwraps in JSX.</div>
             </div>
             <div class="api-entry">
-              <div class="api-sig">computed&lt;T&gt;(fn: () => T): Signal&lt;T&gt;</div>
+              <div class="api-sig">{`computed&lt;T&gt;(fn: () => T): Signal&lt;T&gt;`}</div>
               <div class="api-desc">Creates a read-only signal derived from other signals. Lazy, auto-tracking, memoized.</div>
             </div>
             <div class="api-entry">
-              <div class="api-sig">effect(fn: () => void): () => void</div>
+              <div class="api-sig">{`effect(fn: () => void): () => void`}</div>
               <div class="api-desc">Runs a callback automatically when tracked signals change. Returns a dispose function.</div>
             </div>
           </div>
@@ -235,7 +235,7 @@ export default class ApiCorePage extends DsdElement {
               <div class="api-desc">Creates the LessJS Vite plugin array. Handles route scanning, Hono entry generation, island transform, SSR, and SSG.</div>
             </div>
             <div class="api-entry">
-              <div class="api-sig">interface PipelineConfig { routes?: string; islands?: string; ssr?: boolean; ssg?: boolean; ... }</div>
+              <div class="api-sig">{`interface PipelineConfig { routes?: string; islands?: string; ssr?: boolean; ssg?: boolean; ... }`}</div>
               <div class="api-desc">Configuration options for lessPipeline(), controlling each phase of the build pipeline.</div>
             </div>
           </div>
@@ -253,7 +253,7 @@ export default class ApiCorePage extends DsdElement {
           </div>
         </div>
       </less-layout>
-    `;
+    );
   }
 }
 
