@@ -323,6 +323,12 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   /**
    * Walk shadow DOM elements and VNode tree in parallel, binding events
    * and creating signal text bindings for reactive text children.
+   *
+   * v0.27: Fixed `parent.children` → `parent.childNodes` to include
+   * text nodes. Signal→text bindings were broken because DSD text nodes
+   * are not Element children and were never matched against VNode signal children.
+   * Also skip comment nodes (<!-- -->) and whitespace-only text nodes
+   * between elements to avoid index misalignment.
    */
   private _walkAndBind(
     parent: Element | ShadowRoot,
@@ -336,31 +342,70 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     const vChildren = vnode.children as (string | Record<string, unknown>)[];
     if (!vChildren) return;
 
-    const domChildren = Array.from(parent.children);
-    for (let i = 0; i < Math.min(domChildren.length, vChildren.length); i++) {
-      const domChild = domChildren[i];
-      const vChild = vChildren[i];
+    // Use childNodes to include text nodes — signal children render as TextNode in DSD.
+    // Filter out comment nodes and pure-whitespace text nodes (Vite/Lit formatting artifacts).
+    const domNodes = Array.from(parent.childNodes).filter((n) => {
+      if (n.nodeType === 8) return false; // skip comment nodes
+      if (n.nodeType === 3) {
+        // Keep text nodes with non-whitespace content, or if they're the only sibling
+        const text = n.textContent ?? '';
+        if (text.trim() === '') return false;
+      }
+      return true;
+    });
 
-      // G3 fix: reactive text children from signals
+    let di = 0; // DOM index
+    for (let vi = 0; vi < vChildren.length && di < domNodes.length; vi++) {
+      const vChild = vChildren[vi];
+
+      // Skip string/number children (static text, already correct in DSD)
+      if (typeof vChild === 'string' || typeof vChild === 'number' || typeof vChild === 'boolean') {
+        di++;
+        continue;
+      }
+
+      const domNode = domNodes[di];
+
+      // Signal child → bind to the nearest text node
       if (isSignalLike(vChild)) {
         const sig = vChild as { value: unknown };
-        const existingText = domChild.childNodes[0];
-        if (existingText && existingText.nodeType === 3) {
-          // Bind existing DSD text node to signal
+        let textNode: Text | null = null;
+        if (domNode.nodeType === 3) {
+          textNode = domNode as Text;
+          di++;
+        } else if (domNode.nodeType === 1 && di + 1 < domNodes.length && domNodes[di + 1].nodeType === 3) {
+          // Signal child before an element → next DOM node is the text
+          textNode = domNodes[di + 1] as Text;
+          di += 2;
+        } else {
+          // Fallback: look at DOM element's first text child
+          const firstText = domNode.childNodes[0];
+          if (firstText && firstText.nodeType === 3) {
+            textNode = firstText as Text;
+          }
+          di++;
+        }
+        if (textNode) {
           effect(() => {
-            existingText.textContent = String(sig.value ?? '');
+            textNode!.textContent = String(sig.value ?? '');
           });
         }
         continue;
       }
 
-      if (typeof vChild === 'object' && vChild !== null && 'props' in vChild) {
-        applyProps(domChild, vChild.props as Record<string, unknown>);
+      // VNode element child → apply props + recurse
+      if (typeof vChild === 'object' && vChild !== null && 'props' in vChild && domNode.nodeType === 1) {
+        applyProps(domNode as Element, vChild.props as Record<string, unknown>);
         this._walkAndBind(
-          domChild,
+          domNode as Element,
           vChild as { tag?: string; props?: Record<string, unknown>; children?: unknown[] },
         );
+        di++;
+        continue;
       }
+
+      // Fallback: skip unmatched DOM node
+      di++;
     }
   }
 

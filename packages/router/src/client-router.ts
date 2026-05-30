@@ -1,23 +1,35 @@
 /**
  * @lessjs/router — Client Router
  *
- * URLPattern-based routing for SPA navigation.
- * Replaces all manual string parsing previously in less-layout.
+ * URLPattern-based SPA router. One Router instance per <less-layout>.
+ *
+ * start() sets up:
+ *   1. Click delegation — intercept all <a> clicks in shadow root
+ *   2. Navigation API intercept — prevent full-page loads
+ *   3. Unified contentLoader callback — fetch + swap page content
+ *   4. Locale management — update lang-switch after navigation
+ *
+ * Consumer contract:
+ *   less-layout calls `router.start(opts)` once in connectedCallback.
+ *   The Router takes over all navigation from that point.
+ *   When the caller swaps content (in contentLoader), it must call
+ *   router.syncAfterSwap(shadowRoot) to update lang-switch.
  */
 
 // deno-lint-ignore no-explicit-any
 declare const navigation: any;
 
-export interface RouterState {
-  locale: string;
-  path: string;
-  locales: string[];
-}
-
 const LOCALE_LABELS: Record<string, string> = {
   zh: '\u4E2D\u6587',
   en: 'EN',
 };
+
+export interface RouterStartOptions {
+  /** Called when navigation destination is resolved. Caller fetches + swaps. */
+  contentLoader: (path: string, locale: string) => Promise<void>;
+  /** Called after content swap to update nav highlights etc. */
+  onAfterSwap?: (path: string, locale: string) => void;
+}
 
 /**
  * Router class that encapsulates all locale/path/navigation logic.
@@ -25,10 +37,14 @@ const LOCALE_LABELS: Record<string, string> = {
  */
 export class Router {
   #el: HTMLElement;
+  #cleanup?: () => void;
+  #options?: RouterStartOptions;
 
   constructor(element: HTMLElement) {
     this.#el = element;
   }
+
+  // ─── Public Locale API ────────────────────────────────────────
 
   /** Available locales from [locales] attribute or prop — lazy (SSR-safe) */
   get locales(): string[] {
@@ -81,17 +97,188 @@ export class Router {
     link.setAttribute('href', this.switchPath());
   }
 
-  /** Parse current URL via URLPattern — SSR-safe: falls back to element attribute */
+  // ─── SPA Navigation — start/stop ──────────────────────────────
+
+  /**
+   * Start the SPA router.
+   *
+   * Sets up click delegation on the shadow root AND Navigation API interception.
+   * Both paths route through the same contentLoader callback.
+   *
+   * Call once per component lifecycle (in connectedCallback).
+   * Returns void — cleanup is internal. Call stop() to dispose.
+   */
+  start(opts: RouterStartOptions): void {
+    this.#options = opts;
+
+    if (this.#el.shadowRoot) {
+      this.#setupClickDelegation(this.#el.shadowRoot);
+    }
+    this.#setupNavigationApi();
+
+    // Listen for popstate (back/forward — Navigation API handles this natively
+    // but we need the fallback for browsers without Navigation API)
+    this.#setupPopState();
+  }
+
+  /**
+   * Stop the SPA router. Removes all event listeners.
+   */
+  stop(): void {
+    this.#cleanup?.();
+    this.#cleanup = undefined;
+  }
+
+  /**
+   * Navigate programmatically to a new URL.
+   * Updates browser history without full-page load.
+   */
+  navigateTo(href: string): void {
+    const url = new URL(href, location.origin);
+    if (url.origin !== location.origin) {
+      location.href = href;
+      return;
+    }
+
+    history.pushState(null, '', url.pathname + url.search + url.hash);
+    this.#navigateNow(url.pathname);
+  }
+
+  /**
+   * Replace current history entry (useful for lang switches where
+   * the user stays on the "same" page).
+   */
+  replaceTo(href: string): void {
+    const url = new URL(href, location.origin);
+    if (url.origin !== location.origin) return;
+
+    history.replaceState(null, '', url.pathname + url.search + url.hash);
+    this.#navigateNow(url.pathname);
+  }
+
+  // ─── Setup helpers ────────────────────────────────────────────
+
+  #setupClickDelegation(root: ShadowRoot): void {
+    const handler = (e: Event) => {
+      const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('a');
+      if (!link) return;
+      const href = link.getAttribute('href');
+      if (!href) return;
+
+      // Skip external, hash-only, and mailto links
+      if (
+        href.startsWith('http') ||
+        href.startsWith('#') ||
+        href.startsWith('mailto:') ||
+        href.startsWith('javascript:')
+      ) {
+        return;
+      }
+
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      // For lang-switch, use replaceState to avoid adding to history
+      const isLangSwitch = link.classList.contains('lang-switch');
+      if (isLangSwitch) {
+        this.replaceTo(href);
+      } else {
+        this.navigateTo(href);
+      }
+    };
+    root.addEventListener('click', handler);
+    const prev = this.#cleanup;
+    this.#cleanup = () => {
+      root.removeEventListener('click', handler);
+      prev?.();
+    };
+  }
+
+  #setupNavigationApi(): void {
+    const onNav = (e: {
+      canIntercept: boolean;
+      hashChange: boolean;
+      downloadRequest: boolean;
+      destination: { url: string };
+      intercept: (opts: { handler: () => void }) => void;
+    }) => {
+      if (!e.canIntercept || e.hashChange || e.downloadRequest) return;
+
+      const url = new URL(e.destination.url);
+      if (url.origin !== location.origin) return;
+
+      e.intercept({
+        handler: () => this.#navigateNow(url.pathname),
+      });
+    };
+
+    try {
+      navigation.addEventListener('navigate', onNav);
+      const prev = this.#cleanup;
+      this.#cleanup = () => {
+        try { navigation.removeEventListener('navigate', onNav); } catch { /* */ }
+        prev?.();
+      };
+    } catch {
+      // Navigation API not available — relying on popstate fallback
+    }
+  }
+
+  #setupPopState(): void {
+    const handler = () => {
+      this.#navigateNow(location.pathname);
+    };
+    window.addEventListener('popstate', handler);
+    const prev = this.#cleanup;
+    this.#cleanup = () => {
+      window.removeEventListener('popstate', handler);
+      prev?.();
+    };
+  }
+
+  // ─── Core navigation logic ────────────────────────────────────
+
+  #navigateNow(pathname: string): void {
+    const { locale } = this.#parseUrlFrom(pathname);
+    this.#el.setAttribute('current-path', pathname);
+    this.#el.setAttribute('locale', locale);
+
+    const opts = this.#options;
+    if (!opts) return;
+
+    // Update lang-switch immediately (before async fetch)
+    if (this.#el.shadowRoot) {
+      this.updateSwitch(this.#el.shadowRoot);
+    }
+
+    opts.contentLoader(pathname, locale).then(() => {
+      // After content swap: update lang-switch again (content may have new one)
+      if (this.#el.shadowRoot) {
+        this.updateSwitch(this.#el.shadowRoot);
+      }
+      opts.onAfterSwap?.(pathname, locale);
+    }).catch((err) => {
+      console.warn('[lessjs/router] content load failed:', err);
+      // Fallback: full page reload
+      location.reload();
+    });
+  }
+
+  // ─── Internal helpers ─────────────────────────────────────────
+
   #parseUrl(): { locale: string; path: string } {
-    // SSR path: no globalThis.location (Deno build) → use element attributes
     if (typeof globalThis.location === 'undefined') {
       const locale = this.#el.getAttribute('locale') || 'en';
       const path = this.#el.getAttribute('current-path') || '/';
       return { locale, path };
     }
+    return this.#parseUrlFrom(location.pathname);
+  }
+
+  #parseUrlFrom(pathname: string): { locale: string; path: string } {
     try {
       const pattern = new URLPattern({ pathname: '/:locale?/:page*' });
-      const m = pattern.exec(globalThis.location.pathname)?.pathname?.groups;
+      const m = pattern.exec(pathname)?.pathname?.groups;
       return {
         locale: m?.locale || 'en',
         path: '/' + (m?.page || ''),
@@ -101,7 +288,6 @@ export class Router {
     }
   }
 
-  /** Parse locales from element attribute or prop */
   #parseLocales(): string[] {
     try {
       const raw = ((this.#el as unknown as Record<string, unknown>).locales) ||
@@ -120,53 +306,4 @@ export class Router {
       return ['en'];
     }
   }
-}
-
-/**
- * Set up client-side SPA navigation using Navigation API + URLPattern.
- * Returns an AbortController for cleanup.
- */
-export function setupClientRouter(
-  onNavigate: (state: RouterState) => void,
-): AbortController {
-  const ac = new AbortController();
-
-  try {
-    navigation.addEventListener(
-      'navigate',
-      (
-        e: {
-          canIntercept: boolean;
-          hashChange: boolean;
-          downloadRequest: boolean;
-          destination: { url: string };
-          intercept: (opts: { handler: () => void }) => void;
-        },
-      ) => {
-        if (!e.canIntercept || e.hashChange || e.downloadRequest) return;
-
-        const url = new URL(e.destination.url);
-        if (url.origin !== location.origin) return;
-
-        const pattern = new URLPattern({ pathname: '/:locale?/:page*' });
-        const m = pattern.exec(url.pathname)?.pathname?.groups;
-
-        if (m) {
-          e.intercept({
-            handler: () =>
-              onNavigate({
-                locale: m.locale || 'en',
-                path: '/' + (m.page || ''),
-                locales: [], // filled by caller
-              }),
-          });
-        }
-      },
-      { signal: ac.signal },
-    );
-  } catch {
-    // Navigation API not available — graceful degradation
-  }
-
-  return ac;
 }

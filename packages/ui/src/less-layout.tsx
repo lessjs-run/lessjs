@@ -31,7 +31,6 @@
 
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
-import { navigate, onNavigate } from '@lessjs/core/navigation';
 import { type Context, createContext, provideContext } from '@lessjs/core';
 import { Router } from '@lessjs/router/client-router';
 import { openPropsTokenSheet } from './open-props-tokens.js';
@@ -459,8 +458,6 @@ export class LessLayout extends DsdElement {
     'locales',
   ];
 
-  private _navCleanup?: () => void;
-  private _navUnlisten?: () => void;
   private _themeHandler?: (e: Event) => void;
   private _docClickCleanup?: () => void;
 
@@ -871,12 +868,15 @@ export class LessLayout extends DsdElement {
       this._setupDetailsToggle();
     }
 
-    this._navCleanup = this._setupNavDelegation();
-    this._navUnlisten = onNavigate((url, navType) => {
-      if (navType === 'push') {
-        this.setAttribute('current-path', url.pathname);
-        this._loadContent(url.pathname);
-      }
+    // v0.27: Router.start() replaces _setupNavDelegation + navigate + onNavigate.
+    // Router handles: click delegation, Navigation API intercept, locale sync.
+    this.routing.start({
+      contentLoader: async (path: string) => {
+        await this._loadContent(path);
+      },
+      onAfterSwap: (_path: string) => {
+        this._updateActiveNav();
+      },
     });
 
     // v0.23.0: Integrated from www/public/mobile-menu.js.
@@ -886,8 +886,7 @@ export class LessLayout extends DsdElement {
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    this._navCleanup?.();
-    this._navUnlisten?.();
+    this.routing.stop();
     this._docClickCleanup?.();
     if (this._themeHandler) {
       globalThis.removeEventListener?.('less:theme-change', this._themeHandler);
@@ -976,32 +975,7 @@ export class LessLayout extends DsdElement {
     this._syncInert(false);
   }
 
-  // --- SPA Navigation ---
-
-  private _setupNavDelegation(): () => void {
-    if (!this.shadowRoot) return () => {};
-    const handler = (e: Event) => {
-      // Find the closest <a> — works across any link in the shadow root
-      const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('a');
-      if (!link) return;
-      const href = link.getAttribute('href');
-      if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) {
-        return;
-      }
-      const url = new URL(href, location.origin);
-      if (url.origin !== location.origin) return;
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      navigate(href);
-    };
-    this.shadowRoot.addEventListener('click', handler);
-    return () => this.shadowRoot?.removeEventListener('click', handler);
-  }
-
-  /**
-   * Recursively propagate data-theme to all custom element descendants,
-   * including those nested inside shadow DOM trees and light DOM (slotted content).
-   */
+  // --- Theme ---
   private _propagateTheme(theme: string): void {
     const walk = (root: Element | ShadowRoot) => {
       root.querySelectorAll('*').forEach((el) => {
@@ -1031,15 +1005,9 @@ export class LessLayout extends DsdElement {
       if (!newLayout) throw new Error('No less-layout found');
       while (this.firstChild) this.removeChild(this.firstChild);
       while (newLayout.firstChild) this.appendChild(newLayout.firstChild);
-      this.setAttribute('current-path', path);
 
-      // Sync locale using URLPattern instead of reading from fetched page
-      const { locale: newLocale } = this.routing;
-      if (newLocale && this.routing.locales.includes(newLocale)) {
-        this.setAttribute('locale', newLocale);
-        // Update lang-switch label + href reactively
-        this.routing.updateSwitch(this.shadowRoot!);
-      }
+      // v0.27: Router._navigateNow already sets locale/current-path + updateSwitch().
+      // Here we only handle theme propagation + scroll.
 
       // Ensure newly inserted components inherit current theme.
       const currentTheme = this.getAttribute('data-theme') ||
