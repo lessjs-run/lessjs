@@ -25,16 +25,14 @@ const LOCALE_LABELS: Record<string, string> = {
  */
 export class Router {
   #el: HTMLElement;
-  #locales: string[];
 
   constructor(element: HTMLElement) {
     this.#el = element;
-    this.#locales = this.#parseLocales();
   }
 
-  /** Available locales from [locales] attribute or prop */
+  /** Available locales from [locales] attribute or prop — lazy (SSR-safe) */
   get locales(): string[] {
-    return this.#locales;
+    return this.#parseLocales();
   }
 
   /** Current locale from attribute or URL */
@@ -54,22 +52,22 @@ export class Router {
   /** Path to switch to the other locale */
   switchPath(): string {
     const { locale, path } = this.#parseUrl();
-    const target = this.#locales.find((l) => l !== locale) || this.#locales[0];
+    const target = this.locales.find((l) => l !== locale) || this.locales[0];
     return `/${target}${path}`;
   }
 
   /** Label for the other locale (e.g. "中文" or "EN") */
   switchLabel(): string {
     const { locale } = this.#parseUrl();
-    const target = this.#locales.find((l) => l !== locale) || this.#locales[0];
+    const target = this.locales.find((l) => l !== locale) || this.locales[0];
     return LOCALE_LABELS[target] || target.toUpperCase();
   }
 
   /** Add locale prefix to a path if needed */
   localize(path: string): string {
-    if (this.#locales.length <= 1) return path;
+    if (this.locales.length <= 1) return path;
     if (path.startsWith('http')) return path;
-    for (const loc of this.#locales) {
+    for (const loc of this.locales) {
       if (path === `/${loc}` || path.startsWith(`/${loc}/`)) return path;
     }
     return `/${this.locale}${path}`;
@@ -83,7 +81,7 @@ export class Router {
     link.setAttribute('href', this.switchPath());
   }
 
-  /** Parse current URL via URLPattern */
+  /** Parse current URL via URLPattern — SSR-safe: falls back to element attribute */
   #parseUrl(): { locale: string; path: string } {
     try {
       const pattern = new URLPattern({ pathname: '/:locale?/:page*' });
