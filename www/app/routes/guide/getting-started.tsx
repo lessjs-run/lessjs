@@ -7,7 +7,6 @@ import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
 import '../../islands/less-toc.tsx';
-import '../../islands/less-toc.tsx';
 
 const routeSheet = new StyleSheet();
 

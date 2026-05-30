@@ -240,7 +240,7 @@ export class LessThemeToggle extends DsdElement {
     } catch (e) {
       console.debug('[less-theme-toggle] localStorage.setItem unavailable:', e);
     }
-    this.setAttribute('data-theme', theme);
+    // data-theme attribute is managed by signal prop binding (data-theme={this._theme})
   }
 
   override attributeChangedCallback(name: string, old: string | null, val: string | null): void {

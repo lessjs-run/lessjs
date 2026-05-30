@@ -24,7 +24,7 @@ export default class Benchmark extends DsdElement {
   static styles = [openPropsTokenSheet, styles];
 
   override render() {
-    return this._getLocale('zh') === 'zh' ? this._renderZh() : this._renderEn();
+    return (this._getLocale('zh')) === 'en' ? this._renderEn() : this._renderZh();
   }
 
   _renderEn() {
