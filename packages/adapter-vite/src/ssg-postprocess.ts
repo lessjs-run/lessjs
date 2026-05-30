@@ -198,6 +198,23 @@ const DSD_POLYFILL = `
   } else {
     attachDSD(document);
   }
+
+  // Fallback: if after polyfill some templates remain unattached, inline them
+  // into light DOM so content is still visible even if attachShadow failed.
+  const fallbackRender = () => {
+    document.querySelectorAll('template[shadowrootmode]').forEach((tpl) => {
+      const parent = tpl.parentNode as HTMLElement | null;
+      if (!parent || parent.shadowRoot) return;
+      const frag = tpl.content.cloneNode(true);
+      parent.appendChild(frag);
+      tpl.remove();
+    });
+  };
+  if (document.readyState === 'complete') {
+    fallbackRender();
+  } else {
+    window.addEventListener('load', fallbackRender, { once: true });
+  }
 })();
 </script>
 `;
