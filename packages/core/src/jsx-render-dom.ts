@@ -316,7 +316,13 @@ export function renderToDom(node: unknown, signal?: AbortSignal): Node {
         });
         return renderToDom(result, signal);
       }
-    } catch {
+    } catch (err) {
+      // v0.26.1 FIX: Previously this silently returned empty TextNode,
+      // making CSR rendering failures invisible in the browser.
+      console.error(
+        `[LessJS/CSR] renderToDom() failed for <${String(tag)}>:`,
+        err instanceof Error ? err.message : String(err),
+      );
       return document.createTextNode('');
     }
   }
