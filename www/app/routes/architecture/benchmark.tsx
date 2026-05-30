@@ -23,11 +23,15 @@ styles.replaceSync(pageStyles + `
 export default class Benchmark extends DsdElement {
   static styles = [openPropsTokenSheet, styles];
 
+  override render() {
+    return this._getLocale('zh') === 'zh' ? this._renderZh() : this._renderEn();
+  }
+
   _renderEn() {
     return (
-      <less-layout navItems={JSON.stringify(navSections)} headerNav={JSON.stringify(headerNav)} currentPath="/architecture/benchmark">
+      <less-layout navItems={JSON.stringify(navSections)} headerNav={JSON.stringify(headerNav)} currentPath='/architecture/benchmark'>
         <div class='container'>
-          <h1>Performance & Benchmarks</h1>
+          <h1>Performance &amp; Benchmarks</h1>
           <p class='subtitle'>Zero-noise. What we actually measure.</p>
 
           <h2>Build Performance</h2>
@@ -48,8 +52,30 @@ export default class Benchmark extends DsdElement {
     );
   }
 
-  _renderZh() { return this._renderEn(); }
-  override render() { return this._renderEn(); }
+  _renderZh() {
+    return (
+      <less-layout navItems={JSON.stringify(navSections)} headerNav={JSON.stringify(headerNav)} currentPath='/architecture/benchmark' locale='zh' locales='[&quot;en&quot;,&quot;zh&quot;]'>
+        <div class='container'>
+          <h1>性能与基准测试</h1>
+          <p class='subtitle'>零噪音，实测数据。</p>
+
+          <h2>构建性能</h2>
+          <div class='metric'><span class='label'>SSG 构建 (www)</span><span class='value'>~3s（37 页面，478 URL）</span></div>
+          <div class='metric'><span class='label'>开发冷启动</span><span class='value'>~100ms（deno task dev:fast）</span></div>
+          <div class='metric'><span class='label'>Vite 开发启动</span><span class='value'>~2s（deno task dev）</span></div>
+          <div class='metric'><span class='label'>客户端包体积</span><span class='value'>~0 KB（仅 islands，2 虚拟模块）</span></div>
+
+          <h2>渲染</h2>
+          <div class='metric'><span class='label'>DSD SSR</span><span class='value'>零 JS 解析成本（浏览器原生）</span></div>
+          <div class='metric'><span class='label'>Island 水合</span><span class='value'>按组件、策略门控</span></div>
+          <div class='metric'><span class='label'>路由切换 (SPA)</span><span class='value'>~0ms（无整页重载）</span></div>
+
+          <h2>包体积</h2>
+          <p>LessJS 对 DSD 组件不输出运行时 JS。Islands 按策略按需加载。关键路径零框架运行时开销。</p>
+        </div>
+      </less-layout>
+    );
+  }
 }
 customElements.define('benchmark-page', Benchmark);
 export const tagName = 'benchmark-page';

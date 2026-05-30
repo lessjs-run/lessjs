@@ -66,8 +66,8 @@ routeSheet.replaceSync(`
         letter-spacing: 0.05em;
         padding: 0.15em 0.5em;
         border-radius: 4px;
-        background: var(--brand-subtle, #eff6ff);
-        color: var(--brand, #2563eb);
+        background: var(--brand-subtle);
+        color: var(--brand);
         vertical-align: middle;
         margin-left: 0.5rem;
       }
@@ -79,7 +79,7 @@ routeSheet.replaceSync(`
       }
 
       .early-access-note a {
-        color: var(--brand, #2563eb);
+        color: var(--brand);
         text-decoration: underline;
       }
 
@@ -106,7 +106,7 @@ routeSheet.replaceSync(`
       }
 
       .search-box:focus {
-        border-color: var(--brand, #534AB7);
+        border-color: var(--brand);
         box-shadow: 0 0 0 3px var(--brand-glow, rgba(83,74,183,0.35)), var(--shadow-glow, 0 0 20px rgba(83,74,183,0.15));
       }
 
@@ -148,8 +148,8 @@ routeSheet.replaceSync(`
       }
 
       .filter-btn.active {
-        background: var(--brand, #534AB7);
-        border-color: var(--brand, #534AB7);
+        background: var(--brand);
+        border-color: var(--brand);
         color: #fff;
       }
 
@@ -183,7 +183,7 @@ routeSheet.replaceSync(`
       }
 
       .package-card:hover {
-        border-color: var(--brand, #534ab7);
+        border-color: var(--brand);
         box-shadow: var(--shadow-brand-md, 0 4px 20px rgba(83,74,183,0.3));
         transform: translateY(-3px);
       }

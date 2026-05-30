@@ -82,7 +82,7 @@ styles.replaceSync(`
     display: inline-flex; align-items: center;
     border: var(--border-size-2) solid var(--brand-neon);
     border-radius: var(--radius-round);
-    background: #080A0F;
+    background: var(--bg-base);
     box-shadow: 0 0 16px var(--brand-glow);
     overflow: hidden;
   }

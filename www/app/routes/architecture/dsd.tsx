@@ -27,7 +27,7 @@ routeSheet.replaceSync(`
       }
       .comparison-item.less {
         background: var(--bg-surface);
-        border-left: 3px solid var(--brand, #534AB7);
+        border-left: 3px solid var(--brand);
       }
       @media (max-width: 720px) {
         .comparison {

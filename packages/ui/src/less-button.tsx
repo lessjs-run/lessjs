@@ -98,7 +98,7 @@ sheet.replaceSync(`
   }
 
   .btn--accent {
-    background: linear-gradient(135deg, var(--brand, #534ab7), var(--brand-hover, var(--indigo-7)));
+    background: linear-gradient(135deg, var(--brand), var(--brand-hover));
     color: var(--text-primary);
     border-color: transparent;
   }

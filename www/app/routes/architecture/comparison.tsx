@@ -36,7 +36,7 @@ routeSheet.replaceSync(`
       }
 
       th {
-        background: var(--bg-surface, #f8f8f8);
+        background: var(--bg-surface);
         font-weight: var(--font-weight-5);
         color: var(--text-primary);
         text-align: left;
@@ -63,7 +63,7 @@ routeSheet.replaceSync(`
       }
 
       tbody tr:hover {
-        background: var(--bg-surface, #f5f5f5);
+        background: var(--bg-surface);
       }
 
       tbody tr:last-child td {
@@ -81,7 +81,7 @@ routeSheet.replaceSync(`
       }
 
       .tag-yes {
-        color: var(--brand, #534AB7);
+        color: var(--brand);
         font-weight: var(--font-weight-5);
       }
 
@@ -100,7 +100,7 @@ routeSheet.replaceSync(`
 
       /* LessJS column highlight */
       th.lessjs-col {
-        color: var(--brand, #534AB7);
+        color: var(--brand);
         font-weight: var(--font-weight-6);
       }
 

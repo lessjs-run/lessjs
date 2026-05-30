@@ -47,7 +47,7 @@ heroSheet.replaceSync(`
     line-height: var(--font-lineheight-00); letter-spacing: var(--font-letterspacing-0); color: var(--text-primary);
   }
   .glow-line {
-    background: linear-gradient(135deg, var(--brand-neon), #B166FA);
+    background: linear-gradient(135deg, var(--brand), var(--brand-light));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     animation: core-glow 3s ease-in-out infinite alternate;
   }
