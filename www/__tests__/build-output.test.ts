@@ -34,7 +34,6 @@ Deno.test('build output: client island JS stays within core and showcase budgets
   const showcaseChunks = [
     'island-media-chrome-showcase',
     'island-react-showcase',
-    'island-shoelace-showcase',
   ];
   const files = readdirSync(clientDir, { recursive: true }) as string[];
   let coreBytes = 0;

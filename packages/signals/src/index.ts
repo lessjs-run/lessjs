@@ -17,7 +17,7 @@ export type { ReadonlySignal, Signal, SignalEngine, Unsubscribe, WritableSignal 
 export { createAlienEngine, createDefaultEngine } from './alien-engine.ts';
 
 // ─── Framework layer ────────────────────────────────────────────
-export { computed, effect, signal } from './framework.ts';
+export { computed, effect, effectScope, signal } from './framework.ts';
 
 // ─── Default export (tree-shakeable) ────────────────────────────
 import { computed, effect, signal } from './framework.ts';

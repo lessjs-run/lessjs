@@ -1,3 +1,4 @@
+/** @jsxImportSource @lessjs/core */
 /**
  * @lessjs/ui - less-theme-toggle
  *
@@ -19,6 +20,7 @@
 
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { openPropsTokenSheet } from './open-props-tokens.js';
 import { signal } from '@lessjs/signals';
 export const tagName = 'less-theme-toggle';
 
@@ -32,23 +34,18 @@ sheet.replaceSync(`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    border: var(--border-size-1) solid var(--gray-3);
+    width: 32px; height: 32px; padding: 0;
+    border: 0.5px solid var(--border);
     border-radius: var(--radius-2);
     background: transparent;
-    color: var(--gray-6);
+    color: var(--text-muted);
     cursor: pointer;
-    font-size: 0;
-    line-height: 1;
-    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    transition: all var(--ease-2) var(--duration-2);
   }
-
   .theme-toggle:hover {
-    color: var(--gray-9);
-    border-color: var(--gray-5);
-    background: rgba(83,74,183,0.06);
+    color: var(--text-primary);
+    border-color: var(--brand);
+    background: var(--bg-surface);
   }
 
   .theme-toggle svg {
@@ -64,24 +61,27 @@ sheet.replaceSync(`
     display: none;
   }
 
-  .theme-toggle.is-light .icon-sun {
+  .theme-toggle[data-theme="light"] .icon-sun {
     display: none;
   }
 
-  .theme-toggle.is-light .icon-moon {
+  .theme-toggle[data-theme="light"] .icon-moon {
     display: block;
   }
 `);
 
 export class LessThemeToggle extends DsdElement {
-  static override styles = [sheet];
+  static override styles = [openPropsTokenSheet, sheet];
   static override delegatesFocus = true;
   static override observedAttributes = ['theme'];
 
   private _theme = signal<'dark' | 'light'>('dark');
+  private _initDone = false;
 
   override connectedCallback(): void {
     super.connectedCallback();
+    // raf breaks signal→island-reconstruct→connectedCallback synchronous loop
+    requestAnimationFrame(() => this._initTheme());
   }
 
   /**
@@ -93,6 +93,8 @@ export class LessThemeToggle extends DsdElement {
    * > localStorage > prefers-color-scheme > default 'dark'.
    */
   private _initTheme(): void {
+    if (this._initDone) return;
+    this._initDone = true;
     const themeAttr = this.getAttribute('theme');
     if (themeAttr === 'light') {
       this._theme.value = 'light';
@@ -115,10 +117,8 @@ export class LessThemeToggle extends DsdElement {
             this._theme.value = 'dark';
             resolved = true;
           }
-        } catch (e) {
-          console.debug('[less-theme-toggle] localStorage unavailable:', e);
-        }
-        if (!resolved && typeof globalThis !== 'undefined' && globalThis.matchMedia) {
+        } catch { /* localStorage blocked */ }
+        if (!resolved && globalThis.matchMedia) {
           this._theme.value = globalThis.matchMedia('(prefers-color-scheme: light)').matches
             ? 'light'
             : 'dark';
@@ -126,50 +126,49 @@ export class LessThemeToggle extends DsdElement {
       }
     }
 
-    // Sync theme to component attribute, document root, and localStorage
+    // Sync to self, document, and parent layout — critical for :root[data-theme]
     this.setAttribute('data-theme', this._theme.value);
+    document.documentElement.setAttribute('data-theme', this._theme.value);
+    if (document.documentElement.style) {
+      document.documentElement.style.colorScheme = this._theme.value;
+    }
+    // Propagate to parent less-layout
     try {
-      document.documentElement.setAttribute('data-theme', this._theme.value);
-      if (document.documentElement.style) {
-        document.documentElement.style.colorScheme = this._theme.value;
+      const root = this.getRootNode();
+      if (root instanceof ShadowRoot && root.host) {
+        root.host.setAttribute('data-theme', this._theme.value);
       }
-    } catch (e) {
-      console.debug('[less-theme-toggle] document.documentElement unavailable:', e);
-    }
+    } catch { /* not in shadow DOM */ }
+    this._persistTheme(this._theme.value);
+  }
+
+  private _persistTheme(theme: 'dark' | 'light'): void {
     try {
-      localStorage.setItem('less-theme', this._theme.value);
-    } catch (e) {
-      console.debug('[less-theme-toggle] localStorage.setItem unavailable:', e);
-    }
+      localStorage.setItem('less-theme', theme);
+    } catch { /* blocked */ }
   }
 
   protected override onDsdHydrated(): void {
     super.onDsdHydrated();
-    this._initTheme();
-
-    // Re-render to guarantee event bindings regardless of DSD hydration.
-    // v0.24.1: JSX VNode path now uses renderToDom which wires event handlers.
-    this.update();
+    requestAnimationFrame(() => this._initTheme());
   }
 
   protected override onCsrRendered(): void {
     super.onCsrRendered();
-    this._initTheme();
-
-    // Re-render with the resolved theme (first render used signal default 'dark')
-    this.update();
+    // NO _initTheme() here — causes signal→effect→onCsrRendered→initTheme loop
   }
 
   override render(): ReturnType<typeof DsdElement.prototype.render> {
-    const lightClass = this._theme.value === 'light' ? ' is-light' : '';
-    const title = this._theme.value === 'light' ? 'Switch to dark theme' : 'Switch to light theme';
-
+    // v0.26.1 (ADR-0062): Zero signal.value reads in render().
+    // data-theme is passed as a signal prop → applyProps creates
+    // effect binding that updates the attribute when theme changes.
+    // CSS selectors ([data-theme="light"]) handle icon visibility.
     return (
       <button
         type='button'
-        className={`theme-toggle${lightClass}`}
+        className='theme-toggle'
         part='toggle'
-        title={title}
+        data-theme={this._theme}
         aria-label='Toggle theme'
         onClick={() => this._handleToggle()}
       >
@@ -240,7 +239,7 @@ export class LessThemeToggle extends DsdElement {
     } catch (e) {
       console.debug('[less-theme-toggle] localStorage.setItem unavailable:', e);
     }
-    this.setAttribute('data-theme', theme);
+    // data-theme attribute is managed by signal prop binding (data-theme={this._theme})
   }
 
   override attributeChangedCallback(name: string, old: string | null, val: string | null): void {

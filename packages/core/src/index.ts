@@ -161,7 +161,7 @@ export {
 // VNode & jsx-runtime
 export type { VNode } from './vnode.js';
 export { isVNode } from './vnode.js';
-export { Fragment, jsx, jsxDEV, jsxs } from './jsx-runtime.js';
+export { For, Fragment, jsx, jsxDEV, jsxs, Show } from './jsx-runtime.js';
 // Renderers
 export { renderToDom } from './jsx-render-dom.js';
 export { renderToString } from './jsx-render-string.js';

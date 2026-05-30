@@ -168,6 +168,10 @@ export function injectCspMeta(
  * This polyfill attaches Shadow Roots manually via attachShadow().
  */
 const DSD_POLYFILL = `
+<style>html{visibility:visible!important}body{background:#040508;color:#fff}docs-home{display:block}
+:root[data-theme="dark"]{--gray-0:#030507;--gray-1:#0d0f12;--gray-2:#16191d;--gray-3:#212529;--gray-4:#343a40;--gray-5:#495057;--gray-6:#868e96;--gray-7:#adb5bd;--gray-8:#ced4da;--gray-9:#dee2e6;--gray-10:#e9ecef;--gray-11:#f1f3f5;--gray-12:#f8f9fa;--text-primary:var(--gray-10);--text-secondary:var(--gray-7);--text-muted:var(--gray-6);--bg-base:var(--gray-0);--bg-surface:var(--gray-1);--bg-card:var(--gray-2);--bg-code:#0d0d12;--bg-hover:var(--gray-3);--border:var(--gray-3);--border-hover:var(--gray-4);--brand:#7c6ff5;--brand-hover:#6d5ce8;--brand-light:#8b7cf6;--brand-deep:#3d3580;--brand-subtle:rgba(124,111,245,.15);--brand-glow:rgba(124,111,245,.2);--code-border:rgba(255,255,255,.08)}
+:root[data-theme="light"]{--gray-0:#f8f9fa;--gray-1:#f1f3f5;--gray-2:#e9ecef;--gray-3:#dee2e6;--gray-4:#ced4da;--gray-5:#adb5bd;--gray-6:#868e96;--gray-7:#495057;--gray-8:#343a40;--gray-9:#212529;--gray-10:#16191d;--gray-11:#0d0f12;--gray-12:#030507;--text-primary:var(--gray-10);--text-secondary:var(--gray-7);--text-muted:var(--gray-6);--bg-base:var(--gray-0);--bg-surface:var(--gray-2);--bg-card:var(--gray-0);--bg-code:#f1f3f5;--bg-hover:var(--gray-2);--border:var(--gray-3);--border-hover:var(--gray-4);--brand:#534ab7;--brand-hover:#4039a0;--brand-light:#6d5ce8;--brand-deep:#26215c;--brand-subtle:rgba(83,74,183,.1);--brand-glow:rgba(83,74,183,.15);--code-border:rgba(0,0,0,.08)}
+</style>
 <script>
 // DSD Polyfill (Firefox, older browsers)
 (function() {
@@ -197,6 +201,23 @@ const DSD_POLYFILL = `
     document.addEventListener('DOMContentLoaded', () => attachDSD(document));
   } else {
     attachDSD(document);
+  }
+
+  // Fallback: if after polyfill some templates remain unattached, inline them
+  // into light DOM so content is still visible even if attachShadow failed.
+  const fallbackRender = () => {
+    document.querySelectorAll('template[shadowrootmode]').forEach((tpl) => {
+      const parent = tpl.parentNode;
+      if (!parent || parent.shadowRoot) return;
+      const frag = tpl.content.cloneNode(true);
+      parent.appendChild(frag);
+      tpl.remove();
+    });
+  };
+  if (document.readyState === 'complete') {
+    fallbackRender();
+  } else {
+    window.addEventListener('load', fallbackRender, { once: true });
   }
 })();
 </script>

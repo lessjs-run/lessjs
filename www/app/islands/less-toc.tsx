@@ -24,43 +24,46 @@ styles.replaceSync(`
     top: 5rem;
     max-height: calc(100vh - 8rem);
     overflow-y: auto;
-    font-size: 0.8125rem;
+    font-size: var(--font-size-0);
     scrollbar-width: thin;
+    padding-left: var(--size-3);
   }
   .toc-title {
-    font-size: 0.6875rem;
-    font-weight: 500;
+    font-size: var(--font-size-00);
+    font-weight: var(--font-weight-8);
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-    margin-bottom: 0.75rem;
+    letter-spacing: var(--font-letterspacing-5);
+    color: var(--text-primary);
+    margin-bottom: var(--size-3);
+    padding-top: var(--size-1);
   }
   .toc-list {
     list-style: none;
     margin: 0;
     padding: 0;
-    border-left: 0.5px solid var(--border);
   }
   .toc-link {
     display: block;
-    padding: 0.25rem 0.75rem;
+    padding: var(--size-1) 0 var(--size-1) var(--size-3);
     color: var(--text-muted);
     text-decoration: none;
-    border-left: 1px solid transparent;
-    margin-left: -1px;
-    transition: color 0.15s, border-color 0.15s;
-    line-height: 1.5;
+    border-left: var(--border-size-2) solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    line-height: var(--font-lineheight-3);
+    font-size: var(--font-size-0);
   }
   .toc-link:hover {
-    color: var(--text-primary);
+    color: var(--text-secondary);
+    border-left-color: rgba(124,111,245,0.3);
   }
   .toc-link.active {
-    color: var(--text-primary);
-    border-left-color: var(--text-primary);
+    color: var(--brand-neon);
+    border-left-color: var(--brand-neon);
+    font-weight: var(--font-weight-6);
   }
   .toc-link.h3 {
-    padding-left: 1.5rem;
-    font-size: 0.75rem;
+    padding-left: var(--size-7);
+    font-size: var(--font-size-00);
   }
   @media (max-width: 1100px) {
     :host {

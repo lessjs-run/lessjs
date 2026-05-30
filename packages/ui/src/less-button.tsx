@@ -1,3 +1,4 @@
+/** @jsxImportSource @lessjs/core */
 /**
  * @lessjs/ui - less-button
  *
@@ -22,6 +23,7 @@
 
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _escAttr } from './shared/escape.js';
 
 export const tagName = 'less-button';
@@ -47,7 +49,7 @@ sheet.replaceSync(`
     border-radius: var(--radius-2);
     transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
     white-space: nowrap;
-    letter-spacing: 0.02em;
+    letter-spacing: var(--font-letterspacing-2);
   }
 
   /* Sizes */
@@ -97,8 +99,8 @@ sheet.replaceSync(`
   }
 
   .btn--accent {
-    background: linear-gradient(135deg, var(--brand, #534ab7), #7c3aed);
-    color: white;
+    background: linear-gradient(135deg, var(--brand), var(--brand-hover));
+    color: var(--text-primary);
     border-color: transparent;
   }
   .btn--accent:hover {
@@ -132,7 +134,7 @@ sheet.replaceSync(`
 `);
 
 export class LessButton extends DsdElement {
-  static override styles = [sheet];
+  static override styles = [openPropsTokenSheet, sheet];
   static override delegatesFocus = true;
   static override formAssociated = true;
   static override observedAttributes = ['variant', 'size', 'disabled', 'href', 'target', 'type'];

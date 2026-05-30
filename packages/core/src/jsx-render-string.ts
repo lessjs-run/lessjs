@@ -12,8 +12,8 @@
  * @module @lessjs/core/jsx-render-string
  */
 
-import { isVNode } from './vnode.ts';
-import { Fragment } from './jsx-runtime.ts';
+import { isVNode, type VNode } from './vnode.ts';
+import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { escapeAttr, escapeHtml } from './html-escape.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 
@@ -144,6 +144,33 @@ export function renderToString(node: unknown): string {
     return children.map((c) => renderToString(c)).join('');
   }
 
+  // ── Show (SSR: render truthy child as static snapshot) ────────────────────
+  if (tag === SHOW_TAG || tag === 'show') {
+    const whenVal = isSignalLike(props?.when)
+      ? (props!.when as { value: unknown }).value
+      : props?.when;
+    const ch = children as VNode[];
+    const target = whenVal ? ch[0] : ch[1];
+    return target ? renderToString(target) : '';
+  }
+
+  // ── For (SSR: render each item statically) ────────────────────────────────
+  if (tag === FOR_TAG || tag === 'fore') {
+    const items = (isSignalLike(props?.each)
+      ? (props!.each as { value: unknown }).value
+      : props?.each) as unknown[];
+    if (!Array.isArray(items)) {
+      return '';
+    }
+    const renderFn = children[0] as unknown as ((item: unknown, idx: number) => unknown);
+    if (typeof renderFn !== 'function') {
+      return '';
+    }
+    return items.map((item, i) =>
+      renderToString(renderFn(item, i))
+    ).join('');
+  }
+
   // ── Component function / class ────────────────────────────────────────────
   if (typeof tag === 'function') {
     // DsdElement class: instantiate + call render() via renderToString recursion
@@ -170,7 +197,13 @@ export function renderToString(node: unknown): string {
         });
         return renderToString(result);
       }
-    } catch {
+    } catch (err) {
+      // v0.26.1 FIX: Previously this silently returned '', making SSR failures
+      // invisible. Now we log the error so it's visible in build logs (e.g. CF Pages).
+      console.error(
+        `[LessJS/SSR] renderToString() failed for <${String(tag)}>:`,
+        err instanceof Error ? err.message : String(err),
+      );
       return '';
     }
   }

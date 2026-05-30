@@ -4,7 +4,8 @@ export const tagName = 'page-roadmap';
 // ADR-0037 anchors: DSD-first. Version: v0.21, v0.22, v0.23.
 // Legacy smoke anchors: WC Package Protocol, Six-Phase Vision, Registry Hub, No webpack.
 
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { headerNav, navSections } from '@lessjs/content/nav';
 import '@lessjs/ui/less-layout';
@@ -14,21 +15,6 @@ const routeSheet = new StyleSheet();
 routeSheet.replaceSync(`
   :host {
     display: block;
-    --road-ink: #14151d;
-    --road-muted: #626676;
-    --road-border: rgba(20, 24, 36, 0.12);
-    --road-accent: #5148b8;
-    --road-success: #13795b;
-    --road-warning: #a05a00;
-  }
-
-  :host([data-theme="dark"]) {
-    --road-ink: #f4f6fb;
-    --road-muted: #a7adbd;
-    --road-border: rgba(225, 231, 242, 0.16);
-    --road-accent: #9b93ff;
-    --road-success: #6bd7af;
-    --road-warning: #f2ba66;
   }
 
   :host([data-theme="dark"]) .now,
@@ -40,21 +26,21 @@ routeSheet.replaceSync(`
   .shell {
     max-width: 1080px;
     margin: 0 auto;
-    padding: 44px 24px 72px;
+    padding: 44px var(--size-6) 72px;
   }
 
   .hero {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 320px;
-    gap: 28px;
+    gap: var(--size-7);
     align-items: start;
     padding-bottom: 30px;
-    border-bottom: 1px solid var(--road-border);
+    border-bottom: 1px solid var(--border);
   }
 
   h1 {
     margin: 0;
-    color: var(--road-ink);
+    color: var(--text-primary);
     font-size: clamp(2.6rem, 7vw, 5rem);
     line-height: 0.95;
     letter-spacing: 0;
@@ -63,78 +49,78 @@ routeSheet.replaceSync(`
   .subtitle {
     max-width: 690px;
     margin: 18px 0 0;
-    color: var(--road-muted);
-    font-size: 16px;
-    line-height: 1.75;
+    color: var(--text-muted);
+    font-size: var(--font-size-4);
+    line-height: var(--font-lineheight-4);
   }
 
   .now {
-    border: 1px solid var(--road-border);
-    border-radius: 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-2);
     background: #fff;
-    padding: 16px;
+    padding: var(--size-4);
   }
 
   .now span,
   .chip {
     display: inline-flex;
     align-items: center;
-    min-height: 28px;
+    min-height: var(--size-7);
     padding: 0 10px;
     border: 1px solid rgba(81, 72, 184, 0.28);
-    border-radius: 6px;
+    border-radius: var(--radius-2);
     background: rgba(81, 72, 184, 0.08);
-    color: var(--road-accent);
-    font-size: 12px;
+    color: var(--brand);
+    font-size: var(--font-size-0);
     font-weight: 750;
   }
 
   .now h2 {
-    margin: 14px 0 8px;
-    color: var(--road-ink);
+    margin: 14px 0 var(--size-2);
+    color: var(--text-primary);
     font-size: 18px;
   }
 
   .now p {
     margin: 0;
-    color: var(--road-muted);
-    font-size: 13px;
+    color: var(--text-muted);
+    font-size: var(--font-size-1);
     line-height: 1.6;
   }
 
   .timeline {
-    margin-top: 32px;
+    margin-top: var(--size-8);
     display: grid;
-    gap: 12px;
+    gap: var(--size-3);
   }
 
   .phase {
     display: grid;
     grid-template-columns: 110px 1fr 140px;
-    gap: 16px;
+    gap: var(--size-4);
     align-items: start;
-    border: 1px solid var(--road-border);
-    border-radius: 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-2);
     background: #fff;
-    padding: 16px;
+    padding: var(--size-4);
   }
 
   .version {
-    color: var(--road-accent);
-    font-size: 13px;
-    font-weight: 800;
+    color: var(--brand);
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-8);
   }
 
   .phase h3 {
-    margin: 0 0 8px;
-    color: var(--road-ink);
-    font-size: 16px;
+    margin: 0 0 var(--size-2);
+    color: var(--text-primary);
+    font-size: var(--font-size-4);
   }
 
   .phase p {
     margin: 0;
-    color: var(--road-muted);
-    font-size: 13px;
+    color: var(--text-muted);
+    font-size: var(--font-size-1);
     line-height: 1.65;
   }
 
@@ -142,28 +128,28 @@ routeSheet.replaceSync(`
     justify-self: end;
     display: inline-flex;
     align-items: center;
-    min-height: 28px;
+    min-height: var(--size-7);
     padding: 0 10px;
-    border-radius: 6px;
-    font-size: 12px;
+    border-radius: var(--radius-2);
+    font-size: var(--font-size-0);
     font-weight: 750;
-    border: 1px solid var(--road-border);
+    border: 1px solid var(--border);
   }
 
   .done {
-    color: var(--road-success);
+    color: var(--brand-deep);
     border-color: rgba(19, 121, 91, 0.26);
     background: rgba(19, 121, 91, 0.08);
   }
 
   .current {
-    color: var(--road-accent);
+    color: var(--brand);
     border-color: rgba(81, 72, 184, 0.28);
     background: rgba(81, 72, 184, 0.08);
   }
 
   .planned {
-    color: var(--road-warning);
+    color: var(--brand-deep);
     border-color: rgba(160, 90, 0, 0.24);
     background: rgba(160, 90, 0, 0.08);
   }
@@ -172,26 +158,26 @@ routeSheet.replaceSync(`
     margin-top: 34px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: var(--size-3);
   }
 
   .truth {
-    border: 1px solid var(--road-border);
-    border-radius: 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-2);
     background: #fff;
-    padding: 16px;
+    padding: var(--size-4);
   }
 
   .truth h2 {
     margin: 0 0 10px;
-    color: var(--road-ink);
-    font-size: 16px;
+    color: var(--text-primary);
+    font-size: var(--font-size-4);
   }
 
   .truth p,
   .truth li {
-    color: var(--road-muted);
-    font-size: 13px;
+    color: var(--text-muted);
+    font-size: var(--font-size-1);
     line-height: 1.65;
   }
 
@@ -214,15 +200,15 @@ routeSheet.replaceSync(`
   .nav-link {
     display: inline-flex;
     align-items: center;
-    min-height: 40px;
+    min-height: var(--size-10);
     padding: 0 14px;
-    border: 1px solid var(--road-border);
+    border: 1px solid var(--border);
     border-radius: 7px;
     background: #fff;
-    color: var(--road-ink);
+    color: var(--text-primary);
     text-decoration: none;
-    font-size: 13px;
-    font-weight: 700;
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-7);
   }
 
   @media (max-width: 820px) {
@@ -239,7 +225,7 @@ routeSheet.replaceSync(`
 
   @media (max-width: 560px) {
     .shell {
-      padding: 32px 16px 56px;
+      padding: var(--size-8) var(--size-4) 56px;
     }
   }
 `);
@@ -321,7 +307,7 @@ export class RoadmapPage extends DsdElement {
               <h2>Current</h2>
               <ul>
                 <li>@lessjs/protocols</li>
-                <li>@lessjs/runtime</li>
+                <li>@lessjs/core</li>
                 <li>package graph gate</li>
                 <li>docs architecture truth</li>
               </ul>

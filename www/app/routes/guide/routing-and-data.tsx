@@ -1,7 +1,7 @@
 export const meta = { section: 'Core', label: 'Routing & Data', order: 3 };
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
-import { DsdElement } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
@@ -43,7 +43,7 @@ export class RoutingDataPage extends DsdElement {
 
           <h2>页面契约</h2>
           <p>每个路由文件需导出以下内容：</p>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
 export class AboutPage extends DsdElement {
   override render() {
@@ -64,7 +64,7 @@ export const tagName = 'page-about';</code></pre></less-code-block>
               <tr><td><code>users/[id]/posts.ts</code></td><td><code>/users/:id/posts</code></td><td><code>id</code></td></tr>
             </tbody>
           </table>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
 export class PostPage extends DsdElement {
   slug = '';
@@ -105,7 +105,7 @@ customElements.define('page-post', PostPage);</code></pre></less-code-block>
           <h2>构建时获取数据</h2>
           <p>在页面组件中，可以在模块顶层执行数据获取。数据在 SSG 构建时获取，写入静态 HTML：</p>
           <less-code-block><pre><code>// app/routes/blog/index.ts
-import { DsdElement } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
 
 // 构建时获取数据
 const posts = await fetch('https://api.example.com/posts')
@@ -182,7 +182,7 @@ customElements.define('page-blog-index', BlogIndex);</code></pre></less-code-blo
 
           <h2>Page Contract</h2>
           <p>Each route file must export:</p>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
 export class AboutPage extends DsdElement {
   override render() {
@@ -203,7 +203,7 @@ export const tagName = 'page-about';</code></pre></less-code-block>
               <tr><td><code>users/[id]/posts.ts</code></td><td><code>/users/:id/posts</code></td><td><code>id</code></td></tr>
             </tbody>
           </table>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
 export class PostPage extends DsdElement {
   slug = '';
@@ -244,7 +244,7 @@ customElements.define('page-post', PostPage);</code></pre></less-code-block>
           <h2>Fetching Data at Build Time</h2>
           <p>Perform data fetching at the module top-level. Data is fetched during SSG build and baked into static HTML:</p>
           <less-code-block><pre><code>// app/routes/blog/index.ts
-import { DsdElement } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
 
 // Fetch at build time
 const posts = await fetch('https://api.example.com/posts')

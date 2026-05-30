@@ -1,3 +1,4 @@
+/** @jsxImportSource @lessjs/core */
 /**
  * Hero Ping - Ocean component (v0.20.0 Ocean-Island).
  *
@@ -12,6 +13,7 @@
  */
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { openPropsTokenSheet } from './open-props-tokens.js';
 export const tagName = 'less-hero-ping';
 
 const styles: StyleSheetLike = new StyleSheet();
@@ -19,26 +21,26 @@ styles.replaceSync(`
   :host {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--size-2);
   }
   .ping {
-    padding: 5px 18px;
-    border-radius: 2px;
-    border: 0.5px solid #555;
+    padding: var(--size-1) var(--size-5);
+    border-radius: var(--radius-1);
+    border: var(--border-size-1) solid var(--gray-5);
     background: transparent;
-    color: #ccc;
-    font-size: 10px;
+    color: var(--gray-5);
+    font-size: var(--font-size-00);
     cursor: pointer;
-    letter-spacing: 1.5px;
+    letter-spacing: var(--font-letterspacing-5);
     text-transform: uppercase;
     transition: all 0.15s;
     font-family: inherit;
     white-space: nowrap;
   }
   .ping:hover {
-    background: #1a1a1a;
-    color: #fff;
-    border-color: #888;
+    background: var(--gray-2);
+    color: var(--text-primary);
+    border-color: var(--gray-6);
   }
   .ping:disabled {
     opacity: 0.3;
@@ -47,25 +49,25 @@ styles.replaceSync(`
   .dot {
     width: 7px;
     height: 7px;
-    border-radius: 50%;
+    border-radius: var(--radius-round);
     display: inline-block;
     flex-shrink: 0;
   }
-  .dot.idle { background: #444; }
+  .dot.idle { background: var(--gray-6); }
   .dot.loading {
-    background: #888;
+    background: var(--gray-5);
     animation: pulse 0.8s ease-in-out infinite alternate;
   }
-  .dot.ok { background: #2ecc40; }
-  .dot.err { background: #e74c3c; }
+  .dot.ok { background: #22c55e; }
+  .dot.err { background: var(--error); }
   .info {
-    font-family: "SF Mono", "Fira Code", "Consolas", monospace;
-    font-size: 9px;
-    color: #666;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-00);
+    color: var(--text-muted);
     white-space: nowrap;
   }
-  .info .ok { color: #2ecc40; }
-  .info .err { color: #e74c3c; }
+  .info .ok { color: #22c55e; }
+  .info .err { color: var(--error); }
   @keyframes pulse {
     from { opacity: 0.4; }
     to { opacity: 1; }
@@ -73,7 +75,7 @@ styles.replaceSync(`
 `);
 
 export default class HeroPing extends DsdElement {
-  static override styles = [styles];
+  static override styles = [openPropsTokenSheet, styles];
 
   apiUrl = '';
   _state: 'idle' | 'loading' | 'ok' | 'err' = 'idle';

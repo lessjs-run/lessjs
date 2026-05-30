@@ -1,7 +1,7 @@
 export const meta = { section: 'Production', label: 'Configuration', order: 10 };
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
-import { DsdElement } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';

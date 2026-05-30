@@ -529,6 +529,8 @@ export async function ssgRender(
   // ── Build manifest ──────────────────────────────────────────
   // ── PWA files ──────────────────────────────────────────────
   const pwa = options.pwa;
+  // Temporary: disable SW generation to avoid stale cache blank-screen until root cause fixed
+  // PWA generation — re-enabled after ThemeInit SW cache nuke patch (v0.26.1)
   if (pwa) {
     const manifest = {
       name: pwa.name || 'LessJS',
@@ -613,20 +615,17 @@ async function networkFirst(req) {
     // H-03 fix: Escape basePath to prevent attribute injection
     const escapedBasePath = escapeAttr(basePath);
     const manifestLink = `<link rel="manifest" href="${escapedBasePath}manifest.json">`;
-    const swScript =
-      `<script>addEventListener("load",()=>{navigator.serviceWorker?.register("${escapedBasePath}sw.js")})</script>`;
     const htmlFiles = findHtmlFiles(outputDir);
     for (const htmlPath of htmlFiles) {
       let html = readFileSync(htmlPath, 'utf-8');
       if (!html.includes('rel="manifest"')) {
         html = html.replace('</head>', `${manifestLink}</head>`);
       }
-      if (!html.includes('serviceWorker')) {
-        html = html.replace('</body>', `${swScript}</body>`);
-      }
       writeFileSync(htmlPath, html);
     }
-    log.info(`PWA: injected into ${htmlFiles.length} HTML files`);
+    log.info(`PWA manifest injected into ${htmlFiles.length} HTML files`);
+    // SW registration intentionally omitted — see theme-init.js SW cache nuke.
+    // Re-registering would re-introduce blank-screen risk from stale cached SW.
   }
 
   // ── Sitemap (via ctx) ──────────────────────────────────────

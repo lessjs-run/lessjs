@@ -86,9 +86,11 @@ function tryDenoJsonDir(
   // Strip JSONC comments:
   // - Line comments: // at start of line (after optional whitespace)
   // - Block comments: /* ... */
+  // - Trailing commas (Deno JSONC allows them, JSON.parse does not)
   const json = raw
     .replace(/^\s*\/\/.*$/gm, '')
-    .replace(/\/\*[\s\S]*?\*\//g, '');
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/,\s*([}\]])/g, '$1');
   let denoJson: Record<string, unknown>;
   try {
     denoJson = JSON.parse(json);

@@ -1,3 +1,4 @@
+/** @jsxImportSource @lessjs/core */
 /**
  * @lessjs/ui - less-card
  *
@@ -25,6 +26,7 @@
 
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { openPropsTokenSheet } from './open-props-tokens.js';
 export const tagName = 'less-card';
 
 const sheet: StyleSheetLike = new StyleSheet();
@@ -33,7 +35,7 @@ sheet.replaceSync(`
     display: block;
     background: var(--gray-0);
     border: var(--border-size-1) solid var(--gray-3);
-    border-radius: 6px;
+    border-radius: var(--radius-2);
     overflow: hidden;
     transition: box-shadow 0.2s ease, transform 0.2s ease;
   }
@@ -75,7 +77,7 @@ sheet.replaceSync(`
 `);
 
 export class LessCard extends DsdElement {
-  static override styles = [sheet];
+  static override styles = [openPropsTokenSheet, sheet];
   static override observedAttributes = ['variant'];
 
   override render(): ReturnType<typeof DsdElement.prototype.render> {

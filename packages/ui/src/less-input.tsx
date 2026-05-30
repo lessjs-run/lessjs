@@ -1,3 +1,4 @@
+/** @jsxImportSource @lessjs/core */
 /**
  * @lessjs/ui - less-input
  *
@@ -30,6 +31,7 @@
 
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc, _escAttr } from './shared/escape.js';
 
 export const tagName = 'less-input';
@@ -50,7 +52,7 @@ sheet.replaceSync(`
     font-size: var(--font-size-0);
     font-weight: var(--font-weight-5);
     color: var(--gray-6);
-    letter-spacing: 0.02em;
+    letter-spacing: var(--font-letterspacing-2);
   }
 
   .input {
@@ -86,7 +88,7 @@ sheet.replaceSync(`
   }
 
   .input--error {
-    border-color: var(--error, #dc3545);
+    border-color: var(--error);
   }
 
   :host(:state(disabled)) .input {
@@ -96,17 +98,17 @@ sheet.replaceSync(`
   }
 
   :host(:state(invalid)) .input {
-    border-color: var(--error, #dc3545);
+    border-color: var(--error);
   }
 
   .error-message {
     font-size: var(--font-size-00);
-    color: var(--error, #dc3545);
+    color: var(--error);
   }
 `);
 
 export class LessInput extends DsdElement {
-  static override styles = [sheet];
+  static override styles = [openPropsTokenSheet, sheet];
   static override formAssociated = true;
   static override delegatesFocus = true;
   static override observedAttributes = [

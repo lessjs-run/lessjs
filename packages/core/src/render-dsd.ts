@@ -199,6 +199,25 @@ export async function renderDsd(
         }
       }
       if (!rendered) {
+        console.log(
+          '[LessJS Debug] isVNode check failed for',
+          tagName,
+          'Object.keys:',
+          Object.keys(result),
+          'typeof result:',
+          typeof result,
+        );
+        if (typeof result === 'object' && result !== null) {
+          console.log(
+            '[LessJS Debug] properties present:',
+            'tag in result:',
+            'tag' in result,
+            'props in result:',
+            'props' in result,
+            'children in result:',
+            'children' in result,
+          );
+        }
         const errDetail =
           `Components must return a string or VNode from render(), got ${typeof result}.`;
         const err = classifyError('render', tagName, errDetail, true);

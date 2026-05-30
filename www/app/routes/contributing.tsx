@@ -3,7 +3,8 @@
  */
 export const meta = { section: '', label: 'Contributing', order: 30 };
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -14,14 +15,14 @@ routeSheet.replaceSync(
   pageStyles + `
 
       .layer-diagram {
-        padding: 1.25rem;
+        padding: var(--size-5);
         background: var(--bg-surface);
         border: 0.5px solid var(--border);
-        border-radius: 6px;
-        margin: 1.5rem 0;
-        font-size: 0.8125rem;
-        line-height: 1.8;
-        font-family: "SF Mono", monospace;
+        border-radius: var(--radius-2);
+        margin: var(--size-6) 0;
+        font-size: var(--font-size-1);
+        line-height: var(--font-lineheight-4);
+        font-family: var(--font-mono);
         white-space: pre;
         overflow-x: auto;
         color: var(--text-secondary);
@@ -29,19 +30,19 @@ routeSheet.replaceSync(
       .commit-types {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 0.75rem;
-        margin: 1rem 0;
+        gap: var(--size-3);
+        margin: var(--size-4) 0;
       }
       .commit-type {
-        padding: 0.75rem 1rem;
+        padding: var(--size-3) var(--size-4);
         background: var(--bg-surface);
         border: 0.5px solid var(--border);
-        border-radius: 4px;
-        font-size: 0.875rem;
+        border-radius: var(--radius-1);
+        font-size: var(--font-size-2);
       }
       .commit-type code {
         color: var(--brand);
-        font-weight: 600;
+        font-weight: var(--font-weight-6);
       }
     `,
 );

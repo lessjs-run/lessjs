@@ -1,3 +1,4 @@
+/** @jsxImportSource @lessjs/core */
 /**
  * @lessjs/ui - less-layout
  *
@@ -31,11 +32,15 @@
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { navigate, onNavigate } from '@lessjs/core/navigation';
+import { createContext, provideContext } from '@lessjs/core';
 import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc, _escAttr } from './shared/escape.js';
 import './less-theme-toggle.js';
 
 export const tagName = 'less-layout';
+
+/** SignalContext key: theme state shared across all components */
+export const THEME_CTX = createContext<'dark' | 'light'>(Symbol('theme'), 'dark');
 
 export interface NavItem {
   path?: string;
@@ -59,12 +64,26 @@ sheet.replaceSync(`
     display: block;
   }
 
+  /* ─── Global font stack ─── */
+  * { font-family: var(--font-sans); }
+
+  /* ─── Keyframes ─── */
+  @keyframes nav-pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+  @keyframes logo-breathe {
+    0%, 100% { filter: brightness(1) drop-shadow(0 0 4px var(--brand-glow)); }
+    50% { filter: brightness(1.15) drop-shadow(0 0 12px var(--brand-glow)); }
+  }
+
+  /* ─── Base ─── */
   .app-layout {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background: var(--gray-0);
-    color: var(--gray-9);
+    background: var(--bg-base);
+    color: var(--text-primary);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -75,6 +94,7 @@ sheet.replaceSync(`
     flex: 1;
     max-width: 1400px;
     margin: 0 auto;
+    width: 100%;
   }
 
   .layout-main {
@@ -94,141 +114,149 @@ sheet.replaceSync(`
     flex: 1;
   }
 
+  /* ─── Header — Glassmorphic Swiss ─── */
   .app-header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(255, 255, 255, 0.82);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border-bottom: var(--border-size-1) solid var(--gray-3);
-  }
-
-  :host([data-theme="dark"]) .app-header {
-    background: rgba(3, 5, 7, 0.85);
-    border-bottom-color: var(--gray-3);
+    background: var(--bg-base);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border-bottom: 0.5px solid var(--border);
   }
 
   .header-inner {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 64px;
+    padding: 0 var(--size-16);
     display: flex;
     align-items: center;
-    height: 56px;
-    gap: 24px;
+    height: 64px;
+    gap: var(--size-8);
   }
 
-  .mobile-menu {
-    display: none;
-  }
-
-  .mobile-tab-bar {
-    display: none;
-  }
+  .mobile-menu { display: none; }
+  .mobile-tab-bar { display: none; }
 
   .mobile-menu-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    border: var(--border-size-1) solid var(--gray-3);
+    width: var(--size-8);
+    height: var(--size-8);
+    border: 0.5px solid var(--border);
     border-radius: var(--radius-2);
     background: transparent;
-    color: var(--gray-6);
+    color: var(--text-muted);
     cursor: pointer;
     padding: 0;
     list-style: none;
-    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    transition: all var(--ease-2) var(--duration-2);
   }
-
   .mobile-menu-btn::-webkit-details-marker { display: none; }
   .mobile-menu-btn::marker { content: ""; }
-
   .mobile-menu-btn:hover, .mobile-menu-btn:focus-visible {
-    color: var(--gray-9);
-    border-color: var(--gray-5);
-    background: rgba(83,74,183,0.06);
+    color: var(--brand);
+    border-color: var(--brand);
   }
-
   .mobile-menu[open] .mobile-menu-btn {
-    color: var(--gray-9);
-    background: rgba(83,74,183,0.06);
-    border-color: var(--gray-5);
+    color: var(--brand);
+    border-color: var(--brand);
   }
 
+  /* ─── Logo — Swiss uppercase ─── */
   .logo {
-    font-size: var(--font-size-0);
-    font-weight: var(--font-weight-7);
-    color: var(--gray-9);
+    font-size: var(--font-size-7);
+    font-weight: var(--font-weight-9);
+    color: transparent;
+    background: linear-gradient(135deg, var(--brand), var(--brand-light));
+    -webkit-background-clip: text;
+    background-clip: text;
     text-decoration: none;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    transition: opacity 0.2s ease;
+    letter-spacing: -0.04em;
+    text-transform: none;
+    transition: opacity var(--ease-2) var(--duration-2);
     white-space: nowrap;
+    animation: logo-breathe 4s ease-in-out infinite;
   }
-
-  .logo:hover { opacity: 0.6; }
+  .logo:hover { opacity: 0.75; animation: none; }
 
   .logo-sub {
     font-size: var(--font-size-00);
-    font-weight: var(--font-weight-4);
-    color: var(--gray-5);
+    font-weight: var(--font-weight-5);
+    color: var(--brand);
     margin-left: var(--size-2);
-    letter-spacing: 0.02em;
-    text-transform: none;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
   }
 
+  /* ─── Header Nav ─── */
   .header-nav {
     display: flex;
-    gap: 0.125rem;
+    gap: var(--size-1);
     flex: 1;
   }
-
   .header-nav a {
-    color: var(--gray-6);
+    color: var(--text-muted);
     text-decoration: none;
     font-size: var(--font-size-0);
-    font-weight: var(--font-weight-5);
-    padding: var(--size-2) var(--size-3);
-    letter-spacing: 0.02em;
-    transition: color 0.2s ease;
+    font-weight: var(--font-weight-6);
+    padding: var(--size-2) var(--size-4);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     border-radius: var(--radius-2);
+    transition: all var(--ease-2) var(--duration-2);
+    position: relative;
   }
-
-  .header-nav a:hover {
-    color: var(--gray-9);
-    text-decoration: underline;
+  .header-nav a:hover,
+  .header-nav a[aria-current="page"] {
+    color: var(--text-primary);
+    background: var(--bg-surface);
+  }
+  .header-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 40%;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 1px;
+    transition: transform var(--ease-2) var(--duration-2);
+  }
+  .header-nav a:hover::after,
+  .header-nav a[aria-current="page"]::after {
+    transform: translateX(-50%) scaleX(1);
   }
 
   .header-right {
     display: flex;
     align-items: center;
-    gap: var(--size-2);
+    gap: var(--size-3);
     margin-left: auto;
   }
 
+  /* ─── GitHub link ─── */
   .github-link {
     display: inline-flex;
     align-items: center;
     gap: var(--size-2);
-    color: var(--gray-5);
+    color: var(--text-muted);
     text-decoration: none;
     font-size: var(--font-size-00);
-    font-weight: var(--font-weight-5);
-    letter-spacing: 0.02em;
+    font-weight: var(--font-weight-6);
+    letter-spacing: 0.04em;
     padding: var(--size-2) var(--size-3);
-    border: var(--border-size-1) solid var(--gray-3);
+    border: 0.5px solid var(--border);
     border-radius: var(--radius-2);
-    transition: color 0.2s ease, border-color 0.2s ease;
+    transition: all var(--ease-2) var(--duration-2);
   }
-
   .github-link:hover {
-    color: var(--gray-7);
-    border-color: var(--gray-5);
+    color: var(--text-primary);
+    border-color: var(--brand);
+    background: var(--bg-surface);
   }
-
   .github-link svg { flex-shrink: 0; }
 
   .lang-switch {
@@ -239,250 +267,175 @@ sheet.replaceSync(`
     height: 24px;
     padding: 0 var(--size-2);
     font-size: var(--font-size-00);
-    font-weight: var(--font-weight-5);
-    color: var(--gray-5);
-    border: var(--border-size-1) solid var(--gray-3);
+    font-weight: var(--font-weight-6);
+    color: var(--text-muted);
+    border: 0.5px solid var(--border);
     border-radius: var(--radius-2);
     background: transparent;
     cursor: pointer;
     text-decoration: none;
-    letter-spacing: 0.02em;
-    transition: color 0.2s ease, border-color 0.2s ease;
+    letter-spacing: 0.04em;
+    transition: all var(--ease-2) var(--duration-2);
   }
-
   .lang-switch:hover {
-    color: var(--gray-7);
-    border-color: var(--gray-5);
+    color: var(--text-primary);
+    border-color: var(--brand);
+    background: var(--bg-surface);
   }
 
+  /* ─── Sidebar — Swiss vertical indicator ─── */
   .docs-sidebar {
-    width: clamp(200px, 20vw, 280px);
+    width: clamp(200px, 20vw, 260px);
     flex-shrink: 0;
-    border-right: var(--border-size-1) solid var(--gray-3);
-    padding: var(--size-6) 0;
+    border-right: 0.5px solid var(--border);
+    padding: 2rem 0;
     overflow-y: auto;
-    height: calc(100vh - 56px);
+    height: calc(100vh - 64px);
     position: sticky;
-    top: 56px;
+    top: 64px;
     scrollbar-width: thin;
   }
-
   :host([home]) .docs-sidebar,
   :host([full-width]) .docs-sidebar {
-    width: 0;
-    min-width: 0;
-    padding: 0;
-    overflow: hidden;
-    border-right: none;
+    width: 0; min-width: 0; padding: 0;
+    overflow: hidden; border-right: none;
   }
 
-  .nav-section {
-    margin-bottom: var(--size-5);
-  }
-
+  .nav-section { margin-bottom: 1.5rem; }
   .nav-section summary {
-    font-size: var(--font-size-00);
-    font-weight: var(--font-weight-7);
+    font-size: 0.625rem;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--gray-5);
-    padding: 0 var(--size-5);
-    margin-bottom: var(--size-2);
+    letter-spacing: 0.22em;
+    color: var(--text-muted);
+    padding: 0 1.5rem;
+    margin-bottom: 0.5rem;
     cursor: pointer;
     list-style: none;
     display: flex;
     align-items: center;
-    gap: var(--size-2);
+    gap: 0.5rem;
     user-select: none;
   }
-
   .nav-section summary::-webkit-details-marker { display: none; }
   .nav-section summary::marker { content: ""; }
-
-  .nav-section summary::before {
-    content: "";
-    font-size: 0.5rem;
-    transition: transform 0.2s ease;
-    display: inline-block;
-  }
-
-  .nav-section[open] summary::before { transform: rotate(0deg); }
-  .nav-section:not([open]) summary::before { transform: rotate(-90deg); }
-  .nav-section summary:hover { color: var(--gray-6); }
+  .nav-section summary:hover { color: var(--text-secondary); }
 
   .docs-sidebar a {
     display: block;
-    color: var(--gray-6);
+    color: var(--text-muted);
     text-decoration: none;
-    font-size: var(--font-size-0);
-    padding: 0.3rem var(--size-5);
-    transition: color 0.2s ease, background 0.2s ease;
-    border-left: 1px solid transparent;
+    font-size: 0.85rem;
+    padding: 0.35rem 1.5rem;
+    border-left: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
   }
-
   .docs-sidebar a:hover {
-    color: var(--gray-9);
-    background: rgba(83,74,183,0.06);
+    color: var(--text-secondary);
+    background: var(--bg-surface);
   }
-
   .docs-sidebar a.active,
   .docs-sidebar a[aria-current="page"] {
-    color: var(--gray-9);
-    border-left-color: var(--gray-9);
-    background: rgba(83,74,183,0.06);
-    font-weight: var(--font-weight-5);
+    color: var(--brand);
+    border-left-color: var(--brand);
+    background: var(--bg-surface);
+    font-weight: 600;
   }
 
-  .mobile-backdrop {
-    position: fixed;
-    inset: 0;
-    top: 56px;
-    background: linear-gradient(to right, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.25) 100%);
-    z-index: 80;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-
-  @media (max-width: 900px) {
-    .mobile-menu { display: block; }
-    .header-inner { padding: 0 var(--size-4); gap: var(--size-3); }
-    .header-nav { display: none; }
-    .github-text { display: none; }
-    .header-right { gap: var(--size-2); }
-
-    .docs-sidebar {
-      position: fixed;
-      top: 56px;
-      left: 0;
-      width: min(300px, 80vw);
-      height: calc(100vh - 56px);
-      z-index: 90;
-      background: var(--gray-0);
-      border-right: var(--border-size-1) solid var(--gray-3);
-      border-bottom: none;
-      padding: var(--size-4) 0;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      transform: translateX(-101%);
-      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      will-change: transform;
-      box-shadow: none;
-    }
-
-    :host([home]) .docs-sidebar,
-  :host([full-width]) .docs-sidebar {
-      width: min(300px, 80vw);
-      min-width: auto;
-      padding: var(--size-4) 0;
-      border-right: var(--border-size-1) solid var(--gray-3);
-      transform: translateX(-101%);
-      pointer-events: none;
-      visibility: hidden;
-    }
-
-    :host([menu-open]) .docs-sidebar {
-      transform: translateX(0);
-      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
-    }
-
-    :host([home][menu-open]) .docs-sidebar,
-    :host([full-width][menu-open]) .docs-sidebar { transform: translateX(-101%); }
-    :host([home]) .mobile-menu,
-    :host([full-width]) .mobile-menu { display: none; }
-    :host([home]) .mobile-backdrop,
-    :host([full-width]) .mobile-backdrop { display: none; }
-
-    :host([menu-open]) .mobile-backdrop { opacity: 1; pointer-events: auto; }
-
-    .nav-section { margin-bottom: var(--size-2); }
-    .nav-section summary { padding: var(--size-2) var(--size-4); font-size: var(--font-size-00); }
-    .docs-sidebar a { padding: var(--size-2) var(--size-4) var(--size-2) var(--size-7); font-size: var(--font-size-0); }
-    .layout-main { width: 100%; }
-
-    .app-footer { padding: var(--size-6) var(--size-4); padding-bottom: calc(var(--size-6) + 56px); }
-    .app-footer .divider { display: none; }
-    .app-footer p { line-height: 1.8; }
-
-    .mobile-tab-bar {
-      display: flex;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 56px;
-      z-index: 100;
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(16px) saturate(180%);
-      -webkit-backdrop-filter: blur(16px) saturate(180%);
-      border-top: var(--border-size-1) solid var(--gray-3);
-      padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
-      padding-bottom: env(safe-area-inset-bottom);
-    }
-
-    :host([data-theme="dark"]) .mobile-tab-bar {
-      background: rgba(3, 5, 7, 0.88);
-      border-top-color: var(--gray-3);
-    }
-
-    .tab-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      color: var(--gray-5);
-      text-decoration: none;
-      font-size: 10px;
-      font-weight: var(--font-weight-5);
-      letter-spacing: 0.02em;
-      transition: color 0.2s ease;
-      -webkit-tap-highlight-color: transparent;
-      padding: 4px 0;
-    }
-
-    .tab-item svg { width: 20px; height: 20px; flex-shrink: 0; }
-    .tab-item:hover, .tab-item:focus-visible { color: var(--gray-9); }
-    .tab-item.active { color: var(--gray-9); }
-    .tab-item.active svg { stroke-width: 2; }
-  }
-
-  @media (max-width: 640px) {
-    .header-right { gap: var(--size-1); }
-    .lang-switch { display: none; }
-  }
-
-  @media (max-width: 480px) {
-    .logo-sub { display: none; }
-    .github-link { padding: var(--size-2); border: none; }
-    .github-link .github-text { display: none; }
-    .header-inner { padding: 0 var(--size-3); gap: var(--size-2); }
-    .header-right { gap: 2px; }
-    .mobile-menu-btn { width: 28px; height: 28px; }
-  }
-
+  /* ─── Footer ─── */
   .app-footer {
-    padding: 64px;
-    border-top: var(--border-size-1) solid var(--gray-3);
+    padding: var(--size-12);
+    border-top: 0.5px solid var(--border);
     text-align: center;
-    color: var(--gray-5);
+    color: var(--text-muted);
     font-size: var(--font-size-00);
-    letter-spacing: 0.02em;
-    background: var(--gray-0);
+    letter-spacing: 0.04em;
+    background: transparent;
   }
-
   .app-footer p { margin: 0.25rem 0; }
-  .app-footer a { color: var(--gray-6); transition: color 0.2s ease; }
-  .app-footer a:hover { color: var(--gray-9); text-decoration: underline; }
+  .app-footer a { color: var(--text-secondary); transition: color var(--ease-2) var(--duration-2); }
+  .app-footer a:hover { color: var(--brand); }
+  .edit-link { margin-right: var(--size-3); }
 
   .app-footer .divider {
     display: inline-block;
     width: 1px;
     height: 8px;
-    background: var(--gray-5);
+    background: var(--text-muted);
     vertical-align: middle;
-    margin: 0 var(--size-3);
+    margin: 0 1rem;
+  }
+
+  /* ─── Mobile backdrop ─── */
+  .mobile-backdrop {
+    position: fixed; inset: 0; top: 64px;
+    background: rgba(0,0,0,0.6);
+    z-index: 80; opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 900px) {
+    .mobile-menu { display: block; }
+    .header-inner { padding: 0 1rem; gap: 0.75rem; }
+    .header-nav { display: none; }
+    .github-text { display: none; }
+    .header-right { gap: 0.5rem; }
+
+    .docs-sidebar {
+      position: fixed; top: 64px; left: 0;
+      width: min(280px, 80vw);
+      height: calc(100vh - 64px); z-index: 90;
+      background: var(--bg-base);
+      border-right: 0.5px solid var(--border);
+      padding: 1rem 0; overflow-y: auto;
+      transform: translateX(-101%);
+      transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+      will-change: transform;
+    }
+    :host([menu-open]) .docs-sidebar {
+      transform: translateX(0);
+      box-shadow: 8px 0 40px rgba(0,0,0,0.5);
+    }
+    :host([menu-open]) .mobile-backdrop { opacity: 1; pointer-events: auto; }
+    .nav-section { margin-bottom: 0.5rem; }
+    .nav-section summary { padding: 0.5rem 1rem; }
+    .docs-sidebar a { padding: 0.5rem 1rem 0.5rem 2rem; }
+    .layout-main { width: 100%; }
+    .app-footer { padding: 2rem 1rem; padding-bottom: calc(2rem + 56px); }
+
+    .mobile-tab-bar {
+      display: flex; position: fixed; bottom: 0; left: 0; right: 0;
+      height: 56px; z-index: 100;
+      background: rgba(9,11,17,0.92);
+      backdrop-filter: blur(12px) saturate(180%);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      border-top: 0.5px solid var(--border);
+      padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .tab-item {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2px;
+      color: var(--text-muted);
+      text-decoration: none; font-size: 10px; font-weight: 600;
+      letter-spacing: 0.04em; transition: color 0.2s ease;
+      -webkit-tap-highlight-color: transparent; padding: 4px 0;
+    }
+    .tab-item svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .tab-item:hover { color: var(--text-secondary); }
+    .tab-item.active { color: var(--brand); }
+  }
+
+  @media (max-width: 640px) {
+    .header-right { gap: 0.25rem; }
+    .lang-switch { display: none; }
+  }
+  @media (max-width: 480px) {
+    .logo-sub { display: none; }
+    .github-link { padding: 0.5rem; border: none; }
+    .github-link .github-text { display: none; }
+    .header-inner { padding: 0 0.75rem; gap: 0.5rem; }
   }
 `);
 
@@ -634,6 +587,15 @@ export class LessLayout extends DsdElement {
     return target === 'zh' ? '\u4E2D\u6587' : 'EN';
   }
 
+  /** Update lang-switch label + href after locale change (SPA nav) */
+  private _updateLangSwitch(): void {
+    if (!this.shadowRoot) return;
+    const link = this.shadowRoot.querySelector('.lang-switch') as HTMLAnchorElement | null;
+    if (!link) return;
+    link.textContent = this._otherLocaleLabel();
+    link.setAttribute('href', this._otherLocalePath());
+  }
+
   private _localizePath(path: string): string {
     const locales = this._locales();
     if (locales.length <= 1) return path;
@@ -737,7 +699,7 @@ export class LessLayout extends DsdElement {
   private _renderLayout() {
     const home = this._getBool('full-width') || this._getBool('home');
     const noSearch = this.hasAttribute('no-search');
-    const logoText = this._esc(this._getStr('logo-text', 'LessJS'));
+    const logoText = this._esc(this._getStr('logo-text', 'LESSJS'));
     const logoSub = this._esc(this._getStr('logo-sub', ''));
     const footerText = this._getStr(
       'footer-text',
@@ -815,7 +777,7 @@ export class LessLayout extends DsdElement {
                 href={editUrl}
                 target='_blank'
                 rel='noopener'
-                style='margin-right:0.75rem;'
+                className='edit-link'
               >
                 Edit this page
               </a>
@@ -830,15 +792,19 @@ export class LessLayout extends DsdElement {
   private _renderHeaderNav() {
     const links = this._headerNav();
     if (links.length === 0) return null;
+    const cp = this._currentPath();
     return (
       <nav className='header-nav' part='nav'>
         {links.map((link) => {
           const localized = this._localizePath(link.href);
           const isExternal = link.href.startsWith('http');
+          const isCurrent = !isExternal &&
+            (cp === link.href || cp === localized || cp.startsWith(localized + '/'));
           return (
             <a
               href={localized}
               data-nav={isExternal ? '' : localized}
+              aria-current={isCurrent ? 'page' : undefined}
             >
               {this._esc(link.label)}
             </a>
@@ -952,12 +918,15 @@ export class LessLayout extends DsdElement {
     if (docTheme) {
       this.setAttribute('data-theme', docTheme);
     }
+    // SignalContext: provide theme state to all child components
+    provideContext(this, THEME_CTX, (docTheme as 'dark' | 'light') || 'dark');
 
     // Listen for theme change events from less-theme-toggle
     this._themeHandler = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       if (detail?.theme) {
         this.setAttribute('data-theme', detail.theme);
+        provideContext(this, THEME_CTX, detail.theme);
         this._propagateTheme(detail.theme);
       }
     };
@@ -1125,7 +1094,11 @@ export class LessLayout extends DsdElement {
 
       // Sync locale from the fetched page so i18n content matches
       const newLocale = newLayout.getAttribute('locale');
-      if (newLocale) this.setAttribute('locale', newLocale);
+      if (newLocale) {
+        this.setAttribute('locale', newLocale);
+        // Update lang-switch label + href reactively
+        this._updateLangSwitch();
+      }
 
       // Ensure newly inserted components inherit current theme.
       const currentTheme = this.getAttribute('data-theme') ||

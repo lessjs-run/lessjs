@@ -1,7 +1,7 @@
 export const meta = { section: 'Core', label: 'Core Concepts', order: 2 };
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
-import { DsdElement } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
@@ -31,7 +31,7 @@ export class CoreConceptsPage extends DsdElement {
           <p>
             LessJS 组件是原生 Web Components，继承自 <code>DsdElement</code>。JSX 提供带类型安全的模板语法，编译为 VNode 树，SSR 时输出 Declarative Shadow DOM。
           </p>
-          <less-code-block><pre><code>import { DsdElement, signal } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement, signal } from '@lessjs/core';
 
 export class GreetingCard extends DsdElement {
   #name = signal('LessJS');
@@ -91,7 +91,7 @@ return (
             使用 <code>static props</code> 声明组件属性，自动注册为 <code>observedAttributes</code>。
             属性名自动转换为 kebab-case 作为 HTML 属性名。
           </p>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
 export class ProductCard extends DsdElement {
   static props = {
@@ -134,7 +134,7 @@ customElements.define('product-card', ProductCard);</code></pre></less-code-bloc
           </p>
 
           <h3>signal() — 可变的响应式值</h3>
-          <less-code-block><pre><code>import { signal } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { signal } from '@lessjs/core';
 
 const count = signal(0);
 
@@ -152,7 +152,7 @@ count.value++;</code></pre></less-code-block>
 
           <h3>computed() — 派生状态</h3>
           <p>从其他 Signal 派生只读值，自动追踪依赖并惰性求值：</p>
-          <less-code-block><pre><code>import { signal, computed } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { signal, computed } from '@lessjs/core';
 
 const firstName = signal('Jane');
 const lastName = signal('Doe');
@@ -164,7 +164,7 @@ console.log(fullName.value);  // 'John Doe'（自动更新）</code></pre></less
 
           <h3>effect() — 副作用</h3>
           <p>Signal 变化时自动执行回调，用于 DOM 操作、日志、同步外部状态等：</p>
-          <less-code-block><pre><code>import { signal, effect } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { signal, effect } from '@lessjs/core';
 
 const theme = signal('light');
 const dispose = effect(() => {
@@ -176,7 +176,7 @@ dispose();  // 停止追踪</code></pre></less-code-block>
 
           <h2>完整示例：计数器</h2>
           <p>结合 DsdElement、static props 和 Signals 的完整组件：</p>
-          <less-code-block><pre><code>import { DsdElement, signal, computed } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement, signal, computed } from '@lessjs/core';
 
 export class Counter extends DsdElement {
   static props = {
@@ -252,7 +252,7 @@ customElements.define('my-counter', Counter);</code></pre></less-code-block>
             LessJS components are native Web Components extending <code>DsdElement</code>. JSX provides
             type-safe templates that compile to VNode trees, outputting Declarative Shadow DOM during SSR.
           </p>
-          <less-code-block><pre><code>import { DsdElement, signal } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement, signal } from '@lessjs/core';
 
 export class GreetingCard extends DsdElement {
   #name = signal('LessJS');
@@ -313,7 +313,7 @@ return (
             Declare component properties using <code>static props</code>. Keys are auto-registered as
             <code>observedAttributes</code> and converted to kebab-case for HTML attributes.
           </p>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
 export class ProductCard extends DsdElement {
   static props = {
@@ -357,7 +357,7 @@ customElements.define('product-card', ProductCard);</code></pre></less-code-bloc
           </p>
 
           <h3>signal() — Mutable Reactive Values</h3>
-          <less-code-block><pre><code>import { signal } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { signal } from '@lessjs/core';
 
 const count = signal(0);
 
@@ -375,7 +375,7 @@ count.value++;</code></pre></less-code-block>
 
           <h3>computed() — Derived State</h3>
           <p>Derived read-only values that auto-track dependencies and evaluate lazily:</p>
-          <less-code-block><pre><code>import { signal, computed } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { signal, computed } from '@lessjs/core';
 
 const firstName = signal('Jane');
 const lastName = signal('Doe');
@@ -387,7 +387,7 @@ console.log(fullName.value);  // 'John Doe' (auto-updated)</code></pre></less-co
 
           <h3>effect() — Side Effects</h3>
           <p>Run a callback automatically when tracked signals change. Use for DOM manipulation, logging, external sync:</p>
-          <less-code-block><pre><code>import { signal, effect } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { signal, effect } from '@lessjs/core';
 
 const theme = signal('light');
 const dispose = effect(() => {
@@ -399,7 +399,7 @@ dispose();  // stop tracking</code></pre></less-code-block>
 
           <h2>Complete Example: Counter</h2>
           <p>A component combining DsdElement, static props, and Signals:</p>
-          <less-code-block><pre><code>import { DsdElement, signal, computed } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement, signal, computed } from '@lessjs/core';
 
 export class Counter extends DsdElement {
   static props = {

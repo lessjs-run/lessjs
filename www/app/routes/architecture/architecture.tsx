@@ -2,7 +2,8 @@ export const meta = { section: 'Principles', label: 'Architecture', order: 10 };
 export const tagName = 'engine-architecture';
 
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
@@ -11,113 +12,97 @@ const pageSheet = new StyleSheet();
 pageSheet.replaceSync(`
   :host {
     display: block;
-    --arch-ink: #14151d;
-    --arch-muted: #626676;
-    --arch-border: rgba(20, 24, 36, 0.12);
-    --arch-soft: #f6f7f9;
-    --arch-accent: #5148b8;
-    --arch-success: #13795b;
-  }
-
-  :host([data-theme="dark"]) {
-    --arch-ink: #f4f6fb;
-    --arch-muted: #a7adbd;
-    --arch-border: rgba(225, 231, 242, 0.16);
-    --arch-panel: #11131a;
-    --arch-soft: #171a23;
-    --arch-accent: #9b93ff;
-    --arch-success: #6bd7af;
   }
 
   .shell {
     max-width: 1120px;
     margin: 0 auto;
-    padding: 44px 24px 72px;
+    padding: 44px var(--size-6) 72px;
   }
 
   .hero {
     display: grid;
     grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
-    gap: 28px;
+    gap: var(--size-7);
     align-items: start;
-    padding-bottom: 32px;
-    border-bottom: 1px solid var(--arch-border);
+    padding-bottom: var(--size-8);
+    border-bottom: 1px solid var(--border);
   }
 
   .eyebrow {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 18px;
+    gap: var(--size-2);
+    margin-bottom: var(--size-5);
   }
 
   .chip {
     display: inline-flex;
     align-items: center;
-    min-height: 28px;
-    padding: 0 10px;
-    border: 1px solid var(--arch-border);
-    border-radius: 6px;
-    background: #fff;
-    color: var(--arch-muted);
-    font-size: 12px;
-    font-weight: 700;
+    min-height: var(--size-7);
+    padding: 0 var(--size-3);
+    border: var(--border-size-1) solid var(--border);
+    border-radius: var(--radius-2);
+    background: var(--gray-1);
+    color: var(--text-muted);
+    font-size: var(--font-size-0);
+    font-weight: var(--font-weight-7);
   }
 
   .chip.current {
-    color: var(--arch-accent);
+    color: var(--brand);
     border-color: rgba(81, 72, 184, 0.28);
     background: rgba(81, 72, 184, 0.08);
   }
 
   .chip.pass {
-    color: var(--arch-success);
+    color: var(--brand-deep);
     border-color: rgba(19, 121, 91, 0.26);
     background: rgba(19, 121, 91, 0.08);
   }
 
   h1 {
     margin: 0;
-    color: var(--arch-ink);
+    color: var(--text-primary);
     font-size: clamp(2.5rem, 7vw, 5rem);
     line-height: 0.95;
     letter-spacing: 0;
   }
 
   .lede {
-    margin: 18px 0 0;
-    color: var(--arch-muted);
-    font-size: 16px;
-    line-height: 1.75;
+    margin: var(--size-5) 0 0;
+    color: var(--text-muted);
+    font-size: var(--font-size-4);
+    line-height: var(--font-lineheight-4);
     max-width: 650px;
   }
 
   .artifact {
-    border: 1px solid var(--arch-border);
-    border-radius: 8px;
+    border: var(--border-size-1) solid var(--border);
+    border-radius: var(--radius-2);
     overflow: hidden;
-    background: #fff;
+    background: var(--gray-1);
     box-shadow: 0 20px 54px rgba(20, 24, 36, 0.1);
   }
 
   .artifact-head {
     display: flex;
     justify-content: space-between;
-    gap: 12px;
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--arch-border);
-    background: #fbfbfc;
-    font-size: 12px;
-    color: var(--arch-muted);
+    gap: var(--size-3);
+    padding: 14px var(--size-4);
+    border-bottom: 1px solid var(--border);
+    background: var(--gray-1);
+    font-size: var(--font-size-0);
+    color: var(--text-muted);
   }
 
   pre {
     margin: 0;
-    padding: 16px;
+    padding: var(--size-4);
     overflow-x: auto;
-    background: #11131a;
-    color: #eef1f7;
-    font-size: 12px;
+    background: var(--gray-1);
+    color: var(--gray-11);
+    font-size: var(--font-size-0);
     line-height: 1.65;
   }
 
@@ -126,27 +111,27 @@ pageSheet.replaceSync(`
   }
 
   .section {
-    padding: 42px 0 0;
+    padding: var(--size-10) 0 0;
   }
 
   .section-head {
     display: flex;
     justify-content: space-between;
-    gap: 24px;
-    margin-bottom: 18px;
+    gap: var(--size-6);
+    margin-bottom: var(--size-5);
   }
 
   .kicker {
-    margin: 0 0 8px;
-    color: var(--arch-accent);
-    font-size: 12px;
-    font-weight: 800;
+    margin: 0 0 var(--size-2);
+    color: var(--brand);
+    font-size: var(--font-size-0);
+    font-weight: var(--font-weight-8);
     text-transform: uppercase;
   }
 
   h2 {
     margin: 0;
-    color: var(--arch-ink);
+    color: var(--text-primary);
     font-size: clamp(1.6rem, 4vw, 2.6rem);
     line-height: 1.08;
     letter-spacing: 0;
@@ -155,24 +140,24 @@ pageSheet.replaceSync(`
   .section-copy {
     max-width: 460px;
     margin: 0;
-    color: var(--arch-muted);
-    font-size: 14px;
-    line-height: 1.7;
+    color: var(--text-muted);
+    font-size: var(--font-size-2);
+    line-height: var(--font-lineheight-4);
   }
 
   .layer-map {
-    border: 1px solid var(--arch-border);
-    border-radius: 8px;
-    background: #fff;
+    border: var(--border-size-1) solid var(--border);
+    border-radius: var(--radius-2);
+    background: var(--gray-1);
     overflow: hidden;
   }
 
   .layer {
     display: grid;
     grid-template-columns: 170px 1fr 180px;
-    gap: 14px;
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--arch-border);
+    gap: var(--size-4);
+    padding: 14px var(--size-4);
+    border-bottom: 1px solid var(--border);
     align-items: start;
   }
 
@@ -181,69 +166,69 @@ pageSheet.replaceSync(`
   }
 
   .layer strong {
-    color: var(--arch-ink);
-    font-size: 13px;
+    color: var(--text-primary);
+    font-size: var(--font-size-1);
   }
 
   .layer span,
   .layer p {
     margin: 0;
-    color: var(--arch-muted);
-    font-size: 12px;
+    color: var(--text-muted);
+    font-size: var(--font-size-0);
     line-height: 1.55;
   }
 
   .cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: var(--size-3);
   }
 
   .card {
-    border: 1px solid var(--arch-border);
-    border-radius: 8px;
-    background: #fff;
-    padding: 16px;
+    border: var(--border-size-1) solid var(--border);
+    border-radius: var(--radius-2);
+    background: var(--gray-1);
+    padding: var(--size-4);
   }
 
   .card h3 {
-    margin: 0 0 8px;
-    color: var(--arch-ink);
-    font-size: 15px;
+    margin: 0 0 var(--size-2);
+    color: var(--text-primary);
+    font-size: var(--font-size-3);
   }
 
   .card p {
     margin: 0;
-    color: var(--arch-muted);
-    font-size: 13px;
+    color: var(--text-muted);
+    font-size: var(--font-size-1);
     line-height: 1.65;
   }
 
   .gate-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: var(--size-3);
   }
 
   .gate {
     display: grid;
     grid-template-columns: 120px 1fr;
-    gap: 12px;
+    gap: var(--size-3);
     align-items: start;
-    padding: 14px;
-    border: 1px solid var(--arch-border);
-    border-radius: 8px;
-    background: #fff;
+    padding: var(--size-4);
+    border: var(--border-size-1) solid var(--border);
+    border-radius: var(--radius-2);
+    background: var(--gray-1);
   }
 
   .gate strong {
-    color: var(--arch-success);
-    font-size: 13px;
+    color: var(--brand-deep);
+    font-size: var(--font-size-1);
   }
 
   .gate span {
-    color: var(--arch-muted);
-    font-size: 12px;
+    color: var(--text-muted);
+    font-size: var(--font-size-0);
     line-height: 1.55;
   }
 
@@ -251,21 +236,21 @@ pageSheet.replaceSync(`
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 34px;
+    margin-top: var(--size-8);
   }
 
   .nav-link {
     display: inline-flex;
     align-items: center;
-    min-height: 40px;
+    min-height: var(--size-10);
     padding: 0 14px;
-    border: 1px solid var(--arch-border);
-    border-radius: 7px;
-    background: #fff;
-    color: var(--arch-ink);
+    border: var(--border-size-1) solid var(--border);
+    border-radius: var(--radius-2);
+    background: var(--gray-1);
+    color: var(--text-primary);
     text-decoration: none;
-    font-size: 13px;
-    font-weight: 700;
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-7);
   }
 
   @media (max-width: 900px) {
@@ -277,13 +262,13 @@ pageSheet.replaceSync(`
 
     .layer {
       grid-template-columns: 1fr;
-      gap: 6px;
+      gap: var(--size-2);
     }
   }
 
   @media (max-width: 560px) {
     .shell {
-      padding: 32px 16px 56px;
+      padding: var(--size-8) var(--size-4) 56px;
     }
 
     .section-head,
@@ -362,7 +347,7 @@ export class ArchitecturePage extends DsdElement {
             </div>
             <div class="layer-map">
               <div class="layer"><strong>tools and gates</strong><span>create, graph checker, publish workflow, smoke tests</span><p>Prove generated users, release order, and docs truth.</p></div>
-              <div class="layer"><strong>product facades</strong><span>@lessjs/runtime, @lessjs/app</span><p>Separate authoring imports from configuration assembly.</p></div>
+              <div class="layer"><strong>product facades</strong><span>@lessjs/core, @lessjs/app</span><p>Separate authoring imports from configuration assembly.</p></div>
               <div class="layer"><strong>build adapters</strong><span>@lessjs/adapter-vite</span><p>Own Vite plugin assembly, route scanning, SSG phases, and generated entries.</p></div>
               <div class="layer"><strong>feature packages</strong><span>content, i18n, hub, ui, cem, compat-check</span><p>Own product features and evidence surfaces without routing through core.</p></div>
               <div class="layer"><strong>runtime kernel</strong><span>@lessjs/core</span><p>Own DSD runtime, templates, renderDsd, islands, navigation, logger, and errors.</p></div>

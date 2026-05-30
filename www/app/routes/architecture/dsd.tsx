@@ -1,7 +1,8 @@
 export const meta = { section: 'Principles', label: 'DSD Rendering', order: 30 };
 
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
@@ -13,13 +14,13 @@ routeSheet.replaceSync(`
       .comparison {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        margin: 1rem 0 1.5rem;
+        gap: var(--size-4);
+        margin: var(--size-4) 0 var(--size-6);
       }
       .comparison-item {
-        padding: 1rem 1.25rem;
+        padding: var(--size-4) var(--size-5);
         border: 1px solid var(--border);
-        border-radius: 8px;
+        border-radius: var(--radius-2);
         transition: border-color 0.2s, box-shadow 0.2s;
       }
       .comparison-item:hover {
@@ -27,7 +28,7 @@ routeSheet.replaceSync(`
       }
       .comparison-item.less {
         background: var(--bg-surface);
-        border-left: 3px solid var(--brand, #534AB7);
+        border-left: 3px solid var(--brand);
       }
       @media (max-width: 720px) {
         .comparison {

@@ -1,17 +1,19 @@
 // deno-fmt-ignore-file
 export const meta = { section: 'Quick Start', label: 'Getting Started', order: 1 };
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
+import '../../islands/less-toc.tsx';
 
 const routeSheet = new StyleSheet();
 
 routeSheet.replaceSync(`
       .step {
-        margin: 1.5rem 0 2rem;
+        margin: var(--size-6) 0 var(--size-8);
       }
 
       .step h2 {
@@ -21,14 +23,14 @@ routeSheet.replaceSync(`
       .note {
         background: var(--bg-surface);
         border: 0.5px solid var(--border);
-        border-radius: 4px;
-        padding: 0.75rem 1rem;
-        margin: 1rem 0;
+        border-radius: var(--radius-1);
+        padding: var(--size-3) var(--size-4);
+        margin: var(--size-4) 0;
       }
 
       .nav-row {
-        margin-top: 2rem;
-        padding-top: 1rem;
+        margin-top: var(--size-8);
+        padding-top: var(--size-4);
         border-top: 0.5px solid var(--border);
         display: flex;
         justify-content: flex-end;
@@ -36,8 +38,8 @@ routeSheet.replaceSync(`
       .nav-link {
         color: var(--brand);
         text-decoration: none;
-        font-weight: 500;
-        font-size: 0.875rem;
+        font-weight: var(--font-weight-5);
+        font-size: var(--font-size-2);
       }
       .nav-link:hover { text-decoration: underline; }
 
@@ -56,6 +58,7 @@ export class GettingStartedPage extends DsdElement {
   private _renderZh() {
     return `
       <less-layout locale="${this._getLocale('zh')}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(navSections)}' header-nav='${JSON.stringify(headerNav)}' current-path="/guide/getting-started">
+        <div class="content-grid">
         <div class="container">
           <h1>快速开始</h1>
           <p class="subtitle">
@@ -122,7 +125,7 @@ cd my-app</code></pre></less-code-block>
             页面是一个 Web Component。SSR 会把它渲染成 Declarative Shadow DOM， 所以内容在 JavaScript
             运行前就已经可见。
           </p>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
 export class HomePage extends DsdElement {
   override render(): string {
@@ -138,8 +141,8 @@ export const tagName = 'page-home';</code></pre></less-code-block>
           <p>
             使用 JSX 和 Signal 编写响应式组件。Signal 变化时组件自动重新渲染。
           </p>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
-import { signal } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
+import { signal } from '@lessjs/core';
 
 export class CounterIsland extends DsdElement {
   count = signal(0);
@@ -175,6 +178,7 @@ export const tagName = 'counter-island';</code></pre></less-code-block>
             <a href="/guide/core-concepts" class="nav-link">核心概念 &rarr;</a>
           </div>
         </div>
+        <less-toc></less-toc>
       </less-layout>
     `;
   }
@@ -182,6 +186,7 @@ export const tagName = 'counter-island';</code></pre></less-code-block>
   private _renderEn() {
     return `
       <less-layout locale="${this._getLocale('en')}" locales='${JSON.stringify(['en', 'zh'])}' nav-items='${JSON.stringify(navSections)}' header-nav='${JSON.stringify(headerNav)}' current-path="/en/guide/getting-started">
+        <div class="content-grid">
         <div class="container">
           <h1>Getting Started</h1>
           <p class="subtitle">
@@ -253,7 +258,7 @@ cd my-app</code></pre></less-code-block>
             A page is a Web Component. SSR renders it into Declarative Shadow DOM, so content
             is visible before JavaScript runs.
           </p>
-          <less-code-block><pre><code>import { DsdElement } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { DsdElement } from '@lessjs/core';
 
 export class HomePage extends DsdElement {
   override render(): string {
@@ -286,6 +291,7 @@ export const tagName = 'page-home';</code></pre></less-code-block>
             <a href="/guide/core-concepts" class="nav-link">Core Concepts &rarr;</a>
           </div>
         </div>
+        <less-toc></less-toc>
       </less-layout>
     `;
   }

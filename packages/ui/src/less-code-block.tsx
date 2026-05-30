@@ -1,3 +1,4 @@
+/** @jsxImportSource @lessjs/core */
 /**
  * @lessjs/ui - less-code-block
  *
@@ -21,6 +22,7 @@
 
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { openPropsTokenSheet } from './open-props-tokens.js';
 export const tagName = 'less-code-block';
 
 const sheet: StyleSheetLike = new StyleSheet();
@@ -33,16 +35,16 @@ sheet.replaceSync(`
   pre {
     margin: 0;
     padding: var(--size-5);
-    background: #1a1a2e;
-    border: var(--border-size-1) solid rgba(255, 255, 255, 0.08);
-    border-radius: 6px;
+    background: var(--bg-code);
+    border: var(--border-size-1) solid var(--code-border);
+    border-radius: var(--radius-3);
     overflow-x: auto;
     font-family: var(--font-mono);
     font-size: var(--font-size-0);
-    line-height: 1.7;
-    color: #e0e0e0;
+    line-height: var(--font-lineheight-4);
+    color: var(--text-secondary);
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+    scrollbar-color: var(--brand-subtle) transparent;
     white-space: pre-wrap;
     word-break: break-word;
   }
@@ -50,27 +52,27 @@ sheet.replaceSync(`
   ::slotted(pre) {
     margin: 0;
     padding: var(--size-5);
-    background: #1a1a2e;
-    border: var(--border-size-1) solid rgba(255, 255, 255, 0.08);
-    border-radius: 6px;
+    background: var(--bg-code);
+    border: var(--border-size-1) solid var(--code-border);
+    border-radius: var(--radius-3);
     overflow-x: auto;
     font-family: var(--font-mono);
     font-size: var(--font-size-0);
-    line-height: 1.7;
-    color: #e0e0e0;
+    line-height: var(--font-lineheight-4);
+    color: var(--text-secondary);
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+    scrollbar-color: var(--brand-subtle) transparent;
   }
 
   .lang-badge {
     position: absolute;
     top: var(--size-2);
     left: var(--size-3);
-    font-size: 10px;
-    font-weight: 600;
+    font-size: var(--font-size-00);
+    font-weight: var(--font-weight-7);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.35);
+    letter-spacing: var(--font-letterspacing-5);
+    color: var(--text-muted);
     pointer-events: none;
   }
 
@@ -78,31 +80,35 @@ sheet.replaceSync(`
     position: absolute;
     top: var(--size-2);
     right: var(--size-2);
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.5);
-    border: var(--border-size-1) solid rgba(255, 255, 255, 0.12);
+    background: var(--brand-subtle);
+    color: var(--text-muted);
     padding: var(--size-1) var(--size-3);
     font-size: var(--font-size-00);
     font-family: var(--font-sans);
+    font-weight: var(--font-weight-6);
+    border: 0.5px solid transparent;
     cursor: pointer;
-    border-radius: 4px;
-    transition: color 0.2s ease, background 0.2s ease;
+    border-radius: var(--radius-1);
+    transition: all var(--ease-2) var(--duration-2);
     z-index: 1;
+    letter-spacing: var(--font-letterspacing-4);
   }
 
   .copy-btn:hover {
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-primary);
+    background: var(--brand-glow);
+    border-color: var(--brand);
   }
 
   :host(:state(copied)) .copy-btn {
-    color: #4ade80;
-    border-color: rgba(74, 222, 128, 0.3);
+    color: #22c55e;
+    border-color: rgba(34,197,94,0.3);
+    background: rgba(34,197,94,0.08);
   }
 
   :host(:state(failed)) .copy-btn {
-    color: #e55;
-    border-color: #e55;
+    color: var(--error);
+    border-color: var(--error);
   }
 
   /* Prism token colors (dark theme) */
@@ -121,7 +127,7 @@ sheet.replaceSync(`
 `);
 
 export class LessCodeBlock extends DsdElement {
-  static override styles = [sheet];
+  static override styles = [openPropsTokenSheet, sheet];
 
   private _copyState: 'idle' | 'copied' | 'failed' = 'idle';
   private _copyTimer: ReturnType<typeof setTimeout> | undefined;

@@ -1,6 +1,7 @@
 export const meta = { section: 'Core', label: 'API Routes', order: 60 };
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
 import '@lessjs/ui/less-layout';
@@ -11,11 +12,11 @@ routeSheet.replaceSync(
   pageStyles + `
 
       .principle {
-        padding: 1rem 1.25rem;
+        padding: var(--size-4) var(--size-5);
         background: var(--bg-surface);
         border-left: 2px solid var(--border-hover);
-        border-radius: 0 4px 4px 0;
-        margin: 1rem 0;
+        border-radius: 0 var(--radius-1) var(--radius-1) 0;
+        margin: var(--size-4) 0;
       }
     `,
 );

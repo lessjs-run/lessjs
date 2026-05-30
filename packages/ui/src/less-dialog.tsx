@@ -1,3 +1,4 @@
+/** @jsxImportSource @lessjs/core */
 /**
  * @lessjs/ui - less-dialog
  *
@@ -24,6 +25,7 @@
 
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { openPropsTokenSheet } from './open-props-tokens.js';
 import { _esc, _escAttr } from './shared/escape.js';
 
 export const tagName = 'less-dialog';
@@ -82,8 +84,8 @@ sheet.replaceSync(`
     border: none;
     cursor: pointer;
     color: var(--gray-5);
-    font-size: 1.25rem;
-    line-height: 1;
+    font-size: var(--font-size-2);
+    line-height: var(--font-lineheight-1);
     padding: var(--size-1);
     border-radius: var(--radius-1);
     transition: color 0.15s ease;
@@ -97,7 +99,7 @@ sheet.replaceSync(`
   .dialog-body {
     font-size: var(--font-size-1);
     color: var(--gray-7);
-    line-height: 1.5;
+    line-height: var(--font-lineheight-3);
   }
 
   .dialog-footer {
@@ -113,7 +115,7 @@ sheet.replaceSync(`
 `);
 
 export class LessDialog extends DsdElement {
-  static override styles = [sheet];
+  static override styles = [openPropsTokenSheet, sheet];
   static override delegatesFocus = true;
   static override observedAttributes = ['open', 'label'];
 

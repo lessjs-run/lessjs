@@ -3,7 +3,8 @@
  */
 export const meta = { section: 'History', label: 'Blog', order: 10 };
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import { posts } from '@lessjs/content/blog-data';
@@ -14,14 +15,14 @@ routeSheet.replaceSync(`
       .blog-list {
         list-style: none;
         padding: 0;
-        margin: 1.5rem 0;
+        margin: var(--size-6) 0;
       }
       .blog-item {
         display: block;
-        padding: 1rem 1.25rem;
-        margin-bottom: 0.5rem;
+        padding: var(--size-4) var(--size-5);
+        margin-bottom: var(--size-2);
         border: 0.5px solid var(--border);
-        border-radius: 4px;
+        border-radius: var(--radius-1);
         text-decoration: none;
         color: inherit;
         transition: border-color 0.15s, background 0.15s;
@@ -31,14 +32,14 @@ routeSheet.replaceSync(`
         background: var(--bg-surface);
       }
       .blog-item h2 {
-        margin: 0 0 0.25rem;
-        font-size: 1rem;
-        font-weight: 500;
+        margin: 0 0 var(--size-1);
+        font-size: var(--font-size-4);
+        font-weight: var(--font-weight-5);
         color: var(--text-primary);
       }
       .blog-desc {
-        margin: 0 0 0.25rem;
-        font-size: 0.8125rem;
+        margin: 0 0 var(--size-1);
+        font-size: var(--font-size-1);
         color: var(--text-muted);
       }
       .blog-date {
@@ -49,13 +50,13 @@ routeSheet.replaceSync(`
         display: flex;
         gap: 0.375rem;
         flex-wrap: wrap;
-        margin-top: 0.5rem;
+        margin-top: var(--size-2);
       }
       .blog-tag {
-        font-size: 0.625rem;
-        font-weight: 600;
+        font-size: var(--font-size-00);
+        font-weight: var(--font-weight-6);
         text-transform: uppercase;
-        letter-spacing: 0.06em;
+        letter-spacing: var(--font-letterspacing-2);
         padding: 0.125rem 0.375rem;
         border-radius: 2px;
         background: var(--bg-surface);
@@ -65,14 +66,14 @@ routeSheet.replaceSync(`
       .new-badge {
         display: inline-block;
         font-size: 0.5rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
+        font-weight: var(--font-weight-7);
+        letter-spacing: var(--font-letterspacing-4);
         padding: 0.0625rem 0.3125rem;
         border-radius: 2px;
         background: var(--text-primary);
         color: var(--bg-base);
         vertical-align: middle;
-        margin-left: 0.25rem;
+        margin-left: var(--size-1);
       }
     `);
 

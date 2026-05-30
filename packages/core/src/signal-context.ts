@@ -37,17 +37,19 @@ export function provideContext<T>(
   (host as unknown as Record<symbol, unknown>)[ctx.key] = value;
 }
 
+/**
+ * Consume a SignalContext value reactively.
+ *
+ * v0.26.1 (ADR-0062): Returns the SOURCE signal from the central Map,
+ * not a copy. provideContext updates Map signal → consumer effect()
+ * auto-tracks → DOM updates. No DOM walking needed.
+ */
 export function consumeContext<T>(
-  host: HTMLElement,
   ctx: Context<T>,
 ): { value: T; subscribe(fn: (v: T) => void): () => void } {
-  let el: Element | null = host.parentElement;
-  while (el) {
-    const v = (el as unknown as Record<symbol, unknown>)[ctx.key];
-    if (v !== undefined) {
-      return signal(v as T) as unknown as { value: T; subscribe(fn: (v: T) => void): () => void };
-    }
-    el = el.parentElement || ((el.getRootNode() as ShadowRoot)?.host ?? null);
+  const s = contexts.get(ctx.key);
+  if (s) {
+    return s as { value: T; subscribe(fn: (v: T) => void): () => void };
   }
   return signal(ctx.defaultValue) as unknown as {
     value: T;

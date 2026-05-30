@@ -4,7 +4,8 @@
  * Organized by category: Components, Rendering, Islands, Signals, Build, SSR.
  */
 import { headerNav, navSections } from '@lessjs/content/nav';
-import { DsdElement, StyleSheet } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 
@@ -83,6 +84,14 @@ export default class ApiCorePage extends DsdElement {
             <div class="api-entry">
               <div class="api-sig">renderToString(node: unknown): string</div>
               <div class="api-desc">将 VNode 树转换为 HTML 字符串，用于 SSR/SSG 输出。文本内容自动 HTML 转义。</div>
+            </div>
+            <div class="api-entry">
+              <div class="api-sig">&lt;Show when=signal&gt;...children...&lt;/Show&gt; (v0.26.1)</div>
+              <div class="api-desc">条件渲染控制流组件。when prop 为 truthy 时渲染第一个子节点，否则渲染第二个。基于 effect() 自动响应 signal 变化。</div>
+            </div>
+            <div class="api-entry">
+              <div class="api-sig">&lt;fore each=signal&gt;(item): VNode&lt;/fore&gt; (v0.26.1)</div>
+              <div class="api-desc">列表渲染控制流组件。each prop 接受 Signal&lt;Array&gt;，子节点为 render function。基于 effect() 自动响应 signal 变化。</div>
             </div>
           </div>
 

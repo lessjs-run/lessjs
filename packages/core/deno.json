@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/core",
-  "version": "0.26.0",
+  "version": "0.26.1",
   "exports": {
     ".": "./src/index.ts",
     "./errors": "./src/errors.ts",
@@ -10,6 +10,8 @@
     "./isr": "./src/isr.ts",
     "./navigation": "./src/navigation.ts",
     "./render-serialize": "./src/render-serialize.ts",
+    "./signal-context": "./src/signal-context.ts",
+    "./style-sheet": "./src/style-sheet.ts",
     "./render-instantiate": "./src/render-instantiate.ts",
     "./render-errors": "./src/render-errors.ts",
     "./render-dsd-stream": "./src/render-dsd-stream.ts",

@@ -1,7 +1,7 @@
 export const meta = { section: 'Core', label: 'Islands & SSR', order: 4 };
 import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
-import { DsdElement } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
@@ -32,8 +32,8 @@ export class IslandsSsrPage extends DsdElement {
             "海洋"是纯静态内容（布局、文本、导航），"岛屿"是需要客户端交互的组件。
             这种架构的核心思想：大部分页面不需要 JavaScript，只有少数交互点需要。
           </p>
-          <div class="comparison" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0 1.5rem">
-            <div style="padding:1rem;border:1px solid var(--border);border-radius:6px">
+          <div class="comparison" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--size-4);margin:var(--size-4) 0 var(--size-6)">
+            <div style="padding:var(--size-4);border:1px solid var(--border);border-radius:var(--radius-2)">
               <h3>传统 SPA</h3>
               <ul>
                 <li>JavaScript 加载前页面空白</li>
@@ -41,7 +41,7 @@ export class IslandsSsrPage extends DsdElement {
                 <li>内容和交互绑定</li>
               </ul>
             </div>
-            <div style="padding:1rem;border:1px solid var(--border);border-radius:6px;background:var(--bg-surface);border-left:3px solid var(--brand)">
+            <div style="padding:var(--size-4);border:1px solid var(--border);border-radius:var(--radius-2);background:var(--bg-surface);border-left:3px solid var(--brand)">
               <h3>LessJS Islands</h3>
               <ul>
                 <li>内容通过 SSG + DSD 预渲染</li>
@@ -77,7 +77,7 @@ export class IslandsSsrPage extends DsdElement {
           <p>
             通过 <code>defineIsland()</code> API 声明 island，支持四种 hydration 策略：
           </p>
-          <less-code-block><pre><code>import { defineIsland } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { defineIsland } from '@lessjs/core';
 
 export class MyChart extends DsdElement { /* ... */ }
 
@@ -106,7 +106,7 @@ defineIsland(MyChart, { strategy: 'only' });</code></pre></less-code-block>
           <h2>创建 Island</h2>
           <p>将需要客户端行为的组件放在 <code>app/islands/</code> 目录：</p>
           <less-code-block><pre><code>// app/islands/counter.ts
-import { DsdElement, signal } from '@lessjs/runtime';
+import { DsdElement, signal } from '@lessjs/core';
 
 export class Counter extends DsdElement {
   #count = signal(0);
@@ -176,8 +176,8 @@ customElements.define('my-counter', Counter);</code></pre></less-code-block>
             that need client-side interactivity. The core insight: most of a page doesn't need JavaScript —
             only a few interactive spots do.
           </p>
-          <div class="comparison" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0 1.5rem">
-            <div style="padding:1rem;border:1px solid var(--border);border-radius:6px">
+          <div class="comparison" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--size-4);margin:var(--size-4) 0 var(--size-6)">
+            <div style="padding:var(--size-4);border:1px solid var(--border);border-radius:var(--radius-2)">
               <h3>Traditional SPA</h3>
               <ul>
                 <li>Blank page until JavaScript loads</li>
@@ -185,7 +185,7 @@ customElements.define('my-counter', Counter);</code></pre></less-code-block>
                 <li>Content and interactivity are tightly coupled</li>
               </ul>
             </div>
-            <div style="padding:1rem;border:1px solid var(--border);border-radius:6px;background:var(--bg-surface);border-left:3px solid var(--brand)">
+            <div style="padding:var(--size-4);border:1px solid var(--border);border-radius:var(--radius-2);background:var(--bg-surface);border-left:3px solid var(--brand)">
               <h3>LessJS Islands</h3>
               <ul>
                 <li>Content pre-rendered via SSG + DSD</li>
@@ -221,7 +221,7 @@ customElements.define('my-counter', Counter);</code></pre></less-code-block>
           <p>
             Declare islands via <code>defineIsland()</code> API with four hydration strategies:
           </p>
-          <less-code-block><pre><code>import { defineIsland } from '@lessjs/runtime';
+          <less-code-block><pre><code>import { defineIsland } from '@lessjs/core';
 
 export class MyChart extends DsdElement { /* ... */ }
 
@@ -250,7 +250,7 @@ defineIsland(MyChart, { strategy: 'only' });</code></pre></less-code-block>
           <h2>Creating an Island</h2>
           <p>Place components that need client-side behavior in the <code>app/islands/</code> directory:</p>
           <less-code-block><pre><code>// app/islands/counter.ts
-import { DsdElement, signal } from '@lessjs/runtime';
+import { DsdElement, signal } from '@lessjs/core';
 
 export class Counter extends DsdElement {
   #count = signal(0);

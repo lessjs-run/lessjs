@@ -35,7 +35,6 @@ Deno.test('mixed load+idle', () => {
   const code = generateClientEntry([
     { tagName: 'less-theme-toggle', modulePath: '@lessjs/ui/less-theme-toggle', strategy: 'load' },
     { tagName: 'less-hero-ping', modulePath: '@lessjs/ui/less-hero-ping', strategy: 'idle' },
-    { tagName: 'api-consumer', modulePath: './api-consumer.ts', strategy: 'idle' },
   ]);
   assert(code.includes('requestIdleCallback'));
   assert(code.includes('less:ready'));

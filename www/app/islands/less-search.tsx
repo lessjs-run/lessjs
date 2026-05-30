@@ -45,23 +45,27 @@ sheet.replaceSync(`
     align-items: center;
     gap: var(--size-2);
     padding: var(--size-2) var(--size-3);
-    border: var(--border-size-1) solid var(--gray-3);
+    border: 0.5px solid var(--border);
     border-radius: var(--radius-2);
     background: transparent;
-    color: var(--gray-5);
+    color: var(--text-muted);
     font-size: var(--font-size-00);
-    font-weight: var(--font-weight-5);
-    letter-spacing: 0.02em;
+    font-weight: var(--font-weight-6);
+    letter-spacing: 0.04em;
     cursor: pointer;
-    transition: color 0.2s ease, border-color 0.2s ease;
+    transition: all var(--ease-2) var(--duration-2);
   }
-  .search-trigger:hover { color: var(--gray-7); border-color: var(--gray-5); }
+  .search-trigger:hover {
+    color: var(--text-primary);
+    border-color: var(--brand);
+    background: var(--bg-surface);
+  }
   .search-trigger kbd {
     font-family: inherit;
-    padding: 0.0625rem 0.3125rem;
+    padding: var(--size-1) var(--size-1);
     border: var(--border-size-1) solid var(--gray-3);
-    border-radius: 3px;
-    font-size: 0.625rem;
+    border-radius: var(--radius-1);
+    font-size: var(--font-size-00);
     margin-left: var(--size-1);
   }
   .search-icon { display: none; width: 16px; height: 16px; }
@@ -93,22 +97,22 @@ function getOverlaySheet(): CSSStyleSheet {
     max-width: 560px;
     max-height: 70vh;
     margin: 0 1rem;
-    background: #fff;
-    border: var(--border-size-1) solid var(--gray-3);
+    background: var(--bg-elevated);
+    border: 0.5px solid var(--border);
     border-radius: var(--radius-2);
-    box-shadow: var(--shadow-3);
+    box-shadow: var(--shadow-1);
     display: flex;
     flex-direction: column;
     overflow: hidden;
   }
   .less-search-input {
     width: 100%;
-    padding: 0.875rem 1rem;
+    padding: var(--size-3) var(--size-3);
     border: none;
-    border-bottom: var(--border-size-1) solid var(--gray-3);
+    border-bottom: 0.5px solid var(--border);
     background: transparent;
-    color: var(--gray-9);
-    font-size: 1rem;
+    color: var(--text-primary);
+    font-size: var(--font-size-1);
     outline: none;
     box-sizing: border-box;
     font-family: inherit;
@@ -116,44 +120,44 @@ function getOverlaySheet(): CSSStyleSheet {
   .less-search-results {
     flex: 1;
     overflow-y: auto;
-    padding: 0.5rem 0;
+    padding: var(--size-3) 0;
   }
   .less-search-item {
     display: block;
-    padding: 0.625rem 1rem;
+    padding: var(--size-3) var(--size-3);
     text-decoration: none;
     color: inherit;
-    transition: background 0.1s;
+    transition: background var(--ease-2) var(--duration-2);
     cursor: pointer;
   }
-  .less-search-item:hover { background: var(--gray-1); }
+  .less-search-item:hover { background: var(--bg-hover); }
   .less-search-section {
-    font-size: 0.6875rem;
+    font-size: var(--font-size-00);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--gray-5);
-    margin-bottom: 0.125rem;
+    letter-spacing: var(--font-letterspacing-5);
+    color: var(--text-muted);
+    margin-bottom: var(--size-1);
   }
   .less-search-title {
-    font-size: 0.875rem;
+    font-size: var(--font-size-0);
     font-weight: var(--font-weight-5);
-    color: var(--gray-9);
-    margin-bottom: 0.125rem;
+    color: var(--text-primary);
+    margin-bottom: var(--size-1);
   }
   .less-search-text {
-    font-size: 0.8125rem;
-    color: var(--gray-7);
-    line-height: 1.5;
+    font-size: var(--font-size-0);
+    color: var(--text-secondary);
+    line-height: var(--font-lineheight-3);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
   .less-search-empty {
-    padding: 2rem 1rem;
+    padding: var(--size-9) var(--size-3);
     text-align: center;
     color: var(--gray-5);
-    font-size: 0.875rem;
+    font-size: var(--font-size-0);
   }
 `);
   }
