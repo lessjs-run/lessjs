@@ -981,12 +981,18 @@ export class LessLayout extends DsdElement {
   private _setupNavDelegation(): () => void {
     if (!this.shadowRoot) return () => {};
     const handler = (e: Event) => {
-      const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('[data-nav]');
+      // Find the closest <a> — works across any link in the shadow root
+      const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('a');
       if (!link) return;
-      const path = link.getAttribute('data-nav');
-      if (!path || path.startsWith('http')) return;
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) {
+        return;
+      }
+      const url = new URL(href, location.origin);
+      if (url.origin !== location.origin) return;
       e.preventDefault();
-      navigate(path);
+      e.stopImmediatePropagation();
+      navigate(href);
     };
     this.shadowRoot.addEventListener('click', handler);
     return () => this.shadowRoot?.removeEventListener('click', handler);

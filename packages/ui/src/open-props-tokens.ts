@@ -97,13 +97,12 @@ function createTokenSheet(): StyleSheetLike {
   --bg-base: var(--gray-0);
   --bg-surface: var(--gray-1);
   --bg-card: var(--gray-0);
-  --bg-code: #1e1e2e;
   --bg-elevated: #ffffff;
   --bg-hover: var(--gray-2);
   --bg-muted: var(--gray-1);
   --border: var(--gray-3);
   --border-hover: var(--gray-4);
-  --code-border: rgba(255,255,255,0.06);
+  /* --bg-code, --code-border: inherited from :root[data-theme] via SSG polyfill */
   --error: #dc3545;
   --error-subtle: rgba(220,53,69,0.1);
   --success: #16a34a;
@@ -135,12 +134,9 @@ function createTokenSheet(): StyleSheetLike {
   --bg-base: var(--gray-0);
   --bg-surface: var(--gray-1);
   --bg-card: var(--gray-2);
-  --bg-code: #0d0d12;
   --bg-hover: var(--gray-3);
   --border: var(--gray-3);
   --border-hover: var(--gray-4);
-  --code-border: rgba(255,255,255,.08);
-  --code-border: rgba(255,255,255,.08);
   --error: #f87171;
   --error-subtle: rgba(248,113,113,.15);
   --success: #4ade80;
