@@ -168,6 +168,12 @@ export default class LessSearch extends DsdElement {
   private _loaded = false;
   private _inputRef: HTMLInputElement | null = null;
 
+  constructor() {
+    super();
+    this.registerSignal('open', this.#open);
+    this.registerSignal('query', this.#query);
+  }
+
   // Cmd+K handler — bound/cleaned in lifecycle
   private _onKeydown = (e: KeyboardEvent) => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -299,7 +305,7 @@ export default class LessSearch extends DsdElement {
           class='search-trigger'
           part='trigger'
           aria-label='Search'
-          onClick={() => this._open()}
+          data-on-click='_open'
         >
           <svg
             class='search-icon'
@@ -329,7 +335,7 @@ export default class LessSearch extends DsdElement {
               type='text'
               class='search-input'
               placeholder='Search documentation...'
-              onInput={(e: Event) => this._onInput(e)}
+              data-on-input='_onInput'
               ref={(el: HTMLInputElement) => {
                 this._inputRef = el;
               }}

@@ -57,10 +57,9 @@ import {
   syncStaticPropsFromAttributes,
 } from './prop.js';
 import { isVNode, type VNode } from './vnode.js';
-import { applyProps, renderToDom } from './jsx-render-dom.js';
+import { renderToDom } from './jsx-render-dom.js';
 import { renderToString } from './jsx-render-string.js';
 import { effect, type Signal, signal } from '@lessjs/signals';
-import { isSignalLike } from './signal-like.js';
 
 /**
  * Minimal SSR-safe HTMLElement stub for server environments (SOP-016).
@@ -148,6 +147,9 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    * disconnectedCallback.
    */
   #effectDisposers: Set<() => void> = new Set();
+
+  /** v0.28 (ADR-0067): Event listener cleanup tracking for _hydrateSignals(). */
+  #eventCleanups: Array<() => void> = [];
 
   /**
    * v0.27 (ADR-0065): Signal registry for attribute-based hydration.
@@ -300,133 +302,74 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   }
 
   /**
-   * Hydrate DSD DOM with signal bindings.
+   * v0.28 (ADR-0067): Signal-native hydration.
    *
-   * v0.27 (ADR-0065): Replaces effectScope() with Set-based
-   * dispose tracking. Alien-signals effectScope does not allow
-   * nested effects to fire on signal changes after scope closure.
-   * Plain effects created here fire correctly — the framework
-   * owns the bind/dispose lifecycle natively.
+   * Replaces _walkAndBind() — reads data-signal and data-on markers
+   * from DSD shadow root and creates direct signal→DOM effect bindings.
+   * No position matching, no childNodes filtering, no VNode traversal.
    *
-   * @module internal
+   * Effects are tracked in #effectDisposers for batch cleanup.
+   * Events are tracked in #eventCleanups for removeEventListener.
    */
-  private _hyrateExistingDom(): void {
+  private _hydrateSignals(): void {
     if (!this.shadowRoot) return;
 
-    const result = this.render();
-    if (!isVNode(result)) return;
+    // --- Signal bindings: data-signal="signalName" ---
+    const signalEls = this.shadowRoot.querySelectorAll('[data-signal]');
+    for (const el of signalEls) {
+      const name = el.getAttribute('data-signal');
+      if (!name) continue;
+      const sig = this.signalRegistry.get(name);
+      if (!sig) continue;
 
-    // Dispose previous effects before creating new ones
-    for (const d of this.#effectDisposers) d();
-    this.#effectDisposers.clear();
+      // Apply initial signal value
+      (el as HTMLElement).textContent = String(sig.value);
 
-    // Walk DSD DOM and VNode tree in parallel, binding events
-    // and creating per-prop signal→DOM effect bindings.
-    // Effects run at top level — signal changes always trigger.
-    this._walkAndBind(this.shadowRoot!, result);
+      // Create reactive effect
+      const dispose = effect(() => {
+        (el as HTMLElement).textContent = String(sig.value);
+      });
+      this.#effectDisposers.add(dispose);
+    }
 
-    // v0.27 (ADR-0065): Fix Chromium DSD layout bug without DOM rebuild.
+    // --- Event bindings: data-on-<event>="methodName" ---
+    const EVENT_TYPES = ['click', 'input', 'change', 'submit', 'keydown'] as const;
+    for (const eventType of EVENT_TYPES) {
+      const attr = `data-on-${eventType}`;
+      for (const el of this.shadowRoot.querySelectorAll(`[${attr}]`)) {
+        const methodName = el.getAttribute(attr);
+        if (!methodName) continue;
+        const handler = (this as Record<string, unknown>)[methodName];
+        if (typeof handler === 'function') {
+          const bound = (handler as Function).bind(this);
+          el.addEventListener(eventType, bound as EventListener);
+          this.#eventCleanups.push(() => el.removeEventListener(eventType, bound as EventListener));
+        }
+      }
+    }
+
+    // Chromium DSD layout fix: force reflow without DOM rebuild
     requestAnimationFrame(() => {
       void (this as HTMLElement).offsetHeight;
     });
   }
 
   /**
-   * Walk shadow DOM elements and VNode tree in parallel, binding events
-   * and creating signal text bindings for reactive text children.
+   * Hydrate DSD DOM with signal and event bindings.
    *
-   * v0.27: Fixed `parent.children` → `parent.childNodes` to include
-   * text nodes. Signal→text bindings were broken because DSD text nodes
-   * are not Element children and were never matched against VNode signal children.
-   * Also skip comment nodes (<!-- -->) and whitespace-only text nodes
-   * between elements to avoid index misalignment.
+   * v0.28 (ADR-0067): Delegates to _hydrateSignals().
+   * _walkAndBind position matching is DELETED.
    */
-  private _walkAndBind(
-    parent: Element | ShadowRoot,
-    vnode: {
-      // deno-lint-ignore ban-types
-      tag?: string | symbol | Function;
-      props?: Record<string, unknown>;
-      children?: unknown[];
-    },
-  ): void {
-    const vChildren = vnode.children as (string | Record<string, unknown>)[];
-    if (!vChildren) return;
+  private _hyrateExistingDom(): void {
+    if (!this.shadowRoot) return;
 
-    // Use childNodes to include text nodes — signal children render as TextNode in DSD.
-    // Filter out comment nodes and pure-whitespace text nodes (Vite/Lit formatting artifacts).
-    const domNodes = Array.from(parent.childNodes).filter((n) => {
-      if (n.nodeType === 8) return false; // skip comment nodes
-      if (n.nodeType === 3) {
-        // Keep text nodes with non-whitespace content, or if they're the only sibling
-        const text = n.textContent ?? '';
-        if (text.trim() === '') return false;
-      }
-      return true;
-    });
+    // Dispose previous effects and events
+    for (const d of this.#effectDisposers) d();
+    this.#effectDisposers.clear();
+    for (const f of this.#eventCleanups) f();
+    this.#eventCleanups = [];
 
-    let di = 0; // DOM index
-    for (let vi = 0; vi < vChildren.length && di < domNodes.length; vi++) {
-      const vChild = vChildren[vi];
-
-      // Skip string/number children (static text, already correct in DSD)
-      if (typeof vChild === 'string' || typeof vChild === 'number' || typeof vChild === 'boolean') {
-        di++;
-        continue;
-      }
-
-      const domNode = domNodes[di];
-
-      // Signal child → bind to the nearest text node
-      if (isSignalLike(vChild)) {
-        const sig = vChild as { value: unknown };
-        let textNode: Text | null = null;
-        if (domNode.nodeType === 3) {
-          textNode = domNode as Text;
-          di++;
-        } else if (
-          domNode.nodeType === 1 && di + 1 < domNodes.length && domNodes[di + 1].nodeType === 3
-        ) {
-          // Signal child before an element → next DOM node is the text
-          textNode = domNodes[di + 1] as Text;
-          di += 2;
-        } else {
-          // Fallback: look at DOM element's first text child
-          const firstText = domNode.childNodes[0];
-          if (firstText && firstText.nodeType === 3) {
-            textNode = firstText as Text;
-          }
-          di++;
-        }
-        if (textNode) {
-          effect(() => {
-            textNode!.textContent = String(sig.value ?? '');
-          });
-        }
-        continue;
-      }
-
-      // VNode element child → apply props + recurse
-      if (
-        typeof vChild === 'object' && vChild !== null && 'props' in vChild && domNode.nodeType === 1
-      ) {
-        applyProps(
-          domNode as Element,
-          vChild.props as Record<string, unknown>,
-          undefined,
-          this.#effectDisposers,
-        );
-        this._walkAndBind(
-          domNode as Element,
-          vChild as { tag?: string; props?: Record<string, unknown>; children?: unknown[] },
-        );
-        di++;
-        continue;
-      }
-
-      // Fallback: skip unmatched DOM node
-      di++;
-    }
+    this._hydrateSignals();
   }
 
   /**
@@ -460,12 +403,14 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   disconnectedCallback(): void {
     for (const d of this.#effectDisposers) d();
     this.#effectDisposers.clear();
+    for (const f of this.#eventCleanups) f();
+    this.#eventCleanups = [];
     disposeProps(this);
     disposeStaticProps(this as unknown as Record<string, unknown>);
   }
 
-  // v0.27 (ADR-0065): Effect lifecycle managed by Set<dispose>.
-  // Replaces effectScope() — alien-signals scope blocks nested effect firing.
+  // v0.28 (ADR-0067): Effect + event lifecycle managed by Set/Array.
+  // _walkAndBind DELETED — replaced by _hydrateSignals().
 
   /**
    * Lifecycle: called when an observed attribute changes.

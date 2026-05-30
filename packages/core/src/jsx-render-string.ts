@@ -217,6 +217,25 @@ export function renderToString(node: unknown): string {
 
   // ── HTML element ──────────────────────────────────────────────────────────
   const attrs = serializeAttrs(props);
+
+  // v0.28 (ADR-0067): Emit data-on-<event> markers for event handler props.
+  // Handlers map: onClick→click, onInput→input, onChange→change, onSubmit→submit, onKeydown→keydown
+  const EVENT_MAP: Record<string, string> = {
+    onClick: 'click',
+    onInput: 'input',
+    onChange: 'change',
+    onSubmit: 'submit',
+    onKeydown: 'keydown',
+  };
+  let dataOnAttrs = '';
+  for (const [key, value] of Object.entries(props ?? {})) {
+    const eventType = EVENT_MAP[key];
+    if (eventType && typeof value === 'function') {
+      const name = value.name || '__anonymous__';
+      dataOnAttrs += ` data-on-${eventType}="${name}"`;
+    }
+  }
+
   // innerHTML prop: render as raw HTML content (build-time sanitized, ADR-0064)
   const innerHTML = props?.innerHTML as string | undefined;
   // textContent prop: render signal/dynamic value as escaped child content (v0.27)
@@ -224,9 +243,6 @@ export function renderToString(node: unknown): string {
   const textContent = props?.textContent !== undefined
     ? escapeHtml(String(unwrapSignalLike(props.textContent)))
     : undefined;
-  // v0.27 (ADR-0065): Emit data-signal when textContent is signal-bound.
-  const hasSignalText = textContent !== undefined && isSignalLike(props!.textContent);
-  const sigAttr = hasSignalText ? ' data-signal' : '';
   const childHtml = innerHTML !== undefined
     ? innerHTML
     : textContent !== undefined
@@ -236,8 +252,8 @@ export function renderToString(node: unknown): string {
   const tagStr = String(tag);
 
   if (VOID_ELEMENTS.has(tagStr)) {
-    return `<${tagStr}${attrs}${sigAttr}>`;
+    return `<${tagStr}${attrs}${dataOnAttrs}>`;
   }
 
-  return `<${tagStr}${attrs}${sigAttr}>${childHtml}</${tagStr}>`;
+  return `<${tagStr}${attrs}${dataOnAttrs}>${childHtml}</${tagStr}>`;
 }

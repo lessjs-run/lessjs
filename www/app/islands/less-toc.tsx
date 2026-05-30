@@ -83,6 +83,11 @@ export default class LessToc extends DsdElement {
   private _observer: IntersectionObserver | null = null;
   private _retryTimer: ReturnType<typeof setTimeout> | null = null;
 
+  constructor() {
+    super();
+    this.registerSignal('activeId', this.#activeId);
+  }
+
   override connectedCallback(): void {
     super.connectedCallback();
     requestAnimationFrame(() => this._scanHeadings());

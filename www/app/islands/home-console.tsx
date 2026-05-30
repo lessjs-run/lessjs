@@ -1,6 +1,6 @@
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
-import { effect, signal } from '@lessjs/signals';
+import { signal } from '@lessjs/signals';
 import { consumeContext } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { THEME_CTX } from '@lessjs/ui/less-layout';
@@ -44,20 +44,16 @@ export default class HomeConsole extends DsdElement {
   static override styles = [openPropsTokenSheet, styles];
   #count = signal(42);
 
+  constructor() {
+    super();
+    this.registerSignal('count', this.#count);
+  }
+
   override connectedCallback() {
-    super.connectedCallback();
+    super.connectedCallback(); // calls _hydrateSignals()
     const theme = consumeContext(THEME_CTX);
     this.setAttribute('data-theme', theme.value);
     theme.subscribe((t) => this.setAttribute('data-theme', t));
-
-    // v0.27 (ADR-0065): Signal→DOM binding via framework effect API.
-    // DSD hydration (_walkAndBind inside effectScope) creates effects
-    // that need to survive the scope. This direct binding guarantees
-    // the counter textContent updates when the signal changes.
-    effect(() => {
-      const el = this.shadowRoot?.querySelector('.counter-value');
-      if (el) (el as HTMLElement).textContent = String(this.#count.value);
-    });
   }
 
   override render() {
@@ -68,27 +64,25 @@ export default class HomeConsole extends DsdElement {
         </div>
         <div class='pane'>
           <div class='counter-row'>
-            <button
-              type='button'
-              class='counter-btn'
-              onClick={() => this.#count.value = this.#count.value - 1}
-            >
-              -
-            </button>
-            <span class='counter-value' textContent={this.#count}></span>
-            <button
-              type='button'
-              class='counter-btn'
-              onClick={() => this.#count.value = this.#count.value + 1}
-            >
-              +
-            </button>
+            <button type='button' class='counter-btn' data-on-click='decrement'>-</button>
+            <span class='counter-value' data-signal='count' textContent={this.#count}></span>
+            <button type='button' class='counter-btn' data-on-click='increment'>+</button>
           </div>
           <p class='counter-caption'>
-            <b>METRICS</b> — packages verified: <b textContent={this.#count}></b>
+            <b>METRICS</b> — packages verified:{' '}
+            <b data-signal='count' textContent={this.#count}></b>
           </p>
         </div>
       </div>
     );
   }
+
+  decrement() {
+    this.#count.value--;
+  }
+  increment() {
+    this.#count.value++;
+  }
 }
+
+if (!customElements.get('home-console')) customElements.define('home-console', HomeConsole);

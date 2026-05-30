@@ -92,6 +92,12 @@ export default class ReactiveShowcase extends DsdElement {
     FRAMEWORKS.filter((f) => f.toLowerCase().includes(this.#filter.value.toLowerCase()))
   );
 
+  constructor() {
+    super();
+    this.registerSignal('count', this.#count);
+    this.registerSignal('isDark', this.#isDark);
+  }
+
   override render() {
     return (
       <div className='showcase'>
@@ -102,9 +108,9 @@ export default class ReactiveShowcase extends DsdElement {
             A single <code>signal(0)</code> drives this counter. No Lit, no React, no framework.
           </p>
           <div className='counter-row'>
-            <button type='button' onClick={() => this.#count.value--}>−</button>
-            <span textContent={this.#count}></span>
-            <button type='button' onClick={() => this.#count.value++}>+</button>
+            <button type='button' data-on-click='decrement'>−</button>
+            <span data-signal='count' textContent={this.#count}></span>
+            <button type='button' data-on-click='increment'>+</button>
           </div>
         </div>
 
@@ -125,7 +131,7 @@ export default class ReactiveShowcase extends DsdElement {
             </p>
             <button
               type='button'
-              onClick={() => this.#isDark.value = !this.#isDark.value}
+              data-on-click='toggleTheme'
               textContent={computed(() => `Toggle ${this.#isDark.value ? 'light' : 'dark'}`)}
             >
             </button>
@@ -153,4 +159,16 @@ export default class ReactiveShowcase extends DsdElement {
       </div>
     );
   }
+
+  decrement() {
+    this.#count.value--;
+  }
+  increment() {
+    this.#count.value++;
+  }
+  toggleTheme() {
+    this.#isDark.value = !this.#isDark.value;
+  }
 }
+
+if (!customElements.get(tagName)) customElements.define(tagName, ReactiveShowcase);
