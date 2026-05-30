@@ -205,6 +205,7 @@ export default defineConfig({
           '<meta name="twitter:card" content="summary_large_image">',
           '<meta name="description" content="LessJS — Less is More. DSD-first Web Standards framework. Zero-runtime core, SSG + Island architecture, microsecond Signal reactivity.">',
           '<style id="less-anti-flash">html{visibility:hidden}</style>',
+          '<noscript><style>html{visibility:visible!important}</style></noscript>',
           '<link rel="icon" type="image/svg+xml" href="/assets/less-logo.svg" />',
           '<link rel="apple-touch-icon" href="/assets/less-logo.svg" />',
           colorTokensStyle,
