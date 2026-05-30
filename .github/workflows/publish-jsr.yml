@@ -58,10 +58,11 @@ jobs:
           fi
 
           # Publish in dependency order: truly leaf first, then dependents
-          #   leaf (zero LessJS deps): rpc, protocols, style-sheet, create
+          #   leaf (zero LessJS deps): rpc, protocols, router, style-sheet, create
           #   core: zero LessJS deps, but needed by many packages below
           publish_if_missing "@lessjs/rpc" "packages/rpc"
           publish_if_missing "@lessjs/protocols" "packages/protocols"
+          publish_if_missing "@lessjs/router" "packages/router"
           publish_if_missing "@lessjs/style-sheet" "packages/style-sheet"
           publish_if_missing "@lessjs/create" "packages/create"
           # v0.24.3: @lessjs/signals is now a dependency of @lessjs/core (effect() for VNode signal tracking)
