@@ -51,9 +51,9 @@ export default class HomePage extends DsdElement {
 
 | Section       | Link                                                                                 |
 | ------------- | ------------------------------------------------------------------------------------ |
-| Guide         | [lessjs.org/guide/getting-started](https://lessjs.org/guide/getting-started)         |
-| API Reference | [lessjs.org/apilist](https://lessjs.org/apilist)                                     |
-| Architecture  | [lessjs.org/architecture/architecture](https://lessjs.org/architecture/architecture) |
+| Guide         | [lessjs.com/guide/getting-started](https://lessjs.com/guide/getting-started)         |
+| API Reference | [lessjs.com/apilist](https://lessjs.com/apilist)                                     |
+| Architecture  | [lessjs.com/architecture/architecture](https://lessjs.com/architecture/architecture) |
 
 ## Packages
 

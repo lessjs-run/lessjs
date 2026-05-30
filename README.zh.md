@@ -51,9 +51,9 @@ export default class HomePage extends DsdElement {
 
 | 章节     | 链接                                                                                 |
 | -------- | ------------------------------------------------------------------------------------ |
-| 教程     | [lessjs.org/guide/getting-started](https://lessjs.org/guide/getting-started)         |
-| API 参考 | [lessjs.org/apilist](https://lessjs.org/apilist)                                     |
-| 架构设计 | [lessjs.org/architecture/architecture](https://lessjs.org/architecture/architecture) |
+| 教程     | [lessjs.com/guide/getting-started](https://lessjs.com/guide/getting-started)         |
+| API 参考 | [lessjs.com/apilist](https://lessjs.com/apilist)                                     |
+| 架构设计 | [lessjs.com/architecture/architecture](https://lessjs.com/architecture/architecture) |
 
 ## 包列表
 
