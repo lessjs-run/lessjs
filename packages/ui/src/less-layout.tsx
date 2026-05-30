@@ -587,6 +587,15 @@ export class LessLayout extends DsdElement {
     return target === 'zh' ? '\u4E2D\u6587' : 'EN';
   }
 
+  /** Update lang-switch label + href after locale change (SPA nav) */
+  private _updateLangSwitch(): void {
+    if (!this.shadowRoot) return;
+    const link = this.shadowRoot.querySelector('.lang-switch') as HTMLAnchorElement | null;
+    if (!link) return;
+    link.textContent = this._otherLocaleLabel();
+    link.setAttribute('href', this._otherLocalePath());
+  }
+
   private _localizePath(path: string): string {
     const locales = this._locales();
     if (locales.length <= 1) return path;
@@ -1085,7 +1094,11 @@ export class LessLayout extends DsdElement {
 
       // Sync locale from the fetched page so i18n content matches
       const newLocale = newLayout.getAttribute('locale');
-      if (newLocale) this.setAttribute('locale', newLocale);
+      if (newLocale) {
+        this.setAttribute('locale', newLocale);
+        // Update lang-switch label + href reactively
+        this._updateLangSwitch();
+      }
 
       // Ensure newly inserted components inherit current theme.
       const currentTheme = this.getAttribute('data-theme') ||
