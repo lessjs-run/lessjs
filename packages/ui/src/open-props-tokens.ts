@@ -112,6 +112,46 @@ function createTokenSheet(): StyleSheetLike {
   --info: #2563eb;
   --info-subtle: rgba(37,99,235,0.1);
   --overlay: rgba(0,0,0,0.4);
+
+  /* ═══════════════════════════════════════════════
+     Open Props Color Scales (light mode)
+     https://open-props.style
+     ═══════════════════════════════════════════════ */
+  --indigo-0: #edf2ff; --indigo-1: #dbe4ff; --indigo-2: #bac8ff;
+  --indigo-3: #91a7ff; --indigo-4: #748ffc; --indigo-5: #5c7cfa;
+  --indigo-6: #4c6ef5; --indigo-7: #4263eb; --indigo-8: #3b5bdb;
+  --indigo-9: #364fc7; --indigo-10: #2b3990; --indigo-11: #1e266d;
+  --indigo-12: #11184a;
+  --green-0: #ebfbee; --green-1: #d3f9d8; --green-2: #b2f2bb;
+  --green-3: #8ce99a; --green-4: #69db7c; --green-5: #51cf66;
+  --green-6: #40c057; --green-7: #37b24d; --green-8: #2f9e44;
+  --green-9: #2b8a3e; --green-10: #226231; --green-11: #1a4725;
+  --green-12: #0f2d18;
+  --red-0: #fff5f5; --red-1: #ffe3e3; --red-2: #ffc9c9;
+  --red-3: #ffa8a8; --red-4: #ff8787; --red-5: #ff6b6b;
+  --red-6: #fa5252; --red-7: #f03e3e; --red-8: #e03131;
+  --red-9: #c92a2a; --red-10: #a61e1e; --red-11: #821515;
+  --red-12: #540d0d;
+  --orange-0: #fff4e6; --orange-1: #ffe8cc; --orange-2: #ffd8a8;
+  --orange-3: #ffc078; --orange-4: #ffa94d; --orange-5: #ff922b;
+  --orange-6: #fd7e14; --orange-7: #f76707; --orange-8: #e8590c;
+  --orange-9: #d9480f; --orange-10: #b03a00; --orange-11: #872a00;
+  --orange-12: #5c1a00;
+  --blue-0: #e7f5ff; --blue-1: #d0ebff; --blue-2: #a5d8ff;
+  --blue-3: #74c0fc; --blue-4: #4dabf7; --blue-5: #339af0;
+  --blue-6: #228be6; --blue-7: #1c7ed6; --blue-8: #1971c2;
+  --blue-9: #1864ab; --blue-10: #134e8a; --blue-11: #0e3b69;
+  --blue-12: #092848;
+  --teal-0: #e6fcf5; --teal-1: #c3fae8; --teal-2: #96f2d7;
+  --teal-3: #63e6be; --teal-4: #38d9a9; --teal-5: #20c997;
+  --teal-6: #12b886; --teal-7: #0ca678; --teal-8: #099268;
+  --teal-9: #087f5b; --teal-10: #066649; --teal-11: #054d37;
+  --teal-12: #033325;
+  --cyan-0: #e3fafc; --cyan-1: #c5f6fa; --cyan-2: #99e9f2;
+  --cyan-3: #66d9e8; --cyan-4: #3bc9db; --cyan-5: #22b8cf;
+  --cyan-6: #15aabf; --cyan-7: #1098ad; --cyan-8: #0c8599;
+  --cyan-9: #0b7285; --cyan-10: #095c6b; --cyan-11: #074652;
+  --cyan-12: #053038;
 }
 
 /* ═══════════════════════════════════════════════
@@ -148,6 +188,43 @@ function createTokenSheet(): StyleSheetLike {
   --info: #60a5fa;
   --info-subtle: rgba(96,165,250,.1);
   --overlay: rgba(0,0,0,.6);
+
+  /* Open Props Color Scales (dark mode inversion) */
+  --indigo-0: #11184a; --indigo-1: #1e266d; --indigo-2: #2b3990;
+  --indigo-3: #364fc7; --indigo-4: #3b5bdb; --indigo-5: #4263eb;
+  --indigo-6: #4c6ef5; --indigo-7: #5c7cfa; --indigo-8: #748ffc;
+  --indigo-9: #91a7ff; --indigo-10: #bac8ff; --indigo-11: #dbe4ff;
+  --indigo-12: #edf2ff;
+  --green-0: #0f2d18; --green-1: #1a4725; --green-2: #226231;
+  --green-3: #2b8a3e; --green-4: #2f9e44; --green-5: #37b24d;
+  --green-6: #40c057; --green-7: #51cf66; --green-8: #69db7c;
+  --green-9: #8ce99a; --green-10: #b2f2bb; --green-11: #d3f9d8;
+  --green-12: #ebfbee;
+  --red-0: #540d0d; --red-1: #821515; --red-2: #a61e1e;
+  --red-3: #c92a2a; --red-4: #e03131; --red-5: #f03e3e;
+  --red-6: #fa5252; --red-7: #ff6b6b; --red-8: #ff8787;
+  --red-9: #ffa8a8; --red-10: #ffc9c9; --red-11: #ffe3e3;
+  --red-12: #fff5f5;
+  --orange-0: #5c1a00; --orange-1: #872a00; --orange-2: #b03a00;
+  --orange-3: #d9480f; --orange-4: #e8590c; --orange-5: #f76707;
+  --orange-6: #fd7e14; --orange-7: #ff922b; --orange-8: #ffa94d;
+  --orange-9: #ffc078; --orange-10: #ffd8a8; --orange-11: #ffe8cc;
+  --orange-12: #fff4e6;
+  --blue-0: #092848; --blue-1: #0e3b69; --blue-2: #134e8a;
+  --blue-3: #1864ab; --blue-4: #1971c2; --blue-5: #1c7ed6;
+  --blue-6: #228be6; --blue-7: #339af0; --blue-8: #4dabf7;
+  --blue-9: #74c0fc; --blue-10: #a5d8ff; --blue-11: #d0ebff;
+  --blue-12: #e7f5ff;
+  --teal-0: #033325; --teal-1: #054d37; --teal-2: #066649;
+  --teal-3: #087f5b; --teal-4: #099268; --teal-5: #0ca678;
+  --teal-6: #12b886; --teal-7: #20c997; --teal-8: #38d9a9;
+  --teal-9: #63e6be; --teal-10: #96f2d7; --teal-11: #c3fae8;
+  --teal-12: #e6fcf5;
+  --cyan-0: #053038; --cyan-1: #074652; --cyan-2: #095c6b;
+  --cyan-3: #0b7285; --cyan-4: #0c8599; --cyan-5: #1098ad;
+  --cyan-6: #15aabf; --cyan-7: #22b8cf; --cyan-8: #3bc9db;
+  --cyan-9: #66d9e8; --cyan-10: #99e9f2; --cyan-11: #c5f6fa;
+  --cyan-12: #e3fafc;
 }
 `);
   return sheet;

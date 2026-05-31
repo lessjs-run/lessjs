@@ -43,18 +43,18 @@ const styles = new StyleSheet();
 styles.replaceSync(`
   :host { display: block; }
   .container { max-width: 700px; margin: var(--size-12) auto; text-align: center; }
-  h1 { font-size: 4rem; font-weight: var(--font-weight-7); color: var(--text-primary); margin: 0; }
-  p { color: var(--text-muted); font-size: var(--font-size-4); margin: var(--size-4) 0 var(--size-8); }
+  h1 { font-size: 4rem; font-weight: var(--font-weight-7); color: var(--gray-10); margin: 0; }
+  p { color: var(--gray-6); font-size: var(--font-size-4); margin: var(--size-4) 0 var(--size-8); }
   .links { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--size-3); }
   .links a {
     padding: var(--size-2) var(--size-4);
-    border: 0.5px solid var(--border);
+    border: 0.5px solid var(--gray-3);
     border-radius: var(--radius-2);
-    color: var(--text-secondary);
+    color: var(--gray-7);
     text-decoration: none;
     font-size: var(--font-size-1);
   }
-  .links a:hover { border-color: var(--border-hover); color: var(--text-primary); }
+  .links a:hover { border-color: var(--gray-4); color: var(--gray-10); }
 `);
 
 export default class Page404 extends DsdElement {

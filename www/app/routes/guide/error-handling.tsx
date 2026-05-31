@@ -11,14 +11,14 @@ routeSheet.replaceSync(
 
       .error-hierarchy {
         padding: var(--size-4);
-        background: var(--bg-surface);
-        border-left: 2px solid var(--border-hover);
+        background: var(--gray-1);
+        border-left: 2px solid var(--gray-4);
         border-radius: 0 var(--radius-1) var(--radius-1) 0;
         margin: var(--size-4) 0;
         font-family: var(--font-mono);
         font-size: var(--font-size-1);
         line-height: var(--font-lineheight-4);
-        color: var(--text-secondary);
+        color: var(--gray-7);
       }
     `,
 );

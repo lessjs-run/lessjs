@@ -18,7 +18,7 @@ routeSheet.replaceSync(`
   :host([data-theme="dark"]) .now,
   :host([data-theme="dark"]) .phase,
   :host([data-theme="dark"]) .truth {
-    background: var(--bg-base);
+    background: var(--gray-0);
   }
 
   .shell {
@@ -33,12 +33,12 @@ routeSheet.replaceSync(`
     gap: var(--size-7);
     align-items: start;
     padding-bottom: 30px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--gray-3);
   }
 
   h1 {
     margin: 0;
-    color: var(--text-primary);
+    color: var(--gray-10);
     font-size: clamp(2.6rem, 7vw, 5rem);
     line-height: 0.95;
     letter-spacing: 0;
@@ -47,15 +47,15 @@ routeSheet.replaceSync(`
   .subtitle {
     max-width: 690px;
     margin: 18px 0 0;
-    color: var(--text-muted);
+    color: var(--gray-6);
     font-size: var(--font-size-4);
     line-height: var(--font-lineheight-4);
   }
 
   .now {
-    border: 1px solid var(--border);
+    border: 1px solid var(--gray-3);
     border-radius: var(--radius-2);
-    background: var(--bg-elevated);
+    background: var(--gray-0);
     padding: var(--size-4);
   }
 
@@ -65,23 +65,23 @@ routeSheet.replaceSync(`
     align-items: center;
     min-height: var(--size-7);
     padding: 0 10px;
-    border: 1px solid color-mix(in srgb, var(--brand) 28%, transparent);
+    border: 1px solid color-mix(in srgb, var(--indigo-5) 28%, transparent);
     border-radius: var(--radius-2);
-    background: color-mix(in srgb, var(--brand) 8%, transparent);
-    color: var(--brand);
+    background: color-mix(in srgb, var(--indigo-5) 8%, transparent);
+    color: var(--indigo-5);
     font-size: var(--font-size-0);
     font-weight: 750;
   }
 
   .now h2 {
     margin: 14px 0 var(--size-2);
-    color: var(--text-primary);
+    color: var(--gray-10);
     font-size: 18px;
   }
 
   .now p {
     margin: 0;
-    color: var(--text-muted);
+    color: var(--gray-6);
     font-size: var(--font-size-1);
     line-height: 1.6;
   }
@@ -97,27 +97,27 @@ routeSheet.replaceSync(`
     grid-template-columns: 110px 1fr 140px;
     gap: var(--size-4);
     align-items: start;
-    border: 1px solid var(--border);
+    border: 1px solid var(--gray-3);
     border-radius: var(--radius-2);
-    background: var(--bg-elevated);
+    background: var(--gray-0);
     padding: var(--size-4);
   }
 
   .version {
-    color: var(--brand);
+    color: var(--indigo-5);
     font-size: var(--font-size-1);
     font-weight: var(--font-weight-8);
   }
 
   .phase h3 {
     margin: 0 0 var(--size-2);
-    color: var(--text-primary);
+    color: var(--gray-10);
     font-size: var(--font-size-4);
   }
 
   .phase p {
     margin: 0;
-    color: var(--text-muted);
+    color: var(--gray-6);
     font-size: var(--font-size-1);
     line-height: 1.65;
   }
@@ -131,25 +131,25 @@ routeSheet.replaceSync(`
     border-radius: var(--radius-2);
     font-size: var(--font-size-0);
     font-weight: 750;
-    border: 1px solid var(--border);
+    border: 1px solid var(--gray-3);
   }
 
   .done {
-    color: var(--success);
-    border-color: color-mix(in srgb, var(--success) 26%, transparent);
-    background: color-mix(in srgb, var(--success) 8%, transparent);
+    color: var(--green-6);
+    border-color: color-mix(in srgb, var(--green-6) 26%, transparent);
+    background: color-mix(in srgb, var(--green-6) 8%, transparent);
   }
 
   .current {
-    color: var(--brand);
-    border-color: color-mix(in srgb, var(--brand) 28%, transparent);
-    background: color-mix(in srgb, var(--brand) 8%, transparent);
+    color: var(--indigo-5);
+    border-color: color-mix(in srgb, var(--indigo-5) 28%, transparent);
+    background: color-mix(in srgb, var(--indigo-5) 8%, transparent);
   }
 
   .planned {
-    color: var(--warning);
-    border-color: color-mix(in srgb, var(--warning) 24%, transparent);
-    background: color-mix(in srgb, var(--warning) 8%, transparent);
+    color: var(--orange-6);
+    border-color: color-mix(in srgb, var(--orange-6) 24%, transparent);
+    background: color-mix(in srgb, var(--orange-6) 8%, transparent);
   }
 
   .truth-grid {
@@ -160,21 +160,21 @@ routeSheet.replaceSync(`
   }
 
   .truth {
-    border: 1px solid var(--border);
+    border: 1px solid var(--gray-3);
     border-radius: var(--radius-2);
-    background: var(--bg-elevated);
+    background: var(--gray-0);
     padding: var(--size-4);
   }
 
   .truth h2 {
     margin: 0 0 10px;
-    color: var(--text-primary);
+    color: var(--gray-10);
     font-size: var(--font-size-4);
   }
 
   .truth p,
   .truth li {
-    color: var(--text-muted);
+    color: var(--gray-6);
     font-size: var(--font-size-1);
     line-height: 1.65;
   }
@@ -200,10 +200,10 @@ routeSheet.replaceSync(`
     align-items: center;
     min-height: var(--size-10);
     padding: 0 14px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--gray-3);
     border-radius: 7px;
-    background: var(--bg-elevated);
-    color: var(--text-primary);
+    background: var(--gray-0);
+    color: var(--gray-10);
     text-decoration: none;
     font-size: var(--font-size-1);
     font-weight: var(--font-weight-7);

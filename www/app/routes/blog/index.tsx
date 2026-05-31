@@ -19,30 +19,30 @@ routeSheet.replaceSync(`
         display: block;
         padding: var(--size-4) var(--size-5);
         margin-bottom: var(--size-2);
-        border: 0.5px solid var(--border);
+        border: 0.5px solid var(--gray-3);
         border-radius: var(--radius-1);
         text-decoration: none;
         color: inherit;
         transition: border-color 0.15s, background 0.15s;
       }
       .blog-item:hover {
-        border-color: var(--border-hover);
-        background: var(--bg-surface);
+        border-color: var(--gray-4);
+        background: var(--gray-1);
       }
       .blog-item h2 {
         margin: 0 0 var(--size-1);
         font-size: var(--font-size-4);
         font-weight: var(--font-weight-5);
-        color: var(--text-primary);
+        color: var(--gray-10);
       }
       .blog-desc {
         margin: 0 0 var(--size-1);
         font-size: var(--font-size-1);
-        color: var(--text-muted);
+        color: var(--gray-6);
       }
       .blog-date {
         font-size: 0.6875rem;
-        color: var(--text-muted);
+        color: var(--gray-6);
       }
       .blog-tags {
         display: flex;
@@ -57,9 +57,9 @@ routeSheet.replaceSync(`
         letter-spacing: var(--font-letterspacing-2);
         padding: 0.125rem 0.375rem;
         border-radius: 2px;
-        background: var(--bg-surface);
-        border: 0.5px solid var(--border);
-        color: var(--text-muted);
+        background: var(--gray-1);
+        border: 0.5px solid var(--gray-3);
+        color: var(--gray-6);
       }
       .new-badge {
         display: inline-block;
@@ -68,8 +68,8 @@ routeSheet.replaceSync(`
         letter-spacing: var(--font-letterspacing-4);
         padding: 0.0625rem 0.3125rem;
         border-radius: 2px;
-        background: var(--text-primary);
-        color: var(--bg-base);
+        background: var(--gray-10);
+        color: var(--gray-0);
         vertical-align: middle;
         margin-left: var(--size-1);
       }

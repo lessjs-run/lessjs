@@ -48,10 +48,10 @@ sheet.replaceSync(`
     align-items: center;
     gap: var(--size-2);
     padding: var(--size-2) var(--size-3);
-    border: 0.5px solid var(--border);
+    border: 0.5px solid var(--gray-3);
     border-radius: var(--radius-2);
     background: transparent;
-    color: var(--text-muted);
+    color: var(--gray-6);
     font-size: var(--font-size-00);
     font-weight: var(--font-weight-6);
     letter-spacing: 0.04em;
@@ -59,9 +59,9 @@ sheet.replaceSync(`
     transition: all var(--ease-2) var(--duration-2);
   }
   .search-trigger:hover {
-    color: var(--text-primary);
-    border-color: var(--brand);
-    background: var(--bg-surface);
+    color: var(--gray-10);
+    border-color: var(--indigo-5);
+    background: var(--gray-1);
   }
   .search-trigger kbd {
     font-family: inherit;
@@ -89,7 +89,7 @@ sheet.replaceSync(`
     padding: 15vh 0 0;
     border: 0;
     color: inherit;
-    background: var(--overlay);
+    background: color-mix(in srgb, var(--gray-12) 40%, transparent);
     display: none;
     justify-content: center;
     align-items: flex-start;
@@ -103,8 +103,8 @@ sheet.replaceSync(`
     max-width: 560px;
     max-height: 70vh;
     margin: 0 var(--size-4);
-    background: var(--bg-elevated);
-    border: 0.5px solid var(--border);
+    background: var(--gray-0);
+    border: 0.5px solid var(--gray-3);
     border-radius: var(--radius-2);
     box-shadow: var(--shadow-1);
     display: flex;
@@ -115,9 +115,9 @@ sheet.replaceSync(`
     width: 100%;
     padding: var(--size-3) var(--size-3);
     border: none;
-    border-bottom: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--gray-3);
     background: transparent;
-    color: var(--text-primary);
+    color: var(--gray-10);
     font-size: var(--font-size-1);
     outline: none;
     box-sizing: border-box;
@@ -136,23 +136,23 @@ sheet.replaceSync(`
     transition: background var(--ease-2) var(--duration-2);
     cursor: pointer;
   }
-  .item:hover { background: var(--bg-hover); }
+  .item:hover { background: var(--gray-2); }
   .item-section {
     font-size: var(--font-size-00);
     text-transform: uppercase;
     letter-spacing: var(--font-letterspacing-5);
-    color: var(--text-muted);
+    color: var(--gray-6);
     margin-bottom: var(--size-1);
   }
   .item-title {
     font-size: var(--font-size-0);
     font-weight: var(--font-weight-5);
-    color: var(--text-primary);
+    color: var(--gray-10);
     margin-bottom: var(--size-1);
   }
   .item-text {
     font-size: var(--font-size-0);
-    color: var(--text-secondary);
+    color: var(--gray-7);
     line-height: var(--font-lineheight-3);
     display: -webkit-box;
     -webkit-line-clamp: 2;

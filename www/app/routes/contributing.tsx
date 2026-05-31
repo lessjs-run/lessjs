@@ -14,8 +14,8 @@ routeSheet.replaceSync(
 
       .layer-diagram {
         padding: var(--size-5);
-        background: var(--bg-surface);
-        border: 0.5px solid var(--border);
+        background: var(--gray-1);
+        border: 0.5px solid var(--gray-3);
         border-radius: var(--radius-2);
         margin: var(--size-6) 0;
         font-size: var(--font-size-1);
@@ -23,7 +23,7 @@ routeSheet.replaceSync(
         font-family: var(--font-mono);
         white-space: pre;
         overflow-x: auto;
-        color: var(--text-secondary);
+        color: var(--gray-7);
       }
       .commit-types {
         display: grid;
@@ -33,13 +33,13 @@ routeSheet.replaceSync(
       }
       .commit-type {
         padding: var(--size-3) var(--size-4);
-        background: var(--bg-surface);
-        border: 0.5px solid var(--border);
+        background: var(--gray-1);
+        border: 0.5px solid var(--gray-3);
         border-radius: var(--radius-1);
         font-size: var(--font-size-2);
       }
       .commit-type code {
-        color: var(--brand);
+        color: var(--indigo-5);
         font-weight: var(--font-weight-6);
       }
     `,

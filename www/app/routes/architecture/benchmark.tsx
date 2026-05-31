@@ -15,8 +15,8 @@ import '@lessjs/ui/less-code-block';
 const styles = new StyleSheet();
 styles.replaceSync(pageStyles + `
   .metric { display:grid; grid-template-columns: 120px 1fr; gap:var(--size-2) var(--size-4); margin:var(--size-4) 0; }
-  .metric .label { color:var(--text-muted); font-size:var(--font-size-0); }
-  .metric .value { color:var(--text-primary); font-weight:var(--font-weight-6); }
+  .metric .label { color:var(--gray-6); font-size:var(--font-size-0); }
+  .metric .value { color:var(--gray-10); font-weight:var(--font-weight-6); }
 `);
 
 export default class Benchmark extends DsdElement {

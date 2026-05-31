@@ -90,82 +90,82 @@ const COMPAT_LABELS: Record<string, string> = {
 };
 
 const COMPAT_COLORS: Record<string, string> = {
-  'ssr-capable': 'var(--success)',
-  'client-only': 'var(--warning)',
-  'rejected': 'var(--error)',
-  'experimental-dom': 'var(--info)',
+  'ssr-capable': 'var(--green-6)',
+  'client-only': 'var(--orange-6)',
+  'rejected': 'var(--red-6)',
+  'experimental-dom': 'var(--blue-6)',
 };
 
 const routeSheet = new StyleSheet();
 
 routeSheet.replaceSync(`
       .detail-header { margin-bottom: var(--size-8); }
-      .breadcrumb { font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 0.75rem; }
-      .breadcrumb a { color: var(--brand); text-decoration: none; }
+      .breadcrumb { font-size: 0.8125rem; color: var(--gray-6); margin-bottom: 0.75rem; }
+      .breadcrumb a { color: var(--indigo-5); text-decoration: none; }
       .breadcrumb a:hover { text-decoration: underline; }
       .pkg-title { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin: 0 0 0.5rem; }
       .pkg-title h1 { font-size: var(--font-size-3); font-weight: var(--font-weight-7); margin: 0; }
-      .pkg-title code { font-size: 1.25rem; background: var(--bg-code); padding: 0.125rem 0.5rem; border-radius: var(--radius-1); }
+      .pkg-title code { font-size: 1.25rem; background: var(--gray-2); padding: 0.125rem 0.5rem; border-radius: var(--radius-1); }
       .compat-badge-lg { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.75rem; border-radius: 14px; font-size: 0.8125rem; font-weight: var(--font-weight-6); }
       .compat-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-      .pkg-desc { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.6; margin: 0 0 0.75rem; max-width: 640px; }
+      .pkg-desc { font-size: 0.9375rem; color: var(--gray-7); line-height: 1.6; margin: 0 0 0.75rem; max-width: 640px; }
       .pkg-links { display: flex; gap: var(--size-4); flex-wrap: wrap; margin-bottom: 0.5rem; font-size: 0.8125rem; }
-      .pkg-links a { color: var(--brand); text-decoration: none; }
+      .pkg-links a { color: var(--indigo-5); text-decoration: none; }
       .pkg-links a:hover { text-decoration: underline; }
-      .section { border: 0.5px solid var(--border); border-radius: var(--radius-2); padding: 1.25rem; margin-bottom: 1.25rem; background: var(--bg-surface); }
+      .section { border: 0.5px solid var(--gray-3); border-radius: var(--radius-2); padding: 1.25rem; margin-bottom: 1.25rem; background: var(--gray-1); }
       .section-title { font-size: var(--font-size-1); font-weight: var(--font-weight-6); margin: 0 0 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
       .install-box { padding: var(--size-4); border-radius: 6px; margin-bottom: 0.75rem; }
-      .install-safe { background: var(--success-subtle); border: 0.5px solid rgba(22, 163, 74, 0.2); }
-      .install-unsafe { background: var(--error-subtle); border: 0.5px solid rgba(220, 53, 69, 0.2); }
-      .install-cmd { font-family: monospace; background: var(--bg-code); padding: 0.5rem 0.75rem; border-radius: var(--radius-1); font-size: var(--font-size-0); margin: 0.5rem 0; user-select: all; }
+      .install-safe { background: color-mix(in srgb, var(--green-6) 10%, transparent); border: 0.5px solid rgba(22, 163, 74, 0.2); }
+      .install-unsafe { background: color-mix(in srgb, var(--red-6) 10%, transparent); border: 0.5px solid rgba(220, 53, 69, 0.2); }
+      .install-cmd { font-family: monospace; background: var(--gray-2); padding: 0.5rem 0.75rem; border-radius: var(--radius-1); font-size: var(--font-size-0); margin: 0.5rem 0; user-select: all; }
       .warning-list { list-style: none; padding: 0; margin: 0.5rem 0 0; }
-      .warning-list li { font-size: 0.8125rem; padding: 0.25rem 0; padding-left: 1.25rem; position: relative; color: var(--text-secondary); }
+      .warning-list li { font-size: 0.8125rem; padding: 0.25rem 0; padding-left: 1.25rem; position: relative; color: var(--gray-7); }
       .warning-list li::before { content: '\\u26a0\\ufe0f'; position: absolute; left: 0; }
       .tag-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-      .tag-item { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.625rem; background: var(--bg-code); border-radius: var(--radius-1); font-size: 0.8125rem; font-family: monospace; }
+      .tag-item { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.625rem; background: var(--gray-2); border-radius: var(--radius-1); font-size: 0.8125rem; font-family: monospace; }
       .tag-status { width: 6px; height: 6px; border-radius: 50%; }
       .meta-table { width: 100%; border-collapse: collapse; }
-      .meta-table th, .meta-table td { text-align: left; padding: 0.375rem 0.5rem; font-size: 0.8125rem; border-bottom: 0.5px solid var(--border); }
-      .meta-table th { width: 140px; color: var(--text-muted); font-weight: var(--font-weight-5); }
-      .not-found { text-align: center; padding: var(--size-12) var(--size-4); color: var(--text-muted); }
-      .accordion-toggle { background: none; border: none; color: var(--brand); cursor: pointer; font-size: 0.8125rem; padding: 0.25rem 0; }
+      .meta-table th, .meta-table td { text-align: left; padding: 0.375rem 0.5rem; font-size: 0.8125rem; border-bottom: 0.5px solid var(--gray-3); }
+      .meta-table th { width: 140px; color: var(--gray-6); font-weight: var(--font-weight-5); }
+      .not-found { text-align: center; padding: var(--size-12) var(--size-4); color: var(--gray-6); }
+      .accordion-toggle { background: none; border: none; color: var(--indigo-5); cursor: pointer; font-size: 0.8125rem; padding: 0.25rem 0; }
       .accordion-toggle:hover { text-decoration: underline; }
-      .accordion-content { margin-top: 0.75rem; padding: 0.75rem; background: var(--bg-code); border-radius: var(--radius-1); font-family: monospace; font-size: var(--font-size-00); white-space: pre-wrap; max-height: 400px; overflow: auto; }
+      .accordion-content { margin-top: 0.75rem; padding: 0.75rem; background: var(--gray-2); border-radius: var(--radius-1); font-family: monospace; font-size: var(--font-size-00); white-space: pre-wrap; max-height: 400px; overflow: auto; }
 
       /* Migrated inline styles */
-      .not-found-link { color: var(--brand); font-size: var(--font-size-0); }
-      .pkg-version { font-size: var(--font-size-1); color: var(--text-muted); }
+      .not-found-link { color: var(--indigo-5); font-size: var(--font-size-0); }
+      .pkg-version { font-size: var(--font-size-1); color: var(--gray-6); }
       .install-title { font-weight: var(--font-weight-6); font-size: var(--font-size-0); margin-bottom: 0.25rem; }
-      .install-info { font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
-      .config-changes { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 0.5rem; }
+      .install-info { font-size: 0.8125rem; color: var(--gray-7); margin-bottom: 0.5rem; }
+      .config-changes { font-size: 0.8125rem; color: var(--gray-7); margin-top: 0.5rem; }
       .config-item { font-size: var(--font-size-00); }
-      .justification-text { font-size: var(--font-size-0); color: var(--text-secondary); margin: 0 0 0.75rem; line-height: 1.6; }
+      .justification-text { font-size: var(--font-size-0); color: var(--gray-7); margin: 0 0 0.75rem; line-height: 1.6; }
       .mono-sm { font-family: monospace; font-size: var(--font-size-00); }
-      .usage-hint { margin-bottom: 0.5rem; font-size: 0.8125rem; color: var(--text-secondary); }
-      .import-hint { margin-top: 0.75rem; font-size: 0.8125rem; color: var(--text-secondary); }
+      .usage-hint { margin-bottom: 0.5rem; font-size: 0.8125rem; color: var(--gray-7); }
+      .import-hint { margin-top: 0.75rem; font-size: 0.8125rem; color: var(--gray-7); }
       .import-cmd { margin-top: 0.375rem; }
       .click-hint { margin-top: 0.5rem; font-size: 0.8125rem; }
-      .components-subtitle { font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+      .components-subtitle { font-size: 0.8125rem; color: var(--gray-6); margin-bottom: 0.75rem; }
       .tag-item-link { text-decoration: none; color: inherit; transition: border-color 0.15s; border: 0.5px solid transparent; }
-      .tag-dot-error { background: var(--error); }
-      .tag-dot-ssr { background: var(--success); }
-      .tag-dot-warn { background: var(--warning); }
-      .validation-errors { color: var(--error); font-size: 0.6875rem; }
-      .validation-warnings { color: var(--warning); font-size: 0.6875rem; }
-      .tag-arrow { font-size: 0.625rem; color: var(--text-muted); margin-left: 0.25rem; }
-      .preview-text { font-size: var(--font-size-0); color: var(--text-secondary); }
+      .tag-dot-error { background: var(--red-6); }
+      .tag-dot-ssr { background: var(--green-6); }
+      .tag-dot-warn { background: var(--orange-6); }
+      .validation-errors { color: var(--red-6); font-size: 0.6875rem; }
+      .validation-warnings { color: var(--orange-6); font-size: 0.6875rem; }
+      .tag-arrow { font-size: 0.625rem; color: var(--gray-6); margin-left: 0.25rem; }
+      .preview-text { font-size: var(--font-size-0); color: var(--gray-7); }
 
       /* Compat color classes */
-      .compat-dot-ssr-capable { background: var(--success); }
-      .compat-dot-client-only { background: var(--warning); }
-      .compat-dot-rejected { background: var(--error); }
-      .compat-dot-experimental-dom { background: var(--info); }
-      .compat-dot-default { background: var(--text-muted); }
-      .compat-badge-lg-ssr-capable { background: var(--success-subtle); border: 0.5px solid var(--success); }
-      .compat-badge-lg-client-only { background: var(--warning-subtle); border: 0.5px solid var(--warning); }
-      .compat-badge-lg-rejected { background: var(--error-subtle); border: 0.5px solid var(--error); }
-      .compat-badge-lg-experimental-dom { background: var(--info-subtle); border: 0.5px solid var(--info); }
-      .compat-badge-lg-default { background: var(--bg-surface); border: 0.5px solid var(--border); }
+      .compat-dot-ssr-capable { background: var(--green-6); }
+      .compat-dot-client-only { background: var(--orange-6); }
+      .compat-dot-rejected { background: var(--red-6); }
+      .compat-dot-experimental-dom { background: var(--blue-6); }
+      .compat-dot-default { background: var(--gray-6); }
+      .compat-badge-lg-ssr-capable { background: color-mix(in srgb, var(--green-6) 10%, transparent); border: 0.5px solid var(--green-6); }
+      .compat-badge-lg-client-only { background: color-mix(in srgb, var(--orange-6) 10%, transparent); border: 0.5px solid var(--orange-6); }
+      .compat-badge-lg-rejected { background: color-mix(in srgb, var(--red-6) 10%, transparent); border: 0.5px solid var(--red-6); }
+      .compat-badge-lg-experimental-dom { background: color-mix(in srgb, var(--blue-6) 10%, transparent); border: 0.5px solid var(--blue-6); }
+      .compat-badge-lg-default { background: var(--gray-1); border: 0.5px solid var(--gray-3); }
 
       .config-list { margin: 0.25rem 0 0; padding-left: 1.25rem; }
       .compat-badge-wrap { margin-bottom: 0.75rem; }

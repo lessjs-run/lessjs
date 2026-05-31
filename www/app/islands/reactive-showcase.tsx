@@ -61,7 +61,7 @@ showcaseStyles.replaceSync(`
     width: 100%; padding: var(--size-2) var(--size-3); border: var(--border-size-1) solid var(--gray-4);
     border-radius: var(--radius-1); font-size: var(--font-size-00); box-sizing: border-box;
   }
-  .filter-input:focus { outline: 2px solid var(--brand); outline-offset: -1px; }
+  .filter-input:focus { outline: 2px solid var(--indigo-5); outline-offset: -1px; }
   .item-list { margin-top: var(--size-2); display: flex; flex-direction: column; gap: var(--size-1); }
   .item-list div {
     padding: var(--size-1) var(--size-2); border-radius: var(--radius-1);

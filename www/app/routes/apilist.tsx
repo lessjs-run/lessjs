@@ -13,17 +13,17 @@ const routeSheet = new StyleSheet();
 
 routeSheet.replaceSync(`
       .api-category { margin-bottom: var(--size-8); }
-      .api-category h2 { margin-top: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+      .api-category h2 { margin-top: 2rem; border-bottom: 1px solid var(--gray-3); padding-bottom: 0.5rem; }
       .api-entry { margin: var(--size-4) 0 var(--size-3); }
       .api-sig {
         font-family: var(--font-mono);
         font-size: var(--font-size-00);
-        color: var(--text-primary);
+        color: var(--gray-10);
         margin-bottom: 0.25rem;
       }
       .api-desc {
         font-size: var(--font-size-0);
-        color: var(--text-muted);
+        color: var(--gray-6);
         line-height: var(--font-lineheight-3);
       }
     `);

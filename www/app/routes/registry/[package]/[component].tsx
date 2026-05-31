@@ -107,10 +107,10 @@ const COMPAT_LABELS: Record<string, string> = {
 
 // CSS custom properties for compat colors — used in stylesheet and inline styles
 const COMPAT_COLORS: Record<string, string> = {
-  'ssr-capable': 'var(--compat-ssr)',
-  'client-only': 'var(--compat-client)',
-  'rejected': 'var(--compat-rejected)',
-  'experimental-dom': 'var(--compat-experimental)',
+  'ssr-capable': 'var(--green-6)',
+  'client-only': 'var(--orange-6)',
+  'rejected': 'var(--red-6)',
+  'experimental-dom': 'var(--indigo-5)',
 };
 
 const routeSheet = new StyleSheet();
@@ -128,22 +128,22 @@ routeSheet.replaceSync(`
       }
       .breadcrumb {
         font-size: 0.8125rem;
-        color: var(--text-muted);
+        color: var(--gray-6);
         margin-bottom: 0.75rem;
       }
       .breadcrumb a {
-        color: var(--brand);
+        color: var(--indigo-5);
         text-decoration: none;
       }
       .breadcrumb a:hover {
         text-decoration: underline;
       }
       .section {
-        border: 1px solid var(--border);
+        border: 1px solid var(--gray-3);
         border-radius: 10px;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
-        background: var(--bg-surface);
+        background: var(--gray-1);
         box-shadow: var(--shadow-1);
       }
       .section-title {
@@ -186,10 +186,10 @@ routeSheet.replaceSync(`
 
       /* Preview area */
       .preview-frame {
-        border: 1px solid var(--border);
+        border: 1px solid var(--gray-3);
         border-radius: 10px;
         padding: 1.5rem;
-        background: var(--bg-elevated);
+        background: var(--gray-0);
         min-height: 80px;
         display: flex;
         align-items: center;
@@ -201,30 +201,30 @@ routeSheet.replaceSync(`
         width: 100%;
         border: none;
         min-height: 80px;
-        background: var(--bg-elevated);
+        background: var(--gray-0);
         border-radius: 6px;
       }
       .preview-placeholder {
-        color: var(--text-muted);
+        color: var(--gray-6);
         font-size: 0.8125rem;
         text-align: center;
       }
       .preview-note {
         font-size: 0.75rem;
-        color: var(--text-muted);
+        color: var(--gray-6);
         margin-top: 0.5rem;
         text-align: center;
       }
       .preview-label {
         font-size: 0.75rem;
-        color: var(--text-muted);
+        color: var(--gray-6);
         margin-bottom: 0.5rem;
         font-weight: 500;
       }
 
       /* Usage code block */
       .usage-block {
-        background: var(--bg-code);
+        background: var(--gray-2);
         border-radius: 6px;
         padding: 1rem;
         font-family: monospace;
@@ -243,10 +243,10 @@ routeSheet.replaceSync(`
         text-align: left;
         padding: 0.375rem 0.5rem;
         font-size: 0.8125rem;
-        border-bottom: 0.5px solid var(--border);
+        border-bottom: 0.5px solid var(--gray-3);
       }
       .meta-table th {
-        color: var(--text-muted);
+        color: var(--gray-6);
         font-weight: 500;
       }
       .meta-table th:not(:first-child) {
@@ -256,14 +256,14 @@ routeSheet.replaceSync(`
       .not-found {
         text-align: center;
         padding: 3rem 1rem;
-        color: var(--text-muted);
+        color: var(--gray-6);
       }
 
       .back-link {
         display: inline-block;
         margin-bottom: 1rem;
         font-size: 0.8125rem;
-        color: var(--brand);
+        color: var(--indigo-5);
         text-decoration: none;
       }
       .back-link:hover {
@@ -271,45 +271,45 @@ routeSheet.replaceSync(`
       }
 
       /* Migrated inline styles */
-      .not-found-link { color: var(--brand); font-size: 0.875rem; }
-      .validation-error { color: var(--compat-rejected); font-size: 0.8125rem; }
-      .validation-warning { color: var(--compat-client); font-size: 0.8125rem; }
+      .not-found-link { color: var(--indigo-5); font-size: 0.875rem; }
+      .validation-error { color: var(--red-6); font-size: 0.8125rem; }
+      .validation-warning { color: var(--orange-6); font-size: 0.8125rem; }
       .preview-full-width { width: 100%; }
       .preview-tag-name { font-size: 0.875rem; margin-bottom: 0.25rem; }
       .client-only-note { margin-top: 0.5rem; font-size: 0.75rem; }
-      .usage-hint { margin-bottom: 0.5rem; font-size: 0.8125rem; color: var(--text-secondary); }
-      .pkg-link { color: var(--brand); }
+      .usage-hint { margin-bottom: 0.5rem; font-size: 0.8125rem; color: var(--gray-7); }
+      .pkg-link { color: var(--indigo-5); }
       .mono-text-sm { font-family: monospace; font-size: 0.8125rem; }
-      .meta-muted-sm { font-size: 0.75rem; color: var(--text-muted); }
+      .meta-muted-sm { font-size: 0.75rem; color: var(--gray-6); }
       .meta-text-sm { font-size: 0.8125rem; }
-      .preview-details-text { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.6; }
+      .preview-details-text { font-size: 0.8125rem; color: var(--gray-7); line-height: 1.6; }
       .install-hint { margin-bottom: 0.5rem; font-size: 0.8125rem; }
-      .install-warnings { margin-top: 0.75rem; font-size: 0.8125rem; color: var(--text-secondary); }
+      .install-warnings { margin-top: 0.75rem; font-size: 0.8125rem; color: var(--gray-7); }
       .warning-item { padding: 0.125rem 0; }
       .related-container { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-      .related-link { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.625rem; background: var(--bg-code); border-radius: 4px; font-size: 0.8125rem; font-family: monospace; color: inherit; text-decoration: none; border: 0.5px solid transparent; }
+      .related-link { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.625rem; background: var(--gray-2); border-radius: 4px; font-size: 0.8125rem; font-family: monospace; color: inherit; text-decoration: none; border: 0.5px solid transparent; }
       .related-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
-      .text-error { color: var(--compat-rejected); }
-      .text-success { color: var(--compat-ssr); }
+      .text-error { color: var(--red-6); }
+      .text-success { color: var(--green-6); }
 
       /* Compat color classes */
-      .compat-dot-ssr-capable { background: var(--compat-ssr); }
-      .compat-dot-client-only { background: var(--compat-client); }
-      .compat-dot-rejected { background: var(--compat-rejected); }
-      .compat-dot-experimental-dom { background: var(--compat-experimental); }
-      .compat-dot-default { background: var(--compat-default); }
+      .compat-dot-ssr-capable { background: var(--green-6); }
+      .compat-dot-client-only { background: var(--orange-6); }
+      .compat-dot-rejected { background: var(--red-6); }
+      .compat-dot-experimental-dom { background: var(--indigo-5); }
+      .compat-dot-default { background: var(--gray-6); }
 
-      .compat-badge-ssr-capable { background: color-mix(in srgb, var(--compat-ssr) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-ssr) 25%, transparent); }
-      .compat-badge-client-only { background: color-mix(in srgb, var(--compat-client) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-client) 25%, transparent); }
-      .compat-badge-rejected { background: color-mix(in srgb, var(--compat-rejected) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-rejected) 25%, transparent); }
-      .compat-badge-experimental-dom { background: color-mix(in srgb, var(--compat-experimental) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-experimental) 25%, transparent); }
-      .compat-badge-default { background: color-mix(in srgb, var(--compat-default) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-default) 25%, transparent); }
+      .compat-badge-ssr-capable { background: color-mix(in srgb, var(--green-6) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--green-6) 25%, transparent); }
+      .compat-badge-client-only { background: color-mix(in srgb, var(--orange-6) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--orange-6) 25%, transparent); }
+      .compat-badge-rejected { background: color-mix(in srgb, var(--red-6) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--red-6) 25%, transparent); }
+      .compat-badge-experimental-dom { background: color-mix(in srgb, var(--indigo-5) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--indigo-5) 25%, transparent); }
+      .compat-badge-default { background: color-mix(in srgb, var(--gray-6) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--gray-6) 25%, transparent); }
 
-      .compat-badge-sm-ssr-capable { background: color-mix(in srgb, var(--compat-ssr) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-ssr) 25%, transparent); font-size: 0.75rem; }
-      .compat-badge-sm-client-only { background: color-mix(in srgb, var(--compat-client) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-client) 25%, transparent); font-size: 0.75rem; }
-      .compat-badge-sm-rejected { background: color-mix(in srgb, var(--compat-rejected) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-rejected) 25%, transparent); font-size: 0.75rem; }
-      .compat-badge-sm-experimental-dom { background: color-mix(in srgb, var(--compat-experimental) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-experimental) 25%, transparent); font-size: 0.75rem; }
-      .compat-badge-sm-default { background: color-mix(in srgb, var(--compat-default) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-default) 25%, transparent); font-size: 0.75rem; }
+      .compat-badge-sm-ssr-capable { background: color-mix(in srgb, var(--green-6) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--green-6) 25%, transparent); font-size: 0.75rem; }
+      .compat-badge-sm-client-only { background: color-mix(in srgb, var(--orange-6) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--orange-6) 25%, transparent); font-size: 0.75rem; }
+      .compat-badge-sm-rejected { background: color-mix(in srgb, var(--red-6) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--red-6) 25%, transparent); font-size: 0.75rem; }
+      .compat-badge-sm-experimental-dom { background: color-mix(in srgb, var(--indigo-5) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--indigo-5) 25%, transparent); font-size: 0.75rem; }
+      .compat-badge-sm-default { background: color-mix(in srgb, var(--gray-6) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--gray-6) 25%, transparent); font-size: 0.75rem; }
     `);
 
 export default class DocsRegistryComponentDetail extends DsdElement {
@@ -390,7 +390,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
     // that are normally declared on :root by lessRootColorCSS. In the iframe
     // there is no LessJS runtime, so we inline the light-theme tokens directly.
     const lessThemeCss = meta.importSpec === '@lessjs/ui'
-      ? `<style>:root{--gray-0:#f8f9fa;--gray-1:#f1f3f5;--gray-2:#e9ecef;--gray-3:#dee2e6;--gray-4:#ced4da;--gray-5:#adb5bd;--gray-6:#868e96;--gray-7:#495057;--gray-8:#343a40;--gray-9:#212529;--gray-10:#16191d;--gray-11:#0d0f12;--gray-12:#030507;--bg-base:var(--gray-0);--bg-surface:var(--gray-1);--bg-elevated:var(--gray-2);--bg-hover:var(--gray-2);--bg-card:var(--gray-0);--border:var(--gray-3);--border-hover:var(--gray-4);--text-primary:var(--gray-12);--text-secondary:var(--gray-8);--text-muted:var(--gray-7);--text-muted:var(--gray-6);--brand:var(--gray-12);--brand-light:var(--gray-8);--brand-subtle:var(--gray-2);--brand:#534AB7;--brand-subtle:#EEEDFE;--bg-code:var(--gray-2);--code-border:var(--gray-3);--error:var(--red-7);--scrollbar-track:transparent;--scrollbar-thumb:var(--gray-4);color-scheme:light}</style>`
+      ? '<style>:root{--gray-0:#f8f9fa;--gray-1:#f1f3f5;--gray-2:#e9ecef;--gray-3:#dee2e6;--gray-4:#ced4da;--gray-5:#adb5bd;--gray-6:#868e96;--gray-7:#495057;--gray-8:#343a40;--gray-9:#212529;--gray-10:#16191d;--gray-11:#0d0f12;--gray-12:#030507;--indigo-5:#5c7cfa;--indigo-6:#4c6ef5;--indigo-1:#dbe4ff;--green-6:#40c057;--red-6:#fa5252;--orange-6:#fd7e14;color-scheme:light}</style>'
       : '';
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${themeLink}${lessThemeCss}<script type="module" src="${meta.importUrl}"></script><style>*,*::before,*::after{box-sizing:border-box}body{margin:0;padding:20px;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5;color:var(--gray-12);background:var(--gray-0);overflow:hidden}</style></head><body><${meta.tagName}${attrStr}>${meta.demoSlots}</${meta.tagName}></body></html>`;
   }

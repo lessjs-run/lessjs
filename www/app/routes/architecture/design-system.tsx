@@ -29,17 +29,17 @@ routeSheet.replaceSync(
         font-weight: var(--font-weight-7);
         text-transform: uppercase;
         letter-spacing: 0.16em;
-        color: var(--text-muted);
+        color: var(--gray-6);
         margin-bottom: var(--size-6);
         padding-bottom: var(--size-3);
-        border-bottom: 0.5px solid var(--border);
+        border-bottom: 0.5px solid var(--gray-3);
       }
       .palette-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: var(--border-size-1);
-        background: var(--border);
-        border: 0.5px solid var(--border);
+        background: var(--gray-3);
+        border: 0.5px solid var(--gray-3);
         border-radius: var(--radius-2);
         overflow: hidden;
       }
@@ -47,7 +47,7 @@ routeSheet.replaceSync(
         padding: var(--size-6);
       }
       .palette-dark {
-        background: var(--bg-base);
+        background: var(--gray-0);
       }
       .palette-light {
         background: var(--gray-1);
@@ -60,10 +60,10 @@ routeSheet.replaceSync(
         margin-bottom: var(--size-4);
       }
       .palette-dark .palette-name {
-        color: var(--text-muted);
+        color: var(--gray-6);
       }
       .palette-light .palette-name {
-        color: var(--text-secondary);
+        color: var(--gray-7);
       }
       .swatch-grid {
         display: grid;
@@ -92,26 +92,26 @@ routeSheet.replaceSync(
         letter-spacing: 0.04em;
       }
       .palette-dark .swatch-label {
-        color: var(--text-muted);
+        color: var(--gray-6);
       }
       .palette-light .swatch-label {
-        color: var(--text-secondary);
+        color: var(--gray-7);
       }
       .palette-desc {
         font-size: var(--font-size-0);
         line-height: 1.6;
       }
       .palette-dark .palette-desc {
-        color: var(--text-muted);
+        color: var(--gray-6);
       }
       .palette-dark .palette-desc strong {
-        color: var(--text-primary);
+        color: var(--gray-10);
       }
       .palette-light .palette-desc {
-        color: var(--text-secondary);
+        color: var(--gray-7);
       }
       .palette-light .palette-desc strong {
-        color: var(--text-primary);
+        color: var(--gray-10);
       }
       .type-scale {
         display: flex;
@@ -122,7 +122,7 @@ routeSheet.replaceSync(
         align-items: baseline;
         gap: var(--size-6);
         padding: var(--size-3) 0;
-        border-bottom: 0.5px solid var(--border);
+        border-bottom: 0.5px solid var(--gray-3);
       }
       .type-row:last-child {
         border-bottom: none;
@@ -133,20 +133,20 @@ routeSheet.replaceSync(
         font-weight: var(--font-weight-7);
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        color: var(--text-muted);
+        color: var(--gray-6);
       }
       .type-sample {
-        color: var(--text-primary);
+        color: var(--gray-10);
       }
       .preview-card {
-        background: var(--bg-surface);
-        border: 0.5px solid var(--border);
+        background: var(--gray-1);
+        border: 0.5px solid var(--gray-3);
         border-radius: var(--radius-2);
         overflow: hidden;
       }
       .preview-header {
         padding: 0.875rem var(--size-5);
-        border-bottom: 0.5px solid var(--border);
+        border-bottom: 0.5px solid var(--gray-3);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -154,7 +154,7 @@ routeSheet.replaceSync(
       .preview-title {
         font-size: var(--font-size-1);
         font-weight: var(--font-weight-6);
-        color: var(--text-primary);
+        color: var(--gray-10);
       }
       .preview-badge {
         font-size: 0.5625rem;
@@ -163,9 +163,9 @@ routeSheet.replaceSync(
         letter-spacing: 0.08em;
         padding: 0.25rem var(--size-2);
         border-radius: 3px;
-        background: var(--brand-subtle);
-        color: var(--text-secondary);
-        border: 0.5px solid var(--border);
+        background: var(--indigo-1);
+        color: var(--gray-7);
+        border: 0.5px solid var(--gray-3);
       }
       .preview-body {
         padding: var(--size-5);
@@ -187,15 +187,15 @@ routeSheet.replaceSync(
       .install-section {
         margin-top: 3.5rem;
         padding: var(--size-8);
-        background: var(--bg-surface);
-        border: 0.5px solid var(--border);
+        background: var(--gray-1);
+        border: 0.5px solid var(--gray-3);
         border-radius: var(--radius-2);
         text-align: center;
       }
       .install-section h3 {
         font-size: 0.9375rem;
         font-weight: var(--font-weight-6);
-        color: var(--text-primary);
+        color: var(--gray-10);
         margin: 0 0 var(--size-4);
       }
       .install-cmd {
@@ -203,19 +203,19 @@ routeSheet.replaceSync(
         align-items: center;
         gap: 0.625rem;
         padding: 0.625rem var(--size-5);
-        background: var(--bg-elevated);
-        border: 0.5px solid var(--border);
+        background: var(--gray-0);
+        border: 0.5px solid var(--gray-3);
         border-radius: var(--radius-1);
         font-family: "SF Mono", monospace;
         font-size: var(--font-size-1);
-        color: var(--text-primary);
+        color: var(--gray-10);
       }
       .install-cmd .prompt {
-        color: var(--text-muted);
+        color: var(--gray-6);
       }
       .install-section p {
         font-size: var(--font-size-1);
-        color: var(--text-muted);
+        color: var(--gray-6);
         margin: var(--size-3) 0 0;
       }
       @media (max-width: 900px) {

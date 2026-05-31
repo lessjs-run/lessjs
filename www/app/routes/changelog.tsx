@@ -31,12 +31,12 @@ routeSheet.replaceSync(`
     font-size: var(--font-size-7);
     font-weight: var(--font-weight-9);
     margin: 0 0 var(--size-3);
-    color: var(--text-primary);
+    color: var(--gray-10);
     line-height: var(--font-lineheight-1);
   }
 
   .subtitle {
-    color: var(--text-muted);
+    color: var(--gray-6);
     margin-bottom: var(--size-12);
     font-size: var(--font-size-2);
     line-height: var(--font-lineheight-3);
@@ -45,56 +45,56 @@ routeSheet.replaceSync(`
   p {
     font-size: var(--font-size-1);
     line-height: var(--font-lineheight-4);
-    color: var(--text-primary);
+    color: var(--gray-10);
     margin: var(--size-2) 0;
   }
 
-  a { color: var(--brand); }
+  a { color: var(--indigo-5); }
 
   .changelog-content {
     font-size: var(--font-size-1);
     line-height: var(--font-lineheight-4);
-    color: var(--text-primary);
+    color: var(--gray-10);
   }
   .changelog-content h2 {
     font-size: var(--font-size-5);
     font-weight: var(--font-weight-7);
-    color: var(--text-primary);
+    color: var(--gray-10);
     margin: var(--size-10) 0 var(--size-4);
-    border-bottom: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--gray-3);
     padding-bottom: var(--size-4);
   }
   .changelog-content h3 {
     font-size: var(--font-size-3);
     font-weight: var(--font-weight-6);
-    color: var(--text-primary);
+    color: var(--gray-10);
     margin: var(--size-6) 0 var(--size-2);
   }
   .changelog-content h4 {
     font-size: var(--font-size-2);
     font-weight: var(--font-weight-6);
-    color: var(--text-secondary);
+    color: var(--gray-7);
     margin: var(--size-4) 0 var(--size-2);
   }
   .changelog-content ul {
     padding-left: var(--size-5);
-    color: var(--text-secondary);
+    color: var(--gray-7);
     line-height: var(--font-lineheight-4);
     font-size: var(--font-size-1);
   }
   .changelog-content li { margin: var(--size-1) 0; }
   .changelog-content code {
     font-family: var(--font-mono);
-    background: var(--bg-code);
+    background: var(--gray-2);
     padding: var(--size-1) var(--size-2);
     border-radius: var(--radius-1);
     font-size: var(--font-size-00);
-    color: var(--text-secondary);
+    color: var(--gray-7);
     border: 0.5px solid var(--code-border);
   }
   .changelog-content pre {
-    background: var(--bg-code);
-    color: var(--text-secondary);
+    background: var(--gray-2);
+    color: var(--gray-7);
     padding: var(--size-5) var(--size-6);
     border-radius: var(--radius-3);
     overflow-x: auto;
@@ -111,17 +111,17 @@ routeSheet.replaceSync(`
   }
   .changelog-content hr {
     border: none;
-    border-top: 0.5px solid var(--border);
+    border-top: 0.5px solid var(--gray-3);
     margin: var(--size-6) 0;
   }
-  .changelog-content strong { color: var(--text-primary); }
+  .changelog-content strong { color: var(--gray-10); }
   .changelog-content blockquote {
-    border-left: 3px solid var(--brand);
-    background: var(--bg-surface);
+    border-left: 3px solid var(--indigo-5);
+    background: var(--gray-1);
     padding: var(--size-3) var(--size-5);
     margin: var(--size-4) 0;
     border-radius: 0 var(--radius-3) var(--radius-3) 0;
-    color: var(--text-secondary);
+    color: var(--gray-7);
     font-size: var(--font-size-0);
   }
 
@@ -130,10 +130,10 @@ routeSheet.replaceSync(`
     justify-content: space-between;
     margin-top: var(--size-8);
     padding-top: var(--size-4);
-    border-top: 0.5px solid var(--border);
+    border-top: 0.5px solid var(--gray-3);
   }
   .nav-link {
-    color: var(--brand);
+    color: var(--indigo-5);
     text-decoration: none;
     font-size: var(--font-size-1);
   }

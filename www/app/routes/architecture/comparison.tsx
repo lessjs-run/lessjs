@@ -16,7 +16,7 @@ routeSheet.replaceSync(`
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         margin: var(--size-6) 0 var(--size-10);
-        border: 0.5px solid var(--border);
+        border: 0.5px solid var(--gray-3);
         border-radius: var(--radius-2);
       }
 
@@ -34,19 +34,19 @@ routeSheet.replaceSync(`
       }
 
       th {
-        background: var(--bg-surface);
+        background: var(--gray-1);
         font-weight: var(--font-weight-5);
-        color: var(--text-primary);
+        color: var(--gray-10);
         text-align: left;
         padding: var(--size-3) var(--size-4);
-        border-bottom: 0.5px solid var(--border);
+        border-bottom: 0.5px solid var(--gray-3);
         white-space: nowrap;
       }
 
       td {
         padding: 0.625rem var(--size-4);
-        border-bottom: 0.5px solid var(--border);
-        color: var(--text-secondary);
+        border-bottom: 0.5px solid var(--gray-3);
+        color: var(--gray-7);
         line-height: var(--font-lineheight-3);
       }
 
@@ -61,7 +61,7 @@ routeSheet.replaceSync(`
       }
 
       tbody tr:hover {
-        background: var(--bg-surface);
+        background: var(--gray-1);
       }
 
       tbody tr:last-child td {
@@ -70,7 +70,7 @@ routeSheet.replaceSync(`
 
       td:first-child {
         font-weight: var(--font-weight-5);
-        color: var(--text-primary);
+        color: var(--gray-10);
         white-space: nowrap;
       }
 
@@ -79,7 +79,7 @@ routeSheet.replaceSync(`
       }
 
       .tag-yes {
-        color: var(--brand);
+        color: var(--indigo-5);
         font-weight: var(--font-weight-5);
       }
 
@@ -88,29 +88,29 @@ routeSheet.replaceSync(`
       }
 
       .tag-no {
-        color: var(--text-muted);
+        color: var(--gray-6);
       }
 
       .tag-partial {
-        color: var(--text-muted);
+        color: var(--gray-6);
         font-style: italic;
       }
 
       /* LessJS column highlight */
       th.lessjs-col {
-        color: var(--brand);
+        color: var(--indigo-5);
         font-weight: var(--font-weight-6);
       }
 
       td.lessjs-col {
-        background: var(--brand-subtle, rgba(83,74,183,0.04));
+        background: var(--indigo-1));
         font-weight: var(--font-weight-5);
       }
 
       /* Prose lists */
       ul {
         padding-left: var(--size-5);
-        color: var(--text-secondary);
+        color: var(--gray-7);
         line-height: var(--font-lineheight-4);
         font-size: var(--font-size-2);
       }
@@ -118,7 +118,7 @@ routeSheet.replaceSync(`
         margin: var(--size-2) 0;
       }
       li strong {
-        color: var(--text-primary);
+        color: var(--gray-10);
         font-weight: var(--font-weight-5);
       }
     `);

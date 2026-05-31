@@ -38,7 +38,7 @@ routeSheet.replaceSync(`
       }
 
       .registry-header p {
-        color: var(--text-secondary);
+        color: var(--gray-7);
         margin: 0;
         font-size: 0.9375rem;
       }
@@ -51,8 +51,8 @@ routeSheet.replaceSync(`
         letter-spacing: 0.05em;
         padding: 0.15em 0.5em;
         border-radius: var(--radius-1);
-        background: var(--brand-subtle);
-        color: var(--brand);
+        background: var(--indigo-1);
+        color: var(--indigo-5);
         vertical-align: middle;
         margin-left: 0.5rem;
       }
@@ -64,7 +64,7 @@ routeSheet.replaceSync(`
       }
 
       .early-access-note a {
-        color: var(--brand);
+        color: var(--indigo-5);
         text-decoration: underline;
       }
 
@@ -81,22 +81,22 @@ routeSheet.replaceSync(`
         flex: 1;
         min-width: 200px;
         padding: 0.625rem 0.875rem;
-        border: 0.5px solid var(--border);
+        border: 0.5px solid var(--gray-3);
         border-radius: 6px;
-        background: var(--bg-surface);
-        color: var(--text-primary);
+        background: var(--gray-1);
+        color: var(--gray-10);
         font-size: var(--font-size-0);
         outline: none;
         transition: border-color 0.15s;
       }
 
       .search-box:focus {
-        border-color: var(--brand);
-        box-shadow: 0 0 0 3px var(--brand-glow, rgba(83,74,183,0.35)), var(--shadow-glow, 0 0 20px rgba(83,74,183,0.15));
+        border-color: var(--indigo-5);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--indigo-5) 15%, transparent)), var(--shadow-glow, 0 0 20px rgba(83,74,183,0.15));
       }
 
       .search-box::placeholder {
-        color: var(--text-muted);
+        color: var(--gray-6);
       }
 
       .filter-group {
@@ -107,20 +107,20 @@ routeSheet.replaceSync(`
 
       .sort-select {
         padding: 0.375rem 0.5rem;
-        border: 0.5px solid var(--border);
+        border: 0.5px solid var(--gray-3);
         border-radius: 14px;
         background: transparent;
-        color: var(--text-secondary);
+        color: var(--gray-7);
         font-size: var(--font-size-00);
         cursor: pointer;
       }
 
       .filter-btn {
         padding: 0.375rem 0.75rem;
-        border: 0.5px solid var(--border);
+        border: 0.5px solid var(--gray-3);
         border-radius: 14px;
         background: transparent;
-        color: var(--text-secondary);
+        color: var(--gray-7);
         font-size: var(--font-size-00);
         cursor: pointer;
         transition: all 0.15s;
@@ -128,20 +128,20 @@ routeSheet.replaceSync(`
       }
 
       .filter-btn:hover {
-        border-color: var(--border-hover);
-        color: var(--text-primary);
+        border-color: var(--gray-4);
+        color: var(--gray-10);
       }
 
       .filter-btn.active {
-        background: var(--brand);
-        border-color: var(--brand);
+        background: var(--indigo-5);
+        border-color: var(--indigo-5);
         color: white;
       }
 
       /* Stats */
       .stats {
         font-size: 0.8125rem;
-        color: var(--text-muted);
+        color: var(--gray-6);
         margin-bottom: var(--size-4);
       }
 
@@ -157,9 +157,9 @@ routeSheet.replaceSync(`
         flex-direction: column;
         gap: 0.5rem;
         padding: var(--size-5);
-        border: 1px solid var(--border);
+        border: 1px solid var(--gray-3);
         border-radius: 10px;
-        background: var(--bg-surface);
+        background: var(--gray-1);
         box-shadow: var(--shadow-1);
         transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
         cursor: pointer;
@@ -168,8 +168,8 @@ routeSheet.replaceSync(`
       }
 
       .package-card:hover {
-        border-color: var(--brand);
-        box-shadow: var(--shadow-brand-md, 0 4px 20px rgba(83,74,183,0.3));
+        border-color: var(--indigo-5);
+        box-shadow: 0 4px 20px color-mix(in srgb, var(--indigo-5) 15%, transparent);
         transform: translateY(-3px);
       }
 
@@ -190,20 +190,20 @@ routeSheet.replaceSync(`
 
       .package-name code {
         font-size: var(--font-size-0);
-        background: var(--bg-code);
+        background: var(--gray-2);
         padding: 0.125rem 0.375rem;
         border-radius: 3px;
       }
 
       .package-version {
         font-size: var(--font-size-00);
-        color: var(--text-muted);
+        color: var(--gray-6);
         font-weight: var(--font-weight-4);
       }
 
       .package-desc {
         font-size: 0.8125rem;
-        color: var(--text-secondary);
+        color: var(--gray-7);
         margin: 0.25rem 0;
         line-height: 1.5;
         display: -webkit-box;
@@ -232,17 +232,17 @@ routeSheet.replaceSync(`
       }
 
       /* Compat status colors */
-      .compat-badge-ssr-capable { background: color-mix(in srgb, var(--success) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--success) 25%, transparent); }
-      .compat-badge-client-only { background: color-mix(in srgb, var(--warning) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--warning) 25%, transparent); }
-      .compat-badge-rejected { background: color-mix(in srgb, var(--error) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--error) 25%, transparent); }
-      .compat-badge-experimental-dom { background: color-mix(in srgb, var(--info) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--info) 25%, transparent); }
-      .compat-badge-default { background: color-mix(in srgb, var(--text-muted) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--text-muted) 25%, transparent); }
+      .compat-badge-ssr-capable { background: color-mix(in srgb, var(--green-6) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--green-6) 25%, transparent); }
+      .compat-badge-client-only { background: color-mix(in srgb, var(--orange-6) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--orange-6) 25%, transparent); }
+      .compat-badge-rejected { background: color-mix(in srgb, var(--red-6) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--red-6) 25%, transparent); }
+      .compat-badge-experimental-dom { background: color-mix(in srgb, var(--blue-6) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--blue-6) 25%, transparent); }
+      .compat-badge-default { background: color-mix(in srgb, var(--gray-6) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--gray-6) 25%, transparent); }
 
-      .compat-dot-ssr-capable { background: var(--success); }
-      .compat-dot-client-only { background: var(--warning); }
-      .compat-dot-rejected { background: var(--error); }
-      .compat-dot-experimental-dom { background: var(--info); }
-      .compat-dot-default { background: var(--text-muted); }
+      .compat-dot-ssr-capable { background: var(--green-6); }
+      .compat-dot-client-only { background: var(--orange-6); }
+      .compat-dot-rejected { background: var(--red-6); }
+      .compat-dot-experimental-dom { background: var(--blue-6); }
+      .compat-dot-default { background: var(--gray-6); }
 
       .compat-dot {
         width: 6px;
@@ -254,10 +254,10 @@ routeSheet.replaceSync(`
       .tag-pill {
         display: inline-block;
         padding: 0.0625rem 0.375rem;
-        background: var(--bg-code);
+        background: var(--gray-2);
         border-radius: 3px;
         font-size: 0.6875rem;
-        color: var(--text-muted);
+        color: var(--gray-6);
       }
 
       .install-badge {
@@ -270,13 +270,13 @@ routeSheet.replaceSync(`
       }
 
       .install-safe {
-        background: var(--success-subtle);
-        color: var(--success);
+        background: color-mix(in srgb, var(--green-6) 10%, transparent);
+        color: var(--green-6);
       }
 
       .install-unsafe {
-        background: var(--error-subtle);
-        color: var(--error);
+        background: color-mix(in srgb, var(--red-6) 10%, transparent);
+        color: var(--red-6);
       }
 
       .new-badge {
@@ -287,8 +287,8 @@ routeSheet.replaceSync(`
         font-weight: var(--font-weight-6);
         padding: 0.0625rem 0.375rem;
         border-radius: 6px;
-        background: var(--info-subtle);
-        color: var(--info);
+        background: color-mix(in srgb, var(--blue-6) 10%, transparent);
+        color: var(--blue-6);
         text-transform: uppercase;
         letter-spacing: 0.025em;
       }
@@ -298,7 +298,7 @@ routeSheet.replaceSync(`
         align-items: center;
         gap: 0.5rem;
         font-size: 0.6875rem;
-        color: var(--text-muted);
+        color: var(--gray-6);
       }
 
       .breakdown-segment {
@@ -317,7 +317,7 @@ routeSheet.replaceSync(`
       .empty-state {
         text-align: center;
         padding: var(--size-12) var(--size-4);
-        color: var(--text-muted);
+        color: var(--gray-6);
         font-size: 0.9375rem;
       }
 
@@ -518,13 +518,13 @@ export default class DocsRegistryHome extends DsdElement {
                           <span class="component-breakdown">
                             {ssrCount > 0 && (
                               <span class="breakdown-segment">
-                                <span class="breakdown-dot" style="background:var(--success)"></span>{ssrCount} SSR
+                                <span class="breakdown-dot" style="background:var(--green-6)"></span>{ssrCount} SSR
                               </span>
                             )}
                             {ssrCount > 0 && clientCount > 0 ? ' ' : ''}
                             {clientCount > 0 && (
                               <span class="breakdown-segment">
-                                <span class="breakdown-dot" style="background:var(--warning)"></span>{clientCount} client
+                                <span class="breakdown-dot" style="background:var(--orange-6)"></span>{clientCount} client
                               </span>
                             )}
                           </span>

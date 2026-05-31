@@ -10,9 +10,9 @@ const routeSheet = new StyleSheet();
 routeSheet.replaceSync(`
   .step { margin: var(--size-6) 0 var(--size-8); }
   .step h2 { margin-top: 0; }
-  .note { background: var(--bg-surface); border: 0.5px solid var(--border); border-radius: var(--radius-1); padding: var(--size-3) var(--size-4); margin: var(--size-4) 0; }
-  .nav-row { margin-top: var(--size-8); padding-top: var(--size-4); border-top: 0.5px solid var(--border); display: flex; justify-content: flex-end; }
-  .nav-link { color: var(--brand); text-decoration: none; font-weight: var(--font-weight-5); font-size: var(--font-size-2); }
+  .note { background: var(--gray-1); border: 0.5px solid var(--gray-3); border-radius: var(--radius-1); padding: var(--size-3) var(--size-4); margin: var(--size-4) 0; }
+  .nav-row { margin-top: var(--size-8); padding-top: var(--size-4); border-top: 0.5px solid var(--gray-3); display: flex; justify-content: flex-end; }
+  .nav-link { color: var(--indigo-5); text-decoration: none; font-weight: var(--font-weight-5); font-size: var(--font-size-2); }
   .nav-link:hover { text-decoration: underline; }
   .note p { margin: 0; }
 `);
