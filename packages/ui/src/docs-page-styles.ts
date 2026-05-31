@@ -1,4 +1,4 @@
-import { StyleSheet } from '@lessjs/style-sheet';
+import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 
 /**
  * Shared docs page layout styles.
@@ -141,7 +141,7 @@ const docsPageCss = `
   }
 `;
 
-export const docsPageStyles = new StyleSheet();
+export const docsPageStyles: StyleSheetLike = new StyleSheet();
 docsPageStyles.replaceSync(docsPageCss);
 
 export const docsTocPageStyles = docsPageStyles;

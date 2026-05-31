@@ -16,7 +16,11 @@ import { isVNode, type VNode } from './vnode.ts';
 import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { escapeAttr, escapeHtml } from './html-escape.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
-import { createEventMarkerContext, serializeEventMarkers, type EventMarkerContext } from './event-hydration.ts';
+import {
+  createEventMarkerContext,
+  type EventMarkerContext,
+  serializeEventMarkers,
+} from './event-hydration.ts';
 import { renderDsd } from './render-dsd.js';
 
 // ─── Void elements ───────────────────────────────────────────────────────────
