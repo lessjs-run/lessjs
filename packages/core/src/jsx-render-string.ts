@@ -16,7 +16,7 @@ import { isVNode, type VNode } from './vnode.ts';
 import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { escapeAttr, escapeHtml } from './html-escape.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
-import { createEventMarkerContext, serializeEventMarkers } from './event-hydration.ts';
+import { createEventMarkerContext, serializeEventMarkers, type EventMarkerContext } from './event-hydration.ts';
 import { renderDsd } from './render-dsd.js';
 
 // ─── Void elements ───────────────────────────────────────────────────────────
@@ -143,7 +143,7 @@ function styleObjectToString(obj: Record<string, unknown>): string {
  */
 export function renderToString(
   node: unknown,
-  eventContext = createEventMarkerContext(),
+  eventContext: EventMarkerContext = createEventMarkerContext(),
 ): string {
   // Falsy / empty nodes
   if (node == null || node === false) return '';
@@ -280,7 +280,7 @@ export function renderToString(
  */
 export async function renderDsdTree(
   node: unknown,
-  eventContext = createEventMarkerContext(),
+  eventContext: EventMarkerContext = createEventMarkerContext(),
 ): Promise<string> {
   // Falsy / empty nodes
   if (node == null || node === false) return '';
