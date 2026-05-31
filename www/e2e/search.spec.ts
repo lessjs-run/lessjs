@@ -56,7 +56,7 @@ test.describe('Search', () => {
         left: rect.left,
         right: rect.right,
         width: rect.width,
-        viewportWidth: window.innerWidth,
+        viewportWidth: globalThis.innerWidth,
       };
     });
 

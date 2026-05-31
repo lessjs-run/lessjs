@@ -415,7 +415,7 @@ export async function renderDsdByName(
   dsdOptions?: DsdOptions,
   hooks?: RenderHooks,
 ): Promise<RenderOutput> {
-  return renderDsd(tagName, props, undefined, sourceInfo, dsdOptions, undefined, 0, hooks);
+  return await renderDsd(tagName, props, undefined, sourceInfo, dsdOptions, undefined, 0, hooks);
 }
 
 // v0.21.0: Streaming types and functions moved to render-dsd-stream.ts.
