@@ -102,10 +102,10 @@ Deno.test('route-scanner', { permissions: { read: true, write: true } }, async (
   });
 
   await t.step(
-    'scanIslandMeta - v0.25 reads local less metadata via dynamic import (AST, not regex)',
+    'scanIslandMeta - v0.28.1 reads local less metadata via static file scan (regex)',
     async () => {
-      // v0.25: The import-based approach imports the module and reads `export const less`
-      // directly. Module must be importable (no top-level throw in Deno).
+      // v0.28.1: Static file scan replaces dynamic import.
+      // Parses `export const less = { ... }` from source text using regex.
       await Deno.writeTextFile(
         join(FIXTURES_DIR, 'islands', 'client-only.ts'),
         [
@@ -129,10 +129,10 @@ Deno.test('route-scanner', { permissions: { read: true, write: true } }, async (
   );
 
   await t.step(
-    'scanIslandMeta - v0.25 skips unimportable modules (browser-only guard)',
+    'scanIslandMeta - v0.28.1 reads metadata from source file even if unexecutable',
     async () => {
-      // v0.25: Modules that throw at the top level (e.g. browser-only code)
-      // cannot be imported — their metadata is silently skipped.
+      // v0.28.1: Static scanning does not execute the file, so top-level
+      // throws (e.g. browser-only code) don't prevent metadata extraction.
       await Deno.writeTextFile(
         join(FIXTURES_DIR, 'islands', 'browser-only.ts'),
         [
@@ -143,7 +143,9 @@ Deno.test('route-scanner', { permissions: { read: true, write: true } }, async (
       const meta = await scanIslandMeta(join(FIXTURES_DIR, 'islands'), [
         'browser-only.ts',
       ]);
-      assertEquals(meta['browser-only'], undefined);
+      // v0.28.1: Metadata IS extracted — static scan doesn't execute the file
+      assertEquals(meta['browser-only']?.ssr, false);
+      assertEquals(meta['browser-only']?.reason, 'local island exports less.ssr=false');
     },
   );
 
