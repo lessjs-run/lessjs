@@ -27,14 +27,13 @@ import { DsdElement } from '@lessjs/runtime';
 export default class HomePage extends DsdElement {
   render() {
     return (
-      <less-layout>
-        <h1>Hello LessJS</h1>
-        <less-counter client:idle />
-      </less-layout>
+      <h1>Hello LessJS</h1>
     );
   }
 }
 ```
+
+The App Shell (`<less-layout>`) is applied automatically by the Builder — pages only declare their content.
 
 ## Features
 
