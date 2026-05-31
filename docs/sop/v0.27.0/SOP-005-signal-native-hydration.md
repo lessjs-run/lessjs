@@ -137,6 +137,7 @@ disconnectedCallback(): void {
 ### 2.2 删除 `_walkAndBind` 中引用的死导入
 
 检查并删除仅被 `_walkAndBind` 使用的导入：
+
 - 如果 `isSignalLike` 不再被其他地方使用，删除导入
 
 ### 2.3 删除 `_layoutWorkaroundReRender` 的遗留注释
@@ -215,20 +216,25 @@ class HomeConsole extends DsdElement {
 
   override render() {
     return (
-      <div class="counter">
-        <span class="counter-value" data-signal="count" textContent={this.#count}></span>
-        <button data-on-click="decrement">-</button>
-        <button data-on-click="increment">+</button>
+      <div class='counter'>
+        <span class='counter-value' data-signal='count' textContent={this.#count}></span>
+        <button data-on-click='decrement'>-</button>
+        <button data-on-click='increment'>+</button>
       </div>
     );
   }
 
-  decrement() { this.#count.value--; }
-  increment() { this.#count.value++; }
+  decrement() {
+    this.#count.value--;
+  }
+  increment() {
+    this.#count.value++;
+  }
 }
 ```
 
 **变更**：
+
 - 添加 `registerSignal('count', this.#count)`
 - JSX 中添加 `data-signal="count"` 和 `data-on-click="increment/decrement"`
 - **删除** `import { effect }` — 不再需要手动 effect
@@ -239,6 +245,7 @@ class HomeConsole extends DsdElement {
 **文件**: `www/app/islands/less-search.tsx`
 
 **变更**：
+
 - 添加 `registerSignal('open')`、`registerSignal('query')`、`registerSignal('results')`
 - `data-on-click="onSearchTrigger"` / `data-on-input="onSearchInput"` / `data-on-keydown="onSearchKeydown"` 标记
 - Overlay 可见性通过 CSS class + effect 控制（临时，等 Show 组件就绪）
@@ -248,6 +255,7 @@ class HomeConsole extends DsdElement {
 **文件**: `www/app/islands/reactive-showcase.tsx`
 
 **变更**：
+
 - `registerSignal('count')`、`registerSignal('isDark')`
 - 对应 `data-signal` 和 `data-on-*` 标记
 
@@ -256,6 +264,7 @@ class HomeConsole extends DsdElement {
 **文件**: `www/app/islands/less-toc.tsx`
 
 **变更**：
+
 - `registerSignal('activeHeading')`
 - 滚动追踪用 IntersectionObserver（非信号驱动的 Web API，不需 `data-signal`）
 
@@ -270,6 +279,7 @@ class HomeConsole extends DsdElement {
 **文件**: `packages/ui/src/less-layout.tsx`
 
 **变更**：
+
 - `registerSignal('locale')`、`registerSignal('currentPath')`
 - Router 管理的信号不需要 `data-signal` 标记——它们修改的是组件属性，不是子 DOM 节点
 - `data-on-click` 标记用于 lang-switch、theme-toggle
@@ -283,6 +293,7 @@ class HomeConsole extends DsdElement {
 **文件**: `packages/core/src/dsd-element.ts`
 
 检查并删除：
+
 - `isSignalLike` 导入（如果只被 `_walkAndBind` 使用）
 - `renderToDom` 导入（如果只被 `_layoutWorkaroundReRender` 使用）
 - 任何仅被已删除方法引用的导入
@@ -292,6 +303,7 @@ class HomeConsole extends DsdElement {
 **文件**: `packages/core/src/jsx-render-string.ts`
 
 确认：
+
 - `data-signal` 属性生成逻辑正确（已在 Step 3 中处理）
 - `data-on-*` 事件标记生成正确
 
@@ -351,6 +363,7 @@ npx playwright test www/e2e/islands-reactivity.spec.ts
 ```
 
 **测试覆盖**：
+
 1. 首页 counter 点击 +/- 值变化
 2. SPA 导航无崩溃
 3. i18n lang-switch 正常工作
@@ -399,13 +412,13 @@ ADR-0067 implementation:
 
 ## 附录：文件清单
 
-| 文件 | 操作 | 变更量 |
-|---|---|---|
-| `packages/core/src/dsd-element.ts` | 重写 hydration 路径 | +50 -80 |
-| `packages/core/src/jsx-render-string.ts` | 加 data-on-* 标记 | +15 |
-| `packages/core/src/jsx-render-dom.ts` | 简化 applyProps 签名 | -5 |
-| `www/app/islands/home-console.tsx` | 迁移到 registerSignal | +5 -10 |
-| `www/app/islands/less-search.tsx` | 迁移到 registerSignal | +8 -30 |
-| `www/app/islands/reactive-showcase.tsx` | 迁移到 registerSignal | +5 -5 |
-| `www/app/islands/less-toc.tsx` | 迁移到 registerSignal | +3 |
-| `packages/ui/src/less-layout.tsx` | 添加 data-on-* 标记 | +3 |
+| 文件                                     | 操作                  | 变更量  |
+| ---------------------------------------- | --------------------- | ------- |
+| `packages/core/src/dsd-element.ts`       | 重写 hydration 路径   | +50 -80 |
+| `packages/core/src/jsx-render-string.ts` | 加 data-on-* 标记     | +15     |
+| `packages/core/src/jsx-render-dom.ts`    | 简化 applyProps 签名  | -5      |
+| `www/app/islands/home-console.tsx`       | 迁移到 registerSignal | +5 -10  |
+| `www/app/islands/less-search.tsx`        | 迁移到 registerSignal | +8 -30  |
+| `www/app/islands/reactive-showcase.tsx`  | 迁移到 registerSignal | +5 -5   |
+| `www/app/islands/less-toc.tsx`           | 迁移到 registerSignal | +3      |
+| `packages/ui/src/less-layout.tsx`        | 添加 data-on-* 标记   | +3      |

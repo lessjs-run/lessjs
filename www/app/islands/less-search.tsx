@@ -5,11 +5,11 @@
  * Loads a pre-built search index JSON and performs client-side search.
  * Triggered by Cmd+K or clicking the search icon.
  *
- * v0.27: Complete rewrite — zero hand-written DOM. JSX + signals drive everything.
- *   - Overlay rendered via JSX in shadow DOM, not document.createElement
- *   - Search results driven by signals, not innerHTML string concatenation
- *   - Styles live in shadow DOM, not document.adoptedStyleSheets
- *   - Cmd+K listener managed through DsdElement lifecycle
+ * v0.28 (ADR-0068): Zero-effect / zero-createElement / zero-innerHTML implementation.
+ *   - Overlay visibility: computed signal → data-signal-attr="class"
+ *   - Search results: computed signal → data-signal-html
+ *   - All escaping via @lessjs/core escapeHtml/escapeAttr
+ *   - All events via data-on-* markers
  *
  * @csspart trigger - The search trigger button
  * @csspart icon - The search SVG icon
@@ -17,8 +17,8 @@
  * @csspart shortcut - The keyboard shortcut kbd
  */
 
-import { DsdElement } from '@lessjs/core';
-import { effect, signal } from '@lessjs/signals';
+import { DsdElement, escapeAttr, escapeHtml } from '@lessjs/core';
+import { computed, signal } from '@lessjs/signals';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
@@ -31,7 +31,6 @@ interface SearchEntry {
 
 export const tagName = 'less-search';
 
-// -- Shadow DOM styles (trigger button + overlay) --
 const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host { display: inline-flex; align-items: center; }
@@ -70,7 +69,6 @@ sheet.replaceSync(`
     .search-icon { display: inline-block; }
   }
 
-  /* -- Overlay — rendered in shadow DOM, position:fixed covers viewport -- */
   .overlay {
     position: fixed;
     top: 0; right: 0; bottom: 0; left: 0;
@@ -157,12 +155,20 @@ sheet.replaceSync(`
 export default class LessSearch extends DsdElement {
   static override styles = [openPropsTokenSheet, sheet];
 
-  // Reactive state (signals)
+  // ── Signals ──────────────────────────────────────────────────────────────
+
   #open = signal(false);
   #query = signal('');
   #results = signal<SearchEntry[]>([]);
 
-  // Internal data (non-reactive)
+  /** v0.28: Computed overlay class string for data-signal-attr binding. */
+  #overlayClass = computed(() => this.#open.value ? 'overlay open' : 'overlay');
+
+  /** v0.28: Computed results HTML for data-signal-html binding. */
+  #resultsHtml = computed(() => this._buildResultsHtml());
+
+  // ── Internal state ───────────────────────────────────────────────────────
+
   private _index: unknown = null;
   private _entries: SearchEntry[] = [];
   private _loaded = false;
@@ -172,9 +178,12 @@ export default class LessSearch extends DsdElement {
     super();
     this.registerSignal('open', this.#open);
     this.registerSignal('query', this.#query);
+    this.registerSignal('overlayClass', this.#overlayClass);
+    this.registerSignal('resultsHtml', this.#resultsHtml);
   }
 
-  // Cmd+K handler — bound/cleaned in lifecycle
+  // ── Keyboard shortcut ────────────────────────────────────────────────────
+
   private _onKeydown = (e: KeyboardEvent) => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
       e.preventDefault();
@@ -187,24 +196,6 @@ export default class LessSearch extends DsdElement {
   override connectedCallback(): void {
     super.connectedCallback();
     globalThis.addEventListener('keydown', this._onKeydown);
-
-    // Effect: toggle overlay visibility
-    // DsdElement render() is static — signal-driven UI needs manual effect bindings.
-    effect(() => {
-      const overlay = this.shadowRoot?.querySelector('.overlay');
-      if (overlay) overlay.classList.toggle('open', this.#open.value);
-    });
-
-    // Effect: update results when query or results signal changes
-    effect(() => {
-      this.#query.value; // subscribe
-      this.#results.value; // subscribe
-      const resultsDiv = this.shadowRoot?.querySelector('.results');
-      if (resultsDiv) {
-        resultsDiv.innerHTML = '';
-        this._renderResultsTo(resultsDiv);
-      }
-    });
   }
 
   override disconnectedCallback(): void {
@@ -212,20 +203,26 @@ export default class LessSearch extends DsdElement {
     globalThis.removeEventListener('keydown', this._onKeydown);
   }
 
-  private _open(): void {
+  // ── Public handlers (bound via data-on-* in render) ──────────────────────
+
+  _open(): void {
     this.#open.value = true;
     this._loadIndex();
     requestAnimationFrame(() => this._inputRef?.focus());
   }
 
-  private _close(): void {
+  _close(): void {
     this.#open.value = false;
     this.#query.value = '';
     this.#results.value = [];
     this._inputRef = null;
   }
 
-  private _onInput(e: Event): void {
+  _closeOnBackdrop(e: Event): void {
+    if (e.target === e.currentTarget) this._close();
+  }
+
+  _onInput(e: Event): void {
     const target = e.target as HTMLInputElement;
     this.#query.value = target.value;
 
@@ -239,9 +236,13 @@ export default class LessSearch extends DsdElement {
       for (const field of index.search(this.#query.value, { limit: 10 })) {
         field.result.forEach((p) => paths.add(p));
       }
-      this.#results.value = this._entries.filter((entry) => paths.has(entry.path)).slice(0, 10);
+      this.#results.value = this._entries
+        .filter((entry) => paths.has(entry.path))
+        .slice(0, 10);
     }
   }
+
+  // ── Index loading ────────────────────────────────────────────────────────
 
   private async _loadIndex(): Promise<void> {
     if (this._loaded) return;
@@ -265,37 +266,36 @@ export default class LessSearch extends DsdElement {
     }
   }
 
-  // --- Signal-driven DOM updates (DsdElement render() is static) ---
+  // ── Computed HTML builder (v0.28) ────────────────────────────────────────
 
-  /** Render search results into a container element. Called from effect. */
-  private _renderResultsTo(container: Element): void {
+  /**
+   * Build results HTML string from current signals.
+   * Called by the #resultsHtml computed signal — zero manual effect,
+   * zero document.createElement, zero innerHTML outside hydration.
+   */
+  private _buildResultsHtml(): string {
     const results = this.#results.value;
+
     if (results.length > 0) {
-      for (const r of results) {
-        const a = document.createElement('a');
-        a.href = r.path;
-        a.className = 'item';
-        a.addEventListener('click', () => this._close());
-        a.innerHTML = `<div class="item-section">${this._esc(r.section)}</div>` +
-          `<div class="item-title">${this._esc(r.title)}</div>` +
-          `<div class="item-text">${this._esc(r.text)}</div>`;
-        container.appendChild(a);
-      }
-    } else if (this.#query.value.length >= 2) {
-      container.innerHTML = `<div class="empty">No results found for &ldquo;${
-        this._esc(this.#query.value)
-      }&rdquo;</div>`;
-    } else {
-      container.innerHTML = `<div class="empty">Type at least 2 characters to search</div>`;
+      return results.map((r) =>
+        `<a href="${escapeAttr(r.path)}" class="item" data-on-click="_close">` +
+        `<div class="item-section">${escapeHtml(r.section)}</div>` +
+        `<div class="item-title">${escapeHtml(r.title)}</div>` +
+        `<div class="item-text">${escapeHtml(r.text)}</div>` +
+        `</a>`
+      ).join('');
     }
+
+    if (this.#query.value.length >= 2) {
+      return `<div class="empty">No results found for &ldquo;${
+        escapeHtml(this.#query.value)
+      }&rdquo;</div>`;
+    }
+
+    return `<div class="empty">Type at least 2 characters to search</div>`;
   }
 
-  private _esc(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(
-      /"/g,
-      '&quot;',
-    );
-  }
+  // ── Render (SSR: overlay hidden, results empty; hydration binds signals) ─
 
   override render() {
     return (
@@ -323,12 +323,15 @@ export default class LessSearch extends DsdElement {
           <kbd part='shortcut'>&#x2318;K</kbd>
         </button>
 
-        {/* Overlay — always rendered, CSS display:none by default, toggled by effect */}
+        {
+          /* v0.28: class driven by computed signal via data-signal-attr.
+            No effect(), no classList.toggle. */
+        }
         <div
-          class='overlay'
-          onClick={(e: Event) => {
-            if (e.target === e.currentTarget) this._close();
-          }}
+          class={this.#overlayClass}
+          data-signal='overlayClass'
+          data-signal-attr='class'
+          data-on-click='_closeOnBackdrop'
         >
           <div class='panel'>
             <input
@@ -340,7 +343,16 @@ export default class LessSearch extends DsdElement {
                 this._inputRef = el;
               }}
             />
-            <div class='results'></div>
+            {
+              /* v0.28: innerHTML driven by computed signal via data-signal-html.
+                No effect(), no document.createElement, no _renderResultsTo. */
+            }
+            <div
+              class='results'
+              data-signal-html='resultsHtml'
+              innerHTML={this.#resultsHtml}
+            >
+            </div>
           </div>
         </div>
       </>

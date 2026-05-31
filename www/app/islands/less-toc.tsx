@@ -6,6 +6,8 @@
  * Pure DsdElement - zero Lit dependency.
  *
  * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
+ * v0.28: G6 fix — data-signal markers for signal-driven DOM updates.
+ *   G4 fix — onClick uses data-on-click + dataset instead of closure.
  *
  * Reactive DSD: #headings and #activeId signals auto-trigger re-render.
  */
@@ -85,6 +87,8 @@ export default class LessToc extends DsdElement {
 
   constructor() {
     super();
+    // v0.28: Signals registered for requestReactiveUpdate() path — TOC re-renders
+    // via update() when activeId/headings change, not via data-signal hydration.
     this.registerSignal('activeId', this.#activeId);
   }
 
@@ -137,6 +141,8 @@ export default class LessToc extends DsdElement {
     });
 
     this.#headings.value = newHeadings;
+    // v0.28: Trigger re-render after headings change so active class updates.
+    this.requestReactiveUpdate();
 
     if (newHeadings.length >= 2) {
       this.style.display = 'block';
@@ -149,6 +155,8 @@ export default class LessToc extends DsdElement {
         for (const entry of entries) {
           if (entry.isIntersecting) {
             this.#activeId.value = entry.target.id;
+            // v0.28: Trigger re-render so active class updates on the correct link.
+            this.requestReactiveUpdate();
           }
         }
       },
@@ -157,12 +165,21 @@ export default class LessToc extends DsdElement {
     headings.forEach((h) => this._observer!.observe(h));
   }
 
-  private _onClick(e: Event, id: string): void {
+  /**
+   * TOC link click handler — smooth scroll to heading.
+   * v0.28.1: Regular method (not arrow). _bindEvents() in DsdElement handles
+   * both DSD hydration and CSR re-render paths via .bind(this) + addEventListener.
+   */
+  _onClick(e: Event): void {
     e.preventDefault();
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      history.replaceState(null, '', `#${id}`);
+    const target = e.currentTarget as HTMLElement;
+    const id = target.dataset.tocId;
+    if (id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', `#${id}`);
+      }
     }
   }
 
@@ -184,7 +201,8 @@ export default class LessToc extends DsdElement {
               <a
                 className={cls.join(' ')}
                 href={`#${h.id}`}
-                onClick={(e: Event) => this._onClick(e, h.id)}
+                data-on-click='_onClick'
+                data-toc-id={h.id}
               >
                 {h.text}
               </a>

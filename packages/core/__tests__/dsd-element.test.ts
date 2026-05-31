@@ -135,7 +135,8 @@ Deno.test('DsdElement: requestUpdate() aliases update() for controllers', () => 
 });
 
 // AbortController cleanup on disconnect (via template bindings).
-// hydrateEvents and _hydrateAbortController removed in v0.21.0.
+// _scopeDispose deleted in v0.27 (ADR-0067: Set-based effect tracking).
+// Test verifies event listeners are removed on disconnect.
 
 Deno.test('DsdElement: disconnectedCallback disposes template runtime', () => {
   if (!hasDOM) return;
@@ -148,7 +149,7 @@ Deno.test('DsdElement: disconnectedCallback disposes template runtime', () => {
     }
 
     override render(): string {
-      return '<button>Test</button>';
+      return `<button data-on-click="_onClick">click</button>`;
     }
   }
   if (hasDOM) customElements.define(tagName, AbortElement);
@@ -156,12 +157,22 @@ Deno.test('DsdElement: disconnectedCallback disposes template runtime', () => {
   // Simulate DSD
   const el = document.createElement(tagName) as AbortElement;
   const shadow = el.attachShadow({ mode: 'open' });
-  shadow.innerHTML = '<button>Test</button>';
+  shadow.innerHTML = `<button data-on-click="_onClick">click</button>`;
 
   document.body.appendChild(el);
+
+  // After hydration, click handler should be bound
+  const btn = shadow.querySelector('button')!;
+  assertExists(btn);
+  btn.click();
+  assertEquals(callCount, 1);
+
   document.body.removeChild(el);
-  // After disconnect, _scopeDispose should be cleaned up
-  assertEquals(el['_scopeDispose'], undefined);
+
+  // After disconnect, event listener is cleaned up — click should not fire
+  callCount = 0;
+  btn.click();
+  assertEquals(callCount, 0);
 });
 
 // M-17 guard removed — _hydrateEvents has been removed in v0.21.0.
@@ -330,6 +341,170 @@ Deno.test('DsdElement: this.params default empty object', () => {
   // Default params should be an empty object
   assertEquals(el.shadowRoot!.innerHTML, '<span>keys=0</span>');
   assertEquals(el.params, {});
+
+  document.body.removeChild(el);
+});
+
+// ─── v0.28 (ADR-0068): data-signal-attr attribute bindings ─────────────────
+
+Deno.test('DsdElement: data-signal-attr DSD hydration sets attributes reactively', async () => {
+  if (!hasDOM) return;
+
+  const { signal } = await import('@lessjs/signals');
+  const tagName = `test-sigattr-${Math.random().toString(36).slice(2, 7)}`;
+
+  const themeSig = signal('dark');
+
+  class ThemeAttrElement extends DsdElement {
+    constructor() {
+      super();
+      this.registerSignal('theme', themeSig);
+    }
+    override render(): string {
+      return `<div data-signal="theme" data-signal-attr="data-theme,class">themed</div>`;
+    }
+  }
+  customElements.define(tagName, ThemeAttrElement);
+
+  // Simulate DSD with child content — verify textContent is NOT destroyed
+  const el = document.createElement(tagName) as DsdElement;
+  const shadow = el.attachShadow({ mode: 'open' });
+  shadow.innerHTML =
+    `<div data-signal="theme" data-signal-attr="data-theme,class"><span>child</span></div>`;
+  document.body.appendChild(el);
+
+  const div = shadow.querySelector('div')!;
+  assertExists(div);
+
+  // Attributes should reflect signal value
+  assertEquals(div.getAttribute('data-theme'), 'dark');
+  assertEquals(div.getAttribute('class'), 'dark');
+  // Children MUST be preserved (textContent skip when data-signal-attr present)
+  assertEquals(div.innerHTML, '<span>child</span>');
+
+  // Reactive update
+  themeSig.value = 'light';
+  await new Promise((r) => setTimeout(r, 50));
+  assertEquals(div.getAttribute('data-theme'), 'light');
+  assertEquals(div.getAttribute('class'), 'light');
+  // Children still intact after reactive update
+  assertEquals(div.innerHTML, '<span>child</span>');
+
+  document.body.removeChild(el);
+});
+
+Deno.test('DsdElement: data-signal-html DSD hydration sets innerHTML reactively', async () => {
+  if (!hasDOM) return;
+
+  const { signal } = await import('@lessjs/signals');
+  const tagName = `test-sightml-${Math.random().toString(36).slice(2, 7)}`;
+
+  const htmlSig = signal('<b>bold</b>');
+
+  class HtmlBindElement extends DsdElement {
+    constructor() {
+      super();
+      this.registerSignal('content', htmlSig);
+    }
+    override render(): string {
+      return `<div data-signal-html="content">fallback</div>`;
+    }
+  }
+  customElements.define(tagName, HtmlBindElement);
+
+  const el = document.createElement(tagName) as DsdElement;
+  const shadow = el.attachShadow({ mode: 'open' });
+  shadow.innerHTML = `<div data-signal-html="content">fallback</div>`;
+  document.body.appendChild(el);
+
+  const div = shadow.querySelector('div')!;
+  assertExists(div);
+
+  assertEquals(div.innerHTML, '<b>bold</b>');
+
+  htmlSig.value = '<i>italic</i>';
+  await new Promise((r) => setTimeout(r, 50));
+  assertEquals(div.innerHTML, '<i>italic</i>');
+
+  document.body.removeChild(el);
+});
+
+// ─── v0.28.1: data-signal-class + CSR event re-binding ─────────────────────
+
+Deno.test('DsdElement: data-signal-class toggles CSS class on signal truthiness', async () => {
+  if (!hasDOM) return;
+
+  const { signal } = await import('@lessjs/signals');
+  const tagName = `test-sigclass-${Math.random().toString(36).slice(2, 7)}`;
+
+  const toggleSig = signal('on');
+
+  class ClassToggleElement extends DsdElement {
+    constructor() {
+      super();
+      this.registerSignal('state', toggleSig);
+    }
+    override render(): string {
+      return `<div data-signal="state" data-signal-class="active">content</div>`;
+    }
+  }
+  customElements.define(tagName, ClassToggleElement);
+
+  const el = document.createElement(tagName) as DsdElement;
+  const shadow = el.attachShadow({ mode: 'open' });
+  shadow.innerHTML = `<div data-signal="state" data-signal-class="active">content</div>`;
+  document.body.appendChild(el);
+
+  const div = shadow.querySelector('div')!;
+  assertExists(div);
+
+  // Signal 'on' is truthy → class present
+  assertEquals(div.classList.contains('active'), true);
+
+  toggleSig.value = '';
+  await new Promise((r) => setTimeout(r, 50));
+  // Signal '' is falsy → class removed
+  assertEquals(div.classList.contains('active'), false);
+
+  toggleSig.value = 'on';
+  await new Promise((r) => setTimeout(r, 50));
+  assertEquals(div.classList.contains('active'), true);
+
+  document.body.removeChild(el);
+});
+
+Deno.test('DsdElement: CSR re-render rebinds data-on-click events', () => {
+  if (!hasDOM) return;
+
+  const tagName = `test-csrevent-${Math.random().toString(36).slice(2, 7)}`;
+  let callCount = 0;
+
+  class CsrEventElement extends DsdElement {
+    _testClick() {
+      callCount++;
+    }
+    override render() {
+      return `<button data-on-click="_testClick">click</button>`;
+    }
+  }
+  customElements.define(tagName, CsrEventElement);
+
+  // CSR path (no DSD)
+  const el = document.createElement(tagName) as CsrEventElement;
+  document.body.appendChild(el);
+
+  const btn = el.shadowRoot!.querySelector('button')!;
+  assertExists(btn);
+  btn.click();
+  assertEquals(callCount, 1);
+
+  // Re-render via requestReactiveUpdate
+  el.requestReactiveUpdate();
+
+  // After re-render, event should still be bound
+  const btn2 = el.shadowRoot!.querySelector('button')!;
+  btn2.click();
+  assertEquals(callCount, 2);
 
   document.body.removeChild(el);
 });

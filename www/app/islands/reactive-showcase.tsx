@@ -7,6 +7,8 @@
  *   3. Live filter with signal() — computed display
  *
  * v0.24.1: Migrated from html`` template to JSX (ADR-0057).
+ * v0.28: G5 fix — data-signal-attr for theme attribute binding.
+ *   Replaces manual computed() in prop with data-signal + data-signal-attr.
  *
  * Zero framework runtime — pure DSD + Signals.
  * Replaces Lit Island pattern with Ocean (DsdElement) reactivity.
@@ -91,11 +93,17 @@ export default class ReactiveShowcase extends DsdElement {
   #filtered = computed(() =>
     FRAMEWORKS.filter((f) => f.toLowerCase().includes(this.#filter.value.toLowerCase()))
   );
+  /** v0.28 (G5): Computed theme string for data-signal-attr binding. */
+  #theme = computed(() => this.#isDark.value ? 'dark' : 'light');
+  /** v0.28: Button label — separate signal to avoid textContent conflict with theme. */
+  #buttonLabel = computed(() => `Toggle ${this.#isDark.value ? 'light' : 'dark'}`);
 
   constructor() {
     super();
     this.registerSignal('count', this.#count);
     this.registerSignal('isDark', this.#isDark);
+    this.registerSignal('theme', this.#theme);
+    this.registerSignal('buttonLabel', this.#buttonLabel);
   }
 
   override render() {
@@ -114,25 +122,27 @@ export default class ReactiveShowcase extends DsdElement {
           </div>
         </div>
 
-        {/* Theme: signal + conditional binding */}
+        {/* Theme: signal + data-signal-attr attribute binding (v0.28 G5 fix) */}
         <div className='card'>
           <h3>Theme Preview</h3>
           <p>
             One <code>signal(false)</code>{' '}
-            controls the entire component theme. Reactive attribute binding.
+            controls the entire component theme. Reactive attribute binding via{' '}
+            <code>data-signal-attr</code>.
           </p>
           <div
             class='theme-preview'
-            data-theme={computed(() => this.#isDark.value ? 'dark' : 'light')}
+            data-signal='theme'
+            data-signal-attr='data-theme'
           >
             <p>
-              Current theme:{' '}
-              <strong textContent={computed(() => this.#isDark.value ? 'dark' : 'light')}></strong>
+              Current theme: <strong data-signal='theme' textContent={this.#theme}></strong>
             </p>
             <button
               type='button'
               data-on-click='toggleTheme'
-              textContent={computed(() => `Toggle ${this.#isDark.value ? 'light' : 'dark'}`)}
+              data-signal='buttonLabel'
+              textContent={this.#buttonLabel}
             >
             </button>
           </div>
@@ -150,7 +160,7 @@ export default class ReactiveShowcase extends DsdElement {
             className='filter-input'
             placeholder='Type to filter frameworks...'
             value={this.#filter}
-            onInput={(e) => this.#filter.value = (e.target as HTMLInputElement).value}
+            onInput={(e: Event) => this.#filter.value = (e.target as HTMLInputElement).value}
           />
           <div className='item-list'>
             {this.#filtered.value.map((f) => <div key={f}>{f}</div>)}

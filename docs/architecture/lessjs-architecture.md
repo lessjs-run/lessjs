@@ -54,15 +54,15 @@
 
 Every page is composed of two kinds of content:
 
-| | Ocean | Island |
-|---|---|---|
-| **What it is** | Static content, never changes after render | Interactive content, has state |
-| **Has signals?** | ❌ No signals | ✅ Uses `signal()` / `computed()` |
-| **Rendering** | Pure DSD HTML | DSD HTML + `data-signal` / `data-on` markers |
-| **Client JS** | **0 bytes** | alien-signals (~1.6KB) + `_hydrateSignals()` (~0.4KB) |
-| **SSG output** | Static HTML file | Static HTML file + `<script type="module">` |
-| **SSR output** | HTML per request | HTML per request + `<script type="module">` |
-| **Examples** | `/guide/core-concepts`, `/blog/*`, `/docs/*` | Home page (counter), search page, i18n layout |
+|                  | Ocean                                        | Island                                                |
+| ---------------- | -------------------------------------------- | ----------------------------------------------------- |
+| **What it is**   | Static content, never changes after render   | Interactive content, has state                        |
+| **Has signals?** | ❌ No signals                                | ✅ Uses `signal()` / `computed()`                     |
+| **Rendering**    | Pure DSD HTML                                | DSD HTML + `data-signal` / `data-on` markers          |
+| **Client JS**    | **0 bytes**                                  | alien-signals (~1.6KB) + `_hydrateSignals()` (~0.4KB) |
+| **SSG output**   | Static HTML file                             | Static HTML file + `<script type="module">`           |
+| **SSR output**   | HTML per request                             | HTML per request + `<script type="module">`           |
+| **Examples**     | `/guide/core-concepts`, `/blog/*`, `/docs/*` | Home page (counter), search page, i18n layout         |
 
 ### How the framework decides
 
@@ -172,53 +172,53 @@ This eliminates the `effect(() => render())` cycle that ADR-0058 identified as t
 ### Single Pipeline, Two Outputs
 
 ```
-                       JSX Source
-                           │
-                    Deno TS compiler
-                    (jsxImportSource: "@lessjs/core")
-                           │
-                      VNode tree
-                    { tag: 'span', props: { textContent: <Signal> }, children: [] }
-                           │
-                    renderToString()
-                    (pure function, ~250 lines)
-                           │
-              ┌────────────┴────────────┐
-              │                         │
-         Build time                 Request time
-         (SSG)                      (SSR)
-              │                         │
-         Static HTML                Dynamic HTML
-         + data-signal              + data-signal
-         + data-on                  + data-on
-              │                         │
-         Deploy to CDN              Serve via
-         (Cloudflare Pages)         Deno Deploy / CF Workers
-              │                         │
-              └────────────┬────────────┘
-                           │
-                    Browser parses HTML
-                    DSD → creates shadow DOM
-                           │
-                    client.js loads
-                    (only for Island pages)
-                           │
-                    _hydrateSignals(root)
-                     ├── querySelector('[data-signal]') → effect()
-                     └── querySelector('[data-on-click]') → addEventListener()
-                           │
-                    Signal changes → effect fires → DOM updates
+              JSX Source
+                  │
+           Deno TS compiler
+           (jsxImportSource: "@lessjs/core")
+                  │
+             VNode tree
+           { tag: 'span', props: { textContent: <Signal> }, children: [] }
+                  │
+           renderToString()
+           (pure function, ~250 lines)
+                  │
+     ┌────────────┴────────────┐
+     │                         │
+Build time                 Request time
+(SSG)                      (SSR)
+     │                         │
+Static HTML                Dynamic HTML
++ data-signal              + data-signal
++ data-on                  + data-on
+     │                         │
+Deploy to CDN              Serve via
+(Cloudflare Pages)         Deno Deploy / CF Workers
+     │                         │
+     └────────────┬────────────┘
+                  │
+           Browser parses HTML
+           DSD → creates shadow DOM
+                  │
+           client.js loads
+           (only for Island pages)
+                  │
+           _hydrateSignals(root)
+            ├── querySelector('[data-signal]') → effect()
+            └── querySelector('[data-on-click]') → addEventListener()
+                  │
+           Signal changes → effect fires → DOM updates
 ```
 
 ### What gets DELETED
 
-| Legacy Code | Reason | Replacement |
-|---|---|---|
-| `_walkAndBind()` | Position-matching VNode→DOM (fragile) | `_hydrateSignals()` — marker-driven |
-| `_layoutWorkaroundReRender()` | Chromium DSD layout hack (destroys effects) | `requestAnimationFrame(() => void (this as HTMLElement).offsetHeight)` |
-| `effectScope()` in hydration | Alien-signals scope blocks nested effect firing | `Set<dispose>` manual tracking |
-| `@lessjs/core/navigation` module | Hand-written navigation API | `@lessjs/router` Router.start() |
-| `renderToString` / `renderToDom` dual renderer | Two diverging implementations | `renderToString` is the ONE renderer; `renderToDom` used only for CSR island creation (Show/For) |
+| Legacy Code                                    | Reason                                          | Replacement                                                                                      |
+| ---------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `_walkAndBind()`                               | Position-matching VNode→DOM (fragile)           | `_hydrateSignals()` — marker-driven                                                              |
+| `_layoutWorkaroundReRender()`                  | Chromium DSD layout hack (destroys effects)     | `requestAnimationFrame(() => void (this as HTMLElement).offsetHeight)`                           |
+| `effectScope()` in hydration                   | Alien-signals scope blocks nested effect firing | `Set<dispose>` manual tracking                                                                   |
+| `@lessjs/core/navigation` module               | Hand-written navigation API                     | `@lessjs/router` Router.start()                                                                  |
+| `renderToString` / `renderToDom` dual renderer | Two diverging implementations                   | `renderToString` is the ONE renderer; `renderToDom` used only for CSR island creation (Show/For) |
 
 ### SSR Markers
 
@@ -242,13 +242,13 @@ This eliminates the `effect(() => render())` cycle that ADR-0058 identified as t
 
 ### Why markers, not position matching
 
-| Position Matching (old) | Marker Matching (new) |
-|---|---|
+| Position Matching (old)        | Marker Matching (new)            |
+| ------------------------------ | -------------------------------- |
 | VNode + DOM parallel traversal | `querySelector('[data-signal]')` |
-| Assumes index alignment | Reads attribute value |
-| Breaks on comments/whitespace | Immune to DOM structure changes |
-| Requires filtering childNodes | Direct lookup |
-| ~60 lines of fragile code | ~30 lines of robust code |
+| Assumes index alignment        | Reads attribute value            |
+| Breaks on comments/whitespace  | Immune to DOM structure changes  |
+| Requires filtering childNodes  | Direct lookup                    |
+| ~60 lines of fragile code      | ~30 lines of robust code         |
 
 ---
 
@@ -340,22 +340,26 @@ class HomeConsole extends DsdElement {
   }
 
   override connectedCallback() {
-    super.connectedCallback();  // calls _hydrateSignals()
+    super.connectedCallback(); // calls _hydrateSignals()
     // ...theme context subscription...
   }
 
   override render() {
     return (
-      <div class="counter">
-        <span class="counter-value" data-signal="count" textContent={this.#count}></span>
-        <button data-on-click="decrement">-</button>
-        <button data-on-click="increment">+</button>
+      <div class='counter'>
+        <span class='counter-value' data-signal='count' textContent={this.#count}></span>
+        <button data-on-click='decrement'>-</button>
+        <button data-on-click='increment'>+</button>
       </div>
     );
   }
 
-  decrement() { this.#count.value--; }
-  increment() { this.#count.value++; }
+  decrement() {
+    this.#count.value--;
+  }
+  increment() {
+    this.#count.value++;
+  }
 }
 ```
 
@@ -377,16 +381,16 @@ export function renderToString(vnode: VNode): string {
 ```
 
 ```
-            renderToString(vnode)
-                  │
-      ┌───────────┴───────────┐
-      │                       │
-  Build time              Request time
-  (deno task build)       (Hono route handler)
-      │                       │
-  Write to dist/           Response.body = html
-  Static HTML files        Dynamic HTML
-  (Cloudflare Pages)       (Deno Deploy / CF Workers)
+          renderToString(vnode)
+                │
+    ┌───────────┴───────────┐
+    │                       │
+Build time              Request time
+(deno task build)       (Hono route handler)
+    │                       │
+Write to dist/           Response.body = html
+Static HTML files        Dynamic HTML
+(Cloudflare Pages)       (Deno Deploy / CF Workers)
 ```
 
 ### SSG Mode (Default)
@@ -447,12 +451,12 @@ abstract class DsdElement extends HTMLElement {
 
   // Lifecycle
   abstract render(): VNode | string | null;
-  connectedCallback(): void;     // calls _hydrateSignals()
-  disconnectedCallback(): void;  // batch dispose effects + events
+  connectedCallback(): void; // calls _hydrateSignals()
+  disconnectedCallback(): void; // batch dispose effects + events
 
   // Hydration
-  private _hydrateSignals(): void;   // marker-driven, replaces _walkAndBind
-  private _hydrateLayout(): void;    // RAF offsetHeight for Chromium bug
+  private _hydrateSignals(): void; // marker-driven, replaces _walkAndBind
+  private _hydrateLayout(): void; // RAF offsetHeight for Chromium bug
 
   // Styles
   static styles: StyleSheetLike[];
@@ -474,7 +478,7 @@ class DocsPage extends DsdElement {
   override render() {
     return (
       <less-layout>
-        <div class="container">
+        <div class='container'>
           <h1>Getting Started</h1>
           <p>Static content...</p>
         </div>
@@ -498,16 +502,20 @@ class HomeConsole extends DsdElement {
 
   override render() {
     return (
-      <div class="counter">
-        <span data-signal="count" textContent={this.#count}></span>
-        <button data-on-click="decrement">-</button>
-        <button data-on-click="increment">+</button>
+      <div class='counter'>
+        <span data-signal='count' textContent={this.#count}></span>
+        <button data-on-click='decrement'>-</button>
+        <button data-on-click='increment'>+</button>
       </div>
     );
   }
 
-  decrement() { this.#count.value--; }
-  increment() { this.#count.value++; }
+  decrement() {
+    this.#count.value--;
+  }
+  increment() {
+    this.#count.value++;
+  }
 }
 // Has signals → Island → ~2 KB client JS
 ```
@@ -522,22 +530,30 @@ Conditional and list rendering are handled by **runtime DOM managers**, not virt
 
 ```tsx
 <Show when={this.#open}>
-  <div class="overlay">
+  <div class='overlay'>
     <input onInput={this._onSearch} />
-    <div class="results">{this.#results.map(r => <Item r={r} />)}</div>
+    <div class='results'>{this.#results.map((r) => <Item r={r} />)}</div>
   </div>
-</Show>
+</Show>;
 ```
 
 **SSR**: When `when=false`, Show outputs nothing. When `when=true`, outputs the children as DSD HTML.
 
 **CSR**: Show creates an `effect()`:
+
 ```ts
 effect(() => {
   if (when.value) {
-    if (!mounted) { createDOM(); parent.appendChild(dom); mounted = true; }
+    if (!mounted) {
+      createDOM();
+      parent.appendChild(dom);
+      mounted = true;
+    }
   } else {
-    if (mounted) { dom.remove(); mounted = false; }
+    if (mounted) {
+      dom.remove();
+      mounted = false;
+    }
   }
 });
 ```
@@ -547,12 +563,13 @@ effect(() => {
 ```tsx
 <For each={this.#items}>
   {(item, index) => <li data-signal={`item-${index}`}>{item.name}</li>}
-</For>
+</For>;
 ```
 
 **SSR**: Outputs the initial list as DSD HTML with `data-signal` markers per item.
 
 **CSR**: For creates an `effect()` that reconciles items by key:
+
 ```ts
 effect(() => {
   const newItems = each.value;
@@ -563,11 +580,11 @@ effect(() => {
 
 ### Why Show/For, not VDOM diff
 
-| VDOM diff | Show/For |
-|---|---|
-| Generic tree diff algorithm | Semantic — knows it's a condition or a list |
-| O(n) tree walk on every change | O(1) mount/unmount or O(n) keyed reconciliation |
-| Needs full VNode tree | Only needs the signal value |
+| VDOM diff                           | Show/For                                            |
+| ----------------------------------- | --------------------------------------------------- |
+| Generic tree diff algorithm         | Semantic — knows it's a condition or a list         |
+| O(n) tree walk on every change      | O(1) mount/unmount or O(n) keyed reconciliation     |
+| Needs full VNode tree               | Only needs the signal value                         |
 | Handles all cases (over-engineered) | Handles the specific case (correct by construction) |
 
 This is the **SolidJS approach**: signals drive semantic control flow, not generic VDOM reconciliation.
@@ -589,7 +606,7 @@ class LessLayout extends DsdElement {
         const resp = await fetch(path);
         const html = await resp.text();
         const tmp = new DOMParser().parseFromString(html, 'text/html').body;
-        const newLayout = this._findLessLayout(tmp);  // recursive DSD search
+        const newLayout = this._findLessLayout(tmp); // recursive DSD search
         // adopt + move children
         while (this.firstChild) this.removeChild(this.firstChild);
         for (const child of Array.from(newLayout.children)) {
@@ -649,7 +666,7 @@ switchToZh() {
 ```ts
 // Route handler
 export function render(req: Request) {
-  const locale = extractLocale(req);  // from URL path or Accept-Language
+  const locale = extractLocale(req); // from URL path or Accept-Language
   const vnode = Page.render({ locale });
   return renderToString(vnode);
 }
@@ -693,16 +710,16 @@ class HomeConsole extends DsdElement {
 
 ### Pipeline Comparison
 
-| | SolidJS | Fresh 2.x | Astro | LessJS |
-|---|---|---|---|---|
-| **Compile** | Babel (4000 lines) | Deno native | Vite | **Deno native** |
-| **SSR Engine** | solid-js SSR | Preact renderToString | Multi-framework | **renderToString (250 lines)** |
-| **Initial DOM** | template().cloneNode() | SSR HTML | SSR HTML | **DSD (browser zero-JS)** |
-| **Hydration** | None needed (create=bind) | reviver + Preact hydrate | Per-framework hydrate | **_hydrateSignals (30 lines)** |
-| **0 JS Page** | ✅ | ✅ (v2.3+) | ✅ | ✅ |
-| **Island JS** | solid-js runtime | Preact + signals | Per-framework runtime | **alien-signals (~1.6KB)** |
-| **Encapsulation** | None (global DOM) | None (global HTML) | None (global) | **Shadow DOM** |
-| **SSG/SSR** | SSG only | SSR only | Hybrid | **Hybrid (SSG default, SSR opt-in)** |
+|                   | SolidJS                   | Fresh 2.x                | Astro                 | LessJS                               |
+| ----------------- | ------------------------- | ------------------------ | --------------------- | ------------------------------------ |
+| **Compile**       | Babel (4000 lines)        | Deno native              | Vite                  | **Deno native**                      |
+| **SSR Engine**    | solid-js SSR              | Preact renderToString    | Multi-framework       | **renderToString (250 lines)**       |
+| **Initial DOM**   | template().cloneNode()    | SSR HTML                 | SSR HTML              | **DSD (browser zero-JS)**            |
+| **Hydration**     | None needed (create=bind) | reviver + Preact hydrate | Per-framework hydrate | **_hydrateSignals (30 lines)**       |
+| **0 JS Page**     | ✅                        | ✅ (v2.3+)               | ✅                    | ✅                                   |
+| **Island JS**     | solid-js runtime          | Preact + signals         | Per-framework runtime | **alien-signals (~1.6KB)**           |
+| **Encapsulation** | None (global DOM)         | None (global HTML)       | None (global)         | **Shadow DOM**                       |
+| **SSG/SSR**       | SSG only                  | SSR only                 | Hybrid                | **Hybrid (SSG default, SSR opt-in)** |
 
 ### Why DSD is the Architectural Advantage
 
@@ -716,14 +733,14 @@ LessJS's DSD means the **browser creates the shadow DOM from HTML during parsing
 
 ### Signal Engine Comparison
 
-| | @preact/signals | alien-signals | TC39 Proposal |
-|---|---|---|---|
-| **API** | `signal.value` (property) | `s()` (function call) | `s.get()` / `s.set()` |
-| **Size** | ~2.5KB | ~1.6KB | Native (0KB) |
-| **effect()** | ✅ | ✅ | Framework implements |
-| **Batch** | `batch()` | `startBatch/endBatch` | N/A |
-| **Production Use** | Preact ecosystem | Vue 3.6, XState | Stage 1 |
-| **LessJS Choice** | N/A | ✅ Current | Future target |
+|                    | @preact/signals           | alien-signals         | TC39 Proposal         |
+| ------------------ | ------------------------- | --------------------- | --------------------- |
+| **API**            | `signal.value` (property) | `s()` (function call) | `s.get()` / `s.set()` |
+| **Size**           | ~2.5KB                    | ~1.6KB                | Native (0KB)          |
+| **effect()**       | ✅                        | ✅                    | Framework implements  |
+| **Batch**          | `batch()`                 | `startBatch/endBatch` | N/A                   |
+| **Production Use** | Preact ecosystem          | Vue 3.6, XState       | Stage 1               |
+| **LessJS Choice**  | N/A                       | ✅ Current            | Future target         |
 
 Alien-signals is chosen for: smallest bundle size, Vue core author pedigree, TC39 alignment path via `createReactiveSystem()`.
 
@@ -733,46 +750,46 @@ Alien-signals is chosen for: smallest bundle size, Vue core author pedigree, TC3
 
 ### Phase 1: Hydration Rewrite (v0.27.0)
 
-| Step | Task | Files | Lines |
-|---|---|---|---|
-| 1 | Add `signalRegistry` + `registerSignal()` to DsdElement | `dsd-element.ts` | +15 |
-| 2 | Implement `_hydrateSignals()` | `dsd-element.ts` | +40 |
-| 3 | Add `data-on-click/input/change/submit` to `renderToString()` | `jsx-render-string.ts` | +10 |
-| 4 | Replace `_hyrateExistingDom` to call `_hydrateSignals()` | `dsd-element.ts` | -60 +10 |
-| 5 | DELETE `_walkAndBind()` | `dsd-element.ts` | -80 |
-| 6 | DELETE `_layoutWorkaroundReRender()` | `dsd-element.ts` | -12 |
-| 7 | DELETE `effectScope` import + usage | `dsd-element.ts` | -5 +3 |
-| 8 | Add `#effectDisposers` + `#eventCleanups` tracking | `dsd-element.ts` | +10 |
-| 9 | Migrate components to `registerSignal()` + `data-on-*` | `www/app/islands/*.tsx` | ~20/component |
-| 10 | Build + Playwright e2e verification | CI | — |
+| Step | Task                                                          | Files                   | Lines         |
+| ---- | ------------------------------------------------------------- | ----------------------- | ------------- |
+| 1    | Add `signalRegistry` + `registerSignal()` to DsdElement       | `dsd-element.ts`        | +15           |
+| 2    | Implement `_hydrateSignals()`                                 | `dsd-element.ts`        | +40           |
+| 3    | Add `data-on-click/input/change/submit` to `renderToString()` | `jsx-render-string.ts`  | +10           |
+| 4    | Replace `_hyrateExistingDom` to call `_hydrateSignals()`      | `dsd-element.ts`        | -60 +10       |
+| 5    | DELETE `_walkAndBind()`                                       | `dsd-element.ts`        | -80           |
+| 6    | DELETE `_layoutWorkaroundReRender()`                          | `dsd-element.ts`        | -12           |
+| 7    | DELETE `effectScope` import + usage                           | `dsd-element.ts`        | -5 +3         |
+| 8    | Add `#effectDisposers` + `#eventCleanups` tracking            | `dsd-element.ts`        | +10           |
+| 9    | Migrate components to `registerSignal()` + `data-on-*`        | `www/app/islands/*.tsx` | ~20/component |
+| 10   | Build + Playwright e2e verification                           | CI                      | —             |
 
 ### Phase 2: SSG/SSR Dual Mode (v0.29.0)
 
-| Step | Task |
-|---|---|
-| 1 | SSR entry point (Hono route calling renderToString at request time) |
-| 2 | `deno task serve:dynamic` (SSR dev server) |
-| 3 | `deno task build:static` (SSG build → dist/) |
-| 4 | Cloudflare Pages Functions / Deno Deploy adapter |
-| 5 | Hybrid routing: per-route SSG/SSR opt-in |
+| Step | Task                                                                |
+| ---- | ------------------------------------------------------------------- |
+| 1    | SSR entry point (Hono route calling renderToString at request time) |
+| 2    | `deno task serve:dynamic` (SSR dev server)                          |
+| 3    | `deno task build:static` (SSG build → dist/)                        |
+| 4    | Cloudflare Pages Functions / Deno Deploy adapter                    |
+| 5    | Hybrid routing: per-route SSG/SSR opt-in                            |
 
 ### Phase 3: Control Flow (v0.30.0)
 
-| Step | Task |
-|---|---|
-| 1 | `Show` component — effect-driven DOM mount/unmount |
-| 2 | `For` component — keyed list reconciliation |
-| 3 | SSR: `Show`/`For` output DSD HTML + data-signal markers |
-| 4 | CSR: Show/For effect management with dispose tracking |
+| Step | Task                                                    |
+| ---- | ------------------------------------------------------- |
+| 1    | `Show` component — effect-driven DOM mount/unmount      |
+| 2    | `For` component — keyed list reconciliation             |
+| 3    | SSR: `Show`/`For` output DSD HTML + data-signal markers |
+| 4    | CSR: Show/For effect management with dispose tracking   |
 
 ### Phase 4: Clean Architecture (v0.31.0+)
 
-| Step | Task |
-|---|---|
-| 1 | DELETE remaining `renderToDom` usage in hydration path |
-| 2 | DELETE `_renderIntoShadowRoot` effect cycle |
-| 3 | Audit and remove all dead code |
-| 4 | TC39 Signals proposal alignment (when Stage 2+) |
+| Step | Task                                                   |
+| ---- | ------------------------------------------------------ |
+| 1    | DELETE remaining `renderToDom` usage in hydration path |
+| 2    | DELETE `_renderIntoShadowRoot` effect cycle            |
+| 3    | Audit and remove all dead code                         |
+| 4    | TC39 Signals proposal alignment (when Stage 2+)        |
 
 ---
 
@@ -802,26 +819,26 @@ The `@lessjs/signals` wrapper (`alien-engine.ts`) provides an abstraction layer.
 
 ## Appendix A: Deleted Code Summary
 
-| File | Code | Reason |
-|---|---|---|
-| `packages/core/src/dsd-element.ts` | `_walkAndBind()` (~80 lines) | Position matching → marker matching |
-| `packages/core/src/dsd-element.ts` | `_layoutWorkaroundReRender()` (~12 lines) | DOM rebuild → RAF layout |
-| `packages/core/src/dsd-element.ts` | `effectScope` usage (~10 lines) | Alien scope blocks effects → Set<dispose> |
-| `packages/core/src/navigation.ts` | Entire file (~75 lines) | Hand-written nav → Router.start() |
-| `packages/core/src/index.ts` | `navigation` re-exports (~3 lines) | Dead exports |
-| `packages/core/deno.json` | `./navigation` subpath | Dead subpath |
-| `packages/adapter-vite/deno.json` | `@lessjs/core/navigation` alias | Dead alias |
-| `packages/ui/deno.json` | `@lessjs/core/navigation` alias | Dead alias |
-| Multiple files | `data-less-*` attributes | Brand prefix → `data-signal` / `data-on` |
-| Multiple files | `_signalRegistry` / `_registerSignal` | Underscore prefix → `signalRegistry` / `registerSignal` |
+| File                               | Code                                      | Reason                                                  |
+| ---------------------------------- | ----------------------------------------- | ------------------------------------------------------- |
+| `packages/core/src/dsd-element.ts` | `_walkAndBind()` (~80 lines)              | Position matching → marker matching                     |
+| `packages/core/src/dsd-element.ts` | `_layoutWorkaroundReRender()` (~12 lines) | DOM rebuild → RAF layout                                |
+| `packages/core/src/dsd-element.ts` | `effectScope` usage (~10 lines)           | Alien scope blocks effects → Set<dispose>               |
+| `packages/core/src/navigation.ts`  | Entire file (~75 lines)                   | Hand-written nav → Router.start()                       |
+| `packages/core/src/index.ts`       | `navigation` re-exports (~3 lines)        | Dead exports                                            |
+| `packages/core/deno.json`          | `./navigation` subpath                    | Dead subpath                                            |
+| `packages/adapter-vite/deno.json`  | `@lessjs/core/navigation` alias           | Dead alias                                              |
+| `packages/ui/deno.json`            | `@lessjs/core/navigation` alias           | Dead alias                                              |
+| Multiple files                     | `data-less-*` attributes                  | Brand prefix → `data-signal` / `data-on`                |
+| Multiple files                     | `_signalRegistry` / `_registerSignal`     | Underscore prefix → `signalRegistry` / `registerSignal` |
 
 ## Appendix B: Document Map
 
-| Document | Purpose |
-|---|---|
-| **This file** | Architecture definition (single source of truth) |
-| `docs/adr/0058-real-dom-signal-binding.md` | Signal→DOM binding decision (historical record) |
-| `docs/adr/ADR-0062-dsd-first-rdom-signal-architecture.md` | DSD-first RDOM analysis (historical record) |
-| `docs/adr/ADR-0065-unified-vnode-pipeline.md` | VNode unification attempt (historical record) |
-| `docs/adr/ADR-0066-signal-native-hydration.md` | Hydration rewrite proposal (historical record) |
-| `docs/conversation/unified-vnode-model.md` | Architecture discussion (reference) |
+| Document                                                  | Purpose                                          |
+| --------------------------------------------------------- | ------------------------------------------------ |
+| **This file**                                             | Architecture definition (single source of truth) |
+| `docs/adr/0058-real-dom-signal-binding.md`                | Signal→DOM binding decision (historical record)  |
+| `docs/adr/ADR-0062-dsd-first-rdom-signal-architecture.md` | DSD-first RDOM analysis (historical record)      |
+| `docs/adr/ADR-0065-unified-vnode-pipeline.md`             | VNode unification attempt (historical record)    |
+| `docs/adr/ADR-0066-signal-native-hydration.md`            | Hydration rewrite proposal (historical record)   |
+| `docs/conversation/unified-vnode-model.md`                | Architecture discussion (reference)              |

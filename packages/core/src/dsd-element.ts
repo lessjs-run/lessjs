@@ -314,7 +314,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   private _hydrateSignals(): void {
     if (!this.shadowRoot) return;
 
-    // --- Signal bindings: data-signal="signalName" ---
+    // --- Signal → textContent: data-signal="signalName" ---
     const signalEls = this.shadowRoot.querySelectorAll('[data-signal]');
     for (const el of signalEls) {
       const name = el.getAttribute('data-signal');
@@ -322,21 +322,102 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       const sig = this.signalRegistry.get(name);
       if (!sig) continue;
 
-      // Apply initial signal value
-      (el as HTMLElement).textContent = String(sig.value);
+      // Skip textContent if this element has attr/html/class binding
+      if (
+        el.hasAttribute('data-signal-attr') ||
+        el.hasAttribute('data-signal-html') ||
+        el.hasAttribute('data-signal-class')
+      ) continue;
 
-      // Create reactive effect
+      (el as HTMLElement).textContent = String(sig.value);
       const dispose = effect(() => {
         (el as HTMLElement).textContent = String(sig.value);
       });
       this.#effectDisposers.add(dispose);
     }
 
+    // --- Signal → CSS class: data-signal-class="className" (v0.28.1) ---
+    // Toggles a CSS class based on signal truthiness.
+    // Truthy (non-empty string / non-zero) → add class. Falsy → remove.
+    const classSigEls = this.shadowRoot.querySelectorAll('[data-signal][data-signal-class]');
+    for (const el of classSigEls) {
+      const name = el.getAttribute('data-signal');
+      const className = el.getAttribute('data-signal-class');
+      if (!name || !className) continue;
+      const sig = this.signalRegistry.get(name);
+      if (!sig) continue;
+
+      el.classList.toggle(className, !!sig.value);
+      const dispose = effect(() => {
+        el.classList.toggle(className, !!sig.value);
+      });
+      this.#effectDisposers.add(dispose);
+    }
+
+    // --- Signal → innerHTML: data-signal-html="signalName" (v0.28) ---
+    // v0.28.1: After setting innerHTML, scan subtree for data-on-* and bind events.
+    const htmlEls = this.shadowRoot.querySelectorAll('[data-signal-html]');
+    for (const el of htmlEls) {
+      const name = el.getAttribute('data-signal-html');
+      if (!name) continue;
+      const sig = this.signalRegistry.get(name);
+      if (!sig) continue;
+
+      const applyHtml = () => {
+        (el as HTMLElement).innerHTML = String(sig.value);
+        // v0.28.1: Scan new innerHTML for data-on-* and bind events
+        this._bindEvents(el);
+      };
+      applyHtml();
+      const dispose = effect(() => applyHtml());
+      this.#effectDisposers.add(dispose);
+    }
+
+    // --- Signal → attribute: data-signal-attr="attr1,attr2" (v0.28) ---
+    const attrSigEls = this.shadowRoot.querySelectorAll('[data-signal][data-signal-attr]');
+    for (const el of attrSigEls) {
+      const name = el.getAttribute('data-signal');
+      const attrSpec = el.getAttribute('data-signal-attr');
+      if (!name || !attrSpec) continue;
+      const sig = this.signalRegistry.get(name);
+      if (!sig) continue;
+
+      const attrNames = attrSpec.split(',').map((a) => a.trim()).filter(Boolean);
+      if (attrNames.length === 0) continue;
+
+      const val = String(sig.value);
+      for (const an of attrNames) {
+        el.setAttribute(an, val);
+      }
+
+      const dispose = effect(() => {
+        const v = String(sig.value);
+        for (const an of attrNames) {
+          el.setAttribute(an, v);
+        }
+      });
+      this.#effectDisposers.add(dispose);
+    }
+
     // --- Event bindings: data-on-<event>="methodName" ---
+    this._bindEvents(this.shadowRoot);
+
+    // Chromium DSD layout fix: force reflow without DOM rebuild
+    requestAnimationFrame(() => {
+      void (this as HTMLElement).offsetHeight;
+    });
+  }
+
+  /**
+   * v0.28.1: Bind data-on-* event handlers in a container subtree.
+   * Extracted from _hydrateSignals for reuse in CSR re-render path
+   * and data-signal-html innerHTML scanning.
+   */
+  private _bindEvents(container: Element | ShadowRoot): void {
     const EVENT_TYPES = ['click', 'input', 'change', 'submit', 'keydown'] as const;
     for (const eventType of EVENT_TYPES) {
       const attr = `data-on-${eventType}`;
-      for (const el of this.shadowRoot.querySelectorAll(`[${attr}]`)) {
+      for (const el of container.querySelectorAll(`[${attr}]`)) {
         const methodName = el.getAttribute(attr);
         if (!methodName) continue;
         const handler = (this as Record<string, unknown>)[methodName];
@@ -347,11 +428,6 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
         }
       }
     }
-
-    // Chromium DSD layout fix: force reflow without DOM rebuild
-    requestAnimationFrame(() => {
-      void (this as HTMLElement).offsetHeight;
-    });
   }
 
   /**
@@ -505,6 +581,8 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
         this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
       }
       this.shadowRoot!.appendChild(renderToDom(result, undefined, this.#effectDisposers));
+      // v0.28.1: Re-bind data-on-* events after CSR re-render.
+      this._bindEvents(this.shadowRoot!);
     } else if (typeof result === 'string') {
       this.shadowRoot!.innerHTML = result;
     } else {
