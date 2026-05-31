@@ -7,7 +7,7 @@ English | [简体中文](./README.zh.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
 [![JSR](https://img.shields.io/badge/JSR-@lessjs/core-blue)](https://jsr.io/@lessjs/core)
-[![CI](https://github.com/lessjs-run/lessjs/actions/workflows/ci.yml/badge.svg)](https://github.com/lessjs-run/lessjs/actions)
+[![CI](https://github.com/lessjs-run/lessjs/actions/workflows/test.yml/badge.svg)](https://github.com/lessjs-run/lessjs/actions/workflows/test.yml)
 
 ## Quick Start
 
@@ -26,9 +26,7 @@ import { DsdElement } from '@lessjs/runtime';
 
 export default class HomePage extends DsdElement {
   render() {
-    return (
-      <h1>Hello LessJS</h1>
-    );
+    return <h1>Hello LessJS</h1>;
   }
 }
 ```

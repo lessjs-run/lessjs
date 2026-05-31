@@ -14,7 +14,6 @@
     "./render-errors": "./src/render-errors.ts",
     "./render-dsd-stream": "./src/render-dsd-stream.ts",
     "./types": "./src/types.ts",
-    "./dom-simulation": "./src/dom-simulation.ts",
     "./jsx-runtime": "./src/jsx-runtime.ts",
     "./jsx-dev-runtime": "./src/jsx-runtime.ts",
     "./island-transform": "./src/island-transform.ts"

@@ -30,7 +30,6 @@ const LESSJS_EXPORT_FILES: Record<string, Record<string, string>> = {
     'cli/validate-manifest': 'src/cli/validate-manifest.ts',
     compatibility: 'src/compatibility.ts',
     context: 'src/context.ts',
-    'dom-simulation': 'src/dom-simulation.ts',
     errors: 'src/errors.ts',
     isr: 'src/isr.ts',
     'jsx-runtime': 'src/jsx-runtime.ts',
