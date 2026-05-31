@@ -118,6 +118,7 @@ function createTokenSheet(): StyleSheetLike {
    Dark Mode — cascades from :root[data-theme="dark"]
    All shadow DOMs inherit these overrides
    ═══════════════════════════════════════════════ */
+:host([data-theme="dark"]),
 :host-context([data-theme="dark"]) {
   --gray-0: #030507;  --gray-1: #0d0f12; --gray-2: #16191d;
   --gray-3: #212529;  --gray-4: #343a40; --gray-5: #495057;
@@ -134,6 +135,7 @@ function createTokenSheet(): StyleSheetLike {
   --bg-base: var(--gray-0);
   --bg-surface: var(--gray-1);
   --bg-card: var(--gray-2);
+  --bg-elevated: var(--gray-1);
   --bg-hover: var(--gray-3);
   --border: var(--gray-3);
   --border-hover: var(--gray-4);

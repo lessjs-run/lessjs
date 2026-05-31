@@ -66,4 +66,50 @@ test.describe('Search', () => {
     expect(Math.abs(overlay!.right - overlay!.viewportWidth)).toBeLessThanOrEqual(1);
     expect(Math.abs(overlay!.width - overlay!.viewportWidth)).toBeLessThanOrEqual(1);
   });
+
+  test('search initial HTML does not stringify computed signals', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    await page.waitForFunction(() => customElements.get('less-search'));
+
+    const text = await page.locator('less-search').evaluate((el) =>
+      el.shadowRoot?.querySelector('.results')?.textContent ?? ''
+    );
+    expect(text).not.toContain('[object Object]');
+    expect(text).toContain('Type at least 2 characters to search');
+  });
+
+  test('search panel follows theme token changes', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    await page.waitForFunction(() => customElements.get('less-search'));
+
+    const readPanelBackground = async () =>
+      await page.locator('less-search').evaluate((el) => {
+        const button = el.shadowRoot?.querySelector('button');
+        button?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+        const panel = el.shadowRoot?.querySelector('.panel');
+        return panel ? getComputedStyle(panel).backgroundColor : '';
+      });
+
+    const darkBackground = await readPanelBackground();
+    await page.locator('less-search').evaluate((el) => {
+      const overlay = el.shadowRoot?.querySelector('.overlay');
+      overlay?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    });
+
+    await page.locator('less-theme-toggle').evaluate((el) => {
+      const button = el.shadowRoot?.querySelector('button');
+      button?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    });
+
+    await page.waitForFunction(() =>
+      document.documentElement.getAttribute('data-theme') === 'light'
+    );
+    const lightBackground = await readPanelBackground();
+
+    expect(darkBackground).toBeTruthy();
+    expect(lightBackground).toBeTruthy();
+    expect(lightBackground).not.toBe(darkBackground);
+  });
 });

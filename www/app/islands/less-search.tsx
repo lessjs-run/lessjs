@@ -374,7 +374,7 @@ export default class LessSearch extends DsdElement {
             <div
               class='results'
               data-signal-html='resultsHtml'
-              innerHTML={this.#resultsHtml}
+              innerHTML={this.#resultsHtml.value}
             >
             </div>
           </div>
