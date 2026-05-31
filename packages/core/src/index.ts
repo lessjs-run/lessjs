@@ -157,7 +157,7 @@ export { isVNode } from './vnode.js';
 export { Fragment } from './jsx-runtime.js';
 // Renderers
 export { renderToDom } from './jsx-render-dom.js';
-export { renderToString } from './jsx-render-string.js';
+export { renderDsdTree, renderToString } from './jsx-render-string.js';
 export {
   collectEventBindings,
   createEventMarkerContext,

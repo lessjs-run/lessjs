@@ -548,6 +548,10 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('  const defaultLocale = __getDefaultLocale();');
   lines.push('  const locale = options.locale || __localeFromPath(routePath, defaultLocale);');
   lines.push('  const isHome = routePath === "/";');
+  lines.push('  // routeNode may be a VNode (jsx output) or HTML string. Render VNodes.');
+  lines.push('  const pageHtml = typeof routeNode === "object" && routeNode !== null');
+  lines.push('    ? await renderDsdTree(routeNode)');
+  lines.push('    : String(routeNode);');
   lines.push('  const layoutResult = await renderDsd("less-layout", {');
   lines.push('    currentPath: routePath,');
   lines.push('    locale: locale,');
@@ -556,8 +560,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('    headerNav: __headerNav,');
   lines.push('    home: isHome || undefined,');
   lines.push('  });');
-  lines.push('  // Embed page content as light DOM inside less-layout (before closing tag).');
-  lines.push('  return layoutResult.html.replace("</less-layout>", routeNode + "</less-layout>");');
+  lines.push('  return layoutResult.html.replace("</less-layout>", pageHtml + "</less-layout>");');
   lines.push('}');
   lines.push('');
 
@@ -620,7 +623,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     );
     lines.push('');
     lines.push(
-      'export { renderDsd, wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core"',
+      'export { renderDsd, renderDsdTree, wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core"',
     );
     lines.push(
       'export { installLitAdapter, uninstallLitAdapter } from "@lessjs/adapter-lit"',
