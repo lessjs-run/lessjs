@@ -300,7 +300,7 @@ Deno.test('renderEntry: imports Hono and DSD renderer', () => {
   assertStringIncludes(code, "import { Hono } from 'hono'");
   // v0.5.0: DSD renderer replaces @lit-labs/ssr
   assertStringIncludes(code, 'renderDsd');
-  assertStringIncludes(code, 'renderDsdTree');
+  assertStringIncludes(code, "import { renderDsdTree } from '@lessjs/core/jsx-render-string'");
   assertStringIncludes(code, "import { jsx } from '@lessjs/core/jsx-runtime'");
 });
 
