@@ -49,14 +49,14 @@ pageSheet.replaceSync(`
 
   .chip.current {
     color: var(--brand);
-    border-color: rgba(81, 72, 184, 0.28);
-    background: rgba(81, 72, 184, 0.08);
+    border-color: color-mix(in srgb, var(--brand) 28%, transparent);
+    background: color-mix(in srgb, var(--brand) 8%, transparent);
   }
 
   .chip.pass {
-    color: var(--brand-deep);
-    border-color: rgba(19, 121, 91, 0.26);
-    background: rgba(19, 121, 91, 0.08);
+    color: var(--success);
+    border-color: color-mix(in srgb, var(--success) 26%, transparent);
+    background: color-mix(in srgb, var(--success) 8%, transparent);
   }
 
   h1 {
@@ -80,7 +80,7 @@ pageSheet.replaceSync(`
     border-radius: var(--radius-2);
     overflow: hidden;
     background: var(--gray-1);
-    box-shadow: 0 20px 54px rgba(20, 24, 36, 0.1);
+    box-shadow: 0 20px 54px color-mix(in srgb, var(--gray-12) 10%, transparent);
   }
 
   .artifact-head {

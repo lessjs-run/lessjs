@@ -24,14 +24,6 @@ const COMPAT_LABELS: Record<string, string> = {
   'rejected': 'Rejected',
   'experimental-dom': 'Experimental DOM',
 };
-
-const COMPAT_COLORS: Record<string, string> = {
-  'ssr-capable': 'var(--success)',
-  'client-only': 'var(--warning)',
-  'rejected': 'var(--error)',
-  'experimental-dom': 'var(--info)',
-};
-
 const routeSheet = new StyleSheet();
 
 routeSheet.replaceSync(`
@@ -168,7 +160,7 @@ routeSheet.replaceSync(`
         border: 1px solid var(--border);
         border-radius: 10px;
         background: var(--bg-surface);
-        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        box-shadow: var(--shadow-1);
         transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
         cursor: pointer;
         text-decoration: none;
@@ -238,6 +230,19 @@ routeSheet.replaceSync(`
         font-weight: var(--font-weight-5);
         white-space: nowrap;
       }
+
+      /* Compat status colors */
+      .compat-badge-ssr-capable { background: color-mix(in srgb, var(--success) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--success) 25%, transparent); }
+      .compat-badge-client-only { background: color-mix(in srgb, var(--warning) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--warning) 25%, transparent); }
+      .compat-badge-rejected { background: color-mix(in srgb, var(--error) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--error) 25%, transparent); }
+      .compat-badge-experimental-dom { background: color-mix(in srgb, var(--info) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--info) 25%, transparent); }
+      .compat-badge-default { background: color-mix(in srgb, var(--text-muted) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--text-muted) 25%, transparent); }
+
+      .compat-dot-ssr-capable { background: var(--success); }
+      .compat-dot-client-only { background: var(--warning); }
+      .compat-dot-rejected { background: var(--error); }
+      .compat-dot-experimental-dom { background: var(--info); }
+      .compat-dot-default { background: var(--text-muted); }
 
       .compat-dot {
         width: 6px;
@@ -482,7 +487,7 @@ export default class DocsRegistryHome extends DsdElement {
                 {this._filtered.map((pkg) => {
                   const fullName = pkg.scope ? `${pkg.scope}/${pkg.name}` : pkg.name;
                   const compatLabel = COMPAT_LABELS[pkg.compatibility] || pkg.compatibility;
-                  const compatColor = COMPAT_COLORS[pkg.compatibility] || '#888';
+                  const compatClass = pkg.compatibility || 'default';
 
                   const submittedDate = new Date(pkg.submittedAt);
                   const daysSinceSubmit = (Date.now() - submittedDate.getTime()) /
@@ -503,8 +508,8 @@ export default class DocsRegistryHome extends DsdElement {
                         </div>
                         <div class="package-desc">{pkg.description || 'No description'}</div>
                         <div class="package-meta">
-                          <span class="compat-badge" style={`background:${compatColor}15;border:0.5px solid ${compatColor}40;`}>
-                            <span class="compat-dot" style={`background:${compatColor}`}></span>
+                          <span class={`compat-badge compat-badge-${compatClass}`}>
+                            <span class={`compat-dot compat-dot-${compatClass}`}></span>
                             {compatLabel}
                           </span>
                           <span class={`install-badge ${pkg.safeToInstall ? 'install-safe' : 'install-unsafe'}`}>

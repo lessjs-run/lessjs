@@ -17,10 +17,10 @@ sheet.replaceSync(`
   .lede { max-width: 680px; margin: 18px 0 0; color: var(--text-muted); font-size: var(--font-size-4); line-height: var(--font-lineheight-4); }
   .paths { margin-top: 38px; display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--size-4); }
   .path { border: 1px solid var(--border); border-radius: var(--radius-2); background: var(--bg-card); padding: var(--size-5); text-decoration: none; color: inherit; }
-  .path:hover { border-color: rgba(81,72,184,0.28); }
+  .path:hover { border-color: color-mix(in srgb, var(--brand) 28%, transparent); }
   .path h2 { margin: 0 0 var(--size-2); color: var(--text-primary); font-size: 17px; }
   .path p { margin: 0; color: var(--text-muted); font-size: var(--font-size-1); line-height: var(--font-lineheight-4); }
-  .path .chip { display: inline-flex; align-items: center; min-height: 26px; margin-bottom: var(--size-3); padding: 0 var(--size-2); border-radius: var(--radius-1); font-size: 11px; font-weight: 750; color: var(--brand); border: 1px solid rgba(81,72,184,0.22); background: rgba(81,72,184,0.06); }
+  .path .chip { display: inline-flex; align-items: center; min-height: 26px; margin-bottom: var(--size-3); padding: 0 var(--size-2); border-radius: var(--radius-1); font-size: 11px; font-weight: 750; color: var(--brand); border: 1px solid color-mix(in srgb, var(--brand) 22%, transparent); background: color-mix(in srgb, var(--brand) 6%, transparent); }
   @media (max-width: 680px) { .paths { grid-template-columns: 1fr; } .shell { padding: var(--size-8) var(--size-4) 56px; } }
 `);
 

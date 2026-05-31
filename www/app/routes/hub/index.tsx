@@ -16,8 +16,8 @@ sheet.replaceSync(`
   h1 { margin: 0; color: var(--text-primary); font-size: clamp(2.5rem, 7vw, 5rem); line-height: 0.95; }
   .lede { max-width: 680px; margin: 18px 0 0; color: var(--text-muted); font-size: 16px; line-height: 1.75; }
   .grid { margin-top: 38px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .card { border: 1px solid var(--border); border-radius: 8px; background: #fff; padding: 22px; text-decoration: none; color: inherit; }
-  .card:hover { border-color: rgba(81,72,184,0.28); }
+  .card { border: 1px solid var(--border); border-radius: 8px; background: var(--bg-elevated); padding: 22px; text-decoration: none; color: inherit; }
+  .card:hover { border-color: color-mix(in srgb, var(--brand) 28%, transparent); }
   .card h2 { margin: 0 0 var(--size-2); color: var(--text-primary); font-size: var(--font-size-2); }
   .card p { margin: 0; color: var(--text-muted); font-size: var(--font-size-00); line-height: var(--font-lineheight-4); }
   .chip { display: inline-flex; align-items: center; min-height: 26px; margin-bottom: 12px; padding: 0 8px; border-radius: 5px; font-size: 11px; font-weight: 750; color: var(--brand); border: 1px solid rgba(81,72,184,0.22); background: rgba(81,72,184,0.06); }

@@ -89,7 +89,7 @@ sheet.replaceSync(`
     padding: 15vh 0 0;
     border: 0;
     color: inherit;
-    background: rgba(0,0,0,0.4);
+    background: var(--overlay);
     display: none;
     justify-content: center;
     align-items: flex-start;

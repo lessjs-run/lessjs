@@ -105,16 +105,24 @@ const COMPAT_LABELS: Record<string, string> = {
   'experimental-dom': 'Experimental DOM',
 };
 
+// CSS custom properties for compat colors — used in stylesheet and inline styles
 const COMPAT_COLORS: Record<string, string> = {
-  'ssr-capable': '#22c55e',
-  'client-only': '#f59e0b',
-  'rejected': '#ef4444',
-  'experimental-dom': '#8b5cf6',
+  'ssr-capable': 'var(--compat-ssr)',
+  'client-only': 'var(--compat-client)',
+  'rejected': 'var(--compat-rejected)',
+  'experimental-dom': 'var(--compat-experimental)',
 };
 
 const routeSheet = new StyleSheet();
 
 routeSheet.replaceSync(`
+      /* ── Compat color tokens ──────────────────────────── */
+      --compat-ssr: #22c55e;
+      --compat-client: #f59e0b;
+      --compat-rejected: #ef4444;
+      --compat-experimental: #8b5cf6;
+      --compat-default: #888;
+
       .detail-header {
         margin-bottom: 2rem;
       }
@@ -136,7 +144,7 @@ routeSheet.replaceSync(`
         padding: 1.5rem;
         margin-bottom: 1.5rem;
         background: var(--bg-surface);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        box-shadow: var(--shadow-1);
       }
       .section-title {
         font-size: 1rem;
@@ -181,19 +189,19 @@ routeSheet.replaceSync(`
         border: 1px solid var(--border);
         border-radius: 10px;
         padding: 1.5rem;
-        background: #fff;
+        background: var(--bg-elevated);
         min-height: 80px;
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: auto;
-        box-shadow: inset 0 1px 3px rgba(0,0,0,0.04);
+        box-shadow: var(--shadow-1);
       }
       .preview-iframe {
         width: 100%;
         border: none;
         min-height: 80px;
-        background: #fff;
+        background: var(--bg-elevated);
         border-radius: 6px;
       }
       .preview-placeholder {
@@ -264,8 +272,8 @@ routeSheet.replaceSync(`
 
       /* Migrated inline styles */
       .not-found-link { color: var(--brand); font-size: 0.875rem; }
-      .validation-error { color: #ef4444; font-size: 0.8125rem; }
-      .validation-warning { color: #f59e0b; font-size: 0.8125rem; }
+      .validation-error { color: var(--compat-rejected); font-size: 0.8125rem; }
+      .validation-warning { color: var(--compat-client); font-size: 0.8125rem; }
       .preview-full-width { width: 100%; }
       .preview-tag-name { font-size: 0.875rem; margin-bottom: 0.25rem; }
       .client-only-note { margin-top: 0.5rem; font-size: 0.75rem; }
@@ -281,27 +289,27 @@ routeSheet.replaceSync(`
       .related-container { display: flex; flex-wrap: wrap; gap: 0.5rem; }
       .related-link { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.625rem; background: var(--bg-code); border-radius: 4px; font-size: 0.8125rem; font-family: monospace; color: inherit; text-decoration: none; border: 0.5px solid transparent; }
       .related-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
-      .text-error { color: #ef4444; }
-      .text-success { color: #22c55e; }
+      .text-error { color: var(--compat-rejected); }
+      .text-success { color: var(--compat-ssr); }
 
       /* Compat color classes */
-      .compat-dot-ssr-capable { background: #22c55e; }
-      .compat-dot-client-only { background: #f59e0b; }
-      .compat-dot-rejected { background: #ef4444; }
-      .compat-dot-experimental-dom { background: #8b5cf6; }
-      .compat-dot-default { background: #888; }
+      .compat-dot-ssr-capable { background: var(--compat-ssr); }
+      .compat-dot-client-only { background: var(--compat-client); }
+      .compat-dot-rejected { background: var(--compat-rejected); }
+      .compat-dot-experimental-dom { background: var(--compat-experimental); }
+      .compat-dot-default { background: var(--compat-default); }
 
-      .compat-badge-ssr-capable { background: #22c55e15; border: 0.5px solid #22c55e40; }
-      .compat-badge-client-only { background: #f59e0b15; border: 0.5px solid #f59e0b40; }
-      .compat-badge-rejected { background: #ef444415; border: 0.5px solid #ef444440; }
-      .compat-badge-experimental-dom { background: #8b5cf615; border: 0.5px solid #8b5cf640; }
-      .compat-badge-default { background: #88888815; border: 0.5px solid #88888840; }
+      .compat-badge-ssr-capable { background: color-mix(in srgb, var(--compat-ssr) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-ssr) 25%, transparent); }
+      .compat-badge-client-only { background: color-mix(in srgb, var(--compat-client) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-client) 25%, transparent); }
+      .compat-badge-rejected { background: color-mix(in srgb, var(--compat-rejected) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-rejected) 25%, transparent); }
+      .compat-badge-experimental-dom { background: color-mix(in srgb, var(--compat-experimental) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-experimental) 25%, transparent); }
+      .compat-badge-default { background: color-mix(in srgb, var(--compat-default) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-default) 25%, transparent); }
 
-      .compat-badge-sm-ssr-capable { background: #22c55e15; border: 0.5px solid #22c55e40; font-size: 0.75rem; }
-      .compat-badge-sm-client-only { background: #f59e0b15; border: 0.5px solid #f59e0b40; font-size: 0.75rem; }
-      .compat-badge-sm-rejected { background: #ef444415; border: 0.5px solid #ef444440; font-size: 0.75rem; }
-      .compat-badge-sm-experimental-dom { background: #8b5cf615; border: 0.5px solid #8b5cf640; font-size: 0.75rem; }
-      .compat-badge-sm-default { background: #88888815; border: 0.5px solid #88888840; font-size: 0.75rem; }
+      .compat-badge-sm-ssr-capable { background: color-mix(in srgb, var(--compat-ssr) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-ssr) 25%, transparent); font-size: 0.75rem; }
+      .compat-badge-sm-client-only { background: color-mix(in srgb, var(--compat-client) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-client) 25%, transparent); font-size: 0.75rem; }
+      .compat-badge-sm-rejected { background: color-mix(in srgb, var(--compat-rejected) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-rejected) 25%, transparent); font-size: 0.75rem; }
+      .compat-badge-sm-experimental-dom { background: color-mix(in srgb, var(--compat-experimental) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-experimental) 25%, transparent); font-size: 0.75rem; }
+      .compat-badge-sm-default { background: color-mix(in srgb, var(--compat-default) 8%, transparent); border: 0.5px solid color-mix(in srgb, var(--compat-default) 25%, transparent); font-size: 0.75rem; }
     `);
 
 export default class DocsRegistryComponentDetail extends DsdElement {
@@ -384,7 +392,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
     const lessThemeCss = meta.importSpec === '@lessjs/ui'
       ? `<style>:root{--gray-0:#f8f9fa;--gray-1:#f1f3f5;--gray-2:#e9ecef;--gray-3:#dee2e6;--gray-4:#ced4da;--gray-5:#adb5bd;--gray-6:#868e96;--gray-7:#495057;--gray-8:#343a40;--gray-9:#212529;--gray-10:#16191d;--gray-11:#0d0f12;--gray-12:#030507;--bg-base:var(--gray-0);--bg-surface:var(--gray-1);--bg-elevated:var(--gray-2);--bg-hover:var(--gray-2);--bg-card:var(--gray-0);--border:var(--gray-3);--border-hover:var(--gray-4);--text-primary:var(--gray-12);--text-secondary:var(--gray-8);--text-muted:var(--gray-7);--text-muted:var(--gray-6);--brand:var(--gray-12);--brand-light:var(--gray-8);--brand-subtle:var(--gray-2);--brand:#534AB7;--brand-subtle:#EEEDFE;--bg-code:var(--gray-2);--code-border:var(--gray-3);--error:var(--red-7);--scrollbar-track:transparent;--scrollbar-thumb:var(--gray-4);color-scheme:light}</style>`
       : '';
-    return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${themeLink}${lessThemeCss}<script type="module" src="${meta.importUrl}"></script><style>*,*::before,*::after{box-sizing:border-box}body{margin:0;padding:20px;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5;color:#1a1a2e;background:#fff;overflow:hidden}</style></head><body><${meta.tagName}${attrStr}>${meta.demoSlots}</${meta.tagName}></body></html>`;
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${themeLink}${lessThemeCss}<script type="module" src="${meta.importUrl}"></script><style>*,*::before,*::after{box-sizing:border-box}body{margin:0;padding:20px;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5;color:var(--gray-12);background:var(--gray-0);overflow:hidden}</style></head><body><${meta.tagName}${attrStr}>${meta.demoSlots}</${meta.tagName}></body></html>`;
   }
 
   override render() {

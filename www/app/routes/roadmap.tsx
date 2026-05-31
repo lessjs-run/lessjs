@@ -18,7 +18,7 @@ routeSheet.replaceSync(`
   :host([data-theme="dark"]) .now,
   :host([data-theme="dark"]) .phase,
   :host([data-theme="dark"]) .truth {
-    background: #11131a;
+    background: var(--bg-base);
   }
 
   .shell {
@@ -55,7 +55,7 @@ routeSheet.replaceSync(`
   .now {
     border: 1px solid var(--border);
     border-radius: var(--radius-2);
-    background: #fff;
+    background: var(--bg-elevated);
     padding: var(--size-4);
   }
 
@@ -65,9 +65,9 @@ routeSheet.replaceSync(`
     align-items: center;
     min-height: var(--size-7);
     padding: 0 10px;
-    border: 1px solid rgba(81, 72, 184, 0.28);
+    border: 1px solid color-mix(in srgb, var(--brand) 28%, transparent);
     border-radius: var(--radius-2);
-    background: rgba(81, 72, 184, 0.08);
+    background: color-mix(in srgb, var(--brand) 8%, transparent);
     color: var(--brand);
     font-size: var(--font-size-0);
     font-weight: 750;
@@ -99,7 +99,7 @@ routeSheet.replaceSync(`
     align-items: start;
     border: 1px solid var(--border);
     border-radius: var(--radius-2);
-    background: #fff;
+    background: var(--bg-elevated);
     padding: var(--size-4);
   }
 
@@ -135,21 +135,21 @@ routeSheet.replaceSync(`
   }
 
   .done {
-    color: var(--brand-deep);
-    border-color: rgba(19, 121, 91, 0.26);
-    background: rgba(19, 121, 91, 0.08);
+    color: var(--success);
+    border-color: color-mix(in srgb, var(--success) 26%, transparent);
+    background: color-mix(in srgb, var(--success) 8%, transparent);
   }
 
   .current {
     color: var(--brand);
-    border-color: rgba(81, 72, 184, 0.28);
-    background: rgba(81, 72, 184, 0.08);
+    border-color: color-mix(in srgb, var(--brand) 28%, transparent);
+    background: color-mix(in srgb, var(--brand) 8%, transparent);
   }
 
   .planned {
-    color: var(--brand-deep);
-    border-color: rgba(160, 90, 0, 0.24);
-    background: rgba(160, 90, 0, 0.08);
+    color: var(--warning);
+    border-color: color-mix(in srgb, var(--warning) 24%, transparent);
+    background: color-mix(in srgb, var(--warning) 8%, transparent);
   }
 
   .truth-grid {
@@ -162,7 +162,7 @@ routeSheet.replaceSync(`
   .truth {
     border: 1px solid var(--border);
     border-radius: var(--radius-2);
-    background: #fff;
+    background: var(--bg-elevated);
     padding: var(--size-4);
   }
 
@@ -202,7 +202,7 @@ routeSheet.replaceSync(`
     padding: 0 14px;
     border: 1px solid var(--border);
     border-radius: 7px;
-    background: #fff;
+    background: var(--bg-elevated);
     color: var(--text-primary);
     text-decoration: none;
     font-size: var(--font-size-1);
