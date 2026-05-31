@@ -529,7 +529,7 @@ export async function ssgRender(
 
   // v0.28.1: Inject route manifest so less-layout can derive nav/header/locale
   try {
-    const manifestPath = join(root, 'www/app/data/_generated-route-manifest.ts');
+    const manifestPath = join(root, 'app/data/_generated-route-manifest.ts');
     if (existsSync(manifestPath)) {
       const src = readFileSync(manifestPath, 'utf-8');
       const jsonMatch = src.match(
