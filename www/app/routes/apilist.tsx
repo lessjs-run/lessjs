@@ -61,8 +61,8 @@ export default class ApiCorePage extends DsdElement {
           <div class="api-category">
             <h2>渲染</h2>
             <div class="api-entry">
-              <div class="api-sig">renderDsd(tagName, componentClass, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;</div>
-              <div class="api-desc">将 Custom Element 服务端渲染为 DSD HTML。支持三层：dsd-static、dsd-interactive、pure-island。</div>
+              <div class="api-sig">renderDsd(input: string | CustomElementConstructor, props?): Promise&lt;RenderOutput&gt;</div>
+              <div class="api-desc">唯一渲染入口。input 为标签名时自动查 customElements 注册表，为类时直接使用。返回包含 html、errors、metrics 的 RenderOutput。</div>
             </div>
             <div class="api-entry">
               <div class="api-sig">renderDsdStream(components, options?): ReadableStream&lt;Uint8Array&gt;</div>
@@ -132,10 +132,6 @@ export default class ApiCorePage extends DsdElement {
               <div class="api-sig">getSsrProps(element: HTMLElement): Record&lt;string, unknown&gt;</div>
               <div class="api-desc">从元素属性中提取和反序列化 SSR 传递的数据。</div>
             </div>
-            <div class="api-entry">
-              <div class="api-sig">renderDsdByName(tagName: string, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;</div>
-              <div class="api-desc">通过 tag name 从 customElements 注册表查找组件类并进行 SSR 渲染。</div>
-            </div>
           </div>
         </div>
       
@@ -168,8 +164,8 @@ export default class ApiCorePage extends DsdElement {
           <div class="api-category">
             <h2>Rendering</h2>
             <div class="api-entry">
-              <div class="api-sig">renderDsd(tagName, componentClass, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;</div>
-              <div class="api-desc">Server-side renders a Custom Element as DSD HTML. Supports three layers: dsd-static, dsd-interactive, pure-island.</div>
+              <div class="api-sig">renderDsd(input: string | CustomElementConstructor, props?): Promise&lt;RenderOutput&gt;</div>
+              <div class="api-desc">The single rendering entry point. Accepts a tag name (auto-lookup from registry) or a component class directly. Returns RenderOutput with html, errors, metrics, and hydrationHints.</div>
             </div>
             <div class="api-entry">
               <div class="api-sig">renderDsdStream(components, options?): ReadableStream&lt;Uint8Array&gt;</div>
@@ -230,10 +226,6 @@ export default class ApiCorePage extends DsdElement {
             <div class="api-entry">
               <div class="api-sig">getSsrProps(element: HTMLElement): Record&lt;string, unknown&gt;</div>
               <div class="api-desc">Extracts and deserializes SSR-passed data from element attributes.</div>
-            </div>
-            <div class="api-entry">
-              <div class="api-sig">renderDsdByName(tagName: string, props?, sourceInfo?, dsdOptions?): Promise&lt;string&gt;</div>
-              <div class="api-desc">Looks up a component class from the customElements registry by tag name and SSR-renders it.</div>
             </div>
           </div>
         </div>

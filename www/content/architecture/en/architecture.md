@@ -1,123 +1,113 @@
 ---
-title: Layered Package Architecture
-section: Principles
+title: Architecture
+section: core
 label: Architecture
 order: 10
 ---
 
-<h1>Layered Package Architecture</h1>
+## Layer Model
 
-<section class="hero">
-<div>
-<div class="eyebrow">
-<span class="chip current">ADR-0050</span>
-<span class="chip current">v0.23.0</span>
-<span class="chip pass">graph gate passing</span>
-</div>
-<p class="lede">
-LessJS is now organized around explicit package ownership:
-protocols own shared contracts, core stays the runtime kernel,
-runtime owns authoring imports, app owns configuration, and
-adapter-vite owns Vite implementation.
-</p>
-</div>
-<div class="artifact">
-<div class="artifact-head">
-<strong>package graph sketch</strong>
-<span>source imports declared per package</span>
-</div>
-<pre><code>create -> "no source deps, just generates"
-hub -> "no LessJS deps: scans npm packages"
-ui -> core, style-sheet
-core -> style-sheet, signals
-app -> core
-rpc -> core, hub
-i18n -> protocols
-content -> protocols
-adapter-lit -> core, signals, style-sheet
-adapter-vanilla -> core, signals, style-sheet
-adapter-react -> core, react, signals
-adapter-vite -> core, adapter-lit, adapter-vanilla, adapter-react
-protocols -> "no deps"
-runtime -> core, ui, app, signals, adapter-lit, adapter-vanilla, adapter-react
-style-sheet -> "no deps"
-cem -> compat-check -> hub
-content -> adapter-vite -> app</code></pre>
-</div>
-</section>
+LessJS has a strict three-layer architecture connected by ESM imports:
 
-<section class="section">
-<div class="section-head">
-<div>
-<p class="kicker">layers</p>
-<h2>Dependency direction is part of the API.</h2>
-</div>
-<p class="section-copy">
-v0.23.0 makes package responsibility inspectable. Feature
-packages use protocols for shared build contracts instead of
-adapter internals, and ordinary users write components from the
-runtime facade.
-</p>
-</div>
-<div class="layer-map">
-<div class="layer"><strong>tools and gates</strong><span>create, graph checker, publish workflow, smoke tests</span><p>Prove generated users, release order, and docs truth.</p></div>
-<div class="layer"><strong>product facades</strong><span>@lessjs/core, @lessjs/app</span><p>Separate authoring imports from configuration assembly.</p></div>
-<div class="layer"><strong>build adapters</strong><span>@lessjs/adapter-vite</span><p>Own Vite plugin assembly, route scanning, SSG phases, and generated entries.</p></div>
-<div class="layer"><strong>feature packages</strong><span>content, i18n, hub, ui, cem, compat-check</span><p>Own product features and evidence surfaces without routing through core.</p></div>
-<div class="layer"><strong>runtime kernel</strong><span>@lessjs/core</span><p>Own DSD runtime, templates, renderDsd, islands, navigation, logger, and errors.</p></div>
-<div class="layer"><strong>protocols</strong><span>@lessjs/protocols</span><p>Own dependency-light shared build contracts and virtual ids.</p></div>
-</div>
-</section>
+```
+Application (www/)     ─  routes, islands, renderers
+    │ ESM import
+Builder (adapter-vite) ─  route scan, SSG pipeline, bundle
+    │ ESM import  
+Core (@lessjs/core)    ─  DsdElement, renderDsd, VNode, JSX
+    │ ESM import
+Signals (@lessjs/signals) ─  signal(), computed(), effect()
+```
 
-<section class="section">
-<div class="section-head">
-<div>
-<p class="kicker">why it exists</p>
-<h2>Small core, honest facades.</h2>
-</div>
-<p class="section-copy">
-The framework can only grow if users, contributors, and release
-automation agree about which package owns each concept.
-</p>
-</div>
-<div class="cards">
-<div class="card">
-<h3>Why protocols?</h3>
-<p>Content, i18n, and adapter-vite need shared build contracts. Those contracts are not Vite implementation and should not live under adapter-vite.</p>
-</div>
-<div class="card">
-<h3>Why runtime?</h3>
-<p>Generated components need a single authoring import. Runtime provides that without turning core into an all-purpose DX barrel.</p>
-</div>
-<div class="card">
-<h3>Why signals facade?</h3>
-<p>LessJS uses alien-signals as the engine. The public LessJS contract is .value, subscribe(), and DSD integration semantics.</p>
-</div>
-</div>
-</section>
+Each layer only knows the layer below. No layer imports from above.
 
-<section class="section">
-<div class="section-head">
-<div>
-<p class="kicker">release gates</p>
-<h2>The architecture is checked mechanically.</h2>
-</div>
-<p class="section-copy">
-The root import map can hide missing dependencies during local
-development. The graph gate checks package-local truth before
-publishing.
-</p>
-</div>
-<div class="gate-grid">
-<div class="gate"><strong>0 cycles</strong><span>Internal LessJS package dependencies must remain acyclic.</span></div>
-<div class="gate"><strong>18 packages</strong><span>Every package in packages/ must be present in the publish workflow.</span></div>
-<div class="gate"><strong>direct imports</strong><span>Each source-level @lessjs/* import must be declared in that package's deno.json.</span></div>
-<div class="gate"><strong>0.23.0</strong><span>Unified version releases keep JSR packages resolvable as one set.</span></div>
-</div>
-</section>
+## Rendering Pipeline
 
-<nav class="nav-row">
-<a class="nav-link" href="/roadmap">Roadmap truth -></a>
-<a class="nav-link" href="/changelog">Changelog -></a>
-<a class="nav-link" href="/guide/getting-started">Start building -></a>
-</nav>
+### renderDsd(input, props?) — The One API
+
+```ts
+// By tag name — auto-looks up from customElements registry
+const result = await renderDsd('less-layout', {
+  currentPath: '/guide/getting-started',
+  locale: 'en',
+})
+
+// By class — direct use
+const result = await renderDsd(LessLayout, { ... })
+
+// result.html contains the full DSD output
+console.log(result.html)
+// → <less-layout>
+//     <template shadowrootmode="open">
+//       <style>...</style>
+//       <div class="app-layout">...</div>
+//     </template>
+//   </less-layout>
+```
+
+### Single-Pass VNode Traversal
+
+VNode trees are walked once. When a registered custom element is encountered, `renderDsd()` is called inline:
+
+```
+VNode tree
+    ├─ <div class="app-header">
+    │     ├─ <less-search>      → renderDsd('less-search')  inline
+    │     └─ <less-theme-toggle> → renderDsd('less-theme-toggle') inline
+    ├─ <slot></slot>             → light DOM projection
+    └─ <div class="app-footer">...</div>
+```
+
+No parse5. No visited Set. No string flattening. One tree, one pass.
+
+## Signal-Native Hydration
+
+Signals are part of DsdElement, not a separate system:
+
+```tsx
+class MyCounter extends DsdElement {
+  #count = signal(0)
+
+  render() {
+    // SSR: signal value written into HTML as data-signal attribute
+    return <span data-signal="count">{this.#count.value}</span>
+  }
+
+  // CSR: _hydrateSignals() auto-binds effect() to DOM
+  // → effect(() => el.textContent = this.#count.value)
+}
+```
+
+Hydration markers: `data-signal`, `data-signal-html`, `data-signal-attr`, `data-signal-class`. Event binding: `data-on-click`, `data-on-input`, etc.
+
+## Builder Pipeline
+
+```
+deno task build
+  ├─ Route scanning    → entry-renderer generates SSR entry
+  ├─ Client bundle     → Rolldown bundles island components  
+  └─ SSG rendering     → renderRoute() for each page → write dist/
+```
+
+The SSG step imports the bundled SSR module and calls `renderRoute()` for every page. `renderRoute` renders the page component, processes renderer plugins, wraps in less-layout via `__renderAppShell`, and outputs complete HTML via `wrapInDocument()`.
+
+## Component Model
+
+```
+DsdElement
+├── static styles    → CSSStyleSheet, inlined into DSD template
+├── render()         → VNode tree (JSX)
+├── signalRegistry   → Map<name, Signal>
+├── _hydrateSignals() → Attach effect() to DSD DOM
+└── _bindEvents()    → Attach click/input/etc from data-on-* markers
+```
+
+## Key Design Decisions
+
+| ADR | Decision | Status |
+|-----|----------|--------|
+| ADR-0057 | JSX + Signal component model | Active |
+| ADR-0065 | Unified VNode pipeline (SSR+CSR) | Active |
+| ADR-0067 | Ocean (static) + Island (signal) architecture | Active |
+| ADR-0071 | Single-pass VNode traversal, delete parse5 | Active |
+| ADR-0072 | One renderDsd(), jsx on subpath only | Active |

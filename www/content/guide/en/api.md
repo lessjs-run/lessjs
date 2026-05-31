@@ -1,81 +1,176 @@
 ---
-title: 'API Routes'
-section: 'Core'
-label: 'API Routes'
-order: 60
+title: 'API Reference'
+section: 'Reference'
+label: 'API'
+order: 70
 ---
 
-<less-layout
-locale=
-locales=
-navItems=
-headerNav=
-currentPath='/en/guide/api'
+## Core API
 
-    <h1>API Routes</h1>
-    <p class='subtitle'>
-      LessJS's server layer is Hono. API routes use standard Request/Response semantics and
-      are suitable for serverless or edge runtime deployment.
-    </p>
-    <h2>Design Principles</h2>
-    <div class='principle'>
-      <p>
-        <strong>Use platform primitives.</strong> 
-        Prefer Fetch, Request, Response over framework-specific transports.
-      </p>
-      <p>
-        <strong>Validate at boundaries.</strong> 
-        Parse and validate request bodies before business logic sees the data.
-      </p>
-      <p>
-        <strong>Declare runtime explicitly.</strong> 
-        Static pages can call APIs, but the APIs need a serverless or edge deployment target.
-      </p>
-    </div>
-    <h2>Create API Routes</h2>
-    <p>
-      Place API routes in 
-      <span class='inline-code'>app/routes/api</span>. Default-export a Hono app for complex
-      APIs, or a plain function <span class='inline-code'>(ctx) =&gt; Response</span> 
-      for simple endpoints. The context has <span class='inline-code'>request</span>, 
-      <span class='inline-code'>params</span>, <span class='inline-code'>env</span>, and 
-      <span class='inline-code'>platform</span>.
-    </p>
-    <less-code-block>
-      <pre><code>// app/routes/api/posts.ts
+### renderDsd(input, props?)
 
-import from 'hono';
-const app = new Hono();
-app.get('/', (c) =&gt; c.json([]));
-app.post('/', async (c) =&gt; , 201); });
-export default app;</code></pre>
-</less-code-block>
-<less-code-block>
+The single rendering entry point. Renders a custom element to DSD HTML.
 
-<pre><code>// app/routes/api/health.ts — simple endpoint, no Hono needed
-import type from '@lessjs/core/api';
+```ts
+import { renderDsd } from '@lessjs/core'
 
-export default function GET(ctx: LessApiContext) );
-}</code></pre>
-</less-code-block>
-<h2>Request Validation</h2>
-<p>
-LessJS does not mandate a validation library. Zod with
-<span class='inline-code'>@hono/zod-validator</span> is a practical default.
-</p>
-<h2>Type-Safe RPC</h2>
-<p>
-<span class='inline-code'>@lessjs/rpc</span>
-provides type-safe client/server calling conventions. See
-<a href='/api/reference'>RPC Guide</a>.
-</p>
-<h2>Static Build Boundary</h2>
-<p>
-SSG output is static files. API routes are part of the generated Hono app, but static
-hosting won't execute them. Deploy API routes via serverless adapters or platform
-functions when runtime behavior is needed.
-</p>
-<div class='nav-row'>
-<a href='/api/reference' class='nav-link'>← RPC</a>
-<a href='/guide/configuration' class='nav-link'>Configuration →</a>
-</div>
+// By tag name — auto-looks up from customElements registry
+const result = await renderDsd('less-layout', {
+  currentPath: '/guide/getting-started',
+  locale: 'en',
+})
+
+// By class — direct use
+const result = await renderDsd(MyComponent, { title: 'Hello' })
+
+// result: { html: string, errors: [], metrics: {...}, hydrationHints: [] }
+console.log(result.html)
+```
+
+**Parameters:**
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `input` | `string \| CustomElementConstructor` | Tag name (auto-lookup) or component class |
+| `props` | `Record<string, unknown>` | Properties passed to the component |
+
+**Returns:** `Promise<RenderOutput>` — contains `html`, `errors`, `metrics`, `hydrationHints`.
+
+### renderToString(vnode)
+
+Synchronous VNode to HTML string renderer. Does NOT handle nested custom elements.
+
+```ts
+import { renderToString, jsx } from '@lessjs/core/jsx-runtime'
+
+const vnode = jsx('div', { class: 'greeting', children: 'hello' })
+const html = renderToString(vnode)
+// → '<div class="greeting">hello</div>'
+```
+
+## Component Model
+
+### DsdElement
+
+Base class for all DSD-native components.
+
+```tsx
+import { DsdElement } from '@lessjs/core'
+import { signal } from '@lessjs/signals'
+
+class MyCounter extends DsdElement {
+  static override styles = StyleSheet.create(`
+    :host { display: block; }
+    button { padding: 8px 16px; }
+  `)
+
+  #count = signal(0)
+
+  render() {
+    return (
+      <div>
+        <span data-signal="count">{this.#count.value}</span>
+        <button data-on-click="_increment">+</button>
+      </div>
+    )
+  }
+
+  _increment() {
+    this.#count.value++
+  }
+}
+
+customElements.define('my-counter', MyCounter)
+```
+
+### Fragment
+
+Empty wrapper for grouping children without extra DOM:
+
+```tsx
+render() {
+  return (
+    <>
+      <span>one</span>
+      <span>two</span>
+    </>
+  )
+}
+```
+
+## JSX Runtime (Subpath)
+
+Import from `@lessjs/core/jsx-runtime`:
+
+```ts
+import { jsx, jsxDEV, jsxs, For, Show } from '@lessjs/core/jsx-runtime'
+```
+
+### For
+
+List rendering with signal arrays:
+
+```tsx
+<For each={this.#items}>
+  {(item) => <li>{item.name}</li>}
+</For>
+```
+
+### Show
+
+Conditional rendering:
+
+```tsx
+<Show when={this.#loading}>
+  <Spinner />
+  <Content />
+</Show>
+```
+
+## Signals
+
+Import from `@lessjs/signals`:
+
+```ts
+import { signal, computed, effect } from '@lessjs/signals'
+
+const count = signal(0)
+const double = computed(() => count.value * 2)
+
+effect(() => {
+  console.log('count changed:', count.value)
+})
+```
+
+## Islands
+
+```tsx
+// Create an island
+import { defineIsland } from '@lessjs/core'
+
+defineIsland('my-widget', {
+  tagName: 'my-widget',
+  strategy: 'idle',  // load | idle | visible | only
+})
+```
+
+```tsx
+// Use in a page
+<my-widget client:idle />
+```
+
+Hydration strategies: `client:load` (immediate), `client:idle` (requestIdleCallback), `client:visible` (IntersectionObserver), `client:only` (CSR only, no SSR).
+
+## wrapInDocument
+
+Wraps content in a complete HTML document:
+
+```ts
+import { wrapInDocument } from '@lessjs/core'
+
+const html = wrapInDocument(content, {
+  title: 'My Page',
+  lang: 'en',
+  headExtras: '<link rel="stylesheet" href="/styles.css">',
+})
+```
