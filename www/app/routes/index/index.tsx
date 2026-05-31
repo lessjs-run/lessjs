@@ -180,7 +180,20 @@ export class DocsHome extends DsdElement {
     // SignalContext: auto-tracks theme from less-layout provider
     const theme = consumeContext(THEME_CTX);
     this.setAttribute('data-theme', theme.value);
-    theme.subscribe((t) => this.setAttribute('data-theme', t));
+    theme.subscribe((t) => {
+      this.setAttribute('data-theme', t);
+      // Force :host() re-evaluation in adopted stylesheets.
+      // Changing data-theme on the host should trigger CSS recalc,
+      // but adoptedStyleSheets may cache :host() matches. Spread
+      // creates a new array reference which forces a full re-apply.
+      requestAnimationFrame(() => {
+        if (this.shadowRoot?.adoptedStyleSheets?.length) {
+          this.shadowRoot.adoptedStyleSheets = [
+            ...this.shadowRoot.adoptedStyleSheets,
+          ];
+        }
+      });
+    });
   }
 
   override render() {
