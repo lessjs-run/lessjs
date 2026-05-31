@@ -73,19 +73,26 @@ sheet.replaceSync(`
     .search-icon { display: inline-block; }
   }
 
-  /* v0.27 - fixed overlay above shadow-DOM stacking contexts.
-     z-index 99999 ensures it renders above the app-header (z-index 100)
-     regardless of nested shadow root containing-block rules. */
   .overlay {
     position: fixed;
     inset: 0;
-    z-index: 99999;
-    background: rgba(0,0,0,0.4);
+    z-index: 9999;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 15vh 0 0;
+    border: 0;
+    color: inherit;
+    background: transparent;
     display: none;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 15vh;
     box-sizing: border-box;
+  }
+  .overlay::backdrop {
+    background: rgba(0,0,0,0.4);
   }
   .overlay.open {
     display: flex;
@@ -180,6 +187,7 @@ export default class LessSearch extends DsdElement {
   private _entries: SearchEntry[] = [];
   private _loaded = false;
   private _inputRef: HTMLInputElement | null = null;
+  private _dialogRef: HTMLDialogElement | null = null;
 
   constructor() {
     super();
@@ -214,12 +222,20 @@ export default class LessSearch extends DsdElement {
 
   _open(): void {
     this.#open.value = true;
+    const dialog = this._dialogRef ?? this.shadowRoot?.querySelector('dialog.overlay');
+    if (dialog instanceof HTMLDialogElement && !dialog.open) {
+      dialog.showModal();
+    }
     this._loadIndex();
     requestAnimationFrame(() => this._inputRef?.focus());
   }
 
   _close(): void {
     this.#open.value = false;
+    const dialog = this._dialogRef ?? this.shadowRoot?.querySelector('dialog.overlay');
+    if (dialog instanceof HTMLDialogElement && dialog.open) {
+      dialog.close();
+    }
     this.#query.value = '';
     this.#results.value = [];
     this._inputRef = null;
@@ -338,11 +354,14 @@ export default class LessSearch extends DsdElement {
           /* v0.28: class driven by computed signal via data-signal-attr.
             No effect(), no classList.toggle. */
         }
-        <div
+        <dialog
           class={this.#overlayClass}
           data-signal='overlayClass'
           data-signal-attr='class'
           data-on-click='_closeOnBackdrop'
+          ref={(el: HTMLDialogElement) => {
+            this._dialogRef = el;
+          }}
         >
           <div class='panel'>
             <input
@@ -365,7 +384,7 @@ export default class LessSearch extends DsdElement {
             >
             </div>
           </div>
-        </div>
+        </dialog>
       </>
     );
   }
