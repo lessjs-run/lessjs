@@ -59,11 +59,11 @@ Signal 是 DsdElement 的一部分，不是独立系统：
 
 ```tsx
 class MyCounter extends DsdElement {
-  #count = signal(0)
+  #count = signal(0);
 
   render() {
     // SSR: signal 值写入 HTML 的 data-signal 属性
-    return <span data-signal="count">{this.#count.value}</span>
+    return <span data-signal='count'>{this.#count.value}</span>;
   }
 
   // CSR: _hydrateSignals() 自动将 effect() 绑定到 DOM
@@ -95,10 +95,10 @@ DsdElement
 
 ## 关键架构决策
 
-| ADR | 决策 | 状态 |
-|-----|------|------|
-| ADR-0057 | JSX + Signal 组件模型 | 生效 |
-| ADR-0065 | 统一 VNode 管线 (SSR+CSR) | 生效 |
+| ADR      | 决策                              | 状态 |
+| -------- | --------------------------------- | ---- |
+| ADR-0057 | JSX + Signal 组件模型             | 生效 |
+| ADR-0065 | 统一 VNode 管线 (SSR+CSR)         | 生效 |
 | ADR-0067 | Ocean (静态) + Island (信号) 架构 | 生效 |
-| ADR-0071 | 单次 VNode 遍历，删除 parse5 | 生效 |
-| ADR-0072 | 一个 renderDsd()，jsx 仅 subpath | 生效 |
+| ADR-0071 | 单次 VNode 遍历，删除 parse5      | 生效 |
+| ADR-0072 | 一个 renderDsd()，jsx 仅 subpath  | 生效 |

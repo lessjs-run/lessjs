@@ -14,7 +14,7 @@
  * Prerequisite: `deno task build`
  */
 
-import { assert, assertFalse, assertEquals, assertStringIncludes } from 'jsr:@std/assert@1';
+import { assert, assertEquals, assertFalse, assertStringIncludes } from 'jsr:@std/assert@1';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -86,7 +86,15 @@ Deno.test('v0.27.0 regression: no <dialog> in rendered HTML', () => {
 // ─── API Surface: jsx NOT in root export ────────────────────────────
 
 Deno.test('v0.27.0 regression: jsx not exported from @lessjs/core root', () => {
-  const indexPath = join(import.meta.dirname ?? '.', '..', '..', 'packages', 'core', 'src', 'index.ts');
+  const indexPath = join(
+    import.meta.dirname ?? '.',
+    '..',
+    '..',
+    'packages',
+    'core',
+    'src',
+    'index.ts',
+  );
   const src = readFileSync(indexPath, 'utf-8');
   // Check that no export line exports jsx, jsxDEV, jsxs, For, or Show
   for (const name of ['jsx,', 'jsxDEV', 'jsxs', 'For,', 'Show']) {
@@ -100,7 +108,14 @@ Deno.test('v0.27.0 regression: jsx not exported from @lessjs/core root', () => {
 // ─── parse5 not a dependency ─────────────────────────────────────────
 
 Deno.test('v0.27.0 regression: parse5 not in core deno.json', () => {
-  const coreDenoPath = join(import.meta.dirname ?? '.', '..', '..', 'packages', 'core', 'deno.json');
+  const coreDenoPath = join(
+    import.meta.dirname ?? '.',
+    '..',
+    '..',
+    'packages',
+    'core',
+    'deno.json',
+  );
   const json = readFileSync(coreDenoPath, 'utf-8');
   assertFalse(json.includes('parse5'), 'parse5 found in core/deno.json');
 });

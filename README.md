@@ -57,16 +57,16 @@ export default class HomePage extends DsdElement {
 
 ## Packages
 
-| Package                | Version | Description                                                |
-| ---------------------- | ------- | ---------------------------------------------------------- |
-| `@lessjs/core`         | v0.27.0 | DSD renderer, DsdElement, JSX runtime, islands, navigation |
-| `@lessjs/adapter-vite` | v0.27.0 | Vite plugin: route scanning, SSG pipeline, island entries  |
-| `@lessjs/ui`           | v0.27.0 | DSD-native UI components (button, card, input, dialog...)  |
-| `@lessjs/signals`      | v0.27.0 | Signal primitives (signal, computed, effect)               |
-| `@lessjs/content`      | v0.27.0 | Blog, nav, sitemap build plugins                           |
-| `@lessjs/i18n`         | v0.27.0 | Locales, route expansion                                   |
-| `@lessjs/create`       | v0.27.0 | Project scaffold CLI                                       |
-| `@lessjs/runtime`      | v0.27.0 | Unified component authoring facade (core + signals + style)|
+| Package                | Version | Description                                                 |
+| ---------------------- | ------- | ----------------------------------------------------------- |
+| `@lessjs/core`         | v0.27.0 | DSD renderer, DsdElement, JSX runtime, islands, navigation  |
+| `@lessjs/adapter-vite` | v0.27.0 | Vite plugin: route scanning, SSG pipeline, island entries   |
+| `@lessjs/ui`           | v0.27.0 | DSD-native UI components (button, card, input, dialog...)   |
+| `@lessjs/signals`      | v0.27.0 | Signal primitives (signal, computed, effect)                |
+| `@lessjs/content`      | v0.27.0 | Blog, nav, sitemap build plugins                            |
+| `@lessjs/i18n`         | v0.27.0 | Locales, route expansion                                    |
+| `@lessjs/create`       | v0.27.0 | Project scaffold CLI                                        |
+| `@lessjs/runtime`      | v0.27.0 | Unified component authoring facade (core + signals + style) |
 
 [All 16 packages →](https://jsr.io/@lessjs)
 

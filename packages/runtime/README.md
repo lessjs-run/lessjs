@@ -1,6 +1,6 @@
 # @lessjs/runtime
 
-Component authoring facade (v0.24.3) — the single import for writing LessJS components.
+Component authoring facade (v0.27.0) — the single import for writing LessJS components.
 
 `@lessjs/runtime` re-exports the complete authoring surface from the runtime
 kernel (`@lessjs/core`), signals engine (`@lessjs/signals`), and stylesheet
@@ -42,9 +42,11 @@ customElements.define(tagName, MyButton);
 
 ## Exports
 
-From `@lessjs/core`: `DsdElement`, `jsx`, `jsxs`, `Fragment`, `VNode`, `isVNode`,
+From `@lessjs/core`: `DsdElement`, `Fragment`, `VNode`, `isVNode`,
 `renderToString`, `renderToDom`, `isSignalLike`, `unwrapSignalLike`,
 `ErrorBoundary`, `LessError`, `escapeHtml`, `escapeAttr`, `defineIsland`, `bindEvents`, `getSsrProps`.
+
+From `@lessjs/core/jsx-runtime`: `jsx`, `jsxs`, `jsxDEV`, `For`, `Show`.
 
 From `@lessjs/signals`: `signal`, `computed`, `effect`.
 

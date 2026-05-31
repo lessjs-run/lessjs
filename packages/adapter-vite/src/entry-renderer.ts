@@ -33,7 +33,7 @@
 //    - See: `packages/adapter-vite/src/plugin.ts` for client entry generation
 //
 // 3. Nested custom elements (from the VNode tree):
-//    - Handled by `renderNestedDsd()` in core/src/jsx-render-string.ts
+//    - Handled by `renderDsdTree()` in core/src/jsx-render-string.ts
 //    - Calls `renderDsd()` inline for registered custom element hosts
 //    - Package islands remain client-side unless admitted into the SSR entry
 //

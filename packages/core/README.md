@@ -1,13 +1,13 @@
 # @lessjs/core
 
-Pure LessJS runtime package (v0.24.3).
+Pure LessJS runtime package (v0.27.0).
 
 `@lessjs/core` owns the platform-facing runtime primitives:
 
 - **JSX + Signal component model** — `jsx()`, `jsxs()`, `VNode`, `renderToString()`, `renderToDom()`
 - **DsdElement** — zero-framework base class for DSD components
 - **static props** — ES2022 class fields for reactive properties
-- **DSD rendering** — `renderDsd()`, `renderDsdByName()`, `renderDsdStream()`
+- **DSD rendering** — `renderDsd()`, `renderDsdStream()`
 - **Unified errors** — LessError hierarchy, ErrorBoundary, telemetry
 - **Signal utilities** — `isSignalLike()`, `unwrapSignalLike()`
 - **Island metadata** — island detection, strategy, hydration
@@ -25,7 +25,8 @@ deno add jsr:@lessjs/core
 ## Component Authoring
 
 ```tsx
-import { DsdElement, signal } from '@lessjs/runtime';
+import { DsdElement } from '@lessjs/core';
+import { signal } from '@lessjs/signals';
 
 class MyButton extends DsdElement {
   static props = { variant: String, disabled: Boolean };
@@ -57,11 +58,8 @@ import {
   getSsrProps,
   isSignalLike,
   isVNode,
-  jsx,
-  jsxs,
   LessError,
   renderDsd,
-  renderDsdByName,
   renderDsdStream,
   renderToDom,
   renderToString,

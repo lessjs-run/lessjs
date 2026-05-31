@@ -240,21 +240,24 @@ Published to JSR. Zero node:* imports in core. Works in Deno, Node, Bun, Edge.
 ## 9. API Surface (v0.27.0)
 
 ### Public (root export)
+
 ```ts
 import {
-  renderDsd,        // One function to rule them all
-  renderToString,    // Sync VNode→HTML (no nested CE)
-  DsdElement,        // Base class
-  Fragment,          // JSX fragment
-} from '@lessjs/core'
+  DsdElement, // Base class
+  Fragment, // JSX fragment
+  renderDsd, // One function to rule them all
+  renderToString, // Sync VNode→HTML (no nested CE)
+} from '@lessjs/core';
 ```
 
 ### Compiler Protocol (jsx-runtime subpath)
+
 ```ts
-import { jsx, jsxDEV, jsxs, For, Show } from '@lessjs/core/jsx-runtime'
+import { For, jsx, jsxDEV, jsxs, Show } from '@lessjs/core/jsx-runtime';
 ```
 
 ### Internal (not publicly exported)
+
 ```
 renderDsdTree     // VNode tree walk with inline CE rendering
 renderDsdByName   // Thin wrapper, kept for backward compat

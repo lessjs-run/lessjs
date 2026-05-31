@@ -26,7 +26,7 @@
  *    - NOT imported in SSR entry (package islands registered client-side only)
  *
  * 3. Nested custom element (from the VNode tree):
- *    - Rendered by `renderNestedDsd()` in core/src/jsx-render-string.ts
+ *    - Rendered by `renderDsdTree()` in core/src/jsx-render-string.ts
  *    - Calls `renderDsd()` inline for registered custom element hosts
  *    - Package islands remain client-side unless admitted into the SSR entry
  *
@@ -623,7 +623,7 @@ export function buildSsrAdmissionPlan(
   // v0.19.1 Phase 6: Hub client-only tags (ADR-0035 A1)
   // Tags from Hub registry data (e.g. Shoelace, Media Chrome) that are
   // not islands or CEM-classified - they come from static hub data.
-  // Without this, renderNestedDsd() would try to instantiate
+  // Without this, renderDsdTree() would try to instantiate
   // and render them during SSG, causing 72 DSD errors.
   for (const tag of hubClientOnlyTags) {
     if (!seen.has(tag) && !admittedTags.has(tag)) {

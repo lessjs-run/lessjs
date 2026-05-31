@@ -66,11 +66,11 @@ Signals are part of DsdElement, not a separate system:
 
 ```tsx
 class MyCounter extends DsdElement {
-  #count = signal(0)
+  #count = signal(0);
 
   render() {
     // SSR: signal value written into HTML as data-signal attribute
-    return <span data-signal="count">{this.#count.value}</span>
+    return <span data-signal='count'>{this.#count.value}</span>;
   }
 
   // CSR: _hydrateSignals() auto-binds effect() to DOM
@@ -104,10 +104,10 @@ DsdElement
 
 ## Key Design Decisions
 
-| ADR | Decision | Status |
-|-----|----------|--------|
-| ADR-0057 | JSX + Signal component model | Active |
-| ADR-0065 | Unified VNode pipeline (SSR+CSR) | Active |
+| ADR      | Decision                                      | Status |
+| -------- | --------------------------------------------- | ------ |
+| ADR-0057 | JSX + Signal component model                  | Active |
+| ADR-0065 | Unified VNode pipeline (SSR+CSR)              | Active |
 | ADR-0067 | Ocean (static) + Island (signal) architecture | Active |
-| ADR-0071 | Single-pass VNode traversal, delete parse5 | Active |
-| ADR-0072 | One renderDsd(), jsx on subpath only | Active |
+| ADR-0071 | Single-pass VNode traversal, delete parse5    | Active |
+| ADR-0072 | One renderDsd(), jsx on subpath only          | Active |

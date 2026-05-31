@@ -36,7 +36,7 @@
  *
  * 4. Nested custom elements (from the VNode tree):
  *    - NOT handled in this file
- *    - See: `packages/core/src/jsx-render-string.ts` and `renderNestedDsd()`
+ *    - See: `packages/core/src/jsx-render-string.ts` and `renderDsdTree()`
  *
  * Audit completed: 2026-05-17
  * Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
