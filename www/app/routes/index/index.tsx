@@ -116,11 +116,11 @@ heroSheet.replaceSync(`
     border-radius: var(--radius-3); overflow: hidden;
   }
   .ft-card {
-    padding: var(--size-7); background: rgba(255,255,255,0.015);
+    padding: var(--size-7); background: var(--bg-surface);
     transition: background 0.3s ease;
   }
-  .ft-card:nth-child(6n+4), .ft-card:nth-child(6n+5), .ft-card:nth-child(6n+6) { background: var(--brand-glow); }
-  .ft-card:hover { background: rgba(124,111,245,0.08); }
+  .ft-card:nth-child(6n+4), .ft-card:nth-child(6n+5), .ft-card:nth-child(6n+6) { background: var(--brand-subtle); }
+  .ft-card:hover { background: var(--brand-glow); }
   .ft-icon { font-size: var(--font-size-4); margin-bottom: var(--size-3); display: block; }
   .ft-card h3 { margin: 0 0 var(--size-2); font-size: var(--font-size-1); font-weight: var(--font-weight-8); color: var(--text-primary); }
   .ft-card p { margin: 0; font-size: var(--font-size-0); line-height: var(--font-lineheight-3); color: var(--text-muted); }
