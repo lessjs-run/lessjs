@@ -139,7 +139,7 @@ sheet.replaceSync(`
   .mobile-tab-bar { display: none; }
 
   .mobile-menu-btn {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     width: var(--size-8);
@@ -371,6 +371,7 @@ sheet.replaceSync(`
 
   /* ─── Responsive ─── */
   @media (max-width: 900px) {
+    .mobile-menu-btn { display: flex; }
     .header-inner { padding: 0 1rem; gap: var(--size-3); }
     .header-nav { display: none; }
     .github-text { display: none; }
@@ -666,18 +667,20 @@ export class LessLayout extends DsdElement {
             {this._renderHeaderNav()}
             <div className='header-right'>
               {!noSearch && <less-search></less-search>}
-              <button
-                className='mobile-menu-btn'
-                part='nav-toggle'
-                aria-label='Toggle navigation'
-                data-on-click='_toggleMenu'
-              >
-                <svg width='18' height='18' viewBox='0 0 18 18' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round'>
-                  <line x1='3' y1='4.5' x2='15' y2='4.5' />
-                  <line x1='3' y1='9' x2='15' y2='9' />
-                  <line x1='3' y1='13.5' x2='15' y2='13.5' />
-                </svg>
-              </button>
+              {!home && (
+                <button
+                  className='mobile-menu-btn'
+                  part='nav-toggle'
+                  aria-label='Toggle navigation'
+                  data-on-click='_toggleMenu'
+                >
+                  <svg width='18' height='18' viewBox='0 0 18 18' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round'>
+                    <line x1='3' y1='4.5' x2='15' y2='4.5' />
+                    <line x1='3' y1='9' x2='15' y2='9' />
+                    <line x1='3' y1='13.5' x2='15' y2='13.5' />
+                  </svg>
+                </button>
+              )}
               <less-theme-toggle></less-theme-toggle>
               {locales.length > 1 && (
                 <a
