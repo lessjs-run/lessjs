@@ -311,9 +311,13 @@ export async function renderNestedDsd(
     const items = (isSignalLike(props?.each)
       ? (props!.each as { value: unknown }).value
       : props?.each) as unknown[];
-    if (!Array.isArray(items)) return '';
+    if (!Array.isArray(items)) {
+      return '';
+    }
     const renderFn = children[0] as unknown as ((item: unknown, idx: number) => unknown);
-    if (typeof renderFn !== 'function') return '';
+    if (typeof renderFn !== 'function') {
+      return '';
+    }
     const parts: string[] = [];
     for (let i = 0; i < items.length; i++) {
       parts.push(await renderNestedDsd(renderFn(items[i], i), eventContext));

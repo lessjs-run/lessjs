@@ -21,6 +21,7 @@ The root cause pattern is identical across multiple chains: a **single Vite plug
 **Root cause**: `createLessJsrPackageResolverPlugin` (`ssg-package-resolver.ts:176`) runs with `enforce:'pre'` and intercepts ALL `@lessjs/content/*` and `@lessjs/i18n/*` imports, redirecting them to source directories instead of allowing the generated-data dispatch plugins to resolve them to the correct disk files.
 
 **Cascade effect**:
+
 ```
 ssg-package-resolver intercepts @lessjs/content/nav
   ↓ can't resolve _generated-nav.ts
@@ -37,6 +38,7 @@ Workaround 6: entry-renderer re-export binds virtual names
 ### Scope
 
 The full audit covered:
+
 - 20 workspace packages
 - 401,000+ lines of code
 - 7 GitHub Actions workflows
@@ -69,6 +71,7 @@ We will eliminate all 23 chains in P0 → P1 → P2 → P3 order:
 8. Delete `_generated-route-manifest.ts` and generator code (already done in SOP-008)
 
 **New data flow**:
+
 ```
 content/nav/scanner
   ↓ buildStart()
@@ -85,14 +88,14 @@ less-layout.tsx: import { navSections, headerNav } from '@lessjs/content/nav'
 
 Global replacement of all LessJS brand names in user-facing output:
 
-| From | To | Location |
-|------|----|----------|
-| `__LESS_CLIENT_ONLY_TAGS__` | `__CLIENT_ONLY_TAGS__` | entry-renderer.ts, core/render-nested.ts |
-| `__LESS_HEAD_EXTRAS__` | `__HEAD_EXTRAS__` | entry-renderer.ts, build-ssg.ts |
-| `__LESS_BLOG_BASE_PATH__` | `__BLOG_BASE_PATH__` | content/index.ts |
-| `data-less-e` | `data-eid` | event-hydration.ts + 6 test files |
-| `__island` / `__tagName` | `__hydrate` / `__hydrateTag` | island-transform.ts, island.ts |
-| `<!-- LessJS ERROR: -->` | `<!-- Render Error: -->` | render-errors.ts |
+| From                        | To                           | Location                                 |
+| --------------------------- | ---------------------------- | ---------------------------------------- |
+| `__LESS_CLIENT_ONLY_TAGS__` | `__CLIENT_ONLY_TAGS__`       | entry-renderer.ts, core/render-nested.ts |
+| `__LESS_HEAD_EXTRAS__`      | `__HEAD_EXTRAS__`            | entry-renderer.ts, build-ssg.ts          |
+| `__LESS_BLOG_BASE_PATH__`   | `__BLOG_BASE_PATH__`         | content/index.ts                         |
+| `data-less-e`               | `data-eid`                   | event-hydration.ts + 6 test files        |
+| `__island` / `__tagName`    | `__hydrate` / `__hydrateTag` | island-transform.ts, island.ts           |
+| `<!-- LessJS ERROR: -->`    | `<!-- Render Error: -->`     | render-errors.ts                         |
 
 #### P1: UI Autonomy (chain 4)
 
@@ -143,12 +146,15 @@ One-pass cleanup: delete dead files, remove dead exports, fix CSP placeholder.
 ## Alternatives Considered
 
 ### A: Keep virtual modules, add more dispatch layers
+
 Rejected. Perpetuates the workaround cascade. Every new data type would need another virtual module.
 
 ### B: Rewrite SSG entirely
+
 Rejected. Too much scope for v0.27. The plugin ordering fix is surgical and sufficient.
 
 ### C: Accept all chains as "technical debt backlog"
+
 Rejected. User explicitly demanded "zero tolerance." The chains are not technical debt — they are bugs that became architecture.
 
 ---

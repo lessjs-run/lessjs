@@ -1,14 +1,14 @@
 # ADR-0071: Single-Pass Render — Unify `renderToString` + `renderNestedCustomElements` into `renderNestedDsd`
 
-| Metadata       | Value                                                                 |
-| -------------- | --------------------------------------------------------------------- |
-| **ADR**        | 0071                                                                   |
-| **Status**     | ACCEPTED                                                               |
-| **Date**       | 2026-05-31                                                             |
-| **Author**     | Qi (Delivery Director), with Zhi (Architect)                           |
-| **Deciders**   | Zhi                                                                    |
-| **Supersedes** | ADR-0065 §"renderNestedCustomElements" pattern（部分替代）              |
-| **Version**    | v0.28.0                                                                |
+| Metadata       | Value                                                                                         |
+| -------------- | --------------------------------------------------------------------------------------------- |
+| **ADR**        | 0071                                                                                          |
+| **Status**     | ACCEPTED                                                                                      |
+| **Date**       | 2026-05-31                                                                                    |
+| **Author**     | Qi (Delivery Director), with Zhi (Architect)                                                  |
+| **Deciders**   | Zhi                                                                                           |
+| **Supersedes** | ADR-0065 §"renderNestedCustomElements" pattern（部分替代）                                    |
+| **Version**    | v0.28.0                                                                                       |
 | **Related**    | ADR-0062 (DSD architecture), ADR-0065 (unified VNode pipeline), ADR-0070 (app shell boundary) |
 
 ---
@@ -32,11 +32,11 @@ Between these two traversals, `__wrapAppShell()` in `entry-renderer.ts` further 
 
 During v0.28.0 deployment to `https://dev.lessjs.pages.dev/`, three bugs were reported:
 
-| Bug | Symptom | Root Cause |
-|-----|---------|------------|
+| Bug       | Symptom                                   | Root Cause                                                                                                     |
+| --------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | **Bug 1** | Sidebar disappears on `/zh/guide/*` pages | `less-layout`'s DSD template is absent — `__wrapAppShell` string-concatenated it without calling `renderDsd()` |
-| **Bug 2** | Search panel shows `[object Object]` | `<dialog>` in `less-search.tsx` + signal computed values being `String()`-converted during SSR |
-| **Bug 3** | Search panel doesn't follow theme | `dialog::backdrop` doesn't inherit shadow DOM CSS custom properties |
+| **Bug 2** | Search panel shows `[object Object]`      | `<dialog>` in `less-search.tsx` + signal computed values being `String()`-converted during SSR                 |
+| **Bug 3** | Search panel doesn't follow theme         | `dialog::backdrop` doesn't inherit shadow DOM CSS custom properties                                            |
 
 All three bugs trace to the same architectural weakness: **the pipeline has two tree traversals separated by a string concatenation step, and the intermediate string form loses structural guarantees that the VNode tree provides.**
 
@@ -70,15 +70,15 @@ final HTML  ←  custom elements now have DSD templates
 
 ### Industry Reference — How Others Handle This
 
-| Framework | Component Nesting in SSR | Tree Traversal Count |
-|-----------|-------------------------|---------------------|
-| **React** | `renderToString()` recursively calls child component `render()` | 1 pass |
-| **Vue 3** | `renderComponentVNode()` recursively `renderComponentRoot()` | 1 pass |
-| **Lit SSR** | `render()` → recursive `renderTemplateResult()` for child CE | 1 pass |
-| **SolidJS** | `renderToString()` recursively `renderComponent()` | 1 pass |
-| **Astro** | Compiler resolves component tree at build time | 0 runtime passes |
-| **SvelteKit** | Compiler generates recursive `$$render` calls | 0 runtime passes |
-| **LessJS (current)** | `renderToString` + parse5 + `renderNestedCustomElements` | **2 passes** |
+| Framework            | Component Nesting in SSR                                        | Tree Traversal Count |
+| -------------------- | --------------------------------------------------------------- | -------------------- |
+| **React**            | `renderToString()` recursively calls child component `render()` | 1 pass               |
+| **Vue 3**            | `renderComponentVNode()` recursively `renderComponentRoot()`    | 1 pass               |
+| **Lit SSR**          | `render()` → recursive `renderTemplateResult()` for child CE    | 1 pass               |
+| **SolidJS**          | `renderToString()` recursively `renderComponent()`              | 1 pass               |
+| **Astro**            | Compiler resolves component tree at build time                  | 0 runtime passes     |
+| **SvelteKit**        | Compiler generates recursive `$$render` calls                   | 0 runtime passes     |
+| **LessJS (current)** | `renderToString` + parse5 + `renderNestedCustomElements`        | **2 passes**         |
 
 **Every framework does this in one pass.** LessJS is the only one that serializes, re-parses, and then re-traverses.
 
@@ -124,41 +124,41 @@ final HTML (all CEs with DSD templates, single pass)
 
 ### What Gets Removed
 
-| Artifact | Reason |
-|----------|--------|
-| `packages/core/src/render-nested.ts` (~430 lines) | Entire logic absorbed into unified traversal |
-| `renderNestedCustomElements` export from `packages/core/src/index.ts` | No external caller after ADR-0070 cleanup |
-| `parse5` dependency in `packages/core/deno.json` | No longer used |
-| `visited` Set + cycle detection in `render-dsd.ts` (~15 lines) | Trees are acyclic |
-| `__wrapAppShell()` in `entry-renderer.ts` (~10 lines) | `less-layout` rendered normally |
-| `lines.push(...)` code generation for `__wrapAppShell` (~20 lines) | No generated code needed |
-| `import { renderNestedCustomElements }` in SSR entry code | No longer needed |
+| Artifact                                                              | Reason                                       |
+| --------------------------------------------------------------------- | -------------------------------------------- |
+| `packages/core/src/render-nested.ts` (~430 lines)                     | Entire logic absorbed into unified traversal |
+| `renderNestedCustomElements` export from `packages/core/src/index.ts` | No external caller after ADR-0070 cleanup    |
+| `parse5` dependency in `packages/core/deno.json`                      | No longer used                               |
+| `visited` Set + cycle detection in `render-dsd.ts` (~15 lines)        | Trees are acyclic                            |
+| `__wrapAppShell()` in `entry-renderer.ts` (~10 lines)                 | `less-layout` rendered normally              |
+| `lines.push(...)` code generation for `__wrapAppShell` (~20 lines)    | No generated code needed                     |
+| `import { renderNestedCustomElements }` in SSR entry code             | No longer needed                             |
 
 ### What Gets Added
 
-| Artifact | Lines (est.) | Purpose |
-|----------|-------------|---------|
-| `isRegisteredCustomElement(tag)` helper in `jsx-render-string.ts` | ~5 | Quick `customElements.get()` check |
-| Inline CE rendering branch in the unified traversal | ~15 | Call `renderDsd()` when tag is a registered CE |
-| Async signature on traversal function | 1 line | `async function renderNestedDsd(vnode)` |
+| Artifact                                                          | Lines (est.) | Purpose                                        |
+| ----------------------------------------------------------------- | ------------ | ---------------------------------------------- |
+| `isRegisteredCustomElement(tag)` helper in `jsx-render-string.ts` | ~5           | Quick `customElements.get()` check             |
+| Inline CE rendering branch in the unified traversal               | ~15          | Call `renderDsd()` when tag is a registered CE |
+| Async signature on traversal function                             | 1 line       | `async function renderNestedDsd(vnode)`        |
 
 **Net change: approximately -45 lines.**
 
 ### Benefits
 
-| Dimension | Before | After |
-|-----------|--------|-------|
-| Tree traversals | 2 (renderToString + parse5 rebuild + renderNested) | **1** |
-| Structural information | Lost mid-pipeline (VNode→string) | **Preserved throughout** |
-| `less-layout` DSD rendering | Bypassed (`__wrapAppShell` string) | **Normal path**, like any CE |
-| Custom element Tags | Empty in intermediate HTML | **Fully rendered in single pass** |
-| Cycle detection | `visited.has("x@1")` false positives | **Structurally impossible** |
-| parse5 dependency | Required | **Removed** |
-| Bug 1 (sidebar) | Caused by bypassed DSD | **Cannot occur** (all CEs same path) |
-| Bug 2 (`[object Object]`) | Caused by dialog + string serialization | **Eliminated** (removed in separate fix) |
-| Bug 3 (theme) | Caused by `::backdrop` isolation | **Eliminated** (removed in separate fix) |
-| TypeScript coverage | String-generated code not checked | **Full coverage** (no generated code) |
-| Audit surface | 3 functions, 2 files, parse5 | **1 function, 1 file, 0 external parsers** |
+| Dimension                   | Before                                             | After                                      |
+| --------------------------- | -------------------------------------------------- | ------------------------------------------ |
+| Tree traversals             | 2 (renderToString + parse5 rebuild + renderNested) | **1**                                      |
+| Structural information      | Lost mid-pipeline (VNode→string)                   | **Preserved throughout**                   |
+| `less-layout` DSD rendering | Bypassed (`__wrapAppShell` string)                 | **Normal path**, like any CE               |
+| Custom element Tags         | Empty in intermediate HTML                         | **Fully rendered in single pass**          |
+| Cycle detection             | `visited.has("x@1")` false positives               | **Structurally impossible**                |
+| parse5 dependency           | Required                                           | **Removed**                                |
+| Bug 1 (sidebar)             | Caused by bypassed DSD                             | **Cannot occur** (all CEs same path)       |
+| Bug 2 (`[object Object]`)   | Caused by dialog + string serialization            | **Eliminated** (removed in separate fix)   |
+| Bug 3 (theme)               | Caused by `::backdrop` isolation                   | **Eliminated** (removed in separate fix)   |
+| TypeScript coverage         | String-generated code not checked                  | **Full coverage** (no generated code)      |
+| Audit surface               | 3 functions, 2 files, parse5                       | **1 function, 1 file, 0 external parsers** |
 
 ---
 

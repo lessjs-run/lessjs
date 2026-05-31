@@ -118,8 +118,11 @@ export function renderErrorHtml(
   // Cross-runtime environment detection
   // Check LESSJS_ENV across runtimes. Production suppresses error detail.
   const isDev = (() => {
-    try { return (globalThis as Record<string, unknown>).LESSJS_ENV !== 'production'; }
-    catch { return true; }
+    try {
+      return (globalThis as Record<string, unknown>).LESSJS_ENV !== 'production';
+    } catch {
+      return true;
+    }
   })();
 
   if (isDev) {

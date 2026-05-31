@@ -12,11 +12,11 @@ LessJS 的三层架构（组件模型+信号、DSD 渲染管线、Builder 管线
 
 ### 当前桥接问题清单
 
-| 桥 | 当前实现 | 问题 |
-|----|---------|------|
-| Builder → Render | `lines.push('return \`<less-layout>${c}</less-layout>\`')` | 字符串拼接生成 JS 代码，缺失 await 不报错 |
-| Component → Render | `renderDsd()` call `render()` → try/catch 兜底 | 浏览器 API 调用在 SSR 炸了被静默吞掉 |
-| Render → Render (内部) | `visitedKey = "${tagName}@${depth}"` | 5 个 `<less-code-block>` 深度=1，后4个被误判循环 |
+| 桥                     | 当前实现                                                   | 问题                                             |
+| ---------------------- | ---------------------------------------------------------- | ------------------------------------------------ |
+| Builder → Render       | `lines.push('return \`<less-layout>${c}</less-layout>\`')` | 字符串拼接生成 JS 代码，缺失 await 不报错        |
+| Component → Render     | `renderDsd()` call `render()` → try/catch 兜底             | 浏览器 API 调用在 SSR 炸了被静默吞掉             |
+| Render → Render (内部) | `visitedKey = "${tagName}@${depth}"`                       | 5 个 `<less-code-block>` 深度=1，后4个被误判循环 |
 
 ---
 
@@ -45,7 +45,7 @@ export async function wrapAppShell(
     headerNav: HeaderNavLink[];
     locales: string[];
     defaultLocale: string;
-  }
+  },
 ): Promise<string> {
   // 函数体内所有逻辑受 TypeScript 检查
   // await 缺失 → 编译错误，不是运行时 [object Promise]
@@ -78,6 +78,7 @@ export class DsdElement extends _HTMLElement {
 ```
 
 **关键变化**：
+
 - `renderDsd()` 在 injectProps 之后、render() 之前注入 `#ssrContext`
 - Router 不再被 render() 调用（render 走 ssrContext）
 - Router 只在 connectedCallback 之后使用（CSR 安全）
@@ -118,6 +119,7 @@ function isAncestor(child: P5Element, ancestor: P5Element): boolean {
 ```
 
 **规则变更**：
+
 - 旧：`visited.has("less-code-block@1")` → skip（兄弟也跳过）
 - 新：检查 render() 输出的 AST 中是否包含相同 tag 在更深的层级 → 只跳过自引用循环
 
@@ -128,6 +130,7 @@ function isAncestor(child: P5Element, ancestor: P5Element): boolean {
 ### Phase 1：建桥3（最小改动，最大收益）
 
 **改 `render-nested.ts` 的 cycle detection**：
+
 - 删除 `${tagName}@${depth}` visited Set
 - 在 `renderDsd()` 输出解析后，检查 render() 输出中是否包含同名 tag → 只在真循环时跳过
 - 预估：~30 行改动
@@ -135,6 +138,7 @@ function isAncestor(child: P5Element, ancestor: P5Element): boolean {
 ### Phase 2：建桥2（加固 bridge1 的前提）
 
 **给 DsdElement 加 `#ssrContext`**：
+
 - 新增 `SsrContext` 接口
 - `renderDsd()` 注入 ssrContext
 - `LessLayout._currentPath()` 改为读 ssrContext
@@ -144,6 +148,7 @@ function isAncestor(child: P5Element, ancestor: P5Element): boolean {
 ### Phase 3：建桥1（长期信任）
 
 **提取 `entry-bridge.ts`**：
+
 - 新建 `packages/core/src/entry-bridge.ts`
 - `wrapAppShell()` 从 lines.push 字符串 → 真实函数
 - `entry-renderer.ts` 简化为 import + 参数拼接
@@ -154,22 +159,22 @@ function isAncestor(child: P5Element, ancestor: P5Element): boolean {
 
 ## 影响的包
 
-| 包 | 变更 |
-|----|------|
-| @lessjs/core | 新增 entry-bridge.ts, SsrContext, 修改 render-nested.ts |
-| @lessjs/ui | LessLayout._currentPath() 不再依赖 Router |
-| @lessjs/adapter-vite | entry-renderer.ts 简化 |
-| @lessjs/router | 不受影响（仅 CSR 使用） |
+| 包                   | 变更                                                    |
+| -------------------- | ------------------------------------------------------- |
+| @lessjs/core         | 新增 entry-bridge.ts, SsrContext, 修改 render-nested.ts |
+| @lessjs/ui           | LessLayout._currentPath() 不再依赖 Router               |
+| @lessjs/adapter-vite | entry-renderer.ts 简化                                  |
+| @lessjs/router       | 不受影响（仅 CSR 使用）                                 |
 
 ---
 
 ## 风险与取舍
 
-| 风险 | 缓解 |
-|------|------|
+| 风险                                             | 缓解                                                     |
+| ------------------------------------------------ | -------------------------------------------------------- |
 | entry-bridge.ts 在 core 中增加 deno.json imports | core 已有 render-nested 依赖 parse5，bridge 不增加新依赖 |
-| SsrContext 暴露内部接口 | 标记为 `@internal`，不导出到 public API |
-| AST 循环检测性能 | parse5 树遍历是 O(depth)，一页最多几百节点，零影响 |
+| SsrContext 暴露内部接口                          | 标记为 `@internal`，不导出到 public API                  |
+| AST 循环检测性能                                 | parse5 树遍历是 O(depth)，一页最多几百节点，零影响       |
 
 ---
 

@@ -277,7 +277,9 @@ function renderPageRoute(
       lines.push(`    content = ${renderer.varName}.default.wrap(content, c)`);
     }
   }
-  lines.push(`    content = await __renderAppShell(content, c.req.path || ${JSON.stringify(route.path)})`);
+  lines.push(
+    `    content = await __renderAppShell(content, c.req.path || ${JSON.stringify(route.path)})`,
+  );
   lines.push(`    return c.html(wrapInDocument(content, {`);
   lines.push(`      title: ${JSON.stringify(docConfig.title)},`);
   lines.push(`      lang: ${JSON.stringify(docConfig.lang)},`);
@@ -562,7 +564,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('    home: isHome || undefined,');
   lines.push('  }, { route: routePath });');
   lines.push('  // Embed page content as light DOM inside less-layout (before closing tag).');
-  lines.push('  // less-layout\'s <slot></slot> will project the light DOM children.');
+  lines.push("  // less-layout's <slot></slot> will project the light DOM children.");
   lines.push('  return layoutResult.html.replace("</less-layout>", content + "</less-layout>");');
   lines.push('}');
   lines.push('');

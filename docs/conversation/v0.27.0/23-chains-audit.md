@@ -16,15 +16,16 @@
 
 ### 五轮扫描
 
-| 轮次 | grep 模式 | 分析维度 |
-|------|----------|---------|
-| R1 | 8 种（virtual, globalThis, __LESS_, data-less-, enforce, window.__, define, locale=） | 定义→解析→消费三端对齐 |
-| R2 | 12 维深度扫描 | 代码生成、try/catch、正则解析、文件大小、node:依赖、硬编码路径、phase token、HMR、HTML post-process、设计注释、超长文件、build context 复杂度 |
-| R3 | 16 维极限扫描 | monorepo依赖、CI/CD、test workaround、版本管理、JSR发布、lockfile、adapter共享代码、i18n架构、SSR handler、RPC/Signals/Hub包、content扫描、主题系统、PWA、error boundary、bundle size、Deno兼容层 |
-| R4 | 深度文件审计 | adapter代码共享、CSP、Dead code、内容扫描器、SSR错误、Cross-runtime |
-| R5 | 确认零遗漏 | HMR、Dev server、API routes、compat-check、cem、runtime、依赖图、发布顺序 |
+| 轮次 | grep 模式                                                                             | 分析维度                                                                                                                                                                                          |
+| ---- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R1   | 8 种（virtual, globalThis, __LESS_, data-less-, enforce, window.__, define, locale=） | 定义→解析→消费三端对齐                                                                                                                                                                            |
+| R2   | 12 维深度扫描                                                                         | 代码生成、try/catch、正则解析、文件大小、node:依赖、硬编码路径、phase token、HMR、HTML post-process、设计注释、超长文件、build context 复杂度                                                     |
+| R3   | 16 维极限扫描                                                                         | monorepo依赖、CI/CD、test workaround、版本管理、JSR发布、lockfile、adapter共享代码、i18n架构、SSR handler、RPC/Signals/Hub包、content扫描、主题系统、PWA、error boundary、bundle size、Deno兼容层 |
+| R4   | 深度文件审计                                                                          | adapter代码共享、CSP、Dead code、内容扫描器、SSR错误、Cross-runtime                                                                                                                               |
+| R5   | 确认零遗漏                                                                            | HMR、Dev server、API routes、compat-check、cem、runtime、依赖图、发布顺序                                                                                                                         |
 
 ### 覆盖范围
+
 - 401,000+ 行代码
 - 20 个 workspace 包
 - 7 个 GitHub Actions workflow
@@ -34,48 +35,48 @@
 
 ### 🔴 P0（4 条）— 一次修复多链死
 
-| # | 名称 | 位置 | 本质 |
-|---|------|------|------|
-| 1 | 数据 Virtual 级联 | `virtual:less-nav/blog-data/i18n-data` | 3 个磁盘文件已存在，却通过 virtual 绕 3 圈 |
-| 5 | phase-context 惰性分发 | `phase-context.ts` | 因为 virtual 模块在 buildStart() 后才可用 |
-| 6 | enforce:'pre' 竞态 | `ssg-package-resolver.ts:176` | **根源** — JSR resolver 拦截了不应拦截的路径 |
-| 13 | re-export 绑定 virtual 名 | `entry-renderer.ts:599,604` | 生成的代码写死 `from "virtual:less-..."` |
+| #  | 名称                      | 位置                                   | 本质                                         |
+| -- | ------------------------- | -------------------------------------- | -------------------------------------------- |
+| 1  | 数据 Virtual 级联         | `virtual:less-nav/blog-data/i18n-data` | 3 个磁盘文件已存在，却通过 virtual 绕 3 圈   |
+| 5  | phase-context 惰性分发    | `phase-context.ts`                     | 因为 virtual 模块在 buildStart() 后才可用    |
+| 6  | enforce:'pre' 竞态        | `ssg-package-resolver.ts:176`          | **根源** — JSR resolver 拦截了不应拦截的路径 |
+| 13 | re-export 绑定 virtual 名 | `entry-renderer.ts:599,604`            | 生成的代码写死 `from "virtual:less-..."`     |
 
 **修链条 6 一次，1+5+11+13 四条链同时死。**
 
 ### 🟡 P1（12 条）— 品牌、状态、解析
 
-| # | 名称 | 位置 |
-|---|------|------|
-| 2 | `__LESS_*` 品牌常數 | `__LESS_CLIENT_ONLY_TAGS__`, `__LESS_HEAD_EXTRAS__`, `__LESS_BLOG_BASE_PATH__` |
-| 3 | `data-less-e` DOM 品牌 | `event-hydration.ts:47,147` — 出现在所有 SSR HTML 输出 |
-| 4 | `locale=` 手动传参 | 28 条 route 页面手工计算 locale |
-| 8 | try/catch 静默吞错 | 43+ 处空的 catch {} 块 |
-| 9 | Route Scanner 正则解析 | `route-scanner.ts` 668 行 regex-based |
-| 10 | SSG HTML 正则操作 | `ssg-postprocess.ts` 正则 replace `<head>` |
-| 11 | 硬编码 `www/` 路径 | `build-ssg.ts:501` `resolve(root, 'www/app/data/...')` |
-| 14 | `__island`/`__tagName` 注入 | `island-transform.ts:72-77` — 品牌标记写入用户源码 |
-| 16 | Core 模块级可变状态 | `_adapter`, `_warnedHeadExtrasScripts`, `_telemetryHook`, `_visibilityTimeouts` |
-| 17 | `HydrateEventDescriptor` deprecated | `core/types.ts:560` — 3 个 adapter 仍在使用 |
-| 19 | SSR Error HTML Leak 品牌 | `render-errors.ts:129,135,151` — `<!-- LessJS ERROR: ... -->` |
-| 20 | Cross-Runtime Detection | `typeof Deno !== 'undefined'` in core |
-| 21 | Content Scanner 手动解析 JS | `nav/scanner.ts:32-82` — 逐字符解析 export const meta |
+| #  | 名称                                | 位置                                                                            |
+| -- | ----------------------------------- | ------------------------------------------------------------------------------- |
+| 2  | `__LESS_*` 品牌常數                 | `__LESS_CLIENT_ONLY_TAGS__`, `__LESS_HEAD_EXTRAS__`, `__LESS_BLOG_BASE_PATH__`  |
+| 3  | `data-less-e` DOM 品牌              | `event-hydration.ts:47,147` — 出现在所有 SSR HTML 输出                          |
+| 4  | `locale=` 手动传参                  | 28 条 route 页面手工计算 locale                                                 |
+| 8  | try/catch 静默吞错                  | 43+ 处空的 catch {} 块                                                          |
+| 9  | Route Scanner 正则解析              | `route-scanner.ts` 668 行 regex-based                                           |
+| 10 | SSG HTML 正则操作                   | `ssg-postprocess.ts` 正则 replace `<head>`                                      |
+| 11 | 硬编码 `www/` 路径                  | `build-ssg.ts:501` `resolve(root, 'www/app/data/...')`                          |
+| 14 | `__island`/`__tagName` 注入         | `island-transform.ts:72-77` — 品牌标记写入用户源码                              |
+| 16 | Core 模块级可变状态                 | `_adapter`, `_warnedHeadExtrasScripts`, `_telemetryHook`, `_visibilityTimeouts` |
+| 17 | `HydrateEventDescriptor` deprecated | `core/types.ts:560` — 3 个 adapter 仍在使用                                     |
+| 19 | SSR Error HTML Leak 品牌            | `render-errors.ts:129,135,151` — `<!-- LessJS ERROR: ... -->`                   |
+| 20 | Cross-Runtime Detection             | `typeof Deno !== 'undefined'` in core                                           |
+| 21 | Content Scanner 手动解析 JS         | `nav/scanner.ts:32-82` — 逐字符解析 export const meta                           |
 
 ### 🟠 P2（1 条）— 大重构
 
-| # | 名称 | 位置 |
-|---|------|------|
+| # | 名称                      | 位置                                      |
+| - | ------------------------- | ----------------------------------------- |
 | 7 | Entry Renderer 字符串生成 | `entry-renderer.ts` 785 行 `lines.push()` |
 
 ### 🟢 P3（6 条）— 顺手清
 
-| # | 名称 | 位置 |
-|---|------|------|
-| 12 | Phase Token 类型绕道 | `build-context.ts:188-208` `Symbol() as never` |
-| 15 | 死代码 `dom-simulation.ts` | ADR-0032 替换后未删文件 |
-| 18 | `normalizeLocalePath` 重复 | i18n + router 各一份 |
-| 22 | CSP Nonce 占位符 | `NONCE_PLACEHOLDER` 字符串替换 |
-| 23 | Dead Export build-context | `deno.json:70` — 零引用 |
+| #  | 名称                       | 位置                                           |
+| -- | -------------------------- | ---------------------------------------------- |
+| 12 | Phase Token 类型绕道       | `build-context.ts:188-208` `Symbol() as never` |
+| 15 | 死代码 `dom-simulation.ts` | ADR-0032 替换后未删文件                        |
+| 18 | `normalizeLocalePath` 重复 | i18n + router 各一份                           |
+| 22 | CSP Nonce 占位符           | `NONCE_PLACEHOLDER` 字符串替换                 |
+| 23 | Dead Export build-context  | `deno.json:70` — 零引用                        |
 
 ## 依赖关系图
 
