@@ -318,7 +318,26 @@ export class ArchitecturePage extends DsdElement {
                 <strong>package graph sketch</strong>
                 <span>source imports declared per package</span>
               </div>
-              <pre><code>{`{GRAPH}`}</code></pre>
+              <pre><code>{`signals ────────────────────────── (leaf)
+style-sheet ────────────────────── (leaf)
+protocols ──────────────────────── (leaf)
+rpc ────────────────────────────── (leaf)
+router ─────────────────────────── (leaf)
+create ─────────────────────────── (leaf)
+
+core ──────────▶ signals, style-sheet
+runtime ───────▶ core, signals, style-sheet
+cem ───────────▶ core
+compat-check ──▶ cem, core
+content ───────▶ protocols
+i18n ──────────▶ protocols
+adapter-lit ───▶ core
+adapter-react ─▶ core
+adapter-vanilla▶ core
+adapter-vite ──▶ cem, compat-check, content, core, protocols, style-sheet
+ui ────────────▶ core, router, signals, style-sheet
+app ───────────▶ adapter-vite, content, core, i18n
+hub ───────────▶ compat-check, core`}</code></pre>
             </div>
           </section>
 
