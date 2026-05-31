@@ -217,7 +217,7 @@ export function createLessJsrPackageResolverPlugin(
         );
       }
       const source = await resp.text();
-      // JSR rewrites bare npm specifiers (e.g. 'parse5') to 'npm:parse5@x.y.z'.
+      // JSR rewrites bare npm specifiers (e.g. 'marked') to 'npm:marked@x.y.z'.
       // Vite/Rolldown does not understand Deno's 'npm:' scheme, so we must
       // convert them back to bare specifiers that the bundler can resolve.
       return rewriteNpmSpecifiers(source);
@@ -250,9 +250,9 @@ function ensureTsExtension(path: string): string {
 
 /**
  * Rewrite Deno/JSR `npm:` specifiers to bare specifiers that Vite/Rolldown
- * can resolve. JSR rewrites bare npm imports like `import from 'parse5'` to
- * `import from 'npm:parse5@7.0.0'`. Vite doesn't understand `npm:` so we
- * strip the prefix and version, leaving a bare specifier like `parse5` or
+ * can resolve. JSR rewrites bare npm imports like `import from 'marked'` to
+ * `import from 'npm:marked@12.0.0'`. Vite doesn't understand `npm:` so we
+ * strip the prefix and version, leaving a bare specifier like `marked` or
  * `@lit/reactive-element`.
  *
  * Handles:

@@ -17,6 +17,7 @@ import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { escapeAttr, escapeHtml } from './html-escape.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 import { createEventMarkerContext, serializeEventMarkers } from './event-hydration.ts';
+import { renderDsd } from './render-dsd.js';
 
 // ─── Void elements ───────────────────────────────────────────────────────────
 
@@ -36,6 +37,18 @@ const VOID_ELEMENTS = new Set([
   'track',
   'wbr',
 ]);
+
+function insertLightDomIntoDsdHost(html: string, tagName: string, lightDom: string): string {
+  if (!lightDom) return html;
+
+  const closingTag = `</${tagName}>`;
+  const index = html.lastIndexOf(closingTag);
+  if (index === -1) {
+    return html + lightDom;
+  }
+
+  return html.slice(0, index) + lightDom + html.slice(index);
+}
 
 // ─── Attribute serialisation ──────────────────────────────────────────────────
 
@@ -257,11 +270,10 @@ export function renderToString(
  *
  * Unlike `renderToString` (which outputs empty tags for custom elements),
  * `renderNestedDsd` calls `renderDsd()` inline whenever it encounters a
- * registered custom element tag — so the output already contains the DSD
- * template. This eliminates the need for a separate post-processing pass
- * (the former `renderNestedCustomElements` + parse5).
+ * registered custom element tag, so the output already contains the DSD
+ * template without a serialized-markup post-process.
  *
- * ADR-0071: Single-pass VNode traversal. parse5 deleted. No visited Set.
+ * ADR-0071: Single-pass VNode traversal from author tree to DSD HTML.
  *
  * @param node - VNode, string, number, boolean, null or undefined
  * @returns HTML string with all nested CEs pre-rendered via DSD
@@ -355,27 +367,23 @@ export async function renderNestedDsd(
   const tagStr = String(tag);
 
   // ADR-0071: If this is a registered custom element, render it inline via
-  // renderDsd() so its DSD template is embedded in this traversal — no need
-  // for a separate parse5 post-processing pass.
+  // renderDsd() so its DSD template is embedded in this traversal.
   if (
     typeof customElements !== 'undefined' &&
     customElements.get &&
     customElements.get(tagStr)
   ) {
     try {
-      // Lazy import to avoid static circular with render-dsd.ts at module load.
-      const { renderDsd } = await import('./render-dsd.js');
       const dsdResult = await renderDsd(
         tagStr,
         customElements.get(tagStr) as CustomElementConstructor,
         props,
       );
-      // The DSD result is a complete <tagName><template shadowrootmode="open">...</template></tagName>.
-      // But since we are inside a parent's rendering, we must NOT double-wrap.
-      // Instead, we extract the inner template + attrs and emit them inside the
-      // parent's serialization context. renderDsd()'s output starts with the
-      // CE tag itself, so we use it as-is (it's a self-contained CE).
-      return dsdResult.html;
+      const parts: string[] = [];
+      for (const c of children) {
+        parts.push(await renderNestedDsd(c, eventContext));
+      }
+      return insertLightDomIntoDsdHost(dsdResult.html, tagStr, parts.join(''));
     } catch (err) {
       console.error(
         `[LessJS/SSR] renderNestedDsd() failed for registered CE <${tagStr}>:`,
@@ -384,7 +392,11 @@ export async function renderNestedDsd(
       // Fallback: render as empty CE tag (browser will upgrade on CSR)
       const attrs = serializeAttrs(props);
       const eventAttrs = serializeEventMarkers(props, eventContext);
-      return `<${tagStr}${attrs}${eventAttrs}></${tagStr}>`;
+      const parts: string[] = [];
+      for (const c of children) {
+        parts.push(await renderNestedDsd(c, eventContext));
+      }
+      return `<${tagStr}${attrs}${eventAttrs}>${parts.join('')}</${tagStr}>`;
     }
   }
 

@@ -100,7 +100,7 @@ Deno.test('completeExternalSpecifiers: deduplication', () => {
 Deno.test('extractExternalSpecifiers: returns empty for no modules', () => {
   const result = extractExternalSpecifiers(
     { modules: [], roots: [] },
-    ['parse5', 'entities', 'hono'],
+    ['marked', 'entities', 'hono'],
   );
   assertEquals(result, []);
 });
@@ -110,13 +110,13 @@ Deno.test('extractExternalSpecifiers: extracts exact npm package match', () => {
     {
       modules: [
         { specifier: 'npm:hono@^4.12.18' },
-        { specifier: 'npm:parse5@7.0.0' },
+        { specifier: 'npm:marked@12.0.0' },
       ],
       roots: [],
     },
-    ['hono', 'parse5'],
+    ['hono', 'marked'],
   );
-  assertEquals(result, ['hono', 'parse5']);
+  assertEquals(result, ['hono', 'marked']);
 });
 
 Deno.test('extractExternalSpecifiers: extracts subpath imports', () => {
@@ -152,12 +152,12 @@ Deno.test('extractExternalSpecifiers: skips modules with errors', () => {
   const result = extractExternalSpecifiers(
     {
       modules: [
-        { specifier: 'npm:parse5@7.0.0', error: 'Download failed' },
+        { specifier: 'npm:marked@12.0.0', error: 'Download failed' },
         { specifier: 'npm:hono@^4.12.18' },
       ],
       roots: [],
     },
-    ['parse5', 'hono'],
+    ['marked', 'hono'],
   );
   assertEquals(result, ['hono']);
 });
@@ -168,22 +168,22 @@ Deno.test('extractExternalSpecifiers: returns sorted result', () => {
       modules: [
         { specifier: 'npm:hono@^4.12.18' },
         { specifier: 'npm:entities@^4.5.0/lib/escape.js' },
-        { specifier: 'npm:parse5@7.0.0' },
+        { specifier: 'npm:marked@12.0.0' },
       ],
       roots: [],
     },
-    ['hono', 'entities', 'parse5'],
+    ['hono', 'entities', 'marked'],
   );
-  assertEquals(result, ['entities/lib/escape.js', 'hono', 'parse5']);
+  assertEquals(result, ['entities/lib/escape.js', 'hono', 'marked']);
 });
 
 // ─── buildFallbackManifest (ADR-0054 updated) ──────────────────────
 
 Deno.test('buildFallbackManifest: returns specifiers for known packages', () => {
-  const result = buildFallbackManifest(['parse5', 'entities', 'hono'], NO_MODULES_ROOT);
+  const result = buildFallbackManifest(['marked', 'entities', 'hono'], NO_MODULES_ROOT);
   // Without node_modules, falls back to base package names
   assert(result.specifiers.length >= 3);
-  assertArrayIncludes(result.specifiers, ['parse5', 'entities', 'hono']);
+  assertArrayIncludes(result.specifiers, ['marked', 'entities', 'hono']);
   assertEquals(result.importMap, {});
   assertEquals(result.lockHash, 'fallback');
   assertNotEquals(result.generatedAt, '');

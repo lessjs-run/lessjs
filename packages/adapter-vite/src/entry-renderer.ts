@@ -32,10 +32,10 @@
 //    - Package islands are registered client-side only
 //    - See: `packages/adapter-vite/src/plugin.ts` for client entry generation
 //
-// 3. Nested custom elements (from rendered HTML):
-//    - Handled by `renderDsd()` in core/src/render-dsd.ts
-//    - Filtered by `ssrAdmissionPlan.clientOnlyTags`
-//    - See: core/src/render-nested.ts for nested rendering guard
+// 3. Nested custom elements (from the VNode tree):
+//    - Handled by `renderNestedDsd()` in core/src/jsx-render-string.ts
+//    - Calls `renderDsd()` inline for registered custom element hosts
+//    - Package islands remain client-side unless admitted into the SSR entry
 //
 // Audit completed: 2026-05-17
 // Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
@@ -254,14 +254,7 @@ function renderPageRoute(
   // Components receive route params as props for SSR-time data access.
   // v0.6: Pass route/source context for error visibility.
   // H-02 fix: Use JSON.stringify to escape route path and file path
-  lines.push(
-    `    const raw = await __ssr(tag, c.req.param() || {}, { route: ${
-      JSON.stringify(
-        route.path,
-      )
-    }, source: ${JSON.stringify(route.filePath)} })`,
-  );
-  lines.push(`    const html = raw`);
+  lines.push(`    let node = jsx(tag, c.req.param() || {})`);
   lines.push('');
 
   // Wrap with renderers from outer to inner (v0.3.0)
@@ -270,15 +263,14 @@ function renderPageRoute(
   // Dev mode: headExtras is inlined via JSON.stringify (safe for dev server).
   const headExtrasExpr = isSSG ? '__headExtras' : JSON.stringify(docConfig.headExtras);
 
-  lines.push(`    let content = html`);
   if (matchingRenderers.length > 0) {
-    lines.push(`    // Renderer wrapping (outer -> inner)`);
+    lines.push(`    // Renderer tree wrapping (outer -> inner)`);
     for (const renderer of matchingRenderers) {
-      lines.push(`    content = ${renderer.varName}.default.wrap(content, c)`);
+      lines.push(`    node = await ${renderer.varName}.default.wrap(node, c)`);
     }
   }
   lines.push(
-    `    content = await __renderAppShell(content, c.req.path || ${JSON.stringify(route.path)})`,
+    `    const content = await __renderAppShell(node, c.req.path || ${JSON.stringify(route.path)})`,
   );
   lines.push(`    return c.html(wrapInDocument(content, {`);
   lines.push(`      title: ${JSON.stringify(docConfig.title)},`);
@@ -551,21 +543,19 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('  return __locales.includes(first) ? first : fallback;');
   lines.push('}');
   lines.push('');
-  lines.push('async function __renderAppShell(content, routePath, options = {}) {');
+  lines.push('async function __renderAppShell(routeNode, routePath, options = {}) {');
   lines.push('  const defaultLocale = __getDefaultLocale();');
   lines.push('  const locale = options.locale || __localeFromPath(routePath, defaultLocale);');
   lines.push('  const isHome = routePath === "/";');
-  lines.push('  const layoutResult = await renderDsdByName("less-layout", {');
+  lines.push('  return await renderNestedDsd(jsx("less-layout", {');
   lines.push('    currentPath: routePath,');
   lines.push('    locale: locale,');
   lines.push('    locales: __locales,');
   lines.push('    navItems: __navSections,');
   lines.push('    headerNav: __headerNav,');
   lines.push('    home: isHome || undefined,');
-  lines.push('  }, { route: routePath });');
-  lines.push('  // Embed page content as light DOM inside less-layout (before closing tag).');
-  lines.push("  // less-layout's <slot></slot> will project the light DOM children.");
-  lines.push('  return layoutResult.html.replace("</less-layout>", content + "</less-layout>");');
+  lines.push('    children: [routeNode],');
+  lines.push('  }));');
   lines.push('}');
   lines.push('');
 
@@ -628,7 +618,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     );
     lines.push('');
     lines.push(
-      'export { renderDsd, renderDsdByName, wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core"',
+      'export { renderDsd, renderDsdByName, renderNestedDsd, jsx, wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core"',
     );
     lines.push(
       'export { installLitAdapter, uninstallLitAdapter } from "@lessjs/adapter-lit"',
@@ -721,17 +711,20 @@ export function renderEntry(desc: EntryDescriptor): string {
     );
     lines.push('  const props = { ...params };');
     lines.push('  if (locale) props.locale = locale;');
-    lines.push(
-      '  const dsdOutput = await renderDsdByName(info.tagName, props, { route: routePath, source: info.tagName });',
-    );
-    lines.push('  const html = dsdOutput.html;');
-    lines.push('  let content = html;');
+    lines.push('  const startTime = typeof performance !== "undefined" ? performance.now() : 0;');
+    lines.push('  let node = jsx(info.tagName, props);');
     lines.push('  for (const renderer of __matchingRenderers(routePath)) {');
     lines.push(
-      '    content = await renderer.wrap(content, __rendererContext(routePath, params));',
+      '    node = await renderer.wrap(node, __rendererContext(routePath, params));',
     );
     lines.push('  }');
-    lines.push('  content = await __renderAppShell(content, routePath, { locale });');
+    lines.push('  const content = await __renderAppShell(node, routePath, { locale });');
+    lines.push(
+      '  const renderTimeMs = typeof performance !== "undefined" ? performance.now() - startTime : 0;',
+    );
+    lines.push(
+      '  const componentCount = (content.match(/<template shadowrootmode="open"/g) || []).length;',
+    );
     lines.push('  const fullHtml = wrapInDocument(content, {');
     lines.push('    title: title || "LessJS",');
     lines.push('    lang: lang || locale || "en",');
@@ -744,10 +737,10 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('  });');
     lines.push('  return {');
     lines.push('    html: fullHtml,');
-    lines.push('    errors: dsdOutput.errors,');
-    lines.push('    hydrationHints: dsdOutput.hydrationHints,');
-    lines.push('    componentCount: 1,');
-    lines.push('    renderTimeMs: dsdOutput.metrics.renderTimeMs,');
+    lines.push('    errors: [],');
+    lines.push('    hydrationHints: [],');
+    lines.push('    componentCount,');
+    lines.push('    renderTimeMs,');
     lines.push('  };');
     lines.push('}');
     lines.push('');

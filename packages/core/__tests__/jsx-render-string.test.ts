@@ -7,7 +7,7 @@
 
 import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@1';
 import { Fragment, jsx, jsxs } from '../src/jsx-runtime.ts';
-import { renderToString } from '../src/jsx-render-string.ts';
+import { renderNestedDsd, renderToString } from '../src/jsx-render-string.ts';
 import { signal } from '@lessjs/signals';
 
 Deno.test('renderToString renders text', () => {
@@ -164,4 +164,53 @@ Deno.test('renderToString unwraps Signal innerHTML values', () => {
   const html = signal('<strong>ready</strong>');
   const vnode = jsx('div', { innerHTML: html });
   assertEquals(renderToString(vnode), '<div><strong>ready</strong></div>');
+});
+
+Deno.test('renderNestedDsd keeps custom element light DOM children in one tree', async () => {
+  const previousCustomElements = globalThis.customElements;
+  const registry = new Map<string, CustomElementConstructor>();
+
+  class ShellElement {
+    render() {
+      return jsx('section', { children: [jsx('slot', {})] });
+    }
+  }
+
+  class PageElement {
+    render() {
+      return jsx('article', { children: ['Page body'] });
+    }
+  }
+
+  registry.set('test-shell', ShellElement as unknown as CustomElementConstructor);
+  registry.set('test-page', PageElement as unknown as CustomElementConstructor);
+
+  Object.defineProperty(globalThis, 'customElements', {
+    value: {
+      get: (tagName: string) => registry.get(tagName),
+    },
+    configurable: true,
+  });
+
+  try {
+    const html = await renderNestedDsd(
+      jsx('test-shell', {
+        currentPath: '/guide',
+        children: [jsx('test-page', { title: 'Intro' })],
+      }),
+    );
+
+    assertStringIncludes(html, '<test-shell');
+    assertStringIncludes(html, '<template shadowrootmode="open">');
+    assertStringIncludes(html, '<slot></slot>');
+    assertStringIncludes(html, '<test-page');
+    assertStringIncludes(html, '<article>Page body</article>');
+    assertEquals(html.includes('[object Object]'), false);
+    assertEquals(html.indexOf('<test-page') > html.indexOf('</template>'), true);
+  } finally {
+    Object.defineProperty(globalThis, 'customElements', {
+      value: previousCustomElements,
+      configurable: true,
+    });
+  }
 });

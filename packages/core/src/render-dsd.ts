@@ -163,9 +163,9 @@ export async function renderDsd(
     } else if (typeof result === 'string') {
       content = result;
     } else if (isVNode(result)) {
-      // v0.24.1 (SOP-003): JSX VNode path — convert VNode tree to HTML string
+      // v0.24.1 (SOP-003): JSX VNode path converts VNode tree to HTML string.
       // ADR-0071: Use renderNestedDsd for single-pass traversal with
-      // inline CE rendering. This eliminates parse5 + renderNestedCustomElements.
+      // inline CE rendering.
       content = await renderNestedDsd(result);
     } else {
       // v0.17.3: Multi-adapter dispatch - try all registered adapters
@@ -238,7 +238,7 @@ export async function renderDsd(
   }
 
   // ADR-0071: renderNestedDsd() already rendered all nested CEs inline during
-  // the VNode traversal. No separate renderNestedCustomElements pass is needed.
+  // the VNode traversal.
 
   // 5. Extract static styles from component class
   // v0.20.0: Try native DsdElement CSSStyleSheet first - no adapter needed.

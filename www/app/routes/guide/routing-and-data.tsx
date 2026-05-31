@@ -85,7 +85,7 @@ customElements.define('page-post', PostPage);`}</code></pre></less-code-block>
       <table>
         <thead><tr><th>文件</th><th>作用</th></tr></thead>
         <tbody>
-          <tr><td><code>_renderer.ts</code></td><td>为路由子树包裹 SSR 输出。用于布局外壳、文档级组合</td></tr>
+          <tr><td><code>_renderer.ts</code></td><td>为路由子树包裹 VNode。用于布局外壳、文档级组合</td></tr>
           <tr><td><code>_middleware.ts</code></td><td>挂载 Hono middleware。用于 headers、auth、CSP 和请求守卫</td></tr>
           <tr><td><code>api/*.ts</code></td><td>在文件系统路由树下定义 Hono API handlers</td></tr>
         </tbody>
@@ -217,7 +217,7 @@ customElements.define('page-post', PostPage);`}</code></pre></less-code-block>
       <table>
         <thead><tr><th>File</th><th>Purpose</th></tr></thead>
         <tbody>
-          <tr><td><code>_renderer.ts</code></td><td>Wraps SSR output for route subtrees. Layout shells, document composition</td></tr>
+          <tr><td><code>_renderer.ts</code></td><td>Wraps route VNodes. Layout shells, document composition</td></tr>
           <tr><td><code>_middleware.ts</code></td><td>Mounts Hono middleware. Headers, auth, CSP, request guards</td></tr>
           <tr><td><code>api/*.ts</code></td><td>Defines Hono API handlers within the filesystem route tree</td></tr>
         </tbody>

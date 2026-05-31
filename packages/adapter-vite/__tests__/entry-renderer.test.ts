@@ -139,8 +139,8 @@ Deno.test('renderEntry: _renderer.ts generates wrap call', () => {
   // Generated code should reference renderer variable names
   assertStringIncludes(code, '$specialRenderer');
   assertStringIncludes(code, '$guideRenderer');
-  // Renderer wrap call uses c (Hono context)
-  assertStringIncludes(code, '.default.wrap(content, c)');
+  // Renderer wrap call uses VNode input and c (Hono context)
+  assertStringIncludes(code, '.default.wrap(node, c)');
 });
 
 Deno.test('renderEntry: _middleware.ts generates app.use scope', () => {
@@ -300,6 +300,18 @@ Deno.test('renderEntry: imports Hono and DSD renderer', () => {
   assertStringIncludes(code, "import { Hono } from 'hono'");
   // v0.5.0: DSD renderer replaces @lit-labs/ssr
   assertStringIncludes(code, 'renderDsd');
+  assertStringIncludes(code, 'renderNestedDsd');
+  assertStringIncludes(code, 'jsx');
+});
+
+Deno.test('renderEntry: app shell is built from VNode tree, not HTML replace', () => {
+  const desc = buildEntryDescriptor(basicRoutes, { ssg: true });
+  const code = renderEntry(desc);
+
+  assertStringIncludes(code, 'async function __renderAppShell(routeNode, routePath');
+  assertStringIncludes(code, 'renderNestedDsd(jsx("less-layout"');
+  assertStringIncludes(code, 'children: [routeNode]');
+  assertFalse(code.includes('replace("</' + 'less-layout>"'));
 });
 
 Deno.test('renderEntry: SSG mode includes no DOM shim (DSD renderer)', () => {

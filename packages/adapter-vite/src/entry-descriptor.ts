@@ -25,10 +25,10 @@
  *    - Manifest declarations extracted in `buildEntryDescriptor()` lines 402-415
  *    - NOT imported in SSR entry (package islands registered client-side only)
  *
- * 3. Nested custom element (from rendered HTML):
- *    - Detected during `renderDsd()` in core/src/render-dsd.ts
- *    - Checked against `ssrAdmissionPlan.clientOnlyTags`
- *    - Skipped if in clientOnlyTags (see core/src/render-nested.ts)
+ * 3. Nested custom element (from the VNode tree):
+ *    - Rendered by `renderNestedDsd()` in core/src/jsx-render-string.ts
+ *    - Calls `renderDsd()` inline for registered custom element hosts
+ *    - Package islands remain client-side unless admitted into the SSR entry
  *
  * Audit completed: 2026-05-17
  * Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
@@ -298,7 +298,7 @@ export function buildEntryDescriptor(
   // @lessjs/core is a pure runtime with zero Vite/Hono dependencies.
   imports.push({
     from: '@lessjs/core',
-    names: ['renderDsd', 'renderDsdByName', 'escapeHtml'],
+    names: ['renderDsd', 'renderNestedDsd', 'jsx', 'escapeHtml'],
   });
 
   // Conditional middleware imports

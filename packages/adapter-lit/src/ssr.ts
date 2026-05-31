@@ -298,8 +298,8 @@ function interpolate(result: unknown): string {
           // which need the data during renderNestedDsd().
           //
           // Now: .navItems="${arr}" -> nav-items="[{...}]" (JSON-encoded)
-          // The render-nested.ts parser (parseAttrsToProps) detects JSON
-          // attribute values and parses them back to JS objects/arrays.
+          // The DSD render path parses JSON attribute values back to JS
+          // objects/arrays for SSR component props.
           const propMatch = str.match(/\.([\w-]+)="\s*$/);
           if (propMatch) {
             const propName = propMatch[1];

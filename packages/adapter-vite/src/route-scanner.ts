@@ -10,7 +10,7 @@
  * Packages can export an `islands` array in their main entry.
  *
  * Convention (minimal augmentation):
- * - _renderer.ts: exports a LitElement class used as the page layout wrapper
+ * - _renderer.ts: exports a renderer that wraps route VNodes
  * - _middleware.ts: exports a Hono middleware function applied before the route
  * - Files starting with _ are not route handlers but are loaded by the framework
  *
@@ -34,9 +34,9 @@
  *      node_modules packages WITHOUT importing package code
  *    - Results fed into the compatibility classifier (parseCem + classifyCemManifest)
  *
- * 4. Nested custom elements (from rendered HTML):
+ * 4. Nested custom elements (from the VNode tree):
  *    - NOT handled in this file
- *    - See: `packages/core/src/render-dsd.ts` and `render-nested.ts`
+ *    - See: `packages/core/src/jsx-render-string.ts` and `renderNestedDsd()`
  *
  * Audit completed: 2026-05-17
  * Auditor: AI agent (LessJS v0.17.4 SOP compliance check)

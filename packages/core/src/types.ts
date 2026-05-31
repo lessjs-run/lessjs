@@ -458,7 +458,7 @@ export type SpecialFileType = 'renderer' | 'middleware';
 /**
  * LessRenderer interface for _renderer.ts files.
  *
- * Renderers wrap page SSR output, like Next.js layout.tsx or SvelteKit +layout.svelte.
+ * Renderers wrap route VNode trees, like Next.js layout.tsx or SvelteKit +layout.svelte.
  * They apply to their directory and all subdirectories.
  * Multiple renderers are composed outer to inner (root first, deeper dirs later).
  *
@@ -468,8 +468,8 @@ export type SpecialFileType = 'renderer' | 'middleware';
  * import type { LessRenderer } from '@lessjs/core';
  *
  * const renderer: LessRenderer = {
- *   wrap(html, ctx) {
- *     return `<div class="layout"><nav>...</nav><main>${html}</main></div>`;
+ *   wrap(child, ctx) {
+ *     return jsx('main', { children: [child] });
  *   }
  * };
  * export default renderer;
@@ -477,15 +477,15 @@ export type SpecialFileType = 'renderer' | 'middleware';
  */
 export interface LessRenderer {
   /**
-   * Wrap page HTML with layout chrome.
-   * @param html - The page's SSR-rendered HTML
+   * Wrap a route VNode with layout chrome.
+   * @param node - The route's VNode tree, before SSR or CSR backend rendering
    * @param ctx - Request context (provides c.req.path etc.)
-   * @returns Wrapped HTML string (or Promise for async operations)
+   * @returns Wrapped VNode tree (or Promise for async operations)
    */
   wrap(
-    html: string,
+    node: VNode,
     ctx: { req: { path: string }; [key: string]: unknown },
-  ): string | Promise<string>;
+  ): VNode | Promise<VNode>;
 }
 
 /**

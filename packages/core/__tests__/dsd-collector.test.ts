@@ -2,7 +2,7 @@
  * @lessjs/core - DsdRenderCollector unit tests (Deno)
  *
  * Tests for the DSD render metrics collector used for build-time reporting.
- * No parse5 dependency - purely tests the collector data structure.
+ * Purely tests the collector data structure.
  */
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
 import { DsdRenderCollector } from '../src/types.ts';

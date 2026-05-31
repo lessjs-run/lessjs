@@ -30,7 +30,6 @@
     "npm:marked@15": "15.0.4",
     "npm:marked@15.0.4": "15.0.4",
     "npm:media-chrome@^4.19.0": "4.19.0_react@19.2.6",
-    "npm:parse5@7.0.0": "7.0.0",
     "npm:playwright@1.57.0": "1.57.0",
     "npm:react-dom@19": "19.2.6_react@19.2.6",
     "npm:react-dom@^19.1.0": "19.2.6_react@19.2.6",
@@ -748,12 +747,6 @@
     "parse-srcset@1.0.2": {
       "integrity": "sha512-/2qh0lav6CmI15FzA3i/2Bzk2zCgQhGMkvhOhKNcBVQ1ldgpbfiNTVslmooUmWJcADi1f1kIeynbDRVzNlfR6Q=="
     },
-    "parse5@7.0.0": {
-      "integrity": "sha512-y/t8IXSPWTuRZqXc0ajH/UwDj4mnqLEbSttNbThcFhGrZuOyoyvNBO85PBp2jQa55wY9d07PBNjsK8ZP3K5U6g==",
-      "dependencies": [
-        "entities@4.5.0"
-      ]
-    },
     "picocolors@1.1.1": {
       "integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA=="
     },
@@ -1005,7 +998,6 @@
       "npm:lit-html@3",
       "npm:lit@^3.2.0",
       "npm:media-chrome@^4.19.0",
-      "npm:parse5@7.0.0",
       "npm:react-dom@^19.1.0",
       "npm:react@^19.1.0",
       "npm:typescript@^5.9.0",

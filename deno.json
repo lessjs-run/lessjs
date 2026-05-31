@@ -83,7 +83,6 @@
     "vite": "npm:vite@8.0.10",
     "typescript": "npm:typescript@^5.9.0",
     "@types/node": "npm:@types/node@^22.0.0",
-    "parse5": "npm:parse5@7.0.0",
     "entities": "npm:entities@^4",
     "entities/": "npm:entities@^4/",
     "flexsearch": "npm:flexsearch@0.8.212",

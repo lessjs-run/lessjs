@@ -255,7 +255,6 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     denoJson.imports['@deno/vite-plugin'] = 'npm:@deno/vite-plugin';
     denoJson.imports['hono'] = 'npm:hono@^4';
     denoJson.imports['@hono/vite-dev-server'] = 'npm:@hono/vite-dev-server@^0.25.3';
-    denoJson.imports['parse5'] = 'npm:parse5@7.0.0';
     denoJson.imports['entities'] = 'npm:entities@^4';
     denoJson.imports['entities/'] = 'npm:entities@^4/';
     denoJson.tasks.build = `deno run -A ${
