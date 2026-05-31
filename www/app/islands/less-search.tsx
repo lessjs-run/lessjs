@@ -37,7 +37,11 @@ export const tagName = 'less-search';
 
 const sheet = new StyleSheet();
 sheet.replaceSync(`
-  :host { display: inline-flex; align-items: center; }
+  :host {
+    display: inline-flex;
+    align-items: center;
+    contain: none;
+  }
 
   .search-trigger {
     display: inline-flex;

@@ -109,6 +109,40 @@ test.describe('Link Navigation', () => {
     }
   });
 
+  test('SPA navigation from home to guide swaps app shell and keeps sidebar', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    await page.evaluate(() => {
+      const layout = document.querySelector('less-layout');
+      const guide = layout?.shadowRoot?.querySelector<HTMLAnchorElement>(
+        'a[data-nav*="/guide/getting-started"]',
+      );
+      guide?.click();
+    });
+
+    await page.waitForURL(/\/guide\/getting-started\/?$/);
+    await page.waitForFunction(() => {
+      const layout = document.querySelector('less-layout');
+      return !!layout?.shadowRoot?.querySelector('.docs-sidebar');
+    });
+
+    const state = await page.evaluate(() => {
+      const layout = document.querySelector('less-layout')!;
+      const sidebar = layout.shadowRoot!.querySelector('.docs-sidebar')!;
+      const rect = sidebar.getBoundingClientRect();
+      const style = getComputedStyle(sidebar);
+      return {
+        hasHome: layout.hasAttribute('home'),
+        sidebarWidth: rect.width,
+        display: style.display,
+      };
+    });
+    expect(state.hasHome).toBe(false);
+    expect(state.display).not.toBe('none');
+    expect(state.sidebarWidth).toBeGreaterThan(180);
+  });
+
   test('navigating between guide pages preserves layout', async ({ page }) => {
     await page.goto('/guide/getting-started');
     await page.waitForLoadState('networkidle');

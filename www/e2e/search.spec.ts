@@ -35,4 +35,35 @@ test.describe('Search', () => {
     const res = await request.get(href!);
     expect(res.ok()).toBe(true);
   });
+
+  test('search overlay is anchored to viewport when opened from layout header', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    await page.waitForFunction(() => customElements.get('less-search'));
+
+    await page.locator('less-search').evaluate((el) => {
+      const button = el.shadowRoot?.querySelector('button');
+      button?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    });
+
+    const overlay = await page.locator('less-search').evaluate((el) => {
+      const node = el.shadowRoot?.querySelector('.overlay');
+      if (!node) return null;
+      const rect = node.getBoundingClientRect();
+      const style = getComputedStyle(node);
+      return {
+        display: style.display,
+        left: rect.left,
+        right: rect.right,
+        width: rect.width,
+        viewportWidth: window.innerWidth,
+      };
+    });
+
+    expect(overlay).not.toBeNull();
+    expect(overlay!.display).toBe('flex');
+    expect(Math.abs(overlay!.left)).toBeLessThanOrEqual(1);
+    expect(Math.abs(overlay!.right - overlay!.viewportWidth)).toBeLessThanOrEqual(1);
+    expect(Math.abs(overlay!.width - overlay!.viewportWidth)).toBeLessThanOrEqual(1);
+  });
 });

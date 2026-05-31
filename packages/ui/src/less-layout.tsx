@@ -1025,7 +1025,7 @@ export class LessLayout extends DsdElement {
     return null;
   }
 
-  private _activateDeclarativeShadowRoots(root: Element): void {
+  private _activateDeclarativeShadowRoots(root: Element | ShadowRoot | DocumentFragment): void {
     const templates = Array.from(
       root.querySelectorAll<HTMLTemplateElement>('template[shadowrootmode]'),
     );
@@ -1052,6 +1052,46 @@ export class LessLayout extends DsdElement {
     }
   }
 
+  private _isShadowTemplate(el: Element): el is HTMLTemplateElement {
+    return el instanceof HTMLTemplateElement && el.hasAttribute('shadowrootmode');
+  }
+
+  private _syncLayoutAttributes(newLayout: HTMLElement, locale: string): void {
+    const incoming = new Set(
+      Array.from(newLayout.attributes).map((attr) => attr.name),
+    );
+    const preserve = new Set(['data-theme', 'theme']);
+
+    for (const attr of Array.from(this.attributes)) {
+      if (!incoming.has(attr.name) && !preserve.has(attr.name)) {
+        this.removeAttribute(attr.name);
+      }
+    }
+    for (const attr of Array.from(newLayout.attributes)) {
+      this.setAttribute(attr.name, attr.value);
+    }
+    this.setAttribute('locale', locale);
+    this.setAttribute(
+      'current-path',
+      newLayout.getAttribute('current-path') || this.routing.path,
+    );
+  }
+
+  private _replaceShadowRootFromLayout(newLayout: HTMLElement): void {
+    const shadowTemplate = Array.from(newLayout.children).find((child) =>
+      this._isShadowTemplate(child)
+    );
+    if (!shadowTemplate || !this.shadowRoot) return;
+
+    while (this.shadowRoot.firstChild) {
+      this.shadowRoot.removeChild(this.shadowRoot.firstChild);
+    }
+    this.shadowRoot.appendChild(document.adoptNode(shadowTemplate.content));
+    this._activateDeclarativeShadowRoots(this.shadowRoot);
+    this._setupDetailsToggle();
+    this.routing.updateSwitch(this.shadowRoot);
+  }
+
   private async _loadContent(path: string, locale: string): Promise<void> {
     try {
       const resp = await fetch(path);
@@ -1068,17 +1108,16 @@ export class LessLayout extends DsdElement {
       this._syncHeadElement(parsed, 'link[rel="canonical"]');
       this._syncHeadElements(parsed, 'link[rel="alternate"][hreflang]');
 
-      for (const attr of Array.from(newLayout.attributes)) {
-        this.setAttribute(attr.name, attr.value);
-      }
-      this.setAttribute('locale', locale);
-      this.setAttribute('current-path', path);
+      this._syncLayoutAttributes(newLayout, locale);
+      this._replaceShadowRootFromLayout(newLayout);
 
       // v0.27: adopt + move — proper DOM API, no innerHTML hack.
       // DOMParser nodes belong to a different document. adoptNode()
       // transfers ownership so appendChild works without errors.
       while (this.firstChild) this.removeChild(this.firstChild);
-      const children = Array.from(newLayout.children);
+      const children = Array.from(newLayout.children).filter((child) =>
+        !this._isShadowTemplate(child)
+      );
       for (const child of children) {
         const adopted = document.adoptNode(child);
         if (adopted instanceof Element) {
