@@ -59,15 +59,25 @@ export default class HomePage extends DsdElement {
 
 | Package                | Version | Description                                                |
 | ---------------------- | ------- | ---------------------------------------------------------- |
-| `@lessjs/core`         | v0.26.0 | DSD renderer, DsdElement, JSX runtime, islands, navigation |
-| `@lessjs/adapter-vite` | v0.26.0 | Vite plugin: route scanning, SSG pipeline, island entries  |
-| `@lessjs/ui`           | v0.26.0 | DSD-native UI components (button, card, input, dialog...)  |
-| `@lessjs/signals`      | v0.26.0 | Signal primitives (signal, computed, effect)               |
-| `@lessjs/content`      | v0.26.0 | Blog, nav, sitemap build plugins                           |
-| `@lessjs/i18n`         | v0.26.0 | Locales, route expansion                                   |
-| `@lessjs/create`       | v0.26.0 | Project scaffold CLI                                       |
+| `@lessjs/core`         | v0.27.0 | DSD renderer, DsdElement, JSX runtime, islands, navigation |
+| `@lessjs/adapter-vite` | v0.27.0 | Vite plugin: route scanning, SSG pipeline, island entries  |
+| `@lessjs/ui`           | v0.27.0 | DSD-native UI components (button, card, input, dialog...)  |
+| `@lessjs/signals`      | v0.27.0 | Signal primitives (signal, computed, effect)               |
+| `@lessjs/content`      | v0.27.0 | Blog, nav, sitemap build plugins                           |
+| `@lessjs/i18n`         | v0.27.0 | Locales, route expansion                                   |
+| `@lessjs/create`       | v0.27.0 | Project scaffold CLI                                       |
+| `@lessjs/runtime`      | v0.27.0 | Unified component authoring facade (core + signals + style)|
 
 [All 16 packages →](https://jsr.io/@lessjs)
+
+## What's New in v0.27.0
+
+- **Single-pass DSD rendering** — `renderDsd()` is the only public render API. No more `renderDsdByName` or `renderNestedDsd`. One tree, one traversal.
+- **parse5 removed** — the HTML re-parser is gone. VNode is the one AST.
+- **JSX factories out of root** — `jsx`, `jsxDEV`, `jsxs` now live on `@lessjs/core/jsx-runtime`.
+- **Signal-native hydration** — `data-signal` attributes replace fragile position-matching.
+- **Three production bugs eliminated** — sidebar DSD, search [object Object], theme isolation.
+- **[Full changelog →](https://github.com/lessjs-run/lessjs/blob/dev/docs/changelog/v0.27.0.md)**
 
 ## Contributing
 
