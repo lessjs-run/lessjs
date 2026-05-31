@@ -1,12 +1,14 @@
 /**
- * ScrollReveal - Ocean component (v0.20.0 Ocean-Island).
+ * ScrollReveal — Ocean component.
  *
- * Wraps slotted content with a reveal animation triggered by
- * IntersectionObserver. Pure DsdElement - zero Lit dependency.
+ * Wraps slotted content with an IntersectionObserver-driven reveal
+ * animation. Pure DsdElement + signals — zero manual DOM queries.
  *
- * v0.27: Migrated render() from string to JSX.
+ * v0.28: Signal-driven visibility via data-signal-class. querySelector +
+ *   classList.add replaced with registerSignal + data-signal-class marker.
  */
 import { defineCustomElement, DsdElement } from '@lessjs/core';
+import { signal } from '@lessjs/signals';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
@@ -38,38 +40,51 @@ styles.replaceSync(`
 export default class ScrollReveal extends DsdElement {
   static override styles = [openPropsTokenSheet, styles];
 
-  private _observer: IntersectionObserver | null = null;
+  #visible = signal(false);
+  #observer: IntersectionObserver | null = null;
+
+  constructor() {
+    super();
+    this.registerSignal('visible', this.#visible);
+  }
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this._observer = new IntersectionObserver(
+    this.#observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
+        for (const entry of entries) {
           if (entry.isIntersecting) {
-            const el = entry.target as HTMLElement;
-            el.classList.add('visible');
-            this._observer?.unobserve(el);
+            this.#visible.value = true;
+            this.#observer?.unobserve(entry.target);
+            break;
           }
-        });
+        }
       },
       { threshold: 0.2 },
     );
-    // Observe the reveal element after shadow root is created
-    const reveal = this.shadowRoot?.querySelector('.reveal');
-    if (reveal && this._observer) {
-      this._observer.observe(reveal);
-    }
+    // Observe after shadow root is created — use firstElementChild
+    // instead of querySelector for zero-query guarantee.
+    requestAnimationFrame(() => {
+      const target = this.shadowRoot?.firstElementChild;
+      if (target && this.#observer) {
+        this.#observer.observe(target);
+      }
+    });
   }
 
   override disconnectedCallback(): void {
-    this._observer?.disconnect();
-    this._observer = null;
+    this.#observer?.disconnect();
+    this.#observer = null;
     super.disconnectedCallback();
   }
 
   override render() {
     return (
-      <div class='reveal'>
+      <div
+        class='reveal'
+        data-signal='visible'
+        data-signal-class='visible'
+      >
         <slot></slot>
       </div>
     );
