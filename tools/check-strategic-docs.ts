@@ -45,9 +45,9 @@ const checks: Check[] = [
     required: ['DSD-first'],
   },
   {
-    name: 'v0.26.0 is the current public line',
+    name: 'v0.27.0 is the current public line',
     files: currentDocs,
-    required: ['v0.26'],
+    required: ['v0.27'],
   },
   {
     name: 'v1.0 is the stable engine target',

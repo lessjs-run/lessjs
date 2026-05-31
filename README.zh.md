@@ -59,13 +59,13 @@ export default class HomePage extends DsdElement {
 
 | 包名                   | 版本    | 说明                                               |
 | ---------------------- | ------- | -------------------------------------------------- |
-| `@lessjs/core`         | v0.26.0 | DSD 渲染、DsdElement、JSX 运行时、Island、导航     |
-| `@lessjs/adapter-vite` | v0.26.0 | Vite 插件：路由扫描、SSG 管线、Island 入口生成     |
-| `@lessjs/ui`           | v0.26.0 | DSD 原生 UI 组件（button、card、input、dialog...） |
-| `@lessjs/signals`      | v0.26.0 | Signal 原语（signal、computed、effect）            |
-| `@lessjs/content`      | v0.26.0 | Blog、导航、Sitemap 构建插件                       |
-| `@lessjs/i18n`         | v0.26.0 | 多语言、路由展开                                   |
-| `@lessjs/create`       | v0.26.0 | 项目脚手架 CLI                                     |
+| `@lessjs/core`         | v0.27.0 | DSD 渲染、DsdElement、JSX 运行时、Island、导航     |
+| `@lessjs/adapter-vite` | v0.27.0 | Vite 插件：路由扫描、SSG 管线、Island 入口生成     |
+| `@lessjs/ui`           | v0.27.0 | DSD 原生 UI 组件（button、card、input、dialog...） |
+| `@lessjs/signals`      | v0.27.0 | Signal 原语（signal、computed、effect）            |
+| `@lessjs/content`      | v0.27.0 | Blog、导航、Sitemap 构建插件                       |
+| `@lessjs/i18n`         | v0.27.0 | 多语言、路由展开                                   |
+| `@lessjs/create`       | v0.27.0 | 项目脚手架 CLI                                     |
 
 [全部 16 个包 →](https://jsr.io/@lessjs)
 

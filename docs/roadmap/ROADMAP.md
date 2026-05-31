@@ -42,7 +42,7 @@ outrunning the architecture.
 | 10.2  | v0.24.3     | Consolidation                | TemplateResult removal, TemplateRunner dedup, gate hardening   | ✅ Done |
 | 10.3  | v0.24.4     | API Naming Convention        | verbNoun, PascalCase acronyms, brand prefix removal            | ✅ Done |
 | 11    | v0.25.0     | Declarative DX               | BuildPipeline, route types, static head, static client         | Planned |
-| 12    | v0.26.0     | Reactive Pragmatic           | Route params, data-keep-alive, computed docs                   | Planned |
+| 12    | v0.27.0     | Reactive Pragmatic           | Route params, data-keep-alive, computed docs                   | Planned |
 | 13    | v1.0.x      | Stable Engine                | API/schema freeze and deterministic package guarantees         | Vision  |
 
 ## Compatibility Admission Model
@@ -216,11 +216,11 @@ Governing ADR: ADR-0058, ADR-0059, ADR-0060. See `docs/sop/v0.25.0/`.
 > *P2 conditional: requires `computed()` to have ≥1 real-world use first.
 > TG-06 through TG-13 are architecture debt from 2026-05-29 comprehensive audit.
 
-## Planned: v0.26.0 — Reactive Pragmatic + Framework Decoupling
+## Planned: v0.27.0 — Reactive Pragmatic + Framework Decoupling
 
 Goal: SPA navigation-aware params + keep-alive + framework-Vite decoupling (zero virtual modules).
 
-Governing ADR: ADR-0059, ADR-0061. See `docs/sop/v0.26.0/`.
+Governing ADR: ADR-0059, ADR-0061. See `docs/sop/v0.27.0/`.
 
 | Group | Task                               | Priority | Nature       |
 | ----- | ---------------------------------- | -------- | ------------ |

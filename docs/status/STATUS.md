@@ -2,9 +2,9 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version Line: v0.26.0 (Framework Decoupling — IMPLEMENTED)
+## Current Version Line: v0.27.0 (Framework Decoupling — IMPLEMENTED)
 
-v0.26.0 Status: **IMPLEMENTED.** Virtual module coupling removed from 60 route files,
+v0.27.0 Status: **IMPLEMENTED.** Virtual module coupling removed from 60 route files,
 island transform extracted to @lessjs/core, zero-bundler dev:fast server (~100ms),
 SSG rendering robustness fixes, www/ documentation overhaul.
 
