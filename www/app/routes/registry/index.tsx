@@ -1,8 +1,9 @@
-﻿/**
+/**
  * Registry Hub - Package Search &amp; List
  *
  * v0.19.0: Browse and search validated Web Component packages.
  * Data is embedded during SSG via JSON import, no client-side fetch needed.
+ * v0.28: Signal-driven filtering/sorting — zero manual state, zero inline handlers.
  *
  * @see docs/sop/v0.19.0-platform-hub.md
  * @see ADR-0030
@@ -11,6 +12,7 @@
 export const meta = { section: 'Registry', label: 'Package Registry', order: 5 };
 
 import { DsdElement } from '@lessjs/core';
+import { signal, computed } from '@lessjs/signals';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import hubData from '../../data/registry/hub-index.ts';
@@ -330,39 +332,29 @@ routeSheet.replaceSync(`
     `);
 
 export default class DocsRegistryHome extends DsdElement {
-  private _packages: HubIndexEntry[] = [];
-  private _filtered: HubIndexEntry[] = [];
-  private _query = '';
-  private _tierFilter = 'all';
-  private _sortBy: 'name' | 'tags' | 'compatibility' = 'name';
-  private _loading = true;
+  #query = signal('');
+  #tierFilter = signal('all');
+  #sortBy = signal<'name' | 'tags' | 'compatibility'>('name');
+  #packages: HubIndexEntry[] = [];
+  #filtered = computed(() => this._computeFiltered());
 
   static override styles = [openPropsTokenSheet, routeSheet];
 
   constructor() {
     super();
     const index = hubData as HubIndexData;
-    if (index && index.packages) {
-      this._packages = index.packages || [];
-      this._filtered = [...this._packages];
+    if (index?.packages) {
+      this.#packages = index.packages;
     }
-    this._loading = index && index.packages ? false : true;
+    this.registerSignal('query', this.#query);
+    this.registerSignal('tierFilter', this.#tierFilter);
+    this.registerSignal('sortBy', this.#sortBy);
   }
 
-  private _onSearch(e: InputEvent) {
-    this._query = (e.target as HTMLInputElement).value;
-    this._applyFilters();
-  }
+  private _computeFiltered(): HubIndexEntry[] {
+    let result = [...this.#packages];
 
-  private _setFilter(tier: string) {
-    this._tierFilter = tier;
-    this._applyFilters();
-  }
-
-  private _applyFilters() {
-    let result = [...this._packages];
-
-    const q = this._query.toLowerCase();
+    const q = this.#query.value.toLowerCase();
     if (q.length >= 2) {
       result = result.filter((p) => {
         const fullName = p.scope ? `${p.scope}/${p.name}` : p.name;
@@ -375,12 +367,12 @@ export default class DocsRegistryHome extends DsdElement {
       });
     }
 
-    if (this._tierFilter !== 'all') {
-      result = result.filter((p) => p.compatibility === this._tierFilter);
+    if (this.#tierFilter.value !== 'all') {
+      result = result.filter((p) => p.compatibility === this.#tierFilter.value);
     }
 
     result.sort((a, b) => {
-      switch (this._sortBy) {
+      switch (this.#sortBy.value) {
         case 'tags':
           return b.tags.length - a.tags.length;
         case 'compatibility': {
@@ -400,8 +392,22 @@ export default class DocsRegistryHome extends DsdElement {
       }
     });
 
-    this._filtered = result;
-    this.update();
+    return result;
+  }
+
+  /** data-on-input handler for search box */
+  _onSearchInput(e: Event): void {
+    this.#query.value = (e.target as HTMLInputElement).value;
+  }
+
+  /** data-on-click handler for filter buttons (reads dataset.filter) */
+  _onFilterClick(e: Event): void {
+    this.#tierFilter.value = (e.currentTarget as HTMLElement).dataset.filter || 'all';
+  }
+
+  /** data-on-change handler for sort select */
+  _onSortChange(e: Event): void {
+    this.#sortBy.value = (e.target as HTMLSelectElement).value as 'name' | 'tags' | 'compatibility';
   }
 
   private _packageLink(pkg: HubIndexEntry): string {
@@ -410,6 +416,12 @@ export default class DocsRegistryHome extends DsdElement {
   }
 
   override render() {
+    const q = this.#query.value;
+    const tier = this.#tierFilter.value;
+    const sort = this.#sortBy.value;
+    const filtered = this.#filtered.value;
+    const loading = this.#packages.length === 0;
+
     return (
       
         <div class="container">
@@ -420,7 +432,7 @@ export default class DocsRegistryHome extends DsdElement {
               installation guidance, and snapshot previews.
             </p>
             <p class="early-access-note">
-              🚧 Currently indexing 3 packages. We're actively onboarding more Web Components libraries.
+              Currently indexing 3 packages. Actively onboarding more Web Components libraries.
               <a href="https://github.com/lessjs-run/lessjs/issues?q=label%3Ahub-submit">Submit your package {'->'}</a>
             </p>
           </div>
@@ -430,61 +442,34 @@ export default class DocsRegistryHome extends DsdElement {
               class="search-box"
               type="text"
               placeholder="Search by name, tag, or description..."
-              onInput={this._onSearch}
-              value={this._query}
+              data-on-input="_onSearchInput"
             />
             <div class="filter-group">
-              <button
-                class={`filter-btn ${this._tierFilter === 'all' ? 'active' : ''}`}
-                onClick={() => this._setFilter('all')}
-              >
-                All
-              </button>
-              <button
-                class={`filter-btn ${this._tierFilter === 'ssr-capable' ? 'active' : ''}`}
-                onClick={() => this._setFilter('ssr-capable')}
-              >
-                SSR ✓
-              </button>
-              <button
-                class={`filter-btn ${this._tierFilter === 'client-only' ? 'active' : ''}`}
-                onClick={() => this._setFilter('client-only')}
-              >
-                Client
-              </button>
-              <button
-                class={`filter-btn ${this._tierFilter === 'rejected' ? 'active' : ''}`}
-                onClick={() => this._setFilter('rejected')}
-              >
-                Rejected
-              </button>
+              <button class={`filter-btn ${tier === 'all' ? 'active' : ''}`} data-on-click="_onFilterClick" data-filter="all" type="button">All</button>
+              <button class={`filter-btn ${tier === 'ssr-capable' ? 'active' : ''}`} data-on-click="_onFilterClick" data-filter="ssr-capable" type="button">SSR &#10003;</button>
+              <button class={`filter-btn ${tier === 'client-only' ? 'active' : ''}`} data-on-click="_onFilterClick" data-filter="client-only" type="button">Client</button>
+              <button class={`filter-btn ${tier === 'rejected' ? 'active' : ''}`} data-on-click="_onFilterClick" data-filter="rejected" type="button">Rejected</button>
             </div>
-            <select class="sort-select" onChange={(e: Event) => {
-              this._sortBy = (e.target as HTMLSelectElement).value as
-                | 'name'
-                | 'tags'
-                | 'compatibility';
-              this._applyFilters();
-            }}>
-              <option value="name" selected={this._sortBy === 'name'}>Sort: Name</option>
-              <option value="tags" selected={this._sortBy === 'tags'}>Sort: Components</option>
-              <option value="compatibility" selected={this._sortBy === 'compatibility'}>Sort: Compatibility</option>
+            <select class="sort-select" data-on-change="_onSortChange">
+              <option value="name" selected={sort === 'name'}>Sort: Name</option>
+              <option value="tags" selected={sort === 'tags'}>Sort: Components</option>
+              <option value="compatibility" selected={sort === 'compatibility'}>Sort: Compatibility</option>
             </select>
           </div>
 
-          {this._loading
+          {loading
             ? <div class="empty-state">Loading registry...</div>
-            : this._filtered.length === 0
+            : filtered.length === 0
             ? <div class="empty-state">
-                {this._query || this._tierFilter !== 'all'
+                {q || tier !== 'all'
                   ? 'No packages match your search criteria.'
                   : 'No packages in the registry yet.'}
               </div>
             : <>
-              <div class="stats">{this._filtered.length} package{this._filtered.length !== 1 ? 's' : ''} found</div>
+              <div class="stats">{filtered.length} package{filtered.length !== 1 ? 's' : ''} found</div>
 
               <div class="package-list">
-                {this._filtered.map((pkg) => {
+                {filtered.map((pkg) => {
                   const fullName = pkg.scope ? `${pkg.scope}/${pkg.name}` : pkg.name;
                   const compatLabel = COMPAT_LABELS[pkg.compatibility] || pkg.compatibility;
                   const compatClass = pkg.compatibility || 'default';
@@ -513,7 +498,7 @@ export default class DocsRegistryHome extends DsdElement {
                             {compatLabel}
                           </span>
                           <span class={`install-badge ${pkg.safeToInstall ? 'install-safe' : 'install-unsafe'}`}>
-                            {pkg.safeToInstall ? '✅ Safe install' : '❌ Not installable'}
+                            {pkg.safeToInstall ? '\u2705 Safe install' : '\u274C Not installable'}
                           </span>
                           <span class="component-breakdown">
                             {ssrCount > 0 && (

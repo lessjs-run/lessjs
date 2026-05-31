@@ -159,8 +159,7 @@ export default class ReactiveShowcase extends DsdElement {
           <input
             className='filter-input'
             placeholder='Type to filter frameworks...'
-            value={this.#filter}
-            onInput={(e: Event) => this.#filter.value = (e.target as HTMLInputElement).value}
+            data-on-input='_onFilterInput'
           />
           <div className='item-list'>
             {this.#filtered.value.map((f) => <div key={f}>{f}</div>)}
@@ -178,6 +177,9 @@ export default class ReactiveShowcase extends DsdElement {
   }
   toggleTheme() {
     this.#isDark.value = !this.#isDark.value;
+  }
+  _onFilterInput(e: Event) {
+    this.#filter.value = (e.target as HTMLInputElement).value;
   }
 }
 
