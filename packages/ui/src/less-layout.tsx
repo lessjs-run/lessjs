@@ -136,7 +136,6 @@ sheet.replaceSync(`
     gap: var(--size-8);
   }
 
-  .mobile-menu { display: none; }
   .mobile-tab-bar { display: none; }
 
   .mobile-menu-btn {
@@ -154,13 +153,8 @@ sheet.replaceSync(`
     list-style: none;
     transition: all var(--ease-2) var(--duration-2);
   }
-  .mobile-menu-btn::-webkit-details-marker { display: none; }
-  .mobile-menu-btn::marker { content: ""; }
-  .mobile-menu-btn:hover, .mobile-menu-btn:focus-visible {
-    color: var(--brand);
-    border-color: var(--brand);
-  }
-  .mobile-menu[open] .mobile-menu-btn {
+  .mobile-menu-btn:hover,
+  .mobile-menu-btn:focus-visible {
     color: var(--brand);
     border-color: var(--brand);
   }
@@ -377,7 +371,6 @@ sheet.replaceSync(`
 
   /* ─── Responsive ─── */
   @media (max-width: 900px) {
-    .mobile-menu { display: block; }
     .header-inner { padding: 0 1rem; gap: var(--size-3); }
     .header-nav { display: none; }
     .github-text { display: none; }
@@ -673,28 +666,18 @@ export class LessLayout extends DsdElement {
             {this._renderHeaderNav()}
             <div className='header-right'>
               {!noSearch && <less-search></less-search>}
-              <details className='mobile-menu'>
-                <summary
-                  className='mobile-menu-btn'
-                  part='nav-toggle'
-                  aria-label='Toggle navigation'
-                  onClick={this._toggleMenu}
-                >
-                  <svg
-                    width='18'
-                    height='18'
-                    viewBox='0 0 18 18'
-                    fill='none'
-                    stroke='currentColor'
-                    stroke-width='1.5'
-                    stroke-linecap='round'
-                  >
-                    <line x1='3' y1='4.5' x2='15' y2='4.5' />
-                    <line x1='3' y1='9' x2='15' y2='9' />
-                    <line x1='3' y1='13.5' x2='15' y2='13.5' />
-                  </svg>
-                </summary>
-              </details>
+              <button
+                className='mobile-menu-btn'
+                part='nav-toggle'
+                aria-label='Toggle navigation'
+                data-on-click='_toggleMenu'
+              >
+                <svg width='18' height='18' viewBox='0 0 18 18' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round'>
+                  <line x1='3' y1='4.5' x2='15' y2='4.5' />
+                  <line x1='3' y1='9' x2='15' y2='9' />
+                  <line x1='3' y1='13.5' x2='15' y2='13.5' />
+                </svg>
+              </button>
               <less-theme-toggle></less-theme-toggle>
               {locales.length > 1 && (
                 <a
@@ -912,26 +895,13 @@ export class LessLayout extends DsdElement {
   // --- Mobile menu ---
 
   private _setupDetailsToggle(): void {
-    if (!this.shadowRoot) return;
-    const details = this.shadowRoot.querySelector('details.mobile-menu');
-    if (details) {
-      details.addEventListener('toggle', () => {
-        const isOpen = (details as HTMLDetailsElement).open;
-        this.toggleAttribute('menu-open', isOpen);
-        this._syncInert(isOpen);
-      });
-      this.toggleAttribute('menu-open', (details as HTMLDetailsElement).open);
-    }
+    // No-op — mobile menu now uses button + menu-open attribute directly.
   }
 
-  private _toggleMenu(e: Event): void {
-    e.preventDefault();
-    const details = this.shadowRoot?.querySelector('details.mobile-menu');
-    if (!details) return;
-    const willOpen = !details.hasAttribute('open');
-    details.toggleAttribute('open', willOpen);
-    this.toggleAttribute('menu-open', willOpen);
-    this._syncInert(willOpen);
+  private _toggleMenu(_e: Event): void {
+    const isOpen = this.hasAttribute('menu-open');
+    this.toggleAttribute('menu-open', !isOpen);
+    this._syncInert(!isOpen);
   }
 
   private _syncInert(menuOpen: boolean): void {
