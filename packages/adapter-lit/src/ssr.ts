@@ -139,7 +139,7 @@ function startsWithCustomElement(html: string): boolean {
  *   Output: `<style>...</style>\n<counter-island>`
  *
  * This ensures nested CEs become real DOM elements in the parent's shadow DOM,
- * which `renderDsd.renderNestedCustomElements()` can then process for proper DSD wrapping.
+ * which `renderDsd.renderNestedDsd()` can then process for proper DSD wrapping.
  */
 function unwrapDsdForNestedCe(html: string): string {
   const trimmed = html.trimStart();
@@ -149,7 +149,7 @@ function unwrapDsdForNestedCe(html: string): string {
     const ceTagMatch = trimmed.match(/^<([a-z][a-z0-9]*-[a-z0-9-]+)[^>]*>/);
     if (ceTagMatch) {
       // Return just the CE tag (strip the DSD wrapper)
-      // The CE's shadow DOM content will be processed by renderNestedCustomElements
+      // The CE's shadow DOM content will be processed by renderNestedDsd
       return ceTagMatch[0];
     }
     // If no CE tag found, fall through to case 2
@@ -168,7 +168,7 @@ function unwrapDsdForNestedCe(html: string): string {
  * v0.6 FIX: Nested custom elements in Lit templates must NOT be rendered
  * as DSD text content inside the parent's shadow DOM. Instead, we extract
  * the shadow DOM content so nested CEs become real DOM nodes that can be
- * processed by renderDsd's renderNestedCustomElements().
+ * processed by renderDsd's renderNestedDsd() (ADR-0071).
  *
  * This fixes the "island appearing as raw HTML/text in shadow DOM" bug
  * where <counter-island> DSD was rendered as text inside <less-layout>'s
@@ -295,7 +295,7 @@ function interpolate(result: unknown): string {
           // Previously, property bindings were stripped entirely because
           // "static HTML can't have property bindings". But this broke
           // data-driven components like <less-layout .navItems="${data}">
-          // which need the data during renderNestedCustomElements().
+          // which need the data during renderNestedDsd().
           //
           // Now: .navItems="${arr}" -> nav-items="[{...}]" (JSON-encoded)
           // The render-nested.ts parser (parseAttrsToProps) detects JSON

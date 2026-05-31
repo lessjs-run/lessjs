@@ -4,46 +4,26 @@
  * Pure string-based Declarative Shadow DOM SSR renderer.
  * Framework-agnostic: no Lit dependency and no TemplateResult knowledge.
  *
- * LessJS Architecture (v0.15.0):
+ * LessJS Architecture (v0.28.0, ADR-0071):
  * - Takes a registered Custom Element class + props and returns DSD HTML
- * - Components MUST implement render(): string
- * - Rendering is synchronous string concatenation; no DOM shim needed
+ * - Components implement render() returning string | VNode
+ * - Nested CE rendering is handled inline by renderNestedDsd() during
+ *   the single-pass VNode traversal — no separate post-processing needed
  * - Framework adapters hook into the pipeline via registerAdapter()
- * - Safe/Unsafe HTML contracts preserve Lit's escaping semantics
  *
  * SSR lifecycle:
  *   1. Instantiate component class
  *   2. Set attributes/properties from props
- *   3. Call render() to get Shadow DOM HTML string
- *   4. Wrap in <template shadowrootmode="open">
+ *   3. DO NOT call connectedCallback in SSR
+ *   4. Call render() → get Shadow DOM content
+ *   5. renderNestedDsd() recursively processes nested CEs inline
+ *   6. Wrap in <template shadowrootmode="open">
  *
  * Client lifecycle:
  *   1. Browser parses DSD and attaches Shadow DOM automatically
  *   2. customElements.define() upgrades existing elements
  *   3. connectedCallback fires and attaches event listeners to existing DOM
  *   4. No duplicate client render is needed
- *
- * --- SSR Import Discovery Audit (Step1) ---------------------
- *
- * This file handles nested custom elements during SSR:
- *
- * 1. Local island files:
- *    - NOT handled in this file (see entry-renderer.ts)
- *    - This file only renders registered custom elements
- *
- * 2. Package manifest islands:
- *    - NOT handled in this file
- *    - Package islands are client-side only
- *
- * 3. Nested custom elements (from rendered HTML):
- *    - Detected during `renderDsd()` -> `renderComponent()`
- *    - Calls `detectNestedCustomElements()` (lines 178-215)
- *    - Each nested tag checked against `ssrAdmissionPlan.clientOnlyTags`
- *    - If in clientOnlyTags -> skipped (outputs empty custom element)
- *    - If not in clientOnlyTags -> attempts to render (may recurse)
- *
- * Audit completed: 2026-05-17
- * Auditor: AI agent (LessJS v0.17.4 SOP compliance check)
  *
  * @module @lessjs/core/render-dsd
  */

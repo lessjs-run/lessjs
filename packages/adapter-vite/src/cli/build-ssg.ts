@@ -308,21 +308,19 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
       // its transitive deps (@shoelace-style/localize, etc.) cannot be resolved
       // by Rolldown in Deno's nodeModulesDir:"manual" layout. Shoelace components
       // are browser-only and should stay as bare imports resolved by Deno at
-      // import(entry.js) time, same as hono/parse5.
+      // import(entry.js) time, same as hono.
     ];
-
     // ADR-0047: External packages are externalized, not bundled.
     // ADR-0054: AST-based exports resolution covers ALL subpath exports
-    // (parse5/lib/escape.js, entities/lib/escape.js, hono/secure-headers, etc.)
     // so Rolldown externalizes them correctly via manifest.specifiers.
     // Consumer template deno.json declares these packages so Deno can
     // resolve them at runtime when buildSSG() executes import(entry.js).
     // v0.26.1: Added @shoelace-style/shoelace + @shoelace-style/localize
     // since they cannot be inlined (Rolldown resolution failure) but must
     // be resolvable at import(entry.js) time.
-    // NOTE: React is NOT here 鈥?it's in noExternal (inlined instead).
+    // NOTE: React is NOT here — it's in noExternal (inlined instead).
     const ssrExternalDefaults = [
-      'parse5',
+      'entities',
       'entities',
       'hono',
       '@shoelace-style/shoelace',

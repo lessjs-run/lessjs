@@ -126,7 +126,6 @@ node_modules/
     "@lessjs/app": "jsr:@lessjs/app@^${v.app}",
     "@lessjs/runtime": "jsr:@lessjs/runtime@^${v.runtime}",
     "@lessjs/ui": "jsr:@lessjs/ui@^${v.ui}",
-    "parse5": "npm:parse5@^7.0.0",
     "vite": "npm:vite@8.0.10"
   },
   "nodeModulesDir": "auto",
