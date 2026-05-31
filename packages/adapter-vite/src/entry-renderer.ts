@@ -352,6 +352,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   // --- Document wrapper ---
   // ADR 0013: import directly from source files instead of less-runtime barrel.
   lines.push(`import { wrapInDocument } from '@lessjs/core';`);
+  lines.push(`import { jsx } from '@lessjs/core/jsx-runtime';`);
   lines.push(`import { createLogger } from '@lessjs/core/logger';`);
   lines.push(`import '@lessjs/ui/less-layout';`);
   lines.push(
@@ -547,15 +548,16 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('  const defaultLocale = __getDefaultLocale();');
   lines.push('  const locale = options.locale || __localeFromPath(routePath, defaultLocale);');
   lines.push('  const isHome = routePath === "/";');
-  lines.push('  return await renderNestedDsd(jsx("less-layout", {');
+  lines.push('  const layoutResult = await renderDsd("less-layout", {');
   lines.push('    currentPath: routePath,');
   lines.push('    locale: locale,');
   lines.push('    locales: __locales,');
   lines.push('    navItems: __navSections,');
   lines.push('    headerNav: __headerNav,');
   lines.push('    home: isHome || undefined,');
-  lines.push('    children: [routeNode],');
-  lines.push('  }));');
+  lines.push('  });');
+  lines.push('  // Embed page content as light DOM inside less-layout (before closing tag).');
+  lines.push('  return layoutResult.html.replace("</less-layout>", routeNode + "</less-layout>");');
   lines.push('}');
   lines.push('');
 
@@ -618,7 +620,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     );
     lines.push('');
     lines.push(
-      'export { renderDsd, renderDsdByName, renderNestedDsd, jsx, wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core"',
+      'export { renderDsd, wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core"',
     );
     lines.push(
       'export { installLitAdapter, uninstallLitAdapter } from "@lessjs/adapter-lit"',

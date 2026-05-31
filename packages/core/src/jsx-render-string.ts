@@ -263,13 +263,13 @@ export function renderToString(
   return `<${tagStr}${attrs}${eventAttrs}>${childHtml}</${tagStr}>`;
 }
 
-// ─── renderNestedDsd ────────────────────────────────────────────────────────
+// ─── renderDsdTree ────────────────────────────────────────────────────────
 
 /**
  * Render a VNode tree to an HTML string with inline nested CE rendering.
  *
  * Unlike `renderToString` (which outputs empty tags for custom elements),
- * `renderNestedDsd` calls `renderDsd()` inline whenever it encounters a
+ * `renderDsdTree` calls `renderDsd()` inline whenever it encounters a
  * registered custom element tag, so the output already contains the DSD
  * template without a serialized-markup post-process.
  *
@@ -278,7 +278,7 @@ export function renderToString(
  * @param node - VNode, string, number, boolean, null or undefined
  * @returns HTML string with all nested CEs pre-rendered via DSD
  */
-export async function renderNestedDsd(
+export async function renderDsdTree(
   node: unknown,
   eventContext = createEventMarkerContext(),
 ): Promise<string> {
@@ -290,7 +290,7 @@ export async function renderNestedDsd(
 
   // v0.24.1: Auto-unwrap Signal values in JSX expressions
   if (isSignalLike(node)) {
-    return renderNestedDsd((node as { value: unknown }).value, eventContext);
+    return renderDsdTree((node as { value: unknown }).value, eventContext);
   }
 
   if (!isVNode(node)) {
@@ -303,7 +303,7 @@ export async function renderNestedDsd(
   if (tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(lessjs.fragment)')) {
     const parts: string[] = [];
     for (const c of children) {
-      parts.push(await renderNestedDsd(c, eventContext));
+      parts.push(await renderDsdTree(c, eventContext));
     }
     return parts.join('');
   }
@@ -315,7 +315,7 @@ export async function renderNestedDsd(
       : props?.when;
     const ch = children as VNode[];
     const target = whenVal ? ch[0] : ch[1];
-    return target ? renderNestedDsd(target, eventContext) : '';
+    return target ? renderDsdTree(target, eventContext) : '';
   }
 
   // ── For (SSR: render each item statically) ────────────────────────────────
@@ -332,7 +332,7 @@ export async function renderNestedDsd(
     }
     const parts: string[] = [];
     for (let i = 0; i < items.length; i++) {
-      parts.push(await renderNestedDsd(renderFn(items[i], i), eventContext));
+      parts.push(await renderDsdTree(renderFn(items[i], i), eventContext));
     }
     return parts.join('');
   }
@@ -346,17 +346,17 @@ export async function renderNestedDsd(
           (instance as Record<string, unknown>)[k] = v;
         }
         const result = instance.render();
-        return renderNestedDsd(result, eventContext);
+        return renderDsdTree(result, eventContext);
       } else {
         const result = (tag as (props: Record<string, unknown>) => unknown)({
           ...props,
           children,
         });
-        return renderNestedDsd(result, eventContext);
+        return renderDsdTree(result, eventContext);
       }
     } catch (err) {
       console.error(
-        `[LessJS/SSR] renderNestedDsd() failed for <${String(tag)}>:`,
+        `[LessJS/SSR] renderDsdTree() failed for <${String(tag)}>:`,
         err instanceof Error ? err.message : String(err),
       );
       return '';
@@ -381,12 +381,12 @@ export async function renderNestedDsd(
       );
       const parts: string[] = [];
       for (const c of children) {
-        parts.push(await renderNestedDsd(c, eventContext));
+        parts.push(await renderDsdTree(c, eventContext));
       }
       return insertLightDomIntoDsdHost(dsdResult.html, tagStr, parts.join(''));
     } catch (err) {
       console.error(
-        `[LessJS/SSR] renderNestedDsd() failed for registered CE <${tagStr}>:`,
+        `[LessJS/SSR] renderDsdTree() failed for registered CE <${tagStr}>:`,
         err instanceof Error ? err.message : String(err),
       );
       // Fallback: render as empty CE tag (browser will upgrade on CSR)
@@ -394,7 +394,7 @@ export async function renderNestedDsd(
       const eventAttrs = serializeEventMarkers(props, eventContext);
       const parts: string[] = [];
       for (const c of children) {
-        parts.push(await renderNestedDsd(c, eventContext));
+        parts.push(await renderDsdTree(c, eventContext));
       }
       return `<${tagStr}${attrs}${eventAttrs}>${parts.join('')}</${tagStr}>`;
     }
@@ -419,7 +419,7 @@ export async function renderNestedDsd(
   } else {
     const parts: string[] = [];
     for (const c of children) {
-      parts.push(await renderNestedDsd(c, eventContext));
+      parts.push(await renderDsdTree(c, eventContext));
     }
     childHtml = parts.join('');
   }

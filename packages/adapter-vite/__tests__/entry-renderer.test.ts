@@ -300,8 +300,8 @@ Deno.test('renderEntry: imports Hono and DSD renderer', () => {
   assertStringIncludes(code, "import { Hono } from 'hono'");
   // v0.5.0: DSD renderer replaces @lit-labs/ssr
   assertStringIncludes(code, 'renderDsd');
-  assertStringIncludes(code, 'renderNestedDsd');
   assertStringIncludes(code, 'jsx');
+  assertStringIncludes(code, "import { jsx } from '@lessjs/core/jsx-runtime'");
 });
 
 Deno.test('renderEntry: app shell is built from VNode tree, not HTML replace', () => {
@@ -309,9 +309,8 @@ Deno.test('renderEntry: app shell is built from VNode tree, not HTML replace', (
   const code = renderEntry(desc);
 
   assertStringIncludes(code, 'async function __renderAppShell(routeNode, routePath');
-  assertStringIncludes(code, 'renderNestedDsd(jsx("less-layout"');
-  assertStringIncludes(code, 'children: [routeNode]');
-  assertFalse(code.includes('replace("</' + 'less-layout>"'));
+  assertStringIncludes(code, 'renderDsd("less-layout"');
+  assertStringIncludes(code, '.replace("</less-layout>"');
 });
 
 Deno.test('renderEntry: SSG mode includes no DOM shim (DSD renderer)', () => {

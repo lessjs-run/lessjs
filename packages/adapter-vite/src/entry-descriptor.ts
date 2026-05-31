@@ -298,7 +298,7 @@ export function buildEntryDescriptor(
   // @lessjs/core is a pure runtime with zero Vite/Hono dependencies.
   imports.push({
     from: '@lessjs/core',
-    names: ['renderDsd', 'renderNestedDsd', 'jsx', 'escapeHtml'],
+    names: ['renderDsd', 'escapeHtml'],
   });
 
   // Conditional middleware imports

@@ -1,13 +1,6 @@
 import { assertEquals, assertExists } from 'jsr:@std/assert@1';
-import {
-  DsdElement,
-  Fragment,
-  jsx,
-  jsxs,
-  renderDsd,
-  renderDsdStream,
-  renderToString,
-} from '../src/index.ts';
+import { DsdElement, Fragment, renderDsd, renderDsdStream, renderToString } from '../src/index.ts';
+import { jsx, jsxs } from '../src/jsx-runtime.ts';
 
 Deno.test('core stable API exports v0.24.1 JSX rendering primitives', () => {
   assertEquals(typeof renderDsd, 'function');

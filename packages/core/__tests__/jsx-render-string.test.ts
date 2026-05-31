@@ -7,7 +7,7 @@
 
 import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@1';
 import { Fragment, jsx, jsxs } from '../src/jsx-runtime.ts';
-import { renderNestedDsd, renderToString } from '../src/jsx-render-string.ts';
+import { renderDsdTree, renderToString } from '../src/jsx-render-string.ts';
 import { signal } from '@lessjs/signals';
 
 Deno.test('renderToString renders text', () => {
@@ -166,7 +166,7 @@ Deno.test('renderToString unwraps Signal innerHTML values', () => {
   assertEquals(renderToString(vnode), '<div><strong>ready</strong></div>');
 });
 
-Deno.test('renderNestedDsd keeps custom element light DOM children in one tree', async () => {
+Deno.test('renderDsdTree keeps custom element light DOM children in one tree', async () => {
   const previousCustomElements = globalThis.customElements;
   const registry = new Map<string, CustomElementConstructor>();
 
@@ -193,7 +193,7 @@ Deno.test('renderNestedDsd keeps custom element light DOM children in one tree',
   });
 
   try {
-    const html = await renderNestedDsd(
+    const html = await renderDsdTree(
       jsx('test-shell', {
         currentPath: '/guide',
         children: [jsx('test-page', { title: 'Intro' })],

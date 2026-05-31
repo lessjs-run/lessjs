@@ -7,7 +7,7 @@
  * LessJS Architecture (v0.28.0, ADR-0071):
  * - Takes a registered Custom Element class + props and returns DSD HTML
  * - Components implement render() returning string | VNode
- * - Nested CE rendering is handled inline by renderNestedDsd() during
+ * - Nested CE rendering is handled inline by renderDsdTree() during
  *   the single-pass VNode traversal — no separate post-processing needed
  * - Framework adapters hook into the pipeline via registerAdapter()
  *
@@ -16,7 +16,7 @@
  *   2. Set attributes/properties from props
  *   3. DO NOT call connectedCallback in SSR
  *   4. Call render() → get Shadow DOM content
- *   5. renderNestedDsd() recursively processes nested CEs inline
+ *   5. renderDsdTree() recursively processes nested CEs inline
  *   6. Wrap in <template shadowrootmode="open">
  *
  * Client lifecycle:
@@ -50,7 +50,7 @@ import { instantiationErrorHtml, wrongTypeErrorHtml } from './render-errors.js';
 import { classifyError } from './render-errors.js';
 import { serializeAttributes, wrapDsdOutput } from './render-serialize.js';
 import { isVNode } from './vnode.js';
-import { renderNestedDsd } from './jsx-render-string.js';
+import { renderDsdTree } from './jsx-render-string.js';
 
 const log = createLogger('core');
 const _textEncoder = new TextEncoder();
@@ -77,15 +77,58 @@ const _textEncoder = new TextEncoder();
  * @returns Structured render output (html + errors + metrics + hydrationHints)
  */
 export async function renderDsd(
-  tagName: string,
-  componentClass: CustomElementConstructor,
-  props: Record<string, unknown> = {},
+  input: string | CustomElementConstructor,
+  propsOrClass?: CustomElementConstructor | Record<string, unknown>,
+  maybeProps?: Record<string, unknown>,
   sourceInfo?: { route?: string; source?: string },
   dsdOptions?: DsdOptions,
   collector?: DsdRenderCollector,
-  nestingDepth = 0,
+  nestingDepth?: number,
   hooks?: RenderHooks,
 ): Promise<RenderOutput> {
+  // ADR-0072: Polymorphic input — string auto-lookup, class direct use.
+  let tagName: string;
+  let componentClass: CustomElementConstructor;
+  let props: Record<string, unknown> = {};
+
+  if (typeof input === 'string') {
+    tagName = input;
+    // Detect call signature:
+    //   renderDsd('tag', props)           → propsOrClass is Record<>
+    //   renderDsd('tag', Class, props)    → propsOrClass is class (backward compat)
+    if (propsOrClass && typeof propsOrClass === 'function' && 'prototype' in propsOrClass) {
+      componentClass = propsOrClass as CustomElementConstructor;
+      props = (maybeProps as Record<string, unknown>) ?? {};
+    } else {
+      const cls = globalThis.customElements?.get(tagName) as CustomElementConstructor | undefined;
+      if (!cls) {
+        log.warn(`<${tagName}> is not registered - rendering as void element`);
+        const attrs = serializeAttributes((propsOrClass as Record<string, unknown>) ?? {});
+        const html = `<${tagName}${attrs}></${tagName}>`;
+        return {
+          html,
+          errors: [],
+          metrics: {
+            tagName,
+            renderTimeMs: 0,
+            templateSize: 0,
+            layer: 'dsd-static',
+            hasError: false,
+            nestingDepth: 0,
+          },
+          hydrationHints: [],
+        };
+      }
+      componentClass = cls;
+      props = (propsOrClass as Record<string, unknown>) ?? {};
+    }
+  } else {
+    componentClass = input;
+    tagName = (input as unknown as { tagName?: string }).tagName ?? 'unknown';
+    props = (propsOrClass as Record<string, unknown>) ?? {};
+  }
+
+  const _nestingDepth = nestingDepth ?? 0;
   // H-10 fix: Guard against SSR environments where performance is undefined
   const startTime = typeof performance !== 'undefined' ? performance.now() : 0;
   const sourceStr = sourceInfo
@@ -104,7 +147,7 @@ export async function renderDsd(
     componentClass,
     props,
     dsdOptions,
-    nestingDepth,
+    nestingDepth: _nestingDepth,
   };
 
   // -- Hook: beforeRender --------------------------------------
@@ -142,7 +185,7 @@ export async function renderDsd(
         templateSize: 0,
         layer: 'dsd-static',
         hasError: true,
-        nestingDepth,
+        nestingDepth: _nestingDepth,
       },
       hydrationHints: collectedHints,
     };
@@ -164,9 +207,9 @@ export async function renderDsd(
       content = result;
     } else if (isVNode(result)) {
       // v0.24.1 (SOP-003): JSX VNode path converts VNode tree to HTML string.
-      // ADR-0071: Use renderNestedDsd for single-pass traversal with
+      // ADR-0071: Use renderDsdTree for single-pass traversal with
       // inline CE rendering.
-      content = await renderNestedDsd(result);
+      content = await renderDsdTree(result);
     } else {
       // v0.17.3: Multi-adapter dispatch - try all registered adapters
       // until one claims the result via isTemplate(). This allows Lit,
@@ -229,7 +272,7 @@ export async function renderDsd(
         templateSize: 0,
         layer: 'dsd-static',
         hasError: true,
-        nestingDepth,
+        nestingDepth: _nestingDepth,
       },
       hydrationHints: collectedHints,
     };
@@ -237,7 +280,7 @@ export async function renderDsd(
     return fallbackResult;
   }
 
-  // ADR-0071: renderNestedDsd() already rendered all nested CEs inline during
+  // ADR-0071: renderDsdTree() already rendered all nested CEs inline during
   // the VNode traversal.
 
   // 5. Extract static styles from component class
@@ -300,7 +343,7 @@ export async function renderDsd(
     templateSize: content.length,
     layer: resolvedLayer,
     hasError,
-    nestingDepth,
+    nestingDepth: _nestingDepth,
   };
 
   if (collector) {
@@ -372,37 +415,7 @@ export async function renderDsdByName(
   dsdOptions?: DsdOptions,
   hooks?: RenderHooks,
 ): Promise<RenderOutput> {
-  const cls = globalThis.customElements?.get(tagName);
-
-  if (!cls) {
-    log.warn(`<${tagName}> is not registered - rendering as void element`);
-    const attrs = serializeAttributes(props);
-    const html = `<${tagName}${attrs}></${tagName}>`;
-    return {
-      html,
-      errors: [],
-      metrics: {
-        tagName,
-        renderTimeMs: 0,
-        templateSize: 0,
-        layer: 'dsd-static',
-        hasError: false,
-        nestingDepth: 0,
-      },
-      hydrationHints: [],
-    };
-  }
-
-  return await renderDsd(
-    tagName,
-    cls as CustomElementConstructor,
-    props,
-    sourceInfo,
-    dsdOptions,
-    undefined,
-    0,
-    hooks,
-  );
+  return renderDsd(tagName, props, undefined, sourceInfo, dsdOptions, undefined, 0, hooks);
 }
 
 // v0.21.0: Streaming types and functions moved to render-dsd-stream.ts.
