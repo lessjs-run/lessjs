@@ -1,4 +1,4 @@
-export const meta = { section: '', label: 'Roadmap', order: 10 };
+﻿export const meta = { section: '', label: 'Roadmap', order: 10 };
 export const tagName = 'page-roadmap';
 
 // ADR-0037 anchors: DSD-first. Version: v0.21, v0.22, v0.23.
@@ -7,7 +7,6 @@ export const tagName = 'page-roadmap';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
 import '../islands/less-search.tsx';
 
 const routeSheet = new StyleSheet();
@@ -236,11 +235,7 @@ export class RoadmapPage extends DsdElement {
 
   override render() {
     return (
-      <less-layout
-        locale={this._getLocale('en')}
-        locales={JSON.stringify(['en', 'zh'])}
-        full-width
-      >
+      
         <div class="shell"
           data-legacy-anchors="WC Package Protocol Six-Phase Vision No webpack Registry Hub"
         >
@@ -325,7 +320,7 @@ export class RoadmapPage extends DsdElement {
             <a class="nav-link" href="/guide/deployment">Deployment {'->'}</a>
           </nav>
         </div>
-      </less-layout>
+      
     );
   }
 }

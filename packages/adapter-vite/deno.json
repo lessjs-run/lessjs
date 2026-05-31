@@ -8,7 +8,7 @@
     "./less-plugin": "./src/less-plugin.ts",
     "./subpath-resolver": "./src/subpath-resolver.ts",
     "./optional-package-stubs": "./src/optional-package-stubs.ts",
-    "./phase-context": "./src/phase-context.ts",
+    "./generated-data-resolver": "./src/generated-data-resolver.ts",
     "./cli/build": "./src/cli/build.ts",
     "./cli/build-client": "./src/cli/build-client.ts",
     "./cli/build-ssg": "./src/cli/build-ssg.ts"
@@ -19,7 +19,6 @@
     "@lessjs/core/errors": "jsr:@lessjs/core@^0.27.0/errors",
     "@lessjs/core/context": "jsr:@lessjs/core@^0.27.0/context",
     "@lessjs/protocols/build-types": "jsr:@lessjs/protocols@^0.27.0/build-types",
-    "@lessjs/protocols/virtual-ids": "jsr:@lessjs/protocols@^0.27.0/virtual-ids",
     "@lessjs/cem": "jsr:@lessjs/cem@^0.27.0",
     "@lessjs/compat-check": "jsr:@lessjs/compat-check@^0.27.0",
     "@lessjs/content/sitemap": "jsr:@lessjs/content@^0.27.0/sitemap",

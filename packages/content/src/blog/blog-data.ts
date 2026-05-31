@@ -5,7 +5,7 @@
  * Zero module-level state. Zero side effects beyond reading files.
  *
  * ADR 0018: Replaces the old stateful initBlogData() + getPosts() pattern.
- * Route components import data from virtual:less-blog-data instead.
+ * Route components import data from @lessjs/generated/blog-data instead.
  * This module is only called by the virtual module plugin's load() hook.
  */
 
@@ -18,7 +18,7 @@ import { generateBlogRoutes } from './routes.ts';
  * Can be called from any runtime context.
  *
  * This replaces the stateful initBlogData() + getPosts() pattern.
- * For virtual module consumers, use virtual:less-blog-data instead.
+ * For virtual module consumers, use @lessjs/generated/blog-data instead.
  */
 export async function loadBlogData(options?: LessBlogOptions): Promise<{
   posts: BlogPost[];
@@ -36,7 +36,7 @@ export async function loadBlogData(options?: LessBlogOptions): Promise<{
  * The output is a self-contained .ts file that exports posts,
  * getPostBySlug(), and getBlogOptions().
  *
- * SOP-001: Virtual Modules Removal — replaces virtual:less-blog-data.
+ * SOP-001: Virtual Modules Removal — replaces @lessjs/generated/blog-data.
  *
  * @param posts - Array of parsed blog posts
  * @returns TypeScript module source string

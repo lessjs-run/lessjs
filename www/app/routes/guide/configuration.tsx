@@ -1,8 +1,7 @@
-export const meta = { section: 'Production', label: 'Configuration', order: 10 };
+﻿export const meta = { section: 'Production', label: 'Configuration', order: 10 };
 import { pageStyles } from '../../components/page-styles.js';
 import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 export class ConfigurationPage extends DsdElement {
@@ -18,13 +17,7 @@ export class ConfigurationPage extends DsdElement {
 
 
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-
-
-
-      >
+      
         <div class='container'>
           <h1>配置</h1>
           <p class='subtitle'>
@@ -128,7 +121,7 @@ export default defineConfig({'{'}
             <a href='/guide/error-handling' class='nav-link'>Security &amp; Middleware →</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 
@@ -137,13 +130,7 @@ export default defineConfig({'{'}
 
 
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-
-
-
-      >
+      
         <div class='container'>
           <h1>Configuration</h1>
           <p class='subtitle'>
@@ -263,7 +250,7 @@ export default defineConfig({'{'}
             <a href='/guide/error-handling' class='nav-link'>Security &amp; Middleware →</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

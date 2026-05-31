@@ -1,12 +1,11 @@
-/**
- * Blog Index Page - Data-driven rendering via virtual:less-blog-data
+﻿/**
+ * Blog Index Page - Data-driven rendering via @lessjs/generated/blog-data
  */
 export const meta = { section: 'History', label: 'Blog', order: 10 };
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
-import { posts } from '@lessjs/content/blog-data';
+import { posts } from '@lessjs/generated/blog-data';
 
 const routeSheet = new StyleSheet();
 
@@ -85,10 +84,7 @@ export class BlogIndexPage extends DsdElement {
 
   private _renderZh() {
     return (
-      <less-layout
-        locale={this._getLocale('zh')}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class="container">
           <h1>博客</h1>
           <p class="subtitle">LessJS 框架的设计思考、架构决策和发展路线。</p>
@@ -116,16 +112,13 @@ export class BlogIndexPage extends DsdElement {
             )}
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 
   private _renderEn() {
     return (
-      <less-layout
-        locale={this._getLocale('en')}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class="container">
           <h1>Blog</h1>
           <p class="subtitle">
@@ -155,7 +148,7 @@ export class BlogIndexPage extends DsdElement {
             )}
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

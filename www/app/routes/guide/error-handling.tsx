@@ -1,9 +1,8 @@
-export const meta = { section: 'Production', label: 'Error Handling', order: 30 };
+﻿export const meta = { section: 'Production', label: 'Error Handling', order: 30 };
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 const routeSheet = new StyleSheet();
@@ -35,13 +34,7 @@ export class ErrorHandlingPage extends DsdElement {
 
 
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-
-
-
-      >
+      
         <div class='container'>
           <h1>错误处理</h1>
           <p class='subtitle'>
@@ -69,7 +62,7 @@ export class ErrorHandlingPage extends DsdElement {
             <a href='/guide/testing' class='nav-link'>Testing →</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 
@@ -78,13 +71,7 @@ export class ErrorHandlingPage extends DsdElement {
 
 
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-
-
-
-      >
+      
         <div class='container'>
           <h1>Error Handling</h1>
           <p class='subtitle'>
@@ -115,7 +102,7 @@ export class ErrorHandlingPage extends DsdElement {
             <a href='/guide/testing' class='nav-link'>Testing →</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

@@ -254,7 +254,7 @@ Deno.test('renderDsd - error handling', async (t) => {
     // v0.19.1: Bare-tag fallback - no shadow DOM, no error comments in HTML
     assertStringIncludes(output.html, '<broken-el-1>');
     assertStringIncludes(output.html, '</broken-el-1>');
-    assertFalse(output.html.includes('LessJS ERROR'));
+    assertFalse(output.html.includes('Render Error'));
     assertFalse(output.html.includes('<template shadowrootmode'));
     assertEquals(output.errors.length, 1);
     assertEquals(output.errors[0].phase, 'instantiate');
@@ -266,7 +266,7 @@ Deno.test('renderDsd - error handling', async (t) => {
     // v0.19.1: Bare-tag fallback - no shadow DOM, no error comments in HTML
     assertStringIncludes(output.html, '<error-el-1>');
     assertStringIncludes(output.html, '</error-el-1>');
-    assertFalse(output.html.includes('LessJS ERROR'));
+    assertFalse(output.html.includes('Render Error'));
     assertFalse(output.html.includes('<template shadowrootmode'));
     assertEquals(output.errors.length, 1);
     assertEquals(output.errors[0].phase, 'render');
@@ -285,7 +285,7 @@ Deno.test('renderDsd - error handling', async (t) => {
     const cls = createMockClass('', { renderValue: { notAString: true } });
     const output = await renderDsd('obj-el-1', asCtor(cls), {});
     assertStringIncludes(output.html, '<obj-el-1>');
-    assertStringIncludes(output.html, 'LessJS ERROR');
+    assertStringIncludes(output.html, 'Render Error');
   });
 });
 
@@ -547,21 +547,21 @@ Deno.test('renderDsd - edge cases', async (t) => {
     registerAdapter(undefined);
     const previousCustomElements = globalThis.customElements;
     const previousClientOnly = (globalThis as typeof globalThis & {
-      __LESS_CLIENT_ONLY_TAGS__?: Set<string>;
-    }).__LESS_CLIENT_ONLY_TAGS__;
+      __CLIENT_ONLY_TAGS__?: Set<string>;
+    }).__CLIENT_ONLY_TAGS__;
     const childCls = createMockClass('<span>should-not-render</span>');
     const registry = new Map<string, CustomElementConstructor>([
       ['child-widget', asCtor(childCls)],
     ]);
     (globalThis as typeof globalThis & {
       customElements: CustomElementRegistry;
-      __LESS_CLIENT_ONLY_TAGS__?: Set<string>;
+      __CLIENT_ONLY_TAGS__?: Set<string>;
     }).customElements = {
       get: (tagName: string) => registry.get(tagName),
     } as CustomElementRegistry;
     (globalThis as typeof globalThis & {
-      __LESS_CLIENT_ONLY_TAGS__?: Set<string>;
-    }).__LESS_CLIENT_ONLY_TAGS__ = new Set(['child-widget']);
+      __CLIENT_ONLY_TAGS__?: Set<string>;
+    }).__CLIENT_ONLY_TAGS__ = new Set(['child-widget']);
 
     try {
       const parentCls = createMockClass('<div><child-widget></child-widget></div>');
@@ -571,11 +571,11 @@ Deno.test('renderDsd - edge cases', async (t) => {
     } finally {
       (globalThis as typeof globalThis & {
         customElements?: CustomElementRegistry;
-        __LESS_CLIENT_ONLY_TAGS__?: Set<string>;
+        __CLIENT_ONLY_TAGS__?: Set<string>;
       }).customElements = previousCustomElements;
       (globalThis as typeof globalThis & {
-        __LESS_CLIENT_ONLY_TAGS__?: Set<string>;
-      }).__LESS_CLIENT_ONLY_TAGS__ = previousClientOnly;
+        __CLIENT_ONLY_TAGS__?: Set<string>;
+      }).__CLIENT_ONLY_TAGS__ = previousClientOnly;
     }
   });
 

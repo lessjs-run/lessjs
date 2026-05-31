@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Contributing Page - LessJS Framework Contribution Guide
  */
 export const meta = { section: '', label: 'Contributing', order: 30 };
@@ -6,7 +6,6 @@ import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../components/page-styles.js';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 const routeSheet = new StyleSheet();
@@ -55,14 +54,7 @@ export class ContributingPage extends DsdElement {
   private _renderZh() {
     const loc = this._getLocale('zh');
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-
-
-
-        full-width
-      >
+      
         <div class='container'>
           <h1>Contributing to LessJS</h1>
           <p class='subtitle'>感谢你对 LessJS 框架的兴趣！</p>
@@ -101,21 +93,14 @@ deno task docs:dev</code></pre>
             <a href='/roadmap' class='nav-link'>Roadmap →</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 
   private _renderEn() {
     const loc = this._getLocale('en');
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-
-
-
-        full-width
-      >
+      
         <div class='container'>
           <h1>Contributing to LessJS</h1>
           <p class='subtitle'>Thank you for your interest in the LessJS framework!</p>
@@ -172,7 +157,7 @@ deno task docs:dev</code></pre>
             <a href='/roadmap' class='nav-link'>Roadmap →</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

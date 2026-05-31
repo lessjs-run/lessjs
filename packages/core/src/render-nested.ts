@@ -122,9 +122,9 @@ function isCustomElementName(tagName: string): boolean {
 
 function isClientOnlyTag(tagName: string): boolean {
   const globalWithTags = globalThis as typeof globalThis & {
-    __LESS_CLIENT_ONLY_TAGS__?: Set<string>;
+    __CLIENT_ONLY_TAGS__?: Set<string>;
   };
-  return globalWithTags.__LESS_CLIENT_ONLY_TAGS__?.has(tagName) === true;
+  return globalWithTags.__CLIENT_ONLY_TAGS__?.has(tagName) === true;
 }
 
 /**

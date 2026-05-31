@@ -46,7 +46,7 @@ Deno.test('lessjs() with content adds less:content plugin', () => {
   const names = lessjs({ content: { blog: { contentDir: 'posts', basePath: '/blog' } } })
     .map((p) => p.name);
   assertArrayIncludes(names, ['less:content']);
-  assertArrayIncludes(names, ['less:virtual-nav']);
+  assertArrayIncludes(names, ['less:generated-data']);
 });
 
 Deno.test('lessjs() with content has more plugins than without', () => {
@@ -69,10 +69,10 @@ Deno.test('lessjs() with i18n adds less:i18n plugin', () => {
   assertArrayIncludes(names, ['less:i18n']);
 });
 
-Deno.test('lessjs() with i18n adds i18n-data plugin', () => {
+Deno.test('lessjs() with i18n uses framework generated data resolver', () => {
   const names = lessjs({ i18n: { locales: ['en', 'zh'], defaultLocale: 'en' } })
     .map((p) => p.name);
-  assertArrayIncludes(names, ['less:data-dispatch']);
+  assertArrayIncludes(names, ['less:generated-data']);
 });
 
 // ─── Content + i18n combined ──────────────────────────────────

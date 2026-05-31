@@ -553,9 +553,8 @@ export type StrategySource = 'directive' | 'island-options' | 'manifest' | 'defa
 /**
  * Declarative event binding descriptor.
  *
- * @deprecated Still used by adapter-lit/adapter-react/adapter-vanilla dsd-hydration.
- * Scheduled for removal in v0.27 when adapters migrate to `@click` binding.
- * See ADR-0039.
+ * Used by adapter-lit/adapter-react/adapter-vanilla dsd-hydration for
+ * declarative event binding. See ADR-0039.
  */
 export interface HydrateEventDescriptor {
   /** CSS selector within shadow root to find the target element */

@@ -1,8 +1,7 @@
-export const meta = { section: 'Principles', label: 'Island Deep Dive', order: 50 };
+﻿export const meta = { section: 'Principles', label: 'Island Deep Dive', order: 50 };
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 const routeSheet = new StyleSheet();
@@ -28,10 +27,7 @@ export class IslandsDeepGuidePage extends DsdElement {
     const loc = this._getLocale('zh');
 
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class='container'>
           <h1>Island 深度指南</h1>
           <p class='subtitle'>
@@ -130,7 +126,7 @@ export class IslandsDeepGuidePage extends DsdElement {
             <a href={`/${loc}/api/reference`} class='nav-link'>RPC 远程调用 →</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 
@@ -138,10 +134,7 @@ export class IslandsDeepGuidePage extends DsdElement {
     const loc = this._getLocale('en');
 
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class='container'>
           <h1>Island Deep Dive</h1>
           <p class='subtitle'>
@@ -261,7 +254,7 @@ export class IslandsDeepGuidePage extends DsdElement {
             <a href={`/${loc}/api/reference`} class='nav-link'>RPC →</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

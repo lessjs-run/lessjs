@@ -265,7 +265,7 @@ function renderPageRoute(
   lines.push('');
 
   // Wrap with renderers from outer to inner (v0.3.0)
-  // SSG mode: headExtras is injected via Vite define as __LESS_HEAD_EXTRAS__
+  // SSG mode: headExtras is injected via Vite define as __HEAD_EXTRAS__
   // (ADR 0008 Phase A: replaces the old .less/head-extras.html runtime file read).
   // Dev mode: headExtras is inlined via JSON.stringify (safe for dev server).
   const headExtrasExpr = isSSG ? '__headExtras' : JSON.stringify(docConfig.headExtras);
@@ -277,6 +277,7 @@ function renderPageRoute(
       lines.push(`    content = ${renderer.varName}.default.wrap(content, c)`);
     }
   }
+  lines.push(`    content = __wrapAppShell(content, c.req.path || ${JSON.stringify(route.path)})`);
   lines.push(`    return c.html(wrapInDocument(content, {`);
   lines.push(`      title: ${JSON.stringify(docConfig.title)},`);
   lines.push(`      lang: ${JSON.stringify(docConfig.lang)},`);
@@ -358,6 +359,13 @@ export function renderEntry(desc: EntryDescriptor): string {
   // ADR 0013: import directly from source files instead of less-runtime barrel.
   lines.push(`import { wrapInDocument } from '@lessjs/core';`);
   lines.push(`import { createLogger } from '@lessjs/core/logger';`);
+  lines.push(`import '@lessjs/ui/less-layout';`);
+  lines.push(
+    `import { headerNav as __headerNav, navSections as __navSections } from '@lessjs/generated/nav';`,
+  );
+  lines.push(
+    `import { getDefaultLocale as __getDefaultLocale, locales as __locales } from '@lessjs/generated/i18n';`,
+  );
   lines.push(`const log = createLogger('core');`);
   lines.push('');
 
@@ -475,7 +483,7 @@ export function renderEntry(desc: EntryDescriptor): string {
 
   lines.push('// v0.17.4: SSR admission plan');
   lines.push(
-    `(globalThis).__LESS_CLIENT_ONLY_TAGS__ = new Set(${
+    `(globalThis).__CLIENT_ONLY_TAGS__ = new Set(${
       JSON.stringify(ssrAdmissionPlan.clientOnlyTags)
     })`,
   );
@@ -486,17 +494,17 @@ export function renderEntry(desc: EntryDescriptor): string {
 
   // --- SSG: headExtras via define injection ---
   // ADR 0008 Phase A: Instead of reading .less/head-extras.html at runtime,
-  // headExtras is injected via Vite's define option as __LESS_HEAD_EXTRAS__.
+  // headExtras is injected via Vite's define option as __HEAD_EXTRAS__.
   // This eliminates the .less/head-extras.html temp file and avoids the
   // Vite SSR AsyncFunction syntax errors that large inline strings cause.
   // The build-ssg.ts SSR build config includes:
-  //   define: { __LESS_HEAD_EXTRAS__: JSON.stringify(headExtras) }
+  //   define: { __HEAD_EXTRAS__: JSON.stringify(headExtras) }
   if (desc.isSSG && desc.document.headExtras) {
     lines.push(
       '// SSG: headExtras injected via Vite define (ADR 0008 Phase A)',
     );
     lines.push('// Replaces the old .less/head-extras.html runtime file read');
-    lines.push('const __headExtras = __LESS_HEAD_EXTRAS__ || "";');
+    lines.push('const __headExtras = __HEAD_EXTRAS__ || "";');
     lines.push('');
   }
 
@@ -525,6 +533,29 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('  }');
   lines.push('  const out = await renderDsd(tag, Cls, props, sourceInfo)');
   lines.push('  return out.html');
+  lines.push('}');
+  lines.push('');
+
+  lines.push('function __layoutAttr(value) {');
+  lines.push('  return escapeHtml(String(value));');
+  lines.push('}');
+  lines.push('');
+  lines.push('function __layoutJsonAttr(value) {');
+  lines.push('  return __layoutAttr(JSON.stringify(value));');
+  lines.push('}');
+  lines.push('');
+  lines.push('function __localeFromPath(path, fallback) {');
+  lines.push('  const first = String(path || "/").split("/").filter(Boolean)[0];');
+  lines.push('  return __locales.includes(first) ? first : fallback;');
+  lines.push('}');
+  lines.push('');
+  lines.push('function __wrapAppShell(content, routePath, options = {}) {');
+  lines.push('  const defaultLocale = __getDefaultLocale();');
+  lines.push('  const locale = options.locale || __localeFromPath(routePath, defaultLocale);');
+  lines.push('  const fullWidth = routePath === "/" ? " full-width" : "";');
+  lines.push(
+    '  return `<less-layout${fullWidth} current-path="${__layoutAttr(routePath)}" locale="${__layoutAttr(locale)}" locales="${__layoutJsonAttr(__locales)}" nav-items="${__layoutJsonAttr(__navSections)}" header-nav="${__layoutJsonAttr(__headerNav)}">${content}</less-layout>`;',
+  );
   lines.push('}');
   lines.push('');
 
@@ -594,14 +625,12 @@ export function renderEntry(desc: EntryDescriptor): string {
       'export { installVanillaAdapter, uninstallVanillaAdapter } from "@lessjs/adapter-vanilla"',
       'export { installReactAdapter, uninstallReactAdapter } from "@lessjs/adapter-react"',
     );
-    // ADR 0018: Blog data comes from virtual:less-blog-data (zero module state)
     lines.push(
-      'export { posts, getPostBySlug, getBlogOptions } from "virtual:less-blog-data"',
+      'export { posts, getPostBySlug, getBlogOptions } from "@lessjs/generated/blog-data"',
     );
     lines.push('export { generateSitemap } from "@lessjs/content/sitemap"');
-    // ADR 0018: i18n data comes from virtual:less-i18n-data (zero module state)
     lines.push(
-      'export { locales, getDefaultLocale, getI18nOptions } from "virtual:less-i18n-data"',
+      'export { locales, getDefaultLocale, getI18nOptions } from "@lessjs/generated/i18n"',
     );
 
     // ── ADR 0014: renderRoute() - DSD-first rendering API ───────
@@ -692,6 +721,7 @@ export function renderEntry(desc: EntryDescriptor): string {
       '    content = await renderer.wrap(content, __rendererContext(routePath, params));',
     );
     lines.push('  }');
+    lines.push('  content = __wrapAppShell(content, routePath, { locale });');
     lines.push('  const fullHtml = wrapInDocument(content, {');
     lines.push('    title: title || "LessJS",');
     lines.push('    lang: lang || locale || "en",');

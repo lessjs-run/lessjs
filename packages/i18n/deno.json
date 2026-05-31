@@ -8,7 +8,6 @@
   "imports": {
     "@lessjs/core/logger": "jsr:@lessjs/core@^0.27.0/logger",
     "@lessjs/protocols/build-types": "jsr:@lessjs/protocols@^0.27.0/build-types",
-    "@lessjs/protocols/virtual-ids": "jsr:@lessjs/protocols@^0.27.0/virtual-ids",
     "vite": "npm:vite@8.0.10"
   },
   "publish": {

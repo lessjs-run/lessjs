@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @lessjs/docs - API Reference
  *
  * Organized by category: Components, Rendering, Islands, Signals, Build, SSR.
@@ -6,8 +6,6 @@
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
-
 export const tagName = 'api-core-page';
 export const meta = { section: 'Reference', label: 'API Reference', order: 5 };
 
@@ -39,10 +37,7 @@ export default class ApiCorePage extends DsdElement {
 
   private _renderZh() {
     return (
-      <less-layout
-        locale="zh"
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class="container">
           <h1>API 参考</h1>
           <p class="subtitle">LessJS 公开 API — 按类别分组。</p>
@@ -143,16 +138,13 @@ export default class ApiCorePage extends DsdElement {
             </div>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 
   private _renderEn() {
     return (
-      <less-layout
-        locale="en"
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class="container">
           <h1>API Reference</h1>
           <p class="subtitle">LessJS public API — grouped by category.</p>
@@ -245,7 +237,7 @@ export default class ApiCorePage extends DsdElement {
             </div>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

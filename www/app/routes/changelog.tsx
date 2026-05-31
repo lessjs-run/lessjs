@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Changelog Page - LessJS Framework Version History
  *
  * Reads CHANGELOG.md at build time via marked. Single source of truth.
@@ -171,11 +171,7 @@ export class ChangelogPage extends DsdElement {
     }
 
     return (
-      <less-layout
-        locale={this._getLocale('zh')}
-        locales={JSON.stringify(['en', 'zh'])}
-        full-width
-      >
+      
         <div class='container'>
           <h1>更新日志</h1>
           <p class='subtitle'>LessJS 的所有重要变更都记录在这里。</p>
@@ -191,7 +187,7 @@ export class ChangelogPage extends DsdElement {
             <a href='/guide/getting-started' class='nav-link'>快速上手 &rarr;</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

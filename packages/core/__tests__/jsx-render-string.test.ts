@@ -50,7 +50,7 @@ Deno.test('renderToString excludes onClick handler', () => {
   // onClick must not appear as an HTML attribute name
   assertEquals(html.includes('onClick="'), false);
   assertEquals(html.includes('onclick="'), false);
-  assertStringIncludes(html, 'data-less-e="e0"');
+  assertStringIncludes(html, 'data-eid="e0"');
   assertEquals(html.includes('data-on-click='), false);
 });
 

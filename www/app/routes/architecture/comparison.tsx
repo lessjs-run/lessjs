@@ -1,12 +1,10 @@
-/**
+﻿/**
  * @lessjs/docs - Comparison: LessJS vs Alternatives
  */
 
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
-
 export const tagName = 'comparison-page';
 
 export const meta = { section: 'Principles', label: 'Comparison', order: 20 };
@@ -131,10 +129,7 @@ export default class ComparisonPage extends DsdElement {
   override render() {
     const isZh = this._getLocale('zh') === 'zh';
     return (
-      <less-layout
-        locale={this._getLocale('zh')}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class="container">
           <h1>{isZh ? 'LessJS 与竞品对比' : 'LessJS vs Alternatives'}</h1>
           <p class="subtitle">
@@ -256,7 +251,7 @@ export default class ComparisonPage extends DsdElement {
             <li><strong>旧浏览器兼容</strong> - 需要 DSD 支持的浏览器（Chrome 90+、Safari 16.4+、Firefox 123+）</li>
           </ul>
         </div>
-      </less-layout>
+      
     );
   }
 }

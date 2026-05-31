@@ -14,7 +14,6 @@
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import pkgRecords from '../../data/registry/hub-data.ts';
 

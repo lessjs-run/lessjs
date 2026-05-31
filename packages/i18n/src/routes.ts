@@ -10,12 +10,12 @@
  * Generate getStaticPaths() return for locale-aware routes.
  *
  * ADR 0018: locales parameter is now REQUIRED (no module-level state fallback).
- * Import locales from virtual:less-i18n-data in route components.
+ * Import locales from @lessjs/generated/i18n in route components.
  *
  * Usage in route file:
  * ```ts
  * import { i18nStaticPaths } from '@lessjs/i18n';
- * import { locales } from 'virtual:less-i18n-data';
+ * import { locales } from '@lessjs/generated/i18n';
  *
  * export function getStaticPaths() {
  *   return i18nStaticPaths(locales); // -> [{ locale: 'en' }, { locale: 'zh' }]

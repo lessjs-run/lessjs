@@ -1086,8 +1086,7 @@ Deno.test('less-layout: currentPath highlights active nav link', async () => {
 
 Deno.test('less-layout: no hardcoded DEFAULT_NAV -nav is data-driven via navItems property', async () => {
   const { LessLayout } = await import('../src/less-layout.tsx');
-  // DEFAULT_NAV was removed -navItems must be passed via property
-  // (supplied by @lessjs/content virtual:less-nav module)
+  // DEFAULT_NAV was removed -navItems must be passed via app shell attributes.
   const instance = new LessLayout();
   // Without navItems, sidebar should render empty
   assertExists(instance);

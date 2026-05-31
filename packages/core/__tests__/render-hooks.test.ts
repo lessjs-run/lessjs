@@ -359,7 +359,7 @@ Deno.test('RenderOutput - structured output', async (t) => {
     // v0.19.1: Bare-tag fallback - no error comments in HTML
     assertStringIncludes(output.html, '<output-test-2>');
     assertStringIncludes(output.html, '</output-test-2>');
-    assertFalse(output.html.includes('LessJS ERROR'));
+    assertFalse(output.html.includes('Render Error'));
 
     // errors array is populated
     assertEquals(output.errors.length > 0, true);

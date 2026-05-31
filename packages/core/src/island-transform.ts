@@ -70,10 +70,10 @@ export function transformIslandSource(
 
   // Inject metadata markers
   const injected = `
-// --- LessJS Island Markers (auto-injected by @lessjs/core) ---
+// --- Island Markers (auto-injected) ---
 export const __island = true;
 export const __tagName = '${tagName}';
-// --- End LessJS Island Markers ---
+// --- End Island Markers ---
 `;
 
   return {

@@ -70,7 +70,7 @@ const log = createLogger('core');
 /**
  * Read `export const tagName = '...'` from source text via regex.
  * This avoids importing the module (which can fail for modules that
- * depend on Vite virtual modules like `virtual:less-nav`).
+ * depend on Vite generated-entry modules).
  */
 function readRouteTagName(source: string): string | undefined {
   const match = source.match(

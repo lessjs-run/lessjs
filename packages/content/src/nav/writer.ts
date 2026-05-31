@@ -1,9 +1,9 @@
 /**
- * @lessjs/content/nav - Navigation data module writer
+ * @lessjs/content navigation tools - Navigation data module writer
  *
  * Generates a TypeScript module string from NavData that can be
  * written to a file and imported directly by route components.
- * Replaces the virtual:less-nav virtual module pattern.
+ * Replaces the @lessjs/generated/nav virtual module pattern.
  *
  * SOP-001: Virtual Modules Removal
  */

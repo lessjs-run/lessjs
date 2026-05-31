@@ -1,4 +1,4 @@
-/**
+﻿/**
  * LessJS Benchmark & Performance
  *
  * Zero-noise performance characteristics: SSG build time, DSD rendering,
@@ -10,7 +10,6 @@ import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 const styles = new StyleSheet();
@@ -29,7 +28,7 @@ export default class Benchmark extends DsdElement {
 
   _renderEn() {
     return (
-      <less-layout>
+      
         <div class='container'>
           <h1>Performance &amp; Benchmarks</h1>
           <p class='subtitle'>Zero-noise. What we actually measure.</p>
@@ -48,13 +47,13 @@ export default class Benchmark extends DsdElement {
           <h2>Bundle Size</h2>
           <p>LessJS ships zero runtime JS for DSD components. Islands load on-demand by strategy. No framework runtime in the critical path.</p>
         </div>
-      </less-layout>
+      
     );
   }
 
   _renderZh() {
     return (
-      <less-layout locale='zh' locales='[&quot;en&quot;,&quot;zh&quot;]'>
+      
         <div class='container'>
           <h1>性能与基准测试</h1>
           <p class='subtitle'>零噪音，实测数据。</p>
@@ -73,7 +72,7 @@ export default class Benchmark extends DsdElement {
           <h2>包体积</h2>
           <p>LessJS 对 DSD 组件不输出运行时 JS。Islands 按策略按需加载。关键路径零框架运行时开销。</p>
         </div>
-      </less-layout>
+      
     );
   }
 }

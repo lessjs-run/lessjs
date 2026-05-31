@@ -1,9 +1,8 @@
-export const meta = { section: 'Production', label: 'Deployment', order: 5 };
+﻿export const meta = { section: 'Production', label: 'Deployment', order: 5 };
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 const routeSheet = new StyleSheet();
@@ -43,13 +42,7 @@ export class DeploymentPage extends DsdElement {
 
 
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-
-
-
-      >
+      
         <div class='container'>
           <h1>部署</h1>
           <p class='subtitle'>
@@ -153,7 +146,7 @@ export default defineConfig({
             <a href='/roadmap' class='nav-link'>开发计划 →</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 
@@ -162,13 +155,7 @@ export default defineConfig({
 
 
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-
-
-
-      >
+      
         <div class='container'>
           <h1>Deployment</h1>
           <p class='subtitle'>
@@ -252,7 +239,7 @@ export default defineConfig({
             <a href='/roadmap' class='nav-link'>Roadmap →</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

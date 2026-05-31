@@ -1,10 +1,9 @@
-export const meta = { section: 'Principles', label: 'Architecture', order: 10 };
+﻿export const meta = { section: 'Principles', label: 'Architecture', order: 10 };
 export const tagName = 'engine-architecture';
 
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 const pageSheet = new StyleSheet();
@@ -297,10 +296,7 @@ export class ArchitecturePage extends DsdElement {
   override render() {
     const isZh = this._getLocale('zh') === 'zh';
     return (
-      <less-layout
-        locale={this._getLocale('en')}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class="shell">
           <section class="hero">
             <div>
@@ -402,7 +398,7 @@ export class ArchitecturePage extends DsdElement {
             <a class="nav-link" href="/guide/getting-started">Start building {'->'}</a>
           </nav>
         </div>
-      </less-layout>
+      
     );
   }
 }

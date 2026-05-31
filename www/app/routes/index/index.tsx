@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Homepage — Neo-Swiss Hyper-Dark v0.26.
  *
  * Showcases LessJS framework: DSD rendering, Signal reactivity,
@@ -9,7 +9,6 @@ import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { consumeContext } from '@lessjs/core/signal-context';
 import { THEME_CTX } from '@lessjs/ui/less-layout';
-import '@lessjs/ui/less-layout';
 import '../../islands/less-search.tsx';
 import '../../islands/home-console.tsx';
 
@@ -174,7 +173,7 @@ export class DocsHome extends DsdElement {
     const isZh = this._getLocale('en') === 'zh';
 
     return (
-      <less-layout full-width>
+      
         <div class='swiss-grid'>
           <section class='hero'>
             <div class='hero-inner'>
@@ -232,7 +231,7 @@ export class DocsHome extends DsdElement {
             </div>
           </section>
         </div>
-      </less-layout>
+      
     );
   }
 }

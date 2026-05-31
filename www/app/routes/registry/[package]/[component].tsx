@@ -17,7 +17,6 @@ export const meta = { section: 'Registry', label: 'Component Detail', order: 6 }
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
 import pkgRecords from '../../../data/registry/hub-data.ts';
 import type { HubPackageRecord } from '../../../data/registry/hub-data.ts';
 
@@ -399,10 +398,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
 
     if (!pkg) {
       return (
-        <less-layout
-          locale='en'
-          locales={JSON.stringify(['en'])}
-        >
+        
           <div class='container'>
             <div class='not-found'>
               <h2>Component Not Found</h2>
@@ -412,7 +408,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
               </a>
             </div>
           </div>
-        </less-layout>
+        
       );
     }
 
@@ -421,10 +417,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
 
     if (!tag) {
       return (
-        <less-layout
-          locale='en'
-          locales={JSON.stringify(['en'])}
-        >
+        
           <div class='container'>
             <div class='not-found'>
               <h2>Component Not Found</h2>
@@ -438,7 +431,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
               </a>
             </div>
           </div>
-        </less-layout>
+        
       );
     }
 
@@ -454,10 +447,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
     const usageSnippet = this._buildUsageSnippet(tagName, pkg);
 
     return (
-      <less-layout
-        locale='en'
-        locales={JSON.stringify(['en'])}
-      >
+      
         <div class='container'>
           <a class='back-link' href={`/registry/${this.package}`}>
             ← Back to {fullPkgName}
@@ -728,7 +718,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
             )
             : null}
         </div>
-      </less-layout>
+      
     );
   }
 }

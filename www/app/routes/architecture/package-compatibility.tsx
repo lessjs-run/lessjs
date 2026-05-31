@@ -1,9 +1,8 @@
-export const meta = { section: 'Compatibility', label: 'Package Compatibility', order: 10 };
+﻿export const meta = { section: 'Compatibility', label: 'Package Compatibility', order: 10 };
 
 import { pageStyles } from '../../components/page-styles.js';
 import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 const baseStyle = pageStyles;
@@ -20,10 +19,7 @@ export class PackageCompatibilityGuidePage extends DsdElement {
   private _renderZh() {
     const loc = this._getLocale('zh');
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class="container">
           <h1>第三方包兼容性</h1>
           <p class="subtitle">
@@ -174,17 +170,14 @@ for (const pkg of node_modules) {
             <a class="nav-link" href={`/{loc}/architecture/standards-registry`}>Standards & Registry {"->"}</a>
           </nav>
         </div>
-      </less-layout>
+      
     );
   }
 
   private _renderEn() {
     const loc = this._getLocale('en');
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class="container">
           <h1>Package Compatibility</h1>
           <p class="subtitle">
@@ -341,7 +334,7 @@ for (const pkg of node_modules) {
             <a class="nav-link" href={`/{loc}/architecture/standards-registry`}>Standards & Registry {"->"}</a>
           </nav>
         </div>
-      </less-layout>
+      
     );
   }
 }

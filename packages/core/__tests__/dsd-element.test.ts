@@ -202,7 +202,7 @@ Deno.test('DsdElement: DSD VNode event markers hydrate inline handlers', () => {
 
   const btn = shadow.querySelector('button')!;
   assertExists(btn);
-  assertEquals(btn.getAttribute('data-less-e'), 'e0');
+  assertEquals(btn.getAttribute('data-eid'), 'e0');
   btn.click();
   assertEquals(callCount, 1);
 

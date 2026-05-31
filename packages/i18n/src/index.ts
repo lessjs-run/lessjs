@@ -5,9 +5,8 @@
  * Separate from @lessjs/content because i18n is a cross-cutting concern,
  * not a content-management feature.
  *
- * ADR 0018: Route components import data from virtual:less-i18n-data,
- * NOT from @lessjs/i18n module state. The loadI18nData() pure function
- * is called by the virtual module plugin's load() hook.
+ * Route components import generated data from @lessjs/generated/i18n.
+ * This package writes locale data and does not resolve it at runtime.
  *
  * Recommended usage (via @lessjs/app):
  * ```ts
@@ -70,16 +69,12 @@ export function lessI18n(
       const i18nData = loadI18nData(options);
 
       // Write i18n options to ctx (shared build context)
-      // The virtual:less-i18n-data plugin reads ctx.plugins.i18nOptions in its load() hook
+      // The @lessjs/generated/i18n plugin reads ctx.plugins.i18nOptions in its load() hook
       if (ctx) {
         ctx.plugins.i18nOptions = {
           locales: i18nData.locales,
           defaultLocale: i18nData.defaultLocale,
         };
-        // Register i18n data virtual module plugin with adapter-vite
-        // Lives here (not in adapter-vite) to avoid circular deps
-        const { createI18nDataPlugin } = await import('./i18n-data-plugin.ts');
-        ctx.plugins.i18nDataPlugin = createI18nDataPlugin(ctx);
       }
 
       // SOP-001: Write generated i18n data module to disk

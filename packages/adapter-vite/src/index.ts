@@ -18,7 +18,7 @@
  *   less-plugin.ts         — Internal plugin factory (used by lessPipeline)
  *   subpath-resolver.ts    — JSR remote resolution (ADR 0016)
  *   optional-package-stubs.ts — No-op stubs for optional adapters
- *   phase-context.ts       — Sub-plugin dispatch layer
+ *   generated-data-resolver.ts - Generated app data namespace resolver
  *
  * This file is now a pure re-export hub (~60 lines).
  */
@@ -40,7 +40,6 @@ export {
   injectClientScript,
   injectCspMeta,
   injectDsdPolyfill,
-  injectRouteManifest,
   injectSpeculationRules,
   injectViewTransitionMeta,
   insertAfterHead,

@@ -33,7 +33,7 @@ import { generateHonoEntryCode } from './hono-entry.js';
 import { buildHeadExtras } from './head-injection.js';
 import { islandTransformPlugin } from './island-transform.js';
 import { optionalPackageStubsPlugin } from './optional-package-stubs.js';
-import { dispatchDataPlugin } from './phase-context.js';
+import { createGeneratedDataResolverPlugin } from './generated-data-resolver.js';
 import {
   detectAndClassifyCemPackages,
   fileToTagName,
@@ -103,7 +103,7 @@ export function less(
   // v0.19.1 Phase 6: Discover client-only tags from Hub registry data (ADR-0035 A1)
   // Reads _hub-data-full.ts at build time and extracts tagNames where
   // compatibility is 'client-only'. This ensures Shoelace/Media Chrome
-  // tags are in __LESS_CLIENT_ONLY_TAGS__ without requiring CEM manifests.
+  // tags are in __CLIENT_ONLY_TAGS__ without requiring CEM manifests.
   let _cachedHubClientOnlyTags: string[] | null = null;
   async function discoverHubClientOnlyTags(root: string, _routesDir: string): Promise<string[]> {
     if (_cachedHubClientOnlyTags !== null) return _cachedHubClientOnlyTags;
@@ -363,31 +363,10 @@ export function less(
     injectClientScript: true,
   }) as unknown as Plugin;
 
-  // v0.26: Resolve generated data paths to actual files.
-  // Workspace aliases map @lessjs/content/nav → scanner, but we need
-  // the generated data file. This plugin (enforce: 'pre') takes priority.
-  const generatedDataPlugin: Plugin = {
-    name: 'less:generated-data',
-    enforce: 'pre',
-    resolveId(id) {
-      const cwd = process.cwd();
-      if (id === '@lessjs/content/nav') return join(cwd, 'www/app/data/_generated-nav.ts');
-      if (id === '@lessjs/content/blog-data') {
-        return join(cwd, 'www/app/data/_generated-blog-data.ts');
-      }
-      if (id === '@lessjs/i18n/data') return join(cwd, 'www/app/data/_generated-i18n-data.ts');
-      return null;
-    },
-  };
-
   return [
     corePlugin,
-    generatedDataPlugin,
+    createGeneratedDataResolverPlugin({ root: process.cwd() }),
     createCoreResolvePlugin(metaUrl),
-    // ADR 0021: Blog/i18n data plugins registered lazily by @lessjs/content
-    // and @lessjs/i18n during buildStart(). We dispatch resolve/load to
-    // whatever plugin is registered in ctx.plugins at call time.
-    dispatchDataPlugin(ctx),
     optionalPackageStubsPlugin(),
     virtualEntryPlugin,
     devServerPlugin,

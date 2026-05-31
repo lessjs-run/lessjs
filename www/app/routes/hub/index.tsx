@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Hub landing page - v0.23 artifact-first.
  *
  * Package evidence surface: compatibility tiers, validation status, trust policy.
@@ -9,8 +9,6 @@ export const tagName = 'page-hub';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
-
 const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host { display: block; }
@@ -32,10 +30,7 @@ export class HubPage extends DsdElement {
 
   override render() {
     return (
-      <less-layout
-        locale={this._getLocale('en')}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class='shell'>
           <h1>Hub</h1>
           <p class='lede'>
@@ -61,7 +56,7 @@ export class HubPage extends DsdElement {
             </a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

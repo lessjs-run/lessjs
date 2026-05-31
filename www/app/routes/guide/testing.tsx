@@ -1,8 +1,7 @@
-export const meta = { section: 'Production', label: 'Testing', order: 40 };
+﻿export const meta = { section: 'Production', label: 'Testing', order: 40 };
 import { pageStyles } from '../../components/page-styles.js';
 import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 export class TestingPage extends DsdElement {
@@ -15,13 +14,7 @@ export class TestingPage extends DsdElement {
     const loc = this._getLocale('zh');
 
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-
-
-
-      >
+      
         <div class='container'>
           <h1>测试</h1>
           <p class='subtitle'>
@@ -45,7 +38,7 @@ export class TestingPage extends DsdElement {
             <a href='/guide/deployment' class='nav-link'>部署 →</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 
@@ -53,13 +46,7 @@ export class TestingPage extends DsdElement {
     const loc = this._getLocale('en');
 
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-
-
-
-      >
+      
         <div class='container'>
           <h1>Testing</h1>
           <p class='subtitle'>
@@ -96,7 +83,7 @@ export class TestingPage extends DsdElement {
             <a href='/guide/deployment' class='nav-link'>Deployment →</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

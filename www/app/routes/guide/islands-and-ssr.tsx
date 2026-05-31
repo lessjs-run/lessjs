@@ -1,8 +1,7 @@
-export const meta = { section: 'Core', label: 'Islands & SSR', order: 4 };
+﻿export const meta = { section: 'Core', label: 'Islands & SSR', order: 4 };
 import { pageStyles } from '../../components/page-styles.js';
 import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
 
@@ -15,7 +14,7 @@ export class IslandsSsrPage extends DsdElement {
 
   private _renderZh() {
     return (
-      <less-layout>
+      
         <div class="container">
           <h1>Islands 与 SSR</h1>
           <p class="subtitle">
@@ -147,13 +146,13 @@ customElements.define('my-counter', Counter);`}</code></pre></less-code-block>
             <a href="/guide/deployment" class="nav-link">部署 &rarr;</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 
   private _renderEn() {
     return (
-      <less-layout>
+      
         <div class="container">
           <h1>Islands & SSR</h1>
           <p class="subtitle">
@@ -289,7 +288,7 @@ customElements.define('my-counter', Counter);`}</code></pre></less-code-block>
             <a href="/guide/deployment" class="nav-link">Deployment &rarr;</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

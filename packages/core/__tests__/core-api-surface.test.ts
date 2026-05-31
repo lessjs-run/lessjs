@@ -57,8 +57,8 @@ Deno.test('core JSX event handlers are excluded from SSR output', () => {
   const html = renderToString(vnode);
   // onClick must NOT appear as a raw HTML attribute name
   assertEquals(html.includes('onClick="'), false);
-  // v0.28.1 (ADR-0068): data-less-e marker emitted for VNode-based event hydration
-  assertEquals(html.includes('data-less-e="'), true);
+  // v0.27.0 (SOP-009): data-eid marker emitted for VNode-based event hydration
+  assertEquals(html.includes('data-eid="'), true);
   assertEquals(html.includes('<button type="button"'), true);
 });
 

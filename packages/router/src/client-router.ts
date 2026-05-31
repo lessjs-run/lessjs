@@ -298,13 +298,6 @@ export class Router {
           }
         }
       }
-      // v0.28.1: Fallback to build-injected route manifest
-      const m = (globalThis as Record<string, unknown>).__ROUTE_MANIFEST__ as
-        | Record<string, unknown>
-        | undefined;
-      if (m?.locales && Array.isArray(m.locales) && (m.locales as string[]).length > 0) {
-        return m.locales as string[];
-      }
       return ['en'];
     } catch {
       return ['en'];

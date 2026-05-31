@@ -1,8 +1,7 @@
-export const meta = { section: 'Principles', label: 'Island Upgrade', order: 40 };
+﻿export const meta = { section: 'Principles', label: 'Island Upgrade', order: 40 };
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 
 const routeSheet = new StyleSheet();
@@ -46,10 +45,7 @@ export class IslandsGuidePage extends DsdElement {
   private _renderZh() {
     const loc = this._getLocale('zh');
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class="container">
           <h1>Island Upgrade</h1>
           <p class="subtitle">
@@ -153,17 +149,14 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);`}</
             <a href={`/{loc}/architecture/islands-deep`} class="nav-link">Island 深度指南 &rarr;</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 
   private _renderEn() {
     const loc = this._getLocale('en');
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class="container">
           <h1>Island Upgrade</h1>
           <p class="subtitle">
@@ -250,7 +243,7 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);`}</
             <a href={`/{loc}/architecture/islands-deep`} class="nav-link">Island Deep Guide &rarr;</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

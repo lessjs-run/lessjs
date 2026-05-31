@@ -528,8 +528,7 @@ export class LessLayout extends DsdElement {
       if (prop && Array.isArray(prop)) return prop as NavSection[];
       const raw = this.getAttribute('nav-items');
       if (raw) return JSON.parse(raw);
-      // v0.28.1: Fallback to route manifest injected at build time
-      return this._manifestData<NavSection[]>('navSections') ?? [];
+      return [];
     } catch (e) {
       console.warn('[less-layout] Failed to parse nav-items JSON:', e);
       return [];
@@ -542,29 +541,11 @@ export class LessLayout extends DsdElement {
       if (prop && Array.isArray(prop)) return prop as HeaderNavLink[];
       const raw = this.getAttribute('header-nav');
       if (raw) return JSON.parse(raw);
-      // v0.28.1: Fallback to route manifest injected at build time
-      return this._manifestData<HeaderNavLink[]>('headerNav') ?? [];
+      return [];
     } catch (e) {
       console.warn('[less-layout] Failed to parse header-nav JSON:', e);
       return [];
     }
-  }
-
-  /**
-   * v0.28.1: Read a key from the build-injected window.__ROUTE_MANIFEST__.
-   * Returns null if manifest is not available (e.g., non-SSG environments).
-   */
-  private _manifestData<T>(key: string): T | null {
-    try {
-      const m = (globalThis as Record<string, unknown>).__ROUTE_MANIFEST__ as
-        | Record<string, unknown>
-        | undefined;
-      if (m && key in m) {
-        const val = m[key];
-        if (val != null && typeof val === 'object') return val as T;
-      }
-    } catch { /* manifest not available */ }
-    return null;
   }
 
   // --- Icons ---

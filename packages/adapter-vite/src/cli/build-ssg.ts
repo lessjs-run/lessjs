@@ -19,14 +19,13 @@ import { fileURLToPath } from 'node:url';
 import { normalizePath } from 'vite';
 import process from 'node:process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import type { Plugin } from 'vite';
 import type { FrameworkOptions, HydrationStrategy, LessPackageManifest } from '@lessjs/core';
 import type { LessBuildContext } from '../build-context.js';
 import type { SsgRenderOptions } from './ssg-render.js';
 import { SsrRenderError } from '@lessjs/core/errors';
 import { createLogger } from '@lessjs/core/logger';
-import { RESOLVED_NAV_ID, VIRTUAL_NAV_ID } from '@lessjs/protocols/virtual-ids';
 import { ssgRender } from './ssg-render.js';
+import { createGeneratedDataResolverPlugin } from '../generated-data-resolver.js';
 import { createLessJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
 import { generateSsrPolyfillBanner } from '../ssr-polyfills.js';
 import { resolveExternalManifest } from '../external-resolver.js';
@@ -52,7 +51,7 @@ function getLocalLessjsPackageRoot(metaUrl: string): string | null {
   }
 }
 
-// ─── Optional Package Stubs (ADR 0008 Phase C) ──────────────────────
+// 鈹€鈹€鈹€ Optional Package Stubs (ADR 0008 Phase C) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 // Vite plugin that resolves optional LessJS packages to empty stubs
 // when they're not installed. This allows the generated entry code
 // (which statically imports these packages) to build successfully
@@ -81,8 +80,7 @@ function optionalPackageStubsPlugin(): import('vite').Plugin {
       'export function renderReactToString() { return ""; }',
       'export function isReactElement() { return false; }',
     ].join('\n'),
-    // ADR 0018: @lessjs/content no longer exports initBlogData/getPosts/getPostBySlug/getBlogOptions
-    // Route components import from virtual:less-blog-data instead.
+    // Route components import generated blog data from @lessjs/generated/blog-data.
     // This stub is for the generateSitemap re-export only.
     '@lessjs/content': [
       'export async function loadBlogData() { return { posts: [], basePath: "" }; }',
@@ -90,8 +88,7 @@ function optionalPackageStubsPlugin(): import('vite').Plugin {
     '@lessjs/content/sitemap': [
       'export function generateSitemap() { return []; }',
     ].join('\n'),
-    // ADR 0018: @lessjs/i18n no longer exports initI18nData/getI18nOptions/getI18nLocales/getDefaultLocale
-    // Route components import from virtual:less-i18n-data instead.
+    // Route components import generated i18n data from @lessjs/generated/i18n.
     '@lessjs/i18n': [
       'export function loadI18nData() { return { locales: [], defaultLocale: "en" }; }',
     ].join('\n'),
@@ -323,7 +320,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     // v0.26.1: Added @shoelace-style/shoelace + @shoelace-style/localize
     // since they cannot be inlined (Rolldown resolution failure) but must
     // be resolvable at import(entry.js) time.
-    // NOTE: React is NOT here — it's in noExternal (inlined instead).
+    // NOTE: React is NOT here 鈥?it's in noExternal (inlined instead).
     const ssrExternalDefaults = [
       'parse5',
       'entities',
@@ -384,7 +381,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
         })
         .filter(Boolean),
     );
-    // v0.21: Build filePath → tagName map for client-only placeholder generation.
+    // v0.21: Build filePath 鈫?tagName map for client-only placeholder generation.
     const clientOnlyTagMap = new Map<string, string>();
     for (const [tag, meta] of Object.entries(ssgIslandMeta)) {
       if (meta.ssr !== false) continue;
@@ -392,7 +389,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
       if (file) clientOnlyTagMap.set(normalizePath(resolve(root, islandsDir, file)), tag);
     }
 
-    // v0.21 SOP-004: Conflict detection — same tag must not be both SSR and client:only.
+    // v0.21 SOP-004: Conflict detection 鈥?same tag must not be both SSR and client:only.
     const ssrTags = new Set(
       Object.entries(ssgIslandMeta)
         .filter(([, meta]) => meta.ssr !== false)
@@ -416,7 +413,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
         chunkSizeWarningLimit: 1500,
         rollupOptions: {
           input: { entry: VIRTUAL_SSG_ENTRY_ID },
-          // v0.21: Suppress IMPORT_IS_UNDEFINED for revalidate — the generated
+          // v0.21: Suppress IMPORT_IS_UNDEFINED for revalidate 鈥?the generated
           // code uses typeof check which correctly handles undefined exports.
           onwarn(warning, warn) {
             if (warning.code === 'IMPORT_IS_UNDEFINED') return;
@@ -425,7 +422,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
           output: {
             format: 'esm',
             // ADR-0044: customElements polyfill must run before ESM imports.
-            // Uses Map-backed define()/get() — renderDsdByName() looks up
+            // Uses Map-backed define()/get() 鈥?renderDsdByName() looks up
             // components via customElements.get(tagName) during SSG rendering.
             // SOP-016: HTMLElement stub is self-contained in @lessjs/core/dsd-element.ts.
             banner: `\
@@ -444,14 +441,14 @@ if (typeof globalThis.customElements === 'undefined') {
       },
       ssr: { noExternal: allNoExternal, external: manifest.specifiers },
       // ADR 0008 Phase A: Inject headExtras via define instead of .less/head-extras.html
-      // The generated entry code uses __LESS_HEAD_EXTRAS__ which gets replaced
+      // The generated entry code uses __HEAD_EXTRAS__ which gets replaced
       // at build time. This avoids the Vite SSR AsyncFunction syntax errors
       // that large inline strings (with backticks/${}) cause.
       define: options.headExtras
-        ? { __LESS_HEAD_EXTRAS__: JSON.stringify(options.headExtras) }
-        : { __LESS_HEAD_EXTRAS__: '""' },
+        ? { __HEAD_EXTRAS__: JSON.stringify(options.headExtras) }
+        : { __HEAD_EXTRAS__: '""' },
       esbuild: {
-        // ADR-0057: JSX automatic runtime — same reason as build-client.ts.
+        // ADR-0057: JSX automatic runtime 鈥?same reason as build-client.ts.
         // SSG build also processes .tsx island files for SSR rendering.
         jsx: 'automatic',
         jsxImportSource: '@lessjs/core',
@@ -479,75 +476,15 @@ if (typeof globalThis.customElements === 'undefined') {
         // This plugin resolves them to empty stubs when missing, so the
         // viteBuild() succeeds regardless of which packages are available.
         optionalPackageStubsPlugin(),
+        createGeneratedDataResolverPlugin({
+          root,
+          name: 'less:ssg-generated-data',
+        }),
         createLessJsrPackageResolverPlugin({
           workspaceRoot,
           version: getJsrPackageVersion(import.meta.url),
           localPackageRoot: getLocalLessjsPackageRoot(import.meta.url),
         }),
-        // ADR 0018: Virtual data modules - resolve virtual:less-blog-data
-        // and virtual:less-i18n-data in the SSR bundle.
-        // Use dispatch plugin (checks ctx.plugins at resolve/load time).
-        // The actual plugin may not be registered yet at SSG build time.
-        // If not registered, the user hasn't configured blog/i18n -> resolve as resolved ID
-        // and load() returns empty data.
-        {
-          name: 'less:ssg-data-dispatch',
-          enforce: 'pre',
-          resolveId(id) {
-            // v0.26: Generated data files — return virtual IDs so load()
-            // can read file content. This bypasses workspace alias conflicts.
-            if (id === '@lessjs/content/nav') return '\0less:gen-nav';
-            if (id === '@lessjs/content/blog-data') return '\0less:gen-blog';
-            if (id === '@lessjs/i18n/data') return '\0less:gen-i18n';
-            if (id === 'virtual:less-blog-data') return '\0virtual:less-blog-data';
-            if (id === 'virtual:less-i18n-data') return '\0virtual:less-i18n-data';
-          },
-          load(id) {
-            // v0.26: Read generated file content for virtual module
-            if (id === '\0less:gen-nav') {
-              const p = resolve(root, 'www/app/data/_generated-nav.ts');
-              return existsSync(p)
-                ? readFileSync(p, 'utf-8')
-                : 'export const headerNav = []; export const navSections = [];';
-            }
-            if (id === '\0less:gen-blog') {
-              const p = resolve(root, 'www/app/data/_generated-blog-data.ts');
-              return existsSync(p)
-                ? readFileSync(p, 'utf-8')
-                : 'export const posts = []; export function getPostBySlug() {} export function getBlogOptions() { return {}; }';
-            }
-            if (id === '\0less:gen-i18n') {
-              const p = resolve(root, 'www/app/data/_generated-i18n-data.ts');
-              return existsSync(p)
-                ? readFileSync(p, 'utf-8')
-                : 'export const locales = []; export function getDefaultLocale() { return "en"; } export function getI18nOptions() { return null; }';
-            }
-            // ... rest of load handlers
-            // Vite 8 Plugin.load type: function or {handler}
-            function callLoad(p: Plugin | null, moduleId: string): string | null | undefined {
-              if (!p?.load) return undefined;
-              const fn = typeof p.load === 'function'
-                ? p.load
-                : (p.load as Record<string, unknown>).handler;
-              // deno-lint-ignore no-explicit-any
-              return fn ? (fn as any)(moduleId) : undefined;
-            }
-            if (id === '\0virtual:less-blog-data') {
-              return callLoad(ctx.plugins.blogDataPlugin, id) ?? [
-                'export const posts = [];',
-                'export function getPostBySlug() { return undefined; }',
-                'export function getBlogOptions() { return {}; }',
-              ].join('\n');
-            }
-            if (id === '\0virtual:less-i18n-data') {
-              return callLoad(ctx.plugins.i18nDataPlugin, id) ?? [
-                'export const locales = [];',
-                'export function getDefaultLocale() { return "en"; }',
-                'export function getI18nOptions() { return null; }',
-              ].join('\n');
-            }
-          },
-        },
         {
           name: 'less:ssg-client-only-island-stubs',
           enforce: 'pre',
@@ -555,7 +492,7 @@ if (typeof globalThis.customElements === 'undefined') {
             const normalized = normalizePath(id.split('?')[0]);
             if (!clientOnlyIslandIds.has(normalized)) return;
             const tagName = clientOnlyTagMap.get(normalized) || 'less-client-only-stub';
-            // v0.27: Client-only stub marker — unbranded attribute.
+            // v0.27: Client-only stub marker 鈥?unbranded attribute.
             // SSR outputs <tag-name data-client-only="true"></tag-name>
             // Client runtime imports the real module and upgrades the element.
             return [
@@ -571,20 +508,6 @@ if (typeof globalThis.customElements === 'undefined') {
             ].join('\n');
           },
         },
-        // Resolve virtual:less-nav - shared nav/pwa/speculation constants
-        {
-          name: 'less:ssg-virtual-nav',
-          resolveId(id) {
-            if (id === VIRTUAL_NAV_ID) return RESOLVED_NAV_ID;
-          },
-          load(id) {
-            if (id === RESOLVED_NAV_ID) {
-              const navSections = JSON.stringify(ctx.plugins.navSections || []);
-              const headerNav = JSON.stringify(ctx.plugins.headerNav || []);
-              return `export const navSections = ${navSections};\nexport const headerNav = ${headerNav};`;
-            }
-          },
-        },
       ],
       resolve: {
         preserveSymlinks: true,
@@ -598,10 +521,6 @@ if (typeof globalThis.customElements === 'undefined') {
               ]),
             )
             : {}),
-          // v0.26: Generated data files override workspace aliases
-          '@lessjs/content/nav': './app/data/_generated-nav.ts',
-          '@lessjs/content/blog-data': './app/data/_generated-blog-data.ts',
-          '@lessjs/i18n/data': './app/data/_generated-i18n-data.ts',
         },
       },
     });
@@ -663,7 +582,7 @@ if (typeof globalThis.customElements === 'undefined') {
         }
       }
     } catch (e) {
-      log.warn('Failed to write isr-manifest.json — non-fatal:', e);
+      log.warn('Failed to write isr-manifest.json 鈥?non-fatal:', e);
     }
   } catch (err) {
     const cause = err instanceof Error ? err : new Error(String(err));

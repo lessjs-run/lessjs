@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @lessjs/ui - Design System
  * Two plates. Zero noise.
  *
@@ -9,7 +9,6 @@ import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-button';
 import '@lessjs/ui/less-card';
 import '@lessjs/ui/less-input';
@@ -260,10 +259,7 @@ export class UIShowcase extends DsdElement {
     const loc = this._getLocale('zh');
 
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class='container'>
           <h1>设计系统</h1>
           <p class='subtitle'>
@@ -380,7 +376,7 @@ export class UIShowcase extends DsdElement {
             <a href={`/${loc}/architecture/reference/core`} class='nav-link'>API Reference →</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 
@@ -388,10 +384,7 @@ export class UIShowcase extends DsdElement {
     const loc = this._getLocale('en');
 
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class='container'>
           <h1>Design System</h1>
           <p class='subtitle'>
@@ -508,7 +501,7 @@ export class UIShowcase extends DsdElement {
             <a href={`/${loc}/architecture/reference/core`} class='nav-link'>API Reference →</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

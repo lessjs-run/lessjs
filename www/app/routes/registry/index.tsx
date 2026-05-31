@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Registry Hub - Package Search &amp; List
  *
  * v0.19.0: Browse and search validated Web Component packages.
@@ -13,8 +13,6 @@ export const meta = { section: 'Registry', label: 'Package Registry', order: 5 }
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
-
 import hubData from '../../data/registry/hub-index.ts';
 import type { HubIndexData, HubIndexEntry } from '../../data/registry/hub-index.ts';
 
@@ -408,10 +406,7 @@ export default class DocsRegistryHome extends DsdElement {
 
   override render() {
     return (
-      <less-layout
-        locale="en"
-        locales={JSON.stringify(['en'])}
-      >
+      
         <div class="container">
           <div class="registry-header">
             <h1>Registry Hub <span class="badge-early-access">Early Access</span></h1>
@@ -536,7 +531,7 @@ export default class DocsRegistryHome extends DsdElement {
               </div>
             </>}
         </div>
-      </less-layout>
+      
     );
   }
 }

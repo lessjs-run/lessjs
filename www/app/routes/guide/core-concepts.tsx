@@ -1,8 +1,7 @@
-export const meta = { section: 'Core', label: 'Core Concepts', order: 2 };
+﻿export const meta = { section: 'Core', label: 'Core Concepts', order: 2 };
 import { pageStyles } from '../../components/page-styles.js';
 import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
 
@@ -15,7 +14,7 @@ export class CoreConceptsPage extends DsdElement {
 
   private _renderZh() {
     return (
-      <less-layout>
+      
         <div class="container">
           <h1>核心概念</h1>
           <p class="subtitle">
@@ -224,13 +223,13 @@ customElements.define('my-counter', Counter);`}</code></pre></less-code-block>
             <a href="/guide/routing-and-data" class="nav-link">路由与数据 &rarr;</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 
   private _renderEn() {
     return (
-      <less-layout>
+      
         <div class="container">
           <h1>Core Concepts</h1>
           <p class="subtitle">
@@ -443,7 +442,7 @@ customElements.define('my-counter', Counter);`}</code></pre></less-code-block>
             <a href="/guide/routing-and-data" class="nav-link">Routing & Data &rarr;</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

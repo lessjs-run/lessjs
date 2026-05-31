@@ -1,10 +1,8 @@
-export const meta = { section: 'Compatibility', label: 'Standards & Registry', order: 20 };
+﻿export const meta = { section: 'Compatibility', label: 'Standards & Registry', order: 20 };
 
 import { pageStyles } from '../../components/page-styles.js';
 import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
-
 export class StandardsRegistryGuidePage extends DsdElement {
   declare locale?: string;
 
@@ -17,10 +15,7 @@ export class StandardsRegistryGuidePage extends DsdElement {
   private _renderZh() {
     const loc = this._getLocale('zh');
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class="container">
           <h1>标准与 Registry 策略</h1>
           <p class="subtitle">
@@ -146,17 +141,14 @@ export class StandardsRegistryGuidePage extends DsdElement {
             <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 
   private _renderEn() {
     const loc = this._getLocale('en');
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class="container">
           <h1>Standards & Registry Strategy</h1>
           <p class="subtitle">
@@ -295,7 +287,7 @@ export class StandardsRegistryGuidePage extends DsdElement {
             <a href="/roadmap" class="nav-link">Roadmap &rarr;</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

@@ -5,7 +5,7 @@
  * Zero module-level state.
  *
  * ADR 0018: Replaces the old stateful initI18nData() + getI18nOptions() pattern.
- * Route components import data from virtual:less-i18n-data instead.
+ * Route components import data from @lessjs/generated/i18n instead.
  * This module is only called by the virtual module plugin's load() hook.
  */
 
@@ -16,7 +16,7 @@ import type { LessI18nOptions } from './types.ts';
  * No module-level state. No side effects.
  *
  * This replaces the stateful initI18nData() + getI18nOptions() pattern.
- * For virtual module consumers, use virtual:less-i18n-data instead.
+ * For virtual module consumers, use @lessjs/generated/i18n instead.
  */
 export function loadI18nData(options: LessI18nOptions): LessI18nOptions {
   return {
@@ -30,7 +30,7 @@ export function loadI18nData(options: LessI18nOptions): LessI18nOptions {
  * The output is a self-contained .ts file that exports locales,
  * defaultLocale, and helper functions.
  *
- * SOP-001: Virtual Modules Removal — replaces virtual:less-i18n-data.
+ * SOP-001: Virtual Modules Removal — replaces @lessjs/generated/i18n.
  *
  * @param locales - Array of locale code strings (e.g. ['en', 'zh'])
  * @param defaultLocale - Default locale code (e.g. 'en')

@@ -431,7 +431,7 @@ Deno.test('create-less: generated project builds through the one-command pipelin
       console.error('index.html length:', indexHtml.length);
       console.error('contains shadowrootmode:', indexHtml.includes('shadowrootmode'));
       console.error('contains template:', indexHtml.includes('<template'));
-      console.error('contains LessJS ERROR:', indexHtml.includes('LessJS ERROR'));
+      console.error('contains Render Error:', indexHtml.includes('Render Error'));
       console.error('last 300 chars:', indexHtml.substring(indexHtml.length - 300));
     }
     assertEquals(indexHtml.includes('Hello from LessJS'), true);

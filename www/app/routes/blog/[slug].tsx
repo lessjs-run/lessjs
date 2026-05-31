@@ -1,16 +1,15 @@
 /**
  * Blog Post Page - Dynamic Route
  *
- * Renders individual blog posts from virtual:less-blog-data.
+ * Renders individual blog posts from @lessjs/generated/blog-data.
  * The `slug` param is set by LessJS dynamic routing: /blog/:slug
- * ADR 0018: Data comes from virtual module, not @lessjs/content module state.
+ * Data comes from generated app data, not @lessjs/content module state.
  */
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../../components/page-styles.js';
-import '@lessjs/ui/less-layout';
-import { getPostBySlug, posts } from '@lessjs/content/blog-data';
+import { getPostBySlug, posts } from '@lessjs/generated/blog-data';
 
 export const tagName = 'page-blog-slug';
 
@@ -63,13 +62,7 @@ export default class BlogPostPage extends DsdElement {
 
     if (!post) {
       return (
-        <less-layout
-          locale={loc}
-          locales={JSON.stringify(['en', 'zh'])}
-
-
-
-        >
+        
           <div class='container'>
             <div class='not-found'>
               <h1>404</h1>
@@ -77,18 +70,12 @@ export default class BlogPostPage extends DsdElement {
               <a href='/blog'>← 返回博客</a>
             </div>
           </div>
-        </less-layout>
+        
       );
     }
     const tags = post.frontmatter.tags ?? [];
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-
-
-
-      >
+      
         <div class='container'>
           <a href='/blog' class='blog-back'>← 博客</a>
           <h1>{post.frontmatter.title}</h1>
@@ -106,7 +93,7 @@ export default class BlogPostPage extends DsdElement {
             <a href='/blog' class='nav-link'>← 返回博客</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 
@@ -116,13 +103,7 @@ export default class BlogPostPage extends DsdElement {
 
     if (!post) {
       return (
-        <less-layout
-          locale={loc}
-          locales={JSON.stringify(['en', 'zh'])}
-
-
-
-        >
+        
           <div class='container'>
             <div class='not-found'>
               <h1>404</h1>
@@ -130,18 +111,12 @@ export default class BlogPostPage extends DsdElement {
               <a href='/en/blog'>← Back to Blog</a>
             </div>
           </div>
-        </less-layout>
+        
       );
     }
     const tags = post.frontmatter.tags ?? [];
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-
-
-
-      >
+      
         <div class='container'>
           <a href='/blog' class='blog-back'>← Blog</a>
           <h1>{post.frontmatter.title}</h1>
@@ -159,7 +134,7 @@ export default class BlogPostPage extends DsdElement {
             <a href='/blog' class='nav-link'>← Back to Blog</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

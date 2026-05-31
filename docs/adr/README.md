@@ -65,6 +65,7 @@ architectural decision, its context, and consequences.
 | 0054 | AST-Based External Specifier Resolution           | Accepted                                 |
 | 0055 | SSR Bundle Self-Containment                       | SUPERSEDED by ADR-0056                   |
 | 0056 | External Dependencies — Consumer Import Map + AST | Accepted                                 |
+| 0070 | Generated Data Namespace and App Shell Boundary   | Accepted                                 |
 
 ## Superseded / Historical
 

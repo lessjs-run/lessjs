@@ -1,9 +1,8 @@
-export const meta = { section: 'Quick Start', label: 'Getting Started', order: 1 };
+﻿export const meta = { section: 'Quick Start', label: 'Getting Started', order: 1 };
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { docsPageStyles } from '@lessjs/ui/docs-page-styles';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
 import '../../islands/less-toc.tsx';
@@ -29,14 +28,14 @@ export class GettingStartedPage extends DsdElement {
     const isEn = locale === 'en';
 
     return (
-      <less-layout>
+      
         <div class='content-grid'>
           <div class='container'>
             {isEn ? <GettingStartedEn /> : <GettingStartedZh />}
           </div>
           <less-toc></less-toc>
         </div>
-      </less-layout>
+      
     );
   }
 }

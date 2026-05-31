@@ -116,23 +116,20 @@ export function renderErrorHtml(
   );
 
   // Cross-runtime environment detection
-  const _nodeProcess =
-    (globalThis as unknown as { process?: { env?: Record<string, string | undefined> } }).process as
-      | { env?: Record<string, string | undefined> }
-      | undefined;
-  const _nodeIsDev = _nodeProcess?.env?.NODE_ENV !== 'production';
-  const isDev = typeof Deno !== 'undefined'
-    ? Deno.env?.get('LESSJS_ENV') !== 'production'
-    : _nodeIsDev;
+  // Check LESSJS_ENV across runtimes. Production suppresses error detail.
+  const isDev = (() => {
+    try { return (globalThis as Record<string, unknown>).LESSJS_ENV !== 'production'; }
+    catch { return true; }
+  })();
 
   if (isDev) {
-    return `<!-- LessJS ERROR: <${tagName}> render() threw: ${escapeHtml(errMsg)} -->\n` +
+    return `<!-- Render Error: <${tagName}> render() threw: ${escapeHtml(errMsg)} -->\n` +
       (errStack
         ? `<!-- Stack: ${escapeHtml(errStack.split('\n').slice(0, 3).join(' | '))} -->\n`
         : '') +
       '<!-- Check console for full error details -->';
   } else {
-    return `<!-- LessJS ERROR: <${tagName}> render() failed -->` +
+    return `<!-- Render Error: <${tagName}> render() failed -->` +
       '<!-- Check console for full error details -->';
   }
 }
@@ -148,5 +145,5 @@ export function wrongTypeErrorHtml(
   log.error(
     `<${tagName}> render() returned ${resultType} instead of string. ${errDetail}`,
   );
-  return `<!-- LessJS ERROR: <${tagName}> render() returned ${resultType}, expected string. ${errDetail} -->`;
+  return `<!-- Render Error: <${tagName}> render() returned ${resultType}, expected string. ${errDetail} -->`;
 }

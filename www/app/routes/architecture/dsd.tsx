@@ -1,9 +1,8 @@
-export const meta = { section: 'Principles', label: 'DSD Rendering', order: 30 };
+﻿export const meta = { section: 'Principles', label: 'DSD Rendering', order: 30 };
 
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '../../islands/reactive-showcase.js';
 
@@ -48,10 +47,7 @@ export class DsdGuidePage extends DsdElement {
   private _renderZh() {
     const loc = this._getLocale('zh');
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class="container">
           <h1>DSD 渲染架构</h1>
           <p class="subtitle">
@@ -138,17 +134,14 @@ export class DsdGuidePage extends DsdElement {
             <a href={`/${loc}/architecture/standards-registry`} class="nav-link">{loc === 'zh' ? '标准与注册表' : 'Standards & Registry'} &rarr;</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 
   private _renderEn() {
     const loc = this._getLocale('en');
     return (
-      <less-layout
-        locale={loc}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class="container">
           <h1>DSD Rendering Architecture</h1>
           <p class="subtitle">
@@ -238,7 +231,7 @@ export class DsdGuidePage extends DsdElement {
             <a href={`/${loc}/architecture/standards-registry`} class="nav-link">{loc === 'zh' ? '标准与注册表' : 'Standards & Registry'} &rarr;</a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

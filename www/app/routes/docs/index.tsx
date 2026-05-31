@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Docs landing page - v0.23 artifact-first.
  *
  * Four entry paths: Build an app, Learn the engine, Integrate packages, Maintain LessJS.
@@ -9,8 +9,6 @@ export const tagName = 'page-docs';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
-
 const sheet = new StyleSheet();
 sheet.replaceSync(`
   :host { display: block; }
@@ -31,10 +29,7 @@ export class DocsPage extends DsdElement {
 
   override render() {
     return (
-      <less-layout
-        locale={this._getLocale('en')}
-        locales={JSON.stringify(['en', 'zh'])}
-      >
+      
         <div class='shell'>
           <h1>Docs</h1>
           <p class='lede'>
@@ -64,7 +59,7 @@ export class DocsPage extends DsdElement {
             </a>
           </div>
         </div>
-      </less-layout>
+      
     );
   }
 }

@@ -1,8 +1,7 @@
-export const meta = { section: 'Core', label: 'Routing & Data', order: 3 };
+﻿export const meta = { section: 'Core', label: 'Routing & Data', order: 3 };
 import { pageStyles } from '../../components/page-styles.js';
 import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
 
@@ -15,11 +14,11 @@ export class RoutingDataPage extends DsdElement {
     const locale = this._getLocale('zh');
     const isEn = locale === 'en';
     return (
-      <less-layout>
+      
         <div class='container'>
           {isEn ? <RoutingDataEn /> : <RoutingDataZh />}
         </div>
-      </less-layout>
+      
     );
   }
 }

@@ -342,21 +342,6 @@ export async function ssgRender(
       'SSR bundle loaded but no Hono app found (no default export)',
     );
   }
-  // v0.28.1: Preload route manifest so _manifestData() works during SSR.
-  // less-layout calls _manifestData() from render() which runs inside toSSG().
-  // Without this, nav/header/sidebar are empty in SSR HTML.
-  try {
-    const manifestSrc = readFileSync(
-      join(root, 'app/data/_generated-route-manifest.ts'),
-      'utf-8',
-    );
-    const jsonMatch = manifestSrc.match(
-      /export\s+const\s+routeManifest\s*=\s*({[\s\S]*?\n});\s*export\s+const\s+navSections/m,
-    );
-    if (jsonMatch) {
-      (globalThis as Record<string, unknown>).__ROUTE_MANIFEST__ = JSON.parse(jsonMatch[1]);
-    }
-  } catch { /* manifest unavailable — nav falls back to empty */ }
 
   const result = await toSSG(app as never, fsModule, { dir: outputDir });
 
@@ -496,7 +481,6 @@ export async function ssgRender(
     buildIslandChunkMap,
     injectCspMeta,
     injectDsdPolyfill,
-    injectRouteManifest,
     injectViewTransitionMeta,
     injectSpeculationRules,
     buildSpeculationRulesJson,
@@ -542,24 +526,6 @@ export async function ssgRender(
 
   injectDsdPolyfill(outputDir);
   log.info('DSD polyfill injected');
-
-  // v0.28.1: Inject route manifest so less-layout can derive nav/header/locale
-  try {
-    const manifestPath = join(root, 'app/data/_generated-route-manifest.ts');
-    if (existsSync(manifestPath)) {
-      const src = readFileSync(manifestPath, 'utf-8');
-      const jsonMatch = src.match(
-        /export\s+const\s+routeManifest\s*=\s*({[\s\S]*?\n});\s*export\s+const\s+navSections/m,
-      );
-      if (jsonMatch) {
-        const manifest = JSON.parse(jsonMatch[1]);
-        injectRouteManifest(outputDir, manifest);
-        log.info('Route manifest injected');
-      }
-    }
-  } catch (e) {
-    log.warn(`Failed to inject route manifest: ${e instanceof Error ? e.message : String(e)}`);
-  }
 
   // ── Build manifest ──────────────────────────────────────────
   // ── PWA files ──────────────────────────────────────────────

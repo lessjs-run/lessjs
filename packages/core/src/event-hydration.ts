@@ -1,7 +1,7 @@
 /**
  * Marker-based event hydration for SSR VNode output.
  *
- * SSR emits deterministic `data-less-e` markers. During DSD upgrade,
+ * SSR emits deterministic `data-eid` markers. During DSD upgrade,
  * DsdElement renders the same VNode tree in memory, collects event handlers in
  * the same traversal order, and binds them to matching DOM markers without
  * replacing the existing DSD DOM.
@@ -44,7 +44,7 @@ export function serializeEventMarkers(
   if (!props) return '';
   for (const [key, value] of Object.entries(props)) {
     if (eventTypeFromProp(key) && typeof value === 'function') {
-      return ` data-less-e="${context.nextId()}"`;
+      return ` data-eid="${context.nextId()}"`;
     }
   }
   return '';
@@ -144,8 +144,8 @@ export function hydrateEventMarkers(
   cleanupBag: Array<() => void>,
   owner?: unknown,
 ): void {
-  for (const el of root.querySelectorAll('[data-less-e]')) {
-    const id = el.getAttribute('data-less-e');
+  for (const el of root.querySelectorAll('[data-eid]')) {
+    const id = el.getAttribute('data-eid');
     if (!id) continue;
     const records = bindings.get(id);
     if (!records) continue;

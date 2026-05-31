@@ -32,8 +32,8 @@ function assertLessPluginArray(plugins: ReturnType<typeof less>): void {
   const names = plugins.map((p) => p.name);
   assertArrayIncludes(names, [
     'less:core',
+    'less:generated-data',
     'less:core-resolve',
-    'less:data-dispatch',
     'less:optional-package-stubs',
     'less:virtual-entry',
     '@hono/vite-dev-server',
