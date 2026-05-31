@@ -123,8 +123,6 @@ sheet.replaceSync(`
     top: 0;
     z-index: 100;
     background: var(--bg-base);
-    backdrop-filter: blur(12px) saturate(180%);
-    -webkit-backdrop-filter: blur(12px) saturate(180%);
     border-bottom: 0.5px solid var(--border);
   }
 
@@ -1016,6 +1014,33 @@ export class LessLayout extends DsdElement {
     return null;
   }
 
+  private _activateDeclarativeShadowRoots(root: Element): void {
+    const templates = Array.from(
+      root.querySelectorAll<HTMLTemplateElement>('template[shadowrootmode]'),
+    );
+
+    if (
+      root instanceof HTMLElement &&
+      root.firstElementChild instanceof HTMLTemplateElement &&
+      root.firstElementChild.hasAttribute('shadowrootmode')
+    ) {
+      templates.unshift(root.firstElementChild);
+    }
+
+    for (const template of templates) {
+      const host = template.parentElement;
+      if (!host || host.shadowRoot) {
+        template.remove();
+        continue;
+      }
+
+      const mode = template.getAttribute('shadowrootmode') === 'closed' ? 'closed' : 'open';
+      const shadow = host.attachShadow({ mode });
+      shadow.appendChild(template.content);
+      template.remove();
+    }
+  }
+
   private async _loadContent(path: string, locale: string): Promise<void> {
     try {
       const resp = await fetch(path);
@@ -1044,7 +1069,11 @@ export class LessLayout extends DsdElement {
       while (this.firstChild) this.removeChild(this.firstChild);
       const children = Array.from(newLayout.children);
       for (const child of children) {
-        this.appendChild(document.adoptNode(child));
+        const adopted = document.adoptNode(child);
+        if (adopted instanceof Element) {
+          this._activateDeclarativeShadowRoots(adopted);
+        }
+        this.appendChild(adopted);
       }
 
       // Propagate theme to newly inserted components.

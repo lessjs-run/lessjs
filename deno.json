@@ -36,7 +36,6 @@
     "@lessjs/rpc": "./packages/rpc/src/index.ts",
     "@lessjs/protocols": "./packages/protocols/src/index.ts",
     "@lessjs/protocols/build-types": "./packages/protocols/src/build-types.ts",
-    "@lessjs/protocols/virtual-ids": "./packages/protocols/src/virtual-ids.ts",
     "@lessjs/runtime": "./packages/runtime/src/index.ts",
     "@lessjs/signals": "./packages/signals/src/index.ts",
     "@lessjs/signals/framework": "./packages/signals/src/framework.ts",
