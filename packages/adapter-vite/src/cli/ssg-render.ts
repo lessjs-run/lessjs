@@ -342,6 +342,22 @@ export async function ssgRender(
       'SSR bundle loaded but no Hono app found (no default export)',
     );
   }
+  // v0.28.1: Preload route manifest so _manifestData() works during SSR.
+  // less-layout calls _manifestData() from render() which runs inside toSSG().
+  // Without this, nav/header/sidebar are empty in SSR HTML.
+  try {
+    const manifestSrc = readFileSync(
+      join(root, 'app/data/_generated-route-manifest.ts'),
+      'utf-8',
+    );
+    const jsonMatch = manifestSrc.match(
+      /export\s+const\s+routeManifest\s*=\s*({[\s\S]*?\n});\s*export\s+const\s+navSections/m,
+    );
+    if (jsonMatch) {
+      (globalThis as Record<string, unknown>).__ROUTE_MANIFEST__ = JSON.parse(jsonMatch[1]);
+    }
+  } catch { /* manifest unavailable — nav falls back to empty */ }
+
   const result = await toSSG(app as never, fsModule, { dir: outputDir });
 
   if (!result.success) throw result.error;

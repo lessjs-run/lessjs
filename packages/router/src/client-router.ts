@@ -288,14 +288,22 @@ export class Router {
     try {
       const raw = ((this.#el as unknown as Record<string, unknown>).locales) ||
         this.#el.getAttribute('locales');
-      if (!raw) return ['en'];
-      if (Array.isArray(raw)) return raw as string[];
-      if (typeof raw === 'string') {
-        try {
-          return JSON.parse(raw);
-        } catch {
-          return ['en'];
+      if (raw) {
+        if (Array.isArray(raw)) return raw as string[];
+        if (typeof raw === 'string') {
+          try {
+            return JSON.parse(raw);
+          } catch {
+            return ['en'];
+          }
         }
+      }
+      // v0.28.1: Fallback to build-injected route manifest
+      const m = (globalThis as Record<string, unknown>).__ROUTE_MANIFEST__ as
+        | Record<string, unknown>
+        | undefined;
+      if (m?.locales && Array.isArray(m.locales) && (m.locales as string[]).length > 0) {
+        return m.locales as string[];
       }
       return ['en'];
     } catch {
