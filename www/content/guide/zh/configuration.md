@@ -64,9 +64,9 @@ i18n，一个调用包含所有功能。如果你只需要核心路由和 island
 </tr>
 </tbody>
 </table>
-<h2>JSX 配置（v0.24.1）</h2>
+<h2>JSX 配置</h2>
 <p>
-LessJS v0.24.1 使用 JSX + Signal 作为组件模型。需要配置 deno.json 和 vite.config.ts：
+LessJS 使用 JSX + Signal 作为组件模型。需要配置 deno.json 和 vite.config.ts：
 </p>
 <less-code-block>
 <pre><code>// deno.json

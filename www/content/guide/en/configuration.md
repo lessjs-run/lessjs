@@ -73,9 +73,9 @@ support should update this option only after a package manifest passes validatio
 then, third-party packages should be added explicitly and reviewed like any other
 dependency.
 </p>
-<h2>JSX Configuration (v0.24.1)</h2>
+<h2>JSX Configuration</h2>
 <p>
-LessJS v0.24.1 uses JSX+Signal as the component model. Configure deno.json and
+LessJS uses JSX+Signal as the component model. Configure deno.json and
 vite.config.ts:
 </p>
 <less-code-block>
