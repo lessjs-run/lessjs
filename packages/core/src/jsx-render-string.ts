@@ -249,3 +249,168 @@ export function renderToString(
 
   return `<${tagStr}${attrs}${eventAttrs}>${childHtml}</${tagStr}>`;
 }
+
+// ─── renderNestedDsd ────────────────────────────────────────────────────────
+
+/**
+ * Render a VNode tree to an HTML string with inline nested CE rendering.
+ *
+ * Unlike `renderToString` (which outputs empty tags for custom elements),
+ * `renderNestedDsd` calls `renderDsd()` inline whenever it encounters a
+ * registered custom element tag — so the output already contains the DSD
+ * template. This eliminates the need for a separate post-processing pass
+ * (the former `renderNestedCustomElements` + parse5).
+ *
+ * ADR-0071: Single-pass VNode traversal. parse5 deleted. No visited Set.
+ *
+ * @param node - VNode, string, number, boolean, null or undefined
+ * @returns HTML string with all nested CEs pre-rendered via DSD
+ */
+export async function renderNestedDsd(
+  node: unknown,
+  eventContext = createEventMarkerContext(),
+): Promise<string> {
+  // Falsy / empty nodes
+  if (node == null || node === false) return '';
+  if (typeof node === 'string') return escapeHtml(node);
+  if (typeof node === 'number') return String(node);
+  if (typeof node === 'boolean') return '';
+
+  // v0.24.1: Auto-unwrap Signal values in JSX expressions
+  if (isSignalLike(node)) {
+    return renderNestedDsd((node as { value: unknown }).value, eventContext);
+  }
+
+  if (!isVNode(node)) {
+    return escapeHtml(String(node));
+  }
+
+  const { tag, props, children } = node;
+
+  // ── Fragment ──────────────────────────────────────────────────────────────
+  if (tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(lessjs.fragment)')) {
+    const parts: string[] = [];
+    for (const c of children) {
+      parts.push(await renderNestedDsd(c, eventContext));
+    }
+    return parts.join('');
+  }
+
+  // ── Show (SSR: render truthy child as static snapshot) ────────────────────
+  if (tag === SHOW_TAG || tag === 'show') {
+    const whenVal = isSignalLike(props?.when)
+      ? (props!.when as { value: unknown }).value
+      : props?.when;
+    const ch = children as VNode[];
+    const target = whenVal ? ch[0] : ch[1];
+    return target ? renderNestedDsd(target, eventContext) : '';
+  }
+
+  // ── For (SSR: render each item statically) ────────────────────────────────
+  if (tag === FOR_TAG || tag === 'fore') {
+    const items = (isSignalLike(props?.each)
+      ? (props!.each as { value: unknown }).value
+      : props?.each) as unknown[];
+    if (!Array.isArray(items)) return '';
+    const renderFn = children[0] as unknown as ((item: unknown, idx: number) => unknown);
+    if (typeof renderFn !== 'function') return '';
+    const parts: string[] = [];
+    for (let i = 0; i < items.length; i++) {
+      parts.push(await renderNestedDsd(renderFn(items[i], i), eventContext));
+    }
+    return parts.join('');
+  }
+
+  // ── Component function / class ────────────────────────────────────────────
+  if (typeof tag === 'function') {
+    try {
+      if (tag.prototype && typeof tag.prototype.render === 'function') {
+        const instance = new (tag as new (...args: unknown[]) => { render(): unknown })();
+        for (const [k, v] of Object.entries(props)) {
+          (instance as Record<string, unknown>)[k] = v;
+        }
+        const result = instance.render();
+        return renderNestedDsd(result, eventContext);
+      } else {
+        const result = (tag as (props: Record<string, unknown>) => unknown)({
+          ...props,
+          children,
+        });
+        return renderNestedDsd(result, eventContext);
+      }
+    } catch (err) {
+      console.error(
+        `[LessJS/SSR] renderNestedDsd() failed for <${String(tag)}>:`,
+        err instanceof Error ? err.message : String(err),
+      );
+      return '';
+    }
+  }
+
+  // ── HTML element / Custom Element ─────────────────────────────────────────
+  const tagStr = String(tag);
+
+  // ADR-0071: If this is a registered custom element, render it inline via
+  // renderDsd() so its DSD template is embedded in this traversal — no need
+  // for a separate parse5 post-processing pass.
+  if (
+    typeof customElements !== 'undefined' &&
+    customElements.get &&
+    customElements.get(tagStr)
+  ) {
+    try {
+      // Lazy import to avoid static circular with render-dsd.ts at module load.
+      const { renderDsd } = await import('./render-dsd.js');
+      const dsdResult = await renderDsd(
+        tagStr,
+        customElements.get(tagStr) as CustomElementConstructor,
+        props,
+      );
+      // The DSD result is a complete <tagName><template shadowrootmode="open">...</template></tagName>.
+      // But since we are inside a parent's rendering, we must NOT double-wrap.
+      // Instead, we extract the inner template + attrs and emit them inside the
+      // parent's serialization context. renderDsd()'s output starts with the
+      // CE tag itself, so we use it as-is (it's a self-contained CE).
+      return dsdResult.html;
+    } catch (err) {
+      console.error(
+        `[LessJS/SSR] renderNestedDsd() failed for registered CE <${tagStr}>:`,
+        err instanceof Error ? err.message : String(err),
+      );
+      // Fallback: render as empty CE tag (browser will upgrade on CSR)
+      const attrs = serializeAttrs(props);
+      const eventAttrs = serializeEventMarkers(props, eventContext);
+      return `<${tagStr}${attrs}${eventAttrs}></${tagStr}>`;
+    }
+  }
+
+  // ── Normal HTML element ───────────────────────────────────────────────────
+  const attrs = serializeAttrs(props);
+  const eventAttrs = serializeEventMarkers(props, eventContext);
+
+  const innerHTML = props?.innerHTML !== undefined
+    ? String(unwrapSignalLike(props.innerHTML))
+    : undefined;
+  const textContent = props?.textContent !== undefined
+    ? escapeHtml(String(unwrapSignalLike(props.textContent)))
+    : undefined;
+
+  let childHtml: string;
+  if (innerHTML !== undefined) {
+    childHtml = innerHTML;
+  } else if (textContent !== undefined) {
+    childHtml = textContent;
+  } else {
+    const parts: string[] = [];
+    for (const c of children) {
+      parts.push(await renderNestedDsd(c, eventContext));
+    }
+    childHtml = parts.join('');
+  }
+
+  if (VOID_ELEMENTS.has(tagStr)) {
+    return `<${tagStr}${attrs}${eventAttrs}>`;
+  }
+
+  return `<${tagStr}${attrs}${eventAttrs}>${childHtml}</${tagStr}>`;
+}

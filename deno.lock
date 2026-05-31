@@ -1078,8 +1078,7 @@
       "packages/core": {
         "dependencies": [
           "jsr:@lessjs/signals@0.27",
-          "jsr:@lessjs/style-sheet@0.27",
-          "npm:parse5@7.0.0"
+          "jsr:@lessjs/style-sheet@0.27"
         ]
       },
       "packages/hub": {

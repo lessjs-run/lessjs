@@ -61,7 +61,6 @@ import {
   type RenderOutput,
 } from './types.js';
 import { getRegisteredAdapters } from './adapter-registry.js';
-import { renderNestedCustomElements } from './render-nested.js';
 import type { StyleSheetLike } from '@lessjs/style-sheet';
 import { createLogger } from './logger.js';
 
@@ -71,7 +70,7 @@ import { instantiationErrorHtml, wrongTypeErrorHtml } from './render-errors.js';
 import { classifyError } from './render-errors.js';
 import { serializeAttributes, wrapDsdOutput } from './render-serialize.js';
 import { isVNode } from './vnode.js';
-import { renderToString as renderVNodeToString } from './jsx-render-string.js';
+import { renderNestedDsd } from './jsx-render-string.js';
 
 const log = createLogger('core');
 const _textEncoder = new TextEncoder();
@@ -185,7 +184,9 @@ export async function renderDsd(
       content = result;
     } else if (isVNode(result)) {
       // v0.24.1 (SOP-003): JSX VNode path — convert VNode tree to HTML string
-      content = renderVNodeToString(result);
+      // ADR-0071: Use renderNestedDsd for single-pass traversal with
+      // inline CE rendering. This eliminates parse5 + renderNestedCustomElements.
+      content = await renderNestedDsd(result);
     } else {
       // v0.17.3: Multi-adapter dispatch - try all registered adapters
       // until one claims the result via isTemplate(). This allows Lit,
@@ -256,20 +257,8 @@ export async function renderDsd(
     return fallbackResult;
   }
 
-  // v0.6: L2 Nested DSD - recursively render nested Custom Elements
-  // v0.23.1: Pass visited set to prevent circular component references
-  const visited = new Set<string>();
-  const nestedOutput = await renderNestedCustomElements(content, collector, 10, hooks, visited);
-  content = nestedOutput.html;
-
-  // Propagate nested errors and hydration hints
-  if (nestedOutput.errors.length > 0) {
-    collectedErrors.push(...nestedOutput.errors);
-    hasError = true;
-  }
-  if (nestedOutput.hydrationHints.length > 0) {
-    collectedHints.push(...nestedOutput.hydrationHints);
-  }
+  // ADR-0071: renderNestedDsd() already rendered all nested CEs inline during
+  // the VNode traversal. No separate renderNestedCustomElements pass is needed.
 
   // 5. Extract static styles from component class
   // v0.20.0: Try native DsdElement CSSStyleSheet first - no adapter needed.

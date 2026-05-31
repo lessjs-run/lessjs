@@ -60,7 +60,6 @@ export {
   renderDsdByName,
   renderDsdStream,
 } from './render-dsd.js';
-export { renderNestedCustomElements } from './render-nested.js';
 export type {
   RenderDsdStreamChunk,
   RenderDsdStreamComponent,
