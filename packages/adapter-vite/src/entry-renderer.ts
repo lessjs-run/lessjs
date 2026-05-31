@@ -277,7 +277,7 @@ function renderPageRoute(
       lines.push(`    content = ${renderer.varName}.default.wrap(content, c)`);
     }
   }
-  lines.push(`    content = __wrapAppShell(content, c.req.path || ${JSON.stringify(route.path)})`);
+  lines.push(`    content = await __wrapAppShell(content, c.req.path || ${JSON.stringify(route.path)})`);
   lines.push(`    return c.html(wrapInDocument(content, {`);
   lines.push(`      title: ${JSON.stringify(docConfig.title)},`);
   lines.push(`      lang: ${JSON.stringify(docConfig.lang)},`);
@@ -357,7 +357,7 @@ export function renderEntry(desc: EntryDescriptor): string {
 
   // --- Document wrapper ---
   // ADR 0013: import directly from source files instead of less-runtime barrel.
-  lines.push(`import { wrapInDocument } from '@lessjs/core';`);
+  lines.push(`import { wrapInDocument, renderNestedCustomElements } from '@lessjs/core';`);
   lines.push(`import { createLogger } from '@lessjs/core/logger';`);
   lines.push(`import '@lessjs/ui/less-layout';`);
   lines.push(
@@ -549,13 +549,13 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('  return __locales.includes(first) ? first : fallback;');
   lines.push('}');
   lines.push('');
-  lines.push('function __wrapAppShell(content, routePath, options = {}) {');
+  lines.push('async function __wrapAppShell(content, routePath, options = {}) {');
   lines.push('  const defaultLocale = __getDefaultLocale();');
   lines.push('  const locale = options.locale || __localeFromPath(routePath, defaultLocale);');
-  lines.push('  const fullWidth = routePath === "/" ? " full-width" : "";');
-  lines.push(
-    '  return `<less-layout${fullWidth} current-path="${__layoutAttr(routePath)}" locale="${__layoutAttr(locale)}" locales="${__layoutJsonAttr(__locales)}" nav-items="${__layoutJsonAttr(__navSections)}" header-nav="${__layoutJsonAttr(__headerNav)}">${content}</less-layout>`;',
-  );
+  lines.push('  const isHome = routePath === "/";');
+  lines.push('  const layoutHtml = `<less-layout${isHome ? " home" : ""} current-path="${__layoutAttr(routePath)}" locale="${__layoutAttr(locale)}" locales="${__layoutJsonAttr(__locales)}" nav-items="${__layoutJsonAttr(__navSections)}" header-nav="${__layoutJsonAttr(__headerNav)}">${content}</less-layout>`;');
+  lines.push('  const layoutResult = await renderNestedCustomElements(layoutHtml);');
+  lines.push('  return layoutResult.html;');
   lines.push('}');
   lines.push('');
 
@@ -618,7 +618,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     );
     lines.push('');
     lines.push(
-      'export { renderDsd, renderDsdByName, wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core"',
+      'export { renderDsd, renderDsdByName, renderNestedCustomElements, wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core"',
     );
     lines.push(
       'export { installLitAdapter, uninstallLitAdapter } from "@lessjs/adapter-lit"',
@@ -721,7 +721,7 @@ export function renderEntry(desc: EntryDescriptor): string {
       '    content = await renderer.wrap(content, __rendererContext(routePath, params));',
     );
     lines.push('  }');
-    lines.push('  content = __wrapAppShell(content, routePath, { locale });');
+    lines.push('  content = await __wrapAppShell(content, routePath, { locale });');
     lines.push('  const fullHtml = wrapInDocument(content, {');
     lines.push('    title: title || "LessJS",');
     lines.push('    lang: lang || locale || "en",');

@@ -482,7 +482,18 @@ export class LessLayout extends DsdElement {
   // → all delegated to this.routing (Router instance)
 
   private _currentPath(): string {
-    return this.routing.path;
+    // SSR-safe: prefer attribute/prop set by renderDsd over Router
+    // Router uses location.pathname which is undefined during build.
+    const prop = (this as Record<string, unknown>).currentPath;
+    if (typeof prop === 'string' && prop.length > 0) return prop;
+    const attr = this.getAttribute('current-path');
+    if (attr && attr.length > 0) return attr;
+    // Fall back to Router (CSR only — requires location global)
+    try {
+      return this.routing.path;
+    } catch {
+      return '/';
+    }
   }
 
   /** Compute GitHub edit URL from current path. */
