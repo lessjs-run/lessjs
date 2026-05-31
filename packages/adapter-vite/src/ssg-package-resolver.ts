@@ -54,6 +54,7 @@ const LESSJS_EXPORT_FILES: Record<string, Record<string, string>> = {
     'less-card': 'src/less-card.tsx',
     'less-code-block': 'src/less-code-block.tsx',
     'less-dialog': 'src/less-dialog.tsx',
+    'docs-page-styles': 'src/docs-page-styles.ts',
     'less-hero-ping': 'src/less-hero-ping.tsx',
     'less-input': 'src/less-input.tsx',
     'less-layout': 'src/less-layout.tsx',

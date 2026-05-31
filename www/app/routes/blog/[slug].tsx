@@ -5,7 +5,6 @@
  * The `slug` param is set by LessJS dynamic routing: /blog/:slug
  * ADR 0018: Data comes from virtual module, not @lessjs/content module state.
  */
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -61,15 +60,15 @@ export default class BlogPostPage extends DsdElement {
   private _renderZh() {
     const loc = this._getLocale('zh');
     const post = getPostBySlug(this.slug);
-    const nav = navSections;
+
     if (!post) {
       return (
         <less-layout
           locale={loc}
           locales={JSON.stringify(['en', 'zh'])}
-          navItems={JSON.stringify(nav)}
-          headerNav={JSON.stringify(headerNav)}
-          currentPath='/blog'
+
+
+
         >
           <div class='container'>
             <div class='not-found'>
@@ -86,9 +85,9 @@ export default class BlogPostPage extends DsdElement {
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        navItems={JSON.stringify(nav)}
-        headerNav={JSON.stringify(headerNav)}
-        currentPath='/blog'
+
+
+
       >
         <div class='container'>
           <a href='/blog' class='blog-back'>← 博客</a>
@@ -114,15 +113,15 @@ export default class BlogPostPage extends DsdElement {
   private _renderEn() {
     const loc = this._getLocale('en');
     const post = getPostBySlug(this.slug);
-    const nav = navSections;
+
     if (!post) {
       return (
         <less-layout
           locale={loc}
           locales={JSON.stringify(['en', 'zh'])}
-          navItems={JSON.stringify(nav)}
-          headerNav={JSON.stringify(headerNav)}
-          currentPath='/en/blog'
+
+
+
         >
           <div class='container'>
             <div class='not-found'>
@@ -139,9 +138,9 @@ export default class BlogPostPage extends DsdElement {
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        navItems={JSON.stringify(nav)}
-        headerNav={JSON.stringify(headerNav)}
-        currentPath='/en/blog'
+
+
+
       >
         <div class='container'>
           <a href='/blog' class='blog-back'>← Blog</a>

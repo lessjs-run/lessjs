@@ -1,5 +1,4 @@
 export const meta = { section: 'Core', label: 'Routing & Data', order: 3 };
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -7,8 +6,6 @@ import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import '@lessjs/ui/less-callout';
 
-const navItemsJson = JSON.stringify(navSections);
-const headerNavJson = JSON.stringify(headerNav);
 const localesJson = JSON.stringify(['en', 'zh']);
 
 export class RoutingDataPage extends DsdElement {
@@ -17,9 +14,8 @@ export class RoutingDataPage extends DsdElement {
   override render() {
     const locale = this._getLocale('zh');
     const isEn = locale === 'en';
-    const currentPath = isEn ? '/en/guide/routing-and-data' : '/guide/routing-and-data';
     return (
-      <less-layout locale={locale} locales={localesJson} nav-items={navItemsJson} header-nav={headerNavJson} current-path={currentPath}>
+      <less-layout>
         <div class='container'>
           {isEn ? <RoutingDataEn /> : <RoutingDataZh />}
         </div>

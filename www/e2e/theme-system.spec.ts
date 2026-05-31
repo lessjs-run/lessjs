@@ -11,19 +11,30 @@
 
 import { expect, type Page, test } from '@playwright/test';
 
-/**
- * Find <less-theme-toggle> across shadow DOM boundaries.
- * The toggle lives inside <less-layout>'s shadow DOM on most pages.
- */
-function findToggleInPage(): Element | null {
-  // Primary: inside less-layout's shadow DOM
-  const layout = document.querySelector('less-layout');
-  if (layout?.shadowRoot) {
-    const toggle = layout.shadowRoot.querySelector('less-theme-toggle');
-    if (toggle) return toggle;
-  }
-  // Fallback: light DOM (for pages without less-layout)
-  return document.querySelector('less-theme-toggle');
+async function clickThemeToggle(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    const visit = (root: Document | ShadowRoot | Element): Element | null => {
+      const direct = root.querySelector?.('less-theme-toggle');
+      if (direct) return direct;
+      const all = root.querySelectorAll?.('*') ?? [];
+      for (const el of Array.from(all)) {
+        if (el.shadowRoot) {
+          const found = visit(el.shadowRoot);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+    const toggle = visit(document);
+    const btn = toggle?.shadowRoot?.querySelector('button') as HTMLButtonElement | null;
+    btn?.click();
+  });
+}
+
+async function waitForThemeChange(page: Page, before: string | null): Promise<void> {
+  await page.waitForFunction((prev) => {
+    return document.documentElement.getAttribute('data-theme') !== prev;
+  }, before);
 }
 
 /**
@@ -37,10 +48,19 @@ function findToggleInPage(): Element | null {
  */
 async function waitForToggleReady(page: Page): Promise<void> {
   await page.waitForFunction(() => {
-    const layout = document.querySelector('less-layout');
-    const toggle = layout?.shadowRoot?.querySelector('less-theme-toggle') ??
-      document.querySelector('less-theme-toggle');
-    return toggle?.hasAttribute('data-theme') === true;
+    const visit = (root: Document | ShadowRoot | Element): Element | null => {
+      const direct = root.querySelector?.('less-theme-toggle');
+      if (direct) return direct;
+      const all = root.querySelectorAll?.('*') ?? [];
+      for (const el of Array.from(all)) {
+        if (el.shadowRoot) {
+          const found = visit(el.shadowRoot);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+    return visit(document)?.hasAttribute('data-theme') === true;
   }, { timeout: 10000 });
 }
 
@@ -53,16 +73,38 @@ test.describe('Theme Toggle', () => {
 
   test('theme toggle element exists', async ({ page }) => {
     const exists = await page.evaluate(() => {
-      const toggle = findToggleInPage();
-      return toggle !== null;
+      const visit = (root: Document | ShadowRoot | Element): Element | null => {
+        const direct = root.querySelector?.('less-theme-toggle');
+        if (direct) return direct;
+        const all = root.querySelectorAll?.('*') ?? [];
+        for (const el of Array.from(all)) {
+          if (el.shadowRoot) {
+            const found = visit(el.shadowRoot);
+            if (found) return found;
+          }
+        }
+        return null;
+      };
+      return visit(document) !== null;
     });
     expect(exists).toBe(true);
   });
 
   test('theme toggle has shadow root', async ({ page }) => {
     const hasShadowRoot = await page.evaluate(() => {
-      const toggle = findToggleInPage();
-      return toggle?.shadowRoot !== null;
+      const visit = (root: Document | ShadowRoot | Element): Element | null => {
+        const direct = root.querySelector?.('less-theme-toggle');
+        if (direct) return direct;
+        const all = root.querySelectorAll?.('*') ?? [];
+        for (const el of Array.from(all)) {
+          if (el.shadowRoot) {
+            const found = visit(el.shadowRoot);
+            if (found) return found;
+          }
+        }
+        return null;
+      };
+      return visit(document)?.shadowRoot !== null;
     });
     expect(hasShadowRoot).toBe(true);
   });
@@ -74,13 +116,9 @@ test.describe('Theme Toggle', () => {
 
     // Click the toggle button via evaluate to guarantee the shadow DOM
     // button is clicked regardless of Playwright's shadow DOM piercing.
-    await page.evaluate(() => {
-      const toggle = findToggleInPage();
-      const btn = toggle?.shadowRoot?.querySelector('button');
-      btn?.click();
-    });
+    await clickThemeToggle(page);
 
-    // Theme should have changed
+    await waitForThemeChange(page, themeBefore);
     const themeAfter = await page.evaluate(() => {
       return document.documentElement.getAttribute('data-theme');
     });
@@ -88,11 +126,7 @@ test.describe('Theme Toggle', () => {
   });
 
   test('theme is persisted to localStorage after toggle', async ({ page }) => {
-    await page.evaluate(() => {
-      const toggle = findToggleInPage();
-      const btn = toggle?.shadowRoot?.querySelector('button');
-      btn?.click();
-    });
+    await clickThemeToggle(page);
 
     // Check localStorage
     const stored = await page.evaluate(() => {
@@ -114,21 +148,15 @@ test.describe('Theme Toggle', () => {
       return document.documentElement.getAttribute('data-theme');
     });
 
-    await page.evaluate(() => {
-      const toggle = findToggleInPage();
-      const btn = toggle?.shadowRoot?.querySelector('button');
-      btn?.click();
-    });
+    await clickThemeToggle(page);
+    await waitForThemeChange(page, themeBefore);
     const themeAfter1 = await page.evaluate(() => {
       return document.documentElement.getAttribute('data-theme');
     });
     expect(themeAfter1).not.toBe(themeBefore);
 
-    await page.evaluate(() => {
-      const toggle = findToggleInPage();
-      const btn = toggle?.shadowRoot?.querySelector('button');
-      btn?.click();
-    });
+    await clickThemeToggle(page);
+    await waitForThemeChange(page, themeAfter1);
     const themeAfter2 = await page.evaluate(() => {
       return document.documentElement.getAttribute('data-theme');
     });

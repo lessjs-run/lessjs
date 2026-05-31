@@ -59,6 +59,7 @@ import {
 import { isVNode, type VNode } from './vnode.js';
 import { renderToDom } from './jsx-render-dom.js';
 import { renderToString } from './jsx-render-string.js';
+import { collectEventBindings, hydrateEventMarkers } from './event-hydration.js';
 import { effect, type Signal, signal } from '@lessjs/signals';
 
 /**
@@ -150,6 +151,10 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
 
   /** v0.28 (ADR-0067): Event listener cleanup tracking for _hydrateSignals(). */
   #eventCleanups: Array<() => void> = [];
+
+  /** v0.28.1: Cached VNode from render() — avoids double-render mismatch between SSR and hydration. */
+  #vnodeCache: unknown = undefined;
+  #vnodeCacheValid = false;
 
   /**
    * v0.27 (ADR-0065): Signal registry for attribute-based hydration.
@@ -399,7 +404,19 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       this.#effectDisposers.add(dispose);
     }
 
-    // --- Event bindings: data-on-<event>="methodName" ---
+    // v0.28.1: Cache VNode so SSR and hydration use the same event IDs.
+    // render() may have been called at build time for SSR — reuse cached VNode
+    // if available, otherwise call render() once and cache for hydration.
+    if (!this.#vnodeCacheValid) {
+      this.#vnodeCache = this.render();
+      this.#vnodeCacheValid = true;
+    }
+    const vnode = this.#vnodeCache;
+    if (isVNode(vnode)) {
+      hydrateEventMarkers(this.shadowRoot, collectEventBindings(vnode), this.#eventCleanups, this);
+    }
+
+    // --- Deprecated fallback: data-on-<event>="methodName" ---
     this._bindEvents(this.shadowRoot);
 
     // Chromium DSD layout fix: force reflow without DOM rebuild
@@ -576,6 +593,9 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     this.#effectDisposers.clear();
 
     const result = this.render();
+    // v0.28.1: Cache VNode for event hydration consistency
+    this.#vnodeCache = result;
+    this.#vnodeCacheValid = true;
     if (isVNode(result)) {
       while (this.shadowRoot!.firstChild) {
         this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);

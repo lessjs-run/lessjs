@@ -5,7 +5,6 @@
  * v0.27.0: Replaced 98-line manual markdown renderer with marked.
  */
 export const meta = { section: '', label: 'Changelog', order: 20 };
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -175,9 +174,6 @@ export class ChangelogPage extends DsdElement {
       <less-layout
         locale={this._getLocale('zh')}
         locales={JSON.stringify(['en', 'zh'])}
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path="/changelog"
         full-width
       >
         <div class='container'>

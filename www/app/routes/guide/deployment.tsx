@@ -1,5 +1,4 @@
 export const meta = { section: 'Production', label: 'Deployment', order: 5 };
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -41,15 +40,15 @@ export class DeploymentPage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    const nav = JSON.stringify(navSections);
-    const hNav = JSON.stringify(headerNav);
+
+
     return (
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        navItems={nav}
-        headerNav={hNav}
-        currentPath='/guide/deployment'
+
+
+
       >
         <div class='container'>
           <h1>部署</h1>
@@ -160,15 +159,15 @@ export default defineConfig({
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    const nav = JSON.stringify(navSections);
-    const hNav = JSON.stringify(headerNav);
+
+
     return (
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        navItems={nav}
-        headerNav={hNav}
-        currentPath='/en/guide/deployment'
+
+
+
       >
         <div class='container'>
           <h1>Deployment</h1>

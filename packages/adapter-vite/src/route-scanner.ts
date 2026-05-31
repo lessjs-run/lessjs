@@ -64,7 +64,6 @@ import { LessError } from '@lessjs/core/errors';
 import { createLogger } from '@lessjs/core/logger';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, posix, sep } from 'node:path';
-import { pathToFileURL } from 'node:url';
 
 const log = createLogger('core');
 
@@ -377,14 +376,12 @@ export async function scanIslandMeta(
     const tagName = fileToTagName(filePath);
     const fullPath = join(islandsDir, filePath);
 
-    let mod: Record<string, unknown>;
+    let source = '';
     try {
-      // v0.25: Dynamic import replaces regex-based source scanning
-      const fileUrl = pathToFileURL(fullPath).href;
-      mod = await import(fileUrl) as Record<string, unknown>;
+      source = await readFile(fullPath, 'utf-8');
     } catch (e) {
       log.debug(
-        `Unable to import island module for metadata: ${fullPath}${
+        `Unable to read island module for metadata: ${fullPath}${
           e instanceof Error ? `: ${e.message}` : ''
         }`,
       );
@@ -392,31 +389,70 @@ export async function scanIslandMeta(
     }
 
     // Read the `less` export directly — no regex needed
-    if (!mod.less || typeof mod.less !== 'object' || mod.less === null) continue;
+    const lessExport = readStaticLessExport(source);
+    if (!lessExport) continue;
 
-    const lessExport = mod.less as Record<string, unknown>;
-    const ssr = typeof lessExport.ssr === 'boolean' ? lessExport.ssr : undefined;
-    const dsd = typeof lessExport.dsd === 'boolean' ? lessExport.dsd : undefined;
-    const hydrate: LocalIslandMeta['hydrate'] = typeof lessExport.hydrate === 'string' &&
+    const hydrate: LocalIslandMeta['hydrate'] = lessExport.hydrate &&
         ['load', 'idle', 'visible', 'only'].includes(lessExport.hydrate)
-      ? (lessExport.hydrate as LocalIslandMeta['hydrate'])
+      ? lessExport.hydrate
       : undefined;
 
     meta[tagName] = {
       tagName,
       filePath,
-      ssr: hydrate === 'only' ? false : ssr,
-      dsd: hydrate === 'only' ? false : dsd,
+      ssr: hydrate === 'only' ? false : lessExport.ssr,
+      dsd: hydrate === 'only' ? false : lessExport.dsd,
       hydrate,
       reason: hydrate === 'only'
         ? 'local island exports less.hydrate=only'
-        : ssr === false
+        : lessExport.ssr === false
         ? 'local island exports less.ssr=false'
         : undefined,
     };
   }
 
   return meta;
+}
+
+/**
+ * v0.28.1: Static extraction of `export const less = { ... }` from island source.
+ *
+ * Uses comment-stripped regex instead of full AST parsing. This is pragmatic:
+ * - Island `less` exports are small, predictable objects (3 fields max).
+ * - Deno's TS compiler API is heavy for extracting 3 literal values.
+ * - regex handles all real-world cases in the LessJS codebase.
+ *
+ * What it handles: comments, trailing commas, `as const`, semicolons.
+ * What it doesn't (by design): computed keys, template literals, spread.
+ * If an island needs those, it should use dynamic imports — which this
+ * scanner intentionally avoids.
+ */
+function readStaticLessExport(source: string): {
+  ssr?: boolean;
+  dsd?: boolean;
+  hydrate?: LocalIslandMeta['hydrate'];
+} | null {
+  // Strip single-line and block comments before matching
+  const stripped = source
+    .replace(/\/\/.*$/gm, '')
+    .replace(/\/\*[\s\S]*?\*\//g, '');
+
+  const match = stripped.match(
+    /export\s+const\s+less\s*(?::\s*[^=]+)?\s*=\s*\{([^}]*)\}/m,
+  );
+  if (!match) return null;
+  const body = match[1];
+
+  const readBool = (key: string): boolean | undefined => {
+    const m = body.match(new RegExp(`\\b${key}\\s*:\\s*(true|false)\\b`));
+    return m ? m[1] === 'true' : undefined;
+  };
+  const hydrateMatch = body.match(/\bhydrate\s*:\s*['"]([^'"]+)['"]/);
+  return {
+    ssr: readBool('ssr'),
+    dsd: readBool('dsd'),
+    hydrate: hydrateMatch?.[1] as LocalIslandMeta['hydrate'] | undefined,
+  };
 }
 
 /**

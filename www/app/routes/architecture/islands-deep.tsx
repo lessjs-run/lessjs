@@ -1,5 +1,4 @@
 export const meta = { section: 'Principles', label: 'Island Deep Dive', order: 50 };
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -27,14 +26,11 @@ export class IslandsDeepGuidePage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    const nav = navSections;
+
     return (
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        navItems={JSON.stringify(nav)}
-        headerNav={JSON.stringify(headerNav)}
-        currentPath={`/${loc}/architecture/islands-deep`}
       >
         <div class='container'>
           <h1>Island 深度指南</h1>
@@ -140,14 +136,11 @@ export class IslandsDeepGuidePage extends DsdElement {
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    const nav = navSections;
+
     return (
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        navItems={JSON.stringify(nav)}
-        headerNav={JSON.stringify(headerNav)}
-        currentPath={`/${loc}/architecture/islands-deep`}
       >
         <div class='container'>
           <h1>Island Deep Dive</h1>

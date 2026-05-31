@@ -17,7 +17,7 @@
  * @csspart shortcut - The keyboard shortcut kbd
  */
 
-import { DsdElement, escapeAttr, escapeHtml } from '@lessjs/core';
+import { defineCustomElement, DsdElement, escapeAttr, escapeHtml } from '@lessjs/core';
 import { computed, signal } from '@lessjs/signals';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -27,6 +27,10 @@ interface SearchEntry {
   title: string;
   section: string;
   text: string;
+}
+
+interface FlexSearchDocumentConstructor {
+  Document: new (opts: Record<string, unknown>) => unknown;
 }
 
 export const tagName = 'less-search';
@@ -185,7 +189,7 @@ export default class LessSearch extends DsdElement {
   // ── Keyboard shortcut ────────────────────────────────────────────────────
 
   private _onKeydown = (e: KeyboardEvent) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
       this.#open.value ? this._close() : this._open();
     } else if (e.key === 'Escape' && this.#open.value) {
@@ -225,7 +229,10 @@ export default class LessSearch extends DsdElement {
   _onInput(e: Event): void {
     const target = e.target as HTMLInputElement;
     this.#query.value = target.value;
+    this._runSearch();
+  }
 
+  private _runSearch(): void {
     if (this.#query.value.length < 2 || !this._index) {
       this.#results.value = [];
     } else {
@@ -254,13 +261,14 @@ export default class LessSearch extends DsdElement {
       ]);
       const FlexSearch = (FlexSearchModule as { default?: unknown }).default || FlexSearchModule;
       this._entries = await res.json() as SearchEntry[];
-      this._index = new (FlexSearch as new (opts: Record<string, unknown>) => unknown).Document({
+      this._index = new (FlexSearch as FlexSearchDocumentConstructor).Document({
         document: { id: 'path', index: ['title', 'section', 'text'] },
         tokenize: 'forward',
       });
       for (const entry of this._entries) {
         (this._index as Record<string, (entry: SearchEntry) => void>).add(entry);
       }
+      this._runSearch();
     } catch {
       this._loaded = false;
     }
@@ -278,7 +286,7 @@ export default class LessSearch extends DsdElement {
 
     if (results.length > 0) {
       return results.map((r) =>
-        `<a href="${escapeAttr(r.path)}" class="item" data-on-click="_close">` +
+        `<a href="${escapeAttr(r.path)}" class="result item" data-on-click="_close">` +
         `<div class="item-section">${escapeHtml(r.section)}</div>` +
         `<div class="item-title">${escapeHtml(r.title)}</div>` +
         `<div class="item-text">${escapeHtml(r.text)}</div>` +
@@ -360,4 +368,4 @@ export default class LessSearch extends DsdElement {
   }
 }
 
-if (!customElements.get(tagName)) customElements.define(tagName, LessSearch);
+defineCustomElement(tagName, LessSearch);

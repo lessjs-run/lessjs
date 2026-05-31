@@ -16,6 +16,7 @@ import { isVNode, type VNode } from './vnode.ts';
 import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { escapeAttr, escapeHtml } from './html-escape.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
+import { createEventMarkerContext, serializeEventMarkers } from './event-hydration.ts';
 
 // ─── Void elements ───────────────────────────────────────────────────────────
 
@@ -127,7 +128,10 @@ function styleObjectToString(obj: Record<string, unknown>): string {
  * @param node - VNode, string, number, boolean, null or undefined
  * @returns HTML string (empty string for null/undefined/false)
  */
-export function renderToString(node: unknown): string {
+export function renderToString(
+  node: unknown,
+  eventContext = createEventMarkerContext(),
+): string {
   // Falsy / empty nodes
   if (node == null || node === false) return '';
   if (typeof node === 'string') return escapeHtml(node);
@@ -148,7 +152,7 @@ export function renderToString(node: unknown): string {
 
   // ── Fragment ──────────────────────────────────────────────────────────────
   if (tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(lessjs.fragment)')) {
-    return children.map((c) => renderToString(c)).join('');
+    return children.map((c) => renderToString(c, eventContext)).join('');
   }
 
   // ── Show (SSR: render truthy child as static snapshot) ────────────────────
@@ -158,7 +162,7 @@ export function renderToString(node: unknown): string {
       : props?.when;
     const ch = children as VNode[];
     const target = whenVal ? ch[0] : ch[1];
-    return target ? renderToString(target) : '';
+    return target ? renderToString(target, eventContext) : '';
   }
 
   // ── For (SSR: render each item statically) ────────────────────────────────
@@ -174,7 +178,7 @@ export function renderToString(node: unknown): string {
       return '';
     }
     return items.map((item, i) =>
-      renderToString(renderFn(item, i))
+      renderToString(renderFn(item, i), eventContext)
     ).join('');
   }
 
@@ -195,14 +199,14 @@ export function renderToString(node: unknown): string {
           (instance as Record<string, unknown>)[k] = v;
         }
         const result = instance.render();
-        return renderToString(result);
+        return renderToString(result, eventContext);
       } else {
         // Function component
         const result = (tag as (props: Record<string, unknown>) => unknown)({
           ...props,
           children,
         });
-        return renderToString(result);
+        return renderToString(result, eventContext);
       }
     } catch (err) {
       // v0.26.1 FIX: Previously this silently returned '', making SSR failures
@@ -220,24 +224,12 @@ export function renderToString(node: unknown): string {
 
   // v0.28 (ADR-0067): Emit data-on-<event> markers for event handler props.
   // Handlers map: onClick→click, onInput→input, onChange→change, onSubmit→submit, onKeydown→keydown
-  const EVENT_MAP: Record<string, string> = {
-    onClick: 'click',
-    onInput: 'input',
-    onChange: 'change',
-    onSubmit: 'submit',
-    onKeydown: 'keydown',
-  };
-  let dataOnAttrs = '';
-  for (const [key, value] of Object.entries(props ?? {})) {
-    const eventType = EVENT_MAP[key];
-    if (eventType && typeof value === 'function') {
-      const name = value.name || '__anonymous__';
-      dataOnAttrs += ` data-on-${eventType}="${name}"`;
-    }
-  }
+  const eventAttrs = serializeEventMarkers(props, eventContext);
 
   // innerHTML prop: render as raw HTML content (build-time sanitized, ADR-0064)
-  const innerHTML = props?.innerHTML as string | undefined;
+  const innerHTML = props?.innerHTML !== undefined
+    ? String(unwrapSignalLike(props.innerHTML))
+    : undefined;
   // textContent prop: render signal/dynamic value as escaped child content (v0.27)
   // Signal identity preserved via data-signal attribute for hydration.
   const textContent = props?.textContent !== undefined
@@ -247,13 +239,13 @@ export function renderToString(node: unknown): string {
     ? innerHTML
     : textContent !== undefined
     ? textContent
-    : children.map((c) => renderToString(c)).join('');
+    : children.map((c) => renderToString(c, eventContext)).join('');
 
   const tagStr = String(tag);
 
   if (VOID_ELEMENTS.has(tagStr)) {
-    return `<${tagStr}${attrs}${dataOnAttrs}>`;
+    return `<${tagStr}${attrs}${eventAttrs}>`;
   }
 
-  return `<${tagStr}${attrs}${dataOnAttrs}>${childHtml}</${tagStr}>`;
+  return `<${tagStr}${attrs}${eventAttrs}>${childHtml}</${tagStr}>`;
 }

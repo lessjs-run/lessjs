@@ -1,0 +1,160 @@
+/**
+ * Marker-based event hydration for SSR VNode output.
+ *
+ * SSR emits deterministic `data-less-e` markers. During DSD upgrade,
+ * DsdElement renders the same VNode tree in memory, collects event handlers in
+ * the same traversal order, and binds them to matching DOM markers without
+ * replacing the existing DSD DOM.
+ */
+
+import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
+import { isSignalLike } from './signal-like.ts';
+import { isVNode, type VNode } from './vnode.ts';
+
+const EVENT_PROP_RE = /^on[A-Z]/;
+
+export interface EventBindingRecord {
+  id: string;
+  type: string;
+  handler: EventListener;
+}
+
+export interface EventMarkerContext {
+  nextId(): string;
+}
+
+export function createEventMarkerContext(): EventMarkerContext {
+  let count = 0;
+  return {
+    nextId(): string {
+      return `e${count++}`;
+    },
+  };
+}
+
+export function eventTypeFromProp(prop: string): string | null {
+  if (!EVENT_PROP_RE.test(prop)) return null;
+  return prop.slice(2).toLowerCase();
+}
+
+export function serializeEventMarkers(
+  props: Record<string, unknown> | undefined,
+  context: EventMarkerContext,
+): string {
+  if (!props) return '';
+  for (const [key, value] of Object.entries(props)) {
+    if (eventTypeFromProp(key) && typeof value === 'function') {
+      return ` data-less-e="${context.nextId()}"`;
+    }
+  }
+  return '';
+}
+
+export function collectEventBindings(node: unknown): Map<string, EventBindingRecord[]> {
+  const bindings = new Map<string, EventBindingRecord[]>();
+  let count = 0;
+
+  const visit = (value: unknown): void => {
+    if (
+      value == null || value === false || typeof value === 'string' || typeof value === 'number'
+    ) {
+      return;
+    }
+    if (isSignalLike(value)) {
+      visit((value as { value: unknown }).value);
+      return;
+    }
+    if (!isVNode(value)) return;
+
+    const { tag, props, children } = value as VNode;
+
+    if (
+      tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(lessjs.fragment)')
+    ) {
+      for (const child of children) visit(child);
+      return;
+    }
+
+    if (tag === SHOW_TAG || tag === 'show') {
+      const whenVal = isSignalLike(props?.when)
+        ? (props!.when as { value: unknown }).value
+        : props?.when;
+      const target = whenVal ? children[0] : children[1];
+      visit(target);
+      return;
+    }
+
+    if (tag === FOR_TAG || tag === 'fore') {
+      const items = (isSignalLike(props?.each)
+        ? (props!.each as { value: unknown }).value
+        : props?.each) as unknown[];
+      const renderFn = children[0] as unknown as ((item: unknown, idx: number) => unknown);
+      if (Array.isArray(items) && typeof renderFn === 'function') {
+        items.forEach((item, i) =>
+          visit(renderFn(item, i))
+        );
+      }
+      return;
+    }
+
+    if (typeof tag === 'function') {
+      try {
+        if (tag.prototype && typeof tag.prototype.render === 'function') {
+          const instance = new (tag as new (...args: unknown[]) => { render(): unknown })();
+          for (const [k, v] of Object.entries(props)) {
+            (instance as Record<string, unknown>)[k] = v;
+          }
+          visit(instance.render());
+        } else {
+          visit((tag as (props: Record<string, unknown>) => unknown)({ ...props, children }));
+        }
+      } catch {
+        return;
+      }
+      return;
+    }
+
+    const records: EventBindingRecord[] = [];
+    for (const [key, value] of Object.entries(props ?? {})) {
+      const type = eventTypeFromProp(key);
+      if (type && typeof value === 'function') {
+        records.push({
+          id: '',
+          type,
+          handler: value as EventListener,
+        });
+      }
+    }
+
+    if (records.length > 0) {
+      const id = `e${count++}`;
+      bindings.set(id, records.map((record) => ({ ...record, id })));
+    }
+
+    for (const child of children) visit(child);
+  };
+
+  visit(node);
+  return bindings;
+}
+
+export function hydrateEventMarkers(
+  root: Element | ShadowRoot,
+  bindings: Map<string, EventBindingRecord[]>,
+  cleanupBag: Array<() => void>,
+  owner?: unknown,
+): void {
+  for (const el of root.querySelectorAll('[data-less-e]')) {
+    const id = el.getAttribute('data-less-e');
+    if (!id) continue;
+    const records = bindings.get(id);
+    if (!records) continue;
+    for (const record of records) {
+      const handler = owner && typeof record.handler === 'function'
+        ? (record.handler as EventListener).bind(owner)
+        : record.handler as EventListener;
+      el.addEventListener(record.type, handler);
+      cleanupBag.push(() => el.removeEventListener(record.type, handler));
+    }
+  }
+}

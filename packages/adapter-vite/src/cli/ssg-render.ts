@@ -480,6 +480,7 @@ export async function ssgRender(
     buildIslandChunkMap,
     injectCspMeta,
     injectDsdPolyfill,
+    injectRouteManifest,
     injectViewTransitionMeta,
     injectSpeculationRules,
     buildSpeculationRulesJson,
@@ -525,6 +526,24 @@ export async function ssgRender(
 
   injectDsdPolyfill(outputDir);
   log.info('DSD polyfill injected');
+
+  // v0.28.1: Inject route manifest so less-layout can derive nav/header/locale
+  try {
+    const manifestPath = join(root, 'www/app/data/_generated-route-manifest.ts');
+    if (existsSync(manifestPath)) {
+      const src = readFileSync(manifestPath, 'utf-8');
+      const jsonMatch = src.match(
+        /export\s+const\s+routeManifest\s*=\s*({[\s\S]*?\n});\s*export\s+const\s+navSections/m,
+      );
+      if (jsonMatch) {
+        const manifest = JSON.parse(jsonMatch[1]);
+        injectRouteManifest(outputDir, manifest);
+        log.info('Route manifest injected');
+      }
+    }
+  } catch (e) {
+    log.warn(`Failed to inject route manifest: ${e instanceof Error ? e.message : String(e)}`);
+  }
 
   // ── Build manifest ──────────────────────────────────────────
   // ── PWA files ──────────────────────────────────────────────

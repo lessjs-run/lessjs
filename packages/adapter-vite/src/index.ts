@@ -40,6 +40,7 @@ export {
   injectClientScript,
   injectCspMeta,
   injectDsdPolyfill,
+  injectRouteManifest,
   injectSpeculationRules,
   injectViewTransitionMeta,
   insertAfterHead,

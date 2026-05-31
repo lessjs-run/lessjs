@@ -13,6 +13,7 @@
     "./less-dialog": "./src/less-dialog.tsx",
     "./less-callout": "./src/less-callout.tsx",
     "./less-step-card": "./src/less-step-card.tsx",
+    "./docs-page-styles": "./src/docs-page-styles.ts",
     "./open-props-tokens": "./src/open-props-tokens.ts",
     "./open-props-tokens.js": "./src/open-props-tokens.ts"
   },

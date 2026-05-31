@@ -6,7 +6,6 @@
  */
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { consumeContext } from '@lessjs/core/signal-context';
 import { THEME_CTX } from '@lessjs/ui/less-layout';
@@ -175,7 +174,7 @@ export class DocsHome extends DsdElement {
     const isZh = this._getLocale('en') === 'zh';
 
     return (
-      <less-layout locale='en' locales='["en","zh"]' nav-items={JSON.stringify(navSections)} header-nav={JSON.stringify(headerNav)} current-path="/" full-width>
+      <less-layout full-width>
         <div class='swiss-grid'>
           <section class='hero'>
             <div class='hero-inner'>

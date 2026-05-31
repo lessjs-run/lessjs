@@ -14,7 +14,6 @@
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import { headerNav, navSections } from '@lessjs/content/nav';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
 import pkgRecords from '../../data/registry/hub-data.ts';
@@ -230,24 +229,17 @@ export default class DocsRegistryDetail extends DsdElement {
 
     if (!pkg) {
       return (
-        <less-layout nav-items={JSON.stringify(navSections)} header-nav='${
-        JSON.stringify(headerNav)
-      }' current-path="/registry/{fullName}" locale="en" locales={JSON.stringify(['en'])}>
-          <div class="container">
-            <div class="not-found"><h2>Package Not Found</h2><p>"{fullName}" is not in the registry.</p>
-            <a href="/registry" class="not-found-link">← Back to Registry</a></div>
-          </div>
-        </less-layout>
+        <div class="container">
+          <div class="not-found"><h2>Package Not Found</h2><p>"{fullName}" is not in the registry.</p>
+          <a href="/registry" class="not-found-link">← Back to Registry</a></div>
+        </div>
       );
     }
 
     const hasSnapshots = Object.keys(pkg.snapshotPaths).length > 0;
 
     return (
-      <less-layout nav-items={JSON.stringify(navSections)} header-nav='${
-      JSON.stringify(headerNav)
-    }' current-path="/registry/{fullName}" locale="en" locales={JSON.stringify(['en'])}>
-        <div class="container">
+      <div class="container">
           <div class="breadcrumb"><a href="/registry">Registry</a> / <span>{fullName}</span></div>
 
           <div class="detail-header">
@@ -394,7 +386,6 @@ export default class DocsRegistryDetail extends DsdElement {
             {this._showValidation && <div class="accordion-content">{this._formatJson(pkg.reports.validation)}</div>}
           </div>
         </div>
-      </less-layout>
     );
   }
 }

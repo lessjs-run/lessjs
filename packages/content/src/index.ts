@@ -40,6 +40,8 @@ import {
 import { loadBlogData, writeBlogDataModule } from './blog/blog-data.ts';
 import { scanNavData } from './nav/scanner.ts';
 import { writeNavModule } from './nav/writer.ts';
+import { createRouteManifest, writeRouteManifestModule } from './manifest/writer.ts';
+import { writeSearchIndex } from './search/writer.ts';
 import { createLogger } from '@lessjs/core/logger';
 import process from 'node:process';
 import { join, relative, resolve } from 'node:path';
@@ -57,6 +59,13 @@ export { loadBlogData } from './blog/blog-data.ts';
 
 // Nav
 export { extractMeta, scanNavData } from './nav/scanner.ts';
+export {
+  createRouteManifest,
+  type DocsRouteManifest,
+  type DocsRouteManifestEntry,
+  writeRouteManifestModule,
+} from './manifest/writer.ts';
+export { type SearchIndexEntry, writeSearchIndex } from './search/writer.ts';
 export type {
   HeaderNavLink,
   LessContentOptions,
@@ -155,7 +164,26 @@ export function lessContent(
           mkdirSync(dataDir, { recursive: true });
           const navModule = writeNavModule({ headerNav, navSections });
           writeFileSync(join(dataDir, '_generated-nav.ts'), navModule, 'utf-8');
+          const routeManifest = createRouteManifest({
+            headerNav,
+            navSections,
+            locales: ctx?.plugins.i18nOptions?.locales,
+            defaultLocale: ctx?.plugins.i18nOptions?.defaultLocale,
+          });
+          writeFileSync(
+            join(dataDir, '_generated-route-manifest.ts'),
+            writeRouteManifestModule(routeManifest),
+            'utf-8',
+          );
           log.info(`Nav: wrote _generated-nav.ts (${navSections.length} section(s))`);
+          const publicDir = join(process.cwd(), 'public');
+          mkdirSync(publicDir, { recursive: true });
+          writeFileSync(
+            join(publicDir, 'search-index.json'),
+            writeSearchIndex(navSections, headerNav),
+            'utf-8',
+          );
+          log.info('Search: wrote search-index.json from route metadata');
         } catch (err) {
           log.warn(
             `Failed to write _generated-nav.ts: ${

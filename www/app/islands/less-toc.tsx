@@ -11,7 +11,7 @@
  *
  * Reactive DSD: #headings and #activeId signals auto-trigger re-render.
  */
-import { DsdElement } from '@lessjs/core';
+import { defineCustomElement, DsdElement } from '@lessjs/core';
 import { signal } from '@lessjs/signals';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -214,4 +214,4 @@ export default class LessToc extends DsdElement {
   }
 }
 
-if (!customElements.get(tagName)) customElements.define(tagName, LessToc);
+defineCustomElement(tagName, LessToc);

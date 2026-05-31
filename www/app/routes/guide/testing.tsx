@@ -1,5 +1,4 @@
 export const meta = { section: 'Production', label: 'Testing', order: 40 };
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -14,14 +13,14 @@ export class TestingPage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    const nav = navSections;
+
     return (
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        navItems={JSON.stringify(nav)}
-        headerNav={JSON.stringify(headerNav)}
-        currentPath='/guide/testing'
+
+
+
       >
         <div class='container'>
           <h1>测试</h1>
@@ -52,14 +51,14 @@ export class TestingPage extends DsdElement {
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    const nav = navSections;
+
     return (
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        navItems={JSON.stringify(nav)}
-        headerNav={JSON.stringify(headerNav)}
-        currentPath='/en/guide/testing'
+
+
+
       >
         <div class='container'>
           <h1>Testing</h1>

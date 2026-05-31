@@ -2,7 +2,6 @@
  * Blog Index Page - Data-driven rendering via virtual:less-blog-data
  */
 export const meta = { section: 'History', label: 'Blog', order: 10 };
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -89,9 +88,6 @@ export class BlogIndexPage extends DsdElement {
       <less-layout
         locale={this._getLocale('zh')}
         locales={JSON.stringify(['en', 'zh'])}
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path="/blog"
       >
         <div class="container">
           <h1>博客</h1>
@@ -129,9 +125,6 @@ export class BlogIndexPage extends DsdElement {
       <less-layout
         locale={this._getLocale('en')}
         locales={JSON.stringify(['en', 'zh'])}
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path="/en/blog"
       >
         <div class="container">
           <h1>Blog</h1>

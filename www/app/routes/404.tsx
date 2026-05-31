@@ -1,7 +1,6 @@
 /**
  * 404 Not Found Page - with search, helpful links, and old URL redirects
  */
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';

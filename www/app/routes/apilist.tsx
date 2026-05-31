@@ -3,7 +3,6 @@
  *
  * Organized by category: Components, Rendering, Islands, Signals, Build, SSR.
  */
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -43,9 +42,6 @@ export default class ApiCorePage extends DsdElement {
       <less-layout
         locale="zh"
         locales={JSON.stringify(['en', 'zh'])}
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path="/engine/reference/core"
       >
         <div class="container">
           <h1>API 参考</h1>
@@ -156,9 +152,6 @@ export default class ApiCorePage extends DsdElement {
       <less-layout
         locale="en"
         locales={JSON.stringify(['en', 'zh'])}
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path="/engine/reference/core"
       >
         <div class="container">
           <h1>API Reference</h1>

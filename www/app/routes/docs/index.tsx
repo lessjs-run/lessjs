@@ -8,7 +8,6 @@ export const tagName = 'page-docs';
 
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 
@@ -35,9 +34,6 @@ export class DocsPage extends DsdElement {
       <less-layout
         locale={this._getLocale('en')}
         locales={JSON.stringify(['en', 'zh'])}
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path='/docs'
       >
         <div class='shell'>
           <h1>Docs</h1>

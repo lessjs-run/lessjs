@@ -13,7 +13,7 @@
  * Zero framework runtime — pure DSD + Signals.
  * Replaces Lit Island pattern with Ocean (DsdElement) reactivity.
  */
-import { DsdElement } from '@lessjs/core';
+import { defineCustomElement, DsdElement } from '@lessjs/core';
 import { computed, signal } from '@lessjs/signals';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -181,4 +181,4 @@ export default class ReactiveShowcase extends DsdElement {
   }
 }
 
-if (!customElements.get(tagName)) customElements.define(tagName, ReactiveShowcase);
+defineCustomElement(tagName, ReactiveShowcase);

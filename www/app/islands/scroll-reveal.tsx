@@ -6,7 +6,7 @@
  *
  * v0.27: Migrated render() from string to JSX.
  */
-import { DsdElement } from '@lessjs/core';
+import { defineCustomElement, DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 
@@ -76,4 +76,4 @@ export default class ScrollReveal extends DsdElement {
   }
 }
 
-if (!customElements.get(tagName)) customElements.define(tagName, ScrollReveal);
+defineCustomElement(tagName, ScrollReveal);

@@ -9,7 +9,33 @@
  *   - Pages have correct lang attribute per locale
  */
 
-import { expect, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
+
+async function readDeepLayoutState(page: Page) {
+  return await page.evaluate(() => {
+    const visit = (root: Document | ShadowRoot | Element): Element | null => {
+      const direct = root.querySelector?.('less-layout');
+      if (direct) return direct;
+      const all = root.querySelectorAll?.('*') ?? [];
+      for (const el of Array.from(all)) {
+        if (el.shadowRoot) {
+          const found = visit(el.shadowRoot);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+    const layout = visit(document);
+    const switchLink = layout?.shadowRoot?.querySelector('.lang-switch');
+    return {
+      htmlLang: document.documentElement.lang,
+      layoutLocale: layout?.getAttribute('locale'),
+      switchHref: switchLink?.getAttribute('href'),
+      switchText: switchLink?.textContent?.trim(),
+      title: document.title,
+    };
+  });
+}
 
 test.describe('Locale Routes', () => {
   test('default root loads Chinese locale', async ({ page }) => {
@@ -63,32 +89,17 @@ test.describe('Locale Switcher', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    const layout = page.locator('less-layout');
-    if ((await layout.count()) > 0) {
-      const locale = await layout.getAttribute('locale');
-      expect(locale).toMatch(/^(en|zh)$/);
-    }
+    const state = await readDeepLayoutState(page);
+    expect(state.layoutLocale).toMatch(/^(en|zh)$/);
   });
 
   test('less-layout supports locale switching via locales attribute', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    // less-layout receives locale + locales attributes from route components
-    // The locale attribute is a string, locales is serialized as JSON string
-    const layout = page.locator('less-layout');
-    if ((await layout.count()) > 0) {
-      // Verify locale attribute exists (already tested in another test, but confirm)
-      const locale = await layout.getAttribute('locale');
-      expect(locale).toMatch(/^(en|zh)$/);
-
-      // Verify locales attribute exists with serialized array
-      const localesAttr = await layout.getAttribute('locales');
-      expect(localesAttr).toBeTruthy();
-      // Should contain both locale codes
-      expect(localesAttr).toContain('en');
-      expect(localesAttr).toContain('zh');
-    }
+    const state = await readDeepLayoutState(page);
+    expect(state.layoutLocale).toMatch(/^(en|zh)$/);
+    expect(state.switchHref).toBeTruthy();
   });
 
   test('switching locale via URL changes page language', async ({ page }) => {
@@ -103,6 +114,37 @@ test.describe('Locale Switcher', () => {
     await page.waitForLoadState('networkidle');
     const enLang = await page.getAttribute('html', 'lang');
     expect(enLang).toBe('en');
+  });
+
+  test('SPA locale switch updates document and layout state', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    const before = await readDeepLayoutState(page);
+
+    await page.evaluate(() => {
+      const visit = (root: Document | ShadowRoot | Element): Element | null => {
+        const direct = root.querySelector?.('less-layout');
+        if (direct) return direct;
+        const all = root.querySelectorAll?.('*') ?? [];
+        for (const el of Array.from(all)) {
+          if (el.shadowRoot) {
+            const found = visit(el.shadowRoot);
+            if (found) return found;
+          }
+        }
+        return null;
+      };
+      const layout = visit(document);
+      const link = layout?.shadowRoot?.querySelector('.lang-switch') as HTMLAnchorElement | null;
+      link?.click();
+    });
+    await page.waitForURL(/\/zh\/?$/);
+    const after = await readDeepLayoutState(page);
+
+    expect(after.htmlLang).toBe('zh');
+    expect(after.layoutLocale).toBe('zh');
+    expect(after.switchHref).not.toBe(before.switchHref);
+    expect(after.title).toBeTruthy();
   });
 });
 
@@ -125,11 +167,11 @@ test.describe('i18n SSG Output', () => {
     expect(enRes?.ok()).toBe(true);
   });
 
-  test('both locale versions of decisions exist', async ({ page }) => {
-    const zhRes = await page.goto('/decisions.html');
+  test('both locale versions of roadmap exist', async ({ page }) => {
+    const zhRes = await page.goto('/roadmap');
     expect(zhRes?.ok()).toBe(true);
 
-    const enRes = await page.goto('/en/decisions/');
+    const enRes = await page.goto('/en/roadmap');
     expect(enRes?.ok()).toBe(true);
   });
 });

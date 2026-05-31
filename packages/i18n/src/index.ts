@@ -47,7 +47,8 @@ const log = createLogger('i18n');
 export type { LessI18nOptions } from './types.ts';
 export { loadI18nData } from './i18n-data.ts';
 export { writeI18nDataModule } from './i18n-data.ts';
-export { i18nStaticPaths, switchLocale } from './routes.ts';
+export { i18nStaticPaths, normalizeLocalePath, switchLocale } from './routes.ts';
+export type { LocalePath } from './routes.ts';
 
 // ─── Main Plugin ────────────────────────────────────────────────
 

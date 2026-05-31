@@ -134,6 +134,7 @@ export { createLogger, LessLogger, LogLevel } from './logger.js';
 /** @internal — use @lessjs/core/security subpath */
 export { DANGEROUS_KEYS } from './security.js';
 export { isValidTagName } from './tag-utils.js';
+export { defineCustomElement } from './custom-element.js';
 export { bindEvents, defineIsland, getSsrProps, type IslandOptions } from './island.js';
 export { transformIslandSource } from './island-transform.js';
 export type { IslandTransformOptions, IslandTransformResult } from './island-transform.js';
@@ -163,6 +164,15 @@ export { For, Fragment, jsx, jsxDEV, jsxs, Show } from './jsx-runtime.js';
 // Renderers
 export { renderToDom } from './jsx-render-dom.js';
 export { renderToString } from './jsx-render-string.js';
+export {
+  collectEventBindings,
+  createEventMarkerContext,
+  type EventBindingRecord,
+  type EventMarkerContext,
+  eventTypeFromProp,
+  hydrateEventMarkers,
+  serializeEventMarkers,
+} from './event-hydration.js';
 // static props runtime + Signal unwrap
 export {
   disposeStaticProps,

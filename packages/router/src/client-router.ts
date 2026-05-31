@@ -278,16 +278,10 @@ export class Router {
   }
 
   #parseUrlFrom(pathname: string): { locale: string; path: string } {
-    try {
-      const pattern = new URLPattern({ pathname: '/:locale?/:page*' });
-      const m = pattern.exec(pathname)?.pathname?.groups;
-      return {
-        locale: m?.locale || 'en',
-        path: '/' + (m?.page || ''),
-      };
-    } catch {
-      return { locale: 'en', path: '/' };
-    }
+    const locales = this.locales;
+    const defaultLocale = this.#el.getAttribute('locale') || locales[0] || 'en';
+    const normalized = normalizeLocalePath(pathname, { locales, defaultLocale });
+    return { locale: normalized.locale, path: normalized.path };
   }
 
   #parseLocales(): string[] {
@@ -308,4 +302,27 @@ export class Router {
       return ['en'];
     }
   }
+}
+
+/**
+ * v0.28.1: Locale path normalization — kept local (not imported from @lessjs/i18n)
+ * because router publishes to JSR independently and i18n may not be in the dependency graph.
+ * 15 lines of duplication is acceptable for independent packages.
+ */
+function normalizeLocalePath(
+  pathname: string,
+  options: { locales: string[]; defaultLocale: string },
+): { locale: string; path: string } {
+  const locales = options.locales.length > 0 ? options.locales : [options.defaultLocale];
+  const defaultLocale = locales.includes(options.defaultLocale)
+    ? options.defaultLocale
+    : locales[0];
+  const cleanPath = pathname.startsWith('/') ? pathname : `/${pathname}`;
+  const parts = cleanPath.split('/').filter(Boolean);
+  const first = parts[0];
+  const hasLocalePrefix = first !== undefined && locales.includes(first);
+  return {
+    locale: hasLocalePrefix ? first : defaultLocale,
+    path: '/' + (hasLocalePrefix ? parts.slice(1) : parts).join('/'),
+  };
 }

@@ -4,7 +4,7 @@
  */
 import { assertEquals, assertStrictEquals } from 'jsr:@std/assert@^1.0.0';
 import { loadI18nData } from '../src/i18n-data.ts';
-import { i18nStaticPaths, switchLocale } from '../src/routes.ts';
+import { i18nStaticPaths, normalizeLocalePath, switchLocale } from '../src/routes.ts';
 
 // ─── i18n-data.ts ────────────────────────────────────────────────
 
@@ -75,4 +75,34 @@ Deno.test('switchLocale: handles trailing slash locale prefix', () => {
 Deno.test('switchLocale: handles 3+ locales', () => {
   const result = switchLocale('/ja/guide/intro', 'ko', ['en', 'zh', 'ja', 'ko']);
   assertEquals(result, '/ko/guide/intro');
+});
+
+Deno.test('normalizeLocalePath: only configured locales are parsed as locale', () => {
+  assertEquals(
+    normalizeLocalePath('/guide/getting-started', {
+      locales: ['en', 'zh'],
+      defaultLocale: 'en',
+    }),
+    {
+      locale: 'en',
+      path: '/guide/getting-started',
+      localizedPath: '/guide/getting-started',
+      isDefaultLocalePath: true,
+    },
+  );
+});
+
+Deno.test('normalizeLocalePath: localized path keeps configured prefix', () => {
+  assertEquals(
+    normalizeLocalePath('/zh/guide/getting-started', {
+      locales: ['en', 'zh'],
+      defaultLocale: 'en',
+    }),
+    {
+      locale: 'zh',
+      path: '/guide/getting-started',
+      localizedPath: '/zh/guide/getting-started',
+      isDefaultLocalePath: false,
+    },
+  );
 });

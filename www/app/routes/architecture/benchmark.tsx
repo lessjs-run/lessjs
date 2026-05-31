@@ -6,7 +6,6 @@
  */
 export const meta = { section: 'Reference', label: 'Performance', order: 100 };
 
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -30,7 +29,7 @@ export default class Benchmark extends DsdElement {
 
   _renderEn() {
     return (
-      <less-layout navItems={JSON.stringify(navSections)} headerNav={JSON.stringify(headerNav)} currentPath='/architecture/benchmark'>
+      <less-layout>
         <div class='container'>
           <h1>Performance &amp; Benchmarks</h1>
           <p class='subtitle'>Zero-noise. What we actually measure.</p>
@@ -55,7 +54,7 @@ export default class Benchmark extends DsdElement {
 
   _renderZh() {
     return (
-      <less-layout navItems={JSON.stringify(navSections)} headerNav={JSON.stringify(headerNav)} currentPath='/architecture/benchmark' locale='zh' locales='[&quot;en&quot;,&quot;zh&quot;]'>
+      <less-layout locale='zh' locales='[&quot;en&quot;,&quot;zh&quot;]'>
         <div class='container'>
           <h1>性能与基准测试</h1>
           <p class='subtitle'>零噪音，实测数据。</p>

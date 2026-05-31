@@ -1,5 +1,4 @@
 export const meta = { section: 'Principles', label: 'Island Upgrade', order: 40 };
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -50,9 +49,6 @@ export class IslandsGuidePage extends DsdElement {
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path={`/{loc}/architecture/islands`}
       >
         <div class="container">
           <h1>Island Upgrade</h1>
@@ -167,9 +163,6 @@ if (!customElements.get(tagName)) customElements.define(tagName, MyCounter);`}</
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path={`/{loc}/architecture/islands`}
       >
         <div class="container">
           <h1>Island Upgrade</h1>

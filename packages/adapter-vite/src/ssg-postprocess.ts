@@ -12,6 +12,7 @@
  * 3. injectSpeculationRules() - prefetch/prerender for navigation performance
  * 4. injectCspMeta() - Content-Security-Policy meta tag
  * 5. injectDsdPolyfill() - DSD polyfill for Firefox
+ * 6. injectRouteManifest() - route manifest for less-layout (v0.28.1)
  */
 
 import { join, resolve } from 'node:path';
@@ -456,6 +457,23 @@ export function injectSpeculationRules(dir: string, rulesJson: string): void {
 
   walkHtmlFiles(dir, (content) => {
     if (content.includes('<script type="speculationrules"')) return null;
+    return insertAfterHead(content, scriptTag);
+  });
+}
+
+/**
+ * v0.28.1: Inject route manifest as window.__ROUTE_MANIFEST__ into all HTML files.
+ *
+ * less-layout reads this to derive nav, header, locale, and current-path
+ * at runtime — eliminating the need for route pages to pass nav-items/header-nav/
+ * current-path/locale attributes manually.
+ */
+export function injectRouteManifest(dir: string, manifest: Record<string, unknown>): void {
+  const json = JSON.stringify(manifest);
+  const scriptTag = `  <script>window.__ROUTE_MANIFEST__ = ${json};</script>`;
+
+  walkHtmlFiles(dir, (content) => {
+    if (content.includes('window.__ROUTE_MANIFEST__')) return null;
     return insertAfterHead(content, scriptTag);
   });
 }

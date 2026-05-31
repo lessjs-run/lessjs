@@ -50,8 +50,8 @@ Deno.test('renderToString excludes onClick handler', () => {
   // onClick must not appear as an HTML attribute name
   assertEquals(html.includes('onClick="'), false);
   assertEquals(html.includes('onclick="'), false);
-  // v0.27 (ADR-0067): data-on-click marker emitted for hydration
-  assertStringIncludes(html, 'data-on-click="onClick"');
+  assertStringIncludes(html, 'data-less-e="e0"');
+  assertEquals(html.includes('data-on-click='), false);
 });
 
 Deno.test('renderToString className maps to class', () => {
@@ -158,4 +158,10 @@ Deno.test('renderToString ref callback excluded', () => {
   assertEquals(html, '<div></div>');
   // ref should NOT be called in SSR
   assertEquals(called, false);
+});
+
+Deno.test('renderToString unwraps Signal innerHTML values', () => {
+  const html = signal('<strong>ready</strong>');
+  const vnode = jsx('div', { innerHTML: html });
+  assertEquals(renderToString(vnode), '<div><strong>ready</strong></div>');
 });

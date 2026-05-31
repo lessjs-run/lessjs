@@ -61,14 +61,14 @@ export function lessjs(options: LessjsOptions = {}): Plugin[] {
 
   const plugins: Plugin[] = [...less(coreOpts, ctx)];
 
-  if (contentOpts) {
-    plugins.push(...lessContent({ ...contentOpts, ctx }));
-    log.info('Content plugin loaded');
-  }
-
   if (i18nOpts) {
     plugins.push(lessI18n({ ...i18nOpts, ctx }));
     log.info('i18n plugin loaded');
+  }
+
+  if (contentOpts) {
+    plugins.push(...lessContent({ ...contentOpts, ctx }));
+    log.info('Content plugin loaded');
   }
 
   return plugins;

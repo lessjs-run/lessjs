@@ -2,7 +2,6 @@
  * @lessjs/docs - Comparison: LessJS vs Alternatives
  */
 
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -135,9 +134,6 @@ export default class ComparisonPage extends DsdElement {
       <less-layout
         locale={this._getLocale('zh')}
         locales={JSON.stringify(['en', 'zh'])}
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path="/architecture/comparison"
       >
         <div class="container">
           <h1>{isZh ? 'LessJS 与竞品对比' : 'LessJS vs Alternatives'}</h1>

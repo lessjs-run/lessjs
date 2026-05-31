@@ -1,7 +1,7 @@
 export const meta = { section: 'Quick Start', label: 'Getting Started', order: 1 };
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
+import { docsPageStyles } from '@lessjs/ui/docs-page-styles';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import '@lessjs/ui/less-layout';
 import '@lessjs/ui/less-code-block';
@@ -19,20 +19,17 @@ routeSheet.replaceSync(`
   .note p { margin: 0; }
 `);
 
-const navItemsJson = JSON.stringify(navSections);
-const headerNavJson = JSON.stringify(headerNav);
 const localesJson = JSON.stringify(['en', 'zh']);
 
 export class GettingStartedPage extends DsdElement {
-  static override styles = [openPropsTokenSheet, routeSheet];
+  static override styles = [openPropsTokenSheet, docsPageStyles, routeSheet];
 
   override render() {
     const locale = this._getLocale('zh');
     const isEn = locale === 'en';
-    const currentPath = isEn ? '/en/guide/getting-started' : '/guide/getting-started';
 
     return (
-      <less-layout locale={locale} locales={localesJson} nav-items={navItemsJson} header-nav={headerNavJson} current-path={currentPath}>
+      <less-layout>
         <div class='content-grid'>
           <div class='container'>
             {isEn ? <GettingStartedEn /> : <GettingStartedZh />}

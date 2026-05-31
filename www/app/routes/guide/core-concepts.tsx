@@ -1,5 +1,4 @@
 export const meta = { section: 'Core', label: 'Core Concepts', order: 2 };
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -16,7 +15,7 @@ export class CoreConceptsPage extends DsdElement {
 
   private _renderZh() {
     return (
-      <less-layout locale={this._getLocale('zh')} locales={JSON.stringify(['en', 'zh'])} nav-items={JSON.stringify(navSections)} header-nav={JSON.stringify(headerNav)} current-path="/guide/core-concepts">
+      <less-layout>
         <div class="container">
           <h1>核心概念</h1>
           <p class="subtitle">
@@ -231,7 +230,7 @@ customElements.define('my-counter', Counter);`}</code></pre></less-code-block>
 
   private _renderEn() {
     return (
-      <less-layout locale={this._getLocale('en')} locales={JSON.stringify(['en', 'zh'])} nav-items={JSON.stringify(navSections)} header-nav={JSON.stringify(headerNav)} current-path="/en/guide/core-concepts">
+      <less-layout>
         <div class="container">
           <h1>Core Concepts</h1>
           <p class="subtitle">

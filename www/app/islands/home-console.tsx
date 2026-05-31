@@ -1,4 +1,4 @@
-import { DsdElement } from '@lessjs/core';
+import { defineCustomElement, DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { signal } from '@lessjs/signals';
 import { consumeContext } from '@lessjs/core';
@@ -85,4 +85,4 @@ export default class HomeConsole extends DsdElement {
   }
 }
 
-if (!customElements.get('home-console')) customElements.define('home-console', HomeConsole);
+defineCustomElement('home-console', HomeConsole);

@@ -13,7 +13,6 @@ export const meta = { section: 'Registry', label: 'Package Registry', order: 5 }
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import { headerNav, navSections } from '@lessjs/content/nav';
 import '@lessjs/ui/less-layout';
 
 import hubData from '../../data/registry/hub-index.ts';
@@ -410,9 +409,6 @@ export default class DocsRegistryHome extends DsdElement {
   override render() {
     return (
       <less-layout
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path="/registry"
         locale="en"
         locales={JSON.stringify(['en'])}
       >

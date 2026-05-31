@@ -1,6 +1,5 @@
 export const meta = { section: 'Principles', label: 'DSD Rendering', order: 30 };
 
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -52,9 +51,6 @@ export class DsdGuidePage extends DsdElement {
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path={`/${loc}/architecture/dsd`}
       >
         <div class="container">
           <h1>DSD 渲染架构</h1>
@@ -152,9 +148,6 @@ export class DsdGuidePage extends DsdElement {
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path="/en/architecture/dsd"
       >
         <div class="container">
           <h1>DSD Rendering Architecture</h1>

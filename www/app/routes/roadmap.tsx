@@ -7,7 +7,6 @@ export const tagName = 'page-roadmap';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import { headerNav, navSections } from '@lessjs/content/nav';
 import '@lessjs/ui/less-layout';
 import '../islands/less-search.tsx';
 
@@ -240,9 +239,6 @@ export class RoadmapPage extends DsdElement {
       <less-layout
         locale={this._getLocale('en')}
         locales={JSON.stringify(['en', 'zh'])}
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path="/roadmap"
         full-width
       >
         <div class="shell"

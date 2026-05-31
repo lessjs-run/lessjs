@@ -1,5 +1,4 @@
 export const meta = { section: 'Production', label: 'Configuration', order: 10 };
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -16,15 +15,15 @@ export class ConfigurationPage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    const nav = JSON.stringify(navSections);
-    const hNav = JSON.stringify(headerNav);
+
+
     return (
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        navItems={nav}
-        headerNav={hNav}
-        currentPath='/guide/configuration'
+
+
+
       >
         <div class='container'>
           <h1>配置</h1>
@@ -135,15 +134,15 @@ export default defineConfig({'{'}
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    const nav = JSON.stringify(navSections);
-    const hNav = JSON.stringify(headerNav);
+
+
     return (
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        navItems={nav}
-        headerNav={hNav}
-        currentPath='/en/guide/configuration'
+
+
+
       >
         <div class='container'>
           <h1>Configuration</h1>

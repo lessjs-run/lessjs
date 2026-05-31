@@ -89,6 +89,30 @@ export function getDocumentTheme(page: Page): Promise<string | null> {
 }
 
 /**
+ * Deep-query through open shadow roots.
+ */
+export function deepQuery<T extends Element = Element>(
+  page: Page,
+  selector: string,
+): Promise<T | null> {
+  return page.evaluateHandle((sel) => {
+    const visit = (root: Document | ShadowRoot | Element): Element | null => {
+      const direct = root.querySelector?.(sel);
+      if (direct) return direct;
+      const all = root.querySelectorAll?.('*') ?? [];
+      for (const el of Array.from(all)) {
+        if (el.shadowRoot) {
+          const found = visit(el.shadowRoot);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+    return visit(document);
+  }, selector).then((handle) => handle.asElement() as T | null);
+}
+
+/**
  * Get all meta tag content by name or property.
  */
 export function getMetaContent(

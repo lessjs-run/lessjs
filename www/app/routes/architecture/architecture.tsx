@@ -1,7 +1,6 @@
 export const meta = { section: 'Principles', label: 'Architecture', order: 10 };
 export const tagName = 'engine-architecture';
 
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -301,9 +300,6 @@ export class ArchitecturePage extends DsdElement {
       <less-layout
         locale={this._getLocale('en')}
         locales={JSON.stringify(['en', 'zh'])}
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path='/architecture/architecture'
       >
         <div class="shell">
           <section class="hero">

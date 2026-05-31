@@ -1,6 +1,5 @@
 export const meta = { section: 'Compatibility', label: 'Package Compatibility', order: 10 };
 
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -22,9 +21,6 @@ export class PackageCompatibilityGuidePage extends DsdElement {
     const loc = this._getLocale('zh');
     return (
       <less-layout
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path={`/{loc}/architecture/package-compatibility`}
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
       >
@@ -186,9 +182,6 @@ for (const pkg of node_modules) {
     const loc = this._getLocale('en');
     return (
       <less-layout
-        nav-items={JSON.stringify(navSections)}
-        header-nav={JSON.stringify(headerNav)}
-        current-path={`/{loc}/architecture/package-compatibility`}
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
       >

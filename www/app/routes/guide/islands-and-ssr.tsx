@@ -1,5 +1,4 @@
 export const meta = { section: 'Core', label: 'Islands & SSR', order: 4 };
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { pageStyles } from '../../components/page-styles.js';
 import { DsdElement } from '@lessjs/core';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -16,7 +15,7 @@ export class IslandsSsrPage extends DsdElement {
 
   private _renderZh() {
     return (
-      <less-layout locale={this._getLocale('zh')} locales={JSON.stringify(['en', 'zh'])} nav-items={JSON.stringify(navSections)} header-nav={JSON.stringify(headerNav)} current-path="/guide/islands-and-ssr">
+      <less-layout>
         <div class="container">
           <h1>Islands 与 SSR</h1>
           <p class="subtitle">
@@ -154,7 +153,7 @@ customElements.define('my-counter', Counter);`}</code></pre></less-code-block>
 
   private _renderEn() {
     return (
-      <less-layout locale={this._getLocale('en')} locales={JSON.stringify(['en', 'zh'])} nav-items={JSON.stringify(navSections)} header-nav={JSON.stringify(headerNav)} current-path="/en/guide/islands-and-ssr">
+      <less-layout>
         <div class="container">
           <h1>Islands & SSR</h1>
           <p class="subtitle">

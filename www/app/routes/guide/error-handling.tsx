@@ -1,5 +1,4 @@
 export const meta = { section: 'Production', label: 'Error Handling', order: 30 };
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -33,15 +32,15 @@ export class ErrorHandlingPage extends DsdElement {
 
   private _renderZh() {
     const loc = this._getLocale('zh');
-    const nav = JSON.stringify(navSections);
-    const hNav = JSON.stringify(headerNav);
+
+
     return (
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        navItems={nav}
-        headerNav={hNav}
-        currentPath='/guide/error-handling'
+
+
+
       >
         <div class='container'>
           <h1>错误处理</h1>
@@ -76,15 +75,15 @@ export class ErrorHandlingPage extends DsdElement {
 
   private _renderEn() {
     const loc = this._getLocale('en');
-    const nav = JSON.stringify(navSections);
-    const hNav = JSON.stringify(headerNav);
+
+
     return (
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        navItems={nav}
-        headerNav={hNav}
-        currentPath='/en/guide/error-handling'
+
+
+
       >
         <div class='container'>
           <h1>Error Handling</h1>

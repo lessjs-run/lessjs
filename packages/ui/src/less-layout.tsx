@@ -527,7 +527,9 @@ export class LessLayout extends DsdElement {
       const prop = (this as Record<string, unknown>).navItems;
       if (prop && Array.isArray(prop)) return prop as NavSection[];
       const raw = this.getAttribute('nav-items');
-      return raw ? JSON.parse(raw) : [];
+      if (raw) return JSON.parse(raw);
+      // v0.28.1: Fallback to route manifest injected at build time
+      return this._manifestData<NavSection[]>('navSections') ?? [];
     } catch (e) {
       console.warn('[less-layout] Failed to parse nav-items JSON:', e);
       return [];
@@ -539,11 +541,30 @@ export class LessLayout extends DsdElement {
       const prop = (this as Record<string, unknown>).headerNav;
       if (prop && Array.isArray(prop)) return prop as HeaderNavLink[];
       const raw = this.getAttribute('header-nav');
-      return raw ? JSON.parse(raw) : [];
+      if (raw) return JSON.parse(raw);
+      // v0.28.1: Fallback to route manifest injected at build time
+      return this._manifestData<HeaderNavLink[]>('headerNav') ?? [];
     } catch (e) {
       console.warn('[less-layout] Failed to parse header-nav JSON:', e);
       return [];
     }
+  }
+
+  /**
+   * v0.28.1: Read a key from the build-injected window.__ROUTE_MANIFEST__.
+   * Returns null if manifest is not available (e.g., non-SSG environments).
+   */
+  private _manifestData<T>(key: string): T | null {
+    try {
+      const m = (globalThis as Record<string, unknown>).__ROUTE_MANIFEST__ as
+        | Record<string, unknown>
+        | undefined;
+      if (m && key in m) {
+        const val = m[key];
+        if (val != null && typeof val === 'object') return val as T;
+      }
+    } catch { /* manifest not available */ }
+    return null;
   }
 
   // --- Icons ---
@@ -869,8 +890,8 @@ export class LessLayout extends DsdElement {
     }
 
     this.routing.start({
-      contentLoader: async (path: string) => {
-        await this._loadContent(path);
+      contentLoader: async (path: string, locale: string) => {
+        await this._loadContent(path, locale);
       },
       onAfterSwap: (_path: string) => {
         this._updateActiveNav();
@@ -1014,14 +1035,27 @@ export class LessLayout extends DsdElement {
     return null;
   }
 
-  private async _loadContent(path: string): Promise<void> {
+  private async _loadContent(path: string, locale: string): Promise<void> {
     try {
       const resp = await fetch(path);
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const html = await resp.text();
-      const tmp = new DOMParser().parseFromString(html, 'text/html').body;
+      const parsed = new DOMParser().parseFromString(html, 'text/html');
+      const tmp = parsed.body;
       const newLayout = this._findLessLayout(tmp);
       if (!newLayout) throw new Error('No less-layout found');
+
+      document.documentElement.lang = parsed.documentElement.lang || locale;
+      if (parsed.title) document.title = parsed.title;
+      this._syncHeadElement(parsed, 'meta[name="description"]');
+      this._syncHeadElement(parsed, 'link[rel="canonical"]');
+      this._syncHeadElements(parsed, 'link[rel="alternate"][hreflang]');
+
+      for (const attr of Array.from(newLayout.attributes)) {
+        this.setAttribute(attr.name, attr.value);
+      }
+      this.setAttribute('locale', locale);
+      this.setAttribute('current-path', path);
 
       // v0.27: adopt + move — proper DOM API, no innerHTML hack.
       // DOMParser nodes belong to a different document. adoptNode()
@@ -1045,6 +1079,25 @@ export class LessLayout extends DsdElement {
       console.warn('[less-layout] SPA navigation failed, reloading:', e);
       globalThis.location.reload();
     }
+  }
+
+  private _syncHeadElement(parsed: Document, selector: string): void {
+    const incoming = parsed.head.querySelector(selector);
+    const current = document.head.querySelector(selector);
+    if (!incoming) {
+      current?.remove();
+      return;
+    }
+    const cloned = document.adoptNode(incoming.cloneNode(true));
+    if (current) current.replaceWith(cloned);
+    else document.head.appendChild(cloned);
+  }
+
+  private _syncHeadElements(parsed: Document, selector: string): void {
+    document.head.querySelectorAll(selector).forEach((el) => el.remove());
+    parsed.head.querySelectorAll(selector).forEach((el) => {
+      document.head.appendChild(document.adoptNode(el.cloneNode(true)));
+    });
   }
 
   private _updateActiveNav(): void {

@@ -10,6 +10,8 @@
 import { assertEquals, assertExists, assertStrictEquals } from 'jsr:@std/assert@1';
 import { DsdElement } from '../src/dsd-element.js';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
+import { jsx } from '../src/jsx-runtime.ts';
+import { renderToString } from '../src/jsx-render-string.ts';
 
 // Helper: create a minimal subclass for testing.
 
@@ -170,6 +172,42 @@ Deno.test('DsdElement: disconnectedCallback disposes template runtime', () => {
   document.body.removeChild(el);
 
   // After disconnect, event listener is cleaned up — click should not fire
+  callCount = 0;
+  btn.click();
+  assertEquals(callCount, 0);
+});
+
+Deno.test('DsdElement: DSD VNode event markers hydrate inline handlers', () => {
+  if (!hasDOM) return;
+  let callCount = 0;
+
+  const tagName = `test-marker-event-${Math.random().toString(36).slice(2, 7)}`;
+  class MarkerEventElement extends DsdElement {
+    override render() {
+      return jsx('button', {
+        onClick: () => {
+          callCount++;
+        },
+        children: ['click'],
+      });
+    }
+  }
+  customElements.define(tagName, MarkerEventElement);
+
+  const el = document.createElement(tagName) as MarkerEventElement;
+  const shadow = el.attachShadow({ mode: 'open' });
+  shadow.innerHTML = renderToString(el.render());
+
+  document.body.appendChild(el);
+
+  const btn = shadow.querySelector('button')!;
+  assertExists(btn);
+  assertEquals(btn.getAttribute('data-less-e'), 'e0');
+  btn.click();
+  assertEquals(callCount, 1);
+
+  document.body.removeChild(el);
+
   callCount = 0;
   btn.click();
   assertEquals(callCount, 0);

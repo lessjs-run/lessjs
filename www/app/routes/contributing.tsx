@@ -2,7 +2,6 @@
  * Contributing Page - LessJS Framework Contribution Guide
  */
 export const meta = { section: '', label: 'Contributing', order: 30 };
-import { headerNav, navSections } from '@lessjs/content/nav';
 import { DsdElement } from '@lessjs/core';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -59,9 +58,9 @@ export class ContributingPage extends DsdElement {
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        navItems={JSON.stringify(navSections)}
-        headerNav={JSON.stringify(headerNav)}
-        currentPath='/contributing'
+
+
+
         full-width
       >
         <div class='container'>
@@ -112,9 +111,9 @@ deno task docs:dev</code></pre>
       <less-layout
         locale={loc}
         locales={JSON.stringify(['en', 'zh'])}
-        navItems={JSON.stringify(navSections)}
-        headerNav={JSON.stringify(headerNav)}
-        currentPath='/en/contributing'
+
+
+
         full-width
       >
         <div class='container'>
