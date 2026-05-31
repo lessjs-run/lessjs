@@ -27,7 +27,8 @@
     "npm:lit-element@4": "4.2.2",
     "npm:lit-html@3": "3.3.3",
     "npm:lit@^3.2.0": "3.3.3",
-    "npm:marked@15": "15.0.12",
+    "npm:marked@15": "15.0.4",
+    "npm:marked@15.0.4": "15.0.4",
     "npm:media-chrome@^4.19.0": "4.19.0_react@19.2.6",
     "npm:parse5@7.0.0": "7.0.0",
     "npm:playwright@1.57.0": "1.57.0",
@@ -724,8 +725,8 @@
         "lit-html"
       ]
     },
-    "marked@15.0.12": {
-      "integrity": "sha512-8dD6FusOQSrpv9Z1rdNMdlSgQOIP880DHqnohobOmYLElGEqAL/JvxvuxZO16r4HtjTlfPRDC1hbvxC9dPN2nA==",
+    "marked@15.0.4": {
+      "integrity": "sha512-TCHvDqmb3ZJ4PWG7VEGVgtefA5/euFmsIhxtD0XsBxI39gUSKL81mIRFdt0AiNQozUahd4ke98ZdirExd/vSEw==",
       "bin": true
     },
     "media-chrome@4.19.0_react@19.2.6": {
@@ -1093,6 +1094,11 @@
           "jsr:@lessjs/core@0.27",
           "jsr:@lessjs/protocols@0.27",
           "npm:vite@8.0.10"
+        ]
+      },
+      "packages/router": {
+        "dependencies": [
+          "npm:marked@15.0.4"
         ]
       },
       "packages/runtime": {

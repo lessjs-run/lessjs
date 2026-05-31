@@ -2,7 +2,7 @@
  * Page Loader — MD Content File Loader
  * Reads .md files with frontmatter and renders through marked.
  */
-import { marked } from 'https://esm.sh/marked@15.0.4';
+import { marked } from 'marked';
 
 export interface PageData {
   html: string;
