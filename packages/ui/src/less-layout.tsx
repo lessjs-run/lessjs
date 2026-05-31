@@ -897,6 +897,12 @@ export class LessLayout extends DsdElement {
 
   // --- Mobile menu ---
 
+  // TODO(v0.28): Replace _replaceShadowRootFromLayout with signal-driven SPA nav.
+  // Currently SPA navigation destroys the entire shadow DOM and rebuilds it from
+  // fetched HTML, then manually re-attaches events in _setupDetailsToggle. This is
+  // incompatible with the signal architecture — we should make currentPath/navItems
+  // signals and let data-signal markers handle DOM updates reactively. Then the
+  // _setupDetailsToggle hack (and this entire method) can be deleted.
   private _menuBtnHandler: ((e: Event) => void) | null = null;
 
   private _setupDetailsToggle(): void {
