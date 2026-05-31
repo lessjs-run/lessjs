@@ -150,12 +150,26 @@ heroSheet.replaceSync(`
     .features { padding: var(--size-8) var(--size-6) var(--size-8); }
   }
   @media (max-width: 640px) {
+    .swiss-grid { padding-bottom: calc(var(--size-8) + 56px); }
     .hero-inner { padding: var(--size-4) var(--size-4) 0; }
     .hero-left { padding-top: var(--size-4); }
-    .features { padding: var(--size-8) var(--size-4) var(--size-8); }
+    .features { padding: var(--size-6) var(--size-4) calc(var(--size-8) + 56px); }
     .feature-grid { grid-template-columns: 1fr; }
-    .giant-headline { font-size: 2.8rem; }
+    .giant-headline { font-size: 2.4rem; }
+    .hero-desc { font-size: var(--font-size-0); max-width: 100%; }
+    .terminal { max-width: 100%; }
+    .terminal-body { padding: var(--size-3); font-size: var(--font-size-00); }
+    .cta-bar { flex-direction: column; gap: var(--size-2); }
+    .btn-primary, .btn-secondary { justify-content: center; width: 100%; }
+    .ft-card { padding: var(--size-4); }
+    .eyebrow { font-size: var(--font-size-000); }
   }
+  :host([data-theme="dark"]) .swiss-grid {
+    background: linear-gradient(180deg, var(--gray-12) 0%, var(--gray-11) 100%);
+  }
+  :host([data-theme="dark"]) .terminal { background: var(--gray-11); }
+  :host([data-theme="dark"]) .terminal-head { background: var(--gray-10); }
+  :host([data-theme="dark"]) .term-cmd { color: var(--gray-1); }
 `);
 
 export class DocsHome extends DsdElement {
@@ -179,7 +193,7 @@ export class DocsHome extends DsdElement {
             <div class='hero-inner'>
               {/* Left: Giant Typography */}
               <div class='hero-left'>
-                <p class='eyebrow'>[ DEEP RUNTIME ENGINE V0.26 ]</p>
+                <p class='eyebrow'>[ DEEP RUNTIME ENGINE V0.27 ]</p>
                 <h1 class='giant-headline'>
                   LESS IS<br />
                   <span class='glow-line'>THE CORE.</span>
