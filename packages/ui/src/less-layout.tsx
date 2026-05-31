@@ -897,8 +897,17 @@ export class LessLayout extends DsdElement {
 
   // --- Mobile menu ---
 
+  private _menuBtnHandler: ((e: Event) => void) | null = null;
+
   private _setupDetailsToggle(): void {
-    // No-op — mobile menu now uses button + menu-open attribute directly.
+    const btn = this.shadowRoot?.querySelector('.mobile-menu-btn');
+    if (!btn) return;
+    // Remove any stale listener from a previous shadow root.
+    if (this._menuBtnHandler) {
+      btn.removeEventListener('click', this._menuBtnHandler);
+    }
+    this._menuBtnHandler = this._toggleMenu.bind(this);
+    btn.addEventListener('click', this._menuBtnHandler);
   }
 
   private _toggleMenu(_e: Event): void {
