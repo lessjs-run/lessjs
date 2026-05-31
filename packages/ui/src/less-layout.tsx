@@ -669,6 +669,7 @@ export class LessLayout extends DsdElement {
               {!noSearch && <less-search></less-search>}
               {!home && (
                 <button
+                  type='button'
                   className='mobile-menu-btn'
                   part='nav-toggle'
                   aria-label='Toggle navigation'
