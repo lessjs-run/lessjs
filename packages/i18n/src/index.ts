@@ -64,7 +64,7 @@ export function lessI18n(
   return {
     name: 'less:i18n',
 
-    async buildStart() {
+    buildStart() {
       // ADR 0018: Use loadI18nData() pure function - zero module state
       const i18nData = loadI18nData(options);
 

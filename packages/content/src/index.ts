@@ -14,7 +14,6 @@ import type { LessBuildContextLike } from '@lessjs/protocols/build-types';
 import { loadBlogData, writeBlogDataModule } from './blog/blog-data.ts';
 import { scanNavData } from './nav/scanner.ts';
 import { writeNavModule } from './nav/writer.ts';
-import { createRouteManifest, writeRouteManifestModule } from './manifest/writer.ts';
 import { writeSearchIndex } from './search/writer.ts';
 import { createLogger } from '@lessjs/core/logger';
 import process from 'node:process';
