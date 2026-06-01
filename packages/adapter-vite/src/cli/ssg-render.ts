@@ -531,7 +531,7 @@ export async function ssgRender(
   // ── PWA files ──────────────────────────────────────────────
   const pwa = options.pwa;
   // Temporary: disable SW generation to avoid stale cache blank-screen until root cause fixed
-  // PWA generation — re-enabled after ThemeInit SW cache nuke patch (v0.26.1)
+  // PWA generation is enabled after the ThemeInit service-worker cache patch.
   if (pwa) {
     const manifest = {
       name: pwa.name || 'LessJS',

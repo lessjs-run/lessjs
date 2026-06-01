@@ -181,7 +181,7 @@ export class ChangelogPage extends DsdElement {
             <a href='https://semver.org/lang/zh-CN/' target='_blank'>语义化版本 2.0.0</a>。
             历史条目保留当时术语；当前文档统一把 LessJS 的客户端模型称为 Island Upgrade。
           </p>
-          <div class='changelog-content' innerHTML={html} />
+          <div class='changelog-content' innerHTML={html} rawHtml={true} />
           <div class='nav-row'>
             <a href='/roadmap' class='nav-link'>&larr; 开发计划</a>
             <a href='/guide/getting-started' class='nav-link'>快速上手 &rarr;</a>

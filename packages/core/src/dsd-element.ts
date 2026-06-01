@@ -62,6 +62,20 @@ import { renderToString } from './jsx-render-string.js';
 import { collectEventBindings, hydrateEventMarkers } from './event-hydration.js';
 import { effect, type Signal, signal } from '@lessjs/signals';
 
+function sanitizeDynamicHtml(html: string): string {
+  return html
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/\s+on[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+    .replace(
+      /\s+(href|src|xlink:href|formaction)\s*=\s*("|')\s*(?:javascript|data|vbscript|file):[\s\S]*?\2/gi,
+      '',
+    )
+    .replace(
+      /\s+(href|src|xlink:href|formaction)\s*=\s*(?:javascript|data|vbscript|file):[^\s>]*/gi,
+      '',
+    );
+}
+
 /**
  * Minimal SSR-safe HTMLElement stub for server environments (SOP-016).
  *
@@ -142,7 +156,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   /** v0.25.0 (SOP-012): Removed — detection now inline in _renderOrHydrate(). */
 
   /**
-   * v0.27 (ADR-0065): Effect dispose tracking.
+   * Effect dispose tracking (ADR-0065).
    * Replaces effectScope() — effects are created at top level
    * so they fire on signal changes. Disposed as a batch in
    * disconnectedCallback.
@@ -157,7 +171,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
   #vnodeCacheValid = false;
 
   /**
-   * v0.27 (ADR-0065): Signal registry for attribute-based hydration.
+   * Signal registry for attribute-based hydration (ADR-0065).
    * Maps signal names → signal objects. Built by registerSignal()
    * in component constructors, consumed during hydration.
    */
@@ -269,7 +283,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       this.setAttribute('data-theme', docTheme);
     }
 
-    // v0.26 (TG-01): Read route params from attribute if present
+    // TG-01: Read route params from attribute if present.
     // (SSR/SSG injects params as JS property via injectProps — setter handles it)
     const attrParams = this.getAttribute('params');
     if (attrParams) {
@@ -373,8 +387,8 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       if (!sig) continue;
 
       const applyHtml = () => {
-        (el as HTMLElement).innerHTML = String(sig.value);
-        // v0.28.1: Scan new innerHTML for data-on-* and bind events
+        (el as HTMLElement).innerHTML = sanitizeDynamicHtml(String(sig.value));
+        // Scan new dynamic HTML for data-on-* and bind events.
         this._bindEvents(el);
       };
       applyHtml();

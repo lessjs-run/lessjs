@@ -65,9 +65,17 @@ function optionalPackageStubsPlugin(): import('vite').Plugin {
       'export function uninstallLitAdapter() {}',
       'export const WithDsdHydration = undefined;',
     ].join('\n'),
+    '@lessjs/adapter-lit/ssr': [
+      'export function installLitAdapter() {}',
+      'export function uninstallLitAdapter() {}',
+    ].join('\n'),
     '@lessjs/adapter-vanilla': [
       'class DsdVanillaElement extends (globalThis.HTMLElement || class{}) {}',
       'export { DsdVanillaElement };',
+      'export function installVanillaAdapter() {}',
+      'export function uninstallVanillaAdapter() {}',
+    ].join('\n'),
+    '@lessjs/adapter-vanilla/ssr': [
       'export function installVanillaAdapter() {}',
       'export function uninstallVanillaAdapter() {}',
     ].join('\n'),
@@ -79,6 +87,10 @@ function optionalPackageStubsPlugin(): import('vite').Plugin {
       'export const WithDsdHydration = undefined;',
       'export function renderReactToString() { return ""; }',
       'export function isReactElement() { return false; }',
+    ].join('\n'),
+    '@lessjs/adapter-react/ssr': [
+      'export function installReactAdapter() {}',
+      'export function uninstallReactAdapter() {}',
     ].join('\n'),
     // Route components import generated blog data from @lessjs/generated/blog-data.
     // This stub is for the generateSitemap re-export only.
@@ -291,19 +303,10 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     // to fail and the entire SSG pipeline to produce empty HTML.
     const defaultNoExternal = [
       /^@lessjs\//,
-      /^lit/,
-      /^@lit/,
-      /^@lit-labs\//,
-      // v0.26.1 FIX: alien-signals is a hard dependency of @lessjs/signals.
+      // alien-signals is a hard dependency of @lessjs/signals.
       // Without noExternal, it leaks as a bare import that Deno can resolve
       // locally (via workspace import map) but CF Pages cannot.
       'alien-signals',
-      // v0.26.1 FIX: React is used by adapter-react islands for SSR rendering.
-      // Must be inlined so the SSR bundle is self-contained.
-      'react',
-      'react-dom',
-      'react/jsx-runtime',
-      'react/jsx-dev-runtime',
       // NOTE: Shoelace (@shoelace-style/shoelace) is NOT added here because
       // its transitive deps (@shoelace-style/localize, etc.) cannot be resolved
       // by Rolldown in Deno's nodeModulesDir:"manual" layout. Shoelace components
@@ -315,14 +318,23 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     // so Rolldown externalizes them correctly via manifest.specifiers.
     // Consumer template deno.json declares these packages so Deno can
     // resolve them at runtime when buildSSG() executes import(entry.js).
-    // v0.26.1: Added @shoelace-style/shoelace + @shoelace-style/localize
-    // since they cannot be inlined (Rolldown resolution failure) but must
+    // Shoelace packages cannot be inlined (Rolldown resolution failure) but must
     // be resolvable at import(entry.js) time.
-    // NOTE: React is NOT here — it's in noExternal (inlined instead).
+    // Lit/React runtime packages stay external unless the user explicitly
+    // requests adapter-specific bundling through options.ssr.noExternal.
     const ssrExternalDefaults = [
       'entities',
       'entities',
       'hono',
+      'lit',
+      '@lit/reactive-element',
+      'lit-element',
+      'lit-html',
+      'react',
+      'react-dom',
+      'react-dom/server',
+      'react/jsx-runtime',
+      'react/jsx-dev-runtime',
       '@shoelace-style/shoelace',
       '@shoelace-style/localize',
     ];
@@ -490,7 +502,7 @@ if (typeof globalThis.customElements === 'undefined') {
             const normalized = normalizePath(id.split('?')[0]);
             if (!clientOnlyIslandIds.has(normalized)) return;
             const tagName = clientOnlyTagMap.get(normalized) || 'less-client-only-stub';
-            // v0.27: Client-only stub marker 鈥?unbranded attribute.
+            // Client-only stub marker uses an unbranded attribute.
             // SSR outputs <tag-name data-client-only="true"></tag-name>
             // Client runtime imports the real module and upgrades the element.
             return [

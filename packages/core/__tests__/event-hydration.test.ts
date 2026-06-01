@@ -11,7 +11,33 @@ Deno.test('event hydration: event marker ids are deterministic', () => {
 Deno.test('event hydration: React-style onDoubleClick maps to native dblclick', () => {
   assertEquals(eventTypeFromProp('onClick'), 'click');
   assertEquals(eventTypeFromProp('onDoubleClick'), 'dblclick');
+  assertEquals(eventTypeFromProp('onDblclick'), 'dblclick');
+  assertEquals(eventTypeFromProp('onFocusIn'), 'focusin');
+  assertEquals(eventTypeFromProp('onFocusOut'), 'focusout');
+  assertEquals(eventTypeFromProp('onMouseEnter'), 'mouseenter');
+  assertEquals(eventTypeFromProp('onMouseLeave'), 'mouseleave');
+  assertEquals(eventTypeFromProp('onPointerDown'), 'pointerdown');
+  assertEquals(eventTypeFromProp('onPointerMove'), 'pointermove');
+  assertEquals(eventTypeFromProp('onPointerUp'), 'pointerup');
+  assertEquals(eventTypeFromProp('onPointerCancel'), 'pointercancel');
   assertEquals(eventTypeFromProp('onclick'), null);
+});
+
+Deno.test('event hydration: one marker binds every handler on the same element', () => {
+  const noop = () => {};
+  const tree = jsx('button', {
+    onClick: noop,
+    onDoubleClick: noop,
+    onFocusIn: noop,
+    children: ['multi'],
+  });
+
+  const html = renderToString(tree);
+  assertStringIncludes(html, 'data-eid="e0"');
+  assertEquals(html.includes('data-eid="e1"'), false);
+
+  const records = collectEventBindings(tree).get('e0') ?? [];
+  assertEquals(records.map((record) => record.type), ['click', 'dblclick', 'focusin']);
 });
 
 Deno.test('event hydration: SSR markers and hydration bindings share one traversal contract', () => {

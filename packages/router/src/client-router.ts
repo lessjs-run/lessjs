@@ -16,8 +16,18 @@
  *   router.syncAfterSwap(shadowRoot) to update lang-switch.
  */
 
-// deno-lint-ignore no-explicit-any
-declare const navigation: any;
+interface NavigationLike extends EventTarget {
+  addEventListener(type: 'navigate', listener: EventListener): void;
+  removeEventListener(type: 'navigate', listener: EventListener): void;
+}
+
+interface NavigationNavigateEvent extends Event {
+  canIntercept: boolean;
+  hashChange: boolean;
+  downloadRequest: boolean;
+  destination: { url: string };
+  intercept(opts: { handler: () => void }): void;
+}
 
 const LOCALE_LABELS: Record<string, string> = {
   zh: '\u4E2D\u6587',
@@ -195,13 +205,11 @@ export class Router {
   }
 
   #setupNavigationApi(): void {
-    const onNav = (e: {
-      canIntercept: boolean;
-      hashChange: boolean;
-      downloadRequest: boolean;
-      destination: { url: string };
-      intercept: (opts: { handler: () => void }) => void;
-    }) => {
+    const nav = (globalThis as typeof globalThis & { navigation?: NavigationLike }).navigation;
+    if (!nav) return;
+
+    const onNav: EventListener = (event) => {
+      const e = event as NavigationNavigateEvent;
       if (!e.canIntercept || e.hashChange || e.downloadRequest) return;
 
       const url = new URL(e.destination.url);
@@ -213,11 +221,11 @@ export class Router {
     };
 
     try {
-      navigation.addEventListener('navigate', onNav);
+      nav.addEventListener('navigate', onNav);
       const prev = this.#cleanup;
       this.#cleanup = () => {
         try {
-          navigation.removeEventListener('navigate', onNav);
+          nav.removeEventListener('navigate', onNav);
         } catch { /* */ }
         prev?.();
       };

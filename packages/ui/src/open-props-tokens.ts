@@ -5,7 +5,7 @@
  * border radius, typography, semantic brand/text/bg/border tokens)
  * that all LessJS components can adopt via `static styles`.
  *
- * v0.26.1: Cleaned dead tokens (49 removed). Only used tokens survive.
+ * Cleaned dead tokens; only used tokens survive.
  */
 
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';

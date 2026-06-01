@@ -1,9 +1,10 @@
 {
   "name": "@lessjs/protocols",
-  "version": "0.28.0",
+  "version": "0.28.3",
   "exports": {
     ".": "./src/index.ts",
-    "./build-types": "./src/build-types.ts"
+    "./build-types": "./src/build-types.ts",
+    "./validators": "./src/validators.ts"
   },
   "imports": {},
   "publish": {

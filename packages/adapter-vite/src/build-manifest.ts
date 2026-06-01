@@ -8,7 +8,7 @@
  *   - HTML page counts and compression potential
  *   - headExtras injection size
  *
- * Output format: Fixed-width table via console.log (no external dependency).
+ * Output format: Fixed-width table via console.info (no external dependency).
  *
  * Called by:
  *   - cli/build-client.ts (after Phase 2: client chunks ready)
@@ -214,33 +214,33 @@ export function printBuildManifest(options: {
   };
 
   // Print table using ASCII-only output so build logs remain portable.
-  console.log('');
-  console.log(`== LessJS Build Manifest - Phase ${phase} @ ${timestamp.slice(11, 19)} ==`);
+  console.info('');
+  console.info(`== LessJS Build Manifest - Phase ${phase} @ ${timestamp.slice(11, 19)} ==`);
 
   if (manifest.islands.length > 0 || manifest.clientEntry) {
-    console.log('\n  Client Islands:');
-    console.log('  File                         Size');
-    console.log('  --------------------------   --------');
+    console.info('\n  Client Islands:');
+    console.info('  File                         Size');
+    console.info('  --------------------------   --------');
 
     for (const island of manifest.islands) {
       const displayName = island.name.length > 30 ? island.name.slice(0, 27) + '...' : island.name;
-      console.log(`  ${displayName.padEnd(26)}   ${island.sizeKB.padEnd(8)}`);
+      console.info(`  ${displayName.padEnd(26)}   ${island.sizeKB.padEnd(8)}`);
     }
 
     if (manifest.clientEntry) {
-      console.log(
+      console.info(
         `  ${'client.js (entry)'.padEnd(26)}   ${manifest.clientEntry.sizeKB.padEnd(8)}`,
       );
     }
 
-    console.log('  --------------------------   --------');
-    console.log(`  ${'TOTAL JS'.padEnd(26)}   ${formatSize(manifest.totalJsBytes).padEnd(8)}`);
+    console.info('  --------------------------   --------');
+    console.info(`  ${'TOTAL JS'.padEnd(26)}   ${formatSize(manifest.totalJsBytes).padEnd(8)}`);
   } else {
-    console.log('\n  Client Islands: none - zero client JS');
+    console.info('\n  Client Islands: none - zero client JS');
   }
 
   if (phase === 3 && manifest.htmlPages.length > 0) {
-    console.log(
+    console.info(
       `\n  HTML Pages (${manifest.htmlPages.length} files, ${
         formatSize(manifest.totalHtmlBytes)
       } total):`,
@@ -250,15 +250,15 @@ export function printBuildManifest(options: {
     const shown = manifest.htmlPages.slice(0, maxShow);
     for (const page of shown) {
       const displayName = page.path.length > 40 ? page.path.slice(0, 37) + '...' : page.path;
-      console.log(`    - ${displayName} (${page.sizeKB})`);
+      console.info(`    - ${displayName} (${page.sizeKB})`);
     }
     if (manifest.htmlPages.length > maxShow) {
-      console.log(`    ... +${manifest.htmlPages.length - maxShow} more pages`);
+      console.info(`    ... +${manifest.htmlPages.length - maxShow} more pages`);
     }
   }
 
   if (manifest.headExtrasSize > 0) {
-    console.log(
+    console.info(
       `\n  headExtras: ${
         formatSize(manifest.headExtrasSize)
       } (${manifest.headExtrasSize} bytes injected)`,
@@ -266,15 +266,15 @@ export function printBuildManifest(options: {
   }
 
   if (warnings.length > 0) {
-    console.log('\n  Budget Warnings:');
+    console.info('\n  Budget Warnings:');
     for (const w of warnings) {
-      console.log(`     ${w}`);
+      console.info(`     ${w}`);
     }
   } else {
-    console.log('\n  All artifacts within budget limits');
+    console.info('\n  All artifacts within budget limits');
   }
 
-  console.log('');
+  console.info('');
 
   return manifest;
 }

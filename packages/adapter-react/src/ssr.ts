@@ -19,7 +19,7 @@
  * @module @lessjs/adapter-react/ssr
  */
 
-import { registerAdapter } from '@lessjs/core';
+import { getDefaultRegistry } from '@lessjs/core';
 import { createLogger } from '@lessjs/core/logger';
 
 const log = createLogger('adapter-react');
@@ -131,7 +131,7 @@ let _installed = false;
 export function installReactAdapter(): void {
   if (_installed) return;
 
-  registerAdapter({
+  getDefaultRegistry().register({
     name: 'react',
     isTemplate: (value: unknown): boolean => {
       return isReactElement(value);
@@ -156,6 +156,6 @@ export function installReactAdapter(): void {
  * Resets the adapter so core's renderDsd reverts to its default behavior.
  */
 export function uninstallReactAdapter(): void {
-  registerAdapter(undefined);
+  getDefaultRegistry().register(undefined);
   _installed = false;
 }

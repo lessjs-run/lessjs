@@ -181,8 +181,8 @@ function main() {
     Deno.exit(1);
   }
 
-  console.log(`\n  DSD Report Gate`);
-  console.log(`  Total errors: ${report.totalErrors}`);
+  console.info(`\n  DSD Report Gate`);
+  console.info(`  Total errors: ${report.totalErrors}`);
 
   let gate: DsdGateResult;
   try {
@@ -201,35 +201,35 @@ function main() {
     Deno.exit(1);
   }
 
-  console.log(`  Non-recoverable (native): ${gate.nativeNonRecoverable.length}`);
+  console.info(`  Non-recoverable (native): ${gate.nativeNonRecoverable.length}`);
   if (gate.thirdPartyNonRecoverable.length > 0) {
-    console.log(
+    console.info(
       `  Non-recoverable (third-party): ${gate.thirdPartyNonRecoverable.length} (excluded from gate)`,
     );
   }
-  console.log(`  Recoverable: ${gate.recoverable.length}`);
+  console.info(`  Recoverable: ${gate.recoverable.length}`);
 
-  console.log(`\n  Error breakdown:`);
+  console.info(`\n  Error breakdown:`);
   for (
     const [msg, info] of Object.entries(gate.errorGroups).sort(
       (a, b) => b[1].count - a[1].count,
     )
   ) {
     const status = info.known ? '[known]' : '[UNKNOWN]';
-    console.log(
+    console.info(
       `  ${status} [${info.count}x] ${msg.substring(0, 80)}`,
     );
-    console.log(`      Tags: ${[...info.tags].slice(0, 5).join(', ')}`);
+    console.info(`      Tags: ${[...info.tags].slice(0, 5).join(', ')}`);
   }
 
   if (gate.unknownErrors.length > 0) {
-    console.log(
+    console.info(
       `\n  [WARN] ${gate.unknownErrors.length} unknown error type(s) detected. Consider adding to KNOWN_ERROR_PATTERNS only after triage.`,
     );
   }
 
   if (gate.thirdPartyNonRecoverable.length > 0) {
-    console.log(
+    console.info(
       `\n  [WARN] ${gate.thirdPartyNonRecoverable.length} third-party non-recoverable errors excluded from gate (Shoelace SSR boundary).`,
     );
   }
@@ -241,13 +241,13 @@ function main() {
     Deno.exit(1);
   }
 
-  console.log(
+  console.info(
     `\n  [PASS] Gate passed (thresholds: non-recoverable <= ${gate.maxNonRecoverable}, unknown error types <= ${gate.maxUnknownErrorTypes})`,
   );
-  console.log(
+  console.info(
     `  [INFO] Known errors are from third-party client-only SSR boundaries.`,
   );
-  console.log(
+  console.info(
     `  [INFO] Threshold will tighten again for v0.22 when third-party SSR fallbacks are resolved.\n`,
   );
 }

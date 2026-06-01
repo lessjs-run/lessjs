@@ -224,48 +224,17 @@ export class LessBuildContext {
 
   /** Reset all mutable state (for watch mode / testing) */
   reset(): void {
-    // M-12 fix: Clear phase tokens to prevent stale state in watch mode
     this._phaseTokens[1] = null;
     this._phaseTokens[2] = null;
     this._phaseTokens[3] = null;
-    this.phase1.honoEntryCode = '';
-    this.phase1.cachedRoutes = [];
-    this.phase1.islandTagNames = [];
-    this.phase1.islandFiles = [];
-    this.phase1.islandMeta = {};
-    this.phase1.packageManifests = [];
-    this.phase1.packageIslandDecls = [];
-    this.phase1.ssrAdmissionPlan = null;
-    this.phase1.cemClassifications = [];
-    this.phase1.buildCompleted = false;
-    this.phase1.resolvedConfig = null;
+
+    const userResolveAlias = this.phase1.userResolveAlias;
     // NOTE: userResolveAlias is NOT reset - it's user configuration, not
     // build state. It's set in config()/configResolved() and must persist
     // through buildStart() for Phase 2 and 3 to use.
-    this.phase2.clientEntryCode = '';
-    this.phase3.ssgEntryCode = '';
-    this.phase3.root = '';
-    this.phase3.outDir = 'dist';
-    this.phase3.base = '/';
-    this.phase3.middleware = null;
-    this.phase3.html = null;
-    this.phase3.pwa = null;
-    this.phase3.upgradeStrategy = 'idle';
-    this.phase3.viewTransition = true;
-    this.phase3.speculation = null;
-    this.phase3.headExtras = '';
-    this.phase3.allowHeadExtrasScripts = false;
-    this.phase3.ssrNoExternal = [];
-    this.phase3.ssrExternal = [];
-    this.phase3.routesDir = 'app/routes';
-    this.phase3.islandsDir = 'app/islands';
-    this.phase3.componentsDir = 'app/components';
-    this.phase3.externalManifest = undefined;
-    this.phase3.skipPreResolution = undefined;
-    this.plugins.blogOptions = null;
-    this.plugins.navSections = [];
-    this.plugins.headerNav = [];
-    this.plugins.sitemapOptions = null;
-    this.plugins.i18nOptions = null;
+    Object.assign(this.phase1, new Phase1Meta(), { userResolveAlias });
+    Object.assign(this.phase2, new Phase2Meta());
+    Object.assign(this.phase3, new Phase3Meta());
+    Object.assign(this.plugins, new PluginMeta());
   }
 }

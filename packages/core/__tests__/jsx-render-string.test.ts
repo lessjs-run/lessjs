@@ -160,10 +160,16 @@ Deno.test('renderToString ref callback excluded', () => {
   assertEquals(called, false);
 });
 
-Deno.test('renderToString unwraps Signal innerHTML values', () => {
+Deno.test('renderToString escapes Signal innerHTML values by default', () => {
   const html = signal('<strong>ready</strong>');
   const vnode = jsx('div', { innerHTML: html });
-  assertEquals(renderToString(vnode), '<div><strong>ready</strong></div>');
+  assertEquals(renderToString(vnode), '<div>&lt;strong&gt;ready&lt;/strong&gt;</div>');
+});
+
+Deno.test('renderToString allows sanitized rawHtml explicitly', () => {
+  const html = signal('<strong>ready</strong><img src="javascript:alert(1)" onerror="x()">');
+  const vnode = jsx('div', { innerHTML: html, rawHtml: true });
+  assertEquals(renderToString(vnode), '<div><strong>ready</strong><img></div>');
 });
 
 Deno.test('renderDsdTree keeps custom element light DOM children in one tree', async () => {

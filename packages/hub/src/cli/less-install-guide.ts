@@ -30,7 +30,7 @@ import { resolve } from 'node:path';
 // ─── Logger ───────────────────────────────────────────────────────────────
 
 function log(...args: unknown[]) {
-  console.log(...args);
+  console.info(...args);
 }
 
 function warn(...args: unknown[]) {

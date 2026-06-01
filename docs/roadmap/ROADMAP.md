@@ -20,35 +20,35 @@ outrunning the architecture.
 
 | Area                      | State                                                 |
 | ------------------------- | ----------------------------------------------------- |
-| Project line              | v0.28.0 Contracts & Tokens                            |
+| Project line              | v0.28.3 Cleanup Closure + MDX                         |
 | Current rendering mode    | SSG + Declarative Shadow DOM                          |
 | Component model           | JSX + static props + Signal (ADR-0057)                |
 | Public API naming         | Web Platform style: verbNoun, PascalCase acronyms     |
 | Current DSD base          | `DsdElement` + SSR-safe `StyleSheet`                  |
 | Current framework surface | file routes, Hono API routes, dev/build pipeline      |
 | Current Hub surface       | early Registry Hub, validation, snapshots, `less add` |
-| Next milestone            | v0.28.2 Deprecated Purge + Hardening                  |
+| Next milestone            | v1.0 Stable Engine                                    |
 
 ## Phase Overview
 
-| Phase | Version     | Name                         | Goal                                                           | Status   |
-| ----- | ----------- | ---------------------------- | -------------------------------------------------------------- | -------- |
-| 1–6   | v0.15–v0.20 | Ocean-Island Architecture    | DSD-first rendering, CEM, Hub, gates                           | ✅ Done  |
-| 7     | v0.21.x     | Reactive DSD                 | DsdElement + Signals, safe templates, streaming DSD            | ✅ Done  |
-| 8     | v0.22.x     | Architecture Integrity       | Package boundaries, consumer surface, adapter cleanup, gates   | ✅ Done  |
-| 9     | v0.23.x     | Layered Package Architecture | Protocols, runtime facade, graph gates, docs governance        | ✅ Done  |
-| 10    | v0.24.1     | JSX + Signal Component Model | JSX, static props, Signal unwrap, DSD integration (ADR-0057)   | ✅ Done  |
-| 10.1  | v0.24.2     | Remove Old Component Model   | html/@prop removal, renderer hardening, docs truth convergence | ✅ Done  |
-| 10.2  | v0.24.3     | Consolidation                | TemplateResult removal, TemplateRunner dedup, gate hardening   | ✅ Done  |
-| 10.3  | v0.24.4     | API Naming Convention        | verbNoun, PascalCase acronyms, brand prefix removal            | ✅ Done  |
-| 11    | v0.25.0     | Declarative DX               | BuildPipeline, route types, static head, static client         | ✅ Done  |
-| 12    | v0.26.0     | Hub CLI Reorganization       | Hub command surface, package publish sanity                    | ✅ Done  |
-| 13    | v0.27.0     | Framework Decoupling         | Virtual module removal, island transform, dev:fast server      | ✅ Done  |
-| 14    | v0.28.0     | Contracts & Tokens           | Adapter registry factory, Open Props migration, CI composite   | ✅ Done  |
-| 14.1  | v0.28.1     | Hygiene Convergence          | v0.28 anchor sweep, gitignore leaks, strategic-docs sync       | ✅ Done  |
-| 14.2  | v0.28.2     | Deprecated Purge             | Compat purge, security hardening, SSR bundle reduction         | Planned  |
-| 14.3  | v0.28.3     | Cleanup Closure + MDX        | Test floor, lockfile alignment, MDX design and implementation  | Deferred |
-| 15    | v1.0.x      | Stable Engine                | API/schema freeze and deterministic package guarantees         | Vision   |
+| Phase | Version     | Name                         | Goal                                                           | Status  |
+| ----- | ----------- | ---------------------------- | -------------------------------------------------------------- | ------- |
+| 1–6   | v0.15–v0.20 | Ocean-Island Architecture    | DSD-first rendering, CEM, Hub, gates                           | ✅ Done |
+| 7     | v0.21.x     | Reactive DSD                 | DsdElement + Signals, safe templates, streaming DSD            | ✅ Done |
+| 8     | v0.22.x     | Architecture Integrity       | Package boundaries, consumer surface, adapter cleanup, gates   | ✅ Done |
+| 9     | v0.23.x     | Layered Package Architecture | Protocols, runtime facade, graph gates, docs governance        | ✅ Done |
+| 10    | v0.24.1     | JSX + Signal Component Model | JSX, static props, Signal unwrap, DSD integration (ADR-0057)   | ✅ Done |
+| 10.1  | v0.24.2     | Remove Old Component Model   | html/@prop removal, renderer hardening, docs truth convergence | ✅ Done |
+| 10.2  | v0.24.3     | Consolidation                | TemplateResult removal, TemplateRunner dedup, gate hardening   | ✅ Done |
+| 10.3  | v0.24.4     | API Naming Convention        | verbNoun, PascalCase acronyms, brand prefix removal            | ✅ Done |
+| 11    | v0.25.0     | Declarative DX               | BuildPipeline, route types, static head, static client         | ✅ Done |
+| 12    | v0.26.0     | Hub CLI Reorganization       | Hub command surface, package publish sanity                    | ✅ Done |
+| 13    | v0.27.0     | Framework Decoupling         | Virtual module removal, island transform, dev:fast server      | ✅ Done |
+| 14    | v0.28.0     | Contracts & Tokens           | Adapter registry factory, Open Props migration, CI composite   | ✅ Done |
+| 14.1  | v0.28.1     | Hygiene Convergence          | v0.28 anchor sweep, gitignore leaks, strategic-docs sync       | ✅ Done |
+| 14.2  | v0.28.2     | Deprecated Purge             | Compat purge, security hardening, SSR bundle reduction         | Done    |
+| 14.3  | v0.28.3     | Cleanup Closure + MDX        | Test floor, lockfile alignment, MDX design and implementation  | Done    |
+| 15    | v1.0.x      | Stable Engine                | API/schema freeze and deterministic package guarantees         | Vision  |
 
 ## Compatibility Admission Model
 

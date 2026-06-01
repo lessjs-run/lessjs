@@ -121,23 +121,23 @@ export async function runSubmission(
   // Dry-run mode
   if (options.dryRun) {
     const pkg = record.scope ? `${record.scope}/${record.name}` : record.name;
-    console.log(`\n  📦 Hub Submission Preview`);
-    console.log(`  ─────────────────────────`);
-    console.log(`  Package:      ${pkg} v${record.version}`);
-    console.log(`  Source:       ${record.source}`);
-    console.log(`  Compat:       ${record.compatibility}`);
-    console.log(`  Tags:         ${record.tags.length}`);
-    console.log(`  Artifacts:    ${artifacts.length}`);
-    console.log(`  Safe install: ${record.installGuidance.safeToInstall ? '✅' : '❌'}`);
-    console.log(`  SSR capable:  ${record.installGuidance.ssrCapable ? '✅' : '❌'}`);
+    console.info(`\n  📦 Hub Submission Preview`);
+    console.info(`  ─────────────────────────`);
+    console.info(`  Package:      ${pkg} v${record.version}`);
+    console.info(`  Source:       ${record.source}`);
+    console.info(`  Compat:       ${record.compatibility}`);
+    console.info(`  Tags:         ${record.tags.length}`);
+    console.info(`  Artifacts:    ${artifacts.length}`);
+    console.info(`  Safe install: ${record.installGuidance.safeToInstall ? '✅' : '❌'}`);
+    console.info(`  SSR capable:  ${record.installGuidance.ssrCapable ? '✅' : '❌'}`);
     if (record.installGuidance.warnings.length > 0) {
-      console.log(`  Warnings:`);
+      console.info(`  Warnings:`);
       for (const w of record.installGuidance.warnings) {
-        console.log(`    ⚠️  ${w}`);
+        console.info(`    ⚠️  ${w}`);
       }
     }
-    console.log(`\n  Output: ${bundlePath}`);
-    console.log(`  Run without --dry-run to create a GitHub PR.\n`);
+    console.info(`\n  Output: ${bundlePath}`);
+    console.info(`  Run without --dry-run to create a GitHub PR.\n`);
     return { success: true, bundlePath, errors, warnings };
   }
 

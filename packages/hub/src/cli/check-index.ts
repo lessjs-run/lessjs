@@ -52,13 +52,13 @@ function main() {
   const baseDir = `${cwd}/hub-index`;
   const indexPath = `${baseDir}/index.json`;
 
-  console.log(`\n  Hub Index Checker (read-only)`);
-  console.log(`  Base: ${baseDir}\n`);
+  console.info(`\n  Hub Index Checker (read-only)`);
+  console.info(`  Base: ${baseDir}\n`);
 
   // Load records
   const records = loadRecords(baseDir);
   if (records.length === 0) {
-    console.log(`  ⚠️  No package records found in ${baseDir}/packages/\n`);
+    console.info(`  ⚠️  No package records found in ${baseDir}/packages/\n`);
     Deno.exit(0);
   }
 
@@ -83,13 +83,13 @@ function main() {
   }
 
   if (needsUpdate) {
-    console.log(
+    console.info(
       `  ❌ Index drift detected: ${records.length} package(s).` +
         ` Run \`deno task hub:index:update\` to sync.\n`,
     );
     Deno.exit(1);
   } else {
-    console.log(`  ✅ Index is up to date (${records.length} package(s))\n`);
+    console.info(`  ✅ Index is up to date (${records.length} package(s))\n`);
     Deno.exit(0);
   }
 }

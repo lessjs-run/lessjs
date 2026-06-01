@@ -18,6 +18,7 @@ import type {
 } from '@lessjs/core';
 
 import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import process from 'node:process';
 import { LessError } from '@lessjs/core/errors';
 import { createLogger } from '@lessjs/core/logger';
@@ -42,6 +43,7 @@ import {
   scanRoutes,
 } from './route-scanner.js';
 import { createCoreResolvePlugin } from './subpath-resolver.js';
+import { mdxPlugin } from './plugin-mdx.js';
 
 /**
  * LessJS Framework Vite plugin — internal plugin factory.
@@ -108,40 +110,17 @@ export function less(
   async function discoverHubClientOnlyTags(root: string, _routesDir: string): Promise<string[]> {
     if (_cachedHubClientOnlyTags !== null) return _cachedHubClientOnlyTags;
     try {
-      const { readFileSync } = await import('node:fs');
       const hubDataPath = join(root, 'app', 'data', 'registry', 'hub-data.ts');
-      const content = readFileSync(hubDataPath, 'utf-8');
-      const tags: string[] = [];
-      // Simple regex extraction - look for pairs of:
-      //   "tagName": "sl-xxx" followed by "compatibility": "client-only"
-      // or entire packages with "compatibility": "client-only"
-      const tagRe = /"tagName":\s*"([^"]+)"/g;
-      const compatRe = /"compatibility":\s*"([^"]+)"/g;
-      let tagMatch: RegExpExecArray | null;
-      const tagPositions: Array<{ pos: number; tagName: string }> = [];
-      while ((tagMatch = tagRe.exec(content)) !== null) {
-        tagPositions.push({ pos: tagMatch.index, tagName: tagMatch[1] });
-      }
-      const compatPositions: Array<{ pos: number; compat: string }> = [];
-      let compatMatch: RegExpExecArray | null;
-      while ((compatMatch = compatRe.exec(content)) !== null) {
-        compatPositions.push({ pos: compatMatch.index, compat: compatMatch[1] });
-      }
-      // Associate each tagName with the nearest following compatibility
-      for (const tp of tagPositions) {
-        let nearestCompat = '';
-        let nearestDist = Infinity;
-        for (const cp of compatPositions) {
-          const dist = cp.pos - tp.pos;
-          if (dist > 0 && dist < nearestDist) {
-            nearestDist = dist;
-            nearestCompat = cp.compat;
-          }
-        }
-        if (nearestCompat === 'client-only') {
-          tags.push(tp.tagName);
-        }
-      }
+      const hubData = await import(pathToFileURL(hubDataPath).href) as {
+        default?: Record<string, {
+          tags?: Array<{ tagName?: string; compatibility?: string }>;
+        }>;
+      };
+      const tags = Object.values(hubData.default ?? {}).flatMap((record) =>
+        (record.tags ?? [])
+          .filter((tag) => tag.compatibility === 'client-only' && tag.tagName)
+          .map((tag) => tag.tagName!)
+      );
       _cachedHubClientOnlyTags = tags;
       if (tags.length > 0) {
         log.info(`Hub client-only tags: ${tags.length} tag(s) discovered from ${hubDataPath}`);
@@ -364,6 +343,7 @@ export function less(
   }) as unknown as Plugin;
 
   return [
+    mdxPlugin(),
     corePlugin,
     createGeneratedDataResolverPlugin({ root: process.cwd() }),
     createCoreResolvePlugin(metaUrl),

@@ -9,7 +9,7 @@
  *
  * Rendering: DSD (Declarative Shadow DOM) string concatenation
  * Islands: Custom Element registration + prop deserialization
- * Adapter: registerAdapter() + RendererProtocol interface
+ * Adapter: createAdapterRegistry() + default registry access
  *
  * Build orchestration (Vite plugins) lives in @lessjs/adapter-vite.
  * For the unified lessjs() entry, use @lessjs/app instead.
@@ -61,6 +61,7 @@ export {
   renderDsdByName,
   renderDsdStream,
 } from './render-dsd.js';
+export type { RenderDsdOptions } from './render-dsd.js';
 export type {
   RenderDsdStreamChunk,
   RenderDsdStreamComponent,
@@ -71,9 +72,7 @@ export { camelToKebab } from './render-serialize.js';
 export {
   type AdapterRegistry,
   createAdapterRegistry,
-  getAdapter,
-  getRegisteredAdapters,
-  registerAdapter,
+  getDefaultRegistry,
 } from './adapter-registry.js';
 export type {
   CemCompatibilityReport,

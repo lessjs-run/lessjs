@@ -38,6 +38,26 @@ import { _esc, _escAttr } from './shared/escape.js';
 import './less-theme-toggle.js';
 
 export const tagName = 'less-layout';
+const SAFE_URL_SCHEMES = new Set(['http:', 'https:', 'mailto:', 'tel:', 'sms:']);
+
+function isSafeLayoutUrl(url: string): boolean {
+  const trimmed = url.trim();
+  if (!trimmed) return false;
+  if (
+    trimmed.startsWith('/') ||
+    trimmed.startsWith('#') ||
+    trimmed.startsWith('./') ||
+    trimmed.startsWith('../')
+  ) {
+    return true;
+  }
+  try {
+    const parsed = new URL(trimmed, 'https://lessjs.com/');
+    return SAFE_URL_SCHEMES.has(parsed.protocol);
+  } catch {
+    return false;
+  }
+}
 
 /** SignalContext key: theme state shared across all components */
 export const THEME_CTX: Context<'dark' | 'light'> = createContext<'dark' | 'light'>(
@@ -639,6 +659,30 @@ export class LessLayout extends DsdElement {
     }
   }
 
+  private _safeHref(href: string | undefined, fallback = '#'): string {
+    if (!href) return fallback;
+    const trimmed = href.trim();
+    return isSafeLayoutUrl(trimmed) ? trimmed : fallback;
+  }
+
+  private _isExternalHref(href: string): boolean {
+    try {
+      const parsed = new URL(href, 'https://lessjs.com/');
+      return parsed.origin !== 'https://lessjs.com' && SAFE_URL_SCHEMES.has(parsed.protocol);
+    } catch {
+      return false;
+    }
+  }
+
+  private _localizedSafeHref(href: string | undefined): { href: string; isExternal: boolean } {
+    const safeHref = this._safeHref(href);
+    const isExternal = this._isExternalHref(safeHref);
+    return {
+      href: isExternal ? safeHref : this.routing.localize(safeHref),
+      isExternal,
+    };
+  }
+
   // --- Main render ---
 
   private _renderLayout() {
@@ -650,8 +694,10 @@ export class LessLayout extends DsdElement {
       'footer-text',
       'Built with LessJS Framework — Self-bootstrapped from JSR — LESS IS MORE',
     );
-    const githubUrl = this._getStr('github-url', 'https://github.com/lessjs-run/LessJS');
-    const editUrl = this.getAttribute('edit-url') || this._computeEditUrl();
+    const githubUrl = this._safeHref(
+      this._getStr('github-url', 'https://github.com/lessjs-run/LessJS'),
+    );
+    const editUrl = this._safeHref(this.getAttribute('edit-url') || this._computeEditUrl(), '');
     const locales = this.routing.locales;
     const switchLabel = locales.length > 1 ? this._esc(this.routing.switchLabel()) : '';
     const switchPath = locales.length > 1 ? this.routing.switchPath() : '';
@@ -742,8 +788,7 @@ export class LessLayout extends DsdElement {
     return (
       <nav className='header-nav' part='nav'>
         {links.map((link) => {
-          const localized = this.routing.localize(link.href);
-          const isExternal = link.href.startsWith('http');
+          const { href: localized, isExternal } = this._localizedSafeHref(link.href);
           const isCurrent = !isExternal &&
             (cp === link.href || cp === localized || cp.startsWith(localized + '/'));
           return (
@@ -776,8 +821,7 @@ export class LessLayout extends DsdElement {
             </summary>
             {section.items.map((item) => {
               const href = item.href || item.path || '#';
-              const localized = this.routing.localize(href);
-              const isExternal = href.startsWith('http');
+              const { href: localized, isExternal } = this._localizedSafeHref(href);
               const cp = this._currentPath();
               const isActive = !isExternal && cp === localized;
               return (
@@ -817,8 +861,7 @@ export class LessLayout extends DsdElement {
     return (
       <nav className='mobile-tab-bar' aria-label='Quick navigation'>
         {mobileLinks.map((link) => {
-          const localized = this.routing.localize(link.href);
-          const isExternal = link.href.startsWith('http');
+          const { href: localized, isExternal } = this._localizedSafeHref(link.href);
           const root = sectionRoot(link.href);
           const isActive = !isExternal &&
             (rawPath === root || rawPath.startsWith(root + '/'));
@@ -1111,7 +1154,6 @@ export class LessLayout extends DsdElement {
       this._syncLayoutAttributes(newLayout, locale);
       this._replaceShadowRootFromLayout(newLayout);
 
-      // v0.27: adopt + move — proper DOM API, no innerHTML hack.
       // DOMParser nodes belong to a different document. adoptNode()
       // transfers ownership so appendChild works without errors.
       while (this.firstChild) this.removeChild(this.firstChild);

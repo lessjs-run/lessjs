@@ -16,6 +16,9 @@
 // Demo configuration is centralized in demo-config.ts
 // Import it directly where needed (e.g., scanner.ts imports DEMO_ATTRS, DEMO_SLOTS)
 
+import { toCdnUrl } from './cdn-url.ts';
+import type { Browser, BrowserType } from 'npm:playwright@1.59.1';
+
 // ─── Types ───────────────────────────────────────────────────────────────
 
 export interface PlaywrightRenderOptions {
@@ -49,7 +52,7 @@ export interface PlaywrightRenderResult {
 // ─── Fixture HTML Generation ─────────────────────────────────────────────
 
 /**
- * Convert a bare npm specifier to an esm.sh CDN URL.
+ * Convert a bare npm specifier to the configured CDN URL.
  * This allows the browser to import the module without a local module resolver.
  *
  * For Shoelace, we import the full bundle to ensure all sub-components
@@ -57,12 +60,12 @@ export interface PlaywrightRenderResult {
  *
  * Examples:
  *   '@shoelace-style/shoelace/dist/components/alert/alert.js'
- *   -> 'https://esm.sh/@shoelace-style/shoelace@2.20.1'
+ *   -> 'https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1'
  *
  *   'media-chrome/dist/media-controller.js'
- *   -> 'https://esm.sh/media-chrome@4.19.0'
+ *   -> 'https://cdn.jsdelivr.net/npm/media-chrome@4.19.0/dist/media-controller.js'
  */
-function toEsmUrl(importSpec: string): string {
+function toModuleUrl(importSpec: string): string {
   // Known package versions for consistent CDN resolution
   const VERSIONS: Record<string, string> = {
     '@shoelace-style/shoelace': '2.20.1',
@@ -74,29 +77,28 @@ function toEsmUrl(importSpec: string): string {
       // For Shoelace: import the full bundle to register all components
       // (demo slots may reference sub-components like sl-button, sl-menu, etc.)
       if (pkg === '@shoelace-style/shoelace') {
-        return `https://esm.sh/@shoelace-style/shoelace@${version}`;
+        return toCdnUrl(`@shoelace-style/shoelace@${version}`);
       }
       // For other packages: preserve subpath for tree-shaking
       const subpath = importSpec.slice(pkg.length);
-      return `https://esm.sh/${pkg}@${version}${subpath}`;
+      return toCdnUrl(`${pkg}@${version}${subpath}`);
     }
   }
 
   // Fallback: no version pinning
-  return `https://esm.sh/${importSpec}`;
+  return toCdnUrl(importSpec);
 }
 
 /**
  * Generate an inline HTML page that imports and renders a single component.
  * No file I/O - served from memory via temp HTTP server.
  *
- * Uses esm.sh CDN for module resolution in the browser.
+ * Uses the configured CDN for module resolution in the browser.
  */
 function generateFixtureHtml(options: PlaywrightRenderOptions): string {
   const { importSpec, tagName, demoAttrs, demoSlots, themeCss } = options;
 
-  // Convert npm specifier to esm.sh CDN URL
-  const esmUrl = toEsmUrl(importSpec);
+  const moduleUrl = toModuleUrl(importSpec);
 
   // Build attributes string
   const attrs = demoAttrs
@@ -132,7 +134,7 @@ function generateFixtureHtml(options: PlaywrightRenderOptions): string {
 <head>
   <meta charset="utf-8">
   <script type="module">
-    import '${esmUrl}';
+    import '${moduleUrl}';
   </script>
   ${themeBlock}
 </head>
@@ -211,8 +213,7 @@ function startTempServer(initialHtml: string): Promise<TempServer> {
  * 5. Post-process: sanitize, replace :host, wrap
  */
 async function renderSingleComponent(
-  // deno-lint-ignore no-explicit-any -- Playwright Browser type only available at runtime
-  browser: any,
+  browser: Browser,
   server: TempServer,
   options: PlaywrightRenderOptions,
 ): Promise<PlaywrightRenderResult> {
@@ -382,10 +383,9 @@ export async function renderBatchWithPlaywright(
   if (items.length === 0) return results;
 
   // Import Playwright dynamically (dev-time dependency only)
-  // deno-lint-ignore no-explicit-any -- Playwright types only available at runtime
-  let playwright: any;
+  let playwright: { chromium: BrowserType };
   try {
-    playwright = await import('npm:playwright@^1.59.0');
+    playwright = await import('npm:playwright@1.59.1');
   } catch {
     // Playwright not available - return placeholders for all items
     for (const item of items) {
@@ -406,7 +406,7 @@ export async function renderBatchWithPlaywright(
 
     for (const item of items) {
       if (verbose) {
-        console.log(`  🎬 Rendering <${item.tagName}> via Playwright...`);
+        console.info(`  🎬 Rendering <${item.tagName}> via Playwright...`);
       }
 
       const result = await renderSingleComponent(browser, server, item);
@@ -414,7 +414,7 @@ export async function renderBatchWithPlaywright(
       if (result.success && result.html) {
         results.set(item.tagName, result);
         if (verbose) {
-          console.log(`  ✅ <${item.tagName}> snapshot captured (${result.html.length} chars)`);
+          console.info(`  ✅ <${item.tagName}> snapshot captured (${result.html.length} chars)`);
         }
       } else {
         // Fallback to placeholder
@@ -427,7 +427,7 @@ export async function renderBatchWithPlaywright(
             : 'Snapshot failed - placeholder, not real render',
         });
         if (verbose) {
-          console.log(`  ⚠️  <${item.tagName}> snapshot failed: ${result.error}`);
+          console.info(`  ⚠️  <${item.tagName}> snapshot failed: ${result.error}`);
         }
       }
     }

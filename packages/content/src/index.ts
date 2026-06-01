@@ -26,6 +26,8 @@ export type { BlogPost, BlogPostFrontmatter, LessBlogOptions } from './blog/type
 export { parseMarkdownFile, slugFromFilename } from './blog/markdown.ts';
 export { generateBlogRoutes, scanPosts } from './blog/routes.ts';
 export { loadBlogData } from './blog/blog-data.ts';
+export { compileMdx } from './mdx/compile.ts';
+export type { MdxCompileOptions, MdxModule } from './mdx/types.ts';
 
 export { extractMeta, scanNavData } from './nav/scanner.ts';
 export {

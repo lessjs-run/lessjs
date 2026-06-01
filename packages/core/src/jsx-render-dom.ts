@@ -14,6 +14,7 @@
 import { isVNode, type VNode } from './vnode.ts';
 import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
+import { eventTypeFromProp } from './event-hydration.ts';
 import { effect } from '@lessjs/signals';
 
 // ─── SVG namespace support ────────────────────────────────────────────────────
@@ -88,6 +89,20 @@ function createElementForTag(tag: string): Element {
   return document.createElement(tag);
 }
 
+function sanitizeRawHtml(html: string): string {
+  return html
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/\s+on[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+    .replace(
+      /\s+(href|src|xlink:href|formaction)\s*=\s*("|')\s*(?:javascript|data|vbscript|file):[\s\S]*?\2/gi,
+      '',
+    )
+    .replace(
+      /\s+(href|src|xlink:href|formaction)\s*=\s*(?:javascript|data|vbscript|file):[^\s>]*/gi,
+      '',
+    );
+}
+
 // ─── applyProps ───────────────────────────────────────────────────────────────
 
 /**
@@ -97,6 +112,7 @@ function createElementForTag(tag: string): Element {
  */
 function applyStaticProp(el: Element, key: string, resolved: unknown): void {
   if (resolved == null) return;
+  if (key === 'rawHtml') return;
 
   // style object — unwrap nested signal values
   if (key === 'style' && typeof resolved === 'object' && resolved !== null) {
@@ -148,11 +164,12 @@ export function applyProps(
   el: Element,
   props: Record<string, unknown>,
   signal?: AbortSignal,
-  /** v0.27: Collect effect dispose fns for batch cleanup. */
+  /** Collect effect dispose fns for batch cleanup. */
   disposers?: Set<() => void>,
 ): void {
+  const rawHtml = props.rawHtml === true;
   for (const [key, value] of Object.entries(props)) {
-    if (key === 'children' || key === 'key') continue;
+    if (key === 'children' || key === 'key' || key === 'rawHtml') continue;
 
     // ref callback
     if (key === 'ref' && typeof value === 'function') {
@@ -162,7 +179,8 @@ export function applyProps(
 
     // Event handlers
     if (key.startsWith('on') && typeof value === 'function') {
-      const eventType = key.slice(2).toLowerCase();
+      const eventType = eventTypeFromProp(key);
+      if (!eventType) continue;
       const opts: AddEventListenerOptions = signal ? { signal } : {};
       el.addEventListener(eventType, value as EventListener, opts);
       continue;
@@ -170,13 +188,18 @@ export function applyProps(
 
     if (value == null) continue;
 
-    // innerHTML: set DOM property directly (for sanitized blog content etc.)
+    // innerHTML is text by default; explicit rawHtml opts into sanitized HTML.
     if (key === 'innerHTML') {
-      (el as HTMLElement).innerHTML = String(value);
+      const resolved = String(unwrapSignalLike(value));
+      if (rawHtml) {
+        (el as HTMLElement).innerHTML = sanitizeRawHtml(resolved);
+      } else {
+        (el as HTMLElement).textContent = resolved;
+      }
       continue;
     }
 
-    // v0.26.1 (ADR-0058): Signal→DOM direct binding.
+    // Signal-to-DOM direct binding (ADR-0058).
     // Instead of unwrapping the signal to a static value and calling
     // it done, create an effect that binds the signal directly to the
     // DOM attribute. When the signal changes, only that attribute/prop
@@ -190,7 +213,7 @@ export function applyProps(
       if (signal) {
         signal.addEventListener('abort', dispose, { once: true });
       }
-      // v0.27: Track for batch cleanup in DsdElement lifecycle
+      // Track for batch cleanup in DsdElement lifecycle
       disposers?.add(dispose);
       continue;
     }
@@ -209,7 +232,7 @@ export function applyProps(
  *
  * @param node - VNode, string, number, or null/undefined
  * @param signal - Optional AbortSignal for automatic event listener cleanup
- * @param disposers - v0.27: Optional Set to collect effect dispose fns for batch cleanup
+ * @param disposers - Optional Set to collect effect dispose fns for batch cleanup
  * @returns DOM Node (Element, Text, or DocumentFragment)
  */
 export function renderToDom(
@@ -227,7 +250,7 @@ export function renderToDom(
     return document.createTextNode(String(node));
   }
 
-  // v0.26.1 (ADR-0058/0059): Signal→TextNode reactive binding.
+  // Signal-to-TextNode reactive binding (ADR-0058/0059).
   // Creates a TextNode that auto-updates when the signal changes,
   // without requiring full re-render or VDOM diff.
   if (isSignalLike(node)) {
@@ -339,7 +362,7 @@ export function renderToDom(
         return renderToDom(result, signal, disposers);
       }
     } catch (err) {
-      // v0.26.1 FIX: Previously this silently returned empty TextNode,
+      // Previously this silently returned empty TextNode,
       // making CSR rendering failures invisible in the browser.
       console.error(
         `[LessJS/CSR] renderToDom() failed for <${String(tag)}>:`,

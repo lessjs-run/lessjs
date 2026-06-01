@@ -1,6 +1,6 @@
 # @lessjs/runtime
 
-Component authoring facade (v0.27.0) — the single import for writing LessJS components.
+Component authoring facade: the single import for writing LessJS components.
 
 `@lessjs/runtime` re-exports the complete authoring surface from the runtime
 kernel (`@lessjs/core`), signals engine (`@lessjs/signals`), and stylesheet

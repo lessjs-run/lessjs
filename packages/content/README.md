@@ -17,6 +17,7 @@ deno add jsr:@lessjs/content
 {
   ".": "./src/index.ts", // lessContent() 插件
   "./blog-data": "./src/blog/blog-data.ts", // loadBlogData() 纯函数
+  "./mdx": "./src/mdx/index.ts", // compileMdx() build-time MDX 编译
   "./nav": "./src/nav/index.ts", // Nav 扫描工具
   "./sitemap": "./src/sitemap/index.ts" // Sitemap 生成工具
 }
@@ -25,8 +26,22 @@ deno add jsr:@lessjs/content
 ## 功能
 
 - **Blog 模块**：Markdown frontmatter 解析、slug 生成、草稿过滤、虚拟模块 `@lessjs/generated/blog-data`
+- **MDX 模块**：`compileMdx()` 将 `.mdx` 编译为 `@lessjs/core` JSX runtime 代码，继续走 DSD 渲染路径
 - **Nav 模块**：路由文件 meta 扫描 -> sidebar 自动生成，`@lessjs/generated/nav` 虚拟模块
 - **Sitemap 模块**：SSG 产物扫描 -> `sitemap.xml` + `robots.txt` 自动生成
+
+## MDX
+
+```ts
+import { compileMdx } from '@lessjs/content/mdx';
+
+const mod = await compileMdx(source, {
+  jsxImportSource: '@lessjs/core',
+});
+```
+
+`.mdx` 文件里的 LessJS custom elements 和 `client:*` 属性会编译到同一条 JSX/DSD
+路径；不引入浏览器端 MDX parser，也不引入 React provider 概念。
 
 ## 使用
 

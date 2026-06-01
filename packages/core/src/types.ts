@@ -501,7 +501,7 @@ export interface LessRenderer {
  * import type { MiddlewareHandler } from 'hono';
  *
  * const middleware: MiddlewareHandler = async (c, next) => {
- *   console.log('API request:', c.req.path);
+ *   console.info('API request:', c.req.path);
  *   await next();
  * };
  * export default middleware;

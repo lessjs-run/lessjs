@@ -26,9 +26,17 @@ export const OPTIONAL_PACKAGE_STUBS: Record<string, string> = {
     'export function uninstallLitAdapter() {}',
     'export const WithDsdHydration = undefined;',
   ].join('\n'),
+  '@lessjs/adapter-lit/ssr': [
+    'export function installLitAdapter() {}',
+    'export function uninstallLitAdapter() {}',
+  ].join('\n'),
   '@lessjs/adapter-vanilla': [
     'class DsdVanillaElement extends (globalThis.HTMLElement || class{}) {}',
     'export { DsdVanillaElement };',
+    'export function installVanillaAdapter() {}',
+    'export function uninstallVanillaAdapter() {}',
+  ].join('\n'),
+  '@lessjs/adapter-vanilla/ssr': [
     'export function installVanillaAdapter() {}',
     'export function uninstallVanillaAdapter() {}',
   ].join('\n'),
@@ -40,6 +48,10 @@ export const OPTIONAL_PACKAGE_STUBS: Record<string, string> = {
     'export const WithDsdHydration = undefined;',
     'export function renderReactToString() { return ""; }',
     'export function isReactElement() { return false; }',
+  ].join('\n'),
+  '@lessjs/adapter-react/ssr': [
+    'export function installReactAdapter() {}',
+    'export function uninstallReactAdapter() {}',
   ].join('\n'),
 };
 

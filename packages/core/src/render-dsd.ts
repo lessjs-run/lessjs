@@ -9,7 +9,7 @@
  * - Components implement render() returning string | VNode
  * - Nested CE rendering is handled inline by renderDsdTree() during
  *   the single-pass VNode traversal — no separate post-processing needed
- * - Framework adapters hook into the pipeline via registerAdapter()
+ * - Framework adapters hook into the pipeline via the default adapter registry
  *
  * SSR lifecycle:
  *   1. Instantiate component class
@@ -40,7 +40,7 @@ import {
   type RenderInput,
   type RenderOutput,
 } from './types.js';
-import { getRegisteredAdapters } from './adapter-registry.js';
+import { getDefaultRegistry } from './adapter-registry.js';
 import type { StyleSheetLike } from '@lessjs/style-sheet';
 import { createLogger } from './logger.js';
 
@@ -66,44 +66,65 @@ const _textEncoder = new TextEncoder();
  * v0.15.2: Accepts optional `RenderHooks` for pipeline observation.
  * Hooks are optional and do not change behavior when omitted.
  *
- * @param tagName - Custom element tag name (e.g. 'less-button')
- * @param componentClass - Registered Custom Element class constructor
- * @param props - Attribute/property key-value pairs
- * @param sourceInfo - Optional context for error messages (route path, source file)
- * @param dsdOptions - Optional DSD template attributes per HTML Living Standard
- * @param collector - Optional DSD render metrics collector
- * @param nestingDepth - Current nesting depth (0 = top-level)
- * @param hooks - Optional render pipeline hooks (beforeRender, afterRender, onError)
+ * @param input - Custom element tag name or class constructor
+ * @param options - Render options object
  * @returns Structured render output (html + errors + metrics + hydrationHints)
  */
+export interface RenderDsdOptions {
+  componentClass?: CustomElementConstructor;
+  props?: Record<string, unknown>;
+  sourceInfo?: { route?: string; source?: string };
+  dsdOptions?: DsdOptions;
+  collector?: DsdRenderCollector;
+  nestingDepth?: number;
+  hooks?: RenderHooks;
+}
+
+function isRenderDsdOptions(value: unknown): value is RenderDsdOptions {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const obj = value as Record<string, unknown>;
+  return 'componentClass' in obj ||
+    'props' in obj ||
+    'sourceInfo' in obj ||
+    'dsdOptions' in obj ||
+    'collector' in obj ||
+    'nestingDepth' in obj ||
+    'hooks' in obj;
+}
+
 export async function renderDsd(
   input: string | CustomElementConstructor,
-  propsOrClass?: CustomElementConstructor | Record<string, unknown>,
+  optionsOrClass?: RenderDsdOptions | CustomElementConstructor | Record<string, unknown>,
   maybeProps?: Record<string, unknown>,
-  sourceInfo?: { route?: string; source?: string },
-  dsdOptions?: DsdOptions,
-  collector?: DsdRenderCollector,
-  nestingDepth?: number,
-  hooks?: RenderHooks,
+  legacySourceInfo?: { route?: string; source?: string },
+  legacyDsdOptions?: DsdOptions,
+  legacyCollector?: DsdRenderCollector,
+  legacyNestingDepth?: number,
+  legacyHooks?: RenderHooks,
 ): Promise<RenderOutput> {
-  // ADR-0072: Polymorphic input — string auto-lookup, class direct use.
+  // ADR-0072: Polymorphic input with a single options object.
   let tagName: string;
   let componentClass: CustomElementConstructor;
   let props: Record<string, unknown> = {};
+  const options = isRenderDsdOptions(optionsOrClass) ? optionsOrClass : undefined;
 
   if (typeof input === 'string') {
     tagName = input;
-    // Detect call signature:
-    //   renderDsd('tag', props)           → propsOrClass is Record<>
-    //   renderDsd('tag', Class, props)    → propsOrClass is class (backward compat)
-    if (propsOrClass && typeof propsOrClass === 'function' && 'prototype' in propsOrClass) {
-      componentClass = propsOrClass as CustomElementConstructor;
-      props = (maybeProps as Record<string, unknown>) ?? {};
+    if (options?.componentClass) {
+      componentClass = options.componentClass;
+      props = options.props ?? {};
+    } else if (
+      optionsOrClass && typeof optionsOrClass === 'function' && 'prototype' in optionsOrClass
+    ) {
+      componentClass = optionsOrClass as CustomElementConstructor;
+      props = maybeProps ?? {};
     } else {
       const cls = globalThis.customElements?.get(tagName) as CustomElementConstructor | undefined;
       if (!cls) {
         log.warn(`<${tagName}> is not registered - rendering as void element`);
-        const attrs = serializeAttributes((propsOrClass as Record<string, unknown>) ?? {});
+        const fallbackProps = options?.props ??
+          ((optionsOrClass as Record<string, unknown> | undefined) ?? {});
+        const attrs = serializeAttributes(fallbackProps);
         const html = `<${tagName}${attrs}></${tagName}>`;
         return {
           html,
@@ -120,13 +141,19 @@ export async function renderDsd(
         };
       }
       componentClass = cls;
-      props = (propsOrClass as Record<string, unknown>) ?? {};
+      props = options?.props ?? ((optionsOrClass as Record<string, unknown> | undefined) ?? {});
     }
   } else {
     componentClass = input;
     tagName = (input as unknown as { tagName?: string }).tagName ?? 'unknown';
-    props = (propsOrClass as Record<string, unknown>) ?? {};
+    props = options?.props ?? ((optionsOrClass as Record<string, unknown> | undefined) ?? {});
   }
+
+  const sourceInfo = options?.sourceInfo ?? legacySourceInfo;
+  const dsdOptions = options?.dsdOptions ?? legacyDsdOptions;
+  const collector = options?.collector ?? legacyCollector;
+  const nestingDepth = options?.nestingDepth ?? legacyNestingDepth;
+  const hooks = options?.hooks ?? legacyHooks;
 
   const _nestingDepth = nestingDepth ?? 0;
   // H-10 fix: Guard against SSR environments where performance is undefined
@@ -215,7 +242,7 @@ export async function renderDsd(
       // until one claims the result via isTemplate(). This allows Lit,
       // Vanilla, React, and future adapters to coexist.
       let rendered = false;
-      for (const adapter of getRegisteredAdapters()) {
+      for (const adapter of getDefaultRegistry().getAll()) {
         if (adapter.isTemplate && adapter.render && adapter.isTemplate(result)) {
           content = await adapter.render(result, tagName);
           rendered = true;
@@ -289,7 +316,7 @@ export async function renderDsd(
 
   // Phase 2: Registered adapters (Lit, etc.) - only if no native styles found
   if (!styleCss) {
-    for (const adapter of getRegisteredAdapters()) {
+    for (const adapter of getDefaultRegistry().getAll()) {
       if (adapter.extractStyles) {
         try {
           const extracted = adapter.extractStyles(componentClass);
@@ -403,7 +430,13 @@ export async function renderDsdByName(
   dsdOptions?: DsdOptions,
   hooks?: RenderHooks,
 ): Promise<RenderOutput> {
-  return await renderDsd(tagName, props, undefined, sourceInfo, dsdOptions, undefined, 0, hooks);
+  return await renderDsd(tagName, {
+    props,
+    sourceInfo,
+    dsdOptions,
+    nestingDepth: 0,
+    hooks,
+  });
 }
 
 // v0.21.0: Streaming types and functions moved to render-dsd-stream.ts.

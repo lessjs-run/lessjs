@@ -4,7 +4,7 @@
  *
  * Callout/notice box for inline documentation alerts.
  * Supports 4 types: info, warning, danger, tip.
- * v0.26.1: All colors use semantic tokens, theme-responsive.
+ * All colors use semantic tokens and respond to theme changes.
  *
  * Usage:
  * ```html

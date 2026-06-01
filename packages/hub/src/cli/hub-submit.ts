@@ -100,7 +100,7 @@ function parseArgs(args: string[]): CliFlags {
 }
 
 function printHelp() {
-  console.log(`
+  console.info(`
 less hub submit - Submit a package to the LessJS Registry Hub
 
 USAGE:
@@ -195,7 +195,7 @@ async function main() {
   const fullName = packageScope ? `${packageScope}/${packageName}` : packageName;
 
   if (!flags.json) {
-    console.log(`\n  📦 Package: ${fullName} v${packageVersion}`);
+    console.info(`\n  📦 Package: ${fullName} v${packageVersion}`);
   }
 
   // ─── Step 2: Validate manifest ───────────────────────────────────────
@@ -222,7 +222,7 @@ async function main() {
 
   if (!cemContent) {
     if (!flags.json) {
-      console.log(`  ⚠️  No custom-elements.json found. Defaulting to unknown compatibility.`);
+      console.info(`  ⚠️  No custom-elements.json found. Defaulting to unknown compatibility.`);
     }
   }
 
@@ -334,7 +334,7 @@ async function main() {
   }
 
   if (!flags.json && !flags.dryRun) {
-    console.log(`  Creating submission...`);
+    console.info(`  Creating submission...`);
   }
 
   const result: SubmissionResult = await runSubmission(
@@ -346,29 +346,29 @@ async function main() {
   // ─── Step 7: Output result ────────────────────────────────────────────
 
   if (flags.json) {
-    console.log(JSON.stringify(result, null, 2));
+    console.info(JSON.stringify(result, null, 2));
   } else {
     if (result.success) {
-      console.log(`\n  ✅ Submission ready`);
+      console.info(`\n  ✅ Submission ready`);
       if (result.prUrl) {
-        console.log(`  PR: ${result.prUrl}`);
+        console.info(`  PR: ${result.prUrl}`);
       }
-      console.log(`  Output: ${result.bundlePath}`);
+      console.info(`  Output: ${result.bundlePath}`);
     } else {
-      console.log(`\n  ❌ Submission failed`);
+      console.info(`\n  ❌ Submission failed`);
       for (const e of result.errors) {
-        console.log(`     ${e}`);
+        console.info(`     ${e}`);
       }
     }
 
     if (result.warnings.length > 0) {
-      console.log(`\n  ⚠️  Warnings:`);
+      console.info(`\n  ⚠️  Warnings:`);
       for (const w of result.warnings) {
-        console.log(`     ${w}`);
+        console.info(`     ${w}`);
       }
     }
 
-    console.log();
+    console.info();
   }
 
   Deno.exit(result.success ? 0 : 1);

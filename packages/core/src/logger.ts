@@ -63,7 +63,7 @@ export class LessLogger {
   }
 
   logInfo(msg: string): void {
-    console.log(`${this.prefix} ${msg}`);
+    console.info(`${this.prefix} ${msg}`);
   }
 
   logDebug(msg: string): void {

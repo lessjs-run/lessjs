@@ -1129,3 +1129,31 @@ Deno.test('less-layout: custom logo text and github URL', async () => {
   const result = instance.render();
   assertExists(result);
 });
+
+Deno.test('less-layout: blocks unsafe URL schemes in rendered links', async () => {
+  const { LessLayout } = await import('../src/less-layout.tsx');
+  const instance = new LessLayout();
+  instance.setAttribute('github-url', 'javascript:alert(1)');
+  instance.setAttribute('edit-url', 'data:text/html,<script>alert(1)</script>');
+  instance.setAttribute(
+    'header-nav',
+    JSON.stringify([
+      { href: 'vbscript:msgbox(1)', label: 'Bad' },
+      { href: 'mailto:team@example.com', label: 'Mail' },
+    ]),
+  );
+  instance.setAttribute(
+    'nav-items',
+    JSON.stringify([
+      { section: 'Custom', items: [{ path: 'file:///etc/passwd', label: 'File' }] },
+    ]),
+  );
+
+  const { renderToString } = await import('@lessjs/core');
+  const html = renderToString(instance.render());
+  assertEquals(html.includes('javascript:'), false);
+  assertEquals(html.includes('data:text/html'), false);
+  assertEquals(html.includes('vbscript:'), false);
+  assertEquals(html.includes('file:///'), false);
+  assertEquals(html.includes('mailto:team@example.com'), true);
+});

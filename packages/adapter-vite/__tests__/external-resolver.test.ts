@@ -109,7 +109,7 @@ Deno.test('extractExternalSpecifiers: extracts exact npm package match', () => {
   const result = extractExternalSpecifiers(
     {
       modules: [
-        { specifier: 'npm:hono@^4.12.18' },
+        { specifier: 'npm:hono@4.12.23' },
         { specifier: 'npm:marked@12.0.0' },
       ],
       roots: [],
@@ -139,7 +139,7 @@ Deno.test('extractExternalSpecifiers: ignores non-npm specifiers', () => {
       modules: [
         { specifier: 'jsr:@lessjs/core@0.21/logger.ts' },
         { specifier: 'https://esm.sh/react@18' },
-        { specifier: 'npm:hono@^4.12.18' },
+        { specifier: 'npm:hono@4.12.23' },
       ],
       roots: [],
     },
@@ -153,7 +153,7 @@ Deno.test('extractExternalSpecifiers: skips modules with errors', () => {
     {
       modules: [
         { specifier: 'npm:marked@12.0.0', error: 'Download failed' },
-        { specifier: 'npm:hono@^4.12.18' },
+        { specifier: 'npm:hono@4.12.23' },
       ],
       roots: [],
     },
@@ -166,7 +166,7 @@ Deno.test('extractExternalSpecifiers: returns sorted result', () => {
   const result = extractExternalSpecifiers(
     {
       modules: [
-        { specifier: 'npm:hono@^4.12.18' },
+        { specifier: 'npm:hono@4.12.23' },
         { specifier: 'npm:entities@^4.5.0/lib/escape.js' },
         { specifier: 'npm:marked@12.0.0' },
       ],

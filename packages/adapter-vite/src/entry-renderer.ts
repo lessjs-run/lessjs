@@ -376,7 +376,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   // --- SSG: Auto-install all available adapters ---
   // v0.17.3: Multi-adapter support - install Lit, Vanilla, and React adapters.
   // With viteBuild(ssr:true, noExternal), adapters are inlined into the bundle.
-  // Installing at module load time ensures registerAdapter() runs before any
+  // Installing at module load time ensures the default adapter registry is populated before any
   // renderDsd() call. Each try/catch makes missing adapters a no-op.
   // Both SSG and dev mode need adapters to render framework-specific results.
   {
@@ -384,7 +384,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('// Lit adapter - handles Lit TemplateResults');
     lines.push('try {');
     lines.push(
-      "  const { installLitAdapter } = await import('@lessjs/adapter-lit');",
+      "  const { installLitAdapter } = await import('@lessjs/adapter-lit/ssr');",
     );
     lines.push('  installLitAdapter();');
     lines.push('} catch { /* @lessjs/adapter-lit not available */ }');
@@ -392,7 +392,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('// Vanilla adapter - handles string-based render()');
     lines.push('try {');
     lines.push(
-      "  const { installVanillaAdapter } = await import('@lessjs/adapter-vanilla');",
+      "  const { installVanillaAdapter } = await import('@lessjs/adapter-vanilla/ssr');",
     );
     lines.push('  installVanillaAdapter();');
     lines.push('} catch { /* @lessjs/adapter-vanilla not available */ }');
@@ -400,7 +400,7 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('// React adapter - handles React elements');
     lines.push('try {');
     lines.push(
-      "  const { installReactAdapter } = await import('@lessjs/adapter-react');",
+      "  const { installReactAdapter } = await import('@lessjs/adapter-react/ssr');",
     );
     lines.push('  installReactAdapter();');
     lines.push('} catch { /* @lessjs/adapter-react not available */ }');
@@ -522,7 +522,7 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('    log.warn("<" + tag + "> not registered - rendering empty")');
   lines.push('    return "<" + tag + "></" + tag + ">"');
   lines.push('  }');
-  lines.push('  const out = await renderDsd(tag, Cls, props, sourceInfo)');
+  lines.push('  const out = await renderDsd(tag, { componentClass: Cls, props, sourceInfo })');
   lines.push('  return out.html');
   lines.push('}');
   lines.push('');
@@ -619,12 +619,12 @@ export function renderEntry(desc: EntryDescriptor): string {
     );
     lines.push('');
     lines.push(
-      'export { renderDsd, renderDsdTree, wrapInDocument, registerAdapter, getAdapter } from "@lessjs/core"',
+      'export { getDefaultRegistry, renderDsd, renderDsdTree, wrapInDocument } from "@lessjs/core"',
     );
     lines.push(
-      'export { installLitAdapter, uninstallLitAdapter } from "@lessjs/adapter-lit"',
-      'export { installVanillaAdapter, uninstallVanillaAdapter } from "@lessjs/adapter-vanilla"',
-      'export { installReactAdapter, uninstallReactAdapter } from "@lessjs/adapter-react"',
+      'export { installLitAdapter, uninstallLitAdapter } from "@lessjs/adapter-lit/ssr"',
+      'export { installVanillaAdapter, uninstallVanillaAdapter } from "@lessjs/adapter-vanilla/ssr"',
+      'export { installReactAdapter, uninstallReactAdapter } from "@lessjs/adapter-react/ssr"',
     );
     lines.push(
       'export { posts, getPostBySlug, getBlogOptions } from "@lessjs/generated/blog-data"',

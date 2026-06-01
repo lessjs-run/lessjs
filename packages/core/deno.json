@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/core",
-  "version": "0.28.0",
+  "version": "0.28.3",
   "exports": {
     ".": "./src/index.ts",
     "./errors": "./src/errors.ts",
@@ -19,8 +19,8 @@
     "./island-transform": "./src/island-transform.ts"
   },
   "imports": {
-    "@lessjs/signals": "jsr:@lessjs/signals@^0.28.0",
-    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.28.0"
+    "@lessjs/signals": "jsr:@lessjs/signals@^0.28.3",
+    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.28.3"
   },
   "publish": {
     "include": [
@@ -31,7 +31,7 @@
     ]
   },
   "tasks": {
-    "build": "deno check src/index.ts src/render-dsd.ts",
+    "build": "deno check src/index.ts",
     "lint": "deno lint src/ __tests__/",
     "typecheck": "deno check src/index.ts",
     "test": "deno test --allow-read --allow-write --allow-env --allow-net --allow-run __tests__/",

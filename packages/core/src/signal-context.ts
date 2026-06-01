@@ -17,12 +17,33 @@ export interface Context<T> {
   defaultValue: T;
 }
 
-const contexts = new Map<symbol, unknown>();
+type SignalValue<T> = { value: T; subscribe(fn: (v: T) => void): () => void };
+
+const defaultSignals = new Map<symbol, unknown>();
+const hostSignals = new WeakMap<object, Map<symbol, unknown>>();
 
 export function createContext<T>(key: symbol, defaultValue: T): Context<T> {
   const s = signal<T>(defaultValue);
-  contexts.set(key, s);
+  defaultSignals.set(key, s);
   return { key, defaultValue };
+}
+
+function getHostSignal<T>(
+  host: object,
+  ctx: Context<T>,
+  initialValue: T,
+): SignalValue<T> {
+  let map = hostSignals.get(host);
+  if (!map) {
+    map = new Map<symbol, unknown>();
+    hostSignals.set(host, map);
+  }
+  let scoped = map.get(ctx.key) as SignalValue<T> | undefined;
+  if (!scoped) {
+    scoped = signal<T>(initialValue) as unknown as SignalValue<T>;
+    map.set(ctx.key, scoped);
+  }
+  return scoped;
 }
 
 export function provideContext<T>(
@@ -30,29 +51,46 @@ export function provideContext<T>(
   ctx: Context<T>,
   value: T,
 ): void {
-  const s = contexts.get(ctx.key);
-  if (s && typeof s === 'object' && 'value' in s) {
-    (s as { value: T }).value = value;
+  const scoped = getHostSignal(host, ctx, value);
+  scoped.value = value;
+  (host as unknown as Record<symbol, unknown>)[ctx.key] = scoped;
+}
+
+function findProvidedSignal<T>(
+  host: HTMLElement | undefined,
+  ctx: Context<T>,
+): SignalValue<T> | undefined {
+  let current: Node | null | undefined = host;
+  while (current) {
+    const candidate = (current as unknown as Record<symbol, unknown>)[ctx.key];
+    if (candidate && typeof candidate === 'object' && 'value' in candidate) {
+      return candidate as SignalValue<T>;
+    }
+    current = current.parentNode;
+    if (!current) {
+      const root = host?.getRootNode?.();
+      current = root instanceof ShadowRoot ? root.host : null;
+    }
   }
-  (host as unknown as Record<symbol, unknown>)[ctx.key] = value;
+  return undefined;
 }
 
 /**
  * Consume a SignalContext value reactively.
  *
- * v0.26.1 (ADR-0062): Returns the SOURCE signal from the central Map,
+ * Returns the nearest scoped signal, then the default context signal.
  * not a copy. provideContext updates Map signal → consumer effect()
  * auto-tracks → DOM updates. No DOM walking needed.
  */
 export function consumeContext<T>(
   ctx: Context<T>,
-): { value: T; subscribe(fn: (v: T) => void): () => void } {
-  const s = contexts.get(ctx.key);
-  if (s) {
-    return s as { value: T; subscribe(fn: (v: T) => void): () => void };
+  host?: HTMLElement,
+): SignalValue<T> {
+  const scoped = findProvidedSignal(host, ctx);
+  if (scoped) {
+    return scoped;
   }
-  return signal(ctx.defaultValue) as unknown as {
-    value: T;
-    subscribe(fn: (v: T) => void): () => void;
-  };
+  const s = defaultSignals.get(ctx.key);
+  if (s) return s as SignalValue<T>;
+  return signal(ctx.defaultValue) as unknown as SignalValue<T>;
 }

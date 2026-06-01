@@ -49,47 +49,47 @@ async function main() {
   // ─── Output ────────────────────────────────────────────────────────
 
   if (flags.json) {
-    console.log(JSON.stringify(report, null, 2));
+    console.info(JSON.stringify(report, null, 2));
   } else {
     // Human-readable output
     const pkgInfo = report.packageName
       ? `${report.packageName}${report.version ? ` v${report.version}` : ''}`
       : 'unknown package';
-    console.log(`\n  Manifest: ${pkgInfo}`);
-    console.log(`  Schema:   ${report.schemaVersion || 'unknown'}`);
-    console.log(`  Valid:    ${report.valid ? '✅ yes' : '❌ no'}`);
-    console.log(`  Tier:     ${report.compatibility}`);
-    console.log(`  Tags:     ${report.tags.length}`);
+    console.info(`\n  Manifest: ${pkgInfo}`);
+    console.info(`  Schema:   ${report.schemaVersion || 'unknown'}`);
+    console.info(`  Valid:    ${report.valid ? '✅ yes' : '❌ no'}`);
+    console.info(`  Tier:     ${report.compatibility}`);
+    console.info(`  Tags:     ${report.tags.length}`);
 
     if (report.errors.length > 0) {
-      console.log(`\n  Errors (${report.errors.length}):`);
+      console.info(`\n  Errors (${report.errors.length}):`);
       for (const err of report.errors) {
         const tag = err.tagName ? ` [${err.tagName}]` : '';
-        console.log(`    ❌ ${err.code}${tag}: ${err.message}`);
-        if (err.fix) console.log(`       Fix: ${err.fix}`);
+        console.info(`    ❌ ${err.code}${tag}: ${err.message}`);
+        if (err.fix) console.info(`       Fix: ${err.fix}`);
       }
     }
 
     if (report.warnings.length > 0) {
-      console.log(`\n  Warnings (${report.warnings.length}):`);
+      console.info(`\n  Warnings (${report.warnings.length}):`);
       for (const warn of report.warnings) {
         const tag = warn.tagName ? ` [${warn.tagName}]` : '';
-        console.log(`    ⚠️  ${warn.code}${tag}: ${warn.message}`);
-        if (warn.fix) console.log(`       Fix: ${warn.fix}`);
+        console.info(`    ⚠️  ${warn.code}${tag}: ${warn.message}`);
+        if (warn.fix) console.info(`       Fix: ${warn.fix}`);
       }
     }
 
     if (report.tags.length > 0) {
-      console.log(`\n  Components:`);
+      console.info(`\n  Components:`);
       for (const tag of report.tags) {
         const status = tag.valid ? '✅' : '❌';
         const ssr = tag.ssr !== undefined ? ` ssr=${tag.ssr}` : '';
         const dsd = tag.dsd !== undefined ? ` dsd=${tag.dsd}` : '';
-        console.log(`    ${status} <${tag.tagName}> - ${tag.compatibility}${ssr}${dsd}`);
+        console.info(`    ${status} <${tag.tagName}> - ${tag.compatibility}${ssr}${dsd}`);
       }
     }
 
-    console.log();
+    console.info();
   }
 
   // Strict mode: fail on warnings too

@@ -22,7 +22,7 @@
  * ```html
  * <less-input placeholder="Enter text"></less-input>
  * <less-input type="email" label="Email"></less-input>
- * <form onsubmit="console.log(new FormData(this))">
+ * <form onsubmit="console.info(new FormData(this))">
  *   <less-input name="username" label="Username"></less-input>
  *   <button type="submit">Submit</button>
  * </form>

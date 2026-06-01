@@ -32,7 +32,7 @@ export const SHOW_TAG: unique symbol = Symbol.for('lessjs.show');
 export const FOR_TAG: unique symbol = Symbol.for('lessjs.for');
 
 /**
- * v0.26.1 (ADR-0059): Show — conditional rendering factory.
+ * Show conditional rendering factory (ADR-0059).
  *
  * Returns a VNode with the internal SHOW_TAG symbol so renderToDom
  * can intercept it as a control flow directive. Exported as a
@@ -45,7 +45,7 @@ export function Show(props: { when: unknown; children?: unknown }): VNode {
 }
 
 /**
- * v0.26.1 (ADR-0059): For — list rendering factory.
+ * For list rendering factory (ADR-0059).
  *
  * Usage: <For each={this.#items}>{(item) => <li>{item.name}</li>}</For>
  */

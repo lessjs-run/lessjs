@@ -103,10 +103,12 @@ export function renderDsdStream(
         for (const component of components) {
           const output = await renderDsd(
             component.tagName,
-            component.componentClass,
-            component.props ?? {},
-            component.sourceInfo,
-            component.dsdOptions,
+            {
+              componentClass: component.componentClass,
+              props: component.props ?? {},
+              sourceInfo: component.sourceInfo,
+              dsdOptions: component.dsdOptions,
+            },
           );
           for (const error of output.errors) {
             encoderMetrics.errorCount++;

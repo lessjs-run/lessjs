@@ -1,6 +1,6 @@
 # @lessjs/core
 
-Pure LessJS runtime package (v0.27.0).
+Pure LessJS runtime package.
 
 `@lessjs/core` owns the platform-facing runtime primitives:
 

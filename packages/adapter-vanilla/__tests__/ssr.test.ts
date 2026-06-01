@@ -7,11 +7,11 @@ import {
   installVanillaAdapter,
   uninstallVanillaAdapter,
 } from '../src/ssr.ts';
-import { getAdapter } from '@lessjs/core';
+import { getDefaultRegistry } from '@lessjs/core';
 
 Deno.test('installVanillaAdapter registers vanilla adapter', () => {
   installVanillaAdapter();
-  const adapter = getAdapter('vanilla');
+  const adapter = getDefaultRegistry().get('vanilla');
   assertExists(adapter);
   assertEquals(adapter.name, 'vanilla');
   // Clean up
@@ -21,7 +21,7 @@ Deno.test('installVanillaAdapter registers vanilla adapter', () => {
 Deno.test('installVanillaAdapter is idempotent', () => {
   installVanillaAdapter();
   installVanillaAdapter(); // second call should be no-op
-  const adapter = getAdapter('vanilla');
+  const adapter = getDefaultRegistry().get('vanilla');
   assertExists(adapter);
   assertEquals(adapter.name, 'vanilla');
   uninstallVanillaAdapter();
@@ -30,14 +30,14 @@ Deno.test('installVanillaAdapter is idempotent', () => {
 Deno.test('uninstallVanillaAdapter removes the adapter', () => {
   installVanillaAdapter();
   uninstallVanillaAdapter();
-  // After uninstall, getAdapter() returns the last registered (undefined)
-  const adapter = getAdapter();
+  // After uninstall, the default registry returns no adapter.
+  const adapter = getDefaultRegistry().get();
   assertEquals(adapter, undefined);
 });
 
 Deno.test('vanilla adapter isTemplate returns false for strings', () => {
   installVanillaAdapter();
-  const adapter = getAdapter('vanilla');
+  const adapter = getDefaultRegistry().get('vanilla');
   assertExists(adapter);
   assertEquals(adapter.isTemplate?.('hello'), false);
   assertEquals(adapter.isTemplate?.(42), false);
@@ -47,7 +47,7 @@ Deno.test('vanilla adapter isTemplate returns false for strings', () => {
 
 Deno.test('vanilla adapter render converts to string', async () => {
   installVanillaAdapter();
-  const adapter = getAdapter('vanilla');
+  const adapter = getDefaultRegistry().get('vanilla');
   assertExists(adapter);
   const result = await adapter.render?.('hello world', 'test-element');
   assertEquals(result, 'hello world');

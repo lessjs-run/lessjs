@@ -98,7 +98,7 @@ Deno.test('create-less: deno.json maps LessJS package imports (v0.23 runtime fac
   assertEquals(denoJson.imports['alien-signals'], 'npm:alien-signals@^3.2.0');
   assertEquals(denoJson.imports['@deno/vite-plugin'], 'npm:@deno/vite-plugin');
   assertEquals(denoJson.imports['entities'], 'npm:entities@^4.5.0');
-  assertEquals(denoJson.imports['hono'], 'npm:hono@^4');
+  assertEquals(denoJson.imports['hono'], 'npm:hono@4.12.23');
   assertEquals(denoJson.imports['@lessjs/app'], 'jsr:@lessjs/app@^${v.app}');
   assertEquals(denoJson.imports['@lessjs/runtime'], 'jsr:@lessjs/runtime@^${v.runtime}');
   assertEquals(denoJson.imports['@lessjs/ui'], 'jsr:@lessjs/ui@^${v.ui}');
@@ -253,7 +253,7 @@ Deno.test('create-less: generated project builds through the one-command pipelin
     denoJson.imports['lit'] = 'npm:lit@^3.2.0';
     denoJson.imports['vite'] = 'npm:vite@8.0.10';
     denoJson.imports['@deno/vite-plugin'] = 'npm:@deno/vite-plugin';
-    denoJson.imports['hono'] = 'npm:hono@^4';
+    denoJson.imports['hono'] = 'npm:hono@4.12.23';
     denoJson.imports['@hono/vite-dev-server'] = 'npm:@hono/vite-dev-server@^0.25.3';
     denoJson.imports['entities'] = 'npm:entities@^4';
     denoJson.imports['entities/'] = 'npm:entities@^4/';

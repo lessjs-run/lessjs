@@ -160,6 +160,14 @@ Deno.test('buildHeadExtras: returns headExtras directly when provided', () => {
   assertEquals(result.allowHeadExtrasScripts, false);
 });
 
+Deno.test('buildHeadExtras: sanitizes unsafe direct headExtras markup', () => {
+  const result = buildHeadExtras({
+    headExtras: '<meta name="x" content="ok"><link rel="stylesheet" href="javascript:bad">',
+  });
+  assertStringIncludes(result.headExtras!, '<meta name="x" content="ok" />');
+  assertEquals(result.headExtras!.includes('javascript:'), false);
+});
+
 Deno.test('buildHeadExtras: rejects script in headExtras', () => {
   assertThrows(
     () => buildHeadExtras({ headExtras: '<script src="/x.js"></script>' }),
@@ -245,6 +253,22 @@ Deno.test('buildHeadExtras: stylesheets with custom attrs', () => {
   assertStringIncludes(result.headExtras!, 'data-theme="dark"');
 });
 
+Deno.test('buildHeadExtras: rejects event handler attrs on structured stylesheet entries', () => {
+  assertThrows(
+    () =>
+      buildHeadExtras({
+        inject: {
+          stylesheets: [{
+            href: 'https://cdn.example.com/print.css',
+            attrs: { onload: 'alert(1)' },
+          }],
+        },
+      }),
+    Error,
+    'Unsafe attribute',
+  );
+});
+
 Deno.test('buildHeadExtras: stylesheets with boolean attr', () => {
   const result = buildHeadExtras({
     inject: {
@@ -323,13 +347,29 @@ Deno.test('buildHeadExtras: scripts with custom attrs', () => {
   assertStringIncludes(result.headExtras!, 'data-worker="main"');
 });
 
+Deno.test('buildHeadExtras: rejects event handler attrs on structured script entries', () => {
+  assertThrows(
+    () =>
+      buildHeadExtras({
+        inject: {
+          scripts: [{
+            src: 'https://cdn.example.com/worker.js',
+            attrs: { onerror: 'alert(1)' },
+          }],
+        },
+      }),
+    Error,
+    'Unsafe attribute',
+  );
+});
+
 Deno.test('buildHeadExtras: headFragments are included verbatim', () => {
   const result = buildHeadExtras({
     inject: {
       headFragments: ['<meta name="theme-color" content="#000">'],
     },
   });
-  assertStringIncludes(result.headExtras!, '<meta name="theme-color" content="#000">');
+  assertStringIncludes(result.headExtras!, '<meta name="theme-color" content="#000" />');
 });
 
 Deno.test('buildHeadExtras: headFragments reject script tags', () => {
@@ -343,6 +383,17 @@ Deno.test('buildHeadExtras: headFragments reject script tags', () => {
     Error,
     'inject.headFragments must not contain <script> tags',
   );
+});
+
+Deno.test('buildHeadExtras: sanitizes unsafe headFragments markup', () => {
+  const result = buildHeadExtras({
+    inject: {
+      headFragments: ['<meta name="x" content="ok"><img src=x onerror=alert(1)>'],
+    },
+  });
+  assertStringIncludes(result.headExtras!, '<meta name="x" content="ok" />');
+  assertEquals(result.headExtras!.includes('<img'), false);
+  assertEquals(result.headExtras!.includes('onerror'), false);
 });
 
 Deno.test('buildHeadExtras: order is headFragments → stylesheets → scripts', () => {
@@ -375,7 +426,7 @@ Deno.test('buildHeadExtras: full inject with all three types', () => {
       ],
     },
   });
-  assertStringIncludes(result.headExtras!, '<meta charset="utf-8">');
+  assertStringIncludes(result.headExtras!, '<meta charset="utf-8" />');
   assertStringIncludes(result.headExtras!, '<meta name="viewport"');
   assertStringIncludes(result.headExtras!, 'base.css');
   assertStringIncludes(result.headExtras!, 'theme.css');

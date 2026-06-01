@@ -50,13 +50,13 @@ function main() {
   const baseDir = `${cwd}/hub-index`;
   const indexPath = `${baseDir}/index.json`;
 
-  console.log(`\n  Hub Index Updater`);
-  console.log(`  Base: ${baseDir}\n`);
+  console.info(`\n  Hub Index Updater`);
+  console.info(`  Base: ${baseDir}\n`);
 
   // Load records
   const records = loadRecords(baseDir);
   if (records.length === 0) {
-    console.log(`  ⚠️  No package records found in ${baseDir}/packages/\n`);
+    console.info(`  ⚠️  No package records found in ${baseDir}/packages/\n`);
     Deno.exit(0);
   }
 
@@ -81,10 +81,10 @@ function main() {
 
   if (needsUpdate) {
     Deno.writeTextFileSync(indexPath, newIndexJson);
-    console.log(`  🔄 Index updated: ${records.length} package(s)\n`);
+    console.info(`  🔄 Index updated: ${records.length} package(s)\n`);
     Deno.exit(0);
   } else {
-    console.log(`  ✅ Index already up to date (${records.length} package(s))\n`);
+    console.info(`  ✅ Index already up to date (${records.length} package(s))\n`);
     Deno.exit(0);
   }
 }

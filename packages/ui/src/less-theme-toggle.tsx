@@ -160,7 +160,7 @@ export class LessThemeToggle extends DsdElement {
   }
 
   override render(): ReturnType<typeof DsdElement.prototype.render> {
-    // v0.26.1 (ADR-0062): Zero signal.value reads in render().
+    // Zero signal.value reads in render (ADR-0062).
     // data-theme is passed as a signal prop → applyProps creates
     // effect binding that updates the attribute when theme changes.
     // CSS selectors ([data-theme="light"]) handle icon visibility.

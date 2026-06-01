@@ -67,6 +67,10 @@ export { CORE_SUBPATHS, VIRTUAL_CORE_PREFIX } from './subpath-resolver.js';
 export { assertNoScriptTags, buildHeadExtras, validateSafeUrl } from './head-injection.js';
 export type { HeadExtrasResult } from './head-injection.js';
 
+// ─── MDX integration ──────────────────────────────────────────────
+export { lessMdx, mdxPlugin } from './plugin-mdx.js';
+export type { LessMdxPluginOptions } from './plugin-mdx.js';
+
 // ─── Optional package stubs ──────────────────────────────────────
 export { OPTIONAL_PACKAGE_STUBS } from './optional-package-stubs.js';
 

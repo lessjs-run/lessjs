@@ -15,8 +15,63 @@ import type { FrameworkOptions } from '@lessjs/core';
 import { LessError } from '@lessjs/core/errors';
 import { escapeAttr as escapeHtmlAttr } from '@lessjs/core';
 import { createLogger } from '@lessjs/core/logger';
+import sanitizeHtml, { type IOptions as SanitizeHtmlOptions } from 'sanitize-html';
 
 const log = createLogger('adapter-vite:head-injection');
+
+const SAFE_SCHEMES = ['http', 'https', 'mailto', 'tel', 'sms'];
+const HEAD_SANITIZE_OPTIONS: SanitizeHtmlOptions = {
+  allowedTags: ['base', 'link', 'meta', 'noscript', 'style', 'title'],
+  allowedAttributes: {
+    base: ['href', 'target'],
+    link: [
+      'as',
+      'crossorigin',
+      'href',
+      'hreflang',
+      'imagesizes',
+      'imagesrcset',
+      'integrity',
+      'media',
+      'referrerpolicy',
+      'rel',
+      'sizes',
+      'title',
+      'type',
+    ],
+    meta: ['charset', 'content', 'http-equiv', 'name', 'property'],
+    noscript: [],
+    style: ['media', 'nonce', 'title'],
+    title: [],
+  },
+  allowedSchemes: SAFE_SCHEMES,
+  allowedSchemesByTag: {
+    link: SAFE_SCHEMES,
+    base: ['http', 'https'],
+  },
+  allowedSchemesAppliedToAttributes: ['href', 'src', 'action', 'formaction', 'xlink:href'],
+  allowProtocolRelative: false,
+  allowVulnerableTags: true,
+};
+
+function sanitizeHeadHtml(html: string, context: string): string {
+  const sanitized = sanitizeHtml(html, HEAD_SANITIZE_OPTIONS);
+  if (sanitized.trim() !== html.trim()) {
+    log.warn(`${context} contained unsafe head markup; sanitized before injection`);
+  }
+  return sanitized;
+}
+
+function assertSafeAttributeName(name: string, context: string): void {
+  if (!/^[A-Za-z_:][A-Za-z0-9_.:-]*$/.test(name) || /^on/i.test(name)) {
+    throw new LessError(
+      `Unsafe attribute in ${context}: "${name}"`,
+      'UNSAFE_HEAD_INJECTION',
+      400,
+      false,
+    );
+  }
+}
 
 /**
  * Assert that HTML content does NOT contain <script> tags.
@@ -96,7 +151,10 @@ export function buildHeadExtras(options: FrameworkOptions): HeadExtrasResult {
   // If direct headExtras provided, validate and return
   if (options.headExtras) {
     assertNoScriptTags(options.headExtras, 'headExtras');
-    return { headExtras: options.headExtras, allowHeadExtrasScripts: false };
+    return {
+      headExtras: sanitizeHeadHtml(options.headExtras, 'headExtras'),
+      allowHeadExtrasScripts: false,
+    };
   }
 
   // No inject config - no head extras
@@ -110,7 +168,7 @@ export function buildHeadExtras(options: FrameworkOptions): HeadExtrasResult {
   // before scripts that reference them (e.g. theme-init.js removes anti-flash).
   for (const frag of options.inject.headFragments || []) {
     assertNoScriptTags(frag, 'inject.headFragments');
-    fragments.push(frag);
+    fragments.push(sanitizeHeadHtml(frag, 'inject.headFragments'));
   }
 
   // Stylesheets second
@@ -127,6 +185,7 @@ export function buildHeadExtras(options: FrameworkOptions): HeadExtrasResult {
       if (entry.attrs) {
         for (const [k, v] of Object.entries(entry.attrs)) {
           if (v !== undefined && v !== false) {
+            assertSafeAttributeName(k, 'inject.stylesheets.attrs');
             linkAttrs.push(
               v === true
                 ? escapeHtmlAttr(k)
@@ -148,9 +207,14 @@ export function buildHeadExtras(options: FrameworkOptions): HeadExtrasResult {
       ...(!isObjectScript || script.type ? { type: isObjectScript ? script.type! : 'module' } : {}),
       ...(isObjectScript && script.defer ? { defer: true } : {}),
       ...(isObjectScript && script.async ? { async: true } : {}),
-      ...(isObjectScript ? (script.attrs ?? {}) : {}),
       src,
     };
+    if (isObjectScript && script.attrs) {
+      for (const [k, v] of Object.entries(script.attrs)) {
+        assertSafeAttributeName(k, 'inject.scripts.attrs');
+        attrs[k] = v;
+      }
+    }
     // H-04/05 fix: Add SRI attributes for CDN security
     if (isObjectScript) {
       if (script.integrity) attrs.integrity = script.integrity;

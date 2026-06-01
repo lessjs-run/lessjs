@@ -92,7 +92,7 @@ async function resolveVersions(): Promise<Record<string, string>> {
   }
 
   // Remote: fetch all versions from JSR in parallel
-  console.log('Resolving package versions from JSR...');
+  console.info('Resolving package versions from JSR...');
   const jsrNames: Record<string, string> = {
     core: 'core',
     adapterLit: 'adapter-lit',
@@ -122,7 +122,7 @@ node_modules/
     "alien-signals": "npm:alien-signals@^3.2.0",
     "@deno/vite-plugin": "npm:@deno/vite-plugin",
     "entities": "npm:entities@^4.5.0",
-    "hono": "npm:hono@^4",
+    "hono": "npm:hono@4.12.23",
     "@lessjs/app": "jsr:@lessjs/app@^${v.app}",
     "@lessjs/runtime": "jsr:@lessjs/runtime@^${v.runtime}",
     "@lessjs/ui": "jsr:@lessjs/ui@^${v.ui}",
@@ -304,12 +304,12 @@ async function main() {
     const fullPath = join(targetDir, path);
     await Deno.mkdir(dirname(fullPath), { recursive: true });
     await Deno.writeTextFile(fullPath, content);
-    console.log(`  created ${path}`);
+    console.info(`  created ${path}`);
   }
 
-  console.log(`\nLessJS project created at ./${relativeTarget}/`);
-  console.log(`\n  cd ${relativeTarget}`);
-  console.log('  deno task dev');
+  console.info(`\nLessJS project created at ./${relativeTarget}/`);
+  console.info(`\n  cd ${relativeTarget}`);
+  console.info('  deno task dev');
 }
 
 main();

@@ -138,12 +138,10 @@ export default defineConfig({
           {
             href: 'https://cdn.jsdelivr.net/npm/open-props@1.7.20/open-props.min.css',
             integrity: 'sha384-fsyUJwnN3qLArJUL5oaEYS3/WnhCmI4K5x+oB8wFigOMTJaIvys56ozH3+nE/qcf',
-            attrs: { media: 'print', onload: "this.media='all'" },
           },
           {
             href: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css',
             integrity: 'sha384-rCCjoCPCsizaAAYVoz1Q0CmCTvnctK0JkfCSjx7IIxexTBg+uCKtFYycedUjMyA2',
-            attrs: { media: 'print', onload: "this.media='all'" },
           },
         ],
         // H-04 fix: All CDN scripts now have SRI integrity hashes
@@ -217,8 +215,8 @@ export default defineConfig({
         },
         nav: {
           routesDir: 'app/routes',
-          // v0.26: Minimal headerNav — less-layout auto-filters sidebar.
-          // TODO(v0.27): derive from route meta scanning.
+          // Minimal headerNav; less-layout auto-filters sidebar.
+          // TODO: derive from route meta scanning.
           headerNav: [
             { href: '/guide/getting-started', label: 'Guide' },
             { href: '/apilist', label: 'API' },

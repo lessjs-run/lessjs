@@ -28,6 +28,7 @@ import { formatSnapshotForDisplay, renderSnapshotLit } from './snapshot-renderer
 import { renderBatchWithPlaywright } from './snapshot-playwright.ts';
 import type { PlaywrightRenderOptions } from './snapshot-playwright.ts';
 import { DEMO_ATTRS, DEMO_SLOTS } from './demo-config.ts';
+import { toCdnUrl } from './cdn-url.ts';
 
 // ─── Known WC Packages ──────────────────────────────────────────────────
 
@@ -313,10 +314,10 @@ function buildSnapshotMeta(pkg: KnownWcPackage, tag: string): HubSnapshotMeta {
   let themeCssUrl: string | undefined;
   if (pkg.source === 'npm') {
     // npm packages: full bundle import works in iframe
-    importUrl = `https://esm.sh/${versionedSpec}`;
+    importUrl = toCdnUrl(versionedSpec, { source: 'npm' });
   } else {
     // Local/JSR packages: per-component subpath to avoid heavy dependencies
-    importUrl = `https://esm.sh/jsr/${versionedSpec}/${tag}`;
+    importUrl = toCdnUrl(versionedSpec, { source: 'jsr', tag });
   }
 
   // Special: Shoelace theme CSS
@@ -448,7 +449,7 @@ export async function scanInstalledPackages(): Promise<ScanResult> {
   let playwrightResults: Map<string, { html: string; success: boolean; error?: string }> =
     new Map();
   if (playwrightItems.length > 0) {
-    console.log(`\n🎬 Rendering ${playwrightItems.length} components via Playwright...`);
+    console.info(`\n🎬 Rendering ${playwrightItems.length} components via Playwright...`);
     try {
       playwrightResults = await renderBatchWithPlaywright({ items: playwrightItems });
     } catch (e) {
@@ -621,16 +622,16 @@ export async function writeScanOutput(
     );
   }
 
-  console.log(`  ✅ Written ${result.records.length} records to ${outputDir}`);
-  console.log(`  📄 index.json`);
+  console.info(`  ✅ Written ${result.records.length} records to ${outputDir}`);
+  console.info(`  📄 index.json`);
   for (const record of result.records) {
     const fullName = record.scope ? `${record.scope}/${record.name}` : record.name;
-    console.log(`  📄 packages/${fullName}.json`);
+    console.info(`  📄 packages/${fullName}.json`);
   }
   if (result.errors.length > 0) {
-    console.log(`  ⚠️  ${result.errors.length} error(s):`);
+    console.info(`  ⚠️  ${result.errors.length} error(s):`);
     for (const err of result.errors) {
-      console.log(`     ${err}`);
+      console.info(`     ${err}`);
     }
   }
 }

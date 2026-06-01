@@ -1,20 +1,19 @@
 /**
  * @lessjs/core - Adapter Registry
  *
- * Module-level adapter storage for framework-specific rendering.
+ * Adapter registry storage for framework-specific rendering.
  *
  * Supports named adapters via RendererProtocol.
- * The last registered adapter is the default (returned by getAdapter()).
- * Named lookup is available via getAdapter(name).
+ * The last registered adapter is the default. Named lookup is available via
+ * AdapterRegistry.get(name).
  *
  * With viteBuild(ssr:true, noExternal) producing a self-contained ESM bundle,
  * all virtual modules resolve at compile time and there is only one module
  * instance - so a plain module variable replaces the former globalThis bridge.
  *
- * @warning Do NOT call registerAdapter() manually more than once unless you
- * are intentionally switching adapters. Each call overwrites the previous
- * adapter. In normal usage, the framework calls registerAdapter() automatically
- * via installLitAdapter() or equivalent.
+ * @warning Do NOT mutate the default registry manually more than once unless
+ * you are intentionally switching adapters. In normal usage, framework adapter
+ * installers update the default registry automatically.
  */
 
 import type { RendererProtocol } from './types.js';
@@ -61,19 +60,7 @@ export function createAdapterRegistry(): AdapterRegistry {
 
 const defaultAdapterRegistry = createAdapterRegistry();
 
-/** Register a render adapter explicitly. */
-export function registerAdapter(
-  adapter: RendererProtocol | undefined,
-): void {
-  defaultAdapterRegistry.register(adapter);
-}
-
-/** Get the currently registered (default) adapter, or look up by name. */
-export function getAdapter(name?: string): RendererProtocol | undefined {
-  return defaultAdapterRegistry.get(name);
-}
-
-/** Get all registered named adapters. */
-export function getRegisteredAdapters(): readonly RendererProtocol[] {
-  return defaultAdapterRegistry.getAll();
+/** Get the default process-local render adapter registry. */
+export function getDefaultRegistry(): AdapterRegistry {
+  return defaultAdapterRegistry;
 }

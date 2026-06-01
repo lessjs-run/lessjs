@@ -5,7 +5,7 @@
  * signal(), computed(), effect() - the primary API surface.
  *
  * v0.22.1: Alien Signals is the only engine. TC39 polyfill removed.
- * v0.26.1: Expose effectScope for component-level effect lifecycle.
+ * effectScope exposes component-level effect lifecycle management.
  *
  * @module @lessjs/signals/framework
  */

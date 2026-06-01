@@ -8,7 +8,7 @@ import {
   renderReactToString,
   uninstallReactAdapter,
 } from '../src/ssr.ts';
-import { getAdapter } from '@lessjs/core';
+import { getDefaultRegistry } from '@lessjs/core';
 
 Deno.test('isReactElement detects React elements', () => {
   // Create a minimal React element structure
@@ -35,7 +35,7 @@ Deno.test('isReactElement returns false for Lit TemplateResult-like', () => {
 
 Deno.test('installReactAdapter registers react adapter', () => {
   installReactAdapter();
-  const adapter = getAdapter('react');
+  const adapter = getDefaultRegistry().get('react');
   assertExists(adapter);
   assertEquals(adapter.name, 'react');
   uninstallReactAdapter();
@@ -44,7 +44,7 @@ Deno.test('installReactAdapter registers react adapter', () => {
 Deno.test('installReactAdapter is idempotent', () => {
   installReactAdapter();
   installReactAdapter();
-  const adapter = getAdapter('react');
+  const adapter = getDefaultRegistry().get('react');
   assertExists(adapter);
   assertEquals(adapter.name, 'react');
   uninstallReactAdapter();
@@ -53,13 +53,13 @@ Deno.test('installReactAdapter is idempotent', () => {
 Deno.test('uninstallReactAdapter removes the adapter', () => {
   installReactAdapter();
   uninstallReactAdapter();
-  const adapter = getAdapter();
+  const adapter = getDefaultRegistry().get();
   assertEquals(adapter, undefined);
 });
 
 Deno.test('react adapter isTemplate detects React elements', () => {
   installReactAdapter();
-  const adapter = getAdapter('react');
+  const adapter = getDefaultRegistry().get('react');
   assertExists(adapter);
 
   const reactElement = {
@@ -80,7 +80,7 @@ Deno.test('renderReactToString returns string for non-React values', async () =>
 
 Deno.test('react adapter extractStyles returns undefined', () => {
   installReactAdapter();
-  const adapter = getAdapter('react');
+  const adapter = getDefaultRegistry().get('react');
   assertExists(adapter);
   class TestComponent {}
   assertEquals(

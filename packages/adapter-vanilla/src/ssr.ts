@@ -15,7 +15,7 @@
  * @module @lessjs/adapter-vanilla/ssr
  */
 
-import { registerAdapter } from '@lessjs/core';
+import { getDefaultRegistry } from '@lessjs/core';
 import { createLogger } from '@lessjs/core/logger';
 
 const log = createLogger('adapter-vanilla');
@@ -72,7 +72,7 @@ let _installed = false;
 export function installVanillaAdapter(): void {
   if (_installed) return;
 
-  registerAdapter({
+  getDefaultRegistry().register({
     name: 'vanilla',
     // Vanilla components always return strings - no template detection needed.
     // core's renderDsd handles string output directly.
@@ -95,6 +95,6 @@ export function installVanillaAdapter(): void {
  * Resets the adapter so core's renderDsd reverts to its default behavior.
  */
 export function uninstallVanillaAdapter(): void {
-  registerAdapter(undefined);
+  getDefaultRegistry().register(undefined);
   _installed = false;
 }

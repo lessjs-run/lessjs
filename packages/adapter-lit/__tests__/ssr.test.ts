@@ -110,14 +110,14 @@ Deno.test('extractLitStyles reads single and array CSSResult values', () => {
   assertStringIncludes(styles, '.label{color:red;}');
 });
 
-Deno.test('installLitAdapter registers adapter via registerAdapter and uninstall clears it', async () => {
+Deno.test('installLitAdapter registers adapter in the default registry and uninstall clears it', async () => {
   uninstallLitAdapter();
   installLitAdapter();
   installLitAdapter();
 
-  // Verify the adapter is functional by testing through the registered adapter
-  const { registerAdapter: _registerAdapter } = await import('@lessjs/core');
-  // Adapter is already registered by installLitAdapter
+  // Verify the adapter is functional by testing through the registered adapter.
+  const { getDefaultRegistry } = await import('@lessjs/core');
+  assertEquals(typeof getDefaultRegistry().register, 'function');
   // Test that Lit TemplateResult is recognized
   const result = html`
     <p>${'<x>'}</p>

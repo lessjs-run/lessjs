@@ -111,7 +111,7 @@ function isNothing(value: unknown): boolean {
 // ADR 0021: Always import from @lessjs/core main entry, never from subpaths.
 export { camelToKebab, escapeAttr, escapeHtml } from '@lessjs/core';
 import { camelToKebab, escapeAttr, escapeHtml } from '@lessjs/core';
-import { registerAdapter } from '@lessjs/core';
+import { getDefaultRegistry } from '@lessjs/core';
 import { createLogger } from '@lessjs/core/logger';
 
 const log = createLogger('core');
@@ -464,9 +464,8 @@ export function installLitAdapter(): void {
     return; // Already installed - idempotent
   }
 
-  // Use registerAdapter() - backed by a module-level variable in @lessjs/core,
-  // so the registration is shared within the self-contained SSR bundle.
-  registerAdapter({
+  // The default registry is shared within the self-contained SSR bundle.
+  getDefaultRegistry().register({
     name: 'lit',
     render: (result: unknown, tagName: string): Promise<string> => {
       return Promise.resolve(renderLitToString(result, tagName));
@@ -490,6 +489,6 @@ export function installLitAdapter(): void {
  * default behavior (only accepting string from render()).
  */
 export function uninstallLitAdapter(): void {
-  registerAdapter(undefined);
+  getDefaultRegistry().register(undefined);
   _installed = false;
 }

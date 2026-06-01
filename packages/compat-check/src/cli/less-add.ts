@@ -62,56 +62,56 @@ async function main() {
   });
 
   if (flags.json) {
-    console.log(JSON.stringify(plan, null, 2));
+    console.info(JSON.stringify(plan, null, 2));
   } else {
     // Human-readable output
     const dryTag = flags.dryRun ? ' (dry run)' : '';
-    console.log(
+    console.info(
       `\n  less add${dryTag}: ${plan.packageName}${plan.version ? ` v${plan.version}` : ''}`,
     );
-    console.log(`  ${'─'.repeat(50)}`);
+    console.info(`  ${'─'.repeat(50)}`);
 
     // Status updates
     for (const update of plan.statusUpdates) {
-      console.log(`  ${update}`);
+      console.info(`  ${update}`);
     }
 
     // Errors
     if (plan.errors.length > 0) {
-      console.log(`\n  ❌ Errors (${plan.errors.length}):`);
+      console.info(`\n  ❌ Errors (${plan.errors.length}):`);
       for (const err of plan.errors) {
-        console.log(`    • ${err}`);
+        console.info(`    • ${err}`);
       }
     }
 
     // Warnings
     if (plan.warnings.length > 0) {
-      console.log(`\n  ⚠️  Warnings (${plan.warnings.length}):`);
+      console.info(`\n  ⚠️  Warnings (${plan.warnings.length}):`);
       for (const warn of plan.warnings) {
-        console.log(`    • ${warn}`);
+        console.info(`    • ${warn}`);
       }
     }
 
     // Tags
     if (plan.tags.length > 0) {
-      console.log(`\n  📦 Tags (${plan.tags.length}):`);
+      console.info(`\n  📦 Tags (${plan.tags.length}):`);
       for (const tag of plan.tags) {
         const status = tag.valid ? '✅' : '❌';
-        console.log(`    ${status} <${tag.tagName}> - ${tag.compatibility}`);
+        console.info(`    ${status} <${tag.tagName}> - ${tag.compatibility}`);
       }
     }
 
     // File mutations
     if (plan.fileMutations.length > 0) {
-      console.log(`\n  📄 File mutations (${plan.fileMutations.length}):`);
+      console.info(`\n  📄 File mutations (${plan.fileMutations.length}):`);
       for (const mutation of plan.fileMutations) {
         const icon = mutation.type === 'add' ? '➕' : mutation.type === 'modify' ? '✏️' : '🗑️';
-        console.log(`    ${icon} [${mutation.type}] ${mutation.filePath}`);
-        console.log(`       ${mutation.description}`);
+        console.info(`    ${icon} [${mutation.type}] ${mutation.filePath}`);
+        console.info(`       ${mutation.description}`);
       }
     }
 
-    console.log();
+    console.info();
   }
 
   Deno.exit(plan.valid ? 0 : 1);

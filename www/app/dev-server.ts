@@ -89,6 +89,6 @@ app.get('*', async (c) => {
 
 // ── Start ───────────────────────────────────────────────────
 Deno.serve({ port: PORT }, app.fetch);
-console.log(`[dev:fast] Server running at http://localhost:${PORT}`);
-console.log(`[dev:fast] Serving static files from ${DIST_ROOT}/client/`);
-console.log(`[dev:fast] SSR bundle: ${SSR_ENTRY_PATH}`);
+console.info(`[dev:fast] Server running at http://localhost:${PORT}`);
+console.info(`[dev:fast] Serving static files from ${DIST_ROOT}/client/`);
+console.info(`[dev:fast] SSR bundle: ${SSR_ENTRY_PATH}`);

@@ -88,7 +88,7 @@ export default class BlogPostPage extends DsdElement {
             )
             : null}
           <p class='blog-date'>{post.frontmatter.date}</p>
-          <div class='blog-content' innerHTML={post.html}></div>
+          <div class='blog-content' innerHTML={post.html} rawHtml={true}></div>
           <div class='nav-row'>
             <a href='/blog' class='nav-link'>← 返回博客</a>
           </div>
@@ -129,7 +129,7 @@ export default class BlogPostPage extends DsdElement {
             )
             : null}
           <p class='blog-date'>{post.frontmatter.date}</p>
-          <div class='blog-content' innerHTML={post.html}></div>
+          <div class='blog-content' innerHTML={post.html} rawHtml={true}></div>
           <div class='nav-row'>
             <a href='/blog' class='nav-link'>← Back to Blog</a>
           </div>

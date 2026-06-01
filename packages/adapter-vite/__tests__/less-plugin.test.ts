@@ -48,12 +48,13 @@ function callLoad(plugin: unknown, id: string): unknown {
 
 // ─── Plugin Order & Structure ─────────────────────────────────
 
-Deno.test('lessPlugin: returns 9 plugins in correct order', () => {
+Deno.test('lessPlugin: returns 10 plugins in correct order', () => {
   const plugins = less();
-  assertEquals(plugins.length, 9);
+  assertEquals(plugins.length, 10);
 
   const names = plugins.map((p) => p.name);
   assertEquals(names, [
+    'less:mdx',
     'less:core',
     'less:generated-data',
     'less:core-resolve',
@@ -86,37 +87,37 @@ Deno.test('lessPlugin: defaults routesDir to app/routes', () => {
   const plugins = less({});
   // Default is applied internally - verify plugin creation succeeds
   assertExists(plugins);
-  assertEquals(plugins.length, 9);
+  assertEquals(plugins.length, 10);
 });
 
 Deno.test('lessPlugin: defaults islandsDir to app/islands', () => {
   const plugins = less({});
   assertExists(plugins);
-  assertEquals(plugins.length, 9);
+  assertEquals(plugins.length, 10);
 });
 
 Deno.test('lessPlugin: defaults componentsDir to app/components', () => {
   const plugins = less({});
   assertExists(plugins);
-  assertEquals(plugins.length, 9);
+  assertEquals(plugins.length, 10);
 });
 
 Deno.test('lessPlugin: respects custom routesDir', () => {
   const plugins = less({ routesDir: 'src/pages' });
   assertExists(plugins);
-  assertEquals(plugins.length, 9);
+  assertEquals(plugins.length, 10);
 });
 
 Deno.test('lessPlugin: respects custom islandsDir', () => {
   const plugins = less({ islandsDir: 'src/widgets' });
   assertExists(plugins);
-  assertEquals(plugins.length, 9);
+  assertEquals(plugins.length, 10);
 });
 
 Deno.test('lessPlugin: respects custom componentsDir', () => {
   const plugins = less({ componentsDir: 'src/ui' });
   assertExists(plugins);
-  assertEquals(plugins.length, 9);
+  assertEquals(plugins.length, 10);
 });
 
 // ─── Upgrade Strategy Default ─────────────────────────────────
@@ -158,12 +159,12 @@ Deno.test('lessPlugin: rejects script tags in inject.headFragments', () => {
 
 Deno.test('lessPlugin: handles empty options object', () => {
   const plugins = less({});
-  assertEquals(plugins.length, 9);
+  assertEquals(plugins.length, 10);
 });
 
 Deno.test('lessPlugin: handles undefined options', () => {
   const plugins = less();
-  assertEquals(plugins.length, 9);
+  assertEquals(plugins.length, 10);
 });
 
 // ─── Virtual Entry Plugin Behaviors ───────────────────────────
@@ -317,13 +318,13 @@ Deno.test('lessPlugin: dev server plugin is @hono/vite-dev-server', () => {
 Deno.test('lessPlugin: accepts packageIslands option', () => {
   const plugins = less({ packageIslands: ['@lessjs/ui'] });
   assertExists(plugins);
-  assertEquals(plugins.length, 9);
+  assertEquals(plugins.length, 10);
 });
 
 Deno.test('lessPlugin: accepts empty packageIslands', () => {
   const plugins = less({ packageIslands: [] });
   assertExists(plugins);
-  assertEquals(plugins.length, 9);
+  assertEquals(plugins.length, 10);
 });
 
 Deno.test('lessPlugin: accepts multiple packageIslands', () => {

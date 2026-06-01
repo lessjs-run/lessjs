@@ -54,6 +54,26 @@ function insertLightDomIntoDsdHost(html: string, tagName: string, lightDom: stri
   return html.slice(0, index) + lightDom + html.slice(index);
 }
 
+function sanitizeRawHtml(html: string): string {
+  return html
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/\s+on[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+    .replace(
+      /\s+(href|src|xlink:href|formaction)\s*=\s*("|')\s*(?:javascript|data|vbscript|file):[\s\S]*?\2/gi,
+      '',
+    )
+    .replace(
+      /\s+(href|src|xlink:href|formaction)\s*=\s*(?:javascript|data|vbscript|file):[^\s>]*/gi,
+      '',
+    );
+}
+
+function resolveInnerHtml(props: Record<string, unknown> | undefined): string | undefined {
+  if (props?.innerHTML === undefined) return undefined;
+  const value = String(unwrapSignalLike(props.innerHTML));
+  return props.rawHtml === true ? sanitizeRawHtml(value) : escapeHtml(value);
+}
+
 // ─── Attribute serialisation ──────────────────────────────────────────────────
 
 /**
@@ -75,7 +95,7 @@ function serializeAttrs(props: Record<string, unknown>): string {
   let result = '';
   for (const [key, value] of Object.entries(props)) {
     // Skip non-attribute props
-    if (key === 'children' || key === 'ref' || key === 'key') continue;
+    if (key === 'children' || key === 'ref' || key === 'key' || key === 'rawHtml') continue;
     // Skip event handlers
     if (key.startsWith('on') && typeof value === 'function') continue;
     // Skip all function values
@@ -226,7 +246,7 @@ export function renderToString(
         return renderToString(result, eventContext);
       }
     } catch (err) {
-      // v0.26.1 FIX: Previously this silently returned '', making SSR failures
+      // Previously this silently returned '', making SSR failures
       // invisible. Now we log the error so it's visible in build logs (e.g. CF Pages).
       console.error(
         `[LessJS/SSR] renderToString() failed for <${String(tag)}>:`,
@@ -243,11 +263,9 @@ export function renderToString(
   // Handlers map: onClick→click, onInput→input, onChange→change, onSubmit→submit, onKeydown→keydown
   const eventAttrs = serializeEventMarkers(props, eventContext);
 
-  // innerHTML prop: render as raw HTML content (build-time sanitized, ADR-0064)
-  const innerHTML = props?.innerHTML !== undefined
-    ? String(unwrapSignalLike(props.innerHTML))
-    : undefined;
-  // textContent prop: render signal/dynamic value as escaped child content (v0.27)
+  // innerHTML prop: escape by default; rawHtml=true opts into sanitized HTML.
+  const innerHTML = resolveInnerHtml(props);
+  // textContent prop: render signal/dynamic value as escaped child content.
   // Signal identity preserved via data-signal attribute for hydration.
   const textContent = props?.textContent !== undefined
     ? escapeHtml(String(unwrapSignalLike(props.textContent)))
@@ -380,8 +398,10 @@ export async function renderDsdTree(
     try {
       const dsdResult = await renderDsd(
         tagStr,
-        customElements.get(tagStr) as CustomElementConstructor,
-        props,
+        {
+          componentClass: customElements.get(tagStr) as CustomElementConstructor,
+          props,
+        },
       );
       const parts: string[] = [];
       for (const c of children) {
@@ -408,9 +428,7 @@ export async function renderDsdTree(
   const attrs = serializeAttrs(props);
   const eventAttrs = serializeEventMarkers(props, eventContext);
 
-  const innerHTML = props?.innerHTML !== undefined
-    ? String(unwrapSignalLike(props.innerHTML))
-    : undefined;
+  const innerHTML = resolveInnerHtml(props);
   const textContent = props?.textContent !== undefined
     ? escapeHtml(String(unwrapSignalLike(props.textContent)))
     : undefined;

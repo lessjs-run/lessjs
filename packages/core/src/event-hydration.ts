@@ -13,7 +13,20 @@ import { isVNode, type VNode } from './vnode.ts';
 
 const EVENT_PROP_RE = /^on[A-Z]/;
 const EVENT_TYPE_ALIASES: Record<string, string> = {
+  Dblclick: 'dblclick',
   DoubleClick: 'dblclick',
+  FocusIn: 'focusin',
+  FocusOut: 'focusout',
+  MouseEnter: 'mouseenter',
+  MouseLeave: 'mouseleave',
+  PointerCancel: 'pointercancel',
+  PointerDown: 'pointerdown',
+  PointerEnter: 'pointerenter',
+  PointerLeave: 'pointerleave',
+  PointerMove: 'pointermove',
+  PointerOut: 'pointerout',
+  PointerOver: 'pointerover',
+  PointerUp: 'pointerup',
 };
 
 export interface EventBindingRecord {

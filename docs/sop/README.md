@@ -39,8 +39,8 @@ have one SOP with:
 | v0.27.0 | [v0.27.0/](./v0.27.0/)                                                                       | Done     | Framework decoupling + reactive    |
 | v0.28.0 | [v0.28.0/](./v0.28.0/)                                                                       | Done     | Contracts & Tokens + Open Props    |
 | v0.28.1 | [v0.28.1/](./v0.28.1/)                                                                       | Done     | Hygiene convergence                |
-| v0.28.2 | [v0.28.2/](./v0.28.2/)                                                                       | Planned  | Deprecated purge + hardening       |
-| v0.28.3 | [v0.28.3/](./v0.28.3/)                                                                       | Deferred | Cleanup closure + MDX design       |
+| v0.28.2 | [v0.28.2/](./v0.28.2/)                                                                       | Done     | Deprecated purge + hardening       |
+| v0.28.3 | [v0.28.3/](./v0.28.3/)                                                                       | Done     | Cleanup closure + MDX design       |
 | v1.0.0  | [v1.0.0-general-purpose-engine.md](./v1.0.0-general-purpose-engine.md)                       | Vision   | API freeze                         |
 
 ## Operator Rules

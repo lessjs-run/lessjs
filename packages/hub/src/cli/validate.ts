@@ -151,38 +151,38 @@ function validateRecords(records: HubPackageRecord[], strict: boolean): Validate
 
 function printResult(result: ValidateResult, json: boolean) {
   if (json) {
-    console.log(JSON.stringify(result, null, 2));
+    console.info(JSON.stringify(result, null, 2));
     Deno.exit(result.errors.length > 0 ? 1 : 0);
   }
 
-  console.log(`\n  Hub Record Validator`);
-  console.log(`  ${result.total} record(s), ${result.passed} passed, ${result.failed} failed\n`);
+  console.info(`\n  Hub Record Validator`);
+  console.info(`  ${result.total} record(s), ${result.passed} passed, ${result.failed} failed\n`);
 
   if (result.errors.length > 0) {
-    console.log(`  ❌ Errors (${result.errors.length}):`);
+    console.info(`  ❌ Errors (${result.errors.length}):`);
     for (const err of result.errors) {
-      console.log(`     ${err}`);
+      console.info(`     ${err}`);
     }
   }
 
   if (result.warnings.length > 0) {
-    console.log(`  ⚠️  Warnings (${result.warnings.length}):`);
+    console.info(`  ⚠️  Warnings (${result.warnings.length}):`);
     for (const warn of result.warnings) {
-      console.log(`     ${warn}`);
+      console.info(`     ${warn}`);
     }
   }
 
   if (result.duplicateTags.length > 0) {
-    console.log(`  🔄 Duplicate tags:`);
+    console.info(`  🔄 Duplicate tags:`);
     for (const dup of result.duplicateTags) {
-      console.log(`     ${dup}`);
+      console.info(`     ${dup}`);
     }
   }
 
   if (result.errors.length === 0) {
-    console.log(`  ✅ All records valid.\n`);
+    console.info(`  ✅ All records valid.\n`);
   } else {
-    console.log(`\n`);
+    console.info(`\n`);
   }
 
   Deno.exit(result.errors.length > 0 ? 1 : 0);
