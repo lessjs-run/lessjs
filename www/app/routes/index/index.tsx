@@ -165,11 +165,11 @@ heroSheet.replaceSync(`
     .eyebrow { font-size: var(--font-size-000); }
   }
   :host([data-theme="dark"]) .swiss-grid {
-    background: linear-gradient(180deg, var(--gray-12) 0%, var(--gray-11) 100%);
+    background: linear-gradient(180deg, var(--gray-0) 0%, var(--gray-1) 100%);
   }
-  :host([data-theme="dark"]) .terminal { background: var(--gray-11); }
-  :host([data-theme="dark"]) .terminal-head { background: var(--gray-10); }
-  :host([data-theme="dark"]) .term-cmd { color: var(--gray-1); }
+  :host([data-theme="dark"]) .terminal { background: var(--gray-1); }
+  :host([data-theme="dark"]) .terminal-head { background: var(--gray-2); }
+  :host([data-theme="dark"]) .term-cmd { color: var(--gray-10); }
 `);
 
 export class DocsHome extends DsdElement {

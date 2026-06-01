@@ -162,4 +162,64 @@ test.describe('Theme Toggle', () => {
     });
     expect(themeAfter2).toBe(themeBefore);
   });
+
+  test('homepage surface colors follow the active theme', async ({ page }) => {
+    const luminance = (css: string) => {
+      const match = css.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+      if (!match) return -1;
+      return Number(match[1]) + Number(match[2]) + Number(match[3]);
+    };
+
+    await page.evaluate(() => {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      globalThis.dispatchEvent(
+        new CustomEvent('less:theme-change', {
+          detail: { theme: 'dark' },
+        }),
+      );
+    });
+
+    await page.waitForFunction(() => {
+      const home = document.querySelector('docs-home');
+      return home?.getAttribute('data-theme') === 'dark';
+    });
+
+    const dark = await page.evaluate(() => {
+      const home = document.querySelector('docs-home')!;
+      const grid = home.shadowRoot!.querySelector('.swiss-grid')!;
+      const terminal = home.shadowRoot!.querySelector('.terminal')!;
+      return {
+        grid: getComputedStyle(grid).backgroundImage,
+        terminal: getComputedStyle(terminal).backgroundColor,
+      };
+    });
+
+    await page.evaluate(() => {
+      document.documentElement.setAttribute('data-theme', 'light');
+      globalThis.dispatchEvent(
+        new CustomEvent('less:theme-change', {
+          detail: { theme: 'light' },
+        }),
+      );
+    });
+
+    await page.waitForFunction(() => {
+      const home = document.querySelector('docs-home');
+      return home?.getAttribute('data-theme') === 'light';
+    });
+
+    const light = await page.evaluate(() => {
+      const home = document.querySelector('docs-home')!;
+      const grid = home.shadowRoot!.querySelector('.swiss-grid')!;
+      const terminal = home.shadowRoot!.querySelector('.terminal')!;
+      return {
+        grid: getComputedStyle(grid).backgroundImage,
+        terminal: getComputedStyle(terminal).backgroundColor,
+      };
+    });
+
+    expect(dark.grid).not.toBe(light.grid);
+    expect(dark.terminal).not.toBe(light.terminal);
+    expect(luminance(dark.grid)).toBeLessThan(luminance(light.grid));
+  });
 });
