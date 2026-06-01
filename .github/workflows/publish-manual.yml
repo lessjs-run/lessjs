@@ -28,6 +28,13 @@ jobs:
       - name: Install dependencies
         run: deno install --node-modules-dir
 
+      # `deno install` may rewrite deno.lock (transitive dep re-resolution,
+      # platform-specific lock fields, version normalization). Discard the
+      # install-induced rewrite so the publish dirty-tree guard sees a clean
+      # worktree.
+      - name: Reset deno.lock to committed state
+        run: git checkout -- deno.lock
+
       - name: Publish requested packages to JSR
         shell: bash
         run: |

@@ -27,6 +27,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-deno-workspace
 
+      # `deno install` may rewrite deno.lock (transitive dep re-resolution,
+      # platform-specific lock fields, version normalization). Since deno.lock
+      # is already in the trigger paths, we trust the committed version and
+      # discard the install-induced rewrite to keep the publish guard happy.
+      - name: Reset deno.lock to committed state
+        run: git checkout -- deno.lock
+
       - name: Publish to JSR (missing versions only)
         shell: bash
         run: |
