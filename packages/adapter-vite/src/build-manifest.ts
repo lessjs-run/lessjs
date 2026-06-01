@@ -170,21 +170,23 @@ export function printBuildManifest(options: {
   // Budget thresholds
   const ISLAND_BUDGET_KB = 50; // Warn if single island > 50KB
   const TOTAL_JS_BUDGET_KB = 200; // Warn if total JS > 200KB
-  const PAGE_BUDGET_KB = 200; // Warn if single HTML page > 100KB (uncompressed)
+  const PAGE_BUDGET_KB = 200; // Advisory only: single uncompressed HTML page budget.
 
   const warnings: string[] = [];
 
   // Check island budgets
   for (const island of clientData.islands) {
     if (island.sizeBytes > ISLAND_BUDGET_KB * 1024) {
-      warnings.push(`⚠️  ${island.name} (${island.sizeKB}) exceeds ${ISLAND_BUDGET_KB} KB budget`);
+      warnings.push(
+        `Warning: ${island.name} (${island.sizeKB}) exceeds ${ISLAND_BUDGET_KB} KB budget`,
+      );
     }
   }
 
   // Check total JS budget
   if (clientData.totalJsBytes > TOTAL_JS_BUDGET_KB * 1024) {
     warnings.push(
-      `⚠️  Total JS (${
+      `Warning: Total JS (${
         formatSize(clientData.totalJsBytes)
       }) exceeds ${TOTAL_JS_BUDGET_KB} KB budget`,
     );
@@ -194,7 +196,7 @@ export function printBuildManifest(options: {
   for (const page of htmlPages) {
     if (page.sizeBytes > PAGE_BUDGET_KB * 1024) {
       warnings.push(
-        `⚠️  ${page.path} (${page.sizeKB}) exceeds ${PAGE_BUDGET_KB} KB - consider compression`,
+        `Warning: ${page.path} (${page.sizeKB}) exceeds advisory ${PAGE_BUDGET_KB} KB HTML budget - consider compression`,
       );
     }
   }
@@ -211,77 +213,65 @@ export function printBuildManifest(options: {
     warnings,
   };
 
-  // ─── Print table ───
+  // Print table using ASCII-only output so build logs remain portable.
   console.log('');
-  console.log('╔═══════════════════════════════════════════════════════════════╗');
-  console.log(
-    `║  LessJS Build Manifest - Phase ${phase} @ ${timestamp.slice(11, 19)}              ║`,
-  );
-  console.log('╚═══════════════════════════════════════════════════════════════╝');
+  console.log(`== LessJS Build Manifest - Phase ${phase} @ ${timestamp.slice(11, 19)} ==`);
 
-  // Island chunks (Phase 2+)
   if (manifest.islands.length > 0 || manifest.clientEntry) {
-    console.log('\n  📦 Client Islands:');
-    console.log('  ┌────────────────────────────┬──────────┐');
-    console.log('  │ File                       │ Size     │');
-    console.log('  ├────────────────────────────┼──────────┤');
+    console.log('\n  Client Islands:');
+    console.log('  File                         Size');
+    console.log('  --------------------------   --------');
 
     for (const island of manifest.islands) {
-      // Truncate long hash names for display
       const displayName = island.name.length > 30 ? island.name.slice(0, 27) + '...' : island.name;
-      console.log(`  │ ${displayName.padEnd(26)} │ ${island.sizeKB.padEnd(8)} │`);
+      console.log(`  ${displayName.padEnd(26)}   ${island.sizeKB.padEnd(8)}`);
     }
 
     if (manifest.clientEntry) {
       console.log(
-        `  │ ${'client.js (entry)'.padEnd(26)} │ ${manifest.clientEntry.sizeKB.padEnd(8)} │`,
+        `  ${'client.js (entry)'.padEnd(26)}   ${manifest.clientEntry.sizeKB.padEnd(8)}`,
       );
     }
 
-    console.log('  ├────────────────────────────┼──────────┤');
-    console.log(`  │ ${'TOTAL JS'.padEnd(26)} │ ${formatSize(manifest.totalJsBytes).padEnd(8)} │`);
-    console.log('  └────────────────────────────┴──────────┘');
+    console.log('  --------------------------   --------');
+    console.log(`  ${'TOTAL JS'.padEnd(26)}   ${formatSize(manifest.totalJsBytes).padEnd(8)}`);
   } else {
-    console.log('\n  📦 Client Islands: (none - zero client JS)');
+    console.log('\n  Client Islands: none - zero client JS');
   }
 
-  // HTML pages (Phase 3 only)
   if (phase === 3 && manifest.htmlPages.length > 0) {
     console.log(
-      `\n  📄 HTML Pages (${manifest.htmlPages.length} files, ${
+      `\n  HTML Pages (${manifest.htmlPages.length} files, ${
         formatSize(manifest.totalHtmlBytes)
       } total):`,
     );
 
-    // Group pages by directory depth for cleaner display
     const maxShow = 15;
     const shown = manifest.htmlPages.slice(0, maxShow);
     for (const page of shown) {
       const displayName = page.path.length > 40 ? page.path.slice(0, 37) + '...' : page.path;
-      console.log(`    • ${displayName}  (${page.sizeKB})`);
+      console.log(`    - ${displayName} (${page.sizeKB})`);
     }
     if (manifest.htmlPages.length > maxShow) {
       console.log(`    ... +${manifest.htmlPages.length - maxShow} more pages`);
     }
   }
 
-  // headExtras
   if (manifest.headExtrasSize > 0) {
     console.log(
-      `\n  🔧 headExtras: ${
+      `\n  headExtras: ${
         formatSize(manifest.headExtrasSize)
       } (${manifest.headExtrasSize} bytes injected)`,
     );
   }
 
-  // Warnings
   if (warnings.length > 0) {
-    console.log('\n  ⚠️  Budget Warnings:');
+    console.log('\n  Budget Warnings:');
     for (const w of warnings) {
       console.log(`     ${w}`);
     }
   } else {
-    console.log('\n  ✅ All artifacts within budget limits');
+    console.log('\n  All artifacts within budget limits');
   }
 
   console.log('');

@@ -40,11 +40,20 @@ export interface VNode {
  * Returns true if the given value is a VNode object.
  */
 export function isVNode(v: unknown): v is VNode {
+  if (typeof v !== 'object' || v === null || Array.isArray(v)) return false;
+
+  const candidate = v as {
+    tag?: unknown;
+    props?: unknown;
+    children?: unknown;
+  };
+  const tagType = typeof candidate.tag;
+
   return (
-    typeof v === 'object' &&
-    v !== null &&
-    'tag' in v &&
-    'props' in v &&
-    'children' in v
+    (tagType === 'string' || tagType === 'function' || tagType === 'symbol') &&
+    typeof candidate.props === 'object' &&
+    candidate.props !== null &&
+    !Array.isArray(candidate.props) &&
+    Array.isArray(candidate.children)
   );
 }

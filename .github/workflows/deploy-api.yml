@@ -16,6 +16,8 @@ jobs:
         with:
           deno-version: '2'
       - name: Deploy to Deno Deploy
+        env:
+          DENO_DEPLOY_TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
         run: |
           # Copy to a clean dir (no workspace config)
           cp -r demo /tmp/less-api
@@ -23,5 +25,5 @@ jobs:
           deno deploy \
             --app=less-demo-api \
             --prod \
-            --token="${{ secrets.DENO_DEPLOY_TOKEN }}" \
+            --token="$DENO_DEPLOY_TOKEN" \
             .

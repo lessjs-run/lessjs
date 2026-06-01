@@ -25,11 +25,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
 
       - name: Publish to JSR (missing versions only)
         shell: bash

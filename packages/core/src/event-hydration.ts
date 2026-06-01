@@ -12,6 +12,9 @@ import { isSignalLike } from './signal-like.ts';
 import { isVNode, type VNode } from './vnode.ts';
 
 const EVENT_PROP_RE = /^on[A-Z]/;
+const EVENT_TYPE_ALIASES: Record<string, string> = {
+  DoubleClick: 'dblclick',
+};
 
 export interface EventBindingRecord {
   id: string;
@@ -27,14 +30,19 @@ export function createEventMarkerContext(): EventMarkerContext {
   let count = 0;
   return {
     nextId(): string {
-      return `e${count++}`;
+      return eventMarkerId(count++);
     },
   };
 }
 
+export function eventMarkerId(index: number): string {
+  return `e${index}`;
+}
+
 export function eventTypeFromProp(prop: string): string | null {
   if (!EVENT_PROP_RE.test(prop)) return null;
-  return prop.slice(2).toLowerCase();
+  const eventName = prop.slice(2);
+  return EVENT_TYPE_ALIASES[eventName] ?? eventName.toLowerCase();
 }
 
 export function serializeEventMarkers(
@@ -127,7 +135,7 @@ export function collectEventBindings(node: unknown): Map<string, EventBindingRec
     }
 
     if (records.length > 0) {
-      const id = `e${count++}`;
+      const id = eventMarkerId(count++);
       bindings.set(id, records.map((record) => ({ ...record, id })));
     }
 

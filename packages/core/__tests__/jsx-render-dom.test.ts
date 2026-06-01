@@ -170,4 +170,7 @@ test('renderToDom isVNode type guard', () => {
   assert(isVNode(jsx('div', {})));
   assert(!isVNode('string'));
   assert(!isVNode(null));
+  assert(!isVNode({ tag: 'div', props: {}, children: 'not-array' }));
+  assert(!isVNode({ tag: 'div', props: null, children: [] }));
+  assert(!isVNode({ tag: {}, props: {}, children: [] }));
 });

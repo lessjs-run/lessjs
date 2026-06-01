@@ -197,7 +197,11 @@ Deno.test('printBuildManifest: HTML page budget warning', () => {
     );
 
     const manifest = printBuildManifest({ root: tmp, outDir: 'dist', phase: 3 });
-    assertExists(manifest.warnings.find((w) => w.includes('huge.html') && w.includes('exceeds')));
+    assertExists(
+      manifest.warnings.find((w) =>
+        w.includes('huge.html') && w.includes('advisory') && w.includes('HTML budget')
+      ),
+    );
   } finally {
     cleanup(tmp);
   }

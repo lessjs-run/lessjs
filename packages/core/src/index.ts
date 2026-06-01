@@ -20,6 +20,7 @@
 export type {
   FrameworkOptions,
   LessMiddleware,
+  LessMiddlewareContext,
   LessRenderer,
   RouteEntry,
   SpecialFileType,
@@ -67,7 +68,13 @@ export type {
   RenderDsdStreamOptions,
 } from './render-dsd-stream.js';
 export { camelToKebab } from './render-serialize.js';
-export { getAdapter, getRegisteredAdapters, registerAdapter } from './adapter-registry.js';
+export {
+  type AdapterRegistry,
+  createAdapterRegistry,
+  getAdapter,
+  getRegisteredAdapters,
+  registerAdapter,
+} from './adapter-registry.js';
 export type {
   CemCompatibilityReport,
   CompatibilityClassification,
@@ -163,6 +170,7 @@ export {
   createEventMarkerContext,
   type EventBindingRecord,
   type EventMarkerContext,
+  eventMarkerId,
   eventTypeFromProp,
   hydrateEventMarkers,
   serializeEventMarkers,

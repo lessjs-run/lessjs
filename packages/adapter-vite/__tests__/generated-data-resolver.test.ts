@@ -27,6 +27,16 @@ Deno.test('generatedDataPath maps generated namespace to app data files', () => 
   );
 });
 
+Deno.test('generatedDataPath keeps generated data location consumer-configurable', () => {
+  const normalized = (path: string | null) => path?.replaceAll('\\', '/');
+
+  assert(
+    normalized(generatedDataPath('/site', GENERATED_NAV_ID, '.less/generated'))?.endsWith(
+      '/site/.less/generated/_generated-nav.ts',
+    ),
+  );
+});
+
 Deno.test('generated data resolver resolves only @lessjs/generated namespace', () => {
   const plugin = createGeneratedDataResolverPlugin({ root: '/site' });
   const resolveId = plugin.resolveId as (id: string) => string | null;
