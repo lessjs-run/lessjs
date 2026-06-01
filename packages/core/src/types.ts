@@ -514,8 +514,30 @@ export interface LessRenderer {
  * Uses a generic function type to avoid importing Hono at runtime.
  * When used with Hono, the actual type is Hono.MiddlewareHandler.
  */
-// deno-lint-ignore no-explicit-any
-export type LessMiddleware = (c: any, next: () => Promise<void>) => Promise<void> | void;
+export interface LessMiddlewareContext {
+  req: {
+    raw?: Request;
+    path?: string;
+    param(): Record<string, string>;
+    param(name: string): string | undefined;
+    [key: string]: unknown;
+  };
+  env?: unknown;
+  executionCtx?: unknown;
+  get?(key: string): unknown;
+  set?(key: string, value: unknown): void;
+  header?(name: string, value: string): void;
+  html?(html: string, status?: number): Response;
+  json?(value: unknown, status?: number): Response;
+  text?(value: string, status?: number): Response;
+  redirect?(location: string, status?: number): Response;
+  [key: string]: unknown;
+}
+
+export type LessMiddleware = (
+  c: LessMiddlewareContext,
+  next: () => Promise<void>,
+) => Promise<void> | void;
 
 /** Resolved route entry from file-based routing */
 export interface RouteEntry {

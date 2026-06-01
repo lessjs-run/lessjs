@@ -58,7 +58,7 @@ import type {
   LessPackageManifest,
   RouteEntry,
 } from '@lessjs/core';
-import { buildEntryDescriptor, buildSsrAdmissionPlan } from './entry-descriptor.js';
+import { buildEntryDescriptor } from './entry-descriptor.js';
 
 // Re-export for consumers that import from entry-renderer.ts
 export { buildEntryDescriptor } from './entry-descriptor.js';
@@ -319,11 +319,7 @@ function renderPageRoute(
  */
 export function renderEntry(desc: EntryDescriptor): string {
   const lines: string[] = [];
-  const ssrAdmissionPlan = buildSsrAdmissionPlan(
-    desc.islands,
-    desc.cemClassifications,
-    desc.hubClientOnlyTags || [],
-  );
+  const ssrAdmissionPlan = desc.ssrAdmissionPlan;
 
   // --- SSG: DSD renderer doesn't need DOM shim ---
   // v0.5.0: render-dsd.ts uses pure string concatenation - no DOM shim needed

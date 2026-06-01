@@ -294,15 +294,19 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    * v0.25.0 (SOP-012): Unified render path.
    */
   private _renderOrHydrate(): void {
-    const isDsd = this.shadowRoot && this.shadowRoot.childNodes.length > 0;
-    if (isDsd) {
-      // DSD: DOM already correct — bind events via VNode walk
-      this._hyrateExistingDom();
-      this.onDsdHydrated();
-    } else if (this.shadowRoot) {
-      // CSR: full render from VNode
-      this._renderIntoShadowRoot();
-      this.onCsrRendered();
+    try {
+      const isDsd = this.shadowRoot && this.shadowRoot.childNodes.length > 0;
+      if (isDsd) {
+        // DSD: DOM already correct — bind events via VNode walk
+        this._hyrateExistingDom();
+        this.onDsdHydrated();
+      } else if (this.shadowRoot) {
+        // CSR: full render from VNode
+        this._renderIntoShadowRoot();
+        this.onCsrRendered();
+      }
+    } catch (err) {
+      this._renderErrorFallback(err);
     }
   }
 
@@ -417,7 +421,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     }
 
     // --- Deprecated fallback: data-on-<event>="methodName" ---
-    this._bindEvents(this.shadowRoot);
+    this._bindEvents(this.shadowRoot, { skipSignalHtmlDescendants: true });
 
     // Chromium DSD layout fix: force reflow without DOM rebuild
     requestAnimationFrame(() => {
@@ -430,11 +434,20 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    * Extracted from _hydrateSignals for reuse in CSR re-render path
    * and data-signal-html innerHTML scanning.
    */
-  private _bindEvents(container: Element | ShadowRoot): void {
+  private _bindEvents(
+    container: Element | ShadowRoot,
+    options: { skipSignalHtmlDescendants?: boolean } = {},
+  ): void {
     const EVENT_TYPES = ['click', 'input', 'change', 'submit', 'keydown'] as const;
     for (const eventType of EVENT_TYPES) {
       const attr = `data-on-${eventType}`;
       for (const el of container.querySelectorAll(`[${attr}]`)) {
+        if (
+          options.skipSignalHtmlDescendants &&
+          typeof Element !== 'undefined' &&
+          el instanceof Element &&
+          el.closest('[data-signal-html]')
+        ) continue;
         const methodName = el.getAttribute(attr);
         if (!methodName) continue;
         const handler = (this as Record<string, unknown>)[methodName];
@@ -488,6 +501,50 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    * No-op by default.
    */
   protected onCsrRendered(): void {}
+
+  /**
+   * Hook called when the unified client render/hydrate path throws.
+   * Subclasses may return a string or VNode fallback.
+   */
+  protected onRenderError(error: unknown): string | VNode {
+    console.error(
+      `[DsdElement] <${this.tagName.toLowerCase()}> render/hydrate failed:`,
+      error instanceof Error ? error.message : String(error),
+    );
+    return '';
+  }
+
+  private _renderErrorFallback(error: unknown): void {
+    if (!this.shadowRoot) this.createRenderRoot();
+    if (!this.shadowRoot) return;
+
+    let fallback: string | VNode;
+    try {
+      fallback = this.onRenderError(error);
+    } catch (fallbackError) {
+      console.error(
+        `[DsdElement] <${this.tagName.toLowerCase()}> onRenderError failed:`,
+        fallbackError instanceof Error ? fallbackError.message : String(fallbackError),
+      );
+      fallback = '';
+    }
+
+    for (const d of this.#effectDisposers) d();
+    this.#effectDisposers.clear();
+    for (const f of this.#eventCleanups) f();
+    this.#eventCleanups = [];
+
+    if (isVNode(fallback)) {
+      while (this.shadowRoot.firstChild) {
+        this.shadowRoot.removeChild(this.shadowRoot.firstChild);
+      }
+      this.shadowRoot.appendChild(renderToDom(fallback, undefined, this.#effectDisposers));
+      this._bindEvents(this.shadowRoot);
+    } else {
+      this.shadowRoot.innerHTML = fallback;
+      this._bindEvents(this.shadowRoot);
+    }
+  }
 
   /**
    * Lifecycle: called when the element is disconnected from the DOM.
@@ -605,6 +662,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       this._bindEvents(this.shadowRoot!);
     } else if (typeof result === 'string') {
       this.shadowRoot!.innerHTML = result;
+      this._bindEvents(this.shadowRoot!);
     } else {
       console.warn(
         `[DsdElement] <${this.tagName.toLowerCase()}>.render() returned unexpected type "${typeof result}". ` +

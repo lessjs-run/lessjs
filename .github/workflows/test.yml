@@ -12,16 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Run type check
         run: deno task typecheck
 
@@ -29,16 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Run dependency audit
         run: deno audit
 
@@ -46,9 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Check package graph
         run: deno task graph:check
 
@@ -56,16 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Run core tests
         run: deno test packages/core/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-run --allow-ffi
 
@@ -73,16 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Run adapter-vite tests
         run: deno test packages/adapter-vite/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-run --allow-ffi
 
@@ -90,16 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Run rpc tests
         run: deno test packages/rpc/__tests__/ --coverage --allow-read --allow-write
 
@@ -107,16 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Run ui tests
         run: deno test packages/ui/__tests__/ --coverage --allow-read --allow-write --allow-env
 
@@ -124,16 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Run create tests
         run: deno test packages/create/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-run --allow-ffi
 
@@ -141,16 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Run i18n tests
         run: deno test packages/i18n/__tests__/ --coverage --allow-read --allow-write --allow-env
 
@@ -158,16 +84,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Run content tests
         run: deno test packages/content/__tests__/ --coverage --allow-read --allow-write --allow-env
 
@@ -175,16 +92,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Run hub tests
         run: deno test packages/hub/__tests__/ --coverage --allow-read --allow-write --allow-env --allow-net --allow-run
       - name: Hub validate
@@ -197,16 +105,7 @@ jobs:
     needs: [test-hub]
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Install Playwright Chromium
         run: deno run -A npm:playwright@1.59.1 install chromium --with-deps
       - name: Hub scan (Playwright snapshots)
@@ -217,16 +116,7 @@ jobs:
     needs: [build-www]
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Build www site
         run: deno task build:docs
       - name: Check DSD report
@@ -236,16 +126,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Run adapter-lit tests
         run: deno test packages/adapter-lit/__tests__/ --coverage --allow-read --allow-write --allow-env
 
@@ -253,16 +134,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Build www site
         run: deno task build:docs
 
@@ -270,16 +142,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2'
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-deno-${{ hashFiles('deno.lock') }}
-      - name: Install dependencies
-        run: deno install --node-modules-dir
+      - uses: ./.github/actions/setup-deno-workspace
       - name: Install Playwright Chromium
         run: deno run -A npm:playwright@1.59.1 install chromium --with-deps
       - name: Build www site

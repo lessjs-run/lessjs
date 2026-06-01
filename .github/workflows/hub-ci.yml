@@ -33,11 +33,11 @@ jobs:
 
       - name: Run Hub record validator
         run: |
-          deno run -A packages/hub/src/cli/validate.ts --strict
+          deno task hub:validate --strict
 
       - name: Regenerate and check hub-index drift
         run: |
-          deno run -A packages/hub/src/cli/check-index.ts
+          deno task hub:check-index
 
       - name: Conditional auto-merge
         if: success() && github.actor != 'dependabot[bot]'

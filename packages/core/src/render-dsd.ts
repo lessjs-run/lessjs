@@ -223,25 +223,7 @@ export async function renderDsd(
         }
       }
       if (!rendered) {
-        console.log(
-          '[LessJS Debug] isVNode check failed for',
-          tagName,
-          'Object.keys:',
-          Object.keys(result),
-          'typeof result:',
-          typeof result,
-        );
-        if (typeof result === 'object' && result !== null) {
-          console.log(
-            '[LessJS Debug] properties present:',
-            'tag in result:',
-            'tag' in result,
-            'props in result:',
-            'props' in result,
-            'children in result:',
-            'children' in result,
-          );
-        }
+        log.debug(`Unsupported render() return for <${tagName}>: ${describeRenderValue(result)}`);
         const errDetail =
           `Components must return a string or VNode from render(), got ${typeof result}.`;
         const err = classifyError('render', tagName, errDetail, true);
@@ -393,6 +375,12 @@ export async function renderDsd(
  */
 function renderEndTimeFallback(): number {
   return Date.now();
+}
+
+function describeRenderValue(value: unknown): string {
+  if (typeof value !== 'object' || value === null) return typeof value;
+  const keys = Object.keys(value).join(',');
+  return `object keys=[${keys}]`;
 }
 
 /**

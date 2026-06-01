@@ -313,6 +313,23 @@ Deno.test('renderEntry: app shell is built from VNode tree, not HTML replace', (
   assertStringIncludes(code, '.replace("</less-layout>"');
 });
 
+Deno.test('renderEntry: uses descriptor SSR admission plan without recomputing it', () => {
+  const desc = buildEntryDescriptor(basicRoutes, {
+    ssg: true,
+    islandTagNames: ['planned-widget'],
+    islandFiles: ['planned-widget.ts'],
+  });
+  desc.ssrAdmissionPlan.renderableTags = [];
+  desc.ssrAdmissionPlan.clientOnlyTags = ['planned-widget'];
+  desc.ssrAdmissionPlan.reasons['planned-widget'] = 'test override';
+
+  const code = renderEntry(desc);
+
+  assertFalse(code.includes('import * as __island_planned_widget from'));
+  assertFalse(code.includes("customElements.define('planned-widget'"));
+  assertStringIncludes(code, '"clientOnlyTags": [\n    "planned-widget"\n  ]');
+});
+
 Deno.test('renderEntry: SSG mode includes no DOM shim (DSD renderer)', () => {
   const desc = buildEntryDescriptor(basicRoutes, { ssg: true });
   const code = renderEntry(desc);
@@ -518,9 +535,10 @@ Deno.test('renderEntry: local island with ssr===false is excluded from SSR regis
     ssg: true,
     islandTagNames: ['client-only-widget'],
     islandFiles: ['client-only-widget.ts'],
+    islandMeta: {
+      'client-only-widget': { ssr: false },
+    },
   });
-  // Mark island as ssr: false
-  desc.islands[0].ssr = false;
   const code = renderEntry(desc);
 
   // SSR registration should NOT happen for ssr:false islands

@@ -22,29 +22,58 @@ import type { RendererProtocol } from './types.js';
 // Re-export for consumers who import from @lessjs/core/adapter-registry
 export type { RendererProtocol } from './types.js';
 
-let _adapter: RendererProtocol | undefined;
-const _namedAdapters: Map<string, RendererProtocol> = new Map();
+export interface AdapterRegistry {
+  register(adapter: RendererProtocol | undefined): void;
+  get(name?: string): RendererProtocol | undefined;
+  getAll(): readonly RendererProtocol[];
+  clear(): void;
+}
+
+export function createAdapterRegistry(): AdapterRegistry {
+  let defaultAdapter: RendererProtocol | undefined;
+  const namedAdapters: Map<string, RendererProtocol> = new Map();
+
+  return {
+    register(adapter: RendererProtocol | undefined): void {
+      defaultAdapter = adapter;
+      if (!adapter) {
+        namedAdapters.clear();
+        return;
+      }
+      if (adapter.name) namedAdapters.set(adapter.name, adapter);
+    },
+
+    get(name?: string): RendererProtocol | undefined {
+      if (name) return namedAdapters.get(name);
+      return defaultAdapter;
+    },
+
+    getAll(): readonly RendererProtocol[] {
+      return Array.from(namedAdapters.values());
+    },
+
+    clear(): void {
+      defaultAdapter = undefined;
+      namedAdapters.clear();
+    },
+  };
+}
+
+const defaultAdapterRegistry = createAdapterRegistry();
 
 /** Register a render adapter explicitly. */
 export function registerAdapter(
   adapter: RendererProtocol | undefined,
 ): void {
-  _adapter = adapter;
-  // If adapter has a name, register it in the named map
-  if (adapter && adapter.name) {
-    _namedAdapters.set(adapter.name, adapter);
-  }
+  defaultAdapterRegistry.register(adapter);
 }
 
 /** Get the currently registered (default) adapter, or look up by name. */
 export function getAdapter(name?: string): RendererProtocol | undefined {
-  if (name) {
-    return _namedAdapters.get(name);
-  }
-  return _adapter;
+  return defaultAdapterRegistry.get(name);
 }
 
 /** Get all registered named adapters. */
 export function getRegisteredAdapters(): readonly RendererProtocol[] {
-  return Array.from(_namedAdapters.values());
+  return defaultAdapterRegistry.getAll();
 }
