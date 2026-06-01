@@ -221,5 +221,6 @@ test.describe('Theme Toggle', () => {
     expect(dark.grid).not.toBe(light.grid);
     expect(dark.terminal).not.toBe(light.terminal);
     expect(luminance(dark.grid)).toBeLessThan(luminance(light.grid));
+    expect(luminance(dark.terminal)).toBeLessThan(luminance(light.terminal));
   });
 });

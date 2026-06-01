@@ -200,7 +200,7 @@ export default defineConfig({
           '<meta property="og:type" content="website">',
           '<meta property="og:title" content="LessJS - Less is More">',
           '<meta property="og:description" content="DSD-first Web Standards framework. Zero-runtime core, SSG + Island architecture, microsecond Signal reactivity.">',
-          '<meta property="og:url" content="https://lessjs.com">',
+          '<meta property="og:url" content="https://lessjs.org">',
           '<meta property="og:image" content="https://lessjs.org/assets/og-image.svg">',
           '<meta name="twitter:card" content="summary_large_image">',
           '<meta name="description" content="LessJS — Less is More. DSD-first Web Standards framework. Zero-runtime core, SSG + Island architecture, microsecond Signal reactivity.">',
@@ -228,7 +228,7 @@ export default defineConfig({
           ],
         },
         sitemap: {
-          hostname: 'https://lessjs.com',
+          hostname: 'https://lessjs.org',
         },
       },
       i18n: {

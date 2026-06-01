@@ -139,6 +139,7 @@ export class LessThemeToggle extends DsdElement {
         root.host.setAttribute('data-theme', this._theme.value);
       }
     } catch { /* not in shadow DOM */ }
+    this._dispatchThemeChange(this._theme.value);
     this._persistTheme(this._theme.value);
   }
 
@@ -225,14 +226,7 @@ export class LessThemeToggle extends DsdElement {
       console.debug('[less-theme-toggle] getRootNode unavailable:', e);
     }
 
-    // Dispatch global event so all DsdElement components can react
-    try {
-      if (typeof CustomEvent !== 'undefined' && typeof globalThis.dispatchEvent === 'function') {
-        globalThis.dispatchEvent(new CustomEvent('less:theme-change', { detail: { theme } }));
-      }
-    } catch (e) {
-      console.debug('[less-theme-toggle] localStorage.setItem unavailable:', e);
-    }
+    this._dispatchThemeChange(theme);
 
     try {
       localStorage.setItem('less-theme', theme);
@@ -240,6 +234,16 @@ export class LessThemeToggle extends DsdElement {
       console.debug('[less-theme-toggle] localStorage.setItem unavailable:', e);
     }
     // data-theme attribute is managed by signal prop binding (data-theme={this._theme})
+  }
+
+  private _dispatchThemeChange(theme: 'dark' | 'light'): void {
+    try {
+      if (typeof CustomEvent !== 'undefined' && typeof globalThis.dispatchEvent === 'function') {
+        globalThis.dispatchEvent(new CustomEvent('less:theme-change', { detail: { theme } }));
+      }
+    } catch (e) {
+      console.debug('[less-theme-toggle] theme event dispatch unavailable:', e);
+    }
   }
 
   override attributeChangedCallback(name: string, old: string | null, val: string | null): void {
