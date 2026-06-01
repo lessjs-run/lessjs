@@ -2,23 +2,30 @@
 
 > **版本**: v0.28.3
 > **日期**: 2026-06-01
-> **输入**: [v0.28.0 综合仓库审计](../conversation/20260601/LessJS-审计-最终汇总报告.md) 47 findings（v0.28.1 已关 13，v0.28.2 关 24，剩 10）+ MDX feature 决策
+> **执行状态**: Deferred / blocked by v0.28.2
+> **输入**: [v0.28.0 综合仓库审计](../../conversation/20260601/LessJS-审计-最终汇总报告.md) 47 findings（v0.28.1 已关 13；v0.28.2 仍是计划，未关 24）+ MDX feature 决策
 > **目标**: 关掉 v0.28.2 留的 10 项 cleanup + 加入 MDX 支持（走 `renderDsd()` 路径）
 > **非目标**: 不加其他新功能；不动 Hub 协议；不改 manifest schema
-> **输出**: v0.28.3 release note + ADR-0072 (MDX) + 3 个包新增 MDX 能力 + 200+ 单元测试
+> **目标输出**: v0.28.3 release note + ADR-0072 (MDX) + 3 个包新增 MDX 能力 + 200+ 单元测试
 
 ---
 
 ## 概要
 
+> 2026-06-02 校准：本 SOP 不能在 v0.28.2 未实现、未验证、未发布前启动 release
+> bump。MDX、test floor 和 lockfile realignment 是多周工作，本轮只允许合并不改变
+> runtime 行为的预备性修订。
+
 v0.28.3 = **pre-freeze closure**。两件事合在一起：
 
 **Closure (2 周)**:
+
 - 阶段 1 — Test floor: `packages/router` / `packages/runtime` / `packages/protocols` 加单元测试
 - 阶段 2 — deno.lock 重对齐: `deno install --node-modules-dir` + pin `hono@4.12.23` + `playwright@1.59.1`
 - 阶段 3 — P2 杂项: `tsconfig.json` 加注释、`lint.exclude` 对齐 `fmt.exclude`、`.github/agents/` 用途决策
 
 **MDX (2-3 周)**:
+
 - 阶段 4 — 设计: ADR-0072，决策走 `renderDsd()`，选 `@mdx-js/mdx` 作 parser
 - 阶段 5 — 实现: `@lessjs/content` 加 `.mdx` loader、`adapter-vite` 加 MDX plugin、snapshot 测试、docs
 
@@ -36,11 +43,21 @@ v0.28.3 = **pre-freeze closure**。两件事合在一起：
 
 ---
 
+## Entry Criteria
+
+- v0.28.2 deprecated purge merged to `dev` and `main`
+- v0.28.2 package versions, changelog, release note, and CI are complete
+- full local gate and GitHub Actions are green on the v0.28.2 release commit
+- v0.28.3 ADR-0072 is reviewed before MDX implementation starts
+
+---
+
 ## 阶段 1: Test Floor（1 周）
 
 ### 1.1 `packages/router` 单元测试
 
 **目标**: 至少 100 个测试，覆盖：
+
 - 路由匹配（静态、动态、catch-all、嵌套、optional segments）
 - 参数提取（string、number、custom pattern）
 - 导航 hook（beforeEach、afterEach、redirect、rewrite）
@@ -59,6 +76,7 @@ v0.28.3 = **pre-freeze closure**。两件事合在一起：
 ### 1.2 `packages/runtime` 单元测试
 
 **目标**: 至少 80 个测试，覆盖：
+
 - `DsdElement` lifecycle（connectedCallback、disconnectedCallback、attributeChangedCallback、adoptedCallback）
 - `render(): string | VNode` 行为
 - effect 生命周期（创建、dispose、嵌套 effect）
@@ -76,6 +94,7 @@ v0.28.3 = **pre-freeze closure**。两件事合在一起：
 ### 1.3 `packages/protocols` 单元测试
 
 **目标**: 至少 60 个测试，覆盖：
+
 - 协议类型定义（adapter、renderer、hydration、isr 的 schema）
 - manifest schema 校验（happy path + 各字段错误路径）
 - 协议版本协商（v1、v2、向后兼容）
@@ -93,6 +112,7 @@ v0.28.3 = **pre-freeze closure**。两件事合在一起：
 ### 2.1 删 `node_modules/.deno/`
 
 **变更**:
+
 ```bash
 rm -rf node_modules/.deno/
 git checkout -- deno.lock  # 清空到 commit 时状态
@@ -103,6 +123,7 @@ git checkout -- deno.lock  # 清空到 commit 时状态
 ### 2.2 重新 `deno install`
 
 **变更**:
+
 ```bash
 deno install --node-modules-dir
 deno task graph:check
@@ -113,6 +134,7 @@ deno run -A tools/check-import-map.ts
 ### 2.3 在子包 `deno.json` 里 pin
 
 **变更**: 在 `packages/hub/`、`packages/adapter-vite/` 等用到 hono 的子包 `deno.json`：
+
 ```json
 "imports": {
   "hono": "npm:hono@4.12.23",
@@ -121,6 +143,7 @@ deno run -A tools/check-import-map.ts
 ```
 
 **验证**:
+
 - `git ls-files deno.lock` 只有单一 hono + 单一 playwright 版本
 - `node_modules/.deno/hono/` 只有 `4.12.23/` 一个目录
 - `deno task test` 全过
@@ -150,6 +173,7 @@ deno run -A tools/check-import-map.ts
 **文件**: `.github/agents/adr-reviewer.agent.md`, `sop-gate.agent.md`, `test-quality.agent.md`
 
 **决策路径**:
+
 - 选项 A: **保留 + 加 README** — 写 `agents/README.md` 说明这些是 Copilot agent 提示文件，给开发者用
 - 选项 B: **删除** — 当前没 CI 用到，是 dead docs
 - 选项 C: **移入 docs/** — 当 docs 而不是 agent config
@@ -167,6 +191,7 @@ deno run -A tools/check-import-map.ts
 **输出文件**: `docs/adr/ADR-0072-mdx-in-lessjs.md`
 
 **决策记录**:
+
 - **MDX 输出路径**: 走 `renderDsd()`，输出 VNode 树
 - **Parser**: `@mdx-js/mdx@3.x`（de-facto standard、active maintenance、ESM-native）
 - **编译时机**: build-time（不在 runtime 解析）
@@ -175,6 +200,7 @@ deno run -A tools/check-import-map.ts
 - **Component 范围**: MDX 可用任何 `DsdElement` + `signal` 原语 + 全局 DSD context
 
 **替代方案（已拒绝）**:
+
 - ❌ 另开 HTML string 路径 — 引入 second content pipeline，违反"单一渲染路径"
 - ❌ Runtime 解析 — 性能差、bundle 大，与 LessJS 静态优先理念冲突
 - ❌ 自写 parser — 工程量大，违反"用成熟库"
@@ -210,6 +236,7 @@ HTML output with declarative shadow DOM + hydration markers
 ### 5.1 `packages/content` 加 MDX 支持
 
 **新增文件**:
+
 - `packages/content/src/mdx/compile.ts` — `@mdx-js/mdx` 包装
 - `packages/content/src/mdx/types.ts` — MDX module type
 - `packages/content/src/mdx/__tests__/compile.test.ts` — parser 测试
@@ -217,6 +244,7 @@ HTML output with declarative shadow DOM + hydration markers
 **导出**: `compileMdx(source: string, opts?): Promise<MdxModule>`
 
 **测试**:
+
 - 解析 simple markdown → VNode
 - 解析含 JSX 的 markdown → VNode with components
 - 解析 frontmatter → frontmatter 对象
@@ -226,10 +254,12 @@ HTML output with declarative shadow DOM + hydration markers
 ### 5.2 `packages/adapter-vite` 加 MDX plugin
 
 **新增文件**:
+
 - `packages/adapter-vite/src/plugin-mdx.ts` — Vite plugin 包装
 - `packages/adapter-vite/src/__tests__/plugin-mdx.test.ts` — plugin 测试
 
 **实现**:
+
 ```ts
 import mdx from '@mdx-js/rollup';
 export function mdxPlugin(): Plugin {
@@ -246,6 +276,7 @@ export function mdxPlugin(): Plugin {
 **集成点**: 在 `adapter-vite/src/cli/build-ssg.ts` 已有 plugin 列表加 `mdxPlugin()`
 
 **验证**:
+
 - `deno task build` 处理 `www/content/**/*.mdx`
 - SSR 输出含 DSD 标记（`<template shadowrootmode>`）
 - 浏览器 hydration 正常
@@ -253,11 +284,13 @@ export function mdxPlugin(): Plugin {
 ### 5.3 文档
 
 **新增文件**:
+
 - `www/app/routes/guide/mdx.tsx` — MDX guide page
 - `docs/adr/ADR-0072-mdx-in-lessjs.md` — 设计决策（阶段 4 已写）
 - `packages/content/README.md` 加 MDX section
 
 **内容**:
+
 - 怎么写 `.mdx` file
 - 怎么在 MDX 用 `DsdElement`
 - 怎么在 MDX 用 signal
@@ -268,10 +301,12 @@ export function mdxPlugin(): Plugin {
 ### 5.4 snapshot 测试
 
 **新增文件**:
+
 - `www/__tests__/v0.28.3-mdx.test.ts` — MDX end-to-end
 - `packages/content/src/mdx/__tests__/fixtures/` — 测试用 `.mdx` 文件
 
 **测试**:
+
 - 1 个 simple MDX → SSR output snapshot
 - 1 个含 island 的 MDX → SSR + hydration snapshot
 - 1 个含 signal 的 MDX → SSR + interactive snapshot
@@ -280,9 +315,11 @@ export function mdxPlugin(): Plugin {
 ### 5.5 E2E 测试（可选）
 
 **新增文件**:
+
 - `www/__tests__/e2e/mdx-content.spec.ts` — Playwright
 
 **测试**:
+
 - 访问 MDX content 页面
 - 验证 DSD hydration 正常
 - 验证 island 在 MDX 里工作
@@ -291,33 +328,35 @@ export function mdxPlugin(): Plugin {
 
 ## 阶段 6: 不在本 SOP 范围
 
-| # | Finding | 留给 | 理由 |
-| --- | --- | --- | --- |
-| 1 | `_layoutWorkaroundReRender` upstream 修复 | v0.28.2 SOP 1.2 | — |
-| 2 | Router / runtime / protocols 零测试 | ✓ 本 SOP 1.1-1.3 | — |
-| 3 | deno.lock hono drift | ✓ 本 SOP 2.3 | — |
-| 4 | deno.lock playwright drift | ✓ 本 SOP 2.3 | — |
-| 5 | `tsconfig.json` 缺注释 | ✓ 本 SOP 3.1 | — |
-| 6 | `fmt.exclude` vs `lint.exclude` 漂移 | ✓ 本 SOP 3.2 | — |
-| 7 | `.github/agents/` 用途 | ✓ 本 SOP 3.3 | — |
-| 8 | 其他 P2/P3 informational | 不修 | 追踪 |
+| # | Finding                                   | 留给             | 理由 |
+| - | ----------------------------------------- | ---------------- | ---- |
+| 1 | `_layoutWorkaroundReRender` upstream 修复 | v0.28.2 SOP 1.2  | —    |
+| 2 | Router / runtime / protocols 零测试       | ✓ 本 SOP 1.1-1.3 | —    |
+| 3 | deno.lock hono drift                      | ✓ 本 SOP 2.3     | —    |
+| 4 | deno.lock playwright drift                | ✓ 本 SOP 2.3     | —    |
+| 5 | `tsconfig.json` 缺注释                    | ✓ 本 SOP 3.1     | —    |
+| 6 | `fmt.exclude` vs `lint.exclude` 漂移      | ✓ 本 SOP 3.2     | —    |
+| 7 | `.github/agents/` 用途                    | ✓ 本 SOP 3.3     | —    |
+| 8 | 其他 P2/P3 informational                  | 不修             | 追踪 |
 
 ---
 
 ## 验证清单
 
 ### Closure (1-3)
+
 - [ ] `deno test -A packages/router/` ≥ 100 测试
 - [ ] `deno test -A packages/runtime/` ≥ 80 测试
 - [ ] `deno test -A packages/protocols/` ≥ 60 测试
 - [ ] router/runtime/protocols 覆盖率 ≥ 70%
 - [ ] `deno install --node-modules-dir` 后 `node_modules/.deno/hono/` 单版本
 - [ ] `deno install --node-modules-dir` 后 `node_modules/.deno/playwright/` 单版本
-- [ ] `tsconfig.json` 注释存在
-- [ ] `lint.exclude` 与 `fmt.exclude` 对齐
-- [ ] `agents/README.md` 存在并解释用途
+- [x] `tsconfig.json` 注释存在（2026-06-02 preflight）
+- [x] `lint.exclude` 与 `fmt.exclude` 对齐（2026-06-02 preflight）
+- [x] `.github/agents/README.md` 存在并解释用途（2026-06-02 preflight）
 
 ### MDX (4-5)
+
 - [ ] `docs/adr/ADR-0072-mdx-in-lessjs.md` 存在并签字（STATUS 标记 IMPLEMENTED）
 - [ ] `packages/content/src/mdx/compile.ts` 存在
 - [ ] `packages/adapter-vite/src/plugin-mdx.ts` 存在
@@ -328,6 +367,7 @@ export function mdxPlugin(): Plugin {
 - [ ] 1 个 example MDX file 在 `www/content/` 用于 demo
 
 ### 全局
+
 - [ ] `deno task fmt` 0 改动
 - [ ] `deno task fmt:check` 通过
 - [ ] `deno task lint` 0 错误
@@ -341,6 +381,7 @@ export function mdxPlugin(): Plugin {
 
 ## 出口标准
 
+- 入口条件全部满足；不得在 v0.28.2 未闭合时 bump 到 v0.28.3
 - 上面验证清单全勾
 - 提交到 `codex/v0.28.3-closure-mdx` 分支（每阶段独立 commit）
 - 合并到 `dev`

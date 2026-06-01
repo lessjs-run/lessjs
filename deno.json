@@ -171,9 +171,15 @@
       "exclude": ["no-sloppy-imports"]
     },
     "exclude": [
-      ".deno_cache/",
+      "deliverables/",
+      "www/content/blog/",
       "www/app/routes/",
-      "www/app/data/"
+      "www/app/data/",
+      "docs/mockups/",
+      "docs/conversation/",
+      "custom-dist/",
+      "dist-test-ssg-render/",
+      ".deno_cache/"
     ]
   },
   "compilerOptions": {

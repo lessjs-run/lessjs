@@ -2,14 +2,20 @@
 
 > **版本**: v0.28.2
 > **日期**: 2026-06-01
-> **输入**: [v0.28.0 综合仓库审计](../conversation/20260601/LessJS-审计-最终汇总报告.md) 47 findings + v0.28.1 hygiene baseline
+> **执行状态**: Planned / not implemented in current `dev`
+> **输入**: [v0.28.0 综合仓库审计](../../conversation/20260601/LessJS-审计-最终汇总报告.md) 47 findings + v0.28.1 hygiene baseline
 > **目标**: 一遍删光所有 compat exports / 死代码 / `any` / v0.27 锚点 / 过时签名 / weak type guard / SSR bundle 1.53 MB。
 > **非目标**: 不写新功能、不加新 API、不补 router/runtime/protocols 测试（留给 v1.0.0-patch 系列）
-> **输出**: v0.28.2 release note + 18 项代码删除 + 5 项 security + 1 项 perf
+> **目标输出**: v0.28.2 release note + 18 项代码删除 + 5 项 security + 1 项 perf
 
 ---
 
 ## 概要
+
+> 2026-06-02 校准：当前 `dev` 只新增了本 SOP 与 v0.28.3 SOP。代码仍保留
+> compat exports、部分 v0.27 注释锚点、CLI `console.log` 用法，19 个包版本仍是
+> `0.28.0`。因此本文件是执行计划，不是 release evidence；未跑完出口标准前不得
+> bump package、写 release note 或发布 JSR。
 
 v0.28.1 关了 13 项 hygiene（文档/`.gitignore`/版本锚点），剩 34 项。v0.28.2 把剩 34 项再筛一遍：
 
@@ -36,10 +42,12 @@ v0.28.1 关了 13 项 hygiene（文档/`.gitignore`/版本锚点），剩 34 项
 ### 1.1 `registerAdapter` / `getAdapter` / `getRegisteredAdapters` 兼容导出删除
 
 **文件**:
+
 - `packages/core/src/index.ts`
 - `packages/core/src/adapter-registry.ts`
 
 **变更**:
+
 - 删 module-level `registerAdapter` / `getAdapter` / `getRegisteredAdapters` 实现
 - 全部内部调用改成 `createAdapterRegistry()` 工厂实例（v0.28.0 已引入）
 - 暴露 `getDefaultRegistry()` 函数（工厂后的默认 singleton）
@@ -53,6 +61,7 @@ v0.28.1 关了 13 项 hygiene（文档/`.gitignore`/版本锚点），剩 34 项
 **文件**: `www/app/components/less-layout.tsx`（grep 确认实际路径）
 
 **变更**:
+
 - 检查 GitHub Issue #28 状态
 - 已修 → 删整个函数 + 所有调用
 - 未修 → 移到 `docs/known-issues/ISSUE-28.md`，代码里只留一行 `// workaround for chromium DSD layout — see ISSUE-28`
@@ -62,12 +71,14 @@ v0.28.1 关了 13 项 hygiene（文档/`.gitignore`/版本锚点），剩 34 项
 ### 1.3 v0.27/v0.26 注释锚点清扫
 
 **文件**:
+
 - `www/vite.config.ts:220-221` — `// v0.26: Minimal headerNav` + `// TODO(v0.27): derive from route meta scanning.`
 - `packages/ui/src/less-layout.ts:1114` — `// v0.27: adopt + move — proper DOM API, no innerHTML hack.`
 - `packages/core/src/dsd-element.ts:145, 160` — `* v0.27 (ADR-0065): Effect dispose tracking.`
 - `packages/core/src/jsx-render-string.ts:250` — `// textContent prop: ... (v0.27)` (historical — 改成 `// historical` 或删)
 
 **变更**:
+
 - vite.config.ts: 删 v0.26 anchor；TODO 已完工（看代码确认）就删，没完工改成 `// TODO: derive from route meta scanning.`
 - less-layout.ts: 删 v0.27 anchor（move 动作 v0.27 已 ship）
 - dsd-element.ts: 注释改 `Effect dispose tracking (ADR-0065)`，删 v0.27 前缀
@@ -90,6 +101,7 @@ v0.28.1 关了 13 项 hygiene（文档/`.gitignore`/版本锚点），剩 34 项
 **文件**: `packages/core/deno.json:34`
 
 **变更**:
+
 - 选项 A: `deno check src/index.ts src/render-dsd.ts` → `deno check src/index.ts src/render-dsd-stream.ts`（用真实导出的文件）
 - 选项 B: 改 task 名 `build` → `typecheck`（更准确反映实际做的事）
 
@@ -105,7 +117,7 @@ v0.28.1 关了 13 项 hygiene（文档/`.gitignore`/版本锚点），剩 34 项
 
 ```ts
 // 之前
-export function renderDsd(vnode, mode, ssrAdmissionPlan, isHydrating, isClient, ctx, adapter, opts)
+export function renderDsd(vnode, mode, ssrAdmissionPlan, isHydrating, isClient, ctx, adapter, opts);
 
 // 之后
 export interface RenderDsdOptions {
@@ -117,7 +129,7 @@ export interface RenderDsdOptions {
   adapter?: LessAdapter;
   experimental?: { signalTracking?: boolean };
 }
-export function renderDsd(vnode: VNode, opts: RenderDsdOptions = {}): string
+export function renderDsd(vnode: VNode, opts: RenderDsdOptions = {}): string;
 ```
 
 **风险**: 中（grep 所有调用点 + 更新所有 caller）
@@ -129,6 +141,7 @@ export function renderDsd(vnode: VNode, opts: RenderDsdOptions = {}): string
 **文件**: `packages/core/src/build-context.ts`（grep 确认）
 
 **变更**:
+
 ```ts
 // 之前
 reset() {
@@ -151,6 +164,7 @@ reset() {
 **文件**: `packages/**/src/` + `www/app/` 下所有 `console.log`（test 文件除外）
 
 **变更**:
+
 - 改 `console.debug` 或 `console.warn` 加条件
 - 加 `@internal` 注释标注
 - 真要保留的加 `if (Deno.env.get("LESS_DEBUG"))` 包裹
@@ -186,6 +200,7 @@ reset() {
 **文件**: `packages/core/src/dsd-element.ts`
 
 **变更**: v0.28.0 已加 try/catch + onRenderError 钩子。验证：
+
 - 所有 `_renderOrHydrate` 抛错路径都过 `_renderErrorFallback`
 - `_renderErrorFallback` 清理顺序正确（effect disposers → event cleanups → onRenderError）
 - 没有 try/catch 漏掉的早期返回
@@ -213,6 +228,7 @@ reset() {
 **文件**: `packages/core/src/vnode.ts`
 
 **变更**:
+
 ```ts
 // 之前
 export function isVNode(x: unknown): x is VNode {
@@ -234,6 +250,7 @@ export function isVNode(x: unknown): x is VNode {
 **文件**: `packages/hono-adapter` 或 `packages/server/src/...`（grep "LessMiddleware"）
 
 **变更**:
+
 ```ts
 // 之前
 export type LessMiddleware = (c: any, next: Next) => Promise<void> | void;
@@ -262,6 +279,7 @@ export type LessMiddleware = (c: Context, next: Next) => Promise<void> | void;
 **文件**: `deno.json:110`, `packages/hub/scan.ts`
 
 **变更**:
+
 ```json
 // 之前
 "hub:scan": "deno run -A packages/hub/scan.ts",
@@ -277,6 +295,7 @@ export type LessMiddleware = (c: Context, next: Next) => Promise<void> | void;
 **文件**: `packages/hub/src/snapshot-playwright.ts:60-86`
 
 **变更**:
+
 - 加 env var `LESS_CDN_BASE` 控制（`unpkg` | `jsdelivr` | `esm.sh` | `self-hosted`）
 - 默认 `jsdelivr`
 - 加注释说明选 jsdelivr 的原因（隐私 + SLA + 比 esm.sh 少跟踪）
@@ -296,13 +315,16 @@ export type LessMiddleware = (c: Context, next: Next) => Promise<void> | void;
 **文件**: `packages/ui/src/less-layout.ts`（grep `href` / `src`）
 
 **变更**: 加 URL scheme allowlist
+
 ```ts
 const SAFE_SCHEMES = new Set(['http:', 'https:', 'mailto:', 'tel:', 'sms:']);
 function isSafeUrl(url: string): boolean {
   try {
     const u = new URL(url, 'https://lessjs.com/');
     return SAFE_SCHEMES.has(u.protocol);
-  } catch { return false; }
+  } catch {
+    return false;
+  }
 }
 ```
 
@@ -313,6 +335,7 @@ function isSafeUrl(url: string): boolean {
 **文件**: `packages/core/src/vnode.ts` 或 `packages/core/src/render-dsd.ts`（grep innerHTML）
 
 **变更**:
+
 - `innerHTML` prop 默认 escape
 - 显式 `rawHtml: true` 才不 escape
 - 不 escape 路径用 `sanitize-html` 二次消毒
@@ -328,6 +351,7 @@ function isSafeUrl(url: string): boolean {
 **文件**: `packages/adapter-vite/src/cli/build-ssg.ts:404-524`
 
 **变更**:
+
 ```ts
 // 之前（hardcoded 全部 bundle）
 ssr: {
@@ -343,6 +367,7 @@ ssr: { noExternal }
 ```
 
 **验证**: `deno task build` SSR bundle size:
+
 - vanilla: < 500 KB
 - lit: < 800 KB
 - react: < 1.2 MB
@@ -351,18 +376,18 @@ ssr: { noExternal }
 
 ## 阶段 4: 不在本 SOP 范围（10 项）
 
-| # | Finding | 留给 | 理由 |
-| --- | --- | --- | --- |
-| 1 | router 零测试 | v1.0.0-patch.1 | 100+ 单元测试是独立工作 |
-| 2 | runtime 零测试 | v1.0.0-patch.2 | 80+ 单元测试是独立工作 |
-| 3 | protocols 零测试 | v1.0.0-patch.3 | 同上 |
-| 4 | deno.lock hono drift | v1.0.0-patch.4 | 需 `deno install --node-modules-dir` 重对，影响全部 subpackage |
-| 5 | deno.lock playwright drift | v1.0.0-patch.5 | 同上 |
-| 6 | `tsconfig.json` 缺注释说明 | v0.28.3 | 文档类 |
-| 7 | `fmt.exclude` vs `lint.exclude` 漂移 | v0.28.3 | v0.28.1 已修一个，剩 lint 也对齐 |
-| 8 | `tools/check-strategic-docs.ts` publicDocs 列表 stale | ✓ v0.28.1 已修 | — |
-| 9 | `.github/agents/` 3 个 agent 文档用途 | 不修 | 决定保留或移除 |
-| 10 | `_layoutWorkaroundReRender` upstream 状态 | ✓ 本 SOP 1.2 处理 | — |
+| #  | Finding                                               | 留给              | 理由                                                           |
+| -- | ----------------------------------------------------- | ----------------- | -------------------------------------------------------------- |
+| 1  | router 零测试                                         | v1.0.0-patch.1    | 100+ 单元测试是独立工作                                        |
+| 2  | runtime 零测试                                        | v1.0.0-patch.2    | 80+ 单元测试是独立工作                                         |
+| 3  | protocols 零测试                                      | v1.0.0-patch.3    | 同上                                                           |
+| 4  | deno.lock hono drift                                  | v1.0.0-patch.4    | 需 `deno install --node-modules-dir` 重对，影响全部 subpackage |
+| 5  | deno.lock playwright drift                            | v1.0.0-patch.5    | 同上                                                           |
+| 6  | `tsconfig.json` 缺注释说明                            | v0.28.3           | 文档类                                                         |
+| 7  | `fmt.exclude` vs `lint.exclude` 漂移                  | v0.28.3           | v0.28.1 已修一个，剩 lint 也对齐                               |
+| 8  | `tools/check-strategic-docs.ts` publicDocs 列表 stale | ✓ v0.28.1 已修    | —                                                              |
+| 9  | `.github/agents/` 3 个 agent 文档用途                 | 不修              | 决定保留或移除                                                 |
+| 10 | `_layoutWorkaroundReRender` upstream 状态             | ✓ 本 SOP 1.2 处理 | —                                                              |
 
 ---
 
@@ -386,6 +411,7 @@ ssr: { noExternal }
 
 ## 出口标准
 
+- 所有 19 个 `packages/*/deno.json` 只在本清单全绿后才能从 `0.28.0` bump
 - 上面验证清单全勾
 - 提交到 `codex/v0.28.2-deprecated-purge` 分支（每阶段一个 commit）
 - 合并到 `dev`

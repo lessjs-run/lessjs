@@ -1,3 +1,5 @@
+// Editor-only TypeScript hints for JSX authoring.
+// deno.json is the source of truth for build, check, lint, and runtime config.
 {
   "compilerOptions": {
     "jsx": "react-jsx",

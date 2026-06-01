@@ -14,11 +14,20 @@ v0.24.x Status: **IMPLEMENTED.** JSX+Signal component model, TemplateResult remo
 
 v0.23.x and earlier: **HISTORICAL.**
 
-## Next Target: v0.28.1 Hygiene Convergence
+## Next Target: v0.28.2 Deprecated Purge + Hardening
 
-v0.28.1 is a hygiene-only cycle: bump v0.27 → v0.28 anchors across docs, close `.gitignore` leaks, sync `tools/check-strategic-docs.ts`, rewrite `docs/sop/README.md` index. No code logic changes. See `docs/sop/v0.28.1/SOP-002-thorough-cleanup.md`.
+v0.28.1 is closed as a hygiene-only cycle: v0.28 anchors, `.gitignore` leaks,
+strategic-docs sync, and SOP index cleanup. It did not change package versions
+or runtime behavior.
 
-After v0.28.1: v0.28.2 will address the remaining audit-driven P0/P1 items (security minimum privileges, test floor for router/runtime, event hydration ID unification, SSR bundle size reduction, adapter registry refactor).
+v0.28.2 is the next implementation target. It is not complete in the current
+`dev` tree. It must remove deprecated compatibility paths, close selected
+P0/P1 security and performance findings, and pass the full local and CI gates
+before any package bump or release note can be called valid. See
+`docs/sop/v0.28.2/SOP-003-deprecated-purge.md`.
+
+v0.28.3 remains deferred until v0.28.2 is merged and verified. Its MDX work is a
+multi-week feature track, not a same-day release bump.
 
 ## Stable Engine Target: v1.0
 
@@ -73,18 +82,27 @@ Key outcomes:
 - 80+ theme gate tests in `www/__tests__/v0.27.0-regression.test.ts`
 - 6 individual role audits + 1 summary in `docs/conversation/20260601/`
 
-## v0.28.1 — Hygiene Convergence (PLANNED, this SOP)
+## v0.28.1 — Hygiene Convergence (DONE)
 
-| Task Group | Title                                | Priority |
-| ---------- | ------------------------------------ | -------- |
-| HC-01      | `.gitignore` dedupe + `.gstack/`     | P0       |
-| HC-02      | Untrack leaked tracked files         | P0       |
-| HC-03      | v0.27 → v0.28 version anchor sweep   | P0       |
-| HC-04      | `STATUS.md` rewrite to v0.28.0       | P1       |
-| HC-05      | `docs/sop/README.md` index sync      | P1       |
-| HC-06      | `tools/check-strategic-docs.ts` sync | P1       |
+| Task Group | Title                                | Status |
+| ---------- | ------------------------------------ | ------ |
+| HC-01      | `.gitignore` dedupe + `.gstack/`     | Done   |
+| HC-02      | Untrack leaked tracked files         | Done   |
+| HC-03      | v0.27 → v0.28 version anchor sweep   | Done   |
+| HC-04      | `STATUS.md` rewrite to v0.28.0       | Done   |
+| HC-05      | `docs/sop/README.md` index sync      | Done   |
+| HC-06      | `tools/check-strategic-docs.ts` sync | Done   |
 
-See `docs/sop/v0.28.1/SOP-002-thorough-cleanup.md`.
+v0.28.1 is a repository hygiene closure, not a package release line. All 19
+packages remain aligned to v0.28.0 until v0.28.2 or a later implementation
+release satisfies its exit criteria.
+
+## v0.28.2 / v0.28.3 Planning State
+
+| Version | State    | Release Rule                                                                  |
+| ------- | -------- | ----------------------------------------------------------------------------- |
+| v0.28.2 | Planned  | Bump only after deprecated purge, hardening, build, test, DSD, and CI pass.   |
+| v0.28.3 | Deferred | Depends on v0.28.2; MDX implementation requires ADR, package work, and tests. |
 
 ## Historical Versions
 
@@ -110,4 +128,4 @@ See `docs/sop/v0.28.1/SOP-002-thorough-cleanup.md`.
 
 ## Last Completed Line: v0.28.0
 
-12 commits, 10 SOPs (SOP-001 in v0.28.0/ + 10 in v0.27.0/), 1 ADR. Theme system migrated. Architecture contracts frozen. CI composite action exported. Next: v0.28.1 hygiene convergence (this SOP).
+12 commits, 10 SOPs (SOP-001 in v0.28.0/ + 10 in v0.27.0/), 1 ADR. Theme system migrated. Architecture contracts frozen. CI composite action exported. v0.28.1 hygiene is closed; next implementation line is v0.28.2.
