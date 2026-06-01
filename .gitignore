@@ -42,7 +42,7 @@ test-results/
 
 # Framework internals
 .workbuddy/
-.workbuddy/
+.gstack/
 
 # Vite cache
 .vite/
@@ -56,8 +56,7 @@ coverage-*.txt
 coverage-output.txt
 .git-commit-msg.txt
 docs/vite-build-*.txt
-/node_modules
-node_modules
+node_modules/
 
 # Root-level logo source files (design originals, keep local)
 /less-logo*.svg

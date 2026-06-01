@@ -1,5 +1,5 @@
 ﻿/**
- * Homepage — Neo-Swiss Hyper-Dark v0.27.
+ * Homepage — Neo-Swiss Hyper-Dark v0.28.
  *
  * Showcases LessJS framework: DSD rendering, Signal reactivity,
  * Island architecture. Pure DsdElement + @lessjs/signals.
@@ -200,7 +200,7 @@ export class DocsHome extends DsdElement {
             <div class='hero-inner'>
               {/* Left: Giant Typography */}
               <div class='hero-left'>
-                <p class='eyebrow'>[ DEEP RUNTIME ENGINE V0.27 ]</p>
+                <p class='eyebrow'>[ DEEP RUNTIME ENGINE V0.28 ]</p>
                 <h1 class='giant-headline'>
                   LESS IS<br />
                   <span class='glow-line'>THE CORE.</span>

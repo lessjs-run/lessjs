@@ -49,7 +49,7 @@ function GettingStartedZh() {
       </p>
 
       <less-callout type='info' label='推荐'>
-        推荐使用 Deno 2.7+。LessJS <strong>v0.27</strong> 是 Deno-first 项目，依赖通过
+        推荐使用 Deno 2.7+。LessJS <strong>v0.28</strong> 是 Deno-first 项目，依赖通过
         <span class='inline-code'>deno.json</span> 管理，开发和构建命令都从 Deno task 进入。
       </less-callout>
 

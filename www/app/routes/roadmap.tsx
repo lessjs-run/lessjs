@@ -243,16 +243,15 @@ export class RoadmapPage extends DsdElement {
             <div>
               <h1>Roadmap</h1>
               <p class="subtitle">
-                LessJS roadmap labels are product truth, not aspiration. v0.23.0
-                is the current architecture line: protocols, runtime facade,
-                app facade, publish order, and package graph gates. Edge
-                Full-Stack resumes in v0.24 after the graph stays clean.
+                LessJS roadmap labels are product truth, not aspiration. v0.28.0
+                is the current architecture line: contracts & tokens, Open Props
+                theme system, CI composite action, and signal-driven registry.
               </p>
             </div>
             <aside class="now">
               <span>current line</span>
-              <h2>v0.23.x Layered Package Architecture</h2>
-              <p>Implemented in 0.23.0. All 18 packages are aligned to the same version.</p>
+              <h2>v0.28.0 Contracts & Tokens</h2>
+              <p>Implemented in 0.28.0. All 19 packages are aligned to the same version.</p>
             </aside>
           </section>
 
@@ -280,7 +279,7 @@ export class RoadmapPage extends DsdElement {
             <div class="phase">
               <div class="version">v0.27.x</div>
               <div><h3>Ecosystem Hardening</h3><p>Hub trust policy, more real package evidence, compatibility growth, and package author guidance.</p></div>
-              <span class="status planned">Planned</span>
+              <span class="status done">Done</span>
             </div>
           </div>
 
