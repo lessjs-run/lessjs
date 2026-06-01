@@ -857,7 +857,8 @@ export class LessLayout extends DsdElement {
       this.setAttribute('data-theme', docTheme);
     }
     // SignalContext: provide theme state to all child components
-    provideContext(this, THEME_CTX, (docTheme as 'dark' | 'light') || 'dark');
+    const initialTheme = (docTheme as 'dark' | 'light') || 'dark';
+    provideContext(this, THEME_CTX, initialTheme);
 
     // Listen for theme change events from less-theme-toggle
     this._themeHandler = (e: Event) => {
@@ -869,6 +870,8 @@ export class LessLayout extends DsdElement {
       }
     };
     globalThis.addEventListener?.('less:theme-change', this._themeHandler);
+
+    this._propagateTheme(initialTheme);
 
     if (this.shadowRoot && this.shadowRoot.childNodes.length > 0) {
       this._setupDetailsToggle();

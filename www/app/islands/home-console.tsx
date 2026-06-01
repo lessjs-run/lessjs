@@ -8,31 +8,31 @@ import { THEME_CTX } from '@lessjs/ui/less-layout';
 const styles = new StyleSheet();
 styles.replaceSync(`
   :host { display: block; }
-  .panel { background: var(--gray-0); border: 0.5px solid var(--gray-3); border-radius: var(--radius-2); overflow: hidden; }
-  .rp-header { display: flex; align-items: center; justify-content: space-between; padding: var(--size-2) var(--size-3); background: var(--gray-1); border-bottom: 0.5px solid var(--gray-3); }
-  .rp-title { font-family: var(--font-mono); font-size: var(--font-size-00); font-weight: var(--font-weight-7); color: var(--gray-6); letter-spacing: 0.04em; text-transform: uppercase; }
+  .panel { background: var(--bg-panel, var(--bg-card)); border: 0.5px solid var(--border); border-radius: var(--radius-2); overflow: hidden; }
+  .rp-header { display: flex; align-items: center; justify-content: space-between; padding: var(--size-2) var(--size-3); background: var(--bg-surface); border-bottom: 0.5px solid var(--border); }
+  .rp-title { font-family: var(--font-mono); font-size: var(--font-size-00); font-weight: var(--font-weight-7); color: var(--text-muted); letter-spacing: 0.04em; text-transform: uppercase; }
   .pane { padding: var(--size-6) var(--size-4); }
   .pane.hidden { display: none; }
   .counter-row { display: flex; align-items: center; justify-content: center; gap: var(--size-4); }
   .counter-btn {
     display: flex; align-items: center; justify-content: center;
     width: var(--size-8); height: var(--size-8);
-    border: 0.5px solid var(--gray-3); border-radius: var(--radius-2);
-    background: var(--gray-1); color: var(--gray-6);
+    border: 0.5px solid var(--border); border-radius: var(--radius-2);
+    background: var(--bg-surface); color: var(--text-muted);
     font-size: var(--font-size-3); font-weight: var(--font-weight-6);
     cursor: pointer; transition: all var(--ease-3) var(--duration-2);
     display: flex; align-items: center; justify-content: center;
   }
-  .counter-btn:hover { color: var(--gray-10); background: var(--gray-2); border-color: var(--indigo-5); }
+  .counter-btn:hover { color: var(--text-primary); background: var(--bg-hover); border-color: var(--indigo-5); }
   .counter-value {
     padding: 0 var(--size-7);
     font-size: var(--font-size-5); font-weight: var(--font-weight-9);
-    color: var(--gray-10); font-variant-numeric: tabular-nums;
+    color: var(--text-primary); font-variant-numeric: tabular-nums;
     min-width: 60px; text-align: center;
   }
   .counter-caption {
     font-family: var(--font-mono); font-size: var(--font-size-00);
-    color: var(--gray-6); text-align: center; margin-top: var(--size-4);
+    color: var(--text-muted); text-align: center; margin-top: var(--size-4);
   }
   .counter-caption b { color: var(--indigo-5); font-weight: var(--font-weight-7); }
   @media (max-width: 640px) {
