@@ -56,25 +56,25 @@ The App Shell (`<less-layout>`) is applied automatically by the Builder — page
 
 | Package                | Version | Description                                                 |
 | ---------------------- | ------- | ----------------------------------------------------------- |
-| `@lessjs/core`         | v0.27.0 | DSD renderer, DsdElement, JSX runtime, islands, navigation  |
-| `@lessjs/adapter-vite` | v0.27.0 | Vite plugin: route scanning, SSG pipeline, island entries   |
-| `@lessjs/ui`           | v0.27.0 | DSD-native UI components (button, card, input, dialog...)   |
-| `@lessjs/signals`      | v0.27.0 | Signal primitives (signal, computed, effect)                |
-| `@lessjs/content`      | v0.27.0 | Blog, nav, sitemap build plugins                            |
-| `@lessjs/i18n`         | v0.27.0 | Locales, route expansion                                    |
-| `@lessjs/create`       | v0.27.0 | Project scaffold CLI                                        |
-| `@lessjs/runtime`      | v0.27.0 | Unified component authoring facade (core + signals + style) |
+| `@lessjs/core`         | v0.28.0 | DSD renderer, DsdElement, JSX runtime, islands, navigation  |
+| `@lessjs/adapter-vite` | v0.28.0 | Vite plugin: route scanning, SSG pipeline, island entries   |
+| `@lessjs/ui`           | v0.28.0 | DSD-native UI components (button, card, input, dialog...)   |
+| `@lessjs/signals`      | v0.28.0 | Signal primitives (signal, computed, effect)                |
+| `@lessjs/content`      | v0.28.0 | Blog, nav, sitemap build plugins                            |
+| `@lessjs/i18n`         | v0.28.0 | Locales, route expansion                                    |
+| `@lessjs/create`       | v0.28.0 | Project scaffold CLI                                        |
+| `@lessjs/runtime`      | v0.28.0 | Unified component authoring facade (core + signals + style) |
 
-[All 16 packages →](https://jsr.io/@lessjs)
+[All 19 packages →](https://jsr.io/@lessjs)
 
-## What's New in v0.27.0
+## What's New in v0.28.0
 
-- **Single-pass DSD rendering** — `renderDsd()` is the only public render API. No more `renderDsdByName` or `renderNestedDsd`. One tree, one traversal.
-- **parse5 removed** — the HTML re-parser is gone. VNode is the one AST.
-- **JSX factories out of root** — `jsx`, `jsxDEV`, `jsxs` now live on `@lessjs/core/jsx-runtime`.
-- **Signal-native hydration** — `data-signal` attributes replace fragile position-matching.
-- **Three production bugs eliminated** — sidebar DSD, search [object Object], theme isolation.
-- **[Full changelog →](https://github.com/lessjs-run/lessjs/blob/dev/docs/changelog/v0.27.0.md)**
+- **Architecture contracts stabilized** — `createAdapterRegistry()` factory, `LessRenderer` interface expansion, `onRenderError` hook, try/catch around `_renderOrHydrate`.
+- **Full Open Props migration** — 7 color scales (indigo/green/red/orange/blue/teal/cyan) with dark mode inversions; 0 custom semantic tokens, 0 hardcoded colors in www/.
+- **CI composite action** — reusable workflow exported, 5-step matrix reduced from 14 to 9 jobs.
+- **Documentation site theme gates** — 80+ test cases covering SSR/CSR theme parity, search/sidebar/TOC color isolation.
+- **Signal-driven registry** — registry index rewritten to zero manual DOM via `data-signal` + `data-signal-attr`.
+- **[Full changelog →](https://github.com/lessjs-run/lessjs/blob/dev/docs/changelog/v0.28.0.md)**
 
 ## Contributing
 

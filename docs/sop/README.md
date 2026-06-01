@@ -30,10 +30,15 @@ have one SOP with:
 | v0.19.1 | [v0.19.1-hub-previews-quality-gates.md](./v0.19.1-hub-previews-quality-gates.md)             | Deferred | Hub previews and scores            |
 | v0.20.0 | [v0.20.0/](./v0.20.0/)                                                                       | Done     | Ocean-Island + docs alignment      |
 | v0.21.0 | [v0.21.0/](./v0.21.0/)                                                                       | Done     | Reactive DSD + streaming           |
-| v0.22.0 | [v0.22.0/](./v0.22.0/)                                                                       | Planning | Architecture Integrity             |
-| v0.23.0 | [v0.23.0/](./v0.23.0/)                                                                       | Planning | Layered Package Architecture       |
-| v0.24.3 | [v0.24.3/](./v0.24.3/)                                                                       | Planning | Consolidation + legacy removal     |
-| v0.27.0 | [v0.27.0/](./v0.27.0/)                                                                       | Planning | Framework-level docs reliability   |
+| v0.22.0 | [v0.22.0/](./v0.22.0/)                                                                       | Done     | Architecture Integrity             |
+| v0.23.0 | [v0.23.0/](./v0.23.0/)                                                                       | Done     | Layered Package Architecture       |
+| v0.24.3 | [v0.24.3/](./v0.24.3/)                                                                       | Done     | Consolidation + legacy removal     |
+| v0.25.0 | [v0.25.0/](./v0.25.0/)                                                                       | Done     | Declarative DX                     |
+| v0.26.0 | [v0.26.0/](./v0.26.0/)                                                                       | Done     | Hub CLI reorganization             |
+| v0.26.1 | [v0.26.1/](./v0.26.1/)                                                                       | Done     | Signal-to-CSS visual binding       |
+| v0.27.0 | [v0.27.0/](./v0.27.0/)                                                                       | Done     | Framework decoupling + reactive    |
+| v0.28.0 | [v0.28.0/](./v0.28.0/)                                                                       | Done     | Contracts & Tokens + Open Props    |
+| v0.28.1 | [v0.28.1/](./v0.28.1/)                                                                       | Active   | Hygiene convergence                |
 | v1.0.0  | [v1.0.0-general-purpose-engine.md](./v1.0.0-general-purpose-engine.md)                       | Vision   | API freeze                         |
 
 ## Operator Rules

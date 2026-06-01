@@ -41,9 +41,12 @@ outrunning the architecture.
 | 10.1  | v0.24.2     | Remove Old Component Model   | html/@prop removal, renderer hardening, docs truth convergence | ✅ Done |
 | 10.2  | v0.24.3     | Consolidation                | TemplateResult removal, TemplateRunner dedup, gate hardening   | ✅ Done |
 | 10.3  | v0.24.4     | API Naming Convention        | verbNoun, PascalCase acronyms, brand prefix removal            | ✅ Done |
-| 11    | v0.25.0     | Declarative DX               | BuildPipeline, route types, static head, static client         | Planned |
-| 12    | v0.27.0     | Reactive Pragmatic           | Route params, data-keep-alive, computed docs                   | Planned |
-| 13    | v1.0.x      | Stable Engine                | API/schema freeze and deterministic package guarantees         | Vision  |
+| 11    | v0.25.0     | Declarative DX               | BuildPipeline, route types, static head, static client         | ✅ Done |
+| 12    | v0.26.0     | Hub CLI Reorganization       | Hub command surface, package publish sanity                    | ✅ Done |
+| 13    | v0.27.0     | Framework Decoupling         | Virtual module removal, island transform, dev:fast server      | ✅ Done |
+| 14    | v0.28.0     | Contracts & Tokens           | Adapter registry factory, Open Props migration, CI composite   | ✅ Done |
+| 14.1  | v0.28.1     | Hygiene Convergence          | v0.28 anchor sweep, gitignore leaks, strategic-docs sync       | Active  |
+| 15    | v1.0.x      | Stable Engine                | API/schema freeze and deterministic package guarantees         | Vision  |
 
 ## Compatibility Admission Model
 
