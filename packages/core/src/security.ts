@@ -13,7 +13,8 @@
  * @module @lessjs/core/security
  */
 
-import sanitizeHtml, { type IOptions as SanitizeHtmlOptions } from 'sanitize-html';
+// @deno-types="npm:@types/sanitize-html@^2"
+import sanitizeHtml, { type IOptions as SanitizeHtmlOptions } from 'npm:sanitize-html@^2.17.4';
 
 /** Object prototype keys that must never be injected as SSR props. */
 export const DANGEROUS_KEYS: ReadonlySet<string> = new Set([

@@ -172,6 +172,9 @@ Deno.test('createLessJsrPackageResolverPlugin rewrites npm: specifiers from JSR 
     `import { LitElement } from 'npm:lit@3.3.2';`,
     `import { something } from 'npm:@lit/reactive-element@2.1.0';`,
     `import { ctx } from 'npm:@lessjs/core@0.21.10/context';`,
+    `import 'npm:sanitize-html@2.17.4';`,
+    `const dynamic = import('npm:gray-matter@4.0.3');`,
+    `const literal = 'npm:not-a-real-import@1.0.0';`,
     `export * from 'npm:@jsr/lessjs__signals@0.21.10/framework';`,
     `import { rpc } from 'npm:@jsr/lessjs__rpc@0.21.10';`,
   ].join('\n');
@@ -190,12 +193,39 @@ Deno.test('createLessJsrPackageResolverPlugin rewrites npm: specifiers from JSR 
   assertEquals(result.includes("from 'lit'"), true);
   assertEquals(result.includes("from '@lit/reactive-element'"), true);
   assertEquals(result.includes("from '@lessjs/core/context'"), true);
+  assertEquals(result.includes("import 'sanitize-html'"), true);
+  assertEquals(result.includes("import('gray-matter')"), true);
   assertEquals(result.includes("from '@jsr/lessjs__signals/framework'"), true);
   assertEquals(result.includes("from '@jsr/lessjs__rpc'"), true);
+  assertEquals(result.includes("'npm:not-a-real-import@1.0.0'"), true);
 
   // npm: prefix and version should NOT remain
-  assertEquals(result.includes('npm:'), false);
+  assertEquals(result.replace("'npm:not-a-real-import@1.0.0'", '').includes('npm:'), false);
   assertEquals(result.includes('@12.0.0'), false);
   assertEquals(result.includes('@3.3.2'), false);
   assertEquals(result.includes('@2.1.0'), false);
+});
+
+Deno.test('createLessJsrPackageResolverPlugin rewrites npm: specifiers during workspace transforms', async () => {
+  const plugin = createLessJsrPackageResolverPlugin({
+    workspaceRoot: 'C:/repo',
+    version: '0.28.5',
+  });
+  const transform = plugin.transform as unknown as (
+    code: string,
+    id?: string,
+  ) => { code: string; map: null } | null | Promise<{ code: string; map: null } | null>;
+
+  const result = await transform(
+    [
+      `// @deno-types="npm:@types/sanitize-html@^2"`,
+      `import sanitizeHtml from 'npm:sanitize-html@^2.17.4';`,
+      `const literal = 'npm:keep-me@1.0.0';`,
+    ].join('\n'),
+    'C:/repo/packages/core/src/security.ts',
+  ) as { code: string; map: null };
+
+  assertEquals(result.code.includes("from 'sanitize-html'"), true);
+  assertEquals(result.code.includes('"npm:@types/sanitize-html@^2"'), true);
+  assertEquals(result.code.includes("'npm:keep-me@1.0.0'"), true);
 });

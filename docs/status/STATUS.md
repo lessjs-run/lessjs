@@ -2,12 +2,18 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version Line: v0.28.4 (AppShell Protocol + Cleanup - IMPLEMENTED)
+## Current Version Line: v0.28.5 (Consumer Resolver Patch - IMPLEMENTED)
+
+v0.28.5 Status: **IMPLEMENTED.** Post-publish consumer smoke for v0.28.4 found
+a bare `sanitize-html` import in fresh JSR consumers. v0.28.5 makes the
+sanitizer dependency an explicit `npm:` specifier in published source and aligns
+all 19 packages to `0.28.5`.
 
 v0.28.4 Status: **IMPLEMENTED.** AppShell is now an explicit framework
 protocol; route-level layouts are configurable; `renderDsd()` uses the strict
 object options contract; renderer raw HTML uses a parser-backed sanitizer; and
-local release tasks cover all 19 packages.
+local release tasks cover all 19 packages. It is superseded by v0.28.5 for fresh
+JSR consumers.
 
 v0.28.3 Status: **IMPLEMENTED.** The v0.28 pre-freeze closure added router,
 runtime, and protocols unit-test floors; removed dependency drift from the
@@ -70,10 +76,11 @@ unless a future SOP explicitly moves them forward.
 | Security hardening    | v0.28.2 | HTML/head/link sanitizers and least-privilege Hub     |
 | MDX                   | v0.28.3 | build-time MDX through Less JSX and DSD               |
 | AppShell protocol     | v0.28.4 | default, bare, custom, and route-selected shells      |
+| Consumer resolver     | v0.28.5 | explicit npm sanitizer imports for published source   |
 
 ## Package Version State
 
-All 19 packages are aligned to **v0.28.4**. Patch releases remain unified across
+All 19 packages are aligned to **v0.28.5**. Patch releases remain unified across
 the workspace so published JSR packages resolve a coherent version set.
 
 ## Architecture Positioning
@@ -91,6 +98,7 @@ the workspace so published JSR packages resolve a coherent version set.
 | v0.28.2 | Deprecated Purge + Hardening | Done   | Adapter compat removal, render options, HTML/head/link hardening   |
 | v0.28.3 | Cleanup Closure + MDX        | Done   | Test floors, lockfile alignment, MDX, 19-package `0.28.3` bump     |
 | v0.28.4 | AppShell Protocol + Cleanup  | Done   | Explicit shells, strict render API, sanitizer, 19-package gates    |
+| v0.28.5 | Consumer Resolver Patch      | Done   | Explicit npm sanitizer imports for fresh JSR consumers             |
 
 ## Key Decisions
 
@@ -105,8 +113,9 @@ the workspace so published JSR packages resolve a coherent version set.
 - **Full Open Props migration.** No custom semantic tokens; all colors derive from `@lessjs/ui/open-props-tokens`.
 - **MDX through DSD.** MDX is build-time content compilation into the Less JSX runtime, not a runtime parser or React layer.
 
-## Last Completed Line: v0.28.4
+## Last Completed Line: v0.28.5
 
-SOP-005 is implemented as the `0.28.4` release line. Release details live in
-`docs/changelog/v0.28.4.md`, `docs/release/v0.28.4.md`, and
+v0.28.5 is the post-publish consumer resolver patch for SOP-005's `0.28.4`
+AppShell release line. Release details live in `docs/changelog/v0.28.5.md` and
+`docs/release/v0.28.5.md`; the governing AppShell SOP remains
 `docs/sop/v0.28.4/SOP-005-appshell-and-cleanup.md`.

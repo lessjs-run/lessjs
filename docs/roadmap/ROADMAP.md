@@ -20,7 +20,7 @@ outrunning the architecture.
 
 | Area                      | State                                                 |
 | ------------------------- | ----------------------------------------------------- |
-| Project line              | v0.28.4 AppShell Protocol + Cleanup                   |
+| Project line              | v0.28.5 Consumer Resolver Patch                       |
 | Current rendering mode    | SSG + Declarative Shadow DOM                          |
 | Component model           | JSX + static props + Signal (ADR-0057)                |
 | Public API naming         | Web Platform style: verbNoun, PascalCase acronyms     |
@@ -49,6 +49,7 @@ outrunning the architecture.
 | 14.2  | v0.28.2     | Deprecated Purge             | Compat purge, security hardening, SSR bundle reduction         | Done    |
 | 14.3  | v0.28.3     | Cleanup Closure + MDX        | Test floor, lockfile alignment, MDX design and implementation  | Done    |
 | 14.4  | v0.28.4     | AppShell Protocol + Cleanup  | Explicit shells, strict render API, sanitizer, release gates   | Done    |
+| 14.5  | v0.28.5     | Consumer Resolver Patch      | Fix post-publish sanitizer dependency resolution for consumers | Done    |
 | 15    | v1.0.x      | Stable Engine                | API/schema freeze and deterministic package guarantees         | Vision  |
 
 ## Compatibility Admission Model

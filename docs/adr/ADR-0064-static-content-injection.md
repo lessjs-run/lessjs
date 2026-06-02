@@ -81,7 +81,7 @@ The key distinction: `innerHTML` is compared by value (string equality), not sub
 ```ts
 // packages/content/src/render.ts
 import { marked } from 'marked';
-import sanitizeHtml from 'sanitize-html';
+import sanitizeHtml from 'npm:sanitize-html@^2.17.4';
 
 export async function renderMd(mdPath: string): Promise<string> {
   const raw = await readFile(mdPath, 'utf-8');

@@ -449,6 +449,13 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
           },
           output: {
             format: 'esm',
+            // Framework SSR externals that are introduced by LessJS source must
+            // stay Deno-resolvable in a fresh JSR consumer with no root import
+            // map alias. Keep Vite/Rolldown resolving the bare id internally,
+            // then emit the Deno npm: specifier in the final server bundle.
+            paths: {
+              'sanitize-html': 'npm:sanitize-html@^2.17.4',
+            },
             // ADR-0044: customElements polyfill must run before ESM imports.
             // Uses Map-backed define()/get() 鈥?renderDsdByName() looks up
             // components via customElements.get(tagName) during SSG rendering.

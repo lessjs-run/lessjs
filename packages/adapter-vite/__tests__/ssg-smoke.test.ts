@@ -80,6 +80,18 @@ Deno.test('SSG smoke: one-command build produces trusted www output', async (t) 
 
   await t.step('server SSR bundle exports route metadata and renderRoute', async () => {
     const serverEntry = join(WWW_DIST, 'server', 'entry.js');
+    const serverBundle = readFileSync(serverEntry, 'utf-8');
+    assertEquals(
+      /from\s+["']sanitize-html["']/.test(serverBundle),
+      false,
+      'SSR bundle must not leak a bare sanitize-html import',
+    );
+    assertEquals(
+      serverBundle.includes('npm:sanitize-html@'),
+      true,
+      'SSR bundle must emit a Deno-resolvable sanitize-html npm: import',
+    );
+
     const mod = await import(`${pathToFileURL(serverEntry).href}?t=${Date.now()}`) as Record<
       string,
       unknown

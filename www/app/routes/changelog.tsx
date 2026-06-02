@@ -10,7 +10,8 @@ import { StyleSheet } from '@lessjs/style-sheet';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
 import { pageStyles } from '../components/page-styles.js';
 import { marked } from 'marked';
-import sanitizeHtml from 'sanitize-html';
+// @deno-types="npm:@types/sanitize-html@^2"
+import sanitizeHtml from 'npm:sanitize-html@^2.17.4';
 
 const pageSheet = new StyleSheet();
 pageSheet.replaceSync(`

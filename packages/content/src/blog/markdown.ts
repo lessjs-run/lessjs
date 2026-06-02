@@ -6,7 +6,8 @@
 
 import matter from 'gray-matter';
 import { marked } from 'marked';
-import sanitizeHtml from 'sanitize-html';
+// @deno-types="npm:@types/sanitize-html@^2"
+import sanitizeHtml from 'npm:sanitize-html@^2.17.4';
 import type { BlogPost, LessBlogOptions } from './types.ts';
 
 /**

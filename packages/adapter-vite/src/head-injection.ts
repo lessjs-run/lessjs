@@ -15,7 +15,8 @@ import type { FrameworkOptions } from '@lessjs/core';
 import { LessError } from '@lessjs/core/errors';
 import { escapeAttr as escapeHtmlAttr } from '@lessjs/core';
 import { createLogger } from '@lessjs/core/logger';
-import sanitizeHtml, { type IOptions as SanitizeHtmlOptions } from 'sanitize-html';
+// @deno-types="npm:@types/sanitize-html@^2"
+import sanitizeHtml, { type IOptions as SanitizeHtmlOptions } from 'npm:sanitize-html@^2.17.4';
 
 const log = createLogger('adapter-vite:head-injection');
 

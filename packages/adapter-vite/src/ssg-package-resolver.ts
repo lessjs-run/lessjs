@@ -174,6 +174,12 @@ export function createLessJsrPackageResolverPlugin(
   return {
     name: 'less:ssg-package-resolve',
     enforce: 'pre',
+    transform(code) {
+      if (!code.includes('npm:')) return null;
+      const rewritten = rewriteNpmSpecifiers(code);
+      if (rewritten === code) return null;
+      return { code: rewritten, map: null };
+    },
     resolveId(id, importer) {
       if (options.workspaceRoot) return null;
       if (hasExactUserAlias(id, options.userAliases)) return null;
@@ -261,10 +267,12 @@ function ensureTsExtension(path: string): string {
 }
 
 /**
- * Rewrite Deno/JSR `npm:` specifiers to bare specifiers that Vite/Rolldown
- * can resolve. JSR rewrites bare npm imports like `import from 'marked'` to
- * `import from 'npm:marked@12.0.0'`. Vite doesn't understand `npm:` so we
- * strip the prefix and version, leaving a bare specifier like `marked` or
+ * Rewrite Deno/JSR `npm:` import/export specifiers to bare specifiers that
+ * Vite/Rolldown can resolve. JSR rewrites bare npm imports like
+ * `import from 'marked'` to `import from 'npm:marked@12.0.0'`. Published LessJS
+ * source can also use explicit `npm:` specifiers so fresh Deno consumers do not
+ * need root import-map aliases. Vite doesn't understand `npm:` so we strip the
+ * prefix and version, leaving a bare specifier like `marked` or
  * `@lit/reactive-element`.
  *
  * Handles:
@@ -273,13 +281,14 @@ function ensureTsExtension(path: string): string {
  *   npm:package@version/sub    → package/sub
  *   npm:@scope/pkg@version/sub → @scope/pkg/sub
  */
-const NPM_SPECIFIER_RE = /(['"])npm:(@?[a-z0-9_-]+(?:\/[a-z0-9_-]+)?)@[^'"/]+(\/[^'"]*)?\1/g;
+const NPM_SPECIFIER_RE =
+  /(\bfrom\s*|\bimport\s*\(\s*|\bimport\s+)(['"])npm:(@?[a-z0-9_-]+(?:\/[a-z0-9_-]+)?)@[^'"/]+(\/[^'"]*)?\2/g;
 
 function rewriteNpmSpecifiers(source: string): string {
   return source.replace(
     NPM_SPECIFIER_RE,
-    (_match, quote: string, pkg: string, subpath?: string) => {
-      return `${quote}${pkg}${subpath ?? ''}${quote}`;
+    (_match, prefix: string, quote: string, pkg: string, subpath?: string) => {
+      return `${prefix}${quote}${pkg}${subpath ?? ''}${quote}`;
     },
   );
 }
