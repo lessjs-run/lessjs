@@ -22,6 +22,7 @@ import {
   serializeEventMarkers,
 } from './event-hydration.ts';
 import { renderDsd } from './render-dsd.js';
+import { sanitizeRenderHtml } from './security.ts';
 
 // ─── Void elements ───────────────────────────────────────────────────────────
 
@@ -54,24 +55,10 @@ function insertLightDomIntoDsdHost(html: string, tagName: string, lightDom: stri
   return html.slice(0, index) + lightDom + html.slice(index);
 }
 
-function sanitizeRawHtml(html: string): string {
-  return html
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/\s+on[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
-    .replace(
-      /\s+(href|src|xlink:href|formaction)\s*=\s*("|')\s*(?:javascript|data|vbscript|file):[\s\S]*?\2/gi,
-      '',
-    )
-    .replace(
-      /\s+(href|src|xlink:href|formaction)\s*=\s*(?:javascript|data|vbscript|file):[^\s>]*/gi,
-      '',
-    );
-}
-
 function resolveInnerHtml(props: Record<string, unknown> | undefined): string | undefined {
   if (props?.innerHTML === undefined) return undefined;
   const value = String(unwrapSignalLike(props.innerHTML));
-  return props.rawHtml === true ? sanitizeRawHtml(value) : escapeHtml(value);
+  return props.rawHtml === true ? sanitizeRenderHtml(value) : escapeHtml(value);
 }
 
 // ─── Attribute serialisation ──────────────────────────────────────────────────

@@ -14,19 +14,8 @@
  *   import { installLitAdapter } from '@lessjs/adapter-lit';
  *   installLitAdapter(); // patches renderDsd to handle Lit TemplateResult
  *
- * Usage (for DSD Interactive components):
- *   import { DsdLitElement } from '@lessjs/adapter-lit';
- *   class MyToggle extends DsdLitElement { ... }
- *
  * @module @lessjs/adapter-lit
  */
 
 export { installLitAdapter, uninstallLitAdapter } from './ssr.js';
 export { isLitTemplateResult, renderLitToString } from './ssr.js';
-/**
- * @deprecated Use `DsdElement` from `@lessjs/core` instead.
- * DsdLitElement is the Lit-based predecessor; the framework is migrating
- * to zero-dependency DsdElement (extends HTMLElement directly, no Lit).
- */
-export { DsdLitElement, WithDsdHydration } from './dsd-hydration.js';
-export type { DsdHydration, DsdHydrationMixin } from './dsd-hydration.js';

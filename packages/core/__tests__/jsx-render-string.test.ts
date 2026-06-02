@@ -5,7 +5,7 @@
  * boolean attrs, style serialisation, event exclusion.
  */
 
-import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@1';
+import { assertEquals, assertFalse, assertStringIncludes } from 'jsr:@std/assert@1';
 import { Fragment, jsx, jsxs } from '../src/jsx-runtime.ts';
 import { renderDsdTree, renderToString } from '../src/jsx-render-string.ts';
 import { signal } from '@lessjs/signals';
@@ -169,7 +169,31 @@ Deno.test('renderToString escapes Signal innerHTML values by default', () => {
 Deno.test('renderToString allows sanitized rawHtml explicitly', () => {
   const html = signal('<strong>ready</strong><img src="javascript:alert(1)" onerror="x()">');
   const vnode = jsx('div', { innerHTML: html, rawHtml: true });
-  assertEquals(renderToString(vnode), '<div><strong>ready</strong><img></div>');
+  const output = renderToString(vnode);
+  assertStringIncludes(output, '<strong>ready</strong>');
+  assertStringIncludes(output, '<img');
+  assertFalse(output.includes('javascript:'));
+  assertFalse(output.includes('onerror'));
+});
+
+Deno.test('renderToString rawHtml sanitizer rejects parser edge cases', () => {
+  const html = [
+    '<a href="&#x6a;avascript:alert(1)">bad</a>',
+    '<svg><a xlink:href="javascript:alert(1)">bad</a></svg>',
+    '<iframe srcdoc="<script>alert(1)</script>"></iframe>',
+    '<math href="javascript:alert(1)">bad</math>',
+    '<p data-state="ok">safe</p>',
+  ].join('');
+  const vnode = jsx('div', { innerHTML: html, rawHtml: true });
+  const output = renderToString(vnode);
+
+  assertStringIncludes(output, '<p data-state="ok">safe</p>');
+  assertFalse(output.includes('javascript:'));
+  assertFalse(output.includes('xlink:href'));
+  assertFalse(output.includes('srcdoc'));
+  assertFalse(output.includes('<svg'));
+  assertFalse(output.includes('<iframe'));
+  assertFalse(output.includes('<math'));
 });
 
 Deno.test('renderDsdTree keeps custom element light DOM children in one tree', async () => {

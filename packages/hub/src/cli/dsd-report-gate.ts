@@ -6,7 +6,7 @@
  *   deno task dsd:check-report
  *
  * Reads www/dist/dsd-report.json and checks:
- * 1. Non-recoverable errors must not exceed the v0.20 baseline.
+ * 1. Native non-recoverable errors must be zero by default.
  * 2. Unknown error types fail the gate by default.
  *
  * Override thresholds only for investigation:
@@ -34,7 +34,7 @@ export interface DsdReport {
   timestamp?: string;
 }
 
-// Known error patterns - all from Shoelace components in SSR
+// Known third-party/client-only SSR boundary patterns.
 export const KNOWN_ERROR_PATTERNS: Array<{ pattern: RegExp; description: string }> = [
   {
     pattern: /this\.host\.querySelector is not a function/,
@@ -66,13 +66,11 @@ export const KNOWN_ERROR_PATTERNS: Array<{ pattern: RegExp; description: string 
   },
 ];
 
-// v0.21: Bumped to 12 to accommodate Shoelace third-party demo components
-// (sl-input, sl-dialog, sl-drawer, etc.) whose browser-only APIs cannot be
-// rendered in Deno SSR. These are known, expected non-recoverable errors.
-// v0.21.12: Third-party errors (sl-*) now warn only — gate only fails on
-// LessJS native components (less-*, page-*, demo-*).
+// v0.28.4: Native LessJS/page/demo components must have zero non-recoverable
+// render errors by default. Third-party errors are classified separately for
+// diagnostics, not used as implicit native tolerance.
 export const NATIVE_TAG_PREFIXES = ['less-', 'page-', 'demo-'];
-export const DEFAULT_MAX_NON_RECOVERABLE = 12;
+export const DEFAULT_MAX_NON_RECOVERABLE = 0;
 export const DEFAULT_MAX_UNKNOWN_ERROR_TYPES = 0;
 
 export interface DsdGateOptions {
@@ -244,12 +242,13 @@ function main() {
   console.info(
     `\n  [PASS] Gate passed (thresholds: non-recoverable <= ${gate.maxNonRecoverable}, unknown error types <= ${gate.maxUnknownErrorTypes})`,
   );
-  console.info(
-    `  [INFO] Known errors are from third-party client-only SSR boundaries.`,
-  );
-  console.info(
-    `  [INFO] Threshold will tighten again for v0.22 when third-party SSR fallbacks are resolved.\n`,
-  );
+  if (gate.allErrors.length > 0) {
+    console.info(
+      `  [INFO] Known errors are from third-party client-only SSR boundaries.\n`,
+    );
+  } else {
+    console.info('');
+  }
 }
 
 if (import.meta.main) {

@@ -309,8 +309,57 @@ Deno.test('renderEntry: app shell is built from VNode tree, not HTML replace', (
   const code = renderEntry(desc);
 
   assertStringIncludes(code, 'async function __renderAppShell(routeNode, routePath');
-  assertStringIncludes(code, 'renderDsd("less-layout"');
-  assertStringIncludes(code, '.replace("</less-layout>"');
+  assertStringIncludes(code, '"tagName": "less-layout"');
+  assertStringIncludes(code, "import '@lessjs/ui/less-layout';");
+  assertStringIncludes(code, 'renderDsd(shell.tagName, { props: layoutProps })');
+  assertStringIncludes(code, 'layoutResult.html.slice(0, index) + pageHtml');
+});
+
+Deno.test('renderEntry: appShell false renders route content without default layout import', () => {
+  const desc = buildEntryDescriptor(basicRoutes, { ssg: true, appShell: false });
+  const code = renderEntry(desc);
+
+  assertFalse(code.includes("import '@lessjs/ui/less-layout';"));
+  assertStringIncludes(code, '"default": false');
+  assertStringIncludes(code, 'if (!shell) return pageHtml;');
+});
+
+Deno.test('renderEntry: custom appShell import and props are generated from config', () => {
+  const desc = buildEntryDescriptor(basicRoutes, {
+    ssg: true,
+    appShell: {
+      tagName: 'blog-layout',
+      import: './app/components/blog-layout.tsx',
+      props: { siteName: 'Field Notes' },
+    },
+  });
+  const code = renderEntry(desc);
+
+  assertStringIncludes(code, "import '/app/components/blog-layout.tsx';");
+  assertStringIncludes(code, '"tagName": "blog-layout"');
+  assertStringIncludes(code, '"siteName": "Field Notes"');
+});
+
+Deno.test('renderEntry: route meta layout can select named layouts', () => {
+  const desc = buildEntryDescriptor(basicRoutes, {
+    ssg: true,
+    layouts: {
+      default: false,
+      post: {
+        tagName: 'post-layout',
+        import: './app/components/post-layout.tsx',
+      },
+    },
+  });
+  const code = renderEntry(desc);
+
+  assertStringIncludes(code, "import '/app/components/post-layout.tsx';");
+  assertStringIncludes(
+    code,
+    'const layout = Object.prototype.hasOwnProperty.call(routeMeta, "layout")',
+  );
+  assertStringIncludes(code, '__appShellPlan.layouts[layout] ?? __appShellPlan.default');
+  assertStringIncludes(code, 'module: $pageIndex');
 });
 
 Deno.test('renderEntry: uses descriptor SSR admission plan without recomputing it', () => {

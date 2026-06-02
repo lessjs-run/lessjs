@@ -7,7 +7,7 @@ order: 70
 
 ## Core API
 
-### renderDsd(input, props?)
+### renderDsd(input, options?)
 
 The single rendering entry point. Renders a custom element to DSD HTML.
 
@@ -16,12 +16,16 @@ import { renderDsd } from '@lessjs/core';
 
 // By tag name — auto-looks up from customElements registry
 const result = await renderDsd('less-layout', {
-  currentPath: '/guide/getting-started',
-  locale: 'en',
+  props: {
+    currentPath: '/guide/getting-started',
+    locale: 'en',
+  },
 });
 
 // By class — direct use
-const result = await renderDsd(MyComponent, { title: 'Hello' });
+const result = await renderDsd(MyComponent, {
+  props: { title: 'Hello' },
+});
 
 // result: { html: string, errors: [], metrics: {...}, hydrationHints: [] }
 console.log(result.html);
@@ -29,10 +33,10 @@ console.log(result.html);
 
 **Parameters:**
 
-| Param   | Type                                 | Description                               |
-| ------- | ------------------------------------ | ----------------------------------------- |
-| `input` | `string \| CustomElementConstructor` | Tag name (auto-lookup) or component class |
-| `props` | `Record<string, unknown>`            | Properties passed to the component        |
+| Param     | Type                                 | Description                                                                           |
+| --------- | ------------------------------------ | ------------------------------------------------------------------------------------- |
+| `input`   | `string \| CustomElementConstructor` | Tag name (auto-lookup) or component class                                             |
+| `options` | `RenderDsdOptions`                   | Component class, props, source info, DSD options, collector, nesting depth, and hooks |
 
 **Returns:** `Promise<RenderOutput>` — contains `html`, `errors`, `metrics`, `hydrationHints`.
 

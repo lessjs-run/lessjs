@@ -23,17 +23,21 @@ Each layer only knows the layer below. No layer imports from above.
 
 ## Rendering Pipeline
 
-### renderDsd(input, props?) — The One API
+### renderDsd(input, options?) - The One API
 
 ```ts
 // By tag name — auto-looks up from customElements registry
 const result = await renderDsd('less-layout', {
-  currentPath: '/guide/getting-started',
-  locale: 'en',
+  props: {
+    currentPath: '/guide/getting-started',
+    locale: 'en',
+  },
 })
 
 // By class — direct use
-const result = await renderDsd(LessLayout, { ... })
+const result = await renderDsd(LessLayout, {
+  props: { ... }
+})
 
 // result.html contains the full DSD output
 console.log(result.html)

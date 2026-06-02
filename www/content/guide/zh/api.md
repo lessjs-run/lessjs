@@ -7,7 +7,7 @@ order: 70
 
 ## 核心 API
 
-### renderDsd(input, props?)
+### renderDsd(input, options?)
 
 唯一的渲染入口。将自定义元素渲染为 DSD HTML。
 
@@ -16,12 +16,16 @@ import { renderDsd } from '@lessjs/core';
 
 // 按标签名 — 自动从 customElements 注册表查找
 const result = await renderDsd('less-layout', {
-  currentPath: '/zh/guide/getting-started',
-  locale: 'zh',
+  props: {
+    currentPath: '/zh/guide/getting-started',
+    locale: 'zh',
+  },
 });
 
 // 按类 — 直接使用
-const result = await renderDsd(MyComponent, { title: '你好' });
+const result = await renderDsd(MyComponent, {
+  props: { title: '你好' },
+});
 
 // result: { html: string, errors: [], metrics: {...}, hydrationHints: [] }
 console.log(result.html);
@@ -29,10 +33,10 @@ console.log(result.html);
 
 **参数:**
 
-| 参数    | 类型                                 | 描述                           |
-| ------- | ------------------------------------ | ------------------------------ |
-| `input` | `string \| CustomElementConstructor` | 标签名（自动查注册表）或组件类 |
-| `props` | `Record<string, unknown>`            | 传入组件的属性                 |
+| 参数      | 类型                                 | 描述                           |
+| --------- | ------------------------------------ | ------------------------------ |
+| `input`   | `string \| CustomElementConstructor` | 标签名（自动查注册表）或组件类 |
+| `options` | `RenderDsdOptions`                   | 渲染选项对象                   |
 
 **返回:** `Promise<RenderOutput>` — 包含 `html`、`errors`、`metrics`、`hydrationHints`。
 

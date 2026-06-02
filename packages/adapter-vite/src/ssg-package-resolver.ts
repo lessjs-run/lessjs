@@ -1,4 +1,4 @@
-import type { Plugin } from 'vite';
+import type { Alias, Plugin } from 'vite';
 
 const VIRTUAL_LESSJS_PACKAGE_PREFIX = '\0lessjs:ssg-pkg/';
 // Packages resolved by this plugin for JSR consumer SSG builds.
@@ -107,6 +107,7 @@ export interface LessJsrPackageResolverOptions {
   workspaceRoot: string | null;
   version: string;
   localPackageRoot?: string | null;
+  userAliases?: Record<string, string> | Alias[] | null;
   fetchSource?: (url: string) => Promise<Response>;
   readLocalSource?: (path: string) => string;
 }
@@ -175,6 +176,7 @@ export function createLessJsrPackageResolverPlugin(
     enforce: 'pre',
     resolveId(id, importer) {
       if (options.workspaceRoot) return null;
+      if (hasExactUserAlias(id, options.userAliases)) return null;
 
       const spec = parseLessPackageSpecifier(id);
       if (spec) {
@@ -222,6 +224,17 @@ export function createLessJsrPackageResolverPlugin(
       return rewriteNpmSpecifiers(source);
     },
   };
+}
+
+export function hasExactUserAlias(
+  id: string,
+  aliases: Record<string, string> | Alias[] | null | undefined,
+): boolean {
+  if (!aliases) return false;
+  if (Array.isArray(aliases)) {
+    return aliases.some((alias) => typeof alias.find === 'string' && alias.find === id);
+  }
+  return Object.prototype.hasOwnProperty.call(aliases, id);
 }
 
 function normalizeSubpath(subpath: string): string {

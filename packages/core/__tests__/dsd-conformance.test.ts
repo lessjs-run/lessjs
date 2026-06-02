@@ -1,8 +1,23 @@
 import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@1';
-import { renderDsd } from '../src/render-dsd.ts';
+import { renderDsd, type RenderDsdOptions } from '../src/render-dsd.ts';
 
 function asCtor(cls: new () => { render(): string }): CustomElementConstructor {
   return cls as unknown as CustomElementConstructor;
+}
+
+function renderDsdForTest(
+  tagName: string,
+  componentClass: CustomElementConstructor,
+  props: Record<string, unknown> = {},
+  sourceInfo?: { route?: string; source?: string },
+  dsdOptions?: RenderDsdOptions['dsdOptions'],
+) {
+  return renderDsd(tagName, {
+    componentClass,
+    props,
+    sourceInfo,
+    dsdOptions,
+  });
 }
 
 Deno.test('DSD conformance: emits WHATWG shadowrootmode and focus attributes', async () => {
@@ -12,7 +27,7 @@ Deno.test('DSD conformance: emits WHATWG shadowrootmode and focus attributes', a
     }
   }
 
-  const output = await renderDsd('focus-card', asCtor(FocusCard), {}, undefined, {
+  const output = await renderDsdForTest('focus-card', asCtor(FocusCard), {}, undefined, {
     delegatesFocus: true,
   });
 
@@ -27,7 +42,7 @@ Deno.test('DSD conformance: emits manual slot assignment attribute', async () =>
     }
   }
 
-  const output = await renderDsd('slot-card', asCtor(SlotCard), {}, undefined, {
+  const output = await renderDsdForTest('slot-card', asCtor(SlotCard), {}, undefined, {
     slotAssignment: 'manual',
   });
 
@@ -42,7 +57,7 @@ Deno.test('DSD conformance: host wraps inert template fallback', async () => {
     }
   }
 
-  const output = await renderDsd('parse-card', asCtor(ParseCard), {});
+  const output = await renderDsdForTest('parse-card', asCtor(ParseCard), {});
 
   assertStringIncludes(output.html, '<parse-card>');
   assertStringIncludes(output.html, '<template shadowrootmode="open">');

@@ -115,7 +115,7 @@ export const posts: any[] = [
     "slug": "architecture-analysis",
     "frontmatter": {
       "title": "architecture-analysis",
-      "date": "2026-06-01",
+      "date": "2026-05-13",
       "draft": false,
       "tags": []
     },

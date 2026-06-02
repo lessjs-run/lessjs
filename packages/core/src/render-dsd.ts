@@ -80,51 +80,24 @@ export interface RenderDsdOptions {
   hooks?: RenderHooks;
 }
 
-function isRenderDsdOptions(value: unknown): value is RenderDsdOptions {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
-  const obj = value as Record<string, unknown>;
-  return 'componentClass' in obj ||
-    'props' in obj ||
-    'sourceInfo' in obj ||
-    'dsdOptions' in obj ||
-    'collector' in obj ||
-    'nestingDepth' in obj ||
-    'hooks' in obj;
-}
-
 export async function renderDsd(
   input: string | CustomElementConstructor,
-  optionsOrClass?: RenderDsdOptions | CustomElementConstructor | Record<string, unknown>,
-  maybeProps?: Record<string, unknown>,
-  legacySourceInfo?: { route?: string; source?: string },
-  legacyDsdOptions?: DsdOptions,
-  legacyCollector?: DsdRenderCollector,
-  legacyNestingDepth?: number,
-  legacyHooks?: RenderHooks,
+  options: RenderDsdOptions = {},
 ): Promise<RenderOutput> {
   // ADR-0072: Polymorphic input with a single options object.
   let tagName: string;
   let componentClass: CustomElementConstructor;
-  let props: Record<string, unknown> = {};
-  const options = isRenderDsdOptions(optionsOrClass) ? optionsOrClass : undefined;
+  const props = options.props ?? {};
 
   if (typeof input === 'string') {
     tagName = input;
     if (options?.componentClass) {
       componentClass = options.componentClass;
-      props = options.props ?? {};
-    } else if (
-      optionsOrClass && typeof optionsOrClass === 'function' && 'prototype' in optionsOrClass
-    ) {
-      componentClass = optionsOrClass as CustomElementConstructor;
-      props = maybeProps ?? {};
     } else {
       const cls = globalThis.customElements?.get(tagName) as CustomElementConstructor | undefined;
       if (!cls) {
         log.warn(`<${tagName}> is not registered - rendering as void element`);
-        const fallbackProps = options?.props ??
-          ((optionsOrClass as Record<string, unknown> | undefined) ?? {});
-        const attrs = serializeAttributes(fallbackProps);
+        const attrs = serializeAttributes(props);
         const html = `<${tagName}${attrs}></${tagName}>`;
         return {
           html,
@@ -141,19 +114,17 @@ export async function renderDsd(
         };
       }
       componentClass = cls;
-      props = options?.props ?? ((optionsOrClass as Record<string, unknown> | undefined) ?? {});
     }
   } else {
     componentClass = input;
     tagName = (input as unknown as { tagName?: string }).tagName ?? 'unknown';
-    props = options?.props ?? ((optionsOrClass as Record<string, unknown> | undefined) ?? {});
   }
 
-  const sourceInfo = options?.sourceInfo ?? legacySourceInfo;
-  const dsdOptions = options?.dsdOptions ?? legacyDsdOptions;
-  const collector = options?.collector ?? legacyCollector;
-  const nestingDepth = options?.nestingDepth ?? legacyNestingDepth;
-  const hooks = options?.hooks ?? legacyHooks;
+  const sourceInfo = options.sourceInfo;
+  const dsdOptions = options.dsdOptions;
+  const collector = options.collector;
+  const nestingDepth = options.nestingDepth;
+  const hooks = options.hooks;
 
   const _nestingDepth = nestingDepth ?? 0;
   // H-10 fix: Guard against SSR environments where performance is undefined

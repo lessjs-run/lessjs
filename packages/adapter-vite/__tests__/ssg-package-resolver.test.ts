@@ -145,6 +145,26 @@ Deno.test('createLessJsrPackageResolverPlugin does not intercept optional packag
   );
 });
 
+Deno.test('createLessJsrPackageResolverPlugin lets exact user aliases resolve first', async () => {
+  const plugin = createLessJsrPackageResolverPlugin({
+    workspaceRoot: null,
+    version: '0.21.9',
+    userAliases: {
+      '@lessjs/ui/less-layout': './app/components/site-layout.tsx',
+    },
+  });
+  const resolveId = plugin.resolveId as unknown as (
+    id: string,
+    importer?: string,
+  ) => string | null | Promise<string | null>;
+
+  assertEquals(await resolveId('@lessjs/ui/less-layout'), null);
+  assertEquals(
+    await resolveId('@lessjs/ui/less-card'),
+    toVirtualLessPackageId('ui', 'src/less-card.tsx'),
+  );
+});
+
 Deno.test('createLessJsrPackageResolverPlugin rewrites npm: specifiers from JSR source', async () => {
   const jsrSource = [
     `import * as marked from 'npm:marked@12.0.0';`,

@@ -23,17 +23,21 @@ LessJS 采用严格的三层架构，通过 ESM import 连接：
 
 ## 渲染管线
 
-### renderDsd(input, props?) — 唯一 API
+### renderDsd(input, options?) - 唯一 API
 
 ```ts
 // 按标签名 — 自动从 customElements 注册表查找
 const result = await renderDsd('less-layout', {
-  currentPath: '/zh/guide/getting-started',
-  locale: 'zh',
+  props: {
+    currentPath: '/zh/guide/getting-started',
+    locale: 'zh',
+  },
 })
 
 // 按类 — 直接使用
-const result = await renderDsd(LessLayout, { ... })
+const result = await renderDsd(LessLayout, {
+  props: { ... }
+})
 
 // result.html 包含完整 DSD 输出
 ```

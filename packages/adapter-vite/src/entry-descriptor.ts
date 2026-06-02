@@ -35,6 +35,7 @@
  */
 
 import type {
+  AppShellConfig,
   CompatibilityClassification,
   FrameworkOptions,
   HydrationStrategy,
@@ -203,6 +204,19 @@ export interface DocumentConfig {
   allowHeadExtrasScripts: boolean;
 }
 
+export interface AppShellDecl {
+  tagName: string;
+  importPath: string;
+  props: Record<string, unknown>;
+}
+
+export type ResolvedAppShell = false | AppShellDecl;
+
+export interface AppShellPlan {
+  default: ResolvedAppShell;
+  layouts: Record<string, ResolvedAppShell>;
+}
+
 // ─── Top-level descriptor ──────────────────────────────────────
 
 /** Complete structured descriptor of the Hono entry module to be generated */
@@ -243,6 +257,9 @@ export interface EntryDescriptor {
   /** Document wrapping config */
   document: DocumentConfig;
 
+  /** Application shell/layout plan for route wrapping. */
+  appShell: AppShellPlan;
+
   /** Default island hydration strategy (default: 'idle') */
   upgradeStrategy?: HydrationStrategy;
 
@@ -258,6 +275,41 @@ export interface EntryDescriptor {
  * This is a pure function - same inputs always produce the same descriptor.
  * No side effects, no string concatenation, no code generation.
  */
+function normalizeAppShellImport(importPath: string): string {
+  if (importPath.startsWith('./')) return `/${importPath.slice(2)}`;
+  if (importPath.startsWith('../')) return importPath;
+  return importPath;
+}
+
+function normalizeAppShell(config: AppShellConfig | undefined): ResolvedAppShell {
+  if (config === false) return false;
+  if (config === undefined || config === 'default') {
+    return {
+      tagName: 'less-layout',
+      importPath: '@lessjs/ui/less-layout',
+      props: {},
+    };
+  }
+  return {
+    tagName: config.tagName,
+    importPath: normalizeAppShellImport(config.import),
+    props: config.props ?? {},
+  };
+}
+
+function buildAppShellPlan(options: {
+  appShell?: FrameworkOptions['appShell'];
+  layouts?: FrameworkOptions['layouts'];
+}): AppShellPlan {
+  const defaultShell = normalizeAppShell(options.layouts?.default ?? options.appShell);
+  const layouts: Record<string, ResolvedAppShell> = {};
+  for (const [name, config] of Object.entries(options.layouts ?? {})) {
+    if (name === 'default' || config === undefined) continue;
+    layouts[name] = normalizeAppShell(config);
+  }
+  return { default: defaultShell, layouts };
+}
+
 export function buildEntryDescriptor(
   routes: RouteEntry[],
   options: {
@@ -281,6 +333,8 @@ export function buildEntryDescriptor(
     upgradeStrategy?: HydrationStrategy;
     /** Hub registry client-only tag names (ADR-0035 A1) */
     hubClientOnlyTags?: string[];
+    appShell?: FrameworkOptions['appShell'];
+    layouts?: FrameworkOptions['layouts'];
   } = {},
 ): EntryDescriptor {
   const routesDir = options.routesDir || 'app/routes';
@@ -470,6 +524,10 @@ export function buildEntryDescriptor(
     headExtras: options.headExtras || '',
     allowHeadExtrasScripts: options.allowHeadExtrasScripts || false,
   };
+  const appShell = buildAppShellPlan({
+    appShell: options.appShell,
+    layouts: options.layouts,
+  });
 
   // --- Debug routes (dev only) ---
   const debugRoutes = isSSG ? undefined : routes
@@ -489,6 +547,7 @@ export function buildEntryDescriptor(
     renderers,
     middlewareScopes,
     document,
+    appShell,
     upgradeStrategy: options.upgradeStrategy || 'idle',
     debugRoutes,
   };

@@ -259,6 +259,22 @@ export interface RegistryIndex {
   entries: RegistryIndexEntry[];
 }
 
+/** Declarative application shell used by SSG/SSR entry generation. */
+export interface AppShellDefinition {
+  /** Custom element tag rendered around each route. */
+  tagName: string;
+  /** Module imported before rendering so the custom element is registered. */
+  import: string;
+  /** Static props merged into the generated layout props. */
+  props?: Record<string, unknown>;
+}
+
+/** Application shell mode. `false` renders route content without a shell. */
+export type AppShellConfig = false | 'default' | AppShellDefinition;
+
+/** Named route layouts selected by `route.meta.layout`. */
+export type LayoutsConfig = Record<string, AppShellConfig | undefined>;
+
 /** Framework configuration options */
 export interface FrameworkOptions {
   /** Directory for file-based routes (default: 'app/routes') */
@@ -274,6 +290,20 @@ export interface FrameworkOptions {
    * Example: ['@lessjs/ui'] will scan package.main.manifest.
    */
   packageIslands?: string[];
+
+  /**
+   * Application shell rendered around routes during SSG/SSR.
+   * - undefined/'default': import and render @lessjs/ui/less-layout.
+   * - false: render route content directly.
+   * - object: import and render a user-provided custom element shell.
+   */
+  appShell?: AppShellConfig;
+
+  /**
+   * Named route layouts. A route module can export `meta = { layout: 'post' }`.
+   * `layouts.default` overrides `appShell` for the default route shell.
+   */
+  layouts?: LayoutsConfig;
 
   /**
    * Extra HTML to inject into <head> (e.g. CDN links, analytics).
@@ -622,7 +652,7 @@ export interface ReactiveHost {
  * Renderer Protocol - the adapter interface for framework-specific rendering.
  *
  * Every adapter MUST provide a `name` for diagnostics and multi-adapter support.
- * The last registered adapter is the default (returned by `getAdapter()`).
+ * The registry supports named lookup plus one active default adapter.
  */
 
 export interface RendererProtocol {

@@ -2,12 +2,17 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version Line: v0.28.3 (Cleanup Closure + MDX - IMPLEMENTED)
+## Current Version Line: v0.28.4 (AppShell Protocol + Cleanup - IMPLEMENTED)
 
-v0.28.3 Status: **IMPLEMENTED.** The v0.28 pre-freeze closure is complete:
-router, runtime, and protocols now have unit-test floors; dependency drift is
-removed from the lockfile; MDX compiles through the existing LessJS JSX and DSD
-pipeline; all 19 packages are aligned to `0.28.3`.
+v0.28.4 Status: **IMPLEMENTED.** AppShell is now an explicit framework
+protocol; route-level layouts are configurable; `renderDsd()` uses the strict
+object options contract; renderer raw HTML uses a parser-backed sanitizer; and
+local release tasks cover all 19 packages.
+
+v0.28.3 Status: **IMPLEMENTED.** The v0.28 pre-freeze closure added router,
+runtime, and protocols unit-test floors; removed dependency drift from the
+lockfile; compiled MDX through the existing LessJS JSX and DSD pipeline; and
+aligned all 19 packages to `0.28.3`.
 
 v0.28.2 Status: **IMPLEMENTED.** Deprecated adapter compatibility helpers were
 removed, `renderDsd()` moved to structured options internally, HTML/head/link
@@ -64,10 +69,11 @@ unless a future SOP explicitly moves them forward.
 | Theme system          | v0.28.0 | Full Open Props migration, 7 color scales             |
 | Security hardening    | v0.28.2 | HTML/head/link sanitizers and least-privilege Hub     |
 | MDX                   | v0.28.3 | build-time MDX through Less JSX and DSD               |
+| AppShell protocol     | v0.28.4 | default, bare, custom, and route-selected shells      |
 
 ## Package Version State
 
-All 19 packages are aligned to **v0.28.3**. Patch releases remain unified across
+All 19 packages are aligned to **v0.28.4**. Patch releases remain unified across
 the workspace so published JSR packages resolve a coherent version set.
 
 ## Architecture Positioning
@@ -84,6 +90,7 @@ the workspace so published JSR packages resolve a coherent version set.
 | v0.28.1 | Hygiene Convergence          | Done   | Version anchors, gitignore leaks, strategic docs, SOP index        |
 | v0.28.2 | Deprecated Purge + Hardening | Done   | Adapter compat removal, render options, HTML/head/link hardening   |
 | v0.28.3 | Cleanup Closure + MDX        | Done   | Test floors, lockfile alignment, MDX, 19-package `0.28.3` bump     |
+| v0.28.4 | AppShell Protocol + Cleanup  | Done   | Explicit shells, strict render API, sanitizer, 19-package gates    |
 
 ## Key Decisions
 
@@ -98,9 +105,8 @@ the workspace so published JSR packages resolve a coherent version set.
 - **Full Open Props migration.** No custom semantic tokens; all colors derive from `@lessjs/ui/open-props-tokens`.
 - **MDX through DSD.** MDX is build-time content compilation into the Less JSX runtime, not a runtime parser or React layer.
 
-## Last Completed Line: v0.28.3
+## Last Completed Line: v0.28.4
 
-SOP-003 and SOP-004 are implemented together as the `0.28.3` release line.
-Release details live in `docs/changelog/v0.28.2.md`,
-`docs/changelog/v0.28.3.md`, `docs/release/v0.28.2.md`, and
-`docs/release/v0.28.3.md`.
+SOP-005 is implemented as the `0.28.4` release line. Release details live in
+`docs/changelog/v0.28.4.md`, `docs/release/v0.28.4.md`, and
+`docs/sop/v0.28.4/SOP-005-appshell-and-cleanup.md`.

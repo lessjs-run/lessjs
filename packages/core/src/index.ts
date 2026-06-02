@@ -18,7 +18,10 @@
 // --- Public API re-exports -----------------------------------------
 
 export type {
+  AppShellConfig,
+  AppShellDefinition,
   FrameworkOptions,
+  LayoutsConfig,
   LessMiddleware,
   LessMiddlewareContext,
   LessRenderer,

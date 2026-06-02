@@ -20,7 +20,7 @@ outrunning the architecture.
 
 | Area                      | State                                                 |
 | ------------------------- | ----------------------------------------------------- |
-| Project line              | v0.28.3 Cleanup Closure + MDX                         |
+| Project line              | v0.28.4 AppShell Protocol + Cleanup                   |
 | Current rendering mode    | SSG + Declarative Shadow DOM                          |
 | Component model           | JSX + static props + Signal (ADR-0057)                |
 | Public API naming         | Web Platform style: verbNoun, PascalCase acronyms     |
@@ -48,6 +48,7 @@ outrunning the architecture.
 | 14.1  | v0.28.1     | Hygiene Convergence          | v0.28 anchor sweep, gitignore leaks, strategic-docs sync       | ✅ Done |
 | 14.2  | v0.28.2     | Deprecated Purge             | Compat purge, security hardening, SSR bundle reduction         | Done    |
 | 14.3  | v0.28.3     | Cleanup Closure + MDX        | Test floor, lockfile alignment, MDX design and implementation  | Done    |
+| 14.4  | v0.28.4     | AppShell Protocol + Cleanup  | Explicit shells, strict render API, sanitizer, release gates   | Done    |
 | 15    | v1.0.x      | Stable Engine                | API/schema freeze and deterministic package guarantees         | Vision  |
 
 ## Compatibility Admission Model

@@ -112,6 +112,15 @@ export default defineConfig({
       html: {
         title: 'LessJS',
       },
+      appShell: {
+        tagName: 'less-layout',
+        import: '@lessjs/ui/less-layout',
+        props: {
+          logoText: 'LESSJS',
+          footerText: 'Built with LessJS Framework - Self-bootstrapped from JSR - LESS IS MORE',
+          githubUrl: 'https://github.com/lessjs-run/LessJS',
+        },
+      },
       packageIslands: ['@lessjs/ui', '@shoelace-style/shoelace'],
       ssr: {
         noExternal: [

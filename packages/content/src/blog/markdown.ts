@@ -82,7 +82,7 @@ const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
  * Extracts frontmatter, renders markdown to HTML.
  */
 export async function parseMarkdownFile(
-  _filePath: string,
+  filePath: string,
   fileContent: string,
   slug: string,
   options?: LessBlogOptions,
@@ -91,7 +91,7 @@ export async function parseMarkdownFile(
 
   const frontmatter = {
     title: data.title ?? slug,
-    date: data.date ?? new Date().toISOString().split('T')[0],
+    date: data.date ?? dateFromFilename(filePath) ?? new Date().toISOString().split('T')[0],
     draft: data.draft ?? false,
     tags: data.tags ?? [],
     excerpt: data.excerpt,
@@ -126,4 +126,9 @@ export function slugFromFilename(filename: string): string {
   return filename
     .replace(/\.md$/, '')
     .replace(/^\d{4}-\d{2}-\d{2}-/, ''); // strip date prefix
+}
+
+function dateFromFilename(filePath: string): string | undefined {
+  const filename = filePath.replace(/\\/g, '/').split('/').pop() ?? filePath;
+  return filename.match(/^(\d{4}-\d{2}-\d{2})-/)?.[1];
 }

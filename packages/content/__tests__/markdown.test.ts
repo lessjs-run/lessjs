@@ -45,6 +45,16 @@ Deno.test('parseMarkdownFile: defaults for missing frontmatter', async () => {
   assertEquals(post.frontmatter.tags, []);
 });
 
+Deno.test('parseMarkdownFile: derives missing date from filename prefix', async () => {
+  const content = `Just some content without frontmatter.`;
+  const post = await parseMarkdownFile(
+    'content/blog/2026-05-13-architecture-analysis.md',
+    content,
+    'architecture-analysis',
+  );
+  assertEquals(post.frontmatter.date, '2026-05-13');
+});
+
 Deno.test('parseMarkdownFile: custom markdown renderer', async () => {
   const content = `**bold text**`;
   const customOptions = {

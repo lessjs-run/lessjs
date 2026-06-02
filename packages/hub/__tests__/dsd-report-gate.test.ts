@@ -27,7 +27,7 @@ function reportWith(
   };
 }
 
-Deno.test('evaluateDsdReportGate passes known errors within v0.20 thresholds', () => {
+Deno.test('evaluateDsdReportGate passes known third-party errors while native threshold is zero', () => {
   const report = reportWith([
     { message: 'this.host.querySelector is not a function', recoverable: true },
     { message: 'this.host.childNodes is not iterable', recoverable: false },

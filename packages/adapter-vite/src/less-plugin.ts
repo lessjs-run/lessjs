@@ -9,7 +9,7 @@
  * Internal only: called by lessPipeline() and the @lessjs/app umbrella.
  */
 
-import type { Plugin } from 'vite';
+import type { Alias, Plugin } from 'vite';
 import type {
   FrameworkOptions,
   HydrationStrategy,
@@ -44,6 +44,32 @@ import {
 } from './route-scanner.js';
 import { createCoreResolvePlugin } from './subpath-resolver.js';
 import { mdxPlugin } from './plugin-mdx.js';
+
+type LessAliasOptions = Record<string, string> | Alias[] | null | undefined;
+
+function mergeAliasOptions(
+  primary: LessAliasOptions,
+  fallback: LessAliasOptions,
+): Record<string, string> | Alias[] | null {
+  if (!primary) return fallback ?? null;
+  if (!fallback) return primary;
+
+  const merged: Alias[] = [];
+  const append = (aliases: LessAliasOptions): void => {
+    if (!aliases) return;
+    if (Array.isArray(aliases)) {
+      merged.push(...aliases);
+      return;
+    }
+    for (const [find, replacement] of Object.entries(aliases)) {
+      merged.push({ find, replacement });
+    }
+  };
+
+  append(primary);
+  append(fallback);
+  return merged;
+}
 
 /**
  * LessJS Framework Vite plugin — internal plugin factory.
@@ -103,7 +129,7 @@ export function less(
   const RESOLVED_BUILD_TRIGGER_ID = '\0' + VIRTUAL_BUILD_TRIGGER_ID;
 
   // v0.19.1 Phase 6: Discover client-only tags from Hub registry data (ADR-0035 A1)
-  // Reads _hub-data-full.ts at build time and extracts tagNames where
+  // Imports generated hub-data.ts at build time and extracts tagNames where
   // compatibility is 'client-only'. This ensures Shoelace/Media Chrome
   // tags are in __CLIENT_ONLY_TAGS__ without requiring CEM manifests.
   let _cachedHubClientOnlyTags: string[] | null = null;
@@ -153,6 +179,8 @@ export function less(
       html: resolvedOptions.html,
       upgradeStrategy: resolvedOptions.island?.upgradeStrategy || 'idle',
       hubClientOnlyTags: _cachedHubClientOnlyTags || [],
+      appShell: resolvedOptions.appShell,
+      layouts: resolvedOptions.layouts,
     });
   }
 
@@ -160,14 +188,15 @@ export function less(
     name: 'less:core',
 
     config(userConfig) {
-      if (userConfig.resolve?.alias && !ctx.phase1.userResolveAlias) {
-        ctx.phase1.userResolveAlias = userConfig.resolve.alias as
-          | Record<string, string>
-          | import('vite').Alias[];
+      if (userConfig.resolve?.alias) {
+        ctx.phase1.userResolveAlias = mergeAliasOptions(
+          userConfig.resolve.alias as Record<string, string> | Alias[],
+          ctx.phase1.userResolveAlias,
+        );
       }
 
       const aliases = ctx.phase1.userResolveAlias as
-        | import('vite').Alias[]
+        | Alias[]
         | Record<string, string>
         | null;
 
@@ -286,6 +315,8 @@ export function less(
             process.cwd(),
             resolvedOptions.routesDir || 'app/routes',
           ),
+          appShell: resolvedOptions.appShell,
+          layouts: resolvedOptions.layouts,
         }).ssrAdmissionPlan;
         const pageCount = routes.filter(
           (r) => r.type === 'page' && !r.special,

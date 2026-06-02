@@ -60,21 +60,8 @@ import { isVNode, type VNode } from './vnode.js';
 import { renderToDom } from './jsx-render-dom.js';
 import { renderToString } from './jsx-render-string.js';
 import { collectEventBindings, hydrateEventMarkers } from './event-hydration.js';
+import { sanitizeRenderHtml } from './security.js';
 import { effect, type Signal, signal } from '@lessjs/signals';
-
-function sanitizeDynamicHtml(html: string): string {
-  return html
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/\s+on[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
-    .replace(
-      /\s+(href|src|xlink:href|formaction)\s*=\s*("|')\s*(?:javascript|data|vbscript|file):[\s\S]*?\2/gi,
-      '',
-    )
-    .replace(
-      /\s+(href|src|xlink:href|formaction)\s*=\s*(?:javascript|data|vbscript|file):[^\s>]*/gi,
-      '',
-    );
-}
 
 /**
  * Minimal SSR-safe HTMLElement stub for server environments (SOP-016).
@@ -387,7 +374,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       if (!sig) continue;
 
       const applyHtml = () => {
-        (el as HTMLElement).innerHTML = sanitizeDynamicHtml(String(sig.value));
+        (el as HTMLElement).innerHTML = sanitizeRenderHtml(String(sig.value));
         // Scan new dynamic HTML for data-on-* and bind events.
         this._bindEvents(el);
       };

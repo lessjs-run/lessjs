@@ -15,8 +15,8 @@
  */
 
 import { join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { normalizePath } from 'vite';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { type Alias, normalizePath } from 'vite';
 import process from 'node:process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import type { FrameworkOptions, HydrationStrategy, LessPackageManifest } from '@lessjs/core';
@@ -51,6 +51,33 @@ function getLocalLessjsPackageRoot(metaUrl: string): string | null {
   }
 }
 
+function normalizeAliasReplacement(root: string, replacement: string): string {
+  return replacement.startsWith('/') || /^[A-Za-z]:/.test(replacement) ||
+      replacement.startsWith('file:') || replacement.startsWith('\0')
+    ? replacement
+    : resolve(root, replacement);
+}
+
+function normalizeViteAliases(
+  aliases: Record<string, string> | Alias[] | null | undefined,
+  root: string,
+): Record<string, string> | Alias[] | undefined {
+  if (!aliases) return undefined;
+  if (Array.isArray(aliases)) {
+    return aliases.map((alias) =>
+      typeof alias.replacement === 'string'
+        ? { ...alias, replacement: normalizeAliasReplacement(root, alias.replacement) }
+        : alias
+    );
+  }
+  return Object.fromEntries(
+    Object.entries(aliases).map(([find, replacement]) => [
+      find,
+      normalizeAliasReplacement(root, replacement),
+    ]),
+  );
+}
+
 // 鈹€鈹€鈹€ Optional Package Stubs (ADR 0008 Phase C) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 // Vite plugin that resolves optional LessJS packages to empty stubs
 // when they're not installed. This allows the generated entry code
@@ -59,11 +86,8 @@ function getLocalLessjsPackageRoot(metaUrl: string): string | null {
 function optionalPackageStubsPlugin(): import('vite').Plugin {
   const stubs: Record<string, string> = {
     '@lessjs/adapter-lit': [
-      'class DsdLitElement extends (globalThis.HTMLElement || class{}) {}',
-      'export { DsdLitElement };',
       'export function installLitAdapter() {}',
       'export function uninstallLitAdapter() {}',
-      'export const WithDsdHydration = undefined;',
     ].join('\n'),
     '@lessjs/adapter-lit/ssr': [
       'export function installLitAdapter() {}',
@@ -139,6 +163,8 @@ interface BuildSSGOptions {
   headExtras?: string;
   allowHeadExtrasScripts?: boolean;
   html?: { lang?: string; title?: string };
+  appShell?: FrameworkOptions['appShell'];
+  layouts?: FrameworkOptions['layouts'];
   upgradeStrategy?: HydrationStrategy;
   resolveAlias?: Record<string, string> | import('vite').Alias[];
   base?: string;
@@ -166,6 +192,8 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
   const outDir = options.outDir || ctx.phase3.outDir || 'dist';
   const routesDir = options.routesDir || ctx.phase3.routesDir || 'app/routes';
   const islandsDir = options.islandsDir || ctx.phase3.islandsDir || 'app/islands';
+  const appShell = options.appShell ?? ctx.phase3.appShell;
+  const layouts = options.layouts ?? ctx.phase3.layouts;
 
   // SOP-v0.21.6: Detect if we're running from a Deno workspace.
   // In workspace mode, @deno/vite-plugin resolves bare specifiers.
@@ -229,32 +257,17 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
   // v0.19.1 Phase 6: Discover Hub client-only tags for SSG admission (ADR-0035 A1)
   const hubClientOnlyTags: string[] = [];
   try {
-    const { readFileSync } = await import('node:fs');
     const hubDataPath = join(root, 'app', 'data', 'registry', 'hub-data.ts');
-    const content = readFileSync(hubDataPath, 'utf-8');
-    const tagRe = /"tagName":\s*"([^"]+)"/g;
-    const compatRe = /"compatibility":\s*"([^"]+)"/g;
-    const tagPositions: Array<{ pos: number; tagName: string }> = [];
-    let m: RegExpExecArray | null;
-    while ((m = tagRe.exec(content)) !== null) {
-      tagPositions.push({ pos: m.index, tagName: m[1] });
-    }
-    const compatPositions: Array<{ pos: number; compat: string }> = [];
-    while ((m = compatRe.exec(content)) !== null) {
-      compatPositions.push({ pos: m.index, compat: m[1] });
-    }
-    for (const tp of tagPositions) {
-      let nearestCompat = '';
-      let nearestDist = Infinity;
-      for (const cp of compatPositions) {
-        const dist = cp.pos - tp.pos;
-        if (dist > 0 && dist < nearestDist) {
-          nearestDist = dist;
-          nearestCompat = cp.compat;
-        }
-      }
-      if (nearestCompat === 'client-only') hubClientOnlyTags.push(tp.tagName);
-    }
+    const hubData = await import(pathToFileURL(hubDataPath).href) as {
+      default?: Record<string, { tags?: Array<{ tagName?: string; compatibility?: string }> }>;
+    };
+    hubClientOnlyTags.push(
+      ...Object.values(hubData.default ?? {}).flatMap((record) =>
+        (record.tags ?? [])
+          .filter((tag) => tag.compatibility === 'client-only' && tag.tagName)
+          .map((tag) => tag.tagName!)
+      ),
+    );
     if (hubClientOnlyTags.length > 0) {
       const { createLogger: mkLog } = await import('@lessjs/core/logger');
       mkLog('core').info(
@@ -272,6 +285,8 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     islandMeta: ssgIslandMeta,
     packageManifests,
     hubClientOnlyTags,
+    appShell,
+    layouts,
   }).ssrAdmissionPlan;
 
   const rawSsgEntryCode = generateSsrPolyfillBanner() + '\n' + generateHonoEntryCode(routes, {
@@ -288,6 +303,8 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     html: options.html,
     upgradeStrategy: options.upgradeStrategy || 'idle',
     hubClientOnlyTags,
+    appShell,
+    layouts,
   });
   // Deno import map resolution handles bare specifiers (e.g. @lessjs/ui/less-callout)
   // via the createDenoImportMapPlugin added to the Phase 3 viteBuild plugins below.
@@ -351,6 +368,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
 
     // Handle alias - prefer CLI options, then ctx from Phase 1
     const alias = metadataResolveAlias;
+    const viteResolveAlias = normalizeViteAliases(alias, root);
     if (alias) {
       if (Array.isArray(alias)) {
         for (const a of alias) {
@@ -494,6 +512,7 @@ if (typeof globalThis.customElements === 'undefined') {
           workspaceRoot,
           version: getJsrPackageVersion(import.meta.url),
           localPackageRoot: getLocalLessjsPackageRoot(import.meta.url),
+          userAliases: metadataResolveAlias,
         }),
         {
           name: 'less:ssg-client-only-island-stubs',
@@ -522,16 +541,7 @@ if (typeof globalThis.customElements === 'undefined') {
       resolve: {
         preserveSymlinks: true,
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
-        alias: {
-          ...(alias && !Array.isArray(alias)
-            ? Object.fromEntries(
-              Object.entries(alias).map(([k, v]) => [
-                k,
-                v.startsWith('/') || /^[A-Za-z]:/.test(v) ? v : resolve(root, v),
-              ]),
-            )
-            : {}),
-        },
+        ...(viteResolveAlias ? { alias: viteResolveAlias } : {}),
       },
     });
     log.info('SSR bundle built successfully');

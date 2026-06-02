@@ -688,15 +688,10 @@ export class LessLayout extends DsdElement {
   private _renderLayout() {
     const home = this._getBool('full-width') || this._getBool('home');
     const noSearch = this.hasAttribute('no-search');
-    const logoText = this._esc(this._getStr('logo-text', 'LESSJS'));
+    const logoText = this._esc(this._getStr('logo-text', ''));
     const logoSub = this._esc(this._getStr('logo-sub', ''));
-    const footerText = this._getStr(
-      'footer-text',
-      'Built with LessJS Framework — Self-bootstrapped from JSR — LESS IS MORE',
-    );
-    const githubUrl = this._safeHref(
-      this._getStr('github-url', 'https://github.com/lessjs-run/LessJS'),
-    );
+    const footerText = this._getStr('footer-text', '');
+    const githubUrl = this._safeHref(this._getStr('github-url', ''), '');
     const editUrl = this._safeHref(this.getAttribute('edit-url') || this._computeEditUrl(), '');
     const locales = this.routing.locales;
     const switchLabel = locales.length > 1 ? this._esc(this.routing.switchLabel()) : '';
@@ -706,10 +701,12 @@ export class LessLayout extends DsdElement {
       <div className='app-layout' part='container' home={home || undefined}>
         <header className='app-header' part='header'>
           <nav className='header-inner' aria-label='Primary navigation'>
-            <a className='logo' href='/'>
-              {logoText}
-              <span className='logo-sub'>{logoSub}</span>
-            </a>
+            {(logoText || logoSub) && (
+              <a className='logo' href='/'>
+                {logoText}
+                {logoSub && <span className='logo-sub'>{logoSub}</span>}
+              </a>
+            )}
             {this._renderHeaderNav()}
             <div className='header-right'>
               {!noSearch && <less-search></less-search>}
@@ -746,12 +743,14 @@ export class LessLayout extends DsdElement {
                   {switchLabel}
                 </a>
               )}
-              <a className='github-link' href={githubUrl} aria-label='GitHub repository'>
-                <svg width='16' height='16' viewBox='0 0 16 16' fill='currentColor'>
-                  <path d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z' />
-                </svg>
-                <span className='github-text'>GitHub</span>
-              </a>
+              {githubUrl && (
+                <a className='github-link' href={githubUrl} aria-label='GitHub repository'>
+                  <svg width='16' height='16' viewBox='0 0 16 16' fill='currentColor'>
+                    <path d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z' />
+                  </svg>
+                  <span className='github-text'>GitHub</span>
+                </a>
+              )}
             </div>
           </nav>
         </header>
@@ -762,20 +761,22 @@ export class LessLayout extends DsdElement {
             <slot></slot>
           </main>
         </div>
-        <footer className='app-footer' part='footer'>
-          <p>
-            {editUrl && (
-              <a
-                href={editUrl}
-                target='_blank'
-                rel='noopener'
-                className='edit-link'
-              >
-                Edit this page
-              </a>
-            )} {this._esc(footerText)}
-          </p>
-        </footer>
+        {(editUrl || footerText) && (
+          <footer className='app-footer' part='footer'>
+            <p>
+              {editUrl && (
+                <a
+                  href={editUrl}
+                  target='_blank'
+                  rel='noopener'
+                  className='edit-link'
+                >
+                  Edit this page
+                </a>
+              )} {this._esc(footerText)}
+            </p>
+          </footer>
+        )}
         {this._renderMobileTabBar()}
       </div>
     );

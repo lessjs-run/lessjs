@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/router",
-  "version": "0.28.3",
+  "version": "0.28.4",
   "exports": {
     ".": "./src/mod.ts",
     "./define-routes": "./src/define-routes.ts",

@@ -119,6 +119,12 @@ export class Phase3Meta {
   /** Whether headExtras scripts were produced by structured injection APIs. */
   allowHeadExtrasScripts: boolean = false;
 
+  /** Application shell rendered around routes. */
+  appShell: FrameworkOptions['appShell'] = undefined;
+
+  /** Named route layouts selected by route meta. */
+  layouts: FrameworkOptions['layouts'] = undefined;
+
   /** SSR noExternal patterns (serialized) */
   ssrNoExternal: (string | { __type: 'RegExp'; source: string; flags: string })[] = [];
 

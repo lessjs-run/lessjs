@@ -66,6 +66,7 @@ architectural decision, its context, and consequences.
 | 0055 | SSR Bundle Self-Containment                       | SUPERSEDED by ADR-0056                   |
 | 0056 | External Dependencies — Consumer Import Map + AST | Accepted                                 |
 | 0070 | Generated Data Namespace and App Shell Boundary   | Accepted                                 |
+| 0073 | AppShell Protocol                                 | Accepted, Implemented                    |
 
 ## Superseded / Historical
 

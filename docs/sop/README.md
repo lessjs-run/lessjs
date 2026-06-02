@@ -41,6 +41,7 @@ have one SOP with:
 | v0.28.1 | [v0.28.1/](./v0.28.1/)                                                                       | Done     | Hygiene convergence                |
 | v0.28.2 | [v0.28.2/](./v0.28.2/)                                                                       | Done     | Deprecated purge + hardening       |
 | v0.28.3 | [v0.28.3/](./v0.28.3/)                                                                       | Done     | Cleanup closure + MDX design       |
+| v0.28.4 | [v0.28.4/](./v0.28.4/)                                                                       | Done     | AppShell protocol + cleanup        |
 | v1.0.0  | [v1.0.0-general-purpose-engine.md](./v1.0.0-general-purpose-engine.md)                       | Vision   | API freeze                         |
 
 ## Operator Rules

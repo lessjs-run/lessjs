@@ -270,7 +270,9 @@ function renderPageRoute(
     }
   }
   lines.push(
-    `    const content = await __renderAppShell(node, c.req.path || ${JSON.stringify(route.path)})`,
+    `    const content = await __renderAppShell(node, c.req.path || ${
+      JSON.stringify(route.path)
+    }, { routeMeta: ${route.varName}.meta || {} })`,
   );
   lines.push(`    return c.html(wrapInDocument(content, {`);
   lines.push(`      title: ${JSON.stringify(docConfig.title)},`);
@@ -338,6 +340,12 @@ export function renderEntry(desc: EntryDescriptor): string {
   for (const island of desc.islands) {
     islandLookup[island.tagName] = island.modulePath;
   }
+  const appShellImports = new Set<string>();
+  const collectShellImport = (shell: typeof desc.appShell.default) => {
+    if (shell) appShellImports.add(shell.importPath);
+  };
+  collectShellImport(desc.appShell.default);
+  for (const shell of Object.values(desc.appShell.layouts)) collectShellImport(shell);
 
   lines.push(
     `// Known islands (determined at build time by scanning islandsDir)`,
@@ -350,13 +358,15 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push(`import { wrapInDocument } from '@lessjs/core';`);
   lines.push(`import { jsx } from '@lessjs/core/jsx-runtime';`);
   lines.push(`import { createLogger } from '@lessjs/core/logger';`);
-  lines.push(`import '@lessjs/ui/less-layout';`);
   lines.push(
     `import { headerNav as __headerNav, navSections as __navSections } from '@lessjs/generated/nav';`,
   );
   lines.push(
     `import { getDefaultLocale as __getDefaultLocale, locales as __locales } from '@lessjs/generated/i18n';`,
   );
+  for (const importPath of appShellImports) {
+    lines.push(`import '${importPath}';`);
+  }
   lines.push(`const log = createLogger('core');`);
   lines.push('');
 
@@ -377,33 +387,49 @@ export function renderEntry(desc: EntryDescriptor): string {
   // v0.17.3: Multi-adapter support - install Lit, Vanilla, and React adapters.
   // With viteBuild(ssr:true, noExternal), adapters are inlined into the bundle.
   // Installing at module load time ensures the default adapter registry is populated before any
-  // renderDsd() call. Each try/catch makes missing adapters a no-op.
+  // renderDsd() call. Missing optional packages are fine; package/internal failures are logged.
   // Both SSG and dev mode need adapters to render framework-specific results.
   {
     lines.push('// v0.17.3: Auto-install all available SSR adapters');
-    lines.push('// Lit adapter - handles Lit TemplateResults');
-    lines.push('try {');
+    lines.push('function __isMissingOptionalAdapter(error, spec) {');
+    lines.push('  const message = String(error?.message || error || "");');
+    lines.push('  const code = error?.code;');
     lines.push(
-      "  const { installLitAdapter } = await import('@lessjs/adapter-lit/ssr');",
+      '  return (code === "ERR_MODULE_NOT_FOUND" || code === "MODULE_NOT_FOUND" || message.includes("Could not resolve") || message.includes("Cannot find")) && message.includes(spec);',
     );
-    lines.push('  installLitAdapter();');
-    lines.push('} catch { /* @lessjs/adapter-lit not available */ }');
+    lines.push('}');
     lines.push('');
-    lines.push('// Vanilla adapter - handles string-based render()');
-    lines.push('try {');
+    lines.push('async function __installOptionalAdapter(spec, loader, exportName) {');
+    lines.push('  try {');
+    lines.push('    const mod = await loader();');
+    lines.push('    const install = mod?.[exportName];');
+    lines.push('    if (typeof install !== "function") {');
     lines.push(
-      "  const { installVanillaAdapter } = await import('@lessjs/adapter-vanilla/ssr');",
+      '      log.warn("[LessJS] Optional SSR adapter " + spec + " does not export " + exportName);',
     );
-    lines.push('  installVanillaAdapter();');
-    lines.push('} catch { /* @lessjs/adapter-vanilla not available */ }');
+    lines.push('      return;');
+    lines.push('    }');
+    lines.push('    install();');
+    lines.push('  } catch (error) {');
+    lines.push('    if (__isMissingOptionalAdapter(error, spec)) {');
+    lines.push('      log.debug("[LessJS] Optional SSR adapter not installed: " + spec);');
+    lines.push('      return;');
+    lines.push('    }');
+    lines.push(
+      '    log.warn("[LessJS] Optional SSR adapter failed: " + spec + " - " + String(error?.stack || error?.message || error));',
+    );
+    lines.push('  }');
+    lines.push('}');
     lines.push('');
-    lines.push('// React adapter - handles React elements');
-    lines.push('try {');
     lines.push(
-      "  const { installReactAdapter } = await import('@lessjs/adapter-react/ssr');",
+      "await __installOptionalAdapter('@lessjs/adapter-lit/ssr', () => import('@lessjs/adapter-lit/ssr'), 'installLitAdapter');",
     );
-    lines.push('  installReactAdapter();');
-    lines.push('} catch { /* @lessjs/adapter-react not available */ }');
+    lines.push(
+      "await __installOptionalAdapter('@lessjs/adapter-vanilla/ssr', () => import('@lessjs/adapter-vanilla/ssr'), 'installVanillaAdapter');",
+    );
+    lines.push(
+      "await __installOptionalAdapter('@lessjs/adapter-react/ssr', () => import('@lessjs/adapter-react/ssr'), 'installReactAdapter');",
+    );
     lines.push('');
   }
 
@@ -527,36 +553,52 @@ export function renderEntry(desc: EntryDescriptor): string {
   lines.push('}');
   lines.push('');
 
-  lines.push('function __layoutAttr(value) {');
-  lines.push('  return escapeHtml(String(value));');
-  lines.push('}');
-  lines.push('');
-  lines.push('function __layoutJsonAttr(value) {');
-  lines.push('  return __layoutAttr(JSON.stringify(value));');
-  lines.push('}');
-  lines.push('');
   lines.push('function __localeFromPath(path, fallback) {');
   lines.push('  const first = String(path || "/").split("/").filter(Boolean)[0];');
   lines.push('  return __locales.includes(first) ? first : fallback;');
   lines.push('}');
   lines.push('');
+  lines.push(`const __appShellPlan = ${JSON.stringify(desc.appShell, null, 2)};`);
+  lines.push('');
+  lines.push('function __resolveAppShell(routeMeta = {}) {');
+  lines.push(
+    '  const layout = Object.prototype.hasOwnProperty.call(routeMeta, "layout") ? routeMeta.layout : undefined;',
+  );
+  lines.push('  if (layout === false) return false;');
+  lines.push(
+    '  if (typeof layout === "string") return __appShellPlan.layouts[layout] ?? __appShellPlan.default;',
+  );
+  lines.push('  return __appShellPlan.default;');
+  lines.push('}');
+  lines.push('');
   lines.push('async function __renderAppShell(routeNode, routePath, options = {}) {');
   lines.push('  const defaultLocale = __getDefaultLocale();');
   lines.push('  const locale = options.locale || __localeFromPath(routePath, defaultLocale);');
+  lines.push('  const routeMeta = options.routeMeta || {};');
+  lines.push('  const shell = __resolveAppShell(routeMeta);');
   lines.push('  const isHome = routePath === "/";');
   lines.push('  // routeNode may be a VNode (jsx output) or HTML string. Render VNodes.');
   lines.push('  const pageHtml = typeof routeNode === "object" && routeNode !== null');
   lines.push('    ? await renderDsdTree(routeNode)');
   lines.push('    : String(routeNode);');
-  lines.push('  const layoutResult = await renderDsd("less-layout", {');
+  lines.push('  if (!shell) return pageHtml;');
+  lines.push('  const layoutProps = {');
   lines.push('    currentPath: routePath,');
-  lines.push('    locale: locale,');
+  lines.push('    locale,');
   lines.push('    locales: __locales,');
   lines.push('    navItems: __navSections,');
   lines.push('    headerNav: __headerNav,');
   lines.push('    home: isHome || undefined,');
-  lines.push('  });');
-  lines.push('  return layoutResult.html.replace("</less-layout>", pageHtml + "</less-layout>");');
+  lines.push('    routeMeta,');
+  lines.push('    ...(shell.props || {}),');
+  lines.push('  };');
+  lines.push('  const layoutResult = await renderDsd(shell.tagName, { props: layoutProps });');
+  lines.push('  const closingTag = "</" + shell.tagName + ">";');
+  lines.push('  const index = layoutResult.html.lastIndexOf(closingTag);');
+  lines.push('  if (index === -1) return layoutResult.html + pageHtml;');
+  lines.push(
+    '  return layoutResult.html.slice(0, index) + pageHtml + layoutResult.html.slice(index);',
+  );
   lines.push('}');
   lines.push('');
 
@@ -655,7 +697,8 @@ export function renderEntry(desc: EntryDescriptor): string {
     for (const r of desc.pageRoutes) {
       const tagNameExpr = routeTagNameExpr(r.varName, r.tagName);
       lines.push(
-        `  { path: '${r.path}', tagName: ${tagNameExpr}, isDynamic: ${!!r.isDynamic}, paramNames: ${
+        `  { path: '${r.path}', tagName: ${tagNameExpr}, module: ${r.varName}, isDynamic: ${!!r
+          .isDynamic}, paramNames: ${
           JSON.stringify(
             r.paramNames || [],
           )
@@ -714,12 +757,13 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push('  if (locale) props.locale = locale;');
     lines.push('  const startTime = typeof performance !== "undefined" ? performance.now() : 0;');
     lines.push('  let node = jsx(info.tagName, props);');
+    lines.push('  const routeMeta = info.module?.meta || {};');
     lines.push('  for (const renderer of __matchingRenderers(routePath)) {');
     lines.push(
       '    node = await renderer.wrap(node, __rendererContext(routePath, params));',
     );
     lines.push('  }');
-    lines.push('  const content = await __renderAppShell(node, routePath, { locale });');
+    lines.push('  const content = await __renderAppShell(node, routePath, { locale, routeMeta });');
     lines.push(
       '  const renderTimeMs = typeof performance !== "undefined" ? performance.now() - startTime : 0;',
     );
@@ -799,6 +843,8 @@ export interface HonoEntryOptions {
   upgradeStrategy?: HydrationStrategy;
   /** Hub registry client-only tag names (ADR-0035 A1) */
   hubClientOnlyTags?: string[];
+  appShell?: FrameworkOptions['appShell'];
+  layouts?: FrameworkOptions['layouts'];
 }
 
 /**

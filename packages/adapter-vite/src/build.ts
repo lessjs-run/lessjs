@@ -108,6 +108,8 @@ export function buildPlugin(
         ctx.phase3.speculation = options.speculation ?? null;
         ctx.phase3.headExtras = options.headExtras || '';
         ctx.phase3.allowHeadExtrasScripts = options.allowHeadExtrasScripts || false;
+        ctx.phase3.appShell = options.appShell;
+        ctx.phase3.layouts = options.layouts;
       }
 
       const totalIslands = (ctx.phase1.islandTagNames?.length || 0) +

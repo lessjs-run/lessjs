@@ -61,8 +61,8 @@ export default class ApiCorePage extends DsdElement {
           <div class="api-category">
             <h2>渲染</h2>
             <div class="api-entry">
-              <div class="api-sig">renderDsd(input: string | CustomElementConstructor, props?): Promise&lt;RenderOutput&gt;</div>
-              <div class="api-desc">唯一渲染入口。input 为标签名时自动查 customElements 注册表，为类时直接使用。返回包含 html、errors、metrics 的 RenderOutput。</div>
+              <div class="api-sig">renderDsd(input: string | CustomElementConstructor, options?): Promise&lt;RenderOutput&gt;</div>
+              <div class="api-desc">唯一渲染入口。input 为标签名时自动查 customElements 注册表，为类时直接使用；props、sourceInfo、DSD 选项和 hooks 通过 options 对象传入。</div>
             </div>
             <div class="api-entry">
               <div class="api-sig">renderDsdStream(components, options?): ReadableStream&lt;Uint8Array&gt;</div>
@@ -164,8 +164,8 @@ export default class ApiCorePage extends DsdElement {
           <div class="api-category">
             <h2>Rendering</h2>
             <div class="api-entry">
-              <div class="api-sig">renderDsd(input: string | CustomElementConstructor, props?): Promise&lt;RenderOutput&gt;</div>
-              <div class="api-desc">The single rendering entry point. Accepts a tag name (auto-lookup from registry) or a component class directly. Returns RenderOutput with html, errors, metrics, and hydrationHints.</div>
+              <div class="api-sig">renderDsd(input: string | CustomElementConstructor, options?): Promise&lt;RenderOutput&gt;</div>
+              <div class="api-desc">The single rendering entry point. Accepts a tag name or component class; props, sourceInfo, DSD options, and hooks are passed through the options object.</div>
             </div>
             <div class="api-entry">
               <div class="api-sig">renderDsdStream(components, options?): ReadableStream&lt;Uint8Array&gt;</div>

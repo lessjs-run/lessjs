@@ -15,6 +15,7 @@ import { isVNode, type VNode } from './vnode.ts';
 import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 import { eventTypeFromProp } from './event-hydration.ts';
+import { sanitizeRenderHtml } from './security.ts';
 import { effect } from '@lessjs/signals';
 
 // ─── SVG namespace support ────────────────────────────────────────────────────
@@ -87,20 +88,6 @@ function createElementForTag(tag: string): Element {
     return document.createElementNS(SVG_NS, tag);
   }
   return document.createElement(tag);
-}
-
-function sanitizeRawHtml(html: string): string {
-  return html
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/\s+on[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
-    .replace(
-      /\s+(href|src|xlink:href|formaction)\s*=\s*("|')\s*(?:javascript|data|vbscript|file):[\s\S]*?\2/gi,
-      '',
-    )
-    .replace(
-      /\s+(href|src|xlink:href|formaction)\s*=\s*(?:javascript|data|vbscript|file):[^\s>]*/gi,
-      '',
-    );
 }
 
 // ─── applyProps ───────────────────────────────────────────────────────────────
@@ -192,7 +179,7 @@ export function applyProps(
     if (key === 'innerHTML') {
       const resolved = String(unwrapSignalLike(value));
       if (rawHtml) {
-        (el as HTMLElement).innerHTML = sanitizeRawHtml(resolved);
+        (el as HTMLElement).innerHTML = sanitizeRenderHtml(resolved);
       } else {
         (el as HTMLElement).textContent = resolved;
       }
