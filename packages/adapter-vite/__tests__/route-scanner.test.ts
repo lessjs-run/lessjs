@@ -356,7 +356,7 @@ Deno.test(
 
 Deno.test(
   'route-scanner - detectAndClassifyCemPackages returns empty for empty node_modules',
-  { permissions: { read: true, write: true } },
+  { permissions: { read: true, write: true, env: true } },
   async () => {
     const tmpDir = await Deno.makeTempDir();
     try {
@@ -371,7 +371,7 @@ Deno.test(
 
 Deno.test(
   'route-scanner - detectAndClassifyCemPackages classifies client-only by default (no Less extension)',
-  { permissions: { read: true, write: true } },
+  { permissions: { read: true, write: true, env: true } },
   async () => {
     const tmpDir = await Deno.makeTempDir();
     try {
@@ -404,7 +404,7 @@ Deno.test(
 
 Deno.test(
   'route-scanner - detectAndClassifyCemPackages skips invalid CEM JSON',
-  { permissions: { read: true, write: true } },
+  { permissions: { read: true, write: true, env: true } },
   async () => {
     const tmpDir = await Deno.makeTempDir();
     try {
