@@ -40,8 +40,8 @@ export const FOR_TAG: unique symbol = Symbol.for('lessjs.for');
  *
  * Usage: <Show when={this.#loading}><Spinner/><Content/></Show>
  */
-export function Show(props: { when: unknown; children?: unknown }): VNode {
-  return createVNode(SHOW_TAG, props as Record<string, unknown>);
+export function Show(props: Record<string, unknown>): VNode {
+  return createVNode(SHOW_TAG, props);
 }
 
 /**
@@ -49,8 +49,8 @@ export function Show(props: { when: unknown; children?: unknown }): VNode {
  *
  * Usage: <For each={this.#items}>{(item) => <li>{item.name}</li>}</For>
  */
-export function For(props: { each: unknown; children?: unknown }): VNode {
-  return createVNode(FOR_TAG, props as Record<string, unknown>);
+export function For(props: Record<string, unknown>): VNode {
+  return createVNode(FOR_TAG, props);
 }
 
 // ─── Internal helper ─────────────────────────────────────────────────────────
