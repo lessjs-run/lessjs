@@ -3,7 +3,7 @@
  *
  * v0.19.0: Browse and search validated Web Component packages.
  * Data is embedded during SSG via JSON import, no client-side fetch needed.
- * v0.28: Signal-driven filtering/sorting — zero manual state, zero inline handlers.
+ * v0.29: Signal-driven filtering/sorting — zero manual state, zero inline handlers.
  *
  * @see docs/sop/v0.19.0-platform-hub.md
  * @see ADR-0030

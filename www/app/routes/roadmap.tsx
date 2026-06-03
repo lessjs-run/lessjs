@@ -292,28 +292,28 @@ export class RoadmapPage extends DsdElement {
             <div class="truth">
               <h2>Shipped</h2>
               <ul>
+                <li>Structured Renderer IR + single async path</li>
                 <li>SSG + Declarative Shadow DOM</li>
-                <li>Reactive DSD authoring</li>
-                <li>Hono API route substrate</li>
-                <li>JSR generated project flow</li>
+                <li>Hono API routes + MDX support</li>
+                <li>AppShell protocol + signal-driven islands</li>
               </ul>
             </div>
             <div class="truth">
               <h2>Current</h2>
               <ul>
-                <li>@lessjs/protocols</li>
-                <li>@lessjs/core</li>
-                <li>package graph gate</li>
-                <li>docs architecture truth</li>
+                <li>API surface freeze (v0.29.x)</li>
+                <li>UI dual-track Ocean/Island split</li>
+                <li>JSR publish + consumer smoke</li>
+                <li>19-package aligned monorepo</li>
               </ul>
             </div>
             <div class="truth">
               <h2>Deferred</h2>
               <ul>
-                <li>ISR production handler</li>
+                <li>ISR / Edge SSR production handler</li>
                 <li>CF Workers KV and Deno KV adapters</li>
-                <li>v1.0 API freeze</li>
                 <li>generic auth or ORM systems</li>
+              </ul>
               </ul>
             </div>
           </div>

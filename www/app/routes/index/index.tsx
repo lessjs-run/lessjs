@@ -200,7 +200,7 @@ export class DocsHome extends DsdElement {
             <div class='hero-inner'>
               {/* Left: Giant Typography */}
               <div class='hero-left'>
-                <p class='eyebrow'>[ DEEP RUNTIME ENGINE V0.28 ]</p>
+                <p class='eyebrow'>[ DEEP RUNTIME ENGINE V0.29.2 ]</p>
                 <h1 class='giant-headline'>
                   LESS IS<br />
                   <span class='glow-line'>THE CORE.</span>
