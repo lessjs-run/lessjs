@@ -5,10 +5,9 @@
  * These are Object.prototype internals and dangerous overrides that
  * could be exploited via arbitrary property assignment.
  *
- * Shared by island.ts (client-side bindEvents) and render-instantiate.ts
+ * Shared by island.ts (client-side bindEvents) and render-dsd.ts
  * (SSR injectProps). Previously defined in island.ts and imported by
- * render-instantiate.ts, creating a false coupling — render-instantiate
- * is an SSR module that shouldn't depend on client-side island logic.
+ * render-instantiate.ts (v0.29.1: merged into render-dsd.ts).
  *
  * @module @lessjs/core/security
  */

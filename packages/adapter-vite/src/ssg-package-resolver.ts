@@ -24,7 +24,6 @@ const DEFAULT_LESSJS_PACKAGES = new Set([
 const LESSJS_EXPORT_FILES: Record<string, Record<string, string>> = {
   core: {
     '.': 'src/index.ts',
-    api: 'src/api.ts',
     'cem-parser': 'src/cem-parser.ts',
     'cli/less-add': 'src/cli/less-add.ts',
     'cli/validate-manifest': 'src/cli/validate-manifest.ts',

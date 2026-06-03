@@ -186,7 +186,7 @@ Deno.test('createLessJsrPackageResolverPlugin rewrites npm: specifiers from JSR 
   });
   const load = plugin.load as unknown as (id: string) => string | null | Promise<string | null>;
 
-  const result = await load(toVirtualLessPackageId('core', 'src/jsx-render-string.ts')) as string;
+  const result = await load(toVirtualLessPackageId('core', 'src/render-ir.ts')) as string;
 
   // npm: specifiers stripped to bare packages (version and prefix removed)
   assertEquals(result.includes("from 'marked'"), true);

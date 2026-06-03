@@ -26,7 +26,6 @@
     "@lessjs/core": "./packages/core/src/index.ts",
     "@lessjs/core/context": "./packages/core/src/context.ts",
     "@lessjs/core/errors": "./packages/core/src/errors.ts",
-    "@lessjs/core/api": "./packages/core/src/api.ts",
     "@lessjs/core/isr": "./packages/core/src/isr.ts",
     "@lessjs/core/logger": "./packages/core/src/logger.ts",
     "@lessjs/core/types": "./packages/core/src/types.ts",
