@@ -3,12 +3,12 @@ import { collectEventBindings, eventMarkerId, eventTypeFromProp } from '../src/e
 import { For, Fragment, jsx, jsxs, Show } from '../src/jsx-runtime.ts';
 import { renderDsdTree } from '../src/render-ir.ts';
 
-Deno.test('event hydration: event marker ids are deterministic', async () => {
+Deno.test('event hydration: event marker ids are deterministic', () => {
   assertEquals(eventMarkerId(0), 'e0');
   assertEquals(eventMarkerId(12), 'e12');
 });
 
-Deno.test('event hydration: React-style onDoubleClick maps to native dblclick', async () => {
+Deno.test('event hydration: React-style onDoubleClick maps to native dblclick', () => {
   assertEquals(eventTypeFromProp('onClick'), 'click');
   assertEquals(eventTypeFromProp('onDoubleClick'), 'dblclick');
   assertEquals(eventTypeFromProp('onDblclick'), 'dblclick');
@@ -78,6 +78,3 @@ Deno.test('event hydration: SSR markers and hydration bindings share one travers
 
   assertEquals([...collectEventBindings(tree).keys()], ['e0', 'e1', 'e2', 'e3', 'e4']);
 });
-
-
-

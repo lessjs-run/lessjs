@@ -60,5 +60,3 @@ Deno.test('core DsdElement and renderDsd are callable', () => {
   assertExists(renderDsd);
   assertExists(renderDsdStream);
 });
-
-

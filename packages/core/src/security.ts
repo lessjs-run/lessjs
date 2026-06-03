@@ -44,7 +44,7 @@ export function trustRenderHtml(html: string): string {
     _warnedTrustedHtml = true;
     console.warn(
       '[LessJS] trustRenderHtml is a trust boundary, not a sanitizer. ' +
-      'Caller must ensure HTML content is safe before passing to LessJS.',
+        'Caller must ensure HTML content is safe before passing to LessJS.',
     );
   }
   return html;

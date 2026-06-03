@@ -38,4 +38,3 @@ Deno.test('v0.28.3 MDX: example fixture exists', async () => {
   const mod = await compileMdx(source);
   assert(mod.content.includes('less-theme-toggle'));
 });
-

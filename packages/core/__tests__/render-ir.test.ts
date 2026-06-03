@@ -9,14 +9,14 @@ import {
 } from '../src/render-ir.ts';
 import { jsx } from '../src/jsx-runtime.ts';
 
-Deno.test('render-ir serializes text as escaped HTML', async () => {
+Deno.test('render-ir serializes text as escaped HTML', () => {
   assertEquals(
     serializeRenderNode(textNode('<script>x</script>')),
     '&lt;script&gt;x&lt;/script&gt;',
   );
 });
 
-Deno.test('render-ir serializes trusted HTML without sanitizer mutation', async () => {
+Deno.test('render-ir serializes trusted HTML without sanitizer mutation', () => {
   assertEquals(
     serializeRenderNode(trustedHtmlNode('<img src=x onerror="x()">')),
     '<img src=x onerror="x()">',
@@ -48,7 +48,7 @@ Deno.test('render-ir keeps rawHtml as explicit trusted-html node', async () => {
   assertEquals(serializeRenderNode(node), '<div><span>trusted</span></div>');
 });
 
-Deno.test('render-ir serializes DSD host nodes through the same serializer', async () => {
+Deno.test('render-ir serializes DSD host nodes through the same serializer', () => {
   const html = serializeRenderNode(
     dsdHostNode({
       tag: 'x-card',
@@ -70,10 +70,9 @@ Deno.test('render-ir serializes DSD host nodes through the same serializer', asy
   assertStringIncludes(html, 'light</x-card>');
 });
 
-Deno.test('render-ir fragment serializes children in order', async () => {
+Deno.test('render-ir fragment serializes children in order', () => {
   assertEquals(
     serializeRenderNode(fragmentNode([textNode('a'), trustedHtmlNode('<b>b</b>')])),
     'a<b>b</b>',
   );
 });
-

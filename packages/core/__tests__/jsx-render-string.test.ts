@@ -1,7 +1,7 @@
 /**
  * @lessjs/core - JSX renderDsdTree tests.
  *
- * v0.24.3: Direct tests for SSR renderer ï¿?Signal unwrap, SVG attrs,
+ * v0.24.3: Direct tests for SSR renderer ï¿½?Signal unwrap, SVG attrs,
  * boolean attrs, style serialisation, event exclusion.
  */
 
@@ -244,8 +244,3 @@ Deno.test('renderDsdTree keeps custom element light DOM children in one tree', a
     });
   }
 });
-
-
-
-
-

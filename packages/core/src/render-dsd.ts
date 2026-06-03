@@ -25,7 +25,6 @@ import {
 import { getDefaultRegistry } from './adapter-registry.js';
 import type { StyleSheetLike } from '@lessjs/style-sheet';
 import { createLogger } from './logger.js';
-import { escapeHtml } from './html-escape.js';
 import { escapeAttrValue } from './html-escape.js';
 import { isVNode } from './vnode.js';
 import { renderDsdTree } from './render-ir.js';
@@ -84,36 +83,6 @@ function instantiationErrorHtml(
   _source?: string,
 ): string {
   return `<${tagName}></${tagName}>`;
-}
-
-function renderErrorHtml(
-  tagName: string,
-  err: unknown,
-): string {
-  const errMsg = err instanceof Error ? err.message : String(err);
-  const errStack = err instanceof Error ? err.stack : '';
-  log.error(
-    `<${tagName}> render() failed: ${errMsg}${errStack ? `\n${errStack}` : ''}`,
-  );
-
-  const isDev = (() => {
-    try {
-      return (globalThis as Record<string, unknown>).LESSJS_ENV !== 'production';
-    } catch {
-      return true;
-    }
-  })();
-
-  if (isDev) {
-    return `<!-- Render Error: <${tagName}> render() threw: ${escapeHtml(errMsg)} -->\n` +
-      (errStack
-        ? `<!-- Stack: ${escapeHtml(errStack.split('\n').slice(0, 3).join(' | '))} -->\n`
-        : '') +
-      '<!-- Check console for full error details -->';
-  } else {
-    return `<!-- Render Error: <${tagName}> render() failed -->` +
-      '<!-- Check console for full error details -->';
-  }
 }
 
 function wrongTypeErrorHtml(

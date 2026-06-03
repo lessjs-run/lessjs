@@ -546,5 +546,3 @@ Deno.test('DsdElement: CSR re-render rebinds data-on-click events', () => {
 
   document.body.removeChild(el);
 });
-
-

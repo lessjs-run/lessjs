@@ -5,7 +5,7 @@
 > Status: Planned
 > ADR: [ADR-0078](../../adr/ADR-0078-core-simplification-and-merge.md)
 > Output: core/src 33→26 files, unified attribute serialization,
->         async-only render path, deleted legacy APIs
+> async-only render path, deleted legacy APIs
 
 ## Summary
 
@@ -48,6 +48,7 @@ v0.29.1 执行激进的代码清理，不向后兼容。通过 5 个阶段的清
 ### Problem
 
 代码质量问题不影响功能，但影响可维护性：
+
 - 拼写错误：`_hyrateExistingDom`
 - 硬编码版本：`hub/scanner.ts:62` 的 `'0.20.0'`
 - 信任边界无验证：`trustRenderHtml` 纯透传
@@ -90,7 +91,7 @@ export function trustRenderHtml(html: string): string {
   if (import.meta.env?.DEV) {
     console.warn(
       '[LessJS] trustRenderHtml is a trust boundary, not a sanitizer. ' +
-      'Caller must ensure HTML is safe.'
+        'Caller must ensure HTML is safe.',
     );
   }
   return html;
@@ -111,6 +112,7 @@ export function trustRenderHtml(html: string): string {
 ### Problem
 
 `serializeAttributes` 和 `serializeElementAttrs` 行为不一致：
+
 - `serializeAttributes`：用 `camelToKebab`
 - `serializeElementAttrs`：只处理 `className` → `class` 和 `htmlFor` → `for`
 
@@ -131,29 +133,29 @@ const SKIP_KEYS = new Set(['children', 'ref', 'key', 'rawHtml']);
 function serializeAttrs(tag: string, props: Record<string, unknown>): string {
   const isCustomElement = tag.includes('-');
   let result = '';
-  
+
   for (const [key, value] of Object.entries(props)) {
     if (SKIP_KEYS.has(key)) continue;
     if (key.startsWith('on') && typeof value === 'function') continue;
     if (typeof value === 'function') continue;
     if (value == null) continue;
     if (key === 'innerHTML' || key === 'textContent') continue;
-    
+
     // React 风格映射
     let attrName = key === 'className' ? 'class' : key === 'htmlFor' ? 'for' : key;
-    
+
     // Custom Element 额外做 kebab-case
     if (isCustomElement && attrName === key) {
       attrName = camelToKebab(attrName);
     }
-    
+
     const resolved = unwrapSignalLike(value);
-    
+
     if (typeof resolved === 'boolean') {
       if (resolved) result += ` ${attrName}`;
       continue;
     }
-    
+
     if (key === 'style' && typeof resolved === 'object' && resolved !== null) {
       const styleObj: Record<string, unknown> = {};
       for (const [sk, sv] of Object.entries(resolved as Record<string, unknown>)) {
@@ -163,10 +165,10 @@ function serializeAttrs(tag: string, props: Record<string, unknown>): string {
       if (css) result += ` style="${escapeAttr(css)}"`;
       continue;
     }
-    
+
     result += ` ${attrName}="${escapeAttr(String(resolved))}"`;
   }
-  
+
   return result;
 }
 ```
@@ -180,25 +182,25 @@ export type RenderNode =
   | { kind: 'trusted-html'; value: string }
   | { kind: 'fragment'; children: RenderNode[] }
   | {
-      kind: 'element';
-      tag: string;
-      attrs: Record<string, unknown>;  // 已经是 Record
-      eventAttrs?: string;
-      children: RenderNode[];
-      voidElement?: boolean;
-    }
+    kind: 'element';
+    tag: string;
+    attrs: Record<string, unknown>; // 已经是 Record
+    eventAttrs?: string;
+    children: RenderNode[];
+    voidElement?: boolean;
+  }
   | {
-      kind: 'dsd-host';
-      tag: string;
-      attrs: Record<string, unknown>;  // 从 string 改为 Record
-      ssrPropsAttr: string;
-      source: string;
-      templateAttrs: string;
-      styleCss: string;
-      shadow: RenderNode[];
-      light: RenderNode[];
-      layer: string;
-    };
+    kind: 'dsd-host';
+    tag: string;
+    attrs: Record<string, unknown>; // 从 string 改为 Record
+    ssrPropsAttr: string;
+    source: string;
+    templateAttrs: string;
+    styleCss: string;
+    shadow: RenderNode[];
+    light: RenderNode[];
+    layer: string;
+  };
 ```
 
 **2.3 修改 wrapDsdOutput**
@@ -207,7 +209,7 @@ export type RenderNode =
 // packages/core/src/render-serialize.ts
 export function wrapDsdOutput(params: {
   tagName: string;
-  props: Record<string, unknown>;  // 不再预序列化
+  props: Record<string, unknown>; // 不再预序列化
   content: string;
   styleCss: string;
   layer: string;
@@ -215,15 +217,15 @@ export function wrapDsdOutput(params: {
   dsdOptions?: DsdOptions;
 }): string {
   const { tagName, props, content, styleCss, layer, sourceStr, dsdOptions } = params;
-  
+
   const ssrPropsAttr = Object.keys(props).length > 0
     ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
     : '';
-  
+
   return serializeRenderNode(
     dsdHostNode({
       tag: tagName,
-      attrs: props,  // 直接传 props，不再传预序列化的 string
+      attrs: props, // 直接传 props，不再传预序列化的 string
       ssrPropsAttr,
       source: sourceStr,
       templateAttrs: buildDsdTemplateAttrs(dsdOptions),
@@ -380,7 +382,7 @@ rm packages/core/src/render-serialize.ts
 ```json
 {
   "exports": {
-    ".": "./src/index.ts",
+    ".": "./src/index.ts"
     // 移除已删除文件的 exports
   }
 }
@@ -479,7 +481,9 @@ export async function renderToNode(
 
   // 控制流：Show
   if (tag === SHOW_TAG || tag === 'show') {
-    const whenVal = isSignalLike(props?.when) ? (props!.when as { value: unknown }).value : props?.when;
+    const whenVal = isSignalLike(props?.when)
+      ? (props!.when as { value: unknown }).value
+      : props?.when;
     const target = whenVal ? children[0] : children[1];
     return target ? await renderToNode(target, eventContext) : fragmentNode([]);
   }

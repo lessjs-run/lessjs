@@ -58,11 +58,7 @@ export type {
   IsrRouteConfig,
 } from './isr.js';
 export { DsdElement } from './dsd-element.js';
-export {
-  createRenderDsdStreamMetrics,
-  renderDsd,
-  renderDsdStream,
-} from './render-dsd.js';
+export { createRenderDsdStreamMetrics, renderDsd, renderDsdStream } from './render-dsd.js';
 export type { RenderDsdOptions } from './render-dsd.js';
 export type {
   RenderDsdStreamChunk,
@@ -142,7 +138,13 @@ export { createLogger, LessLogger, LogLevel } from './logger.js';
 /** @internal — use @lessjs/core/security subpath */
 export { DANGEROUS_KEYS } from './security.js';
 export { isValidTagName } from './tag-utils.js';
-export { defineIsland, bindEvents, getSsrProps, defineCustomElement, type IslandOptions } from './island.js';
+export {
+  bindEvents,
+  defineCustomElement,
+  defineIsland,
+  getSsrProps,
+  type IslandOptions,
+} from './island.js';
 export { transformIslandSource } from './island-transform.js';
 export type { IslandTransformOptions, IslandTransformResult } from './island-transform.js';
 
@@ -184,10 +186,4 @@ export {
   syncStaticPropsFromAttributes,
   unwrap,
 } from './prop.js';
-export type {
-  PropDecl,
-  PropDeclFull,
-  PropDeclShorthand,
-  PropsFrom,
-  PropType,
-} from './prop.js';
+export type { PropDecl, PropDeclFull, PropDeclShorthand, PropsFrom, PropType } from './prop.js';
