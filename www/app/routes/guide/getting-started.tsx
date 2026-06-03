@@ -1,5 +1,6 @@
 ﻿export const meta = { section: 'Quick Start', label: 'Getting Started', order: 1 };
 import { DsdElement } from '@lessjs/core';
+import { LESSJS_VERSION } from '../../data/version.ts';
 import { StyleSheet } from '@lessjs/style-sheet';
 import { docsPageStyles } from '@lessjs/ui/docs-page-styles';
 import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
@@ -49,7 +50,7 @@ function GettingStartedZh() {
       </p>
 
       <less-callout type='info' label='推荐'>
-        推荐使用 Deno 2.7+。LessJS <strong>v0.28</strong> 是 Deno-first 项目，依赖通过
+        推荐使用 Deno 2.7+。LessJS <strong>v{LESSJS_VERSION}</strong> 是 Deno-first 项目，依赖通过
         <span class='inline-code'>deno.json</span> 管理，开发和构建命令都从 Deno task 进入。
       </less-callout>
 

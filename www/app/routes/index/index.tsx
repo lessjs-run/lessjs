@@ -1,5 +1,5 @@
 ﻿/**
- * Homepage — Neo-Swiss Hyper-Dark v0.28.
+ * Homepage — Neo-Swiss Hyper-Dark v0.29.2.
  *
  * Showcases LessJS framework: DSD rendering, Signal reactivity,
  * Island architecture. Pure DsdElement + @lessjs/signals.

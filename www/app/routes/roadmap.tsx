@@ -243,15 +243,15 @@ export class RoadmapPage extends DsdElement {
             <div>
               <h1>Roadmap</h1>
               <p class="subtitle">
-                LessJS roadmap labels are product truth, not aspiration. v0.28.0
-                is the current architecture line: contracts & tokens, Open Props
-                theme system, CI composite action, and signal-driven registry.
+                LessJS roadmap labels are product truth, not aspiration. The current
+                line is v0.29.2 — structured renderer IR, single async render path,
+                core simplification (33→26 files), and unified attribute serialization.
               </p>
             </div>
             <aside class="now">
               <span>current line</span>
-              <h2>v0.28.0 Contracts & Tokens</h2>
-              <p>Implemented in 0.28.0. All 19 packages are aligned to the same version.</p>
+              <h2>v0.29.2 Core Simplification</h2>
+              <p>19 packages aligned. renderDsdTree is the only public rendering API.</p>
             </aside>
           </section>
 
@@ -269,17 +269,22 @@ export class RoadmapPage extends DsdElement {
             <div class="phase">
               <div class="version">v0.23.x</div>
               <div><h3>Layered Package Architecture</h3><p>Protocols own shared contracts, runtime owns authoring imports, app owns configuration, and graph checks enforce package truth.</p></div>
+              <span class="status done">Done</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.28.x</div>
+              <div><h3>Cleanup Arc</h3><p>Hygiene convergence, deprecated purge, closure+MDX, AppShell protocol, consumer resolver patch, build pipeline cleanup.</p></div>
+              <span class="status done">Done</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.29.x</div>
+              <div><h3>Renderer IR + Simplification</h3><p>Structured RenderNode IR, unified attribute serialization, single async render path, core 33→26 files, renderToString removed.</p></div>
               <span class="status current">Current</span>
             </div>
             <div class="phase">
-              <div class="version">v0.24.x</div>
-              <div><h3>Edge Full-Stack</h3><p>ISR production handlers, KV adapters, deployment parity, and www showcase proof.</p></div>
+              <div class="version">v0.30.x</div>
+              <div><h3>UI Dual-Track + v1.0 Freeze</h3><p>Ocean/Island UI split, API freeze line, v1.0 release preparation.</p></div>
               <span class="status planned">Planned</span>
-            </div>
-            <div class="phase">
-              <div class="version">v0.27.x</div>
-              <div><h3>Ecosystem Hardening</h3><p>Hub trust policy, more real package evidence, compatibility growth, and package author guidance.</p></div>
-              <span class="status done">Done</span>
             </div>
           </div>
 
