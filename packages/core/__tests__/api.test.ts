@@ -1,5 +1,5 @@
 import { assertEquals } from 'jsr:@std/assert@^1.0.0';
-import type { LessApiContext } from '../src/api.ts';
+import type { LessApiContext } from '../src/types.ts';
 
 Deno.test('LessApiContext type has correct shape', () => {
   // Verify the type is importable and has the expected structure.
