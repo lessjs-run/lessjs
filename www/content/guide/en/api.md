@@ -40,17 +40,25 @@ console.log(result.html);
 
 **Returns:** `Promise<RenderOutput>` — contains `html`, `errors`, `metrics`, `hydrationHints`.
 
-### renderToString(vnode)
+### renderDsdTree(node)
 
-Synchronous VNode to HTML string renderer. Does NOT handle nested custom elements.
+Async VNode tree to HTML string renderer. Handles nested custom elements with DSD.
 
 ```ts
-import { jsx, renderToString } from '@lessjs/core/jsx-runtime';
+import { renderDsdTree } from '@lessjs/core';
 
 const vnode = jsx('div', { class: 'greeting', children: 'hello' });
-const html = renderToString(vnode);
+const html = await renderDsdTree(vnode);
 // → '<div class="greeting">hello</div>'
 ```
+
+**Parameters:**
+
+| Param  | Type      | Description                        |
+| ------ | --------- | ---------------------------------- |
+| `node` | `unknown` | VNode, string, number, or fragment |
+
+**Returns:** `Promise<string>` — escaped HTML string with DSD for registered custom elements.
 
 ## Component Model
 

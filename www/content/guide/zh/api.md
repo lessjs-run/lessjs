@@ -40,18 +40,26 @@ console.log(result.html);
 
 **返回:** `Promise<RenderOutput>` — 包含 `html`、`errors`、`metrics`、`hydrationHints`。
 
-### renderToString(vnode)
+### renderDsdTree(node)
 
-同步 VNode 转 HTML 字符串。不处理嵌套自定义元素。
+异步 VNode 树转 HTML 字符串。处理嵌套自定义元素的 DSD 渲染。
 
 ```ts
-import { renderToString } from '@lessjs/core';
+import { renderDsdTree } from '@lessjs/core';
 import { jsx } from '@lessjs/core/jsx-runtime';
 
 const vnode = jsx('div', { class: 'greeting', children: 'hello' });
-const html = renderToString(vnode);
+const html = await renderDsdTree(vnode);
 // → '<div class="greeting">hello</div>'
 ```
+
+**参数:**
+
+| 参数   | 类型      | 描述                     |
+| ------ | --------- | ------------------------ |
+| `node` | `unknown` | VNode、字符串、数字或片段 |
+
+**返回:** `Promise<string>` — 转义后的 HTML 字符串，已注册自定义元素包含 DSD。
 
 ## 组件模型
 
