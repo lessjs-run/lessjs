@@ -214,7 +214,9 @@ export class DsdElement extends Base implements ReactiveHost {
     const sheets = Array.isArray(ctor.styles) ? ctor.styles : [ctor.styles];
     if (sheets.length > 0) {
       // StyleSheet delegates to native CSSStyleSheet in browser
-      target.adoptedStyleSheets = sheets as CSSStyleSheet[];
+      // ShadowRoot.adoptedStyleSheets may not be declared in the configured DOM lib.
+      (target as unknown as { adoptedStyleSheets: CSSStyleSheet[] }).adoptedStyleSheets =
+        sheets as unknown as CSSStyleSheet[];
     }
   }
 

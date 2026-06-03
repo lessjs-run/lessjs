@@ -50,7 +50,7 @@ export abstract class ErrorBoundary extends DsdElement {
   /**
    * Wrap child render in try/catch.
    */
-  override render(): string | VNode {
+  override render(): VNode | null {
     if (this._error) {
       const result = this.onError(this._error);
       return result;
