@@ -325,8 +325,7 @@ export async function renderDsd(
       }
       if (!rendered) {
         log.debug(`Unsupported render() return for <${tagName}>: ${describeRenderValue(result)}`);
-        const errDetail =
-          `Components must return a string or VNode from render(), got ${typeof result}.`;
+        const errDetail = `Components must return a VNode from render(), got ${typeof result}.`;
         const err = classifyError('render', tagName, errDetail, true);
         collectedErrors.push(err);
         hooks?.onError?.(err);

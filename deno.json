@@ -76,7 +76,6 @@
     "@lessjs/content/sitemap": "./packages/content/src/sitemap/index.ts",
     "@lessjs/i18n": "./packages/i18n/src/index.ts",
     "@lessjs/app": "./packages/app/src/index.ts",
-    "happy-dom": "npm:happy-dom@^20.8.9",
     "lit": "npm:lit@^3.2.0",
     "@lit/reactive-element": "npm:@lit/reactive-element@^2",
     "lit-element": "npm:lit-element@^4",

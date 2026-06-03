@@ -11,7 +11,7 @@
  * @module @lessjs/core/jsx-render-dom
  */
 
-import { isVNode, type VNode } from './vnode.ts';
+import { isComponentCtor, isComponentFn, isVNode, type VNode } from './vnode.ts';
 import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 import { eventTypeFromProp } from './event-hydration.ts';
@@ -327,30 +327,27 @@ export function renderToDom(
   }
 
   // ── Component function / class ────────────────────────────────────────────
-  if (typeof tag === 'function') {
+  if (isComponentCtor(tag)) {
     try {
-      if (tag.prototype && typeof tag.prototype.render === 'function') {
-        // DsdElement class — CSR: create + connect
-        const instance = new (tag as new (...args: unknown[]) => {
-          render(): unknown;
-          connectedCallback?(): void;
-        })();
-        for (const [k, v] of Object.entries(props)) {
-          (instance as Record<string, unknown>)[k] = v;
-        }
-        const result = instance.render();
-        return renderToDom(result, signal, disposers);
-      } else {
-        // Function component
-        const result = (tag as (props: Record<string, unknown>) => unknown)({
-          ...props,
-          children,
-        });
-        return renderToDom(result, signal, disposers);
+      const instance = new tag();
+      for (const [k, v] of Object.entries(props)) {
+        (instance as Record<string, unknown>)[k] = v;
       }
+      const result = instance.render();
+      return renderToDom(result, signal, disposers);
     } catch (err) {
-      // Previously this silently returned empty TextNode,
-      // making CSR rendering failures invisible in the browser.
+      console.error(
+        `[LessJS/CSR] renderToDom() failed for <${String(tag)}>:`,
+        err instanceof Error ? err.message : String(err),
+      );
+      return document.createTextNode('');
+    }
+  }
+  if (isComponentFn(tag)) {
+    try {
+      const result = tag({ ...props, children });
+      return renderToDom(result, signal, disposers);
+    } catch (err) {
       console.error(
         `[LessJS/CSR] renderToDom() failed for <${String(tag)}>:`,
         err instanceof Error ? err.message : String(err),

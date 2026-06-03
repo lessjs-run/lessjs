@@ -15,7 +15,7 @@ import {
 import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { DANGEROUS_KEYS, trustRenderHtml } from './security.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
-import { isVNode, type VNode } from './vnode.ts';
+import { isComponentCtor, isComponentFn, isVNode, type VNode } from './vnode.ts';
 import { renderDsd } from './render-dsd.js';
 
 export type RenderNode =
@@ -213,7 +213,7 @@ export async function renderToNode(
   }
 
   // Component function/class
-  if (typeof tag === 'function') {
+  if (isComponentCtor(tag) || isComponentFn(tag)) {
     try {
       return await renderToNode(callComponent(tag, props, children), eventContext);
     } catch (err) {
@@ -285,16 +285,18 @@ function callComponent(
   props: Record<string, unknown>,
   children: (VNode | string)[],
 ): unknown {
-  if (typeof tag !== 'function') return null;
-  if (tag.prototype && typeof tag.prototype.render === 'function') {
-    const instance = new (tag as new (...args: unknown[]) => { render(): unknown })();
+  if (isComponentCtor(tag)) {
+    const instance = new tag();
     for (const [key, value] of Object.entries(props)) {
       if (DANGEROUS_KEYS.has(key)) continue;
       (instance as Record<string, unknown>)[key] = value;
     }
     return instance.render();
   }
-  return (tag as (props: Record<string, unknown>) => unknown)({ ...props, children });
+  if (isComponentFn(tag)) {
+    return tag({ ...props, children });
+  }
+  return null;
 }
 
 function styleObjectToString(obj: Record<string, unknown>): string {

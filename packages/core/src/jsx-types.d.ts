@@ -17,8 +17,7 @@ declare namespace JSX {
    * (this Element) is returned from DsdElement.render(): string | VNode.
    */
   interface Element {
-    // deno-lint-ignore ban-types
-    tag: string | Function | symbol;
+    tag: string | import('./vnode.ts').ComponentFn | import('./vnode.ts').ComponentCtor | symbol;
     props: Record<string, unknown>;
     children: (string | import('./vnode.ts').VNode)[];
     key?: string | number;

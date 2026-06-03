@@ -13,8 +13,8 @@ export { ErrorBoundary } from '../src/error-boundary.ts';
 export { Fragment, jsx, jsxDEV, jsxs } from '../src/jsx-runtime.ts';
 export { renderToDom } from '../src/jsx-render-dom.ts';
 export { renderDsdTree, serializeRenderNode } from '../src/render-ir.ts';
-export { isVNode } from '../src/vnode.ts';
-export type { VNode } from '../src/vnode.ts';
+export { isComponentCtor, isComponentFn, isVNode } from '../src/vnode.ts';
+export type { ComponentCtor, ComponentFn, VNode } from '../src/vnode.ts';
 
 // ── Signals ───────────────────────────────────────────────────────
 export { isSignalLike, unwrapSignalLike } from '../src/signal-like.ts';

@@ -14,7 +14,7 @@
 
 /// <reference path="./jsx-types.d.ts" />
 
-import type { VNode } from './vnode.ts';
+import type { ComponentCtor, ComponentFn, VNode } from './vnode.ts';
 
 // ─── Fragment ────────────────────────────────────────────────────────────────
 
@@ -67,8 +67,7 @@ function normaliseChildren(raw: unknown): (VNode | string)[] {
   return [raw as VNode | string];
 }
 
-// deno-lint-ignore ban-types
-type ComponentTag = string | Function | symbol;
+type ComponentTag = string | ComponentFn | ComponentCtor | symbol;
 
 function createVNode(
   tag: ComponentTag | typeof Fragment,

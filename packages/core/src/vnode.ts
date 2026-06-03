@@ -11,6 +11,18 @@
  * @module @lessjs/core/vnode
  */
 
+// ─── Component types ─────────────────────────────────────────────────────────
+
+/**
+ * Function component: receives props, returns VNode or null.
+ */
+export type ComponentFn = (props: Record<string, unknown>) => unknown;
+
+/**
+ * Class component constructor: has render() method on prototype.
+ */
+export type ComponentCtor = new (...args: unknown[]) => { render(): unknown };
+
 // ─── VNode interface ─────────────────────────────────────────────────────────
 
 /**
@@ -22,8 +34,7 @@
  */
 export interface VNode {
   /** HTML tag name (e.g. 'div'), component function/class, or Fragment symbol */
-  // deno-lint-ignore ban-types
-  tag: string | Function | symbol;
+  tag: string | ComponentFn | ComponentCtor | symbol;
   /** Attribute object (includes events, class, style, etc.) */
   props: Record<string, unknown>;
   /** Child nodes (VNode or text string) */
@@ -56,4 +67,20 @@ export function isVNode(v: unknown): v is VNode {
     !Array.isArray(candidate.props) &&
     Array.isArray(candidate.children)
   );
+}
+
+/**
+ * Returns true if the VNode tag is a class component constructor.
+ */
+export function isComponentCtor(tag: VNode['tag']): tag is ComponentCtor {
+  return typeof tag === 'function' &&
+    tag.prototype !== undefined &&
+    typeof (tag as ComponentCtor).prototype.render === 'function';
+}
+
+/**
+ * Returns true if the VNode tag is a function component.
+ */
+export function isComponentFn(tag: VNode['tag']): tag is ComponentFn {
+  return typeof tag === 'function' && !isComponentCtor(tag);
 }

@@ -63,50 +63,37 @@ import { trustRenderHtml } from './security.js';
 import { effect, type Signal, signal } from '@lessjs/signals';
 
 /**
- * Minimal SSR-safe HTMLElement stub for server environments (SOP-016).
+ * SSR-safe HTMLElement base class.
  *
- * Provides only the methods actually used by @lessjs/core internals
- * and LessJS UI components during SSR render().
- *
- * When HTMLElement is unavailable on globalThis, this stub is assigned
- * to globalThis.HTMLElement so the entire dependency graph — including
- * client-only island stubs that write `extends HTMLElement` — shares
- * the same base class.
- *
- * Subclasses MUST NOT rely on this stub's methods for real DOM
- * behaviour. SSR rendering uses happy-dom for full DOM simulation.
+ * v0.30: In browser, extends real HTMLElement. In SSR, assigns a minimal
+ * stub to globalThis so the entire dependency graph shares the same base.
  */
-const _SsrHTMLElementStub = class {
-  hasAttribute(_name: string): boolean {
-    return false;
-  }
-  getAttribute(_name: string): string | null {
-    return null;
-  }
-  setAttribute(_name: string, _value: string): void {}
-  removeAttribute(_name: string): void {}
-  get tagName(): string {
-    return '';
-  }
-  get isConnected(): boolean {
-    return false;
-  }
-};
-
-const _HTMLElement: typeof HTMLElement = typeof HTMLElement !== 'undefined'
+const Base = typeof HTMLElement !== 'undefined'
   ? HTMLElement
-  : ((globalThis as Record<string, unknown>).HTMLElement =
-    _SsrHTMLElementStub as unknown as typeof HTMLElement);
+  : ((globalThis as Record<string, unknown>).HTMLElement ||
+    ((globalThis as Record<string, unknown>).HTMLElement =
+      class {})) as unknown as typeof HTMLElement;
 
 /**
  * Zero-dependency Custom Element base class for DSD rendering.
- *
- * Provides DSD detection, CSR fallback, event hydration, and style management
- * without any framework dependency (no Lit, no reactive-element).
- *
- * Subclasses MUST override `render(): string | TemplateResult`.
  */
-export class DsdElement extends _HTMLElement implements ReactiveHost {
+export class DsdElement extends Base implements ReactiveHost {
+  // SSR-safe DOM method overrides
+  override hasAttribute(name: string): boolean {
+    if (typeof HTMLElement !== 'undefined') return super.hasAttribute(name);
+    return false;
+  }
+  override getAttribute(name: string): string | null {
+    if (typeof HTMLElement !== 'undefined') return super.getAttribute(name);
+    return null;
+  }
+  override setAttribute(name: string, value: string): void {
+    if (typeof HTMLElement !== 'undefined') super.setAttribute(name, value);
+  }
+  override removeAttribute(name: string): void {
+    if (typeof HTMLElement !== 'undefined') super.removeAttribute(name);
+  }
+
   /** Component stylesheets (SSR-safe - StyleSheet delegates to native CSSStyleSheet in browser). */
   static styles?: StyleSheetLike | StyleSheetLike[];
 
@@ -506,19 +493,19 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    * Hook called when the unified client render/hydrate path throws.
    * Subclasses may return a string or VNode fallback.
    */
-  protected onRenderError(error: unknown): string | VNode {
+  protected onRenderError(error: unknown): VNode | null {
     console.error(
       `[DsdElement] <${this.tagName.toLowerCase()}> render/hydrate failed:`,
       error instanceof Error ? error.message : String(error),
     );
-    return '';
+    return null;
   }
 
   private _renderErrorFallback(error: unknown): void {
     if (!this.shadowRoot) this.createRenderRoot();
     if (!this.shadowRoot) return;
 
-    let fallback: string | VNode;
+    let fallback: VNode | null;
     try {
       fallback = this.onRenderError(error);
     } catch (fallbackError) {
@@ -526,7 +513,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
         `[DsdElement] <${this.tagName.toLowerCase()}> onRenderError failed:`,
         fallbackError instanceof Error ? fallbackError.message : String(fallbackError),
       );
-      fallback = '';
+      fallback = null;
     }
 
     for (const d of this.#effectDisposers) d();
@@ -534,14 +521,11 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     for (const f of this.#eventCleanups) f();
     this.#eventCleanups = [];
 
-    if (isVNode(fallback)) {
+    if (fallback != null) {
       while (this.shadowRoot.firstChild) {
         this.shadowRoot.removeChild(this.shadowRoot.firstChild);
       }
       this.shadowRoot.appendChild(renderToDom(fallback, undefined, this.#effectDisposers));
-      this._bindEvents(this.shadowRoot);
-    } else {
-      this.shadowRoot.innerHTML = trustRenderHtml(fallback);
       this._bindEvents(this.shadowRoot);
     }
   }
@@ -653,22 +637,12 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
     // v0.28.1: Cache VNode for event hydration consistency
     this.#vnodeCache = result;
     this.#vnodeCacheValid = true;
-    if (isVNode(result)) {
+    if (result != null) {
       while (this.shadowRoot!.firstChild) {
         this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
       }
       this.shadowRoot!.appendChild(renderToDom(result, undefined, this.#effectDisposers));
-      // v0.28.1: Re-bind data-on-* events after CSR re-render.
       this._bindEvents(this.shadowRoot!);
-    } else if (typeof result === 'string') {
-      this.shadowRoot!.innerHTML = trustRenderHtml(result);
-      this._bindEvents(this.shadowRoot!);
-    } else {
-      console.warn(
-        `[DsdElement] <${this.tagName.toLowerCase()}>.render() returned unexpected type "${typeof result}". ` +
-          `Expected string or VNode.`,
-      );
-      this.shadowRoot!.innerHTML = '';
     }
   }
 
@@ -698,7 +672,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    *
    * @returns HTML string or VNode for the shadow DOM content.
    */
-  render(): string | VNode {
-    return '';
+  render(): VNode | null {
+    return null;
   }
 }

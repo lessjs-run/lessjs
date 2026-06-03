@@ -9,7 +9,7 @@
 
 import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { isSignalLike } from './signal-like.ts';
-import { isVNode, type VNode } from './vnode.ts';
+import { isComponentCtor, isVNode, type VNode } from './vnode.ts';
 
 const EVENT_PROP_RE = /^on[A-Z]/;
 const EVENT_TYPE_ALIASES: Record<string, string> = {
@@ -118,17 +118,22 @@ export function collectEventBindings(node: unknown): Map<string, EventBindingRec
       return;
     }
 
+    if (isComponentCtor(tag)) {
+      try {
+        const instance = new tag();
+        for (const [k, v] of Object.entries(props)) {
+          (instance as Record<string, unknown>)[k] = v;
+        }
+        visit(instance.render());
+      } catch {
+        return;
+      }
+      return;
+    }
+
     if (typeof tag === 'function') {
       try {
-        if (tag.prototype && typeof tag.prototype.render === 'function') {
-          const instance = new (tag as new (...args: unknown[]) => { render(): unknown })();
-          for (const [k, v] of Object.entries(props)) {
-            (instance as Record<string, unknown>)[k] = v;
-          }
-          visit(instance.render());
-        } else {
-          visit((tag as (props: Record<string, unknown>) => unknown)({ ...props, children }));
-        }
+        visit((tag as (props: Record<string, unknown>) => unknown)({ ...props, children }));
       } catch {
         return;
       }

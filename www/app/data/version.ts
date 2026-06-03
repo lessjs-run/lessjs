@@ -1,2 +1,2 @@
 // Current public line: v0.29
-export const LESSJS_VERSION = 'v0.29.4';
+export const LESSJS_VERSION = 'v0.30.0';
