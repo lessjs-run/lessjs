@@ -20,7 +20,7 @@ outrunning the architecture.
 
 | Area                      | State                                                 |
 | ------------------------- | ----------------------------------------------------- |
-| Project line              | v0.28.5 Consumer Resolver Patch                       |
+| Project line              | v0.29.2 Core Simplification                           |
 | Current rendering mode    | SSG + Declarative Shadow DOM                          |
 | Component model           | JSX + static props + Signal (ADR-0057)                |
 | Public API naming         | Web Platform style: verbNoun, PascalCase acronyms     |

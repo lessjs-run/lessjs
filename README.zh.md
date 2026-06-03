@@ -2,7 +2,7 @@
 
 [English](./README.md) | 简体中文
 
-**DSD-first Web Components 框架。** 构建带真实 Shadow DOM 的静态站点，零 JS 开销，渐进式 Island。
+**DSD-first Web Components 框架 (v0.29)。** 构建带真实 Shadow DOM 的静态站点，零 JS 开销，渐进式 Island。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)

@@ -2,7 +2,7 @@
 
 > AI assistant: read this file first on every session start.
 
-## Current Version Line: v0.28.5 (Consumer Resolver Patch - IMPLEMENTED)
+## Current Version Line: v0.29.2 (Core Simplification - IMPLEMENTED)
 
 v0.28.5 Status: **IMPLEMENTED.** Post-publish consumer smoke for v0.28.4 found
 a bare `sanitize-html` import in fresh JSR consumers. v0.28.5 makes the

@@ -2,7 +2,7 @@
 
 English | [简体中文](./README.zh.md)
 
-**The DSD-first Web Components framework.** Build static sites with real Shadow DOM, zero JS overhead, and progressive islands.
+**The DSD-first Web Components framework (v0.29).** Build static sites with real Shadow DOM, zero JS overhead, and progressive islands.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
