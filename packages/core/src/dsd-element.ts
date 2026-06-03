@@ -494,19 +494,19 @@ export class DsdElement extends Base implements ReactiveHost {
    * Hook called when the unified client render/hydrate path throws.
    * Subclasses may return a string or VNode fallback.
    */
-  protected onRenderError(error: unknown): VNode | null {
+  protected onRenderError(error: unknown): string | VNode {
     console.error(
       `[DsdElement] <${this.tagName.toLowerCase()}> render/hydrate failed:`,
       error instanceof Error ? error.message : String(error),
     );
-    return null;
+    return '';
   }
 
   private _renderErrorFallback(error: unknown): void {
     if (!this.shadowRoot) this.createRenderRoot();
     if (!this.shadowRoot) return;
 
-    let fallback: VNode | null;
+    let fallback: string | VNode;
     try {
       fallback = this.onRenderError(error);
     } catch (fallbackError) {
@@ -514,7 +514,7 @@ export class DsdElement extends Base implements ReactiveHost {
         `[DsdElement] <${this.tagName.toLowerCase()}> onRenderError failed:`,
         fallbackError instanceof Error ? fallbackError.message : String(fallbackError),
       );
-      fallback = null;
+      fallback = '';
     }
 
     for (const d of this.#effectDisposers) d();
@@ -522,11 +522,14 @@ export class DsdElement extends Base implements ReactiveHost {
     for (const f of this.#eventCleanups) f();
     this.#eventCleanups = [];
 
-    if (fallback != null) {
+    if (isVNode(fallback)) {
       while (this.shadowRoot.firstChild) {
         this.shadowRoot.removeChild(this.shadowRoot.firstChild);
       }
       this.shadowRoot.appendChild(renderToDom(fallback, undefined, this.#effectDisposers));
+      this._bindEvents(this.shadowRoot);
+    } else {
+      this.shadowRoot.innerHTML = trustRenderHtml(fallback);
       this._bindEvents(this.shadowRoot);
     }
   }
@@ -638,12 +641,21 @@ export class DsdElement extends Base implements ReactiveHost {
     // v0.28.1: Cache VNode for event hydration consistency
     this.#vnodeCache = result;
     this.#vnodeCacheValid = true;
-    if (result != null) {
+    if (isVNode(result)) {
       while (this.shadowRoot!.firstChild) {
         this.shadowRoot!.removeChild(this.shadowRoot!.firstChild);
       }
       this.shadowRoot!.appendChild(renderToDom(result, undefined, this.#effectDisposers));
       this._bindEvents(this.shadowRoot!);
+    } else if (typeof result === 'string') {
+      this.shadowRoot!.innerHTML = trustRenderHtml(result);
+      this._bindEvents(this.shadowRoot!);
+    } else {
+      console.warn(
+        `[DsdElement] <${this.tagName.toLowerCase()}>.render() returned unexpected type "${typeof result}". ` +
+          `Expected string or VNode.`,
+      );
+      this.shadowRoot!.innerHTML = '';
     }
   }
 
@@ -673,7 +685,7 @@ export class DsdElement extends Base implements ReactiveHost {
    *
    * @returns HTML string or VNode for the shadow DOM content.
    */
-  render(): VNode | null {
-    return null;
+  render(): string | VNode {
+    return '';
   }
 }
