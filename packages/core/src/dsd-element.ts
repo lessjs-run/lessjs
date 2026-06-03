@@ -214,8 +214,7 @@ export class DsdElement extends Base implements ReactiveHost {
     const sheets = Array.isArray(ctor.styles) ? ctor.styles : [ctor.styles];
     if (sheets.length > 0) {
       // StyleSheet delegates to native CSSStyleSheet in browser
-      // type-escape: adoptedStyleSheets may not be in the configured DOM lib
-      (target as unknown as { adoptedStyleSheets: typeof sheets }).adoptedStyleSheets = sheets;
+      target.adoptedStyleSheets = sheets as CSSStyleSheet[];
     }
   }
 
@@ -238,8 +237,8 @@ export class DsdElement extends Base implements ReactiveHost {
     initializeProps(this);
 
     // v0.24.1 (ADR-0057): Initialize static props signals and accessors
-    initializeStaticProps(this as unknown as Record<string, unknown>);
-    syncStaticPropsFromAttributes(this as unknown as Record<string, unknown>);
+    initializeStaticProps(this);
+    syncStaticPropsFromAttributes(this);
 
     // Ensure shadow root exists and detect DSD pre-population
     if (!this.shadowRoot) {
@@ -540,7 +539,7 @@ export class DsdElement extends Base implements ReactiveHost {
     for (const f of this.#eventCleanups) f();
     this.#eventCleanups = [];
     disposeProps(this);
-    disposeStaticProps(this as unknown as Record<string, unknown>);
+    disposeStaticProps(this);
   }
 
   // v0.28 (ADR-0067): Effect + event lifecycle managed by Set/Array.
@@ -566,7 +565,7 @@ export class DsdElement extends Base implements ReactiveHost {
     handlePropAttributeChange(this, _name, _oldValue, _newValue);
     // v0.24.1 (ADR-0057): Route to static props handler
     handleStaticPropAttributeChange(
-      this as unknown as Record<string, unknown>,
+      this,
       _name,
       _oldValue,
       _newValue,
