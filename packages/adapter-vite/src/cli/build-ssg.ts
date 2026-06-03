@@ -15,7 +15,7 @@
  */
 
 import { join, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { type Alias, normalizePath } from 'vite';
 import process from 'node:process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -29,6 +29,8 @@ import { createGeneratedDataResolverPlugin } from '../generated-data-resolver.js
 import { createLessJsrPackageResolverPlugin } from '../ssg-package-resolver.js';
 import { generateSsrPolyfillBanner } from '../ssr-polyfills.js';
 import { resolveExternalManifest } from '../external-resolver.js';
+import { optionalPackageStubsPlugin } from '../optional-package-stubs.js';
+import { loadHubClientOnlyTags } from '../hub-client-only-tags.js';
 
 const log = createLogger('ssg');
 
@@ -76,77 +78,6 @@ function normalizeViteAliases(
       normalizeAliasReplacement(root, replacement),
     ]),
   );
-}
-
-// 鈹€鈹€鈹€ Optional Package Stubs (ADR 0008 Phase C) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
-// Vite plugin that resolves optional LessJS packages to empty stubs
-// when they're not installed. This allows the generated entry code
-// (which statically imports these packages) to build successfully
-// regardless of which optional packages are available.
-function optionalPackageStubsPlugin(): import('vite').Plugin {
-  const stubs: Record<string, string> = {
-    '@lessjs/adapter-lit': [
-      'export function installLitAdapter() {}',
-      'export function uninstallLitAdapter() {}',
-    ].join('\n'),
-    '@lessjs/adapter-lit/ssr': [
-      'export function installLitAdapter() {}',
-      'export function uninstallLitAdapter() {}',
-    ].join('\n'),
-    '@lessjs/adapter-vanilla': [
-      'class DsdVanillaElement extends (globalThis.HTMLElement || class{}) {}',
-      'export { DsdVanillaElement };',
-      'export function installVanillaAdapter() {}',
-      'export function uninstallVanillaAdapter() {}',
-    ].join('\n'),
-    '@lessjs/adapter-vanilla/ssr': [
-      'export function installVanillaAdapter() {}',
-      'export function uninstallVanillaAdapter() {}',
-    ].join('\n'),
-    '@lessjs/adapter-react': [
-      'class DsdReactElement extends (globalThis.HTMLElement || class{}) {}',
-      'export { DsdReactElement };',
-      'export function installReactAdapter() {}',
-      'export function uninstallReactAdapter() {}',
-      'export const WithDsdHydration = undefined;',
-      'export function renderReactToString() { return ""; }',
-      'export function isReactElement() { return false; }',
-    ].join('\n'),
-    '@lessjs/adapter-react/ssr': [
-      'export function installReactAdapter() {}',
-      'export function uninstallReactAdapter() {}',
-    ].join('\n'),
-    // Route components import generated blog data from @lessjs/generated/blog-data.
-    // This stub is for the generateSitemap re-export only.
-    '@lessjs/content': [
-      'export async function loadBlogData() { return { posts: [], basePath: "" }; }',
-    ].join('\n'),
-    '@lessjs/content/sitemap': [
-      'export function generateSitemap() { return []; }',
-    ].join('\n'),
-    // Route components import generated i18n data from @lessjs/generated/i18n.
-    '@lessjs/i18n': [
-      'export function loadI18nData() { return { locales: [], defaultLocale: "en" }; }',
-    ].join('\n'),
-  };
-
-  return {
-    name: 'less:ssg-optional-stubs',
-    enforce: 'pre',
-    async resolveId(id) {
-      if (id in stubs) {
-        // Try to resolve the real package first
-        const resolved = await this.resolve(id, undefined, { skipSelf: true });
-        if (resolved) return null; // Package exists - let normal resolution proceed
-        return `\0stub:${id}`; // Package missing - use stub
-      }
-    },
-    load(id) {
-      for (const pkgId of Object.keys(stubs)) {
-        if (id === `\0stub:${pkgId}`) return stubs[pkgId];
-      }
-    },
-  };
 }
 
 interface BuildSSGOptions {
@@ -254,27 +185,10 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     : await scanIslandMeta(islandsRoot, ssgIslandFiles);
   const { buildEntryDescriptor } = await import('../entry-descriptor.js');
 
-  // v0.19.1 Phase 6: Discover Hub client-only tags for SSG admission (ADR-0035 A1)
-  const hubClientOnlyTags: string[] = [];
-  try {
-    const hubDataPath = join(root, 'app', 'data', 'registry', 'hub-data.ts');
-    const hubData = await import(pathToFileURL(hubDataPath).href) as {
-      default?: Record<string, { tags?: Array<{ tagName?: string; compatibility?: string }> }>;
-    };
-    hubClientOnlyTags.push(
-      ...Object.values(hubData.default ?? {}).flatMap((record) =>
-        (record.tags ?? [])
-          .filter((tag) => tag.compatibility === 'client-only' && tag.tagName)
-          .map((tag) => tag.tagName!)
-      ),
-    );
-    if (hubClientOnlyTags.length > 0) {
-      const { createLogger: mkLog } = await import('@lessjs/core/logger');
-      mkLog('core').info(
-        `Hub client-only tags: ${hubClientOnlyTags.length} tag(s) for SSG admission`,
-      );
-    }
-  } catch { /* hub data not available - skip */ }
+  const { tags: hubClientOnlyTags } = await loadHubClientOnlyTags(root, {
+    onError: 'throw',
+    logger: log,
+  });
 
   ctx.phase1.ssrAdmissionPlan = buildEntryDescriptor(routes, {
     routesDir,
@@ -340,7 +254,6 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
     // Lit/React runtime packages stay external unless the user explicitly
     // requests adapter-specific bundling through options.ssr.noExternal.
     const ssrExternalDefaults = [
-      'entities',
       'entities',
       'hono',
       'lit',
@@ -409,7 +322,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
         })
         .filter(Boolean),
     );
-    // v0.21: Build filePath 鈫?tagName map for client-only placeholder generation.
+    // v0.21: Build filePath -> tagName map for client-only placeholder generation.
     const clientOnlyTagMap = new Map<string, string>();
     for (const [tag, meta] of Object.entries(ssgIslandMeta)) {
       if (meta.ssr !== false) continue;
@@ -417,7 +330,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
       if (file) clientOnlyTagMap.set(normalizePath(resolve(root, islandsDir, file)), tag);
     }
 
-    // v0.21 SOP-004: Conflict detection 鈥?same tag must not be both SSR and client:only.
+    // v0.21 SOP-004: Conflict detection: same tag must not be both SSR and client:only.
     const ssrTags = new Set(
       Object.entries(ssgIslandMeta)
         .filter(([, meta]) => meta.ssr !== false)
@@ -441,7 +354,7 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
         chunkSizeWarningLimit: 1500,
         rollupOptions: {
           input: { entry: VIRTUAL_SSG_ENTRY_ID },
-          // v0.21: Suppress IMPORT_IS_UNDEFINED for revalidate 鈥?the generated
+          // v0.21: Suppress IMPORT_IS_UNDEFINED for revalidate; the generated
           // code uses typeof check which correctly handles undefined exports.
           onwarn(warning, warn) {
             if (warning.code === 'IMPORT_IS_UNDEFINED') return;
@@ -449,15 +362,14 @@ async function buildSSG(options: BuildSSGOptions = {}, ctx: LessBuildContext): P
           },
           output: {
             format: 'esm',
-            // Framework SSR externals that are introduced by LessJS source must
-            // stay Deno-resolvable in a fresh JSR consumer with no root import
-            // map alias. Keep Vite/Rolldown resolving the bare id internally,
-            // then emit the Deno npm: specifier in the final server bundle.
+            // Workspace sources may use explicit npm: specifiers that Rolldown
+            // rewrites to bare imports while bundling. Re-emit known externals
+            // as Deno-resolvable npm: imports for fresh JSR consumers.
             paths: {
               'sanitize-html': 'npm:sanitize-html@^2.17.4',
             },
             // ADR-0044: customElements polyfill must run before ESM imports.
-            // Uses Map-backed define()/get() 鈥?renderDsdByName() looks up
+            // Uses Map-backed define()/get(); renderDsdByName() looks up
             // components via customElements.get(tagName) during SSG rendering.
             // SOP-016: HTMLElement stub is self-contained in @lessjs/core/dsd-element.ts.
             banner: `\
@@ -483,7 +395,7 @@ if (typeof globalThis.customElements === 'undefined') {
         ? { __HEAD_EXTRAS__: JSON.stringify(options.headExtras) }
         : { __HEAD_EXTRAS__: '""' },
       esbuild: {
-        // ADR-0057: JSX automatic runtime 鈥?same reason as build-client.ts.
+        // ADR-0057: JSX automatic runtime, same reason as build-client.ts.
         // SSG build also processes .tsx island files for SSR rendering.
         jsx: 'automatic',
         jsxImportSource: '@lessjs/core',
@@ -609,7 +521,7 @@ if (typeof globalThis.customElements === 'undefined') {
         }
       }
     } catch (e) {
-      log.warn('Failed to write isr-manifest.json 鈥?non-fatal:', e);
+      log.warn('Failed to write isr-manifest.json; non-fatal:', e);
     }
   } catch (err) {
     const cause = err instanceof Error ? err : new Error(String(err));

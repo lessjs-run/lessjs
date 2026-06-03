@@ -60,7 +60,7 @@ import { isVNode, type VNode } from './vnode.js';
 import { renderToDom } from './jsx-render-dom.js';
 import { renderToString } from './jsx-render-string.js';
 import { collectEventBindings, hydrateEventMarkers } from './event-hydration.js';
-import { sanitizeRenderHtml } from './security.js';
+import { trustRenderHtml } from './security.js';
 import { effect, type Signal, signal } from '@lessjs/signals';
 
 /**
@@ -374,7 +374,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       if (!sig) continue;
 
       const applyHtml = () => {
-        (el as HTMLElement).innerHTML = sanitizeRenderHtml(String(sig.value));
+        (el as HTMLElement).innerHTML = trustRenderHtml(String(sig.value));
         // Scan new dynamic HTML for data-on-* and bind events.
         this._bindEvents(el);
       };

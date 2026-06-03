@@ -1,6 +1,6 @@
 {
   "name": "@lessjs/core",
-  "version": "0.28.5",
+  "version": "0.29.0",
   "exports": {
     ".": "./src/index.ts",
     "./errors": "./src/errors.ts",
@@ -19,8 +19,8 @@
     "./island-transform": "./src/island-transform.ts"
   },
   "imports": {
-    "@lessjs/signals": "jsr:@lessjs/signals@^0.28.5",
-    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.28.5"
+    "@lessjs/signals": "jsr:@lessjs/signals@^0.29.0",
+    "@lessjs/style-sheet": "jsr:@lessjs/style-sheet@^0.29.0"
   },
   "publish": {
     "include": [

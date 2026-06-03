@@ -2,8 +2,8 @@
 
 > Version: v0.28.6
 > Date: 2026-06-02
-> Status: Planned
-> ADR: TBD - Declarative Build Pipeline and Metadata Boundaries
+> Status: Completed
+> ADR: ADR-0058 - BuildPipeline Declarative API
 > Output: graph-driven release tasks, AST/manifest metadata boundaries,
 > declaration-only generated entries, and diagnosable build failures.
 
@@ -161,6 +161,7 @@ v0.28.6 covers five implementation areas:
 3. island metadata AST or manifest extraction
 4. generated SSR entry runtime-module extraction
 5. consumer bundle boundary regression tests
+6. verified pre-freeze cleanup defects from the 2026-06-03 audit
 
 The work is cleanup-first. It may remove stale compatibility paths and source
 heuristics. It should not expand the public API surface unless an existing
@@ -431,6 +432,58 @@ The test should catch:
 - generated project build remains part of CI release proof
 - docs or release notes explain why consumer bundle checks are release gates
 
+## Workstream 6: Verified Pre-Freeze Defect Cleanup
+
+### Problem
+
+The 2026-06-03 audit found several concrete defects that are not new features
+and should not wait for the v0.29 UI Shell work. They are small, but they affect
+API semantics, build consistency, or package dependency boundaries.
+
+### Required Fixes
+
+1. Fix adapter registry reset semantics.
+   - Current issue: `register(undefined)` clears all named adapters.
+   - Target: resetting the default adapter must not silently wipe named
+     adapters unless the explicit operation is `clear()`.
+   - Affected file: `packages/core/src/adapter-registry.ts`.
+
+2. Collapse optional package stubs into one real module.
+   - Current issue: SSG and dev/plugin paths can use different stub sets.
+   - Target: `packages/adapter-vite/src/optional-package-stubs.ts` is the only
+     source of optional stub definitions.
+   - Affected files:
+     - `packages/adapter-vite/src/less-plugin.ts`
+     - `packages/adapter-vite/src/cli/build-ssg.ts`
+
+3. Restore the `@lessjs/core` dependency and trust-boundary model.
+   - Current issue: `packages/core/src/security.ts` imports
+     `npm:sanitize-html`.
+   - Target: core must not own a heavy npm sanitizer dependency. `rawHtml`
+     must be documented or renamed as a trusted HTML boundary, and untrusted
+     HTML must be sanitized before entering core.
+   - Affected file: `packages/core/src/security.ts`.
+   - Follow-up: the full structured trust model is deferred to
+     [ADR-0077](../../adr/ADR-0077-structured-render-ir.md) and v0.29.0.
+
+4. Fold package version synchronization into the package graph/release runner.
+   - Current issue: package version bumps are duplicated across package
+     metadata.
+   - Target: version bump validation and/or update should be graph-driven.
+
+5. Remove small review-quality drift while touching the build path.
+   - Example: duplicate `entities` in `ssrExternalDefaults`.
+
+### Acceptance
+
+- adapter registry tests cover default reset versus full clear
+- SSG and dev builds import the same optional stub module
+- core publish metadata no longer hides an unintended npm dependency boundary
+- raw/trusted HTML semantics no longer overclaim sanitizer behavior
+- package version consistency is covered by the graph/release runner
+- duplicate external defaults are removed
+- these fixes are described in the v0.28.6 changelog and release note
+
 ## Execution Order
 
 1. Write the v0.28.6 ADR before code changes.
@@ -440,10 +493,11 @@ The test should catch:
 5. Replace island metadata regex parsing with AST or manifest extraction.
 6. Extract SSR entry runtime behavior into real modules.
 7. Add consumer bundle boundary regression tests.
-8. Run focused tests for each changed subsystem.
-9. Run full local gates.
-10. Update changelog, release note, and package versions to `0.28.6`.
-11. Push `dev`, monitor CI, merge to `main`, and verify publish workflow.
+8. Fix the verified pre-freeze defects from Workstream 6.
+9. Run focused tests for each changed subsystem.
+10. Run full local gates.
+11. Update changelog, release note, and package versions to `0.28.6`.
+12. Push `dev`, monitor CI, merge to `main`, and verify publish workflow.
 
 ## Verification
 
@@ -455,6 +509,10 @@ Focused gates:
 - SSR runtime helper tests
 - generated entry wiring tests
 - consumer bundle boundary smoke test
+- adapter registry tests
+- optional package stub consistency tests
+- core dependency-boundary check
+- raw/trusted HTML trust-boundary tests
 
 Full local gates:
 
@@ -490,6 +548,10 @@ v0.28.6 is complete only when:
 - generated SSR entry code is declaration-heavy and runtime-light
 - complex SSR behavior lives in real tested modules
 - consumer bundle boundary regressions are tested
+- adapter registry default reset does not wipe named adapters
+- optional package stubs are single-source
+- core dependency boundary is explicit and tested
+- sanitizer removal does not broaden the default escaped `innerHTML` behavior
 - all 19 packages are bumped to `0.28.6`
 - changelog and release note describe this cleanup line accurately
 - full local gates pass

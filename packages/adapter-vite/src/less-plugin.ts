@@ -18,7 +18,6 @@ import type {
 } from '@lessjs/core';
 
 import { join } from 'node:path';
-import { pathToFileURL } from 'node:url';
 import process from 'node:process';
 import { LessError } from '@lessjs/core/errors';
 import { createLogger } from '@lessjs/core/logger';
@@ -35,6 +34,7 @@ import { buildHeadExtras } from './head-injection.js';
 import { islandTransformPlugin } from './island-transform.js';
 import { optionalPackageStubsPlugin } from './optional-package-stubs.js';
 import { createGeneratedDataResolverPlugin } from './generated-data-resolver.js';
+import { loadHubClientOnlyTags } from './hub-client-only-tags.js';
 import {
   detectAndClassifyCemPackages,
   fileToTagName,
@@ -128,35 +128,12 @@ export function less(
   const VIRTUAL_BUILD_TRIGGER_ID = 'virtual:less-build-trigger';
   const RESOLVED_BUILD_TRIGGER_ID = '\0' + VIRTUAL_BUILD_TRIGGER_ID;
 
-  // v0.19.1 Phase 6: Discover client-only tags from Hub registry data (ADR-0035 A1)
-  // Imports generated hub-data.ts at build time and extracts tagNames where
-  // compatibility is 'client-only'. This ensures Shoelace/Media Chrome
-  // tags are in __CLIENT_ONLY_TAGS__ without requiring CEM manifests.
   let _cachedHubClientOnlyTags: string[] | null = null;
   async function discoverHubClientOnlyTags(root: string, _routesDir: string): Promise<string[]> {
     if (_cachedHubClientOnlyTags !== null) return _cachedHubClientOnlyTags;
-    try {
-      const hubDataPath = join(root, 'app', 'data', 'registry', 'hub-data.ts');
-      const hubData = await import(pathToFileURL(hubDataPath).href) as {
-        default?: Record<string, {
-          tags?: Array<{ tagName?: string; compatibility?: string }>;
-        }>;
-      };
-      const tags = Object.values(hubData.default ?? {}).flatMap((record) =>
-        (record.tags ?? [])
-          .filter((tag) => tag.compatibility === 'client-only' && tag.tagName)
-          .map((tag) => tag.tagName!)
-      );
-      _cachedHubClientOnlyTags = tags;
-      if (tags.length > 0) {
-        log.info(`Hub client-only tags: ${tags.length} tag(s) discovered from ${hubDataPath}`);
-      }
-      return tags;
-    } catch {
-      // Hub data not available - skip (non-fatal)
-      _cachedHubClientOnlyTags = [];
-      return [];
-    }
+    const result = await loadHubClientOnlyTags(root, { onError: 'warn', logger: log });
+    _cachedHubClientOnlyTags = result.tags;
+    return result.tags;
   }
 
   function generateEntry(

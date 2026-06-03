@@ -30,3 +30,16 @@ Deno.test('AdapterRegistry clear removes default and named adapters', () => {
   assertEquals(registry.get('vanilla'), undefined);
   assertEquals(registry.getAll(), []);
 });
+
+Deno.test('AdapterRegistry register(undefined) resets only the default adapter', () => {
+  const registry = createAdapterRegistry();
+  registry.register({ name: 'lit' });
+  registry.register({ name: 'react' });
+
+  registry.register(undefined);
+
+  assertEquals(registry.get(), undefined);
+  assertEquals(registry.get('lit')?.name, 'lit');
+  assertEquals(registry.get('react')?.name, 'react');
+  assertEquals(registry.getAll().map((adapter) => adapter.name), ['lit', 'react']);
+});

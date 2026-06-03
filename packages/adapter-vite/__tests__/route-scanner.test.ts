@@ -1,7 +1,7 @@
 /**
  * @lessjs/adapter-vite - route-scanner.ts tests (Deno)
  */
-import { assertEquals } from 'jsr:@std/assert@^1.0.0';
+import { assertEquals, assertRejects } from 'jsr:@std/assert@^1.0.0';
 import { join } from 'jsr:@std/path@^1.0.0';
 import {
   detectAndClassifyCemPackages,
@@ -102,14 +102,17 @@ Deno.test('route-scanner', { permissions: { read: true, write: true } }, async (
   });
 
   await t.step(
-    'scanIslandMeta - v0.28.1 reads local less metadata via static file scan (regex)',
+    'scanIslandMeta - v0.28.6 reads local less metadata via AST static scan',
     async () => {
-      // v0.28.1: Static file scan replaces dynamic import.
-      // Parses `export const less = { ... }` from source text using regex.
       await Deno.writeTextFile(
         join(FIXTURES_DIR, 'islands', 'client-only.ts'),
         [
-          'export const less = { ssr: false, dsd: false, hydrate: "idle" };',
+          'export const less = {',
+          '  // comments and trailing commas are accepted by the AST path',
+          '  ssr: false,',
+          '  dsd: false,',
+          '  hydrate: "idle",',
+          '} as const;',
           'export default class ClientOnly {}',
         ].join('\n'),
       );
@@ -129,10 +132,10 @@ Deno.test('route-scanner', { permissions: { read: true, write: true } }, async (
   );
 
   await t.step(
-    'scanIslandMeta - v0.28.1 reads metadata from source file even if unexecutable',
+    'scanIslandMeta - v0.28.6 reads metadata from source file even if unexecutable',
     async () => {
-      // v0.28.1: Static scanning does not execute the file, so top-level
-      // throws (e.g. browser-only code) don't prevent metadata extraction.
+      // Static AST scanning does not execute the file, so top-level throws
+      // do not prevent metadata extraction.
       await Deno.writeTextFile(
         join(FIXTURES_DIR, 'islands', 'browser-only.ts'),
         [
@@ -143,9 +146,27 @@ Deno.test('route-scanner', { permissions: { read: true, write: true } }, async (
       const meta = await scanIslandMeta(join(FIXTURES_DIR, 'islands'), [
         'browser-only.ts',
       ]);
-      // v0.28.1: Metadata IS extracted — static scan doesn't execute the file
       assertEquals(meta['browser-only']?.ssr, false);
       assertEquals(meta['browser-only']?.reason, 'local island exports less.ssr=false');
+    },
+  );
+
+  await t.step(
+    'scanIslandMeta - rejects dynamic less metadata instead of guessing',
+    async () => {
+      await Deno.writeTextFile(
+        join(FIXTURES_DIR, 'islands', 'dynamic-meta.ts'),
+        [
+          'const base = { ssr: false };',
+          'export const less = { ...base };',
+          'export default class DynamicMeta {}',
+        ].join('\n'),
+      );
+      await assertRejects(
+        () => scanIslandMeta(join(FIXTURES_DIR, 'islands'), ['dynamic-meta.ts']),
+        Error,
+        'unsupported less metadata syntax',
+      );
     },
   );
 

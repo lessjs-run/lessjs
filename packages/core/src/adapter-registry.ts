@@ -35,10 +35,7 @@ export function createAdapterRegistry(): AdapterRegistry {
   return {
     register(adapter: RendererProtocol | undefined): void {
       defaultAdapter = adapter;
-      if (!adapter) {
-        namedAdapters.clear();
-        return;
-      }
+      if (!adapter) return;
       if (adapter.name) namedAdapters.set(adapter.name, adapter);
     },
 

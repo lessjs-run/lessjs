@@ -15,7 +15,7 @@ import { isVNode, type VNode } from './vnode.ts';
 import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 import { eventTypeFromProp } from './event-hydration.ts';
-import { sanitizeRenderHtml } from './security.ts';
+import { trustRenderHtml } from './security.ts';
 import { effect } from '@lessjs/signals';
 
 // ─── SVG namespace support ────────────────────────────────────────────────────
@@ -142,7 +142,7 @@ function applyStaticProp(el: Element, key: string, resolved: unknown): void {
  * - Signal values → create effect() binding (ADR-0058)
  * - `style` object → assign to element.style
  * - Boolean values → setAttribute / removeAttribute
- * - `innerHTML` → set element.innerHTML (for sanitized HTML content)
+ * - `innerHTML` → text by default; trusted HTML when rawHtml=true
  * - `className` → `class` attribute
  * - `htmlFor` → `for` attribute
  * - Other values → setAttribute
@@ -175,11 +175,11 @@ export function applyProps(
 
     if (value == null) continue;
 
-    // innerHTML is text by default; explicit rawHtml opts into sanitized HTML.
+    // innerHTML is text by default; explicit rawHtml opts into trusted HTML.
     if (key === 'innerHTML') {
       const resolved = String(unwrapSignalLike(value));
       if (rawHtml) {
-        (el as HTMLElement).innerHTML = sanitizeRenderHtml(resolved);
+        (el as HTMLElement).innerHTML = trustRenderHtml(resolved);
       } else {
         (el as HTMLElement).textContent = resolved;
       }

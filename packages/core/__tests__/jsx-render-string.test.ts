@@ -5,7 +5,7 @@
  * boolean attrs, style serialisation, event exclusion.
  */
 
-import { assertEquals, assertFalse, assertStringIncludes } from 'jsr:@std/assert@1';
+import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@1';
 import { Fragment, jsx, jsxs } from '../src/jsx-runtime.ts';
 import { renderDsdTree, renderToString } from '../src/jsx-render-string.ts';
 import { signal } from '@lessjs/signals';
@@ -166,17 +166,17 @@ Deno.test('renderToString escapes Signal innerHTML values by default', () => {
   assertEquals(renderToString(vnode), '<div>&lt;strong&gt;ready&lt;/strong&gt;</div>');
 });
 
-Deno.test('renderToString allows sanitized rawHtml explicitly', () => {
+Deno.test('renderToString treats rawHtml as a trusted HTML boundary', () => {
   const html = signal('<strong>ready</strong><img src="javascript:alert(1)" onerror="x()">');
   const vnode = jsx('div', { innerHTML: html, rawHtml: true });
   const output = renderToString(vnode);
   assertStringIncludes(output, '<strong>ready</strong>');
   assertStringIncludes(output, '<img');
-  assertFalse(output.includes('javascript:'));
-  assertFalse(output.includes('onerror'));
+  assertStringIncludes(output, 'javascript:alert(1)');
+  assertStringIncludes(output, 'onerror="x()"');
 });
 
-Deno.test('renderToString rawHtml sanitizer rejects parser edge cases', () => {
+Deno.test('renderToString does not sanitize trusted rawHtml parser edge cases', () => {
   const html = [
     '<a href="&#x6a;avascript:alert(1)">bad</a>',
     '<svg><a xlink:href="javascript:alert(1)">bad</a></svg>',
@@ -188,12 +188,12 @@ Deno.test('renderToString rawHtml sanitizer rejects parser edge cases', () => {
   const output = renderToString(vnode);
 
   assertStringIncludes(output, '<p data-state="ok">safe</p>');
-  assertFalse(output.includes('javascript:'));
-  assertFalse(output.includes('xlink:href'));
-  assertFalse(output.includes('srcdoc'));
-  assertFalse(output.includes('<svg'));
-  assertFalse(output.includes('<iframe'));
-  assertFalse(output.includes('<math'));
+  assertStringIncludes(output, '&#x6a;avascript:alert(1)');
+  assertStringIncludes(output, 'xlink:href="javascript:alert(1)"');
+  assertStringIncludes(output, 'srcdoc=');
+  assertStringIncludes(output, '<svg>');
+  assertStringIncludes(output, '<iframe');
+  assertStringIncludes(output, '<math');
 });
 
 Deno.test('renderDsdTree keeps custom element light DOM children in one tree', async () => {

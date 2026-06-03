@@ -53,6 +53,15 @@ export const OPTIONAL_PACKAGE_STUBS: Record<string, string> = {
     'export function installReactAdapter() {}',
     'export function uninstallReactAdapter() {}',
   ].join('\n'),
+  '@lessjs/content': [
+    'export async function loadBlogData() { return { posts: [], basePath: "" }; }',
+  ].join('\n'),
+  '@lessjs/content/sitemap': [
+    'export function generateSitemap() { return []; }',
+  ].join('\n'),
+  '@lessjs/i18n': [
+    'export function loadI18nData() { return { locales: [], defaultLocale: "en" }; }',
+  ].join('\n'),
 };
 
 /**

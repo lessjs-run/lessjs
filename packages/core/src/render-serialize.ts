@@ -8,6 +8,7 @@
  */
 
 import { escapeAttrValue } from './html-escape.js';
+import { dsdHostNode, serializeRenderNode, trustedHtmlNode } from './render-ir.ts';
 import type { DsdOptions } from './types.js';
 
 // ─── camelCase -> kebab-case ────────────────────────────────────
@@ -96,17 +97,17 @@ export function wrapDsdOutput(params: {
     ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
     : '';
 
-  if (layer === 'pure-island') {
-    return `<${tagName}${attrs}${ssrPropsAttr}${sourceStr}></${tagName}>`;
-  }
-
-  // Layer 1 (dsd-static) and Layer 2 (dsd-interactive): emit DSD template
-  const styleTag = styleCss ? `\n    <style>${styleCss}</style>` : '';
-  const dsdAttrs = buildDsdTemplateAttrs(dsdOptions);
-
-  return `<${tagName}${attrs}${ssrPropsAttr}${sourceStr}>
-  <template shadowrootmode="open"${dsdAttrs}>${styleTag}
-    ${content}
-  </template>
-</${tagName}>`;
+  return serializeRenderNode(
+    dsdHostNode({
+      tag: tagName,
+      attrs,
+      ssrPropsAttr,
+      source: sourceStr,
+      templateAttrs: buildDsdTemplateAttrs(dsdOptions),
+      styleCss,
+      shadow: [trustedHtmlNode(content)],
+      light: [],
+      layer,
+    }),
+  );
 }

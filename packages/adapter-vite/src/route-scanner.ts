@@ -64,6 +64,7 @@ import { LessError } from '@lessjs/core/errors';
 import { createLogger } from '@lessjs/core/logger';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, posix, sep } from 'node:path';
+import * as ts from 'typescript';
 
 const log = createLogger('core');
 
@@ -415,44 +416,119 @@ export async function scanIslandMeta(
 }
 
 /**
- * v0.28.1: Static extraction of `export const less = { ... }` from island source.
+ * v0.28.6: Static AST extraction of `export const less = { ... }`.
  *
- * Uses comment-stripped regex instead of full AST parsing. This is pragmatic:
- * - Island `less` exports are small, predictable objects (3 fields max).
- * - Deno's TS compiler API is heavy for extracting 3 literal values.
- * - regex handles all real-world cases in the LessJS codebase.
- *
- * What it handles: comments, trailing commas, `as const`, semicolons.
- * What it doesn't (by design): computed keys, template literals, spread.
- * If an island needs those, it should use dynamic imports — which this
- * scanner intentionally avoids.
+ * The scanner intentionally does not execute island modules. It accepts only a
+ * static object literal with boolean `ssr`/`dsd` and string `hydrate` values.
+ * Dynamic metadata is rejected instead of guessed.
  */
 function readStaticLessExport(source: string): {
   ssr?: boolean;
   dsd?: boolean;
   hydrate?: LocalIslandMeta['hydrate'];
 } | null {
-  // Strip single-line and block comments before matching
-  const stripped = source
-    .replace(/\/\/.*$/gm, '')
-    .replace(/\/\*[\s\S]*?\*\//g, '');
-
-  const match = stripped.match(
-    /export\s+const\s+less\s*(?::\s*[^=]+)?\s*=\s*\{([^}]*)\}/m,
+  const sourceFile = ts.createSourceFile(
+    'island.ts',
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS,
   );
-  if (!match) return null;
-  const body = match[1];
 
-  const readBool = (key: string): boolean | undefined => {
-    const m = body.match(new RegExp(`\\b${key}\\s*:\\s*(true|false)\\b`));
-    return m ? m[1] === 'true' : undefined;
-  };
-  const hydrateMatch = body.match(/\bhydrate\s*:\s*['"]([^'"]+)['"]/);
-  return {
-    ssr: readBool('ssr'),
-    dsd: readBool('dsd'),
-    hydrate: hydrateMatch?.[1] as LocalIslandMeta['hydrate'] | undefined,
-  };
+  for (const statement of sourceFile.statements) {
+    if (!ts.isVariableStatement(statement)) continue;
+    const isExported = statement.modifiers?.some((mod) => mod.kind === ts.SyntaxKind.ExportKeyword);
+    if (!isExported) continue;
+
+    for (const declaration of statement.declarationList.declarations) {
+      if (!ts.isIdentifier(declaration.name) || declaration.name.text !== 'less') continue;
+      if (!declaration.initializer) {
+        throw staticLessError('less export must have an initializer');
+      }
+
+      const initializer = unwrapStaticLessExpression(declaration.initializer);
+      if (!ts.isObjectLiteralExpression(initializer)) {
+        throw staticLessError(
+          `less export must be a static object literal, got ${ts.SyntaxKind[initializer.kind]}`,
+        );
+      }
+
+      return readLessObjectLiteral(initializer);
+    }
+  }
+
+  return null;
+}
+
+function unwrapStaticLessExpression(expression: ts.Expression): ts.Expression {
+  let current = expression;
+  while (
+    ts.isAsExpression(current) ||
+    ts.isSatisfiesExpression(current) ||
+    ts.isParenthesizedExpression(current)
+  ) {
+    current = current.expression;
+  }
+  return current;
+}
+
+function readLessObjectLiteral(object: ts.ObjectLiteralExpression): {
+  ssr?: boolean;
+  dsd?: boolean;
+  hydrate?: LocalIslandMeta['hydrate'];
+} {
+  const meta: {
+    ssr?: boolean;
+    dsd?: boolean;
+    hydrate?: LocalIslandMeta['hydrate'];
+  } = {};
+
+  for (const property of object.properties) {
+    if (!ts.isPropertyAssignment(property)) {
+      throw staticLessError(`unsupported less metadata syntax: ${ts.SyntaxKind[property.kind]}`);
+    }
+    if (property.name.kind === ts.SyntaxKind.ComputedPropertyName) {
+      throw staticLessError('computed less metadata keys are not supported');
+    }
+
+    const key = propertyNameToString(property.name);
+    if (!key || !['ssr', 'dsd', 'hydrate'].includes(key)) continue;
+
+    const value = unwrapStaticLessExpression(property.initializer);
+    if (key === 'ssr' || key === 'dsd') {
+      if (value.kind !== ts.SyntaxKind.TrueKeyword && value.kind !== ts.SyntaxKind.FalseKeyword) {
+        throw staticLessError(`less.${key} must be a boolean literal`);
+      }
+      meta[key] = value.kind === ts.SyntaxKind.TrueKeyword;
+      continue;
+    }
+
+    if (!ts.isStringLiteral(value) && !ts.isNoSubstitutionTemplateLiteral(value)) {
+      throw staticLessError('less.hydrate must be a string literal');
+    }
+    if (!['load', 'idle', 'visible', 'only'].includes(value.text)) {
+      throw staticLessError(`less.hydrate has unsupported value "${value.text}"`);
+    }
+    meta.hydrate = value.text as LocalIslandMeta['hydrate'];
+  }
+
+  return meta;
+}
+
+function propertyNameToString(name: ts.PropertyName): string | null {
+  if (ts.isIdentifier(name) || ts.isStringLiteral(name) || ts.isNumericLiteral(name)) {
+    return name.text;
+  }
+  return null;
+}
+
+function staticLessError(message: string): LessError {
+  return new LessError(
+    `Invalid static island metadata export "less": ${message}. Accepted shape: export const less = { ssr?: boolean, dsd?: boolean, hydrate?: "load" | "idle" | "visible" | "only" } as const.`,
+    'ISLAND_METADATA_ERROR',
+    500,
+    false,
+  );
 }
 
 /**
