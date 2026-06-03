@@ -70,14 +70,14 @@ type PropSignal = { value: unknown; subscribe(fn: (v: unknown) => void): () => v
 
 const _propSignals = new WeakMap<DsdElement, PropSignalMap>();
 const _propUnsubscribers = new WeakMap<DsdElement, Array<() => void>>();
-const _ctorMetadata = new WeakMap<Function, PropMetadataStore>();
+const _ctorMetadata = new WeakMap<object, PropMetadataStore>();
 const _staticPropSignals = new WeakMap<DsdElement, Map<string, PropSignal>>();
 const _staticPropUnsubs = new WeakMap<DsdElement, Array<() => void>>();
 
 // ─── @prop() runtime (legacy compat) ────────────────────────────
 
 export function initializeProps(instance: DsdElement): void {
-  const store = _ctorMetadata.get(instance.constructor as Function);
+  const store = _ctorMetadata.get(instance.constructor);
   if (!store?.props.length) return;
 
   const sigMap: PropSignalMap = { signals: new Map() };
@@ -133,7 +133,7 @@ export function handlePropAttributeChange(
   const sigMap = _propSignals.get(instance);
   if (!sigMap) return;
 
-  const store = _ctorMetadata.get(instance.constructor as Function);
+  const store = _ctorMetadata.get(instance.constructor);
   if (!store) return;
 
   for (const { key, options } of store.props) {
