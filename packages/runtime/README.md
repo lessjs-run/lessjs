@@ -43,7 +43,7 @@ customElements.define(tagName, MyButton);
 ## Exports
 
 From `@lessjs/core`: `DsdElement`, `Fragment`, `VNode`, `isVNode`,
-`renderToString`, `renderToDom`, `isSignalLike`, `unwrapSignalLike`,
+`renderDsdTree`, `renderToDom`, `isSignalLike`, `unwrapSignalLike`,
 `ErrorBoundary`, `LessError`, `escapeHtml`, `escapeAttr`, `defineIsland`, `bindEvents`, `getSsrProps`.
 
 From `@lessjs/core/jsx-runtime`: `jsx`, `jsxs`, `jsxDEV`, `For`, `Show`.

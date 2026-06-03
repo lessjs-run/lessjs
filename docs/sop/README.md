@@ -44,6 +44,7 @@ have one SOP with:
 | v0.28.4 | [v0.28.4/](./v0.28.4/)                                                                       | Done     | AppShell protocol + cleanup        |
 | v0.28.6 | [v0.28.6/](./v0.28.6/)                                                                       | Done     | Build pipeline cleanup             |
 | v0.29.0 | [v0.29.0/](./v0.29.0/)                                                                       | Done     | Structured renderer IR             |
+| v0.29.1 | [v0.29.1/](./v0.29.1/)                                                                       | Planned  | Core simplification and merge      |
 | v0.30.0 | [v0.30.0/](./v0.30.0/)                                                                       | Planned  | DSD Shell UI dual-track            |
 | v1.0.0  | [v1.0.0-general-purpose-engine.md](./v1.0.0-general-purpose-engine.md)                       | Vision   | API freeze                         |
 

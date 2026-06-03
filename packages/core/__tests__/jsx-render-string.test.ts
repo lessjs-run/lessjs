@@ -1,51 +1,51 @@
 /**
- * @lessjs/core - JSX renderToString tests.
+ * @lessjs/core - JSX renderDsdTree tests.
  *
- * v0.24.3: Direct tests for SSR renderer â€” Signal unwrap, SVG attrs,
+ * v0.24.3: Direct tests for SSR renderer ï¿?Signal unwrap, SVG attrs,
  * boolean attrs, style serialisation, event exclusion.
  */
 
 import { assertEquals, assertStringIncludes } from 'jsr:@std/assert@1';
 import { Fragment, jsx, jsxs } from '../src/jsx-runtime.ts';
-import { renderDsdTree, renderToString } from '../src/jsx-render-string.ts';
+import { renderDsdTree } from '../src/render-ir.ts';
 import { signal } from '@lessjs/signals';
 
-Deno.test('renderToString renders text', () => {
-  assertEquals(renderToString('hello'), 'hello');
+Deno.test('renderDsdTree renders text', async () => {
+  assertEquals(await renderDsdTree('hello'), 'hello');
 });
 
-Deno.test('renderToString renders number', () => {
-  assertEquals(renderToString(42), '42');
+Deno.test('renderDsdTree renders number', async () => {
+  assertEquals(await renderDsdTree(42), '42');
 });
 
-Deno.test('renderToString renders null as empty', () => {
-  assertEquals(renderToString(null), '');
+Deno.test('renderDsdTree renders null as empty', async () => {
+  assertEquals(await renderDsdTree(null), '');
 });
 
-Deno.test('renderToString unwraps Signal children', () => {
+Deno.test('renderDsdTree unwraps Signal children', async () => {
   const s = signal('world');
-  assertEquals(renderToString(s), 'world');
+  assertEquals(await renderDsdTree(s), 'world');
 });
 
-Deno.test('renderToString basic element', () => {
+Deno.test('renderDsdTree basic element', async () => {
   const vnode = jsx('div', { id: 'x' });
-  assertEquals(renderToString(vnode), '<div id="x"></div>');
+  assertEquals(await renderDsdTree(vnode), '<div id="x"></div>');
 });
 
-Deno.test('renderToString element with text child', () => {
+Deno.test('renderDsdTree element with text child', async () => {
   const vnode = jsx('p', { children: ['hello'] });
-  assertEquals(renderToString(vnode), '<p>hello</p>');
+  assertEquals(await renderDsdTree(vnode), '<p>hello</p>');
 });
 
-Deno.test('renderToString element with Signal child', () => {
+Deno.test('renderDsdTree element with Signal child', async () => {
   const s = signal('dynamic');
   const vnode = jsx('span', { children: [s] });
-  assertEquals(renderToString(vnode), '<span>dynamic</span>');
+  assertEquals(await renderDsdTree(vnode), '<span>dynamic</span>');
 });
 
-Deno.test('renderToString excludes onClick handler', () => {
+Deno.test('renderDsdTree excludes onClick handler', async () => {
   const vnode = jsx('button', { onClick: () => {}, children: ['Click'] });
-  const html = renderToString(vnode);
+  const html = await renderDsdTree(vnode);
   assertStringIncludes(html, '<button');
   // onClick must not appear as an HTML attribute name
   assertEquals(html.includes('onClick="'), false);
@@ -54,35 +54,35 @@ Deno.test('renderToString excludes onClick handler', () => {
   assertEquals(html.includes('data-on-click='), false);
 });
 
-Deno.test('renderToString className maps to class', () => {
+Deno.test('renderDsdTree className maps to class', async () => {
   const vnode = jsx('div', { className: 'foo bar' });
-  assertEquals(renderToString(vnode), '<div class="foo bar"></div>');
+  assertEquals(await renderDsdTree(vnode), '<div class="foo bar"></div>');
 });
 
-Deno.test('renderToString htmlFor maps to for', () => {
+Deno.test('renderDsdTree htmlFor maps to for', async () => {
   const vnode = jsx('label', { htmlFor: 'input-id', children: ['Label'] });
-  assertEquals(renderToString(vnode), '<label for="input-id">Label</label>');
+  assertEquals(await renderDsdTree(vnode), '<label for="input-id">Label</label>');
 });
 
-Deno.test('renderToString boolean true emits attribute', () => {
+Deno.test('renderDsdTree boolean true emits attribute', async () => {
   const vnode = jsx('input', { disabled: true });
-  assertEquals(renderToString(vnode), '<input disabled>');
+  assertEquals(await renderDsdTree(vnode), '<input disabled>');
 });
 
-Deno.test('renderToString boolean false omits attribute', () => {
+Deno.test('renderDsdTree boolean false omits attribute', async () => {
   const vnode = jsx('input', { disabled: false });
-  assertEquals(renderToString(vnode), '<input>');
+  assertEquals(await renderDsdTree(vnode), '<input>');
 });
 
-Deno.test('renderToString style object serialises', () => {
+Deno.test('renderDsdTree style object serialises', async () => {
   const vnode = jsx('div', { style: { color: 'red', fontSize: '16px' } });
-  const html = renderToString(vnode);
+  const html = await renderDsdTree(vnode);
   assertStringIncludes(html, 'style=');
   assertStringIncludes(html, 'color: red');
   assertStringIncludes(html, 'font-size: 16px');
 });
 
-Deno.test('renderToString SVG attributes preserved', () => {
+Deno.test('renderDsdTree SVG attributes preserved', async () => {
   const vnode = jsx('svg', {
     viewBox: '0 0 16 16',
     fill: 'none',
@@ -90,93 +90,93 @@ Deno.test('renderToString SVG attributes preserved', () => {
       jsx('circle', { cx: '8', cy: '8', r: '3' }),
     ],
   });
-  const html = renderToString(vnode);
+  const html = await renderDsdTree(vnode);
   assertStringIncludes(html, 'viewBox="0 0 16 16"');
   assertStringIncludes(html, '<circle');
 });
 
-Deno.test('renderToString SVG stroke-width attribute', () => {
+Deno.test('renderDsdTree SVG stroke-width attribute', async () => {
   const vnode = jsx('svg', {
     children: [
       jsx('line', { 'stroke-width': '1.5', x1: '0', y1: '0', x2: '10', y2: '10' }),
     ],
   });
-  const html = renderToString(vnode);
+  const html = await renderDsdTree(vnode);
   assertStringIncludes(html, 'stroke-width="1.5"');
 });
 
-Deno.test('renderToString Fragment concatenates children', () => {
+Deno.test('renderDsdTree Fragment concatenates children', async () => {
   const vnode = jsxs(Fragment, {
     children: [
       jsx('span', { children: ['a'] }),
       jsx('span', { children: ['b'] }),
     ],
   });
-  assertEquals(renderToString(vnode), '<span>a</span><span>b</span>');
+  assertEquals(await renderDsdTree(vnode), '<span>a</span><span>b</span>');
 });
 
-Deno.test('renderToString void elements self-close', () => {
-  assertEquals(renderToString(jsx('br', {})), '<br>');
-  assertEquals(renderToString(jsx('img', { src: 'x.png' })), '<img src="x.png">');
-  assertEquals(renderToString(jsx('input', { type: 'text' })), '<input type="text">');
+Deno.test('renderDsdTree void elements self-close', async () => {
+  assertEquals(await renderDsdTree(jsx('br', {})), '<br>');
+  assertEquals(await renderDsdTree(jsx('img', { src: 'x.png' })), '<img src="x.png">');
+  assertEquals(await renderDsdTree(jsx('input', { type: 'text' })), '<input type="text">');
 });
 
-Deno.test('renderToString Signal attribute (TODO: unwrap hardening Step 4)', () => {
+Deno.test('renderDsdTree Signal attribute (TODO: unwrap hardening Step 4)', async () => {
   // Step 4 will add Signal auto-unwrap for attributes.
   // Currently produces [object Object]; users must use .value explicitly.
   const s = signal('tooltip');
   const vnode = jsx('button', { title: s.value as unknown as string, children: ['Hover'] });
-  const html = renderToString(vnode);
+  const html = await renderDsdTree(vnode);
   assertStringIncludes(html, 'title="tooltip"');
 });
 
-Deno.test('renderToString multiple children with signals', () => {
+Deno.test('renderDsdTree multiple children with signals', async () => {
   const a = signal('hello');
   const b = signal('world');
   const vnode = jsx('div', { children: [a, ' ', b] });
-  assertEquals(renderToString(vnode), '<div>hello world</div>');
+  assertEquals(await renderDsdTree(vnode), '<div>hello world</div>');
 });
 
-Deno.test('renderToString nested elements', () => {
+Deno.test('renderDsdTree nested elements', async () => {
   const vnode = jsx('ul', {
     children: [
       jsx('li', { children: ['a'] }),
       jsx('li', { children: ['b'] }),
     ],
   });
-  assertEquals(renderToString(vnode), '<ul><li>a</li><li>b</li></ul>');
+  assertEquals(await renderDsdTree(vnode), '<ul><li>a</li><li>b</li></ul>');
 });
 
-Deno.test('renderToString ref callback excluded', () => {
+Deno.test('renderDsdTree ref callback excluded', async () => {
   let called = false;
   const vnode = jsx('div', {
     ref: () => {
       called = true;
     },
   });
-  const html = renderToString(vnode);
+  const html = await renderDsdTree(vnode);
   assertEquals(html, '<div></div>');
   // ref should NOT be called in SSR
   assertEquals(called, false);
 });
 
-Deno.test('renderToString escapes Signal innerHTML values by default', () => {
+Deno.test('renderDsdTree escapes Signal innerHTML values by default', async () => {
   const html = signal('<strong>ready</strong>');
   const vnode = jsx('div', { innerHTML: html });
-  assertEquals(renderToString(vnode), '<div>&lt;strong&gt;ready&lt;/strong&gt;</div>');
+  assertEquals(await renderDsdTree(vnode), '<div>&lt;strong&gt;ready&lt;/strong&gt;</div>');
 });
 
-Deno.test('renderToString treats rawHtml as a trusted HTML boundary', () => {
+Deno.test('renderDsdTree treats rawHtml as a trusted HTML boundary', async () => {
   const html = signal('<strong>ready</strong><img src="javascript:alert(1)" onerror="x()">');
   const vnode = jsx('div', { innerHTML: html, rawHtml: true });
-  const output = renderToString(vnode);
+  const output = await renderDsdTree(vnode);
   assertStringIncludes(output, '<strong>ready</strong>');
   assertStringIncludes(output, '<img');
   assertStringIncludes(output, 'javascript:alert(1)');
   assertStringIncludes(output, 'onerror="x()"');
 });
 
-Deno.test('renderToString does not sanitize trusted rawHtml parser edge cases', () => {
+Deno.test('renderDsdTree does not sanitize trusted rawHtml parser edge cases', async () => {
   const html = [
     '<a href="&#x6a;avascript:alert(1)">bad</a>',
     '<svg><a xlink:href="javascript:alert(1)">bad</a></svg>',
@@ -185,7 +185,7 @@ Deno.test('renderToString does not sanitize trusted rawHtml parser edge cases', 
     '<p data-state="ok">safe</p>',
   ].join('');
   const vnode = jsx('div', { innerHTML: html, rawHtml: true });
-  const output = renderToString(vnode);
+  const output = await renderDsdTree(vnode);
 
   assertStringIncludes(output, '<p data-state="ok">safe</p>');
   assertStringIncludes(output, '&#x6a;avascript:alert(1)');
@@ -244,3 +244,8 @@ Deno.test('renderDsdTree keeps custom element light DOM children in one tree', a
     });
   }
 });
+
+
+
+
+

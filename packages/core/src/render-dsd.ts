@@ -4,31 +4,13 @@
  * Pure string-based Declarative Shadow DOM SSR renderer.
  * Framework-agnostic: no Lit dependency and no TemplateResult knowledge.
  *
- * LessJS Architecture (v0.28.0, ADR-0071):
- * - Takes a registered Custom Element class + props and returns DSD HTML
- * - Components implement render() returning string | VNode
- * - Nested CE rendering is handled inline by renderDsdTree() during
- *   the single-pass VNode traversal — no separate post-processing needed
- * - Framework adapters hook into the pipeline via the default adapter registry
- *
- * SSR lifecycle:
- *   1. Instantiate component class
- *   2. Set attributes/properties from props
- *   3. DO NOT call connectedCallback in SSR
- *   4. Call render() → get Shadow DOM content
- *   5. renderDsdTree() recursively processes nested CEs inline
- *   6. Wrap in <template shadowrootmode="open">
- *
- * Client lifecycle:
- *   1. Browser parses DSD and attaches Shadow DOM automatically
- *   2. customElements.define() upgrades existing elements
- *   3. connectedCallback fires and attaches event listeners to existing DOM
- *   4. No duplicate client render is needed
+ * v0.29.1: Inlined render-errors, render-instantiate, and render-serialize helpers.
+ * Uses unified serializeAttrs from render-ir. Removed renderDsdByName.
+ * Changed renderDsdTree import from jsx-render-string to render-ir.
  *
  * @module @lessjs/core/render-dsd
  */
 
-// --- Internal imports ------------------------------------------
 import {
   type ComponentLayer,
   type DsdOptions,
@@ -43,33 +25,197 @@ import {
 import { getDefaultRegistry } from './adapter-registry.js';
 import type { StyleSheetLike } from '@lessjs/style-sheet';
 import { createLogger } from './logger.js';
-
-// --- Extracted modules -----------------------------------------
-import { injectProps, instantiateComponent } from './render-instantiate.js';
-import { instantiationErrorHtml, wrongTypeErrorHtml } from './render-errors.js';
-import { classifyError } from './render-errors.js';
-import { serializeAttributes, wrapDsdOutput } from './render-serialize.js';
+import { escapeHtml } from './html-escape.js';
+import { escapeAttrValue } from './html-escape.js';
 import { isVNode } from './vnode.js';
-import { renderDsdTree } from './jsx-render-string.js';
+import { renderDsdTree } from './render-ir.js';
+import { dsdHostNode, serializeAttrs, serializeRenderNode, trustedHtmlNode } from './render-ir.js';
+import { DANGEROUS_KEYS } from './security.js';
+import type { DsdComponent } from './types.js';
 
 const log = createLogger('core');
 const _textEncoder = new TextEncoder();
 
-// --- DSD Rendering ----------------------------------------------
+// ─── Error Classification ──────────────────────────────────────
 
-/**
- * Render a single component to DSD HTML as structured RenderOutput.
- *
- * v0.15.2: Returns `Promise<RenderOutput>` instead of `Promise<string>`.
- * Callers should destructure: `const { html, errors, metrics, hydrationHints } = await renderDsd(...)`
- *
- * v0.15.2: Accepts optional `RenderHooks` for pipeline observation.
- * Hooks are optional and do not change behavior when omitted.
- *
- * @param input - Custom element tag name or class constructor
- * @param options - Render options object
- * @returns Structured render output (html + errors + metrics + hydrationHints)
- */
+export type RenderPhase = 'instantiate' | 'render' | 'nested' | 'style' | 'serialize';
+
+export type RenderErrorCode =
+  | 'LESS_RENDER_INSTANTIATE_FAILED'
+  | 'LESS_RENDER_INVALID_OUTPUT'
+  | 'LESS_RENDER_RENDER_FAILED'
+  | 'LESS_RENDER_NESTED_FAILED'
+  | 'LESS_RENDER_STYLE_FAILED'
+  | 'LESS_RENDER_SERIALIZE_FAILED';
+
+export function classifyError(
+  phase: RenderPhase,
+  tagName: string,
+  err: unknown,
+  recoverable = false,
+): RenderError {
+  const message = err instanceof Error ? err.message : String(err);
+  return {
+    code: codeForRenderError(phase, message),
+    severity: recoverable ? 'warning' : 'error',
+    phase,
+    tagName,
+    message,
+    recoverable,
+  };
+}
+
+function codeForRenderError(phase: RenderPhase, message: string): RenderErrorCode {
+  if (phase === 'instantiate') return 'LESS_RENDER_INSTANTIATE_FAILED';
+  if (phase === 'nested') return 'LESS_RENDER_NESTED_FAILED';
+  if (phase === 'style') return 'LESS_RENDER_STYLE_FAILED';
+  if (phase === 'serialize') return 'LESS_RENDER_SERIALIZE_FAILED';
+  if (message.includes('Components must return a string') || message.includes('TemplateResult')) {
+    return 'LESS_RENDER_INVALID_OUTPUT';
+  }
+  return 'LESS_RENDER_RENDER_FAILED';
+}
+
+function instantiationErrorHtml(
+  tagName: string,
+  _errMsg: string,
+  _sourceStr: string,
+  _route?: string,
+  _source?: string,
+): string {
+  return `<${tagName}></${tagName}>`;
+}
+
+function renderErrorHtml(
+  tagName: string,
+  err: unknown,
+): string {
+  const errMsg = err instanceof Error ? err.message : String(err);
+  const errStack = err instanceof Error ? err.stack : '';
+  log.error(
+    `<${tagName}> render() failed: ${errMsg}${errStack ? `\n${errStack}` : ''}`,
+  );
+
+  const isDev = (() => {
+    try {
+      return (globalThis as Record<string, unknown>).LESSJS_ENV !== 'production';
+    } catch {
+      return true;
+    }
+  })();
+
+  if (isDev) {
+    return `<!-- Render Error: <${tagName}> render() threw: ${escapeHtml(errMsg)} -->\n` +
+      (errStack
+        ? `<!-- Stack: ${escapeHtml(errStack.split('\n').slice(0, 3).join(' | '))} -->\n`
+        : '') +
+      '<!-- Check console for full error details -->';
+  } else {
+    return `<!-- Render Error: <${tagName}> render() failed -->` +
+      '<!-- Check console for full error details -->';
+  }
+}
+
+function wrongTypeErrorHtml(
+  tagName: string,
+  resultType: string,
+  errDetail: string,
+): string {
+  log.error(
+    `<${tagName}> render() returned ${resultType} instead of string. ${errDetail}`,
+  );
+  return `<!-- Render Error: <${tagName}> render() returned ${resultType}, expected string. ${errDetail} -->`;
+}
+
+// ─── Component Instantiation ───────────────────────────────────
+
+function instantiateComponent(
+  tagName: string,
+  componentClass: CustomElementConstructor,
+): DsdComponent | null {
+  try {
+    return new componentClass() as unknown as DsdComponent;
+  } catch (err) {
+    const errMsg = err instanceof Error ? err.message : String(err);
+    log.error(`Failed to instantiate <${tagName}>:`, errMsg);
+    return null;
+  }
+}
+
+function injectProps(
+  instance: DsdComponent,
+  tagName: string,
+  props: Record<string, unknown>,
+): void {
+  for (const [key, value] of Object.entries(props)) {
+    if (DANGEROUS_KEYS.has(key)) {
+      log.warn(
+        `Skipping dangerous prop key "${key}" on <${tagName}> - potential prototype pollution`,
+      );
+      continue;
+    }
+    try {
+      (instance as Record<string, unknown>)[key] = value;
+    } catch (e) {
+      log.debug(
+        `Cannot set read-only property "${key}" on <${tagName}>: ${
+          e instanceof Error ? e.message : String(e)
+        }`,
+      );
+    }
+  }
+}
+
+// ─── DSD Template Attributes ───────────────────────────────────
+
+function buildDsdTemplateAttrs(options?: DsdOptions): string {
+  if (!options) return '';
+  const parts: string[] = [];
+  if (options.delegatesFocus) parts.push(' shadowrootdelegatesfocus');
+  if (options.clonable) parts.push(' shadowrootclonable');
+  if (options.serializable) parts.push(' shadowrootserializable');
+  if (options.slotAssignment === 'manual') {
+    parts.push(' shadowrootslotassignment="manual"');
+  }
+  if (options.customElementRegistry) {
+    parts.push(' shadowrootcustomelementregistry');
+  }
+  return parts.join('');
+}
+
+// ─── DSD Output Wrapping ───────────────────────────────────────
+
+function wrapDsdOutput(params: {
+  tagName: string;
+  props: Record<string, unknown>;
+  content: string;
+  styleCss: string;
+  layer: string;
+  sourceStr: string;
+  dsdOptions?: DsdOptions;
+}): string {
+  const { tagName, props, content, styleCss, layer, sourceStr, dsdOptions } = params;
+  const ssrPropsAttr = Object.keys(props).length > 0
+    ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
+    : '';
+
+  return serializeRenderNode(
+    dsdHostNode({
+      tag: tagName,
+      attrs: props,
+      ssrPropsAttr,
+      source: sourceStr,
+      templateAttrs: buildDsdTemplateAttrs(dsdOptions),
+      styleCss,
+      shadow: [trustedHtmlNode(content)],
+      light: [],
+      layer,
+    }),
+  );
+}
+
+// ─── DSD Rendering ─────────────────────────────────────────────
+
 export interface RenderDsdOptions {
   componentClass?: CustomElementConstructor;
   props?: Record<string, unknown>;
@@ -84,7 +230,6 @@ export async function renderDsd(
   input: string | CustomElementConstructor,
   options: RenderDsdOptions = {},
 ): Promise<RenderOutput> {
-  // ADR-0072: Polymorphic input with a single options object.
   let tagName: string;
   let componentClass: CustomElementConstructor;
   const props = options.props ?? {};
@@ -97,7 +242,7 @@ export async function renderDsd(
       const cls = globalThis.customElements?.get(tagName) as CustomElementConstructor | undefined;
       if (!cls) {
         log.warn(`<${tagName}> is not registered - rendering as void element`);
-        const attrs = serializeAttributes(props);
+        const attrs = serializeAttrs(tagName, props);
         const html = `<${tagName}${attrs}></${tagName}>`;
         return {
           html,
@@ -127,7 +272,6 @@ export async function renderDsd(
   const hooks = options.hooks;
 
   const _nestingDepth = nestingDepth ?? 0;
-  // H-10 fix: Guard against SSR environments where performance is undefined
   const startTime = typeof performance !== 'undefined' ? performance.now() : 0;
   const sourceStr = sourceInfo
     ? `${sourceInfo.route ? ` route="${sourceInfo.route}"` : ''}${
@@ -139,7 +283,6 @@ export async function renderDsd(
   const collectedHints: HydrationHint[] = [];
   let hasError = false;
 
-  // Build RenderInput for hooks
   const renderInput: RenderInput = {
     tagName,
     componentClass,
@@ -148,7 +291,6 @@ export async function renderDsd(
     nestingDepth: _nestingDepth,
   };
 
-  // -- Hook: beforeRender --------------------------------------
   if (hooks?.beforeRender) {
     try {
       hooks.beforeRender(renderInput);
@@ -157,7 +299,6 @@ export async function renderDsd(
     }
   }
 
-  // 1. Instantiate the component
   const instance = instantiateComponent(tagName, componentClass);
   if (!instance) {
     const errMsg = 'Failed to instantiate';
@@ -191,11 +332,8 @@ export async function renderDsd(
     return result;
   }
 
-  // 2. Set attributes/properties
   injectProps(instance, tagName, props);
 
-  // 3. DO NOT call connectedCallback in SSR.
-  // 4. Call render() to get Shadow DOM content
   let content = '';
   try {
     const result = instance.render();
@@ -204,14 +342,8 @@ export async function renderDsd(
     } else if (typeof result === 'string') {
       content = result;
     } else if (isVNode(result)) {
-      // v0.24.1 (SOP-003): JSX VNode path converts VNode tree to HTML string.
-      // ADR-0071: Use renderDsdTree for single-pass traversal with
-      // inline CE rendering.
       content = await renderDsdTree(result);
     } else {
-      // v0.17.3: Multi-adapter dispatch - try all registered adapters
-      // until one claims the result via isTemplate(). This allows Lit,
-      // Vanilla, React, and future adapters to coexist.
       let rendered = false;
       for (const adapter of getDefaultRegistry().getAll()) {
         if (adapter.isTemplate && adapter.render && adapter.isTemplate(result)) {
@@ -236,12 +368,7 @@ export async function renderDsd(
     hasError = true;
     hooks?.onError?.(classifiedErr);
 
-    // v0.19.1 Phase 6 (ADR-0035 A2): Bare-tag fallback on render failure.
-    // Instead of producing broken DSD output with error comments inside
-    // <template shadowrootmode="open">, return just the bare custom element
-    // tag. The browser will upgrade it when JS loads - correct progressive
-    // enhancement.
-    const attrs = serializeAttributes(props);
+    const attrs = serializeAttrs(tagName, props);
     const renderEndFallback = typeof performance !== 'undefined' ? performance.now() : Date.now();
     const fallbackResult: RenderOutput = {
       html: `<${tagName}${attrs}></${tagName}>`,
@@ -260,15 +387,8 @@ export async function renderDsd(
     return fallbackResult;
   }
 
-  // ADR-0071: renderDsdTree() already rendered all nested CEs inline during
-  // the VNode traversal.
-
-  // 5. Extract static styles from component class
-  // v0.20.0: Try native DsdElement CSSStyleSheet first - no adapter needed.
-  // v0.17.3: Fallback to registered adapters for framework-specific extraction.
   let styleCss = '';
 
-  // Phase 1: Native DsdElement styles (CSSStyleSheet) - zero-dependency path
   const ctor = componentClass as unknown as {
     styles?: StyleSheetLike | StyleSheetLike[];
   };
@@ -285,7 +405,6 @@ export async function renderDsd(
     }
   }
 
-  // Phase 2: Registered adapters (Lit, etc.) - only if no native styles found
   if (!styleCss) {
     for (const adapter of getDefaultRegistry().getAll()) {
       if (adapter.extractStyles) {
@@ -308,10 +427,8 @@ export async function renderDsd(
     }
   }
 
-  // 6. Resolve component layer
   const resolvedLayer = dsdOptions?.layer || instance.layer || 'dsd-static';
 
-  // --- Collect DSD render metrics (if collector provided) -----
   const renderEnd = typeof performance !== 'undefined'
     ? performance.now()
     : renderEndTimeFallback();
@@ -330,7 +447,6 @@ export async function renderDsd(
     collector.add(metrics);
   }
 
-  // Collect hydration hint for this component
   if (resolvedLayer !== 'dsd-static') {
     collectedHints.push({
       tagName,
@@ -338,7 +454,6 @@ export async function renderDsd(
     });
   }
 
-  // 7. Wrap in DSD output
   const html = wrapDsdOutput({
     tagName,
     props,
@@ -356,7 +471,6 @@ export async function renderDsd(
     hydrationHints: collectedHints,
   };
 
-  // -- Hook: afterRender ---------------------------------------
   if (hooks?.afterRender) {
     try {
       hooks.afterRender(output);
@@ -368,9 +482,6 @@ export async function renderDsd(
   return output;
 }
 
-/**
- * Fallback for renderEnd when performance is not available.
- */
 function renderEndTimeFallback(): number {
   return Date.now();
 }
@@ -381,37 +492,7 @@ function describeRenderValue(value: unknown): string {
   return `object keys=[${keys}]`;
 }
 
-/**
- * Render a component from the global Custom Element registry.
- * Looks up the class by tag name using customElements.get().
- *
- * v0.15.2: Returns `Promise<RenderOutput>`. Callers should destructure `html`.
- *
- * @param tagName - Registered custom element tag name
- * @param props - Attribute/property key-value pairs
- * @param sourceInfo - Optional context for error messages (route path, source file)
- * @param dsdOptions - Optional DSD template attributes
- * @param hooks - Optional render pipeline hooks
- * @returns Structured render output
- */
-export async function renderDsdByName(
-  tagName: string,
-  props: Record<string, unknown> = {},
-  sourceInfo?: { route?: string; source?: string },
-  dsdOptions?: DsdOptions,
-  hooks?: RenderHooks,
-): Promise<RenderOutput> {
-  return await renderDsd(tagName, {
-    props,
-    sourceInfo,
-    dsdOptions,
-    nestingDepth: 0,
-    hooks,
-  });
-}
-
 // v0.21.0: Streaming types and functions moved to render-dsd-stream.ts.
-// Re-exported here for backward compatibility.
 export { createRenderDsdStreamMetrics, renderDsdStream } from './render-dsd-stream.js';
 export type {
   RenderDsdStreamChunk,

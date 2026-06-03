@@ -118,7 +118,7 @@ export default app;</code></pre>
           </less-code-block>
           <less-code-block>
             <pre><code>{'// app/routes/api/health.ts — simple endpoint, no Hono needed'}
-import type {'{'} LessApiContext {'}'} from '@lessjs/core/api';
+import type {'{'} LessApiContext {'}'} from '@lessjs/core';
 
 export default function GET(ctx: LessApiContext) {'{'}
   return Response.json({'{'} ok: true, mode: ctx.env.MODE ?? 'production' {'}'});

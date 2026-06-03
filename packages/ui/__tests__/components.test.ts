@@ -1149,8 +1149,8 @@ Deno.test('less-layout: blocks unsafe URL schemes in rendered links', async () =
     ]),
   );
 
-  const { renderToString } = await import('@lessjs/core');
-  const html = renderToString(instance.render());
+  const { renderDsdTree } = await import('@lessjs/core');
+  const html = await renderDsdTree(instance.render());
   assertEquals(html.includes('javascript:'), false);
   assertEquals(html.includes('data:text/html'), false);
   assertEquals(html.includes('vbscript:'), false);

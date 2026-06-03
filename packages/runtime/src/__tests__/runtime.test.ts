@@ -10,7 +10,7 @@ import {
   isVNode,
   jsx,
   jsxs,
-  renderToString,
+  renderDsdTree,
   signal,
   StyleSheet,
 } from '../index.ts';
@@ -52,31 +52,31 @@ for (let i = 0; i < 20; i++) {
 }
 
 for (let i = 0; i < 20; i++) {
-  Deno.test(`runtime: jsx facade creates VNode ${i}`, () => {
+  Deno.test(`runtime: jsx facade creates VNode ${i}`, async () => {
     const vnode = jsx('span', { id: `n-${i}`, children: `value-${i}` });
     assert(isVNode(vnode));
     assertEquals(vnode.tag, 'span');
     assertEquals(vnode.props.id, `n-${i}`);
-    assertEquals(renderToString(vnode), `<span id="n-${i}">value-${i}</span>`);
+    assertEquals(await renderDsdTree(vnode), `<span id="n-${i}">value-${i}</span>`);
   });
 }
 
 for (let i = 0; i < 10; i++) {
-  Deno.test(`runtime: jsxs facade preserves children ${i}`, () => {
+  Deno.test(`runtime: jsxs facade preserves children ${i}`, async () => {
     const vnode = jsxs('div', {
       className: 'box',
       children: [jsx('span', { children: `a-${i}` }), jsx('span', { children: `b-${i}` })],
     });
-    assertStringIncludes(renderToString(vnode), `<span>a-${i}</span><span>b-${i}</span>`);
+    assertStringIncludes(await renderDsdTree(vnode), `<span>a-${i}</span><span>b-${i}</span>`);
   });
 }
 
 for (let i = 0; i < 10; i++) {
-  Deno.test(`runtime: Fragment facade renders child sequence ${i}`, () => {
+  Deno.test(`runtime: Fragment facade renders child sequence ${i}`, async () => {
     const vnode = jsxs(Fragment, {
       children: [jsx('b', { children: `x-${i}` }), jsx('i', { children: `y-${i}` })],
     });
-    assertEquals(renderToString(vnode), `<b>x-${i}</b><i>y-${i}</i>`);
+    assertEquals(await renderDsdTree(vnode), `<b>x-${i}</b><i>y-${i}</i>`);
   });
 }
 

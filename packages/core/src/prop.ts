@@ -3,24 +3,44 @@
  *
  * ADR-0052 / SOP-010 / ADR-0057: static props + Signal model.
  *
- * The `@prop()` decorator was removed in v0.24.1.
- * Use `static props = { name: String }` instead.
- *
- * Each declared prop creates a signal-backed accessor. When the property
- * changes, the signal notifies the DsdElement's ReactiveHost, which
- * schedules a microtask-batched DOM patch.
- *
- * Attribute↔property sync:
- * - attributeChangedCallback writes to signal value
- * - signal changes optionally reflect back to HTML attribute
- *
- * Type conversion:
- * - String: value.toString() (default)
- * - Number: Number(value)
- * - Boolean: attribute presence ("" or null)
+ * v0.29.1: PropDecl / PropType / PropsFrom types merged from prop-types.ts.
  */
 
 import type { DsdElement } from './dsd-element.js';
+
+// ─── PropDecl Type Utilities ────────────────────────────────────
+
+export type PropDeclShorthand =
+  | StringConstructor
+  | NumberConstructor
+  | BooleanConstructor
+  | ArrayConstructor
+  | ObjectConstructor;
+
+export type PropDeclFull =
+  | { type: StringConstructor; default?: string; reflect?: boolean }
+  | { type: NumberConstructor; default?: number; reflect?: boolean }
+  | { type: BooleanConstructor; default?: boolean; reflect?: boolean }
+  | { type: ArrayConstructor; default?: unknown[]; reflect?: boolean }
+  | { type: ObjectConstructor; default?: Record<string, unknown>; reflect?: boolean };
+
+export type PropDecl = PropDeclShorthand | PropDeclFull;
+
+export type PropType<D> = D extends NumberConstructor ? number
+  : D extends StringConstructor ? string
+  : D extends BooleanConstructor ? boolean
+  : D extends ArrayConstructor ? unknown[]
+  : D extends ObjectConstructor ? Record<string, unknown>
+  : D extends { type: NumberConstructor } ? number
+  : D extends { type: StringConstructor } ? string
+  : D extends { type: BooleanConstructor } ? boolean
+  : D extends { type: ArrayConstructor } ? unknown[]
+  : D extends { type: ObjectConstructor } ? Record<string, unknown>
+  : unknown;
+
+export type PropsFrom<P extends Record<string, PropDecl>> = {
+  [K in keyof P]: PropType<P[K]>;
+};
 
 // ─── Internal types (v0.24.1: `PropertyOptions` no longer exported) ────────
 

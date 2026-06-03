@@ -12,7 +12,7 @@ export { ErrorBoundary } from '../src/error-boundary.ts';
 // ── JSX runtime ───────────────────────────────────────────────────
 export { Fragment, jsx, jsxDEV, jsxs } from '../src/jsx-runtime.ts';
 export { renderToDom } from '../src/jsx-render-dom.ts';
-export { renderToString } from '../src/jsx-render-string.ts';
+export { renderDsdTree, serializeRenderNode } from '../src/render-ir.ts';
 export { isVNode } from '../src/vnode.ts';
 export type { VNode } from '../src/vnode.ts';
 

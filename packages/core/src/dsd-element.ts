@@ -58,7 +58,6 @@ import {
 } from './prop.js';
 import { isVNode, type VNode } from './vnode.js';
 import { renderToDom } from './jsx-render-dom.js';
-import { renderToString } from './jsx-render-string.js';
 import { collectEventBindings, hydrateEventMarkers } from './event-hydration.js';
 import { trustRenderHtml } from './security.js';
 import { effect, type Signal, signal } from '@lessjs/signals';
@@ -299,7 +298,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       const isDsd = this.shadowRoot && this.shadowRoot.childNodes.length > 0;
       if (isDsd) {
         // DSD: DOM already correct — bind events via VNode walk
-        this._hyrateExistingDom();
+        this._hydrateExistingDom();
         this.onDsdHydrated();
       } else if (this.shadowRoot) {
         // CSR: full render from VNode
@@ -467,7 +466,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    * v0.28 (ADR-0067): Delegates to _hydrateSignals().
    * _walkAndBind position matching is DELETED.
    */
-  private _hyrateExistingDom(): void {
+  private _hydrateExistingDom(): void {
     if (!this.shadowRoot) return;
 
     // Dispose previous effects and events
@@ -701,15 +700,5 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
    */
   render(): string | VNode {
     return '';
-  }
-
-  /**
-   * Resolve the output of render() to a plain HTML string.
-   * Handles string and VNode return types uniformly.
-   */
-  protected _resolveRenderOutput(result: string | VNode): string {
-    if (typeof result === 'string') return result;
-    if (isVNode(result)) return renderToString(result);
-    return String(result);
   }
 }

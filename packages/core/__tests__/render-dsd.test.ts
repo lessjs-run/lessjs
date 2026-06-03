@@ -8,7 +8,7 @@
  * Uses plain class mocks - no browser HTMLElement needed.
  */
 import { assertEquals, assertFalse, assertStringIncludes } from 'jsr:@std/assert@^1.0.0';
-import { renderDsd, renderDsdByName, type RenderDsdOptions } from '../src/render-dsd.ts';
+import { renderDsd, type RenderDsdOptions } from '../src/render-dsd.ts';
 import { escapeAttr, escapeAttrValue, escapeHtml } from '../src/html-escape.ts';
 import { getDefaultRegistry, type RendererProtocol } from '../src/adapter-registry.ts';
 
@@ -453,17 +453,6 @@ Deno.test('renderDsd - source info', async (t) => {
     });
     assertStringIncludes(output.html, '<err-el-3>');
     assertEquals(output.errors.length, 1);
-  });
-});
-
-// ─── renderDsdByName ─────────────────────────────────────────
-
-Deno.test('renderDsdByName', async (t) => {
-  await t.step('renders void element for unregistered tag', async () => {
-    const output = await renderDsdByName('nonexistent-tag-xyz', {});
-    assertStringIncludes(output.html, '<nonexistent-tag-xyz');
-    assertStringIncludes(output.html, '</nonexistent-tag-xyz>');
-    assertFalse(output.html.includes('shadowrootmode'));
   });
 });
 

@@ -1,6 +1,6 @@
 import { assert, assertEquals, assertRejects, assertStringIncludes } from 'jsr:@std/assert@1';
 import { compileMdx } from '@lessjs/content/mdx';
-import { renderToString } from '@lessjs/core';
+import { renderDsdTree } from '@lessjs/core';
 import { jsx } from '@lessjs/core/jsx-runtime';
 
 Deno.test('v0.28.3 MDX: simple source compiles with frontmatter', async () => {
@@ -19,13 +19,13 @@ Deno.test('v0.28.3 MDX: island syntax survives compile', async () => {
   assertStringIncludes(mod.code, 'client:idle');
 });
 
-Deno.test('v0.28.3 MDX: VNode output can enter LessJS render path', () => {
-  const html = renderToString(jsx('less-card', { children: 'MDX card' }));
+Deno.test('v0.28.3 MDX: VNode output can enter LessJS render path', async () => {
+  const html = await renderDsdTree(jsx('less-card', { children: 'MDX card' }));
   assertEquals(html, '<less-card>MDX card</less-card>');
 });
 
-Deno.test('v0.28.3 MDX: signal placeholder content can render as JSX text', () => {
-  const html = renderToString(jsx('p', { children: 'Count: 1' }));
+Deno.test('v0.28.3 MDX: signal placeholder content can render as JSX text', async () => {
+  const html = await renderDsdTree(jsx('p', { children: 'Count: 1' }));
   assertStringIncludes(html, 'Count: 1');
 });
 
@@ -38,3 +38,4 @@ Deno.test('v0.28.3 MDX: example fixture exists', async () => {
   const mod = await compileMdx(source);
   assert(mod.content.includes('less-theme-toggle'));
 });
+

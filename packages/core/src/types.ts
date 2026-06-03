@@ -24,6 +24,14 @@ import type { VNode } from './vnode.js';
 
 // ─── WC Package Protocol (v0.16+) ───────────────────────────────────
 
+/** API route context passed to simple handlers */
+export interface LessApiContext {
+  request: Request;
+  params: Record<string, string>;
+  env: Record<string, string | undefined>;
+  platform?: unknown;
+}
+
 /** Custom element attribute descriptor (CEM-compatible) */
 export interface LessAttribute {
   /** Attribute name */

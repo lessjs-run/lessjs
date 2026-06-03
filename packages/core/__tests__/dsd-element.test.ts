@@ -11,7 +11,7 @@ import { assertEquals, assertExists, assertStrictEquals } from 'jsr:@std/assert@
 import { DsdElement } from '../src/dsd-element.js';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { jsx } from '../src/jsx-runtime.ts';
-import { renderToString } from '../src/jsx-render-string.ts';
+import { renderDsdTree } from '../src/render-ir.ts';
 
 // Helper: create a minimal subclass for testing.
 
@@ -171,13 +171,13 @@ Deno.test('DsdElement: disconnectedCallback disposes template runtime', () => {
 
   document.body.removeChild(el);
 
-  // After disconnect, event listener is cleaned up — click should not fire
+  // After disconnect, event listener is cleaned up �?click should not fire
   callCount = 0;
   btn.click();
   assertEquals(callCount, 0);
 });
 
-Deno.test('DsdElement: DSD VNode event markers hydrate inline handlers', () => {
+Deno.test('DsdElement: DSD VNode event markers hydrate inline handlers', async () => {
   if (!hasDOM) return;
   let callCount = 0;
 
@@ -196,7 +196,7 @@ Deno.test('DsdElement: DSD VNode event markers hydrate inline handlers', () => {
 
   const el = document.createElement(tagName) as MarkerEventElement;
   const shadow = el.attachShadow({ mode: 'open' });
-  shadow.innerHTML = renderToString(el.render());
+  shadow.innerHTML = await renderDsdTree(el.render());
 
   document.body.appendChild(el);
 
@@ -213,7 +213,7 @@ Deno.test('DsdElement: DSD VNode event markers hydrate inline handlers', () => {
   assertEquals(callCount, 0);
 });
 
-// M-17 guard removed — _hydrateEvents has been removed in v0.21.0.
+// M-17 guard removed �?_hydrateEvents has been removed in v0.21.0.
 // Event binding via html template @click does not use method-name strings.
 
 Deno.test('DsdElement: html @click bindings use direct function references (no M-17 concern)', () => {
@@ -319,7 +319,7 @@ Deno.test('DsdElement: DSD path does not overwrite existing shadow DOM', () => {
   const shadow = el.attachShadow({ mode: 'open' });
   shadow.innerHTML = '<div class="dsd-content">dsd original</div>';
 
-  // Connect — should detect DSD and NOT overwrite
+  // Connect �?should detect DSD and NOT overwrite
   document.body.appendChild(el);
 
   // Content should still be the DSD content, not the CSR render() result
@@ -404,7 +404,7 @@ Deno.test('DsdElement: data-signal-attr DSD hydration sets attributes reactively
   }
   customElements.define(tagName, ThemeAttrElement);
 
-  // Simulate DSD with child content — verify textContent is NOT destroyed
+  // Simulate DSD with child content �?verify textContent is NOT destroyed
   const el = document.createElement(tagName) as DsdElement;
   const shadow = el.attachShadow({ mode: 'open' });
   shadow.innerHTML =
@@ -496,12 +496,12 @@ Deno.test('DsdElement: data-signal-class toggles CSS class on signal truthiness'
   const div = shadow.querySelector('div')!;
   assertExists(div);
 
-  // Signal 'on' is truthy → class present
+  // Signal 'on' is truthy �?class present
   assertEquals(div.classList.contains('active'), true);
 
   toggleSig.value = '';
   await new Promise((r) => setTimeout(r, 50));
-  // Signal '' is falsy → class removed
+  // Signal '' is falsy �?class removed
   assertEquals(div.classList.contains('active'), false);
 
   toggleSig.value = 'on';
@@ -546,3 +546,5 @@ Deno.test('DsdElement: CSR re-render rebinds data-on-click events', () => {
 
   document.body.removeChild(el);
 });
+
+

@@ -47,7 +47,7 @@ export type { ErrorPhase, ErrorSeverity, ErrorTelemetryHook, SsrErrorEntry } fro
 export { ErrorBoundary } from './error-boundary.js';
 export { createSsrContext, extractParams, parseQuery } from './context.js';
 export { renderSsrError, wrapInDocument } from './html-escape.js';
-export type { LessApiContext } from './api.js';
+export type { LessApiContext } from './types.js';
 export { createIsrCacheKey, isIsrRouteConfig, MemoryIsrCache } from './isr.js';
 export type {
   IsrCache,
@@ -61,7 +61,6 @@ export { DsdElement } from './dsd-element.js';
 export {
   createRenderDsdStreamMetrics,
   renderDsd,
-  renderDsdByName,
   renderDsdStream,
 } from './render-dsd.js';
 export type { RenderDsdOptions } from './render-dsd.js';
@@ -71,7 +70,7 @@ export type {
   RenderDsdStreamMetrics,
   RenderDsdStreamOptions,
 } from './render-dsd-stream.js';
-export { camelToKebab } from './render-serialize.js';
+export { camelToKebab, serializeAttrs } from './render-ir.js';
 export {
   type AdapterRegistry,
   createAdapterRegistry,
@@ -143,8 +142,7 @@ export { createLogger, LessLogger, LogLevel } from './logger.js';
 /** @internal — use @lessjs/core/security subpath */
 export { DANGEROUS_KEYS } from './security.js';
 export { isValidTagName } from './tag-utils.js';
-export { defineCustomElement } from './custom-element.js';
-export { bindEvents, defineIsland, getSsrProps, type IslandOptions } from './island.js';
+export { defineIsland, bindEvents, getSsrProps, defineCustomElement, type IslandOptions } from './island.js';
 export { transformIslandSource } from './island-transform.js';
 export type { IslandTransformOptions, IslandTransformResult } from './island-transform.js';
 
@@ -166,7 +164,7 @@ export { isVNode } from './vnode.js';
 export { Fragment } from './jsx-runtime.js';
 // Renderers
 export { renderToDom } from './jsx-render-dom.js';
-export { renderDsdTree, renderToString } from './jsx-render-string.js';
+export { renderDsdTree } from './render-ir.js';
 export {
   collectEventBindings,
   createEventMarkerContext,
@@ -186,11 +184,10 @@ export {
   syncStaticPropsFromAttributes,
   unwrap,
 } from './prop.js';
-// Type-inference utilities
 export type {
   PropDecl,
   PropDeclFull,
   PropDeclShorthand,
   PropsFrom,
   PropType,
-} from './prop-types.js';
+} from './prop.js';

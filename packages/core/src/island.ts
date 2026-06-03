@@ -12,38 +12,27 @@
  * FAST, or any Web Component library. bindEvents() sets props
  * directly; adapters handle framework-specific update triggers.
  *
- * Usage:
- * ```ts
- * import { defineIsland } from '@lessjs/core';
- *
- * class MyCounter extends LitElement {
- *   static properties = { count: { type: Number } };
- *   declare count: number;
- *
- *   render() { return html`<button @click=${() => this.count++}>${this.count}</button>`; }
- * }
- *
- * // Register with load strategy (DSD enabled by default)
- * export default defineIsland('my-counter', MyCounter, { strategy: 'load' });
- *
- * // Pure Island - no DSD, full framework reactivity
- * export default defineIsland('my-counter', MyCounter, { strategy: 'only' });
- * ```
- *
- * Web Standards alignment:
- *   - Uses standard customElements.define() API
- *   - IntersectionObserver for visible strategy
- *   - requestIdleCallback for idle strategy
- *   - Zero framework runtime - just native platform APIs
- *
- * @module @lessjs/core/island
+ * v0.29.1: defineCustomElement helper inlined from custom-element.ts.
  */
-
-/** Island registration options */
 
 import { createLogger } from './logger.js';
 import type { HydrationStrategy } from './types.js';
 const log = createLogger('core');
+
+/**
+ * SSR-safe custom element registration helper.
+ * v0.29.1: Merged from custom-element.ts.
+ */
+export function defineCustomElement(
+  tag: string,
+  ctor: CustomElementConstructor,
+): void {
+  if (typeof globalThis.customElements === 'undefined') return;
+  if (!globalThis.customElements.get(tag)) {
+    globalThis.customElements.define(tag, ctor);
+  }
+}
+
 const VALID_STRATEGIES = new Set<HydrationStrategy>(['load', 'idle', 'visible', 'only']);
 
 // Module-level store of active visibility strategy timeout IDs.

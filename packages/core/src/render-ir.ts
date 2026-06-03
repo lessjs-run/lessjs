@@ -1,9 +1,9 @@
 /**
  * Internal structured render IR.
  *
- * This module is intentionally internal in v0.29.0. Public entrypoints keep
- * returning HTML strings or RenderOutput, but the renderer now crosses explicit
- * node boundaries before serialization.
+ * v0.29.1: Unified attribute serialization and single async render path.
+ * `renderDsdTree` is the only public rendering API. All internal rendering
+ * flows through `renderToNode`.
  */
 
 import { escapeAttr, escapeHtml } from './html-escape.ts';
@@ -33,7 +33,7 @@ export type RenderNode =
   | {
     kind: 'dsd-host';
     tag: string;
-    attrs: string;
+    attrs: Record<string, unknown>;
     ssrPropsAttr: string;
     source: string;
     templateAttrs: string;
@@ -76,51 +76,31 @@ export function dsdHostNode(params: Omit<Extract<RenderNode, { kind: 'dsd-host' 
   return { kind: 'dsd-host', ...params } satisfies RenderNode;
 }
 
-export function serializeRenderNode(node: RenderNode): string {
-  switch (node.kind) {
-    case 'text':
-      return escapeHtml(node.value);
-    case 'trusted-html':
-      return node.value;
-    case 'fragment':
-      return node.children.map(serializeRenderNode).join('');
-    case 'element': {
-      const attrs = serializeElementAttrs(node.attrs);
-      const events = node.eventAttrs ?? '';
-      if (node.voidElement || VOID_ELEMENTS.has(node.tag)) {
-        return `<${node.tag}${attrs}${events}>`;
-      }
-      return `<${node.tag}${attrs}${events}>${
-        node.children.map(serializeRenderNode).join('')
-      }</${node.tag}>`;
-    }
-    case 'dsd-host': {
-      if (node.layer === 'pure-island') {
-        return `<${node.tag}${node.attrs}${node.ssrPropsAttr}${node.source}>${
-          node.light.map(serializeRenderNode).join('')
-        }</${node.tag}>`;
-      }
+// ─── camelCase → kebab-case ─────────────────────────────────────
 
-      const style = node.styleCss ? `\n    <style>${node.styleCss}</style>` : '';
-      return `<${node.tag}${node.attrs}${node.ssrPropsAttr}${node.source}>
-  <template shadowrootmode="open"${node.templateAttrs}>${style}
-    ${node.shadow.map(serializeRenderNode).join('')}
-  </template>
-${node.light.map(serializeRenderNode).join('')}</${node.tag}>`;
-    }
-  }
+export function camelToKebab(str: string): string {
+  return str.replace(/([A-Z])/g, '-$1').toLowerCase();
 }
 
-export function serializeElementAttrs(props: Record<string, unknown>): string {
+// ─── Unified Attribute Serialization ────────────────────────────
+
+const SKIP_ATTR_KEYS = new Set(['children', 'ref', 'key', 'rawHtml', 'innerHTML', 'textContent']);
+
+export function serializeAttrs(tag: string, props: Record<string, unknown>): string {
+  const isCustomElement = tag.includes('-');
   let result = '';
+
   for (const [key, value] of Object.entries(props)) {
-    if (key === 'children' || key === 'ref' || key === 'key' || key === 'rawHtml') continue;
+    if (SKIP_ATTR_KEYS.has(key)) continue;
     if (key.startsWith('on') && typeof value === 'function') continue;
     if (typeof value === 'function') continue;
     if (value == null) continue;
-    if (key === 'innerHTML' || key === 'textContent') continue;
 
-    const attrName = key === 'className' ? 'class' : key === 'htmlFor' ? 'for' : key;
+    let attrName = key === 'className' ? 'class' : key === 'htmlFor' ? 'for' : key;
+    if (isCustomElement && attrName === key) {
+      attrName = camelToKebab(attrName);
+    }
+
     const resolved = unwrapSignalLike(value);
 
     if (typeof resolved === 'boolean') {
@@ -138,93 +118,127 @@ export function serializeElementAttrs(props: Record<string, unknown>): string {
       continue;
     }
 
-    result += ` ${attrName}="${escapeAttr(String(resolved))}"`;
-  }
-  return result;
-}
-
-export function renderToString(
-  node: unknown,
-  eventContext: EventMarkerContext = createEventMarkerContext(),
-): string {
-  return serializeRenderNode(renderToStaticNode(node, eventContext));
-}
-
-export async function renderDsdTree(
-  node: unknown,
-  eventContext: EventMarkerContext = createEventMarkerContext(),
-): Promise<string> {
-  return serializeRenderNode(await renderToDsdNode(node, eventContext));
-}
-
-export function renderToStaticNode(
-  node: unknown,
-  eventContext: EventMarkerContext = createEventMarkerContext(),
-): RenderNode {
-  if (node == null || node === false || typeof node === 'boolean') return fragmentNode([]);
-  if (typeof node === 'string' || typeof node === 'number') return textNode(node);
-  if (isSignalLike(node)) {
-    return renderToStaticNode((node as { value: unknown }).value, eventContext);
-  }
-  if (!isVNode(node)) return textNode(String(node));
-
-  const special = renderSpecialVNodeSync(node, eventContext);
-  if (special) return special;
-
-  const { tag, props, children } = node;
-  if (typeof tag === 'function') {
-    try {
-      return renderToStaticNode(callComponent(tag, props, children), eventContext);
-    } catch (err) {
-      console.error(
-        `[LessJS/SSR] renderToString() failed for <${String(tag)}>:` +
-          ` ${err instanceof Error ? err.message : String(err)}`,
-      );
-      return fragmentNode([]);
+    if (typeof resolved === 'object') {
+      result += ` ${attrName}="${escapeAttr(JSON.stringify(resolved))}"`;
+    } else {
+      result += ` ${attrName}="${escapeAttr(String(resolved))}"`;
     }
   }
 
-  const tagName = String(tag);
-  return {
-    kind: 'element',
-    tag: tagName,
-    attrs: props,
-    eventAttrs: serializeEventMarkers(props, eventContext),
-    children: renderChildrenFromProps(props, children, eventContext),
-    voidElement: VOID_ELEMENTS.has(tagName),
-  };
+  return result;
 }
 
-export async function renderToDsdNode(
+// ─── Serialization ──────────────────────────────────────────────
+
+export function serializeRenderNode(node: RenderNode): string {
+  switch (node.kind) {
+    case 'text':
+      return escapeHtml(node.value);
+    case 'trusted-html':
+      return node.value;
+    case 'fragment':
+      return node.children.map(serializeRenderNode).join('');
+    case 'element': {
+      const attrs = serializeAttrs(node.tag, node.attrs);
+      const events = node.eventAttrs ?? '';
+      if (node.voidElement || VOID_ELEMENTS.has(node.tag)) {
+        return `<${node.tag}${attrs}${events}>`;
+      }
+      return `<${node.tag}${attrs}${events}>${
+        node.children.map(serializeRenderNode).join('')
+      }</${node.tag}>`;
+    }
+    case 'dsd-host': {
+      const attrs = serializeAttrs(node.tag, node.attrs);
+      if (node.layer === 'pure-island') {
+        return `<${node.tag}${attrs}${node.ssrPropsAttr}${node.source}>${
+          node.light.map(serializeRenderNode).join('')
+        }</${node.tag}>`;
+      }
+      const style = node.styleCss ? `\n    <style>${node.styleCss}</style>` : '';
+      return `<${node.tag}${attrs}${node.ssrPropsAttr}${node.source}>
+  <template shadowrootmode="open"${node.templateAttrs}>${style}
+    ${node.shadow.map(serializeRenderNode).join('')}
+  </template>
+${node.light.map(serializeRenderNode).join('')}</${node.tag}>`;
+    }
+  }
+}
+
+// ─── Single async render path ───────────────────────────────────
+
+export async function renderToNode(
   node: unknown,
   eventContext: EventMarkerContext = createEventMarkerContext(),
 ): Promise<RenderNode> {
   if (node == null || node === false || typeof node === 'boolean') return fragmentNode([]);
   if (typeof node === 'string' || typeof node === 'number') return textNode(node);
   if (isSignalLike(node)) {
-    return await renderToDsdNode((node as { value: unknown }).value, eventContext);
+    return await renderToNode((node as { value: unknown }).value, eventContext);
   }
   if (!isVNode(node)) return textNode(String(node));
 
-  const special = await renderSpecialVNodeAsync(node, eventContext);
-  if (special) return special;
-
   const { tag, props, children } = node;
+
+  // Fragment
+  if (tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(lessjs.fragment)')) {
+    const parts: RenderNode[] = [];
+    for (const child of children) parts.push(await renderToNode(child, eventContext));
+    return fragmentNode(parts);
+  }
+
+  // Show
+  if (tag === SHOW_TAG || tag === 'show') {
+    const whenVal = isSignalLike(props?.when)
+      ? (props!.when as { value: unknown }).value
+      : props?.when;
+    const target = whenVal ? children[0] : children[1];
+    return target ? await renderToNode(target, eventContext) : fragmentNode([]);
+  }
+
+  // For
+  if (tag === FOR_TAG || tag === 'fore') {
+    const items = (isSignalLike(props?.each)
+      ? (props!.each as { value: unknown }).value
+      : props?.each) as unknown[];
+    const renderFn = children[0] as unknown as ((item: unknown, idx: number) => unknown);
+    if (!Array.isArray(items) || typeof renderFn !== 'function') {
+      return fragmentNode([]);
+    }
+    const parts: RenderNode[] = [];
+    for (let index = 0; index < items.length; index++) {
+      parts.push(await renderToNode(renderFn(items[index], index), eventContext));
+    }
+    return fragmentNode(parts);
+  }
+
+  // Component function/class
   if (typeof tag === 'function') {
     try {
-      return await renderToDsdNode(callComponent(tag, props, children), eventContext);
+      return await renderToNode(callComponent(tag, props, children), eventContext);
     } catch (err) {
       console.error(
-        `[LessJS/SSR] renderDsdTree() failed for <${String(tag)}>:` +
+        `[LessJS/SSR] render failed for <${String(tag)}>:` +
           ` ${err instanceof Error ? err.message : String(err)}`,
       );
       return fragmentNode([]);
     }
   }
 
+  // HTML / SVG element
   const tagName = String(tag);
-  const childNodes = await renderChildrenFromPropsAsync(props, children, eventContext);
+  const childNodes: RenderNode[] = [];
 
+  if (props?.innerHTML !== undefined) {
+    const value = unwrapSignalLike(props.innerHTML);
+    childNodes.push(props.rawHtml === true ? trustedHtmlNode(value) : textNode(value));
+  } else if (props?.textContent !== undefined) {
+    childNodes.push(textNode(unwrapSignalLike(props.textContent)));
+  } else {
+    for (const child of children) childNodes.push(await renderToNode(child, eventContext));
+  }
+
+  // Custom Element → DSD
   if (
     typeof customElements !== 'undefined' &&
     customElements.get &&
@@ -238,7 +252,7 @@ export async function renderToDsdNode(
       return mergeDsdHostHtmlWithLightDom(dsdResult.html, tagName, childNodes);
     } catch (err) {
       console.error(
-        `[LessJS/SSR] renderDsdTree() failed for registered CE <${tagName}>:` +
+        `[LessJS/SSR] renderDsd failed for registered CE <${tagName}>:` +
           ` ${err instanceof Error ? err.message : String(err)}`,
       );
     }
@@ -254,105 +268,16 @@ export async function renderToDsdNode(
   };
 }
 
-function renderSpecialVNodeSync(
-  node: VNode,
-  eventContext: EventMarkerContext,
-): RenderNode | null {
-  const { tag, props, children } = node;
-  if (tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(lessjs.fragment)')) {
-    return fragmentNode(children.map((child) => renderToStaticNode(child, eventContext)));
-  }
+// ─── Public API ─────────────────────────────────────────────────
 
-  if (tag === SHOW_TAG || tag === 'show') {
-    const whenVal = isSignalLike(props?.when)
-      ? (props!.when as { value: unknown }).value
-      : props?.when;
-    const target = whenVal ? children[0] : children[1];
-    return target ? renderToStaticNode(target, eventContext) : fragmentNode([]);
-  }
-
-  if (tag === FOR_TAG || tag === 'fore') {
-    const items = (isSignalLike(props?.each)
-      ? (props!.each as { value: unknown }).value
-      : props?.each) as unknown[];
-    const renderFn = children[0] as unknown as ((item: unknown, idx: number) => unknown);
-    if (!Array.isArray(items) || typeof renderFn !== 'function') {
-      return fragmentNode([]);
-    }
-    return fragmentNode(
-      items.map((item, index) =>
-        renderToStaticNode(renderFn(item, index), eventContext)
-      ),
-    );
-  }
-
-  return null;
+export async function renderDsdTree(
+  node: unknown,
+  eventContext: EventMarkerContext = createEventMarkerContext(),
+): Promise<string> {
+  return serializeRenderNode(await renderToNode(node, eventContext));
 }
 
-async function renderSpecialVNodeAsync(
-  node: VNode,
-  eventContext: EventMarkerContext,
-): Promise<RenderNode | null> {
-  const { tag, props, children } = node;
-  if (tag === Fragment || (typeof tag === 'symbol' && String(tag) === 'Symbol(lessjs.fragment)')) {
-    const parts: RenderNode[] = [];
-    for (const child of children) parts.push(await renderToDsdNode(child, eventContext));
-    return fragmentNode(parts);
-  }
-
-  if (tag === SHOW_TAG || tag === 'show') {
-    const whenVal = isSignalLike(props?.when)
-      ? (props!.when as { value: unknown }).value
-      : props?.when;
-    const target = whenVal ? children[0] : children[1];
-    return target ? await renderToDsdNode(target, eventContext) : fragmentNode([]);
-  }
-
-  if (tag === FOR_TAG || tag === 'fore') {
-    const items = (isSignalLike(props?.each)
-      ? (props!.each as { value: unknown }).value
-      : props?.each) as unknown[];
-    const renderFn = children[0] as unknown as ((item: unknown, idx: number) => unknown);
-    if (!Array.isArray(items) || typeof renderFn !== 'function') {
-      return fragmentNode([]);
-    }
-    const parts: RenderNode[] = [];
-    for (let index = 0; index < items.length; index++) {
-      parts.push(await renderToDsdNode(renderFn(items[index], index), eventContext));
-    }
-    return fragmentNode(parts);
-  }
-
-  return null;
-}
-
-function renderChildrenFromProps(
-  props: Record<string, unknown>,
-  children: (VNode | string)[],
-  eventContext: EventMarkerContext,
-): RenderNode[] {
-  if (props?.innerHTML !== undefined) {
-    const value = unwrapSignalLike(props.innerHTML);
-    return [props.rawHtml === true ? trustedHtmlNode(value) : textNode(value)];
-  }
-  if (props?.textContent !== undefined) return [textNode(unwrapSignalLike(props.textContent))];
-  return children.map((child) => renderToStaticNode(child, eventContext));
-}
-
-async function renderChildrenFromPropsAsync(
-  props: Record<string, unknown>,
-  children: (VNode | string)[],
-  eventContext: EventMarkerContext,
-): Promise<RenderNode[]> {
-  if (props?.innerHTML !== undefined) {
-    const value = unwrapSignalLike(props.innerHTML);
-    return [props.rawHtml === true ? trustedHtmlNode(value) : textNode(value)];
-  }
-  if (props?.textContent !== undefined) return [textNode(unwrapSignalLike(props.textContent))];
-  const nodes: RenderNode[] = [];
-  for (const child of children) nodes.push(await renderToDsdNode(child, eventContext));
-  return nodes;
-}
+// ─── Helpers ────────────────────────────────────────────────────
 
 function callComponent(
   tag: VNode['tag'],

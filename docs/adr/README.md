@@ -71,6 +71,7 @@ architectural decision, its context, and consequences.
 | 0075 | Fork daisyUI 5 Compiled CSS for DSD Shell Components | Proposed                                 |
 | 0076 | Open Props and daisyUI Token Merge                   | Proposed                                 |
 | 0077 | Structured Render IR and Single Renderer Pipeline    | Accepted, Implemented                    |
+| 0078 | Core Package Simplification and Module Merge         | Accepted                                 |
 
 ## Superseded / Historical
 

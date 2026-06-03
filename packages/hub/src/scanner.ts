@@ -59,7 +59,7 @@ const WC_PACKAGES: KnownWcPackage[] = [
   {
     name: 'ui',
     scope: '@lessjs',
-    version: '0.20.0',
+    version: '0.29.0',
     source: 'local',
     description:
       'LessJS UI component library with DSD-native DsdElement components. All components are SSR-capable.',

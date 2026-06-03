@@ -27,7 +27,7 @@ export type { LessRenderer } from '@lessjs/core';
 export { isVNode } from '@lessjs/core';
 
 // JSX rendering
-export { renderToDom, renderToString } from '@lessjs/core';
+export { renderDsdTree, renderToDom } from '@lessjs/core';
 
 // v0.25.0: SignalContext
 export { consumeContext, createContext, provideContext } from '@lessjs/core';

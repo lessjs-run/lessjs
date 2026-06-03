@@ -13,7 +13,7 @@ Deno.test('@lessjs/runtime exports the component authoring facade', () => {
       'effect',
       'StyleSheet',
       'renderToDom',
-      'renderToString',
+      'renderDsdTree',
       'escapeHtml',
     ]
   ) {

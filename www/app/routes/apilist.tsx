@@ -73,7 +73,7 @@ export default class ApiCorePage extends DsdElement {
               <div class="api-desc">将 VNode 树转换为真实 DOM 节点。事件处理器通过原生 addEventListener 绑定。</div>
             </div>
             <div class="api-entry">
-              <div class="api-sig">renderToString(node: unknown): string</div>
+              <div class="api-sig">renderDsdTree(node: unknown): Promise&lt;string&gt;</div>
               <div class="api-desc">将 VNode 树转换为 HTML 字符串，用于 SSR/SSG 输出。文本内容自动 HTML 转义。</div>
             </div>
             <div class="api-entry">
@@ -176,7 +176,7 @@ export default class ApiCorePage extends DsdElement {
               <div class="api-desc">Converts a VNode tree to real DOM nodes. Event handlers wired via native addEventListener.</div>
             </div>
             <div class="api-entry">
-              <div class="api-sig">renderToString(node: unknown): string</div>
+              <div class="api-sig">renderDsdTree(node: unknown): Promise&lt;string&gt;</div>
               <div class="api-desc">Converts a VNode tree to an HTML string for SSR/SSG output. Text content is HTML-escaped.</div>
             </div>
           </div>
