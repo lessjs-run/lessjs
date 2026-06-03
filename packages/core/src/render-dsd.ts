@@ -162,8 +162,9 @@ function wrapDsdOutput(params: {
   layer: string;
   sourceStr: string;
   dsdOptions?: DsdOptions;
+  lightDom?: import('../src/render-ir.ts').RenderNode[];
 }): string {
-  const { tagName, props, content, styleCss, layer, sourceStr, dsdOptions } = params;
+  const { tagName, props, content, styleCss, layer, sourceStr, dsdOptions, lightDom } = params;
   const ssrPropsAttr = Object.keys(props).length > 0
     ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
     : '';
@@ -177,7 +178,7 @@ function wrapDsdOutput(params: {
       templateAttrs: buildDsdTemplateAttrs(dsdOptions),
       styleCss,
       shadow: [trustedHtmlNode(content)],
-      light: [],
+      light: lightDom ?? [],
       layer,
     }),
   );
@@ -193,6 +194,7 @@ export interface RenderDsdOptions {
   collector?: DsdRenderCollector;
   nestingDepth?: number;
   hooks?: RenderHooks;
+  lightDom?: import('../src/render-ir.ts').RenderNode[];
 }
 
 export async function renderDsd(
@@ -431,6 +433,7 @@ export async function renderDsd(
     layer: resolvedLayer,
     sourceStr,
     dsdOptions,
+    lightDom: options.lightDom,
   });
 
   const output: RenderOutput = {

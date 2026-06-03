@@ -13,7 +13,7 @@ import {
   serializeEventMarkers,
 } from './event-hydration.ts';
 import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
-import { trustRenderHtml } from './security.ts';
+import { DANGEROUS_KEYS, trustRenderHtml } from './security.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 import { isVNode, type VNode } from './vnode.ts';
 import { renderDsd } from './render-dsd.js';
@@ -248,8 +248,9 @@ export async function renderToNode(
       const dsdResult = await renderDsd(tagName, {
         componentClass: customElements.get(tagName) as CustomElementConstructor,
         props,
+        lightDom: childNodes,
       });
-      return mergeDsdHostHtmlWithLightDom(dsdResult.html, tagName, childNodes);
+      return trustedHtmlNode(dsdResult.html);
     } catch (err) {
       console.error(
         `[LessJS/SSR] renderDsd failed for registered CE <${tagName}>:` +
@@ -288,27 +289,12 @@ function callComponent(
   if (tag.prototype && typeof tag.prototype.render === 'function') {
     const instance = new (tag as new (...args: unknown[]) => { render(): unknown })();
     for (const [key, value] of Object.entries(props)) {
+      if (DANGEROUS_KEYS.has(key)) continue;
       (instance as Record<string, unknown>)[key] = value;
     }
     return instance.render();
   }
   return (tag as (props: Record<string, unknown>) => unknown)({ ...props, children });
-}
-
-function mergeDsdHostHtmlWithLightDom(
-  hostHtml: string,
-  tagName: string,
-  lightDom: RenderNode[],
-): RenderNode {
-  const lightHtml = lightDom.map(serializeRenderNode).join('');
-  if (!lightHtml) return trustedHtmlNode(hostHtml);
-
-  const closingTag = `</${tagName}>`;
-  const index = hostHtml.lastIndexOf(closingTag);
-  const html = index === -1
-    ? hostHtml + lightHtml
-    : hostHtml.slice(0, index) + lightHtml + hostHtml.slice(index);
-  return trustedHtmlNode(html);
 }
 
 function styleObjectToString(obj: Record<string, unknown>): string {

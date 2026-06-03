@@ -11,46 +11,45 @@ A Web Component is SSR-rendered only when a declared adapter or validated
 package contract makes that safe. Otherwise it becomes client-only or fails
 validation before build output is generated.
 
-The current product center is **DSD-first Web Components rendering**. Full-stack
-capabilities are still important, but they must build on clean package
-boundaries, a small consumer surface, and verified release gates instead of
-outrunning the architecture.
+The current product center is **JamFullStack Web Components framework**.
 
 ## Current State
 
 | Area                      | State                                                 |
 | ------------------------- | ----------------------------------------------------- |
-| Project line              | v0.29.2 Core Simplification                           |
+| Project line              | v0.29.4 Stable Engine                                 |
 | Current rendering mode    | SSG + Declarative Shadow DOM                          |
 | Component model           | JSX + static props + Signal (ADR-0057)                |
 | Public API naming         | Web Platform style: verbNoun, PascalCase acronyms     |
 | Current DSD base          | `DsdElement` + SSR-safe `StyleSheet`                  |
 | Current framework surface | file routes, Hono API routes, dev/build pipeline      |
 | Current Hub surface       | early Registry Hub, validation, snapshots, `less add` |
-| Next milestone            | v1.0 Stable Engine                                    |
+| Next milestone            | JamFullStack (ISR, Edge KV, Data Layer)               |
 
 ## Phase Overview
 
-| Phase | Version     | Name                         | Goal                                                           | Status  |
-| ----- | ----------- | ---------------------------- | -------------------------------------------------------------- | ------- |
-| 1–6   | v0.15–v0.20 | Ocean-Island Architecture    | DSD-first rendering, CEM, Hub, gates                           | ✅ Done |
-| 7     | v0.21.x     | Reactive DSD                 | DsdElement + Signals, safe templates, streaming DSD            | ✅ Done |
-| 8     | v0.22.x     | Architecture Integrity       | Package boundaries, consumer surface, adapter cleanup, gates   | ✅ Done |
-| 9     | v0.23.x     | Layered Package Architecture | Protocols, runtime facade, graph gates, docs governance        | ✅ Done |
-| 10    | v0.24.1     | JSX + Signal Component Model | JSX, static props, Signal unwrap, DSD integration (ADR-0057)   | ✅ Done |
-| 10.1  | v0.24.2     | Remove Old Component Model   | html/@prop removal, renderer hardening, docs truth convergence | ✅ Done |
-| 10.2  | v0.24.3     | Consolidation                | TemplateResult removal, TemplateRunner dedup, gate hardening   | ✅ Done |
-| 10.3  | v0.24.4     | API Naming Convention        | verbNoun, PascalCase acronyms, brand prefix removal            | ✅ Done |
-| 11    | v0.25.0     | Declarative DX               | BuildPipeline, route types, static head, static client         | ✅ Done |
-| 12    | v0.26.0     | Hub CLI Reorganization       | Hub command surface, package publish sanity                    | ✅ Done |
-| 13    | v0.27.0     | Framework Decoupling         | Virtual module removal, island transform, dev:fast server      | ✅ Done |
-| 14    | v0.28.0     | Contracts & Tokens           | Adapter registry factory, Open Props migration, CI composite   | ✅ Done |
-| 14.1  | v0.28.1     | Hygiene Convergence          | v0.28 anchor sweep, gitignore leaks, strategic-docs sync       | ✅ Done |
-| 14.2  | v0.28.2     | Deprecated Purge             | Compat purge, security hardening, SSR bundle reduction         | Done    |
-| 14.3  | v0.28.3     | Cleanup Closure + MDX        | Test floor, lockfile alignment, MDX design and implementation  | Done    |
-| 14.4  | v0.28.4     | AppShell Protocol + Cleanup  | Explicit shells, strict render API, sanitizer, release gates   | Done    |
-| 14.5  | v0.28.5     | Consumer Resolver Patch      | Fix post-publish sanitizer dependency resolution for consumers | Done    |
-| 15    | v1.0.x      | Stable Engine                | API/schema freeze and deterministic package guarantees         | Vision  |
+| Phase | Version     | Name                         | Goal                                                                               | Status  |
+| ----- | ----------- | ---------------------------- | ---------------------------------------------------------------------------------- | ------- |
+| 1–6   | v0.15–v0.20 | Ocean-Island Architecture    | DSD-first rendering, CEM, Hub, gates                                               | ✅ Done |
+| 7     | v0.21.x     | Reactive DSD                 | DsdElement + Signals, safe templates, streaming DSD                                | ✅ Done |
+| 8     | v0.22.x     | Architecture Integrity       | Package boundaries, consumer surface, adapter cleanup, gates                       | ✅ Done |
+| 9     | v0.23.x     | Layered Package Architecture | Protocols, runtime facade, graph gates, docs governance                            | ✅ Done |
+| 10    | v0.24.1     | JSX + Signal Component Model | JSX, static props, Signal unwrap, DSD integration (ADR-0057)                       | ✅ Done |
+| 10.1  | v0.24.2     | Remove Old Component Model   | html/@prop removal, renderer hardening, docs truth convergence                     | ✅ Done |
+| 10.2  | v0.24.3     | Consolidation                | TemplateResult removal, TemplateRunner dedup, gate hardening                       | ✅ Done |
+| 10.3  | v0.24.4     | API Naming Convention        | verbNoun, PascalCase acronyms, brand prefix removal                                | ✅ Done |
+| 11    | v0.25.0     | Declarative DX               | BuildPipeline, route types, static head, static client                             | ✅ Done |
+| 12    | v0.26.0     | Hub CLI Reorganization       | Hub command surface, package publish sanity                                        | ✅ Done |
+| 13    | v0.27.0     | Framework Decoupling         | Virtual module removal, island transform, dev:fast server                          | ✅ Done |
+| 14    | v0.28.0     | Contracts & Tokens           | Adapter registry factory, Open Props migration, CI composite                       | ✅ Done |
+| 14.1  | v0.28.1     | Hygiene Convergence          | v0.28 anchor sweep, gitignore leaks, strategic-docs sync                           | ✅ Done |
+| 14.2  | v0.28.2     | Deprecated Purge             | Compat purge, security hardening, SSR bundle reduction                             | Done    |
+| 14.3  | v0.28.3     | Cleanup Closure + MDX        | Test floor, lockfile alignment, MDX design and implementation                      | Done    |
+| 14.4  | v0.28.4     | AppShell Protocol + Cleanup  | Explicit shells, strict render API, sanitizer, release gates                       | Done    |
+| 14.5  | v0.28.5     | Consumer Resolver Patch      | Fix post-publish sanitizer dependency resolution for consumers                     | Done    |
+| 14.6  | v0.29.x     | Renderer IR + Simplification | Structured RenderNode IR, unified attrs, async-only path, core 33→26, CodeQL audit | ✅ Done |
+| 15    | v0.30.x     | JamFullStack Foundation      | ISR KV adapters, Edge deployment, RPC maturation, Data Layer                       | Next    |
+| 16    | v1.0.x      | Stable Engine                | API/schema freeze and deterministic package guarantees                             | Vision  |
 
 ## Compatibility Admission Model
 
@@ -75,17 +74,6 @@ Delivered:
 - `RenderHooks` lifecycle
 - `DsdBuildReport` and `dsd-report.json`
 - repeatable release gates
-
-Exit criteria: met.
-
-### v0.16.x - WC Package Protocol
-
-Delivered:
-
-- manifest and registry types
-- package island metadata expansion
-- local registry validation
-- package metadata as data instead of runtime guessing
 
 Exit criteria: met.
 
@@ -249,15 +237,24 @@ Governing ADR: ADR-0059, ADR-0061. See `docs/sop/v0.27.0/`.
 | SignalQuery               | Promise-style RPC sufficient        |
 | Edge Full-Stack (ISR, KV) | Deferred until architecture clean   |
 
-## Vision: v1.0 Stable Engine
+## Vision: JamFullStack
 
-v1.0 should freeze: `DsdElement`, `renderDsd()`, adapter protocol, manifest and
-compatibility schema, `dsd-report.json`, `less validate-manifest`, `less add`,
-client-only fallback behavior.
+LessJS should ship a complete Web Components full-stack experience:
 
-v1.0 should not promise: SSR for every CEM package, browser-equivalent DOM
-simulation, automatic safe execution of arbitrary package code, a mature
-public marketplace.
+- **ISR + Edge KV**: production ISR handlers backed by Deno KV and Cloudflare Workers KV.
+- **Edge Deployment**: first-class Deno Deploy and CF Workers deployment presets.
+- **RPC Maturation**: type-safe streaming, middleware, error contracts.
+- **Data Layer**: DB adapter abstraction (SQLite/Postgres/D1/KV) for route loaders.
+
+v1.0 freezes the renderer, component model, and package protocol after these capabilities are stable.
+
+## Explicitly Deferred
+
+| Item                     | Reason                                       |
+| ------------------------ | -------------------------------------------- |
+| v1.0 freeze              | Functionally incomplete — JamFullStack first |
+| Performance optimization | Correctness before speed                     |
+| ORM / generic auth       | Post-v1.0 ecosystem                          |
 
 ## Document Cross-Reference
 
