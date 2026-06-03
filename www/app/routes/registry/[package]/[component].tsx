@@ -402,7 +402,6 @@ export default class DocsRegistryComponentDetail extends DsdElement {
     const fullPkgName = pkg
       ? (pkg.scope ? `${pkg.scope}/${pkg.name}` : pkg.name)
       : this.package?.replace('~', '/') || 'unknown';
-    const pkgRoute = this.package?.replace('~', '/') || '';
 
     if (!pkg) {
       return (

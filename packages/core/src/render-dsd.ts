@@ -347,7 +347,7 @@ export async function renderDsd(
         renderTimeMs: renderEndFallback - startTime,
         templateSize: 0,
         layer: 'dsd-static',
-        hasError: true,
+        hasError: hasError,
         nestingDepth: _nestingDepth,
       },
       hydrationHints: collectedHints,
@@ -456,7 +456,7 @@ function renderEndTimeFallback(): number {
 }
 
 function describeRenderValue(value: unknown): string {
-  if (typeof value !== 'object' || value === null) return typeof value;
+  if (value === null || typeof value !== 'object') return typeof value;
   const keys = Object.keys(value).join(',');
   return `object keys=[${keys}]`;
 }

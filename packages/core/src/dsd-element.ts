@@ -541,7 +541,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       this.shadowRoot.appendChild(renderToDom(fallback, undefined, this.#effectDisposers));
       this._bindEvents(this.shadowRoot);
     } else {
-      this.shadowRoot.innerHTML = fallback;
+      this.shadowRoot.innerHTML = trustRenderHtml(fallback);
       this._bindEvents(this.shadowRoot);
     }
   }
@@ -661,7 +661,7 @@ export class DsdElement extends _HTMLElement implements ReactiveHost {
       // v0.28.1: Re-bind data-on-* events after CSR re-render.
       this._bindEvents(this.shadowRoot!);
     } else if (typeof result === 'string') {
-      this.shadowRoot!.innerHTML = result;
+      this.shadowRoot!.innerHTML = trustRenderHtml(result);
       this._bindEvents(this.shadowRoot!);
     } else {
       console.warn(
