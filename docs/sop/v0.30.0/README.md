@@ -2,7 +2,7 @@
 
 > Version: v0.30.0
 > Date: 2026-06-04
-> Status: Local gate passed; remote CI pending
+> Status: Done
 > ADR: ADR-0080
 > Release type: Breaking architecture cleanup
 
@@ -333,17 +333,17 @@ deno task dsd:check-report
 deno task publish:dry-run
 ```
 
-- [ ] Push `dev`.
-- [ ] Wait for `dev` CI to pass.
-- [ ] Merge `main` only after `dev` is green.
-- [ ] Wait for `main` CI and publish workflow.
+- [x] Push `dev`.
+- [x] Wait for `dev` CI to pass.
+- [x] Merge `main` only after `dev` is green.
+- [x] Wait for `main` CI and publish workflow.
 
 Exit:
 
 - [x] local full gate passes.
-- [ ] `dev` CI passes.
-- [ ] `main` CI passes.
-- [ ] JSR publish workflow and consumer smoke pass.
+- [x] `dev` CI passes.
+- [x] `main` CI passes.
+- [x] JSR publish workflow and consumer smoke pass.
 
 Local gate evidence captured on 2026-06-04:
 
@@ -417,6 +417,6 @@ v0.30.0 is complete only when all of the following are true:
 - [x] all completed SOP claims are backed by commands
 - [x] all 19 packages are `0.30.0`
 - [x] full local gate passes
-- [ ] `dev` and `main` CI pass
+- [x] `dev` and `main` CI pass
 - [x] publish dry-run passes
-- [ ] main publish workflow and consumer smoke pass
+- [x] main publish workflow and consumer smoke pass

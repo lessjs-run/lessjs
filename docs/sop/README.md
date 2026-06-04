@@ -50,7 +50,7 @@ have one SOP with:
 | v0.29.4 | [v0.29.4/](./v0.29.4/)                                                                       | Done     | Type and renderer hardening        |
 | v0.29.5 | [v0.29.5/](./v0.29.5/)                                                                       | Done     | Type safety cleanup                |
 | v0.29.6 | [v0.29.6/](./v0.29.6/)                                                                       | Done     | Architecture debt closure          |
-| v0.30.0 | [v0.30.0/](./v0.30.0/)                                                                       | In Gate  | Architecture contract freeze       |
+| v0.30.0 | [v0.30.0/](./v0.30.0/)                                                                       | Done     | Architecture contract freeze       |
 | v0.31.0 | [v0.31.0/](./v0.31.0/)                                                                       | Deferred | DSD Shell UI dual-track            |
 | v1.0.0  | [v1.0.0-general-purpose-engine.md](./v1.0.0-general-purpose-engine.md)                       | Vision   | API freeze                         |
 
