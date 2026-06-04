@@ -63,20 +63,13 @@ import { trustRenderHtml } from './security.js';
 import { effect, type Signal, signal } from '@lessjs/signals';
 
 /**
- * Minimal SSR-safe HTMLElement stub for server environments (SOP-016).
+ * SSR-safe base class for DsdElement.
  *
- * Provides only the methods actually used by @lessjs/core internals
- * and LessJS UI components during SSR render().
- *
- * When HTMLElement is unavailable on globalThis, this stub is assigned
- * to globalThis.HTMLElement so the entire dependency graph — including
- * client-only island stubs that write `extends HTMLElement` — shares
- * the same base class.
- *
- * Subclasses MUST NOT rely on this stub's methods for real DOM
- * behaviour. SSR rendering uses happy-dom for full DOM simulation.
+ * In browser: extends HTMLElement directly.
+ * In SSR: assigns a minimal stub to globalThis.HTMLElement so the entire
+ * dependency graph shares the same base class.
  */
-const _SsrHTMLElementStub = class {
+const _Base = typeof HTMLElement !== 'undefined' ? HTMLElement : (class {
   hasAttribute(_name: string): boolean {
     return false;
   }
@@ -91,12 +84,12 @@ const _SsrHTMLElementStub = class {
   get isConnected(): boolean {
     return false;
   }
-};
+} as unknown as typeof HTMLElement);
 
-const _HTMLElement: typeof HTMLElement = typeof HTMLElement !== 'undefined'
-  ? HTMLElement
-  : ((globalThis as Record<string, unknown>).HTMLElement =
-    _SsrHTMLElementStub as unknown as typeof HTMLElement);
+// In SSR, assign globalThis.HTMLElement so other code can reference it
+if (typeof HTMLElement === 'undefined') {
+  (globalThis as Record<string, unknown>).HTMLElement = _Base;
+}
 
 /**
  * Zero-dependency Custom Element base class for DSD rendering.
@@ -106,7 +99,7 @@ const _HTMLElement: typeof HTMLElement = typeof HTMLElement !== 'undefined'
  *
  * Subclasses MUST override `render(): string | TemplateResult`.
  */
-export class DsdElement extends _HTMLElement implements ReactiveHost {
+export class DsdElement extends _Base implements ReactiveHost {
   /** Component stylesheets (SSR-safe - StyleSheet delegates to native CSSStyleSheet in browser). */
   static styles?: StyleSheetLike | StyleSheetLike[];
 
