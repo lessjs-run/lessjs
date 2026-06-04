@@ -27,35 +27,13 @@ import type {
   ManifestDecision,
   RenderError,
 } from '@lessjs/core';
+import { escapeAttr } from '@lessjs/core';
 import { createLogger } from '@lessjs/core/logger';
 import { stableHash } from '../island-manifest.js';
 
 const log = createLogger('ssg');
 
 // ─── Helpers ──────────────────────────────────────────────────────
-
-/**
- * H-03 fix: Escape a string for safe use in HTML attributes.
- * Prevents XSS when injecting user-controlled values like basePath into HTML.
- */
-function escapeAttr(str: string): string {
-  return str.replace(/["'&<>]/g, (c) => {
-    switch (c) {
-      case '"':
-        return '&quot;';
-      case "'":
-        return '&#39;';
-      case '&':
-        return '&amp;';
-      case '<':
-        return '&lt;';
-      case '>':
-        return '&gt;';
-      default:
-        return c;
-    }
-  });
-}
 
 // ─── Types ──────────────────────────────────────────────────────
 
@@ -625,7 +603,7 @@ async function networkFirst(req) {
       writeFileSync(htmlPath, html);
     }
     log.info(`PWA manifest injected into ${htmlFiles.length} HTML files`);
-    // SW registration intentionally omitted — see theme-init.js SW cache nuke.
+    // SW registration intentionally omitted �?see theme-init.js SW cache nuke.
     // Re-registering would re-introduce blank-screen risk from stale cached SW.
   }
 

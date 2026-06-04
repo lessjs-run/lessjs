@@ -17,6 +17,7 @@
 // Import it directly where needed (e.g., scanner.ts imports DEMO_ATTRS, DEMO_SLOTS)
 
 import { toCdnUrl } from './cdn-url.ts';
+import { escapeAttr } from '@lessjs/core';
 import type { Browser, BrowserType } from 'npm:playwright@1.59.1';
 
 // ─── Types ───────────────────────────────────────────────────────────────
@@ -142,13 +143,6 @@ function generateFixtureHtml(options: PlaywrightRenderOptions): string {
   ${componentTag}
 </body>
 </html>`;
-}
-
-function escapeAttr(str: string): string {
-  return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(
-    />/g,
-    '&gt;',
-  );
 }
 
 // ─── Temp HTTP Server ────────────────────────────────────────────────────

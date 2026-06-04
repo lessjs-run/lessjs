@@ -11,6 +11,8 @@
  * @see ADR-0031
  */
 
+import { escapeHtml } from '@lessjs/core';
+
 // ─── Types ───────────────────────────────────────────────────────────────
 
 export interface SnapshotRenderResult {
@@ -169,7 +171,7 @@ function templateResultToString(result: unknown, tagName: string): string {
       continue;
     }
     if (typeof val === 'string') {
-      output += htmlEscape(val);
+      output += escapeHtml(val);
     } else if (typeof val === 'number' || typeof val === 'boolean') {
       output += String(val);
     } else if (isLitTemplateResult(val)) {
@@ -178,7 +180,7 @@ function templateResultToString(result: unknown, tagName: string): string {
       for (const item of val) {
         if (item === null || item === undefined) continue;
         if (typeof item === 'string') {
-          output += htmlEscape(item);
+          output += escapeHtml(item);
         } else if (isLitTemplateResult(item)) {
           output += templateResultToString(item, tagName);
         } else if (
@@ -186,13 +188,13 @@ function templateResultToString(result: unknown, tagName: string): string {
         ) {
           output += templateResultToString(item, tagName);
         } else {
-          output += htmlEscape(String(item));
+          output += escapeHtml(String(item));
         }
       }
     } else if (val && typeof val === 'object' && 'strings' in (val as Record<string, unknown>)) {
       output += templateResultToString(val, tagName);
     } else {
-      output += htmlEscape(String(val));
+      output += escapeHtml(String(val));
     }
   }
   output += strings[strings.length - 1] || '';
@@ -208,14 +210,6 @@ function isLitTemplateResult(value: unknown): boolean {
     value !== null &&
     LIT_TEMPLATE_TYPE_MARKER in (value as Record<string, unknown>)
   );
-}
-
-function htmlEscape(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
 }
 
 // ─── Placeholder ─────────────────────────────────────────────────────────
