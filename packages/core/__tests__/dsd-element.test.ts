@@ -11,6 +11,7 @@ import { assertEquals, assertExists, assertStrictEquals } from 'jsr:@std/assert@
 import { DsdElement } from '../src/dsd-element.js';
 import { StyleSheet, type StyleSheetLike } from '@lessjs/style-sheet';
 import { jsx } from '../src/jsx-runtime.ts';
+import type { VNode } from '../src/vnode.ts';
 import { renderDsdTree } from '../src/render-ir.ts';
 
 // Helper: create a minimal subclass for testing.
@@ -183,7 +184,7 @@ Deno.test('DsdElement: DSD VNode event markers hydrate inline handlers', async (
 
   const tagName = `test-marker-event-${Math.random().toString(36).slice(2, 7)}`;
   class MarkerEventElement extends DsdElement {
-    override render() {
+    override render(): VNode | null {
       return jsx('button', {
         onClick: () => {
           callCount++;
@@ -521,7 +522,7 @@ Deno.test('DsdElement: CSR re-render rebinds data-on-click events', () => {
     _testClick() {
       callCount++;
     }
-    override render() {
+    override render(): VNode | null {
       return `<button data-on-click="_testClick">click</button>`;
     }
   }
