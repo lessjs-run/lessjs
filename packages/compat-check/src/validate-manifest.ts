@@ -19,8 +19,7 @@ import type {
   ValidationDiagnostic,
 } from './types.js';
 
-import { validateModulePath } from './compatibility.js';
-import { isValidTagName } from '@lessjs/core';
+import { isValidTagName, validateModulePath } from './compatibility.js';
 
 export type { ManifestValidationReport, ValidatedTag, ValidationDiagnostic };
 

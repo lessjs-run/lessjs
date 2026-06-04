@@ -19,7 +19,9 @@ import type {
   LessElementExtensions,
   LessPackageManifest,
 } from '@lessjs/cem';
-import { type CompatibilityClassification, isValidTagName } from '@lessjs/core';
+import { isValidTagName } from '@lessjs/core';
+
+export { isValidTagName };
 
 // ─── Known Adapters ─────────────────────────────────────────────────────
 

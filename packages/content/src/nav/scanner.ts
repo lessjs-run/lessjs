@@ -90,7 +90,7 @@ export function extractMeta(source: string): RouteMeta | null {
     result.section &&
     result.label
   ) {
-    return result as RouteMeta;
+    return result as unknown as RouteMeta;
   }
   return null;
 }
