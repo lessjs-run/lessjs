@@ -348,7 +348,7 @@ export function less(
   const devServerPlugin = honoDevServer({
     entry: VIRTUAL_ENTRY_ID,
     injectClientScript: true,
-  }) as unknown as Plugin;
+  }) as Plugin;
 
   return [
     mdxPlugin(),

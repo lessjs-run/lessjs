@@ -2,7 +2,7 @@
 
 > Version: v0.29.6
 > Date: 2026-06-04
-> Status: In Progress
+> Status: Completed
 > ADR: ADR-0079
 > Output: Type escapes 42→12, ~350 lines deleted, all duplication resolved
 
