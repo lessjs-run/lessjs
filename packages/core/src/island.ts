@@ -40,6 +40,15 @@ const VALID_STRATEGIES = new Set<HydrationStrategy>(['load', 'idle', 'visible', 
 // to prevent timer leaks.
 const _visibilityTimeouts = new Set<ReturnType<typeof setTimeout>>();
 
+const _islandMeta = new WeakMap<
+  CustomElementConstructor,
+  { tagName: string; layer: string; isIsland: boolean }
+>();
+
+export function getIslandMeta(ctor: CustomElementConstructor) {
+  return _islandMeta.get(ctor);
+}
+
 /** Clear all active visibility strategy timeouts (for test cleanup). */
 export function _clearAllVisibilityTimeouts(): void {
   for (const id of _visibilityTimeouts) {
@@ -337,13 +346,11 @@ export function defineIsland<T extends CustomElementConstructor>(
     }
   }
 
-  // Mark the class with metadata (used by island-transform plugin and SSR)
-  (componentClass as unknown as Record<string, unknown>).__island = true;
-  (componentClass as unknown as Record<string, unknown>).__tagName = tagName;
-  // v0.6.2: Layer metadata - SSR pipeline uses this to decide DSD rendering
-  (componentClass as unknown as Record<string, unknown>).__layer = useDsd
-    ? 'dsd-interactive'
-    : 'pure-island';
+  _islandMeta.set(componentClass, {
+    isIsland: true,
+    tagName,
+    layer: useDsd ? 'dsd-interactive' : 'pure-island',
+  });
 
   // v0.6': Mixin pattern for connectedCallback - replaces monkey-patch.
   // Instead of modifying the prototype directly, we create a wrapper

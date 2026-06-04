@@ -1,47 +1,42 @@
 /**
  * @lessjs/core - SignalContext — DOM-tree-based cross-component signal sharing.
  *
- * v0.25.0 (SOP-005): Provider exposes symbolic property on host element.
- * Consumer walks parentElement / shadowRoot.host upward to find it.
- * Returns a signal so effect() auto-tracks dependencies.
- *
- * ~20 lines, zero new dependencies. Reuses existing alien-signals + DOM APIs.
+ * v0.29.6: WeakMap replaces symbol-keyed DOM property stamping.
+ * Consumer walks parentElement / shadowRoot.host upward to find signals.
  *
  * @module @lessjs/core/signal-context
  */
 
-import { signal } from '@lessjs/signals';
+import { type Signal, signal } from '@lessjs/signals';
 
 export interface Context<T> {
   key: symbol;
   defaultValue: T;
 }
 
-type SignalValue<T> = { value: T; subscribe(fn: (v: T) => void): () => void };
-
-const defaultSignals = new Map<symbol, unknown>();
-const hostSignals = new WeakMap<object, Map<symbol, unknown>>();
+const defaultSignals = new Map<symbol, Signal<unknown>>();
+const hostSignals = new WeakMap<object, Map<symbol, Signal<unknown>>>();
 
 export function createContext<T>(key: symbol, defaultValue: T): Context<T> {
   const s = signal<T>(defaultValue);
-  defaultSignals.set(key, s);
+  defaultSignals.set(key, s as Signal<unknown>);
   return { key, defaultValue };
 }
 
-function getHostSignal<T>(
+function getOrCreateHostSignal<T>(
   host: object,
   ctx: Context<T>,
   initialValue: T,
-): SignalValue<T> {
+): Signal<T> {
   let map = hostSignals.get(host);
   if (!map) {
-    map = new Map<symbol, unknown>();
+    map = new Map();
     hostSignals.set(host, map);
   }
-  let scoped = map.get(ctx.key) as SignalValue<T> | undefined;
+  let scoped = map.get(ctx.key) as Signal<T> | undefined;
   if (!scoped) {
-    scoped = signal<T>(initialValue) as unknown as SignalValue<T>;
-    map.set(ctx.key, scoped);
+    scoped = signal<T>(initialValue);
+    map.set(ctx.key, scoped as Signal<unknown>);
   }
   return scoped;
 }
@@ -51,20 +46,20 @@ export function provideContext<T>(
   ctx: Context<T>,
   value: T,
 ): void {
-  const scoped = getHostSignal(host, ctx, value);
+  const scoped = getOrCreateHostSignal(host, ctx, value);
   scoped.value = value;
-  (host as unknown as Record<symbol, unknown>)[ctx.key] = scoped;
 }
 
 function findProvidedSignal<T>(
   host: HTMLElement | undefined,
   ctx: Context<T>,
-): SignalValue<T> | undefined {
+): Signal<T> | undefined {
   let current: Node | null | undefined = host;
   while (current) {
-    const candidate = (current as unknown as Record<symbol, unknown>)[ctx.key];
-    if (candidate && typeof candidate === 'object' && 'value' in candidate) {
-      return candidate as SignalValue<T>;
+    const store = hostSignals.get(current as object);
+    if (store) {
+      const candidate = store.get(ctx.key);
+      if (candidate) return candidate as Signal<T>;
     }
     current = current.parentNode;
     if (!current) {
@@ -75,22 +70,13 @@ function findProvidedSignal<T>(
   return undefined;
 }
 
-/**
- * Consume a SignalContext value reactively.
- *
- * Returns the nearest scoped signal, then the default context signal.
- * not a copy. provideContext updates Map signal → consumer effect()
- * auto-tracks → DOM updates. No DOM walking needed.
- */
 export function consumeContext<T>(
   ctx: Context<T>,
   host?: HTMLElement,
-): SignalValue<T> {
+): Signal<T> {
   const scoped = findProvidedSignal(host, ctx);
-  if (scoped) {
-    return scoped;
-  }
+  if (scoped) return scoped;
   const s = defaultSignals.get(ctx.key);
-  if (s) return s as SignalValue<T>;
-  return signal(ctx.defaultValue) as unknown as SignalValue<T>;
+  if (s) return s as Signal<T>;
+  return signal(ctx.defaultValue);
 }

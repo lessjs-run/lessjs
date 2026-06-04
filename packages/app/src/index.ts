@@ -23,7 +23,7 @@ import type { FrameworkOptions } from '@lessjs/core';
 import type { LessContentOptions } from '@lessjs/content';
 import type { LessI18nOptions } from '@lessjs/i18n';
 
-import { LessBuildContext as LessBuildContextClass } from '@lessjs/adapter-vite';
+import { LessBuildContext } from '@lessjs/adapter-vite';
 // Internal: less() is the raw plugin factory, not part of the public API.
 // lessPipeline() wraps it — use that for consumer-facing code.
 import { less } from '@lessjs/adapter-vite/less-plugin';
@@ -52,7 +52,7 @@ export interface LessjsOptions extends FrameworkOptions {
  */
 export function lessjs(options: LessjsOptions = {}): Plugin[] {
   const { content: contentOpts, i18n: i18nOpts, ...coreOpts } = options;
-  const ctx = new LessBuildContextClass({
+  const ctx = new LessBuildContext({
     ...coreOpts,
     routesDir: coreOpts.routesDir || 'app/routes',
     islandsDir: coreOpts.islandsDir || 'app/islands',

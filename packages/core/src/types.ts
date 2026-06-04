@@ -1506,3 +1506,13 @@ export interface ManifestValidationReport {
   /** Per-tag validation results */
   tags: ValidatedTag[];
 }
+
+// v0.29.6: DsdComponentConstructor — precise type for component constructors
+// with framework-convention static properties (styles, tagName, observedAttributes)
+export interface DsdComponentConstructor extends CustomElementConstructor {
+  styles?:
+    | import('@lessjs/style-sheet').StyleSheetLike
+    | import('@lessjs/style-sheet').StyleSheetLike[];
+  tagName?: string;
+  observedAttributes?: string[];
+}

@@ -363,7 +363,7 @@ function interpolate(result: unknown): string {
  */
 export function extractLitStyles(componentClass: CustomElementConstructor): string | undefined {
   try {
-    const ctor = componentClass as unknown as Record<string, unknown>;
+    const ctor = componentClass as { styles?: unknown };
     const styles = ctor.styles;
     if (!styles) return undefined;
 

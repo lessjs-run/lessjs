@@ -9,7 +9,7 @@
 
 import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { isSignalLike } from './signal-like.ts';
-import { isComponentCtor, isVNode, type VNode } from './vnode.ts';
+import { isComponentCtor, isVNode, type RenderFn, type VNode } from './vnode.ts';
 
 const EVENT_PROP_RE = /^on[A-Z]/;
 const EVENT_TYPE_ALIASES: Record<string, string> = {
@@ -109,7 +109,7 @@ export function collectEventBindings(node: unknown): Map<string, EventBindingRec
       const items = (isSignalLike(props?.each)
         ? (props!.each as { value: unknown }).value
         : props?.each) as unknown[];
-      const renderFn = children[0] as unknown as ((item: unknown, idx: number) => unknown);
+      const renderFn = children[0] as RenderFn;
       if (Array.isArray(items) && typeof renderFn === 'function') {
         items.forEach((item, i) =>
           visit(renderFn(item, i))

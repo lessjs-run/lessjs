@@ -15,7 +15,7 @@ import {
 import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { DANGEROUS_KEYS, trustRenderHtml } from './security.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
-import { isComponentCtor, isComponentFn, isVNode, type VNode } from './vnode.ts';
+import { isComponentCtor, isComponentFn, isVNode, type RenderFn, type VNode } from './vnode.ts';
 import { renderDsd } from './render-dsd.js';
 
 export type RenderNode =
@@ -201,7 +201,7 @@ export async function renderToNode(
     const items = (isSignalLike(props?.each)
       ? (props!.each as { value: unknown }).value
       : props?.each) as unknown[];
-    const renderFn = children[0] as unknown as ((item: unknown, idx: number) => unknown);
+    const renderFn = children[0] as RenderFn;
     if (!Array.isArray(items) || typeof renderFn !== 'function') {
       return fragmentNode([]);
     }

@@ -19,6 +19,7 @@ import {
   _clearAllVisibilityTimeouts,
   bindEvents,
   defineIsland,
+  getIslandMeta,
   getSsrProps,
 } from '../src/island.ts';
 
@@ -145,7 +146,7 @@ Deno.test('island: sets __island marker on class', () => {
   try {
     const Cls = createMockElementClass();
     defineIsland('meta-island-test', Cls);
-    assertEquals((Cls as unknown as Record<string, unknown>).__island, true);
+    assertEquals(getIslandMeta(Cls)!.isIsland, true);
   } finally {
     teardownMocks();
   }
@@ -156,7 +157,7 @@ Deno.test('island: sets __tagName marker on class', () => {
   try {
     const Cls = createMockElementClass();
     defineIsland('meta-tagname-test', Cls);
-    assertEquals((Cls as unknown as Record<string, unknown>).__tagName, 'meta-tagname-test');
+    assertEquals(getIslandMeta(Cls)!.tagName, 'meta-tagname-test');
   } finally {
     teardownMocks();
   }
@@ -167,7 +168,7 @@ Deno.test('island: sets __layer to dsd-interactive by default (dsd: true)', () =
   try {
     const Cls = createMockElementClass();
     defineIsland('meta-dsd-default', Cls);
-    assertEquals((Cls as unknown as Record<string, unknown>).__layer, 'dsd-interactive');
+    assertEquals(getIslandMeta(Cls)!.layer, 'dsd-interactive');
   } finally {
     teardownMocks();
   }
@@ -178,7 +179,7 @@ Deno.test('island: sets __layer to pure-island when dsd: false', () => {
   try {
     const Cls = createMockElementClass();
     defineIsland('meta-pure-island', Cls, { dsd: false });
-    assertEquals((Cls as unknown as Record<string, unknown>).__layer, 'pure-island');
+    assertEquals(getIslandMeta(Cls)!.layer, 'pure-island');
   } finally {
     teardownMocks();
   }
@@ -189,7 +190,7 @@ Deno.test('island: sets __layer to dsd-interactive when dsd explicitly true', ()
   try {
     const Cls = createMockElementClass();
     defineIsland('meta-dsd-explicit', Cls, { dsd: true });
-    assertEquals((Cls as unknown as Record<string, unknown>).__layer, 'dsd-interactive');
+    assertEquals(getIslandMeta(Cls)!.layer, 'dsd-interactive');
   } finally {
     teardownMocks();
   }
@@ -517,7 +518,7 @@ Deno.test('island: dsd default is true (dsd-interactive layer)', () => {
   try {
     const Cls = createMockElementClass();
     defineIsland('dsd-default-test', Cls);
-    assertEquals((Cls as unknown as Record<string, unknown>).__layer, 'dsd-interactive');
+    assertEquals(getIslandMeta(Cls)!.layer, 'dsd-interactive');
   } finally {
     teardownMocks();
   }
@@ -528,7 +529,7 @@ Deno.test('island: dsd: false sets pure-island layer', () => {
   try {
     const Cls = createMockElementClass();
     defineIsland('dsd-false-test', Cls, { dsd: false });
-    assertEquals((Cls as unknown as Record<string, unknown>).__layer, 'pure-island');
+    assertEquals(getIslandMeta(Cls)!.layer, 'pure-island');
   } finally {
     teardownMocks();
   }
@@ -542,7 +543,7 @@ Deno.test('island: tagName option in IslandOptions does not override first argum
     const Cls = createMockElementClass();
     // The first argument is used as the tag name regardless of options.tagName
     defineIsland('primary-tag', Cls);
-    assertEquals((Cls as unknown as Record<string, unknown>).__tagName, 'primary-tag');
+    assertEquals(getIslandMeta(Cls)!.tagName, 'primary-tag');
   } finally {
     teardownMocks();
   }

@@ -23,6 +23,8 @@ export type ComponentFn = (props: Record<string, unknown>) => unknown;
  */
 export type ComponentCtor = new (...args: unknown[]) => { render(): unknown };
 
+export type RenderFn = (item: unknown, idx: number) => unknown;
+
 // ─── VNode interface ─────────────────────────────────────────────────────────
 
 /**
@@ -38,7 +40,7 @@ export interface VNode {
   /** Attribute object (includes events, class, style, etc.) */
   props: Record<string, unknown>;
   /** Child nodes (VNode or text string) */
-  children: (VNode | string)[];
+  children: (VNode | string | RenderFn)[];
   /** Optional key for list rendering */
   key?: string | number;
   /** Optional ref callback — called with the DOM element after mount */

@@ -13,6 +13,7 @@
 
 import {
   type ComponentLayer,
+  type DsdComponentConstructor,
   type DsdOptions,
   type DsdRenderCollector,
   type DsdRenderMetrics,
@@ -23,7 +24,6 @@ import {
   type RenderOutput,
 } from './types.js';
 import { getDefaultRegistry } from './adapter-registry.js';
-import type { StyleSheetLike } from '@lessjs/style-sheet';
 import { createLogger } from './logger.js';
 import { escapeAttrValue } from './html-escape.js';
 import { isVNode } from './vnode.js';
@@ -233,7 +233,7 @@ export async function renderDsd(
     }
   } else {
     componentClass = input;
-    tagName = (input as unknown as { tagName?: string }).tagName ?? 'unknown';
+    tagName = (input as DsdComponentConstructor).tagName ?? 'unknown';
   }
 
   const sourceInfo = options.sourceInfo;
@@ -359,9 +359,7 @@ export async function renderDsd(
 
   let styleCss = '';
 
-  const ctor = componentClass as unknown as {
-    styles?: StyleSheetLike | StyleSheetLike[];
-  };
+  const ctor = componentClass as DsdComponentConstructor;
   if (ctor.styles) {
     const sheets = Array.isArray(ctor.styles) ? ctor.styles : [ctor.styles];
     for (const sheet of sheets) {

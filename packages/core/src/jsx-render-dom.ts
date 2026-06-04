@@ -11,7 +11,7 @@
  * @module @lessjs/core/jsx-render-dom
  */
 
-import { isComponentCtor, isComponentFn, isVNode, type VNode } from './vnode.ts';
+import { isComponentCtor, isComponentFn, isVNode, type RenderFn, type VNode } from './vnode.ts';
 import { FOR_TAG, Fragment, SHOW_TAG } from './jsx-runtime.ts';
 import { isSignalLike, unwrapSignalLike } from './signal-like.ts';
 import { eventTypeFromProp } from './event-hydration.ts';
@@ -297,8 +297,8 @@ export function renderToDom(
   // ── For (list rendering) ──────────────────────────────────────────────────
   if (tag === FOR_TAG || tag === 'fore') {
     const eachSig = props?.each;
-    const renderFn = (children[0] as unknown as ((item: unknown, idx: number) => unknown)) ??
-      ((() => document.createTextNode('')) as unknown as (item: unknown, idx: number) => unknown);
+    const renderFn = (children[0] as RenderFn) ??
+      ((() => document.createTextNode('') as unknown) as RenderFn);
 
     const marker = document.createComment('for');
     let anchors: ChildNode[] = [];

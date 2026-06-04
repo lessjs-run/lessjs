@@ -379,8 +379,7 @@ export function classifyCemManifest(
 
     for (const decl of mod.declarations) {
       if (decl.kind !== 'custom-element') continue;
-      // deno-lint-ignore no-explicit-any
-      const ce = decl as any;
+      const ce = decl as { tagName?: string; less?: unknown; superClass?: { name?: string } };
 
       if (!ce.tagName) continue;
 
