@@ -1,132 +1,101 @@
-# ADR-0081: VNode Event Unification
+# ADR-0081: VNode-Only Dynamic UI and Trusted HTML Boundary
 
 - Status: Accepted
 - Date: 2026-06-04
 - Target: v0.30.1
-- Supersedes: _bindEvents() restoration proposals
-- Related: ADR-0079, ADR-0080
+- Supersedes: `_bindEvents()` restoration proposals, `data-on-*` event binding,
+  ordinary dynamic `data-signal-html`
+- Related: ADR-0077, ADR-0080
 
 ## Context
 
-Commit `7007fd1c` ("feat: freeze v0.30 architecture contract") inadvertently deleted
-the `_bindEvents()` method from `dsd-element.ts`. This method scanned the shadow DOM for
-declarative event attributes (`data-on-click="methodName"`, `data-on-input="methodName"`,
-etc.) and bound component methods as event listeners. Its removal broke all island
-interactivity on the production website.
+v0.30.0 intentionally collapsed the public renderer contract to one model:
+components return `VNode | null`, and the framework owns conversion to SSR HTML
+or live DOM. After that cleanup, production islands exposed one remaining
+secondary path:
 
-Two event binding mechanisms currently exist in the codebase:
+1. A signal produced an HTML string.
+2. `data-signal-html` assigned that string through `innerHTML`.
+3. Event handlers were expressed as string attributes such as
+   `data-on-click="_close"`.
+4. `_bindEvents()` scanned the shadow DOM and looked up instance methods by name.
 
-1. **VNode path** (`collectEventBindings` + `hydrateEventMarkers` in `event-hydration.ts`):
-   handles JSX inline functions (`onClick={() => ...}`) serialized as `data-eid` markers
-   during SSR. Works for compile-time known event handlers.
+That path was brittle for the exact reasons v0.30.0 was trying to remove:
+string UI construction, manual escaping, duplicated event binding, and no type
+checking for handlers. Restoring `_bindEvents()` would fix the immediate island
+regression but would permanently keep a second event model beside JSX events.
 
-2. **Declarative path** (`_bindEvents()` — now deleted): handled `data-on-click="_open"`
-   string attributes at runtime by looking up method names on the component instance.
-   Required for islands that generate DOM via `data-signal-html` (string → innerHTML).
+The full repository scan for v0.30.1 also found broader cleanup work, not only
+the island regression:
 
-The design tension: islands like `less-search` construct search results as HTML strings
-that are injected via `data-signal-html`. These strings contain `data-on-click="_close"`
-attributes that are invisible to the VNode tree. Without `_bindEvents()`, these events
-are never bound.
+- stale `less-*` UI subpaths and custom element names after the `@openelement`
+  rename;
+- `virtual:less-*` historical references that must not be active build
+  contracts;
+- dynamic HTML and `innerHTML` sites that need an explicit trust boundary;
+- mojibake/replacement text introduced by broad edits;
+- stale architecture gate allowlist entries after file renames;
+- accidental non-product material under `opc-doc/`.
 
 ## Decision
 
-**Do not restore `_bindEvents()`.** Adopt a unified VNode rendering path for all
-dynamic content generation.
+openElement adopts this permanent boundary:
 
-### Key change: `data-signal-render`
-
-Add a new signal hydration directive to `DsdElement._hydrateSignals()`:
-
-- `data-signal-render="signalName"` — the signal's value is a `VNode | VNode[]`
-- On signal change, `renderToDom()` renders the VNode(s) into the container element
-- `renderToDom` automatically binds all JSX event handlers (`onClick={fn}`, etc.)
-- No `data-on-*` attributes needed — events live on the VNode
-
-### Before / After
-
-**Before** (string concatenation + declarative events):
-
-```tsx
-// signal: Signal<string>
-this.#resultsHtml.value = items
-  .map((i) => `<a data-on-click="_close" ...>${escapeHtml(i.title)}</a>`)
-  .join('');
-
-// template
-<div data-signal-html='resultsHtml' />;
-```
-
-**After** (VNode rendering — auto-escape, auto-bind):
-
-```tsx
-// signal: Signal<VNode[]>
-this.#results.value = items.map((i) => (
-  <a onClick={() => this._close(i)} href={`/blog/${i.slug}`}>
-    {i.title}
-  </a>
-));
-
-// template
-<div data-signal-render='results' />;
-```
-
-### Scope
-
-All four website islands are migrated:
-
-| Island              | Change                                                                 |
-| ------------------- | ---------------------------------------------------------------------- |
-| `less-search`       | `data-signal-html` → `data-signal-render`, all `data-on-*` → JSX `on*` |
-| `reactive-showcase` | Same pattern                                                           |
-| `home-console`      | `data-on-click` → `onClick`                                            |
-| `scroll-reveal`     | Audit `data-on-*` usage, migrate if present                            |
-
-### What stays
-
-- `escapeHtml`/`escapeAttr` remain in `core` — they are essential for SSR HTML
-  serialization (`render-ir.ts`, `render-dsd.ts`, `head-injection.ts`). Islands
-  simply no longer import them directly.
-- `collectEventBindings` / `hydrateEventMarkers` stay — they handle VNode-level
-  event hydration for the existing JSX path.
+1. **Interactive dynamic UI is VNode-only.** Dynamic island content must be
+   represented as `VNode | VNode[] | null` and rendered by the core renderer.
+2. **Events live on VNodes.** JSX `on*` handlers are the only event model for
+   framework-authored interactive UI. `data-on-*` and method-name lookup are not
+   restored.
+3. **`data-signal-render` is an internal hydration marker.** It is acceptable as
+   the current DOM marker that connects a signal to a VNode render target, but
+   docs should teach "signals return VNodes", not a public directive DSL.
+4. **HTML injection remains only as a named trust escape hatch.** `trustedHtml`
+   or a branded `TrustedHtml` value may be used for pre-sanitized, non-interactive
+   content such as Markdown/MDX, code highlighting, or Hub snapshots. Ordinary
+   dynamic `data-signal-html` is not a framework-authored UI path.
+5. **The active contract must be proven by gates.** The architecture gate must
+   reject active source regressions: `_bindEvents`, `data-on-*` in production UI,
+   stale `less-*` package subpaths, unreviewed `innerHTML`, mojibake, and stale
+   type-escape allowlist entries.
 
 ## Consequences
 
 ### Positive
 
-- Single event binding system: VNodes are the sole source of truth for events
-- Islands gain type safety: `onClick={fn}` is checked by TypeScript; `data-on-click="_close"`
-  was a string with zero compile-time guarantees
-- Islands no longer import `escapeHtml`/`escapeAttr` — JSX auto-escapes text content
-- Architecture is self-documenting: the render tree IS the source of truth
+- One event model: JSX handlers are type checked and refactorable.
+- One dynamic UI model: signal-driven DOM updates flow through the VNode renderer.
+- Less manual escaping: text goes through JSX escaping by default.
+- Explicit trust: HTML injection is visible at the callsite and can be audited.
+- Cleaner release readiness: architecture claims become gate-proven instead of
+  prose-only.
 
 ### Negative
 
-- `data-signal-render` is a new directive that must coexist with `data-signal-html`
-  (which stays for existing non-island consumers)
-- Islands must be hand-migrated (3 files, ~100 lines total)
-- Requires `renderToDom` to be imported in islands (already available via `DsdElement`
-  internal path)
+- Code using `data-on-*` must be rewritten.
+- Code using `data-signal-html` for dynamic UI must return VNodes instead.
+- Simple HTML snippets need either JSX or the explicit trusted HTML escape hatch.
+- The first implementation may replace a dynamic container wholesale on signal
+  changes. That is acceptable for v0.30.1 islands; keyed updates are a future
+  optimization, not part of this cleanup.
 
-### Risk
+## Non-Goals
 
-Migration is isolated to `packages/core/src/dsd-element.ts` (+~20 lines) and
-`www/app/islands/` (3 files). No SSR or build pipeline changes. Build verification
-is deterministic: `deno task build` succeeds and E2E tests confirm island interactivity.
+- Do not add a new public directive family.
+- Do not restore `_bindEvents()`.
+- Do not introduce a sanitizer dependency in core.
+- Do not remove all `innerHTML` platform usage. Only keep audited trusted
+  boundaries.
+- Do not rewrite historical ADRs solely to erase old product names. Current
+  public docs and active source take priority.
 
-## Alternatives Considered
+## Required Gates
 
-1. **Restore `_bindEvents()`**: Zero cost but keeps two event binding systems.
-   The same bug (accidental deletion) could recur because there's no architectural
-   signal that declarative events are needed.
+v0.30.1 is not complete until these are true in active tracked files:
 
-2. **Single `data-on-*` → JSX proxy**: A compiler transform that converts
-   `data-on-click="_method"` to VNode events at build time. Too complex for 3 files.
-
-3. **Keep `data-signal-html` + restore `_bindEvents`**: Shortest fix but doubles
-   the maintenance surface. Breeds future bugs when new contributors don't know
-   about the second event path.
-
-## Rejected
-
-Restoring `_bindEvents()` as-is without architectural change.
+- `opc-doc/` is absent from `git ls-files`.
+- active production source has no `_bindEvents` implementation.
+- `www/app/islands/**` has no `data-on-*`, `data-signal-html`, or direct
+  `escapeHtml`/`escapeAttr` imports.
+- framework-authored interactive pages have no `data-on-*`.
+- root import maps and package exports use `open-*` UI subpaths only.
+- `arch:check`, `graph:check`, build, tests, lint, and fmt all pass.

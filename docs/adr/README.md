@@ -64,7 +64,7 @@ architectural decision, its context, and consequences.
 | 0053 | Unified Error Handling Architecture                      | Accepted (v0.24.0)                       |
 | 0054 | AST-Based External Specifier Resolution                  | Accepted                                 |
 | 0055 | SSR Bundle Self-Containment                              | SUPERSEDED by ADR-0056                   |
-| 0056 | External Dependencies �?Consumer Import Map + AST        | Accepted                                 |
+| 0056 | External Dependencies, Consumer Import Map + AST         | Accepted                                 |
 | 0070 | Generated Data Namespace and App Shell Boundary          | Accepted                                 |
 | 0073 | AppShell Protocol                                        | Accepted, Implemented                    |
 | 0074 | @openelement/ui Dual-Track Ocean and Island Architecture | Proposed                                 |
@@ -74,6 +74,7 @@ architectural decision, its context, and consequences.
 | 0078 | Core Package Simplification and Module Merge             | Accepted                                 |
 | 0079 | v0.29.6 Architecture Debt Closure                        | Accepted                                 |
 | 0080 | Architecture Contract Freeze                             | Accepted                                 |
+| 0081 | VNode-Only Dynamic UI and Trusted HTML Boundary          | Accepted                                 |
 
 ## Superseded / Historical
 

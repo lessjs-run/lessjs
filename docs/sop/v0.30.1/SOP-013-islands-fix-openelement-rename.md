@@ -1,230 +1,168 @@
-# SOP-013: v0.30.1 Islands Fix + openelement Rename
+# SOP-013: v0.30.1 Clean Architecture Sweep
 
 > Version: v0.30.1
 > Date: 2026-06-04
 > Status: In Progress
-> Output: Island interactivity restored, @openelement → @openelement complete rename, openelement.org domain activated
+> ADR: `docs/adr/ADR-0081-vnode-event-unification.md`
+> Output: openElement rename closure, VNode-only dynamic island UI, trusted HTML
+> boundary, stale-route cleanup, and gate-proven architecture hygiene.
 
 ## Summary
 
-Two-phase release:
+v0.30.1 is the cleanup release after the v0.30.0 architecture freeze. Its purpose
+is not to add features. Its purpose is to make the active repository match the
+claimed architecture:
 
-1. **Islands fix**: Replace string-concatenation event binding with VNode `data-signal-render` path (ADR-0081)
-2. **Full rename**: @openelement → @openelement across all 19 packages, CI/CD, website, and documentation
+- one public package scope: `@openelement/*`;
+- one component naming line: `open-*`;
+- one dynamic interactive UI model: `Signal -> VNode -> renderToDom`;
+- one trusted HTML escape hatch for non-interactive pre-sanitized content;
+- one current source of truth for architecture, package graph, and gates.
 
-## Entry Criteria
+## Scan Evidence
 
-- v0.30.0 is on `main` (1297 tests passing)
-- Islands broken on production (search, counter, showcase, console)
-- openelement.org domain purchased, GitHub org open-element created, JSR scope @openelement created
+The initial v0.30.1 scan read the tracked repository rather than sampling a few
+files:
 
----
+- tracked files: 961
+- text files: 921
+- tracked bytes read: 12,471,185
+- `@lessjs`: 0 matches
+- `LessJS`: 1,909 matches, mostly historical/current docs and public copy
+- `lessjs` domains: 42 matches
+- `virtual:less`: 515 matches, mostly historical/generated content
+- `@openelement/ui/less-*`: 102 matches
+- `<less-*>`: 89 matches
+- `data-on-*`: 84 matches
+- `data-signal-html`: 60 matches
+- `innerHTML`: 350 matches
+- `rawHtml`: 27 matches
+- mojibake/replacement text: 11,450 matches
+- `as unknown as`: 191 matches
 
-## Phase 1: Islands Architecture Fix (ADR-0081)
+`deno task arch:check` currently fails and is part of the work, not an optional
+follow-up. The first failure set includes stale type-escape allowlist entries,
+mojibake in active source, and gate drift after `less-*` files were renamed to
+`open-*`.
 
-### Workstream 1.1: `data-signal-render` in DsdElement
+## Workstreams
 
-**File**: `packages/core/src/dsd-element.ts` — `_hydrateSignals()`
+### 1. Remove accidental material
 
-Add new signal handling branch after `data-signal-attr` block:
+- Delete `opc-doc/` from git tracking.
+- Confirm `git ls-files opc-doc` returns no files.
+- Do not move these files into product docs.
 
-```ts
-// --- Signal → VNode rendering: data-signal-render="signalName" ---
-const renderEls = this.shadowRoot.querySelectorAll('[data-signal-render]');
-for (const el of renderEls) {
-  const name = el.getAttribute('data-signal-render');
-  if (!name) continue;
-  const sig = this.signalRegistry.get(name);
-  if (!sig) continue;
+### 2. Finish the `@openelement` and `open-*` rename
 
-  const renderTarget = () => {
-    while (el.firstChild) el.removeChild(el.firstChild);
-    const v = sig.value;
-    if (v != null) {
-      const nodes = Array.isArray(v) ? v : [v];
-      for (const node of nodes) {
-        el.appendChild(renderToDom(node, undefined, this.#effectDisposers));
-      }
-    }
-  };
-  renderTarget();
-  this.#effectDisposers.add(effect(() => renderTarget()));
-}
-```
+- Replace active root import-map entries such as
+  `@openelement/ui/less-button` with `@openelement/ui/open-button`.
+- Update package exports, generated entry references, consumer smoke helpers,
+  docs examples, and website imports to the same `open-*` subpaths.
+- Remove active `<less-*>` usage from source and generated site inputs.
+- Keep historical ADR/changelog wording only when the file is clearly historical
+  and not part of the current user-facing contract.
 
-### Workstream 1.2: Migrate less-search island
+### 3. Make dynamic island UI VNode-only
 
-**File**: `www/app/islands/less-search.tsx`
+- Do not restore `_bindEvents()`.
+- Keep `data-signal-render` as an internal hydration marker while documenting
+  the public model as "signals return VNodes".
+- Rewrite framework-authored interactive dynamic content from HTML strings to
+  `VNode | VNode[]`.
+- Remove `data-on-*` from active framework UI.
+- Remove `data-signal-html` from active islands.
+- Remove direct `escapeHtml` and `escapeAttr` imports from islands; JSX owns text
+  escaping.
 
-| Current                                    | New                                           |
-| ------------------------------------------ | --------------------------------------------- |
-| `#resultsHtml: Signal<string>`             | `#resultsNodes: Signal<VNode[]>`              |
-| Template: `data-signal-html="resultsHtml"` | Template: `data-signal-render="resultsNodes"` |
-| `data-on-click="_open"`                    | `onClick={this._handleOpen.bind(this)}`       |
-| `data-on-input="_onInput"`                 | `onInput={this._handleInput.bind(this)}`      |
-| `data-on-click="_closeOnBackdrop"`         | `onClick={this._handleBackdrop.bind(this)}`   |
-| `data-on-click="__stopPropagation"`        | `onClick={(e) => e.stopPropagation()}`        |
-| `escapeHtml`, `escapeAttr` imports         | Removed (JSX auto-escapes)                    |
-| String concatenation of search results     | VNode array via JSX                           |
+### 4. Narrow HTML injection to a trusted boundary
 
-### Workstream 1.3: Migrate remaining islands
+- Keep `trustedHtml` only for pre-sanitized, non-interactive content such as
+  Markdown/MDX output, code highlighting, and Hub snapshots.
+- Do not use trusted HTML for buttons, links with framework handlers, filters,
+  live search results, or other dynamic interactive UI.
+- Replace ordinary `rawHtml` naming in active docs and current examples with the
+  trusted boundary language.
+- Gate unreviewed `innerHTML` writes. Allow only audited core renderer, trusted
+  content routes, devtools, syntax highlighting, and snapshot boundaries.
 
-**File**: `www/app/islands/reactive-showcase.tsx`
+### 5. Repair architecture gates
 
-- Audit for `data-on-*` usage; migrate to `onClick`/`onInput` in JSX
-- Replace `data-signal-html` with `data-signal-render` where applicable
+- Update `tools/check-architecture-contract.ts` after the rename:
+  `less-code-block.tsx` allowlist entries become `open-code-block.tsx`.
+- Add active-source checks for:
+  - stale `@openelement/ui/less-*` imports;
+  - active `<less-*>` tags;
+  - `_bindEvents`;
+  - `data-on-*` in production UI;
+  - `data-signal-html` in islands;
+  - island imports of `escapeHtml` or `escapeAttr`;
+  - unreviewed `innerHTML`;
+  - mojibake/replacement text in current source and current docs.
+- Keep historical docs out of hard failures unless they are linked as current
+  product docs.
 
-**File**: `www/app/islands/home-console.tsx`
+### 6. Repair encoding and stale current docs
 
-- `data-on-click="_increment"` → `onClick={this._increment.bind(this)}`
-- `data-on-click="_decrement"` → `onClick={this._decrement.bind(this)}`
+- Remove mojibake from current source comments, active ADR/SOP docs, README files,
+  package READMEs, and current architecture/reference/guide pages.
+- Update `docs/status/STATUS.md` so it reflects v0.30.1, not v0.28.x.
+- Update `README.md`, `README.zh.md`, `CONTRIBUTING.md`, and agent prompts to
+  match the current openElement identity.
+- Keep older historical ADRs readable but do not spend this release rewriting
+  every old archive solely for branding.
 
-**File**: `www/app/islands/scroll-reveal.tsx`
+### 7. Align release metadata
 
-- Audit: may not use `data-on-*` directly; check for `data-signal-html` patterns
+- Bump all 19 packages to `0.30.1`.
+- Align internal `jsr:@openelement/*` ranges to `^0.30.1`.
+- Update `www/app/data/version.ts` and Hub constants.
+- Regenerate or explicitly restore deterministic lock state. The release must
+  not accidentally remove `deno.lock` without an intentional lock policy.
+- Add `docs/changelog/v0.30.1.md` and `docs/release/v0.30.1.md`.
 
-### Workstream 1.4: Remove unused imports
+### 8. Verification and release closure
 
-Remove `escapeHtml`/`escapeAttr` imports from islands that no longer use them.
-
----
-
-## Phase 2: Full Rename @openelement → @openelement
-
-### Workstream 2.1: Mechanical string replacement
-
-Execute across all files (`.ts`, `.tsx`, `.json`, `.yml`, `.md`):
-
-```
-@openelement → @openelement
-```
-
-**Files affected**: ~300 files, ~4500 occurrences
-
-**Key config files**:
-
-- Root `deno.json`: import map (53 entries), jsxImportSource, tasks
-- `www/deno.json`: generated imports
-- 19 package `deno.json`: `"name"` fields, internal JSR references
-
-### Workstream 2.2: Internal identifiers (manual review)
-
-| File                                          | Old                                           | New                                                    |
-| --------------------------------------------- | --------------------------------------------- | ------------------------------------------------------ |
-| `core/src/jsx-runtime.ts`                     | `Symbol.for('lessjs.fragment/show/for')`      | `Symbol.for('openelement.fragment/show/for')`          |
-| `core/src/render-ir.ts`                       | `Symbol(lessjs.fragment)`                     | `Symbol(openelement.fragment)`                         |
-| `core/src/event-hydration.ts`                 | `Symbol(lessjs.fragment)`                     | `Symbol(openelement.fragment)`                         |
-| `core/src/isr.ts`                             | `lessjs:isr:`                                 | `openelement:isr:`                                     |
-| `adapter-vite/src/subpath-resolver.ts`        | `/@openelement/` regex, `VIRTUAL_CORE_PREFIX` | `/@openelement/`, `VIRTUAL_CORE_PREFIX`                |
-| `adapter-vite/src/ssg-package-resolver.ts`    | `VIRTUAL_LESSJS_PACKAGE_PREFIX`, `\0lessjs:`  | `VIRTUAL_OPENELEMENT_PACKAGE_PREFIX`, `\0openelement:` |
-| `adapter-vite/src/generated-data-resolver.ts` | `@openelement/generated/*`                    | `@openelement/generated/*`                             |
-| `adapter-vite/src/entry-renderer.ts`          | ~15 generated import strings                  | Same with @openelement                                 |
-| `adapter-vite/src/entry-descriptor.ts`        | `@openelement/ui\/open-layout`                | `@openelement/ui/open-layout`                          |
-| `adapter-vite/src/optional-package-stubs.ts`  | 9 keys                                        | 9 keys renamed                                         |
-| `router/src/client-router.ts`                 | `[lessjs/router]`                             | `[openelement/router]`                                 |
-| `app/src/index.ts`                            | `JSR_SCOPE = '@openelement'`                  | `JSR_SCOPE = '@openelement'`                           |
-| `content/src/manifest/writer.ts`              | `Auto-generated by @openelement/content`      | `@openelement/content`                                 |
-
-### Workstream 2.3: Component rename less- → open-
-
-| File                            | New Name                |
-| ------------------------------- | ----------------------- |
-| `ui/src\/open-button.tsx`       | `open-button.tsx`       |
-| `ui/src\/open-card.tsx`         | `open-card.tsx`         |
-| `ui/src\/open-dialog.tsx`       | `open-dialog.tsx`       |
-| `ui/src\/open-input.tsx`        | `open-input.tsx`        |
-| `ui/src\/open-layout.tsx`       | `open-layout.tsx`       |
-| `ui/src\/open-code-block.tsx`   | `open-code-block.tsx`   |
-| `ui/src\/open-hero-ping.tsx`    | `open-hero-ping.tsx`    |
-| `ui/src\/open-theme-toggle.tsx` | `open-theme-toggle.tsx` |
-| `ui/src\/open-callout.tsx`      | `open-callout.tsx`      |
-| `ui/src\/open-step-card.tsx`    | `open-step-card.tsx`    |
-
-Internal changes per file:
-
-- Class name: `LessButton` → `OpenButton` (etc.)
-- Tag name string: `'less-button'` → `'open-button'`
-- All JSX: `<less-*>` → `<open-*>` across entire codebase
-- `ui/deno.json` exports updated
-- `ui/src/manifest.ts` references updated
-
-### Workstream 2.4: CI/CD workflows
-
-| Workflow                   | Changes                                                               |
-| -------------------------- | --------------------------------------------------------------------- |
-| `publish-jsr.yml`          | 19 package names + consumer smoke directory                           |
-| `publish-manual.yml`       | 10 package names                                                      |
-| `jsr-consumer-monitor.yml` | `jsr:@openelement/create` → `jsr:@openelement/create`, directory name |
-| `deploy-api.yml`           | `/tmp/less-api` → `/tmp/open-api`, `--app=less-demo-api`              |
-| `codeql.yml`               | Comment: `LessJS` → `openElement`                                     |
-
----
-
-## Phase 3: Domain Configuration
-
-### Code changes
-
-| File                       | Change                                                          |
-| -------------------------- | --------------------------------------------------------------- |
-| `www/public/CNAME`         | `lessjs.com` → `openelement.org`                                |
-| `www/vite.config.ts`       | OG tags, sitemap, PWA name, GoatCounter, logo/footer, githubUrl |
-| `ui/src/open-layout.tsx`   | Internal link origin URL                                        |
-| `www/e2e/seo-meta.spec.ts` | Expected domain                                                 |
-
-### Infrastructure (manual — user action)
-
-1. Transfer domain from GoDaddy to Tencent Cloud DNSPod
-2. Set CloudFlare nameservers in DNSPod
-3. Add CNAME `openelement.org` → `lessjs.pages.dev` in CloudFlare DNS
-4. Add `openelement.org` as Custom Domain in CloudFlare Pages
-
----
-
-## Phase 4: Verification
-
-### Build
+Run the local gate in this order:
 
 ```powershell
-Remove-Item -Recurse -Force www/dist
+deno task fmt
+deno task fmt:check
+deno task lint
+deno task typecheck
+deno task test
 deno task build
+deno task dsd:check-report
+deno task publish:dry-run
+deno task graph:check
+deno task arch:check
 ```
 
-### Tests
-
-```powershell
-deno test
-```
-
-**Target**: 1297 tests passing (baseline unchanged).
-
-### Push
-
-```powershell
-git push origin dev
-```
-
-### CI gates
-
-- `typecheck`: passes
-- `lint` + `fmt:check`: clean
-- All 12 test jobs: green
-- `build-www` + `test-e2e`: green
-
-### Post-publish
-
-- JSR auto-publish 19 packages to `@openelement` scope
-- Consumer smoke test: `deno run -A jsr:@openelement/create test-blog` → build → verify
-- `z-js.dev` → `openelement.org` 301 redirect
-
----
+Then push `dev`, watch CI, fix failures until green, fast-forward/merge to
+`main`, and confirm publish plus consumer smoke if the publish workflow runs.
 
 ## Exit Criteria
 
-- [ ] All 4 islands interactive on local build
-- [ ] Search returns results with clickable links
-- [ ] GoatCounter loads (SRI hash verified or removed)
-- [ ] 1297 tests pass
-- [ ] CI all green on dev branch
-- [ ] Build produces valid dist with no stale `@openelement` references
-- [ ] All `<less-*>` → `<open-*>` in production HTML
-- [ ] `openelement.org` resolves and serves the site
+- [ ] `git ls-files opc-doc` is empty.
+- [ ] `deno task arch:check` passes with no stale allowlist entries.
+- [ ] root import map and package exports expose `open-*`, not `less-*`, UI
+      subpaths.
+- [ ] active framework-authored UI has no `data-on-*`.
+- [ ] active islands have no `data-signal-html`.
+- [ ] active islands do not import `escapeHtml` or `escapeAttr`.
+- [ ] all reviewed `innerHTML` use is either renderer internals, devtools,
+      syntax highlighting, trusted content, or Hub snapshot display.
+- [ ] current docs and current source contain no mojibake/replacement text.
+- [ ] all 19 packages are versioned `0.30.1`.
+- [ ] changelog and release note for v0.30.1 exist.
+- [ ] local full gate passes.
+- [ ] dev CI passes.
+- [ ] main CI passes after merge.
+
+## Non-Goals
+
+- No new renderer feature beyond the cleanup needed for VNode-only dynamic UI.
+- No keyed diff implementation.
+- No sanitizer dependency in core.
+- No rewrite of every historical ADR/changelog/blog archive for branding alone.
+- No v0.31 UI Shell/Ocean-Island work in this release.
