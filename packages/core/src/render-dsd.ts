@@ -310,10 +310,11 @@ export async function renderDsd(
     const result = instance.render();
     if (result == null) {
       content = '';
-    } else if (typeof result === 'string') {
-      content = result;
     } else if (isVNode(result)) {
       content = await renderDsdTree(result);
+    } else if (typeof result === 'string') {
+      log.warn(`<${tagName}> render() returned string — deprecated. Use VNode instead.`);
+      content = result;
     } else {
       let rendered = false;
       for (const adapter of getDefaultRegistry().getAll()) {

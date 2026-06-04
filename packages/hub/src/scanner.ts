@@ -12,6 +12,7 @@
 import { buildPackageRecord } from './builder.ts';
 import { buildIndex } from './indexer.ts';
 import { resolve } from 'node:path';
+import { LESSJS_UI_VERSION, VALIDATOR_VERSION } from './constants.ts';
 import { validateHubPackageRecord } from './schema.ts';
 import type {
   BuildPackageRecordOptions,
@@ -59,7 +60,7 @@ const WC_PACKAGES: KnownWcPackage[] = [
   {
     name: 'ui',
     scope: '@lessjs',
-    version: '0.29.0',
+    version: LESSJS_UI_VERSION,
     source: 'local',
     description:
       'LessJS UI component library with DSD-native DsdElement components. All components are SSR-capable.',
@@ -562,7 +563,7 @@ async function buildAndStoreRecord(
     description: pkg.description,
     homepage: pkg.homepage,
     submittedBy: 'hub-scanner',
-    validatorVersion: '0.19.0',
+    validatorVersion: VALIDATOR_VERSION,
     manifestContent,
   };
 
