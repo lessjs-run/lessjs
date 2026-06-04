@@ -100,7 +100,7 @@ export interface RpcControllerOptions {
 }
 
 /**
- * Lit ReactiveController for declarative RPC calls.
+ * Reactive-controller-style helper for declarative RPC calls.
  *
  * Handles loading/error states and triggers host re-renders automatically.
  * Supports optional retry with configurable backoff, and request cancellation

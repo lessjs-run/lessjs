@@ -171,14 +171,15 @@ function wrapDsdOutput(params: {
   lightDom?: RenderNode[];
 }): string {
   const { tagName, props, content, styleCss, layer, sourceStr, dsdOptions, lightDom } = params;
-  const ssrPropsAttr = Object.keys(props).length > 0
-    ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(props))}"`
+  const publicProps = filterPublicDsdProps(props);
+  const ssrPropsAttr = Object.keys(publicProps).length > 0
+    ? ` data-ssr-props="${escapeAttrValue(JSON.stringify(publicProps))}"`
     : '';
 
   return serializeRenderNode(
     dsdHostNode({
       tag: tagName,
-      attrs: props,
+      attrs: publicProps,
       ssrPropsAttr,
       source: sourceStr,
       templateAttrs: buildDsdTemplateAttrs(dsdOptions),
@@ -188,6 +189,15 @@ function wrapDsdOutput(params: {
       layer,
     }),
   );
+}
+
+function filterPublicDsdProps(props: Record<string, unknown>): Record<string, unknown> {
+  const publicProps: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(props)) {
+    if (key.startsWith('__openElement')) continue;
+    publicProps[key] = value;
+  }
+  return publicProps;
 }
 
 // ─── DSD Rendering ─────────────────────────────────────────────

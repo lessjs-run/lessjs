@@ -51,9 +51,14 @@ have one SOP with:
 | v0.29.5 | [v0.29.5/](./v0.29.5/)                                                                       | Done     | Type safety cleanup                |
 | v0.29.6 | [v0.29.6/](./v0.29.6/)                                                                       | Done     | Architecture debt closure          |
 | v0.30.0 | [v0.30.0/](./v0.30.0/)                                                                       | Done     | Architecture contract freeze       |
-| v0.30.1 | [v0.30.1/](./v0.30.1/)                                                                       | Active   | Clean architecture sweep           |
-| v0.31.0 | [v0.31.0/](./v0.31.0/)                                                                       | Deferred | DSD Shell UI dual-track            |
-| v1.0.0  | [v1.0.0-general-purpose-engine.md](./v1.0.0-general-purpose-engine.md)                       | Vision   | API freeze                         |
+| v0.30.1 | [v0.30.1/](./v0.30.1/)                                                                       | Done     | Clean architecture sweep           |
+| v0.31.0 | [v0.31.0/](./v0.31.0/)                                                                       | Active   | JSX-first Application API          |
+| v0.32.0 | [v0.32.0/](./v0.32.0/)                                                                       | Planned  | Rendering modes                    |
+| v0.33.0 | [v0.33.0/](./v0.33.0/)                                                                       | Planned  | Server/API layer                   |
+| v0.34.0 | [v0.34.0/](./v0.34.0/)                                                                       | Planned  | Data integration layer             |
+| v0.35.0 | [v0.35.0/](./v0.35.0/)                                                                       | Planned  | UI Shell and design system surface |
+| v0.36.0 | [v0.36.0/](./v0.36.0/)                                                                       | Planned  | Hardening and migration            |
+| v1.0.0  | [v1.0.0/](./v1.0.0/)                                                                         | Vision   | Stable application engine          |
 
 ## Operator Rules
 

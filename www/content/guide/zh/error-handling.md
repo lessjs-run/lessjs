@@ -1,42 +1,28 @@
 ---
-title: 'Error Handling'
-section: 'Production'
-label: 'Error Handling'
+title: '错误处理'
+section: '生产'
+label: '错误处理'
 order: 30
 ---
 
-<open-layout
-locale=
-locales=
-navItems=
-headerNav=
-currentPath='/zh/guide/error-handling'
+# 错误处理
 
-    <h1>Error Handling</h1>
-    <p class='subtitle'>
-      openElement distinguishes between framework errors, build-time render errors, API errors, and
-      browser island failures. The goal is clear diagnostics without leaking internal
-      information in production.
-    </p>
-    <h2>Error Hierarchy</h2>
-    <div class='error-hierarchy'>
-      OpenElementError |-- NotFoundError 404 |-- UnauthorizedError 401 |-- ForbiddenError 403 |--
-      ValidationError 422 |-- ConflictError 409 |-- RateLimitError 429 |-- SsrRenderError 500
-      |-- IslandUpgradeError 500
-    </div>
-    <h2>Operational vs Programming</h2>
-    <p>
-      openElement distinguishes operational errors (not found, validation, rate limit - return
-      structured status) from programming errors (render failure, broken import - fail build
-      or show dev diagnostics).
-    </p>
-    <h2>Structured Logging</h2>
-    <p>
-      openElement uses <span class='inline-code'>createLogger(scope)</span> 
-      for scoped log levels (DEBUG, INFO, WARN, ERROR). Each message carries a prefix
-      identifying its source - e.g. <span class='inline-code'>[openElement/SSG]</span>.
-    </p>
-    <div class='nav-row'>
-      <a href='/guide/security-middleware' class='nav-link'>← Security &amp; Middleware</a>
-      <a href='/guide/testing' class='nav-link'>Testing →</a>
-    </div>
+openElement 区分 build-time framework errors、route render errors、API errors 和 browser island
+failures。
+
+## 构建错误
+
+构建期错误应该明确失败。缺失 optional package 可以降级，但已经存在的包如果 import 时报错，必须在诊断里可见。
+
+## Route render errors
+
+SSG 和 SSR route render failure 会记录 route path。生产响应不泄漏内部 stack trace。
+
+## API errors
+
+客户端 RPC 可以使用结构化 response helpers 或 `RpcError`。业务性错误应带清晰 HTTP status
+和 message；编程错误应让 build 或 server route 失败。
+
+## Browser errors
+
+Island upgrade failure 应限制在 island 内，并能通过浏览器日志和 e2e 测试诊断。

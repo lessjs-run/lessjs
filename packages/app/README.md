@@ -1,20 +1,21 @@
 # @openelement/app
 
-Recommended openElement application entry.
+JSX-first application authoring API for openElement.
 
-`openElement()` combines `@openelement/adapter-vite`, `@openelement/content`, and
-`@openelement/i18n` with one shared build context. Use this package for normal apps.
+Use the package root in route, island, and component modules:
 
-## Install
+```tsx
+import { definePage } from '@openelement/app';
 
-```bash
-deno add jsr:@openelement/app
+export default definePage(() => {
+  return <main>Hello openElement</main>;
+});
 ```
 
-## Usage
+Use the `/vite` subpath in `vite.config.ts`:
 
 ```ts
-import { openElement } from '@openelement/app';
+import { openElement } from '@openelement/app/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -30,18 +31,26 @@ export default defineConfig({
 });
 ```
 
-## What It Does
+## Authoring API
 
-1. Creates a shared `OpenElementBuildContext`.
-2. Installs the Vite adapter through `createOpenPlugin(options, ctx)`.
-3. Adds content plugins when `content` is configured.
-4. Adds i18n route expansion when `i18n` is configured.
+```tsx
+import { defineElement, defineIsland, defineLayout, definePage } from '@openelement/app';
+```
 
-## Registry Boundary
+- `definePage(render)` creates a file-route page from a JSX function.
+- `definePage({ load, render, title, description, layout, revalidate })` creates a page with route data and metadata.
+- `defineIsland(tagName, render, options)` creates a browser-upgraded island.
+- `defineElement(tagName, render)` creates a DSD component.
+- `defineLayout(tagName, render)` is the layout-specific form of `defineElement()`.
 
-`packageIslands` is explicit configuration today. A future `open add` command
-may update it automatically, but only after validating a package manifest and
-showing the user the config diff.
+`DsdElement` remains the runtime primitive in `@openelement/core`, but application
+authors should start from this package.
+
+## Install
+
+```bash
+deno add jsr:@openelement/app
+```
 
 ## License
 

@@ -2,10 +2,10 @@
 
 English | [简体中文](./README.zh.md)
 
-**DSD-first Web Components framework (v0.30.1).** openElement builds static-first
-applications with Declarative Shadow DOM, JSX/VNode rendering, progressive
-islands, Hono routes, and release gates that prove the package graph before
-publishing.
+**JSX-first, DSD-first Web Components application framework (v0.31.0).**
+openElement builds static-first applications with Declarative Shadow DOM,
+JSX/VNode rendering, progressive islands, Hono routes, and release gates that
+prove the package graph before publishing.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Deno](https://img.shields.io/badge/Deno-2.7%2B-000000)](https://deno.com/)
@@ -27,34 +27,48 @@ Static content ships as HTML first. Interactive pieces are islands that upgrade
 only when their `client:*` strategy says they should.
 
 ```tsx
-import { DsdElement, type VNode } from '@openelement/runtime';
+import { definePage } from '@openelement/app';
 
-export default class HomePage extends DsdElement {
-  render(): VNode {
-    return <main>Hello openElement</main>;
-  }
-}
+export default definePage(() => {
+  return <main>Hello openElement</main>;
+});
 ```
 
-The current v0.30.1 contract is intentionally narrow:
+For browser-upgraded UI:
 
-- one app facade: `openElement()`;
-- one renderer model: JSX -> VNode -> RenderNode -> DSD HTML or DOM;
-- one metadata field: `openElement`;
-- one UI naming line: `open-*`;
-- one trust boundary: `trustedHtml` for pre-sanitized, non-interactive content.
+```tsx
+import { defineIsland } from '@openelement/app';
+import { signal } from '@openelement/runtime';
+
+const count = signal(0);
+
+export default defineIsland(
+  'my-counter',
+  () => <button onClick={() => count.value++}>Count: {count.value}</button>,
+);
+```
+
+The v0.31.0 public contract is intentionally layered:
+
+- application authoring: `definePage()`, `defineIsland()`, `defineElement()`, `defineLayout()`;
+- build configuration: `openElement()` from `@openelement/app/vite`;
+- renderer model: JSX -> VNode -> RenderNode -> DSD HTML or DOM;
+- metadata field: `openElement`;
+- UI naming line: `open-*`;
+- trust boundary: `trustedHtml` for pre-sanitized, non-interactive content.
 
 ## Packages
 
-All 19 packages are versioned together at **v0.30.1** under
+All 19 packages are versioned together at **v0.31.0** under
 [`@openelement`](https://jsr.io/@openelement).
 
 | Package                     | Role                                      |
 | --------------------------- | ----------------------------------------- |
+| `@openelement/app`          | JSX-first application authoring API       |
+| `@openelement/app/vite`     | `openElement()` Vite configuration facade |
 | `@openelement/core`         | DSD renderer, DsdElement, JSX runtime     |
 | `@openelement/adapter-vite` | Vite adapter, SSG pipeline, island builds |
-| `@openelement/app`          | `openElement()` app configuration facade  |
-| `@openelement/runtime`      | component authoring facade                |
+| `@openelement/runtime`      | runtime convenience facade                |
 | `@openelement/ui`           | `open-*` DSD component library            |
 | `@openelement/content`      | Markdown, MDX, nav, blog, sitemap         |
 | `@openelement/i18n`         | locale data and static path helpers       |
@@ -70,13 +84,14 @@ All 19 packages are versioned together at **v0.30.1** under
 
 ## Current Line
 
-v0.30.1 is the clean architecture sweep after the v0.30.0 contract freeze. It
-removes active LessJS compatibility names, keeps dynamic UI on the VNode path,
-and aligns current docs and package metadata with the openElement identity.
+v0.31.0 moves the default mental model from "extend a runtime class" to "write
+JSX pages and islands". `DsdElement` remains the runtime primitive, but app
+authors start from `@openelement/app`.
 
-v0.31 is reserved for UI Shell/Ocean-Island work. **v1.0** remains the stable
-engine target after the renderer, metadata, package graph, and trust-boundary
-contracts have been proven in product-facing surfaces.
+The next minors focus on streaming/ISR, server routes, data integration, and UI
+Shell product surfaces without reopening the cleaned v0.30 renderer contract.
+The v1.0 target is a stable application engine after this v0.31-v0.36 line is
+implementation-proven.
 
 ## Contributing
 

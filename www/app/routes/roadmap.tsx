@@ -1,7 +1,7 @@
 ﻿export const meta = { section: '', label: 'Roadmap', order: 10 };
 export const tagName = 'page-roadmap';
 
-// ADR-0037 anchors: DSD-first. Version: v0.21, v0.22, v0.23.
+// ADR-0037 anchors: DSD-first. Version: v0.31, v0.32, v1.0.
 // Legacy smoke anchors: WC Package Protocol, Six-Phase Vision, Registry Hub, No webpack.
 
 import { DsdElement } from '@openelement/core';
@@ -236,54 +236,65 @@ export class RoadmapPage extends DsdElement {
   override render() {
     return (
       
-        <div class="shell"
-          data-legacy-anchors="WC Package Protocol Six-Phase Vision No webpack Registry Hub"
-        >
+      <div
+        class="shell"
+        data-legacy-anchors="WC Package Protocol Six-Phase Vision No webpack Registry Hub"
+      >
           <section class="hero">
             <div>
               <h1>Roadmap</h1>
               <p class="subtitle">
                 openElement roadmap labels are product truth, not aspiration. The current
-                line is v0.29.2 — structured renderer IR, single async render path,
-                core simplification (33→26 files), and unified attribute serialization.
+                line is v0.31.0: JSX-first Application API on top of the DSD-first renderer.
+                The path to v1.0 is a stable application engine, not a generic backend platform.
               </p>
             </div>
             <aside class="now">
               <span>current line</span>
-              <h2>v0.29.2 Core Simplification</h2>
-              <p>19 packages aligned. renderDsdTree is the only public rendering API.</p>
+              <h2>v0.31.0 Application API</h2>
+              <p>19 packages aligned. App authors start from definePage and defineIsland.</p>
             </aside>
           </section>
 
           <div class="timeline">
             <div class="phase">
-              <div class="version">v0.21.x</div>
-              <div><h3>Reactive DSD</h3><p>DsdElement reactivity, safe templates, streaming DSD, and island strategy vocabulary.</p></div>
+              <div class="version">v0.30.x</div>
+              <div><h3>Architecture Contract Freeze</h3><p>One renderer model, one metadata boundary, openElement rename, and cleanup gates.</p></div>
               <span class="status done">Done</span>
             </div>
             <div class="phase">
-              <div class="version">v0.22.x</div>
-              <div><h3>Architecture Integrity</h3><p>Consumer surface cleanup, adapter cleanup, signals facade hardening, and release gate repairs.</p></div>
-              <span class="status done">Done</span>
-            </div>
-            <div class="phase">
-              <div class="version">v0.23.x</div>
-              <div><h3>Layered Package Architecture</h3><p>Protocols own shared contracts, runtime owns authoring imports, app owns configuration, and graph checks enforce package truth.</p></div>
-              <span class="status done">Done</span>
-            </div>
-            <div class="phase">
-              <div class="version">v0.28.x</div>
-              <div><h3>Cleanup Arc</h3><p>Hygiene convergence, deprecated purge, closure+MDX, AppShell protocol, consumer resolver patch, build pipeline cleanup.</p></div>
-              <span class="status done">Done</span>
-            </div>
-            <div class="phase">
-              <div class="version">v0.29.x</div>
-              <div><h3>Renderer IR + Simplification</h3><p>Structured RenderNode IR, unified attribute serialization, single async render path, core 33→26 files, renderToString removed.</p></div>
+              <div class="version">v0.31.0</div>
+              <div><h3>JSX-first Application API</h3><p>definePage, defineIsland, defineElement, defineLayout, and the @openelement/app/vite split.</p></div>
               <span class="status current">Current</span>
             </div>
             <div class="phase">
-              <div class="version">v0.30.x</div>
-              <div><h3>UI Dual-Track + v1.0 Freeze</h3><p>Ocean/Island UI split, API freeze line, v1.0 release preparation.</p></div>
+              <div class="version">v0.32.0</div>
+              <div><h3>Rendering Modes</h3><p>Productized SSR, ISR, streaming DSD, cache adapters, and deployment recipes.</p></div>
+              <span class="status planned">Planned</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.33.0</div>
+              <div><h3>Server/API Layer</h3><p>Typed Hono helpers, middleware lifecycle, response helpers, and runtime route contracts.</p></div>
+              <span class="status planned">Planned</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.34.0</div>
+              <div><h3>Data Integration Layer</h3><p>External ORM and database recipes without framework-owned ORM or auth platforms.</p></div>
+              <span class="status planned">Planned</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.35.0</div>
+              <div><h3>UI Shell and Design System</h3><p>AppShell polish, Ocean/Island UI split, @openelement/ui/css, and starter templates.</p></div>
+              <span class="status planned">Planned</span>
+            </div>
+            <div class="phase">
+              <div class="version">v0.36.0</div>
+              <div><h3>Hardening and Migration</h3><p>API audit, docs proof, fixture matrix, ecosystem smoke, and performance budget.</p></div>
+              <span class="status planned">Planned</span>
+            </div>
+            <div class="phase">
+              <div class="version">v1.0.0</div>
+              <div><h3>Stable Application Engine</h3><p>Freeze the proven authoring, rendering, metadata, release, and docs contracts.</p></div>
               <span class="status planned">Planned</span>
             </div>
           </div>
@@ -292,6 +303,7 @@ export class RoadmapPage extends DsdElement {
             <div class="truth">
               <h2>Shipped</h2>
               <ul>
+                <li>JSX-first Application API</li>
                 <li>Structured Renderer IR + single async path</li>
                 <li>SSG + Declarative Shadow DOM</li>
                 <li>Hono API routes + MDX support</li>
@@ -301,9 +313,9 @@ export class RoadmapPage extends DsdElement {
             <div class="truth">
               <h2>Current</h2>
               <ul>
-                <li>API surface freeze (v0.29.x)</li>
-                <li>UI dual-track Ocean/Island split</li>
-                <li>JSR publish + consumer smoke</li>
+                <li>v0.31.0 Application API rollout</li>
+                <li>Root app authoring + /vite config split</li>
+                <li>www docs and generated template DX</li>
                 <li>19-package aligned monorepo</li>
               </ul>
             </div>

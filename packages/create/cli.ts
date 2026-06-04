@@ -124,6 +124,7 @@ node_modules/
     "entities": "npm:entities@^4.5.0",
     "hono": "npm:hono@4.12.23",
     "@openelement/app": "jsr:@openelement/app@^${v.app}",
+    "@openelement/app/vite": "jsr:@openelement/app@^${v.app}/vite",
     "@openelement/runtime": "jsr:@openelement/runtime@^${v.runtime}",
     "@openelement/ui": "jsr:@openelement/ui@^${v.ui}",
     "vite": "npm:vite@8.0.10"
@@ -140,7 +141,7 @@ node_modules/
   "compilerOptions": { "lib": ["ES2022", "DOM", "DOM.Iterable"], "jsx": "react-jsx", "jsxImportSource": "@openelement/core" }
 }
 `,
-    'vite.config.ts': `import { openElement } from '@openelement/app';
+    'vite.config.ts': `import { openElement } from '@openelement/app/vite';
 import { defineConfig } from 'vite';
 import deno from '@deno/vite-plugin';
 
@@ -193,7 +194,8 @@ export default defineConfig({
 });
 `,
     'app/routes/index.tsx': `/** @jsxImportSource @openelement/core */
-import { DsdElement, StyleSheet } from '@openelement/runtime';
+import { definePage } from '@openelement/app';
+import { StyleSheet } from '@openelement/runtime';
 
 export const tagName = 'home-page';
 
@@ -204,10 +206,10 @@ styles.replaceSync(\`
   p { color: var(--text-secondary, #666); }
 \`);
 
-export default class HomePage extends DsdElement {
-  static override styles = styles;
-
-  override render() {
+export default definePage({
+  title: 'My openElement App',
+  styles,
+  render() {
     return (
       <>
         <h1>Hello from openElement!</h1>
@@ -218,13 +220,15 @@ export default class HomePage extends DsdElement {
         <my-counter></my-counter>
       </>
     );
-  }
-}
+  },
+});
 `,
     'app/islands/my-counter.tsx': `/** @jsxImportSource @openelement/core */
-import { DsdElement, signal, StyleSheet } from '@openelement/runtime';
+import { defineIsland } from '@openelement/app';
+import { signal, StyleSheet } from '@openelement/runtime';
 
 export const tagName = 'my-counter';
+export const openElement = { hydrate: 'idle', ssr: true, dsd: true } as const;
 
 const styles = new StyleSheet();
 styles.replaceSync(\`
@@ -232,25 +236,20 @@ styles.replaceSync(\`
   button { padding: 0.25rem 0.75rem; cursor: pointer; }
 \`);
 
-export default class MyCounter extends DsdElement {
-  static override styles = styles;
+const count = signal(0);
 
-  static props = { count: Number };
-
-  override render() {
+export default defineIsland(tagName, {
+  styles,
+  render() {
     return (
       <>
-        <button onClick={() => this.count--}>-</button>
-        <span>{this.count}</span>
-        <button onClick={() => this.count++}>+</button>
+        <button onClick={() => count.value--}>-</button>
+        <span>{count.value}</span>
+        <button onClick={() => count.value++}>+</button>
       </>
     );
-  }
-}
-
-if (typeof customElements !== 'undefined' && !customElements.get(tagName)) {
-  customElements.define(tagName, MyCounter);
-}
+  },
+}, { hydrate: openElement.hydrate, dsd: openElement.dsd });
 `,
   };
 }

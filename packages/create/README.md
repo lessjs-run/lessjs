@@ -19,13 +19,13 @@ my-app/
   vite.config.ts
   app/
     routes/
-      index.ts
+      index.tsx
     islands/
       my-counter.ts
 ```
 
-The scaffold uses `@openelement/app` and includes `packageIslands: ['@openelement/ui']`
-for the built-in openElement UI components.
+The scaffold uses `definePage()` and `defineIsland()` from `@openelement/app`,
+and imports the Vite facade from `@openelement/app/vite`.
 
 ## Current Scope
 

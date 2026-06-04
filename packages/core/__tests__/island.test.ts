@@ -128,6 +128,25 @@ Deno.test('island: throws on tag name without hyphen', () => {
   throw new Error('Expected defineIsland() to throw for tag name without hyphen');
 });
 
+Deno.test('island: no customElements registry is a safe SSR no-op', () => {
+  const previousCustomElements = globalThis.customElements;
+  delete (globalThis as unknown as { customElements?: CustomElementRegistry }).customElements;
+
+  try {
+    const Cls = createMockElementClass();
+    const result = defineIsland('ssr-only-island', Cls);
+    assertEquals(result, Cls);
+  } finally {
+    if (previousCustomElements) {
+      Object.defineProperty(globalThis, 'customElements', {
+        value: previousCustomElements,
+        writable: true,
+        configurable: true,
+      });
+    }
+  }
+});
+
 Deno.test('island: throws on empty tag name', () => {
   const Cls = createMockElementClass();
   try {

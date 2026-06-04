@@ -225,7 +225,7 @@ Deno.test('renderEntry: document config renders correctly', () => {
   // v0.3.0: wrapInDocument is called at runtime, not inlined HTML.
   // The generated code passes config as parameters.
   assertStringIncludes(code, 'lang: "zh-CN"');
-  assertStringIncludes(code, 'title: "测试"');
+  assertStringIncludes(code, 'title: __page.title || "测试"');
   assertStringIncludes(code, 'cdn.example.com');
 });
 

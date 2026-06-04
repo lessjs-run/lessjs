@@ -1,5 +1,5 @@
 /**
- * Local Workspace Consumer Build — generates a test project from the local
+ * Local Workspace Consumer Build - generates a test project from the local
  * workspace create package and builds it. This is faster than the
  * post-publish smoke test because it uses local source directly, making
  * it suitable for running on every PR.
@@ -23,6 +23,15 @@ function vitePath(path: string): string {
 
 const tmpRoot = Deno.makeTempDirSync({ prefix: 'openelement-consumer-local-' });
 const projectName = 'consumer-test-app';
+const keepTemp = Deno.env.get('OPEN_ELEMENT_KEEP_CONSUMER_LOCAL') === '1';
+
+function cleanup(): void {
+  if (keepTemp) {
+    console.log(`Keeping temp project at ${tmpRoot}`);
+    return;
+  }
+  rmSync(tmpRoot, { recursive: true, force: true });
+}
 
 console.log(`Generating test project from local workspace...`);
 
@@ -37,7 +46,7 @@ const createResult = await new Deno.Command(Deno.execPath(), {
 if (createResult.code !== 0) {
   console.error('Failed to generate consumer project:');
   console.error(new TextDecoder().decode(createResult.stderr));
-  rmSync(tmpRoot, { recursive: true, force: true });
+  cleanup();
   Deno.exit(1);
 }
 
@@ -51,11 +60,23 @@ const denoJson = JSON.parse(readFileSync(denoJsonPath, 'utf-8'));
 denoJson.imports['@openelement/app'] = pathToFileURL(
   join(repoRoot, 'packages', 'app', 'src', 'index.ts'),
 ).href;
+denoJson.imports['@openelement/app/vite'] = pathToFileURL(
+  join(repoRoot, 'packages', 'app', 'src', 'vite.ts'),
+).href;
 denoJson.imports['@openelement/core'] = pathToFileURL(
   join(repoRoot, 'packages', 'core', 'src', 'index.ts'),
 ).href;
 denoJson.imports['@openelement/core/logger'] = pathToFileURL(
   join(repoRoot, 'packages', 'core', 'src', 'logger.ts'),
+).href;
+denoJson.imports['@openelement/core/render-ir'] = pathToFileURL(
+  join(repoRoot, 'packages', 'core', 'src', 'render-ir.ts'),
+).href;
+denoJson.imports['@openelement/core/jsx-runtime'] = pathToFileURL(
+  join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts'),
+).href;
+denoJson.imports['@openelement/core/jsx-dev-runtime'] = pathToFileURL(
+  join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts'),
 ).href;
 denoJson.imports['@openelement/adapter-vite/build-context'] = pathToFileURL(
   join(repoRoot, 'packages', 'adapter-vite', 'src', 'build-context.ts'),
@@ -68,6 +89,12 @@ denoJson.imports['@openelement/signals'] = pathToFileURL(
 ).href;
 denoJson.imports['@openelement/signals/framework'] = pathToFileURL(
   join(repoRoot, 'packages', 'signals', 'src', 'framework.ts'),
+).href;
+denoJson.imports['@openelement/runtime'] = pathToFileURL(
+  join(repoRoot, 'packages', 'runtime', 'src', 'index.ts'),
+).href;
+denoJson.imports['@openelement/style-sheet'] = pathToFileURL(
+  join(repoRoot, 'packages', 'style-sheet', 'src', 'index.ts'),
 ).href;
 denoJson.imports['@openelement/content'] = pathToFileURL(
   join(repoRoot, 'packages', 'content', 'src', 'index.ts'),
@@ -126,12 +153,32 @@ const aliases = [
     replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'logger.ts')),
   },
   {
+    find: '@openelement/core/render-ir',
+    replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'render-ir.ts')),
+  },
+  {
+    find: '@openelement/core/jsx-runtime',
+    replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts')),
+  },
+  {
+    find: '@openelement/core/jsx-dev-runtime',
+    replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'jsx-runtime.ts')),
+  },
+  {
     find: '@openelement/core',
     replacement: vitePath(join(repoRoot, 'packages', 'core', 'src', 'index.ts')),
   },
   {
     find: '@openelement/signals/framework',
     replacement: vitePath(join(signalsSrc, 'framework.ts')),
+  },
+  {
+    find: '@openelement/runtime',
+    replacement: vitePath(join(repoRoot, 'packages', 'runtime', 'src', 'index.ts')),
+  },
+  {
+    find: '@openelement/style-sheet',
+    replacement: vitePath(join(repoRoot, 'packages', 'style-sheet', 'src', 'index.ts')),
   },
   {
     find: '@openelement/adapter-lit/ssr',
@@ -147,40 +194,44 @@ const aliases = [
   },
   {
     find: '@openelement/ui/open-button',
-    replacement: vitePath(join(uiSrc, 'open-button.ts')),
+    replacement: vitePath(join(uiSrc, 'open-button.tsx')),
   },
   {
     find: '@openelement/ui/open-card',
-    replacement: vitePath(join(uiSrc, 'open-card.ts')),
+    replacement: vitePath(join(uiSrc, 'open-card.tsx')),
   },
   {
     find: '@openelement/ui/open-input',
-    replacement: vitePath(join(uiSrc, 'open-input.ts')),
+    replacement: vitePath(join(uiSrc, 'open-input.tsx')),
   },
   {
     find: '@openelement/ui/open-code-block',
-    replacement: vitePath(join(uiSrc, 'open-code-block.ts')),
+    replacement: vitePath(join(uiSrc, 'open-code-block.tsx')),
   },
   {
     find: '@openelement/ui/open-layout',
-    replacement: vitePath(join(uiSrc, 'open-layout.ts')),
+    replacement: vitePath(join(uiSrc, 'open-layout.tsx')),
   },
   {
     find: '@openelement/ui/open-theme-toggle',
-    replacement: vitePath(join(uiSrc, 'open-theme-toggle.ts')),
+    replacement: vitePath(join(uiSrc, 'open-theme-toggle.tsx')),
   },
   {
     find: '@openelement/ui/open-hero-ping',
-    replacement: vitePath(join(uiSrc, 'open-hero-ping.ts')),
+    replacement: vitePath(join(uiSrc, 'open-hero-ping.tsx')),
   },
   {
     find: '@openelement/ui/open-dialog',
-    replacement: vitePath(join(uiSrc, 'open-dialog.ts')),
+    replacement: vitePath(join(uiSrc, 'open-dialog.tsx')),
   },
   // Parent @openelement/ui alias MUST come after all @openelement/ui/* subpath aliases
   {
     find: '@openelement/ui',
     replacement: vitePath(uiSrc),
+  },
+  {
+    find: '@openelement/app/vite',
+    replacement: vitePath(join(repoRoot, 'packages', 'app', 'src', 'vite.ts')),
   },
   {
     find: '@openelement/app',
@@ -192,21 +243,12 @@ const viteConfigPath = join(appDir, 'vite.config.ts');
 let viteConfig = readFileSync(viteConfigPath, 'utf-8');
 
 viteConfig = viteConfig.replace(
-  "import { openElement } from '@openelement/app';",
-  `import { openPipeline } from ${
-    JSON.stringify(
-      pathToFileURL(join(repoRoot, 'packages', 'adapter-vite', 'src', 'index.ts')).href,
-    )
-  };`,
-);
-viteConfig = viteConfig.replace('openElement({', 'openPipeline({');
-viteConfig = viteConfig.replace(
   "packageIslands: ['@openelement/ui'],",
   `packageIslands: [${JSON.stringify(pathToFileURL(join(uiSrc, 'index.ts')).href)}],`,
 );
 viteConfig = viteConfig.replace(
-  'plugins: [openPipeline',
-  `resolve: { alias: ${JSON.stringify(aliases, null, 4)} },\n  plugins: [less`,
+  'plugins: [',
+  `resolve: { alias: ${JSON.stringify(aliases, null, 4)} },\n  plugins: [`,
 );
 writeFileSync(viteConfigPath, viteConfig);
 
@@ -235,15 +277,17 @@ if (buildResult.code !== 0) {
   console.error('Consumer build FAILED:');
   console.error(stdout);
   console.error(stderr);
-  rmSync(tmpRoot, { recursive: true, force: true });
+  cleanup();
   Deno.exit(1);
 }
 
 // Step 6: Verify output
 const indexHtmlPath = join(appDir, 'dist', 'index.html');
 if (!existsSync(indexHtmlPath)) {
-  console.error('dist/index.html not found — consumer build produced no output');
-  rmSync(tmpRoot, { recursive: true, force: true });
+  console.error('dist/index.html not found; consumer build produced no output');
+  console.error(stdout);
+  console.error(stderr);
+  cleanup();
   Deno.exit(1);
 }
 
@@ -251,11 +295,11 @@ const indexHtml = readFileSync(indexHtmlPath, 'utf-8');
 if (!indexHtml.includes('Hello from openElement')) {
   console.error('dist/index.html does not contain expected content');
   console.error('Last 300 chars:', indexHtml.substring(indexHtml.length - 300));
-  rmSync(tmpRoot, { recursive: true, force: true });
+  cleanup();
   Deno.exit(1);
 }
 
-console.log('Local consumer build passed — dist/index.html contains expected output.');
+console.log('Local consumer build passed; dist/index.html contains expected output.');
 
 // Cleanup
-rmSync(tmpRoot, { recursive: true, force: true });
+cleanup();

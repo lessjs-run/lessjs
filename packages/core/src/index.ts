@@ -12,7 +12,7 @@
  * Adapter: createAdapterRegistry() + default registry access
  *
  * Build orchestration (Vite plugins) lives in @openelement/adapter-vite.
- * For the unified openElement() entry, use @openelement/app instead.
+ * For the unified openElement() entry, use @openelement/app/vite instead.
  */
 
 // --- Public API re-exports -----------------------------------------

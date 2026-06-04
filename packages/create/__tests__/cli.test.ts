@@ -91,8 +91,8 @@ Deno.test('create-open: deno.json maps openElement package imports (v0.23 runtim
   const importKeys = Object.keys(denoJson.imports);
   assertEquals(
     importKeys.length,
-    8,
-    `Expected 8 imports, got ${importKeys.length}: ${importKeys.join(', ')}`,
+    9,
+    `Expected 9 imports, got ${importKeys.length}: ${importKeys.join(', ')}`,
   );
   // v0.23.6: external SSR dependencies declared in consumer import map
   assertEquals(denoJson.imports['alien-signals'], 'npm:alien-signals@^3.2.0');
@@ -100,6 +100,7 @@ Deno.test('create-open: deno.json maps openElement package imports (v0.23 runtim
   assertEquals(denoJson.imports['entities'], 'npm:entities@^4.5.0');
   assertEquals(denoJson.imports['hono'], 'npm:hono@4.12.23');
   assertEquals(denoJson.imports['@openelement/app'], 'jsr:@openelement/app@^${v.app}');
+  assertEquals(denoJson.imports['@openelement/app/vite'], 'jsr:@openelement/app@^${v.app}/vite');
   assertEquals(denoJson.imports['@openelement/runtime'], 'jsr:@openelement/runtime@^${v.runtime}');
   assertEquals(denoJson.imports['@openelement/ui'], 'jsr:@openelement/ui@^${v.ui}');
   assertEquals(denoJson.imports['vite'], 'npm:vite@8.0.10');
@@ -133,7 +134,7 @@ Deno.test('create-open: refuses path escape and existing target before writing',
 
 Deno.test('create-open: vite.config.ts imports openElement plugin', () => {
   const viteConfig = extractTemplate('vite.config.ts');
-  assert(viteConfig.includes("import { openElement } from '@openelement/app'"));
+  assert(viteConfig.includes("import { openElement } from '@openelement/app/vite'"));
   assert(viteConfig.includes('openElement({'));
 });
 
@@ -153,14 +154,15 @@ Deno.test('create-open: vite.config.ts includes virtual-passthrough resolve plug
   assert(viteConfig.includes("from '@deno/vite-plugin'"));
 });
 
-Deno.test('create-open: route index imports DsdElement (v0.20 Ocean-Island)', () => {
+Deno.test('create-open: route index uses JSX-first definePage API', () => {
   const routeIndex = extractTemplate('app/routes/index.tsx');
-  assert(routeIndex.includes('DsdElement'));
+  assert(routeIndex.includes('definePage'));
+  assert(routeIndex.includes("from '@openelement/app'"));
   assert(routeIndex.includes("from '@openelement/runtime'"));
   assert(routeIndex.includes('@jsxImportSource @openelement/core'));
   assert(routeIndex.includes('StyleSheet'));
-  assert(routeIndex.includes('static override styles'));
-  assert(routeIndex.includes('override render()'));
+  assert(routeIndex.includes('styles,'));
+  assert(routeIndex.includes('render()'));
   assert(routeIndex.includes('<h1>Hello from openElement!</h1>'));
   assertEquals(routeIndex.includes('return `'), false);
   assert(routeIndex.includes('tagName'));
@@ -169,14 +171,15 @@ Deno.test('create-open: route index imports DsdElement (v0.20 Ocean-Island)', ()
   assertEquals(routeIndex.includes('LitElement'), false);
 });
 
-Deno.test('create-open: island counter uses JSX + static props (v0.24)', () => {
+Deno.test('create-open: island counter uses JSX-first defineIsland API', () => {
   const islandCounter = extractTemplate('app/islands/my-counter.tsx');
-  assert(islandCounter.includes('DsdElement'));
+  assert(islandCounter.includes('defineIsland'));
+  assert(islandCounter.includes("from '@openelement/app'"));
   assert(islandCounter.includes("from '@openelement/runtime'"));
   assert(islandCounter.includes("tagName = 'my-counter'"));
-  assert(islandCounter.includes('static props'));
+  assert(islandCounter.includes("hydrate: 'idle'"));
   assert(islandCounter.includes('@jsxImportSource @openelement/core'));
-  assert(islandCounter.includes('customElements.define'));
+  assertFalse(islandCounter.includes('customElements.define'));
   // Verify no Lit dependency in template
   assertEquals(islandCounter.includes("from 'lit'"), false);
   assertEquals(islandCounter.includes('LitElement'), false);
@@ -201,6 +204,9 @@ Deno.test('create-open: generated project builds through the one-command pipelin
     const denoJson = JSON.parse(readFileSync(denoJsonPath, 'utf-8'));
     denoJson.imports['@openelement/app'] = pathToFileURL(
       join(repoRoot, 'packages', 'app', 'src', 'index.ts'),
+    ).href;
+    denoJson.imports['@openelement/app/vite'] = pathToFileURL(
+      join(repoRoot, 'packages', 'app', 'src', 'vite.ts'),
     ).href;
     denoJson.imports['@openelement/core'] = pathToFileURL(
       join(repoRoot, 'packages', 'core', 'src', 'index.ts'),
@@ -368,6 +374,10 @@ Deno.test('create-open: generated project builds through the one-command pipelin
       {
         find: '@openelement/ui',
         replacement: vitePath(uiSrc),
+      },
+      {
+        find: '@openelement/app/vite',
+        replacement: vitePath(join(repoRoot, 'packages', 'app', 'src', 'vite.ts')),
       },
       // @openelement/app must resolve to local source
       {

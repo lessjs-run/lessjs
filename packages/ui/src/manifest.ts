@@ -13,7 +13,7 @@ import type { OpenElementPackageManifest } from '@openelement/core';
 export const manifest: OpenElementPackageManifest = {
   schemaVersion: '1.0.0',
   packageName: '@openelement/ui',
-  version: '0.30.1',
+  version: '0.31.0',
   description: 'Swiss International Style Web Component library for openElement',
   author: 'openElement',
   license: 'MIT',

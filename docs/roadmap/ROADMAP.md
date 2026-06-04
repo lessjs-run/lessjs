@@ -1,268 +1,177 @@
 # openElement Roadmap
 
-> Source of truth for version planning.
-> Strategic boundary: [ADR-0037](../adr/0037-dsd-first-strategic-boundary.md).
+> Source of truth for forward version planning.\
+> Current line: v0.31.0 Application API.\
+> Updated: 2026-06-05.
 
-## Principle
+## Product Position
 
-openElement promises deterministic outcomes, not universal magic.
+openElement is a JSX-first Web Components application framework with
+Declarative Shadow DOM as the default server-rendered output.
 
-A Web Component is SSR-rendered only when a declared adapter or validated
-package contract makes that safe. Otherwise it becomes client-only or fails
-validation before build output is generated.
+The project should compete on a narrower but cleaner axis than full-stack React
+frameworks: Web Platform output, DSD-first HTML, progressive islands, and a small
+runtime contract. It should not hide that it is not yet a complete full-stack
+platform.
 
-The current product center is **JamFullStack Web Components framework**.
+## Framework References
 
-## Current State
+The roadmap follows the broad shape used by mainstream frameworks:
 
-| Area                      | State                                                 |
-| ------------------------- | ----------------------------------------------------- |
-| Project line              | v0.29.4 Stable Engine                                 |
-| Current rendering mode    | SSG + Declarative Shadow DOM                          |
-| Component model           | JSX + static props + Signal (ADR-0057)                |
-| Public API naming         | Web Platform style: verbNoun, PascalCase acronyms     |
-| Current DSD base          | `DsdElement` + SSR-safe `StyleSheet`                  |
-| Current framework surface | file routes, Hono API routes, dev/build pipeline      |
-| Current Hub surface       | early Registry Hub, validation, snapshots, `less add` |
-| Next milestone            | JamFullStack (ISR, Edge KV, Data Layer)               |
+- Next.js separates App Router pages, layouts, route handlers, and revalidation:
+  <https://nextjs.org/docs/app>
+- SvelteKit separates page/server loading and endpoint handling:
+  <https://svelte.dev/docs/kit/load>
+- Astro centers static/server rendering and islands:
+  <https://docs.astro.build/en/guides/on-demand-rendering/>
+- Nuxt separates pages, server routes, data fetching, and app config:
+  <https://nuxt.com/docs/getting-started/routing>
 
-## Phase Overview
+The openElement difference is the output model: Web Components plus Declarative
+Shadow DOM, not a framework-owned component runtime.
 
-| Phase | Version     | Name                         | Goal                                                                               | Status  |
-| ----- | ----------- | ---------------------------- | ---------------------------------------------------------------------------------- | ------- |
-| 1–6   | v0.15–v0.20 | Ocean-Island Architecture    | DSD-first rendering, CEM, Hub, gates                                               | ✅ Done |
-| 7     | v0.21.x     | Reactive DSD                 | DsdElement + Signals, safe templates, streaming DSD                                | ✅ Done |
-| 8     | v0.22.x     | Architecture Integrity       | Package boundaries, consumer surface, adapter cleanup, gates                       | ✅ Done |
-| 9     | v0.23.x     | Layered Package Architecture | Protocols, runtime facade, graph gates, docs governance                            | ✅ Done |
-| 10    | v0.24.1     | JSX + Signal Component Model | JSX, static props, Signal unwrap, DSD integration (ADR-0057)                       | ✅ Done |
-| 10.1  | v0.24.2     | Remove Old Component Model   | html/@prop removal, renderer hardening, docs truth convergence                     | ✅ Done |
-| 10.2  | v0.24.3     | Consolidation                | TemplateResult removal, TemplateRunner dedup, gate hardening                       | ✅ Done |
-| 10.3  | v0.24.4     | API Naming Convention        | verbNoun, PascalCase acronyms, brand prefix removal                                | ✅ Done |
-| 11    | v0.25.0     | Declarative DX               | BuildPipeline, route types, static head, static client                             | ✅ Done |
-| 12    | v0.26.0     | Hub CLI Reorganization       | Hub command surface, package publish sanity                                        | ✅ Done |
-| 13    | v0.27.0     | Framework Decoupling         | Virtual module removal, island transform, dev:fast server                          | ✅ Done |
-| 14    | v0.28.0     | Contracts & Tokens           | Adapter registry factory, Open Props migration, CI composite                       | ✅ Done |
-| 14.1  | v0.28.1     | Hygiene Convergence          | v0.28 anchor sweep, gitignore leaks, strategic-docs sync                           | ✅ Done |
-| 14.2  | v0.28.2     | Deprecated Purge             | Compat purge, security hardening, SSR bundle reduction                             | Done    |
-| 14.3  | v0.28.3     | Cleanup Closure + MDX        | Test floor, lockfile alignment, MDX design and implementation                      | Done    |
-| 14.4  | v0.28.4     | AppShell Protocol + Cleanup  | Explicit shells, strict render API, sanitizer, release gates                       | Done    |
-| 14.5  | v0.28.5     | Consumer Resolver Patch      | Fix post-publish sanitizer dependency resolution for consumers                     | Done    |
-| 14.6  | v0.29.x     | Renderer IR + Simplification | Structured RenderNode IR, unified attrs, async-only path, core 33→26, CodeQL audit | ✅ Done |
-| 15    | v0.30.x     | JamFullStack Foundation      | ISR KV adapters, Edge deployment, RPC maturation, Data Layer                       | Next    |
-| 16    | v1.0.x      | Stable Engine                | API/schema freeze and deterministic package guarantees                             | Vision  |
+## Current Public Contract
 
-## Compatibility Admission Model
+| Layer                 | Current contract                                                    |
+| --------------------- | ------------------------------------------------------------------- |
+| Application authoring | `definePage`, `defineIsland`, `defineElement`, `defineLayout`       |
+| Build configuration   | `openElement()` from `@openelement/app/vite`                        |
+| Renderer              | JSX -> VNode -> RenderNode -> DSD HTML or DOM                       |
+| Metadata              | structured `openElement` declarations and `definePage()` descriptor |
+| Runtime primitive     | `DsdElement` remains public but is not the default tutorial API     |
+| Trust boundary        | `trustedHtml` is caller-trusted HTML, not a sanitizer               |
 
-| Package/component state                                     | Outcome                                       | Build behavior                                                |
-| ----------------------------------------------------------- | --------------------------------------------- | ------------------------------------------------------------- |
-| Less manifest says `ssr: true` and a renderer can handle it | SSR/SSG                                       | Render through declared adapter                               |
-| Less manifest says `ssr: false`                             | Client-only                                   | Do not import/register in SSR bundle; emit hydration metadata |
-| CEM exists but no Less SSR declaration exists               | Client-only by default                        | Validate metadata, do not assume SSR                          |
-| No CEM and no Less manifest                                 | Reject or require manual config               | Avoid guessing package shape                                  |
-| Duplicate custom-element tags                               | Reject unless scoped registry support applies | Avoid global registry conflict                                |
-| Browser-only render dependency is detected                  | Client-only or explicit experimental path     | Report reason in diagnostics                                  |
-| DOM simulation is enabled                                   | Experimental opt-in                           | Timeout-bound, isolated, and reported                         |
+## Version Ladder
 
-## Completed Phases
+| Version | Name                               | Goal                                                                          | Status  |
+| ------- | ---------------------------------- | ----------------------------------------------------------------------------- | ------- |
+| v0.30.x | Contract cleanup                   | One renderer model, one metadata boundary, openElement rename                 | Done    |
+| v0.31.0 | JSX-first Application API          | Make page/island authoring the default DX                                     | Current |
+| v0.32.0 | Rendering Modes                    | Productize SSR, ISR, streaming DSD, and cache/deploy semantics                | Planned |
+| v0.33.0 | Server/API Layer                   | Make Hono route handlers, middleware, errors, and typed responses first-class | Planned |
+| v0.34.0 | Data Integration Layer             | External ORM/database recipes and adapters without owning an ORM              | Planned |
+| v0.35.0 | UI Shell and Design System Surface | AppShell, Ocean/Island UI split, `@openelement/ui/css`, starters              | Planned |
+| v0.36.0 | Hardening and Migration            | API audit, docs proof, fixtures, ecosystem smoke, performance                 | Planned |
+| v1.0.0  | Stable Application Engine          | Freeze stable APIs after v0.31-v0.36 are gate-proven                          | Vision  |
 
-### v0.15.x - Renderer Kernel
+## v0.31.0 - JSX-first Application API
 
-Delivered:
+Goal: change the default mental model from "extend `DsdElement`" to "write JSX
+pages and islands".
 
-- `RenderOutput`, `RenderError`, and `HydrationHint` structured types
-- `RendererProtocol` with named adapters
-- `RenderHooks` lifecycle
-- `DsdBuildReport` and `dsd-report.json`
-- repeatable release gates
+Deliverables:
 
-Exit criteria: met.
+- `@openelement/app` exports application authoring helpers.
+- `@openelement/app/vite` exports the Vite build facade.
+- `definePage()` supports function and object forms.
+- `definePage({ load })` feeds SSR and SSG route rendering.
+- `defineIsland()` gives islands a concise app-level entry.
+- create template and docs teach Application API first.
 
-### v0.17.x - Ecosystem Entry
+SOP: `docs/sop/v0.31.0/`
 
-Delivered:
+## v0.32.0 - Rendering Modes
 
-- manifest-native adapter-vite pipeline
-- client-only SSR filtering
-- local island admission planning
-- Vanilla and React adapter exploration
-- compatibility boundary hardening
-
-Exit criteria: met.
-
-### v0.18.x - Universal WC Engine
-
-Delivered:
-
-- CEM parser and compatibility classifier
-- `less validate-manifest`
-- `less add` dry-run/install workflow
-- explicit opt-in DOM simulation experiment
-
-Exit criteria: met.
-
-### v0.19.x - Registry Hub MVP
-
-Delivered:
-
-- package search and detail pages
-- manifest and compatibility report ingestion
-- bundle size and hydration metadata
-- `less hub submit`
-- GitHub Actions submission gate
-- component browser and rendered previews
-- Playwright snapshot rendering for client-only packages
-
-Exit criteria: met for MVP. Not yet a mature marketplace.
-
-### v0.20.x - Ocean-Island Architecture
-
-Delivered:
-
-- `DsdElement` in `@openelement/core`
-- SSR-safe `StyleSheet` abstraction
-- DSD-native `@openelement/ui` migration for ocean components
-- Open Props token migration
-- CSS Parts coverage
-- `@openelement/adapter-lit` deprecation for DSD components
-- `open-hero-ping` retained as the Lit island example
-- DSD report gate tightened to finite thresholds
-- ADR-0037 strategic boundary and SOP-015 docs alignment
-
-Exit criteria:
-
-- DSD components no longer depend on Lit.
-- `deno task dsd:check-report` fails on unknown error classes.
-- README, roadmap, status, and website docs no longer describe v0.18/v0.19 as
-  the current public line.
-
-### v0.21.x - Reactive DSD
-
-Goal: make `DsdElement` the universal reactive base class via Signals integration.
-Ocean components gain reactivity without Lit, React, or any framework runtime.
+Goal: make rendering mode selection explicit and deployable.
 
 Scope:
 
-- DsdElement + Signals subscription tracking for TemplateResult values
-- Microtask-batched component-local rerendering for Signal writes
-- `html` tagged template literal (zero build step, XSS-safe by default)
-- Safe templates: automatic escaping, `unsafeHTML()` escape hatch
-- Streaming DSD: `renderDSDStream()` -> `ReadableStream<Uint8Array>`
-- Progressive page delivery: TTFB < 50ms, per-component chunking
-- Priority ordering: above-fold first, below-fold deferred
-- No DOM diff in v0.21: complex UI remains an Island responsibility
+- static, dynamic SSR, ISR, and streaming DSD mode declarations;
+- route-level revalidate semantics;
+- cache adapter boundary for memory, Deno KV, Cloudflare KV, and filesystem;
+- deploy recipes for static host, Deno Deploy, Cloudflare Workers, and Node-compatible hosts;
+- tests proving stale/fresh behavior and stream ordering.
 
-See `docs/sop/v0.21.0/` for detailed SOPs.
+SOP: `docs/sop/v0.32.0/`
 
-## Completed: v0.22–v0.24 — Architecture Integrity through API Consolidation ✅
+## v0.33.0 - Server/API Layer
 
-### v0.22.x - Architecture Integrity
+Goal: make backend routes feel intentional without turning openElement into a
+heavy backend framework.
 
-Package boundaries, consumer surface, adapter cleanup, release gates.
-See `docs/sop/v0.22.0/`. ADR-0049 is the governing decision.
+Scope:
 
-### v0.23.x - Layered Package Architecture
+- typed Hono route helpers;
+- request context, middleware order, cookies, headers, redirect helpers;
+- structured error responses;
+- route handler docs and generated types;
+- security defaults for API responses.
 
-Protocols, runtime facade, app facade, graph gates, docs governance.
-See `docs/sop/v0.23.0/`. ADR-0050 is the governing decision.
+SOP: `docs/sop/v0.33.0/`
 
-### v0.24.1 — JSX + Signal Component Model (ADR-0057)
+## v0.34.0 - Data Integration Layer
 
-JSX template, static props, Signal unwrap, DSD integration.
-See `docs/sop/v0.24.1/`. ADR-0057 (v2) is the governing decision.
+Goal: support real app data without owning an ORM.
 
-### v0.24.2 — Remove Old Component Model
+Scope:
 
-html/@prop removal, renderer hardening, docs truth convergence.
-See `docs/sop/v0.24.3/`.
+- documented integration recipes for Drizzle, Kysely, Prisma, TypeORM, Deno KV,
+  Cloudflare D1, Postgres, and SQLite;
+- connection lifecycle guidance for serverless and edge runtimes;
+- typed loader examples;
+- no built-in ORM, no auth provider, no proprietary database abstraction.
 
-### v0.24.3 — Consolidation
+SOP: `docs/sop/v0.34.0/`
 
-TemplateResult removal, type dedup, gate hardening.
-See `docs/sop/v0.24.3/`.
+## v0.35.0 - UI Shell and Design System Surface
 
-### v0.24.4 — API Naming Convention (SOP-001)
+Goal: make the visible app shell and component surface good enough for real
+sites without reopening renderer architecture.
 
-verbNoun, PascalCase acronyms, brand prefix removal across 100+ files.
-See `docs/sop/v0.24.4/`, `docs/release/0.24.4.md`.
+Scope:
 
-## Completed: v0.25.0 — Declarative DX
+- explicit AppShell/layout APIs refined from ADR-0073;
+- Ocean/Island UI split;
+- `@openelement/ui/css` and token strategy;
+- starter templates for docs, blog, product, and dashboard;
+- visual docs and Playwright proof.
 
-Goal: eliminate architecture debt, add type-safe routes, unify DX.
+SOP: `docs/sop/v0.35.0/`
 
-Governing ADR: ADR-0058, ADR-0059, ADR-0060. See `docs/sop/v0.25.0/`.
+## v0.36.0 - Hardening and Migration
 
-| Group | Task                               | Priority | Nature           |
-| ----- | ---------------------------------- | -------- | ---------------- |
-| TG-01 | `lessPipeline()` declarative API   | P0       | Pure refactor    |
-| TG-02 | `RouteParams` type generation      | P0       | Code generation  |
-| TG-03 | `static head` metadata             | P1       | Small feature    |
-| TG-04 | `static client` island declaration | P1       | Syntax sugar     |
-| TG-05 | SignalContext (DOM-tree)           | P2*      | ~20 lines        |
-| TG-06 | CSS token injection convergence    | P1       | Token dedup      |
-| TG-07 | route-scanner regex → AST          | P1       | TS AST upgrade   |
-| TG-08 | `as any` type hardening            | P1       | Type safety      |
-| TG-09 | Test path unification              | P2       | Test utils       |
-| TG-10 | `less()` @deprecated               | P2       | Docs             |
-| TG-11 | island.test.ts old name fix        | P2       | Docs             |
-| TG-12 | `_dsdHydrated` dual-path merge     | P1       | Runtime refactor |
-| TG-13 | 31 pages string → JSX migration    | P1       | Content refactor |
-| TG-14 | Full regression + docs             | P2       | Verification     |
+Goal: turn the v0.31-v0.35 features into a release-candidate engine.
 
-> *P2 conditional: requires `computed()` to have ≥1 real-world use first.
-> TG-06 through TG-13 are architecture debt from 2026-05-29 comprehensive audit.
+Scope:
 
-## Completed: v0.27.0 — Reactive Pragmatic + Framework Decoupling
+- public API audit;
+- docs/API consistency gate;
+- generated project matrix;
+- package publish dry-run and consumer smoke;
+- performance baseline;
+- migration guide from v0.30/v0.31 to v1.
 
-Goal: SPA navigation-aware params + keep-alive + framework-Vite decoupling (zero virtual modules).
+SOP: `docs/sop/v0.36.0/`
 
-Governing ADR: ADR-0059, ADR-0061. See `docs/sop/v0.27.0/`.
+## v1.0.0 - Stable Application Engine
 
-| Group | Task                               | Priority | Nature       |
-| ----- | ---------------------------------- | -------- | ------------ |
-| TG-01 | `this.params` SPA-reactive         | P0       | New feature  |
-| TG-02 | `data-keep-alive` DOM preservation | P1       | Bug fix      |
-| TG-03 | `computed()` documentation         | P2       | Docs         |
-| TG-04 | Virtual modules removal (SOP-001)  | P0       | Refactor     |
-| TG-05 | Entry renderer cleanup (SOP-002)   | P0       | Refactor     |
-| TG-06 | Island transform extraction (003)  | P1       | Refactor     |
-| TG-07 | Dev server zero bundler (SOP-004)  | P1       | New feature  |
-| TG-08 | Adapter cleanup + regression (005) | P1       | Verification |
+v1.0 can happen only when the following are true:
 
-## Explicitly Excluded
+- app authoring API is stable and documented;
+- rendering modes have deploy recipes and tests;
+- server/API layer has explicit boundaries;
+- data integrations are external and documented;
+- UI shell has proven templates;
+- package graph, docs, architecture, build, publish dry-run, and e2e gates pass.
 
-| Excluded                  | Reason                              |
-| ------------------------- | ----------------------------------- |
-| `static data` SSG fetch   | Content system already handles data |
-| `static middleware`       | 0 file uses                         |
-| SignalQuery               | Promise-style RPC sufficient        |
-| Edge Full-Stack (ISR, KV) | Deferred until architecture clean   |
+SOP: `docs/sop/v1.0.0/`
 
-## Vision: JamFullStack
+## Explicit Non-Goals
 
-openElement should ship a complete Web Components full-stack experience:
-
-- **ISR + Edge KV**: production ISR handlers backed by Deno KV and Cloudflare Workers KV.
-- **Edge Deployment**: first-class Deno Deploy and CF Workers deployment presets.
-- **RPC Maturation**: type-safe streaming, middleware, error contracts.
-- **Data Layer**: DB adapter abstraction (SQLite/Postgres/D1/KV) for route loaders.
-
-v1.0 freezes the renderer, component model, and package protocol after these capabilities are stable.
-
-## Explicitly Deferred
-
-| Item                     | Reason                                       |
-| ------------------------ | -------------------------------------------- |
-| v1.0 freeze              | Functionally incomplete — JamFullStack first |
-| Performance optimization | Correctness before speed                     |
-| ORM / generic auth       | Post-v1.0 ecosystem                          |
+| Item                         | Decision                                                                     |
+| ---------------------------- | ---------------------------------------------------------------------------- |
+| Built-in ORM                 | External recipes only. ORM choice belongs to the app.                        |
+| Generic auth platform        | External integrations and examples only before v1.                           |
+| React-like runtime ownership | openElement outputs Web Components and DSD; it does not own a React runtime. |
+| String renderer revival      | No. The renderer model remains JSX/VNode/RenderNode.                         |
+| Silent compatibility shims   | No. 0.x may break APIs when cleanup improves the contract.                   |
 
 ## Document Cross-Reference
 
-| Document Type | Rhythm                                  | Location                |
-| ------------- | --------------------------------------- | ----------------------- |
-| SOP           | per patch near-term, per minor far-term | `docs/sop/`             |
-| ADR           | decision-driven                         | `docs/adr/`             |
-| Changelog     | per patch                               | `docs/changelog/`       |
-| Status        | always current                          | `docs/status/STATUS.md` |
-| Roadmap       | this document + per-minor pages         | `docs/roadmap/`         |
-| Release Note  | per version                             | `docs/release/`         |
+| Document Type | Rhythm                         | Location                |
+| ------------- | ------------------------------ | ----------------------- |
+| SOP           | per minor and per release task | `docs/sop/`             |
+| ADR           | decision-driven                | `docs/adr/`             |
+| Changelog     | per release                    | `docs/changelog/`       |
+| Status        | always current                 | `docs/status/STATUS.md` |
+| Release Note  | per version                    | `docs/release/`         |

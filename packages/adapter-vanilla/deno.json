@@ -1,14 +1,14 @@
 {
   "name": "@openelement/adapter-vanilla",
-  "version": "0.30.1",
+  "version": "0.31.0",
   "exports": {
     ".": "./src/index.ts",
     "./ssr": "./src/ssr.ts",
     "./dsd-hydration": "./src/dsd-hydration.ts"
   },
   "imports": {
-    "@openelement/core": "jsr:@openelement/core@^0.30.1",
-    "@openelement/core/logger": "jsr:@openelement/core@^0.30.1/logger"
+    "@openelement/core": "jsr:@openelement/core@^0.31.0",
+    "@openelement/core/logger": "jsr:@openelement/core@^0.31.0/logger"
   },
   "tasks": {
     "build": "deno check src/index.ts src/ssr.ts src/dsd-hydration.ts",

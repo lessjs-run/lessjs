@@ -27,7 +27,7 @@ export class ConfigurationPage extends DsdElement {
           <h2>Minimal Configuration</h2>
           <open-code-block>
             <pre><code>import {'{'} defineConfig {'}'} from 'vite';
-import {'{'} openElement {'}'} from '@openelement/app';
+import {'{'} openElement {'}'} from '@openelement/app/vite';
 export default defineConfig({'{'} plugins: [openElement()] {'}'});</code></pre>
           </open-code-block>
           <p>
@@ -140,7 +140,7 @@ export default defineConfig({'{'}
           <h2>Minimal Configuration</h2>
           <open-code-block>
             <pre><code>import {'{'} defineConfig {'}'} from 'vite';
-import {'{'} openElement {'}'} from '@openelement/app';
+import {'{'} openElement {'}'} from '@openelement/app/vite';
 export default defineConfig({'{'} plugins: [openElement()] {'}'});</code></pre>
           </open-code-block>
           <p>

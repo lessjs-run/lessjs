@@ -1,11 +1,11 @@
 export const meta = { section: 'Quick Start', label: 'Getting Started', order: 1 };
-// v0.30.1
+
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
 import { docsPageStyles } from '@openelement/ui/docs-page-styles';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
-import '@openelement/ui/open-code-block';
 import '@openelement/ui/open-callout';
+import '@openelement/ui/open-code-block';
 import { OPENELEMENT_VERSION } from '../../data/version.ts';
 
 const routeSheet = new StyleSheet();
@@ -23,11 +23,10 @@ export class GettingStartedPage extends DsdElement {
   static override styles = [openPropsTokenSheet, docsPageStyles, routeSheet];
 
   override render() {
-    const locale = this._getLocale('en');
     return (
       <div class='content-grid'>
         <div class='container'>
-          {locale === 'zh' ? <GettingStartedZh /> : <GettingStartedEn />}
+          {this._getLocale('en') === 'zh' ? <GettingStartedZh /> : <GettingStartedEn />}
         </div>
       </div>
     );
@@ -39,19 +38,23 @@ function GettingStartedEn() {
     <>
       <h1>Getting Started</h1>
       <p class='subtitle'>
-        Create a minimal DSD-first app, start the dev server, build static
-        output, and see where the v0.30.1 openElement contract lives.
+        Create a minimal JSX-first, DSD-first openElement app, start the dev
+        server, build static output, and learn where the v0.31.0 application
+        API lives.
       </p>
 
       <open-callout type='info' label='Recommended'>
         Deno 2.7+ recommended. openElement <strong>{OPENELEMENT_VERSION}</strong>
-        {' '}uses Deno tasks, `deno.json` imports, JSX/VNode rendering, and the
-        `openElement()` Vite facade.
+        {' '}uses Deno tasks, <code>deno.json</code> imports, JSX/VNode
+        rendering, and the <code>openElement()</code> Vite facade from
+        <code>@openelement/app/vite</code>.
       </open-callout>
 
       <section class='step'>
         <h2>1. Create a Project</h2>
-        <open-code-block><pre><code>{'deno run -A jsr:@openelement/create my-app\ncd my-app'}</code></pre></open-code-block>
+        <open-code-block>
+          <pre><code>{'deno run -A jsr:@openelement/create my-app\ncd my-app'}</code></pre>
+        </open-code-block>
         <p>
           The scaffold includes page routes, a sample island, Vite config, and
           the common Deno tasks needed for development and builds.
@@ -77,72 +80,60 @@ function GettingStartedEn() {
         </p>
       </section>
 
-      <section class='step'>
-        <h2>4. Preview the Production Build</h2>
-        <open-code-block><pre><code>deno task preview</code></pre></open-code-block>
-        <p>
-          Preview checks the final static output, not the dev server. Run it
-          before deployment.
-        </p>
-      </section>
-
       <h2>Project Structure</h2>
       <open-code-block><pre><code>{`my-app/
 |-- app/
 |   |-- routes/
-|   |   |-- index.tsx
-|   |   |-- about.tsx
-|   |   \`-- api/
-|   |       \`-- status.ts
+|   |   \`-- index.tsx
 |   |-- islands/
-|   |   \`-- counter.tsx
+|   |   \`-- my-counter.tsx
 |   \`-- components/
 |-- deno.json
 \`-- vite.config.ts`}</code></pre></open-code-block>
 
       <h2>Writing a Page</h2>
       <p>
-        A page is a custom element. SSR renders it into Declarative Shadow DOM,
-        so content is visible before JavaScript runs.
+        A page is a JSX function wrapped by <code>definePage()</code>. The
+        framework turns it into a Web Component and renders it as Declarative
+        Shadow DOM during SSR/SSG.
       </p>
-      <open-code-block><pre><code>{`import { DsdElement, type VNode } from '@openelement/core';
+      <open-code-block><pre><code>{`import { definePage } from '@openelement/app';
 
-export class HomePage extends DsdElement {
-  override render(): VNode {
-    return <main>Hello openElement</main>;
-  }
-}
-
-customElements.define('page-home', HomePage);
-export default HomePage;
-export const tagName = 'page-home';`}</code></pre></open-code-block>
+export default definePage(() => {
+  return <main>Hello openElement</main>;
+});`}</code></pre></open-code-block>
 
       <h2>Adding Interactivity</h2>
       <p>
         Put browser-upgraded components under <span class='inline-code'>app/islands</span>.
-        Interactive dynamic UI should return VNodes and use JSX event handlers.
+        Interactive UI should return VNodes and use JSX event handlers.
       </p>
-      <open-code-block><pre><code>{`import { DsdElement, type VNode } from '@openelement/core';
-import { signal } from '@openelement/signals';
+      <open-code-block><pre><code>{`import { defineIsland } from '@openelement/app';
+import { signal } from '@openelement/runtime';
 
-export class CounterIsland extends DsdElement {
-  count = signal(0);
+const count = signal(0);
 
-  override render(): VNode {
-    return (
-      <button onClick={() => this.count.value++}>
-        Count: {this.count.value}
-      </button>
-    );
-  }
-}`}</code></pre></open-code-block>
+export default defineIsland(
+  'my-counter',
+  () => (
+    <button onClick={() => count.value++}>
+      Count: {count.value}
+    </button>
+  ),
+);`}</code></pre></open-code-block>
+
+      <h2>Configuring Vite</h2>
+      <open-code-block><pre><code>{`import { defineConfig } from 'vite';
+import { openElement } from '@openelement/app/vite';
+
+export default defineConfig({
+  plugins: [openElement({ routesDir: 'app/routes', islandsDir: 'app/islands' })],
+});`}</code></pre></open-code-block>
 
       <div class='note'>
         <p>
-          Next steps: <a href='/guide/core-concepts'>Core Concepts</a>,{' '}
-          <a href='/guide/routing-and-data'>Routing &amp; Data</a>,{' '}
-          <a href='/guide/islands-and-ssr'>Islands &amp; SSR</a>, and{' '}
-          <a href='/guide/deployment'>Deployment</a>.
+          The v1.0 target is a stable application engine. v0.31.0 starts that
+          path by making the Application API the default authoring surface.
         </p>
       </div>
 
@@ -158,48 +149,74 @@ function GettingStartedZh() {
     <>
       <h1>快速开始</h1>
       <p class='subtitle'>
-        从一个最小 DSD-first 应用开始：创建项目、启动开发服务、构建静态输出，
-        并理解 v0.30.1 的 openElement 契约。
+        创建一个 JSX-first、DSD-first 的 openElement 应用，启动开发服务器，
+        构建静态输出，并理解 v0.31.0 的应用层 API。
       </p>
 
       <open-callout type='info' label='推荐'>
         推荐 Deno 2.7+。openElement <strong>{OPENELEMENT_VERSION}</strong>
-        {' '}使用 Deno tasks、`deno.json` imports、JSX/VNode 渲染，以及
-        `openElement()` Vite facade。
+        {' '}使用 Deno tasks、<code>deno.json</code> imports、JSX/VNode
+        渲染，以及来自 <code>@openelement/app/vite</code> 的
+        <code>openElement()</code> Vite facade。
       </open-callout>
 
       <section class='step'>
         <h2>1. 创建项目</h2>
-        <open-code-block><pre><code>{'deno run -A jsr:@openelement/create my-app\ncd my-app'}</code></pre></open-code-block>
-        <p>脚手架会生成页面路由、示例 island、Vite 配置和常用 Deno tasks。</p>
+        <open-code-block>
+          <pre><code>{'deno run -A jsr:@openelement/create my-app\ncd my-app'}</code></pre>
+        </open-code-block>
+        <p>
+          脚手架会生成页面路由、示例 island、Vite 配置和常用 Deno tasks。
+        </p>
       </section>
 
       <section class='step'>
-        <h2>2. 启动开发服务</h2>
+        <h2>2. 启动开发服务器</h2>
         <open-code-block><pre><code>deno task dev</code></pre></open-code-block>
-        <p>开发模式由 Vite 提供模块加载和热更新，由生成的 Hono entry 提供 SSR/API 行为。</p>
+        <p>
+          开发模式由 Vite 提供模块加载和热更新，SSR/API 行为来自生成的
+          Hono entry。
+        </p>
       </section>
 
       <section class='step'>
         <h2>3. 构建静态输出</h2>
         <open-code-block><pre><code>deno task build</code></pre></open-code-block>
         <p>
-          构建会扫描 routes 和 islands，生成 SSR wiring，输出 DSD HTML 和
-          client island chunks，最终结果位于 <span class='inline-code'>dist/</span>。
+          构建会扫描 routes 和 islands，生成 SSR wiring，输出 DSD HTML
+          和 client island chunks，最终结果位于
+          <span class='inline-code'>dist/</span>。
         </p>
       </section>
 
-      <section class='step'>
-        <h2>4. 预览生产构建</h2>
-        <open-code-block><pre><code>deno task preview</code></pre></open-code-block>
-        <p>部署前至少运行一次 preview，检查最终静态输出。</p>
-      </section>
+      <h2>页面写法</h2>
+      <open-code-block><pre><code>{`import { definePage } from '@openelement/app';
 
-      <h2>核心写法</h2>
-      <p>
-        页面和 island 都是 custom elements。交互 UI 返回 VNodes，用 JSX
-        event handlers；不要回到 method-name string event attributes 或动态 HTML 字符串。
-      </p>
+export default definePage(() => {
+  return <main>Hello openElement</main>;
+});`}</code></pre></open-code-block>
+
+      <h2>交互写法</h2>
+      <open-code-block><pre><code>{`import { defineIsland } from '@openelement/app';
+import { signal } from '@openelement/runtime';
+
+const count = signal(0);
+
+export default defineIsland(
+  'my-counter',
+  () => (
+    <button onClick={() => count.value++}>
+      Count: {count.value}
+    </button>
+  ),
+);`}</code></pre></open-code-block>
+
+      <div class='note'>
+        <p>
+          v1.0 的目标是稳定应用引擎。v0.31.0 先把 Application API
+          变成默认应用编写入口。
+        </p>
+      </div>
 
       <div class='nav-row'>
         <a href='/zh/guide/core-concepts' class='nav-link'>核心概念 &rarr;</a>

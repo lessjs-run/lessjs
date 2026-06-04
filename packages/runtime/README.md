@@ -1,12 +1,15 @@
 # @openelement/runtime
 
-Component authoring facade: the single import for writing openElement components.
+Runtime convenience facade for low-level openElement primitives.
 
-`@openelement/runtime` re-exports the complete authoring surface from the runtime
-kernel (`@openelement/core`), signals engine (`@openelement/signals`), and stylesheet
-abstraction (`@openelement/style-sheet`).
+Most applications should start from `@openelement/app`:
 
-**Use `@openelement/runtime` as your only import when writing openElement components.**
+```tsx
+import { defineIsland, definePage } from '@openelement/app';
+```
+
+Use `@openelement/runtime` when you need direct access to the renderer class,
+signals, or stylesheet primitive in library code.
 
 ## Install
 
@@ -21,6 +24,8 @@ import { DsdElement, signal, StyleSheet } from '@openelement/runtime';
 
 class MyButton extends DsdElement {
   static props = { disabled: Boolean };
+  static styles = [StyleSheet.fromCss('.btn { font: inherit; }')];
+
   #clicks = signal(0);
 
   render() {
@@ -36,15 +41,15 @@ class MyButton extends DsdElement {
   }
 }
 
-export const tagName = 'my-button';
-customElements.define(tagName, MyButton);
+customElements.define('my-button', MyButton);
 ```
 
 ## Exports
 
 From `@openelement/core`: `DsdElement`, `Fragment`, `VNode`, `isVNode`,
 `renderDsdTree`, `renderToDom`, `isSignalLike`, `unwrapSignalLike`,
-`ErrorBoundary`, `OpenElementError`, `escapeHtml`, `escapeAttr`, `defineIsland`, `bindSsrProps`, `getSsrProps`.
+`ErrorBoundary`, `OpenElementError`, `escapeHtml`, `escapeAttr`, `defineIsland`,
+`bindSsrProps`, `getSsrProps`.
 
 From `@openelement/core/jsx-runtime`: `jsx`, `jsxs`, `jsxDEV`, `For`, `Show`.
 

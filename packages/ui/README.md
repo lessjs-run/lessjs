@@ -32,7 +32,7 @@ deno add jsr:@openelement/ui
 components in package manifest scanning:
 
 ```ts
-import { openElement } from '@openelement/app';
+import { openElement } from '@openelement/app/vite';
 
 export default {
   plugins: [

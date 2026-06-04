@@ -5,7 +5,7 @@
  * with a shared OpenElementBuildContext. This is the primary user-facing API.
  */
 import { assertArrayIncludes, assertEquals, assertExists } from 'jsr:@std/assert@^1.0.0';
-import { openElement } from '../src/index.ts';
+import { openElement } from '../src/vite.ts';
 
 // ─── Plugin structure ──────────────────────────────────────────
 

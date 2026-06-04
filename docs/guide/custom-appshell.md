@@ -37,7 +37,7 @@ customElements.define(tagName, SiteLayout);
 ## 2. Configure The Shell
 
 ```ts
-import { openElement } from '@openelement/app';
+import { openElement } from '@openelement/app/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({

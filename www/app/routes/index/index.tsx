@@ -1,5 +1,5 @@
 /**
- * Homepage - openElement v0.30.1.
+ * Homepage - openElement v0.31.0.
  */
 import { DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
@@ -63,7 +63,7 @@ export class DocsHome extends DsdElement {
         <section class="hero">
           <div class="hero-inner">
             <div class="hero-left">
-              <p class="eyebrow">openElement v0.30.1</p>
+              <p class="eyebrow">openElement v0.31.0</p>
               <h1 class="giant-headline">THE OPEN<br /><span class="glow-line">ELEMENT.</span></h1>
               <p class="hero-desc">A DSD-first Web Components framework with one VNode renderer pipeline, structured metadata, explicit trusted HTML boundaries, and island JavaScript that upgrades only where it is needed.</p>
               <div class="terminal">

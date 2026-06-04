@@ -30,8 +30,9 @@ export default defineConfig({
 });
 ```
 
-Most applications should use `openElement()` from `@openelement/app` instead; it combines
-the core adapter, content pipeline, and i18n with one shared build context.
+Most applications should use `openElement()` from `@openelement/app/vite`
+instead; it combines the core adapter, content pipeline, and i18n with one
+shared build context.
 
 ## Main Options
 

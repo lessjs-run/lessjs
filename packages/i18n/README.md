@@ -1,27 +1,19 @@
 # @openelement/i18n
 
-国际化插件 - SSG locale 展开、路径辅助、语言切换。
+Build-time i18n support for openElement SSG apps.
 
-## 安装
+## Install
 
 ```bash
 deno add jsr:@openelement/i18n
 ```
 
-## 功能
+## Recommended Usage
 
-- **SSG locale 展开**：构建时为每个 locale × 每个路由渲染页面
-- **`i18nStaticPaths()`**：为动态路由提供 locale 参数展开
-- **`switchLocale()`**：路由辅助函数，生成跨 locale 链接
-- **Language switcher**：与 `open-layout` 集成的语言切换器
-
-## 使用
-
-### 推荐方式（通过 @openelement/app）
+Configure i18n through the unified Vite facade:
 
 ```ts
-// vite.config.ts
-import { openElement } from '@openelement/app';
+import { openElement } from '@openelement/app/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -36,38 +28,31 @@ export default defineConfig({
 });
 ```
 
-### Route 层辅助函数
+## Features
+
+- SSG locale expansion for every configured locale and static route.
+- `i18nStaticPaths()` for dynamic route locale expansion.
+- `switchLocale()` for generating alternate locale links.
+- Integration with `open-layout` language switching.
+
+## Route Helpers
 
 ```ts
-// app/routes/[locale]/index.ts
 import { i18nStaticPaths, switchLocale } from '@openelement/i18n';
 
 export function getStaticPaths() {
-  return i18nStaticPaths(); // 展开所有 locale 路径
+  return i18nStaticPaths();
 }
 
-// 生成跨 locale 链接
-const enPath = switchLocale('/zh/about', 'en'); // -> '/en/about'
+const enPath = switchLocale('/zh/about', 'en');
 ```
 
-### 独立使用（需显式传递 ctx）
+## Advanced Direct Use
 
-```ts
-import { openI18n } from '@openelement/i18n';
-import { less } from '@openelement/adapter-vite';
-import { OpenElementBuildContext } from '@openelement/adapter-vite/build-context';
-import { defineConfig } from 'vite';
+Direct plugin use is for framework internals and adapter experiments. Normal
+applications should configure i18n through `openElement()` so i18n, content,
+route scanning, and SSG share one build context.
 
-const ctx = new OpenElementBuildContext({});
-
-export default defineConfig({
-  plugins: [
-    ...createOpenPlugin({ routesDir: 'app/routes' }, ctx),
-    openI18n({ locales: ['en', 'zh'], defaultLocale: 'en', ctx }),
-  ],
-});
-```
-
-## 许可
+## License
 
 MIT

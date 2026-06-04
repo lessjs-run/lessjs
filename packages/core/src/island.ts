@@ -379,9 +379,11 @@ export function defineIsland<T extends CustomElementConstructor>(
 
   // Define a registration function that's idempotent
   const register = () => {
-    if (!globalThis.customElements.get(tagName)) {
+    const registry = globalThis.customElements;
+    if (!registry) return;
+    if (!registry.get(tagName)) {
       try {
-        globalThis.customElements.define(tagName, componentClass);
+        registry.define(tagName, componentClass);
       } catch (e) {
         // Already defined - safe to ignore in SSR contexts
         log.debug(

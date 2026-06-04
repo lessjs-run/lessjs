@@ -5,38 +5,28 @@ label: 'Error Handling'
 order: 30
 ---
 
-<open-layout
-locale=
-locales=
-navItems=
-headerNav=
-currentPath='/en/guide/error-handling'
+# Error Handling
 
-    <h1>Error Handling</h1>
-    <p class='subtitle'>
-      openElement distinguishes between framework errors, build-time render errors, API errors, and
-      browser island failures. The goal is clear diagnostics without leaking internal
-      information in production.
-    </p>
-    <h2>Error Hierarchy</h2>
-    <div class='error-hierarchy'>
-      OpenElementError |-- NotFoundError 404 |-- UnauthorizedError 401 |-- ForbiddenError 403 |--
-      ValidationError 422 |-- ConflictError 409 |-- RateLimitError 429 |-- SsrRenderError 500
-      |-- IslandUpgradeError 500
-    </div>
-    <h2>Operational vs Programming</h2>
-    <p>
-      openElement distinguishes operational errors (not found, validation, rate limit - return
-      structured status) from programming errors (render failure, broken import - fail build
-      or show dev diagnostics).
-    </p>
-    <h2>Structured Logging</h2>
-    <p>
-      openElement uses <span class='inline-code'>createLogger(scope)</span> 
-      for scoped log levels (DEBUG, INFO, WARN, ERROR). Each message carries a prefix
-      identifying its source - e.g. <span class='inline-code'>[openElement/SSG]</span>.
-    </p>
-    <div class='nav-row'>
-      <a href='/guide/security-middleware' class='nav-link'>← Security &amp; Middleware</a>
-      <a href='/guide/testing' class='nav-link'>Testing →</a>
-    </div>
+openElement separates build-time framework errors, route render errors, API
+errors, and browser island failures.
+
+## Build Errors
+
+Build-time errors should fail loudly. Optional package misses can degrade, but a
+present package that throws during import should be visible in diagnostics.
+
+## Route Render Errors
+
+SSG and SSR route render failures are logged with the route path. Production
+responses avoid leaking internal stack traces.
+
+## API Errors
+
+Use structured response helpers or `RpcError` for client RPC calls. Operational
+errors should carry a clear HTTP status and message; programming errors should
+fail the build or server route.
+
+## Browser Errors
+
+Island upgrade failures should stay scoped to the island and remain diagnosable
+through browser logs and e2e tests.

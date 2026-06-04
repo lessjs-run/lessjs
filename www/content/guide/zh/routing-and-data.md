@@ -1,53 +1,65 @@
 ---
-title: 'Routing & Data'
-section: 'Core'
-label: 'Routing & Data'
+title: '路由与数据'
+section: '指南'
+label: '路由与数据'
 order: 3
 ---
 
-<open-layout locale="$" locales='$' nav-items='$' header-nav='$' current-path="/zh/guide/routing-and-data">
+# 路由与数据
 
-          <h1>Routing &amp; Data</h1>
-          <p class="subtitle">
-            openElement uses filesystem routing. Files map to URLs, with dynamic segments, special files,
-            and build-time data injection.
-          </p>
+`app/routes` 下的文件会成为路由。路由模块导出页面组件，通常由 `definePage()` 创建。
 
-          <h2>Filesystem Routing</h2>
-          <p>
-            Page components under <code>app/routes/</code> are automatically mapped to routes. Each page
-            module must export a Custom Element class as default and a <code>tagName</code>.
-          </p>
-          <table>
-            <thead><tr><th>File</th><th>URL</th></tr></thead>
-            <tbody>
-              <tr><td><code>app/routes/index.ts</code></td><td><code>/</code></td></tr>
-              <tr><td><code>app/routes/about.ts</code></td><td><code>/about</code></td></tr>
-              <tr><td><code>app/routes/docs/index.ts</code></td><td><code>/docs</code></td></tr>
-              <tr><td><code>app/routes/docs/install.ts</code></td><td><code>/docs/install</code></td></tr>
-            </tbody>
-          </table>
+## 静态页面
 
-          <h2>Page Contract</h2>
-          <p>Each route file must export:</p>
-          <open-code-block><pre><code>import  from '@openelement/core';
+```tsx
+import { definePage } from '@openelement/app';
 
-export class AboutPage extends DsdElement
-}
+export default definePage(() => <main>Home</main>);
+```
 
-customElements.define('page-about', AboutPage);
-export default AboutPage;
-export const tagName = 'page-about';</code></pre></open-code-block>
+## 页面 metadata
 
-    <h2>Dynamic Routes: Bracket Syntax</h2>
-    <p>Filenames with <code>[param]</code> map to Hono route params and are injected as component properties during SSR:</p>
-    <table>
-      <thead><tr><th>File</th><th>Route</th><th>Property</th></tr></thead>
-      <tbody>
-        <tr><td><code>posts/[slug].ts</code></td><td><code>/posts/:slug</code></td><td><code>slug</code></td></tr>
-        <tr><td><code>users/[id]/posts.ts</code></td><td><code>/users/:id/posts</code></td><td><code>id</code></td></tr>
-      </tbody>
-    </table>
-    <open-code-block><pre><code>import  from '@openelement/core';
+```tsx
+export default definePage({
+  title: 'Posts',
+  description: 'Latest posts',
+  render() {
+    return <main>Posts</main>;
+  },
+});
+```
 
-export class PostPage extends DsdElement &lt;/article&gt;\
+## 加载数据
+
+```tsx
+import { definePage } from '@openelement/app';
+
+export default definePage({
+  async load() {
+    return { posts: await fetchPosts() };
+  },
+  render({ data }) {
+    return (
+      <main>
+        {data.posts.map((post) => <article>{post.title}</article>)}
+      </main>
+    );
+  },
+});
+```
+
+`load()` 会收到 route params、request 和运行时上下文。返回值会作为 `data` 传给页面。
+
+## 渲染意图
+
+页面 descriptor 可以声明后续渲染意图：
+
+```tsx
+export default definePage({
+  rendering: 'ssg',
+  revalidate: 300,
+  render: () => <main>Cached page</main>,
+});
+```
+
+v0.31 建立应用契约。v0.32 会继续产品化 SSR、ISR、streaming DSD 和 cache adapters。

@@ -10,7 +10,7 @@
  *
  * Recommended usage (via @openelement/app):
  * ```ts
- * import { openElement } from '@openelement/app';
+ * import { openElement } from '@openelement/app/vite';
  *
  * export default defineConfig({
  *   plugins: [await openElement({

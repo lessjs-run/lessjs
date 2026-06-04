@@ -1,36 +1,38 @@
 # @openelement/rpc
 
-零依赖 RPC 控制器 — 基于 Fetch API + AbortController，框架无关。
+Small Fetch API RPC helpers for openElement applications and Web Components.
 
-## 安装
+`@openelement/rpc` is intentionally framework-light: it owns request state,
+retry, cancellation, and typed call helpers, but it does not own routing,
+database access, or application auth.
+
+## Install
 
 ```bash
 deno add jsr:@openelement/rpc
 ```
 
-## 功能
+## Usage
 
-- **`RpcController`**：ReactiveController 模式，自动管理 loading/error 状态并触发 host 重渲染
-- **自动重试**：可配置重试次数 + 指数退避，仅对网络错误和 5xx 重试
-- **请求取消**：通过 AbortController 取消进行中的请求（hostDisconnected 自动清理）
-- **类型安全**：TypeScript 泛型推导请求/响应类型
-- **零依赖**：纯 `fetch` + `AbortController`，无框架依赖
-
-## 使用
-
-### 基础用法
+Application code should normally use `@openelement/app` for pages and islands.
+Use `RpcController` inside a low-level element when a client request needs
+loading/error state tied to the host lifecycle.
 
 ```tsx
 import { RpcController, RpcError } from '@openelement/rpc';
 import { DsdElement } from '@openelement/runtime';
 
-class MyElement extends DsdElement {
-  private rpc = new RpcController(this);
+class PostLoader extends DsdElement {
+  static props = { endpoint: String };
 
-  async loadData() {
+  endpoint = '/api/posts';
+  rpc = new RpcController(this);
+
+  async loadPosts() {
     try {
-      const data = await this.rpc.call(() => fetch('/api/posts').then((r) => r.json()));
-      this.data = data;
+      return await this.rpc.call((signal) =>
+        fetch(this.endpoint, { signal }).then((r) => r.json())
+      );
     } catch (err) {
       if (err instanceof RpcError) {
         console.error(`API error (${err.status}): ${err.message}`);
@@ -38,28 +40,23 @@ class MyElement extends DsdElement {
     }
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.loadData();
-  }
-
   render() {
-    if (this.rpc.loading) return <p>加载中...</p>;
-    if (this.rpc.error) return <p>错误: {this.rpc.error.message}</p>;
-    return <p>{this.data}</p>;
+    if (this.rpc.loading) return <button disabled>Loading</button>;
+    if (this.rpc.error) return <p>Error: {this.rpc.error.message}</p>;
+    return <button onClick={() => this.loadPosts()}>Load posts</button>;
   }
 }
+
+customElements.define('post-loader', PostLoader);
 ```
 
-### 重试配置
+## Features
 
-```ts
-const rpc = new RpcController(this, {
-  maxRetries: 2,
-  retryDelay: (attempt) => Math.pow(2, attempt) * 1000, // 2s, 4s
-});
-```
+- Fetch-based calls with typed request and response shapes.
+- AbortController cancellation for in-flight requests.
+- Optional retry with custom delay calculation.
+- No ORM, auth provider, or server runtime dependency.
 
-## 许可
+## License
 
 MIT

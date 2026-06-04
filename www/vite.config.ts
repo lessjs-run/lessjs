@@ -1,4 +1,4 @@
-import { openElement } from '@openelement/app';
+import { openElement } from '@openelement/app/vite';
 import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import { defineConfig } from 'vite';
 

@@ -72,6 +72,20 @@ function routeTagNameExpr(varName: string, fallback: string): string {
   return JSON.stringify(fallback);
 }
 
+function pageDefinitionExpr(varName: string): string {
+  return `(${varName}.default?.openElementPage || {})`;
+}
+
+function routeMetaExpr(varName: string): string {
+  const pageDef = pageDefinitionExpr(varName);
+  return `({ ...(${varName}.meta || {}), ...(${pageDef}.layout !== undefined ? { layout: ${pageDef}.layout } : {}), ...(${pageDef}.title !== undefined ? { title: ${pageDef}.title } : {}), ...(${pageDef}.description !== undefined ? { description: ${pageDef}.description } : {}) })`;
+}
+
+function routeRevalidateExpr(varName: string): string {
+  const pageDef = pageDefinitionExpr(varName);
+  return `(${varName}.revalidate !== undefined ? ${varName}.revalidate : ${pageDef}.revalidate)`;
+}
+
 function renderCorsOrigin(origin: CorsOriginConfig): string {
   if (typeof origin === 'object' && !Array.isArray(origin)) return origin.body;
   return JSON.stringify(origin);
@@ -234,6 +248,8 @@ function renderPageRoute(
   // H-02 fix: escape single quotes in route path (for paths like "/it's-a-test")
   const pathStr = route.path.replace(/'/g, "\\'");
   const tagNameExpr = routeTagNameExpr(route.varName, route.tagName);
+  const pageDefExpr = pageDefinitionExpr(route.varName);
+  const routeMeta = routeMetaExpr(route.varName);
   lines.push(`app.get('${pathStr}', async (c) => {`);
   lines.push(`  try {`);
   lines.push(`    const tag = ${tagNameExpr}`);
@@ -242,7 +258,27 @@ function renderPageRoute(
   // Components receive route params as props for SSR-time data access.
   // v0.6: Pass route/source context for error visibility.
   // H-02 fix: Use JSON.stringify to escape route path and file path
-  lines.push(`    let node = jsx(tag, c.req.param() || {})`);
+  lines.push(`    const __page = ${pageDefExpr}`);
+  lines.push(`    const __params = c.req.param() || {}`);
+  lines.push(`    const __loadContext = {`);
+  lines.push(`      params: __params,`);
+  lines.push(`      request: c.req.raw,`);
+  lines.push(`      env: c.env || {},`);
+  lines.push(
+    `      platform: (() => { try { return c.executionCtx } catch { return undefined } })(),`,
+  );
+  lines.push(
+    `      route: { path: ${JSON.stringify(route.path)}, filePath: ${
+      JSON.stringify(route.filePath)
+    } },`,
+  );
+  lines.push(`    }`);
+  lines.push(
+    `    const __data = typeof __page.load === "function" ? await __page.load(__loadContext) : undefined`,
+  );
+  lines.push(
+    `    let node = jsx(tag, { ...__params, __openElementParams: __params, __openElementData: __data, __openElementRequest: c.req.raw })`,
+  );
   lines.push('');
 
   // Wrap with renderers from outer to inner (v0.3.0)
@@ -260,11 +296,12 @@ function renderPageRoute(
   lines.push(
     `    const content = await __renderAppShell(node, c.req.path || ${
       JSON.stringify(route.path)
-    }, { routeMeta: ${route.varName}.meta || {} })`,
+    }, { routeMeta: ${routeMeta} })`,
   );
   lines.push(`    return c.html(wrapInDocument(content, {`);
-  lines.push(`      title: ${JSON.stringify(docConfig.title)},`);
+  lines.push(`      title: __page.title || ${JSON.stringify(docConfig.title)},`);
   lines.push(`      lang: ${JSON.stringify(docConfig.lang)},`);
+  lines.push(`      meta: { description: __page.description },`);
   lines.push(`      headExtras: ${headExtrasExpr},`);
   lines.push(
     `      allowHeadExtrasScripts: ${JSON.stringify(docConfig.allowHeadExtrasScripts)},`,
@@ -273,6 +310,9 @@ function renderPageRoute(
   lines.push(`    }))`);
 
   lines.push(`  } catch (err) {`);
+  lines.push(
+    `    console.error('[openElement] Route render failed for ${pathStr}:', err)`,
+  );
   // Use import.meta.env.PROD for runtime environment detection.
   // process.env.NODE_ENV was previously evaluated at code-generation time
   // (build machine), which meant CI without NODE_ENV=production would leak
@@ -686,10 +726,25 @@ export function renderEntry(desc: EntryDescriptor): string {
           JSON.stringify(
             r.paramNames || [],
           )
-        }, revalidate: typeof ${r.varName}.revalidate === 'number' ? ${r.varName}.revalidate : undefined },`,
+        }, revalidate: ${routeRevalidateExpr(r.varName)} },`,
       );
     }
     lines.push('];');
+    lines.push('');
+
+    lines.push('function __pageDefinition(module) {');
+    lines.push('  return module?.default?.openElementPage || {};');
+    lines.push('}');
+    lines.push('');
+    lines.push('function __routeMeta(module) {');
+    lines.push('  const page = __pageDefinition(module);');
+    lines.push('  return {');
+    lines.push('    ...(module?.meta || {}),');
+    lines.push('    ...(page.layout !== undefined ? { layout: page.layout } : {}),');
+    lines.push('    ...(page.title !== undefined ? { title: page.title } : {}),');
+    lines.push('    ...(page.description !== undefined ? { description: page.description } : {}),');
+    lines.push('  };');
+    lines.push('}');
     lines.push('');
 
     lines.push('function __rendererContext(routePath, params) {');
@@ -737,11 +792,24 @@ export function renderEntry(desc: EntryDescriptor): string {
     lines.push(
       '  const { params = {}, locale, title, lang, headExtras } = options;',
     );
-    lines.push('  const props = { ...params };');
+    lines.push('  const page = __pageDefinition(info.module);');
+    lines.push('  const routeMeta = __routeMeta(info.module);');
+    lines.push('  const loadContext = {');
+    lines.push('    params,');
+    lines.push('    request: options.request,');
+    lines.push('    env: options.env || {},');
+    lines.push('    platform: options.platform,');
+    lines.push('    route: { path: routePath },');
+    lines.push('  };');
+    lines.push(
+      '  const data = typeof page.load === "function" ? await page.load(loadContext) : undefined;',
+    );
+    lines.push(
+      '  const props = { ...params, __openElementParams: params, __openElementData: data, __openElementRequest: options.request };',
+    );
     lines.push('  if (locale) props.locale = locale;');
     lines.push('  const startTime = typeof performance !== "undefined" ? performance.now() : 0;');
     lines.push('  let node = jsx(info.tagName, props);');
-    lines.push('  const routeMeta = info.module?.meta || {};');
     lines.push('  for (const renderer of __matchingRenderers(routePath)) {');
     lines.push(
       '    node = await renderer.wrap(node, __rendererContext(routePath, params));',
@@ -755,8 +823,9 @@ export function renderEntry(desc: EntryDescriptor): string {
       '  const componentCount = (content.match(/<template shadowrootmode="open"/g) || []).length;',
     );
     lines.push('  const fullHtml = wrapInDocument(content, {');
-    lines.push('    title: title || "openElement",');
+    lines.push('    title: title || page.title || "openElement",');
     lines.push('    lang: lang || locale || "en",');
+    lines.push('    meta: { description: page.description },');
     lines.push(
       '    headExtras: headExtras !== undefined ? headExtras : (typeof __headExtras !== "undefined" ? __headExtras : ""),',
     );

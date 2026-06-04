@@ -1,90 +1,38 @@
 ---
-title: 'Deployment'
-section: 'Production'
-label: 'Deployment'
+title: '部署'
+section: '生产'
+label: '部署'
 order: 5
 ---
 
-<open-layout
-locale=
-locales=
-navItems=
-headerNav=
-currentPath='/zh/guide/deployment'
+# 部署
 
-    <h1>Deployment</h1>
-    <p class='subtitle'>
-      openElement prioritizes static file deployment. Runtime API routes are deployed separately
-      via serverless or edge adapters when the app needs dynamic behavior.
-    </p>
-    <h2>Build Once</h2>
-    <open-code-block>
-      <pre><code>deno task build</code></pre>
-    </open-code-block>
-    <p>
-      The build outputs 
-      <span class='inline-code'>dist/</span>: static HTML with Declarative Shadow DOM, client
-      island chunks, and copied public assets.
-    </p>
-    <h2>Static Hosting</h2>
-    <div class='platform-grid'>
-      <div class='platform-card'>
-        <h3>GitHub Pages</h3>
-        <p>Set Vite base when deploying under a repo sub-path.</p>
-      </div>
-      <div class='platform-card'>
-        <h3>Cloudflare Pages</h3>
-        <p>Build command: deno task build; Output dir: dist.</p>
-      </div>
-      <div class='platform-card'>
-        <h3>Netlify</h3>
-        <p>Publish directory: dist.</p>
-      </div>
-      <div class='platform-card'>
-        <h3>Vercel</h3>
-        <p>Use static output, Framework preset: "Other".</p>
-      </div>
-      <div class='platform-card'>
-        <h3>S3 / CloudFront</h3>
-        <p>Upload dist/ with appropriate cache headers.</p>
-      </div>
-    </div>
-    <h2>API Deployment</h2>
-    <p>
-      API routes belong to the generated Hono app. Static hosting doesn't execute them. Deploy
-      API routes via platform adapters when runtime behavior is needed.
-    </p>
-    <h2>No Production SSR Server by Default</h2>
-    <p>
-      openElement's main path doesn't need a long-running production SSR server. Static pages stay
-      static; dynamic behavior should be explicit API or future ISR. This keeps hosting cheap,
-      cacheable, and operationally lightweight.
-    </p>
-    <h2>PWA Support</h2>
-    <p>
-      openElement supports Progressive Web Apps. Place your manifest and service worker in the
-      <code>public/</code> directory — they're automatically copied to the output during build.
-      CSP meta and view transition metadata can be auto-injected via the Vite plugin.
-    </p>
-    <open-code-block><pre><code> from '@openelement/app';
+openElement 是 static-first。构建输出是普通 HTML、JavaScript 和静态资源，可以部署到任何静态平台。
 
-export default defineConfig(,
-})],
-});`}</code></pre></open-code-block>
+## 构建
 
-    <h2>Deployment Checklist</h2>
-    <ul>
-      <li>
-        Run <span class='inline-code'>deno task build</span> locally or in CI.
-      </li>
-      <li>
-        Preview <span class='inline-code'>dist/</span> before publishing.
-      </li>
-      <li>Confirm base path when deploying to a sub-directory.</li>
-      <li>Verify CSP/security headers still apply at the chosen hosting path.</li>
-      <li>If islands call runtime endpoints, deploy API routes separately.</li>
-    </ul>
-    <div class='nav-row'>
-      <a href='/guide/islands-and-ssr' class='nav-link'>← Islands &amp; SSR</a>
-      <a href='/roadmap' class='nav-link'>Roadmap →</a>
-    </div>
+```bash
+deno task build
+```
+
+输出目录是 `dist/`。
+
+## 静态平台
+
+- Cloudflare Pages：build command `deno task build`，output directory `dist`。
+- Netlify：publish directory `dist`。
+- Vercel：使用 static output，preset 选择 "Other"。
+- GitHub Pages：如果部署到仓库子路径，需要配置 Vite base。
+- S3 或 R2：上传 `dist/` 并配置缓存头。
+
+## API routes
+
+运行时 API 行为与静态输出分离。需要动态行为时，通过平台 adapter 或后续 server/API layer 部署 API routes。
+
+## 发布检查
+
+- 发布前跑完整本地门禁。
+- 本地预览 `dist/`。
+- 确认 base path 和 asset URL。
+- 在托管层配置 CSP/security headers。
+- 将运行时 API 与静态页面分开部署。

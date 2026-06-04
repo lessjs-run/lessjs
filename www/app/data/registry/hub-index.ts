@@ -27,7 +27,7 @@ const _data: HubIndexData = {
   {
     "name": "ui",
     "scope": "@openelement",
-    "version": "0.30.1",
+    "version": "0.31.0",
     "description": "openElement UI component library with DSD-native DsdElement components. All components are SSR-capable.",
     "compatibility": "ssr-capable",
     "tags": [

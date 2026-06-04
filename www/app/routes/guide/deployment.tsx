@@ -123,7 +123,7 @@ export class DeploymentPage extends DsdElement {
             构建时会自动复制到输出目录。配置 CSP meta 和 view transition 元数据可通过 Vite 插件自动注入。
           </p>
           <open-code-block><pre><code>{`// vite.config.ts
-import { openElement } from '@openelement/app';
+import { openElement } from '@openelement/app/vite';
 
 export default defineConfig({
   plugins: [openElement({
@@ -212,7 +212,7 @@ export default defineConfig({
             CSP meta and view transition metadata can be auto-injected via the Vite plugin.
           </p>
           <open-code-block><pre><code>{`// vite.config.ts
-import { openElement } from '@openelement/app';
+import { openElement } from '@openelement/app/vite';
 
 export default defineConfig({
   plugins: [openElement({

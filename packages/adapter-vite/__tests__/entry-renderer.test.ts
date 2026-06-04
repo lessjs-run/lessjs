@@ -362,6 +362,32 @@ Deno.test('renderEntry: route meta layout can select named layouts', () => {
   assertStringIncludes(code, 'module: $pageIndex');
 });
 
+Deno.test('renderEntry: definePage descriptor feeds load, metadata, and revalidate wiring', () => {
+  const desc = buildEntryDescriptor(basicRoutes, { ssg: true });
+  const code = renderEntry(desc);
+
+  assertStringIncludes(code, 'const __page = ($pageIndex.default?.openElementPage || {})');
+  assertStringIncludes(
+    code,
+    'const __data = typeof __page.load === "function" ? await __page.load(__loadContext) : undefined',
+  );
+  assertStringIncludes(code, '__openElementParams: __params');
+  assertStringIncludes(code, '__openElementData: __data');
+  assertStringIncludes(code, 'title: __page.title || "openElement"');
+  assertStringIncludes(code, 'meta: { description: __page.description }');
+  assertStringIncludes(code, 'function __pageDefinition(module) {');
+  assertStringIncludes(
+    code,
+    'const data = typeof page.load === "function" ? await page.load(loadContext) : undefined;',
+  );
+  assertStringIncludes(code, '__openElementParams: params');
+  assertStringIncludes(code, 'title: title || page.title || "openElement"');
+  assertStringIncludes(
+    code,
+    'revalidate: ($pageIndex.revalidate !== undefined ? $pageIndex.revalidate : ($pageIndex.default?.openElementPage || {}).revalidate)',
+  );
+});
+
 Deno.test('renderEntry: uses descriptor SSR admission plan without recomputing it', () => {
   const desc = buildEntryDescriptor(basicRoutes, {
     ssg: true,

@@ -1,13 +1,13 @@
-# Current Architecture - v0.30.1
+# Current Architecture - v0.31.0
 
-> Status: **CURRENT (CONTRACT-FROZEN)**\
-> Version line: v0.30.1\
-> Governing decisions: ADR-0077, ADR-0078, ADR-0080, ADR-0081\
-> Last hardened: 2026-06-04
+> Status: **CURRENT (APPLICATION API LINE)**\
+> Version line: v0.31.0\
+> Governing decisions: ADR-0077, ADR-0078, ADR-0080, ADR-0081, ADR-0082\
+> Last hardened: 2026-06-05
 
 ## Architecture Center
 
-openElement is a DSD-first Web Components application framework.
+openElement is a JSX-first Web Components application framework.
 
 The architecture is designed around deterministic output:
 
@@ -18,8 +18,8 @@ The architecture is designed around deterministic output:
 - generated projects as release artifacts;
 - package graph gates before publish.
 
-openElement owns the Web Component and DSD application layer. Hono, Vite, Deno, JSR,
-and Web Platform APIs remain the substrate.
+openElement owns the Web Component and DSD application layer. Hono, Vite, Deno,
+JSR, and Web Platform APIs remain the substrate.
 
 ## Layer Model
 
@@ -27,11 +27,13 @@ and Web Platform APIs remain the substrate.
 tools and release gates
   arch:check, graph:check, docs gates, publish dry-run, consumer smoke
 
-product facades
-  @openelement/app, @openelement/runtime
+application authoring
+  @openelement/app: definePage, defineIsland, defineElement, defineLayout
+  @openelement/runtime: runtime convenience exports
 
-build adapters
-  @openelement/adapter-vite, SSG phases, generated entry wiring
+build configuration
+  @openelement/app/vite: openElement()
+  @openelement/adapter-vite: Vite adapter, SSG phases, generated entry wiring
 
 framework adapters
   @openelement/adapter-lit, @openelement/adapter-react, @openelement/adapter-vanilla
@@ -57,51 +59,64 @@ kernel must not import a concrete build adapter.
 
 ## Current Packages (19 total)
 
-| Package                        | Role                                | Key fact                          |
-| ------------------------------ | ----------------------------------- | --------------------------------- |
-| `@openelement/core`            | runtime kernel                      | DSD+JSX+VNode; pure runtime       |
-| `@openelement/protocols`       | shared build contracts              | zero-dependency pure types        |
-| `@openelement/signals`         | signal facade over `alien-signals`  | owns public signal contract       |
-| `@openelement/style-sheet`     | CSSStyleSheet cross-env abstraction | browser zero-overhead, SSR shim   |
-| `@openelement/router`          | client and route helpers            | URLPattern-based routing          |
-| `@openelement/rpc`             | RPC primitives                      | zero-dependency utility           |
-| `@openelement/runtime`         | authoring facade                    | single-import convenience         |
-| `@openelement/adapter-vite`    | Vite adapter + SSG                  | owns build pipeline               |
-| `@openelement/app`             | configuration facade                | single Vite config entry          |
-| `@openelement/content`         | content feature                     | markdown, MDX, nav, blog, sitemap |
-| `@openelement/i18n`            | i18n feature                        | locale data + static path helpers |
-| `@openelement/ui`              | DSD component library               | JSX components                    |
-| `@openelement/cem`             | CEM parser                          | CEM shape extraction              |
-| `@openelement/compat-check`    | compatibility classifier            | admission decisions               |
-| `@openelement/hub`             | registry + trust evidence           | Playwright real-browser snapshots |
-| `@openelement/create`          | project scaffolding                 | generated project contract        |
-| `@openelement/adapter-lit`     | Lit interop                         | adapter-boundary conversion       |
-| `@openelement/adapter-react`   | React interop                       | adapter-boundary conversion       |
-| `@openelement/adapter-vanilla` | vanilla WC interop                  | VNode contract + style extraction |
+| Package                        | Role                                | Key fact                           |
+| ------------------------------ | ----------------------------------- | ---------------------------------- |
+| `@openelement/app`             | application authoring facade        | JSX-first pages, islands, layouts  |
+| `@openelement/app/vite`        | build configuration subpath         | `openElement()` Vite facade        |
+| `@openelement/core`            | runtime kernel                      | DSD+JSX+VNode; pure runtime        |
+| `@openelement/protocols`       | shared build contracts              | zero-dependency pure types         |
+| `@openelement/signals`         | signal facade over `alien-signals`  | owns public signal contract        |
+| `@openelement/style-sheet`     | CSSStyleSheet cross-env abstraction | browser zero-overhead, SSR shim    |
+| `@openelement/router`          | client and route helpers            | URLPattern-based routing           |
+| `@openelement/rpc`             | RPC primitives                      | zero-dependency utility            |
+| `@openelement/runtime`         | runtime convenience facade          | authoring-friendly runtime exports |
+| `@openelement/adapter-vite`    | Vite adapter + SSG                  | owns build pipeline                |
+| `@openelement/content`         | content feature                     | markdown, MDX, nav, blog, sitemap  |
+| `@openelement/i18n`            | i18n feature                        | locale data + static path helpers  |
+| `@openelement/ui`              | DSD component library               | JSX components                     |
+| `@openelement/cem`             | CEM parser                          | CEM shape extraction               |
+| `@openelement/compat-check`    | compatibility classifier            | admission decisions                |
+| `@openelement/hub`             | registry + trust evidence           | Playwright real-browser snapshots  |
+| `@openelement/create`          | project scaffolding                 | generated project contract         |
+| `@openelement/adapter-lit`     | Lit interop                         | adapter-boundary conversion        |
+| `@openelement/adapter-react`   | React interop                       | adapter-boundary conversion        |
+| `@openelement/adapter-vanilla` | vanilla WC interop                  | VNode contract + style extraction  |
 
-## Public Component Contract
+## Public Application Contract
 
-The only openElement component render contract is:
+The recommended app authoring contract is:
 
 ```tsx
-import { DsdElement, type VNode } from '@openelement/core';
+import { definePage } from '@openelement/app';
 
-class MyComponent extends DsdElement {
-  render(): VNode | null {
-    return <div class='my-component'>Hello</div>;
-  }
-}
+export default definePage(() => {
+  return <main>Hello openElement</main>;
+});
 ```
 
-Core does not accept string-returning components. Adapter-specific render values
-must be converted before they enter the core renderer.
+The object form carries route data and page metadata:
+
+```tsx
+export default definePage({
+  title: 'Posts',
+  async load({ params }) {
+    return { slug: params.slug };
+  },
+  render({ data }) {
+    return <article>{data.slug}</article>;
+  },
+});
+```
+
+`DsdElement` is still the runtime primitive. It is not the default tutorial API.
 
 ## Renderer Pipeline
 
 Core rendering has one structural model:
 
 ```text
-VNode
+JSX
+  -> VNode
   -> RenderNode IR
   -> serializer
   -> DSD HTML or DOM boundary
@@ -123,6 +138,7 @@ Framework behavior must come from structured declarations:
 - package graph and release order come from `packages/*/deno.json`;
 - internal JSR ranges are checked against the current release line;
 - route metadata is extracted with TypeScript AST or generated manifests;
+- page metadata comes from `definePage().openElementPage` or named `meta`;
 - Hub client-only data is imported/read as structured data;
 - generated SSR entries are declarative wiring only.
 
@@ -133,6 +149,8 @@ logic.
 
 | Concept                             | Canonical owner                            |
 | ----------------------------------- | ------------------------------------------ |
+| app authoring API                   | `@openelement/app`                         |
+| build configuration facade          | `@openelement/app/vite`                    |
 | component render contract           | `@openelement/core`                        |
 | HTML and attribute escaping         | `@openelement/core`                        |
 | compatibility classification shape  | `@openelement/core/types`                  |
@@ -159,11 +177,11 @@ deno task publish:dry-run
 
 ## No Backward Compatibility
 
-v0.30.1 is the post-freeze cleanup line. Removed pre-freeze APIs are not
-preserved with deprecation shims.
+v0.31.0 is allowed to be breaking. The package root `@openelement/app` now owns
+application authoring; Vite configuration moved to `@openelement/app/vite`.
 
 ## Next Architecture Work
 
-UI Shell, Ocean-Island, and `@openelement/ui/css` remain deferred to the next
-product surface release. They must build on the v0.30.1 contract instead of
-reopening the renderer or metadata cleanup arc.
+The next minors should productize streaming/ISR, server route semantics, data
+integration recipes, and UI Shell surfaces without reopening the cleaned v0.30
+renderer, metadata, package graph, or trust-boundary contracts.

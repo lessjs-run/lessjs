@@ -1,3 +1,24 @@
+## v0.31.0 - JSX-first Application API (2026-06-05)
+
+### Application API
+
+- Added `definePage()`, `defineIsland()`, `defineElement()`, and
+  `defineLayout()` from `@openelement/app`.
+- Moved the Vite configuration facade to `@openelement/app/vite`.
+- Wired `definePage({ load, title, description, layout, revalidate })` into SSR
+  and SSG generated entries.
+- Updated the create template, README files, package docs, www guide pages,
+  roadmap, SOPs, status, and ADRs for the new Application API.
+
+### Breaking
+
+```diff
+- import { openElement } from '@openelement/app';
++ import { openElement } from '@openelement/app/vite';
+```
+
+---
+
 ## v0.30.1 - Clean Architecture Sweep (2026-06-04)
 
 ### Public Contract
