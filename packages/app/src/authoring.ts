@@ -75,14 +75,26 @@ export interface OpenElementPageDescriptor<
 }
 
 type PageHostProps = {
-  params?: Record<string, string>;
   __openElementParams?: Record<string, string>;
   __openElementData?: unknown;
   __openElementRequest?: Request;
 };
 
-type PageConstructor = typeof DsdElement & {
-  openElementPage: OpenElementPageDescriptor;
+abstract class ApplicationElement extends DsdElement {
+  [key: string]: unknown;
+}
+
+abstract class ApplicationPageElement extends ApplicationElement implements PageHostProps {
+  __openElementParams?: Record<string, string>;
+  __openElementData?: unknown;
+  __openElementRequest?: Request;
+}
+
+type PageConstructor<
+  Data = unknown,
+  Params extends Record<string, string> = Record<string, string>,
+> = typeof DsdElement & {
+  openElementPage: OpenElementPageDescriptor<Data, Params>;
 };
 
 function normalizePageDefinition<
@@ -115,7 +127,7 @@ export function definePage<
   Params extends Record<string, string> = Record<string, string>,
 >(
   input: PageRenderFunction<Data, Params> | PageDefinition<Data, Params>,
-): PageConstructor {
+): PageConstructor<Data, Params> {
   const definition = normalizePageDefinition(input);
   const pageDescriptor = {
     kind: 'page',
@@ -125,24 +137,23 @@ export function definePage<
     revalidate: definition.revalidate ?? false,
   } as OpenElementPageDescriptor<Data, Params>;
 
-  class OpenElementPage extends DsdElement {
+  class OpenElementPage extends ApplicationPageElement {
     static override styles = definition.styles;
     static openElementPage = pageDescriptor;
 
     override render(): VNode | null {
-      const host = this as unknown as Record<string, unknown> & PageHostProps;
-      const params = (host.__openElementParams ?? host.params ?? {}) as Params;
-      const data = host.__openElementData as Data;
+      const params = (this.__openElementParams ?? this.params ?? {}) as Params;
+      const data = this.__openElementData as Data;
       return definition.render({
         data,
         params,
-        request: host.__openElementRequest,
-        props: collectPublicProps(host),
+        request: this.__openElementRequest,
+        props: collectPublicProps(this),
       });
     }
   }
 
-  return OpenElementPage as PageConstructor;
+  return OpenElementPage;
 }
 
 export interface ElementDefinition<
@@ -174,13 +185,11 @@ export function defineElement<Props extends Record<string, unknown> = Record<str
   assertCustomElementTag(tagName);
   const definition = normalizeElementDefinition(input);
 
-  class OpenElementComponent extends DsdElement {
+  class OpenElementComponent extends ApplicationElement {
     static override styles = definition.styles;
 
     override render(): VNode | null {
-      return definition.render(
-        collectPublicProps(this as unknown as Record<string, unknown>) as Props,
-      );
+      return definition.render(collectPublicProps(this) as Props);
     }
   }
 
