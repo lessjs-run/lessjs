@@ -37,7 +37,7 @@ function defineTestElement(options?: {
     static override formAssociated = options?.formAssociated;
     static override observedAttributes = options?.observedAttributes;
 
-    override render(): VNode | null {
+    override render(): string {
       return options?.renderContent ?? '<div class="test-inner">rendered</div>';
     }
   }
@@ -119,7 +119,7 @@ Deno.test('DsdElement: requestUpdate() aliases update() for controllers', () => 
   class RequestUpdateElement extends DsdElement {
     value = 'before';
 
-    override render(): VNode | null {
+    override render(): string {
       return `<span>${this.value}</span>`;
     }
   }
@@ -150,7 +150,7 @@ Deno.test('DsdElement: disconnectedCallback disposes template runtime', () => {
       callCount++;
     }
 
-    override render(): VNode | null {
+    override render(): string {
       return `<button data-on-click="_onClick">click</button>`;
     }
   }
@@ -278,7 +278,7 @@ Deno.test('DsdElement: delegatesFocus is passed to attachShadow', () => {
   class FocusElement extends DsdElement {
     static override delegatesFocus = true;
 
-    override render(): VNode | null {
+    override render(): string {
       return '<input type="text">';
     }
   }
@@ -335,7 +335,7 @@ Deno.test('DsdElement: this.params is reactive', () => {
 
   const tagName = `test-params-${Math.random().toString(36).slice(2, 7)}`;
   class ParamsElement extends DsdElement {
-    override render(): VNode | null {
+    override render(): string {
       const p = this.params;
       return `<span>slug=${p.slug || 'none'}</span>`;
     }
@@ -366,7 +366,7 @@ Deno.test('DsdElement: this.params default empty object', () => {
 
   const tagName = `test-params-default-${Math.random().toString(36).slice(2, 7)}`;
   class DefaultParamsElement extends DsdElement {
-    override render(): VNode | null {
+    override render(): string {
       const keys = Object.keys(this.params);
       return `<span>keys=${keys.length}</span>`;
     }
@@ -398,7 +398,7 @@ Deno.test('DsdElement: data-signal-attr DSD hydration sets attributes reactively
       super();
       this.registerSignal('theme', themeSig);
     }
-    override render(): VNode | null {
+    override render(): string {
       return `<div data-signal="theme" data-signal-attr="data-theme,class">themed</div>`;
     }
   }
@@ -444,7 +444,7 @@ Deno.test('DsdElement: data-signal-html DSD hydration sets innerHTML reactively'
       super();
       this.registerSignal('content', htmlSig);
     }
-    override render(): VNode | null {
+    override render(): string {
       return `<div data-signal-html="content">fallback</div>`;
     }
   }
@@ -482,7 +482,7 @@ Deno.test('DsdElement: data-signal-class toggles CSS class on signal truthiness'
       super();
       this.registerSignal('state', toggleSig);
     }
-    override render(): VNode | null {
+    override render(): string {
       return `<div data-signal="state" data-signal-class="active">content</div>`;
     }
   }
