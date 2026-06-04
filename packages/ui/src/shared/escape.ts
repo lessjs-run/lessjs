@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @openelement/ui - Shared HTML/attribute escape utilities.
  *
  * SSR-safe (no DOM API). Used by all UI components to prevent XSS

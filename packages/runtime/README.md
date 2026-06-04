@@ -1,4 +1,4 @@
-﻿# @openelement/runtime
+# @openelement/runtime
 
 Component authoring facade: the single import for writing LessJS components.
 

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @openelement/ui - Open Props Token Sheet
  *
  * Shared CSSStyleSheet defining design tokens (spacing, gray palette,

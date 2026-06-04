@@ -1,4 +1,4 @@
-﻿// deno-lint-ignore-file no-explicit-any no-unused-vars require-await
+// deno-lint-ignore-file no-explicit-any no-unused-vars require-await
 /**
  * @openelement/ui - Comprehensive component tests (Deno)
  *

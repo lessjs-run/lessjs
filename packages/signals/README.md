@@ -1,4 +1,4 @@
-﻿# @openelement/signals
+# @openelement/signals
 
 TC39 Signals polyfill - 信号、计算属性、副作用、Island 生命周期绑定。
 

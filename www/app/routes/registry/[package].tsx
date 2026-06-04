@@ -11,10 +11,10 @@
  * @see ADR-0030
  */
 
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
-import '@lessjs/ui/less-code-block';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
+import '@openelement/ui/open-code-block';
 import pkgRecords from '../../data/registry/hub-data.ts';
 
 interface HubTagRecord {
@@ -309,7 +309,7 @@ export default class DocsRegistryDetail extends DsdElement {
             </div>
             <p class="justification-text">{pkg.compatibilityJustification}</p>
             <table class="meta-table">
-              <tr><th>Validator</th><td>@lessjs/core v{pkg.validatorVersion}</td></tr>
+              <tr><th>Validator</th><td>@openelement/core v{pkg.validatorVersion}</td></tr>
               <tr><th>Manifest hash</th><td class="mono-sm">{pkg.manifestHash}</td></tr>
               <tr><th>Submitted by</th><td>{pkg.submittedBy || '-'}</td></tr>
             </table>

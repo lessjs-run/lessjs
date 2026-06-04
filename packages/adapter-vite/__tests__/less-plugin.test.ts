@@ -175,7 +175,7 @@ Deno.test('lessPlugin: virtual-entry resolves virtual:less-hono-entry', () => {
 
   const resolved = callResolveId(virtualPlugin, 'virtual:less-hono-entry');
   assertExists(resolved);
-  assertEquals(resolved, '\0virtual:less-hono-entry');
+  assertEquals(resolved, '\0virtual:open-hono-entry');
 });
 
 Deno.test('lessPlugin: virtual-entry resolves virtual:less-build-trigger', () => {
@@ -184,7 +184,7 @@ Deno.test('lessPlugin: virtual-entry resolves virtual:less-build-trigger', () =>
 
   const resolved = callResolveId(virtualPlugin, 'virtual:less-build-trigger');
   assertExists(resolved);
-  assertEquals(resolved, '\0virtual:less-build-trigger');
+  assertEquals(resolved, '\0virtual:open-build-trigger');
 });
 
 Deno.test('lessPlugin: virtual-entry resolveId returns undefined for unknown IDs', () => {
@@ -199,7 +199,7 @@ Deno.test('lessPlugin: virtual-entry load returns code for resolved entry ID', (
   const plugins = less({});
   const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
 
-  const code = callLoad(virtualPlugin, '\0virtual:less-hono-entry');
+  const code = callLoad(virtualPlugin, '\0virtual:open-hono-entry');
   assertExists(code);
   assertStringIncludes(code as string, 'hono');
 });
@@ -208,7 +208,7 @@ Deno.test('lessPlugin: virtual-entry load returns null export for build trigger'
   const plugins = less({});
   const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
 
-  const code = callLoad(virtualPlugin, '\0virtual:less-build-trigger');
+  const code = callLoad(virtualPlugin, '\0virtual:open-build-trigger');
   assertExists(code);
   assertEquals(code, 'export default null;');
 });

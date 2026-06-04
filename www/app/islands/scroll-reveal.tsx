@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ScrollReveal — Ocean component.
  *
  * Wraps slotted content with an IntersectionObserver-driven reveal

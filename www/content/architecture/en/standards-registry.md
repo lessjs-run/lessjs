@@ -1,4 +1,4 @@
-﻿---
+---
 title: 'Standards & Registry Strategy'
 section: 'Compatibility'
 label: 'Standards & Registry'

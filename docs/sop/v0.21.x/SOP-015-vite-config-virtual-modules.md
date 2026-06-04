@@ -40,7 +40,7 @@ export default defineConfig({
 ### 工作原理
 
 1. `virtual-passthrough`（`enforce: 'pre'`）先于 `deno()` 运行
-2. 遇到 `virtual:less-hono-entry` → 返回 `\0virtual:less-hono-entry`（Vite 虚拟模块约定格式）
+2. 遇到 `virtual:less-hono-entry` → 返回 `\0virtual:open-hono-entry`（Vite 虚拟模块约定格式）
 3. `deno()` 的 `resolveId` 不会再被调用
 4. Vite 进入 `load` 阶段 → LessJS 的 `less:virtual-entry` 插件 `load` 钩子识别 `\0` 前缀并提供虚拟模块内容
 

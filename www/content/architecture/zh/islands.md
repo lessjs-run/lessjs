@@ -1,4 +1,4 @@
-﻿---
+---
 title: 'Island Upgrade'
 section: 'Principles'
 label: 'Island Upgrade'

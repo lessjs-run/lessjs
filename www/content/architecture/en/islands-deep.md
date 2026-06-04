@@ -1,4 +1,4 @@
-﻿---
+---
 title: 'Island Deep Dive'
 section: 'Principles'
 label: 'Island Deep Dive'

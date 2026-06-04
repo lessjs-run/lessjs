@@ -230,8 +230,8 @@ Deno.test('less() virtualEntryPlugin.load returns code for resolved ID', () => {
   const plugins = less();
   const virtualPlugin = plugins.find((p) => p.name === 'less:virtual-entry')!;
   assertExists(virtualPlugin.load);
-  // '\0virtual:less-hono-entry' is the resolved ID
-  const code = (virtualPlugin.load as Function)('\0virtual:less-hono-entry' as never);
+  // '\0virtual:open-hono-entry' is the resolved ID
+  const code = (virtualPlugin.load as Function)('\0virtual:open-hono-entry' as never);
   assertExists(code);
   assertStringIncludes(code as string, 'hono');
 });
@@ -420,7 +420,7 @@ Deno.test('less() virtualEntryPlugin.load fallback when ctx.honoEntryCode is emp
     (plugins[0] as any).configResolved({} as never);
   }
   // load should return code
-  const code = (virtualPlugin.load as Function)('\0virtual:less-hono-entry' as never);
+  const code = (virtualPlugin.load as Function)('\0virtual:open-hono-entry' as never);
   assertExists(code);
   assertStringIncludes(code as string, 'hono');
 });

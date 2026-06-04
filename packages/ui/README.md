@@ -1,4 +1,4 @@
-﻿# @openelement/ui
+# @openelement/ui
 
 LessJS Web Components package.
 

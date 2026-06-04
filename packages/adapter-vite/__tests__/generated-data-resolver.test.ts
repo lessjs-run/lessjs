@@ -41,7 +41,7 @@ Deno.test('generated data resolver resolves only @openelement/generated namespac
   const plugin = createGeneratedDataResolverPlugin({ root: '/site' });
   const resolveId = plugin.resolveId as (id: string) => string | null;
 
-  assertEquals(resolveId(GENERATED_NAV_ID), '\0less:generated-data:@openelement/generated/nav');
+  assertEquals(resolveId(GENERATED_NAV_ID), '\0open:generated-data:@openelement/generated/nav');
   assertEquals(resolveId('@openelement/content/' + 'nav'), null);
   assertEquals(resolveId('virtual:less-' + 'nav'), null);
 });
@@ -51,7 +51,7 @@ Deno.test('generated data resolver provides fallback modules before first genera
   const load = plugin.load as (id: string) => string | null;
 
   assertStringIncludes(
-    load('\0less:generated-data:@openelement/generated/i18n') ?? '',
+    load('\0open:generated-data:@openelement/generated/i18n') ?? '',
     'getDefaultLocale',
   );
 });

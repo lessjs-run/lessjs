@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @openelement/signals - Alien Signals Engine Adapter.
  *
  * v0.22 (SOP-004): Default engine using alien-signals.

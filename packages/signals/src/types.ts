@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @openelement/signals - Public type exports
  *
  * Shared types used by framework and sugar layers.

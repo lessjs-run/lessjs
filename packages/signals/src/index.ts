@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @openelement/signals - Reactive signals powered by alien-signals.
  *
  * v0.22: Alien-signals is the sole engine. TC39 polyfill removed.

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @openelement/docs - Search island
  *
  * Full-text search using FlexSearch.

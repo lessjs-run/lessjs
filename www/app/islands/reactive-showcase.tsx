@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Reactive DSD Showcase — DsdElement + Signals (v0.21)
  *
  * Demonstrates three core Reactive DSD patterns:

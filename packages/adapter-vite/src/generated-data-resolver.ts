@@ -57,11 +57,11 @@ export function createGeneratedDataResolverPlugin(
       if (!GENERATED_DATA_FILES[id]) return null;
       const path = generatedDataPath(options.root, id, dataDir);
       if (path && existsSync(path)) return path;
-      return '\0less:generated-data:' + id;
+      return '\0open:generated-data:' + id;
     },
 
     load(id) {
-      const prefix = '\0less:generated-data:';
+      const prefix = '\0open:generated-data:';
       if (!id.startsWith(prefix)) return null;
 
       const sourceId = id.slice(prefix.length);

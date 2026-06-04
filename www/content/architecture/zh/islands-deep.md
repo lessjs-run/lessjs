@@ -1,4 +1,4 @@
-﻿---
+---
 title: 'Island 深度指南'
 section: 'Principles'
 label: 'Island Deep Dive'

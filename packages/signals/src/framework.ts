@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @openelement/signals - Framework Layer
  *
  * Developer-friendly API wrapping the engine.

@@ -1,4 +1,4 @@
-﻿import { defineCustomElement, DsdElement } from '@openelement/core';
+import { defineCustomElement, DsdElement } from '@openelement/core';
 import { StyleSheet } from '@openelement/style-sheet';
 import { signal } from '@openelement/signals';
 import { consumeContext } from '@openelement/core';

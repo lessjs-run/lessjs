@@ -14,9 +14,9 @@
 
 export const meta = { section: 'Registry', label: 'Component Detail', order: 6 };
 
-import { DsdElement } from '@lessjs/core';
-import { StyleSheet } from '@lessjs/style-sheet';
-import { openPropsTokenSheet } from '@lessjs/ui/open-props-tokens';
+import { DsdElement } from '@openelement/core';
+import { StyleSheet } from '@openelement/style-sheet';
+import { openPropsTokenSheet } from '@openelement/ui/open-props-tokens';
 import pkgRecords from '../../../data/registry/hub-data.ts';
 import type { HubPackageRecord } from '../../../data/registry/hub-data.ts';
 
@@ -389,7 +389,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
     // styles reference CSS custom properties (--bg-card, --border, etc.)
     // that are normally declared on :root by lessRootColorCSS. In the iframe
     // there is no LessJS runtime, so we inline the light-theme tokens directly.
-    const lessThemeCss = meta.importSpec === '@lessjs/ui'
+    const lessThemeCss = meta.importSpec === '@openelement/ui'
       ? '<style>:root{--gray-0:#f8f9fa;--gray-1:#f1f3f5;--gray-2:#e9ecef;--gray-3:#dee2e6;--gray-4:#ced4da;--gray-5:#adb5bd;--gray-6:#868e96;--gray-7:#495057;--gray-8:#343a40;--gray-9:#212529;--gray-10:#16191d;--gray-11:#0d0f12;--gray-12:#030507;--indigo-5:#5c7cfa;--indigo-6:#4c6ef5;--indigo-1:#dbe4ff;--green-6:#40c057;--red-6:#fa5252;--orange-6:#fd7e14;color-scheme:light}</style>'
       : '';
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${themeLink}${lessThemeCss}<script type="module" src="${meta.importUrl}"></script><style>*,*::before,*::after{box-sizing:border-box}body{margin:0;padding:20px;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5;color:var(--gray-12);background:var(--gray-0);overflow:hidden}</style></head><body><${meta.tagName}${attrStr}>${meta.demoSlots}</${meta.tagName}></body></html>`;
@@ -594,7 +594,7 @@ export default class DocsRegistryComponentDetail extends DsdElement {
               </tr>
               <tr>
                 <th>Validator</th>
-                <td>@lessjs/core v{pkg.validatorVersion}</td>
+                <td>@openelement/core v{pkg.validatorVersion}</td>
               </tr>
             </table>
           </div>

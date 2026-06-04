@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @openelement/ui - Smoke tests
  *
  * Minimal tests to verify components can be imported and registered.

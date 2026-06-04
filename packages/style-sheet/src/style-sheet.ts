@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @openelement/core - StyleSheet (cross-environment CSSStyleSheet abstraction).
  *
  * In the browser this delegates to the native CSSStyleSheet API at zero

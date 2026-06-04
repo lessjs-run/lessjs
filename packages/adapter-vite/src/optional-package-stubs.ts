@@ -80,10 +80,10 @@ export function optionalPackageStubsPlugin(): Plugin {
       if (!(id in OPTIONAL_PACKAGE_STUBS)) return;
       const resolved = await this.resolve(id, undefined, { skipSelf: true });
       if (resolved) return null;
-      return `\0less:optional-stub:${id}`;
+      return `\0open:optional-stub:${id}`;
     },
     load(id) {
-      const prefix = '\0less:optional-stub:';
+      const prefix = '\0open:optional-stub:';
       if (!id.startsWith(prefix)) return;
       return OPTIONAL_PACKAGE_STUBS[id.slice(prefix.length)];
     },

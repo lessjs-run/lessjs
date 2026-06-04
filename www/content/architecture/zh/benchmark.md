@@ -1,4 +1,4 @@
-﻿---
+---
 title: '性能与基准测试'
 section: 'Reference'
 label: 'Performance'

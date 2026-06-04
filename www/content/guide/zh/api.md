@@ -1,4 +1,4 @@
-﻿---
+---
 title: 'API 参考'
 section: '参考'
 label: 'API'

@@ -1,4 +1,4 @@
-﻿---
+---
 title: 'Performance & Benchmarks'
 section: 'Reference'
 label: 'Performance'

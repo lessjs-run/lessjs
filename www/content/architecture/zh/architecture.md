@@ -1,4 +1,4 @@
-﻿---
+---
 title: 架构
 section: core
 label: 架构

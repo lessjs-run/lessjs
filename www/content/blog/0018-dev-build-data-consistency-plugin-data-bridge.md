@@ -1,4 +1,4 @@
-﻿---
+---
 title: 'ADR 0018: Eliminate Plugin Module State — Virtual Data Modules + @deno/vite-plugin'
 date: '2026-05-11'
 type: 'adr'
@@ -472,7 +472,7 @@ sequenceDiagram
     Browser->>HonoVite: GET /blog
     HonoVite->>Vite: ssrLoadModule('virtual:less-hono-entry')
     Vite->>Vite: ssrLoadModule('virtual:less-blog-data')
-    Vite->>Plugin: load('\0virtual:less-blog-data')
+    Vite->>Plugin: load('\0virtual:open-blog-data')
     Plugin->>Content: loadBlogData(opts)
     Content->>FS: read markdown files
     FS-->>Content: raw content
@@ -498,7 +498,7 @@ sequenceDiagram
     participant FS as File System
 
     CLI->>Vite: start SSR build
-    Vite->>Plugin: load('\0virtual:less-blog-data')
+    Vite->>Plugin: load('\0virtual:open-blog-data')
     Plugin->>Content: loadBlogData(opts)
     Content->>FS: read markdown files
     FS-->>Content: raw content
@@ -586,7 +586,7 @@ sequenceDiagram
     Graph-->>Watcher: module invalidated
     Watcher->>Browser: hot.send({ type: 'full-reload' })
     Browser->>Vite: GET /blog (new request)
-    Vite->>Plugin: load('\0virtual:less-blog-data')
+    Vite->>Plugin: load('\0virtual:open-blog-data')
     Note over Plugin: load() re-reads all .md files
     Plugin-->>Vite: fresh data exports
     Vite-->>Browser: HTML with updated content

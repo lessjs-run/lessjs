@@ -1,4 +1,4 @@
-﻿/**
+/**
  * E2E: Theme System
  *
  * Verifies the dark/light theme toggle:

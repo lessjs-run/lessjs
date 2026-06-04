@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @openelement/signals - computed() unit tests
  *
  * Tests for computed signal with automatic dependency tracking.

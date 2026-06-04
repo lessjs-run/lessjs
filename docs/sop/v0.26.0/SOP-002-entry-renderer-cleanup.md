@@ -36,8 +36,8 @@ lines.push('export { locales, getDefaultLocale, getI18nOptions } from "virtual:l
 移除 `resolveId` 中对 `virtual:less-blog-data` 和 `virtual:less-i18n-data` 的处理：
 
 ```diff
-- if (id === 'virtual:less-blog-data') return '\0virtual:less-blog-data';
-- if (id === 'virtual:less-i18n-data') return '\0virtual:less-i18n-data';
+- if (id === 'virtual:less-blog-data') return '\0virtual:open-blog-data';
+- if (id === 'virtual:less-i18n-data') return '\0virtual:open-i18n-data';
 ```
 
 添加 alias 映射:

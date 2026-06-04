@@ -1,4 +1,4 @@
-﻿import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
+import { StyleSheet, type StyleSheetLike } from '@openelement/style-sheet';
 
 /**
  * Shared docs page layout styles.
